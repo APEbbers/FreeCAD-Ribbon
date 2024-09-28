@@ -429,14 +429,13 @@ class ModernMenu(RibbonBar):
                         lambda i=i + 1: self.LoadMarcoFreeCAD(ListScripts[i - 1]),
                     )
         # Add a about button for this ribbon
-        Menu.addSeparator()
-        AboutButton = Menu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon"))
-        AboutButton.triggered.connect(self.on_AboutButton_clicked)
-
         # Get the version of this addon
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
-        Menu.addLabel("version " + version, Qt.AlignmentFlag.AlignCenter)
+
+        Menu.addSeparator()
+        AboutButton = Menu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version)
+        AboutButton.triggered.connect(self.on_AboutButton_clicked)
 
     def loadDesignMenu(self):
         message = translate(
