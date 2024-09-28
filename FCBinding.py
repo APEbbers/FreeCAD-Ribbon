@@ -433,19 +433,10 @@ class ModernMenu(RibbonBar):
         AboutButton = Menu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon"))
         AboutButton.triggered.connect(self.on_AboutButton_clicked)
 
-        # Passing the path of the
-        # xml document to enable the
-        # parsing process
+        # Get the version of this addon
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
-        tree = ET.parse(PackageXML)
-        # getting the parent tag of
-        # the xml document
-        root = tree.getroot()
-        version = ""
-        for child in root:
-            if child == "version":
-                version = str(child[0])
-        Menu.addLabel("version " + version)
+        version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
+        Menu.addLabel("version " + version, Qt.AlignmentFlag.AlignCenter)
 
     def loadDesignMenu(self):
         message = translate(
