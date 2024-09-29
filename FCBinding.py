@@ -73,11 +73,13 @@ try:
     from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
     from pyqtribbon.panel import RibbonPanel
     from pyqtribbon.toolbutton import RibbonToolButton
+    from pyqtribbon.separator import RibbonSeparator
 except ImportError:
     import pyqtribbon_local as pyqtribbon
     from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
     from pyqtribbon_local.panel import RibbonPanel
     from pyqtribbon_local.toolbutton import RibbonToolButton
+    from pyqtribbon_local.separator import RibbonSeparator
 
     print(translate("FreeCAD Ribbon", "pyqtribbon used local"))
 
@@ -181,6 +183,7 @@ class ModernMenu(RibbonBar):
         rgb = StandardColors.light().color().toTuple()
         hexColor = f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
         StyleSheet = StyleSheet.replace("border-left: 0.5px solid;", "border-left: 0.5px solid " + hexColor + ";")
+        StyleSheet = StyleSheet.replace("border-top: 0.5px solid;", "border-top: 0.5px solid " + hexColor + ";")
         StyleSheet = StyleSheet.replace("border: 0.5px solid;", "border: 0.5px solid " + hexColor + ";")
         self.setStyleSheet(StyleSheet)
 
@@ -600,6 +603,7 @@ class ModernMenu(RibbonBar):
                 title=toolbar,
                 showPanelOptionButton=True,
             )
+            panel.panelOptionButton().hide()
 
             # get list of all buttons in toolbar
             allButtons: list = []
@@ -669,9 +673,24 @@ class ModernMenu(RibbonBar):
                 0  # needed to count the number of medium buttons in a column. (bug fix with adding separators)
             )
 
+            # Define number of rows used per button size
+            LargeButtonRows = 3
+            MediumButtonRows = 2
+            SmallButtonRows = 1
+            # Define the rowCount and column count
+            rowCount = 0
+            columnCount = 0
+            # Set the maximum columns
+            maxColumns = 6
+
+            # Define an action list of the actions that are byond the maximum columns
             actionList = []
+
+            # Go through the button list:
             for i in range(len(allButtons)):
                 button = allButtons[i]
+
+                # count the number of buttons per type. Needed for proper sorting the buttons later.
                 try:
                     action = button.defaultAction()
                     buttonSize = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][
@@ -684,14 +703,16 @@ class ModernMenu(RibbonBar):
                 except Exception:
                     pass
 
-                # if the button has not text, skipp it.
+                # if the button has not text, remove it, skipp it and increase the counter.
                 if button.text() == "":
                     continue
-                # If the command is already there, skipp it.
+                # If the command is already there, remove it, skipp it and increase the counter.
                 elif shadowList.__contains__(button.text()) is True:
                     continue
                 else:
-                    if button.text() == "separator":
+                    # If the last item is not an separator, you can add an separator
+                    # With an paneloptionbutton, use an offset of 2 instead of 1 for i.
+                    if button.text() == "separator" and i < len(allButtons):
                         separator = panel.addLargeVerticalSeparator(
                             alignment=Qt.AlignmentFlag.AlignLeft, fixedHeight=False
                         )
@@ -710,7 +731,6 @@ class ModernMenu(RibbonBar):
                         if float((NoMediumButtons + 1) / 2).is_integer():
                             panel.addMediumButton().setEnabled(False)
                         NoMediumButtons = 0
-
                         continue
                     else:
                         try:
@@ -753,7 +773,29 @@ class ModernMenu(RibbonBar):
                             except KeyError:
                                 buttonSize = "small"  # small as default
 
-                            actionList.append(action)
+                            # Panel overflow behaviour ----------------------------------------------------------------
+                            #
+                            # get the number of rows in the panel
+                            if buttonSize == "small":
+                                rowCount = rowCount + SmallButtonRows
+                            if buttonSize == "medium":
+                                rowCount = rowCount + MediumButtonRows
+                            if buttonSize == "large":
+                                rowCount = rowCount + LargeButtonRows
+
+                            # If the number of rows devided by 3 is a whole number,
+                            # the number of columns is the rowcount devided by 3.
+                            if float(rowCount / 3).is_integer():
+                                columnCount = rowCount / 3
+
+                            # If the number of columns is more than allowed,
+                            # Add the actions to the OptionPanel instead.
+                            if columnCount > maxColumns:
+                                actionList.append(action)
+                                panel.panelOptionButton().show()
+                                continue
+                            # ----------------------------------------------------------------------------------------
+
                             # Check if this is an icon only toolbar
                             IconOnly = False
                             for iconToolbar in self.ribbonStructure["iconOnlyToolbars"]:
@@ -825,15 +867,22 @@ class ModernMenu(RibbonBar):
                         except Exception:
                             continue
 
-            # remove any suffix
+            # remove any suffix from the panel title
             if panel.title().endswith("_custom"):
                 panel.setTitle(panel.title().replace("_custom", ""))
 
             # Setup the panelOptionButton
             OptionButton = panel.panelOptionButton()
-            OptionButton.setObjectName(panel.title())
-            OptionButton.addActions(actionList)
-            OptionButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+            if len(actionList) > 0:
+                # Add the actions and set the popup mode
+                OptionButton.addActions(actionList)
+                OptionButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+                OptionButton.setMinimumWidth(panel.width())
+                OptionButton.setArrowType(Qt.ArrowType.DownArrow)
+                OptionButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+                OptionButton.setStyleSheet("RibbonPanelOptionButton::menu-indicator {image: none;}")
+                # Replace the panel title for the optionbutton text
+                OptionButton.setText("more...")
 
             # Set the margings. In linux seems the style behavior different than on Windows
             Layout = panel.layout()
@@ -923,19 +972,6 @@ class ModernMenu(RibbonBar):
             if script.endswith(".py"):
                 App.loadFile(script)
         return
-
-    def OptionPanel(self, ObjectName):
-        Form = QWidget()
-        Form.setObjectName(ObjectName)
-        Form.resize(400, 300)
-
-        # self.retranslateUi(Form)
-
-        # QMetaObject.connectSlotsByName(Form)
-
-        Form.setWindowTitle(QCoreApplication.translate("Form", "Form", None))
-
-        return Form
 
 
 class run:
