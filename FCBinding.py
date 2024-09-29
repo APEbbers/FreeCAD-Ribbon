@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import QIcon, QAction, QPixmap, QScrollEvent, QKeyEvent
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QAction, QPixmap, QScrollEvent, QKeyEvent
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -37,7 +37,7 @@ from PySide.QtWidgets import (
     QSpacerItem,
     QLayoutItem,
 )
-from PySide.QtCore import Qt, QTimer, Signal, QObject, QMetaMethod, SIGNAL, QEvent
+from PySide6.QtCore import Qt, QTimer, Signal, QObject, QMetaMethod, SIGNAL, QEvent
 
 import json
 import os
@@ -46,6 +46,7 @@ import webbrowser
 import LoadDesign_Ribbon
 import Parameters_Ribbon
 import LoadSettings_Ribbon
+import LoadOptionPanel
 import Standard_Functions_RIbbon as StandardFunctions
 import platform
 import subprocess
@@ -70,14 +71,16 @@ sys.path.append(pathPackages)
 translate = App.Qt.translate
 
 try:
-    from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar, RibbonStyle
+    from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+    from pyqtribbon.panel import RibbonPanel
 except ImportError:
     import pyqtribbon_local as pyqtribbon
-    from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar, RibbonStyle
+    from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+    from pyqtribbon_local.panel import RibbonPanel
 
     print(translate("FreeCAD Ribbon", "pyqtribbon used local"))
 
-from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar, RibbonStyle
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -519,7 +522,6 @@ class ModernMenu(RibbonBar):
             timer.timeout.connect(self.onWbActivated)
             timer.setSingleShot(True)
             timer.start(100)
-
             return
 
         # create panels
@@ -595,8 +597,18 @@ class ModernMenu(RibbonBar):
             # Create the panel, use the toolbar name as title
             panel = self.currentCategory().addPanel(
                 title=toolbar,
-                showPanelOptionButton=False,
+                showPanelOptionButton=True,
             )
+
+            # Setup the panelOptionButton
+            PanelOptionButton = panel.panelOptionButton()
+            PanelOptionButton.setCheckable(True)
+
+            # Connect the filter for the quick commands on the quickcommands tab
+            def panelOptionButton_Click():
+                self.onPanelOptionButton_clicked(self, panel)
+
+            panel.panelOptionButton().connect(panel.panelOptionButton(), SIGNAL("clicked()"), panelOptionButton_Click)
 
             # get list of all buttons in toolbar
             allButtons: list = []
@@ -827,6 +839,18 @@ class ModernMenu(RibbonBar):
             Layout.setContentsMargins(3, 3, 3, 3)
 
         self.isWbLoaded[tabName] = True
+
+        return
+
+    @staticmethod
+    def onPanelOptionButton_clicked(self, panel: RibbonPanel):
+        OptionPanel = QWidget()
+        PanelOptionButton = panel.panelOptionButton()
+        if PanelOptionButton.isChecked() is True:
+            print("panel will be shown")
+            LoadOptionPanel.main()
+        if PanelOptionButton.isChecked() is False:
+            print("panel will be hidden")
 
         return
 
