@@ -19,9 +19,9 @@ The FreeCAD ribbon provides the following functions and features:
   * Set the button size to small, medium or large
 * You can apply your own stylesheet
 * Scripts are provided to help setup your own customized Ribbon
-* Much more...
+* And much more...
 
-See the [wiki page](https://github.com/APEbbers/FreeCAD-Ribbon/wiki) for more details and how to customize the Ribbon to your preference.
+See the [wiki page](https://github.com/APEbbers/FreeCAD-Ribbon/wiki) for more details and on how to customize the Ribbon to your preference.
 
 ## Installation
 
