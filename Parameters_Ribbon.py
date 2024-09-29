@@ -159,9 +159,8 @@ else:
     SHOW_ICON_TEXT_LARGE = bool(False)
     Settings.SetBoolSetting("ShowIconText_Large", False)
 
-
-if Settings.GetStringSetting("MaxColumnsPerPanel") != "":
-    MAX_COLUMN_PANELS = Settings.GetStringSetting("MaxColumnsPerPanel")
+if Settings.GetIntSetting("MaxColumnsPerPanel") != "":
+    MAX_COLUMN_PANELS = Settings.GetIntSetting("MaxColumnsPerPanel")
 else:
-    MAX_COLUMN_PANELS = 6
-    Settings.SetStringSetting("MaxColumnsPerPanel", MAX_COLUMN_PANELS)
+    MAX_COLUMN_PANELS = int(6)
+    Settings.SetIntSetting("MaxColumnsPerPanel", MAX_COLUMN_PANELS)

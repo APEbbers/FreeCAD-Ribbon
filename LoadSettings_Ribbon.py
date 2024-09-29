@@ -222,7 +222,7 @@ class LoadDialog(Settings_ui.Ui_Form):
         Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", self.ShowText_Small)
         Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", self.ShowText_Medium)
         Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", self.ShowText_Large)
-        Parameters_Ribbon.Settings.SetStringSetting("MaxColumnsPerPanel", self.form.MaxPanelColumn.text())
+        Parameters_Ribbon.Settings.SetIntSetting("MaxColumnsPerPanel", int(self.form.MaxPanelColumn.text()))
 
         # Close the form
         self.form.close()
