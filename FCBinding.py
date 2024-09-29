@@ -681,7 +681,7 @@ class ModernMenu(RibbonBar):
             rowCount = 0
             columnCount = 0
             # Set the maximum columns
-            maxColumns = 6
+            maxColumns = Parameters_Ribbon.MAX_COLUMN_PANELS
 
             # Define an action list of the actions that are byond the maximum columns
             actionList = []
@@ -790,10 +790,11 @@ class ModernMenu(RibbonBar):
 
                             # If the number of columns is more than allowed,
                             # Add the actions to the OptionPanel instead.
-                            if columnCount > maxColumns:
-                                actionList.append(action)
-                                panel.panelOptionButton().show()
-                                continue
+                            if maxColumns > 0:
+                                if columnCount > maxColumns:
+                                    actionList.append(action)
+                                    panel.panelOptionButton().show()
+                                    continue
                             # ----------------------------------------------------------------------------------------
 
                             # Check if this is an icon only toolbar
