@@ -37,7 +37,7 @@ from PySide6.QtWidgets import (
     QSpacerItem,
     QLayoutItem,
 )
-from PySide6.QtCore import Qt, QTimer, Signal, QObject, QMetaMethod, SIGNAL, QEvent
+from PySide6.QtCore import Qt, QTimer, Signal, QObject, QMetaMethod, SIGNAL, QEvent, QMetaObject, QCoreApplication
 
 import json
 import os
@@ -46,7 +46,6 @@ import webbrowser
 import LoadDesign_Ribbon
 import Parameters_Ribbon
 import LoadSettings_Ribbon
-import LoadOptionPanel
 import Standard_Functions_RIbbon as StandardFunctions
 import platform
 import subprocess
@@ -73,10 +72,12 @@ translate = App.Qt.translate
 try:
     from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
     from pyqtribbon.panel import RibbonPanel
+    from pyqtribbon.toolbutton import RibbonToolButton
 except ImportError:
     import pyqtribbon_local as pyqtribbon
     from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
     from pyqtribbon_local.panel import RibbonPanel
+    from pyqtribbon_local.toolbutton import RibbonToolButton
 
     print(translate("FreeCAD Ribbon", "pyqtribbon used local"))
 
@@ -600,16 +601,6 @@ class ModernMenu(RibbonBar):
                 showPanelOptionButton=True,
             )
 
-            # Setup the panelOptionButton
-            PanelOptionButton = panel.panelOptionButton()
-            PanelOptionButton.setCheckable(True)
-
-            # Connect the filter for the quick commands on the quickcommands tab
-            def panelOptionButton_Click():
-                self.onPanelOptionButton_clicked(self, panel)
-
-            panel.panelOptionButton().connect(panel.panelOptionButton(), SIGNAL("clicked()"), panelOptionButton_Click)
-
             # get list of all buttons in toolbar
             allButtons: list = []
             try:
@@ -677,6 +668,8 @@ class ModernMenu(RibbonBar):
             NoMediumButtons = (
                 0  # needed to count the number of medium buttons in a column. (bug fix with adding separators)
             )
+
+            actionList = []
             for i in range(len(allButtons)):
                 button = allButtons[i]
                 try:
@@ -760,12 +753,14 @@ class ModernMenu(RibbonBar):
                             except KeyError:
                                 buttonSize = "small"  # small as default
 
+                            actionList.append(action)
                             # Check if this is an icon only toolbar
                             IconOnly = False
                             for iconToolbar in self.ribbonStructure["iconOnlyToolbars"]:
                                 if iconToolbar == toolbar:
                                     IconOnly = True
 
+                            btn = RibbonToolButton()
                             if buttonSize == "small":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
                                 if IconOnly is True:
@@ -834,23 +829,17 @@ class ModernMenu(RibbonBar):
             if panel.title().endswith("_custom"):
                 panel.setTitle(panel.title().replace("_custom", ""))
 
+            # Setup the panelOptionButton
+            OptionButton = panel.panelOptionButton()
+            OptionButton.setObjectName(panel.title())
+            OptionButton.addActions(actionList)
+            OptionButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+
             # Set the margings. In linux seems the style behavior different than on Windows
             Layout = panel.layout()
             Layout.setContentsMargins(3, 3, 3, 3)
 
         self.isWbLoaded[tabName] = True
-
-        return
-
-    @staticmethod
-    def onPanelOptionButton_clicked(self, panel: RibbonPanel):
-        OptionPanel = QWidget()
-        PanelOptionButton = panel.panelOptionButton()
-        if PanelOptionButton.isChecked() is True:
-            print("panel will be shown")
-            LoadOptionPanel.main()
-        if PanelOptionButton.isChecked() is False:
-            print("panel will be hidden")
 
         return
 
@@ -934,6 +923,19 @@ class ModernMenu(RibbonBar):
             if script.endswith(".py"):
                 App.loadFile(script)
         return
+
+    def OptionPanel(self, ObjectName):
+        Form = QWidget()
+        Form.setObjectName(ObjectName)
+        Form.resize(400, 300)
+
+        # self.retranslateUi(Form)
+
+        # QMetaObject.connectSlotsByName(Form)
+
+        Form.setWindowTitle(QCoreApplication.translate("Form", "Form", None))
+
+        return Form
 
 
 class run:
