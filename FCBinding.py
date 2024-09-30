@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import QIcon, QAction, QPixmap, QScrollEvent, QKeyEvent
+from PySide6.QtGui import QIcon, QAction, QPixmap, QScrollEvent, QKeyEvent, QActionGroup
 from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
@@ -684,13 +684,14 @@ class ModernMenu(RibbonBar):
             maxColumns = Parameters_Ribbon.MAX_COLUMN_PANELS
 
             # Define an action list of the actions that are byond the maximum columns
-            actionList = []
+            ButtonList = []
 
             # Go through the button list:
             for i in range(len(allButtons)):
                 button = allButtons[i]
 
                 # count the number of buttons per type. Needed for proper sorting the buttons later.
+                buttonSize = "small"
                 try:
                     action = button.defaultAction()
                     buttonSize = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][
@@ -703,6 +704,21 @@ class ModernMenu(RibbonBar):
                 except Exception:
                     pass
 
+                # Panel overflow behaviour ----------------------------------------------------------------
+                #
+                # get the number of rows in the panel
+                if buttonSize == "small":
+                    rowCount = rowCount + SmallButtonRows
+                if buttonSize == "medium":
+                    rowCount = rowCount + MediumButtonRows
+                if buttonSize == "large":
+                    rowCount = rowCount + LargeButtonRows
+
+                # If the number of rows devided by 3 is a whole number,
+                # the number of columns is the rowcount devided by 3.
+                columnCount = rowCount / 3
+                # ----------------------------------------------------------------------------------------
+
                 # if the button has not text, remove it, skipp it and increase the counter.
                 if button.text() == "":
                     continue
@@ -710,6 +726,14 @@ class ModernMenu(RibbonBar):
                 elif shadowList.__contains__(button.text()) is True:
                     continue
                 else:
+                    # If the number of columns is more than allowed,
+                    # Add the actions to the OptionPanel instead.
+                    if maxColumns > 0:
+                        if columnCount >= maxColumns:
+                            ButtonList.append(button)
+                            panel.panelOptionButton().show()
+                            continue
+
                     # If the last item is not an separator, you can add an separator
                     # With an paneloptionbutton, use an offset of 2 instead of 1 for i.
                     if button.text() == "separator" and i < len(allButtons):
@@ -773,29 +797,28 @@ class ModernMenu(RibbonBar):
                             except KeyError:
                                 buttonSize = "small"  # small as default
 
-                            # Panel overflow behaviour ----------------------------------------------------------------
-                            #
-                            # get the number of rows in the panel
-                            if buttonSize == "small":
-                                rowCount = rowCount + SmallButtonRows
-                            if buttonSize == "medium":
-                                rowCount = rowCount + MediumButtonRows
-                            if buttonSize == "large":
-                                rowCount = rowCount + LargeButtonRows
+                            # # Panel overflow behaviour ----------------------------------------------------------------
+                            # #
+                            # # get the number of rows in the panel
+                            # if buttonSize == "small":
+                            #     rowCount = rowCount + SmallButtonRows
+                            # if buttonSize == "medium":
+                            #     rowCount = rowCount + MediumButtonRows
+                            # if buttonSize == "large":
+                            #     rowCount = rowCount + LargeButtonRows
 
-                            # If the number of rows devided by 3 is a whole number,
-                            # the number of columns is the rowcount devided by 3.
-                            if float(rowCount / 3).is_integer():
-                                columnCount = rowCount / 3
+                            # # If the number of rows devided by 3 is a whole number,
+                            # # the number of columns is the rowcount devided by 3.
+                            # columnCount = rowCount / 3
 
-                            # If the number of columns is more than allowed,
-                            # Add the actions to the OptionPanel instead.
-                            if maxColumns > 0:
-                                if columnCount > maxColumns:
-                                    actionList.append(action)
-                                    panel.panelOptionButton().show()
-                                    continue
-                            # ----------------------------------------------------------------------------------------
+                            # # If the number of columns is more than allowed,
+                            # # Add the actions to the OptionPanel instead.
+                            # if maxColumns > 0:
+                            #     if columnCount >= maxColumns:
+                            #         actionList.append(action)
+                            #         panel.panelOptionButton().show()
+                            #         continue
+                            # # ----------------------------------------------------------------------------------------
 
                             # Check if this is an icon only toolbar
                             IconOnly = False
@@ -865,7 +888,8 @@ class ModernMenu(RibbonBar):
                             # add the button text to the shadowList for checking if buttons are already there.
                             shadowList.append(button.text())
 
-                        except Exception:
+                        except Exception as e:
+                            print(e)
                             continue
 
             # remove any suffix from the panel title
@@ -873,10 +897,21 @@ class ModernMenu(RibbonBar):
                 panel.setTitle(panel.title().replace("_custom", ""))
 
             # Setup the panelOptionButton
+            actionList = []
+            for button in ButtonList:
+                if len(button.actions()) == 1:
+                    actionList.append(button.actions()[0])
+                if len(button.actions()) > 1:
+                    actionList.append(button.actions())
             OptionButton = panel.panelOptionButton()
             if len(actionList) > 0:
-                # Add the actions and set the popup mode
-                OptionButton.addActions(actionList)
+                for i in range(len(actionList)):
+                    action = actionList[i]
+                    if isinstance(action, QAction):
+                        OptionButton.addAction(action)
+                    if isinstance(action, list):
+                        OptionButton.addActions(action)
+
                 OptionButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
                 OptionButton.setMinimumWidth(panel.width())
                 OptionButton.setArrowType(Qt.ArrowType.DownArrow)
