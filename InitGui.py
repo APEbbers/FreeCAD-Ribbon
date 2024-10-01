@@ -38,5 +38,5 @@ try:
 except Exception as e:
     print(e)
 
-Gui.addLanguagePath(os.path.join(os.path.dirname(__file__), "translations"))
+Gui.addLanguagePath(os.path.join(os.path.dirname(FCBinding.__file__), "translations"))
 Gui.updateLocale()
