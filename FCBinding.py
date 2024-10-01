@@ -910,14 +910,28 @@ class ModernMenu(RibbonBar):
                     if isinstance(action, QAction):
                         OptionButton.addAction(action)
                     if isinstance(action, list):
-                        OptionButton.addActions(action)
+                        # if it is a submenu, it is a list with two items
+                        # The first, is the default action with text
+                        # The second is the action with all the subactions, but without text or icon
 
+                        # Get the first action
+                        action_0 = action[0]
+                        # Get the second action
+                        action_1 = action[1]
+                        # Set the text and icon for the second action with those from the first action
+                        action_1.setText(action_0.text())
+                        action_1.setIcon(action_0.icon())
+                        # Add the second action
+                        OptionButton.addAction(action_1)
+
+                # Set the behavior of the option button
                 OptionButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
-                OptionButton.setMinimumWidth(panel.width())
+                # Set the standard toolbutton arrow instead of pyqt's symbol
                 OptionButton.setArrowType(Qt.ArrowType.DownArrow)
                 OptionButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+                # Remove the image to avoid double arrows
                 OptionButton.setStyleSheet("RibbonPanelOptionButton::menu-indicator {image: none;}")
-                # Replace the panel title for the optionbutton text
+                # Set the optionbutton text
                 OptionButton.setText("more...")
 
             # Set the margings. In linux seems the style behavior different than on Windows
