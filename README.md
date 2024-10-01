@@ -19,9 +19,9 @@ The FreeCAD ribbon provides the following functions and features:
   * Set the button size to small, medium or large
 * You can apply your own stylesheet
 * Scripts are provided to help setup your own customized Ribbon
-* Much more...
+* And much more...
 
-See the [wiki page](https://github.com/APEbbers/FreeCAD-Ribbon/wiki) for more details and how to customize the Ribbon to your preference.
+See the [wiki page](https://github.com/APEbbers/FreeCAD-Ribbon/wiki) for more details and on how to customize the Ribbon to your preference.
 
 ## Installation
 
@@ -41,7 +41,7 @@ Download this repository, extract the folder and copy it to the `Mod` folder of 
 1. Restart FreeCAD.
 1. When you restarted you don't see any toolbar.
 1. Create a new macro (Macro menu -> macros...-> create macro)
-1. Paste this code in to macro.
+1. Paste this code in to the new macro.
 
     ```python
     from PySide import QtCore, QtGui, QtWidgets
