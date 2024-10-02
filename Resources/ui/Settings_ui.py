@@ -8,107 +8,68 @@
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide.QtCore import (
-    QCoreApplication,
-    QDate,
-    QDateTime,
-    QLocale,
-    QMetaObject,
-    QObject,
-    QPoint,
-    QRect,
-    QSize,
-    QTime,
-    QUrl,
-    Qt,
-)
-from PySide.QtGui import (
-    QBrush,
-    QColor,
-    QConicalGradient,
-    QCursor,
-    QFont,
-    QFontDatabase,
-    QGradient,
-    QIcon,
-    QImage,
-    QKeySequence,
-    QLinearGradient,
-    QPainter,
-    QPalette,
-    QPixmap,
-    QRadialGradient,
-    QTransform,
-)
-from PySide.QtWidgets import (
-    QAbstractSpinBox,
-    QApplication,
-    QCheckBox,
-    QFrame,
-    QGridLayout,
-    QGroupBox,
-    QLabel,
-    QPushButton,
-    QSizePolicy,
-    QSpacerItem,
-    QSpinBox,
-    QTabWidget,
-    QVBoxLayout,
-    QWidget,
-)
-
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QFrame,
+    QGridLayout, QGroupBox, QLabel, QPushButton,
+    QSizePolicy, QSpacerItem, QSpinBox, QTabWidget,
+    QVBoxLayout, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
-            Form.setObjectName("Form")
+            Form.setObjectName(u"Form")
         Form.setWindowModality(Qt.WindowModal)
         Form.resize(580, 724)
         Form.setAutoFillBackground(False)
         self.gridLayout_7 = QGridLayout(Form)
-        self.gridLayout_7.setObjectName("gridLayout_7")
+        self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.gridLayout_6 = QGridLayout()
-        self.gridLayout_6.setObjectName("gridLayout_6")
-        self.horizontalSpacer_2 = QSpacerItem(
-            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum
-        )
+        self.gridLayout_6.setObjectName(u"gridLayout_6")
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.gridLayout_6.addItem(self.horizontalSpacer_2, 0, 0, 1, 1)
 
         self.Cancel = QPushButton(Form)
-        self.Cancel.setObjectName("Cancel")
+        self.Cancel.setObjectName(u"Cancel")
 
         self.gridLayout_6.addWidget(self.Cancel, 0, 1, 1, 1)
 
         self.GenerateJsonExit = QPushButton(Form)
-        self.GenerateJsonExit.setObjectName("GenerateJsonExit")
+        self.GenerateJsonExit.setObjectName(u"GenerateJsonExit")
 
         self.gridLayout_6.addWidget(self.GenerateJsonExit, 0, 2, 1, 1)
+
 
         self.gridLayout_7.addLayout(self.gridLayout_6, 1, 0, 1, 1)
 
         self.tabWidget = QTabWidget(Form)
-        self.tabWidget.setObjectName("tabWidget")
+        self.tabWidget.setObjectName(u"tabWidget")
         self.tabWidget.setAutoFillBackground(False)
-        self.tabWidget.setStyleSheet("")
+        self.tabWidget.setStyleSheet(u"")
         self.tabWidget.setElideMode(Qt.ElideRight)
         self.General = QWidget()
-        self.General.setObjectName("General")
+        self.General.setObjectName(u"General")
         self.General.setEnabled(True)
         self.General.setAutoFillBackground(True)
         self.gridLayout_9 = QGridLayout(self.General)
-        self.gridLayout_9.setObjectName("gridLayout_9")
+        self.gridLayout_9.setObjectName(u"gridLayout_9")
         self.groupBox = QGroupBox(self.General)
-        self.groupBox.setObjectName("groupBox")
+        self.groupBox.setObjectName(u"groupBox")
         self.groupBox.setMinimumSize(QSize(0, 120))
         font = QFont()
         font.setBold(True)
         self.groupBox.setFont(font)
         self.gridLayout_8 = QGridLayout(self.groupBox)
-        self.gridLayout_8.setObjectName("gridLayout_8")
+        self.gridLayout_8.setObjectName(u"gridLayout_8")
         self.gridLayout_8.setContentsMargins(6, 6, 6, 6)
         self.EnableBackup = QCheckBox(self.groupBox)
-        self.EnableBackup.setObjectName("EnableBackup")
+        self.EnableBackup.setObjectName(u"EnableBackup")
         font1 = QFont()
         font1.setBold(False)
         self.EnableBackup.setFont(font1)
@@ -116,56 +77,52 @@ class Ui_Form(object):
         self.gridLayout_8.addWidget(self.EnableBackup, 0, 0, 1, 1)
 
         self.groupBox_Backup = QGroupBox(self.groupBox)
-        self.groupBox_Backup.setObjectName("groupBox_Backup")
+        self.groupBox_Backup.setObjectName(u"groupBox_Backup")
         self.groupBox_Backup.setEnabled(False)
         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(
-            self.groupBox_Backup.sizePolicy().hasHeightForWidth()
-        )
+        sizePolicy.setHeightForWidth(self.groupBox_Backup.sizePolicy().hasHeightForWidth())
         self.groupBox_Backup.setSizePolicy(sizePolicy)
         self.groupBox_Backup.setMinimumSize(QSize(0, 50))
         self.groupBox_Backup.setFont(font1)
         self.gridLayout_13 = QGridLayout(self.groupBox_Backup)
-        self.gridLayout_13.setObjectName("gridLayout_13")
+        self.gridLayout_13.setObjectName(u"gridLayout_13")
         self.label_4 = QLabel(self.groupBox_Backup)
-        self.label_4.setObjectName("label_4")
+        self.label_4.setObjectName(u"label_4")
         self.label_4.setFrameShape(QFrame.Box)
         self.label_4.setScaledContents(True)
-        self.label_4.setAlignment(Qt.AlignLeading | Qt.AlignLeft | Qt.AlignVCenter)
+        self.label_4.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
 
         self.gridLayout_13.addWidget(self.label_4, 0, 0, 1, 1)
 
         self.BackUpLocation = QPushButton(self.groupBox_Backup)
-        self.BackUpLocation.setObjectName("BackUpLocation")
+        self.BackUpLocation.setObjectName(u"BackUpLocation")
         sizePolicy1 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy1.setHorizontalStretch(20)
         sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(
-            self.BackUpLocation.sizePolicy().hasHeightForWidth()
-        )
+        sizePolicy1.setHeightForWidth(self.BackUpLocation.sizePolicy().hasHeightForWidth())
         self.BackUpLocation.setSizePolicy(sizePolicy1)
         self.BackUpLocation.setMinimumSize(QSize(20, 0))
 
         self.gridLayout_13.addWidget(self.BackUpLocation, 0, 1, 1, 1)
 
+
         self.gridLayout_8.addWidget(self.groupBox_Backup, 1, 0, 1, 1)
+
 
         self.gridLayout_9.addWidget(self.groupBox, 0, 0, 2, 1)
 
-        self.verticalSpacer_7 = QSpacerItem(
-            20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding
-        )
+        self.verticalSpacer_7 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.gridLayout_9.addItem(self.verticalSpacer_7, 3, 0, 1, 1)
 
         self.groupBox1 = QGroupBox(self.General)
-        self.groupBox1.setObjectName("groupBox1")
+        self.groupBox1.setObjectName(u"groupBox1")
         self.groupBox1.setMinimumSize(QSize(0, 300))
         self.groupBox1.setFont(font)
         self.gridLayout_4 = QGridLayout(self.groupBox1)
-        self.gridLayout_4.setObjectName("gridLayout_4")
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.gridLayout_3 = QGridLayout()
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.groupBox_3 = QGroupBox(self.groupBox1)
@@ -331,27 +288,27 @@ class Ui_Form(object):
         self.groupBox_2.setMinimumSize(QSize(0, 60))
         self.groupBox_2.setFont(font1)
         self.gridLayout_12 = QGridLayout(self.groupBox_2)
-        self.gridLayout_12.setObjectName("gridLayout_12")
+        self.gridLayout_12.setObjectName(u"gridLayout_12")
         self.gridLayout_12.setContentsMargins(-1, 9, -1, -1)
         self.label_7 = QLabel(self.groupBox_2)
-        self.label_7.setObjectName("label_7")
+        self.label_7.setObjectName(u"label_7")
         self.label_7.setFrameShape(QFrame.Box)
         self.label_7.setScaledContents(True)
-        self.label_7.setAlignment(Qt.AlignLeading | Qt.AlignLeft | Qt.AlignVCenter)
+        self.label_7.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
 
         self.gridLayout_12.addWidget(self.label_7, 0, 0, 1, 1)
 
         self.StyleSheetLocation = QPushButton(self.groupBox_2)
-        self.StyleSheetLocation.setObjectName("StyleSheetLocation")
-        sizePolicy1.setHeightForWidth(
-            self.StyleSheetLocation.sizePolicy().hasHeightForWidth()
-        )
+        self.StyleSheetLocation.setObjectName(u"StyleSheetLocation")
+        sizePolicy1.setHeightForWidth(self.StyleSheetLocation.sizePolicy().hasHeightForWidth())
         self.StyleSheetLocation.setSizePolicy(sizePolicy1)
         self.StyleSheetLocation.setMinimumSize(QSize(20, 0))
 
         self.gridLayout_12.addWidget(self.StyleSheetLocation, 0, 1, 1, 1)
 
+
         self.gridLayout_4.addWidget(self.groupBox_2, 1, 0, 1, 1)
+
 
         self.gridLayout_9.addWidget(self.groupBox1, 2, 0, 1, 1)
 
@@ -359,23 +316,24 @@ class Ui_Form(object):
 
         self.gridLayout_7.addWidget(self.tabWidget, 0, 0, 1, 1)
 
+
         self.retranslateUi(Form)
         self.EnableBackup.toggled.connect(self.groupBox_Backup.setEnabled)
 
         self.tabWidget.setCurrentIndex(0)
 
-        QMetaObject.connectSlotsByName(Form)
 
+        QMetaObject.connectSlotsByName(Form)
     # setupUi
 
     def retranslateUi(self, Form):
-        Form.setWindowTitle(QCoreApplication.translate("Form", "Form", None))
-        self.Cancel.setText(QCoreApplication.translate("Form", "Cancel", None))
-        # if QT_CONFIG(shortcut)
-        self.Cancel.setShortcut(QCoreApplication.translate("Form", "Esc", None))
-        # endif // QT_CONFIG(shortcut)
-        self.GenerateJsonExit.setText(QCoreApplication.translate("Form", "Close", None))
-        # if QT_CONFIG(shortcut)
+        Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
+        self.Cancel.setText(QCoreApplication.translate("Form", u"Cancel", None))
+#if QT_CONFIG(shortcut)
+        self.Cancel.setShortcut(QCoreApplication.translate("Form", u"Esc", None))
+#endif // QT_CONFIG(shortcut)
+        self.GenerateJsonExit.setText(QCoreApplication.translate("Form", u"Close", None))
+#if QT_CONFIG(shortcut)
         self.GenerateJsonExit.setShortcut("")
         # endif // QT_CONFIG(shortcut)
         self.groupBox.setTitle(
@@ -437,3 +395,4 @@ class Ui_Form(object):
         )
 
     # retranslateUi
+
