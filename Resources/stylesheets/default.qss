@@ -72,4 +72,3 @@ RibbonPanelOptionButton {
 	RibbonPanelOptionButton:hover{
 		border-radius: 2px;
 	}
-
