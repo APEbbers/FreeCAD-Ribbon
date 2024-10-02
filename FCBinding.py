@@ -60,7 +60,6 @@ import Standard_Functions_RIbbon as StandardFunctions
 import platform
 import subprocess
 import xml.etree.ElementTree as ET
-import xml.etree.ElementTree as ET
 
 # import modules for keypress detection based on OS
 if platform.system() == "Windows" or platform.system() == "Darwin":
