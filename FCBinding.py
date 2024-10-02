@@ -25,8 +25,6 @@ from pathlib import Path
 
 from PySide.QtGui import QIcon, QAction, QPixmap, QScrollEvent, QKeyEvent, QActionGroup
 from PySide.QtWidgets import (
-from PySide6.QtGui import QIcon, QAction, QPixmap, QScrollEvent, QKeyEvent, QActionGroup
-from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -95,8 +93,6 @@ except ImportError:
     from pyqtribbon_local.separator import RibbonSeparator
 
     print(translate("FreeCAD Ribbon", "pyqtribbon used local"))
-
-from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -813,29 +809,6 @@ class ModernMenu(RibbonBar):
                                 ][action.data()]["size"]
                             except KeyError:
                                 buttonSize = "small"  # small as default
-
-                            # # Panel overflow behaviour ----------------------------------------------------------------
-                            # #
-                            # # get the number of rows in the panel
-                            # if buttonSize == "small":
-                            #     rowCount = rowCount + SmallButtonRows
-                            # if buttonSize == "medium":
-                            #     rowCount = rowCount + MediumButtonRows
-                            # if buttonSize == "large":
-                            #     rowCount = rowCount + LargeButtonRows
-
-                            # # If the number of rows devided by 3 is a whole number,
-                            # # the number of columns is the rowcount devided by 3.
-                            # columnCount = rowCount / 3
-
-                            # # If the number of columns is more than allowed,
-                            # # Add the actions to the OptionPanel instead.
-                            # if maxColumns > 0:
-                            #     if columnCount >= maxColumns:
-                            #         actionList.append(action)
-                            #         panel.panelOptionButton().show()
-                            #         continue
-                            # # ----------------------------------------------------------------------------------------
 
                             # Check if this is an icon only toolbar
                             IconOnly = False
