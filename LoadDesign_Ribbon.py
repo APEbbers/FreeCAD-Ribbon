@@ -1254,14 +1254,14 @@ class LoadDialog(Design_ui.Ui_Form):
                                 "toolbars"
                             ][Toolbar]["order"][j]
                             .lower()
-                            .startswith("separator")
+                            .__contains__("separator")
                         ):
                             ToolbarCommands.insert(j + index, "separator")
                             index = index + 1
 
         # Go through the list of toolbar commands
         for ToolbarCommand in ToolbarCommands:
-            if ToolbarCommand.startswith("separator"):
+            if ToolbarCommand.__contains__("separator"):
                 # Create the row in the table
                 # add a row to the table widget
                 self.form.tableWidget.insertRow(self.form.tableWidget.rowCount())
@@ -1275,7 +1275,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 RowNumber = self.form.tableWidget.rowCount() - 1
                 # update the data
                 TableWidgetItem.setData(
-                    Qt.ItemDataRole.UserRole, f"separator_{WorkBenchName}_{RowNumber}"
+                    Qt.ItemDataRole.UserRole, f"{RowNumber}_separator_{WorkBenchName}"
                 )
 
                 # Add the first cell with the table widget
@@ -1314,7 +1314,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     Toolbar
                 ]["order"] = Order
 
-            if not ToolbarCommand.startswith("separator"):
+            if not ToolbarCommand.__contains__("separator"):
                 # Get the command
                 Command = Gui.Command.get(ToolbarCommand)
                 if Command is None:
@@ -1497,10 +1497,8 @@ class LoadDialog(Design_ui.Ui_Form):
         RowNumber = self.form.tableWidget.rowCount()
         if len(self.form.tableWidget.selectedItems()) > 0:
             RowNumber = self.form.tableWidget.currentRow()
-        # update the data
-        TableWidgetItem.setData(
-            Qt.ItemDataRole.UserRole, f"separator_{WorkBenchName}_{RowNumber}"
-        )
+        # # update the data
+        # TableWidgetItem.setData(Qt.ItemDataRole.UserRole, f"{RowNumber}_separator_{WorkBenchName}")
         self.form.tableWidget.insertRow(RowNumber)
 
         # Add the first cell with the table widget
@@ -1528,6 +1526,14 @@ class LoadDialog(Design_ui.Ui_Form):
         for item in self.List_Workbenches:
             if item[2] == WorkbenchTitle:
                 WorkBenchName = item[0]
+
+        # Set the data for all current separators
+        for i in range(self.form.tableWidget.rowCount()):
+            TableWidgetItem = QTableWidgetItem(self.form.tableWidget.item(i, 0))
+            if TableWidgetItem.text().__contains__("separator"):
+                TableWidgetItem.setData(
+                    Qt.ItemDataRole.UserRole, f"{RowNumber}_separator_{WorkBenchName}"
+                )
 
         # Define the order based on the order in this table widget
         Order = []

@@ -733,7 +733,7 @@ class ModernMenu(RibbonBar):
                                     "toolbars"
                                 ][toolbar]["order"][j]
                                 .lower()
-                                .startswith("separator")
+                                .__contains__("separator")
                             ):
                                 separator = QToolButton()
                                 separator.setText("separator")
