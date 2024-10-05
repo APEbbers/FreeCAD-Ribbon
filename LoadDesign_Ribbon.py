@@ -156,16 +156,6 @@ class LoadDialog(Design_ui.Ui_Form):
                 if IsInList is False:
                     self.StringList_Toolbars.append([Toolbar, WorkBench[2]])
 
-                JsonPath = os.path.dirname(__file__)
-                JsonFile = os.path.join(JsonPath, "StringList_Toolbars.json")
-
-                resultingDict = {}
-                resultingDict.update(self.StringList_Toolbars)
-
-                # Writing to sample.json
-                with open(JsonFile, "w") as outfile:
-                    json.dump(resultingDict, outfile, indent=4)
-
             time.sleep(1)
 
         CustomToolbars = self.List_ReturnCustomToolbars()
