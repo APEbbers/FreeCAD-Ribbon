@@ -1210,22 +1210,6 @@ class LoadDialog(Design_ui.Ui_Form):
             if key == Toolbar:
                 ToolbarCommands = Commands[key]
 
-        # Sort the Toolbarcommands according the sorted list
-        def SortCommands(item):
-            try:
-                Command = Gui.Command.get(item)
-                MenuName = Command.getInfo()["menuText"].replace("&", "")
-                OrderList: list = self.Dict_RibbonCommandPanel["workbenches"][
-                    WorkBenchName
-                ]["toolbars"][Toolbar]["order"]
-                position = OrderList.index(MenuName)
-            except Exception:
-                position = 999999
-
-            return position
-
-        ToolbarCommands.sort(key=SortCommands)
-
         # add separators to the command list.
         index = 0
         if WorkBenchName in self.Dict_RibbonCommandPanel["workbenches"]:
@@ -1256,8 +1240,37 @@ class LoadDialog(Design_ui.Ui_Form):
                             .lower()
                             .__contains__("separator")
                         ):
-                            ToolbarCommands.insert(j + index, "separator")
+                            ToolbarCommands.insert(
+                                j + index,
+                                self.Dict_RibbonCommandPanel["workbenches"][
+                                    WorkBenchName
+                                ]["toolbars"][Toolbar]["order"][j],
+                            )
                             index = index + 1
+
+        # Sort the Toolbarcommands according the sorted list
+        def SortCommands(item):
+            try:
+                try:
+                    Command = Gui.Command.get(item)
+                    MenuName = (
+                        Command.getInfo()["menuText"]
+                        .replace("&", "")
+                        .replace("...", "")
+                    )
+                    item = MenuName
+                except Exception:
+                    pass
+                OrderList: list = self.Dict_RibbonCommandPanel["workbenches"][
+                    WorkBenchName
+                ]["toolbars"][Toolbar]["order"]
+                position = OrderList.index(item)
+            except Exception:
+                position = 999999
+
+            return position
+
+        ToolbarCommands.sort(key=SortCommands)
 
         # Go through the list of toolbar commands
         for ToolbarCommand in ToolbarCommands:
@@ -1389,7 +1402,9 @@ class LoadDialog(Design_ui.Ui_Form):
                     TableWidgetItem.setText(MenuName + textAddition)
                     TableWidgetItem.setData(
                         Qt.ItemDataRole.UserRole,
-                        Command.getInfo()["menuText"].replace("&", ""),
+                        Command.getInfo()["menuText"]
+                        .replace("&", "")
+                        .replace("...", ""),
                     )
                     TableWidgetItem.setFlags(
                         TableWidgetItem.flags() | Qt.ItemFlag.ItemIsEditable
@@ -1498,7 +1513,9 @@ class LoadDialog(Design_ui.Ui_Form):
         if len(self.form.tableWidget.selectedItems()) > 0:
             RowNumber = self.form.tableWidget.currentRow()
         # # update the data
-        # TableWidgetItem.setData(Qt.ItemDataRole.UserRole, f"{RowNumber}_separator_{WorkBenchName}")
+        TableWidgetItem.setData(
+            Qt.ItemDataRole.UserRole, f"{RowNumber}_separator_{WorkBenchName}"
+        )
         self.form.tableWidget.insertRow(RowNumber)
 
         # Add the first cell with the table widget
@@ -1526,14 +1543,6 @@ class LoadDialog(Design_ui.Ui_Form):
         for item in self.List_Workbenches:
             if item[2] == WorkbenchTitle:
                 WorkBenchName = item[0]
-
-        # Set the data for all current separators
-        for i in range(self.form.tableWidget.rowCount()):
-            TableWidgetItem = QTableWidgetItem(self.form.tableWidget.item(i, 0))
-            if TableWidgetItem.text().__contains__("separator"):
-                TableWidgetItem.setData(
-                    Qt.ItemDataRole.UserRole, f"{RowNumber}_separator_{WorkBenchName}"
-                )
 
         # Define the order based on the order in this table widget
         Order = []
