@@ -23,7 +23,14 @@
         "Std_Copy",
         "Std_Paste"
     ],
-    "ignoredWorkbenches": [],
+    "ignoredWorkbenches": [
+        "Inspection",
+        "Material",
+        "OpenSCAD",
+        "Points",
+        "Reverse Engineering",
+        "Test Framework"
+    ],
     "customToolbars": {
         "TechDrawWorkbench": {
             "TechDraw Dimensions_custom": {

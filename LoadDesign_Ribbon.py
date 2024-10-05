@@ -37,7 +37,6 @@ from PySide.QtWidgets import (
 from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread
 import sys
 import json
-import shelve
 from datetime import datetime
 import shutil
 import Standard_Functions_RIbbon as StandardFunctions
@@ -117,7 +116,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # region - create the lists ------------------------------------------------------------------
         #
-        # Create a list of all workbenches with their icon -------------------------------------------
+        # Create a list of all workbenches with their icon
         self.List_Workbenches.clear()
         List_Workbenches = Gui.listWorkbenches().copy()
         for WorkBenchName in List_Workbenches:
@@ -129,7 +128,6 @@ class LoadDialog(Design_ui.Ui_Form):
                         Icon = Gui.getIcon(IconName)
                     WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
                     self.List_Workbenches.append([str(WorkBenchName), Icon, WorkbenchTitle])
-        # --------------------------------------------------------------------------------------------
 
         # Create a list of all toolbars
         self.StringList_Toolbars.clear()
@@ -158,11 +156,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
             time.sleep(1)
 
-            # Create a list of all commands
-            CustomToolbars = self.List_ReturnCustomToolbars()
-            for Customtoolbar in CustomToolbars:
-                self.StringList_Toolbars.append(Customtoolbar)
-        # --------------------------------------------------------------------------------------------
+        CustomToolbars = self.List_ReturnCustomToolbars()
+        for Customtoolbar in CustomToolbars:
+            self.StringList_Toolbars.append(Customtoolbar)
         # re-activate the workbench that was stored.
         Gui.activateWorkbench(ActiveWB)
 
@@ -170,30 +166,20 @@ class LoadDialog(Design_ui.Ui_Form):
         self.List_Commands.clear()
         # Create a list of command names
         CommandNames = []
-        FilesPresent = False
         for i in range(len(self.List_Workbenches)):
             WorkBench = Gui.getWorkbench(self.List_Workbenches[i][0])
-            ToolbarItems = None
-            # If there is a file with data, use it, otherwise create it
-            if FilesPresent is True:
-                JsonFile = open(os.path.join(os.path.dirname(__file__), "List_Commands.json"))
-                data = json.load(JsonFile)
-                try:
-                    ToolbarItems = data[WorkBench]
-                except Exception:
-                    pass
-            if ToolbarItems is None:
-                ToolbarItems = WorkBench.getToolbarItems()
+            ToolbarItems = WorkBench.getToolbarItems()
 
-                for key, value in ToolbarItems.items():
-                    for j in range(len(value)):
-                        Item = [value[j], self.List_Workbenches[i][0]]
-                        IsInList = False
-                        for k in range(len(CommandNames)):
-                            if CommandNames[k][0] == value[j]:
-                                IsInList = True
-                        if IsInList is False:
-                            CommandNames.append(Item)
+            for key, value in ToolbarItems.items():
+                for j in range(len(value)):
+                    Item = [value[j], self.List_Workbenches[i][0]]
+                    # if CommandNames.__contains__(Item) is False:
+                    IsInList = False
+                    for k in range(len(CommandNames)):
+                        if CommandNames[k][0] == value[j]:
+                            IsInList = True
+                    if IsInList is False:
+                        CommandNames.append(Item)
 
         # Go through the list
         for CommandName in CommandNames:
@@ -208,7 +194,6 @@ class LoadDialog(Design_ui.Ui_Form):
                     Icon = None
                 MenuName = command.getInfo()["menuText"].replace("&", "")
                 self.List_Commands.append([CommandName[0], Icon, MenuName, WorkBenchName])
-
         # add also custom commands
         Toolbars = self.List_ReturnCustomToolbars()
         for Toolbar in Toolbars:
@@ -225,9 +210,8 @@ class LoadDialog(Design_ui.Ui_Form):
                         MenuName = command.getInfo()["menuText"].replace("&", "")
                         self.List_Commands.append([CustomCommand, Icon, MenuName, WorkBenchName])
 
-        # --------------------------------------------------------------------------------------------
         #
-        # endregion ----------------------------------------------------------------------------------
+        # endregion ----------------------------------------------------------------------
 
         # Read the jason file and fill the lists
         self.ReadJson()
