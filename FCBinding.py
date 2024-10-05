@@ -790,7 +790,7 @@ class ModernMenu(RibbonBar):
                     rowCount = rowCount + SmallButtonRows
                 if buttonSize == "medium":
                     rowCount = rowCount + MediumButtonRows
-                if buttonSize == "large":
+                if buttonSize == "large" or button.text().__contains__("separator"):
                     rowCount = rowCount + LargeButtonRows
 
                 # If the number of rows devided by 3 is a whole number,
@@ -808,7 +808,7 @@ class ModernMenu(RibbonBar):
                     # If the number of columns is more than allowed,
                     # Add the actions to the OptionPanel instead.
                     if maxColumns > 0:
-                        if columnCount >= maxColumns:
+                        if columnCount > maxColumns + 1:
                             ButtonList.append(button)
                             panel.panelOptionButton().show()
                             continue
@@ -968,7 +968,8 @@ class ModernMenu(RibbonBar):
 
             # Setup the panelOptionButton
             actionList = []
-            for button in ButtonList:
+            for i in range(len(ButtonList)):
+                button = ButtonList[i]
                 if len(button.actions()) == 1:
                     actionList.append(button.actions()[0])
                 if len(button.actions()) > 1:
@@ -993,6 +994,8 @@ class ModernMenu(RibbonBar):
                         action_1.setIcon(action_0.icon())
                         # Add the second action
                         OptionButton.addAction(action_1)
+                if len(actionList) == 0:
+                    panel.panelOptionButton().hide()
 
                 # Set the behavior of the option button
                 OptionButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)

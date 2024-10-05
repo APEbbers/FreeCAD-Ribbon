@@ -146,7 +146,7 @@ CustomJson_Workbenches = {
                         "Check Geometry",
                         "Create a sub-object(s) shape binder",
                         "Create a clone",
-                        "Validate sketch...",
+                        "Validate sketch",
                     ],
                     "commands": {
                         "PartDesign_CompSketches": {
@@ -190,20 +190,20 @@ CustomJson_Workbenches = {
                     "order": [
                         "Pad",
                         "Revolution",
-                        "Additive helix",
-                        "Additive loft",
-                        "Additive pipe",
-                        "Create an additive primitive",
-                        "separator_PartDesignWorkbench_6",
+                        "2_separator_PartDesignWorkbench",
                         "Pocket",
                         "Hole",
                         "Groove",
+                        "Additive helix",
+                        "Additive loft",
+                        "Additive pipe",
+                        "8_separator_PartDesignWorkbench",
                         "Subtractive loft",
                         "Subtractive pipe",
                         "Subtractive helix",
-                        "Create a subtractive primitive",
-                        "separator_PartDesignWorkbench_15",
                         "Boolean operation",
+                        "Create an additive primitive",
+                        "Create a subtractive primitive",
                     ],
                     "commands": {
                         "PartDesign_Pad": {
@@ -217,7 +217,7 @@ CustomJson_Workbenches = {
                             "icon": "PartDesign_Revolution",
                         },
                         "PartDesign_AdditiveLoft": {
-                            "size": "small",
+                            "size": "large",
                             "text": "Additive loft",
                             "icon": "PartDesign_AdditiveLoft",
                         },
@@ -227,7 +227,7 @@ CustomJson_Workbenches = {
                             "icon": "PartDesign_AdditivePipe",
                         },
                         "PartDesign_AdditiveHelix": {
-                            "size": "small",
+                            "size": "large",
                             "text": "Additive helix",
                             "icon": "PartDesign_AdditiveHelix",
                         },
@@ -333,18 +333,7 @@ CustomJson_Workbenches = {
                     "Part Design Modeling",
                     "Part Design Dressup",
                     "Part Design Patterns",
-                    "Create BOM_custom",
                 ],
-                "Create BOM_custom": {
-                    "order": ["Create overall BoM"],
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "large",
-                            "text": "Create overall BoM",
-                            "icon": "BoM.svg",
-                        }
-                    },
-                },
                 "Structure": {
                     "order": [
                         "Create part",
@@ -631,7 +620,7 @@ CustomJson_Workbenches = {
                 "2D modification tools": {
                     "order": [
                         "Offset",
-                        "2D Offset...",
+                        "2D Offset",
                         "Trimex",
                         "Join",
                         "Split",
@@ -670,7 +659,7 @@ CustomJson_Workbenches = {
                         "Point array",
                         "Cut with plane",
                         "Mirror",
-                        "Extrude...",
+                        "Extrude",
                         "Difference",
                         "Union",
                         "Intersection",
@@ -685,19 +674,19 @@ CustomJson_Workbenches = {
                 },
                 "Manage tools": {
                     "order": [
-                        "BIM Setup...",
+                        "BIM Setup",
                         "Views manager",
-                        "Manage project...",
-                        "Manage doors and windows...",
-                        "Manage IFC elements...",
-                        "Manage IFC quantities...",
-                        "Manage IFC properties...",
-                        "Manage classification...",
-                        "Manage layers...",
+                        "Manage project",
+                        "Manage doors and windows",
+                        "Manage IFC elements",
+                        "Manage IFC quantities",
+                        "Manage IFC properties",
+                        "Manage classification",
+                        "Manage layers",
                         "Material",
                         "Schedule",
-                        "Preflight checks...",
-                        "Annotation styles...",
+                        "Preflight checks",
+                        "Annotation styles",
                     ],
                     "commands": {
                         "BIM_Setup": {
@@ -784,16 +773,6 @@ CustomJson_Workbenches = {
                             "text": "Create a variable set",
                             "icon": "VarSet",
                         },
-                    },
-                },
-                "BoM Toolbar - BIMWorkbench": {
-                    "order": ["Create overall BoM"],
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "large",
-                            "text": "Create overall BoM",
-                            "icon": "BoM.svg",
-                        }
                     },
                 },
             }
@@ -1486,8 +1465,8 @@ CustomJson_Workbenches = {
                         "Cone",
                         "Torus",
                         "Create tube",
-                        "Create primitives...",
-                        "Shape builder...",
+                        "Create primitives",
+                        "Shape builder",
                     ],
                     "commands": {
                         "Part_Box": {
@@ -1535,23 +1514,24 @@ CustomJson_Workbenches = {
                 "Part tools": {
                     "order": [
                         "Create sketch",
-                        "Extrude...",
-                        "Revolve...",
-                        "Mirroring...",
-                        "Scale...",
-                        "Fillet...",
-                        "Chamfer...",
-                        "separator_PartWorkbench_7",
+                        "Extrude",
+                        "Revolve",
+                        "Mirroring",
+                        "Scale",
+                        "Fillet",
+                        "Chamfer",
+                        "7_separator_PartWorkbench",
                         "Make face from wires",
                         "Create ruled surface",
-                        "Loft...",
-                        "Sweep...",
-                        "separator_PartWorkbench_12",
-                        "Section",
-                        "Cross-sections...",
+                        "Loft",
+                        "Sweep",
+                        "Thickness",
                         "Offset:",
-                        "Thickness...",
-                        "Create projection on surface...",
+                        "14_separator_PartWorkbench",
+                        "Section",
+                        "Cross-sections",
+                        "17_separator_PartWorkbench",
+                        "Create projection on surface",
                         "Color per face",
                     ],
                     "commands": {
@@ -1645,12 +1625,12 @@ CustomJson_Workbenches = {
                 "Boolean": {
                     "order": [
                         "Compound tools",
-                        "Boolean...",
+                        "Boolean",
                         "Cut",
                         "Union",
                         "Intersection",
-                        "Join objects...",
-                        "Split objects...",
+                        "Join objects",
+                        "Split objects",
                         "Check Geometry",
                         "Defeaturing",
                     ],
@@ -1708,7 +1688,6 @@ CustomJson_Workbenches = {
                     "Solids",
                     "Part tools",
                     "Boolean",
-                    "Create BOM_custom",
                 ],
                 "Individual views": {
                     "order": [
@@ -1758,16 +1737,6 @@ CustomJson_Workbenches = {
                         },
                     },
                 },
-                "Create BOM_custom": {
-                    "order": ["Create overall BoM"],
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "large",
-                            "text": "Create overall BoM",
-                            "icon": "BoM.svg",
-                        }
-                    },
-                },
             }
         },
         "SketcherWorkbench": {
@@ -1776,9 +1745,9 @@ CustomJson_Workbenches = {
                     "order": [
                         "Create sketch",
                         "Edit sketch",
-                        "Attach sketch...",
-                        "Reorient sketch...",
-                        "Validate sketch...",
+                        "Attach sketch",
+                        "Reorient sketch",
+                        "Validate sketch",
                         "Merge sketches",
                         "Mirror sketch",
                     ],
@@ -2257,20 +2226,21 @@ CustomJson_Workbenches = {
                         "Create spreadsheet",
                         "Import spreadsheet",
                         "Export spreadsheet",
-                        "separator_SpreadsheetWorkbench_3",
+                        "3_separator_SpreadsheetWorkbench",
                         "Merge cells",
                         "Split cell",
-                        "separator_SpreadsheetWorkbench_6",
+                        "6_separator_SpreadsheetWorkbench",
                         "Align left",
                         "Align center",
                         "Align right",
                         "Align top",
                         "Vertically center-align",
                         "Align bottom",
-                        "separator_SpreadsheetWorkbench_13",
+                        "13_separator_SpreadsheetWorkbench",
                         "Bold text",
                         "Italic text",
                         "Underline text",
+                        "17_separator_SpreadsheetWorkbench",
                         "Set alias",
                     ],
                     "commands": {
@@ -2397,6 +2367,36 @@ CustomJson_Workbenches = {
                             "size": "small",
                             "text": "Left",
                             "icon": "view-left",
+                        },
+                    },
+                },
+                "Structure": {
+                    "order": [
+                        "Create part",
+                        "Create group",
+                        "Link actions",
+                        "Create a variable set",
+                    ],
+                    "commands": {
+                        "Std_Part": {
+                            "size": "small",
+                            "text": "Create part",
+                            "icon": "Geofeaturegroup",
+                        },
+                        "Std_Group": {
+                            "size": "small",
+                            "text": "Create group",
+                            "icon": "folder",
+                        },
+                        "Std_LinkActions": {
+                            "size": "small",
+                            "text": "Link actions",
+                            "icon": "",
+                        },
+                        "Std_VarSet": {
+                            "size": "small",
+                            "text": "Create a variable set",
+                            "icon": "VarSet",
                         },
                     },
                 },
@@ -2706,7 +2706,6 @@ CustomJson_Workbenches = {
                     "TechDraw Decoration",
                     "TechDraw Annotation",
                     "TitleBlock Toolbar",
-                    "Create BOM_custom",
                 ],
                 "Individual views": {
                     "order": [
@@ -2754,16 +2753,6 @@ CustomJson_Workbenches = {
                             "text": "Left",
                             "icon": "view-left",
                         },
-                    },
-                },
-                "Create BOM_custom": {
-                    "order": ["Create overall BoM"],
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "large",
-                            "text": "Create overall BoM",
-                            "icon": "BoM.svg",
-                        }
                     },
                 },
                 "TechDraw Dimensions_custom": {
@@ -2918,9 +2907,11 @@ def CreateJson():
                             for i3 in range(len(value)):
                                 CommandOrder = Gui.Command.get(value[i3])
                                 if CommandOrder is not None:
-                                    MenuNameOrder = CommandOrder.getInfo()[
-                                        "menuText"
-                                    ].replace("&", "")
+                                    MenuNameOrder = (
+                                        CommandOrder.getInfo()["menuText"]
+                                        .replace("&", "")
+                                        .replace("...", "")
+                                    )
                                     Order.append(MenuNameOrder)
 
                             # Set the first command to large
@@ -3017,7 +3008,6 @@ def CreateLists():
         for key, value in ToolbarItems.items():
             for j in range(len(value)):
                 Item = [value[j], List_Workbenches[i][0]]
-                # if CommandNames.__contains__(Item) is False:
                 IsInList = False
                 for k in range(len(CommandNames)):
                     if CommandNames[k][0] == value[j]:
