@@ -260,8 +260,21 @@
                     "Part Design Helper",
                     "Part Design Modeling",
                     "Part Design Dressup",
-                    "Part Design Patterns"
+                    "Part Design Patterns",
+                    "Create BOM_custom"
                 ],
+                "Create BOM_custom": {
+                    "order": [
+                        "Create overall BoM"
+                    ],
+                    "commands": {
+                        "CreateBOM_Overall": {
+                            "size": "large",
+                            "text": "Create overall BoM",
+                            "icon": "BoM.svg"
+                        }
+                    }
+                },
                 "Structure": {
                     "order": [
                         "Create part",
@@ -1470,7 +1483,6 @@
                         "Sweep",
                         "Thickness",
                         "Offset:",
-                        "14_separator_PartWorkbench",
                         "Section",
                         "Cross-sections",
                         "17_separator_PartWorkbench",
@@ -1630,7 +1642,8 @@
                     "Structure",
                     "Solids",
                     "Part tools",
-                    "Boolean"
+                    "Boolean",
+                    "Create BOM_custom"
                 ],
                 "Individual views": {
                     "order": [
@@ -1677,6 +1690,18 @@
                             "size": "small",
                             "text": "Left",
                             "icon": "view-left"
+                        }
+                    }
+                },
+                "Create BOM_custom": {
+                    "order": [
+                        "Create overall BoM"
+                    ],
+                    "commands": {
+                        "CreateBOM_Overall": {
+                            "size": "large",
+                            "text": "Create overall BoM",
+                            "icon": "BoM.svg"
                         }
                     }
                 }
