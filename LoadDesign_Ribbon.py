@@ -137,34 +137,26 @@ class LoadDialog(Design_ui.Ui_Form):
         ActiveWB = Gui.activeWorkbench().name()
         # Go through the list of workbenches
         i = 0
-        # If there is a file with data, use it, otherwise create it
-        if os.path.isfile(os.path.join(os.path.dirname(__file__), "List_Commands.json")) and os.path.isfile(
-            os.path.join(os.path.dirname(__file__), "StringList_Toolbars.json")
-        ):
-            JsonFile = open(os.path.join(os.path.dirname(__file__), "StringList_Toolbars.json"))
-            data = json.load(JsonFile)
-            self.StringList_Toolbars = data
-        else:
-            for WorkBench in self.List_Workbenches:
-                wbToolbars = []
-                try:
-                    wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
-                except Exception:
-                    Gui.activateWorkbench(WorkBench[0])
-                    wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
-                # Go through the toolbars
-                for Toolbar in wbToolbars:
-                    # Go through the list of toolbars. If already present, skip it.
-                    # Otherwise add it the the list.
-                    IsInList = False
-                    for i in range(len(self.StringList_Toolbars)):
-                        if Toolbar == self.StringList_Toolbars[i][0]:
-                            IsInList = True
+        for WorkBench in self.List_Workbenches:
+            wbToolbars = []
+            try:
+                wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
+            except Exception:
+                Gui.activateWorkbench(WorkBench[0])
+                wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
+            # Go through the toolbars
+            for Toolbar in wbToolbars:
+                # Go through the list of toolbars. If already present, skip it.
+                # Otherwise add it the the list.
+                IsInList = False
+                for i in range(len(self.StringList_Toolbars)):
+                    if Toolbar == self.StringList_Toolbars[i][0]:
+                        IsInList = True
 
-                    if IsInList is False:
-                        self.StringList_Toolbars.append([Toolbar, WorkBench[2]])
+                if IsInList is False:
+                    self.StringList_Toolbars.append([Toolbar, WorkBench[2]])
 
-                time.sleep(1)
+            time.sleep(1)
 
             # Create a list of all commands
             CustomToolbars = self.List_ReturnCustomToolbars()
@@ -179,10 +171,6 @@ class LoadDialog(Design_ui.Ui_Form):
         # Create a list of command names
         CommandNames = []
         FilesPresent = False
-        if os.path.isfile(os.path.join(os.path.dirname(__file__), "List_Commands.json")) and os.path.isfile(
-            os.path.join(os.path.dirname(__file__), "StringList_Toolbars.json")
-        ):
-            FilesPresent = True
         for i in range(len(self.List_Workbenches)):
             WorkBench = Gui.getWorkbench(self.List_Workbenches[i][0])
             ToolbarItems = None
@@ -207,18 +195,6 @@ class LoadDialog(Design_ui.Ui_Form):
                         if IsInList is False:
                             CommandNames.append(Item)
 
-                # Write the toolbars to a json file
-                JSonPath = os.path.dirname(__file__)
-                JsonFile = os.path.join(JSonPath, "List_Commands.json")
-
-                resultingDict = {}
-                resultingDict[self.List_Workbenches[i][0]] = ToolbarItems
-
-                # Writing to sample.json
-                with open(JsonFile, "w") as outfile:
-                    json.dump(resultingDict, outfile, indent=4)
-                outfile.close()
-
         # Go through the list
         for CommandName in CommandNames:
             # get the command with this name
@@ -232,6 +208,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     Icon = None
                 MenuName = command.getInfo()["menuText"].replace("&", "")
                 self.List_Commands.append([CommandName[0], Icon, MenuName, WorkBenchName])
+
         # add also custom commands
         Toolbars = self.List_ReturnCustomToolbars()
         for Toolbar in Toolbars:
