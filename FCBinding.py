@@ -351,6 +351,15 @@ class ModernMenu(RibbonBar):
         WorkbenchOrderedList: list = (
             App.ParamGet(WorkbenchOrderParam).GetString("Ordered").split(",")
         )
+        # Check if there are workbenches that are not in the orderlist
+        IsInList = False
+        for InstalledWB in Gui.listWorkbenches():
+            for i in range(len(WorkbenchOrderedList)):
+                if WorkbenchOrderedList[i] == InstalledWB:
+                    IsInList = True
+            if IsInList is False:
+                WorkbenchOrderedList.append(InstalledWB)
+            IsInList = False
         # There is an issue with the internal assembly wb showing the wrong panel
         # when assembly4 wb is installed and positioned for the internal assemmbly wb
         for i in range(len(WorkbenchOrderedList)):
@@ -375,22 +384,20 @@ class ModernMenu(RibbonBar):
         for i in range(len(WorkbenchOrderedList)):
             for workbenchName, workbench in Gui.listWorkbenches().items():
                 if workbenchName == WorkbenchOrderedList[i]:
-                    if (
-                        workbenchName == ""
-                        or workbench.MenuText
-                        in self.ribbonStructure["ignoredWorkbenches"]
-                    ):
-                        continue
-
                     name = workbench.MenuText
-                    self.wbNameMapping[name] = workbenchName
-                    self.isWbLoaded[name] = False
+                    if (
+                        name != ""
+                        and name not in self.ribbonStructure["ignoredWorkbenches"]
+                        and name != "<none>"
+                    ):
+                        self.wbNameMapping[name] = workbenchName
+                        self.isWbLoaded[name] = False
 
-                    self.addCategory(name)
-                    # set tab icon
-                    self.tabBar().setTabIcon(
-                        len(self.categories()) - 1, QIcon(workbench.Icon)
-                    )
+                        self.addCategory(name)
+                        # set tab icon
+                        self.tabBar().setTabIcon(
+                            len(self.categories()) - 1, QIcon(workbench.Icon)
+                        )
 
         # Set the font size of the ribbon tab titles
         self.tabBar().font().setPointSizeF(10)
