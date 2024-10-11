@@ -738,7 +738,6 @@ class ModernMenu(RibbonBar):
                         Text = button.text().replace("...", "")
                         if Text == "":
                             return -1
-                        print(Text)
 
                         position = None
                         try:
