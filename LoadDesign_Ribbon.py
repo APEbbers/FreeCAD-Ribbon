@@ -1720,7 +1720,6 @@ class LoadDialog(Design_ui.Ui_Form):
 
         if len(BackupFiles) > 0:
             SelectedFile = StandardFunctions.Mbox(
-                translate("FreeCAD Ribbon", "FreeCAD Ribbon"),
                 translate("FreeCAD Ribbon", "Select a backup file"),
                 "",
                 21,
