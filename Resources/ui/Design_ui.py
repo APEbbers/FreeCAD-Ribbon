@@ -949,7 +949,7 @@ class Ui_Form(object):
         self.label_11.setText(
             QCoreApplication.translate(
                 "Form",
-                "<html><head/><body><p>Select panels to add to the custom panell.</p></body></html>",
+                "<html><head/><body><p>Select panels to add to the custom panel.</p></body></html>",
                 None,
             )
         )
