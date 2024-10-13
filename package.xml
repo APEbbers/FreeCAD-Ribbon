@@ -11,7 +11,7 @@
 
   <maintainer>Paul Ebbers</maintainer>
 
-  <license file="LICENSE">GPL-3.0 license</license>
+  <license file="LICENSE">GPL-3.0-or-later</license>
 
   <pythonmin>3.8.0</pythonmin>
 
