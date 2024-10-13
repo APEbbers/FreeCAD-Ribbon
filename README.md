@@ -3,7 +3,7 @@
 An Ribbon UI for FreeCAD, based on the PyQtRibbon library (https://github.com/haiiliin/pyqtribbon).
 This ribbon is based the work of Geolta (https://github.com/geolta/FreeCAD-Ribbon) and HakanSeven (https://github.com/HakanSeven12/Modern-UI) for the Modern-UI workbench.
 
-![](https://github.com/APEbbers/FreeCAD-Ribbon/blob/main/Resources/Images/Screenshot.png)
+![FreeCAD Ribbon UI](https://github.com/APEbbers/FreeCAD-Ribbon/blob/main/Resources/Images/Screenshot.png)
 
 The FreeCAD ribbon provides the following functions and features:
 
@@ -25,11 +25,13 @@ See the [wiki page](https://github.com/APEbbers/FreeCAD-Ribbon/wiki) for more de
 
 ## Installation
 
-There are two options for installing this addon:
+There are three options for installing this addon:
+### Via the Addon manager
+Go to 'Tools/Addon-Manager' and search for 'FreeCAD-Ribbon'). Click on 'Install'.
 
 ### Custom Repository for Addon Manager
 
-Go to `Edit/Preferences/Addon-Manager` and add the custom repository `https://github.com/APEbbers/FreeCAD-Ribbon.git` with the branch `main`. Now you can go to the Addon Manager (`Tools/Addon-Manager`) and install "FreeCAD Ribbon" (maybe you have to update your local cache first). Now restart FreeCAD and you will see a ribbon interface :)
+Go to `Edit/Preferences/Addon-Manager` and add the custom repository `https://github.com/APEbbers/FreeCAD-Ribbon.git` with the branch `main`. Now you can go to the Addon Manager (`Tools/Addon-Manager`) and install "FreeCAD Ribbon" (it can be that you have to update your local cache first). Now restart FreeCAD and you will see a ribbon interface :)
 
 ### Manual Installation
 
