@@ -62,7 +62,7 @@ Download this repository, extract the folder and copy it to the `Mod` folder of 
 
 ## Discussion
 
-Feel free to discuss this addon on the [FreeCAD Forum](https://forum.freecad.org/viewtopic.php?t=79235).
+Feel free to discuss this addon on the [FreeCAD Forum](https://forum.freecad.org/viewtopic.php?t=91353).
 
 ## Known Issues
 
