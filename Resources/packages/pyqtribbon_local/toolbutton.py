@@ -1,10 +1,14 @@
-from qtpy import QtCore, QtWidgets
+from PySide.QtWidgets import QToolButton
+from PySide.QtCore import (
+    Qt,
+    QSize,
+)
 
 from .constants import RibbonButtonStyle
 from .menu import RibbonMenu
 
 
-class RibbonToolButton(QtWidgets.QToolButton):
+class RibbonToolButton(QToolButton):
     """Tool button that is showed in the ribbon."""
 
     _buttonStyle: RibbonButtonStyle
@@ -25,7 +29,7 @@ class RibbonToolButton(QtWidgets.QToolButton):
         # Styles
         self.setButtonStyle(RibbonButtonStyle.Large)
         self.setAutoRaise(True)
-        self.setFocusPolicy(QtCore.Qt.FocusPolicy.NoFocus)
+        self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
     def setMaximumIconSize(self, size: int):
         """Set the maximum icon size of the button.
@@ -51,8 +55,8 @@ class RibbonToolButton(QtWidgets.QToolButton):
         if style == RibbonButtonStyle.Small:
             height = self._smallButtonIconSize
             height = min(height, self._maximumIconSize)
-            self.setIconSize(QtCore.QSize(height, height))
-            self.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+            self.setIconSize(QSize(height, height))
+            self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
             self.setStyleSheet(
                 """
                 RibbonToolButton::menu-indicator {
@@ -65,8 +69,8 @@ class RibbonToolButton(QtWidgets.QToolButton):
         elif style == RibbonButtonStyle.Medium:
             height = self._mediumButtonIconSize
             height = min(height, self._maximumIconSize)
-            self.setIconSize(QtCore.QSize(height, height))
-            self.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+            self.setIconSize(QSize(height, height))
+            self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
             self.setStyleSheet(
                 """
                 RibbonToolButton::menu-indicator {
@@ -79,8 +83,8 @@ class RibbonToolButton(QtWidgets.QToolButton):
         elif style == RibbonButtonStyle.Large:
             height = self._largeButtonIconSize
             height = min(height, self._maximumIconSize)
-            self.setIconSize(QtCore.QSize(height, height))
-            self.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
+            self.setIconSize(QSize(height, height))
+            self.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
             self.setStyleSheet(
                 """
                 RibbonToolButton[popupMode="0"]::menu-indicator {

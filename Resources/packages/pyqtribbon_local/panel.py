@@ -5,7 +5,42 @@ import re
 from typing import Any, Callable, Dict, List, Union, overload
 
 import numpy as np
-from qtpy import QtCore, QtGui, QtWidgets
+
+from PySide.QtGui import QIcon, QKeySequence
+from PySide.QtWidgets import (
+    QToolButton,
+    QSizePolicy,
+    QWidget,
+    QHBoxLayout,
+    QFrame,
+    QListWidget,
+    QVBoxLayout,
+    QLabel,
+    QLayout,
+    QGridLayout,
+    QCheckBox,
+    QComboBox,
+    QFontComboBox,
+    QLineEdit,
+    QTextEdit,
+    QPlainTextEdit,
+    QProgressBar,
+    QSlider,
+    QSpinBox,
+    QDoubleSpinBox,
+    QDateTimeEdit,
+    QDateEdit,
+    QTimeEdit,
+    QTableWidget,
+    QTreeWidget,
+    QCalendarWidget,
+)
+from PySide.QtCore import (
+    Qt,
+    QSize,
+    Signal,
+    QKeyCombination,
+)
 
 from .constants import (
     ColumnWise,
@@ -21,7 +56,7 @@ from .toolbutton import RibbonToolButton
 from .utils import DataFile
 
 
-class RibbonPanelTitle(QtWidgets.QLabel):
+class RibbonPanelTitle(QLabel):
     """Widget to display the title of a panel."""
 
     pass
@@ -82,7 +117,7 @@ class RibbonGridLayoutManager(object):
         return 0, cols
 
 
-class RibbonPanelItemWidget(QtWidgets.QFrame):
+class RibbonPanelItemWidget(QFrame):
     """Widget to display a panel item."""
 
     def __init__(self, parent=None):
@@ -91,12 +126,12 @@ class RibbonPanelItemWidget(QtWidgets.QFrame):
         :param parent: The parent widget.
         """
         super().__init__(parent)
-        self.setLayout(QtWidgets.QVBoxLayout())
+        self.setLayout(QVBoxLayout())
         self.layout().setContentsMargins(0, 0, 0, 0)
         self.layout().setSpacing(0)
-        self.layout().setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.layout().setSizeConstraint(QtWidgets.QLayout.SizeConstraint.SetMaximumSize)
-        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)  # type: ignore
+        self.layout().setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.layout().setSizeConstraint(QLayout.SizeConstraint.SetMaximumSize)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)  # type: ignore
 
     def addWidget(self, widget):
         """Add a widget to the panel item.
@@ -106,13 +141,13 @@ class RibbonPanelItemWidget(QtWidgets.QFrame):
         self.layout().addWidget(widget)
 
 
-class RibbonPanelOptionButton(QtWidgets.QToolButton):
+class RibbonPanelOptionButton(QToolButton):
     """Button to display the options of a panel."""
 
     pass
 
 
-class RibbonPanel(QtWidgets.QFrame):
+class RibbonPanel(QFrame):
     """Panel in the ribbon category."""
 
     #: maximal number of rows
@@ -129,13 +164,13 @@ class RibbonPanel(QtWidgets.QFrame):
     _showPanelOptionButton: bool
 
     #: widgets that are added to the panel
-    _widgets: List[QtWidgets.QWidget] = []
+    _widgets: List[QWidget] = []
 
     # height of the title widget
     _titleHeight: int = 15
 
     # Panel options signal
-    panelOptionClicked = QtCore.Signal(bool)
+    panelOptionClicked = Signal(bool)
 
     @overload
     def __init__(
@@ -155,7 +190,7 @@ class RibbonPanel(QtWidgets.QFrame):
         :param showPanelOptionButton: Whether to show the panel option button.
         :param parent: The parent widget.
         """
-        if (args and not isinstance(args[0], QtWidgets.QWidget)) or (
+        if (args and not isinstance(args[0], QWidget)) or (
             "title" in kwargs or "maxRows" in kwargs
         ):
             title = args[0] if len(args) > 0 else kwargs.get("title", "")
@@ -179,35 +214,33 @@ class RibbonPanel(QtWidgets.QFrame):
         self._showPanelOptionButton = showPanelOptionButton
 
         # Main layout
-        self._mainLayout = QtWidgets.QVBoxLayout(self)
+        self._mainLayout = QVBoxLayout(self)
         self._mainLayout.setContentsMargins(0, 0, 0, 0)
         self._mainLayout.setSpacing(0)
 
         # Actions layout
-        self._actionsLayout = QtWidgets.QGridLayout()
+        self._actionsLayout = QGridLayout()
         self._actionsLayout.setContentsMargins(5, 5, 5, 5)
         self._actionsLayout.setSpacing(0)
         self._mainLayout.addLayout(self._actionsLayout, 1)
 
         # Title layout
-        self._titleWidget = QtWidgets.QWidget()
+        self._titleWidget = QWidget()
         self._titleWidget.setFixedHeight(self._titleHeight)
-        self._titleLayout = QtWidgets.QHBoxLayout(self._titleWidget)
+        self._titleLayout = QHBoxLayout(self._titleWidget)
         self._titleLayout.setContentsMargins(0, 0, 0, 0)
         self._titleLayout.setSpacing(0)
         self._titleLabel = RibbonPanelTitle()  # type: ignore
         self._titleLabel.setText(title)
-        self._titleLabel.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
+        self._titleLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._titleLayout.addWidget(self._titleLabel, 1)
 
         # Panel option button
         if showPanelOptionButton:
             self._panelOption = RibbonPanelOptionButton()  # type: ignore
             self._panelOption.setAutoRaise(True)
-            self._panelOption.setIcon(QtGui.QIcon(DataFile("icons/linking.png")))
-            self._panelOption.setIconSize(
-                QtCore.QSize(self._titleHeight, self._titleHeight)
-            )
+            self._panelOption.setIcon(QIcon(DataFile("icons/linking.png")))
+            self._panelOption.setIconSize(QSize(self._titleHeight, self._titleHeight))
             self._panelOption.setToolTip("Panel options")
             self._panelOption.clicked.connect(self.panelOptionClicked)  # type: ignore
             self._titleLayout.addWidget(self._panelOption, 0)
@@ -345,7 +378,7 @@ class RibbonPanel(QtWidgets.QFrame):
         """
         self._titleHeight = height
         self._titleWidget.setFixedHeight(height)
-        self._panelOption.setIconSize(QtCore.QSize(height, height))
+        self._panelOption.setIconSize(QSize(height, height))
 
     def titleHeight(self) -> int:
         """Get the height of the title widget.
@@ -354,7 +387,7 @@ class RibbonPanel(QtWidgets.QFrame):
         """
         return self._titleHeight
 
-    def addWidgetsBy(self, data: Dict[str, Dict]) -> Dict[str, QtWidgets.QWidget]:
+    def addWidgetsBy(self, data: Dict[str, Dict]) -> Dict[str, QWidget]:
         """Add widgets to the panel.
 
         :param data: The data to add. The dict is of the form:
@@ -379,7 +412,7 @@ class RibbonPanel(QtWidgets.QFrame):
             VerticalSeparator, Gallery.
         :return: A dictionary of the added widgets.
         """
-        widgets = {}  # type: Dict[str, QtWidgets.QWidget]
+        widgets = {}  # type: Dict[str, QWidget]
         for key, widget_data in data.items():
             type = widget_data.pop("type", "").capitalize()
             method = getattr(self, f"add{type}", None)  # type: Callable
@@ -393,14 +426,14 @@ class RibbonPanel(QtWidgets.QFrame):
 
     def addWidget(
         self,
-        widget: QtWidgets.QWidget,
+        widget: QWidget,
         *,
         rowSpan: Union[int, RibbonButtonStyle] = Small,
         colSpan: int = 1,
         mode: RibbonSpaceFindMode = ColumnWise,
-        alignment: QtCore.Qt.AlignmentFlag = QtCore.Qt.AlignmentFlag.AlignCenter,
+        alignment: Qt.AlignmentFlag = Qt.AlignmentFlag.AlignCenter,
         fixedHeight: Union[bool, float] = False,
-    ) -> QtWidgets.QWidget | Any:
+    ) -> QWidget | Any:
         """Add a widget to the panel.
 
         :param widget: The widget to add.
@@ -442,11 +475,11 @@ class RibbonPanel(QtWidgets.QFrame):
     addMediumWidget = functools.partialmethod(addWidget, rowSpan=Medium)
     addLargeWidget = functools.partialmethod(addWidget, rowSpan=Large)
 
-    def removeWidget(self, widget: QtWidgets.QWidget):
+    def removeWidget(self, widget: QWidget):
         """Remove a widget from the panel."""
         self._actionsLayout.removeWidget(widget)
 
-    def widget(self, index: int) -> QtWidgets.QWidget:
+    def widget(self, index: int) -> QWidget:
         """Get the widget at the given index.
 
         :param index: The index of the widget, starting from 0.
@@ -454,7 +487,7 @@ class RibbonPanel(QtWidgets.QFrame):
         """
         return self._widgets[index]
 
-    def widgets(self) -> List[QtWidgets.QWidget]:
+    def widgets(self) -> List[QWidget]:
         """Get all the widgets in the panel.
 
         :return: A list of all the widgets in the panel.
@@ -464,14 +497,14 @@ class RibbonPanel(QtWidgets.QFrame):
     def addButton(
         self,
         text: str = None,
-        icon: QtGui.QIcon = None,
+        icon: QIcon = None,
         showText: bool = True,
         slot: Callable = None,
         shortcut: (
-            QtCore.Qt.Key
-            | QtGui.QKeySequence
-            | QtCore.QKeyCombination
-            | QtGui.QKeySequence.StandardKey
+            Qt.Key
+            | QKeySequence
+            | QKeyCombination
+            | QKeySequence.StandardKey
             | str
             | int
         ) = None,
@@ -523,7 +556,7 @@ class RibbonPanel(QtWidgets.QFrame):
             maximumIconSize = max(maximumHeight - fontSize * 2 - arrowSize, 48)
             button.setMaximumIconSize(int(maximumIconSize))
         if not showText:
-            button.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly)
+            button.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
         button.setCheckable(checkable)
         kwargs["rowSpan"] = (
             self.defaultRowSpan(Small)
@@ -553,10 +586,10 @@ class RibbonPanel(QtWidgets.QFrame):
         rowSpan: Union[int, RibbonButtonStyle] = Small,
         colSpan: int = 1,
         mode: RibbonSpaceFindMode = ColumnWise,
-        alignment: QtCore.Qt.AlignmentFlag = QtCore.Qt.AlignmentFlag.AlignCenter,
+        alignment: Qt.AlignmentFlag = Qt.AlignmentFlag.AlignCenter,
         fixedHeight: Union[bool, float] = False,
         **kwargs,
-    ) -> QtWidgets.QWidget:
+    ) -> QWidget:
         """Add any widget to the panel.
 
         :param cls: The class of the widget to add.
@@ -612,48 +645,40 @@ class RibbonPanel(QtWidgets.QFrame):
         return functools.partial(base_method, rowSpan=rowSpan)
 
     addCheckBox = functools.partialmethod(
-        _addAnyWidget, cls=QtWidgets.QCheckBox, initializer=QtWidgets.QCheckBox.setText
+        _addAnyWidget, cls=QCheckBox, initializer=QCheckBox.setText
     )
     addComboBox = functools.partialmethod(
-        _addAnyWidget, cls=QtWidgets.QComboBox, initializer=QtWidgets.QComboBox.addItems
+        _addAnyWidget, cls=QComboBox, initializer=QComboBox.addItems
     )
-    addFontComboBox = functools.partialmethod(
-        _addAnyWidget, cls=QtWidgets.QFontComboBox
-    )
-    addLineEdit = functools.partialmethod(_addAnyWidget, cls=QtWidgets.QLineEdit)
-    addTextEdit = functools.partialmethod(_addAnyWidget, cls=QtWidgets.QTextEdit)
-    addPlainTextEdit = functools.partialmethod(
-        _addAnyWidget, cls=QtWidgets.QPlainTextEdit
-    )
+    addFontComboBox = functools.partialmethod(_addAnyWidget, cls=QFontComboBox)
+    addLineEdit = functools.partialmethod(_addAnyWidget, cls=QLineEdit)
+    addTextEdit = functools.partialmethod(_addAnyWidget, cls=QTextEdit)
+    addPlainTextEdit = functools.partialmethod(_addAnyWidget, cls=QPlainTextEdit)
     addLabel = functools.partialmethod(
-        _addAnyWidget, cls=QtWidgets.QLabel, initializer=QtWidgets.QLabel.setText
+        _addAnyWidget, cls=QLabel, initializer=QLabel.setText
     )
-    addProgressBar = functools.partialmethod(_addAnyWidget, cls=QtWidgets.QProgressBar)
-    addSlider = functools.partialmethod(_addAnyWidget, cls=QtWidgets.QSlider)
-    addSpinBox = functools.partialmethod(_addAnyWidget, cls=QtWidgets.QSpinBox)
-    addDoubleSpinBox = functools.partialmethod(
-        _addAnyWidget, cls=QtWidgets.QDoubleSpinBox
-    )
-    addDateEdit = functools.partialmethod(_addAnyWidget, cls=QtWidgets.QDateEdit)
-    addTimeEdit = functools.partialmethod(_addAnyWidget, cls=QtWidgets.QTimeEdit)
-    addDateTimeEdit = functools.partialmethod(
-        _addAnyWidget, cls=QtWidgets.QDateTimeEdit
-    )
+    addProgressBar = functools.partialmethod(_addAnyWidget, cls=QProgressBar)
+    addSlider = functools.partialmethod(_addAnyWidget, cls=QSlider)
+    addSpinBox = functools.partialmethod(_addAnyWidget, cls=QSpinBox)
+    addDoubleSpinBox = functools.partialmethod(_addAnyWidget, cls=QDoubleSpinBox)
+    addDateEdit = functools.partialmethod(_addAnyWidget, cls=QDateEdit)
+    addTimeEdit = functools.partialmethod(_addAnyWidget, cls=QTimeEdit)
+    addDateTimeEdit = functools.partialmethod(_addAnyWidget, cls=QDateTimeEdit)
     addTableWidget = functools.partialmethod(
-        _addAnyWidget, cls=QtWidgets.QTableWidget, rowSpan=Large
+        _addAnyWidget, cls=QTableWidget, rowSpan=Large
     )
     addTreeWidget = functools.partialmethod(
-        _addAnyWidget, cls=QtWidgets.QTreeWidget, rowSpan=Large
+        _addAnyWidget, cls=QTreeWidget, rowSpan=Large
     )
     addListWidget = functools.partialmethod(
-        _addAnyWidget, cls=QtWidgets.QListWidget, rowSpan=Large
+        _addAnyWidget, cls=QListWidget, rowSpan=Large
     )
     addCalendarWidget = functools.partialmethod(
-        _addAnyWidget, cls=QtWidgets.QCalendarWidget, rowSpan=Large
+        _addAnyWidget, cls=QCalendarWidget, rowSpan=Large
     )
 
     def addSeparator(
-        self, orientation=QtCore.Qt.Orientation.Vertical, width=6, **kwargs
+        self, orientation=Qt.Orientation.Vertical, width=6, **kwargs
     ) -> RibbonSeparator:
         """Add a separator to the panel.
 
@@ -667,10 +692,10 @@ class RibbonPanel(QtWidgets.QFrame):
         return self.addWidget(RibbonSeparator(orientation, width), **kwargs)
 
     addHorizontalSeparator = functools.partialmethod(
-        addSeparator, orientation=QtCore.Qt.Orientation.Horizontal
+        addSeparator, orientation=Qt.Orientation.Horizontal
     )
     addVerticalSeparator = functools.partialmethod(
-        addSeparator, orientation=QtCore.Qt.Orientation.Vertical
+        addSeparator, orientation=Qt.Orientation.Vertical
     )
 
     def addGallery(

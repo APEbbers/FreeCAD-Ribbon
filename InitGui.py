@@ -23,19 +23,6 @@ import os
 import FreeCAD as App
 import FreeCADGui as Gui
 import FCBinding
-import Standard_Functions_RIbbon as StandardFunctions
-
-qtpy_present = True
-pyqtribbon_present = True
-
-try:
-    import qtpy
-except ImportError:
-    qtpy_present = False
-try:
-    import pyqtribbon
-except ImportError:
-    pyqtribbon_present = False
 
 
 def QT_TRANSLATE_NOOP(context, text):
@@ -44,34 +31,12 @@ def QT_TRANSLATE_NOOP(context, text):
 
 translate = App.Qt.translate
 
-if qtpy_present is True:
-    try:
-        print(translate("FreeCAD Ribbon", "Activating Ribbon Bar..."))
-        mw = Gui.getMainWindow()
-        mw.workbenchActivated.connect(FCBinding.run)
-    except Exception as e:
-        print(e)
+try:
+    print(translate("FreeCAD Ribbon", "Activating Ribbon Bar..."))
+    mw = Gui.getMainWindow()
+    mw.workbenchActivated.connect(FCBinding.run)
+except Exception as e:
+    print(e)
 
-    Gui.addLanguagePath(os.path.join(os.path.dirname(FCBinding.__file__), "translations"))
-    Gui.updateLocale()
-if qtpy_present is False:
-    message = translate(
-        "FreeCAD Ribbon",
-        "the qtpy package is missing. please , excecute the following steps:\n"
-        + "1. Start 'FreeCADCmd.exe'.\n"
-        + "2. type 'import pip' and press enter.\n"
-        + "3. type pip.main(['install'] + ['qtpy']) and press enter\n"
-        + "after that, qtpy should be installed. Now restart FreeCAD.",
-    )
-    StandardFunctions.Mbox(message, "FreeCAD-Ribbon", 0, "Warning")
-if pyqtribbon_present is False:
-    message = translate(
-        "FreeCAD Ribbon",
-        "The package 'pyqtribbon' is missing, a local version is used instead.\n"
-        + "If you want or need to install the missing package, excecute the following steps:\n"
-        + "1. Start 'FreeCADCmd.exe'.\n"
-        + "2. type 'import pip' and press enter.\n"
-        + "3. type pip.main(['install'] + ['qtpy']) and press enter\n"
-        + "after that, qtpy should be installed. Now restart FreeCAD.",
-    )
-    print(message)
+Gui.addLanguagePath(os.path.join(os.path.dirname(FCBinding.__file__), "translations"))
+Gui.updateLocale()

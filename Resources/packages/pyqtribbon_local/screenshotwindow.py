@@ -1,7 +1,11 @@
-from qtpy import QtCore, QtWidgets
+from PySide.QtWidgets import (
+    QMainWindow,
+    QApplication,
+)
+from PySide.QtCore import Qt, QTimer
 
 
-class RibbonScreenShotWindow(QtWidgets.QMainWindow):
+class RibbonScreenShotWindow(QMainWindow):
     """This class is just for taking a screenshot of the window, the window will be closed 0.1s after it is shown."""
 
     _fileName = "shot.jpg"
@@ -12,9 +16,9 @@ class RibbonScreenShotWindow(QtWidgets.QMainWindow):
         :param fileName: The file name for the screenshot.
         """
         super().__init__(*args, **kwargs)
-        QtCore.QTimer().singleShot(3000, self.takeScreenShot)
+        QTimer().singleShot(3000, self.takeScreenShot)
         self.setScreenShotFileName(fileName)
-        self.setWindowFlags(QtCore.Qt.WindowType.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
 
     def setScreenShotFileName(self, fileName: str):
         """Set the file name for the screenshot.
@@ -25,7 +29,7 @@ class RibbonScreenShotWindow(QtWidgets.QMainWindow):
 
     def takeScreenShot(self):
         """Take a screenshot of the window."""
-        screen = QtWidgets.QApplication.primaryScreen()
+        screen = QApplication.primaryScreen()
         screenshot = screen.grabWindow(self.winId())
         screenshot.save(self._fileName)
         self.close()

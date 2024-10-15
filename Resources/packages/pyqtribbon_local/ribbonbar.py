@@ -1,6 +1,23 @@
 import typing
 
-from qtpy import QtCore, QtGui, QtWidgets
+from PySide.QtGui import QIcon, QColor
+from PySide.QtWidgets import (
+    QToolButton,
+    QVBoxLayout,
+    QWidget,
+    QLayout,
+    QStackedWidget,
+    QGraphicsDropShadowEffect,
+    QMenuBar,
+    QToolBar,
+)
+from PySide.QtCore import (
+    Qt,
+    QSize,
+    Signal,
+    QEvent,
+    QObject,
+)
 
 from .category import (
     RibbonCategory,
@@ -15,7 +32,7 @@ from .titlewidget import RibbonApplicationButton, RibbonTitleWidget
 from .utils import DataFile
 
 
-class RibbonStackedWidget(QtWidgets.QStackedWidget):
+class RibbonStackedWidget(QStackedWidget):
     """Stacked widget that is used to display the ribbon."""
 
     def __init__(self, parent=None):
@@ -24,16 +41,16 @@ class RibbonStackedWidget(QtWidgets.QStackedWidget):
         :param parent: The parent widget.
         """
         super().__init__(parent)
-        effect = QtWidgets.QGraphicsDropShadowEffect()
+        effect = QGraphicsDropShadowEffect()
         effect.setOffset(2, 2)
         self.setGraphicsEffect(effect)
 
 
-class RibbonBar(QtWidgets.QMenuBar):
+class RibbonBar(QMenuBar):
     """The RibbonBar class is the top level widget that contains the ribbon."""
 
     #: Signal, the help button was clicked.
-    helpButtonClicked = QtCore.Signal(bool)
+    helpButtonClicked = Signal(bool)
 
     #: hide the ribbon bar automatically when the mouse press outside the ribbon bar
     _autoHideRibbon = False
@@ -69,7 +86,7 @@ class RibbonBar(QtWidgets.QMenuBar):
         :param maxRows: The maximum number of rows.
         :param parent: The parent widget of the ribbon.
         """
-        if (args and not isinstance(args[0], QtWidgets.QWidget)) or (
+        if (args and not isinstance(args[0], QWidget)) or (
             "title" in kwargs or "maxRows" in kwargs
         ):
             title = (
@@ -90,14 +107,12 @@ class RibbonBar(QtWidgets.QMenuBar):
         self._stackedWidget = RibbonStackedWidget(self)
 
         # Main layout
-        self._mainLayout = QtWidgets.QVBoxLayout(self)
+        self._mainLayout = QVBoxLayout(self)
         self._mainLayout.setContentsMargins(0, 0, 0, 0)
         self._mainLayout.setSpacing(0)
         self._mainLayout.addWidget(self._titleWidget, 0)
         self._mainLayout.addWidget(self._stackedWidget, 1)
-        self._mainLayout.setSizeConstraint(
-            QtWidgets.QLayout.SizeConstraint.SetMinAndMaxSize
-        )
+        self._mainLayout.setSizeConstraint(QLayout.SizeConstraint.SetMinAndMaxSize)
 
         # Connect signals
         self._titleWidget.helpButtonClicked.connect(self.helpButtonClicked)
@@ -121,8 +136,8 @@ class RibbonBar(QtWidgets.QMenuBar):
         """
         self._autoHideRibbon = autoHide
 
-    def eventFilter(self, a0: QtCore.QObject, a1: QtCore.QEvent) -> bool:
-        if self._autoHideRibbon and a1.type() == QtCore.QEvent.Type.HoverMove:
+    def eventFilter(self, a0: QObject, a1: QEvent) -> bool:
+        if self._autoHideRibbon and a1.type() == QEvent.Type.HoverMove:
             self.setRibbonVisible(self.underMouse())
         return super().eventFilter(a0, a1)
 
@@ -220,28 +235,28 @@ class RibbonBar(QtWidgets.QMenuBar):
         """Return the application button."""
         return self._titleWidget.applicationButton()
 
-    def setApplicationIcon(self, icon: QtGui.QIcon):
+    def setApplicationIcon(self, icon: QIcon):
         """Set the application icon.
 
         :param icon: The icon to set.
         """
         self._titleWidget.applicationButton().setIcon(icon)
 
-    def addTitleWidget(self, widget: QtWidgets.QWidget):
+    def addTitleWidget(self, widget: QWidget):
         """Add a widget to the title widget.
 
         :param widget: The widget to add.
         """
         self._titleWidget.addTitleWidget(widget)
 
-    def removeTitleWidget(self, widget: QtWidgets.QWidget):
+    def removeTitleWidget(self, widget: QWidget):
         """Remove a widget from the title widget.
 
         :param widget: The widget to remove.
         """
         self._titleWidget.removeTitleWidget(widget)
 
-    def insertTitleWidget(self, index: int, widget: QtWidgets.QWidget):
+    def insertTitleWidget(self, index: int, widget: QWidget):
         """Insert a widget to the title widget.
 
         :param index: The index to insert the widget.
@@ -275,14 +290,14 @@ class RibbonBar(QtWidgets.QMenuBar):
         """
         return self._titleWidget.tabBar()
 
-    def quickAccessToolBar(self) -> QtWidgets.QToolBar:
+    def quickAccessToolBar(self) -> QToolBar:
         """Return the quick access toolbar of the ribbon.
 
         :return: The quick access toolbar of the ribbon.
         """
         return self._titleWidget.quickAccessToolBar()
 
-    def addQuickAccessButton(self, button: QtWidgets.QToolButton):
+    def addQuickAccessButton(self, button: QToolButton):
         """Add a button to the quick access bar.
 
         :param button: The button to add.
@@ -318,14 +333,14 @@ class RibbonBar(QtWidgets.QMenuBar):
         """
         self._titleWidget.setTitleWidgetHeight(height)
 
-    def rightToolBar(self) -> QtWidgets.QToolBar:
+    def rightToolBar(self) -> QToolBar:
         """Return the right toolbar of the ribbon.
 
         :return: The right toolbar of the ribbon.
         """
         return self._titleWidget.rightToolBar()
 
-    def addRightToolButton(self, button: QtWidgets.QToolButton):
+    def addRightToolButton(self, button: QToolButton):
         """Add a widget to the right button bar.
 
         :param button: The button to add.
@@ -340,14 +355,14 @@ class RibbonBar(QtWidgets.QMenuBar):
         """
         self._titleWidget.setRightToolBarHeight(height)
 
-    def helpRibbonButton(self) -> QtWidgets.QToolButton:
+    def helpRibbonButton(self) -> QToolButton:
         """Return the help button of the ribbon.
 
         :return: The help button of the ribbon.
         """
         return self._titleWidget.helpRibbonButton()
 
-    def setHelpButtonIcon(self, icon: QtGui.QIcon):
+    def setHelpButtonIcon(self, icon: QIcon):
         """Set the icon of the help button.
 
         :param icon: The icon to set.
@@ -358,14 +373,14 @@ class RibbonBar(QtWidgets.QMenuBar):
         """Remove the help button from the ribbon."""
         self._titleWidget.removeHelpButton()
 
-    def collapseRibbonButton(self) -> QtWidgets.QToolButton:
+    def collapseRibbonButton(self) -> QToolButton:
         """Return the collapse ribbon button.
 
         :return: The collapse ribbon button.
         """
         return self._titleWidget.collapseRibbonButton()
 
-    def setCollapseButtonIcon(self, icon: QtGui.QIcon):
+    def setCollapseButtonIcon(self, icon: QIcon):
         """Set the icon of the min button.
 
         :param icon: The icon to set.
@@ -407,7 +422,7 @@ class RibbonBar(QtWidgets.QMenuBar):
                 {
                     "category-title": {
                         "style": RibbonCategoryStyle.Normal,
-                        "color": QtCore.Qt.red,
+                        "color": Qt.red,
                         "panels": {
                             "panel-title": {
                                 "showPanelOptionButton": True,
@@ -439,7 +454,7 @@ class RibbonBar(QtWidgets.QMenuBar):
         self,
         title: str,
         style=RibbonCategoryStyle.Normal,
-        color: QtGui.QColor = None,
+        color: QColor = None,
     ) -> typing.Union[RibbonNormalCategory, RibbonContextCategory]:
         """Add a new category to the ribbon.
 
@@ -490,9 +505,7 @@ class RibbonBar(QtWidgets.QMenuBar):
     def addContextCategory(
         self,
         title: str,
-        color: typing.Union[
-            QtGui.QColor, QtCore.Qt.GlobalColor
-        ] = QtCore.Qt.GlobalColor.blue,
+        color: typing.Union[QColor, Qt.GlobalColor] = Qt.GlobalColor.blue,
     ) -> RibbonContextCategory:
         """Add a new context category to the ribbon.
 
@@ -506,9 +519,7 @@ class RibbonBar(QtWidgets.QMenuBar):
         self,
         name: str,
         titles: typing.List[str],
-        color: typing.Union[
-            QtGui.QColor, QtCore.Qt.GlobalColor
-        ] = QtCore.Qt.GlobalColor.blue,
+        color: typing.Union[QColor, Qt.GlobalColor] = Qt.GlobalColor.blue,
     ) -> RibbonContextCategories:
         """Add a group of context categories with the same tab color to the ribbon.
 
@@ -628,12 +639,12 @@ class RibbonBar(QtWidgets.QMenuBar):
             )
         ]
 
-    def minimumSizeHint(self) -> QtCore.QSize:
+    def minimumSizeHint(self) -> QSize:
         """Return the minimum size hint of the widget.
 
         :return: The minimum size hint.
         """
-        return QtCore.QSize(super().minimumSizeHint().width(), self._ribbonHeight)
+        return QSize(super().minimumSizeHint().width(), self._ribbonHeight)
 
     def _collapseButtonClicked(self):
         self.tabBar().currentChanged.connect(self.showRibbon)  # type: ignore
@@ -644,7 +655,7 @@ class RibbonBar(QtWidgets.QMenuBar):
         if not self._ribbonVisible:
             self._ribbonVisible = True
             self.collapseRibbonButton().setToolTip("Collapse Ribbon")
-            self.collapseRibbonButton().setIcon(QtGui.QIcon(DataFile("icons/up.png")))
+            self.collapseRibbonButton().setIcon(QIcon(DataFile("icons/up.png")))
             self._stackedWidget.setVisible(True)
             self.setFixedSize(self.sizeHint())
 
@@ -653,7 +664,7 @@ class RibbonBar(QtWidgets.QMenuBar):
         if self._ribbonVisible:
             self._ribbonVisible = False
             self.collapseRibbonButton().setToolTip("Expand Ribbon")
-            self.collapseRibbonButton().setIcon(QtGui.QIcon(DataFile("icons/down.png")))
+            self.collapseRibbonButton().setIcon(QIcon(DataFile("icons/down.png")))
             self._stackedWidget.setVisible(False)
             self.setFixedSize(self.sizeHint().width(), self._titleWidget.size().height() + 5)  # type: ignore
 
