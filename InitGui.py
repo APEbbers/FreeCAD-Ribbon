@@ -27,6 +27,7 @@ import Standard_Functions_RIbbon as StandardFunctions
 
 qtpy_present = True
 pyqtribbon_present = True
+keyboard_present = True
 
 try:
     import qtpy

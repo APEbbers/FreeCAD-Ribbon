@@ -1,6 +1,6 @@
 import typing
 
-from qtpy import QtCore, QtGui, QtWidgets
+from PySide import QtCore, QtGui, QtWidgets
 
 from .menu import RibbonPermanentMenu
 from .separator import RibbonHorizontalSeparator
@@ -32,15 +32,11 @@ class RibbonGalleryListWidget(QtWidgets.QListWidget):
 
     def scrollToNextRow(self) -> None:
         """Scroll to the next row."""
-        self.verticalScrollBar().setValue(
-            self.verticalScrollBar().value() + self.verticalScrollBar().singleStep()
-        )
+        self.verticalScrollBar().setValue(self.verticalScrollBar().value() + self.verticalScrollBar().singleStep())
 
     def scrollToPreviousRow(self) -> None:
         """Scroll to the previous row."""
-        self.verticalScrollBar().setValue(
-            self.verticalScrollBar().value() - self.verticalScrollBar().singleStep()
-        )
+        self.verticalScrollBar().setValue(self.verticalScrollBar().value() - self.verticalScrollBar().singleStep())
 
 
 class RibbonGalleryButton(QtWidgets.QToolButton):
@@ -84,9 +80,7 @@ class RibbonGallery(QtWidgets.QFrame):
             "minimumWidth" in kwargs or "popupHideOnClick" in kwargs
         ):
             minimumWidth = args[0] if len(args) > 0 else kwargs.get("minimumWidth", 800)
-            popupHideOnClick = (
-                args[1] if len(args) > 1 else kwargs.get("popupHideOnClick", False)
-            )
+            popupHideOnClick = args[1] if len(args) > 1 else kwargs.get("popupHideOnClick", False)
             parent = args[2] if len(args) > 2 else kwargs.get("parent", None)
         else:
             minimumWidth = 800
@@ -108,16 +102,12 @@ class RibbonGallery(QtWidgets.QFrame):
         self._downButton = RibbonGalleryButton(self)
         self._downButton.setIcon(QtGui.QIcon(DataFile("icons/down.png")))
         self._downButton.setIconSize(QtCore.QSize(24, 24))
-        self._downButton.setToolButtonStyle(
-            QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly
-        )
+        self._downButton.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly)
         self._downButton.setAutoRaise(True)
         self._moreButton = RibbonGalleryButton(self)
         self._moreButton.setIcon(QtGui.QIcon(DataFile("icons/more.png")))
         self._moreButton.setIconSize(QtCore.QSize(24, 24))
-        self._moreButton.setToolButtonStyle(
-            QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly
-        )
+        self._moreButton.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly)
         self._moreButton.setAutoRaise(True)
         self._scrollButtonLayout = QtWidgets.QVBoxLayout()
         self._scrollButtonLayout.setContentsMargins(0, 0, 0, 0)
@@ -158,11 +148,7 @@ class RibbonGallery(QtWidgets.QFrame):
 
     def resizeEvent(self, a0: QtGui.QResizeEvent) -> None:
         """Resize the gallery."""
-        height = (
-            self.height()
-            - self._mainLayout.contentsMargins().top()
-            - self._mainLayout.contentsMargins().bottom()
-        )
+        height = self.height() - self._mainLayout.contentsMargins().top() - self._mainLayout.contentsMargins().bottom()
         self._upButton.setFixedSize(height // 4, height // 3)  # type: ignore
         self._downButton.setFixedSize(height // 4, height // 3)  # type: ignore
         self._moreButton.setFixedSize(height // 4, height // 3)  # type: ignore
@@ -236,9 +222,7 @@ class RibbonGallery(QtWidgets.QFrame):
         """
         item = QtWidgets.QListWidgetItem()
         item.setSizeHint(widget.sizeHint())
-        self._popupListWidget.setSpacing(
-            (self.height() - item.sizeHint().height()) // 2
-        )
+        self._popupListWidget.setSpacing((self.height() - item.sizeHint().height()) // 2)
         self._popupListWidget.addItem(item)
         self._popupListWidget.setItemWidget(item, widget)
 
@@ -305,9 +289,7 @@ class RibbonGallery(QtWidgets.QFrame):
             popupButton.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly)
         else:
             button.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
-            popupButton.setToolButtonStyle(
-                QtCore.Qt.ToolButtonStyle.ToolButtonTextUnderIcon
-            )
+            popupButton.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonTextUnderIcon)
         self._addWidget(button)  # noqa
         self._addPopupWidget(popupButton)  # noqa
         return button, popupButton

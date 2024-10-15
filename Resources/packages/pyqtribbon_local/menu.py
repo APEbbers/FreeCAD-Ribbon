@@ -1,6 +1,6 @@
 import typing
 
-from qtpy import QtCore, QtGui, QtWidgets
+from PySide import QtCore, QtGui, QtWidgets
 
 
 class RibbonMenu(QtWidgets.QMenu):
@@ -86,9 +86,7 @@ class RibbonMenu(QtWidgets.QMenu):
         :param spacing: The spacing.
         """
         spacer = QtWidgets.QLabel()
-        spacer.setSizePolicy(
-            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Fixed
-        )
+        spacer.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Fixed)
         spacer.setFixedHeight(spacing)
         self.addWidget(spacer)  # noqa
 

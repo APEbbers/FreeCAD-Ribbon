@@ -1,6 +1,6 @@
 import typing
 
-from qtpy import QtCore, QtGui, QtWidgets
+from PySide import QtCore, QtGui, QtWidgets
 
 from .constants import RibbonCategoryStyle
 from .panel import RibbonPanel
@@ -52,35 +52,25 @@ class RibbonCategoryLayoutWidget(QtWidgets.QFrame):
         self._categoryLayout = QtWidgets.QHBoxLayout(self._categoryScrollAreaContents)
         self._categoryLayout.setContentsMargins(0, 0, 0, 0)
         self._categoryLayout.setSpacing(0)
-        self._categoryLayout.setSizeConstraint(
-            QtWidgets.QLayout.SizeConstraint.SetMinAndMaxSize
-        )
+        self._categoryLayout.setSizeConstraint(QtWidgets.QLayout.SizeConstraint.SetMinAndMaxSize)
 
         # Category scroll area
         self._categoryScrollArea = RibbonCategoryScrollArea()  # type: ignore
-        self._categoryScrollArea.setHorizontalScrollBarPolicy(
-            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff
-        )
-        self._categoryScrollArea.setVerticalScrollBarPolicy(
-            QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff
-        )
+        self._categoryScrollArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self._categoryScrollArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self._categoryScrollArea.setWidget(self._categoryScrollAreaContents)
 
         # Previous/Next buttons
         self._previousButton = RibbonCategoryLayoutButton(self)
         self._previousButton.setIcon(QtGui.QIcon(DataFile("icons/backward.png")))
         self._previousButton.setIconSize(QtCore.QSize(12, 12))
-        self._previousButton.setToolButtonStyle(
-            QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly
-        )
+        self._previousButton.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly)
         self._previousButton.setAutoRaise(True)
         self._previousButton.clicked.connect(self.scrollPrevious)  # type: ignore
         self._nextButton = RibbonCategoryLayoutButton(self)
         self._nextButton.setIcon(QtGui.QIcon(DataFile("icons/forward.png")))
         self._nextButton.setIconSize(QtCore.QSize(12, 12))
-        self._nextButton.setToolButtonStyle(
-            QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly
-        )
+        self._nextButton.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly)
         self._nextButton.setAutoRaise(True)
         self._nextButton.clicked.connect(self.scrollNext)  # type: ignore
 
@@ -88,15 +78,11 @@ class RibbonCategoryLayoutWidget(QtWidgets.QFrame):
         self._mainLayout = QtWidgets.QHBoxLayout(self)
         self._mainLayout.setContentsMargins(0, 0, 0, 0)
         self._mainLayout.setSpacing(0)
-        self._mainLayout.addWidget(
-            self._previousButton, 0, QtCore.Qt.AlignmentFlag.AlignVCenter
-        )
+        self._mainLayout.addWidget(self._previousButton, 0, QtCore.Qt.AlignmentFlag.AlignVCenter)
         self._mainLayout.addWidget(self._categoryScrollArea, 1)
         self._mainLayout.addSpacerItem(QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Policy.Expanding,
                                                              QtWidgets.QSizePolicy.Policy.Minimum))  # fmt: skip
-        self._mainLayout.addWidget(
-            self._nextButton, 0, QtCore.Qt.AlignmentFlag.AlignVCenter
-        )
+        self._mainLayout.addWidget(self._nextButton, 0, QtCore.Qt.AlignmentFlag.AlignVCenter)
 
         # Auto set the visibility of the scroll buttons
         self.autoSetScrollButtonsVisible()
@@ -114,12 +100,8 @@ class RibbonCategoryLayoutWidget(QtWidgets.QFrame):
     def autoSetScrollButtonsVisible(self):
         """Set the visibility of the scroll buttons."""
         horizontalScrollBar = self._categoryScrollArea.horizontalScrollBar()
-        self._previousButton.setVisible(
-            horizontalScrollBar.value() > horizontalScrollBar.minimum()
-        )
-        self._nextButton.setVisible(
-            horizontalScrollBar.value() < horizontalScrollBar.maximum()
-        )
+        self._previousButton.setVisible(horizontalScrollBar.value() > horizontalScrollBar.minimum())
+        self._nextButton.setVisible(horizontalScrollBar.value() < horizontalScrollBar.maximum())
         self._previousButton.setIconSize(QtCore.QSize(12, self.size().height() - 15))
         self._nextButton.setIconSize(QtCore.QSize(12, self.size().height() - 15))
 
@@ -200,11 +182,7 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
             "title" in kwargs or "style" in kwargs or "color" in kwargs
         ):
             title = args[0] if len(args) > 0 else kwargs.get("title", "")
-            style = (
-                args[1]
-                if len(args) > 1
-                else kwargs.get("style", RibbonCategoryStyle.Normal)
-            )
+            style = args[1] if len(args) > 1 else kwargs.get("style", RibbonCategoryStyle.Normal)
             color = args[2] if len(args) > 2 else kwargs.get("color", None)
             parent = args[3] if len(args) > 3 else kwargs.get("parent", None)
         else:

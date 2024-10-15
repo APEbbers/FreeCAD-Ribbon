@@ -6,7 +6,7 @@ import logging
 import sys
 import traceback
 
-from qtpy import QtCore, QtWidgets
+from PySide import QtCore, QtWidgets
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.StreamHandler(stream=sys.stdout))
@@ -27,14 +27,10 @@ class UncaughtHook(QtCore.QObject):
         if QtWidgets.QApplication.instance() is not None:
             errorbox = QtWidgets.QMessageBox()
             errorbox.setWindowIcon(
-                QtWidgets.QApplication.style().standardIcon(
-                    QtWidgets.QStyle.StandardPixmap.SP_MessageBoxCritical
-                )
+                QtWidgets.QApplication.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_MessageBoxCritical)
             )
             errorbox.setWindowTitle("Critical error occurred")
-            errorbox.setText(
-                f"Oops. An unexpected error occurred:\n```\n{log_msg}\n```"
-            )
+            errorbox.setText(f"Oops. An unexpected error occurred:\n```\n{log_msg}\n```")
             errorbox.setTextFormat(QtCore.Qt.TextFormat.MarkdownText)
             errorbox.exec()
         else:
