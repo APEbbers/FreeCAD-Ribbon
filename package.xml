@@ -25,9 +25,6 @@
     <workbench>
       <freecadmin>0.21.0</freecadmin>
       <icon>Resources/Icons/FreecadNew.svg</icon>
-      <!-- <depend optional="False" type="python">qtpy</depend> -->
-      <!-- <depend optional="False" type="python">pyqtribbon</depend> -->
-      <!-- <depend optional="True" type="python">keyboard</depend> -->
       <subdirectory>./</subdirectory>
     </workbench>
   </content>
