@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QToolButton
-from PySide6.QtCore import (
+from PySide.QtWidgets import QToolButton
+from PySide.QtCore import (
     Qt,
     QSize,
 )

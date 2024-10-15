@@ -6,12 +6,12 @@ import logging
 import sys
 import traceback
 
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QApplication,
     QMessageBox,
     QStyle,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QObject,
 )

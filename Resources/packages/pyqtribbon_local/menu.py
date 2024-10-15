@@ -1,7 +1,7 @@
 import typing
 
-from PySide6.QtGui import QAction, QHideEvent
-from PySide6.QtWidgets import (
+from PySide.QtGui import QAction, QHideEvent
+from PySide.QtWidgets import (
     QSizePolicy,
     QWidget,
     QHBoxLayout,
@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QMenu,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QAction,
     Signal,

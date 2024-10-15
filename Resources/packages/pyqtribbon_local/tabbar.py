@@ -1,8 +1,8 @@
 import typing
 
-from PySide6.QtGui import QColor
-from PySide6.QtWidgets import QTabBar
-from PySide6.QtCore import Qt
+from PySide.QtGui import QColor
+from PySide.QtWidgets import QTabBar
+from PySide.QtCore import Qt
 
 
 class RibbonTabBar(QTabBar):

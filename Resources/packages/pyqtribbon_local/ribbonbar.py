@@ -1,7 +1,7 @@
 import typing
 
-from PySide6.QtGui import QIcon, QColor
-from PySide6.QtWidgets import (
+from PySide.QtGui import QIcon, QColor
+from PySide.QtWidgets import (
     QToolButton,
     QWidget,
     QVBoxLayout,
@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
     QMenuBar,
     QToolBar,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QSize,
     Signal,

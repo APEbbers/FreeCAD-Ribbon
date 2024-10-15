@@ -1,8 +1,8 @@
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QMainWindow,
     QApplication,
 )
-from PySide6.QtCore import Qt, QTimer
+from PySide.QtCore import Qt, QTimer
 
 
 class RibbonScreenShotWindow(QMainWindow):

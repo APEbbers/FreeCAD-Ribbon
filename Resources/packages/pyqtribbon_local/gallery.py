@@ -1,7 +1,7 @@
 import typing
 
-from PySide6.QtGui import QIcon, QResizeEvent, QAction
-from PySide6.QtWidgets import (
+from PySide.QtGui import QIcon, QResizeEvent, QAction
+from PySide.QtWidgets import (
     QToolButton,
     QSizePolicy,
     QWidget,
@@ -12,7 +12,7 @@ from PySide6.QtWidgets import (
     QAbstractItemView,
     QListWidgetItem,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QSize,
 )

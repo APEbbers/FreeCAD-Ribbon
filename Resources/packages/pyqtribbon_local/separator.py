@@ -1,13 +1,13 @@
 import typing
 
-from PySide6.QtGui import QPaintEvent, QPen, QColor, QPainter
-from PySide6.QtWidgets import (
+from PySide.QtGui import QPaintEvent, QPen, QColor, QPainter
+from PySide.QtWidgets import (
     QSizePolicy,
     QWidget,
     QFrame,
     QWidget,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QSize,
 )

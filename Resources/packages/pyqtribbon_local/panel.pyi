@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import Any, Callable, Dict, Iterable, List, Union, overload
 
 import numpy as np
-from PySide6.QtGui import QIcon, QResizeEvent, QAction, QKeySequence
-from PySide6.QtWidgets import (
+from PySide.QtGui import QIcon, QResizeEvent, QAction, QKeySequence
+from PySide.QtWidgets import (
     QToolButton,
     QSizePolicy,
     QWidget,
@@ -35,7 +35,7 @@ from PySide6.QtWidgets import (
     QTreeWidget,
     QCalendarWidget,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QSize,
     QAction,
