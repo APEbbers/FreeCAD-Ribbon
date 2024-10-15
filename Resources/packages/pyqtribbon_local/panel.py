@@ -39,8 +39,8 @@ from PySide.QtCore import (
     Qt,
     QSize,
     Signal,
-    QKeyCombination,
 )
+
 
 from .constants import (
     ColumnWise,
@@ -500,14 +500,7 @@ class RibbonPanel(QFrame):
         icon: QIcon = None,
         showText: bool = True,
         slot: Callable = None,
-        shortcut: (
-            Qt.Key
-            | QKeySequence
-            | QKeyCombination
-            | QKeySequence.StandardKey
-            | str
-            | int
-        ) = None,
+        shortcut: Qt.Key | QKeySequence | QKeySequence.StandardKey | str | int = None,
         tooltip: str = None,
         statusTip: str = None,
         checkable: bool = False,
