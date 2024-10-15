@@ -1,6 +1,21 @@
 import typing
 
-from PySide import QtCore, QtGui, QtWidgets
+from PySide.QtGui import QIcon, QPaintEvent, QResizeEvent, QColor
+from PySide.QtWidgets import (
+    QToolButton,
+    QSizePolicy,
+    QWidget,
+    QLayout,
+    QSpacerItem,
+    QHBoxLayout,
+    QScrollArea,
+    QFrame,
+)
+from PySide.QtCore import (
+    Qt,
+    Signal,
+    QSize,
+)
 
 from .constants import RibbonCategoryStyle
 from .panel import RibbonPanel
@@ -11,7 +26,7 @@ if typing.TYPE_CHECKING:
     from .ribbonbar import RibbonBar  # noqa: F401
 
 
-class RibbonCategoryLayoutButton(QtWidgets.QToolButton):
+class RibbonCategoryLayoutButton(QToolButton):
     """Previous/Next buttons in the category when the
     size is not enough for the widgets.
     """
@@ -19,22 +34,22 @@ class RibbonCategoryLayoutButton(QtWidgets.QToolButton):
     pass
 
 
-class RibbonCategoryScrollArea(QtWidgets.QScrollArea):
+class RibbonCategoryScrollArea(QScrollArea):
     """Scroll area for the gallery"""
 
     pass
 
 
-class RibbonCategoryScrollAreaContents(QtWidgets.QFrame):
+class RibbonCategoryScrollAreaContents(QFrame):
     """Scroll area contents for the gallery"""
 
     pass
 
 
-class RibbonCategoryLayoutWidget(QtWidgets.QFrame):
+class RibbonCategoryLayoutWidget(QFrame):
     """The category layout widget's category scroll area to arrange the widgets in the category."""
 
-    displayOptionsButtonClicked = QtCore.Signal()
+    displayOptionsButtonClicked = Signal()
 
     def __init__(self, parent=None):
         """Create a new category layout widget.
@@ -46,53 +61,53 @@ class RibbonCategoryLayoutWidget(QtWidgets.QFrame):
         # Contents of the category scroll area
         self._categoryScrollAreaContents = RibbonCategoryScrollAreaContents()  # type: ignore
         self._categoryScrollAreaContents.setSizePolicy(
-            QtWidgets.QSizePolicy.Policy.Expanding,
-            QtWidgets.QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding,
+            QSizePolicy.Policy.Expanding,
         )
-        self._categoryLayout = QtWidgets.QHBoxLayout(self._categoryScrollAreaContents)
+        self._categoryLayout = QHBoxLayout(self._categoryScrollAreaContents)
         self._categoryLayout.setContentsMargins(0, 0, 0, 0)
         self._categoryLayout.setSpacing(0)
-        self._categoryLayout.setSizeConstraint(QtWidgets.QLayout.SizeConstraint.SetMinAndMaxSize)
+        self._categoryLayout.setSizeConstraint(QLayout.SizeConstraint.SetMinAndMaxSize)
 
         # Category scroll area
         self._categoryScrollArea = RibbonCategoryScrollArea()  # type: ignore
-        self._categoryScrollArea.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self._categoryScrollArea.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self._categoryScrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self._categoryScrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self._categoryScrollArea.setWidget(self._categoryScrollAreaContents)
 
         # Previous/Next buttons
         self._previousButton = RibbonCategoryLayoutButton(self)
-        self._previousButton.setIcon(QtGui.QIcon(DataFile("icons/backward.png")))
-        self._previousButton.setIconSize(QtCore.QSize(12, 12))
-        self._previousButton.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly)
+        self._previousButton.setIcon(QIcon(DataFile("icons/backward.png")))
+        self._previousButton.setIconSize(QSize(12, 12))
+        self._previousButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
         self._previousButton.setAutoRaise(True)
         self._previousButton.clicked.connect(self.scrollPrevious)  # type: ignore
         self._nextButton = RibbonCategoryLayoutButton(self)
-        self._nextButton.setIcon(QtGui.QIcon(DataFile("icons/forward.png")))
-        self._nextButton.setIconSize(QtCore.QSize(12, 12))
-        self._nextButton.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonIconOnly)
+        self._nextButton.setIcon(QIcon(DataFile("icons/forward.png")))
+        self._nextButton.setIconSize(QSize(12, 12))
+        self._nextButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
         self._nextButton.setAutoRaise(True)
         self._nextButton.clicked.connect(self.scrollNext)  # type: ignore
 
         # Add the widgets to the main layout
-        self._mainLayout = QtWidgets.QHBoxLayout(self)
+        self._mainLayout = QHBoxLayout(self)
         self._mainLayout.setContentsMargins(0, 0, 0, 0)
         self._mainLayout.setSpacing(0)
-        self._mainLayout.addWidget(self._previousButton, 0, QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self._mainLayout.addWidget(self._previousButton, 0, Qt.AlignmentFlag.AlignVCenter)
         self._mainLayout.addWidget(self._categoryScrollArea, 1)
-        self._mainLayout.addSpacerItem(QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Policy.Expanding,
-                                                             QtWidgets.QSizePolicy.Policy.Minimum))  # fmt: skip
-        self._mainLayout.addWidget(self._nextButton, 0, QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self._mainLayout.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Policy.Expanding,
+                                                             QSizePolicy.Policy.Minimum))  # fmt: skip
+        self._mainLayout.addWidget(self._nextButton, 0, Qt.AlignmentFlag.AlignVCenter)
 
         # Auto set the visibility of the scroll buttons
         self.autoSetScrollButtonsVisible()
 
-    def paintEvent(self, a0: QtGui.QPaintEvent) -> None:
+    def paintEvent(self, a0: QPaintEvent) -> None:
         """Override the paint event to draw the background."""
         super().paintEvent(a0)
         self.autoSetScrollButtonsVisible()
 
-    def resizeEvent(self, a0: QtGui.QResizeEvent) -> None:
+    def resizeEvent(self, a0: QResizeEvent) -> None:
         """Override the resize event to resize the scroll area."""
         super().resizeEvent(a0)
         self.autoSetScrollButtonsVisible()
@@ -102,8 +117,8 @@ class RibbonCategoryLayoutWidget(QtWidgets.QFrame):
         horizontalScrollBar = self._categoryScrollArea.horizontalScrollBar()
         self._previousButton.setVisible(horizontalScrollBar.value() > horizontalScrollBar.minimum())
         self._nextButton.setVisible(horizontalScrollBar.value() < horizontalScrollBar.maximum())
-        self._previousButton.setIconSize(QtCore.QSize(12, self.size().height() - 15))
-        self._nextButton.setIconSize(QtCore.QSize(12, self.size().height() - 15))
+        self._previousButton.setIconSize(QSize(12, self.size().height() - 15))
+        self._nextButton.setIconSize(QSize(12, self.size().height() - 15))
 
     def scrollPrevious(self):
         """Scroll the category to the previous widget."""
@@ -118,21 +133,21 @@ class RibbonCategoryLayoutWidget(QtWidgets.QFrame):
         )
         self.autoSetScrollButtonsVisible()
 
-    def addWidget(self, widget: QtWidgets.QWidget):
+    def addWidget(self, widget: QWidget):
         """Add a widget to the category layout.
 
         :param widget: The widget to add.
         """
         self._categoryLayout.addWidget(widget)
 
-    def removeWidget(self, widget: QtWidgets.QWidget):
+    def removeWidget(self, widget: QWidget):
         """Remove a widget from the category layout.
 
         :param widget: The widget to remove.
         """
         self._categoryLayout.removeWidget(widget)
 
-    def takeWidget(self, widget: QtWidgets.QWidget) -> QtWidgets.QWidget:
+    def takeWidget(self, widget: QWidget) -> QWidget:
         """Remove and return a widget from the category layout.
 
         :param widget: The widget to remove.
@@ -152,7 +167,7 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
     #: Panels
     _panels: typing.Dict[str, RibbonPanel]
     #: color of the context category
-    _color: typing.Optional[QtGui.QColor]
+    _color: typing.Optional[QColor]
     #: Maximum rows
     _maxRows: int = 6
 
@@ -161,7 +176,7 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
         self,
         title: str = "",
         style: RibbonCategoryStyle = RibbonCategoryStyle.Normal,
-        color: QtGui.QColor = None,
+        color: QColor = None,
         parent=None,
     ):
         pass
@@ -178,9 +193,7 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
         :param color: The color of the context category.
         :param parent: The parent widget.
         """
-        if (args and not isinstance(args[0], QtWidgets.QWidget)) or (
-            "title" in kwargs or "style" in kwargs or "color" in kwargs
-        ):
+        if (args and not isinstance(args[0], QWidget)) or ("title" in kwargs or "style" in kwargs or "color" in kwargs):
             title = args[0] if len(args) > 0 else kwargs.get("title", "")
             style = args[1] if len(args) > 1 else kwargs.get("style", RibbonCategoryStyle.Normal)
             color = args[2] if len(args) > 2 else kwargs.get("color", None)
@@ -325,7 +338,7 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
 class RibbonNormalCategory(RibbonCategory):
     """A normal category."""
 
-    def __init__(self, title: str, parent: QtWidgets.QWidget):
+    def __init__(self, title: str, parent: QWidget):
         """Create a new normal category.
 
         :param title: The title of the category.
@@ -344,7 +357,7 @@ class RibbonNormalCategory(RibbonCategory):
 class RibbonContextCategory(RibbonCategory):
     """A context category."""
 
-    def __init__(self, title: str, color: QtGui.QColor, parent: QtWidgets.QWidget):
+    def __init__(self, title: str, color: QColor, parent: QWidget):
         """Create a new context category.
 
         :param title: The title of the category.
@@ -360,14 +373,14 @@ class RibbonContextCategory(RibbonCategory):
         """
         raise ValueError("You can not set the category style of a context category.")
 
-    def color(self) -> QtGui.QColor:
+    def color(self) -> QColor:
         """Return the color of the context category.
 
         :return: The color of the context category.
         """
         return self._color
 
-    def setColor(self, color: QtGui.QColor):
+    def setColor(self, color: QColor):
         """Set the color of the context category.
 
         :param color: The color of the context category.
@@ -407,7 +420,7 @@ class RibbonContextCategories(typing.Dict[str, RibbonContextCategory]):
     def __init__(
         self,
         name: str,
-        color: QtGui.QColor,
+        color: QColor,
         categories: typing.Dict[str, RibbonContextCategory],
         ribbon,
     ):
@@ -424,11 +437,11 @@ class RibbonContextCategories(typing.Dict[str, RibbonContextCategory]):
         """Set the name of the context categories."""
         self._name = name
 
-    def color(self) -> QtGui.QColor:
+    def color(self) -> QColor:
         """Return the color of the context categories."""
         return self._color
 
-    def setColor(self, color: QtGui.QColor):
+    def setColor(self, color: QColor):
         """Set the color of the context categories."""
         self._color = color
 

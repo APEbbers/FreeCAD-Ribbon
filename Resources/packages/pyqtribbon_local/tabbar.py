@@ -1,9 +1,11 @@
 import typing
 
-from PySide import QtCore, QtGui, QtWidgets
+from PySide6.QtGui import QColor
+from PySide6.QtWidgets import QTabBar
+from PySide6.QtCore import Qt
 
 
-class RibbonTabBar(QtWidgets.QTabBar):
+class RibbonTabBar(QTabBar):
     """The TabBar for the title widget."""
 
     #: context category top margin
@@ -11,7 +13,7 @@ class RibbonTabBar(QtWidgets.QTabBar):
     #: context category dark color height
     _contextCategoryDarkColorHeight = 5
 
-    _tabColors: typing.Dict[str, typing.Union[QtCore.Qt.GlobalColor, QtGui.QColor]] = {}
+    _tabColors: typing.Dict[str, typing.Union[Qt.GlobalColor, QColor]] = {}
     _associated_tabs = {}
 
     def __init__(self, parent=None):
@@ -42,7 +44,7 @@ class RibbonTabBar(QtWidgets.QTabBar):
         """
         return [self.tabText(i) for i in range(self.count())]
 
-    def addTab(self, text: str, color: QtGui.QColor = None, *args, **kwargs) -> int:
+    def addTab(self, text: str, color: QColor = None, *args, **kwargs) -> int:
         """Add a new tab to the tab bar.
 
         :param text: The text of the tab.
@@ -52,7 +54,7 @@ class RibbonTabBar(QtWidgets.QTabBar):
         self._tabColors[text] = color
         return super().addTab(text)
 
-    def addAssociatedTabs(self, name: str, texts: typing.List[str], color: QtGui.QColor) -> typing.List[int]:
+    def addAssociatedTabs(self, name: str, texts: typing.List[str], color: QColor) -> typing.List[int]:
         """Add associated multiple tabs which have the same color to the tab bar.
 
         :param name: The name of the context category.
@@ -78,7 +80,7 @@ class RibbonTabBar(QtWidgets.QTabBar):
                 if title in self._associated_tabs:
                     del self._associated_tabs[title]
 
-    def currentTabColor(self) -> QtGui.QColor:
+    def currentTabColor(self) -> QColor:
         """Current tab color
 
         :return: Current tab color
@@ -92,6 +94,6 @@ class RibbonTabBar(QtWidgets.QTabBar):
             currentTabText = self.tabText(inx)
             currentTabColor = self._tabColors[currentTabText]
             if currentTabColor is not None:
-                self.setStyleSheet("RibbonTabBar::tab:selected {color: %s;}" % QtGui.QColor(currentTabColor).name())
+                self.setStyleSheet("RibbonTabBar::tab:selected {color: %s;}" % QColor(currentTabColor).name())
             else:
                 self.setStyleSheet("RibbonTabBar::tab:selected {color: black;}")

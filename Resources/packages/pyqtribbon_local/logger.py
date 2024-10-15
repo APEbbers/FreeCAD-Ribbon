@@ -6,13 +6,21 @@ import logging
 import sys
 import traceback
 
-from PySide import QtCore, QtWidgets
+from PySide6.QtWidgets import (
+    QApplication,
+    QMessageBox,
+    QStyle,
+)
+from PySide6.QtCore import (
+    Qt,
+    QObject,
+)
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.StreamHandler(stream=sys.stdout))
 
 
-class UncaughtHook(QtCore.QObject):
+class UncaughtHook(QObject):
     def __init__(self, *args, **kwargs):
         super(UncaughtHook, self).__init__(*args, **kwargs)
 
@@ -24,14 +32,12 @@ class UncaughtHook(QtCore.QObject):
         """Checks if a QApplication instance is available and shows a messagebox with the exception message.
         If unavailable (non-console application), log an additional notice.
         """
-        if QtWidgets.QApplication.instance() is not None:
-            errorbox = QtWidgets.QMessageBox()
-            errorbox.setWindowIcon(
-                QtWidgets.QApplication.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_MessageBoxCritical)
-            )
+        if QApplication.instance() is not None:
+            errorbox = QMessageBox()
+            errorbox.setWindowIcon(QApplication.style().standardIcon(QStyle.StandardPixmap.SP_MessageBoxCritical))
             errorbox.setWindowTitle("Critical error occurred")
             errorbox.setText(f"Oops. An unexpected error occurred:\n```\n{log_msg}\n```")
-            errorbox.setTextFormat(QtCore.Qt.TextFormat.MarkdownText)
+            errorbox.setTextFormat(Qt.TextFormat.MarkdownText)
             errorbox.exec()
         else:
             log.debug("No QApplication instance available.")
