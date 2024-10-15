@@ -1,7 +1,7 @@
 ## FreeCAD Ribbon UI
 
 An Ribbon UI for FreeCAD, based on the PyQtRibbon library (https://github.com/haiiliin/pyqtribbon).
-This ribbon is based the work of Geolta (https://github.com/geolta/FreeCAD-Ribbon) and HakanSeven (https://github.com/HakanSeven12/Modern-UI) for the Modern-UI workbench.  
+This ribbon is based the work of Geolta (https://github.com/geolta/FreeCAD-Ribbon) and HakanSeven (https://github.com/HakanSeven12/Modern-UI) for the Modern-UI workbench.
 
 ![](https://github.com/APEbbers/FreeCAD-Ribbon/blob/main/Resources/Images/Screenshot.png)
 
@@ -27,10 +27,10 @@ See the [wiki page](https://github.com/APEbbers/FreeCAD-Ribbon/wiki) for more de
 
 There are three options for installing this addon:
 ### Via the Addon manager
-Go to 'Tools/Addon-Manager' and search for 'FreeCAD-Ribbon'). Click on 'Install'.  
-  
-With certain versions of linux or when using AppImage, it can be that the addon-manager cannot install the package "PyQtRibbon".  
-For that reason, a version of "PyQtRibbon" is shipped with the FreeCAD-Ribbon. If the addon-manager gives an error, continue with the installation. The FreeCAD-Ribbon will use the shipped version of PyQtRibbon. Please keep in mind that this version of pyqtribbon won't be updated reguraly.  
+Go to 'Tools/Addon-Manager' and search for 'FreeCAD-Ribbon'). Click on 'Install'.
+
+With certain versions of linux or when using AppImage, it can be that the addon-manager cannot install the package "PyQtRibbon".
+For that reason, a version of "PyQtRibbon" is shipped with the FreeCAD-Ribbon. If the addon-manager gives an error, continue with the installation. The FreeCAD-Ribbon will use the shipped version of PyQtRibbon. Please keep in mind that this version of pyqtribbon won't be updated reguraly.
 
 ### Custom Repository for Addon Manager
 
