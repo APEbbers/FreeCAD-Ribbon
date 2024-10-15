@@ -11,6 +11,7 @@ from PySide.QtWidgets import (
     QFormLayout,
     QLabel,
     QMenu,
+    QApplication,
 )
 from PySide.QtCore import (
     Qt,

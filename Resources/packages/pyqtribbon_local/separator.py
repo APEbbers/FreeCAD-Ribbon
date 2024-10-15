@@ -3,14 +3,10 @@ import typing
 from PySide.QtGui import QPaintEvent, QPen, QColor, QPainter
 from PySide.QtWidgets import (
     QSizePolicy,
-    QWidget,
     QFrame,
     QWidget,
 )
-from PySide.QtCore import (
-    Qt,
-    QSize,
-)
+from PySide.QtCore import Qt, QSize, QPoint
 
 
 class RibbonSeparator(QFrame):

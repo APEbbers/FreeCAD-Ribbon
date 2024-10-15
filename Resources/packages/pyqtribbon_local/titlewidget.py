@@ -7,7 +7,6 @@ from PySide.QtWidgets import (
     QWidget,
     QHBoxLayout,
     QFrame,
-    QWidget,
     QLabel,
     QToolBar,
     QTabBar,

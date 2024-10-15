@@ -11,6 +11,7 @@ from PySide.QtWidgets import (
     QVBoxLayout,
     QAbstractItemView,
     QListWidgetItem,
+    QApplication,
 )
 from PySide.QtCore import (
     Qt,

@@ -6,7 +6,7 @@ from typing import Any, Callable, Dict, List, Union, overload
 
 import numpy as np
 
-from PySide.QtGui import QIcon, QResizeEvent, QAction, QKeySequence
+from PySide.QtGui import QIcon, QKeySequence
 from PySide.QtWidgets import (
     QToolButton,
     QSizePolicy,
@@ -15,9 +15,6 @@ from PySide.QtWidgets import (
     QFrame,
     QListWidget,
     QVBoxLayout,
-    QAbstractItemView,
-    QListWidgetItem,
-    QWidget,
     QLabel,
     QLayout,
     QGridLayout,

@@ -3,7 +3,6 @@ import typing
 from PySide.QtGui import QIcon, QColor
 from PySide.QtWidgets import (
     QToolButton,
-    QWidget,
     QVBoxLayout,
     QWidget,
     QLayout,

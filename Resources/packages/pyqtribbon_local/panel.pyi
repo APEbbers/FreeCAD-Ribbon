@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any, Callable, Dict, Iterable, List, Union, overload
 
 import numpy as np
-from PySide.QtGui import QIcon, QResizeEvent, QAction, QKeySequence
+from PySide.QtGui import QIcon, QKeySequence
 from PySide.QtWidgets import (
     QToolButton,
     QWidget,
@@ -11,7 +11,6 @@ from PySide.QtWidgets import (
     QFrame,
     QListWidget,
     QVBoxLayout,
-    QWidget,
     QLabel,
     QGridLayout,
     QComboBox,
