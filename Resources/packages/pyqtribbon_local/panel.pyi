@@ -6,19 +6,14 @@ import numpy as np
 from PySide.QtGui import QIcon, QResizeEvent, QAction, QKeySequence
 from PySide.QtWidgets import (
     QToolButton,
-    QSizePolicy,
     QWidget,
     QHBoxLayout,
     QFrame,
     QListWidget,
     QVBoxLayout,
-    QAbstractItemView,
-    QListWidgetItem,
     QWidget,
     QLabel,
-    QLayout,
     QGridLayout,
-    QCheckBox,
     QComboBox,
     QFontComboBox,
     QLineEdit,
@@ -37,8 +32,6 @@ from PySide.QtWidgets import (
 )
 from PySide.QtCore import (
     Qt,
-    QSize,
-    QAction,
     Signal,
     QKeyCombination,
 )

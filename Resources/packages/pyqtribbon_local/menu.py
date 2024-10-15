@@ -14,7 +14,6 @@ from PySide.QtWidgets import (
 )
 from PySide.QtCore import (
     Qt,
-    QAction,
     Signal,
 )
 
