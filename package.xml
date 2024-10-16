@@ -5,13 +5,13 @@
 
   <description>A Ribbon interface for FreeCAD</description>
 
-  <version>1.0.0</version>
+  <version>1.1.5</version>
 
   <date>2024-07-28</date>
 
   <maintainer>Paul Ebbers</maintainer>
 
-  <license file="LICENSE">GPL-3.0 license</license>
+  <license file="LICENSE">GPL-3.0-or-later</license>
 
   <pythonmin>3.8.0</pythonmin>
 
@@ -25,9 +25,6 @@
     <workbench>
       <freecadmin>0.21.0</freecadmin>
       <icon>Resources/Icons/FreecadNew.svg</icon>
-      <depend optional="False" type="python">pyqtribbon</depend>
-      <depend optional="False" type="python">qtpy</depend>
-      <depend optional="True" type="python">keyboard</depend>
       <subdirectory>./</subdirectory>
     </workbench>
   </content>

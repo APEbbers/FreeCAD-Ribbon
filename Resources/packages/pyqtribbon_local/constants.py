@@ -1,6 +1,6 @@
 from enum import IntEnum
 
-from qtpy import QtGui
+from PySide.QtGui import QColor
 
 
 class RibbonCategoryStyle(IntEnum):
@@ -16,12 +16,12 @@ Context = RibbonCategoryStyle.Context
 
 #: A list of context category colors
 contextColors = [
-    QtGui.QColor(201, 89, 156),  # 玫红
-    QtGui.QColor(242, 203, 29),  # 黄
-    QtGui.QColor(255, 157, 0),  # 橙
-    QtGui.QColor(14, 81, 167),  # 蓝
-    QtGui.QColor(228, 0, 69),  # 红
-    QtGui.QColor(67, 148, 0),  # 绿
+    QColor(201, 89, 156),  # 玫红
+    QColor(242, 203, 29),  # 黄
+    QColor(255, 157, 0),  # 橙
+    QColor(14, 81, 167),  # 蓝
+    QColor(228, 0, 69),  # 红
+    QColor(67, 148, 0),  # 绿
 ]
 
 
