@@ -161,13 +161,9 @@ class ModernMenu(RibbonBar):
             )
 
         # Get the adress of the reporisaty adress
-        try:
-            self.ReproAdress = StandardFunctions.getReproAdress(
-                os.path.dirname(__file__)
-            )
+        self.ReproAdress = StandardFunctions.getRepoAdress(os.path.dirname(__file__))
+        if self.ReproAdress != "" or self.ReproAdress is None:
             print(translate("FreeCAD Ribbon", "FreeCAD Ribbon: ") + self.ReproAdress)
-        except Exception:
-            pass
 
         # Set the icon size if parameters has none
         # Define the icon sizes
