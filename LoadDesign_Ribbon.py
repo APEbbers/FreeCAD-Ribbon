@@ -98,9 +98,6 @@ class LoadDialog(Design_ui.Ui_Form):
         # # this will create a Qt widget from our ui file
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "Design.ui"))
 
-        # Get the adress of the reporisaty adress
-        self.ReproAdress = StandardFunctions.getReproAdress(os.path.dirname(__file__))
-
         # Make sure that the dialog stays on top
         self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
         self.form.label_4.hide()
