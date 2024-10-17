@@ -29,9 +29,6 @@ There are three options for installing this addon:
 ### Via the Addon manager
 Go to 'Tools/Addon-Manager' and search for 'FreeCAD-Ribbon'). Click on 'Install'.
 
-With certain versions of linux or when using AppImage, it can be that the addon-manager cannot install the package "PyQtRibbon".
-For that reason, a version of "PyQtRibbon" is shipped with the FreeCAD-Ribbon. If the addon-manager gives an error, continue with the installation. The FreeCAD-Ribbon will use the shipped version of PyQtRibbon. Please keep in mind that this version of pyqtribbon won't be updated reguraly.
-
 ### Custom Repository for Addon Manager
 
 Go to `Edit/Preferences/Addon-Manager` and add the custom repository `https://github.com/APEbbers/FreeCAD-Ribbon.git` with the branch `main`. Now you can go to the Addon Manager (`Tools/Addon-Manager`) and install "FreeCAD Ribbon" (it can be that you have to update your local cache first). Now restart FreeCAD and you will see a ribbon interface :)
