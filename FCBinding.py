@@ -44,6 +44,8 @@ from PySide.QtWidgets import (
     QLayout,
     QSpacerItem,
     QLayoutItem,
+    QHBoxLayout,
+    QVBoxLayout,
 )
 from PySide.QtCore import (
     Qt,
@@ -106,6 +108,8 @@ class ModernMenu(RibbonBar):
     Create ModernMenu QWidget.
     """
 
+    orderChanged = Signal(list)
+
     ReproAdress: str = ""
 
     ribbonStructure = {}
@@ -125,11 +129,14 @@ class ModernMenu(RibbonBar):
     # Set a sixe factor for the buttons
     sizeFactor = 1.3
 
-    def __init__(self):
+    def __init__(self, *args, orientation=Qt.Orientation.Vertical, **kwargs):
         """
         Constructor
         """
-        super().__init__(title="", iconSize=self.iconSize)
+        super().__init__(
+            title="",
+            iconSize=self.iconSize,
+        )
         self.setObjectName("Ribbon")
 
         # connect the signals
@@ -234,6 +241,10 @@ class ModernMenu(RibbonBar):
                 self.UseQtKeyPress = True
 
             self.setAcceptDrops(True)
+            # Store the orientation for drag checks later.
+            self.orientation = orientation
+
+            self.drag = DragItems.DragRibbonToolButton(orientation=Qt.Orientation.Vertical)
         return
 
     # region - events
@@ -284,32 +295,8 @@ class ModernMenu(RibbonBar):
             self.setRibbonVisible(False)
         pass
 
-    def dragEnterEvent(self, e):
-        e.accept()
-
-    def dropEvent(self, e):
-        pos = e.position()
-        Button = RibbonToolButton(e.source())
-        panel = RibbonPanel(Button.parentWidget())
-        panel.removeWidget(Button)
-
-        n = 0
-        for n in range(len(self.tabBar().actions())):
-            # Get the widget at each index in turn.
-            a = panel.widgets()[n]
-            if pos.x() < a.x() + a.size().width() // 2:
-                # We didn't drag past this widget.
-                # insert to the left of it.
-                break
-            else:
-                # We aren't on the left hand side of any widget,
-                # so we're at the end. Increment 1 to insert after.
-                n += 1
-
-        e.accept()
-        return
-
     # endregion
+    #
     #
     # endregion
 
