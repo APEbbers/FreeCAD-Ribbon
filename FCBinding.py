@@ -362,7 +362,7 @@ class ModernMenu(RibbonBar):
                 try:
                     index_1 = WorkbenchOrderedList.index(WorkbenchOrderedList[i])
                     index_2 = WorkbenchOrderedList.index("AssemblyWorkbench")
-    
+
                     WorkbenchOrderedList.pop(index_2)
                     WorkbenchOrderedList.insert(index_1 - 1, "AssemblyWorkbench")
                     break
