@@ -371,13 +371,19 @@ class ModernMenu(RibbonBar):
         # There is an issue with the internal assembly wb showing the wrong panel
         # when assembly4 wb is installed and positioned for the internal assemmbly wb
         for i in range(len(WorkbenchOrderedList)):
-            if WorkbenchOrderedList[i] == "Assembly4Workbench" or WorkbenchOrderedList[i] == "Assembly3Workbench":
-                index_1 = WorkbenchOrderedList.index(WorkbenchOrderedList[i])
-                index_2 = WorkbenchOrderedList.index("AssemblyWorkbench")
+            if (
+                WorkbenchOrderedList[i] == "Assembly4Workbench"
+                or WorkbenchOrderedList[i] == "Assembly3Workbench"
+            ):
+                try:
+                    index_1 = WorkbenchOrderedList.index(WorkbenchOrderedList[i])
+                    index_2 = WorkbenchOrderedList.index("AssemblyWorkbench")
 
-                WorkbenchOrderedList.pop(index_2)
-                WorkbenchOrderedList.insert(index_1 - 1, "AssemblyWorkbench")
-                break
+                    WorkbenchOrderedList.pop(index_2)
+                    WorkbenchOrderedList.insert(index_1 - 1, "AssemblyWorkbench")
+                    break
+                except Exception:
+                    pass
         param_string = ""
         for i in range(len(WorkbenchOrderedList)):
             param_string = param_string + "," + WorkbenchOrderedList[i]
