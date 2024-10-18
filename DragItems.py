@@ -19,6 +19,10 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+import FreeCAD as App
+import FreeCADGui as Gui
+from pathlib import Path
+
 from PySide6.QtGui import (
     QIcon,
     QAction,
@@ -55,6 +59,24 @@ from PySide6.QtCore import (
     QCoreApplication,
     QMimeData,
 )
+
+import json
+import os
+import sys
+import Parameters_Ribbon
+import DragItems
+import Standard_Functions_RIbbon as StandardFunctions
+import platform
+import subprocess
+import xml.etree.ElementTree as ET
+
+# Get the resources
+pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
+pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
+sys.path.append(pathStylSheets)
+sys.path.append(pathPackages)
+
+translate = App.Qt.translate
 
 import pyqtribbon_local as pyqtribbon
 from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
