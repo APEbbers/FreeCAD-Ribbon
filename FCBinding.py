@@ -23,15 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
-    QIcon,
-    QAction,
-    QPixmap,
-    QScrollEvent,
-    QKeyEvent,
-    QActionGroup,
-    QDrag,
-)
+from PySide.QtGui import QIcon, QAction, QPixmap, QScrollEvent, QKeyEvent, QActionGroup
 from PySide.QtWidgets import (
     QToolButton,
     QToolBar,
@@ -44,8 +36,6 @@ from PySide.QtWidgets import (
     QLayout,
     QSpacerItem,
     QLayoutItem,
-    QHBoxLayout,
-    QVBoxLayout,
 )
 from PySide.QtCore import (
     Qt,
@@ -57,7 +47,6 @@ from PySide.QtCore import (
     QEvent,
     QMetaObject,
     QCoreApplication,
-    QMimeData,
 )
 
 import json
@@ -67,7 +56,6 @@ import webbrowser
 import LoadDesign_Ribbon
 import Parameters_Ribbon
 import LoadSettings_Ribbon
-import DragItems
 import Standard_Functions_RIbbon as StandardFunctions
 import platform
 import subprocess
@@ -108,8 +96,6 @@ class ModernMenu(RibbonBar):
     Create ModernMenu QWidget.
     """
 
-    orderChanged = Signal(list)
-
     ReproAdress: str = ""
 
     ribbonStructure = {}
@@ -129,14 +115,11 @@ class ModernMenu(RibbonBar):
     # Set a sixe factor for the buttons
     sizeFactor = 1.3
 
-    def __init__(self, *args, orientation=Qt.Orientation.Vertical, **kwargs):
+    def __init__(self):
         """
         Constructor
         """
-        super().__init__(
-            title="",
-            iconSize=self.iconSize,
-        )
+        super().__init__(title="", iconSize=self.iconSize)
         self.setObjectName("Ribbon")
 
         # connect the signals
@@ -239,16 +222,8 @@ class ModernMenu(RibbonBar):
                 keyboard.on_press_key("alt", lambda _: self.ToggleMenuBar())
             except Exception:  # Use Qt incase of an error
                 self.UseQtKeyPress = True
-
-            self.setAcceptDrops(True)
-            # Store the orientation for drag checks later.
-            self.orientation = orientation
-
-            self.drag = DragItems.DragRibbonToolButton(orientation=Qt.Orientation.Vertical)
         return
 
-    # region - events
-    #
     # The backup keypress event
     def keyPressEvent(self, event):
         if self.UseQtKeyPress is True:
@@ -295,9 +270,6 @@ class ModernMenu(RibbonBar):
             self.setRibbonVisible(False)
         pass
 
-    # endregion
-    #
-    #
     # endregion
 
     def connectSignals(self):
@@ -372,12 +344,15 @@ class ModernMenu(RibbonBar):
         # when assembly4 wb is installed and positioned for the internal assemmbly wb
         for i in range(len(WorkbenchOrderedList)):
             if WorkbenchOrderedList[i] == "Assembly4Workbench" or WorkbenchOrderedList[i] == "Assembly3Workbench":
-                index_1 = WorkbenchOrderedList.index(WorkbenchOrderedList[i])
-                index_2 = WorkbenchOrderedList.index("AssemblyWorkbench")
+                try:
+                    index_1 = WorkbenchOrderedList.index(WorkbenchOrderedList[i])
+                    index_2 = WorkbenchOrderedList.index("AssemblyWorkbench")
 
-                WorkbenchOrderedList.pop(index_2)
-                WorkbenchOrderedList.insert(index_1 - 1, "AssemblyWorkbench")
-                break
+                    WorkbenchOrderedList.pop(index_2)
+                    WorkbenchOrderedList.insert(index_1 - 1, "AssemblyWorkbench")
+                    break
+                except Exception:
+                    pass
         param_string = ""
         for i in range(len(WorkbenchOrderedList)):
             param_string = param_string + "," + WorkbenchOrderedList[i]
@@ -442,10 +417,6 @@ class ModernMenu(RibbonBar):
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
 
-        # Activate drag and drop for the different segments
-        self.tabBar().setAcceptDrops(True)
-        self.quickAccessToolBar().setAcceptDrops(True)
-        self.rightToolBar().setAcceptDrops(True)
         return
 
     def ApplicationMenu(self):
@@ -886,8 +857,7 @@ class ModernMenu(RibbonBar):
                                     showText=showText,
                                     fixedHeight=False,
                                 )
-                                if Parameters_Ribbon.SHOW_ICON_TEXT_LARGE is False:
-                                    btn.setMinimumWidth(btn.maximumHeight() - 10)
+                                btn.setMinimumWidth(btn.maximumHeight() + 10)
                             else:
                                 raise NotImplementedError(
                                     translate(
@@ -900,11 +870,10 @@ class ModernMenu(RibbonBar):
                             if button.menu() is not None:
                                 btn.setMenu(button.menu())
                                 btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                                btn.setMinimumWidth(btn.height + 20)
 
                             # Set the default actiom
                             btn.setDefaultAction(action)
-
-                            btn = DragItems.DragRibbonToolButton(btn)
 
                             # add the button text to the shadowList for checking if buttons are already there.
                             shadowList.append(button.text())
@@ -961,9 +930,6 @@ class ModernMenu(RibbonBar):
             # Set the margings. In linux seems the style behavior different than on Windows
             Layout = panel.layout()
             Layout.setContentsMargins(3, 3, 3, 3)
-
-            # Set the panel to accept drag and drop
-            panel.setAcceptDrops(True)
 
         self.isWbLoaded[tabName] = True
 

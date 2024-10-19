@@ -99,34 +99,23 @@ class Settings:
 
 # Define the resources
 ICON_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "icons")
-STYLESHEET_LOCATION = os.path.join(
-    os.path.dirname(__file__), "Resources", "stylesheets"
-)
+STYLESHEET_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "stylesheets")
 UI_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "ui")
 
 # Define the icon sizes
-if (
-    Settings.GetIntSetting("IconSize_Small") is not None
-    or Settings.GetIntSetting("IconSize_Small") > 0
-):
+if Settings.GetIntSetting("IconSize_Small") is not None or Settings.GetIntSetting("IconSize_Small") > 0:
     ICON_SIZE_SMALL = Settings.GetIntSetting("IconSize_Small")
 else:
     ICON_SIZE_SMALL = int(30)
     Settings.SetIntSetting("IconSize_Small", 30)
 
-if (
-    Settings.GetIntSetting("IconSize_Medium") is not None
-    or Settings.GetIntSetting("IconSize_Medium") > 0
-):
+if Settings.GetIntSetting("IconSize_Medium") is not None or Settings.GetIntSetting("IconSize_Medium") > 0:
     ICON_SIZE_MEDIUM = Settings.GetIntSetting("IconSize_Medium")
 else:
     ICON_SIZE_MEDIUM = int(40)
     Settings.SetIntSetting("IconSize_Medium", 40)
 
-if (
-    Settings.GetIntSetting("IconSize_Large") is not None
-    or Settings.GetIntSetting("IconSize_Large") > 0
-):
+if Settings.GetIntSetting("IconSize_Large") is not None or Settings.GetIntSetting("IconSize_Large") > 0:
     ICON_SIZE_LARGE = Settings.GetIntSetting("IconSize_Large")
 else:
     ICON_SIZE_LARGE = int(50)
@@ -149,7 +138,10 @@ else:
 if Settings.GetStringSetting("Stylesheet") != "":
     STYLESHEET = Settings.GetStringSetting("Stylesheet")
 else:
-    STYLESHEET = os.path.join(STYLESHEET_LOCATION, "default.qss")
+    if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
+        STYLESHEET = os.path.join(STYLESHEET_LOCATION, "default_0.21.qss")
+    else:
+        STYLESHEET = os.path.join(STYLESHEET_LOCATION, "default.qss")
     Settings.SetStringSetting("Stylesheet", STYLESHEET)
 
 if Settings.GetBoolSetting("ShowIconText_Small") is True:
@@ -170,10 +162,7 @@ else:
     SHOW_ICON_TEXT_LARGE = bool(False)
     Settings.SetBoolSetting("ShowIconText_Large", False)
 
-if (
-    Settings.GetIntSetting("MaxColumnsPerPanel") is not None
-    or Settings.GetIntSetting("MaxColumnsPerPanel") > 0
-):
+if Settings.GetIntSetting("MaxColumnsPerPanel") is not None or Settings.GetIntSetting("MaxColumnsPerPanel") > 0:
     MAX_COLUMN_PANELS = Settings.GetIntSetting("MaxColumnsPerPanel")
 else:
     MAX_COLUMN_PANELS = int(6)
