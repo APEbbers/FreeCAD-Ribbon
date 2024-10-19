@@ -937,8 +937,7 @@ class ModernMenu(RibbonBar):
                                     showText=showText,
                                     fixedHeight=False,
                                 )
-                                if Parameters_Ribbon.SHOW_ICON_TEXT_LARGE is False:
-                                    btn.setMinimumWidth(btn.maximumHeight() - 10)
+                                btn.setMinimumWidth(btn.maximumHeight() + 10)
                             else:
                                 raise NotImplementedError(
                                     translate(
@@ -953,6 +952,7 @@ class ModernMenu(RibbonBar):
                                 btn.setPopupMode(
                                     QToolButton.ToolButtonPopupMode.MenuButtonPopup
                                 )
+                                btn.setMinimumWidth(btn.height + 20)
 
                             # Set the default actiom
                             btn.setDefaultAction(action)

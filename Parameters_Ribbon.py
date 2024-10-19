@@ -149,7 +149,10 @@ else:
 if Settings.GetStringSetting("Stylesheet") != "":
     STYLESHEET = Settings.GetStringSetting("Stylesheet")
 else:
-    STYLESHEET = os.path.join(STYLESHEET_LOCATION, "default.qss")
+    if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
+        STYLESHEET = os.path.join(STYLESHEET_LOCATION, "default_0.21.qss")
+    else:
+        STYLESHEET = os.path.join(STYLESHEET_LOCATION, "default.qss")
     Settings.SetStringSetting("Stylesheet", STYLESHEET)
 
 if Settings.GetBoolSetting("ShowIconText_Small") is True:
