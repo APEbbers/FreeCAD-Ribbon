@@ -23,6 +23,7 @@ import os
 import FreeCAD as App
 import FreeCADGui as Gui
 import FCBinding
+import Parameters_Ribbon
 
 
 def QT_TRANSLATE_NOOP(context, text):
@@ -36,7 +37,8 @@ try:
     mw = Gui.getMainWindow()
     mw.workbenchActivated.connect(FCBinding.run)
 except Exception as e:
-    print(e)
+    if Parameters_Ribbon.DEBUG_MODE is True:
+        print(f"{e.with_traceback(e.__traceback__)}, 0")
 
 Gui.addLanguagePath(os.path.join(os.path.dirname(FCBinding.__file__), "translations"))
 Gui.updateLocale()

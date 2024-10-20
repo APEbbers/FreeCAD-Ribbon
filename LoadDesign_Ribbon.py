@@ -1254,7 +1254,6 @@ class LoadDialog(Design_ui.Ui_Form):
         for key in Commands:
             if key == Toolbar:
                 ToolbarCommands = Commands[key]
-                print(ToolbarCommands)
 
         # add separators to the command list.
         index = 0

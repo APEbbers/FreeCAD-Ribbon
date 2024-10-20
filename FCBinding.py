@@ -58,8 +58,6 @@ import Parameters_Ribbon
 import LoadSettings_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
 import platform
-import subprocess
-import xml.etree.ElementTree as ET
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -576,7 +574,8 @@ class ModernMenu(RibbonBar):
         workbench = Gui.activeWorkbench()
         if not hasattr(workbench, "__Workbench__"):
             # XXX for debugging purposes
-            print(f"wb {workbench.MenuText} not loaded")
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                print(f"wb {workbench.MenuText} not loaded")
 
             # wait for 0.1s hoping that after that time the workbench is loaded
             timer.timeout.connect(self.onWbActivated)
@@ -626,7 +625,8 @@ class ModernMenu(RibbonBar):
                     except Exception:
                         continue
         except Exception as e:
-            print(e)
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                print(f"{e.with_traceback(e.__traceback__)}, 1")
             pass
 
         try:
@@ -740,7 +740,6 @@ class ModernMenu(RibbonBar):
                             position = OrderList.index(Text)
                         except ValueError:
                             position = 999999
-                            # print(e)
 
                         return position
 
@@ -961,7 +960,8 @@ class ModernMenu(RibbonBar):
                             shadowList.append(button.text())
 
                         except Exception as e:
-                            print(e)
+                            if Parameters_Ribbon.DEBUG_MODE is True:
+                                print(f"{e.with_traceback(None)}, 2")
                             continue
 
             # remove any suffix from the panel title
@@ -1093,7 +1093,8 @@ class ModernMenu(RibbonBar):
                                 if Child.text() == MenuText:
                                     ButtonList.append(Child)
                         except Exception as e:
-                            print(e)
+                            if Parameters_Ribbon.DEBUG_MODE is True:
+                                print(f"{e.with_traceback(None)}, 3")
                             continue
         except Exception:
             pass

@@ -181,3 +181,10 @@ if (
 else:
     MAX_COLUMN_PANELS = int(6)
     Settings.SetIntSetting("MaxColumnsPerPanel", MAX_COLUMN_PANELS)
+
+# Get the Debug Mode
+if Settings.GetBoolSetting("DebugMode") is True:
+    DEBUG_MODE = Settings.GetBoolSetting("DebugMode")
+else:
+    DEBUG_MODE = False
+    Settings.SetBoolSetting("DebugMode", False)
