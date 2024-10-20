@@ -3,7 +3,7 @@
  <class>Form</class>
  <widget class="QWidget" name="Form">
   <property name="windowModality">
-   <enum>Qt::WindowModal</enum>
+   <enum>Qt::WindowModality::WindowModal</enum>
   </property>
   <property name="geometry">
    <rect>
@@ -25,7 +25,7 @@
      <item row="0" column="0">
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+        <enum>Qt::Orientation::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
@@ -69,7 +69,7 @@
       <number>0</number>
      </property>
      <property name="elideMode">
-      <enum>Qt::ElideRight</enum>
+      <enum>Qt::TextElideMode::ElideRight</enum>
      </property>
      <widget class="QWidget" name="General">
       <property name="enabled">
@@ -82,129 +82,68 @@
        <string>General</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_9">
-       <item row="0" column="0" rowspan="2">
-        <widget class="QGroupBox" name="groupBox">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>120</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="title">
-          <string>Backup settings</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_8">
-          <property name="leftMargin">
-           <number>6</number>
-          </property>
-          <property name="topMargin">
-           <number>6</number>
-          </property>
-          <property name="rightMargin">
-           <number>6</number>
-          </property>
-          <property name="bottomMargin">
-           <number>6</number>
-          </property>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="EnableBackup">
-            <property name="font">
-             <font>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Create backup</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QGroupBox" name="groupBox_Backup">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>50</height>
-             </size>
-            </property>
-            <property name="font">
-             <font>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="title">
-             <string>Backup location</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_13">
-             <item row="0" column="0">
-              <widget class="QLabel" name="label_4">
-               <property name="frameShape">
-                <enum>QFrame::Box</enum>
-               </property>
-               <property name="text">
-                <string>...\</string>
-               </property>
-               <property name="scaledContents">
-                <bool>true</bool>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QPushButton" name="BackUpLocation">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                 <horstretch>20</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>20</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>Browse..</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <spacer name="verticalSpacer_7">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
+       <item row="6" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <widget class="QCheckBox" name="DebugMode">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>150</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="baseSize">
+            <size>
+             <width>20</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Debug mode</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>300</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>300</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Debug mode enables extra reports in the report view for debugging purposes.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item row="2" column="0">
         <widget class="QGroupBox" name="groupBox">
@@ -216,7 +155,6 @@
          </property>
          <property name="font">
           <font>
-           <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
@@ -230,7 +168,6 @@
              <widget class="QGroupBox" name="groupBox_3">
               <property name="font">
                <font>
-                <weight>50</weight>
                 <bold>false</bold>
                </font>
               </property>
@@ -244,7 +181,6 @@
                   <widget class="QCheckBox" name="ShowText_Small">
                    <property name="font">
                     <font>
-                     <weight>50</weight>
                      <bold>false</bold>
                     </font>
                    </property>
@@ -257,7 +193,6 @@
                   <widget class="QCheckBox" name="ShowText_Medium">
                    <property name="font">
                     <font>
-                     <weight>50</weight>
                      <bold>false</bold>
                     </font>
                    </property>
@@ -270,7 +205,6 @@
                   <widget class="QCheckBox" name="ShowText_Large">
                    <property name="font">
                     <font>
-                     <weight>50</weight>
                      <bold>false</bold>
                     </font>
                    </property>
@@ -288,7 +222,6 @@
              <widget class="QGroupBox" name="groupBox_4">
               <property name="font">
                <font>
-                <weight>50</weight>
                 <bold>false</bold>
                </font>
               </property>
@@ -314,7 +247,6 @@
                    </property>
                    <property name="font">
                     <font>
-                     <weight>50</weight>
                      <bold>false</bold>
                     </font>
                    </property>
@@ -339,7 +271,6 @@
                    </property>
                    <property name="font">
                     <font>
-                     <weight>50</weight>
                      <bold>false</bold>
                     </font>
                    </property>
@@ -376,7 +307,6 @@
                    </property>
                    <property name="font">
                     <font>
-                     <weight>50</weight>
                      <bold>false</bold>
                     </font>
                    </property>
@@ -384,10 +314,10 @@
                     <bool>true</bool>
                    </property>
                    <property name="alignment">
-                    <set>Qt::AlignCenter</set>
+                    <set>Qt::AlignmentFlag::AlignCenter</set>
                    </property>
                    <property name="correctionMode">
-                    <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+                    <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
                    </property>
                    <property name="showGroupSeparator" stdset="0">
                     <bool>false</bool>
@@ -422,15 +352,14 @@
                    </property>
                    <property name="font">
                     <font>
-                     <weight>50</weight>
                      <bold>false</bold>
                     </font>
                    </property>
                    <property name="alignment">
-                    <set>Qt::AlignCenter</set>
+                    <set>Qt::AlignmentFlag::AlignCenter</set>
                    </property>
                    <property name="correctionMode">
-                    <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+                    <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
                    </property>
                    <property name="value">
                     <number>44</number>
@@ -442,7 +371,7 @@
                <item row="0" column="1">
                 <spacer name="horizontalSpacer_3">
                  <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                  <property name="sizeHint" stdset="0">
                   <size>
@@ -471,7 +400,6 @@
               </property>
               <property name="font">
                <font>
-                <weight>50</weight>
                 <bold>false</bold>
                </font>
               </property>
@@ -516,7 +444,7 @@
                  <item row="0" column="2">
                   <spacer name="horizontalSpacer">
                    <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
+                    <enum>Qt::Orientation::Horizontal</enum>
                    </property>
                    <property name="sizeHint" stdset="0">
                     <size>
@@ -562,7 +490,6 @@
             </property>
             <property name="font">
              <font>
-              <weight>50</weight>
               <bold>false</bold>
              </font>
             </property>
@@ -576,7 +503,7 @@
              <item row="0" column="0">
               <widget class="QLabel" name="label_7">
                <property name="frameShape">
-                <enum>QFrame::Box</enum>
+                <enum>QFrame::Shape::Box</enum>
                </property>
                <property name="text">
                 <string>...\</string>
@@ -585,7 +512,7 @@
                 <bool>true</bool>
                </property>
                <property name="alignment">
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
                </property>
               </widget>
              </item>
@@ -613,6 +540,127 @@
           </item>
          </layout>
         </widget>
+       </item>
+       <item row="0" column="0" rowspan="2">
+        <widget class="QGroupBox" name="groupBox">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>120</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="title">
+          <string>Backup settings</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_8">
+          <property name="leftMargin">
+           <number>6</number>
+          </property>
+          <property name="topMargin">
+           <number>6</number>
+          </property>
+          <property name="rightMargin">
+           <number>6</number>
+          </property>
+          <property name="bottomMargin">
+           <number>6</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="EnableBackup">
+            <property name="font">
+             <font>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Create backup</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QGroupBox" name="groupBox_Backup">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="title">
+             <string>Backup location</string>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_13">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_4">
+               <property name="frameShape">
+                <enum>QFrame::Shape::Box</enum>
+               </property>
+               <property name="text">
+                <string>...\</string>
+               </property>
+               <property name="scaledContents">
+                <bool>true</bool>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QPushButton" name="BackUpLocation">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>20</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>20</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Browse..</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <spacer name="verticalSpacer_7">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
