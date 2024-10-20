@@ -53,6 +53,7 @@ class LoadDialog(Settings_ui.Ui_Form):
     ShowText_Small = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
     ShowText_Medium = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
     ShowText_Large = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
+    DebugMode = Parameters_Ribbon.DEBUG_MODE
 
     settingChanged = False
 
@@ -93,15 +94,17 @@ class LoadDialog(Settings_ui.Ui_Form):
         else:
             self.form.ShowText_Large.setCheckState(Qt.CheckState.Unchecked)
         self.form.MaxPanelColumn.setValue(Parameters_Ribbon.MAX_COLUMN_PANELS)
+        if Parameters_Ribbon.DEBUG_MODE is True:
+            self.form.DebugMode.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.DebugMode.setCheckState(Qt.CheckState.Unchecked)
 
         # region - connect controls with functions----------------------------------------------------
         #
         self.form.EnableBackup.clicked.connect(self.on_EnableBackup_clicked)
         self.form.BackUpLocation.clicked.connect(self.on_BackUpLocation_clicked)
         self.form.IconSize_Small.textChanged.connect(self.on_IconSize_Small_TextChanged)
-        self.form.IconSize_Medium.textChanged.connect(
-            self.on_IconSize_Medium_TextChanged
-        )
+        self.form.IconSize_Medium.textChanged.connect(self.on_IconSize_Medium_TextChanged)
         self.form.StyleSheetLocation.clicked.connect(self.on_StyleSheetLocation_clicked)
 
         self.form.ShowText_Small.clicked.connect(self.on_ShowTextSmall_clicked)
@@ -111,6 +114,8 @@ class LoadDialog(Settings_ui.Ui_Form):
         self.form.MaxPanelColumn.textChanged.connect(self.on_MaxPanelColumn_TextChanged)
 
         self.form.MaxPanelColumn.textChanged.connect(self.on_MaxPanelColumn_TextChanged)
+
+        self.form.DebugMode.clicked.connect(self.on_DebugMode_clicked)
 
         # Connect the cancel button
         def Cancel():
@@ -122,9 +127,7 @@ class LoadDialog(Settings_ui.Ui_Form):
         def GenerateJsonExit():
             self.on_Close_clicked(self)
 
-        self.form.GenerateJsonExit.connect(
-            self.form.GenerateJsonExit, SIGNAL("clicked()"), GenerateJsonExit
-        )
+        self.form.GenerateJsonExit.connect(self.form.GenerateJsonExit, SIGNAL("clicked()"), GenerateJsonExit)
         # endregion
 
         return
@@ -144,9 +147,7 @@ class LoadDialog(Settings_ui.Ui_Form):
 
     def on_BackUpLocation_clicked(self):
         BackupFolder = ""
-        BackupFolder = StandardFunctions.GetFolder(
-            parent=None, DefaultPath=Parameters_Ribbon.BACKUP_LOCATION
-        )
+        BackupFolder = StandardFunctions.GetFolder(parent=None, DefaultPath=Parameters_Ribbon.BACKUP_LOCATION)
         if BackupFolder != "":
             self.pathBackup = BackupFolder
             self.form.label_4.setText(BackupFolder)
@@ -164,10 +165,6 @@ class LoadDialog(Settings_ui.Ui_Form):
         Parameters_Ribbon.ICON_SIZE_MEDIUM = int(self.form.IconSize_Medium.text())
         self.settingChanged = True
         return
-
-    def on_MaxPanelColumn_TextChanged(self):
-        Parameters_Ribbon.MAX_COLUMN_PANELS = int(self.form.MaxPanelColumn.text())
-        self.settingChanged = True
 
     def on_MaxPanelColumn_TextChanged(self):
         Parameters_Ribbon.MAX_COLUMN_PANELS = int(self.form.MaxPanelColumn.text())
@@ -218,6 +215,16 @@ class LoadDialog(Settings_ui.Ui_Form):
         self.settingChanged = True
         return
 
+    def on_DebugMode_clicked(self):
+        if self.form.DebugMode.isChecked() is True:
+            Parameters_Ribbon.DEBUG_MODE = True
+            self.DebugMode = True
+        if self.form.DebugMode.isChecked() is False:
+            Parameters_Ribbon.DEBUG_MODE = False
+            self.DebugMode = False
+        self.settingChanged = True
+        return
+
     @staticmethod
     def on_Cancel_clicked(self):
         # Close the form
@@ -228,25 +235,14 @@ class LoadDialog(Settings_ui.Ui_Form):
     def on_Close_clicked(self):
         Parameters_Ribbon.Settings.SetBoolSetting("BackupEnabled", self.Backup)
         Parameters_Ribbon.Settings.SetStringSetting("BackupFolder", self.BackupLocation)
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "IconSize_Small", int(self.form.IconSize_Small.text())
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "IconSize_Medium", int(self.form.IconSize_Medium.text())
-        )
+        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", int(self.form.IconSize_Small.text()))
+        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", int(self.form.IconSize_Medium.text()))
         Parameters_Ribbon.Settings.SetStringSetting("Stylesheet", self.StyleSheet)
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "ShowIconText_Small", self.ShowText_Small
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "ShowIconText_Medium", self.ShowText_Medium
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "ShowIconText_Large", self.ShowText_Large
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "MaxColumnsPerPanel", int(self.form.MaxPanelColumn.text())
-        )
+        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", self.ShowText_Small)
+        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", self.ShowText_Medium)
+        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", self.ShowText_Large)
+        Parameters_Ribbon.Settings.SetIntSetting("MaxColumnsPerPanel", int(self.form.MaxPanelColumn.text()))
+        Parameters_Ribbon.Settings.SetBoolSetting("DebugMode", self.DebugMode)
 
         # Close the form
         self.form.close()
