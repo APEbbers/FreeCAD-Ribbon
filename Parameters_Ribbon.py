@@ -173,4 +173,4 @@ if Settings.GetBoolSetting("DebugMode") is True:
     DEBUG_MODE = Settings.GetBoolSetting("DebugMode")
 else:
     DEBUG_MODE = False
-    Settings.SetBoolSetting("DebugMode"), False
+    Settings.SetBoolSetting("DebugMode", False)
