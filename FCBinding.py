@@ -86,8 +86,8 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-import pyqtribbon_local_local_local as pyqtribbon_local_local_local
-from pyqtribbon_local_local_local.ribbonbar import RibbonMenu, RibbonBar
+import pyqtribbon_local as pyqtribbon
+from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
 
 import DragItems
 from DragItems import DragRibbonToolButton as RibbonToolButton
