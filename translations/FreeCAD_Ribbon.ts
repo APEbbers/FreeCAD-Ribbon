@@ -305,7 +305,7 @@
     <name>FreeCAD Ribbon</name>
     <message>
         <location filename="../FCBinding.py" line="77"/>
-        <source>pyqtribbon used local</source>
+        <source>pyqtribbon_local used local</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

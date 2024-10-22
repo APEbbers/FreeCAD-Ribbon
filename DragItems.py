@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -33,7 +33,7 @@ from PySide6.QtGui import (
     QDrag,
     # QKeySequence,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QToolButton,
     QWidget,
     QHBoxLayout,
@@ -58,7 +58,7 @@ from PySide6.QtWidgets import (
     QTreeWidget,
     QCalendarWidget,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -88,18 +88,20 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-import pyqtribbon as pyqtribbon
-from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon.panel import RibbonPanel
-from pyqtribbon.toolbutton import RibbonToolButton
-from pyqtribbon.separator import RibbonSeparator
+import pyqtribbon_local as pyqtribbon_local
+from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon_local.panel import RibbonPanel
+from pyqtribbon_local.toolbutton import RibbonToolButton
+from pyqtribbon_local.separator import RibbonSeparator
 
 
 class DragTargetIndicator(QLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setContentsMargins(25, 5, 25, 5)
-        self.setStyleSheet("QLabel { background-color: #ccc; border: 1px solid black; }")
+        self.setStyleSheet(
+            "QLabel { background-color: #ccc; border: 1px solid black; }"
+        )
 
 
 class DragRibbonToolButton(RibbonToolButton):
