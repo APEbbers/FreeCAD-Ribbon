@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -33,7 +33,7 @@ from PySide.QtGui import (
     QDrag,
     # QKeySequence,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QWidget,
     QHBoxLayout,
@@ -58,7 +58,7 @@ from PySide.QtWidgets import (
     QTreeWidget,
     QCalendarWidget,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -88,25 +88,18 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon_local.panel import RibbonPanel
-from pyqtribbon_local.toolbutton import RibbonToolButton
-from pyqtribbon_local.separator import RibbonSeparator
-
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
+import pyqtribbon as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
 
 
 class DragTargetIndicator(QLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setContentsMargins(25, 5, 25, 5)
-        self.setStyleSheet(
-            "QLabel { background-color: #ccc; border: 1px solid black; }"
-        )
+        self.setStyleSheet("QLabel { background-color: #ccc; border: 1px solid black; }")
 
 
 class DragRibbonToolButton(RibbonToolButton):
@@ -138,81 +131,75 @@ class DragRibbonToolButton(RibbonToolButton):
 
         self.setLayout(self.blayout)
 
-    def dragEnterEvent(self, e):
-        e.accept()
+    # def dragEnterEvent(self, e):
+    #     e.accept()
 
-    def dragLeaveEvent(self, e):
-        self._drag_target_indicator.hide()
-        e.accept()
+    # def dragLeaveEvent(self, e):
+    #     self._drag_target_indicator.hide()
+    #     e.accept()
 
-    def dragMoveEvent(self, e):
-        # Find the correct location of the drop target, so we can move it there.
-        index = self._find_drop_location(e)
-        if index is not None:
-            # Inserting moves the item if its alreaady in the layout.
-            self.blayout.insertWidget(index, self._drag_target_indicator)
-            # Hide the item being dragged.
-            e.source().hide()
-            # Show the target.
-            self._drag_target_indicator.show()
-        e.accept()
+    # def dragMoveEvent(self, e):
+    #     # Find the correct location of the drop target, so we can move it there.
+    #     index = self._find_drop_location(e)
+    #     if index is not None:
+    #         # Inserting moves the item if its alreaady in the layout.
+    #         self.blayout.insertWidget(index, self._drag_target_indicator)
+    #         # Hide the item being dragged.
+    #         e.source().hide()
+    #         # Show the target.
+    #         self._drag_target_indicator.show()
+    #     e.accept()
 
-    def dropEvent(self, e):
-        widget = e.source()
-        # Use drop target location for destination, then remove it.
-        self._drag_target_indicator.hide()
-        index = self.blayout.indexOf(self._drag_target_indicator)
-        if index is not None:
-            self.blayout.insertWidget(index, widget)
-            self.orderChanged.emit(self.get_item_data())
-            widget.show()
-            self.blayout.activate()
-        e.accept()
+    # def dropEvent(self, e):
+    #     widget = e.source()
+    #     # Use drop target location for destination, then remove it.
+    #     self._drag_target_indicator.hide()
+    #     index = self.blayout.indexOf(self._drag_target_indicator)
+    #     if index is not None:
+    #         self.blayout.insertWidget(index, widget)
+    #         self.orderChanged.emit(self.get_item_data())
+    #         widget.show()
+    #         self.blayout.activate()
+    #     e.accept()
 
-    def _find_drop_location(self, e):
-        pos = e.pos()
-        spacing = self.blayout.spacing() / 2
+    # def _find_drop_location(self, e):
+    #     pos = e.pos()
+    #     spacing = self.blayout.spacing() / 2
 
-        for n in range(self.blayout.count()):
-            # Get the widget at each index in turn.
-            w = self.blayout.itemAt(n).widget()
+    #     for n in range(self.blayout.count()):
+    #         # Get the widget at each index in turn.
+    #         w = self.blayout.itemAt(n).widget()
 
-            if self.orientation == Qt.Orientation.Vertical:
-                # Drag drop vertically.
-                drop_here = (
-                    pos.y() >= w.y() - spacing
-                    and pos.y() <= w.y() + w.size().height() + spacing
-                )
-            else:
-                # Drag drop horizontally.
-                drop_here = (
-                    pos.x() >= w.x() - spacing
-                    and pos.x() <= w.x() + w.size().width() + spacing
-                )
+    #         if self.orientation == Qt.Orientation.Vertical:
+    #             # Drag drop vertically.
+    #             drop_here = pos.y() >= w.y() - spacing and pos.y() <= w.y() + w.size().height() + spacing
+    #         else:
+    #             # Drag drop horizontally.
+    #             drop_here = pos.x() >= w.x() - spacing and pos.x() <= w.x() + w.size().width() + spacing
 
-            if drop_here:
-                # Drop over this target.
-                break
+    #         if drop_here:
+    #             # Drop over this target.
+    #             break
 
-        return n
+    #     return n
 
-    def add_item(self, item):
-        self.blayout.addWidget(item)
+    # def add_item(self, item):
+    #     self.blayout.addWidget(item)
 
-    def get_item_data(self):
-        data = []
-        for n in range(self.blayout.count()):
-            # Get the widget at each index in turn.
-            w = self.blayout.itemAt(n).widget()
-            data.append(w.data)
-        return data
+    # def get_item_data(self):
+    #     data = []
+    #     for n in range(self.blayout.count()):
+    #         # Get the widget at each index in turn.
+    #         w = self.blayout.itemAt(n).widget()
+    #         data.append(w.data)
+    #     return data
 
-    def mouseMoveEvent(self, e):
-        if e.buttons() == Qt.MouseButton.LeftButton:
-            drag = QDrag(self)
-            mime = QMimeData()
-            drag.setMimeData(mime)
-            drag.exec(Qt.DropAction.MoveAction)
+    # def mouseMoveEvent(self, e):
+    #     if e.buttons() == Qt.MouseButton.LeftButton:
+    #         drag = QDrag(self)
+    #         mime = QMimeData()
+    #         drag.setMimeData(mime)
+    #         drag.exec(Qt.DropAction.MoveAction)
 
 
 class DragSeparator(RibbonSeparator):
