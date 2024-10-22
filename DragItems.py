@@ -88,20 +88,18 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-import pyqtribbon_local_local as pyqtribbon_local
-from pyqtribbon_local_local.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon_local_local.panel import RibbonPanel
-from pyqtribbon_local_local.toolbutton import RibbonToolButton
-from pyqtribbon_local_local.separator import RibbonSeparator
+import pyqtribbon_local as pyqtribbon
+from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon_local.panel import RibbonPanel
+from pyqtribbon_local.toolbutton import RibbonToolButton
+from pyqtribbon_local.separator import RibbonSeparator
 
 
 class DragTargetIndicator(QLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setContentsMargins(25, 5, 25, 5)
-        self.setStyleSheet(
-            "QLabel { background-color: #ccc; border: 1px solid black; }"
-        )
+        self.setStyleSheet("QLabel { background-color: #ccc; border: 1px solid black; }")
 
 
 class DragRibbonToolButton(RibbonToolButton):
