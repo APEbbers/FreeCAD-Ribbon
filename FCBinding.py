@@ -86,8 +86,8 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-import pyqtribbon_local as pyqtribbon_local
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+import pyqtribbon_local_local as pyqtribbon_local_local
+from pyqtribbon_local_local.ribbonbar import RibbonMenu, RibbonBar
 
 import DragItems
 from DragItems import DragRibbonToolButton as RibbonToolButton
@@ -932,7 +932,7 @@ class ModernMenu(RibbonBar):
                         separator = panel.addLargeVerticalSeparator(
                             alignment=Qt.AlignmentFlag.AlignLeft, fixedHeight=False
                         )
-                        # there is a bug in pyqtribbon_local where the separator is placed in the wrong position
+                        # there is a bug in pyqtribbon_local_local where the separator is placed in the wrong position
                         # despite the correct order of the button list.
                         # To correct this, empty and disabled buttons are added for spacing.
                         # (adding spacers did not work)
