@@ -2,3 +2,5 @@
   replacement: PySide
 - search: PySide2
   replacement: PySide
+- search: pyqtribbon_local
+  replacement: pyqtribbon
