@@ -1,9 +1,10 @@
 # .pre-commit-config.yaml
 repos:
 -   repo: https://github.com/mattlqx/pre-commit-search-and-replace
-    rev: v1.1.2
+    rev: v1.1.6
     hooks:
     -   id: search-and-replace
+    language_version: default
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0  # this is optional, use `pre-commit autoupdate` to get the latest rev!
     hooks:
