@@ -5,7 +5,7 @@ repos:
     hooks:
     -   id: search-and-replace
     language: python
-    language_version: default
+    language_version: "3.12"
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0  # this is optional, use `pre-commit autoupdate` to get the latest rev!
     hooks:
