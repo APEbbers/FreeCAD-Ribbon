@@ -88,19 +88,20 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
+# import pyqtribbon_local as pyqtribbon
+# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon_local.panel import RibbonPanel
+# from pyqtribbon_local.toolbutton import RibbonToolButton
+# from pyqtribbon_local.separator import RibbonSeparator
+
 import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon_local.panel import RibbonPanel
-from pyqtribbon_local.toolbutton import RibbonToolButton
-from pyqtribbon_local.separator import RibbonSeparator
-
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
 
 
-class DragTargetIndicator(QLabel):
+class DragTargetIndicator(RibbonToolButton):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setContentsMargins(25, 5, 25, 5)
@@ -109,7 +110,7 @@ class DragTargetIndicator(QLabel):
         )
 
 
-class DragRibbonToolButton(RibbonToolButton):
+class DragWidget(QWidget):
     """
     Generic list sorting handler.
     """
@@ -127,8 +128,6 @@ class DragRibbonToolButton(RibbonToolButton):
             self.blayout = QVBoxLayout()
         else:
             self.blayout = QHBoxLayout()
-
-        self.setLayout(self.blayout)
 
         # Add the drag target indicator. This is invisible by default,
         # we show it and move it around while the drag is active.
@@ -204,8 +203,24 @@ class DragRibbonToolButton(RibbonToolButton):
         for n in range(self.blayout.count()):
             # Get the widget at each index in turn.
             w = self.blayout.itemAt(n).widget()
-            data.append(w.data)
+            if w != self._drag_target_indicator:
+                # The target indicator has no data.
+                data.append(w.data)
         return data
+
+
+class DragRibbonToolButton(RibbonToolButton):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # self.setContentsMargins(25, 5, 25, 5)
+        # self.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # self.setStyleSheet("border: 1px solid black;")
+        # Store data separately from display label, but use label for default.
+        # self.data = self.text()
+
+    def set_data(self, data):
+        self.data = data
 
     def mouseMoveEvent(self, e):
         if e.buttons() == Qt.MouseButton.LeftButton:

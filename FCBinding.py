@@ -23,7 +23,19 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import QIcon, QAction, QPixmap, QScrollEvent, QKeyEvent, QActionGroup
+from PySide.QtGui import (
+    QIcon,
+    QAction,
+    QPixmap,
+    QScrollEvent,
+    QKeyEvent,
+    QActionGroup,
+    QDrag,
+    QDropEvent,
+    QDragEnterEvent,
+    QDragMoveEvent,
+    QDragLeaveEvent,
+)
 from PySide.QtWidgets import (
     QToolButton,
     QToolBar,
@@ -36,6 +48,8 @@ from PySide.QtWidgets import (
     QLayout,
     QSpacerItem,
     QLayoutItem,
+    QHBoxLayout,
+    QVBoxLayout,
 )
 from PySide.QtCore import (
     Qt,
@@ -47,6 +61,7 @@ from PySide.QtCore import (
     QEvent,
     QMetaObject,
     QCoreApplication,
+    QMimeData,
 )
 
 import json
@@ -72,11 +87,18 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
+# import pyqtribbon_local as pyqtribbon
+# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+
 import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon_local.panel import RibbonPanel
-from pyqtribbon_local.toolbutton import RibbonToolButton
-from pyqtribbon_local.separator import RibbonSeparator
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+
+import DragItems
+from DragItems import DragRibbonToolButton, DragSeparator, DragPanel, DragWidget
+
 
 # import modules for keypress detection based on OS
 if platform.system() == "Windows" or platform.system() == "Darwin":
@@ -198,7 +220,8 @@ class ModernMenu(RibbonBar):
 
         # Set these settings and connections at init
         # Set the autohide behavior of the ribbon
-        self.setAutoHideRibbon(Parameters_Ribbon.AUTOHIDE_RIBBON)
+        # self.setAutoHideRibbon(Parameters_Ribbon.AUTOHIDE_RIBBON)
+        self.setAutoHideRibbon(False)
         # connect the collapsbutton with our own function
         self.collapseRibbonButton().connect(
             self.collapseRibbonButton(),
@@ -228,6 +251,18 @@ class ModernMenu(RibbonBar):
                 keyboard.on_press_key("alt", lambda _: self.ToggleMenuBar())
             except Exception:  # Use Qt incase of an error
                 self.UseQtKeyPress = True
+
+        # Enable DragDrop
+        self.setAcceptDrops(True)
+        # self.drag = DragWidget(orientation=Qt.Orientation.Vertical)
+        # container = QWidget()
+        # layout = QVBoxLayout()
+        # layout.addStretch(1)
+        # layout.addWidget(self.drag)
+        # layout.addStretch(1)
+        # container.setLayout(layout)
+
+        # self.currentCategory().addWidget(container)
         return
 
     # The backup keypress event
@@ -275,6 +310,86 @@ class ModernMenu(RibbonBar):
             TB.setMaximumHeight(45)
             self.setRibbonVisible(False)
         pass
+
+    # endregion
+
+    # region
+    # def dragEnterEvent(self, e):
+    #     e.accept()
+
+    # def dragLeaveEvent(self, e):
+    #     self._drag_target_indicator.hide()
+    #     e.accept()
+
+    # def dragMoveEvent(self, e):
+    #     # Find the correct location of the drop target, so we can move it there.
+    #     index = self._find_drop_location(e)
+    #     if index is not None:
+    #         # Inserting moves the item if its alreaady in the layout.
+    #         self.blayout.insertWidget(index, self._drag_target_indicator)
+    #         # Hide the item being dragged.
+    #         e.source().hide()
+    #         # Show the target.
+    #         self._drag_target_indicator.show()
+    #     e.accept()
+
+    # def dropEvent(self, e):
+    #     widget = e.source()
+    #     # Use drop target location for destination, then remove it.
+    #     self._drag_target_indicator.hide()
+    #     index = self.blayout.indexOf(self._drag_target_indicator)
+    #     if index is not None:
+    #         self.blayout.insertWidget(index, widget)
+    #         self.orderChanged.emit(self.get_item_data())
+    #         widget.show()
+    #         self.blayout.activate()
+    #     e.accept()
+
+    # def _find_drop_location(self, e):
+    #     pos = e.pos()
+    #     spacing = self.blayout.spacing() / 2
+
+    #     n = 0
+    #     for n in range(self.blayout.count()):
+    #         # Get the widget at each index in turn.
+    #         w = self.blayout.itemAt(n).widget()
+
+    #         if self.orientation == Qt.Orientation.Vertical:
+    #             # Drag drop vertically.
+    #             drop_here = (
+    #                 pos.y() >= w.y() - spacing
+    #                 and pos.y() <= w.y() + w.size().height() + spacing
+    #             )
+    #         else:
+    #             # Drag drop horizontally.
+    #             drop_here = (
+    #                 pos.x() >= w.x() - spacing
+    #                 and pos.x() <= w.x() + w.size().width() + spacing
+    #             )
+
+    #         if drop_here:
+    #             # Drop over this target.
+    #             break
+
+    #     return n
+
+    # def add_item(self, item):
+    #     self.blayout.addWidget(item)
+
+    # def get_item_data(self):
+    #     data = []
+    #     for n in range(self.blayout.count()):
+    #         # Get the widget at each index in turn.
+    #         w = self.blayout.itemAt(n).widget()
+    #         data.append(w.data)
+    #     return data
+
+    # def mouseMoveEvent(self, e):
+    #     if e.buttons() == Qt.MouseButton.LeftButton:
+    #         drag = QDrag(self)
+    #         mime = QMimeData()
+    #         drag.setMimeData(mime)
+    #         drag.exec(Qt.DropAction.MoveAction)
 
     # endregion
 
@@ -335,6 +450,8 @@ class ModernMenu(RibbonBar):
         self.quickAccessToolBar().setSizePolicy(
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
         )
+        # # Enable DragDrop
+        # self.quickAccessToolBar().setAcceptDrops(True)
 
         # Get the order of workbenches from Parameters
         WorkbenchOrderParam = "User parameter:BaseApp/Preferences/Workbenches/"
@@ -441,6 +558,8 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setSizePolicy(
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
         )
+        # # Enable DragDrop
+        # self.rightToolBar().setAcceptDrops(True)
 
         # Set the application button
         self.applicationOptionButton().setMinimumWidth(self.iconSize * self.sizeFactor)
@@ -664,6 +783,8 @@ class ModernMenu(RibbonBar):
                 showPanelOptionButton=True,
             )
             panel.panelOptionButton().hide()
+            # # Enable DragDrop
+            # panel.setAcceptDrops(True)
 
             # get list of all buttons in toolbar
             allButtons: list = []
@@ -820,7 +941,7 @@ class ModernMenu(RibbonBar):
                         separator = panel.addLargeVerticalSeparator(
                             alignment=Qt.AlignmentFlag.AlignLeft, fixedHeight=False
                         )
-                        # there is a bug in pyqtribbon where the separator is placed in the wrong position
+                        # there is a bug in pyqtribbon_local_local_local_local_local where the separator is placed in the wrong position
                         # despite the correct order of the button list.
                         # To correct this, empty and disabled buttons are added for spacing.
                         # (adding spacers did not work)
@@ -955,6 +1076,10 @@ class ModernMenu(RibbonBar):
 
                             # Set the default actiom
                             btn.setDefaultAction(action)
+
+                            btn.setAcceptDrops(True)
+
+                            # self.drag.add_item(btn)
 
                             # add the button text to the shadowList for checking if buttons are already there.
                             shadowList.append(button.text())
