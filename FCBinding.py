@@ -885,7 +885,6 @@ class ModernMenu(RibbonBar):
                                 btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                                 btn.setMinimumWidth(btn.height + 20)
                                 btn.setDefaultAction(btn.actions()[0])
-                                btn.setText()
 
                             # add the button text to the shadowList for checking if buttons are already there.
                             shadowList.append(button.text())
