@@ -847,6 +847,19 @@ class ModernMenu(RibbonBar):
                                 ]["toolbars"][toolbar]["commands"][action.data()][
                                     "text"
                                 ]
+
+                                # There is a bug in freecad with the comp-sketch menu hase the wrong text
+                                if (
+                                    action.data() == "PartDesign_CompSketches"
+                                    and self.ribbonStructure["workbenches"][
+                                        workbenchName
+                                    ]["toolbars"][toolbar]["commands"][action.data()][
+                                        "text"
+                                    ]
+                                    == "Create datum"
+                                ):
+                                    text = "Create sketch"
+
                                 # the text would be overwritten again when the state of the action changes
                                 # (e.g. when getting enabled / disabled), therefore the action itself
                                 # is manipulated.
