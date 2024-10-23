@@ -368,7 +368,7 @@ def getRepoAdress(base_path):
 
         return ref
     except Exception:
-        return
+        return ""
 
 
 def CreateToolbar(Name: str, WorkBenchName: str = "Global", ButtonList: list = []):
