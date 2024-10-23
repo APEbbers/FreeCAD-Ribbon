@@ -777,6 +777,17 @@ class ModernMenu(RibbonBar):
                                 text = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
                                     "commands"
                                 ][action.data()]["text"]
+
+                                # There is a bug in freecad with the comp-sketch menu hase the wrong text
+                                if (
+                                    action.data() == "PartDesign_CompSketches"
+                                    and self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
+                                        "commands"
+                                    ][action.data()]["text"]
+                                    == "Create datum"
+                                ):
+                                    text = "Create sketch"
+
                                 # the text would be overwritten again when the state of the action changes
                                 # (e.g. when getting enabled / disabled), therefore the action itself
                                 # is manipulated.
@@ -874,6 +885,7 @@ class ModernMenu(RibbonBar):
                                 btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                                 btn.setMinimumWidth(btn.height + 20)
                                 btn.setDefaultAction(btn.actions()[0])
+                                btn.setText()
 
                             # add the button text to the shadowList for checking if buttons are already there.
                             shadowList.append(button.text())
