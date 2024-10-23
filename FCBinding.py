@@ -289,14 +289,16 @@ class ModernMenu(RibbonBar):
         return
 
     def ToggleMenuBar(self):
-        mw = Gui.getMainWindow()
-        menuBar = mw.menuBar()
-        if menuBar.isVisible() is True:
-            menuBar.hide()
-            return
-        if menuBar.isVisible() is False:
-            menuBar.show()
-            return
+        wb = Gui.activeWorkbench()
+        if wb.name() != "SketcherWorkbench":
+            mw = Gui.getMainWindow()
+            menuBar = mw.menuBar()
+            if menuBar.isVisible() is True:
+                menuBar.hide()
+                return
+            if menuBar.isVisible() is False:
+                menuBar.show()
+                return
 
     def createModernMenu(self):
         """
