@@ -94,7 +94,7 @@ translate = App.Qt.translate
 # from pyqtribbon_local.toolbutton import RibbonToolButton
 # from pyqtribbon_local.separator import RibbonSeparator
 
-import pyqtribbon as pyqtribbon
+import pyqtribbon_local as pyqtribbon
 from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
 from pyqtribbon.panel import RibbonPanel
 from pyqtribbon.toolbutton import RibbonToolButton
@@ -105,7 +105,9 @@ class DragTargetIndicator(RibbonToolButton):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setContentsMargins(25, 5, 25, 5)
-        self.setStyleSheet("QLabel { background-color: #ccc; border: 1px solid black; }")
+        self.setStyleSheet(
+            "QLabel { background-color: #ccc; border: 1px solid black; }"
+        )
 
 
 class DragWidget(QWidget):
@@ -176,10 +178,16 @@ class DragWidget(QWidget):
 
             if self.orientation == Qt.Orientation.Vertical:
                 # Drag drop vertically.
-                drop_here = pos.y() >= w.y() - spacing and pos.y() <= w.y() + w.size().height() + spacing
+                drop_here = (
+                    pos.y() >= w.y() - spacing
+                    and pos.y() <= w.y() + w.size().height() + spacing
+                )
             else:
                 # Drag drop horizontally.
-                drop_here = pos.x() >= w.x() - spacing and pos.x() <= w.x() + w.size().width() + spacing
+                drop_here = (
+                    pos.x() >= w.x() - spacing
+                    and pos.x() <= w.x() + w.size().width() + spacing
+                )
 
             if drop_here:
                 # Drop over this target.
