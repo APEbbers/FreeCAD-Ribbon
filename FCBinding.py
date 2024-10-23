@@ -209,17 +209,21 @@ class ModernMenu(RibbonBar):
         else:
             self.setMaximumHeight(200)
 
-        # Get the keypress when on linux
-        if platform.system() == "Linux" or platform.system() == "Darwin":
-            self.UseQtKeyPress = True
+        # ------- Bug when a workbench is activated --------------------------------
+        #
+        # # Get the keypress when on linux
+        # if platform.system() == "Linux" or platform.system() == "Darwin":
+        #     self.UseQtKeyPress = True
 
-        # Get the keypress when on windows or mac
-        if platform.system() == "Windows" or platform.system() == "Darwin":
-            try:
-                # connect the alt key to the menuBar
-                keyboard.on_press_key("alt", lambda _: self.ToggleMenuBar())
-            except Exception:  # Use Qt incase of an error
-                self.UseQtKeyPress = True
+        # # Get the keypress when on windows or mac
+        # if platform.system() == "Windows" or platform.system() == "Darwin":
+        #     try:
+        #         # connect the alt key to the menuBar
+        #         keyboard.on_press_key("alt", lambda _: self.ToggleMenuBar())
+        #     except Exception:  # Use Qt incase of an error
+        #         self.UseQtKeyPress = True
+        #
+        # --------------------------------------------------------------------------
         return
 
     # The backup keypress event
