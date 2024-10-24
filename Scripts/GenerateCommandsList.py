@@ -139,7 +139,9 @@ def CreateLists():
         # get the command with this name
         command = Gui.Command.get(CommandName[0])
         WorkBenchName = CommandName[1]
-        if command is not None and not List_QuickAccessCommands.__contains__(CommandName[0]):
+        if command is not None and not List_QuickAccessCommands.__contains__(
+            CommandName[0]
+        ):
             # get the icon for this command
             if command.getInfo()["pixmap"] != "":
                 Icon = Gui.getIcon(command.getInfo()["pixmap"])

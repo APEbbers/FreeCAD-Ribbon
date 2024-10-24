@@ -785,7 +785,9 @@ CustomJson_Workbenches = {
                         "Post Process",
                         "Check the CAM job for common errors",
                     ],
-                    "commands": {"CAM_Job": {"size": "large", "text": "Job", "icon": "CAM_Job"}},
+                    "commands": {
+                        "CAM_Job": {"size": "large", "text": "Job", "icon": "CAM_Job"}
+                    },
                 },
                 "Tool Commands": {
                     "order": [
@@ -2868,7 +2870,9 @@ def CreateJson():
                     "order",
                 ],
             )
-            Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolbarOrder
+            Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][
+                "order"
+            ] = ToolbarOrder
 
             # Go through the toolbars
             for key, value in list(wbToolbars.items()):
@@ -2904,7 +2908,9 @@ def CreateJson():
                                 CommandOrder = Gui.Command.get(value[i3])
                                 if CommandOrder is not None:
                                     MenuNameOrder = (
-                                        CommandOrder.getInfo()["menuText"].replace("&", "").replace("...", "")
+                                        CommandOrder.getInfo()["menuText"]
+                                        .replace("&", "")
+                                        .replace("...", "")
                                     )
                                     Order.append(MenuNameOrder)
 
@@ -2934,12 +2940,12 @@ def CreateJson():
                                     ],
                                 )
 
-                                Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
-                                    "order"
-                                ] = Order
-                                Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar]["commands"][
-                                    CommandName
-                                ] = {
+                                Dict_RibbonCommandPanel["workbenches"][WorkBenchName][
+                                    "toolbars"
+                                ][Toolbar]["order"] = Order
+                                Dict_RibbonCommandPanel["workbenches"][WorkBenchName][
+                                    "toolbars"
+                                ][Toolbar]["commands"][CommandName] = {
                                     "size": Size,
                                     "text": MenuName,
                                     "icon": IconName,
@@ -3094,7 +3100,12 @@ def List_ReturnCustomToolbars():
                 ).GetGroups()
 
                 for Group in CustomToolbars:
-                    Parameter = App.ParamGet("User parameter:BaseApp/Workbench/" + WorkBenchName + "/Toolbar/" + Group)
+                    Parameter = App.ParamGet(
+                        "User parameter:BaseApp/Workbench/"
+                        + WorkBenchName
+                        + "/Toolbar/"
+                        + Group
+                    )
                     Name = Parameter.GetString("Name")
 
                     ListCommands = []
@@ -3127,7 +3138,12 @@ def Dict_ReturnCustomToolbars(WorkBenchName):
             ).GetGroups()
 
             for Group in CustomToolbars:
-                Parameter = App.ParamGet("User parameter:BaseApp/Workbench/" + WorkBenchName + "/Toolbar/" + Group)
+                Parameter = App.ParamGet(
+                    "User parameter:BaseApp/Workbench/"
+                    + WorkBenchName
+                    + "/Toolbar/"
+                    + Group
+                )
                 Name = Parameter.GetString("Name")
 
                 if Name != "":
@@ -3153,7 +3169,9 @@ def Dict_AddCustomToolbarsToWorkbench(WorkBenchName):
     try:
         for CustomToolbar in Dict_CustomPanels["customToolbars"][WorkBenchName]:
             ListCommands = []
-            Commands = Dict_CustomPanels["customToolbars"][WorkBenchName][CustomToolbar]["commands"]
+            Commands = Dict_CustomPanels["customToolbars"][WorkBenchName][
+                CustomToolbar
+            ]["commands"]
 
             for key, value in list(Commands.items()):
                 for i in range(len(List_Commands)):
