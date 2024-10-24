@@ -40,8 +40,8 @@ import sys
 import json
 from datetime import datetime
 import shutil
-from . import Standard_Functions_RIbbon as StandardFunctions
-from . import Parameters_Ribbon
+import Standard_Functions_RIbbon as StandardFunctions
+import Parameters_Ribbon
 import webbrowser
 import time
 
@@ -182,7 +182,7 @@ class LoadDialog(Design_ui.Ui_Form):
             WorkBench = Gui.getWorkbench(self.List_Workbenches[i][0])
             ToolbarItems = WorkBench.getToolbarItems()
 
-            for key, value in list(ToolbarItems.items()):
+            for key, value in ToolbarItems.items():
                 for j in range(len(value)):
                     Item = [value[j], self.List_Workbenches[i][0]]
                     # if CommandNames.__contains__(Item) is False:
@@ -836,7 +836,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 # Get the global custom toolbars
                 CustomCommands = self.Dict_ReturnCustomToolbars_Global()
                 ToolbarItems.update(CustomCommands)
-                for key, value in list(ToolbarItems.items()):
+                for key, value in ToolbarItems.items():
                     # Go through the selected items, if they mach continue
                     for i in range(len(SelectedToolbars)):
                         if key == SelectedToolbars[i].text():
@@ -1013,9 +1013,9 @@ class LoadDialog(Design_ui.Ui_Form):
                         WorkBenchName = WorkBench
 
                         # Get the commands and their original toolbar
-                        for key, value in list(self.Dict_CustomToolbars["customToolbars"][
+                        for key, value in self.Dict_CustomToolbars["customToolbars"][
                             WorkBenchName
-                        ][CustomPanelTitle]["commands"].items()):
+                        ][CustomPanelTitle]["commands"].items():
                             for CommandListItem in self.List_Commands:
                                 # Check if the items is already there
                                 IsInList = ShadowList.__contains__(CommandListItem[0])
@@ -1073,9 +1073,9 @@ class LoadDialog(Design_ui.Ui_Form):
             if WorkBench[2] == WorkBenchTitle:
                 WorkBenchName = WorkBench[0]
                 try:
-                    for key, value in list(self.Dict_CustomToolbars["customToolbars"][
+                    for key, value in self.Dict_CustomToolbars["customToolbars"][
                         WorkBenchName
-                    ].items()):
+                    ].items():
                         if key == CustomPanelTitle:
                             # remove the custom toolbar from the combobox
                             for i in range(self.form.CustomToolbarSelector.count()):
@@ -2520,7 +2520,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
                             WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
 
-                            for key, value in list(Commands.items()):
+                            for key, value in Commands.items():
                                 for i in range(len(self.List_Commands)):
                                     if (
                                         self.List_Commands[i][2] == key
@@ -2565,7 +2565,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     CustomToolbar
                 ]["commands"]
 
-                for key, value in list(Commands.items()):
+                for key, value in Commands.items():
                     for i in range(len(self.List_Commands)):
                         if self.List_Commands[i][2] == key:
                             if (

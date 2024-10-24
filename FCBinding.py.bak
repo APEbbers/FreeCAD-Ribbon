@@ -53,10 +53,10 @@ import json
 import os
 import sys
 import webbrowser
-from . import LoadDesign_Ribbon
-from . import Parameters_Ribbon
-from . import LoadSettings_Ribbon
-from . import Standard_Functions_RIbbon as StandardFunctions
+import LoadDesign_Ribbon
+import Parameters_Ribbon
+import LoadSettings_Ribbon
+import Standard_Functions_RIbbon as StandardFunctions
 import platform
 
 # Get the resources
@@ -147,7 +147,7 @@ class ModernMenu(RibbonBar):
         # Get the adress of the reporisaty adress
         self.ReproAdress = StandardFunctions.getRepoAdress(os.path.dirname(__file__))
         if self.ReproAdress != "" or self.ReproAdress is not None:
-            print((translate("FreeCAD Ribbon", "FreeCAD Ribbon: ") + self.ReproAdress))
+            print(translate("FreeCAD Ribbon", "FreeCAD Ribbon: ") + self.ReproAdress)
 
         # Set the icon size if parameters has none
         # Define the icon sizes
@@ -364,7 +364,7 @@ class ModernMenu(RibbonBar):
 
         # add category for each workbench
         for i in range(len(WorkbenchOrderedList)):
-            for workbenchName, workbench in list(Gui.listWorkbenches().items()):
+            for workbenchName, workbench in Gui.listWorkbenches().items():
                 if workbenchName == WorkbenchOrderedList[i]:
                     name = workbench.MenuText
                     if name != "" and name not in self.ribbonStructure["ignoredWorkbenches"] and name != "<none>":
@@ -1003,7 +1003,7 @@ class ModernMenu(RibbonBar):
             Commands = self.ribbonStructure["customToolbars"][WorkBenchName][CustomToolbar]["commands"]
 
             # Get the command and its original toolbar
-            for key, value in list(Commands.items()):
+            for key, value in Commands.items():
                 # get the menu text from the command list
                 for CommandName in Gui.listCommands():
                     Command = Gui.Command.get(CommandName)
