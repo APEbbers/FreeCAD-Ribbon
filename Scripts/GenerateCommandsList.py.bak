@@ -114,7 +114,7 @@ def CreateLists():
             print(WorkBenchItem[0])
             Gui.activateWorkbench(WorkBenchItem[0])
             ToolbarItems = WorkBench.getToolbarItems()
-            for key, value in list(ToolbarItems.items()):
+            for key, value in ToolbarItems.items():
                 MustBeIgnored = False
                 for ToolBar in List_IconOnlyToolbars:
                     if ToolBar == key:
