@@ -2,14 +2,14 @@
 
 An Ribbon UI for FreeCAD, based on the PyQtRibbon library (https://github.com/haiiliin/pyqtribbon).
 This ribbon is based the work of Geolta (https://github.com/geolta/FreeCAD-Ribbon) and HakanSeven (https://github.com/HakanSeven12/Modern-UI) for the Modern-UI workbench.
-
 ![](https://github.com/APEbbers/FreeCAD-Ribbon/blob/main/Resources/Images/Screenshot.png)
-
 ![](https://github.com/APEbbers/FreeCAD-Ribbon/blob/main/Resources/Images/Screenshot_CloseUP.png)
 
-![](https://github.com/APEbbers/FreeCAD-Ribbon/blob/main/Resources/Images/Screenshot_DarkMode.png)
 
+![](https://github.com/APEbbers/FreeCAD-Ribbon/blob/main/Resources/Images/Screenshot_DarkMode.png)
 ![](https://github.com/APEbbers/FreeCAD-Ribbon/blob/main/Resources/Images/Screenshot_DarkMode_CloseUP.png)
+
+
 
 The FreeCAD ribbon provides the following functions and features:
 
