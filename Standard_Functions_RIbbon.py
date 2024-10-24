@@ -273,7 +273,7 @@ def OpenFile(FileName: str):
                     subprocess.check_output(["xdg-open", FileName.strip()])
                 except subprocess.CalledProcessError:
                     Print(
-                        f"An error occured when opening {FileName}!\n"
+                        f"An error occurred when opening {FileName}!\n"
                         + "This can happen when running FreeCAD as an AppImage.\n"
                         + "Please install FreeCAD directly.",
                         "Error",
