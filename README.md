@@ -5,7 +5,7 @@ This ribbon is based the work of Geolta (https://github.com/geolta/FreeCAD-Ribbo
 
 ![](https://github.com/APEbbers/FreeCAD-Ribbon/blob/main/Resources/Images/Screenshot.png)
 
-![](https://github.com/APEbbers/FreeCAD-Ribbon/blob/Develop/Resources/Images/Screenshot_DarkMode.png)
+![](https://github.com/APEbbers/FreeCAD-Ribbon/blob/main/Resources/Images/Screenshot_DarkMode.png)
 
 The FreeCAD ribbon provides the following functions and features:
 
