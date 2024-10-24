@@ -2762,7 +2762,7 @@ CustomJson_Workbenches = {
                         "Axonometric length dimension",
                         "Insert Landmark Dimension - EXPERIMENTAL",
                         "Repair Dimension References",
-                        "Insert '\\u2300' Prefix",
+                        "Insert '\u2300' Prefix",
                         "Increase Decimal Places",
                     ],
                     "commands": {
@@ -2825,7 +2825,7 @@ def CreateJson():
             skipWorkbenchList.append(Workbench)
         Dict_RibbonCommandPanel.update(CustomJson_Workbenches)
 
-    # Go through the workbenches
+    # Go throug the workbenches
     for WorkbenchItem in List_Workbenches:
         WorkBenchName = WorkbenchItem[0]
 
@@ -2853,7 +2853,7 @@ def CreateJson():
             ToolbarOrder = []
             ToolbarOrder.append("Individual views")
             ToolbarOrder.append("Structure")
-            for key, value in list(wbToolbars.items()):
+            for key, value in wbToolbars.items():
                 IsInList = False
                 for item in ToolbarOrder:
                     if item == key:
@@ -2875,7 +2875,7 @@ def CreateJson():
             ] = ToolbarOrder
 
             # Go through the toolbars
-            for key, value in list(wbToolbars.items()):
+            for key, value in wbToolbars.items():
                 Toolbar = key
 
                 # Exclude the toolbars that will be ignored in the RibbonBar
@@ -2891,7 +2891,7 @@ def CreateJson():
                 if ToolbarToBeSkipped is False:
                     # create a empty size string
                     Size = "small"
-                    # Define empty strings for the command name and icon name
+                    # Defien empty strings for the command name and icon name
                     CommandName = ""
                     IconName = ""
 
@@ -3005,7 +3005,7 @@ def CreateLists():
     for i in range(len(List_Workbenches)):
         WorkBench = Gui.getWorkbench(List_Workbenches[i][0])
         ToolbarItems = WorkBench.getToolbarItems()
-        for key, value in list(ToolbarItems.items()):
+        for key, value in ToolbarItems.items():
             for j in range(len(value)):
                 Item = [value[j], List_Workbenches[i][0]]
                 IsInList = False
@@ -3173,7 +3173,7 @@ def Dict_AddCustomToolbarsToWorkbench(WorkBenchName):
                 CustomToolbar
             ]["commands"]
 
-            for key, value in list(Commands.items()):
+            for key, value in Commands.items():
                 for i in range(len(List_Commands)):
                     if List_Commands[i][2] == key:
                         Command = List_Commands[i][0]

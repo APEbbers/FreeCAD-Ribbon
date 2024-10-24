@@ -123,7 +123,7 @@ def UpdateCommands():
                 ][ToolBar]["commands"]:
                     # Get the command (key) and its custom name (value) from the commandlist
                     # And compare them with the command in the Dict_RibbonCommandPanel
-                    for key, value in list(Dict_Commands.items()):
+                    for key, value in Dict_Commands.items():
                         # If the command and key are equal and value is not empty or three dots,
                         # Get the custom name and change the text in the Dict_RibbonCommandPanel
                         if Command == key:
