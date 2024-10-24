@@ -36,7 +36,7 @@ See the [wiki page](https://github.com/APEbbers/FreeCAD-Ribbon/wiki) for more de
 1. Search for 'FreeCAD-Ribbon'.
 1. Click on 'Install'.
 
-Result: Addon will be installed and FreeCAD will prompt for a restart.  
+Result: Addon will be installed and FreeCAD will prompt for a restart.
 Accept prompt and FreeCAD will restart with the Ribbon addon included.
 
 <details>
