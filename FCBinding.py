@@ -53,10 +53,10 @@ import json
 import os
 import sys
 import webbrowser
-from . import LoadDesign_Ribbon
-from . import Parameters_Ribbon
-from . import LoadSettings_Ribbon
-from . import Standard_Functions_RIbbon as StandardFunctions
+import LoadDesign_Ribbon
+import Parameters_Ribbon
+import LoadSettings_Ribbon
+import Standard_Functions_RIbbon as StandardFunctions
 import platform
 
 # Get the resources

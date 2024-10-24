@@ -22,8 +22,8 @@
 import os
 import FreeCAD as App
 import FreeCADGui as Gui
-from . import FCBinding
-from . import Parameters_Ribbon
+import FCBinding
+import Parameters_Ribbon
 
 
 def QT_TRANSLATE_NOOP(context, text):
