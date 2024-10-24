@@ -135,3 +135,4 @@ __pycache__
 .pttx
 *.pptx
 /CreateTranslations.bat
+*.bak
