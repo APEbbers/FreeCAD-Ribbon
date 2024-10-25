@@ -123,7 +123,7 @@ class ModernMenu(RibbonBar):
         # connect the signals
         self.connectSignals()
 
-        # if FreeCAD is version 0.21 create a custom toolbar "Invidual Views"
+        # if FreeCAD is version 0.21 create a custom toolbar "Individual Views"
         if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
             StandardFunctions.CreateToolbar(
                 Name="Individual views",
@@ -144,7 +144,7 @@ class ModernMenu(RibbonBar):
                 WorkBenchName="Global",
             )
 
-        # Get the adress of the reporisaty adress
+        # Get the address of the repository address
         self.ReproAdress = StandardFunctions.getRepoAdress(os.path.dirname(__file__))
         if self.ReproAdress != "" or self.ReproAdress is not None:
             print(translate("FreeCAD Ribbon", "FreeCAD Ribbon: ") + self.ReproAdress)
@@ -211,7 +211,7 @@ class ModernMenu(RibbonBar):
         if self.isEnabled() is False:
             mw.menuBar().show()
 
-        # make sure that the ribbon cannot "dissapear"
+        # make sure that the ribbon cannot "disappear"
         if self.ribbonVisible() is False:
             self.setMaximumHeight(45)
         else:
@@ -228,7 +228,7 @@ class ModernMenu(RibbonBar):
         #     try:
         #         # connect the alt key to the menuBar
         #         keyboard.on_press_key("alt", lambda _: self.ToggleMenuBar())
-        #     except Exception:  # Use Qt incase of an error
+        #     except Exception:  # Use Qt in case of an error
         #         self.UseQtKeyPress = True
         #
         # --------------------------------------------------------------------------
@@ -240,7 +240,7 @@ class ModernMenu(RibbonBar):
             if event.key() == Qt.Key.Key_Alt or event.key() == Qt.Key.Key_AltGr:
                 self.ToggleMenuBar()
 
-    # implentation to add actions to the Filemenu. Needed for the accessiores menu
+    # implementation to add actions to the Filemenu. Needed for the accessories menu
     def addAction(self, action: QAction):
         menu = self.findChild(RibbonMenu, "Ribbon")
         if menu is None:
@@ -248,7 +248,7 @@ class ModernMenu(RibbonBar):
         menu.addAction(action)
         return
 
-    # used to scroll a ribbon horizontal, when it's wider than the screen
+    # used to scroll a ribbon horizontally, when it's wider than the screen
     def wheelEvent(self, event):
         x = 0
         # Get the scroll value (1 or -1)
@@ -309,7 +309,7 @@ class ModernMenu(RibbonBar):
         Create menu tabs.
         """
         # add quick access buttons
-        i = 2  # Start value for button count. Used for width of quixkaccess toolbar
+        i = 2  # Start value for button count. Used for width of quickaccess toolbar
         toolBarWidth = (self.iconSize * self.sizeFactor) * i
         for commandName in self.ribbonStructure["quickAccessCommands"]:
             i = i + 1
@@ -357,7 +357,7 @@ class ModernMenu(RibbonBar):
                 WorkbenchOrderedList.append(InstalledWB)
             IsInList = False
         # There is an issue with the internal assembly wb showing the wrong panel
-        # when assembly4 wb is installed and positioned for the internal assemmbly wb
+        # when assembly4 wb is installed and positioned for the internal assembly wb
         for i in range(len(WorkbenchOrderedList)):
             if (
                 WorkbenchOrderedList[i] == "Assembly4Workbench"
@@ -402,7 +402,7 @@ class ModernMenu(RibbonBar):
         self.tabBar().font().setPointSizeF(10)
         self.tabBar().setFixedHeight(self.iconSize * self.sizeFactor)
 
-        # Set the size of the collpseRibbonButton
+        # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(self.iconSize, self.iconSize)
 
         # Set the helpbutton
@@ -441,7 +441,7 @@ class ModernMenu(RibbonBar):
         pinButton.clicked.connect(self.onPinClicked)
         self.rightToolBar().addWidget(pinButton)
 
-        # Set the widht of the right toolbar
+        # Set the width of the right toolbar
         i = len(self.rightToolBar().actions())
         self.rightToolBar().setMinimumWidth(self.iconSize * self.sizeFactor * i)
         self.rightToolBar().setSizePolicy(
@@ -607,7 +607,7 @@ class ModernMenu(RibbonBar):
         ListToolbars: list = workbench.listToolbars()
         if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
             ListToolbars.append("Individual views")
-        # Get custom toolbars that are created in the toolbar enviroment and add them to the list of toolbars
+        # Get custom toolbars that are created in the toolbar environment and add them to the list of toolbars
         CustomToolbars = self.List_ReturnCustomToolbars()
         for CustomToolbar in CustomToolbars:
             if CustomToolbar[1] == workbenchName:
@@ -800,15 +800,15 @@ class ModernMenu(RibbonBar):
                 if buttonSize == "large" or button.text().__contains__("separator"):
                     rowCount = rowCount + LargeButtonRows
 
-                # If the number of rows devided by 3 is a whole number,
-                # the number of columns is the rowcount devided by 3.
+                # If the number of rows divided by 3 is a whole number,
+                # the number of columns is the rowcount divided by 3.
                 columnCount = rowCount / 3
                 # ----------------------------------------------------------------------------------------
 
-                # if the button has not text, remove it, skipp it and increase the counter.
+                # if the button has not text, remove it, skip it and increase the counter.
                 if button.text() == "":
                     continue
-                # If the command is already there, remove it, skipp it and increase the counter.
+                # If the command is already there, remove it, skip it and increase the counter.
                 elif shadowList.__contains__(button.text()) is True:
                     continue
                 else:
@@ -1033,7 +1033,7 @@ class ModernMenu(RibbonBar):
                 # Set the optionbutton text
                 OptionButton.setText("more...")
 
-            # Set the margings. In linux seems the style behavior different than on Windows
+            # Set the margins. In linux seems the style behavior different than on Windows
             Layout = panel.layout()
             Layout.setContentsMargins(3, 3, 3, 3)
 
@@ -1150,7 +1150,7 @@ class run:
             # set the name of the object and the window title
             ribbonDock.setObjectName("Ribbon")
             ribbonDock.setWindowTitle("Ribbon")
-            # Set the titlebar to an empty widget (effectivly hide it)
+            # Set the titlebar to an empty widget (effectively hide it)
             ribbonDock.setTitleBarWidget(QWidget())
             # attach the ribbon to the dockwidget
             ribbonDock.setWidget(ribbon)

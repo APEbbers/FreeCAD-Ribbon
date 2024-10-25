@@ -65,7 +65,7 @@ class Settings:
         # Create a tuple from the int value of the color
         result = QColor.fromRgba(preferences.GetUnsigned(settingName)).toTuple()
 
-        # correct the order of the tuple and devide them by 255
+        # correct the order of the tuple and divide them by 255
         result = (result[3] / 255, result[0] / 255, result[1] / 255, result[2] / 255)
 
         return result

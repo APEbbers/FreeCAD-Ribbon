@@ -496,7 +496,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # endregion
 
-        # region - Modifiy controls-------------------------------------------------------------------
+        # region - Modify controls--------------------------------------------------------------------
         #
         # -- TabWidget
         # Set the first tab activated
@@ -824,7 +824,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Go through the list of workbenches
         for WorkBenchItem in self.List_Workbenches:
-            # If the workbench title maches the selected workbench, continue
+            # If the workbench title matches the selected workbench, continue
             if WorkBenchItem[2] == self.form.WorkbenchList_2.currentText():
                 WorkBench = Gui.getWorkbench(WorkBenchItem[0])
 
@@ -900,7 +900,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Go through the list of workbenches
         for WorkBenchItem in self.List_Workbenches:
             WorkBenchTitle = self.form.WorkbenchList_2.currentText()
-            # If the workbench title maches the selected workbench, continue
+            # If the workbench title matches the selected workbench, continue
             if WorkBenchItem[2] == WorkBenchTitle and WorkBenchItem[2] != "":
                 WorkBenchName = WorkBenchItem[0]
 
@@ -918,7 +918,7 @@ class LoadDialog(Design_ui.Ui_Form):
                             Command = self.List_Commands[j][0]
                             Commands.append(Command)
 
-                    # Get the orginal toolbar
+                    # Get the original toolbar
                     OriginalToolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
 
                     Suffix = "_custom"
@@ -1343,17 +1343,17 @@ class LoadDialog(Design_ui.Ui_Form):
                 # Add the first cell with the table widget
                 self.form.tableWidget.setItem(RowNumber, 0, TableWidgetItem)
 
-                # Create the second cell and set the checkstate according the checkstate as defined ealier
+                # Create the second cell and set the checkstate according the checkstate as defined earlier
                 Icon_small = QTableWidgetItem()
                 Icon_small.setText("")
                 self.form.tableWidget.setItem(RowNumber, 1, Icon_small)
 
-                # Create the third cell and set the checkstate according the checkstate as defined ealier
+                # Create the third cell and set the checkstate according the checkstate as defined earlier
                 Icon_medium = QTableWidgetItem()
                 Icon_medium.setText("")
                 self.form.tableWidget.setItem(RowNumber, 2, Icon_medium)
 
-                # Create the last cell and set the checkstate according the checkstate as defined ealier
+                # Create the last cell and set the checkstate according the checkstate as defined earlier
                 Icon_large = QTableWidgetItem()
                 Icon_large.setText("")
                 self.form.tableWidget.setItem(RowNumber, 3, Icon_large)
@@ -1470,17 +1470,17 @@ class LoadDialog(Design_ui.Ui_Form):
                     # Add the first cell with the table widget
                     self.form.tableWidget.setItem(RowNumber, 0, TableWidgetItem)
 
-                    # Create the second cell and set the checkstate according the checkstate as defined ealier
+                    # Create the second cell and set the checkstate according the checkstate as defined earlier
                     Icon_small = QTableWidgetItem()
                     Icon_small.setCheckState(checked_small)
                     self.form.tableWidget.setItem(RowNumber, 1, Icon_small)
 
-                    # Create the third cell and set the checkstate according the checkstate as defined ealier
+                    # Create the third cell and set the checkstate according the checkstate as defined earlier
                     Icon_medium = QTableWidgetItem()
                     Icon_medium.setCheckState(checked_medium)
                     self.form.tableWidget.setItem(RowNumber, 2, Icon_medium)
 
-                    # Create the last cell and set the checkstate according the checkstate as defined ealier
+                    # Create the last cell and set the checkstate according the checkstate as defined earlier
                     Icon_large = QTableWidgetItem()
                     Icon_large.setCheckState(checked_large)
                     self.form.tableWidget.setItem(RowNumber, 3, Icon_large)
@@ -1570,17 +1570,17 @@ class LoadDialog(Design_ui.Ui_Form):
         # Add the first cell with the table widget
         self.form.tableWidget.setItem(RowNumber, 0, TableWidgetItem)
 
-        # Create the second cell and set the checkstate according the checkstate as defined ealier
+        # Create the second cell and set the checkstate according the checkstate as defined earlier
         Icon_small = QTableWidgetItem()
         Icon_small.setText("")
         self.form.tableWidget.setItem(RowNumber, 1, Icon_small)
 
-        # Create the third cell and set the checkstate according the checkstate as defined ealier
+        # Create the third cell and set the checkstate according the checkstate as defined earlier
         Icon_medium = QTableWidgetItem()
         Icon_medium.setText("")
         self.form.tableWidget.setItem(RowNumber, 2, Icon_medium)
 
-        # Create the last cell and set the checkstate according the checkstate as defined ealier
+        # Create the last cell and set the checkstate according the checkstate as defined earlier
         Icon_large = QTableWidgetItem()
         Icon_large.setText("")
         self.form.tableWidget.setItem(RowNumber, 3, Icon_large)
@@ -1655,7 +1655,7 @@ class LoadDialog(Design_ui.Ui_Form):
         if text == "":
             Item.setText(Item.data(Qt.ItemDataRole.UserRole))
 
-        # Update the data with the (text)chanche
+        # Update the data with the (text)changed
         self.UpdateData()
         # Update the order of the commands
         self.on_ToolbarsOrder_changed()
@@ -1675,7 +1675,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Get the checkedstate from the clicked cell
         CheckState = self.form.tableWidget.item(row, column).checkState()
-        # Go through the cells in the row. If checkstate is checkd, uncheck the other cells in the row
+        # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
         for i3 in range(1, self.form.tableWidget.columnCount()):
             if CheckState == Qt.CheckState.Checked:
                 if i3 == column:
@@ -1803,8 +1803,8 @@ class LoadDialog(Design_ui.Ui_Form):
                     "You must restart FreeCAD for changes to take effect.",
                 )
             )
-            anwser = StandardFunctions.RestartDialog(message=message)
-            if anwser == "yes":
+            answer = StandardFunctions.RestartDialog(message=message)
+            if answer == "yes":
                 StandardFunctions.restart_freecad()
 
         self.form.close()
@@ -1831,8 +1831,8 @@ class LoadDialog(Design_ui.Ui_Form):
             translate("FreeCAD Ribbon", "Ribbonbar reset from ") + f"{result}!",
             "Warning",
         )
-        anwser = StandardFunctions.RestartDialog(message=message)
-        if anwser == "yes":
+        answer = StandardFunctions.RestartDialog(message=message)
+        if answer == "yes":
             StandardFunctions.restart_freecad()
 
         self.form.close()
@@ -2005,7 +2005,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         Toolbar = self.form.ToolbarList.currentText()
                         # create a empty size string
                         Size = "small"
-                        # Defien empty strings for the command name and icon name
+                        # Define empty strings for the command name and icon name
                         CommandName = ""
                         IconName = ""
                         # Get the command text from the first cell in the row
@@ -2036,7 +2036,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
                                     # Get the checkedstate from the clicked cell
                                     # CheckState = self.form.tableWidget.item(row, column).checkState()
-                                    # Go through the cells in the row. If checkstate is checkd, uncheck the other cells in the row
+                                    # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
                                     for i4 in range(
                                         1, self.form.tableWidget.columnCount()
                                     ):
@@ -2243,7 +2243,7 @@ class LoadDialog(Design_ui.Ui_Form):
             for i in range(SourceWidget.count()):
                 # Get the item
                 SourceItem = SourceWidget.item(i)
-                # If the item is not none and the item text is equeal to itemText,
+                # If the item is not none and the item text is equal to itemText,
                 # remove it from the columns to add list.
                 if SourceItem is not None:
                     if SourceItem.text() == DestinationItem.text():

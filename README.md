@@ -4,8 +4,11 @@ An Ribbon UI for FreeCAD, based on the PyQtRibbon library (https://github.com/ha
 This ribbon is based the work of Geolta (https://github.com/geolta/FreeCAD-Ribbon) and HakanSeven (https://github.com/HakanSeven12/Modern-UI) for the Modern-UI workbench.
 
 ![](https://github.com/APEbbers/FreeCAD-Ribbon/blob/main/Resources/Images/Screenshot.png)
+![](https://github.com/APEbbers/FreeCAD-Ribbon/blob/main/Resources/Images/Screenshot_CloseUP.png)
 
-![](https://github.com/APEbbers/FreeCAD-Ribbon/blob/Develop/Resources/Images/Screenshot_DarkMode.png)
+
+![](https://github.com/APEbbers/FreeCAD-Ribbon/blob/main/Resources/Images/Screenshot_DarkMode.png)
+![](https://github.com/APEbbers/FreeCAD-Ribbon/blob/main/Resources/Images/Screenshot_DarkMode_CloseUP.png)
 
 The FreeCAD ribbon provides the following functions and features:
 
@@ -27,9 +30,17 @@ See the [wiki page](https://github.com/APEbbers/FreeCAD-Ribbon/wiki) for more de
 
 ## Installation
 
-There are three options for installing this addon:
-### Via the Addon manager
-Go to 'Tools/Addon-Manager' and search for 'FreeCAD-Ribbon'). Click on 'Install'.
+### Install via the Addon Manager
+
+1. Open FreeCAD [Addon Manager](https://wiki.freecad.org/Std_AddonMgr).
+1. Search for 'FreeCAD-Ribbon'.
+1. Click on 'Install'.
+
+Result: Addon will be installed and FreeCAD will prompt for a restart.
+Accept prompt and FreeCAD will restart with the Ribbon addon included.
+
+<details>
+<summary><b>Manual Installation/Uninstallation (click to expand)</b></summary>
 
 ### Custom Repository for Addon Manager
 
@@ -61,6 +72,8 @@ Download this repository, extract the folder and copy it to the `Mod` folder of 
 
 1. Execute the macro
 1. Restart FreeCAD.
+
+</details>
 
 ## Discussion
 

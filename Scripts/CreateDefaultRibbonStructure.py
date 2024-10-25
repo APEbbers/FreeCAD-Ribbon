@@ -2825,7 +2825,7 @@ def CreateJson():
             skipWorkbenchList.append(Workbench)
         Dict_RibbonCommandPanel.update(CustomJson_Workbenches)
 
-    # Go throug the workbenches
+    # Go through the workbenches
     for WorkbenchItem in List_Workbenches:
         WorkBenchName = WorkbenchItem[0]
 
@@ -2891,7 +2891,7 @@ def CreateJson():
                 if ToolbarToBeSkipped is False:
                     # create a empty size string
                     Size = "small"
-                    # Defien empty strings for the command name and icon name
+                    # Define empty strings for the command name and icon name
                     CommandName = ""
                     IconName = ""
 

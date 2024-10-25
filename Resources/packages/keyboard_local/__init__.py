@@ -853,7 +853,7 @@ def unhook_all_hotkeys():
     Removes all keyboard hotkeys in use, including abbreviations, word listeners,
     `record`ers and `wait`s.
     """
-    # Because of "alises" some hooks may have more than one entry, all of which
+    # Because of "aliases" some hooks may have more than one entry, all of which
     # are removed together.
     _listener.blocking_hotkeys.clear()
     _listener.nonblocking_hotkeys.clear()
