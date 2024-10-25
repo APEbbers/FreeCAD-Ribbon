@@ -560,7 +560,6 @@ class ModernMenu(RibbonBar):
         index = self.tabBar().currentIndex()
         tabName = self.tabBar().tabText(index)
         category = self.currentCategory()
-        category
 
         # activate selected workbench
         tabName = tabName.replace("&", "")
@@ -1100,7 +1099,7 @@ class ModernMenu(RibbonBar):
                 # get the menu text from the command list
                 for CommandName in Gui.listCommands():
                     Command = Gui.Command.get(CommandName)
-                    MenuText = Command.getInfo()["menuText"]
+                    MenuText = Command.getInfo()["menuText"].replace("&", "")
 
                     if MenuText == key:
                         try:

@@ -908,7 +908,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 Commands = []
                 for i in range(self.form.ToolbarsSelected.count()):
                     ListWidgetItem = self.form.ToolbarsSelected.item(i)
-                    MenuName = ListWidgetItem.text()
+                    MenuName = ListWidgetItem.text().replace("&", "")
 
                     for j in range(len(self.List_Commands)):
                         if (
