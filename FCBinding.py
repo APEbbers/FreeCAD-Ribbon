@@ -199,12 +199,6 @@ class ModernMenu(RibbonBar):
         # Set these settings and connections at init
         # Set the autohide behavior of the ribbon
         self.setAutoHideRibbon(Parameters_Ribbon.AUTOHIDE_RIBBON)
-        # # connect the collapsbutton with our own function
-        # self.collapseRibbonButton().connect(
-        #     self.collapseRibbonButton(),
-        #     SIGNAL("clicked()"),
-        #     self.onCollapseRibbonButton_clicked,
-        # )
 
         # Set the menuBar hidden as standard
         mw.menuBar().hide()
@@ -308,8 +302,9 @@ class ModernMenu(RibbonBar):
                 button.addActions(QuickAction)
                 button.setDefaultAction(QuickAction[0])
                 width = (self.iconSize * self.sizeFactor) + self.iconSize
+                height = self.iconSize
                 button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                button.setMinimumWidth(width)
+                button.setMinimumSize(width, height)
 
             # Add the button to the quickaccess toolbar
             self.addQuickAccessButton(button)
@@ -317,7 +312,7 @@ class ModernMenu(RibbonBar):
             toolBarWidth = toolBarWidth + width
 
         # Set the height of the quickaccess toolbar
-        self.quickAccessToolBar().setMaximumHeight(self.iconSize * self.sizeFactor)
+        self.quickAccessToolBar().setMinimumWidth(self.iconSize * self.sizeFactor)
         # Set the width of the quickaccess toolbar.
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
         # Set the size policy
@@ -405,13 +400,12 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
         # Set the application button
-        self.applicationOptionButton().setMinimumWidth(self.iconSize * self.sizeFactor)
+        self.applicationOptionButton().setMinimumWidth(self.iconSize * self.sizeFactor * 2)
         self.setApplicationIcon(Gui.getIcon("freecad"))
         self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
 
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
-
         return
 
     def ApplicationMenu(self):
@@ -420,9 +414,6 @@ class ModernMenu(RibbonBar):
         # add the menus from the menubar to the application button
         MenuBar = mw.menuBar()
         Menu.addActions(MenuBar.actions())
-
-        # Safe the menus ontop
-        self.MenuActions = MenuBar.actions()
 
         # Add the ribbon design button
         Menu.addSeparator()
@@ -451,6 +442,8 @@ class ModernMenu(RibbonBar):
         Menu.addSeparator()
         AboutButton = Menu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version)
         AboutButton.triggered.connect(self.on_AboutButton_clicked)
+
+        return
 
     def loadDesignMenu(self):
         message = translate(
@@ -1027,37 +1020,18 @@ class run:
         if name != "NoneWorkbench":
             mw = Gui.getMainWindow()
 
-            MenuBarActions = mw.menuBar().actions()
             # Disable connection after activation
             mw.workbenchActivated.disconnect(run)
             if disable:
                 return
 
             ribbon = ModernMenu()
-            # ribbonDock = QDockWidget()
-            # # set the name of the object and the window title
-            # ribbonDock.setObjectName("Ribbon")
-            # ribbonDock.setWindowTitle("Ribbon")
-            # # Set the titlebar to an empty widget (effectively hide it)
-            # ribbonDock.setTitleBarWidget(QWidget())
-            # # attach the ribbon to the dockwidget
-            # ribbonDock.setWidget(ribbon)
-
-            # if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
-            #     ribbonDock.setMaximumHeight(45)
-
-            # # Add the dockwidget to the main window
-            # mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
-
-            # Give an offset otherwise the ribbon will go through the menu bar
-            ribbon.setContentsMargins(0, 20, 0, 0)
+            # Get the layout
+            layout = ribbon.layout()
+            # Set spacing and content margins to zero
+            layout.setSpacing(0)
+            layout.setContentsMargins(0, 0, 0, 0)
+            # update the layout
+            ribbon.setLayout(layout)
             # Create the ribbon
-            mw.setMenuBar(ribbon)
-
-            for action in MenuBarActions:
-                mw.menuBar().removeAction(action)
-
-            # # Remove the menus on top
-            # MenuBar = mw.menuBar()
-            # for i in range(len(MenuBar.actions())):
-            #     MenuBar.removeAction(MenuBar.actions()[i])
+            mw.setMenuWidget(ribbon)
