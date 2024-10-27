@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import QIcon, QAction, QPixmap, QScrollEvent, QKeyEvent, QActionGroup
-from PySide6.QtWidgets import (
+from PySide.QtGui import QIcon, QAction, QPixmap, QScrollEvent, QKeyEvent, QActionGroup
+from PySide.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -37,7 +37,7 @@ from PySide6.QtWidgets import (
     QSpacerItem,
     QLayoutItem,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -72,17 +72,11 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-# import pyqtribbon_local as pyqtribbon
-# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon_local.panel import RibbonPanel
-# from pyqtribbon_local.toolbutton import RibbonToolButton
-# from pyqtribbon_local.separator import RibbonSeparator
-
-import pyqtribbon as pyqtribbon
-from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon.panel import RibbonPanel
-from pyqtribbon.toolbutton import RibbonToolButton
-from pyqtribbon.separator import RibbonSeparator
+import pyqtribbon_local as pyqtribbon
+from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon_local.panel import RibbonPanel
+from pyqtribbon_local.toolbutton import RibbonToolButton
+from pyqtribbon_local.separator import RibbonSeparator
 
 # import modules for keypress detection based on OS
 if platform.system() == "Windows" or platform.system() == "Darwin":
@@ -193,12 +187,35 @@ class ModernMenu(RibbonBar):
         StyleSheet = StyleSheet.replace("border: 0.5px solid;", "border: 0.5px solid " + hexColor + ";")
         self.setStyleSheet(StyleSheet)
 
+        # Correct colors when no stylesheet is selected for FreeCAD.
+        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
+        currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
+        if currentStyleSheet == "":
+            StandardColors = mw.style().standardPalette()
+            try:
+                rgb = StandardColors.background().color().toTuple()
+            except Exception:
+                rgb = (240, 240, 240, 255)
+            hexColor = f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
+            # Set the quickaccess toolbar background color
+            self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
+
+            StyleSheet_Addition = "\n\nQToolButton {background: solid " + hexColor + ";}"
+            StyleSheet = StyleSheet + StyleSheet_Addition
+            self.setStyleSheet(StyleSheet)
+
         # get the state of the mainwindow
         self.MainWindowLoaded = True
 
         # Set these settings and connections at init
         # Set the autohide behavior of the ribbon
         self.setAutoHideRibbon(Parameters_Ribbon.AUTOHIDE_RIBBON)
+        # connect the collapsbutton with our own function
+        self.collapseRibbonButton().connect(
+            self.collapseRibbonButton(),
+            SIGNAL("clicked()"),
+            self.onCollapseRibbonButton_clicked,
+        )
 
         # Set the menuBar hidden as standard
         mw.menuBar().hide()
@@ -227,7 +244,11 @@ class ModernMenu(RibbonBar):
         #
         # --------------------------------------------------------------------------
 
-        # self.tabBar().setUsesScrollButtons
+        ScrollButtons = self.tabBar().children()
+        ScrollLeftButton: QToolButton = ScrollButtons[0]
+        ScrollRightButton: QToolButton = ScrollButtons[1]
+        ScrollLeftButton.setMinimumWidth(self.iconSize * 0.7)
+        ScrollRightButton.setMinimumWidth(self.iconSize * 0.7)
         return
 
     # The backup keypress event
@@ -258,6 +279,25 @@ class ModernMenu(RibbonBar):
             self.currentCategory()._nextButton.click()
 
         return
+
+    # region - Hover function needed for handling the autohide function of the ribbon
+    def enterEvent(self, QEvent):
+        TB = mw.findChildren(QDockWidget, "Ribbon")[0]
+
+        if self.ribbonVisible() is False:
+            TB.setMaximumHeight(200)
+            self.setRibbonVisible(True)
+        pass
+
+    def leaveEvent(self, QEvent):
+        TB = mw.findChildren(QDockWidget, "Ribbon")[0]
+
+        if self._autoHideRibbon is True:
+            TB.setMaximumHeight(45)
+            self.setRibbonVisible(False)
+        pass
+
+    # endregion
 
     def connectSignals(self):
         self.tabBar().currentChanged.connect(self.onUserChangedWorkbench)
@@ -317,6 +357,19 @@ class ModernMenu(RibbonBar):
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
         # Set the size policy
         self.quickAccessToolBar().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+
+        # Correct colors when no stylesheet is selected for FreeCAD.
+        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
+        currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
+        if currentStyleSheet == "":
+            StandardColors = mw.style().standardPalette()
+            try:
+                rgb = StandardColors.background().color().toTuple()
+            except Exception:
+                rgb = (240, 240, 240, 255)
+            hexColor = f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
+            # Set the quickaccess toolbar background color
+            self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
 
         # Get the order of workbenches from Parameters
         WorkbenchOrderParam = "User parameter:BaseApp/Preferences/Workbenches/"
@@ -468,14 +521,28 @@ class ModernMenu(RibbonBar):
             webbrowser.open(AboutAdress, new=2, autoraise=True)
         return
 
+    def onCollapseRibbonButton_clicked(self):
+        # Get the ribbon
+        TB = mw.findChildren(QDockWidget, "Ribbon")[0]
+
+        # Set the height based on visibility of the ribbon
+        if self.ribbonVisible() is False:
+            TB.setMaximumHeight(45)
+        else:
+            TB.setMaximumHeight(200)
+
+        return
+
     def onPinClicked(self):
         if self._autoHideRibbon is True:
             self.setAutoHideRibbon(False)
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
+            self.onCollapseRibbonButton_clicked()
             return
         if self._autoHideRibbon is False:
             self.setAutoHideRibbon(True)
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", True)
+            self.onCollapseRibbonButton_clicked()
             return
 
         return
@@ -487,6 +554,7 @@ class ModernMenu(RibbonBar):
 
         index = self.tabBar().currentIndex()
         tabName = self.tabBar().tabText(index)
+        category = self.currentCategory()
 
         # activate selected workbench
         tabName = tabName.replace("&", "")
@@ -1007,6 +1075,37 @@ class ModernMenu(RibbonBar):
         return
 
 
+# class run:
+#     """
+#     Activate Modern UI.
+#     """
+
+#     def __init__(self, name):
+#         """
+#         Constructor
+#         """
+#         disable = 0
+#         if name != "NoneWorkbench":
+#             mw = Gui.getMainWindow()
+
+#             # Disable connection after activation
+#             mw.workbenchActivated.disconnect(run)
+#             if disable:
+#                 return
+
+#             ribbon = ModernMenu()
+#             # # Get the layout
+#             # layout = ribbon.layout()
+#             # # Set spacing and content margins to zero
+#             # layout.setSpacing(0)
+#             # layout.setContentsMargins(0, 0, 0, 0)
+#             # # update the layout
+#             # ribbon.setLayout(layout)
+#             # Create the ribbon
+#             ribbon.setContentsMargins(0, 20, 0, 0)
+#             mw.setMenuWidget(ribbon)
+
+
 class run:
     """
     Activate Modern UI.
@@ -1018,20 +1117,23 @@ class run:
         """
         disable = 0
         if name != "NoneWorkbench":
-            mw = Gui.getMainWindow()
-
             # Disable connection after activation
             mw.workbenchActivated.disconnect(run)
             if disable:
                 return
 
             ribbon = ModernMenu()
-            # Get the layout
-            layout = ribbon.layout()
-            # Set spacing and content margins to zero
-            layout.setSpacing(0)
-            layout.setContentsMargins(0, 0, 0, 0)
-            # update the layout
-            ribbon.setLayout(layout)
-            # Create the ribbon
-            mw.setMenuWidget(ribbon)
+            ribbonDock = QDockWidget()
+            # set the name of the object and the window title
+            ribbonDock.setObjectName("Ribbon")
+            ribbonDock.setWindowTitle("Ribbon")
+            # Set the titlebar to an empty widget (effectively hide it)
+            ribbonDock.setTitleBarWidget(QWidget())
+            # attach the ribbon to the dockwidget
+            ribbonDock.setWidget(ribbon)
+
+            if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
+                ribbonDock.setMaximumHeight(45)
+
+            # Add the dockwidget to the main window
+            mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
