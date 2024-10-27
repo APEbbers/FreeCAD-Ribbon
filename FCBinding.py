@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import QIcon, QAction, QPixmap, QScrollEvent, QKeyEvent, QActionGroup
+from PySide.QtGui import QIcon, QAction, QPixmap, QScrollEvent, QKeyEvent, QActionGroup, QHoverEvent
 from PySide.QtWidgets import (
     QToolButton,
     QToolBar,
@@ -453,7 +453,6 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
         # Set the application button
-        self.applicationOptionButton().setMinimumWidth(self.iconSize * self.sizeFactor * 2)
         self.setApplicationIcon(Gui.getIcon("freecad"))
         self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
 
@@ -1131,6 +1130,8 @@ class run:
             ribbonDock.setTitleBarWidget(QWidget())
             # attach the ribbon to the dockwidget
             ribbonDock.setWidget(ribbon)
+
+            ribbonDock.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
 
             if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
                 ribbonDock.setMaximumHeight(45)
