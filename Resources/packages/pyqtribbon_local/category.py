@@ -81,13 +81,13 @@ class RibbonCategoryLayoutWidget(QFrame):
 
         # Previous/Next buttons
         self._previousButton = RibbonCategoryLayoutButton(self)
-        self._previousButton.setIcon(QIcon(DataFile("icons/backward.png")))
+        self._previousButton.setIcon(QIcon(DataFile("icons/backward.svg")))
         self._previousButton.setIconSize(QSize(12, 12))
         self._previousButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
         self._previousButton.setAutoRaise(True)
         self._previousButton.clicked.connect(self.scrollPrevious)  # type: ignore
         self._nextButton = RibbonCategoryLayoutButton(self)
-        self._nextButton.setIcon(QIcon(DataFile("icons/forward.png")))
+        self._nextButton.setIcon(QIcon(DataFile("icons/forward.svg")))
         self._nextButton.setIconSize(QSize(12, 12))
         self._nextButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
         self._nextButton.setAutoRaise(True)

@@ -122,7 +122,7 @@ class RibbonTitleWidget(QFrame):
         self._collapseRibbonButton.setIconSize(
             QSize(self._rightButtonHeight, self._rightButtonHeight)
         )
-        self._collapseRibbonButton.setIcon(QIcon(DataFile("icons/up.png")))
+        self._collapseRibbonButton.setIcon(QIcon(DataFile("icons/up.svg")))
         self._collapseRibbonButton.setAutoRaise(True)
         self._collapseRibbonButton.setToolTip("Collapse Ribbon")
         self._collapseRibbonButton.clicked.connect(self.collapseRibbonButtonClicked)  # type: ignore

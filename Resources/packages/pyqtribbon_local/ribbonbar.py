@@ -655,7 +655,7 @@ class RibbonBar(QMenuBar):
         if not self._ribbonVisible:
             self._ribbonVisible = True
             self.collapseRibbonButton().setToolTip("Collapse Ribbon")
-            self.collapseRibbonButton().setIcon(QIcon(DataFile("icons/up.png")))
+            self.collapseRibbonButton().setIcon(QIcon(DataFile("icons/up.svg")))
             self._stackedWidget.setVisible(True)
             self.setFixedSize(self.sizeHint())
 
@@ -664,7 +664,7 @@ class RibbonBar(QMenuBar):
         if self._ribbonVisible:
             self._ribbonVisible = False
             self.collapseRibbonButton().setToolTip("Expand Ribbon")
-            self.collapseRibbonButton().setIcon(QIcon(DataFile("icons/down.png")))
+            self.collapseRibbonButton().setIcon(QIcon(DataFile("icons/down.svg")))
             self._stackedWidget.setVisible(False)
             self.setFixedSize(self.sizeHint().width(), self._titleWidget.size().height() + 5)  # type: ignore
 
