@@ -57,6 +57,7 @@ from PySide.QtCore import (
     QEvent,
     QMetaObject,
     QCoreApplication,
+    QSize,
 )
 
 import json
@@ -308,6 +309,7 @@ class ModernMenu(RibbonBar):
         for commandName in self.ribbonStructure["quickAccessCommands"]:
             i = i + 1
             width = 0
+            height = self.iconSize
             button = QToolButton()
 
             QuickAction = Gui.Command.get(commandName).getAction()
@@ -320,9 +322,10 @@ class ModernMenu(RibbonBar):
                 button.addActions(QuickAction)
                 button.setDefaultAction(QuickAction[0])
                 width = (self.iconSize * self.sizeFactor) + self.iconSize
-                height = self.iconSize
                 button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                button.setMinimumSize(height, height)
+                button.setMinimumWidth(width)
+
+            button.setMaximumHeight(height)
 
             # Add the button to the quickaccess toolbar
             self.addQuickAccessButton(button)
@@ -442,7 +445,11 @@ class ModernMenu(RibbonBar):
         )
 
         # Set the application button
+
         self.setApplicationIcon(Gui.getIcon("freecad"))
+        self.applicationOptionButton().setIconSize(
+            QSize(self.iconSize * 2, self.iconSize * 2)
+        )
         self.applicationOptionButton().setToolTip(
             translate("FreeCAD Ribbon", "FreeCAD Ribbon")
         )
