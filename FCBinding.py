@@ -23,7 +23,15 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import QIcon, QAction, QPixmap, QScrollEvent, QKeyEvent, QActionGroup
+from PySide.QtGui import (
+    QIcon,
+    QAction,
+    QPixmap,
+    QScrollEvent,
+    QKeyEvent,
+    QActionGroup,
+    QHoverEvent,
+)
 from PySide.QtWidgets import (
     QToolButton,
     QToolBar,
@@ -113,6 +121,8 @@ class ModernMenu(RibbonBar):
     # Set a sixe factor for the buttons
     sizeFactor = 1.3
 
+    MenuActions = None
+
     def __init__(self):
         """
         Constructor
@@ -193,6 +203,29 @@ class ModernMenu(RibbonBar):
         )
         self.setStyleSheet(StyleSheet)
 
+        # Correct colors when no stylesheet is selected for FreeCAD.
+        FreeCAD_preferences = App.ParamGet(
+            "User parameter:BaseApp/Preferences/MainWindow"
+        )
+        currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
+        if currentStyleSheet == "":
+            StandardColors = mw.style().standardPalette()
+            try:
+                rgb = StandardColors.background().color().toTuple()
+            except Exception:
+                rgb = (240, 240, 240, 255)
+            hexColor = f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
+            # Set the quickaccess toolbar background color
+            self.quickAccessToolBar().setStyleSheet(
+                "background-color: " + hexColor + ";"
+            )
+
+            StyleSheet_Addition = (
+                "\n\nQToolButton {background: solid " + hexColor + ";}"
+            )
+            StyleSheet = StyleSheet + StyleSheet_Addition
+            self.setStyleSheet(StyleSheet)
+
         # get the state of the mainwindow
         self.MainWindowLoaded = True
 
@@ -232,6 +265,12 @@ class ModernMenu(RibbonBar):
         #         self.UseQtKeyPress = True
         #
         # --------------------------------------------------------------------------
+
+        ScrollButtons = self.tabBar().children()
+        ScrollLeftButton: QToolButton = ScrollButtons[0]
+        ScrollRightButton: QToolButton = ScrollButtons[1]
+        ScrollLeftButton.setMinimumWidth(self.iconSize * 0.7)
+        ScrollRightButton.setMinimumWidth(self.iconSize * 0.7)
         return
 
     # The backup keypress event
@@ -325,8 +364,9 @@ class ModernMenu(RibbonBar):
                 button.addActions(QuickAction)
                 button.setDefaultAction(QuickAction[0])
                 width = (self.iconSize * self.sizeFactor) + self.iconSize
+                height = self.iconSize
                 button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                button.setMinimumWidth(width)
+                button.setMinimumSize(width, height)
 
             # Add the button to the quickaccess toolbar
             self.addQuickAccessButton(button)
@@ -334,13 +374,30 @@ class ModernMenu(RibbonBar):
             toolBarWidth = toolBarWidth + width
 
         # Set the height of the quickaccess toolbar
-        self.quickAccessToolBar().setMaximumHeight(self.iconSize * self.sizeFactor)
+        self.quickAccessToolBar().setMinimumWidth(self.iconSize * self.sizeFactor)
         # Set the width of the quickaccess toolbar.
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
         # Set the size policy
         self.quickAccessToolBar().setSizePolicy(
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
         )
+
+        # Correct colors when no stylesheet is selected for FreeCAD.
+        FreeCAD_preferences = App.ParamGet(
+            "User parameter:BaseApp/Preferences/MainWindow"
+        )
+        currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
+        if currentStyleSheet == "":
+            StandardColors = mw.style().standardPalette()
+            try:
+                rgb = StandardColors.background().color().toTuple()
+            except Exception:
+                rgb = (240, 240, 240, 255)
+            hexColor = f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
+            # Set the quickaccess toolbar background color
+            self.quickAccessToolBar().setStyleSheet(
+                "background-color: " + hexColor + ";"
+            )
 
         # Get the order of workbenches from Parameters
         WorkbenchOrderParam = "User parameter:BaseApp/Preferences/Workbenches/"
@@ -449,7 +506,6 @@ class ModernMenu(RibbonBar):
         )
 
         # Set the application button
-        self.applicationOptionButton().setMinimumWidth(self.iconSize * self.sizeFactor)
         self.setApplicationIcon(Gui.getIcon("freecad"))
         self.applicationOptionButton().setToolTip(
             translate("FreeCAD Ribbon", "FreeCAD Ribbon")
@@ -457,7 +513,6 @@ class ModernMenu(RibbonBar):
 
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
-
         return
 
     def ApplicationMenu(self):
@@ -502,6 +557,8 @@ class ModernMenu(RibbonBar):
             translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version
         )
         AboutButton.triggered.connect(self.on_AboutButton_clicked)
+
+        return
 
     def loadDesignMenu(self):
         message = translate(
@@ -1128,6 +1185,37 @@ class ModernMenu(RibbonBar):
         return
 
 
+# class run:
+#     """
+#     Activate Modern UI.
+#     """
+
+#     def __init__(self, name):
+#         """
+#         Constructor
+#         """
+#         disable = 0
+#         if name != "NoneWorkbench":
+#             mw = Gui.getMainWindow()
+
+#             # Disable connection after activation
+#             mw.workbenchActivated.disconnect(run)
+#             if disable:
+#                 return
+
+#             ribbon = ModernMenu()
+#             # # Get the layout
+#             # layout = ribbon.layout()
+#             # # Set spacing and content margins to zero
+#             # layout.setSpacing(0)
+#             # layout.setContentsMargins(0, 0, 0, 0)
+#             # # update the layout
+#             # ribbon.setLayout(layout)
+#             # Create the ribbon
+#             ribbon.setContentsMargins(0, 20, 0, 0)
+#             mw.setMenuWidget(ribbon)
+
+
 class run:
     """
     Activate Modern UI.
@@ -1154,11 +1242,12 @@ class run:
             # attach the ribbon to the dockwidget
             ribbonDock.setWidget(ribbon)
 
+            ribbonDock.setSizePolicy(
+                QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred
+            )
+
             if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
                 ribbonDock.setMaximumHeight(45)
 
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
-
-    def on_hovered(self, ribbonDock: QDockWidget):
-        ribbonDock.setMaximumHeight(200)
