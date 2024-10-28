@@ -584,6 +584,14 @@ class ModernMenu(RibbonBar):
         tabName = self.tabBar().tabText(index)
         category = self.currentCategory()
 
+        # Set the previous/next buttons to standard toolbuttons
+        previousButton: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[0]
+        nextButton: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[1]
+        previousButton.setArrowType(Qt.ArrowType.LeftArrow)
+        nextButton.setArrowType(Qt.ArrowType.RightArrow)
+        previousButton.setMinimumWidth(self.iconSize)
+        nextButton.setMinimumWidth(self.iconSize)
+
         # activate selected workbench
         tabName = tabName.replace("&", "")
         Gui.activateWorkbench(self.wbNameMapping[tabName])
