@@ -264,6 +264,7 @@ class ModernMenu(RibbonBar):
         ScrollRightButton: QToolButton = ScrollButtons[1]
         ScrollLeftButton.setMinimumWidth(self.iconSize * 0.7)
         ScrollRightButton.setMinimumWidth(self.iconSize * 0.7)
+
         return
 
     # implementation to add actions to the Filemenu. Needed for the accessories menu
