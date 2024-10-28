@@ -1789,7 +1789,7 @@ class LoadDialog(Design_ui.Ui_Form):
             BackupFile = os.path.join(pathBackup, SelectedFile)
             result = shutil.copy(BackupFile, JsonFile)
             StandardFunctions.Print(
-                translate("FreeCAD Ribbon", "Ribbonbar set back to settings from: ")
+                translate("FreeCAD Ribbon", "Ribbon bar set back to settings from: ")
                 + f"{result}!",
                 "Warning",
             )
@@ -1828,7 +1828,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         result = shutil.copy(BackupFile, JsonFile)
         StandardFunctions.Print(
-            translate("FreeCAD Ribbon", "Ribbonbar reset from ") + f"{result}!",
+            translate("FreeCAD Ribbon", "Ribbon bar reset from ") + f"{result}!",
             "Warning",
         )
         answer = StandardFunctions.RestartDialog(message=message)
