@@ -138,6 +138,12 @@ class ModernMenu(RibbonBar):
         super().__init__(title="", iconSize=self.iconSize)
         self.setObjectName("Ribbon")
 
+        # Get the style from the main window
+        palette = mw.palette()
+        self.setPalette(palette)
+        Style = mw.style()
+        self.setStyle(Style)
+
         # connect the signals
         self.connectSignals()
 
@@ -217,7 +223,6 @@ class ModernMenu(RibbonBar):
             self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
             self.tabBar().setStyleSheet("background-color: " + hexColor + ";")
 
-            # Set the background for the ribbon
             StyleSheet_Addition = "\n\nQToolButton {background: solid " + hexColor + ";}"
             StyleSheet_Addition_2 = (
                 "\n\nRibbonBar {border: none;background: solid " + hexColor + ";color: " + hexColor + ";}"
@@ -243,21 +248,23 @@ class ModernMenu(RibbonBar):
         if self.isEnabled() is False:
             mw.menuBar().show()
 
-        # Get the style from the main window
-        palette = mw.palette()
-        self.setPalette(palette)
-        Style = mw.style()
-        self.setStyle(Style)
+        # # change the scroll buttons on the tabbar
+        # ScrollButtons = self.tabBar().children()
+        # ScrollLeftButton: QToolButton = ScrollButtons[0]
+        # ScrollRightButton: QToolButton = ScrollButtons[1]
+        # ScrollLeftButton.setMinimumWidth(self.iconSize * 0.7)
+        # ScrollRightButton.setMinimumWidth(self.iconSize * 0.7)
+        # ScrollRightButton.setPalette(palette)
+        # ScrollRightButton.setStyle(Style)
 
-        # change the scroll buttons on the tabbar
-        ScrollButtons = self.tabBar().children()
-        ScrollLeftButton: QToolButton = ScrollButtons[0]
-        ScrollRightButton: QToolButton = ScrollButtons[1]
-        ScrollLeftButton.setMinimumWidth(self.iconSize * 0.7)
-        ScrollRightButton.setMinimumWidth(self.iconSize * 0.7)
-        ScrollRightButton.setPalette(palette)
-        ScrollRightButton.setStyle(Style)
-
+        # # Set the previous/next buttons to standard toolbuttons
+        # category = self.currentCategory()
+        # previousButton: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[0]
+        # nextButton: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[1]
+        # previousButton.setArrowType(Qt.ArrowType.LeftArrow)
+        # nextButton.setArrowType(Qt.ArrowType.RightArrow)
+        # previousButton.setMinimumWidth(self.iconSize)
+        # nextButton.setMinimumWidth(self.iconSize)
         return
 
     # implementation to add actions to the Filemenu. Needed for the accessories menu
@@ -530,15 +537,6 @@ class ModernMenu(RibbonBar):
 
         index = self.tabBar().currentIndex()
         tabName = self.tabBar().tabText(index)
-        category = self.currentCategory()
-
-        # Set the previous/next buttons to standard toolbuttons
-        previousButton: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[0]
-        nextButton: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[1]
-        previousButton.setArrowType(Qt.ArrowType.LeftArrow)
-        nextButton.setArrowType(Qt.ArrowType.RightArrow)
-        previousButton.setMinimumWidth(self.iconSize)
-        nextButton.setMinimumWidth(self.iconSize)
 
         # activate selected workbench
         tabName = tabName.replace("&", "")
@@ -973,6 +971,24 @@ class ModernMenu(RibbonBar):
             Layout.setContentsMargins(3, 3, 3, 3)
 
         self.isWbLoaded[tabName] = True
+
+        # change the scroll buttons on the tabbar
+        ScrollButtons = self.tabBar().children()
+        ScrollLeftButton: QToolButton = ScrollButtons[0]
+        ScrollRightButton: QToolButton = ScrollButtons[1]
+        ScrollLeftButton.setMinimumWidth(self.iconSize * 0.7)
+        ScrollRightButton.setMinimumWidth(self.iconSize * 0.7)
+        ScrollLeftButton.setArrowType(Qt.ArrowType.LeftArrow)
+        ScrollRightButton.setArrowType(Qt.ArrowType.RightArrow)
+
+        # Set the previous/next buttons to standard toolbuttons
+        category = self.currentCategory()
+        previousButton: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[0]
+        nextButton: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[1]
+        previousButton.setArrowType(Qt.ArrowType.LeftArrow)
+        nextButton.setArrowType(Qt.ArrowType.RightArrow)
+        previousButton.setMinimumWidth(self.iconSize)
+        nextButton.setMinimumWidth(self.iconSize)
 
         return
 
