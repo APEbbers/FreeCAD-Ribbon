@@ -65,8 +65,6 @@ Note: See [wiki page/installation](https://github.com/APEbbers/FreeCAD-Ribbon/wi
 1. Execute the macro
 1. Restart FreeCAD.
 
-</details>
-
 ## Discussion
 
 Feel free to discuss this addon on the [FreeCAD Forum](https://forum.freecad.org/viewtopic.php?t=91353).
