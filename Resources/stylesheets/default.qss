@@ -60,12 +60,12 @@ QToolBar {
 }
 
 RibbonPanelOptionButton {
-	image: none;
+	/*image: none;*/
 	border-radius: none;
 	border-top: 0.5px solid;/* do not change this line. It is used to set the color by code */
 	}
 	RibbonPanelOptionButton::menu-indicator {
-		image: none;
+		/*image: none;*/
 		subcontrol-origin: padding;
 		subcontrol-position: right center;
 	}
