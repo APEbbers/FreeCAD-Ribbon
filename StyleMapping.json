@@ -1,0 +1,44 @@
+{
+    "Stylesheets": {
+        "": {
+            "Background_Color": "#f0f0f0"
+        },
+        "FreeCAD Dark.qss": {
+            "Background_Color": "#333333",
+            "ScrollLeftButton_Tab": "backward.svg",
+            "ScrollRightButton_Tab": "forward.svg",
+            "ScrollLeftButton_Category": "backward.svg",
+            "ScrollRightButton_Category": "forward.svg",
+            "OptionButton": "more.svg",
+            "PinButton_open": "pin-icon-open.svg",
+            "PinButton_closed": "pin-icon-closed.svg",
+            "collapseRibbonButton_up": "up.svg",
+            "collapseRibbonButton_down": "down.svg"
+
+        },
+        "FreeCAD Light.qss": {
+            "Background_Color": "#f0f0f0",
+            "ScrollLeftButton_Tab": "backward.svg",
+            "ScrollRightButton_Tab": "forward.svg",
+            "ScrollLeftButton_Category": "backward.svg",
+            "ScrollRightButton_Category": "forward.svg",
+            "OptionButton": "more.svg",
+            "PinButton_open": "pin-icon-open.svg",
+            "PinButton_closed": "pin-icon-closed.svg",
+            "collapseRibbonButton_up": "up.svg",
+            "collapseRibbonButton_down": "down.svg"
+        },
+        "OpenLight.qss": {
+            "Background_Color": "#a3a8ad",
+            "ScrollLeftButton_Tab": "backward.svg",
+            "ScrollRightButton_Tab": "forward.svg",
+            "ScrollLeftButton_Category": "backward.svg",
+            "ScrollRightButton_Category": "forward.svg",
+            "OptionButton": "more.svg",
+            "PinButton_open": "pin-icon-open.svg",
+            "PinButton_closed": "pin-icon-closed.svg",
+            "collapseRibbonButton_up": "up.svg",
+            "collapseRibbonButton_down": "down.svg"
+        }
+    }
+}

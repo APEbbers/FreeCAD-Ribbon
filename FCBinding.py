@@ -138,6 +138,8 @@ class ModernMenu(RibbonBar):
         super().__init__(title="", iconSize=self.iconSize)
         self.setObjectName("Ribbon")
 
+        self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+
         # Get the style from the main window
         palette = mw.palette()
         self.setPalette(palette)
@@ -209,26 +211,17 @@ class ModernMenu(RibbonBar):
         StyleSheet = StyleSheet.replace("border: 0.5px solid;", "border: 0.5px solid " + hexColor + ";")
         self.setStyleSheet(StyleSheet)
 
-        # Correct colors when no stylesheet is selected for FreeCAD.
-        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
-        currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
-        if currentStyleSheet == "":
-            StandardColors = mw.style().standardPalette()
-            try:
-                rgb = StandardColors.background().color().toTuple()
-            except Exception:
-                rgb = (240, 240, 240, 255)
-            hexColor = f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
-            # Set the quickaccess toolbar background color. This fixes a transparant toolbar.
-            self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
-            self.tabBar().setStyleSheet("background-color: " + hexColor + ";")
+        hexColor = self.ReturnStyleItem("Background_Color")
+        # Set the quickaccess toolbar background color. This fixes a transparant toolbar.
+        self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
+        self.tabBar().setStyleSheet("background-color: " + hexColor + ";")
 
-            StyleSheet_Addition = "\n\nQToolButton {background: solid " + hexColor + ";}"
-            StyleSheet_Addition_2 = (
-                "\n\nRibbonBar {border: none;background: solid " + hexColor + ";color: " + hexColor + ";}"
-            )
-            StyleSheet = StyleSheet_Addition_2 + StyleSheet + StyleSheet_Addition
-            self.setStyleSheet(StyleSheet)
+        StyleSheet_Addition = "\n\nQToolButton {background: solid " + hexColor + ";}"
+        StyleSheet_Addition_2 = (
+            "\n\nRibbonBar {border: none;background: solid " + hexColor + ";color: " + hexColor + ";}"
+        )
+        StyleSheet = StyleSheet_Addition_2 + StyleSheet + StyleSheet_Addition
+        self.setStyleSheet(StyleSheet)
 
         # get the state of the mainwindow
         self.MainWindowLoaded = True
@@ -236,35 +229,12 @@ class ModernMenu(RibbonBar):
         # Set these settings and connections at init
         # Set the autohide behavior of the ribbon
         self.setAutoHideRibbon(Parameters_Ribbon.AUTOHIDE_RIBBON)
-        # connect the collapsbutton with our own function
-        self.collapseRibbonButton().connect(
-            self.collapseRibbonButton(),
-            SIGNAL("clicked()"),
-            self.onCollapseRibbonButton_clicked,
-        )
+        self.removeCollapseButton()
 
         # Set the menuBar hidden as standard
         mw.menuBar().hide()
         if self.isEnabled() is False:
             mw.menuBar().show()
-
-        # # change the scroll buttons on the tabbar
-        # ScrollButtons = self.tabBar().children()
-        # ScrollLeftButton: QToolButton = ScrollButtons[0]
-        # ScrollRightButton: QToolButton = ScrollButtons[1]
-        # ScrollLeftButton.setMinimumWidth(self.iconSize * 0.7)
-        # ScrollRightButton.setMinimumWidth(self.iconSize * 0.7)
-        # ScrollRightButton.setPalette(palette)
-        # ScrollRightButton.setStyle(Style)
-
-        # # Set the previous/next buttons to standard toolbuttons
-        # category = self.currentCategory()
-        # previousButton: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[0]
-        # nextButton: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[1]
-        # previousButton.setArrowType(Qt.ArrowType.LeftArrow)
-        # nextButton.setArrowType(Qt.ArrowType.RightArrow)
-        # previousButton.setMinimumWidth(self.iconSize)
-        # nextButton.setMinimumWidth(self.iconSize)
         return
 
     # implementation to add actions to the Filemenu. Needed for the accessories menu
@@ -386,9 +356,6 @@ class ModernMenu(RibbonBar):
         self.tabBar().font().setPointSizeF(10)
         # self.tabBar().setFixedHeight(self.iconSize * self.sizeFactor)
 
-        # Set the size of the collapseRibbonButton
-        self.collapseRibbonButton().setFixedSize(self.iconSize, self.iconSize)
-
         # Set the helpbutton
         self.helpRibbonButton().setEnabled(True)
         self.helpRibbonButton().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -436,6 +403,8 @@ class ModernMenu(RibbonBar):
 
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
+        self.collapseRibbonButton().setDisabled(True)
+        self.collapseRibbonButton().setVisible(False)
         return
 
     def ApplicationMenu(self):
@@ -501,31 +470,14 @@ class ModernMenu(RibbonBar):
             webbrowser.open(AboutAdress, new=2, autoraise=True)
         return
 
-    def onCollapseRibbonButton_clicked(self):
-        try:
-            # Get the ribbon
-            TB = mw.findChildren(QDockWidget, "Ribbon")[0]
-
-            # Set the height based on visibility of the ribbon
-            if self.ribbonVisible() is False:
-                TB.setMaximumHeight(45)
-            else:
-                TB.setMaximumHeight(200)
-        except Exception:
-            pass
-
-        return
-
     def onPinClicked(self):
         if self._autoHideRibbon is True:
             self.setAutoHideRibbon(False)
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
-            self.onCollapseRibbonButton_clicked()
             return
         if self._autoHideRibbon is False:
             self.setAutoHideRibbon(True)
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", True)
-            self.onCollapseRibbonButton_clicked()
             return
 
         return
@@ -958,13 +910,16 @@ class ModernMenu(RibbonBar):
 
                 # Set the behavior of the option button
                 OptionButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
-                # Set the standard toolbutton arrow instead of pyqt's symbol
-                OptionButton.setArrowType(Qt.ArrowType.DownArrow)
-                OptionButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
                 # Remove the image to avoid double arrows
                 OptionButton.setStyleSheet("RibbonPanelOptionButton::menu-indicator {image: none;}")
-                # Set the optionbutton text
-                OptionButton.setText("more...")
+                # Set the icon
+                OptionButton_Icon = self.ReturnStyleItem("OptionButton")
+                if OptionButton_Icon is not None:
+                    OptionButton.setIcon(OptionButton_Icon)
+                else:
+                    OptionButton.setArrowType(Qt.ArrowType.DownArrow)
+                    OptionButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+                    OptionButton.setText("more...")
 
             # Set the margins. In linux seems the style behavior different than on Windows
             Layout = panel.layout()
@@ -972,23 +927,41 @@ class ModernMenu(RibbonBar):
 
         self.isWbLoaded[tabName] = True
 
-        # change the scroll buttons on the tabbar
-        ScrollButtons = self.tabBar().children()
-        ScrollLeftButton: QToolButton = ScrollButtons[0]
-        ScrollRightButton: QToolButton = ScrollButtons[1]
-        ScrollLeftButton.setMinimumWidth(self.iconSize * 0.7)
-        ScrollRightButton.setMinimumWidth(self.iconSize * 0.7)
-        ScrollLeftButton.setArrowType(Qt.ArrowType.LeftArrow)
-        ScrollRightButton.setArrowType(Qt.ArrowType.RightArrow)
+        # cset the scroll buttons on the tabbar
+        ScrollButtons_Tab = self.tabBar().children()
+        ScrollLeftButton_Tab: QToolButton = ScrollButtons_Tab[0]
+        ScrollRightButton_Tab: QToolButton = ScrollButtons_Tab[1]
+        # get the icons
+        ScrollLeftButton_Tab_Icon = self.ReturnStyleItem("ScrollLeftButton_Tab")
+        ScrollRightButton_Tab_Icon = self.ReturnStyleItem("ScrollRightButton_Tab")
+        # Set the icons
+        if ScrollLeftButton_Tab_Icon is not None:
+            ScrollLeftButton_Tab.setIcon(ScrollLeftButton_Tab_Icon)
+        else:
+            ScrollLeftButton_Tab.setArrowType(Qt.ArrowType.LeftArrow)
+        if ScrollRightButton_Tab_Icon is not None:
+            ScrollRightButton_Tab.setIcon(ScrollRightButton_Tab_Icon)
+        else:
+            ScrollRightButton_Tab.setArrowType(Qt.ArrowType.RightArrow)
 
-        # Set the previous/next buttons to standard toolbuttons
+        # Set the previous/next buttons
         category = self.currentCategory()
-        previousButton: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[0]
-        nextButton: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[1]
-        previousButton.setArrowType(Qt.ArrowType.LeftArrow)
-        nextButton.setArrowType(Qt.ArrowType.RightArrow)
-        previousButton.setMinimumWidth(self.iconSize)
-        nextButton.setMinimumWidth(self.iconSize)
+        ScrollLeftButton_Category: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[0]
+        ScrollRightButton_Category: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[1]
+        ScrollLeftButton_Category.setMinimumWidth(self.iconSize)
+        ScrollRightButton_Category.setMinimumWidth(self.iconSize)
+        # get the icons
+        ScrollLeftButton_Category_Icon = self.ReturnStyleItem("ScrollLeftButton_Category")
+        ScrollRightButton_Category_Icon = self.ReturnStyleItem("ScrollRightButton_Category")
+        # Set the icons
+        if ScrollLeftButton_Category_Icon is not None:
+            ScrollLeftButton_Category.setIcon(ScrollLeftButton_Category_Icon)
+        else:
+            ScrollLeftButton_Category.setArrowType(Qt.ArrowType.LeftArrow)
+        if ScrollRightButton_Category_Icon is not None:
+            ScrollRightButton_Category.setIcon(ScrollRightButton_Category_Icon)
+        else:
+            ScrollRightButton_Category.setArrowType(Qt.ArrowType.RightArrow)
 
         return
 
@@ -1073,6 +1046,45 @@ class ModernMenu(RibbonBar):
             if script.endswith(".py"):
                 App.loadFile(script)
         return
+
+    def ReturnStyleItem(self, ControlName):
+        """
+        Enter one of the names below:
+
+        IconName (string):
+            "Background_Color" returns string,
+            "ScrollLeftButton_Tab returns QIcon",
+            "ScrollRightButton_Tab" returns QIcon,
+            "ScrollLeftButton_Category" returns QIcon,
+            "ScrollRightButton_Category" returns QIcon,
+            "OptionButton" returns QIcon,
+            "PinButton_open" returns QIcon,
+            "PinButton_closed" returns QIcon,
+        """
+        # define a result holder and a dict for the StyleMapping file
+        result = None
+        StyleMapping = {}
+
+        # read ribbon structure from JSON file
+        with open(os.path.join(os.path.dirname(__file__), "StyleMapping.json"), "r") as file:
+            StyleMapping.update(json.load(file))
+        file.close()
+
+        # Get the current stylesheet for FreeCAD
+        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
+        currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
+
+        try:
+            if ControlName != "Background_Color":
+                PixmapName = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
+                pixmap = QPixmap(os.path.join(pathIcons, PixmapName))
+                result = QIcon()
+                result.addPixmap(pixmap)
+            if ControlName == "Background_Color":
+                result = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
+        except Exception:
+            pass
+        return result
 
 
 class run:
