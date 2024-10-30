@@ -423,6 +423,8 @@ def ReturnXML_Value(path: str, ElementName: str):
 
 
 def TranslationsMapping(WorkBenchName: str, string: str):
+    result = ""
+
     ListSpecialWB = [
         "Assembly4Workbench",
         "A2plusWorkbench",
