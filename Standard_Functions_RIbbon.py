@@ -178,9 +178,7 @@ def restart_freecad():
 
     args = QtWidgets.QApplication.arguments()[1:]
     if Gui.getMainWindow().close():
-        QtCore.QProcess.startDetached(
-            QtWidgets.QApplication.applicationFilePath(), args
-        )
+        QtCore.QProcess.startDetached(QtWidgets.QApplication.applicationFilePath(), args)
 
     return
 
@@ -333,13 +331,9 @@ def GetFileDialog(Filter="", parent=None, DefaultPath="", SaveAs: bool = True) -
 
     file = ""
     if SaveAs is False:
-        file = QFileDialog.getOpenFileName(
-            parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter
-        )[0]
+        file = QFileDialog.getOpenFileName(parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter)[0]
     if SaveAs is True:
-        file = QFileDialog.getSaveFileName(
-            parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter
-        )[0]
+        file = QFileDialog.getSaveFileName(parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter)[0]
     return file
 
 
@@ -347,9 +341,7 @@ def GetFolder(parent=None, DefaultPath="") -> str:
     from PySide.QtWidgets import QFileDialog
 
     Directory = ""
-    Directory = QFileDialog.getExistingDirectory(
-        parent=parent, caption="Select Folder", dir=DefaultPath
-    )
+    Directory = QFileDialog.getExistingDirectory(parent=parent, caption="Select Folder", dir=DefaultPath)
 
     return Directory
 
@@ -377,9 +369,7 @@ def CreateToolbar(Name: str, WorkBenchName: str = "Global", ButtonList: list = [
     # Define the name for the toolbar
     ToolBarName = Name
     # define the parameter path for the toolbar
-    WorkbenchToolBarsParamPath = (
-        "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
-    )
+    WorkbenchToolBarsParamPath = "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
 
     # add the ToolbarGroup in the FreeCAD Parameters
     WorkbenchToolbar = App.ParamGet(WorkbenchToolBarsParamPath + ToolBarName)
@@ -405,9 +395,7 @@ def RemoveWorkBenchToolbars(Name: str, WorkBenchName: str = "Global") -> None:
     # Define the name for the toolbar
     ToolBarName = Name
     # define the parameter path for the toolbar
-    ToolBarsParamPath = (
-        "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
-    )
+    ToolBarsParamPath = "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
 
     custom_toolbars = App.ParamGet(ToolBarsParamPath)
     custom_toolbars.RemGroup(ToolBarName)
@@ -430,5 +418,42 @@ def ReturnXML_Value(path: str, ElementName: str):
     for child in root:
         if str(child.tag).split("}")[1] == ElementName:
             result = child.text
+
+    return result
+
+
+def TranslationsMapping(WorkBenchName):
+    contextDict = {
+        "WorkFeatureWorkbench": "Workbench",
+        "SketcherWorkbench": "Workbench",
+        "PartDesignWorkbench": "Workbench",
+        "PartWorkbench": "Workbench",
+        "SMWorkbench": "Workbench",
+        "FrameWorkbench": "Workbench",
+        "SurfaceWorkbench": "Workbench",
+        "Assembly4Workbench": "Asm4_trans",
+        "TechDrawWorkbench": "Workbench",
+        "FemWorkbench": "Workbench",
+        "GearWorkbench": "Workbench",
+        "FastenersWorkbench": "Workbench",
+        "SpreadsheetWorkbench": "Workbench",
+        "InspectionWorkbench": "Workbench",
+        "RenderWorkbench": "Workbench",
+        "RobotWorkbench": "Workbench",
+        "CfdOFWorkbench": "Workbench",
+        "PlotWorkbench": "Workbench",
+        "BillOfMaterialsWB": "Workbench",
+        "DynamicDataWorkbench": "Workbench",
+        "AssistantWorkbench": "Workbench",
+        "TestWorkbench": "Workbench",
+        "ThreadProfileWorkbench": "Workbench",
+        "AssemblyWorkbench": "Workbench",
+        "BIMWorkbench": "Workbench",
+        "CAMWorkbench": "Workbench",
+        "MaterialWorkbench": "Workbench",
+        "Assembly3Workbench": "asm3",
+    }
+
+    result = contextDict[WorkBenchName]
 
     return result

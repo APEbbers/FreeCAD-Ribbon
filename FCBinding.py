@@ -607,7 +607,7 @@ class ModernMenu(RibbonBar):
         # Get the list of toolbars from the active workbench
         ListToolbars: list = workbench.listToolbars()
         if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
-            ListToolbars.append(translate("FreeCAD Ribbon", "Individual views"))
+            ListToolbars.append("Individual views")
         # Get custom toolbars that are created in the toolbar environment and add them to the list of toolbars
         CustomToolbars = self.List_ReturnCustomToolbars()
         for CustomToolbar in CustomToolbars:
@@ -662,7 +662,7 @@ class ModernMenu(RibbonBar):
                 continue
 
             # Create the panel, use the toolbar name as title
-            title = translate("Workbench", toolbar)
+            title = translate(StandardFunctions.TranslationsMapping(workbenchName), toolbar)
             panel = self.currentCategory().addPanel(
                 title=title,
                 showPanelOptionButton=True,
@@ -826,16 +826,10 @@ class ModernMenu(RibbonBar):
                             action = button.defaultAction()
 
                             # get the action text
-                            text = translate("Workbench", action.text())
+                            text = translate(StandardFunctions.TranslationsMapping(workbenchName), action.text())
 
                             # try to get alternative text from ribbonStructure
                             try:
-                                # get the json language
-                                languageJSON = self.ribbonStructure["language"]
-                                # Get the current stylesheet for FreeCAD
-                                FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
-                                FCLanguage = FreeCAD_preferences.GetString("Language")
-
                                 textJSON = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
                                     "commands"
                                 ][action.data()]["text"]
@@ -850,7 +844,6 @@ class ModernMenu(RibbonBar):
                                 ):
                                     textJSON = "Create sketch"
 
-                                # if text != textJSON and languageJSON == FCLanguage:
                                 text = textJSON
 
                                 # the text would be overwritten again when the state of the action changes
