@@ -3,12 +3,12 @@
 An Ribbon UI for FreeCAD, based on the PyQtRibbon library (https://github.com/haiiliin/pyqtribbon).
 This ribbon is based the work of Geolta (https://github.com/geolta/FreeCAD-Ribbon) and HakanSeven (https://github.com/HakanSeven12/Modern-UI) for the Modern-UI workbench.
 
-![](./Resources/Images/Screenshot.png)
-![](./Resources/Images/Screenshot_CloseUP.png)
+![Screenshot_light](./Resources/Images/Screenshot.png)
+![Closeup_Light](./Resources/Images/Screenshot_CloseUP.png)
 
 
-![](./Resources/Images/Screenshot_DarkMode.png)
-![](./Resources/Images/Screenshot_DarkMode_CloseUP.png)
+![Screenshot_Dark](./Resources/Images/Screenshot_DarkMode.png)
+![Closeup_Dark](./Resources/Images/Screenshot_DarkMode_CloseUP.png)
 
 The FreeCAD ribbon provides the following functions and features:
 
@@ -39,16 +39,8 @@ See the [wiki page](https://github.com/APEbbers/FreeCAD-Ribbon/wiki) for more de
 Result: Addon will be installed and FreeCAD will prompt for a restart.
 Accept prompt and FreeCAD will restart with the Ribbon addon included.
 
-<details>
-<summary><b>Manual Installation/Uninstallation (click to expand)</b></summary>
+Note: See [wiki page/installation](https://github.com/APEbbers/FreeCAD-Ribbon/wiki/01-%E2%80%90-Installation) for other ways to install.
 
-### Custom Repository for Addon Manager
-
-Go to `Edit/Preferences/Addon-Manager` and add the custom repository `https://github.com/APEbbers/FreeCAD-Ribbon.git` with the branch `main`. Now you can go to the Addon Manager (`Tools/Addon-Manager`) and install "FreeCAD Ribbon" (it can be that you have to update your local cache first). Now restart FreeCAD and you will see a ribbon interface :)
-
-### Manual Installation
-
-Download this repository, extract the folder and copy it to the `Mod` folder of FreeCAD, detailed information can be found at the [FreeCAD Wiki](https://wiki.freecad.org/Installing_more_workbenches). Now restart FreeCAD and you will see a ribbon interface :)
 
 ## Uninstallation
 
@@ -72,8 +64,6 @@ Download this repository, extract the folder and copy it to the `Mod` folder of 
 
 1. Execute the macro
 1. Restart FreeCAD.
-
-</details>
 
 ## Discussion
 
