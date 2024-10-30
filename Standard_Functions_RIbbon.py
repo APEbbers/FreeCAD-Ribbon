@@ -432,3 +432,86 @@ def ReturnXML_Value(path: str, ElementName: str):
             result = child.text
 
     return result
+
+
+def TranslationsMapping(WorkBenchName: str, string: str):
+    result = ""
+
+    ListSpecialWB = [
+        "Assembly4Workbench",
+        "A2plusWorkbench",
+    ]
+    isSpecialWB = False
+    for wb in ListSpecialWB:
+        if wb == WorkBenchName:
+            isSpecialWB = True
+
+    if isSpecialWB is False:
+        contextDict_Standard = {
+            "WorkFeatureWorkbench": "Workbench",
+            "SketcherWorkbench": "Workbench",
+            "PartDesignWorkbench": "Workbench",
+            "PartWorkbench": "Workbench",
+            "SMWorkbench": "Workbench",
+            "FrameWorkbench": "Workbench",
+            "SurfaceWorkbench": "Workbench",
+            "TechDrawWorkbench": "Workbench",
+            "FemWorkbench": "Workbench",
+            "GearWorkbench": "Workbench",
+            "FastenersWorkbench": "Workbench",
+            "SpreadsheetWorkbench": "Workbench",
+            "InspectionWorkbench": "Workbench",
+            "RenderWorkbench": "Workbench",
+            "RobotWorkbench": "Workbench",
+            "CfdOFWorkbench": "Workbench",
+            "PlotWorkbench": "Workbench",
+            "BillOfMaterialsWB": "Workbench",
+            "DynamicDataWorkbench": "Workbench",
+            "AssistantWorkbench": "Workbench",
+            "TestWorkbench": "Workbench",
+            "ThreadProfileWorkbench": "Workbench",
+            "AssemblyWorkbench": "Workbench",
+            "BIMWorkbench": "Workbench",
+            "CAMWorkbench": "Workbench",
+            "MaterialWorkbench": "Workbench",
+            "Assembly3Workbench": "asm3",
+        }
+        try:
+            context = contextDict_Standard[WorkBenchName]
+        except Exception:
+            context = "Workbench"
+        result = translate(context, string)
+
+    if WorkBenchName == "Assembly4Workbench":
+        ListContext = [
+            "Fasteners",
+            "Commands",
+            "Asm4_Help",
+            "Commands1",
+            "Asm4_showLcs",
+            "Asm4_hideLcs",
+        ]
+        for i in range(len(ListContext)):
+            context = ListContext[i]
+            value = translate(context, string)
+            if value != string:
+                result = value
+            if i == len(ListContext) - 1:
+                result = string
+
+    if WorkBenchName == "A2plusWorkbench":
+        ListContext = [
+            "A2p_BoM",
+            "A2plus",
+            "A2plus_Constraints",
+            "A2plus_searchConstraintConflicts",
+        ]
+        for i in range(len(ListContext)):
+            context = ListContext[i]
+            value = translate(context, string)
+            if value != string:
+                result = value
+            if i == len(ListContext) - 1:
+                result = string
+
+    return result

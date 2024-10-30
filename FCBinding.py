@@ -721,8 +721,9 @@ class ModernMenu(RibbonBar):
                 continue
 
             # Create the panel, use the toolbar name as title
+            title = StandardFunctions.TranslationsMapping(workbenchName, toolbar)
             panel = self.currentCategory().addPanel(
-                title=toolbar,
+                title=title,
                 showPanelOptionButton=True,
             )
             panel.panelOptionButton().hide()
@@ -902,9 +903,14 @@ class ModernMenu(RibbonBar):
                         try:
                             action = button.defaultAction()
 
+                            # get the action text
+                            text = StandardFunctions.TranslationsMapping(
+                                workbenchName, action.text()
+                            )
+
                             # try to get alternative text from ribbonStructure
                             try:
-                                text = self.ribbonStructure["workbenches"][
+                                textJSON = self.ribbonStructure["workbenches"][
                                     workbenchName
                                 ]["toolbars"][toolbar]["commands"][action.data()][
                                     "text"
@@ -920,7 +926,9 @@ class ModernMenu(RibbonBar):
                                     ]
                                     == "Create datum"
                                 ):
-                                    text = "Create sketch"
+                                    textJSON = "Create sketch"
+
+                                text = textJSON
 
                                 # the text would be overwritten again when the state of the action changes
                                 # (e.g. when getting enabled / disabled), therefore the action itself
@@ -1183,37 +1191,6 @@ class ModernMenu(RibbonBar):
             if script.endswith(".py"):
                 App.loadFile(script)
         return
-
-
-# class run:
-#     """
-#     Activate Modern UI.
-#     """
-
-#     def __init__(self, name):
-#         """
-#         Constructor
-#         """
-#         disable = 0
-#         if name != "NoneWorkbench":
-#             mw = Gui.getMainWindow()
-
-#             # Disable connection after activation
-#             mw.workbenchActivated.disconnect(run)
-#             if disable:
-#                 return
-
-#             ribbon = ModernMenu()
-#             # # Get the layout
-#             # layout = ribbon.layout()
-#             # # Set spacing and content margins to zero
-#             # layout.setSpacing(0)
-#             # layout.setContentsMargins(0, 0, 0, 0)
-#             # # update the layout
-#             # ribbon.setLayout(layout)
-#             # Create the ribbon
-#             ribbon.setContentsMargins(0, 20, 0, 0)
-#             mw.setMenuWidget(ribbon)
 
 
 class run:

@@ -1789,7 +1789,7 @@ class LoadDialog(Design_ui.Ui_Form):
             BackupFile = os.path.join(pathBackup, SelectedFile)
             result = shutil.copy(BackupFile, JsonFile)
             StandardFunctions.Print(
-                translate("FreeCAD Ribbon", "Ribbonbar set back to settings from: ")
+                translate("FreeCAD Ribbon", "Ribbon bar set back to settings from: ")
                 + f"{result}!",
                 "Warning",
             )
@@ -1828,7 +1828,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         result = shutil.copy(BackupFile, JsonFile)
         StandardFunctions.Print(
-            translate("FreeCAD Ribbon", "Ribbonbar reset from ") + f"{result}!",
+            translate("FreeCAD Ribbon", "Ribbon bar reset from ") + f"{result}!",
             "Warning",
         )
         answer = StandardFunctions.RestartDialog(message=message)
@@ -2133,6 +2133,11 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     def WriteJson(self):
+        # get the system language
+        # Get the current stylesheet for FreeCAD
+        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
+        FCLanguage = FreeCAD_preferences.GetString("Language")
+
         # Create the internal lists
         List_IgnoredToolbars = []
         List_IconOnlyToolbars = []
@@ -2163,6 +2168,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Create a resulting dict
         resultingDict = {}
         # add the various lists to the resulting dict.
+        resultingDict["language"] = FCLanguage
         resultingDict["ignoredToolbars"] = List_IgnoredToolbars
         resultingDict["iconOnlyToolbars"] = List_IconOnlyToolbars
         resultingDict["quickAccessCommands"] = List_QuickAccessCommands

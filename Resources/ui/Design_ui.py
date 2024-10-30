@@ -943,7 +943,7 @@ class Ui_Form(object):
         )
         self.AddCustomToolbar.setText(QCoreApplication.translate("Form", "Add", None))
         self.label_9.setText(
-            QCoreApplication.translate("Form", "select custom panel: ", None)
+            QCoreApplication.translate("Form", "Select custom panel: ", None)
         )
         self.RemovePanel.setText(QCoreApplication.translate("Form", "Remove", None))
         self.label_11.setText(
