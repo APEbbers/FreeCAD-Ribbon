@@ -662,7 +662,7 @@ class ModernMenu(RibbonBar):
                 continue
 
             # Create the panel, use the toolbar name as title
-            title = StandardFunctions.TranslationsMapping(workbenchName), toolbar
+            title = StandardFunctions.TranslationsMapping(workbenchName, toolbar)
             panel = self.currentCategory().addPanel(
                 title=title,
                 showPanelOptionButton=True,
@@ -826,7 +826,7 @@ class ModernMenu(RibbonBar):
                             action = button.defaultAction()
 
                             # get the action text
-                            text = StandardFunctions.TranslationsMapping(workbenchName), action.text()
+                            text = StandardFunctions.TranslationsMapping(workbenchName, action.text())
 
                             # try to get alternative text from ribbonStructure
                             try:
