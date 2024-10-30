@@ -235,6 +235,10 @@ class ModernMenu(RibbonBar):
         mw.menuBar().hide()
         if self.isEnabled() is False:
             mw.menuBar().show()
+
+        # Remove the collapseble button
+        RightToolbar = self.rightToolBar()
+        RightToolbar.removeAction(RightToolbar.actions()[0])
         return
 
     # implementation to add actions to the Filemenu. Needed for the accessories menu
