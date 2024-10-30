@@ -429,7 +429,12 @@ def TranslationsMapping(WorkBenchName: str, string: str):
         "Assembly4Workbench",
         "A2plusWorkbench",
     ]
-    if not ListSpecialWB.__contains__(WorkBenchName):
+    isSpecialWB = False
+    for wb in ListSpecialWB:
+        if wb == WorkBenchName:
+            isSpecialWB = True
+
+    if isSpecialWB is False:
         contextDict_Standard = {
             "WorkFeatureWorkbench": "Workbench",
             "SketcherWorkbench": "Workbench",
@@ -465,34 +470,36 @@ def TranslationsMapping(WorkBenchName: str, string: str):
             context = "Workbench"
         result = translate(context, string)
 
-        if WorkBenchName == "Assembly4Workbench":
-            ListContext = [
-                "Fasteners",
-                "Commands",
-                "Asm4_Help",
-                "Commands1",
-                "Asm4_showLcs",
-                "Asm4_hideLcs",
-            ]
-            for i in range(len(ListContext)):
-                value = translate(ListContext[i], string)
-                if value != string:
-                    result = value
-                if i == len(ListContext) - 1:
-                    result = string
+    if WorkBenchName == "Assembly4Workbench":
+        ListContext = [
+            "Fasteners",
+            "Commands",
+            "Asm4_Help",
+            "Commands1",
+            "Asm4_showLcs",
+            "Asm4_hideLcs",
+        ]
+        for i in range(len(ListContext)):
+            context = ListContext[i]
+            value = translate(context, string)
+            if value != string:
+                result = value
+            if i == len(ListContext) - 1:
+                result = string
 
-        if WorkBenchName == "A2plusWorkbench":
-            ListContext = [
-                "A2p_BoM",
-                "A2plus",
-                "A2plus_Constraints",
-                "A2plus_searchConstraintConflicts",
-            ]
-            for i in range(len(ListContext)):
-                value = translate(ListContext[i], string)
-                if value != string:
-                    result = value
-                if i == len(ListContext) - 1:
-                    result = string
+    if WorkBenchName == "A2plusWorkbench":
+        ListContext = [
+            "A2p_BoM",
+            "A2plus",
+            "A2plus_Constraints",
+            "A2plus_searchConstraintConflicts",
+        ]
+        for i in range(len(ListContext)):
+            context = ListContext[i]
+            value = translate(context, string)
+            if value != string:
+                result = value
+            if i == len(ListContext) - 1:
+                result = string
 
     return result

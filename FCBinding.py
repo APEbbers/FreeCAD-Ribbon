@@ -1088,37 +1088,6 @@ class ModernMenu(RibbonBar):
         return
 
 
-# class run:
-#     """
-#     Activate Modern UI.
-#     """
-
-#     def __init__(self, name):
-#         """
-#         Constructor
-#         """
-#         disable = 0
-#         if name != "NoneWorkbench":
-#             mw = Gui.getMainWindow()
-
-#             # Disable connection after activation
-#             mw.workbenchActivated.disconnect(run)
-#             if disable:
-#                 return
-
-#             ribbon = ModernMenu()
-#             # # Get the layout
-#             # layout = ribbon.layout()
-#             # # Set spacing and content margins to zero
-#             # layout.setSpacing(0)
-#             # layout.setContentsMargins(0, 0, 0, 0)
-#             # # update the layout
-#             # ribbon.setLayout(layout)
-#             # Create the ribbon
-#             ribbon.setContentsMargins(0, 20, 0, 0)
-#             mw.setMenuWidget(ribbon)
-
-
 class run:
     """
     Activate Modern UI.
