@@ -86,10 +86,6 @@ from pyqtribbon_local.panel import RibbonPanel
 from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 
-# import modules for keypress detection based on OS
-if platform.system() == "Windows" or platform.system() == "Darwin":
-    import keyboard_local as keyboard
-
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
 
@@ -245,26 +241,11 @@ class ModernMenu(RibbonBar):
             mw.menuBar().show()
 
         # make sure that the ribbon cannot "disappear"
+        self.setMinimumHeight(45)
         if self.ribbonVisible() is False:
             self.setMaximumHeight(45)
         else:
             self.setMaximumHeight(200)
-
-        # ------- Bug when a workbench is activated --------------------------------
-        #
-        # # Get the keypress when on linux
-        # if platform.system() == "Linux" or platform.system() == "Darwin":
-        #     self.UseQtKeyPress = True
-
-        # # Get the keypress when on windows or mac
-        # if platform.system() == "Windows" or platform.system() == "Darwin":
-        #     try:
-        #         # connect the alt key to the menuBar
-        #         keyboard.on_press_key("alt", lambda _: self.ToggleMenuBar())
-        #     except Exception:  # Use Qt in case of an error
-        #         self.UseQtKeyPress = True
-        #
-        # --------------------------------------------------------------------------
 
         ScrollButtons = self.tabBar().children()
         ScrollLeftButton: QToolButton = ScrollButtons[0]
