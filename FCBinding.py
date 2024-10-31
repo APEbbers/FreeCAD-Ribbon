@@ -716,6 +716,7 @@ class ModernMenu(RibbonBar):
                 allButtons = TB[0].findChildren(QToolButton)
                 # remove empty buttons
                 for i in range(len(allButtons)):
+                    button: QToolButton = allButtons[i]
                     if allButtons[i].text() == "":
                         allButtons.pop(i)
             except Exception:
@@ -776,6 +777,17 @@ class ModernMenu(RibbonBar):
                     # XXX check that positionsList consists of strings only
                     def sortButtons(button: QToolButton):
                         Text = button.text().replace("...", "")
+
+                        try:
+                            action = None
+                            if len(button.actions()) > 0:
+                                action = button.actions()[0]
+                            if action is not None:
+                                command = Gui.Command.get(action.data())
+                                Text = command.getInfo()["menuText"].replace("...", "")
+                        except Exception:
+                            pass
+
                         if Text == "":
                             return -1
 
