@@ -31,6 +31,7 @@ from PySide.QtGui import (
     QKeyEvent,
     QActionGroup,
     QHoverEvent,
+    QFont,
 )
 from PySide.QtWidgets import (
     QToolButton,
@@ -55,6 +56,7 @@ from PySide.QtCore import (
     QEvent,
     QMetaObject,
     QCoreApplication,
+    QSize,
 )
 
 import json
@@ -80,11 +82,17 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
+# import pyqtribbon_local as pyqtribbon
+# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon_local.panel import RibbonPanel
+# from pyqtribbon_local.toolbutton import RibbonToolButton
+# from pyqtribbon_local.separator import RibbonSeparator
+
 import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon_local.panel import RibbonPanel
-from pyqtribbon_local.toolbutton import RibbonToolButton
-from pyqtribbon_local.separator import RibbonSeparator
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -339,12 +347,13 @@ class ModernMenu(RibbonBar):
 
             if len(QuickAction) <= 1:
                 button.setDefaultAction(QuickAction[0])
-                width = self.iconSize * self.sizeFactor
+                width = self.iconSize
+                height = self.iconSize
                 button.setMinimumWidth(width)
             elif len(QuickAction) > 1:
                 button.addActions(QuickAction)
                 button.setDefaultAction(QuickAction[0])
-                width = (self.iconSize * self.sizeFactor) + self.iconSize
+                width = (self.iconSize) + self.iconSize
                 height = self.iconSize
                 button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                 button.setMinimumSize(width, height)
@@ -355,13 +364,17 @@ class ModernMenu(RibbonBar):
             toolBarWidth = toolBarWidth + width
 
         # Set the height of the quickaccess toolbar
-        self.quickAccessToolBar().setMinimumWidth(self.iconSize * self.sizeFactor)
+        self.quickAccessToolBar().setMinimumHeight(self.iconSize)
+        self.setContentsMargins(1, 1, 1, 1)
         # Set the width of the quickaccess toolbar.
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
         # Set the size policy
         self.quickAccessToolBar().setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred
         )
+
+        # Set the tabbar height and textsize
+        self.tabBar().setIconSize(QSize(self.iconSize, self.iconSize))
 
         # Correct colors when no stylesheet is selected for FreeCAD.
         FreeCAD_preferences = App.ParamGet(
@@ -436,10 +449,6 @@ class ModernMenu(RibbonBar):
                             len(self.categories()) - 1, QIcon(workbench.Icon)
                         )
 
-        # Set the font size of the ribbon tab titles
-        self.tabBar().font().setPointSizeF(10)
-        self.tabBar().setFixedHeight(self.iconSize * self.sizeFactor)
-
         # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(self.iconSize, self.iconSize)
 
@@ -480,8 +489,9 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().addWidget(pinButton)
 
         # Set the width of the right toolbar
-        i = len(self.rightToolBar().actions())
-        self.rightToolBar().setMinimumWidth(self.iconSize * self.sizeFactor * i)
+        i = len(self.rightToolBar().actions()) + 1
+        iconSize = self.rightToolBar().iconSize().height()
+        self.rightToolBar().setMinimumWidth(iconSize * self.sizeFactor * i)
         self.rightToolBar().setSizePolicy(
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
         )
