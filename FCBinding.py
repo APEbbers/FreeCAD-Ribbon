@@ -82,17 +82,11 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-# import pyqtribbon_local as pyqtribbon
-# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon_local.panel import RibbonPanel
-# from pyqtribbon_local.toolbutton import RibbonToolButton
-# from pyqtribbon_local.separator import RibbonSeparator
-
 import pyqtribbon_local as pyqtribbon
-from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon.panel import RibbonPanel
-from pyqtribbon.toolbutton import RibbonToolButton
-from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon_local.panel import RibbonPanel
+from pyqtribbon_local.toolbutton import RibbonToolButton
+from pyqtribbon_local.separator import RibbonSeparator
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
