@@ -550,7 +550,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for ToolbarCommand in self.List_Commands:
             IsInList = ShadowList.__contains__(ToolbarCommand[0])
 
-            if IsInList is False:
+            if IsInList is False and ToolbarCommand[3] != "Global":
                 WorkbenchTitle = Gui.getWorkbench(ToolbarCommand[3]).MenuText
                 if (
                     WorkbenchTitle == self.form.ListCategory_1.currentText()
@@ -590,7 +590,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for ToolbarCommand in self.List_Commands:
             IsInList = ShadowList.__contains__(ToolbarCommand[0])
 
-            if IsInList is False:
+            if IsInList is False and ToolbarCommand[3] != "Global":
                 if (
                     ToolbarCommand[2]
                     .lower()
@@ -2091,6 +2091,16 @@ class LoadDialog(Design_ui.Ui_Form):
                                         "text": MenuNameCustom,
                                         "icon": IconName,
                                     }
+
+                                    MenuName = Command.getInfo()["menuText"].replace(
+                                        "...", ""
+                                    )
+                                    if MenuNameCustom == MenuName:
+                                        del self.Dict_RibbonCommandPanel["workbenches"][
+                                            WorkBenchName
+                                        ]["toolbars"][Toolbar]["commands"][CommandName][
+                                            "text"
+                                        ]
             except Exception:
                 continue
         return

@@ -925,7 +925,33 @@ class ModernMenu(RibbonBar):
                                 ):
                                     textJSON = "Create sketch"
 
-                                text = textJSON
+                                # Check if the original menutext is different
+                                # if so use the alternative, otherwise use original
+                                for CommandName in Gui.listCommands():
+                                    Command = Gui.Command.get(CommandName)
+                                    MenuName = Command.getInfo()["menuText"].replace(
+                                        "...", ""
+                                    )
+
+                                    if (
+                                        CommandName
+                                        == self.ribbonStructure["workbenches"][
+                                            workbenchName
+                                        ]["toolbars"][toolbar]["commands"][
+                                            action.data()
+                                        ]
+                                    ):
+                                        if (
+                                            MenuName
+                                            != self.ribbonStructure["workbenches"][
+                                                workbenchName
+                                            ]["toolbars"][toolbar]["commands"][
+                                                action.data()
+                                            ][
+                                                "text"
+                                            ]
+                                        ):
+                                            text = textJSON
 
                                 # the text would be overwritten again when the state of the action changes
                                 # (e.g. when getting enabled / disabled), therefore the action itself
@@ -938,8 +964,8 @@ class ModernMenu(RibbonBar):
                                 commandName = self.ribbonStructure["workbenches"][
                                     workbenchName
                                 ]["toolbars"][toolbar]["commands"][action.data()]
-                                command = Gui.Command.get(commandName)
-                                action.setIcon(Gui.getIcon(command.getInfo()["pixmap"]))
+                                Command = Gui.Command.get(commandName)
+                                action.setIcon(Gui.getIcon(Command.getInfo()["pixmap"]))
 
                             # try to get alternative icon from ribbonStructure
                             try:
