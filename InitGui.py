@@ -35,13 +35,21 @@ translate = App.Qt.translate
 
 # check if there is a "RibbonStructure.json". if not create one
 file = os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json")
+file_default = os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure_default.json")
 source = os.path.join(os.path.dirname(FCBinding.__file__), "CreateStructure.txt")
-print(file)
+source_default = os.path.join(os.path.dirname(FCBinding.__file__), "CreateStructure.txt")
+
 # check if file exits
 fileExists = os.path.isfile(file)
 # if not, copy and rename
 if fileExists is False:
     shutil.copy(source, file)
+
+# check if file exits
+fileExists = os.path.isfile(file_default)
+# if not, copy and rename
+if fileExists is False:
+    shutil.copy(source_default, file_default)
 
 try:
     print(translate("FreeCAD Ribbon", "Activating Ribbon Bar..."))
