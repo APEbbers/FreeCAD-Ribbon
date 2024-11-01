@@ -137,3 +137,5 @@ __pycache__
 /CreateTranslations.bat
 *.bak
 Backups/
+RibbonStructure.json
+RibbonStructure_default.json
