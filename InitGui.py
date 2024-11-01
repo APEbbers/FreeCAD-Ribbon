@@ -24,6 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import FCBinding
 import Parameters_Ribbon
+import shutil
 
 
 def QT_TRANSLATE_NOOP(context, text):
@@ -31,6 +32,16 @@ def QT_TRANSLATE_NOOP(context, text):
 
 
 translate = App.Qt.translate
+
+# check if there is a "RibbonStructure.json". if not create one
+file = os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json")
+source = os.path.join(os.path.dirname(FCBinding.__file__), "CreateStructure.txt")
+print(file)
+# check if file exits
+fileExists = os.path.isfile(file)
+# if not, copy and rename
+if fileExists is False:
+    shutil.copy(source, file)
 
 try:
     print(translate("FreeCAD Ribbon", "Activating Ribbon Bar..."))
