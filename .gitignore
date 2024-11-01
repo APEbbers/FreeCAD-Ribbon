@@ -136,3 +136,4 @@ __pycache__
 *.pptx
 /CreateTranslations.bat
 *.bak
+Backups/
