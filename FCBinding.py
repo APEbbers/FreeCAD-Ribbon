@@ -201,14 +201,6 @@ class ModernMenu(RibbonBar):
         # Set the custom stylesheet
         StyleSheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
         # modify the stylesheet to set the border for a toolbar menu
-        #
-        # Get the border color
-        hexColor = self.ReturnStyleItem("Border_Color")
-        StyleSheet = StyleSheet.replace("border-left: 0.5px solid;", "border-left: 0.5px solid " + hexColor + ";")
-        StyleSheet = StyleSheet.replace("border-top: 0.5px solid;", "border-top: 0.5px solid " + hexColor + ";")
-        StyleSheet = StyleSheet.replace("border: 0.5px solid;", "border: 0.5px solid " + hexColor + ";")
-        self.setStyleSheet(StyleSheet)
-
         hexColor = self.ReturnStyleItem("Background_Color")
         if hexColor is not None or hexColor != "":
             # Set the quickaccess toolbar background color. This fixes a transparant toolbar.
@@ -319,6 +311,24 @@ class ModernMenu(RibbonBar):
         Create menu tabs.
         """
         # add quick access buttons
+        #
+        # Define the borders
+        # Set the border color and shape
+        hexColor = self.ReturnStyleItem("Border_Color")
+        StyleSheet = (
+            """QToolButton:hover {
+                    border: 0.5px solid"""
+            + hexColor
+            + """;
+            }"""
+            + """QToolButton::menu-button {
+                    border: 0.5px solid"""
+            + hexColor
+            + """;
+            }"""
+        )
+        self.applicationOptionButton().setStyleSheet(StyleSheet)
+
         i = 1  # Start value for button count. Used for width of quickaccess toolbar
         toolBarWidth = ((self.iconSize * self.sizeFactor) * i) + self.ApplicationButtonSize
         for commandName in self.ribbonStructure["quickAccessCommands"]:
@@ -339,6 +349,7 @@ class ModernMenu(RibbonBar):
                 height = self.iconSize
                 button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                 button.setMinimumSize(width, height)
+            button.setStyleSheet(StyleSheet)
 
             # Add the button to the quickaccess toolbar
             self.addQuickAccessButton(button)
@@ -451,26 +462,7 @@ class ModernMenu(RibbonBar):
             QSize(self.applicationOptionButton().height() * 0.8, self.applicationOptionButton().height() * 0.8)
         )
         # Set the border color and shape
-        hexColor = self.ReturnStyleItem("Border_Color")
-        radius = str(self.applicationOptionButton().height() * 0.5)
-        StyleSheet = (
-            """QToolButton { 
-                      border-radius : """
-            + radius
-            + """;
-            border: 1px solid"""
-            + hexColor
-            + """;}"""
-            + """QToolButton:hover {
-                    border-radius : """
-            + radius
-            + """;
-                    border: 3px solid"""
-            + hexColor
-            + """;
-            }"""
-        )
-        self.applicationOptionButton().setStyleSheet(StyleSheet)
+        self.applicationOptionButton().setStyleSheet(self.ReturnStyleSheet("applicationbutton"))
 
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
@@ -981,6 +973,9 @@ class ModernMenu(RibbonBar):
                             # Set the default actiom
                             btn.setDefaultAction(action)
 
+                            # Set the stylesheet
+                            btn.setStyleSheet(self.ReturnStyleSheet("toolbutton"))
+
                             # add dropdown menu if necessary
                             if button.menu() is not None:
                                 btn.setMenu(button.menu())
@@ -1174,7 +1169,7 @@ class ModernMenu(RibbonBar):
         """
         Enter one of the names below:
 
-        IconName (string):
+        ControlName (string):
             "Background_Color" returns string,
             "Border_Color" returns string,
             "ScrollLeftButton_Tab returns QIcon",
@@ -1204,13 +1199,57 @@ class ModernMenu(RibbonBar):
                 pixmap = QPixmap(os.path.join(pathIcons, PixmapName))
                 result = QIcon()
                 result.addPixmap(pixmap)
-            if ControlName == "Background_Color":
-                result = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
-            if ControlName == "Border_Color":
+            if ControlName == "Background_Color" or ControlName == "Border_Color":
                 result = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
         except Exception:
             pass
         return result
+
+    def ReturnStyleSheet(self, control):
+        """
+        Enter one of the names below:
+
+        control (string):
+            "toolbutton,
+            "applicationbutton,
+        """
+        StyleSheet = ""
+        if control.lower() == "toolbutton":
+            hexColor = self.ReturnStyleItem("Border_Color")
+            StyleSheet = (
+                """QToolButton:hover {
+                        border: 0.5px solid"""
+                + hexColor
+                + """;
+                }"""
+                + """QToolButton::menu-button:hover {
+                        border: 0.5px solid"""
+                + hexColor
+                + """;
+                }"""
+            )
+            return StyleSheet
+        if control.lower() == "applicationbutton":
+            hexColor = self.ReturnStyleItem("Border_Color")
+            radius = str(self.applicationOptionButton().height() * 0.5)
+            StyleSheet = (
+                """QToolButton { 
+                        border-radius : """
+                + radius
+                + """;
+                border: 1px solid"""
+                + hexColor
+                + """;}"""
+                + """QToolButton:hover {
+                        border-radius : """
+                + radius
+                + """;
+                        border: 3px solid"""
+                + hexColor
+                + """;
+                }"""
+            )
+            return StyleSheet
 
 
 # class run:
