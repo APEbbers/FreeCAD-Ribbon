@@ -48,6 +48,7 @@ from PySide6.QtWidgets import (
     QLayoutItem,
     QGridLayout,
     QScrollArea,
+    QTabBar,
 )
 from PySide6.QtCore import (
     Qt,
@@ -131,6 +132,8 @@ class ModernMenu(RibbonBar):
     sizeFactor = 1.3
 
     MenuActions = None
+
+    PinToggled = True
 
     def __init__(self):
         """
@@ -236,14 +239,33 @@ class ModernMenu(RibbonBar):
         RightToolbar.removeAction(RightToolbar.actions()[0])
 
         # make sure that the ribbon cannot "disappear"
-        self.setMinimumHeight(45)
-        if self.ribbonVisible() is False:
-            self.setMaximumHeight(45)
-        else:
-            self.setMaximumHeight(200)
+        self.setMinimumHeight(100)
 
-        self.hovered.disconnect(None)
+        # Set the menuBar hidden as standard
+        mw.menuBar().hide()
+        if self.isEnabled() is False:
+            mw.menuBar().show()
+
+        self.tabBar().tabBarClicked.connect(self.onTabBarClicked)
         return
+
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.Type.HoverMove:
+            # swallow events
+            # print("Event swallowed")
+            pass
+        else:
+            # bubble events
+            return QObject.eventFilter(self, obj, event)
+
+    def leaveEvent(self, QEvent):
+        TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+        if self.PinToggled is True:
+            if self._autoHideRibbon is True:
+                TB.setMinimumHeight(100)
+                TB.setMaximumHeight(100)
+                self.setRibbonVisible(True)
+            return
 
     # implementation to add actions to the Filemenu. Needed for the accessories menu
     def addAction(self, action: QAction):
@@ -267,12 +289,6 @@ class ModernMenu(RibbonBar):
             self.currentCategory()._nextButton.click()
 
         return
-
-    def enterEvent(self, QEvent):
-        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
-        self.setFocus()
-        self.currentCategory().activateWindow()
-        pass
 
     def connectSignals(self):
         self.tabBar().currentChanged.connect(self.onUserChangedWorkbench)
@@ -499,15 +515,21 @@ class ModernMenu(RibbonBar):
         return
 
     def onPinClicked(self):
-        if self._autoHideRibbon is True:
-            self.setAutoHideRibbon(False)
-            Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
+        TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+        if self.PinToggled is True:
+            if self._autoHideRibbon is True:
+                TB.setMinimumHeight(100)
+                TB.setMaximumHeight(100)
+                self.setRibbonVisible(True)
+                self.PinToggled = False
             return
-        if self._autoHideRibbon is False:
-            self.setAutoHideRibbon(True)
-            Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", True)
+        if self.PinToggled is False or self._autoHideRibbon is False:
+            TB.setMinimumHeight(250)
+            TB.setMaximumHeight(250)
+            self.setFixedHeight(250)
+            self.setRibbonVisible(True)
+            self.PinToggled = True
             return
-
         return
 
     def onUserChangedWorkbench(self):
@@ -548,6 +570,13 @@ class ModernMenu(RibbonBar):
         # create panels
         self.buildPanels()
         return
+
+    def onTabBarClicked(self):
+        TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+        TB.setMinimumHeight(250)
+        TB.setMaximumHeight(250)
+        self.setFixedHeight(250)
+        self.setRibbonVisible(True)
 
     def buildPanels(self):
         # Get the active workbench and get tis name
@@ -1151,36 +1180,6 @@ class ModernMenu(RibbonBar):
         return result
 
 
-class run:
-    """
-    Activate Modern UI.
-    """
-
-    def __init__(self, name):
-        """
-        Constructor
-        """
-        disable = 0
-        if name != "NoneWorkbench":
-            mw = Gui.getMainWindow()
-
-            # Disable connection after activation
-            mw.workbenchActivated.disconnect(run)
-            if disable:
-                return
-
-            ribbon = ModernMenu()
-            # Get the layout
-            layout = ribbon.layout()
-            # Set spacing and content margins to zero
-            layout.setSpacing(0)
-            layout.setContentsMargins(3, 0, 3, 3)
-            # update the layout
-            ribbon.setLayout(layout)
-            # Create the ribbon
-            mw.setMenuBar(ribbon)
-
-
 # class run:
 #     """
 #     Activate Modern UI.
@@ -1193,17 +1192,52 @@ class run:
 #         disable = 0
 #         if name != "NoneWorkbench":
 #             mw = Gui.getMainWindow()
+
 #             # Disable connection after activation
 #             mw.workbenchActivated.disconnect(run)
 #             if disable:
 #                 return
 
 #             ribbon = ModernMenu()
-#             ribbonDock = QDockWidget()
-#             # set the name of the object and the window title
-#             ribbonDock.setObjectName("Ribbon")
-#             ribbonDock.setWindowTitle("Ribbon")
-#             # Set the titlebar to an empty widget (effectively hide it)
-#             ribbonDock.setTitleBarWidget(QWidget())
-#             # attach the ribbon to the dockwidget
-#             ribbonDock.setWidget(ribbon)
+#             # Get the layout
+#             layout = ribbon.layout()
+#             # Set spacing and content margins to zero
+#             layout.setSpacing(0)
+#             layout.setContentsMargins(3, 0, 3, 3)
+#             # update the layout
+#             ribbon.setLayout(layout)
+#             # Create the ribbon
+#             mw.setMenuBar(ribbon)
+
+
+class run:
+    """
+    Activate Modern UI.
+    """
+
+    def __init__(self, name):
+        """
+        Constructor
+        """
+        disable = 0
+        if name != "NoneWorkbench":
+            mw = Gui.getMainWindow()
+            # Disable connection after activation
+            mw.workbenchActivated.disconnect(run)
+            if disable:
+                return
+
+            ribbon = ModernMenu()
+            ribbonDock = QDockWidget()
+            # set the name of the object and the window title
+            ribbonDock.setObjectName("Ribbon")
+            ribbonDock.setWindowTitle("Ribbon")
+            # Set the titlebar to an empty widget (effectively hide it)
+            ribbonDock.setTitleBarWidget(QWidget())
+            # attach the ribbon to the dockwidget
+            ribbonDock.setWidget(ribbon)
+
+            ribbonDock.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+
+            # Add the dockwidget to the main window
+            mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
