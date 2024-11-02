@@ -238,7 +238,7 @@ class ModernMenu(RibbonBar):
         self.tabBar().tabBarClicked.connect(self.onTabBarClicked)
 
         # self.RibbonMinimalHeight = self.tabBar().height()
-        self.RibbonMaximumHeight = self.currentCategory().height() + self.RibbonMinimalHeight * self.sizeFactor
+        self.RibbonMaximumHeight = self.currentCategory().height() + self.RibbonMinimalHeight
         return
 
     def eventFilter(self, obj, event):
@@ -311,24 +311,6 @@ class ModernMenu(RibbonBar):
         Create menu tabs.
         """
         # add quick access buttons
-        #
-        # Define the borders
-        # Set the border color and shape
-        hexColor = self.ReturnStyleItem("Border_Color")
-        StyleSheet = (
-            """QToolButton:hover {
-                    border: 0.5px solid"""
-            + hexColor
-            + """;
-            }"""
-            + """QToolButton::menu-button {
-                    border: 0.5px solid"""
-            + hexColor
-            + """;
-            }"""
-        )
-        self.applicationOptionButton().setStyleSheet(StyleSheet)
-
         i = 1  # Start value for button count. Used for width of quickaccess toolbar
         toolBarWidth = ((self.iconSize * self.sizeFactor) * i) + self.ApplicationButtonSize
         for commandName in self.ribbonStructure["quickAccessCommands"]:
@@ -349,7 +331,7 @@ class ModernMenu(RibbonBar):
                 height = self.iconSize
                 button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                 button.setMinimumSize(width, height)
-            button.setStyleSheet(StyleSheet)
+            button.setStyleSheet(self.ReturnStyleSheet("toolbutton"))
 
             # Add the button to the quickaccess toolbar
             self.addQuickAccessButton(button)
@@ -359,7 +341,6 @@ class ModernMenu(RibbonBar):
         self.quickAccessToolBar().show()
         # Set the height of the quickaccess toolbar
         self.quickAccessToolBar().setMinimumHeight(self.iconSize * 3)
-        self.setContentsMargins(1, 1, 1, 1)
         # Set the width of the quickaccess toolbar.
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
         # Set the size policy

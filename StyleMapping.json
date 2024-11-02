@@ -19,7 +19,7 @@
         },
         "FreeCAD Light.qss": {
             "Background_Color": "#f0f0f0",
-            "Border_Color": "#e6e6e6",
+            "Border_Color": "#646464",
             "ScrollLeftButton_Tab": "backward.svg",
             "ScrollRightButton_Tab": "forward.svg",
             "ScrollLeftButton_Category": "backward.svg",
