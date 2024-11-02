@@ -45,6 +45,7 @@ from PySide.QtWidgets import (
     QLayout,
     QSpacerItem,
     QLayoutItem,
+    QTabBar,
 )
 from PySide.QtCore import (
     Qt,
@@ -254,6 +255,10 @@ class ModernMenu(RibbonBar):
         ScrollRightButton: QToolButton = ScrollButtons[1]
         ScrollLeftButton.setMinimumWidth(self.iconSize * 0.7)
         ScrollRightButton.setMinimumWidth(self.iconSize * 0.7)
+
+        # Block signals to prevent mixup with FreeCAD
+        tabBar: QTabBar = self.tabBar()
+        tabBar.blockSignals(True)
         return
 
     # The backup keypress event
