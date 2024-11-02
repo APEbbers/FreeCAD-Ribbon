@@ -1128,7 +1128,12 @@ class ModernMenu(RibbonBar):
                             for Child in OriginalToolBar.findChildren(QToolButton):
                                 # If the text of the QToolButton matches the menu text
                                 # Add it to the button list.
-                                if Child.text() == MenuText:
+                                IsInList = False
+                                for Toolbutton in ButtonList:
+                                    if Toolbutton.text() == Child.text():
+                                        IsInList = True
+
+                                if Child.text() == MenuText and IsInList is False:
                                     ButtonList.append(Child)
                         except Exception as e:
                             if Parameters_Ribbon.DEBUG_MODE is True:
@@ -1212,7 +1217,7 @@ class ModernMenu(RibbonBar):
             return StyleSheet
         if control.lower() == "applicationbutton":
             hexColor = self.ReturnStyleItem("Border_Color")
-            radius = str(self.applicationOptionButton().height() * 0.5)
+            radius = str(self.applicationOptionButton().height() * 0.49)
             StyleSheet = (
                 """QToolButton { 
                         border-radius : """
@@ -1281,6 +1286,13 @@ class run:
                 return
 
             ribbon = ModernMenu()
+            # Get the layout
+            layout = ribbon.layout()
+            # Set spacing and content margins to zero
+            layout.setSpacing(0)
+            layout.setContentsMargins(3, 0, 3, 3)
+            # update the layout
+            ribbon.setLayout(layout)
             ribbonDock = QDockWidget()
             # set the name of the object and the window title
             ribbonDock.setObjectName("Ribbon")

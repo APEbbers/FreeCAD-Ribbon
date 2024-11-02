@@ -31,7 +31,7 @@
             "collapseRibbonButton_down": "down.svg"
         },
         "OpenLight.qss": {
-            "Background_Color": "#a3a8ad",
+            "Background_Color": "",
             "Border_Color": "#1c7ed6",
             "ScrollLeftButton_Tab": "backward.svg",
             "ScrollRightButton_Tab": "forward.svg",
