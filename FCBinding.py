@@ -260,6 +260,8 @@ class ModernMenu(RibbonBar):
             return QObject.eventFilter(self, obj, event)
 
     def enterEvent(self, QEvent):
+        # In FreeCAD 1.0, Overlays are introduced. These have also an enterEvent which results in strange behavior
+        # Therefore this function is only activated on older versions of FreeCAD.
         if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             TB.setMinimumHeight(self.RibbonMaximumHeight)
