@@ -2,7 +2,16 @@
     "Stylesheets": {
         "": {
             "Background_Color": "#f0f0f0",
-            "Border_Color": "Black"
+            "Border_Color": "Black",
+            "ScrollLeftButton_Tab": "",
+            "ScrollRightButton_Tab": "",
+            "ScrollLeftButton_Category": "",
+            "ScrollRightButton_Category": "",
+            "OptionButton": "",
+            "PinButton_open": "",
+            "PinButton_closed": "",
+            "collapseRibbonButton_up": "",
+            "collapseRibbonButton_down": ""
         },
         "FreeCAD Dark.qss": {
             "Background_Color": "#333333",

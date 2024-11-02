@@ -202,7 +202,7 @@ class ModernMenu(RibbonBar):
         StyleSheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
         # modify the stylesheet to set the border for a toolbar menu
         hexColor = self.ReturnStyleItem("Background_Color")
-        if hexColor is not None or hexColor != "":
+        if hexColor is not None and hexColor != "":
             # Set the quickaccess toolbar background color. This fixes a transparant toolbar.
             self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
             self.tabBar().setStyleSheet("background-color: " + hexColor + ";")
@@ -1188,7 +1188,7 @@ class ModernMenu(RibbonBar):
             if ControlName == "Background_Color" or ControlName == "Border_Color":
                 result = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
         except Exception:
-            pass
+            result is None
         return result
 
     def ReturnStyleSheet(self, control):
@@ -1200,41 +1200,44 @@ class ModernMenu(RibbonBar):
             "applicationbutton,
         """
         StyleSheet = ""
-        if control.lower() == "toolbutton":
-            hexColor = self.ReturnStyleItem("Border_Color")
-            StyleSheet = (
-                """QToolButton:hover {
-                        border: 0.5px solid"""
-                + hexColor
-                + """;
-                }"""
-                + """QToolButton::menu-button:hover {
-                        border: 0.5px solid"""
-                + hexColor
-                + """;
-                }"""
-            )
-            return StyleSheet
-        if control.lower() == "applicationbutton":
-            hexColor = self.ReturnStyleItem("Border_Color")
-            radius = str(self.applicationOptionButton().height() * 0.49)
-            StyleSheet = (
-                """QToolButton { 
-                        border-radius : """
-                + radius
-                + """;
-                border: 1px solid"""
-                + hexColor
-                + """;}"""
-                + """QToolButton:hover {
-                        border-radius : """
-                + radius
-                + """;
-                        border: 3px solid"""
-                + hexColor
-                + """;
-                }"""
-            )
+        try:
+            if control.lower() == "toolbutton":
+                hexColor = self.ReturnStyleItem("Border_Color")
+                StyleSheet = (
+                    """QToolButton:hover {
+                            border: 0.5px solid"""
+                    + hexColor
+                    + """;
+                    }"""
+                    + """QToolButton::menu-button:hover {
+                            border: 0.5px solid"""
+                    + hexColor
+                    + """;
+                    }"""
+                )
+                return StyleSheet
+            if control.lower() == "applicationbutton":
+                hexColor = self.ReturnStyleItem("Border_Color")
+                radius = str(self.applicationOptionButton().height() * 0.49)
+                StyleSheet = (
+                    """QToolButton { 
+                            border-radius : """
+                    + radius
+                    + """;
+                    border: 1px solid"""
+                    + hexColor
+                    + """;}"""
+                    + """QToolButton:hover {
+                            border-radius : """
+                    + radius
+                    + """;
+                            border: 3px solid"""
+                    + hexColor
+                    + """;
+                    }"""
+                )
+                return StyleSheet
+        except Exception:
             return StyleSheet
 
 
