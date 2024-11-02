@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -34,7 +34,7 @@ from PySide.QtGui import (
     QRegion,
     QFont,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -49,7 +49,7 @@ from PySide.QtWidgets import (
     QGridLayout,
     QScrollArea,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -85,19 +85,19 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon_local.panel import RibbonPanel
-from pyqtribbon_local.toolbutton import RibbonToolButton
-from pyqtribbon_local.separator import RibbonSeparator
-from pyqtribbon_local.category import RibbonCategoryLayoutButton
+# import pyqtribbon_local as pyqtribbon
+# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon_local.panel import RibbonPanel
+# from pyqtribbon_local.toolbutton import RibbonToolButton
+# from pyqtribbon_local.separator import RibbonSeparator
+# from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
+import pyqtribbon as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -139,7 +139,7 @@ class ModernMenu(RibbonBar):
         super().__init__(title="", iconSize=self.iconSize)
         self.setObjectName("Ribbon")
 
-        self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+        self.setWindowFlags(self.windowFlags() | Qt.Dialog)
 
         # Get the style from the main window
         palette = mw.palette()
@@ -230,16 +230,19 @@ class ModernMenu(RibbonBar):
         # Set these settings and connections at init
         # Set the autohide behavior of the ribbon
         self.setAutoHideRibbon(Parameters_Ribbon.AUTOHIDE_RIBBON)
-        self.removeCollapseButton()
-
-        # Set the menuBar hidden as standard
-        mw.menuBar().hide()
-        if self.isEnabled() is False:
-            mw.menuBar().show()
 
         # Remove the collapseble button
         RightToolbar = self.rightToolBar()
         RightToolbar.removeAction(RightToolbar.actions()[0])
+
+        # make sure that the ribbon cannot "disappear"
+        self.setMinimumHeight(45)
+        if self.ribbonVisible() is False:
+            self.setMaximumHeight(45)
+        else:
+            self.setMaximumHeight(200)
+
+        self.hovered.disconnect(None)
         return
 
     # implementation to add actions to the Filemenu. Needed for the accessories menu
@@ -264,6 +267,12 @@ class ModernMenu(RibbonBar):
             self.currentCategory()._nextButton.click()
 
         return
+
+    def enterEvent(self, QEvent):
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.setFocus()
+        self.currentCategory().activateWindow()
+        pass
 
     def connectSignals(self):
         self.tabBar().currentChanged.connect(self.onUserChangedWorkbench)
@@ -308,7 +317,7 @@ class ModernMenu(RibbonBar):
 
         self.quickAccessToolBar().show()
         # Set the height of the quickaccess toolbar
-        self.quickAccessToolBar().setMinimumHeight(self.iconSize)
+        self.quickAccessToolBar().setMinimumHeight(self.iconSize * 3)
         self.setContentsMargins(1, 1, 1, 1)
         # Set the width of the quickaccess toolbar.
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
@@ -1165,8 +1174,36 @@ class run:
             layout = ribbon.layout()
             # Set spacing and content margins to zero
             layout.setSpacing(0)
-            layout.setContentsMargins(0, 0, 0, 0)
+            layout.setContentsMargins(3, 0, 3, 3)
             # update the layout
             ribbon.setLayout(layout)
             # Create the ribbon
             mw.setMenuBar(ribbon)
+
+
+# class run:
+#     """
+#     Activate Modern UI.
+#     """
+
+#     def __init__(self, name):
+#         """
+#         Constructor
+#         """
+#         disable = 0
+#         if name != "NoneWorkbench":
+#             mw = Gui.getMainWindow()
+#             # Disable connection after activation
+#             mw.workbenchActivated.disconnect(run)
+#             if disable:
+#                 return
+
+#             ribbon = ModernMenu()
+#             ribbonDock = QDockWidget()
+#             # set the name of the object and the window title
+#             ribbonDock.setObjectName("Ribbon")
+#             ribbonDock.setWindowTitle("Ribbon")
+#             # Set the titlebar to an empty widget (effectively hide it)
+#             ribbonDock.setTitleBarWidget(QWidget())
+#             # attach the ribbon to the dockwidget
+#             ribbonDock.setWidget(ribbon)
