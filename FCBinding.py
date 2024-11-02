@@ -112,28 +112,24 @@ class ModernMenu(RibbonBar):
     Create ModernMenu QWidget.
     """
 
+    # Define a placeholder for the repro adress
     ReproAdress: str = ""
-
+    # Placeholders for building the ribbonbar
     ribbonStructure = {}
-
     wbNameMapping = {}
     isWbLoaded = {}
-
     MainWindowLoaded = False
-
-    UseQtKeyPress = False
-
-    borderColor = ""
 
     # use icon size from FreeCAD preferences
     iconSize = Parameters_Ribbon.ICON_SIZE_SMALL
+    ApplicationButtonSize = iconSize * 2
 
     # Set a sixe factor for the buttons
     sizeFactor = 1.3
 
-    MenuActions = None
-
-    PinToggled = True
+    # Placeholders for toggle function of the ribbon
+    RibbonMinimalHeight = iconSize * 3
+    RibbonMaximumHeight = 240  # Will be redefined later
 
     def __init__(self):
         """
@@ -239,14 +235,19 @@ class ModernMenu(RibbonBar):
         RightToolbar.removeAction(RightToolbar.actions()[0])
 
         # make sure that the ribbon cannot "disappear"
-        self.setMinimumHeight(100)
+        self.setMinimumHeight(self.RibbonMinimalHeight)
 
         # Set the menuBar hidden as standard
         mw.menuBar().hide()
         if self.isEnabled() is False:
             mw.menuBar().show()
 
+        # connect a tabbar click event to the tarbar click funtion
+        # this used to replaced the native functions
         self.tabBar().tabBarClicked.connect(self.onTabBarClicked)
+
+        # self.RibbonMinimalHeight = self.tabBar().height()
+        self.RibbonMaximumHeight = self.currentCategory().height() + self.RibbonMinimalHeight * self.sizeFactor
         return
 
     def eventFilter(self, obj, event):
@@ -258,13 +259,21 @@ class ModernMenu(RibbonBar):
             # bubble events
             return QObject.eventFilter(self, obj, event)
 
+    def enterEvent(self, QEvent):
+        if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
+            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            TB.setMinimumHeight(self.RibbonMaximumHeight)
+            TB.setMaximumHeight(self.RibbonMaximumHeight)
+            self.setFixedHeight(self.RibbonMaximumHeight)
+            self.setRibbonVisible(True)
+            return
+
     def leaveEvent(self, QEvent):
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-        if self.PinToggled is True:
-            if self._autoHideRibbon is True:
-                TB.setMinimumHeight(100)
-                TB.setMaximumHeight(100)
-                self.setRibbonVisible(True)
+        if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
+            TB.setMinimumHeight(self.RibbonMinimalHeight)
+            TB.setMaximumHeight(self.RibbonMinimalHeight)
+            self.setRibbonVisible(True)
             return
 
     # implementation to add actions to the Filemenu. Needed for the accessories menu
@@ -305,8 +314,8 @@ class ModernMenu(RibbonBar):
         Create menu tabs.
         """
         # add quick access buttons
-        i = 2  # Start value for button count. Used for width of quickaccess toolbar
-        toolBarWidth = (self.iconSize * self.sizeFactor) * i
+        i = 1  # Start value for button count. Used for width of quickaccess toolbar
+        toolBarWidth = ((self.iconSize * self.sizeFactor) * i) + self.ApplicationButtonSize
         for commandName in self.ribbonStructure["quickAccessCommands"]:
             i = i + 1
             width = 0
@@ -433,18 +442,21 @@ class ModernMenu(RibbonBar):
         iconSize = self.rightToolBar().iconSize().height()
         self.rightToolBar().setMinimumWidth(iconSize * self.sizeFactor * i)
         self.rightToolBar().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        # Set the application button
 
-        self.setApplicationIcon(Gui.getIcon("freecad"))
-        self.applicationOptionButton().setIconSize(QSize(self.iconSize * 2, self.iconSize * 2))
+        # Set the application button
         self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
-        self.applicationOptionButton().setFixedSize(self.iconSize * 2, self.iconSize * 2)
+        self.applicationOptionButton().setFixedSize(self.ApplicationButtonSize, self.ApplicationButtonSize)
+        self.setApplicationIcon(Gui.getIcon("freecad"))
+        self.applicationOptionButton().setIconSize(
+            QSize(self.applicationOptionButton().height() * 0.8, self.applicationOptionButton().height() * 0.8)
+        )
         # Set the border color and shape
         StandardColors = mw.style().standardPalette()
         rgb = StandardColors.light().color().toTuple()
         hexColor = f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
-        radius = str(self.iconSize * 0.9)
-        StyleSheet = """border-radius : """ + radius + """;border: 2px solid""" + hexColor + """;"""
+        radius = str(self.applicationOptionButton().height() * 0.5)
+        StyleSheet = self.applicationOptionButton().styleSheet()
+        StyleSheet = """QToolButton { border-radius : """ + radius + """;border: 1px solid""" + hexColor + """;}"""
         self.applicationOptionButton().setStyleSheet(StyleSheet)
 
         # add the menus from the menubar to the application button
@@ -516,19 +528,24 @@ class ModernMenu(RibbonBar):
 
     def onPinClicked(self):
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-        if self.PinToggled is True:
-            if self._autoHideRibbon is True:
-                TB.setMinimumHeight(100)
-                TB.setMaximumHeight(100)
-                self.setRibbonVisible(True)
-                self.PinToggled = False
-            return
-        if self.PinToggled is False or self._autoHideRibbon is False:
-            TB.setMinimumHeight(250)
-            TB.setMaximumHeight(250)
-            self.setFixedHeight(250)
+        if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
+            TB.setMinimumHeight(self.RibbonMinimalHeight)
+            TB.setMaximumHeight(self.RibbonMinimalHeight)
+            Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", True)
+            Parameters_Ribbon.AUTOHIDE_RIBBON = True
+
+            # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
-            self.PinToggled = True
+            return
+        if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
+            TB.setMinimumHeight(self.RibbonMaximumHeight)
+            TB.setMaximumHeight(self.RibbonMaximumHeight)
+            self.setFixedHeight(self.RibbonMaximumHeight)
+            Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
+            Parameters_Ribbon.AUTOHIDE_RIBBON = False
+
+            # Make sure that the ribbon remains visible
+            self.setRibbonVisible(True)
             return
         return
 
@@ -573,9 +590,9 @@ class ModernMenu(RibbonBar):
 
     def onTabBarClicked(self):
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-        TB.setMinimumHeight(250)
-        TB.setMaximumHeight(250)
-        self.setFixedHeight(250)
+        TB.setMinimumHeight(self.RibbonMaximumHeight)
+        TB.setMaximumHeight(self.RibbonMaximumHeight)
+        self.setFixedHeight(self.RibbonMaximumHeight)
         self.setRibbonVisible(True)
 
     def buildPanels(self):
