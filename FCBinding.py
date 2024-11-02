@@ -1198,7 +1198,12 @@ class ModernMenu(RibbonBar):
                             for Child in OriginalToolBar.findChildren(QToolButton):
                                 # If the text of the QToolButton matches the menu text
                                 # Add it to the button list.
-                                if Child.text() == MenuText:
+                                IsInList = False
+                                for Toolbutton in ButtonList:
+                                    if Toolbutton.text() == Child.text():
+                                        IsInList = True
+
+                                if Child.text() == MenuText and IsInList is False:
                                     ButtonList.append(Child)
                         except Exception as e:
                             if Parameters_Ribbon.DEBUG_MODE is True:
