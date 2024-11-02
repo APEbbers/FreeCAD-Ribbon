@@ -203,25 +203,24 @@ class ModernMenu(RibbonBar):
         # modify the stylesheet to set the border for a toolbar menu
         #
         # Get the border color
-        StandardColors = mw.style().standardPalette()
-        rgb = StandardColors.light().color().toTuple()
-        hexColor = f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
+        hexColor = self.ReturnStyleItem("Border_Color")
         StyleSheet = StyleSheet.replace("border-left: 0.5px solid;", "border-left: 0.5px solid " + hexColor + ";")
         StyleSheet = StyleSheet.replace("border-top: 0.5px solid;", "border-top: 0.5px solid " + hexColor + ";")
         StyleSheet = StyleSheet.replace("border: 0.5px solid;", "border: 0.5px solid " + hexColor + ";")
         self.setStyleSheet(StyleSheet)
 
         hexColor = self.ReturnStyleItem("Background_Color")
-        # Set the quickaccess toolbar background color. This fixes a transparant toolbar.
-        self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
-        self.tabBar().setStyleSheet("background-color: " + hexColor + ";")
-
-        StyleSheet_Addition = "\n\nQToolButton {background: solid " + hexColor + ";}"
-        StyleSheet_Addition_2 = (
-            "\n\nRibbonBar {border: none;background: solid " + hexColor + ";color: " + hexColor + ";}"
-        )
-        StyleSheet = StyleSheet_Addition_2 + StyleSheet + StyleSheet_Addition
-        self.setStyleSheet(StyleSheet)
+        if hexColor is not None or hexColor != "":
+            # Set the quickaccess toolbar background color. This fixes a transparant toolbar.
+            self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
+            self.tabBar().setStyleSheet("background-color: " + hexColor + ";")
+            # Set the background color. This fixes transparant backgrounds when FreeCAD has no stylesheet
+            StyleSheet_Addition = "\n\nQToolButton {background: solid " + hexColor + ";}"
+            StyleSheet_Addition_2 = (
+                "\n\nRibbonBar {border: none;background: solid " + hexColor + ";color: " + hexColor + ";}"
+            )
+            StyleSheet = StyleSheet_Addition_2 + StyleSheet + StyleSheet_Addition
+            self.setStyleSheet(StyleSheet)
 
         # get the state of the mainwindow
         self.MainWindowLoaded = True
@@ -267,6 +266,8 @@ class ModernMenu(RibbonBar):
             TB.setMinimumHeight(self.RibbonMaximumHeight)
             TB.setMaximumHeight(self.RibbonMaximumHeight)
             self.setFixedHeight(self.RibbonMaximumHeight)
+
+            # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
             return
 
@@ -275,6 +276,8 @@ class ModernMenu(RibbonBar):
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
             TB.setMinimumHeight(self.RibbonMinimalHeight)
             TB.setMaximumHeight(self.RibbonMinimalHeight)
+
+            # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
             return
 
@@ -358,12 +361,7 @@ class ModernMenu(RibbonBar):
         FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
         currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
         if currentStyleSheet == "":
-            StandardColors = mw.style().standardPalette()
-            try:
-                rgb = StandardColors.background().color().toTuple()
-            except Exception:
-                rgb = (240, 240, 240, 255)
-            hexColor = f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
+            hexColor = self.ReturnStyleItem("Background_Color")
             # Set the quickaccess toolbar background color
             self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
 
@@ -453,12 +451,25 @@ class ModernMenu(RibbonBar):
             QSize(self.applicationOptionButton().height() * 0.8, self.applicationOptionButton().height() * 0.8)
         )
         # Set the border color and shape
-        StandardColors = mw.style().standardPalette()
-        rgb = StandardColors.light().color().toTuple()
-        hexColor = f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
+        hexColor = self.ReturnStyleItem("Border_Color")
         radius = str(self.applicationOptionButton().height() * 0.5)
-        StyleSheet = self.applicationOptionButton().styleSheet()
-        StyleSheet = """QToolButton { border-radius : """ + radius + """;border: 1px solid""" + hexColor + """;}"""
+        StyleSheet = (
+            """QToolButton { 
+                      border-radius : """
+            + radius
+            + """;
+            border: 1px solid"""
+            + hexColor
+            + """;}"""
+            + """QToolButton:hover {
+                    border-radius : """
+            + radius
+            + """;
+                    border: 3px solid"""
+            + hexColor
+            + """;
+            }"""
+        )
         self.applicationOptionButton().setStyleSheet(StyleSheet)
 
         # add the menus from the menubar to the application button
@@ -1165,6 +1176,7 @@ class ModernMenu(RibbonBar):
 
         IconName (string):
             "Background_Color" returns string,
+            "Border_Color" returns string,
             "ScrollLeftButton_Tab returns QIcon",
             "ScrollRightButton_Tab" returns QIcon,
             "ScrollLeftButton_Category" returns QIcon,
@@ -1193,6 +1205,8 @@ class ModernMenu(RibbonBar):
                 result = QIcon()
                 result.addPixmap(pixmap)
             if ControlName == "Background_Color":
+                result = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
+            if ControlName == "Border_Color":
                 result = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
         except Exception:
             pass
