@@ -31,6 +31,7 @@ from PySide.QtGui import (
     QKeyEvent,
     QActionGroup,
     QHoverEvent,
+    QFont,
 )
 from PySide.QtWidgets import (
     QToolButton,
@@ -44,6 +45,7 @@ from PySide.QtWidgets import (
     QLayout,
     QSpacerItem,
     QLayoutItem,
+    QTabBar,
 )
 from PySide.QtCore import (
     Qt,
@@ -55,6 +57,7 @@ from PySide.QtCore import (
     QEvent,
     QMetaObject,
     QCoreApplication,
+    QSize,
 )
 
 import json
@@ -339,12 +342,13 @@ class ModernMenu(RibbonBar):
 
             if len(QuickAction) <= 1:
                 button.setDefaultAction(QuickAction[0])
-                width = self.iconSize * self.sizeFactor
+                width = self.iconSize
+                height = self.iconSize
                 button.setMinimumWidth(width)
             elif len(QuickAction) > 1:
                 button.addActions(QuickAction)
                 button.setDefaultAction(QuickAction[0])
-                width = (self.iconSize * self.sizeFactor) + self.iconSize
+                width = (self.iconSize) + self.iconSize
                 height = self.iconSize
                 button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                 button.setMinimumSize(width, height)
@@ -355,13 +359,17 @@ class ModernMenu(RibbonBar):
             toolBarWidth = toolBarWidth + width
 
         # Set the height of the quickaccess toolbar
-        self.quickAccessToolBar().setMinimumWidth(self.iconSize * self.sizeFactor)
+        self.quickAccessToolBar().setMinimumHeight(self.iconSize)
+        self.setContentsMargins(1, 1, 1, 1)
         # Set the width of the quickaccess toolbar.
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
         # Set the size policy
         self.quickAccessToolBar().setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred
         )
+
+        # Set the tabbar height and textsize
+        self.tabBar().setIconSize(QSize(self.iconSize, self.iconSize))
 
         # Correct colors when no stylesheet is selected for FreeCAD.
         FreeCAD_preferences = App.ParamGet(
@@ -436,10 +444,6 @@ class ModernMenu(RibbonBar):
                             len(self.categories()) - 1, QIcon(workbench.Icon)
                         )
 
-        # Set the font size of the ribbon tab titles
-        self.tabBar().font().setPointSizeF(10)
-        self.tabBar().setFixedHeight(self.iconSize * self.sizeFactor)
-
         # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(self.iconSize, self.iconSize)
 
@@ -480,8 +484,9 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().addWidget(pinButton)
 
         # Set the width of the right toolbar
-        i = len(self.rightToolBar().actions())
-        self.rightToolBar().setMinimumWidth(self.iconSize * self.sizeFactor * i)
+        i = len(self.rightToolBar().actions()) + 1
+        iconSize = self.rightToolBar().iconSize().height()
+        self.rightToolBar().setMinimumWidth(iconSize * self.sizeFactor * i)
         self.rightToolBar().setSizePolicy(
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
         )
@@ -921,7 +926,33 @@ class ModernMenu(RibbonBar):
                                 ):
                                     textJSON = "Create sketch"
 
-                                text = textJSON
+                                # Check if the original menutext is different
+                                # if so use the alternative, otherwise use original
+                                for CommandName in Gui.listCommands():
+                                    Command = Gui.Command.get(CommandName)
+                                    MenuName = Command.getInfo()["menuText"].replace(
+                                        "...", ""
+                                    )
+
+                                    if (
+                                        CommandName
+                                        == self.ribbonStructure["workbenches"][
+                                            workbenchName
+                                        ]["toolbars"][toolbar]["commands"][
+                                            action.data()
+                                        ]
+                                    ):
+                                        if (
+                                            MenuName
+                                            != self.ribbonStructure["workbenches"][
+                                                workbenchName
+                                            ]["toolbars"][toolbar]["commands"][
+                                                action.data()
+                                            ][
+                                                "text"
+                                            ]
+                                        ):
+                                            text = textJSON
 
                                 # the text would be overwritten again when the state of the action changes
                                 # (e.g. when getting enabled / disabled), therefore the action itself
@@ -934,8 +965,8 @@ class ModernMenu(RibbonBar):
                                 commandName = self.ribbonStructure["workbenches"][
                                     workbenchName
                                 ]["toolbars"][toolbar]["commands"][action.data()]
-                                command = Gui.Command.get(commandName)
-                                action.setIcon(Gui.getIcon(command.getInfo()["pixmap"]))
+                                Command = Gui.Command.get(commandName)
+                                action.setIcon(Gui.getIcon(Command.getInfo()["pixmap"]))
 
                             # try to get alternative icon from ribbonStructure
                             try:
@@ -1167,7 +1198,12 @@ class ModernMenu(RibbonBar):
                             for Child in OriginalToolBar.findChildren(QToolButton):
                                 # If the text of the QToolButton matches the menu text
                                 # Add it to the button list.
-                                if Child.text() == MenuText:
+                                IsInList = False
+                                for Toolbutton in ButtonList:
+                                    if Toolbutton.text() == Child.text():
+                                        IsInList = True
+
+                                if Child.text() == MenuText and IsInList is False:
                                     ButtonList.append(Child)
                         except Exception as e:
                             if Parameters_Ribbon.DEBUG_MODE is True:
