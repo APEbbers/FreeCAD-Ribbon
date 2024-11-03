@@ -78,8 +78,23 @@ def ReturnStyleItem(ControlName):
     FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
     currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
 
+    ListIcons = [
+        "ScrollLeftButton_Tab",
+        "ScrollRightButton_Tab",
+        "ScrollLeftButton_Category",
+        "ScrollRightButton_Category",
+        "OptionButton",
+        "PinButton_open",
+        "PinButton_closed",
+    ]
+
+    isIcon = False
+    for control in ListIcons:
+        if control == ControlName:
+            isIcon = True
+
     try:
-        if ControlName != "Background_Color" and ControlName != "Border_Color":
+        if isIcon is True:
             PixmapName = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
             if PixmapName == "":
                 return None
@@ -87,7 +102,7 @@ def ReturnStyleItem(ControlName):
             result = QIcon()
             result.addPixmap(pixmap)
             return result
-        if ControlName == "Background_Color" or ControlName == "Border_Color":
+        if isIcon is False:
             result = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
             return result
     except Exception:
