@@ -105,7 +105,7 @@ def ReturnStyleSheet(control, radius="2px"):
     StyleSheet = ""
     try:
         if control.lower() == "toolbutton":
-            hexColor = self.ReturnStyleItem("Border_Color")
+            hexColor = ReturnStyleItem("Border_Color")
             StyleSheet = (
                 """QToolButton:hover {
                         border: 0.5px solid"""
@@ -120,7 +120,7 @@ def ReturnStyleSheet(control, radius="2px"):
             )
             return StyleSheet
         if control.lower() == "applicationbutton":
-            hexColor = self.ReturnStyleItem("Border_Color")
+            hexColor = ReturnStyleItem("Border_Color")
             StyleSheet = (
                 """QToolButton { 
                         border-radius : """
