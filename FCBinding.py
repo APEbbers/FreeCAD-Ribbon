@@ -71,6 +71,7 @@ import LoadDesign_Ribbon
 import Parameters_Ribbon
 import LoadSettings_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
+import StyleMapping
 import platform
 
 # Get the resources
@@ -201,7 +202,7 @@ class ModernMenu(RibbonBar):
         # Set the custom stylesheet
         StyleSheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
         # modify the stylesheet to set the border for a toolbar menu
-        hexColor = self.ReturnStyleItem("Background_Color")
+        hexColor = StyleMapping.ReturnStyleItem("Background_Color")
         if hexColor is not None and hexColor != "":
             # Set the quickaccess toolbar background color. This fixes a transparant toolbar.
             self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
@@ -332,7 +333,7 @@ class ModernMenu(RibbonBar):
                 height = self.iconSize
                 button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                 button.setMinimumSize(width, height)
-            button.setStyleSheet(self.ReturnStyleSheet("toolbutton"))
+            button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
 
             # Add the button to the quickaccess toolbar
             self.addQuickAccessButton(button)
@@ -354,7 +355,7 @@ class ModernMenu(RibbonBar):
         FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
         currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
         if currentStyleSheet == "":
-            hexColor = self.ReturnStyleItem("Background_Color")
+            hexColor = StyleMapping.ReturnStyleItem("Background_Color")
             # Set the quickaccess toolbar background color
             self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
 
@@ -445,7 +446,7 @@ class ModernMenu(RibbonBar):
         )
         # Set the border color and shape
         radius = str(self.ApplicationButtonSize * 0.49) + "px"
-        self.applicationOptionButton().setStyleSheet(self.ReturnStyleSheet("applicationbutton", radius))
+        self.applicationOptionButton().setStyleSheet(StyleMapping.ReturnStyleSheet("applicationbutton", radius))
 
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
@@ -957,7 +958,7 @@ class ModernMenu(RibbonBar):
                             btn.setDefaultAction(action)
 
                             # Set the stylesheet
-                            btn.setStyleSheet(self.ReturnStyleSheet("toolbutton"))
+                            btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
 
                             # add dropdown menu if necessary
                             if button.menu() is not None:
@@ -1015,10 +1016,10 @@ class ModernMenu(RibbonBar):
                 OptionButton.setStyleSheet("RibbonPanelOptionButton::menu-indicator {image: none;}")
                 Menu = OptionButton.menu()
                 if Menu is not None:
-                    hexColor = self.ReturnStyleItem("Background_Color")
+                    hexColor = StyleMapping.ReturnStyleItem("Background_Color")
                     Menu.setStyleSheet("background-color: " + hexColor)
                 # Set the icon
-                OptionButton_Icon = self.ReturnStyleItem("OptionButton")
+                OptionButton_Icon = StyleMapping.ReturnStyleItem("OptionButton")
                 if OptionButton_Icon is not None:
                     OptionButton.setIcon(OptionButton_Icon)
                 else:
@@ -1037,8 +1038,8 @@ class ModernMenu(RibbonBar):
         ScrollLeftButton_Tab: QToolButton = ScrollButtons_Tab[0]
         ScrollRightButton_Tab: QToolButton = ScrollButtons_Tab[1]
         # get the icons
-        ScrollLeftButton_Tab_Icon = self.ReturnStyleItem("ScrollLeftButton_Tab")
-        ScrollRightButton_Tab_Icon = self.ReturnStyleItem("ScrollRightButton_Tab")
+        ScrollLeftButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab")
+        ScrollRightButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollRightButton_Tab")
         # Set the icons
         if ScrollLeftButton_Tab_Icon is not None:
             ScrollLeftButton_Tab.setIcon(ScrollLeftButton_Tab_Icon)
@@ -1056,8 +1057,8 @@ class ModernMenu(RibbonBar):
         ScrollLeftButton_Category.setMinimumWidth(self.iconSize * 0.5)
         ScrollRightButton_Category.setMinimumWidth(self.iconSize * 0.5)
         # get the icons
-        ScrollLeftButton_Category_Icon = self.ReturnStyleItem("ScrollLeftButton_Category")
-        ScrollRightButton_Category_Icon = self.ReturnStyleItem("ScrollRightButton_Category")
+        ScrollLeftButton_Category_Icon = StyleMapping.ReturnStyleItem("ScrollLeftButton_Category")
+        ScrollRightButton_Category_Icon = StyleMapping.ReturnStyleItem("ScrollRightButton_Category")
         # Set the icons
         if ScrollLeftButton_Category_Icon is not None:
             ScrollLeftButton_Category.setIcon(ScrollLeftButton_Category_Icon)
@@ -1156,98 +1157,6 @@ class ModernMenu(RibbonBar):
             if script.endswith(".py"):
                 App.loadFile(script)
         return
-
-    def ReturnStyleItem(self, ControlName):
-        """
-        Enter one of the names below:
-
-        ControlName (string):
-            "Background_Color" returns string,
-            "Border_Color" returns string,
-            "ScrollLeftButton_Tab returns QIcon",
-            "ScrollRightButton_Tab" returns QIcon,
-            "ScrollLeftButton_Category" returns QIcon,
-            "ScrollRightButton_Category" returns QIcon,
-            "OptionButton" returns QIcon,
-            "PinButton_open" returns QIcon,
-            "PinButton_closed" returns QIcon,
-        """
-        # define a result holder and a dict for the StyleMapping file
-        result = None
-        StyleMapping = {}
-
-        # read ribbon structure from JSON file
-        with open(os.path.join(os.path.dirname(__file__), "StyleMapping.json"), "r") as file:
-            StyleMapping.update(json.load(file))
-        file.close()
-
-        # Get the current stylesheet for FreeCAD
-        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
-        currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
-
-        try:
-            if ControlName != "Background_Color" and ControlName != "Border_Color":
-                PixmapName = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
-                if PixmapName == "":
-                    return None
-                pixmap = QPixmap(os.path.join(pathIcons, PixmapName))
-                result = QIcon()
-                result.addPixmap(pixmap)
-                return result
-            if ControlName == "Background_Color" or ControlName == "Border_Color":
-                result = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
-                return result
-        except Exception:
-            return None
-
-    def ReturnStyleSheet(self, control, radius="2px"):
-        """
-        Enter one of the names below:
-
-        control (string):
-            "toolbutton,
-            "applicationbutton,
-        """
-        StyleSheet = ""
-        try:
-            if control.lower() == "toolbutton":
-                hexColor = self.ReturnStyleItem("Border_Color")
-                StyleSheet = (
-                    """QToolButton:hover {
-                            border: 0.5px solid"""
-                    + hexColor
-                    + """;
-                    }"""
-                    + """QToolButton::menu-button:hover {
-                            border: 0.5px solid"""
-                    + hexColor
-                    + """;
-                    }"""
-                )
-                return StyleSheet
-            if control.lower() == "applicationbutton":
-                hexColor = self.ReturnStyleItem("Border_Color")
-                StyleSheet = (
-                    """QToolButton { 
-                            border-radius : """
-                    + radius
-                    + """;
-                    border: 1px solid"""
-                    + hexColor
-                    + """;}"""
-                    + """QToolButton:hover {
-                            border-radius : """
-                    + radius
-                    + """;
-                    border: 3px solid"""
-                    + hexColor
-                    + """;
-                    }"""
-                )
-                return StyleSheet
-        except Exception as e:
-            print(e)
-            return StyleSheet
 
 
 # class run:
