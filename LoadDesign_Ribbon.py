@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -35,7 +35,7 @@ from PySide.QtWidgets import (
     QMenu,
     QWidget,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread
 import sys
 import json
 from datetime import datetime
@@ -1972,7 +1972,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                     }
 
                                     MenuName = Command.getInfo()["menuText"].replace("...", "")
-                                    if MenuNameCustom == MenuName:
+                                    if MenuNameTableWidgetItem == MenuName:
                                         del self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][
                                             Toolbar
                                         ]["commands"][CommandName]["text"]
