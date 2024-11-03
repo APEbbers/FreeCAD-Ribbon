@@ -722,7 +722,7 @@ class LoadDialog(Design_ui.Ui_Form):
         WorkBenchName = ""
         WorkBenchTitle = ""
         for WorkBench in self.List_Workbenches:
-            if WorkBench[2] == self.form.WorkbenchList_2.currentText():
+            if WorkBench[2] == self.form.WorkbenchList_2.currentData():
                 WorkBenchName = WorkBench[0]
                 WorkBenchTitle = WorkBench[2]
 
@@ -798,7 +798,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Go through the list of workbenches
         for WorkBenchItem in self.List_Workbenches:
             # If the workbench title matches the selected workbench, continue
-            if WorkBenchItem[2] == self.form.WorkbenchList_2.currentText():
+            if WorkBenchItem[2] == self.form.WorkbenchList_2.currentData():
                 WorkbenchName = WorkBenchItem[0]
                 WorkBench = Gui.getWorkbench(WorkbenchName)
 
@@ -813,13 +813,16 @@ class LoadDialog(Design_ui.Ui_Form):
                 for key, value in list(ToolbarItems.items()):
                     # Go through the selected items, if they mach continue
                     for i in range(len(SelectedToolbars)):
-                        if key == SelectedToolbars[i].text():
+                        toolbar = QListWidgetItem(SelectedToolbars[i]).data(Qt.ItemDataRole.UserRole)
+                        if key == toolbar:
                             for j in range(len(value)):
+                                CommandName = value[j]
                                 # Get the command
-                                Command = Gui.Command.get(value[j])
+                                Command = Gui.Command.get(CommandName)
+                                CommandAction = Command.getAction()[0]
                                 if Command is None:
                                     continue
-                                MenuName = Command.getInfo()["menuText"]
+                                MenuName = CommandAction.text().replace("&", "")
 
                                 # get the icon for this command if there isn't one, leave it None
                                 Icon = Gui.getIcon(Command.getInfo()["pixmap"])
@@ -868,7 +871,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Go through the list of workbenches
         for WorkBenchItem in self.List_Workbenches:
-            WorkBenchTitle = self.form.WorkbenchList_2.currentText()
+            WorkBenchTitle = self.form.WorkbenchList_2.currentData()
             # If the workbench title matches the selected workbench, continue
             if WorkBenchItem[2] == WorkBenchTitle and WorkBenchItem[2] != "":
                 WorkBenchName = WorkBenchItem[0]
@@ -1090,7 +1093,7 @@ class LoadDialog(Design_ui.Ui_Form):
         WorkBenchName = ""
         WorkBenchTitle = ""
         for WorkBench in self.List_Workbenches:
-            if WorkBench[2] == self.form.WorkbenchList.currentText():
+            if WorkBench[2] == self.form.WorkbenchList.currentData():
                 WorkBenchName = WorkBench[0]
                 WorkBenchTitle = WorkBench[2]
 
@@ -1127,8 +1130,9 @@ class LoadDialog(Design_ui.Ui_Form):
             # If the are not to be ignored, add them to the listwidget
             if IsIgnored is False:
                 if Toolbar != "":
-                    self.form.ToolbarList.addItem(Toolbar, "")
-
+                    self.form.ToolbarList.addItem(
+                        StandardFunctions.TranslationsMapping(WorkBenchName, Toolbar), Toolbar
+                    )
                     # Define a new ListWidgetItem.
                     ListWidgetItem = QListWidgetItem()
                     ListWidgetItem.setText(StandardFunctions.TranslationsMapping(WorkBenchName, Toolbar))
@@ -1148,13 +1152,13 @@ class LoadDialog(Design_ui.Ui_Form):
         # Get the correct workbench name
         WorkBenchName = ""
         for WorkBench in self.List_Workbenches:
-            if WorkBench[2] == self.form.WorkbenchList.currentText():
+            if WorkBench[2] == self.form.WorkbenchList.currentData():
                 WorkBenchName = WorkBench[0]
 
         # Get the workbench object
         Workbench = Gui.getWorkbench(WorkBenchName)
         # Get the toolbar name
-        Toolbar = self.form.ToolbarList.currentText()
+        Toolbar = self.form.ToolbarList.currentData()
         # Copy the workbench Toolbars
         Commands = Workbench.getToolbarItems().copy()
         # Get the custom toolbars from each installed workbench
@@ -1273,7 +1277,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 # if not, continue
                 if IsInList is False:
                     # Get the text
-                    MenuName = Command.getInfo()["menuText"].replace("&", "")
+                    MenuName = Command.getInfo()["menuText"].replace("&", "").replace("...", "")
                     textAddition = ""
                     IconName = ""
                     # get the icon for this command if there isn't one, leave it None
@@ -1298,7 +1302,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     for j in range(len(self.List_Workbenches)):
                         if self.List_Workbenches[j][0] == WorkBenchName:
                             try:
-                                MenuName = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][
+                                MenuNameJson = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][
                                     Toolbar
                                 ]["commands"][CommandName]["text"]
                                 Size = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
@@ -1321,6 +1325,12 @@ class LoadDialog(Design_ui.Ui_Form):
                             except Exception:
                                 continue
 
+                    if MenuNameJson != Command.getInfo()["menuText"].replace("&", "").replace("...", ""):
+                        MenuNameTabelWidgetItem = MenuNameJson
+                    else:
+                        CommandAction = Command.getAction()[0]
+                        MenuNameTabelWidgetItem = CommandAction.text()
+
                     # Create the row in the table
                     # add a row to the table widget
                     self.form.tableWidget.insertRow(self.form.tableWidget.rowCount())
@@ -1329,12 +1339,10 @@ class LoadDialog(Design_ui.Ui_Form):
                     #
                     # Define a table widget item
                     TableWidgetItem = QTableWidgetItem()
-                    TableWidgetItem.setText(
-                        StandardFunctions.TranslationsMapping(WorkBenchName, MenuName) + textAddition
-                    )
+                    TableWidgetItem.setText(MenuNameTabelWidgetItem + textAddition)
                     TableWidgetItem.setData(
                         Qt.ItemDataRole.UserRole,
-                        Command.getInfo()["menuText"].replace("&", "").replace("...", ""),
+                        MenuName.replace("&", "").replace("...", ""),
                     )
                     TableWidgetItem.setFlags(TableWidgetItem.flags() | Qt.ItemFlag.ItemIsEditable)
                     if Icon is not None:
@@ -1363,7 +1371,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     self.form.tableWidget.setItem(RowNumber, 3, Icon_large)
 
                     # Double check the workbench name
-                    WorkbenchTitle = self.form.WorkbenchList.currentText()
+                    WorkbenchTitle = self.form.WorkbenchList.currentData()
                     for item in self.List_Workbenches:
                         if item[2] == WorkbenchTitle:
                             WorkBenchName = item[0]
@@ -1394,12 +1402,11 @@ class LoadDialog(Design_ui.Ui_Form):
                         CommandName
                     ] = {
                         "size": Size,
-                        "text": MenuName,
+                        "text": TableWidgetItem.data(Qt.ItemDataRole.UserRole),
                         "icon": IconName,
                     }
 
                     # Set the IconOnlyToolbars control
-                    Toolbar = self.form.ToolbarList.currentText()
                     IsInList = False
                     for item in self.List_IconOnlyToolbars:
                         if item == Toolbar:
@@ -1417,7 +1424,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Get the correct workbench name
         WorkBenchName = ""
         for WorkBench in self.List_Workbenches:
-            if WorkBench[2] == self.form.WorkbenchList.currentText():
+            if WorkBench[2] == self.form.WorkbenchList.currentData():
                 WorkBenchName = WorkBench[0]
 
         # Get the toolbar name
@@ -1457,7 +1464,7 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.tableWidget.selectRow(RowNumber)
 
         # Double check the workbench name
-        WorkbenchTitle = self.form.WorkbenchList.currentText()
+        WorkbenchTitle = self.form.WorkbenchList.currentData()
         for item in self.List_Workbenches:
             if item[2] == WorkbenchTitle:
                 WorkBenchName = item[0]
@@ -1598,12 +1605,13 @@ class LoadDialog(Design_ui.Ui_Form):
         # Get the correct workbench name
         WorkBenchName = ""
         for WorkBench in self.List_Workbenches:
-            if WorkBench[2] == self.form.WorkbenchList.currentText():
+            if WorkBench[2] == self.form.WorkbenchList.currentData():
                 WorkBenchName = WorkBench[0]
 
         ToolbarOrder = []
         for i2 in range(self.form.ToolbarsOrder.count()):
-            ToolbarOrder.append(self.form.ToolbarsOrder.item(i2).text())
+            Toolbar = self.form.ToolbarsOrder.item(i2).data(Qt.ItemDataRole.UserRole)
+            ToolbarOrder.append(Toolbar)
         self.add_keys_nested_dict(
             self.Dict_RibbonCommandPanel,
             [
@@ -1765,9 +1773,13 @@ class LoadDialog(Design_ui.Ui_Form):
                 self.form.WorkbenchesAvailable.addItem(ListWidgetItem)
             if IsSelected is True:
                 self.form.WorkbenchesSelected.addItem(ListWidgetItem)
-                self.form.WorkbenchList.addItem(icon, workbench[2])
+                self.form.WorkbenchList.addItem(
+                    icon, StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]), workbench[2]
+                )
                 # Add the ListWidgetItem also to the second WorkbenchList.
-                self.form.WorkbenchList_2.addItem(icon, workbench[2])
+                self.form.WorkbenchList_2.addItem(
+                    icon, StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]), workbench[2]
+                )
 
             # Add the ListWidgetItem also to the categoryListWidgets
             self.form.ListCategory_1.addItem(icon, workbench[2])
@@ -1863,7 +1875,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for i1 in range(self.form.tableWidget.rowCount()):
             row = i1
 
-            WorkbenchTitle = self.form.WorkbenchList.currentText()
+            WorkbenchTitle = self.form.WorkbenchList.currentData()
             WorkBenchName = ""
             try:
                 for WorkbenchItem in self.List_Workbenches:
@@ -1871,18 +1883,17 @@ class LoadDialog(Design_ui.Ui_Form):
                         WorkBenchName = WorkbenchItem[0]
 
                         # get the name of the toolbar
-                        Toolbar = self.form.ToolbarList.currentText()
-                        LocaleToolbar = self.form.ToolbarList.currentText()
-                        for ToolbarItem in self.StringList_Toolbars:
-                            if StandardFunctions.TranslationsMapping(WorkBenchName, ToolbarItem[0] == LocaleToolbar):
-                                Toolbar = ToolbarItem[0]
+                        Toolbar = self.form.ToolbarList.currentData()
                         # create a empty size string
                         Size = "small"
                         # Define empty strings for the command name and icon name
                         CommandName = ""
                         IconName = ""
                         # Get the command text from the first cell in the row
-                        MenuNameCustom = self.form.tableWidget.item(row, 0).text().replace("...", "")
+                        MenuNameTableWidgetItem = (
+                            self.form.tableWidget.item(row, 0).text().replace("&", "").replace("...", "")
+                        )
+                        # Get the menu name from the stored data
                         MenuName = self.form.tableWidget.item(row, 0).data(Qt.ItemDataRole.UserRole)
 
                         # Go through the list with all available commands.
@@ -1894,12 +1905,20 @@ class LoadDialog(Design_ui.Ui_Form):
                                     Command = Gui.Command.get(CommandName)
                                     IconName = Command.getInfo()["pixmap"]
 
+                                    # If the text in the tableitemwidget is equeal to the command menu text
+                                    # Use the original menutext
+                                    CommandAction = Command.getAction()[0]
+                                    if MenuNameTableWidgetItem == CommandAction.text().replace("&", "").replace(
+                                        "...", ""
+                                    ):
+                                        MenuNameTableWidgetItem = (
+                                            Command.getInfo()["menuText"].replace("&", "").replace("...", "")
+                                        )
+
                                     # There are a few dropdown buttons that need to be corrected
                                     if CommandName == "PartDesign_CompSketches":
-                                        MenuName = translate("FreeCAD Ribbon", "Create sketch")
+                                        MenuName = "Create sketch"
 
-                                    # Get the checkedstate from the clicked cell
-                                    # CheckState = self.form.tableWidget.item(row, column).checkState()
                                     # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
                                     for i4 in range(1, self.form.tableWidget.columnCount()):
                                         CheckState = self.form.tableWidget.item(row, i4).checkState()
@@ -1948,7 +1967,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                         "commands"
                                     ][CommandName] = {
                                         "size": Size,
-                                        "text": MenuNameCustom,
+                                        "text": MenuNameTableWidgetItem,
                                         "icon": IconName,
                                     }
             except Exception:
@@ -2020,9 +2039,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for i2 in range(len(SelectedCommands)):
             ListWidgetItem: QListWidgetItem = SelectedCommands[i2]
             Command = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
-            CommandAction = Command.getAction()[0]
-            MenuName = CommandAction.text().replace("&", "")
-            QuickAccessCommand = MenuName
+            QuickAccessCommand = Command.getInfo()["name"].replace("&", "")
             List_QuickAccessCommands.append(QuickAccessCommand)
 
         # IgnoredWorkbences
@@ -2176,11 +2193,11 @@ class LoadDialog(Design_ui.Ui_Form):
         # Get the correct workbench name
         WorkBenchName = ""
         for WorkBench in self.List_Workbenches:
-            if WorkBench[2] == self.form.WorkbenchList.currentText():
+            if WorkBench[2] == self.form.WorkbenchList.currentData():
                 WorkBenchName = WorkBench[0]
 
         # Get the toolbar name
-        Toolbar = self.form.ToolbarList.currentText()
+        Toolbar = self.form.ToolbarList.currentData()
 
         # Define the order based on the order in this table widget
         Order = []
