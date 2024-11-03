@@ -239,16 +239,17 @@ class ModernMenu(RibbonBar):
 
         # self.RibbonMinimalHeight = self.tabBar().height()
         self.RibbonMaximumHeight = self.currentCategory().height() + self.RibbonMinimalHeight
+
         return
 
     def eventFilter(self, obj, event):
         if event.type() == QEvent.Type.HoverMove:
             # swallow events
             # print("Event swallowed")
-            pass
+            return False
         else:
             # bubble events
-            return QObject.eventFilter(self, obj, event)
+            return True
 
     def enterEvent(self, QEvent):
         # In FreeCAD 1.0, Overlays are introduced. These have also an enterEvent which results in strange behavior
@@ -271,7 +272,7 @@ class ModernMenu(RibbonBar):
 
             # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
-            return
+            pass
 
     # implementation to add actions to the Filemenu. Needed for the accessories menu
     def addAction(self, action: QAction):
@@ -443,7 +444,8 @@ class ModernMenu(RibbonBar):
             QSize(self.applicationOptionButton().height() * 0.8, self.applicationOptionButton().height() * 0.8)
         )
         # Set the border color and shape
-        self.applicationOptionButton().setStyleSheet(self.ReturnStyleSheet("applicationbutton"))
+        radius = str(self.ApplicationButtonSize * 0.49) + "px"
+        self.applicationOptionButton().setStyleSheet(self.ReturnStyleSheet("applicationbutton", radius))
 
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
@@ -1011,6 +1013,10 @@ class ModernMenu(RibbonBar):
                 OptionButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
                 # Remove the image to avoid double arrows
                 OptionButton.setStyleSheet("RibbonPanelOptionButton::menu-indicator {image: none;}")
+                Menu = OptionButton.menu()
+                if Menu is not None:
+                    hexColor = self.ReturnStyleItem("Background_Color")
+                    Menu.setStyleSheet("background-color: " + hexColor)
                 # Set the icon
                 OptionButton_Icon = self.ReturnStyleItem("OptionButton")
                 if OptionButton_Icon is not None:
@@ -1047,8 +1053,8 @@ class ModernMenu(RibbonBar):
         category = self.currentCategory()
         ScrollLeftButton_Category: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[0]
         ScrollRightButton_Category: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[1]
-        ScrollLeftButton_Category.setMinimumWidth(self.iconSize)
-        ScrollRightButton_Category.setMinimumWidth(self.iconSize)
+        ScrollLeftButton_Category.setMinimumWidth(self.iconSize * 0.5)
+        ScrollRightButton_Category.setMinimumWidth(self.iconSize * 0.5)
         # get the icons
         ScrollLeftButton_Category_Icon = self.ReturnStyleItem("ScrollLeftButton_Category")
         ScrollRightButton_Category_Icon = self.ReturnStyleItem("ScrollRightButton_Category")
@@ -1180,18 +1186,21 @@ class ModernMenu(RibbonBar):
         currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
 
         try:
-            if ControlName != "Background_Color":
+            if ControlName != "Background_Color" and ControlName != "Border_Color":
                 PixmapName = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
+                if PixmapName == "":
+                    return None
                 pixmap = QPixmap(os.path.join(pathIcons, PixmapName))
                 result = QIcon()
                 result.addPixmap(pixmap)
+                return result
             if ControlName == "Background_Color" or ControlName == "Border_Color":
                 result = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
+                return result
         except Exception:
-            result is None
-        return result
+            return None
 
-    def ReturnStyleSheet(self, control):
+    def ReturnStyleSheet(self, control, radius="2px"):
         """
         Enter one of the names below:
 
@@ -1218,7 +1227,6 @@ class ModernMenu(RibbonBar):
                 return StyleSheet
             if control.lower() == "applicationbutton":
                 hexColor = self.ReturnStyleItem("Border_Color")
-                radius = str(self.applicationOptionButton().height() * 0.49)
                 StyleSheet = (
                     """QToolButton { 
                             border-radius : """
@@ -1231,13 +1239,14 @@ class ModernMenu(RibbonBar):
                             border-radius : """
                     + radius
                     + """;
-                            border: 3px solid"""
+                    border: 3px solid"""
                     + hexColor
                     + """;
                     }"""
                 )
                 return StyleSheet
-        except Exception:
+        except Exception as e:
+            print(e)
             return StyleSheet
 
 
