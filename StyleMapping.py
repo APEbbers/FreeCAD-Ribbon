@@ -56,7 +56,7 @@ sys.path.append(pathUI)
 sys.path.append(pathBackup)
 
 
-def ReturnStyleItem(self, ControlName):
+def ReturnStyleItem(ControlName):
     """
     Enter one of the names below:
 
@@ -94,7 +94,7 @@ def ReturnStyleItem(self, ControlName):
         return None
 
 
-def ReturnStyleSheet(self, control, radius="2px"):
+def ReturnStyleSheet(control, radius="2px"):
     """
     Enter one of the names below:
 
