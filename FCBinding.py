@@ -1098,7 +1098,10 @@ class ModernMenu(RibbonBar):
                                     if Toolbutton.text() == Child.text():
                                         IsInList = True
 
-                                if Child.text() == MenuNameTranslated and IsInList is False:
+                                if (
+                                    Child.text() == MenuNameTranslated
+                                    and IsInList is False
+                                ):
                                     ButtonList.append(Child)
                         except Exception as e:
                             if Parameters_Ribbon.DEBUG_MODE is True:
