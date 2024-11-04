@@ -342,7 +342,7 @@ class ModernMenu(RibbonBar):
 
         self.quickAccessToolBar().show()
         # Set the height of the quickaccess toolbar
-        self.quickAccessToolBar().setMinimumHeight(self.iconSize)
+        self.quickAccessToolBar().setMinimumHeight(self.ApplicationButtonSize)
         # Set the width of the quickaccess toolbar.
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
         # Set the size policy
