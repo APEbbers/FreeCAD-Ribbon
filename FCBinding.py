@@ -342,7 +342,7 @@ class ModernMenu(RibbonBar):
 
         self.quickAccessToolBar().show()
         # Set the height of the quickaccess toolbar
-        self.quickAccessToolBar().setMinimumHeight(self.iconSize * 3)
+        self.quickAccessToolBar().setMinimumHeight(self.iconSize)
         # Set the width of the quickaccess toolbar.
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
         # Set the size policy
@@ -1027,9 +1027,9 @@ class ModernMenu(RibbonBar):
                     OptionButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
                     OptionButton.setText("more...")
 
-            # Set the margins. In linux seems the style behavior different than on Windows
-            Layout = panel.layout()
-            Layout.setContentsMargins(3, 3, 3, 3)
+            # # Set the margins. In linux seems the style behavior different than on Windows
+            # Layout = panel.layout()
+            # Layout.setContentsMargins(3, 3, 3, 3)
 
         self.isWbLoaded[tabName] = True
 
@@ -1213,7 +1213,7 @@ class run:
             layout = ribbon.layout()
             # Set spacing and content margins to zero
             layout.setSpacing(0)
-            layout.setContentsMargins(3, 0, 3, 3)
+            layout.setContentsMargins(3, 0, 3, 0)
             # update the layout
             ribbon.setLayout(layout)
             ribbonDock = QDockWidget()
