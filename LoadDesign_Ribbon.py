@@ -714,6 +714,12 @@ class LoadDialog(Design_ui.Ui_Form):
             DestinationWidget=self.form.WorkbenchesAvailable,
         )
 
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.GenerateJson.setEnabled(True)
+
+        return
+
     # endregion
 
     # region - Custom panels tab
@@ -819,36 +825,39 @@ class LoadDialog(Design_ui.Ui_Form):
                                 CommandName = value[j]
                                 # Get the command
                                 Command = Gui.Command.get(CommandName)
-                                CommandAction = Command.getAction()[0]
-                                if Command is None:
-                                    continue
-                                MenuName = CommandAction.text().replace("&", "")
+                                if Command is not None:
+                                    CommandAction = Command.getAction()[0]
+                                    if Command is None:
+                                        continue
+                                    MenuName = CommandAction.text().replace("&", "")
 
-                                # get the icon for this command if there isn't one, leave it None
-                                Icon = Gui.getIcon(Command.getInfo()["pixmap"])
-                                action = Command.getAction()
-                                try:
-                                    if len(action) > 1:
-                                        Icon = action[0].icon()
-                                except Exception:
-                                    pass
+                                    # get the icon for this command if there isn't one, leave it None
+                                    Icon = Gui.getIcon(Command.getInfo()["pixmap"])
+                                    action = Command.getAction()
+                                    try:
+                                        if len(action) > 1:
+                                            Icon = action[0].icon()
+                                    except Exception:
+                                        pass
 
-                                # Define a new ListWidgetItem.
-                                ListWidgetItem = QListWidgetItem()
-                                ListWidgetItem.setText(StandardFunctions.TranslationsMapping(WorkbenchName, MenuName))
-                                icon = QIcon(Icon)
-                                ListWidgetItem.setIcon(icon)
-                                ListWidgetItem.setData(
-                                    Qt.ItemDataRole.UserRole, key
-                                )  # add here the toolbar name as hidden data
+                                    # Define a new ListWidgetItem.
+                                    ListWidgetItem = QListWidgetItem()
+                                    ListWidgetItem.setText(
+                                        StandardFunctions.TranslationsMapping(WorkbenchName, MenuName)
+                                    )
+                                    icon = QIcon(Icon)
+                                    ListWidgetItem.setIcon(icon)
+                                    ListWidgetItem.setData(
+                                        Qt.ItemDataRole.UserRole, key
+                                    )  # add here the toolbar name as hidden data
 
-                                IsInList = False
-                                for k in range(self.form.ToolbarsSelected.count()):
-                                    if self.form.ToolbarsSelected.item(k).text() == ListWidgetItem.text():
-                                        IsInList = True
+                                    IsInList = False
+                                    for k in range(self.form.ToolbarsSelected.count()):
+                                        if self.form.ToolbarsSelected.item(k).text() == ListWidgetItem.text():
+                                            IsInList = True
 
-                                if IsInList is False:
-                                    self.form.ToolbarsSelected.addItem(ListWidgetItem)
+                                    if IsInList is False:
+                                        self.form.ToolbarsSelected.addItem(ListWidgetItem)
 
         # Enable the apply button
         if self.CheckChanges() is True:
@@ -878,10 +887,20 @@ class LoadDialog(Design_ui.Ui_Form):
 
                 # Create item that defines the custom toolbar
                 Commands = []
+                MenuName = ""
                 for i in range(self.form.ToolbarsSelected.count()):
                     ListWidgetItem = self.form.ToolbarsSelected.item(i)
-                    MenuName = ListWidgetItem.text().replace("&", "")
+                    MenuNameTranslated = ListWidgetItem.text().replace("&", "")
+                    # Get the original MenuName
+                    for CommandItem in self.List_Commands:
+                        Command = Gui.Command.get(CommandItem[0])
+                        CommandAction = Command.getAction()[0]
+                        if CommandAction.text().replace("&", "").replace("...", "") == MenuNameTranslated.replace(
+                            "&", ""
+                        ).replace("...", ""):
+                            MenuName = CommandItem[2].replace("&", "").replace("...", "")
 
+                    # Get the commands
                     for j in range(len(self.List_Commands)):
                         if self.List_Commands[j][2] == MenuName and self.List_Commands[j][3] == WorkBenchName:
                             Command = self.List_Commands[j][0]
