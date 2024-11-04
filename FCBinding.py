@@ -1179,7 +1179,9 @@ class ModernMenu(RibbonBar):
 
         try:
             # Get the commands from the custom panel
-            Commands = self.ribbonStructure["customToolbars"][WorkBenchName][CustomToolbar]["commands"]
+            Commands = self.ribbonStructure["customToolbars"][WorkBenchName][
+                CustomToolbar
+            ]["commands"]
 
             # Get the command and its original toolbar
             for key, value in list(Commands.items()):
@@ -1195,7 +1197,9 @@ class ModernMenu(RibbonBar):
                             # Go through all it's QtoolButtons
                             for Child in OriginalToolBar.findChildren(QToolButton):
                                 CommandAction = Command.getAction()[0]
-                                MenuNameTranslated = CommandAction.text().replace("&", "")
+                                MenuNameTranslated = CommandAction.text().replace(
+                                    "&", ""
+                                )
                                 # If the text of the QToolButton matches the menu text
                                 # Add it to the button list.
                                 IsInList = False
@@ -1203,7 +1207,10 @@ class ModernMenu(RibbonBar):
                                     if Toolbutton.text() == Child.text():
                                         IsInList = True
 
-                                if Child.text() == MenuNameTranslated and IsInList is False:
+                                if (
+                                    Child.text() == MenuNameTranslated
+                                    and IsInList is False
+                                ):
                                     ButtonList.append(Child)
                         except Exception as e:
                             if Parameters_Ribbon.DEBUG_MODE is True:
