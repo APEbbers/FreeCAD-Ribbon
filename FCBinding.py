@@ -129,7 +129,7 @@ class ModernMenu(RibbonBar):
     sizeFactor = 1.3
 
     # Placeholders for toggle function of the ribbon
-    RibbonMinimalHeight = iconSize * 3
+    RibbonMinimalHeight = ApplicationButtonSize + 10
     RibbonMaximumHeight = 240  # Will be redefined later
 
     def __init__(self):
@@ -342,7 +342,7 @@ class ModernMenu(RibbonBar):
 
         self.quickAccessToolBar().show()
         # Set the height of the quickaccess toolbar
-        self.quickAccessToolBar().setMinimumHeight(self.ApplicationButtonSize)
+        self.quickAccessToolBar().setMinimumHeight(self.RibbonMinimalHeight)
         # Set the width of the quickaccess toolbar.
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
         # Set the size policy
