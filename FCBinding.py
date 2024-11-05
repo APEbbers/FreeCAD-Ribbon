@@ -120,6 +120,7 @@ class ModernMenu(RibbonBar):
     wbNameMapping = {}
     isWbLoaded = {}
     MainWindowLoaded = False
+    LeaveEventEnabled = True
 
     # use icon size from FreeCAD preferences
     iconSize = Parameters_Ribbon.ICON_SIZE_SMALL
@@ -267,14 +268,15 @@ class ModernMenu(RibbonBar):
             return
 
     def leaveEvent(self, QEvent):
-        TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-        if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
-            TB.setMinimumHeight(self.RibbonMinimalHeight)
-            TB.setMaximumHeight(self.RibbonMinimalHeight)
+        if self.LeaveEventEnabled is True:
+            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
+                TB.setMinimumHeight(self.RibbonMinimalHeight)
+                TB.setMaximumHeight(self.RibbonMinimalHeight)
 
-            # Make sure that the ribbon remains visible
-            self.setRibbonVisible(True)
-            pass
+                # Make sure that the ribbon remains visible
+                self.setRibbonVisible(True)
+                pass
 
     # implementation to add actions to the Filemenu. Needed for the accessories menu
     def addAction(self, action: QAction):
@@ -448,10 +450,6 @@ class ModernMenu(RibbonBar):
         # Set the border color and shape
         radius = str(self.ApplicationButtonSize * 0.49) + "px"
         self.applicationOptionButton().setStyleSheet(StyleMapping.ReturnStyleSheet("applicationbutton", radius))
-        # self.applicationOptionButton().setStyleSheet(
-        #     "* {color: qlineargradient(spread:pad, x1:0 y1:0, x2:1 y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));"
-        #     "background: qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 cyan, stop:1 blue);}"
-        # )
 
         # add the menus from the menubar to the application button
         self.ApplicationMenu()

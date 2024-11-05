@@ -104,6 +104,8 @@ def ReturnStyleItem(ControlName):
             return result
         if isIcon is False:
             result = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
+            if result == "":
+                result = None
             return result
     except Exception:
         return None
@@ -119,71 +121,76 @@ def ReturnStyleSheet(control, radius="2px"):
     """
     StyleSheet = ""
     try:
-        if control.lower() == "toolbutton":
-            hexColor = ReturnStyleItem("Border_Color")
-            StyleSheet = (
-                """QToolButton:hover {
-                        border: 0.5px solid"""
-                + hexColor
-                + """;
-                }"""
-                + """QToolButton::menu-button:hover {
-                        border: 0.5px solid"""
-                + hexColor
-                + """;
-                }"""
-            )
-            return StyleSheet
-        if control.lower() == "applicationbutton":
-            StyleSheet = (
-                """QToolButton {
-                        border-radius : """
-                + radius
-                + """;
-                background: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 """
-                + ReturnStyleItem("Border_Color")
-                + """, stop:0.9 """
-                + ReturnStyleItem("Background_Color")
-                + """, stop:1 """
-                + ReturnStyleItem("Background_Color")
-                + """)
-                ;}"""
-                + """QToolButton:hover {
-                        border-radius : """
-                + radius
-                + """;
-                border: 3px solid"""
-                + ReturnStyleItem("Border_Color")
-                + """;
-                }"""
-            )
-            # StyleSheet = (
-            #     """QToolButton {
-            #             border-radius : """
-            #     + radius
-            #     + """;
-            #     border: 0.5px solid"""
-            #     + ReturnStyleItem("Border_Color")
-            #     + """;
-            #     background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 """
-            #     + ReturnStyleItem("Border_Color")
-            #     + """, stop:0.15 """
-            #     + ReturnStyleItem("Background_Color")
-            #     + """, stop:0.85 """
-            #     + ReturnStyleItem("Background_Color")
-            #     + """, stop:1 """
-            #     + ReturnStyleItem("Border_Color")
-            #     + """)
-            #     ;}"""
-            #     + """QToolButton:hover {
-            #             border-radius : """
-            #     + radius
-            #     + """;
-            #     border: 3px solid"""
-            #     + ReturnStyleItem("Border_Color")
-            #     + """;
-            #     }"""
-            # )
+        BorderColor = ReturnStyleItem("Border_Color")
+        BackgroundColor = ReturnStyleItem("Background_Color")
+        if BackgroundColor is not None and BorderColor is not None:
+            if control.lower() == "toolbutton":
+                StyleSheet = (
+                    """QToolButton:hover {
+                            border: 0.5px solid"""
+                    + BorderColor
+                    + """;
+                    }"""
+                    + """QToolButton::menu-button:hover {
+                            border: 0.5px solid"""
+                    + BorderColor
+                    + """;
+                    }"""
+                )
+                return StyleSheet
+            if control.lower() == "applicationbutton":
+                StyleSheet = (
+                    """QToolButton {
+                            border-radius : """
+                    + radius
+                    + """;
+                    border: 0.5px solid"""
+                    + BorderColor
+                    + """;
+                    background: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 """
+                    + BorderColor
+                    + """, stop:0.9 """
+                    + BackgroundColor
+                    + """, stop:1 """
+                    + BackgroundColor
+                    + """)
+                    ;}"""
+                    + """QToolButton:hover {
+                            border-radius : """
+                    + radius
+                    + """;
+                    border: 3px solid"""
+                    + ReturnStyleItem("Border_Color")
+                    + """;
+                    }"""
+                )
+                # StyleSheet = (
+                #     """QToolButton {
+                #             border-radius : """
+                #     + radius
+                #     + """;
+                #     border: 0.5px solid"""
+                #     + ReturnStyleItem("Border_Color")
+                #     + """;
+                #     background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 """
+                #     + ReturnStyleItem("Border_Color")
+                #     + """, stop:0.15 """
+                #     + ReturnStyleItem("Background_Color")
+                #     + """, stop:0.85 """
+                #     + ReturnStyleItem("Background_Color")
+                #     + """, stop:1 """
+                #     + ReturnStyleItem("Border_Color")
+                #     + """)
+                #     ;}"""
+                #     + """QToolButton:hover {
+                #             border-radius : """
+                #     + radius
+                #     + """;
+                #     border: 3px solid"""
+                #     + ReturnStyleItem("Border_Color")
+                #     + """;
+                #     }"""
+                # )
 
             return StyleSheet
     except Exception as e:
@@ -233,8 +240,21 @@ StyleMapping = {
             "collapseRibbonButton_down": "down.svg",
         },
         "OpenLight.qss": {
-            "Background_Color": "#f1f3f5",
+            "Background_Color": "#dee2e6",
             "Border_Color": "#1c7ed6",
+            "ScrollLeftButton_Tab": "backward.svg",
+            "ScrollRightButton_Tab": "forward.svg",
+            "ScrollLeftButton_Category": "backward.svg",
+            "ScrollRightButton_Category": "forward.svg",
+            "OptionButton": "more.svg",
+            "PinButton_open": "pin-icon-open.svg",
+            "PinButton_closed": "pin-icon-closed.svg",
+            "collapseRibbonButton_up": "up.svg",
+            "collapseRibbonButton_down": "down.svg",
+        },
+        "OpenDark.qss": {
+            "Background_Color": "#212529",
+            "Border_Color": "#264b69",
             "ScrollLeftButton_Tab": "backward.svg",
             "ScrollRightButton_Tab": "forward.svg",
             "ScrollLeftButton_Category": "backward.svg",
