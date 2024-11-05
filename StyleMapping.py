@@ -135,24 +135,56 @@ def ReturnStyleSheet(control, radius="2px"):
             )
             return StyleSheet
         if control.lower() == "applicationbutton":
-            hexColor = ReturnStyleItem("Border_Color")
             StyleSheet = (
-                """QToolButton { 
+                """QToolButton {
                         border-radius : """
                 + radius
                 + """;
-                border: 1px solid"""
-                + hexColor
-                + """;}"""
+                background: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 """
+                + ReturnStyleItem("Border_Color")
+                + """, stop:0.9 """
+                + ReturnStyleItem("Background_Color")
+                + """, stop:1 """
+                + ReturnStyleItem("Background_Color")
+                + """)
+                ;}"""
                 + """QToolButton:hover {
                         border-radius : """
                 + radius
                 + """;
                 border: 3px solid"""
-                + hexColor
+                + ReturnStyleItem("Border_Color")
                 + """;
                 }"""
             )
+            # StyleSheet = (
+            #     """QToolButton {
+            #             border-radius : """
+            #     + radius
+            #     + """;
+            #     border: 0.5px solid"""
+            #     + ReturnStyleItem("Border_Color")
+            #     + """;
+            #     background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 """
+            #     + ReturnStyleItem("Border_Color")
+            #     + """, stop:0.15 """
+            #     + ReturnStyleItem("Background_Color")
+            #     + """, stop:0.85 """
+            #     + ReturnStyleItem("Background_Color")
+            #     + """, stop:1 """
+            #     + ReturnStyleItem("Border_Color")
+            #     + """)
+            #     ;}"""
+            #     + """QToolButton:hover {
+            #             border-radius : """
+            #     + radius
+            #     + """;
+            #     border: 3px solid"""
+            #     + ReturnStyleItem("Border_Color")
+            #     + """;
+            #     }"""
+            # )
+
             return StyleSheet
     except Exception as e:
         print(e)
@@ -201,7 +233,7 @@ StyleMapping = {
             "collapseRibbonButton_down": "down.svg",
         },
         "OpenLight.qss": {
-            "Background_Color": "",
+            "Background_Color": "#f1f3f5",
             "Border_Color": "#1c7ed6",
             "ScrollLeftButton_Tab": "backward.svg",
             "ScrollRightButton_Tab": "forward.svg",

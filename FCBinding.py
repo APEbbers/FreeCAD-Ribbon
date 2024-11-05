@@ -205,15 +205,16 @@ class ModernMenu(RibbonBar):
         hexColor = StyleMapping.ReturnStyleItem("Background_Color")
         if hexColor is not None and hexColor != "":
             # Set the quickaccess toolbar background color. This fixes a transparant toolbar.
-            self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
-            self.tabBar().setStyleSheet("background-color: " + hexColor + ";")
+            self.quickAccessToolBar().setStyleSheet("QToolBar {background: " + hexColor + ";}")
+            self.tabBar().setStyleSheet("background: " + hexColor + ";")
             # Set the background color. This fixes transparant backgrounds when FreeCAD has no stylesheet
             StyleSheet_Addition = "\n\nQToolButton {background: solid " + hexColor + ";}"
             StyleSheet_Addition_2 = (
                 "\n\nRibbonBar {border: none;background: solid " + hexColor + ";color: " + hexColor + ";}"
             )
             StyleSheet = StyleSheet_Addition_2 + StyleSheet + StyleSheet_Addition
-            self.setStyleSheet(StyleSheet)
+        self.setStyleSheet(StyleSheet)
+        self
 
         # get the state of the mainwindow
         self.MainWindowLoaded = True
@@ -447,6 +448,10 @@ class ModernMenu(RibbonBar):
         # Set the border color and shape
         radius = str(self.ApplicationButtonSize * 0.49) + "px"
         self.applicationOptionButton().setStyleSheet(StyleMapping.ReturnStyleSheet("applicationbutton", radius))
+        # self.applicationOptionButton().setStyleSheet(
+        #     "* {color: qlineargradient(spread:pad, x1:0 y1:0, x2:1 y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));"
+        #     "background: qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 cyan, stop:1 blue);}"
+        # )
 
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
