@@ -1320,6 +1320,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     Size = "small"
 
                     # Go through the toolbars in the Json Ribbon list
+                    MenuNameJson = ""
                     for j in range(len(self.List_Workbenches)):
                         if self.List_Workbenches[j][0] == WorkBenchName:
                             try:
@@ -1345,6 +1346,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                     Icon = Gui.getIcon(Icon_Json_Name)
                             except Exception:
                                 continue
+
                     MenuNameTabelWidgetItem = ""
                     if MenuNameJson != Command.getInfo()["menuText"].replace("&", "").replace("...", ""):
                         MenuNameTabelWidgetItem = MenuNameJson
