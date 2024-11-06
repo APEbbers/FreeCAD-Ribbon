@@ -2318,18 +2318,21 @@ class LoadDialog(Design_ui.Ui_Form):
 
             ListCommands = []
             # get list of all buttons in toolbar
-            TB = mw.findChildren(QToolBar, Name)
-            allButtons: list = TB[0].findChildren(QToolButton)
-            for button in allButtons:
-                if button.text() == "":
-                    continue
+            try:
+                TB = mw.findChildren(QToolBar, Name)
+                allButtons: list = TB[0].findChildren(QToolButton)
+                for button in allButtons:
+                    if button.text() == "":
+                        continue
 
-                action = button.defaultAction()
-                if action is not None:
-                    Command = action.objectName()
-                    ListCommands.append(Command)
+                    action = button.defaultAction()
+                    if action is not None:
+                        Command = action.objectName()
+                        ListCommands.append(Command)
 
-            Toolbars.append([Name, "Global", ListCommands])
+                Toolbars.append([Name, "Global", ListCommands])
+            except Exception:
+                continue
 
         return Toolbars
 
@@ -2358,18 +2361,21 @@ class LoadDialog(Design_ui.Ui_Form):
                     Name = Parameter.GetString("Name")
 
                     if Name != "":
-                        ListCommands = []
-                        # get list of all buttons in toolbar
-                        TB = mw.findChildren(QToolBar, Name)
-                        allButtons: list = TB[0].findChildren(QToolButton)
-                        for button in allButtons:
-                            if button.text() == "":
-                                continue
-                            action = button.defaultAction()
-                            Command = action.objectName()
-                            ListCommands.append(Command)
+                        try:
+                            ListCommands = []
+                            # get list of all buttons in toolbar
+                            TB = mw.findChildren(QToolBar, Name)
+                            allButtons: list = TB[0].findChildren(QToolButton)
+                            for button in allButtons:
+                                if button.text() == "":
+                                    continue
+                                action = button.defaultAction()
+                                Command = action.objectName()
+                                ListCommands.append(Command)
 
-                            Toolbars[Name] = ListCommands
+                                Toolbars[Name] = ListCommands
+                        except Exception:
+                            continue
 
         return Toolbars
 
@@ -2390,18 +2396,21 @@ class LoadDialog(Design_ui.Ui_Form):
             Name = Parameter.GetString("Name")
 
             if Name != "":
-                ListCommands = []
-                # get list of all buttons in toolbar
-                TB = mw.findChildren(QToolBar, Name)
-                allButtons: list = TB[0].findChildren(QToolButton)
-                for button in allButtons:
-                    if button.text() == "":
-                        continue
-                    action = button.defaultAction()
-                    Command = action.objectName()
-                    ListCommands.append(Command)
+                try:
+                    ListCommands = []
+                    # get list of all buttons in toolbar
+                    TB = mw.findChildren(QToolBar, Name)
+                    allButtons: list = TB[0].findChildren(QToolButton)
+                    for button in allButtons:
+                        if button.text() == "":
+                            continue
+                        action = button.defaultAction()
+                        Command = action.objectName()
+                        ListCommands.append(Command)
 
-                    Toolbars[Name] = ListCommands
+                        Toolbars[Name] = ListCommands
+                except Exception:
+                    continue
 
         return Toolbars
 
