@@ -1488,6 +1488,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     Size = "small"
 
                     # Go through the toolbars in the Json Ribbon list
+                    MenuNameJson = ""
                     for j in range(len(self.List_Workbenches)):
                         if self.List_Workbenches[j][0] == WorkBenchName:
                             try:
@@ -1522,6 +1523,7 @@ class LoadDialog(Design_ui.Ui_Form):
                             except Exception:
                                 continue
 
+                    MenuNameTabelWidgetItem = ""
                     if MenuNameJson != Command.getInfo()["menuText"].replace(
                         "&", ""
                     ).replace("...", ""):
@@ -2519,19 +2521,22 @@ class LoadDialog(Design_ui.Ui_Form):
                         Name = Parameter.GetString("Name")
 
                         ListCommands = []
-                        # get list of all buttons in toolbar
-                        TB = mw.findChildren(QToolBar, Name)
-                        allButtons: list = TB[0].findChildren(QToolButton)
-                        for button in allButtons:
-                            if button.text() == "":
-                                continue
+                        try:
+                            # get list of all buttons in toolbar
+                            TB = mw.findChildren(QToolBar, Name)
+                            allButtons: list = TB[0].findChildren(QToolButton)
+                            for button in allButtons:
+                                if button.text() == "":
+                                    continue
 
-                            action = button.defaultAction()
-                            if action is not None:
-                                Command = action.objectName()
-                                ListCommands.append(Command)
+                                action = button.defaultAction()
+                                if action is not None:
+                                    Command = action.objectName()
+                                    ListCommands.append(Command)
 
-                        Toolbars.append([Name, WorkbenchTitle, ListCommands])
+                            Toolbars.append([Name, WorkbenchTitle, ListCommands])
+                        except Exception:
+                            continue
 
         return Toolbars
 
