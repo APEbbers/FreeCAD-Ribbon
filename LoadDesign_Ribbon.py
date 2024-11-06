@@ -1345,7 +1345,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                     Icon = Gui.getIcon(Icon_Json_Name)
                             except Exception:
                                 continue
-
+                    MenuNameTabelWidgetItem = ""
                     if MenuNameJson != Command.getInfo()["menuText"].replace("&", "").replace("...", ""):
                         MenuNameTabelWidgetItem = MenuNameJson
                     else:
