@@ -95,12 +95,12 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
+import pyqtribbon as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -409,6 +409,9 @@ class ModernMenu(RibbonBar):
         # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(self.iconSize, self.iconSize)
 
+        # add the searchbar if available
+        SearchBarWidth = self.AddSearchBar()
+
         # Set the helpbutton
         self.helpRibbonButton().setEnabled(True)
         self.helpRibbonButton().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -435,11 +438,8 @@ class ModernMenu(RibbonBar):
         pinButton.clicked.connect(self.onPinClicked)
         self.rightToolBar().addWidget(pinButton)
 
-        # add the searchbar if available
-        SearchBarWidth = self.AddSearchBar()
-
         # Set the width of the right toolbar
-        i = len(self.rightToolBar().actions()) + 1
+        i = len(self.rightToolBar().actions()) + 0 - 1
         iconSize = self.rightToolBar().iconSize().height()
         self.rightToolBar().setMinimumWidth((iconSize * self.sizeFactor * i) + SearchBarWidth)
         self.rightToolBar().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -461,7 +461,7 @@ class ModernMenu(RibbonBar):
 
     # Add the searchBar if it is present
     def AddSearchBar(self):
-        TB: QToolBar = mw.findChildren(QToolBar, "SearchBar")[0]
+        TB: QToolBar = mw.findChildren(QToolBar, "SearchBar")
         width = 0
         if TB is not None:
             import SearchBoxLight
@@ -476,8 +476,9 @@ class ModernMenu(RibbonBar):
             sea.resultSelected.connect(
                 lambda index, groupId: __import__("GetItemGroups").onResultSelected(index, groupId)
             )
-            sea.setFixedWidth(width)
-            self.rightToolBar().addWidget(sea)
+            sea.setFixedSize(width, self.iconSize)
+            BeforeAction = self.rightToolBar().actions()[1]
+            self.rightToolBar().insertWidget(BeforeAction, sea)
 
             return width
 
