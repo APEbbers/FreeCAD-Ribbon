@@ -439,7 +439,7 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().addWidget(pinButton)
 
         # Set the width of the right toolbar
-        i = len(self.rightToolBar().actions()) + 0 - 1
+        i = len(self.rightToolBar().actions())
         iconSize = self.rightToolBar().iconSize().height()
         self.rightToolBar().setMinimumWidth((iconSize * self.sizeFactor * i) + SearchBarWidth)
         self.rightToolBar().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
