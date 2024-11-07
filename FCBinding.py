@@ -464,22 +464,24 @@ class ModernMenu(RibbonBar):
         TB: QToolBar = mw.findChildren(QToolBar, "SearchBar")
         width = 0
         if TB is not None:
-            import SearchBoxLight
+            try:
+                import SearchBoxLight
 
-            width = 200
+                width = 200
 
-            sea = SearchBoxLight.SearchBoxLight(
-                getItemGroups=lambda: __import__("GetItemGroups").getItemGroups(),
-                getToolTip=lambda groupId, setParent: __import__("GetItemGroups").getToolTip(groupId, setParent),
-                getItemDelegate=lambda: __import__("IndentedItemDelegate").IndentedItemDelegate(),
-            )
-            sea.resultSelected.connect(
-                lambda index, groupId: __import__("GetItemGroups").onResultSelected(index, groupId)
-            )
-            sea.setFixedSize(width, self.iconSize)
-            BeforeAction = self.rightToolBar().actions()[1]
-            self.rightToolBar().insertWidget(BeforeAction, sea)
-
+                sea = SearchBoxLight.SearchBoxLight(
+                    getItemGroups=lambda: __import__("GetItemGroups").getItemGroups(),
+                    getToolTip=lambda groupId, setParent: __import__("GetItemGroups").getToolTip(groupId, setParent),
+                    getItemDelegate=lambda: __import__("IndentedItemDelegate").IndentedItemDelegate(),
+                )
+                sea.resultSelected.connect(
+                    lambda index, groupId: __import__("GetItemGroups").onResultSelected(index, groupId)
+                )
+                sea.setFixedSize(width, self.iconSize)
+                BeforeAction = self.rightToolBar().actions()[1]
+                self.rightToolBar().insertWidget(BeforeAction, sea)
+            except Exception:
+                pass
             return width
 
     def ApplicationMenu(self):
