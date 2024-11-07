@@ -49,6 +49,7 @@ from PySide.QtWidgets import (
     QGridLayout,
     QScrollArea,
     QTabBar,
+    QWidgetAction,
 )
 from PySide.QtCore import (
     Qt,
@@ -434,10 +435,13 @@ class ModernMenu(RibbonBar):
         pinButton.clicked.connect(self.onPinClicked)
         self.rightToolBar().addWidget(pinButton)
 
+        # add the searchbar if available
+        SearchBarWidth = self.AddSearchBar()
+
         # Set the width of the right toolbar
         i = len(self.rightToolBar().actions()) + 1
         iconSize = self.rightToolBar().iconSize().height()
-        self.rightToolBar().setMinimumWidth(iconSize * self.sizeFactor * i)
+        self.rightToolBar().setMinimumWidth((iconSize * self.sizeFactor * i) + SearchBarWidth)
         self.rightToolBar().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
         # Set the application button
@@ -454,6 +458,28 @@ class ModernMenu(RibbonBar):
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
         return
+
+    # Add the searchBar if it is present
+    def AddSearchBar(self):
+        TB: QToolBar = mw.findChildren(QToolBar, "SearchBar")[0]
+        width = 0
+        if TB is not None:
+            import SearchBoxLight
+
+            width = 200
+
+            sea = SearchBoxLight.SearchBoxLight(
+                getItemGroups=lambda: __import__("GetItemGroups").getItemGroups(),
+                getToolTip=lambda groupId, setParent: __import__("GetItemGroups").getToolTip(groupId, setParent),
+                getItemDelegate=lambda: __import__("IndentedItemDelegate").IndentedItemDelegate(),
+            )
+            sea.resultSelected.connect(
+                lambda index, groupId: __import__("GetItemGroups").onResultSelected(index, groupId)
+            )
+            sea.setFixedWidth(width)
+            self.rightToolBar().addWidget(sea)
+
+            return width
 
     def ApplicationMenu(self):
         Menu = self.addFileMenu()
