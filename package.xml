@@ -26,6 +26,8 @@
       <freecadmin>0.21.0</freecadmin>
       <icon>Resources/Icons/FreecadNew.svg</icon>
       <subdirectory>./</subdirectory>
+      <!-- Optional install of 3rd-party SearchBar to streamline ability to Search and find commands -->
+      <depend type="addon" optional="true">SearchBar Workbench</depend>`
     </workbench>
   </content>
 
