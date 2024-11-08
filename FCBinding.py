@@ -1193,6 +1193,7 @@ class ModernMenu(RibbonBar):
         return
 
 
+# region - alternative loading
 # class run:
 #     """
 #     Activate Modern UI.
@@ -1221,6 +1222,7 @@ class ModernMenu(RibbonBar):
 #             ribbon.setLayout(layout)
 #             # Create the ribbon
 #             mw.setMenuBar(ribbon)
+# endregion
 
 
 class run:

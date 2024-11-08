@@ -123,6 +123,18 @@ def ReturnStyleSheet(control, radius="2px"):
     try:
         BorderColor = ReturnStyleItem("Border_Color")
         BackgroundColor = ReturnStyleItem("Background_Color")
+        ApplicationButton = ReturnStyleItem("ApplicationButton_Background")
+
+        # AppColor_1 = ApplicationButton
+        # AppColor_2 = BackgroundColor
+        # AppColor_3 = BackgroundColor
+        # AppBorder_1 = "transparant"
+        # AppBorder_2 = BorderColor
+        AppColor_1 = ApplicationButton
+        AppColor_2 = ApplicationButton
+        AppColor_3 = ApplicationButton
+        AppBorder_1 = BorderColor
+        AppBorder_2 = BorderColor
         if BackgroundColor is not None and BorderColor is not None:
             if control.lower() == "toolbutton":
                 StyleSheet = (
@@ -145,14 +157,14 @@ def ReturnStyleSheet(control, radius="2px"):
                     + radius
                     + """;
                     border: 0.5px solid"""
-                    + BorderColor
+                    + AppBorder_1
                     + """;
                     background: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 """
-                    + BorderColor
+                    + AppColor_1
                     + """, stop:0.9 """
-                    + BackgroundColor
+                    + AppColor_2
                     + """, stop:1 """
-                    + BackgroundColor
+                    + AppColor_3
                     + """)
                     ;}"""
                     + """QToolButton:hover {
@@ -160,37 +172,10 @@ def ReturnStyleSheet(control, radius="2px"):
                     + radius
                     + """;
                     border: 3px solid"""
-                    + ReturnStyleItem("Border_Color")
+                    + AppBorder_2
                     + """;
                     }"""
                 )
-                # StyleSheet = (
-                #     """QToolButton {
-                #             border-radius : """
-                #     + radius
-                #     + """;
-                #     border: 0.5px solid"""
-                #     + ReturnStyleItem("Border_Color")
-                #     + """;
-                #     background: qlineargradient(spread:pad, x1:0 y1:0, x2:0 y2:1, stop:0 """
-                #     + ReturnStyleItem("Border_Color")
-                #     + """, stop:0.15 """
-                #     + ReturnStyleItem("Background_Color")
-                #     + """, stop:0.85 """
-                #     + ReturnStyleItem("Background_Color")
-                #     + """, stop:1 """
-                #     + ReturnStyleItem("Border_Color")
-                #     + """)
-                #     ;}"""
-                #     + """QToolButton:hover {
-                #             border-radius : """
-                #     + radius
-                #     + """;
-                #     border: 3px solid"""
-                #     + ReturnStyleItem("Border_Color")
-                #     + """;
-                #     }"""
-                # )
 
             return StyleSheet
     except Exception as e:
@@ -202,7 +187,8 @@ StyleMapping = {
     "Stylesheets": {
         "": {
             "Background_Color": "#f0f0f0",
-            "Border_Color": "Black",
+            "Border_Color": "#646464",
+            "ApplicationButton_Background": "#e0e0e0",
             "ScrollLeftButton_Tab": "",
             "ScrollRightButton_Tab": "",
             "ScrollLeftButton_Category": "",
@@ -216,6 +202,7 @@ StyleMapping = {
         "FreeCAD Dark.qss": {
             "Background_Color": "#333333",
             "Border_Color": "#ffffff",
+            "ApplicationButton_Background": "#2a2a2a",
             "ScrollLeftButton_Tab": "backward.svg",
             "ScrollRightButton_Tab": "forward.svg",
             "ScrollLeftButton_Category": "backward.svg",
@@ -229,6 +216,7 @@ StyleMapping = {
         "FreeCAD Light.qss": {
             "Background_Color": "#f0f0f0",
             "Border_Color": "#646464",
+            "ApplicationButton_Background": "#e0e0e0",
             "ScrollLeftButton_Tab": "backward.svg",
             "ScrollRightButton_Tab": "forward.svg",
             "ScrollLeftButton_Category": "backward.svg",
@@ -242,19 +230,21 @@ StyleMapping = {
         "OpenLight.qss": {
             "Background_Color": "#dee2e6",
             "Border_Color": "#1c7ed6",
-            "ScrollLeftButton_Tab": "backward.svg",
-            "ScrollRightButton_Tab": "forward.svg",
-            "ScrollLeftButton_Category": "backward.svg",
-            "ScrollRightButton_Category": "forward.svg",
-            "OptionButton": "more.svg",
-            "PinButton_open": "pin-icon-open.svg",
-            "PinButton_closed": "pin-icon-closed.svg",
-            "collapseRibbonButton_up": "up.svg",
-            "collapseRibbonButton_down": "down.svg",
+            "ApplicationButton_Background": "#a5d8ff",
+            "ScrollLeftButton_Tab": "backward_1.svg",
+            "ScrollRightButton_Tab": "forward_1.svg",
+            "ScrollLeftButton_Category": "backward_1.svg",
+            "ScrollRightButton_Category": "forward_1.svg",
+            "OptionButton": "more_1.svg",
+            "PinButton_open": "pin-icon-open_1.svg",
+            "PinButton_closed": "pin-icon-closed_1.svg",
+            "collapseRibbonButton_up": "up_1.svg",
+            "collapseRibbonButton_down": "down_1.svg",
         },
         "OpenDark.qss": {
             "Background_Color": "#212529",
             "Border_Color": "#264b69",
+            "ApplicationButton_Background": "#1f364d",
             "ScrollLeftButton_Tab": "backward.svg",
             "ScrollRightButton_Tab": "forward.svg",
             "ScrollLeftButton_Category": "backward.svg",
