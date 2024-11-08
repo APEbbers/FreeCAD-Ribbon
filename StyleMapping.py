@@ -63,6 +63,7 @@ def ReturnStyleItem(ControlName):
     ControlName (string):
         "Background_Color" returns string,
         "Border_Color" returns string,
+        "ApplicationButton_Background" returns string,
         "ScrollLeftButton_Tab returns QIcon",
         "ScrollRightButton_Tab" returns QIcon,
         "ScrollLeftButton_Category" returns QIcon,
@@ -105,7 +106,7 @@ def ReturnStyleItem(ControlName):
         if isIcon is False:
             result = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
             if result == "":
-                result = None
+                result = result = StyleMapping["Stylesheets"][""][ControlName]
             return result
     except Exception:
         return None
@@ -194,8 +195,8 @@ StyleMapping = {
             "ScrollLeftButton_Category": "",
             "ScrollRightButton_Category": "",
             "OptionButton": "",
-            "PinButton_open": "",
-            "PinButton_closed": "",
+            "PinButton_open": "pin-icon-default.svg",
+            "PinButton_closed": "pin-icon-default.svg",
             "collapseRibbonButton_up": "",
             "collapseRibbonButton_down": "",
         },

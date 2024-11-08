@@ -420,17 +420,17 @@ class ModernMenu(RibbonBar):
         helpMenu = mw.findChildren(QMenu, "&Help")[0]
         helpAction = helpMenu.actions()[0]
         self.helpRibbonButton().setDefaultAction(helpAction)
+        self.helpRibbonButton().setFixedSize(self.iconSize, self.iconSize)
 
         # Add a button the enable or disable AutoHide
-        pixmap = QPixmap(os.path.join(pathIcons, "pin-icon-open.svg"))
-        pinIcon = QIcon()
-        pinIcon.addPixmap(pixmap)
         pinButton = QToolButton()
         pinButton.setCheckable(True)
-        pinButton.setIcon(pinIcon)
+        pinButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        pinButton.setFixedWidth(self.iconSize)
+        pinButton.setIconSize(QSize(self.iconSize, self.iconSize))
+        pinButton.setIcon(StyleMapping.ReturnStyleItem("PinButton_open"))
         pinButton.setText(translate("FreeCAD Ribbon", "Pin Ribbon"))
         pinButton.setToolTip(translate("FreeCAD Ribbon", "Click to toggle the autohide function on or off"))
-        pinButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
             pinButton.setChecked(False)
         if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
@@ -448,9 +448,7 @@ class ModernMenu(RibbonBar):
         self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
         self.applicationOptionButton().setFixedSize(self.ApplicationButtonSize, self.ApplicationButtonSize)
         self.setApplicationIcon(Gui.getIcon("freecad"))
-        self.applicationOptionButton().setIconSize(
-            QSize(self.applicationOptionButton().height() * 0.8, self.applicationOptionButton().height() * 0.8)
-        )
+        self.applicationOptionButton().setIconSize(QSize(self.ApplicationButtonSize, self.ApplicationButtonSize))
         # Set the border color and shape
         radius = str(self.ApplicationButtonSize * 0.49) + "px"
         self.applicationOptionButton().setStyleSheet(StyleMapping.ReturnStyleSheet("applicationbutton", radius))
