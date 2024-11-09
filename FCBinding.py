@@ -95,12 +95,12 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
+import pyqtribbon as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -352,7 +352,8 @@ class ModernMenu(RibbonBar):
         self.quickAccessToolBar().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
 
         # Set the tabbar height and textsize
-        self.tabBar().setIconSize(QSize(self.iconSize, self.iconSize))
+        self.tabBar().setFixedHeight(self.iconSize * self.sizeFactor)
+        # self.tabBar().setIconSize(QSize(self.iconSize, self.iconSize))
 
         # Correct colors when no stylesheet is selected for FreeCAD.
         FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
@@ -363,8 +364,7 @@ class ModernMenu(RibbonBar):
             self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
 
         # Get the order of workbenches from Parameters
-        WorkbenchOrderParam = "User parameter:BaseApp/Preferences/Workbenches/"
-        WorkbenchOrderedList: list = App.ParamGet(WorkbenchOrderParam).GetString("Ordered").split(",")
+        WorkbenchOrderedList: list = Parameters_Ribbon.TAB_ORDER.split(",")
         # Check if there are workbenches that are not in the orderlist
         IsInList = False
         for InstalledWB in Gui.listWorkbenches():
@@ -390,7 +390,7 @@ class ModernMenu(RibbonBar):
         param_string = ""
         for i in range(len(WorkbenchOrderedList)):
             param_string = param_string + "," + WorkbenchOrderedList[i]
-        Parameters_Ribbon.Settings.SetStringSetting(WorkbenchOrderParam + "/Ordered", param_string)
+        Parameters_Ribbon.Settings.SetStringSetting("TabOrder", param_string)
 
         # add category for each workbench
         for i in range(len(WorkbenchOrderedList)):
