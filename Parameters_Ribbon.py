@@ -98,11 +98,11 @@ class Settings:
 
 
 # Define the Ribbon structure location
-if Settings.GetStringSetting("RibbonStructureJson") != "":
-    RIBBON_STRUCTURE_JSON = Settings.GetStringSetting("RibbonStructureJson")
+if Settings.GetStringSetting("RibbonStructure") != "":
+    RIBBON_STRUCTURE_JSON = Settings.GetStringSetting("RibbonStructure")
 else:
     RIBBON_STRUCTURE_JSON = os.path.join(os.path.dirname(__file__), "RibbonStructure.json")
-    Settings.SetStringSetting("RibbonStructure.json", RIBBON_STRUCTURE_JSON)
+    Settings.SetStringSetting("RibbonStructure", RIBBON_STRUCTURE_JSON)
 
 # Define the resources
 ICON_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "icons")
