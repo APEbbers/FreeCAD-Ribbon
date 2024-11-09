@@ -1072,10 +1072,12 @@ class ModernMenu(RibbonBar):
         ScrollRightButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollRightButton_Tab")
         # Set the icons
         if ScrollLeftButton_Tab_Icon is not None:
+            ScrollLeftButton_Tab.setStyleSheet("image: none;")
             ScrollLeftButton_Tab.setIcon(ScrollLeftButton_Tab_Icon)
         else:
             ScrollLeftButton_Tab.setArrowType(Qt.ArrowType.LeftArrow)
         if ScrollRightButton_Tab_Icon is not None:
+            ScrollRightButton_Tab.setStyleSheet("image: none;")
             ScrollRightButton_Tab.setIcon(ScrollRightButton_Tab_Icon)
         else:
             ScrollRightButton_Tab.setArrowType(Qt.ArrowType.RightArrow)

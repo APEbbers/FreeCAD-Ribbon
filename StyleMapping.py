@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -35,7 +35,7 @@ from PySide.QtWidgets import (
     QMenu,
     QWidget,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread
 import sys
 import json
 from datetime import datetime
@@ -155,6 +155,7 @@ def ReturnStyleSheet(control, radius="2px"):
                 StyleSheet = (
                     """QToolButton {
                             padding: 7px;
+                            padding: 7px;
                             border-radius : """
                     + radius
                     + """;
@@ -195,7 +196,7 @@ StyleMapping = {
             "ScrollRightButton_Tab": "",
             "ScrollLeftButton_Category": "",
             "ScrollRightButton_Category": "",
-            "OptionButton": "",
+            "OptionButton": "more_default.svg",
             "PinButton_open": "pin-icon-default.svg",
             "PinButton_closed": "pin-icon-default.svg",
             "collapseRibbonButton_up": "",
@@ -205,29 +206,29 @@ StyleMapping = {
             "Background_Color": "#333333",
             "Border_Color": "#ffffff",
             "ApplicationButton_Background": "#2a2a2a",
-            "ScrollLeftButton_Tab": "backward.svg",
-            "ScrollRightButton_Tab": "forward.svg",
-            "ScrollLeftButton_Category": "backward.svg",
-            "ScrollRightButton_Category": "forward.svg",
-            "OptionButton": "more.svg",
+            "ScrollLeftButton_Tab": "backward_small_default_white.svg",
+            "ScrollRightButton_Tab": "forward_small_default_white.svg",
+            "ScrollLeftButton_Category": "backward_default_white.svg",
+            "ScrollRightButton_Category": "forward_default_white.svg",
+            "OptionButton": "more_default_white.svg",
             "PinButton_open": "pin-icon-default_white.svg",
             "PinButton_closed": "pin-icon-default_white.svg",
-            "collapseRibbonButton_up": "up.svg",
-            "collapseRibbonButton_down": "down.svg",
+            "collapseRibbonButton_up": "",
+            "collapseRibbonButton_down": "",
         },
         "FreeCAD Light.qss": {
             "Background_Color": "#f0f0f0",
             "Border_Color": "#646464",
             "ApplicationButton_Background": "#e0e0e0",
-            "ScrollLeftButton_Tab": "backward.svg",
-            "ScrollRightButton_Tab": "forward.svg",
-            "ScrollLeftButton_Category": "backward.svg",
-            "ScrollRightButton_Category": "forward.svg",
-            "OptionButton": "more.svg",
+            "ScrollLeftButton_Tab": "backward_small_default.svg",
+            "ScrollRightButton_Tab": "forward_small_default.svg",
+            "ScrollLeftButton_Category": "backward_default.svg",
+            "ScrollRightButton_Category": "forward_default.svg",
+            "OptionButton": "more_default.svg",
             "PinButton_open": "pin-icon-default.svg",
             "PinButton_closed": "pin-icon-default.svg",
-            "collapseRibbonButton_up": "up.svg",
-            "collapseRibbonButton_down": "down.svg",
+            "collapseRibbonButton_up": "",
+            "collapseRibbonButton_down": "",
         },
         "OpenLight.qss": {
             "Background_Color": "#dee2e6",
@@ -240,22 +241,22 @@ StyleMapping = {
             "OptionButton": "more_1.svg",
             "PinButton_open": "pin-icon-open_1.svg",
             "PinButton_closed": "pin-icon-closed_1.svg",
-            "collapseRibbonButton_up": "up_1.svg",
-            "collapseRibbonButton_down": "down_1.svg",
+            "collapseRibbonButton_up": "",
+            "collapseRibbonButton_down": "",
         },
         "OpenDark.qss": {
             "Background_Color": "#212529",
             "Border_Color": "#264b69",
             "ApplicationButton_Background": "#1f364d",
-            "ScrollLeftButton_Tab": "backward.svg",
-            "ScrollRightButton_Tab": "forward.svg",
-            "ScrollLeftButton_Category": "backward.svg",
-            "ScrollRightButton_Category": "forward.svg",
+            "ScrollLeftButton_Tab": "backward_small_default_white.svg",
+            "ScrollRightButton_Tab": "forward_small_default_white.svg",
+            "ScrollLeftButton_Category": "backward_default_white.svg",
+            "ScrollRightButton_Category": "forward_default_white.svg",
             "OptionButton": "more.svg",
             "PinButton_open": "pin-icon-default_white.svg",
             "PinButton_closed": "pin-icon-default_white.svg",
-            "collapseRibbonButton_up": "up.svg",
-            "collapseRibbonButton_down": "down.svg",
+            "collapseRibbonButton_up": "",
+            "collapseRibbonButton_down": "",
         },
     }
 }
