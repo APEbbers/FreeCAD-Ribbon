@@ -241,7 +241,7 @@ class ModernMenu(RibbonBar):
         # this used to replaced the native functions
         self.tabBar().tabBarClicked.connect(self.onTabBarClicked)
 
-        # self.RibbonMinimalHeight = self.tabBar().height()
+        # Set the maximum heigth for the ribbon
         self.RibbonMaximumHeight = self.currentCategory().height() + self.RibbonMinimalHeight
         return
 
@@ -337,6 +337,7 @@ class ModernMenu(RibbonBar):
                 button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                 button.setFixedSize(width, height)
             button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
+            self.setQuickAccessButtonHeight(self.iconSize)
 
             # Add the button to the quickaccess toolbar
             self.addQuickAccessButton(button)
@@ -352,7 +353,6 @@ class ModernMenu(RibbonBar):
         self.quickAccessToolBar().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
 
         # Set the tabbar height and textsize
-        # self.tabBar().setFixedHeight(self.iconSize * self.sizeFactor)
         self.tabBar().setIconSize(QSize(self.iconSize, self.iconSize))
 
         # Correct colors when no stylesheet is selected for FreeCAD.
@@ -425,7 +425,7 @@ class ModernMenu(RibbonBar):
         pinButton = QToolButton()
         pinButton.setCheckable(True)
         pinButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        pinButton.setFixedWidth(self.iconSize)
+        pinButton.setFixedSize(self.iconSize, self.iconSize)
         pinButton.setIconSize(QSize(self.iconSize, self.iconSize))
         pinButton.setIcon(StyleMapping.ReturnStyleItem("PinButton_open"))
         pinButton.setText(translate("FreeCAD Ribbon", "Pin Ribbon"))
@@ -438,11 +438,10 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().addWidget(pinButton)
 
         # Set the width of the right toolbar
-        iconSize = self.rightToolBar().iconSize().height()
-        i = len(self.rightToolBar().actions()) - 1
-        i = i + SearchBarWidth / iconSize
-        self.rightToolBar().setMinimumWidth((iconSize * i))
-        self.rightToolBar().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        RightToolbarWidth = SearchBarWidth
+        for child in self.rightToolBar().actions():
+            RightToolbarWidth = RightToolbarWidth + self.iconSize
+        self.rightToolBar().setMinimumWidth(RightToolbarWidth - self.iconSize * 1.5)
 
         # Set the application button
         self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
@@ -455,6 +454,7 @@ class ModernMenu(RibbonBar):
 
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
+
         return
 
     # Add the searchBar if it is present
@@ -478,6 +478,7 @@ class ModernMenu(RibbonBar):
                 sea.setFixedSize(width, self.iconSize)
                 BeforeAction = self.rightToolBar().actions()[1]
                 self.rightToolBar().insertWidget(BeforeAction, sea)
+                width = sea.width()
             except Exception:
                 pass
             return width
