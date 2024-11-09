@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -35,7 +35,7 @@ from PySide.QtGui import (
     QFont,
     QColor,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -52,7 +52,7 @@ from PySide.QtWidgets import (
     QTabBar,
     QWidgetAction,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -96,12 +96,12 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
+import pyqtribbon as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -244,6 +244,8 @@ class ModernMenu(RibbonBar):
 
         # Set the maximum heigth for the ribbon
         self.RibbonMaximumHeight = self.currentCategory().height() + self.RibbonMinimalHeight
+
+        self.tabBar().wheelEvent = lambda event: self.wheelEvent_TabBar(event)
         return
 
     def eventFilter(self, obj, event):
@@ -300,6 +302,24 @@ class ModernMenu(RibbonBar):
         if x == -1:
             self.currentCategory()._nextButton.click()
 
+        return
+
+    # used to scroll a ribbon horizontally, when it's wider than the screen
+    def wheelEvent_TabBar(self, event):
+        x = 0
+        # Get the scroll value (1 or -1)
+        delta = event.angleDelta().y()
+        x += delta and delta // abs(delta)
+
+        ScrollButtons_Tab = self.tabBar().children()
+        ScrollLeftButton_Tab: QToolButton = ScrollButtons_Tab[0]
+        ScrollRightButton_Tab: QToolButton = ScrollButtons_Tab[1]
+
+        # go back or forward based on x.
+        if x == 1:
+            ScrollLeftButton_Tab.click()
+        if x == -1:
+            ScrollRightButton_Tab.click()
         return
 
     def connectSignals(self):
