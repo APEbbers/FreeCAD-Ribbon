@@ -142,7 +142,7 @@ if Settings.GetStringSetting("TabOrder") != "":
     TAB_ORDER = Settings.GetStringSetting("TabOrder")
 else:
     WorkbenchOrderParam = "User parameter:BaseApp/Preferences/Workbenches/"
-    TAB_ORDER = App.ParamGet(WorkbenchOrderParam).GetString("TabOrder")
+    TAB_ORDER = App.ParamGet(WorkbenchOrderParam).GetString("Ordered")
     Settings.SetStringSetting("TabOrder", TAB_ORDER)
 
 if Settings.GetBoolSetting("AutoHideRibbon") is True:
