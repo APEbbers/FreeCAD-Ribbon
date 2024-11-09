@@ -33,6 +33,7 @@ from PySide.QtGui import (
     QHoverEvent,
     QRegion,
     QFont,
+    QColor,
 )
 from PySide.QtWidgets import (
     QToolButton,
@@ -578,6 +579,8 @@ class ModernMenu(RibbonBar):
 
         index = self.tabBar().currentIndex()
         tabName = self.tabBar().tabText(index)
+        Color = QColor(StyleMapping.ReturnStyleItem("Border_Color"))
+        self.tabBar().setTabTextColor(index, Color)
 
         # activate selected workbench
         tabName = tabName.replace("&", "")
@@ -587,6 +590,9 @@ class ModernMenu(RibbonBar):
         return
 
     def onWbActivated(self):
+        # Make sure that the text is readable
+        self.tabBar().setStyleSheet("color: " + StyleMapping.ReturnStyleItem("Border_Color") + ";")
+
         # switch tab if necessary
         self.updateCurrentTab()
 
