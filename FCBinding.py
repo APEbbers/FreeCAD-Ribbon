@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -35,7 +35,7 @@ from PySide6.QtGui import (
     QFont,
     QColor,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -52,7 +52,7 @@ from PySide6.QtWidgets import (
     QTabBar,
     QWidgetAction,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -96,12 +96,12 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-import pyqtribbon as pyqtribbon
-from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon.panel import RibbonPanel
-from pyqtribbon.toolbutton import RibbonToolButton
-from pyqtribbon.separator import RibbonSeparator
-from pyqtribbon.category import RibbonCategoryLayoutButton
+# import pyqtribbon as pyqtribbon
+# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon.panel import RibbonPanel
+# from pyqtribbon.toolbutton import RibbonToolButton
+# from pyqtribbon.separator import RibbonSeparator
+# from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
