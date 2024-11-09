@@ -243,7 +243,6 @@ class ModernMenu(RibbonBar):
 
         # self.RibbonMinimalHeight = self.tabBar().height()
         self.RibbonMaximumHeight = self.currentCategory().height() + self.RibbonMinimalHeight
-
         return
 
     def eventFilter(self, obj, event):
@@ -439,16 +438,19 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().addWidget(pinButton)
 
         # Set the width of the right toolbar
-        i = len(self.rightToolBar().actions())
         iconSize = self.rightToolBar().iconSize().height()
-        self.rightToolBar().setMinimumWidth((iconSize * self.sizeFactor * i) + SearchBarWidth)
+        i = len(self.rightToolBar().actions()) - 1
+        i = i + SearchBarWidth / iconSize
+        self.rightToolBar().setMinimumWidth((iconSize * i))
         self.rightToolBar().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
         # Set the application button
         self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
         self.applicationOptionButton().setFixedSize(self.ApplicationButtonSize, self.ApplicationButtonSize)
         self.setApplicationIcon(Gui.getIcon("freecad"))
-        self.applicationOptionButton().setIconSize(QSize(self.ApplicationButtonSize, self.ApplicationButtonSize))
+        self.applicationOptionButton().setIconSize(
+            QSize(self.ApplicationButtonSize * 4, self.ApplicationButtonSize * 4)
+        )
         # Set the border color and shape
         radius = str(self.ApplicationButtonSize * 0.49) + "px"
         self.applicationOptionButton().setStyleSheet(StyleMapping.ReturnStyleSheet("applicationbutton", radius))
@@ -1057,9 +1059,9 @@ class ModernMenu(RibbonBar):
                     OptionButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
                     OptionButton.setText("more...")
 
-            # # Set the margins. In linux seems the style behavior different than on Windows
-            # Layout = panel.layout()
-            # Layout.setContentsMargins(3, 3, 3, 3)
+            # Set the margins. In linux seems the style behavior different than on Windows
+            Layout = panel.layout()
+            Layout.setContentsMargins(3, 3, 3, 3)
 
         self.isWbLoaded[tabName] = True
 
