@@ -193,7 +193,7 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 40)
 
         # read ribbon structure from JSON file
-        with open(os.path.join(os.path.dirname(__file__), "RibbonStructure.json"), "r") as file:
+        with open(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, "r") as file:
             self.ribbonStructure.update(json.load(file))
         file.close()
 
