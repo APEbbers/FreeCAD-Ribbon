@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -34,7 +34,7 @@ from PySide.QtGui import (
     QRegion,
     QFont,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -51,7 +51,7 @@ from PySide.QtWidgets import (
     QTabBar,
     QWidgetAction,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -335,7 +335,7 @@ class ModernMenu(RibbonBar):
                 width = (self.iconSize) + self.iconSize
                 height = self.iconSize
                 button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                button.setMinimumSize(width, height)
+                button.setFixedSize(width, height)
             button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
 
             # Add the button to the quickaccess toolbar
@@ -352,8 +352,8 @@ class ModernMenu(RibbonBar):
         self.quickAccessToolBar().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
 
         # Set the tabbar height and textsize
-        self.tabBar().setFixedHeight(self.iconSize * self.sizeFactor)
-        # self.tabBar().setIconSize(QSize(self.iconSize, self.iconSize))
+        # self.tabBar().setFixedHeight(self.iconSize * self.sizeFactor)
+        self.tabBar().setIconSize(QSize(self.iconSize, self.iconSize))
 
         # Correct colors when no stylesheet is selected for FreeCAD.
         FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
@@ -448,9 +448,7 @@ class ModernMenu(RibbonBar):
         self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
         self.applicationOptionButton().setFixedSize(self.ApplicationButtonSize, self.ApplicationButtonSize)
         self.setApplicationIcon(Gui.getIcon("freecad"))
-        self.applicationOptionButton().setIconSize(
-            QSize(self.ApplicationButtonSize * 4, self.ApplicationButtonSize * 4)
-        )
+
         # Set the border color and shape
         radius = str(self.ApplicationButtonSize * 0.49) + "px"
         self.applicationOptionButton().setStyleSheet(StyleMapping.ReturnStyleSheet("applicationbutton", radius))

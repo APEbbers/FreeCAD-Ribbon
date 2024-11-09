@@ -154,6 +154,7 @@ def ReturnStyleSheet(control, radius="2px"):
             if control.lower() == "applicationbutton":
                 StyleSheet = (
                     """QToolButton {
+                            padding: 7px;
                             border-radius : """
                     + radius
                     + """;
@@ -209,7 +210,7 @@ StyleMapping = {
             "ScrollLeftButton_Category": "backward.svg",
             "ScrollRightButton_Category": "forward.svg",
             "OptionButton": "more.svg",
-            "PinButton_open": "pin-icon-default_white.svgg",
+            "PinButton_open": "pin-icon-default_white.svg",
             "PinButton_closed": "pin-icon-default_white.svg",
             "collapseRibbonButton_up": "up.svg",
             "collapseRibbonButton_down": "down.svg",
