@@ -98,7 +98,7 @@ def ReturnStyleItem(ControlName):
         if isIcon is True:
             PixmapName = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
             if PixmapName == "":
-                return None
+                PixmapName = StyleMapping["Stylesheets"][""][ControlName]
             pixmap = QPixmap(os.path.join(pathIcons, PixmapName))
             result = QIcon()
             result.addPixmap(pixmap)

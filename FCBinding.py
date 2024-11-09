@@ -427,7 +427,9 @@ class ModernMenu(RibbonBar):
         pinButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         pinButton.setFixedSize(self.iconSize, self.iconSize)
         pinButton.setIconSize(QSize(self.iconSize, self.iconSize))
-        pinButton.setIcon(StyleMapping.ReturnStyleItem("PinButton_open"))
+        pinButtonIcon = StyleMapping.ReturnStyleItem("PinButton_open")
+        if pinButtonIcon is not None:
+            pinButton.setIcon(pinButtonIcon)
         pinButton.setText(translate("FreeCAD Ribbon", "Pin Ribbon"))
         pinButton.setToolTip(translate("FreeCAD Ribbon", "Click to toggle the autohide function on or off"))
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
