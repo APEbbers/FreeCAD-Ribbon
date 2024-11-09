@@ -251,7 +251,7 @@ StyleMapping = {
             "ScrollRightButton_Tab": "forward_small_default_white.svg",
             "ScrollLeftButton_Category": "backward_default_white.svg",
             "ScrollRightButton_Category": "forward_default_white.svg",
-            "OptionButton": "more.svg",
+            "OptionButton": "more_default_white.svg",
             "PinButton_open": "pin-icon-default_white.svg",
             "PinButton_closed": "pin-icon-default_white.svg",
             "collapseRibbonButton_up": "",
