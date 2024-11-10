@@ -365,27 +365,30 @@ class ModernMenu(RibbonBar):
             i = i + 1
             width = 0
             button = QToolButton()
-            QuickAction = Gui.Command.get(commandName).getAction()
+            try:
+                QuickAction = Gui.Command.get(commandName).getAction()
 
-            if len(QuickAction) <= 1:
-                button.setDefaultAction(QuickAction[0])
-                width = self.iconSize
-                height = self.iconSize
-                button.setMinimumWidth(width)
-            elif len(QuickAction) > 1:
-                button.addActions(QuickAction)
-                button.setDefaultAction(QuickAction[0])
-                width = (self.iconSize) + self.iconSize
-                height = self.iconSize
-                button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                button.setFixedSize(width, height)
-            button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
-            self.setQuickAccessButtonHeight(self.iconSize)
+                if len(QuickAction) <= 1:
+                    button.setDefaultAction(QuickAction[0])
+                    width = self.iconSize
+                    height = self.iconSize
+                    button.setMinimumWidth(width)
+                elif len(QuickAction) > 1:
+                    button.addActions(QuickAction)
+                    button.setDefaultAction(QuickAction[0])
+                    width = (self.iconSize) + self.iconSize
+                    height = self.iconSize
+                    button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                    button.setFixedSize(width, height)
+                button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
+                self.setQuickAccessButtonHeight(self.iconSize)
 
-            # Add the button to the quickaccess toolbar
-            self.addQuickAccessButton(button)
+                # Add the button to the quickaccess toolbar
+                self.addQuickAccessButton(button)
 
-            toolBarWidth = toolBarWidth + width
+                toolBarWidth = toolBarWidth + width
+            except Exception:
+                continue
 
         self.quickAccessToolBar().show()
         # Set the height of the quickaccess toolbar
