@@ -23,6 +23,7 @@
         "Std_Cut",
         "Std_Copy",
         "Std_Paste"
+        "Std_Measure"
     ],
     "ignoredWorkbenches": [
         "Inspection",
