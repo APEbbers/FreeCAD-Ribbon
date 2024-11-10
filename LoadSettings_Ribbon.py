@@ -79,7 +79,7 @@ class LoadDialog(Settings_ui.Ui_Form):
         self.form.label_4.setText(Parameters_Ribbon.BACKUP_LOCATION)
         self.form.IconSize_Small.setValue(Parameters_Ribbon.ICON_SIZE_SMALL)
         self.form.IconSize_Medium.setValue(Parameters_Ribbon.ICON_SIZE_MEDIUM)
-        self.form.IconSize_Large.setValue(Parameters_Ribbon.ICON_SIZE_LARGE)
+        # self.form.IconSize_Large.setValue(Parameters_Ribbon.ICON_SIZE_LARGE)
         self.form.label_7.setText(Parameters_Ribbon.STYLESHEET)
         if Parameters_Ribbon.SHOW_ICON_TEXT_SMALL is True:
             self.form.ShowText_Small.setCheckState(Qt.CheckState.Checked)
