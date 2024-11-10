@@ -236,7 +236,7 @@ class LoadDialog(Design_ui.Ui_Form):
             else:
                 Icon = None
             MenuName = command.getInfo()["menuText"].replace("&", "")
-            self.List_Commands.append(["Std_Measure", Icon, MenuName, "Global"])
+            self.List_Commands.append(["Std_Measure", Icon, MenuName, "General"])
 
         #
         # endregion ----------------------------------------------------------------------
@@ -522,7 +522,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for ToolbarCommand in self.List_Commands:
             CommandName = ToolbarCommand[0]
             workbenchName = ToolbarCommand[3]
-            IsInList = ShadowList.__contains__(CommandName)
+            IsInList = ShadowList.__contains__(f"{CommandName}, {workbenchName}")
 
             if IsInList is False and workbenchName != "Global":
                 Command = Gui.Command.get(CommandName)
@@ -555,7 +555,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     # Add the ListWidgetItem to the correct ListWidget
                     if Icon is not None:
                         self.form.CommandsAvailable.addItem(ListWidgetItem)
-            ShadowList.append(CommandName)
+            ShadowList.append(f"{CommandName}, {workbenchName}")
         return
 
     def on_SearchBar_1_TextChanged(self):
@@ -567,7 +567,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for ToolbarCommand in self.List_Commands:
             CommandName = ToolbarCommand[0]
             workbenchName = ToolbarCommand[3]
-            IsInList = ShadowList.__contains__(CommandName)
+            IsInList = ShadowList.__contains__(f"{CommandName}, {workbenchName}")
 
             if IsInList is False and workbenchName != "Global":
                 Command = Gui.Command.get(CommandName)
@@ -598,7 +598,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     # Add the ListWidgetItem to the correct ListWidget
                     if Icon is not None:
                         self.form.CommandsAvailable.addItem(ListWidgetItem)
-            ShadowList.append(CommandName)
+            ShadowList.append(f"{CommandName}, {workbenchName}")
         return
 
     def on_AddCommand_clicked(self):
