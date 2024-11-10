@@ -173,6 +173,17 @@ class ModernMenu(RibbonBar):
                 Name="Individual views",
                 WorkBenchName="Global",
             )
+        # Add a toolbar "tools"
+        StandardFunctions.CreateToolbar(
+            Name="Tools",
+            WorkBenchName="Global",
+            ButtonList=[
+                "Std_Measure",
+                "Std_UnitsCalculator",
+                "Std_DlgMacroRecord",
+                "Std_DlgMacroExecute",
+            ],
+        )
 
         # Get the address of the repository address
         self.ReproAdress = StandardFunctions.getRepoAdress(os.path.dirname(__file__))
@@ -685,6 +696,7 @@ class ModernMenu(RibbonBar):
         ListToolbars: list = workbench.listToolbars()
         if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
             ListToolbars.append("Individual views")
+        ListToolbars.append("Tools")
         # Get custom toolbars that are created in the toolbar environment and add them to the list of toolbars
         CustomToolbars = self.List_ReturnCustomToolbars()
         for CustomToolbar in CustomToolbars:

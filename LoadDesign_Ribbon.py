@@ -1131,6 +1131,10 @@ class LoadDialog(Design_ui.Ui_Form):
         for CustomToolbar in CustomToolbars:
             if CustomToolbar[1] == WorkBenchTitle:
                 wbToolbars.append(CustomToolbar[0])
+        # Get the global custom toolbars
+        CustomToolbars = self.Dict_ReturnCustomToolbars_Global()
+        for CustomToolbar in CustomToolbars:
+            wbToolbars.append(CustomToolbar)
         # Get the custom panels
         CustomPanel = self.List_AddCustomToolbarsToWorkbench(WorkBenchName=WorkBenchName)
         for CustomToolbar in CustomPanel:
@@ -2408,7 +2412,6 @@ class LoadDialog(Design_ui.Ui_Form):
                     action = button.defaultAction()
                     Command = action.objectName()
                     ListCommands.append(Command)
-
                     Toolbars[Name] = ListCommands
 
         return Toolbars
