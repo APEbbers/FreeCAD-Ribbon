@@ -1007,7 +1007,7 @@ class ModernMenu(RibbonBar):
                                     showText=showText,
                                     fixedHeight=False,
                                 )
-                                btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_LARGE)
+                                btn.setMinimumWidth(btn.maximumHeight() + 10)
                             else:
                                 raise NotImplementedError(
                                     translate(

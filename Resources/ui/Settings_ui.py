@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsLXEEkQ.ui'
+## Form generated from reading UI file 'SettingsfduXKu.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -225,18 +225,6 @@ class Ui_Form(object):
 
         self.gridLayout.addWidget(self.label_10, 0, 0, 1, 1)
 
-        self.label_5 = QLabel(self.groupBox_4)
-        self.label_5.setObjectName("label_5")
-
-        self.gridLayout.addWidget(self.label_5, 2, 0, 1, 1)
-
-        self.IconSize_Large = QSpinBox(self.groupBox_4)
-        self.IconSize_Large.setObjectName("IconSize_Large")
-        self.IconSize_Large.setMaximum(240)
-        self.IconSize_Large.setDisplayIntegerBase(10)
-
-        self.gridLayout.addWidget(self.IconSize_Large, 2, 1, 1, 1)
-
         self.gridLayout_5.addLayout(self.gridLayout, 0, 0, 1, 1)
 
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
@@ -414,9 +402,6 @@ class Ui_Form(object):
         self.groupBox_4.setTitle(QCoreApplication.translate("Form", "Button size", None))
         self.label_11.setText(QCoreApplication.translate("Form", "Size of medium buttons:", None))
         self.label_10.setText(QCoreApplication.translate("Form", "Size of small buttons:", None))
-        self.label_5.setText(
-            QCoreApplication.translate("Form", "<html><head/><body><p>Size of large buttons:</p></body></html>", None)
-        )
         self.groupBox_5.setTitle(QCoreApplication.translate("Form", "Panels", None))
         self.label.setText(QCoreApplication.translate("Form", "No. of columns per panel", None))
         self.label_2.setText(

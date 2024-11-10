@@ -105,6 +105,7 @@ class LoadDialog(Settings_ui.Ui_Form):
         self.form.BackUpLocation.clicked.connect(self.on_BackUpLocation_clicked)
         self.form.IconSize_Small.textChanged.connect(self.on_IconSize_Small_TextChanged)
         self.form.IconSize_Medium.textChanged.connect(self.on_IconSize_Medium_TextChanged)
+        # self.form.IconSize_Large.textChanged.connect(self.on_IconSize_Large_TextChanged)
         self.form.StyleSheetLocation.clicked.connect(self.on_StyleSheetLocation_clicked)
 
         self.form.ShowText_Small.clicked.connect(self.on_ShowTextSmall_clicked)
@@ -166,10 +167,10 @@ class LoadDialog(Settings_ui.Ui_Form):
         self.settingChanged = True
         return
 
-    def on_IconSize_Large_TextChanged(self):
-        Parameters_Ribbon.ICON_SIZE_LARGE = int(self.form.IconSize_Large.text())
-        self.settingChanged = True
-        return
+    # def on_IconSize_Large_TextChanged(self):
+    #     Parameters_Ribbon.ICON_SIZE_LARGE = int(self.form.IconSize_Large.text())
+    #     self.settingChanged = True
+    #     return
 
     def on_MaxPanelColumn_TextChanged(self):
         Parameters_Ribbon.MAX_COLUMN_PANELS = int(self.form.MaxPanelColumn.text())
