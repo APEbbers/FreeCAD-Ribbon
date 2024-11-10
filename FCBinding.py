@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -35,7 +35,7 @@ from PySide.QtGui import (
     QFont,
     QColor,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -52,7 +52,7 @@ from PySide.QtWidgets import (
     QTabBar,
     QWidgetAction,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -89,19 +89,19 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon_local.panel import RibbonPanel
-from pyqtribbon_local.toolbutton import RibbonToolButton
-from pyqtribbon_local.separator import RibbonSeparator
-from pyqtribbon_local.category import RibbonCategoryLayoutButton
+# import pyqtribbon_local as pyqtribbon
+# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon_local.panel import RibbonPanel
+# from pyqtribbon_local.toolbutton import RibbonToolButton
+# from pyqtribbon_local.separator import RibbonSeparator
+# from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
+import pyqtribbon as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -243,12 +243,10 @@ class ModernMenu(RibbonBar):
         self.tabBar().tabBarClicked.connect(self.onTabBarClicked)
 
         # Set the maximum heigth for the ribbon
-        self.currentCategory().setFixedHeight(Parameters_Ribbon.ICON_SIZE_LARGE + 10)
         self.RibbonMaximumHeight = self.currentCategory().height() + self.RibbonMinimalHeight
 
-        # override the default scroll behavior for the tabbar with a custom function
+        # override the default scroll behavior with a custom function
         self.tabBar().wheelEvent = lambda event_tabBar: self.wheelEvent_TabBar(event_tabBar)
-
         self.wheelEvent = lambda event_CC: self.wheelEvent_CC(event_CC)
         return
 
@@ -377,7 +375,7 @@ class ModernMenu(RibbonBar):
         # Set the width of the quickaccess toolbar.
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
         # Set the size policy
-        self.quickAccessToolBar().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        self.quickAccessToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
 
         # Set the tabbar height and textsize
         self.tabBar().setIconSize(QSize(self.iconSize, self.iconSize))
@@ -471,6 +469,8 @@ class ModernMenu(RibbonBar):
         for child in self.rightToolBar().actions():
             RightToolbarWidth = RightToolbarWidth + self.iconSize
         self.rightToolBar().setMinimumWidth(RightToolbarWidth - self.iconSize * 1.5)
+        # Set the size policy
+        self.rightToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
 
         # Set the application button
         self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
