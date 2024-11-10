@@ -307,13 +307,15 @@ class ModernMenu(RibbonBar):
             x += delta and delta // abs(delta)
 
             NoClicks = Parameters_Ribbon.Settings.GetIntSetting("TabBar_Scroll")
+            if NoClicks == 0 or NoClicks is None:
+                NoClicks = 1
 
             # go back or forward based on x.
             if x == 1:
-                for i in range(1, NoClicks):
+                for i in range(NoClicks):
                     self.currentCategory().scrollPrevious()
             if x == -1:
-                for i in range(1, NoClicks):
+                for i in range(NoClicks):
                     self.currentCategory().scrollNext()
         return
 
@@ -330,13 +332,15 @@ class ModernMenu(RibbonBar):
             ScrollRightButton_Tab: QToolButton = ScrollButtons_Tab[1]
 
             NoClicks = Parameters_Ribbon.Settings.GetIntSetting("Ribbon_Scroll")
+            if NoClicks == 0 or NoClicks is None:
+                NoClicks = 1
 
             # go back or forward based on x.
             if x == 1:
-                for i in range(1, NoClicks):
+                for i in range(NoClicks):
                     ScrollLeftButton_Tab.click()
             if x == -1:
-                for i in range(1, NoClicks):
+                for i in range(NoClicks):
                     ScrollRightButton_Tab.click()
         return
 
