@@ -188,3 +188,34 @@ if Settings.GetBoolSetting("DebugMode") is True:
 else:
     DEBUG_MODE = False
     Settings.SetBoolSetting("DebugMode", False)
+
+# Navigation settings
+if Settings.GetBoolSetting("ShowOnHover") is True:
+    SHOW_ON_HOVER = Settings.GetBoolSetting("ShowOnHover")
+else:
+    SHOW_ON_HOVER = False
+    Settings.SetBoolSetting("ShowOnHover", False)
+
+if Settings.GetIntSetting("TabBar_Scroll") is not None or Settings.GetIntSetting("TabBar_Scroll") > 0:
+    TABBAR_SCROLLSPEED = Settings.GetIntSetting("TabBar_Scroll")
+else:
+    TABBAR_SCROLLSPEED = int(1)
+    Settings.SetIntSetting("TabBar_Scroll", TABBAR_SCROLLSPEED)
+
+if Settings.GetIntSetting("Ribbon_Scroll") is not None or Settings.GetIntSetting("Ribbon_Scroll") > 0:
+    TABBAR_SCROLLSPEED = Settings.GetIntSetting("Ribbon_Scroll")
+else:
+    TABBAR_SCROLLSPEED = int(1)
+    Settings.SetIntSetting("Ribbon_Scroll", TABBAR_SCROLLSPEED)
+
+if Settings.GetIntSetting("TabBar_Click") is not None or Settings.GetIntSetting("TabBar_Click") > 0:
+    TABBAR_CLICKSPEED = Settings.GetIntSetting("TabBar_Click")
+else:
+    TABBAR_CLICKSPEED = int(1)
+    Settings.SetIntSetting("TabBar_Click", TABBAR_CLICKSPEED)
+
+if Settings.GetIntSetting("Ribbon_Click") is not None or Settings.GetIntSetting("Ribbon_Click") > 0:
+    TABBAR_CLICKSPEED = Settings.GetIntSetting("Ribbon_Click")
+else:
+    TABBAR_CLICKSPEED = int(1)
+    Settings.SetIntSetting("Ribbon_Click", TABBAR_CLICKSPEED)

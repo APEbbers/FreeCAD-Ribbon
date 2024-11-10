@@ -265,7 +265,11 @@ class ModernMenu(RibbonBar):
     def enterEvent(self, QEvent):
         # In FreeCAD 1.0, Overlays are introduced. These have also an enterEvent which results in strange behavior
         # Therefore this function is only activated on older versions of FreeCAD.
-        if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
+        if (
+            int(App.Version()[0]) == 0
+            and int(App.Version()[1]) <= 21
+            and Parameters_Ribbon.Settings.GetIntSetting("ShowOnHover") is True
+        ):
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             TB.setMinimumHeight(self.RibbonMaximumHeight)
             TB.setMaximumHeight(self.RibbonMaximumHeight)
@@ -302,11 +306,15 @@ class ModernMenu(RibbonBar):
             delta = event.angleDelta().y()
             x += delta and delta // abs(delta)
 
+            NoClicks = Parameters_Ribbon.Settings.GetIntSetting("TabBar_Scroll")
+
             # go back or forward based on x.
             if x == 1:
-                self.currentCategory().scrollPrevious()
+                for i in range(1, NoClicks):
+                    self.currentCategory().scrollPrevious()
             if x == -1:
-                self.currentCategory().scrollNext()
+                for i in range(1, NoClicks):
+                    self.currentCategory().scrollNext()
         return
 
     # used to scroll the tabbar horizontally, when it's wider than the screen
@@ -321,12 +329,15 @@ class ModernMenu(RibbonBar):
             ScrollLeftButton_Tab: QToolButton = ScrollButtons_Tab[0]
             ScrollRightButton_Tab: QToolButton = ScrollButtons_Tab[1]
 
+            NoClicks = Parameters_Ribbon.Settings.GetIntSetting("Ribbon_Scroll")
+
             # go back or forward based on x.
             if x == 1:
-                ScrollLeftButton_Tab.click()
+                for i in range(1, NoClicks):
+                    ScrollLeftButton_Tab.click()
             if x == -1:
-                ScrollRightButton_Tab.click()
-            # self.tabBar().scroll(x, 0)
+                for i in range(1, NoClicks):
+                    ScrollRightButton_Tab.click()
         return
 
     def connectSignals(self):
