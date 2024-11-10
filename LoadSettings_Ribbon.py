@@ -243,7 +243,7 @@ class LoadDialog(Settings_ui.Ui_Form):
         Parameters_Ribbon.Settings.SetStringSetting("BackupFolder", self.BackupLocation)
         Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", int(self.form.IconSize_Small.text()))
         Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", int(self.form.IconSize_Medium.text()))
-        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", int(self.form.IconSize_Large.text()))
+        # Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", int(self.form.IconSize_Large.text()))
         Parameters_Ribbon.Settings.SetStringSetting("Stylesheet", self.StyleSheet)
         Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", self.ShowText_Small)
         Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", self.ShowText_Medium)
