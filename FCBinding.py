@@ -248,10 +248,12 @@ class ModernMenu(RibbonBar):
 
         # override the default scroll behavior for the tabbar with a custom function
         self.tabBar().wheelEvent = lambda event_tabBar: self.wheelEvent_TabBar(event_tabBar)
+
+        self.wheelEvent = lambda event_CC: self.wheelEvent_CC(event_CC)
         return
 
     def eventFilter(self, obj, event):
-        if event.type() == QEvent.Type.HoverMove:
+        if event.type() == QEvent.Type.HoverMove or event.type() == QEvent.Type.Wheel:
             # swallow events
             # print("Event swallowed")
             return False
@@ -292,7 +294,7 @@ class ModernMenu(RibbonBar):
         return
 
     # used to scroll a ribbon horizontally, when it's wider than the screen
-    def wheelEvent(self, event):
+    def wheelEvent_CC(self, event):
         x = 0
         # Get the scroll value (1 or -1)
         delta = event.angleDelta().y()
