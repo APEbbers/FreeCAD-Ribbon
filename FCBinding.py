@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -35,7 +35,7 @@ from PySide6.QtGui import (
     QFont,
     QColor,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -52,7 +52,7 @@ from PySide6.QtWidgets import (
     QTabBar,
     QWidgetAction,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -89,19 +89,19 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-# import pyqtribbon_local as pyqtribbon
-# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon_local.panel import RibbonPanel
-# from pyqtribbon_local.toolbutton import RibbonToolButton
-# from pyqtribbon_local.separator import RibbonSeparator
-# from pyqtribbon_local.category import RibbonCategoryLayoutButton
+import pyqtribbon_local as pyqtribbon
+from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon_local.panel import RibbonPanel
+from pyqtribbon_local.toolbutton import RibbonToolButton
+from pyqtribbon_local.separator import RibbonSeparator
+from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-import pyqtribbon as pyqtribbon
-from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon.panel import RibbonPanel
-from pyqtribbon.toolbutton import RibbonToolButton
-from pyqtribbon.separator import RibbonSeparator
-from pyqtribbon.category import RibbonCategoryLayoutButton
+# import pyqtribbon as pyqtribbon
+# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon.panel import RibbonPanel
+# from pyqtribbon.toolbutton import RibbonToolButton
+# from pyqtribbon.separator import RibbonSeparator
+# from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -248,12 +248,15 @@ class ModernMenu(RibbonBar):
         # override the default scroll behavior with a custom function
         self.tabBar().wheelEvent = lambda event_tabBar: self.wheelEvent_TabBar(event_tabBar)
         self.wheelEvent = lambda event_CC: self.wheelEvent_CC(event_CC)
+        self.tabBar().setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.currentCategory().setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         return
 
     def eventFilter(self, obj, event):
         if event.type() == QEvent.Type.HoverMove or event.type() == QEvent.Type.Wheel:
             # swallow events
             # print("Event swallowed")
+            event.ignore()
             return False
         else:
             # bubble events
@@ -309,6 +312,7 @@ class ModernMenu(RibbonBar):
 
     # used to scroll the tabbar horizontally, when it's wider than the screen
     def wheelEvent_TabBar(self, event):
+        print(self.tabBar().isActiveWindow())
         x = 0
         # Get the scroll value (1 or -1)
         delta = event.angleDelta().y()
