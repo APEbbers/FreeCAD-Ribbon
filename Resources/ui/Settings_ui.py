@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingscklRmQ.ui'
+## Form generated from reading UI file 'SettingsEUpzHL.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -388,7 +388,9 @@ class Ui_Form(object):
         self.ScrollClicks_TabBar.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
         self.ScrollClicks_TabBar.setProperty("showGroupSeparator", False)
         self.ScrollClicks_TabBar.setMinimum(0)
+        self.ScrollClicks_TabBar.setMaximum(10)
         self.ScrollClicks_TabBar.setValue(1)
+        self.ScrollClicks_TabBar.setDisplayIntegerBase(10)
 
         self.gridLayout_17.addWidget(self.ScrollClicks_TabBar, 0, 1, 1, 1)
 
@@ -410,7 +412,9 @@ class Ui_Form(object):
         self.ScrollClicks_Ribbon.setFont(font1)
         self.ScrollClicks_Ribbon.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.ScrollClicks_Ribbon.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
+        self.ScrollClicks_Ribbon.setMaximum(10)
         self.ScrollClicks_Ribbon.setValue(1)
+        self.ScrollClicks_Ribbon.setDisplayIntegerBase(10)
 
         self.gridLayout_17.addWidget(self.ScrollClicks_Ribbon, 1, 1, 1, 1)
 
@@ -457,8 +461,14 @@ class Ui_Form(object):
         sizePolicy6.setVerticalStretch(0)
         sizePolicy6.setHeightForWidth(self.ScrollSpeed_TabBar.sizePolicy().hasHeightForWidth())
         self.ScrollSpeed_TabBar.setSizePolicy(sizePolicy6)
-        self.ScrollSpeed_TabBar.setValue(50)
+        self.ScrollSpeed_TabBar.setMaximum(10)
+        self.ScrollSpeed_TabBar.setSingleStep(1)
+        self.ScrollSpeed_TabBar.setPageStep(1)
+        self.ScrollSpeed_TabBar.setValue(5)
+        self.ScrollSpeed_TabBar.setSliderPosition(5)
         self.ScrollSpeed_TabBar.setOrientation(Qt.Orientation.Horizontal)
+        self.ScrollSpeed_TabBar.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.ScrollSpeed_TabBar.setTickInterval(1)
 
         self.gridLayout_15.addWidget(self.ScrollSpeed_TabBar, 1, 1, 1, 1)
 
@@ -473,8 +483,12 @@ class Ui_Form(object):
 
         self.ScrollSpeed_Ribbon = QSlider(self.groupBox_6)
         self.ScrollSpeed_Ribbon.setObjectName("ScrollSpeed_Ribbon")
-        self.ScrollSpeed_Ribbon.setValue(50)
+        self.ScrollSpeed_Ribbon.setMaximum(10)
+        self.ScrollSpeed_Ribbon.setPageStep(1)
+        self.ScrollSpeed_Ribbon.setValue(5)
         self.ScrollSpeed_Ribbon.setOrientation(Qt.Orientation.Horizontal)
+        self.ScrollSpeed_Ribbon.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.ScrollSpeed_Ribbon.setTickInterval(1)
 
         self.gridLayout_15.addWidget(self.ScrollSpeed_Ribbon, 2, 1, 1, 1)
 
@@ -664,7 +678,7 @@ class Ui_Form(object):
         self.CustomColors.toggled.connect(self.ColorS.setEnabled)
         self.CustomIcons.toggled.connect(self.IconS.setEnabled)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(Form)
 

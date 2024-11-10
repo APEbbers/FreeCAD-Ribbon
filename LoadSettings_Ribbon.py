@@ -23,7 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL
+from PySide6.QtCore import Qt, SIGNAL
+from PySide6.QtWidgets import QTabWidget
 import sys
 
 import Standard_Functions_RIbbon as StandardFunctions
@@ -73,6 +74,9 @@ class LoadDialog(Settings_ui.Ui_Form):
         self.form.setPalette(palette)
         Style = mw.style()
         self.form.setStyle(Style)
+
+        # Disable custom Colors and Icons for the time being
+        self.form.tabWidget.removeTab(2)
 
         # load all settings
         self.form.EnableBackup.setChecked(Parameters_Ribbon.ENABLE_BACKUP)

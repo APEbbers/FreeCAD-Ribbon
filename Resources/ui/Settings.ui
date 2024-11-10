@@ -66,7 +66,7 @@
       <string notr="true"/>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::TextElideMode::ElideRight</enum>
@@ -723,8 +723,14 @@
               <property name="minimum">
                <number>0</number>
               </property>
+              <property name="maximum">
+               <number>10</number>
+              </property>
               <property name="value">
                <number>1</number>
+              </property>
+              <property name="displayIntegerBase">
+               <number>10</number>
               </property>
              </widget>
             </item>
@@ -783,8 +789,14 @@
               <property name="correctionMode">
                <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
               </property>
+              <property name="maximum">
+               <number>10</number>
+              </property>
               <property name="value">
                <number>1</number>
+              </property>
+              <property name="displayIntegerBase">
+               <number>10</number>
               </property>
              </widget>
             </item>
@@ -883,11 +895,29 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="maximum">
+               <number>10</number>
+              </property>
+              <property name="singleStep">
+               <number>1</number>
+              </property>
+              <property name="pageStep">
+               <number>1</number>
+              </property>
               <property name="value">
-               <number>50</number>
+               <number>5</number>
+              </property>
+              <property name="sliderPosition">
+               <number>5</number>
               </property>
               <property name="orientation">
                <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TickPosition::TicksBelow</enum>
+              </property>
+              <property name="tickInterval">
+               <number>1</number>
               </property>
              </widget>
             </item>
@@ -917,11 +947,23 @@
             </item>
             <item row="2" column="1">
              <widget class="QSlider" name="ScrollSpeed_Ribbon">
+              <property name="maximum">
+               <number>10</number>
+              </property>
+              <property name="pageStep">
+               <number>1</number>
+              </property>
               <property name="value">
-               <number>50</number>
+               <number>5</number>
               </property>
               <property name="orientation">
                <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TickPosition::TicksBelow</enum>
+              </property>
+              <property name="tickInterval">
+               <number>1</number>
               </property>
              </widget>
             </item>
