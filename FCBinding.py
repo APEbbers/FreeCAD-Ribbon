@@ -89,19 +89,19 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon_local.panel import RibbonPanel
-from pyqtribbon_local.toolbutton import RibbonToolButton
-from pyqtribbon_local.separator import RibbonSeparator
-from pyqtribbon_local.category import RibbonCategoryLayoutButton
+# import pyqtribbon_local as pyqtribbon
+# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon_local.panel import RibbonPanel
+# from pyqtribbon_local.toolbutton import RibbonToolButton
+# from pyqtribbon_local.separator import RibbonSeparator
+# from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
+import pyqtribbon as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -243,8 +243,10 @@ class ModernMenu(RibbonBar):
         self.tabBar().tabBarClicked.connect(self.onTabBarClicked)
 
         # Set the maximum heigth for the ribbon
+        self.currentCategory().setFixedHeight(Parameters_Ribbon.ICON_SIZE_LARGE + 10)
         self.RibbonMaximumHeight = self.currentCategory().height() + self.RibbonMinimalHeight
 
+        # override the default scroll behavior for the tabbar with a custom function
         self.tabBar().wheelEvent = lambda event: self.wheelEvent_TabBar(event)
         return
 
@@ -304,7 +306,7 @@ class ModernMenu(RibbonBar):
 
         return
 
-    # used to scroll a ribbon horizontally, when it's wider than the screen
+    # used to scroll the tabbar horizontally, when it's wider than the screen
     def wheelEvent_TabBar(self, event):
         x = 0
         # Get the scroll value (1 or -1)
@@ -477,7 +479,6 @@ class ModernMenu(RibbonBar):
 
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
-
         return
 
     # Add the searchBar if it is present
@@ -507,8 +508,10 @@ class ModernMenu(RibbonBar):
             return width
 
     def ApplicationMenu(self):
+        # Add a file menu
         Menu = self.addFileMenu()
 
+        # Remove the border, cause by creating it for the applicationOptionButton
         StyleSheet = """border: none;"""
         Menu.setStyleSheet(StyleSheet)
 
@@ -519,10 +522,10 @@ class ModernMenu(RibbonBar):
         # Add the ribbon design button
         Menu.addSeparator()
         DesignMenu = Menu.addMenu(translate("FreeCAD Ribbon", "Customize..."))
-        DesignButton = DesignMenu.addAction(translate("FreeCAD Ribbon", "Ribbon Design"))
+        DesignButton = DesignMenu.addAction(translate("FreeCAD Ribbon", "Ribbon layout"))
         DesignButton.triggered.connect(self.loadDesignMenu)
         # Add the preference button
-        PreferenceButton = DesignMenu.addAction(translate("FreeCAD Ribbon", "Ribbon Preferences"))
+        PreferenceButton = DesignMenu.addAction(translate("FreeCAD Ribbon", "Ribbon preferences"))
         PreferenceButton.triggered.connect(self.loadSettingsMenu)
         # Add the script submenu with items
         ScriptDir = os.path.join(os.path.dirname(__file__), "Scripts")
@@ -1004,7 +1007,7 @@ class ModernMenu(RibbonBar):
                                     showText=showText,
                                     fixedHeight=False,
                                 )
-                                btn.setMinimumWidth(btn.maximumHeight() + 10)
+                                btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_LARGE)
                             else:
                                 raise NotImplementedError(
                                     translate(

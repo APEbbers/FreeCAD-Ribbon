@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'Settings.ui'
+## Form generated from reading UI file 'SettingsLXEEkQ.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.1
+## Created by: Qt User Interface Compiler version 6.7.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -69,9 +69,7 @@ class Ui_Form(object):
         self.gridLayout_7.setObjectName("gridLayout_7")
         self.gridLayout_6 = QGridLayout()
         self.gridLayout_6.setObjectName("gridLayout_6")
-        self.horizontalSpacer_2 = QSpacerItem(
-            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum
-        )
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_6.addItem(self.horizontalSpacer_2, 0, 0, 1, 1)
 
@@ -102,7 +100,7 @@ class Ui_Form(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.DebugMode = QCheckBox(self.General)
         self.DebugMode.setObjectName("DebugMode")
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.DebugMode.sizePolicy().hasHeightForWidth())
@@ -115,7 +113,7 @@ class Ui_Form(object):
 
         self.label_3 = QLabel(self.General)
         self.label_3.setObjectName("label_3")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
@@ -176,17 +174,47 @@ class Ui_Form(object):
         self.gridLayout_5.setObjectName("gridLayout_5")
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName("gridLayout")
-        self.label_11 = QLabel(self.groupBox_4)
-        self.label_11.setObjectName("label_11")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
+        self.IconSize_Small = QSpinBox(self.groupBox_4)
+        self.IconSize_Small.setObjectName("IconSize_Small")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.IconSize_Small.sizePolicy().hasHeightForWidth())
+        self.IconSize_Small.setSizePolicy(sizePolicy2)
+        self.IconSize_Small.setMinimumSize(QSize(50, 0))
+        self.IconSize_Small.setSizeIncrement(QSize(0, 0))
+        self.IconSize_Small.setBaseSize(QSize(0, 0))
+        self.IconSize_Small.setFont(font1)
+        self.IconSize_Small.setFrame(True)
+        self.IconSize_Small.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.IconSize_Small.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
+        self.IconSize_Small.setProperty("showGroupSeparator", False)
+        self.IconSize_Small.setMinimum(0)
+        self.IconSize_Small.setValue(24)
+
+        self.gridLayout.addWidget(self.IconSize_Small, 0, 1, 1, 1)
+
+        self.label_11 = QLabel(self.groupBox_4)
+        self.label_11.setObjectName("label_11")
         sizePolicy2.setHeightForWidth(self.label_11.sizePolicy().hasHeightForWidth())
         self.label_11.setSizePolicy(sizePolicy2)
         self.label_11.setMinimumSize(QSize(130, 0))
         self.label_11.setFont(font1)
 
         self.gridLayout.addWidget(self.label_11, 1, 0, 1, 1)
+
+        self.IconSize_Medium = QSpinBox(self.groupBox_4)
+        self.IconSize_Medium.setObjectName("IconSize_Medium")
+        sizePolicy2.setHeightForWidth(self.IconSize_Medium.sizePolicy().hasHeightForWidth())
+        self.IconSize_Medium.setSizePolicy(sizePolicy2)
+        self.IconSize_Medium.setMinimumSize(QSize(50, 0))
+        self.IconSize_Medium.setBaseSize(QSize(0, 0))
+        self.IconSize_Medium.setFont(font1)
+        self.IconSize_Medium.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.IconSize_Medium.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
+        self.IconSize_Medium.setValue(44)
+
+        self.gridLayout.addWidget(self.IconSize_Medium, 1, 1, 1, 1)
 
         self.label_10 = QLabel(self.groupBox_4)
         self.label_10.setObjectName("label_10")
@@ -197,49 +225,21 @@ class Ui_Form(object):
 
         self.gridLayout.addWidget(self.label_10, 0, 0, 1, 1)
 
-        self.IconSize_Small = QSpinBox(self.groupBox_4)
-        self.IconSize_Small.setObjectName("IconSize_Small")
-        sizePolicy2.setHeightForWidth(
-            self.IconSize_Small.sizePolicy().hasHeightForWidth()
-        )
-        self.IconSize_Small.setSizePolicy(sizePolicy2)
-        self.IconSize_Small.setMinimumSize(QSize(50, 0))
-        self.IconSize_Small.setSizeIncrement(QSize(0, 0))
-        self.IconSize_Small.setBaseSize(QSize(0, 0))
-        self.IconSize_Small.setFont(font1)
-        self.IconSize_Small.setFrame(True)
-        self.IconSize_Small.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.IconSize_Small.setCorrectionMode(
-            QAbstractSpinBox.CorrectionMode.CorrectToNearestValue
-        )
-        self.IconSize_Small.setProperty("showGroupSeparator", False)
-        self.IconSize_Small.setMinimum(0)
-        self.IconSize_Small.setValue(24)
+        self.label_5 = QLabel(self.groupBox_4)
+        self.label_5.setObjectName("label_5")
 
-        self.gridLayout.addWidget(self.IconSize_Small, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.label_5, 2, 0, 1, 1)
 
-        self.IconSize_Medium = QSpinBox(self.groupBox_4)
-        self.IconSize_Medium.setObjectName("IconSize_Medium")
-        sizePolicy2.setHeightForWidth(
-            self.IconSize_Medium.sizePolicy().hasHeightForWidth()
-        )
-        self.IconSize_Medium.setSizePolicy(sizePolicy2)
-        self.IconSize_Medium.setMinimumSize(QSize(50, 0))
-        self.IconSize_Medium.setBaseSize(QSize(0, 0))
-        self.IconSize_Medium.setFont(font1)
-        self.IconSize_Medium.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.IconSize_Medium.setCorrectionMode(
-            QAbstractSpinBox.CorrectionMode.CorrectToNearestValue
-        )
-        self.IconSize_Medium.setValue(44)
+        self.IconSize_Large = QSpinBox(self.groupBox_4)
+        self.IconSize_Large.setObjectName("IconSize_Large")
+        self.IconSize_Large.setMaximum(240)
+        self.IconSize_Large.setDisplayIntegerBase(10)
 
-        self.gridLayout.addWidget(self.IconSize_Medium, 1, 1, 1, 1)
+        self.gridLayout.addWidget(self.IconSize_Large, 2, 1, 1, 1)
 
         self.gridLayout_5.addLayout(self.gridLayout, 0, 0, 1, 1)
 
-        self.horizontalSpacer_3 = QSpacerItem(
-            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum
-        )
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_5.addItem(self.horizontalSpacer_3, 0, 1, 1, 1)
 
@@ -257,12 +257,10 @@ class Ui_Form(object):
         self.gridLayout_10.setObjectName("gridLayout_10")
         self.MaxPanelColumn = QSpinBox(self.groupBox_5)
         self.MaxPanelColumn.setObjectName("MaxPanelColumn")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         sizePolicy3.setHorizontalStretch(0)
         sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(
-            self.MaxPanelColumn.sizePolicy().hasHeightForWidth()
-        )
+        sizePolicy3.setHeightForWidth(self.MaxPanelColumn.sizePolicy().hasHeightForWidth())
         self.MaxPanelColumn.setSizePolicy(sizePolicy3)
         self.MaxPanelColumn.setMinimumSize(QSize(50, 0))
         self.MaxPanelColumn.setMinimum(0)
@@ -276,9 +274,7 @@ class Ui_Form(object):
 
         self.gridLayout_10.addWidget(self.label, 0, 0, 1, 1)
 
-        self.horizontalSpacer = QSpacerItem(
-            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum
-        )
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_10.addItem(self.horizontalSpacer, 0, 2, 1, 1)
 
@@ -296,7 +292,7 @@ class Ui_Form(object):
 
         self.groupBox_2 = QGroupBox(self.groupBox)
         self.groupBox_2.setObjectName("groupBox_2")
-        sizePolicy4 = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.Fixed)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
         sizePolicy4.setHorizontalStretch(0)
         sizePolicy4.setVerticalStretch(0)
         sizePolicy4.setHeightForWidth(self.groupBox_2.sizePolicy().hasHeightForWidth())
@@ -311,21 +307,17 @@ class Ui_Form(object):
         self.label_7.setFrameShape(QFrame.Shape.Box)
         self.label_7.setScaledContents(True)
         self.label_7.setAlignment(
-            Qt.AlignmentFlag.AlignLeading
-            | Qt.AlignmentFlag.AlignLeft
-            | Qt.AlignmentFlag.AlignVCenter
+            Qt.AlignmentFlag.AlignLeading | Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
         )
 
         self.gridLayout_12.addWidget(self.label_7, 0, 0, 1, 1)
 
         self.StyleSheetLocation = QPushButton(self.groupBox_2)
         self.StyleSheetLocation.setObjectName("StyleSheetLocation")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         sizePolicy5.setHorizontalStretch(20)
         sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(
-            self.StyleSheetLocation.sizePolicy().hasHeightForWidth()
-        )
+        sizePolicy5.setHeightForWidth(self.StyleSheetLocation.sizePolicy().hasHeightForWidth())
         self.StyleSheetLocation.setSizePolicy(sizePolicy5)
         self.StyleSheetLocation.setMinimumSize(QSize(20, 0))
 
@@ -351,9 +343,7 @@ class Ui_Form(object):
         self.groupBox_Backup = QGroupBox(self.groupBox1)
         self.groupBox_Backup.setObjectName("groupBox_Backup")
         self.groupBox_Backup.setEnabled(False)
-        sizePolicy.setHeightForWidth(
-            self.groupBox_Backup.sizePolicy().hasHeightForWidth()
-        )
+        sizePolicy.setHeightForWidth(self.groupBox_Backup.sizePolicy().hasHeightForWidth())
         self.groupBox_Backup.setSizePolicy(sizePolicy)
         self.groupBox_Backup.setMinimumSize(QSize(0, 50))
         self.groupBox_Backup.setFont(font1)
@@ -364,18 +354,14 @@ class Ui_Form(object):
         self.label_4.setFrameShape(QFrame.Shape.Box)
         self.label_4.setScaledContents(True)
         self.label_4.setAlignment(
-            Qt.AlignmentFlag.AlignLeading
-            | Qt.AlignmentFlag.AlignLeft
-            | Qt.AlignmentFlag.AlignVCenter
+            Qt.AlignmentFlag.AlignLeading | Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
         )
 
         self.gridLayout_13.addWidget(self.label_4, 0, 0, 1, 1)
 
         self.BackUpLocation = QPushButton(self.groupBox_Backup)
         self.BackUpLocation.setObjectName("BackUpLocation")
-        sizePolicy5.setHeightForWidth(
-            self.BackUpLocation.sizePolicy().hasHeightForWidth()
-        )
+        sizePolicy5.setHeightForWidth(self.BackUpLocation.sizePolicy().hasHeightForWidth())
         self.BackUpLocation.setSizePolicy(sizePolicy5)
         self.BackUpLocation.setMinimumSize(QSize(20, 0))
 
@@ -385,9 +371,7 @@ class Ui_Form(object):
 
         self.gridLayout_9.addWidget(self.groupBox1, 0, 0, 2, 1)
 
-        self.verticalSpacer_7 = QSpacerItem(
-            20, 40, QSizePolicy.Expanding, QSizePolicy.Minimum
-        )
+        self.verticalSpacer_7 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.gridLayout_9.addItem(self.verticalSpacer_7, 5, 0, 1, 1)
 
@@ -422,32 +406,19 @@ class Ui_Form(object):
                 None,
             )
         )
-        self.groupBox.setTitle(
-            QCoreApplication.translate("Form", "Ribbon settings", None)
-        )
+        self.groupBox.setTitle(QCoreApplication.translate("Form", "Ribbon settings", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("Form", "Show text", None))
-        self.ShowText_Small.setText(
-            QCoreApplication.translate("Form", "Small buttons", None)
-        )
-        self.ShowText_Medium.setText(
-            QCoreApplication.translate("Form", "Medium buttons", None)
-        )
-        self.ShowText_Large.setText(
-            QCoreApplication.translate("Form", "Large buttons", None)
-        )
-        self.groupBox_4.setTitle(
-            QCoreApplication.translate("Form", "Button size", None)
-        )
-        self.label_11.setText(
-            QCoreApplication.translate("Form", "Size of medium buttons:", None)
-        )
-        self.label_10.setText(
-            QCoreApplication.translate("Form", "Size of small buttons:", None)
+        self.ShowText_Small.setText(QCoreApplication.translate("Form", "Small buttons", None))
+        self.ShowText_Medium.setText(QCoreApplication.translate("Form", "Medium buttons", None))
+        self.ShowText_Large.setText(QCoreApplication.translate("Form", "Large buttons", None))
+        self.groupBox_4.setTitle(QCoreApplication.translate("Form", "Button size", None))
+        self.label_11.setText(QCoreApplication.translate("Form", "Size of medium buttons:", None))
+        self.label_10.setText(QCoreApplication.translate("Form", "Size of small buttons:", None))
+        self.label_5.setText(
+            QCoreApplication.translate("Form", "<html><head/><body><p>Size of large buttons:</p></body></html>", None)
         )
         self.groupBox_5.setTitle(QCoreApplication.translate("Form", "Panels", None))
-        self.label.setText(
-            QCoreApplication.translate("Form", "No. of columns per panel", None)
-        )
+        self.label.setText(QCoreApplication.translate("Form", "No. of columns per panel", None))
         self.label_2.setText(
             QCoreApplication.translate(
                 "Form",
@@ -455,29 +426,16 @@ class Ui_Form(object):
                 None,
             )
         )
-        self.groupBox_2.setTitle(
-            QCoreApplication.translate("Form", "Select stylesheet", None)
-        )
+        self.groupBox_2.setTitle(QCoreApplication.translate("Form", "Select stylesheet", None))
         self.label_7.setText(QCoreApplication.translate("Form", "...\\", None))
-        self.StyleSheetLocation.setText(
-            QCoreApplication.translate("Form", "Browse..", None)
-        )
-        self.groupBox1.setTitle(
-            QCoreApplication.translate("Form", "Backup settings", None)
-        )
-        self.EnableBackup.setText(
-            QCoreApplication.translate("Form", "Create backup", None)
-        )
-        self.groupBox_Backup.setTitle(
-            QCoreApplication.translate("Form", "Backup location", None)
-        )
+        self.StyleSheetLocation.setText(QCoreApplication.translate("Form", "Browse..", None))
+        self.groupBox1.setTitle(QCoreApplication.translate("Form", "Backup settings", None))
+        self.EnableBackup.setText(QCoreApplication.translate("Form", "Create backup", None))
+        self.groupBox_Backup.setTitle(QCoreApplication.translate("Form", "Backup location", None))
         self.label_4.setText(QCoreApplication.translate("Form", "...\\", None))
-        self.BackUpLocation.setText(
-            QCoreApplication.translate("Form", "Browse..", None)
-        )
+        self.BackUpLocation.setText(QCoreApplication.translate("Form", "Browse..", None))
         self.tabWidget.setTabText(
-            self.tabWidget.indexOf(self.General),
-            QCoreApplication.translate("Form", "General", None),
+            self.tabWidget.indexOf(self.General), QCoreApplication.translate("Form", "General", None)
         )
 
     # retranslateUi

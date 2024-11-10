@@ -125,8 +125,8 @@ else:
 if Settings.GetIntSetting("IconSize_Large") is not None or Settings.GetIntSetting("IconSize_Large") > 0:
     ICON_SIZE_LARGE = Settings.GetIntSetting("IconSize_Large")
 else:
-    ICON_SIZE_LARGE = int(50)
-    Settings.SetIntSetting("IconSize_Large", 50)
+    ICON_SIZE_LARGE = int(200)
+    Settings.SetIntSetting("IconSize_Large", 200)
 
 # Backup parameters
 ENABLE_BACKUP = Settings.GetBoolSetting("BackupEnabled")
