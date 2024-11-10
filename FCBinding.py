@@ -446,7 +446,8 @@ class ModernMenu(RibbonBar):
                     pass
         param_string = ""
         for i in range(len(WorkbenchOrderedList)):
-            param_string = param_string + "," + WorkbenchOrderedList[i]
+            if WorkbenchOrderedList[i] != "":
+                param_string = param_string + "," + WorkbenchOrderedList[i]
         Parameters_Ribbon.Settings.SetStringSetting("TabOrder", param_string)
 
         # add category for each workbench
@@ -1126,9 +1127,9 @@ class ModernMenu(RibbonBar):
                     OptionButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
                     OptionButton.setText("more...")
 
-            # Set the margins. In linux seems the style behavior different than on Windows
-            Layout = panel.layout()
-            Layout.setContentsMargins(3, 3, 3, 3)
+            # # Set the margins. In linux seems the style behavior different than on Windows
+            # Layout = panel.layout()
+            # Layout.setContentsMargins(3, 3, 3, 3)
 
         self.isWbLoaded[tabName] = True
 
