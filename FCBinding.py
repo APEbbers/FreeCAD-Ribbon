@@ -253,7 +253,7 @@ class ModernMenu(RibbonBar):
         return
 
     def eventFilter(self, obj, event):
-        if event.type() == QEvent.Type.HoverMove or event.type() == QEvent.Type.Wheel:
+        if event.type() == QEvent.Type.HoverMove:
             # swallow events
             # print("Event swallowed")
             event.ignore()
@@ -296,38 +296,41 @@ class ModernMenu(RibbonBar):
 
     # used to scroll a ribbon horizontally, when it's wider than the screen
     def wheelEvent_CC(self, event):
-        x = 0
-        # Get the scroll value (1 or -1)
-        delta = event.angleDelta().y()
-        x += delta and delta // abs(delta)
+        if self.currentCategory().underMouse():
+            print("RibbonFocussed focussed")
+            x = 0
+            # Get the scroll value (1 or -1)
+            delta = event.angleDelta().y()
+            x += delta and delta // abs(delta)
 
-        # go back or forward based on x.
-        if x == 1:
-            # self.currentCategory()._previousButton.click()
-            self.currentCategory().scrollPrevious()
-        if x == -1:
-            # self.currentCategory()._nextButton.click()
-            self.currentCategory().scrollNext()
+            # go back or forward based on x.
+            if x == 1:
+                # self.currentCategory()._previousButton.click()
+                self.currentCategory().scrollPrevious()
+            if x == -1:
+                # self.currentCategory()._nextButton.click()
+                self.currentCategory().scrollNext()
         return
 
     # used to scroll the tabbar horizontally, when it's wider than the screen
     def wheelEvent_TabBar(self, event):
-        print(self.tabBar().isActiveWindow())
-        x = 0
-        # Get the scroll value (1 or -1)
-        delta = event.angleDelta().y()
-        x += delta and delta // abs(delta)
+        if self.tabBar().underMouse():
+            print("Tabbar focussed")
+            x = 0
+            # Get the scroll value (1 or -1)
+            delta = event.angleDelta().y()
+            x += delta and delta // abs(delta)
 
-        ScrollButtons_Tab = self.tabBar().children()
-        ScrollLeftButton_Tab: QToolButton = ScrollButtons_Tab[0]
-        ScrollRightButton_Tab: QToolButton = ScrollButtons_Tab[1]
+            ScrollButtons_Tab = self.tabBar().children()
+            ScrollLeftButton_Tab: QToolButton = ScrollButtons_Tab[0]
+            ScrollRightButton_Tab: QToolButton = ScrollButtons_Tab[1]
 
-        # go back or forward based on x.
-        if x == 1:
-            ScrollLeftButton_Tab.click()
-        if x == -1:
-            ScrollRightButton_Tab.click()
-        # self.tabBar().scroll(x, 0)
+            # go back or forward based on x.
+            if x == 1:
+                ScrollLeftButton_Tab.click()
+            if x == -1:
+                ScrollRightButton_Tab.click()
+            # self.tabBar().scroll(x, 0)
         return
 
     def connectSignals(self):
