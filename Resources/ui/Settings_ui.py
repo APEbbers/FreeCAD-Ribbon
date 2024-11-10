@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsEUpzHL.ui'
+## Form generated from reading UI file 'SettingsuFyBkQ.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -678,7 +678,7 @@ class Ui_Form(object):
         self.CustomColors.toggled.connect(self.ColorS.setEnabled)
         self.CustomIcons.toggled.connect(self.IconS.setEnabled)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
         QMetaObject.connectSlotsByName(Form)
 
