@@ -297,7 +297,6 @@ class ModernMenu(RibbonBar):
     # used to scroll a ribbon horizontally, when it's wider than the screen
     def wheelEvent_CC(self, event):
         if self.currentCategory().underMouse():
-            print("RibbonFocussed focussed")
             x = 0
             # Get the scroll value (1 or -1)
             delta = event.angleDelta().y()
@@ -305,17 +304,14 @@ class ModernMenu(RibbonBar):
 
             # go back or forward based on x.
             if x == 1:
-                # self.currentCategory()._previousButton.click()
                 self.currentCategory().scrollPrevious()
             if x == -1:
-                # self.currentCategory()._nextButton.click()
                 self.currentCategory().scrollNext()
         return
 
     # used to scroll the tabbar horizontally, when it's wider than the screen
     def wheelEvent_TabBar(self, event):
         if self.tabBar().underMouse():
-            print("Tabbar focussed")
             x = 0
             # Get the scroll value (1 or -1)
             delta = event.angleDelta().y()
