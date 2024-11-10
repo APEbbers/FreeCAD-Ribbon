@@ -247,7 +247,7 @@ class ModernMenu(RibbonBar):
         self.RibbonMaximumHeight = self.currentCategory().height() + self.RibbonMinimalHeight
 
         # override the default scroll behavior for the tabbar with a custom function
-        self.tabBar().wheelEvent = lambda event: self.wheelEvent_TabBar(event)
+        self.tabBar().wheelEvent = lambda event_tabBar: self.wheelEvent_TabBar(event_tabBar)
         return
 
     def eventFilter(self, obj, event):
@@ -300,10 +300,11 @@ class ModernMenu(RibbonBar):
 
         # go back or forward based on x.
         if x == 1:
-            self.currentCategory()._previousButton.click()
+            # self.currentCategory()._previousButton.click()
+            self.currentCategory().scrollPrevious()
         if x == -1:
-            self.currentCategory()._nextButton.click()
-
+            # self.currentCategory()._nextButton.click()
+            self.currentCategory().scrollNext()
         return
 
     # used to scroll the tabbar horizontally, when it's wider than the screen
@@ -322,6 +323,7 @@ class ModernMenu(RibbonBar):
             ScrollLeftButton_Tab.click()
         if x == -1:
             ScrollRightButton_Tab.click()
+        # self.tabBar().scroll(x, 0)
         return
 
     def connectSignals(self):
