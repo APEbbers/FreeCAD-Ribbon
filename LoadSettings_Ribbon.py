@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 import os
 
 from PySide.QtCore import Qt, SIGNAL
-from PySide.QtWidgets import QTabWidget
+from PySide.QtWidgets import QTabWidget, QSlider
 import sys
 
 import Standard_Functions_RIbbon as StandardFunctions
@@ -55,6 +55,7 @@ class LoadDialog(Settings_ui.Ui_Form):
     ShowText_Medium = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
     ShowText_Large = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
     DebugMode = Parameters_Ribbon.DEBUG_MODE
+    ShowOnHover = Parameters_Ribbon.SHOW_ON_HOVER
 
     settingChanged = False
 
@@ -102,6 +103,10 @@ class LoadDialog(Settings_ui.Ui_Form):
             self.form.DebugMode.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.DebugMode.setCheckState(Qt.CheckState.Unchecked)
+        if Parameters_Ribbon.SHOW_ON_HOVER is True:
+            self.form.EnableEnterEvent.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.EnableEnterEvent.setCheckState(Qt.CheckState.Unchecked)
 
         # region - connect controls with functions----------------------------------------------------
         #
@@ -133,6 +138,16 @@ class LoadDialog(Settings_ui.Ui_Form):
             self.on_Close_clicked(self)
 
         self.form.GenerateJsonExit.connect(self.form.GenerateJsonExit, SIGNAL("clicked()"), GenerateJsonExit)
+
+        self.form.EnableEnterEvent.clicked.connect(self.on_EnableEnterEvent_clicked)
+
+        self.form.ScrollSpeed_TabBar.valueChanged.connect(self.on_ScrollSpeed_TabBar_valueCHanged)
+
+        self.form.ScrollSpeed_Ribbon.valueChanged.connect(self.on_ScrollSpeed_Ribbon_valueCHanged)
+
+        self.form.ScrollClicks_TabBar.textChanged.connect(self.on_ScrollClicks_TabBar_valueCHanged)
+
+        self.form.ScrollClicks_Ribbon.textChanged.connect(self.on_ScrollClicks_Ribbon_valueCHanged)
         # endregion
 
         return
@@ -234,6 +249,31 @@ class LoadDialog(Settings_ui.Ui_Form):
             self.DebugMode = False
         self.settingChanged = True
         return
+
+    def on_EnableEnterEvent_clicked(self):
+        if self.form.EnableEnterEvent.isChecked() is True:
+            Parameters_Ribbon.SHOW_ON_HOVER = True
+            self.ShowOnHover = True
+        if self.form.EnableEnterEvent.isChecked() is False:
+            Parameters_Ribbon.SHOW_ON_HOVER = False
+            self.ShowOnHover = False
+        self.settingChanged = True
+
+    def on_ScrollSpeed_TabBar_valueCHanged(self):
+        Parameters_Ribbon.TABBAR_SCROLLSPEED = self.form.ScrollSpeed_TabBar.value()
+        self.settingChanged = True
+
+    def on_ScrollSpeed_Ribbon_valueCHanged(self):
+        Parameters_Ribbon.RIBBON_SCROLLSPEED = self.form.ScrollSpeed_Ribbon.value()
+        self.settingChanged = True
+
+    def on_ScrollClicks_TabBar_valueCHanged(self):
+        Parameters_Ribbon.TABBAR_CLICKSPEED = self.form.ScrollClicks_TabBar.value()
+        self.settingChanged = True
+
+    def on_ScrollClicks_Ribbon_valueCHanged(self):
+        Parameters_Ribbon.RIBBON_CLICKSPEED = self.form.ScrollClicks_Ribbon.value()
+        self.settingChanged = True
 
     @staticmethod
     def on_Cancel_clicked(self):

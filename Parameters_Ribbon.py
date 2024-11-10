@@ -203,10 +203,10 @@ else:
     Settings.SetIntSetting("TabBar_Scroll", TABBAR_SCROLLSPEED)
 
 if Settings.GetIntSetting("Ribbon_Scroll") is not None or Settings.GetIntSetting("Ribbon_Scroll") > 0:
-    TABBAR_SCROLLSPEED = Settings.GetIntSetting("Ribbon_Scroll")
+    RIBBON_SCROLLSPEED = Settings.GetIntSetting("Ribbon_Scroll")
 else:
-    TABBAR_SCROLLSPEED = int(1)
-    Settings.SetIntSetting("Ribbon_Scroll", TABBAR_SCROLLSPEED)
+    RIBBON_SCROLLSPEED = int(1)
+    Settings.SetIntSetting("Ribbon_Scroll", RIBBON_SCROLLSPEED)
 
 if Settings.GetIntSetting("TabBar_Click") is not None or Settings.GetIntSetting("TabBar_Click") > 0:
     TABBAR_CLICKSPEED = Settings.GetIntSetting("TabBar_Click")
@@ -215,7 +215,7 @@ else:
     Settings.SetIntSetting("TabBar_Click", TABBAR_CLICKSPEED)
 
 if Settings.GetIntSetting("Ribbon_Click") is not None or Settings.GetIntSetting("Ribbon_Click") > 0:
-    TABBAR_CLICKSPEED = Settings.GetIntSetting("Ribbon_Click")
+    RIBBON_CLICKSPEED = Settings.GetIntSetting("Ribbon_Click")
 else:
-    TABBAR_CLICKSPEED = int(1)
-    Settings.SetIntSetting("Ribbon_Click", TABBAR_CLICKSPEED)
+    RIBBON_CLICKSPEED = int(1)
+    Settings.SetIntSetting("Ribbon_Click", RIBBON_CLICKSPEED)
