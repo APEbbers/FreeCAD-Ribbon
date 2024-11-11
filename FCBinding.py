@@ -204,6 +204,34 @@ class ModernMenu(RibbonBar):
         ):
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 40)
 
+        # Set the mouse settings
+        if Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is None:
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowOnHover", False)
+
+        # Set the mouse scroll settings
+        if (
+            Parameters_Ribbon.Settings.GetIntSetting("TabBar_Scroll") is None
+            or Parameters_Ribbon.Settings.GetIntSetting("TabBar_Scroll") == 0
+        ):
+            Parameters_Ribbon.Settings.SetIntSetting("TabBar_Scroll", 1)
+        if (
+            Parameters_Ribbon.Settings.GetIntSetting("Ribbon_Scroll") is None
+            or Parameters_Ribbon.Settings.GetIntSetting("Ribbon_Scroll") == 0
+        ):
+            Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Scroll", 1)
+
+        # scroll button settings
+        if (
+            Parameters_Ribbon.Settings.GetIntSetting("TabBar_Click") is None
+            or Parameters_Ribbon.Settings.GetIntSetting("TabBar_Click") == 0
+        ):
+            Parameters_Ribbon.Settings.SetIntSetting("TabBar_Click", 1)
+        if (
+            Parameters_Ribbon.Settings.GetIntSetting("Ribbon_Click") is None
+            or Parameters_Ribbon.Settings.GetIntSetting("Ribbon_Click") == 0
+        ):
+            Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Click", 1)
+
         # read ribbon structure from JSON file
         with open(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, "r") as file:
             self.ribbonStructure.update(json.load(file))
