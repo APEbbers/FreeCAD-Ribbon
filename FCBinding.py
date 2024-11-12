@@ -1357,6 +1357,8 @@ class run:
             # attach the ribbon to the dockwidget
             ribbonDock.setWidget(ribbon)
 
+            if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
+                ribbonDock.setMaximumHeight(ribbon.RibbonMinimalHeight)
             ribbonDock.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
 
             # Add the dockwidget to the main window
