@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsuFyBkQ.ui'
+## Form generated from reading UI file 'SettingsFWYbnt.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -445,6 +445,22 @@ class Ui_Form(object):
         self.gridLayout_16.setObjectName("gridLayout_16")
         self.gridLayout_15 = QGridLayout()
         self.gridLayout_15.setObjectName("gridLayout_15")
+        self.EnableEnterEvent = QCheckBox(self.groupBox_6)
+        self.EnableEnterEvent.setObjectName("EnableEnterEvent")
+
+        self.gridLayout_15.addWidget(self.EnableEnterEvent, 0, 0, 1, 1)
+
+        self.ScrollSpeed_Ribbon = QSlider(self.groupBox_6)
+        self.ScrollSpeed_Ribbon.setObjectName("ScrollSpeed_Ribbon")
+        self.ScrollSpeed_Ribbon.setMaximum(10)
+        self.ScrollSpeed_Ribbon.setPageStep(1)
+        self.ScrollSpeed_Ribbon.setValue(5)
+        self.ScrollSpeed_Ribbon.setOrientation(Qt.Orientation.Horizontal)
+        self.ScrollSpeed_Ribbon.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.ScrollSpeed_Ribbon.setTickInterval(1)
+
+        self.gridLayout_15.addWidget(self.ScrollSpeed_Ribbon, 2, 1, 1, 1)
+
         self.label_12 = QLabel(self.groupBox_6)
         self.label_12.setObjectName("label_12")
         sizePolicy2.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
@@ -453,6 +469,15 @@ class Ui_Form(object):
         self.label_12.setFont(font1)
 
         self.gridLayout_15.addWidget(self.label_12, 2, 0, 1, 1)
+
+        self.label_13 = QLabel(self.groupBox_6)
+        self.label_13.setObjectName("label_13")
+        sizePolicy2.setHeightForWidth(self.label_13.sizePolicy().hasHeightForWidth())
+        self.label_13.setSizePolicy(sizePolicy2)
+        self.label_13.setMinimumSize(QSize(130, 0))
+        self.label_13.setFont(font1)
+
+        self.gridLayout_15.addWidget(self.label_13, 1, 0, 1, 1)
 
         self.ScrollSpeed_TabBar = QSlider(self.groupBox_6)
         self.ScrollSpeed_TabBar.setObjectName("ScrollSpeed_TabBar")
@@ -471,36 +496,6 @@ class Ui_Form(object):
         self.ScrollSpeed_TabBar.setTickInterval(1)
 
         self.gridLayout_15.addWidget(self.ScrollSpeed_TabBar, 1, 1, 1, 1)
-
-        self.label_13 = QLabel(self.groupBox_6)
-        self.label_13.setObjectName("label_13")
-        sizePolicy2.setHeightForWidth(self.label_13.sizePolicy().hasHeightForWidth())
-        self.label_13.setSizePolicy(sizePolicy2)
-        self.label_13.setMinimumSize(QSize(130, 0))
-        self.label_13.setFont(font1)
-
-        self.gridLayout_15.addWidget(self.label_13, 1, 0, 1, 1)
-
-        self.ScrollSpeed_Ribbon = QSlider(self.groupBox_6)
-        self.ScrollSpeed_Ribbon.setObjectName("ScrollSpeed_Ribbon")
-        self.ScrollSpeed_Ribbon.setMaximum(10)
-        self.ScrollSpeed_Ribbon.setPageStep(1)
-        self.ScrollSpeed_Ribbon.setValue(5)
-        self.ScrollSpeed_Ribbon.setOrientation(Qt.Orientation.Horizontal)
-        self.ScrollSpeed_Ribbon.setTickPosition(QSlider.TickPosition.TicksBelow)
-        self.ScrollSpeed_Ribbon.setTickInterval(1)
-
-        self.gridLayout_15.addWidget(self.ScrollSpeed_Ribbon, 2, 1, 1, 1)
-
-        self.EnableEnterEvent = QCheckBox(self.groupBox_6)
-        self.EnableEnterEvent.setObjectName("EnableEnterEvent")
-
-        self.gridLayout_15.addWidget(self.EnableEnterEvent, 0, 0, 1, 1)
-
-        self.label_5 = QLabel(self.groupBox_6)
-        self.label_5.setObjectName("label_5")
-
-        self.gridLayout_15.addWidget(self.label_5, 0, 1, 1, 2)
 
         self.gridLayout_16.addLayout(self.gridLayout_15, 0, 0, 1, 1)
 
@@ -742,20 +737,13 @@ class Ui_Form(object):
             )
         )
         self.groupBox_6.setTitle(QCoreApplication.translate("Form", "Mouse settings", None))
+        self.EnableEnterEvent.setText(QCoreApplication.translate("Form", "Show ribbon on hover. ", None))
         self.label_12.setText(
             QCoreApplication.translate("Form", "<html><head/><body><p>Scroll speed for ribbon:</p></body></html>", None)
         )
         self.label_13.setText(
             QCoreApplication.translate(
                 "Form", "<html><head/><body><p>Scroll speed for tab bar:</p></body></html>", None
-            )
-        )
-        self.EnableEnterEvent.setText(QCoreApplication.translate("Form", "Show ribbon on hover. ", None))
-        self.label_5.setText(
-            QCoreApplication.translate(
-                "Form",
-                '<html><head/><body><p><span style=" font-style:italic;">(Disabled for FC 1.0 due to bug)</span></p></body></html>',
-                None,
             )
         )
         self.tabWidget.setTabText(

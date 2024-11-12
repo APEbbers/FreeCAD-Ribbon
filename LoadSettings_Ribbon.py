@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL
-from PySide.QtWidgets import QTabWidget, QSlider, QSpinBox
+from PySide6.QtCore import Qt, SIGNAL
+from PySide6.QtWidgets import QTabWidget, QSlider, QSpinBox, QCheckBox
 import sys
 
 import Standard_Functions_RIbbon as StandardFunctions
@@ -103,10 +103,15 @@ class LoadDialog(Settings_ui.Ui_Form):
             self.form.DebugMode.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.DebugMode.setCheckState(Qt.CheckState.Unchecked)
+
         if Parameters_Ribbon.SHOW_ON_HOVER is True:
             self.form.EnableEnterEvent.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.EnableEnterEvent.setCheckState(Qt.CheckState.Unchecked)
+        # it is FreeCAD 1.0 disable this option.
+        if int(App.Version()[0]) > 0:
+            self.form.EnableEnterEvent.setDisabled(True)
+            self.form.EnableEnterEvent.setHidden(True)
 
         self.form.ScrollSpeed_TabBar.setValue(Parameters_Ribbon.TABBAR_SCROLLSPEED)
         self.form.ScrollSpeed_Ribbon.setValue(Parameters_Ribbon.RIBBON_SCROLLSPEED)

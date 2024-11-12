@@ -291,15 +291,15 @@ class ModernMenu(RibbonBar):
         self.currentCategory().setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         return
 
-    def eventFilter(self, obj, event):
-        if event.type() == QEvent.Type.HoverMove:
-            # swallow events
-            # print("Event swallowed")
-            event.ignore()
-            return False
-        else:
-            # bubble events
-            return True
+    # def eventFilter(self, obj, event):
+    #     if event.type() == QEvent.Type.HoverMove:
+    #         # swallow events
+    #         # print("Event swallowed")
+    #         event.ignore()
+    #         return False
+    #     else:
+    #         # bubble events
+    #         return True
 
     def enterEvent(self, QEvent):
         # In FreeCAD 1.0, Overlays are introduced. These have also an enterEvent which results in strange behavior
@@ -307,7 +307,7 @@ class ModernMenu(RibbonBar):
         if (
             int(App.Version()[0]) == 0
             and int(App.Version()[1]) <= 21
-            and Parameters_Ribbon.Settings.GetIntSetting("ShowOnHover") is True
+            and Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is True
         ):
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             TB.setMinimumHeight(self.RibbonMaximumHeight)
