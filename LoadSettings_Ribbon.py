@@ -290,6 +290,7 @@ class LoadDialog(Settings_ui.Ui_Form):
         Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", self.ShowText_Large)
         Parameters_Ribbon.Settings.SetIntSetting("MaxColumnsPerPanel", int(self.form.MaxPanelColumn.text()))
         Parameters_Ribbon.Settings.SetBoolSetting("DebugMode", self.DebugMode)
+        Parameters_Ribbon.Settings.SetBoolSetting("ShowOnHover", self.ShowOnHover)
         Parameters_Ribbon.Settings.SetIntSetting("TabBar_Scroll", self.form.ScrollSpeed_TabBar.value())
         Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Scroll", self.form.ScrollSpeed_Ribbon.value())
         Parameters_Ribbon.Settings.SetIntSetting("TabBar_Click", self.form.ScrollClicks_TabBar.value())
