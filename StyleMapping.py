@@ -106,7 +106,7 @@ def ReturnStyleItem(ControlName):
         if isIcon is False:
             result = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
             if result == "":
-                result = result = StyleMapping["Stylesheets"][""][ControlName]
+                result = StyleMapping["Stylesheets"][""][ControlName]
             return result
     except Exception:
         return None

@@ -291,15 +291,18 @@ class ModernMenu(RibbonBar):
         self.currentCategory().setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         return
 
-    # def eventFilter(self, obj, event):
-    #     if event.type() == QEvent.Type.HoverMove:
-    #         # swallow events
-    #         # print("Event swallowed")
-    #         event.ignore()
-    #         return False
-    #     else:
-    #         # bubble events
-    #         return True
+    def eventFilter(self, obj, event):
+        if int(App.Version()[0]) > 1:
+            if event.type() == QEvent.Type.HoverMove:
+                # swallow events
+                # print("Event swallowed")
+                event.ignore()
+                return False
+            else:
+                # bubble events
+                return True
+        else:
+            return True
 
     def enterEvent(self, QEvent):
         # In FreeCAD 1.0, Overlays are introduced. These have also an enterEvent which results in strange behavior
@@ -672,7 +675,8 @@ class ModernMenu(RibbonBar):
 
         # activate selected workbench
         tabName = tabName.replace("&", "")
-        Gui.activateWorkbench(self.wbNameMapping[tabName])
+        if self.wbNameMapping[tabName] is not None:
+            Gui.activateWorkbench(self.wbNameMapping[tabName])
         self.onWbActivated()
         self.ApplicationMenu()
         return
@@ -1169,13 +1173,21 @@ class ModernMenu(RibbonBar):
         ScrollLeftButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab")
         ScrollRightButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollRightButton_Tab")
         # Set the icons
+        StyleSheet = "QToolButton {image: none};QToolButton::arrow {image: none};"
+        BackgroundColor = StyleMapping.ReturnStyleItem("Background_Color")
+        if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21 and BackgroundColor is not None:
+            StyleSheet = (
+                """QToolButton {image: none;background: """
+                + BackgroundColor
+                + """};QToolButton::arrow {image: none};"""
+            )
         if ScrollLeftButton_Tab_Icon is not None:
-            ScrollLeftButton_Tab.setStyleSheet("QToolButton {image: none};QToolButton::arrow {image: none};")
+            ScrollLeftButton_Tab.setStyleSheet(StyleSheet)
             ScrollLeftButton_Tab.setIcon(ScrollLeftButton_Tab_Icon)
         else:
             ScrollRightButton_Tab.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextOnly)
         if ScrollRightButton_Tab_Icon is not None:
-            ScrollRightButton_Tab.setStyleSheet("QToolButton {image: none};QToolButton::arrow {image: none};")
+            ScrollRightButton_Tab.setStyleSheet(StyleSheet)
             ScrollRightButton_Tab.setIcon(ScrollRightButton_Tab_Icon)
         else:
             ScrollRightButton_Tab.setArrowType(Qt.ArrowType.RightArrow)
@@ -1214,6 +1226,7 @@ class ModernMenu(RibbonBar):
 
     def hideClassicToolbars(self):
         for toolbar in mw.findChildren(QToolBar):
+            # Add here toolbars that are allowed to be shown
             if toolbar.objectName() not in [
                 "",
                 "draft_status_scale_widget",
@@ -1357,8 +1370,8 @@ class run:
             # attach the ribbon to the dockwidget
             ribbonDock.setWidget(ribbon)
 
-            if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
-                ribbonDock.setMaximumHeight(ribbon.RibbonMinimalHeight)
+            # if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
+            #     ribbonDock.setMaximumHeight(ribbon.RibbonMinimalHeight)
             ribbonDock.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
 
             # Add the dockwidget to the main window
