@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 import os
 
 from PySide.QtCore import Qt, SIGNAL
-from PySide.QtWidgets import QTabWidget, QSlider
+from PySide.QtWidgets import QTabWidget, QSlider, QSpinBox
 import sys
 
 import Standard_Functions_RIbbon as StandardFunctions
@@ -108,6 +108,11 @@ class LoadDialog(Settings_ui.Ui_Form):
         else:
             self.form.EnableEnterEvent.setCheckState(Qt.CheckState.Unchecked)
 
+        self.form.ScrollSpeed_TabBar.setValue(Parameters_Ribbon.TABBAR_SCROLLSPEED)
+        self.form.ScrollSpeed_Ribbon.setValue(Parameters_Ribbon.RIBBON_SCROLLSPEED)
+        self.form.ScrollClicks_TabBar.setValue(Parameters_Ribbon.TABBAR_CLICKSPEED)
+        self.form.ScrollClicks_Ribbon.setValue(Parameters_Ribbon.RIBBON_CLICKSPEED)
+
         # region - connect controls with functions----------------------------------------------------
         #
         self.form.EnableBackup.clicked.connect(self.on_EnableBackup_clicked)
@@ -116,15 +121,11 @@ class LoadDialog(Settings_ui.Ui_Form):
         self.form.IconSize_Medium.textChanged.connect(self.on_IconSize_Medium_TextChanged)
         # self.form.IconSize_Large.textChanged.connect(self.on_IconSize_Large_TextChanged)
         self.form.StyleSheetLocation.clicked.connect(self.on_StyleSheetLocation_clicked)
-
         self.form.ShowText_Small.clicked.connect(self.on_ShowTextSmall_clicked)
         self.form.ShowText_Medium.clicked.connect(self.on_ShowTextMedium_clicked)
         self.form.ShowText_Large.clicked.connect(self.on_ShowTextLarge_clicked)
-
         self.form.MaxPanelColumn.textChanged.connect(self.on_MaxPanelColumn_TextChanged)
-
         self.form.MaxPanelColumn.textChanged.connect(self.on_MaxPanelColumn_TextChanged)
-
         self.form.DebugMode.clicked.connect(self.on_DebugMode_clicked)
 
         # Connect the cancel button
@@ -138,15 +139,10 @@ class LoadDialog(Settings_ui.Ui_Form):
             self.on_Close_clicked(self)
 
         self.form.GenerateJsonExit.connect(self.form.GenerateJsonExit, SIGNAL("clicked()"), GenerateJsonExit)
-
         self.form.EnableEnterEvent.clicked.connect(self.on_EnableEnterEvent_clicked)
-
         self.form.ScrollSpeed_TabBar.valueChanged.connect(self.on_ScrollSpeed_TabBar_valueCHanged)
-
         self.form.ScrollSpeed_Ribbon.valueChanged.connect(self.on_ScrollSpeed_Ribbon_valueCHanged)
-
         self.form.ScrollClicks_TabBar.textChanged.connect(self.on_ScrollClicks_TabBar_valueCHanged)
-
         self.form.ScrollClicks_Ribbon.textChanged.connect(self.on_ScrollClicks_Ribbon_valueCHanged)
         # endregion
 
@@ -294,6 +290,10 @@ class LoadDialog(Settings_ui.Ui_Form):
         Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", self.ShowText_Large)
         Parameters_Ribbon.Settings.SetIntSetting("MaxColumnsPerPanel", int(self.form.MaxPanelColumn.text()))
         Parameters_Ribbon.Settings.SetBoolSetting("DebugMode", self.DebugMode)
+        Parameters_Ribbon.Settings.SetIntSetting("TabBar_Scroll", self.form.ScrollSpeed_TabBar.value())
+        Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Scroll", self.form.ScrollSpeed_Ribbon.value())
+        Parameters_Ribbon.Settings.SetIntSetting("TabBar_Click", self.form.ScrollClicks_TabBar.value())
+        Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Click", self.form.ScrollClicks_Ribbon.value())
 
         # Close the form
         self.form.close()
