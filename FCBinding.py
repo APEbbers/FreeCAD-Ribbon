@@ -455,13 +455,15 @@ class ModernMenu(RibbonBar):
         for i in range(len(WorkbenchOrderedList)):
             for workbenchName, workbench in list(Gui.listWorkbenches().items()):
                 if workbenchName == WorkbenchOrderedList[i]:
-                    name = workbench.MenuText
+                    name = workbench.MenuText.replace("&", "")
                     if name != "" and name not in self.ribbonStructure["ignoredWorkbenches"] and name != "<none>":
                         self.wbNameMapping[name] = workbenchName
                         self.isWbLoaded[name] = False
 
                         # Set the title
                         self.addCategory(name)
+                        # add the name as data to the tab
+                        self.tabbar().setTabData(len(self.categories(), name))
 
                         # Set the tabbar according the style setting
                         if Parameters_Ribbon.TABBAR_STYLE == 0:
@@ -701,7 +703,7 @@ class ModernMenu(RibbonBar):
         workbenchName = workbench.name()
 
         # check if the panel is already loaded. If so exit this function
-        tabName = self.tabBar().tabText(self.tabBar().currentIndex()).replace("&", "")
+        tabName = QTabBar(self.tabBar()).tabData(self.tabBar().currentIndex()).replace("&", "")
         if self.isWbLoaded[tabName]:
             return
 
