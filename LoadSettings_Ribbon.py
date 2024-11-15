@@ -124,17 +124,26 @@ class LoadDialog(Settings_ui.Ui_Form):
 
         # region - connect controls with functions----------------------------------------------------
         #
+        # Connect Backup
         self.form.EnableBackup.clicked.connect(self.on_EnableBackup_clicked)
         self.form.BackUpLocation.clicked.connect(self.on_BackUpLocation_clicked)
+        # Connect icon sizes
         self.form.IconSize_Small.textChanged.connect(self.on_IconSize_Small_TextChanged)
         self.form.IconSize_Medium.textChanged.connect(self.on_IconSize_Medium_TextChanged)
         # self.form.IconSize_Large.textChanged.connect(self.on_IconSize_Large_TextChanged)
+        self.form.IconSize_ApplicationButton.textChanged.connect(self.on_IconSize_ApplicationButton_TextChanged)
+        self.form.IconSize_QuickAccessButton.textChanged.connect(self.on_IconSize_QuickAccessButton_TextChanged)
+        self.form.IconSize_rightToolbarButton.textChanged.connect(self.on_IconSize_rightToolbarButton_TextChanged)
+        self.form.TabbarHeight.textChanged.connect(self.on_TabbarHeight_TextChanged)
+        # Connect stylesheet
         self.form.StyleSheetLocation.clicked.connect(self.on_StyleSheetLocation_clicked)
+        # Connect icon texts
         self.form.ShowText_Small.clicked.connect(self.on_ShowTextSmall_clicked)
         self.form.ShowText_Medium.clicked.connect(self.on_ShowTextMedium_clicked)
         self.form.ShowText_Large.clicked.connect(self.on_ShowTextLarge_clicked)
+        # Connect column width
         self.form.MaxPanelColumn.textChanged.connect(self.on_MaxPanelColumn_TextChanged)
-        self.form.MaxPanelColumn.textChanged.connect(self.on_MaxPanelColumn_TextChanged)
+        # Connect debug mode
         self.form.DebugMode.clicked.connect(self.on_DebugMode_clicked)
 
         # Connect the cancel button
