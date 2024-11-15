@@ -329,7 +329,7 @@ class LoadDialog(Settings_ui.Ui_Form):
         Parameters_Ribbon.Settings.SetBoolSetting("BackupEnabled", self.Backup)
         Parameters_Ribbon.Settings.SetStringSetting("BackupFolder", self.BackupLocation)
         # Save tabBar style
-        Parameters_Ribbon.Settings.SetIntSetting("TabBar_Style", self.form.TabbarStyle).currentIndex()
+        Parameters_Ribbon.Settings.SetIntSetting("TabBar_Style", self.form.TabbarStyle.currentIndex())
         # Save icon sizes
         Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", int(self.form.IconSize_Small.text()))
         Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", int(self.form.IconSize_Medium.text()))
