@@ -622,12 +622,14 @@ class ModernMenu(RibbonBar):
     def on_AboutButton_clicked(self):
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
-        f = open(os.path.join(os.path.dirname(__file__), "LICENSE"), "r")
-        LICENSE = f.readlines()
+
+        file_path = os.path.join(os.path.dirname(__file__), "LICENSE")
+        with open(file_path, "r") as file:
+            LICENSE = file.read()
 
         text = f"""FreeCAD Ribbon {version}
         \na Ribbon UI for FreeCAD.\n
-        \n
+
         License:\n\n{LICENSE}
         """
 
