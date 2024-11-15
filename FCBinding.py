@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -35,7 +35,7 @@ from PySide.QtGui import (
     QFont,
     QColor,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -52,7 +52,7 @@ from PySide.QtWidgets import (
     QTabBar,
     QWidgetAction,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -460,18 +460,19 @@ class ModernMenu(RibbonBar):
                         self.wbNameMapping[name] = workbenchName
                         self.isWbLoaded[name] = False
 
+                        # Set the title
+                        self.addCategory(name)
+
                         # Set the tabbar according the style setting
                         if Parameters_Ribbon.TABBAR_STYLE == 0:
-                            # Set the title
-                            self.addCategory(name)
                             # set tab icon
                             self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon(workbench.Icon))
                         if Parameters_Ribbon.TABBAR_STYLE == 1:
                             # set tab icon
                             self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon(workbench.Icon))
+                            self.tabBar().setTabText(len(self.categories()) - 1, "")
                         if Parameters_Ribbon.TABBAR_STYLE == 2:
-                            # Set the title
-                            self.addCategory(name)
+                            self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon())
 
         # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
