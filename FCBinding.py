@@ -651,7 +651,7 @@ class ModernMenu(RibbonBar):
         """
 
         index = self.tabBar().currentIndex()
-        tabName = self.tabBar().tabText(index)
+        tabName = self.tabBar().tabData(index)
         Color = QColor(StyleMapping.ReturnStyleItem("Border_Color"))
         self.tabBar().setTabTextColor(index, Color)
 
