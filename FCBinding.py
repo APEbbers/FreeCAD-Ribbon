@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -35,7 +35,7 @@ from PySide6.QtGui import (
     QFont,
     QColor,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -52,7 +52,7 @@ from PySide6.QtWidgets import (
     QTabBar,
     QWidgetAction,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -137,6 +137,8 @@ class ModernMenu(RibbonBar):
     # Placeholders for toggle function of the ribbon
     RibbonMinimalHeight = ApplicationButtonSize + 10
     RibbonMaximumHeight = 240  # Will be redefined later
+
+    CategoryList = []
 
     def __init__(self):
         """
@@ -456,24 +458,23 @@ class ModernMenu(RibbonBar):
             for workbenchName, workbench in list(Gui.listWorkbenches().items()):
                 if workbenchName == WorkbenchOrderedList[i]:
                     name = workbench.MenuText.replace("&", "")
-                    if name != "" and name not in self.ribbonStructure["ignoredWorkbenches"] and name != "<none>":
+                    if (
+                        name != ""
+                        and name not in self.ribbonStructure["ignoredWorkbenches"]
+                        and name != "<none>"
+                        and name is not None
+                    ):
                         self.wbNameMapping[name] = workbenchName
                         self.isWbLoaded[name] = False
 
                         # Set the title
                         self.addCategory(name)
-                        # add the name as data to the tab
-                        self.tabbar().setTabData(len(self.categories(), name))
 
                         # Set the tabbar according the style setting
                         if Parameters_Ribbon.TABBAR_STYLE == 0:
                             # set tab icon
                             self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon(workbench.Icon))
                         if Parameters_Ribbon.TABBAR_STYLE == 1:
-                            # set tab icon
-                            self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon(workbench.Icon))
-                            self.tabBar().setTabText(len(self.categories()) - 1, "")
-                        if Parameters_Ribbon.TABBAR_STYLE == 2:
                             self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon())
 
         # Set the size of the collapseRibbonButton
@@ -651,16 +652,18 @@ class ModernMenu(RibbonBar):
         """
 
         index = self.tabBar().currentIndex()
-        tabName = self.tabBar().tabData(index)
-        Color = QColor(StyleMapping.ReturnStyleItem("Border_Color"))
-        self.tabBar().setTabTextColor(index, Color)
+        tabName = self.tabBar().tabText(index)
 
-        # activate selected workbench
-        tabName = tabName.replace("&", "")
-        if self.wbNameMapping[tabName] is not None:
-            Gui.activateWorkbench(self.wbNameMapping[tabName])
-        self.onWbActivated()
-        self.ApplicationMenu()
+        if tabName is not None and tabName != "":
+            Color = QColor(StyleMapping.ReturnStyleItem("Border_Color"))
+            self.tabBar().setTabTextColor(index, Color)
+
+            # activate selected workbench
+            tabName = tabName.replace("&", "")
+            if self.wbNameMapping[tabName] is not None:
+                Gui.activateWorkbench(self.wbNameMapping[tabName])
+            self.onWbActivated()
+            self.ApplicationMenu()
         return
 
     def onWbActivated(self):
@@ -703,8 +706,8 @@ class ModernMenu(RibbonBar):
         workbenchName = workbench.name()
 
         # check if the panel is already loaded. If so exit this function
-        tabName = QTabBar(self.tabBar()).tabData(self.tabBar().currentIndex()).replace("&", "")
-        if self.isWbLoaded[tabName]:
+        tabName = self.tabBar().tabText(self.tabBar().currentIndex()).replace("&", "")
+        if self.isWbLoaded[tabName] or tabName == "":
             return
 
         # Get the list of toolbars from the active workbench

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsAfurFZ.ui'
+## Form generated from reading UI file 'SettingsRFbxHv.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -340,7 +340,6 @@ class Ui_Form(object):
         self.gridLayout_24.addWidget(self.label_24, 0, 0, 1, 1)
 
         self.TabbarStyle = QComboBox(self.groupBox_10)
-        self.TabbarStyle.addItem("")
         self.TabbarStyle.addItem("")
         self.TabbarStyle.addItem("")
         self.TabbarStyle.setObjectName("TabbarStyle")
@@ -806,8 +805,7 @@ class Ui_Form(object):
             QCoreApplication.translate("Form", "<html><head/><body><p>Set the tab style: </p></body></html>", None)
         )
         self.TabbarStyle.setItemText(0, QCoreApplication.translate("Form", "Icon + text", None))
-        self.TabbarStyle.setItemText(1, QCoreApplication.translate("Form", "Icon only", None))
-        self.TabbarStyle.setItemText(2, QCoreApplication.translate("Form", "Text only", None))
+        self.TabbarStyle.setItemText(1, QCoreApplication.translate("Form", "Text only", None))
 
         self.TabbarStyle.setCurrentText(QCoreApplication.translate("Form", "Icon + text", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("Form", "Select stylesheet", None))

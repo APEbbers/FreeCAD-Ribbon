@@ -585,11 +585,6 @@
                    </item>
                    <item>
                     <property name="text">
-                     <string>Icon only</string>
-                    </property>
-                   </item>
-                   <item>
-                    <property name="text">
                      <string>Text only</string>
                     </property>
                    </item>
