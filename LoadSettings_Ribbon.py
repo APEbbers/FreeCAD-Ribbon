@@ -325,14 +325,14 @@ class LoadDialog(Settings_ui.Ui_Form):
         Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", int(self.form.IconSize_Medium.text()))
         # Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", int(self.form.IconSize_Large.text()))
         Parameters_Ribbon.Settings.SetStringSetting("Stylesheet", self.StyleSheet)
-        Parameters_Ribbon.Settings.SetStringSetting(
+        Parameters_Ribbon.Settings.SetIntSetting(
             "ApplicationButtonSize", int(self.form.IconSize_ApplicationButton.text())
         )
-        Parameters_Ribbon.Settings.SetStringSetting(
+        Parameters_Ribbon.Settings.SetIntSetting(
             "QuickAccessButtonSize", int(self.form.IconSize_QuickAccessButton.text())
         )
-        Parameters_Ribbon.Settings.SetStringSetting("TabBarSize", int(self.form.TabbarHeight.text()))
-        Parameters_Ribbon.Settings.SetStringSetting(
+        Parameters_Ribbon.Settings.SetIntSetting("TabBarSize", int(self.form.TabbarHeight.text()))
+        Parameters_Ribbon.Settings.SetIntSetting(
             "RightToolbarButtonSize", int(self.form.IconSize_rightToolbarButton.text())
         )
         # Save text settings
