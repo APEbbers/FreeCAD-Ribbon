@@ -589,7 +589,8 @@ class ModernMenu(RibbonBar):
                         ListScripts[i],
                         lambda i=i + 1: self.LoadMarcoFreeCAD(ListScripts[i - 1]),
                     )
-        # Add a about button and a What's new?  buttonfor this ribbon
+        # Add a about button, a What's new? and a help button for this ribbon
+        #
         # Get the version of this addon
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
@@ -597,8 +598,10 @@ class ModernMenu(RibbonBar):
         Menu.addSeparator()
         WhatsNewButton = Menu.addAction(translate("FreeCAD Ribbon", "What's new?"))
         WhatsNewButton.triggered.connect(self.on_WhatsNewButton_clicked)
+        RibbonHelpButton = Menu.addAction(translate("FreeCAD Ribbon", "Ribbon help"))
+        RibbonHelpButton.triggered.connect(self.on_RibbonHelpButton_clicked)
         AboutButton = Menu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version)
-        AboutButton.triggered.connect(self.on_AboutButton_clicked)
+        AboutButton.triggered.connect(self.on_AboutButton_clicked(version))
 
         return
 
@@ -616,13 +619,23 @@ class ModernMenu(RibbonBar):
         LoadSettings_Ribbon.main()
         return
 
-    def on_AboutButton_clicked(self):
+    def on_AboutButton_clicked(self, version):
+        text = f"""FreeCAD Ribbon {version}
+        \na Ribbon UI for FreeCAD.\n
+        \n
+        License:\n\n{license()}
+        """
+
+        StandardFunctions.Mbox(text=text, title="About FreeCAD Ribbon", style=0, IconType="NoIcon")
+        return
+
+    def on_RibbonHelpButton_clicked(self):
         if self.ReproAdress != "" or self.ReproAdress is not None:
             if not self.ReproAdress.endswith("/"):
                 self.ReproAdress = self.ReproAdress + "/"
 
-            AboutAdress = self.ReproAdress + "wiki"
-            webbrowser.open(AboutAdress, new=2, autoraise=True)
+            Adress = self.ReproAdress + "wiki"
+            webbrowser.open(Adress, new=2, autoraise=True)
         return
 
     def on_WhatsNewButton_clicked(self):
