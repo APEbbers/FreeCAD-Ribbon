@@ -601,7 +601,7 @@ class ModernMenu(RibbonBar):
         RibbonHelpButton = Menu.addAction(translate("FreeCAD Ribbon", "Ribbon help"))
         RibbonHelpButton.triggered.connect(self.on_RibbonHelpButton_clicked)
         AboutButton = Menu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version)
-        AboutButton.triggered.connect(self.on_AboutButton_clicked(version))
+        AboutButton.triggered.connect(self.on_AboutButton_clicked)
 
         return
 
@@ -619,8 +619,10 @@ class ModernMenu(RibbonBar):
         LoadSettings_Ribbon.main()
         return
 
-    def on_AboutButton_clicked(self, version):
-        LICENSE = open(os.path.join(os.path.dirname(__file__), "LICENSE"))
+    def on_AboutButton_clicked(self):
+        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
+        version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
+        LICENSE = open(os.path.join(os.path.dirname(__file__), "LICENSE"), "r")
 
         text = f"""FreeCAD Ribbon {version}
         \na Ribbon UI for FreeCAD.\n
