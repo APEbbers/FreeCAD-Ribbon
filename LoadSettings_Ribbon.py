@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 import os
 
 from PySide.QtCore import Qt, SIGNAL
-from PySide.QtWidgets import QTabWidget, QSlider, QSpinBox, QCheckBox
+from PySide.QtWidgets import QTabWidget, QSlider, QSpinBox, QCheckBox, QComboBox
 import sys
 
 import Standard_Functions_RIbbon as StandardFunctions
@@ -82,6 +82,7 @@ class LoadDialog(Settings_ui.Ui_Form):
         # load all settings
         self.form.EnableBackup.setChecked(Parameters_Ribbon.ENABLE_BACKUP)
         self.form.label_4.setText(Parameters_Ribbon.BACKUP_LOCATION)
+        self.form.TabbarStyle.setCurrentIndex(Parameters_Ribbon.TABBAR_STYLE)
         self.form.IconSize_Small.setValue(Parameters_Ribbon.ICON_SIZE_SMALL)
         self.form.IconSize_Medium.setValue(Parameters_Ribbon.ICON_SIZE_MEDIUM)
         # self.form.IconSize_Large.setValue(Parameters_Ribbon.ICON_SIZE_LARGE)
@@ -127,6 +128,8 @@ class LoadDialog(Settings_ui.Ui_Form):
         # Connect Backup
         self.form.EnableBackup.clicked.connect(self.on_EnableBackup_clicked)
         self.form.BackUpLocation.clicked.connect(self.on_BackUpLocation_clicked)
+        # Connect the tabbar style
+        self.form.TabbarStyle.currentIndexChanged.connect(self.on_TabbarStyle_currentIndexChanged)
         # Connect icon sizes
         self.form.IconSize_Small.textChanged.connect(self.on_IconSize_Small_TextChanged)
         self.form.IconSize_Medium.textChanged.connect(self.on_IconSize_Medium_TextChanged)
@@ -188,6 +191,11 @@ class LoadDialog(Settings_ui.Ui_Form):
             Parameters_Ribbon.BACKUP_LOCATION = BackupFolder
             self.BackupLocation = BackupFolder
             self.settingChanged = True
+        return
+
+    def on_TabbarStyle_currentIndexChanged(self):
+        Parameters_Ribbon.TABBAR_STYLE = self.form.TabbarStyle.currentIndex()
+        self.settingChanged = True
         return
 
     def on_IconSize_Small_TextChanged(self):
@@ -320,6 +328,8 @@ class LoadDialog(Settings_ui.Ui_Form):
         # Save backup settings
         Parameters_Ribbon.Settings.SetBoolSetting("BackupEnabled", self.Backup)
         Parameters_Ribbon.Settings.SetStringSetting("BackupFolder", self.BackupLocation)
+        # Save tabBar style
+        Parameters_Ribbon.Settings.SetIntSetting("TabBar_Style", self.form.TabbarStyle).currentIndex()
         # Save icon sizes
         Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", int(self.form.IconSize_Small.text()))
         Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", int(self.form.IconSize_Medium.text()))

@@ -97,6 +97,14 @@ class Settings:
     # endregion
 
     def WriteSettings():
+        Settings.SetStringSetting("BackupFolder", BACKUP_LOCATION)
+        Settings.SetStringSetting("RibbonStructure", RIBBON_STRUCTURE_JSON)
+        Settings.SetStringSetting("TabOrder", TAB_ORDER)
+        Settings.SetIntSetting("TabBar_Style", TABBAR_STYLE)
+        Settings.SetStringSetting("Stylesheet", STYLESHEET)
+        Settings.SetBoolSetting("AutoHideRibbon", AUTOHIDE_RIBBON)
+        Settings.SetIntSetting("MaxColumnsPerPanel", MAX_COLUMN_PANELS)
+
         Settings.SetIntSetting("IconSize_Small", ICON_SIZE_SMALL)
         Settings.SetIntSetting("IconSize_Medium", ICON_SIZE_MEDIUM)
         Settings.SetIntSetting("IconSize_Large", ICON_SIZE_LARGE)
@@ -104,11 +112,18 @@ class Settings:
         Settings.SetIntSetting("QuickAccessButtonSize", QUICK_ICON_SIZE)
         Settings.SetIntSetting("TabBarSize", TABBAR_SIZE)
         Settings.SetIntSetting("RightToolbarButtonSize", RIGHT_ICON_SIZE)
+
+        Settings.SetBoolSetting("ShowIconText_Small", SHOW_ICON_TEXT_SMALL)
+        Settings.SetBoolSetting("ShowIconText_Medium", SHOW_ICON_TEXT_MEDIUM)
+        Settings.SetBoolSetting("ShowIconText_Large", SHOW_ICON_TEXT_LARGE)
+
         Settings.SetBoolSetting("ShowOnHover", SHOW_ON_HOVER)
         Settings.SetIntSetting("TabBar_Scroll", TABBAR_SCROLLSPEED)
         Settings.SetIntSetting("Ribbon_Scroll", RIBBON_SCROLLSPEED)
         Settings.SetIntSetting("TabBar_Click", TABBAR_CLICKSPEED)
         Settings.SetIntSetting("Ribbon_Click", RIBBON_CLICKSPEED)
+
+        Settings.SetBoolSetting("DebugMode", DEBUG_MODE)
 
 
 # region - Define the Ribbon structure location ------------------------------------------------------------------------
@@ -123,6 +138,13 @@ else:
 ICON_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "icons")
 STYLESHEET_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "stylesheets")
 UI_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "ui")
+# endregion ------------------------------------------------------------------------------------------------------------
+
+# region - Define the tabbar style -------------------------------------------------------------------------------------
+TABBAR_STYLE = Settings.GetIntSetting("TabBar_Style")
+if Settings.GetIntSetting("TabBar_Style") is None or Settings.GetIntSetting("TabBar_Style") > 2:
+    TABBAR_STYLE = int(0)
+    Settings.SetIntSetting("TabBar_Style", 0)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the icon sizes ---------------------------------------------------------------------------------------

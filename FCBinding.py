@@ -460,9 +460,18 @@ class ModernMenu(RibbonBar):
                         self.wbNameMapping[name] = workbenchName
                         self.isWbLoaded[name] = False
 
-                        self.addCategory(name)
-                        # set tab icon
-                        self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon(workbench.Icon))
+                        # Set the tabbar according the style setting
+                        if Parameters_Ribbon.TABBAR_STYLE == 0:
+                            # Set the title
+                            self.addCategory(name)
+                            # set tab icon
+                            self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon(workbench.Icon))
+                        if Parameters_Ribbon.TABBAR_STYLE == 1:
+                            # set tab icon
+                            self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon(workbench.Icon))
+                        if Parameters_Ribbon.TABBAR_STYLE == 0:
+                            # Set the title
+                            self.addCategory(name)
 
         # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
