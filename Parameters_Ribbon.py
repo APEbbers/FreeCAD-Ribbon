@@ -97,19 +97,21 @@ class Settings:
     # endregion
 
 
-# Define the Ribbon structure location
+# region - Define the Ribbon structure location ------------------------------------------------------------------------
 if Settings.GetStringSetting("RibbonStructure") != "":
     RIBBON_STRUCTURE_JSON = Settings.GetStringSetting("RibbonStructure")
 else:
     RIBBON_STRUCTURE_JSON = os.path.join(os.path.dirname(__file__), "RibbonStructure.json")
     Settings.SetStringSetting("RibbonStructure", RIBBON_STRUCTURE_JSON)
+# endregion ------------------------------------------------------------------------------------------------------------
 
-# Define the resources
+# region - Define the resources
 ICON_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "icons")
 STYLESHEET_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "stylesheets")
 UI_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "ui")
+# endregion ------------------------------------------------------------------------------------------------------------
 
-# Define the icon sizes
+# region - Define the icon sizes ---------------------------------------------------------------------------------------
 if Settings.GetIntSetting("IconSize_Small") is not None or Settings.GetIntSetting("IconSize_Small") > 0:
     ICON_SIZE_SMALL = Settings.GetIntSetting("IconSize_Small")
 else:
@@ -128,7 +130,32 @@ else:
     ICON_SIZE_LARGE = int(200)
     Settings.SetIntSetting("IconSize_Large", 200)
 
-# Backup parameters
+if Settings.GetIntSetting("ApplicationButtonSize") is not None or Settings.GetIntSetting("ApplicationButtonSize") > 0:
+    APP_ICON_SIZE = Settings.GetIntSetting("ApplicationButtonSize")
+else:
+    APP_ICON_SIZE = int(60)
+    Settings.SetIntSetting("ApplicationButtonSize", APP_ICON_SIZE)
+
+if Settings.GetIntSetting("QuickAccessButtonSize") is not None or Settings.GetIntSetting("QuickAccessButtonSize") > 0:
+    QUICK_ICON_SIZE = Settings.GetIntSetting("QuickAccessButtonSize")
+else:
+    QUICK_ICON_SIZE = int(30)
+    Settings.SetIntSetting("QuickAccessButtonSize", QUICK_ICON_SIZE)
+
+if Settings.GetIntSetting("TabBarSize") is not None or Settings.GetIntSetting("TabBarSize") > 0:
+    TABBAR_SIZE = Settings.GetIntSetting("TabBarSize")
+else:
+    TABBAR_SIZE = int(30)
+    Settings.SetIntSetting("TabBarSize", TABBAR_SIZE)
+
+if Settings.GetIntSetting("RightToolbarButtonSize") is not None or Settings.GetIntSetting("RightToolbarButtonSize") > 0:
+    RIGHT_ICON_SIZE = Settings.GetIntSetting("RightToolbarButtonSize")
+else:
+    RIGHT_ICON_SIZE = int(30)
+    Settings.SetIntSetting("RightToolbarButtonSize", RIGHT_ICON_SIZE)
+# endregion ------------------------------------------------------------------------------------------------------------
+
+# region - Backup parameters -------------------------------------------------------------------------------------------
 ENABLE_BACKUP = Settings.GetBoolSetting("BackupEnabled")
 
 if Settings.GetStringSetting("BackupFolder") != "":
@@ -136,8 +163,9 @@ if Settings.GetStringSetting("BackupFolder") != "":
 else:
     BACKUP_LOCATION = os.path.dirname(__file__) + "/Backups"
     Settings.SetStringSetting("BackupFolder", BACKUP_LOCATION)
+# endregion ------------------------------------------------------------------------------------------------------------
 
-# Ribbon settings
+# region - Ribbon settings ---------------------------------------------------------------------------------------------
 if Settings.GetStringSetting("TabOrder") != "":
     TAB_ORDER = Settings.GetStringSetting("TabOrder")
 else:
@@ -176,20 +204,28 @@ else:
     SHOW_ICON_TEXT_LARGE = bool(False)
     Settings.SetBoolSetting("ShowIconText_Large", False)
 
+if Settings.GetBoolSetting("ShowIconText_Large") is True:
+    SHOW_ICON_TEXT_LARGE = Settings.GetBoolSetting("ShowIconText_Large")
+else:
+    SHOW_ICON_TEXT_LARGE = bool(False)
+    Settings.SetBoolSetting("ShowIconText_Large", False)
+
 if Settings.GetIntSetting("MaxColumnsPerPanel") is not None or Settings.GetIntSetting("MaxColumnsPerPanel") > 0:
     MAX_COLUMN_PANELS = Settings.GetIntSetting("MaxColumnsPerPanel")
 else:
     MAX_COLUMN_PANELS = int(6)
     Settings.SetIntSetting("MaxColumnsPerPanel", MAX_COLUMN_PANELS)
+# endregion ------------------------------------------------------------------------------------------------------------
 
-# Get the Debug Mode
+# region - Get the Debug Mode ------------------------------------------------------------------------------------------
 if Settings.GetBoolSetting("DebugMode") is True:
     DEBUG_MODE = Settings.GetBoolSetting("DebugMode")
 else:
     DEBUG_MODE = False
     Settings.SetBoolSetting("DebugMode", False)
+# endregion ------------------------------------------------------------------------------------------------------------
 
-# Navigation settings
+# region - Navigation settings -----------------------------------------------------------------------------------------
 if Settings.GetBoolSetting("ShowOnHover") is True:
     SHOW_ON_HOVER = Settings.GetBoolSetting("ShowOnHover")
 else:
@@ -219,3 +255,4 @@ if Settings.GetIntSetting("Ribbon_Click") is not None or Settings.GetIntSetting(
 else:
     RIBBON_CLICKSPEED = int(1)
     Settings.SetIntSetting("Ribbon_Click", RIBBON_CLICKSPEED)
+# endregion ------------------------------------------------------------------------------------------------------------

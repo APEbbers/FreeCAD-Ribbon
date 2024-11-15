@@ -126,7 +126,18 @@ class ModernMenu(RibbonBar):
 
     # use icon size from FreeCAD preferences
     iconSize = Parameters_Ribbon.ICON_SIZE_SMALL
-    ApplicationButtonSize = iconSize * 2
+    ApplicationButtonSize = Parameters_Ribbon.APP_ICON_SIZE
+    if ApplicationButtonSize is None or ApplicationButtonSize == 0:
+        ApplicationButtonSize = 2 * iconSize
+    QuickAccessButtonSize = Parameters_Ribbon.QUICK_ICON_SIZE
+    if QuickAccessButtonSize is None or QuickAccessButtonSize == 0:
+        QuickAccessButtonSize = iconSize
+    RightToolBarButtonSize = Parameters_Ribbon.RIGHT_ICON_SIZE
+    if RightToolBarButtonSize is None or RightToolBarButtonSize == 0:
+        RightToolBarButtonSize = iconSize
+    TabBar_Size = Parameters_Ribbon.TABBAR_SIZE
+    if TabBar_Size is None or TabBar_Size == 0:
+        TabBar_Size = iconSize
 
     # Set a sixe factor for the buttons
     sizeFactor = 1.3
@@ -203,6 +214,36 @@ class ModernMenu(RibbonBar):
             or Parameters_Ribbon.Settings.GetIntSetting("IconSize_Medium") == 0
         ):
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 40)
+
+        if (
+            Parameters_Ribbon.Settings.GetIntSetting("IconSize_Large") is not None
+            or Parameters_Ribbon.Settings.GetIntSetting("IconSize_Large") > 0
+        ):
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 200)
+
+        if (
+            Parameters_Ribbon.Settings.GetIntSetting("ApplicationButtonSize") is not None
+            or Parameters_Ribbon.Settings.GetIntSetting("ApplicationButtonSize") > 0
+        ):
+            Parameters_Ribbon.Settings.SetIntSetting("ApplicationButtonSize", self.iconSize * 2)
+
+        if (
+            Parameters_Ribbon.Settings.GetIntSetting("QuickAccessButtonSize") is not None
+            or Parameters_Ribbon.Settings.GetIntSetting("QuickAccessButtonSize") > 0
+        ):
+            Parameters_Ribbon.Settings.SetIntSetting("QuickAccessButtonSize", self.iconSize)
+
+        if (
+            Parameters_Ribbon.Settings.GetIntSetting("TabBarSize") is not None
+            or Parameters_Ribbon.Settings.GetIntSetting("TabBarSize") > 0
+        ):
+            Parameters_Ribbon.Settings.SetIntSetting("TabBarSize", self.iconSize)
+
+        if (
+            Parameters_Ribbon.Settings.GetIntSetting("RightToolbarButtonSize") is not None
+            or Parameters_Ribbon.Settings.GetIntSetting("RightToolbarButtonSize") > 0
+        ):
+            Parameters_Ribbon.Settings.SetIntSetting("RightToolbarButtonSize", self.iconSize)
 
         # Set the mouse settings
         if Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is None:

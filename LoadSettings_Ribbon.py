@@ -85,6 +85,10 @@ class LoadDialog(Settings_ui.Ui_Form):
         self.form.IconSize_Small.setValue(Parameters_Ribbon.ICON_SIZE_SMALL)
         self.form.IconSize_Medium.setValue(Parameters_Ribbon.ICON_SIZE_MEDIUM)
         # self.form.IconSize_Large.setValue(Parameters_Ribbon.ICON_SIZE_LARGE)
+        self.form.IconSize_ApplicationButton.setValue(Parameters_Ribbon.APP_ICON_SIZE)
+        self.form.IconSize_QuickAccessButton.setValue(Parameters_Ribbon.QUICK_ICON_SIZE)
+        self.form.IconSize_rightToolbarButton.setValue(Parameters_Ribbon.RIGHT_ICON_SIZE)
+        self.form.TabbarHeight.setValue(Parameters_Ribbon.TABBAR_SIZE)
         self.form.label_7.setText(Parameters_Ribbon.STYLESHEET)
         if Parameters_Ribbon.SHOW_ICON_TEXT_SMALL is True:
             self.form.ShowText_Small.setCheckState(Qt.CheckState.Checked)
@@ -192,6 +196,26 @@ class LoadDialog(Settings_ui.Ui_Form):
     #     self.settingChanged = True
     #     return
 
+    def on_IconSize_ApplicationButton_TextChanged(self):
+        Parameters_Ribbon.APP_ICON_SIZE = int(self.form.IconSize_ApplicationButton.text())
+        self.settingChanged = True
+        return
+
+    def on_IconSize_QuickAccessButton_TextChanged(self):
+        Parameters_Ribbon.QUICK_ICON_SIZE = int(self.form.IconSize_QuickAccessButton.text())
+        self.settingChanged = True
+        return
+
+    def on_IconSize_rightToolbarButton_TextChanged(self):
+        Parameters_Ribbon.RIGHT_ICON_SIZE = int(self.form.IconSize_rightToolbarButton.text())
+        self.settingChanged = True
+        return
+
+    def on_TabbarHeight_TextChanged(self):
+        Parameters_Ribbon.TABBAR_SIZE = int(self.form.TabbarHeight.text())
+        self.settingChanged = True
+        return
+
     def on_MaxPanelColumn_TextChanged(self):
         Parameters_Ribbon.MAX_COLUMN_PANELS = int(self.form.MaxPanelColumn.text())
         self.settingChanged = True
@@ -284,18 +308,33 @@ class LoadDialog(Settings_ui.Ui_Form):
 
     @staticmethod
     def on_Close_clicked(self):
+        # Save backup settings
         Parameters_Ribbon.Settings.SetBoolSetting("BackupEnabled", self.Backup)
         Parameters_Ribbon.Settings.SetStringSetting("BackupFolder", self.BackupLocation)
+        # Save icon sizes
         Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", int(self.form.IconSize_Small.text()))
         Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", int(self.form.IconSize_Medium.text()))
         # Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", int(self.form.IconSize_Large.text()))
         Parameters_Ribbon.Settings.SetStringSetting("Stylesheet", self.StyleSheet)
+        Parameters_Ribbon.Settings.SetStringSetting(
+            "ApplicationButtonSize", int(self.form.IconSize_ApplicationButton.text())
+        )
+        Parameters_Ribbon.Settings.SetStringSetting(
+            "QuickAccessButtonSize", int(self.form.IconSize_QuickAccessButton.text())
+        )
+        Parameters_Ribbon.Settings.SetStringSetting("TabBarSize", int(self.form.TabbarHeight.text()))
+        Parameters_Ribbon.Settings.SetStringSetting(
+            "RightToolbarButtonSize", int(self.form.IconSize_rightToolbarButton.text())
+        )
+        # Save text settings
         Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", self.ShowText_Small)
         Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", self.ShowText_Medium)
         Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", self.ShowText_Large)
+        # Save No of columns
         Parameters_Ribbon.Settings.SetIntSetting("MaxColumnsPerPanel", int(self.form.MaxPanelColumn.text()))
         Parameters_Ribbon.Settings.SetBoolSetting("DebugMode", self.DebugMode)
         Parameters_Ribbon.Settings.SetBoolSetting("ShowOnHover", self.ShowOnHover)
+        # Save behavior settings
         Parameters_Ribbon.Settings.SetIntSetting("TabBar_Scroll", self.form.ScrollSpeed_TabBar.value())
         Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Scroll", self.form.ScrollSpeed_Ribbon.value())
         Parameters_Ribbon.Settings.SetIntSetting("TabBar_Click", self.form.ScrollClicks_TabBar.value())
