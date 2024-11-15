@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>580</width>
-    <height>798</height>
+    <height>874</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -165,60 +165,6 @@
           <item row="0" column="0">
            <layout class="QGridLayout" name="gridLayout_3">
             <item row="1" column="0">
-             <widget class="QGroupBox" name="groupBox_3">
-              <property name="font">
-               <font>
-                <bold>false</bold>
-               </font>
-              </property>
-              <property name="title">
-               <string>Show text</string>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_2">
-               <item row="0" column="0">
-                <layout class="QVBoxLayout" name="verticalLayout">
-                 <item>
-                  <widget class="QCheckBox" name="ShowText_Small">
-                   <property name="font">
-                    <font>
-                     <bold>false</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Small buttons</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="ShowText_Medium">
-                   <property name="font">
-                    <font>
-                     <bold>false</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Medium buttons</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QCheckBox" name="ShowText_Large">
-                   <property name="font">
-                    <font>
-                     <bold>false</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Large buttons</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
-              </layout>
-             </widget>
-            </item>
-            <item row="0" column="0">
              <widget class="QGroupBox" name="groupBox_4">
               <property name="font">
                <font>
@@ -232,7 +178,14 @@
                <item row="0" column="0">
                 <layout class="QGridLayout" name="gridLayout">
                  <item row="2" column="1">
-                  <widget class="QSpinBox" name="IconSize_ApplicationButton"/>
+                  <widget class="QSpinBox" name="IconSize_ApplicationButton">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </widget>
                  </item>
                  <item row="2" column="0">
                   <widget class="QLabel" name="label_5">
@@ -252,7 +205,7 @@
                    <property name="minimumSize">
                     <size>
                      <width>50</width>
-                     <height>0</height>
+                     <height>20</height>
                     </size>
                    </property>
                    <property name="baseSize">
@@ -312,7 +265,7 @@
                    <property name="minimumSize">
                     <size>
                      <width>50</width>
-                     <height>0</height>
+                     <height>20</height>
                     </size>
                    </property>
                    <property name="sizeIncrement">
@@ -353,10 +306,24 @@
                   </widget>
                  </item>
                  <item row="3" column="1">
-                  <widget class="QSpinBox" name="IconSize_QuickAccessButton"/>
+                  <widget class="QSpinBox" name="IconSize_QuickAccessButton">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </widget>
                  </item>
                  <item row="5" column="1">
-                  <widget class="QSpinBox" name="IconSize_rightToolbarButton"/>
+                  <widget class="QSpinBox" name="IconSize_rightToolbarButton">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </widget>
                  </item>
                  <item row="0" column="0">
                   <widget class="QLabel" name="label_10">
@@ -392,7 +359,7 @@
                  <item row="3" column="0">
                   <widget class="QLabel" name="label_21">
                    <property name="text">
-                    <string>Size of quick access toolbar buttons:</string>
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of quick access toolbar buttons: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                    </property>
                   </widget>
                  </item>
@@ -404,7 +371,14 @@
                   </widget>
                  </item>
                  <item row="4" column="1">
-                  <widget class="QSpinBox" name="TabbarHeight"/>
+                  <widget class="QSpinBox" name="TabbarHeight">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </widget>
                  </item>
                 </layout>
                </item>
@@ -424,7 +398,7 @@
               </layout>
              </widget>
             </item>
-            <item row="2" column="0">
+            <item row="3" column="0">
              <widget class="QGroupBox" name="groupBox_5">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -460,7 +434,7 @@
                    <property name="minimumSize">
                     <size>
                      <width>50</width>
-                     <height>0</height>
+                     <height>20</height>
                     </size>
                    </property>
                    <property name="minimum">
@@ -508,6 +482,133 @@
                   </widget>
                  </item>
                 </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QGroupBox" name="groupBox_3">
+              <property name="font">
+               <font>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="title">
+               <string>Show text</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_2">
+               <item row="0" column="0">
+                <layout class="QVBoxLayout" name="verticalLayout">
+                 <item>
+                  <widget class="QCheckBox" name="ShowText_Small">
+                   <property name="font">
+                    <font>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Small buttons</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="ShowText_Medium">
+                   <property name="font">
+                    <font>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Medium buttons</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QCheckBox" name="ShowText_Large">
+                   <property name="font">
+                    <font>
+                     <bold>false</bold>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Large buttons</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QGroupBox" name="groupBox_10">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="title">
+               <string>Tab style</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_25">
+               <item row="0" column="0">
+                <layout class="QGridLayout" name="gridLayout_24">
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="label_24">
+                   <property name="text">
+                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the tab style: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QComboBox" name="TabbarStyle">
+                   <property name="minimumSize">
+                    <size>
+                     <width>100</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="currentText">
+                    <string>Icon + text</string>
+                   </property>
+                   <item>
+                    <property name="text">
+                     <string>Icon + text</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Icon only</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>Text only</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="1">
+                <spacer name="horizontalSpacer_7">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
                </item>
               </layout>
              </widget>
