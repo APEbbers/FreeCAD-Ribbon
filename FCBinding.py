@@ -469,7 +469,7 @@ class ModernMenu(RibbonBar):
                         if Parameters_Ribbon.TABBAR_STYLE == 1:
                             # set tab icon
                             self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon(workbench.Icon))
-                        if Parameters_Ribbon.TABBAR_STYLE == 0:
+                        if Parameters_Ribbon.TABBAR_STYLE == 2:
                             # Set the title
                             self.addCategory(name)
 
