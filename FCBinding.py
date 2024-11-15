@@ -96,12 +96,12 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
+import pyqtribbon as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -589,12 +589,14 @@ class ModernMenu(RibbonBar):
                         ListScripts[i],
                         lambda i=i + 1: self.LoadMarcoFreeCAD(ListScripts[i - 1]),
                     )
-        # Add a about button for this ribbon
+        # Add a about button and a What's new?  buttonfor this ribbon
         # Get the version of this addon
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
 
         Menu.addSeparator()
+        WhatsNewButton = Menu.addAction(translate("FreeCAD Ribbon", "What's new?"))
+        WhatsNewButton.triggered.connect(self.on_WhatsNewButton_clicked)
         AboutButton = Menu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version)
         AboutButton.triggered.connect(self.on_AboutButton_clicked)
 
@@ -621,6 +623,14 @@ class ModernMenu(RibbonBar):
 
             AboutAdress = self.ReproAdress + "wiki"
             webbrowser.open(AboutAdress, new=2, autoraise=True)
+        return
+
+    def on_WhatsNewButton_clicked(self):
+        if self.ReproAdress != "" or self.ReproAdress is not None:
+            if not self.ReproAdress.endswith("/"):
+                self.ReproAdress = self.ReproAdress + "/"
+            Adress = self.ReproAdress + "wiki" + "06-%E2%80%90-What's-new%3F"
+            webbrowser.open(Adress, new=2, autoraise=True)
         return
 
     def onPinClicked(self):
