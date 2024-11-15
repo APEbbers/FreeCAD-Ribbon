@@ -127,17 +127,9 @@ class ModernMenu(RibbonBar):
     # use icon size from FreeCAD preferences
     iconSize = Parameters_Ribbon.ICON_SIZE_SMALL
     ApplicationButtonSize = Parameters_Ribbon.APP_ICON_SIZE
-    if ApplicationButtonSize is None or ApplicationButtonSize == 0:
-        ApplicationButtonSize = 2 * iconSize
     QuickAccessButtonSize = Parameters_Ribbon.QUICK_ICON_SIZE
-    if QuickAccessButtonSize is None or QuickAccessButtonSize == 0:
-        QuickAccessButtonSize = iconSize
     RightToolBarButtonSize = Parameters_Ribbon.RIGHT_ICON_SIZE
-    if RightToolBarButtonSize is None or RightToolBarButtonSize == 0:
-        RightToolBarButtonSize = iconSize
     TabBar_Size = Parameters_Ribbon.TABBAR_SIZE
-    if TabBar_Size is None or TabBar_Size == 0:
-        TabBar_Size = iconSize
 
     # Set a sixe factor for the buttons
     sizeFactor = 1.3
@@ -202,76 +194,7 @@ class ModernMenu(RibbonBar):
             print(translate("FreeCAD Ribbon", "FreeCAD Ribbon: ") + self.ReproAdress)
 
         # Set the icon size if parameters has none
-        # Define the icon sizes
-        if (
-            Parameters_Ribbon.Settings.GetIntSetting("IconSize_Small") is None
-            or Parameters_Ribbon.Settings.GetIntSetting("IconSize_Small") == 0
-        ):
-            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 30)
-
-        if (
-            Parameters_Ribbon.Settings.GetIntSetting("IconSize_Medium") is None
-            or Parameters_Ribbon.Settings.GetIntSetting("IconSize_Medium") == 0
-        ):
-            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 40)
-
-        if (
-            Parameters_Ribbon.Settings.GetIntSetting("IconSize_Large") is not None
-            or Parameters_Ribbon.Settings.GetIntSetting("IconSize_Large") > 0
-        ):
-            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 200)
-
-        if (
-            Parameters_Ribbon.Settings.GetIntSetting("ApplicationButtonSize") is not None
-            or Parameters_Ribbon.Settings.GetIntSetting("ApplicationButtonSize") > 0
-        ):
-            Parameters_Ribbon.Settings.SetIntSetting("ApplicationButtonSize", self.iconSize * 2)
-
-        if (
-            Parameters_Ribbon.Settings.GetIntSetting("QuickAccessButtonSize") is not None
-            or Parameters_Ribbon.Settings.GetIntSetting("QuickAccessButtonSize") > 0
-        ):
-            Parameters_Ribbon.Settings.SetIntSetting("QuickAccessButtonSize", self.iconSize)
-
-        if (
-            Parameters_Ribbon.Settings.GetIntSetting("TabBarSize") is not None
-            or Parameters_Ribbon.Settings.GetIntSetting("TabBarSize") > 0
-        ):
-            Parameters_Ribbon.Settings.SetIntSetting("TabBarSize", self.iconSize)
-
-        if (
-            Parameters_Ribbon.Settings.GetIntSetting("RightToolbarButtonSize") is not None
-            or Parameters_Ribbon.Settings.GetIntSetting("RightToolbarButtonSize") > 0
-        ):
-            Parameters_Ribbon.Settings.SetIntSetting("RightToolbarButtonSize", self.iconSize)
-
-        # Set the mouse settings
-        if Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is None:
-            Parameters_Ribbon.Settings.SetBoolSetting("ShowOnHover", False)
-
-        # Set the mouse scroll settings
-        if (
-            Parameters_Ribbon.Settings.GetIntSetting("TabBar_Scroll") is None
-            or Parameters_Ribbon.Settings.GetIntSetting("TabBar_Scroll") == 0
-        ):
-            Parameters_Ribbon.Settings.SetIntSetting("TabBar_Scroll", 1)
-        if (
-            Parameters_Ribbon.Settings.GetIntSetting("Ribbon_Scroll") is None
-            or Parameters_Ribbon.Settings.GetIntSetting("Ribbon_Scroll") == 0
-        ):
-            Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Scroll", 1)
-
-        # scroll button settings
-        if (
-            Parameters_Ribbon.Settings.GetIntSetting("TabBar_Click") is None
-            or Parameters_Ribbon.Settings.GetIntSetting("TabBar_Click") == 0
-        ):
-            Parameters_Ribbon.Settings.SetIntSetting("TabBar_Click", 1)
-        if (
-            Parameters_Ribbon.Settings.GetIntSetting("Ribbon_Click") is None
-            or Parameters_Ribbon.Settings.GetIntSetting("Ribbon_Click") == 0
-        ):
-            Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Click", 1)
+        Parameters_Ribbon.Settings.WriteSettings()
 
         # read ribbon structure from JSON file
         with open(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, "r") as file:
@@ -443,7 +366,7 @@ class ModernMenu(RibbonBar):
         """
         # add quick access buttons
         i = 1  # Start value for button count. Used for width of quickaccess toolbar
-        toolBarWidth = ((self.iconSize * self.sizeFactor) * i) + self.ApplicationButtonSize
+        toolBarWidth = ((self.QuickAccessButtonSize * self.sizeFactor) * i) + self.ApplicationButtonSize
         for commandName in self.ribbonStructure["quickAccessCommands"]:
             i = i + 1
             width = 0
@@ -453,18 +376,18 @@ class ModernMenu(RibbonBar):
 
                 if len(QuickAction) <= 1:
                     button.setDefaultAction(QuickAction[0])
-                    width = self.iconSize
-                    height = self.iconSize
-                    button.setMinimumWidth(width)
+                    width = self.QuickAccessButtonSize
+                    height = self.QuickAccessButtonSize
+                    button.setFixedSize(width, height)
                 elif len(QuickAction) > 1:
                     button.addActions(QuickAction)
                     button.setDefaultAction(QuickAction[0])
-                    width = (self.iconSize) + self.iconSize
-                    height = self.iconSize
+                    width = (self.QuickAccessButtonSize) + self.QuickAccessButtonSize
+                    height = self.QuickAccessButtonSize
                     button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                     button.setFixedSize(width, height)
                 button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
-                self.setQuickAccessButtonHeight(self.iconSize)
+                self.setQuickAccessButtonHeight(self.QuickAccessButtonSize)
 
                 # Add the button to the quickaccess toolbar
                 self.addQuickAccessButton(button)
@@ -479,10 +402,16 @@ class ModernMenu(RibbonBar):
         # Set the width of the quickaccess toolbar.
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
         # Set the size policy
-        self.quickAccessToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
+        self.quickAccessToolBar().setSizePolicy(
+            QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding
+        )
 
         # Set the tabbar height and textsize
-        self.tabBar().setIconSize(QSize(self.iconSize, self.iconSize))
+        self.tabBar().setContentsMargins(3, 3, 3, 3)
+        font = self.tabBar().font()
+        font.setPixelSize(self.TabBar_Size * 0.6)
+        self.tabBar().setFont(font)
+        self.tabBar().setIconSize(QSize(self.TabBar_Size - 6, self.TabBar_Size - 6))
 
         # Correct colors when no stylesheet is selected for FreeCAD.
         FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
@@ -536,7 +465,7 @@ class ModernMenu(RibbonBar):
                         self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon(workbench.Icon))
 
         # Set the size of the collapseRibbonButton
-        self.collapseRibbonButton().setFixedSize(self.iconSize, self.iconSize)
+        self.collapseRibbonButton().setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
 
         # add the searchbar if available
         SearchBarWidth = self.AddSearchBar()
@@ -549,14 +478,14 @@ class ModernMenu(RibbonBar):
         helpMenu = mw.findChildren(QMenu, "&Help")[0]
         helpAction = helpMenu.actions()[0]
         self.helpRibbonButton().setDefaultAction(helpAction)
-        self.helpRibbonButton().setFixedSize(self.iconSize, self.iconSize)
+        self.helpRibbonButton().setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
 
         # Add a button the enable or disable AutoHide
         pinButton = QToolButton()
         pinButton.setCheckable(True)
         pinButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        pinButton.setFixedSize(self.iconSize, self.iconSize)
-        pinButton.setIconSize(QSize(self.iconSize, self.iconSize))
+        pinButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+        pinButton.setIconSize(QSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize))
         pinButtonIcon = StyleMapping.ReturnStyleItem("PinButton_open")
         if pinButtonIcon is not None:
             pinButton.setIcon(pinButtonIcon)
@@ -572,8 +501,8 @@ class ModernMenu(RibbonBar):
         # Set the width of the right toolbar
         RightToolbarWidth = SearchBarWidth
         for child in self.rightToolBar().actions():
-            RightToolbarWidth = RightToolbarWidth + self.iconSize
-        self.rightToolBar().setMinimumWidth(RightToolbarWidth - self.iconSize * 1.5)
+            RightToolbarWidth = RightToolbarWidth + self.RightToolBarButtonSize
+        self.rightToolBar().setMinimumWidth(RightToolbarWidth - self.RightToolBarButtonSize * 1.5)
         # Set the size policy
         self.rightToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
 
@@ -583,7 +512,7 @@ class ModernMenu(RibbonBar):
         self.setApplicationIcon(Gui.getIcon("freecad"))
 
         # Set the border color and shape
-        radius = str(self.ApplicationButtonSize * 0.49) + "px"
+        radius = str((self.applicationOptionButton().width() * 0.49) - 1) + "px"
         self.applicationOptionButton().setStyleSheet(StyleMapping.ReturnStyleSheet("applicationbutton", radius))
 
         # add the menus from the menubar to the application button
