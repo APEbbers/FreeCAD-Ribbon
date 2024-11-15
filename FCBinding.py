@@ -620,10 +620,12 @@ class ModernMenu(RibbonBar):
         return
 
     def on_AboutButton_clicked(self, version):
+        LICENSE = open(os.path.join(os.path.dirname(__file__), "LICENSE"))
+
         text = f"""FreeCAD Ribbon {version}
         \na Ribbon UI for FreeCAD.\n
         \n
-        License:\n\n{license()}
+        License:\n\n{LICENSE}
         """
 
         StandardFunctions.Mbox(text=text, title="About FreeCAD Ribbon", style=0, IconType="NoIcon")
