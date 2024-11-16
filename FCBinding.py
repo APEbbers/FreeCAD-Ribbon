@@ -89,19 +89,19 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon_local.panel import RibbonPanel
-from pyqtribbon_local.toolbutton import RibbonToolButton
-from pyqtribbon_local.separator import RibbonSeparator
-from pyqtribbon_local.category import RibbonCategoryLayoutButton
+# import pyqtribbon_local as pyqtribbon
+# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon_local.panel import RibbonPanel
+# from pyqtribbon_local.toolbutton import RibbonToolButton
+# from pyqtribbon_local.separator import RibbonSeparator
+# from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
+import pyqtribbon as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -314,17 +314,15 @@ class ModernMenu(RibbonBar):
             delta = event.angleDelta().y()
             x += delta and delta // abs(delta)
 
-            NoClicks = Parameters_Ribbon.Settings.GetIntSetting("TabBar_Scroll")
+            NoClicks = Parameters_Ribbon.Settings.GetIntSetting("TabBar_Scroll") * 10
             if NoClicks == 0 or NoClicks is None:
-                NoClicks = 1
+                NoClicks = 50
 
             # go back or forward based on x.
             if x == 1:
-                for i in range(NoClicks):
-                    self.currentCategory().scrollPrevious()
+                self.currentCategory().scrollPrevious()
             if x == -1:
-                for i in range(NoClicks):
-                    self.currentCategory().scrollNext()
+                self.currentCategory().scrollNext()
         return
 
     # used to scroll the tabbar horizontally, when it's wider than the screen
@@ -1227,6 +1225,15 @@ class ModernMenu(RibbonBar):
         else:
             ScrollRightButton_Category.setArrowType(Qt.ArrowType.RightArrow)
 
+        # ScrollLeftButton_Category.clicked.connect(self.on_ScrollButton_Category_clicked(ScrollLeftButton_Category))
+        # ScrollRightButton_Category.clicked.connect(self.on_ScrollButton_Category_clicked(ScrollRightButton_Category))
+
+        return
+
+    def on_ScrollButton_Category_clicked(self, ScrollButton: RibbonCategoryLayoutButton):
+        for i in range(Parameters_Ribbon.RIBBON_CLICKSPEED):
+            print("scroll click")
+            ScrollButton.click()
         return
 
     def updateCurrentTab(self):
