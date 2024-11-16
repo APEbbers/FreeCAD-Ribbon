@@ -314,15 +314,15 @@ class ModernMenu(RibbonBar):
             delta = event.angleDelta().y()
             x += delta and delta // abs(delta)
 
-            NoClicks = Parameters_Ribbon.Settings.GetIntSetting("TabBar_Scroll") * 10
+            NoClicks = 100 - (Parameters_Ribbon.Settings.GetIntSetting("TabBar_Scroll") * 10)
             if NoClicks == 0 or NoClicks is None:
                 NoClicks = 50
 
             # go back or forward based on x.
             if x == 1:
-                self.currentCategory().scrollPrevious()
+                self.currentCategory().scrollPrevious(NoClicks)
             if x == -1:
-                self.currentCategory().scrollNext()
+                self.currentCategory().scrollNext(NoClicks)
         return
 
     # used to scroll the tabbar horizontally, when it's wider than the screen
