@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 import os
 
 from PySide.QtCore import Qt, SIGNAL
-from PySide.QtWidgets import QTabWidget, QSlider, QSpinBox, QCheckBox, QComboBox
+from PySide.QtWidgets import QTabWidget, QSlider, QSpinBox, QCheckBox, QComboBox, QLabel
 import sys
 
 import Standard_Functions_RIbbon as StandardFunctions
@@ -78,6 +78,12 @@ class LoadDialog(Settings_ui.Ui_Form):
 
         # Disable custom Colors and Icons for the time being
         self.form.tabWidget.removeTab(2)
+
+        # Remove tabbar click settings for the time being
+        self.form.label_15().setHidden(True)
+        self.form.label_15().setDisabled(True)
+        self.fom.ScrollClicks_TabBar().setHidden(True)
+        self.fom.ScrollClicks_TabBar().setDisabled(True)
 
         # load all settings
         self.form.EnableBackup.setChecked(Parameters_Ribbon.ENABLE_BACKUP)

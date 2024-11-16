@@ -22,6 +22,7 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
+import time
 
 from PySide.QtGui import (
     QIcon,
@@ -63,6 +64,7 @@ from PySide.QtCore import (
     QMetaObject,
     QCoreApplication,
     QSize,
+    Slot,
 )
 
 import json
@@ -102,6 +104,7 @@ from pyqtribbon_local.category import RibbonCategoryLayoutButton
 # from pyqtribbon.toolbutton import RibbonToolButton
 # from pyqtribbon.separator import RibbonSeparator
 # from pyqtribbon.category import RibbonCategoryLayoutButton
+# from pyqtribbon.tabbar import RibbonTabBar
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -255,6 +258,36 @@ class ModernMenu(RibbonBar):
         self.wheelEvent = lambda event_CC: self.wheelEvent_CC(event_CC)
         self.tabBar().setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.currentCategory().setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+
+        # Customize the tabBar. Has only to be done once
+        # The scrollbuttons for the ribbon are set per ribbon tab
+        # So they are set in self.BuildPanels()
+        #
+        # Set the scroll buttons on the tabbar
+        ScrollLeftButton_Tab: QToolButton = self.tabBar().findChildren(QToolButton)[0]
+        ScrollRightButton_Tab: QToolButton = self.tabBar().findChildren(QToolButton)[1]
+        # get the icons
+        ScrollLeftButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab")
+        ScrollRightButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollRightButton_Tab")
+        # Set the icons
+        StyleSheet = "QToolButton {image: none};QToolButton::arrow {image: none};"
+        BackgroundColor = StyleMapping.ReturnStyleItem("Background_Color")
+        if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21 and BackgroundColor is not None:
+            StyleSheet = (
+                """QToolButton {image: none;background: """
+                + BackgroundColor
+                + """};QToolButton::arrow {image: none};"""
+            )
+        if ScrollLeftButton_Tab_Icon is not None:
+            ScrollLeftButton_Tab.setStyleSheet(StyleSheet)
+            ScrollLeftButton_Tab.setIcon(ScrollLeftButton_Tab_Icon)
+        else:
+            ScrollRightButton_Tab.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextOnly)
+        if ScrollRightButton_Tab_Icon is not None:
+            ScrollRightButton_Tab.setStyleSheet(StyleSheet)
+            ScrollRightButton_Tab.setIcon(ScrollRightButton_Tab_Icon)
+        else:
+            ScrollRightButton_Tab.setArrowType(Qt.ArrowType.RightArrow)
         return
 
     def eventFilter(self, obj, event):
@@ -314,7 +347,7 @@ class ModernMenu(RibbonBar):
             delta = event.angleDelta().y()
             x += delta and delta // abs(delta)
 
-            NoClicks = Parameters_Ribbon.Settings.GetIntSetting("TabBar_Scroll")
+            NoClicks = Parameters_Ribbon.Settings.GetIntSetting("Ribbon_Scroll")
             if NoClicks == 0 or NoClicks is None:
                 NoClicks = 1
 
@@ -339,7 +372,7 @@ class ModernMenu(RibbonBar):
             ScrollLeftButton_Tab: QToolButton = ScrollButtons_Tab[0]
             ScrollRightButton_Tab: QToolButton = ScrollButtons_Tab[1]
 
-            NoClicks = Parameters_Ribbon.Settings.GetIntSetting("Ribbon_Scroll")
+            NoClicks = Parameters_Ribbon.Settings.GetIntSetting("TabBar_Scroll")
             if NoClicks == 0 or NoClicks is None:
                 NoClicks = 1
 
@@ -1181,33 +1214,6 @@ class ModernMenu(RibbonBar):
 
         self.isWbLoaded[tabName] = True
 
-        # cset the scroll buttons on the tabbar
-        ScrollButtons_Tab = self.tabBar().children()
-        ScrollLeftButton_Tab: QToolButton = ScrollButtons_Tab[0]
-        ScrollRightButton_Tab: QToolButton = ScrollButtons_Tab[1]
-        # get the icons
-        ScrollLeftButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab")
-        ScrollRightButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollRightButton_Tab")
-        # Set the icons
-        StyleSheet = "QToolButton {image: none};QToolButton::arrow {image: none};"
-        BackgroundColor = StyleMapping.ReturnStyleItem("Background_Color")
-        if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21 and BackgroundColor is not None:
-            StyleSheet = (
-                """QToolButton {image: none;background: """
-                + BackgroundColor
-                + """};QToolButton::arrow {image: none};"""
-            )
-        if ScrollLeftButton_Tab_Icon is not None:
-            ScrollLeftButton_Tab.setStyleSheet(StyleSheet)
-            ScrollLeftButton_Tab.setIcon(ScrollLeftButton_Tab_Icon)
-        else:
-            ScrollRightButton_Tab.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextOnly)
-        if ScrollRightButton_Tab_Icon is not None:
-            ScrollRightButton_Tab.setStyleSheet(StyleSheet)
-            ScrollRightButton_Tab.setIcon(ScrollRightButton_Tab_Icon)
-        else:
-            ScrollRightButton_Tab.setArrowType(Qt.ArrowType.RightArrow)
-
         # Set the previous/next buttons
         category = self.currentCategory()
         ScrollLeftButton_Category: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[0]
@@ -1226,15 +1232,18 @@ class ModernMenu(RibbonBar):
             ScrollRightButton_Category.setIcon(ScrollRightButton_Category_Icon)
         else:
             ScrollRightButton_Category.setArrowType(Qt.ArrowType.RightArrow)
-
-        # ScrollLeftButton_Category.clicked.connect(self.on_ScrollButton_Category_clicked(ScrollLeftButton_Category))
-        # ScrollRightButton_Category.clicked.connect(self.on_ScrollButton_Category_clicked(ScrollRightButton_Category))
+        # Connect the custom click event
+        ScrollLeftButton_Category.mousePressEvent = lambda clickLeft: self.on_ScrollButton_Category_clicked(
+            clickLeft, ScrollLeftButton_Category
+        )
+        ScrollRightButton_Category.mousePressEvent = lambda clickRight: self.on_ScrollButton_Category_clicked(
+            clickRight, ScrollRightButton_Category
+        )
 
         return
 
-    def on_ScrollButton_Category_clicked(self, ScrollButton: RibbonCategoryLayoutButton):
+    def on_ScrollButton_Category_clicked(self, event, ScrollButton: RibbonCategoryLayoutButton):
         for i in range(Parameters_Ribbon.RIBBON_CLICKSPEED):
-            print("scroll click")
             ScrollButton.click()
         return
 
