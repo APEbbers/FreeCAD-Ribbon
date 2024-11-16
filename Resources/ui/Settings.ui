@@ -517,8 +517,8 @@
               </property>
               <layout class="QGridLayout" name="gridLayout_2">
                <item row="0" column="0">
-                <layout class="QVBoxLayout" name="verticalLayout">
-                 <item>
+                <layout class="QGridLayout" name="gridLayout_26">
+                 <item row="0" column="0">
                   <widget class="QCheckBox" name="ShowText_Small">
                    <property name="font">
                     <font>
@@ -530,7 +530,7 @@
                    </property>
                   </widget>
                  </item>
-                 <item>
+                 <item row="1" column="0">
                   <widget class="QCheckBox" name="ShowText_Medium">
                    <property name="font">
                     <font>
@@ -542,7 +542,7 @@
                    </property>
                   </widget>
                  </item>
-                 <item>
+                 <item row="2" column="0">
                   <widget class="QCheckBox" name="ShowText_Large">
                    <property name="font">
                     <font>
@@ -551,6 +551,13 @@
                    </property>
                    <property name="text">
                     <string>Large buttons</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QLabel" name="label_26">
+                   <property name="text">
+                    <string>Text for Large buttons with a size lower than 100 will</string>
                    </property>
                   </widget>
                  </item>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'LicenseFormIXCbWM.ui'
+## Form generated from reading UI file 'LicenseFormAcGHXv.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -58,7 +58,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName("Dialog")
-        Dialog.resize(400, 384)
+        Dialog.resize(585, 642)
         self.gridLayout = QGridLayout(Dialog)
         self.gridLayout.setObjectName("gridLayout")
         self.buttonBox = QDialogButtonBox(Dialog)
@@ -77,7 +77,7 @@ class Ui_Dialog(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 501, 9858))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 533, 9858))
         self.gridLayout_3 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.LicenseText = QLabel(self.scrollAreaWidgetContents)
