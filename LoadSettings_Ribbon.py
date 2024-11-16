@@ -82,8 +82,8 @@ class LoadDialog(Settings_ui.Ui_Form):
         # Remove tabbar click settings for the time being
         self.form.label_15.setHidden(True)
         self.form.label_15.setDisabled(True)
-        self.form.ScrollClicks_TabBar().setHidden(True)
-        self.form.ScrollClicks_TabBar().setDisabled(True)
+        self.form.ScrollClicks_TabBar.setHidden(True)
+        self.form.ScrollClicks_TabBar.setDisabled(True)
 
         # load all settings
         self.form.EnableBackup.setChecked(Parameters_Ribbon.ENABLE_BACKUP)
