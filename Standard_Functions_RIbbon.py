@@ -371,6 +371,14 @@ def CreateToolbar(Name: str, WorkBenchName: str = "Global", ButtonList: list = [
     # define the parameter path for the toolbar
     WorkbenchToolBarsParamPath = "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
 
+    # check if there is already a toolbar with the same name
+    CustomToolbars: list = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar").GetGroups()
+    for Group in CustomToolbars:
+        Parameter = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar/" + Group)
+        ItemName = Parameter.GetString("Name")
+        if ItemName == ToolBarName:
+            return ToolBarName
+
     # add the ToolbarGroup in the FreeCAD Parameters
     WorkbenchToolbar = App.ParamGet(WorkbenchToolBarsParamPath + ToolBarName)
 

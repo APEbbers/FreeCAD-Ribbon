@@ -189,9 +189,9 @@ class ModernMenu(RibbonBar):
             ButtonList=[
                 "Std_Measure",
                 "Std_UnitsCalculator",
+                "Std_Properties",
                 "Std_BoxElementSelection",
                 "Std_BoxSelection",
-                "Std_Properties",
                 "Std_WhatsThis",
             ],
         )
