@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsRFbxHv.ui'
+## Form generated from reading UI file 'SettingsuHpMBK.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -507,10 +507,6 @@ class Ui_Form(object):
 
         self.gridLayout_18.addLayout(self.gridLayout_17, 0, 0, 1, 1)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_18.addItem(self.verticalSpacer, 1, 0, 1, 1)
-
         self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_18.addItem(self.horizontalSpacer_4, 0, 1, 1, 1)
@@ -578,6 +574,10 @@ class Ui_Form(object):
         self.gridLayout_16.addLayout(self.gridLayout_15, 0, 0, 1, 1)
 
         self.gridLayout_14.addWidget(self.groupBox_6, 0, 0, 1, 1)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_14.addItem(self.verticalSpacer, 2, 0, 1, 1)
 
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QWidget()
@@ -751,7 +751,7 @@ class Ui_Form(object):
         self.CustomColors.toggled.connect(self.ColorS.setEnabled)
         self.CustomIcons.toggled.connect(self.IconS.setEnabled)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
         QMetaObject.connectSlotsByName(Form)
 
