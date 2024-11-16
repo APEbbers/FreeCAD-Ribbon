@@ -23,9 +23,9 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide6.QtCore import Qt, SIGNAL
-from PySide6.QtWidgets import QTabWidget, QSlider, QSpinBox, QCheckBox, QComboBox, QLabel
-from PySide6.QtGui import QIcon, QPixmap
+from PySide.QtCore import Qt, SIGNAL
+from PySide.QtWidgets import QTabWidget, QSlider, QSpinBox, QCheckBox, QComboBox, QLabel
+from PySide.QtGui import QIcon, QPixmap
 import sys
 
 import Standard_Functions_RIbbon as StandardFunctions
@@ -72,7 +72,8 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
 
         # Add a logo
         pixmap = QPixmap(os.path.join(pathIcons, "FreecadNew.svg"))
-        QLabel(self.form.LogoHolder).setPixmap(pixmap)
+        self.form.LogoHolder.setFixedSize(pixmap.height(), pixmap.width())
+        self.form.LogoHolder.setPixmap(pixmap)
 
         if QLabel(self.form.LogoHolder).pixmap() is None:
             self.form.LogoHolder.setHidden(True)
@@ -85,7 +86,8 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         self.form.Introduction.setText(
             f"""
         A customizable ribbon UI for FreeCAD.
-        installed version: {version}
+        
+        Installed version: {version}
         """
         )
 
