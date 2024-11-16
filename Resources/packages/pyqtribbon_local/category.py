@@ -120,13 +120,13 @@ class RibbonCategoryLayoutWidget(QFrame):
         self._previousButton.setIconSize(QSize(12, self.size().height() - 15))
         self._nextButton.setIconSize(QSize(12, self.size().height() - 15))
 
-    def scrollPrevious(self, value: int):
+    def scrollPrevious(self, value: int = 50):
         """Scroll the category to the previous widget."""
         horizontalScrollBar = self._categoryScrollArea.horizontalScrollBar()
         horizontalScrollBar.setValue(horizontalScrollBar.value() - value)
         self.autoSetScrollButtonsVisible()
 
-    def scrollNext(self, value: int):
+    def scrollNext(self, value: int = 50):
         """Scroll the category to the next widget."""
         self._categoryScrollArea.horizontalScrollBar().setValue(
             self._categoryScrollArea.horizontalScrollBar().value() + value
