@@ -766,14 +766,18 @@ class ModernMenu(RibbonBar):
 
         # Get the list of toolbars from the active workbench
         ListToolbars: list = workbench.listToolbars()
-        if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
-            ListToolbars.append("Individual views")
-        ListToolbars.append("Tools")
+        # if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
+        #     ListToolbars.append("Individual views")
+        # ListToolbars.append("Tools")
         # Get custom toolbars that are created in the toolbar environment and add them to the list of toolbars
         CustomToolbars = self.List_ReturnCustomToolbars()
         for CustomToolbar in CustomToolbars:
             if CustomToolbar[1] == workbenchName:
                 ListToolbars.append(CustomToolbar[0])
+        # Get the global custom toolbars that are created in the toolbar environment and add them to the list of toolbars
+        CustomToolbars_Global = self.List_ReturnCustomToolbars_Global()
+        for CustomToolbar in CustomToolbars_Global:
+            ListToolbars.append(CustomToolbar[0])
 
         # Get the custom panels and add them to the list of toolbars
         try:
@@ -1287,6 +1291,19 @@ class ModernMenu(RibbonBar):
                         Name = Parameter.GetString("Name")
 
                         Toolbars.append([Name, WorkBenchName])
+
+        return Toolbars
+
+    def List_ReturnCustomToolbars_Global(self):
+        Toolbars = []
+
+        CustomToolbars: list = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar").GetGroups()
+
+        for Group in CustomToolbars:
+            Parameter = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar/" + Group)
+            Name = Parameter.GetString("Name")
+
+            Toolbars.append([Name, "Global"])
 
         return Toolbars
 
