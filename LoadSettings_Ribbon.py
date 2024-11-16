@@ -91,7 +91,7 @@ class LoadDialog(Settings_ui.Ui_Form):
         self.form.TabbarStyle.setCurrentIndex(Parameters_Ribbon.TABBAR_STYLE)
         self.form.IconSize_Small.setValue(Parameters_Ribbon.ICON_SIZE_SMALL)
         self.form.IconSize_Medium.setValue(Parameters_Ribbon.ICON_SIZE_MEDIUM)
-        # self.form.IconSize_Large.setValue(Parameters_Ribbon.ICON_SIZE_LARGE)
+        self.form.IconSize_Large.setValue(Parameters_Ribbon.ICON_SIZE_LARGE)
         self.form.IconSize_ApplicationButton.setValue(Parameters_Ribbon.APP_ICON_SIZE)
         self.form.IconSize_QuickAccessButton.setValue(Parameters_Ribbon.QUICK_ICON_SIZE)
         self.form.IconSize_rightToolbarButton.setValue(Parameters_Ribbon.RIGHT_ICON_SIZE)
@@ -139,7 +139,7 @@ class LoadDialog(Settings_ui.Ui_Form):
         # Connect icon sizes
         self.form.IconSize_Small.textChanged.connect(self.on_IconSize_Small_TextChanged)
         self.form.IconSize_Medium.textChanged.connect(self.on_IconSize_Medium_TextChanged)
-        # self.form.IconSize_Large.textChanged.connect(self.on_IconSize_Large_TextChanged)
+        self.form.IconSize_Large.textChanged.connect(self.on_IconSize_Large_TextChanged)
         self.form.IconSize_ApplicationButton.textChanged.connect(self.on_IconSize_ApplicationButton_TextChanged)
         self.form.IconSize_QuickAccessButton.textChanged.connect(self.on_IconSize_QuickAccessButton_TextChanged)
         self.form.IconSize_rightToolbarButton.textChanged.connect(self.on_IconSize_rightToolbarButton_TextChanged)
@@ -214,10 +214,10 @@ class LoadDialog(Settings_ui.Ui_Form):
         self.settingChanged = True
         return
 
-    # def on_IconSize_Large_TextChanged(self):
-    #     Parameters_Ribbon.ICON_SIZE_LARGE = int(self.form.IconSize_Large.text())
-    #     self.settingChanged = True
-    #     return
+    def on_IconSize_Large_TextChanged(self):
+        Parameters_Ribbon.ICON_SIZE_LARGE = int(self.form.IconSize_Large.text())
+        self.settingChanged = True
+        return
 
     def on_IconSize_ApplicationButton_TextChanged(self):
         Parameters_Ribbon.APP_ICON_SIZE = int(self.form.IconSize_ApplicationButton.text())
@@ -339,7 +339,7 @@ class LoadDialog(Settings_ui.Ui_Form):
         # Save icon sizes
         Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", int(self.form.IconSize_Small.text()))
         Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", int(self.form.IconSize_Medium.text()))
-        # Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", int(self.form.IconSize_Large.text()))
+        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", int(self.form.IconSize_Large.text()))
         Parameters_Ribbon.Settings.SetStringSetting("Stylesheet", self.StyleSheet)
         Parameters_Ribbon.Settings.SetIntSetting(
             "ApplicationButtonSize", int(self.form.IconSize_ApplicationButton.text())

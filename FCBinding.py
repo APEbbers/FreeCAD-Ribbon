@@ -91,20 +91,20 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon_local.panel import RibbonPanel
-from pyqtribbon_local.toolbutton import RibbonToolButton
-from pyqtribbon_local.separator import RibbonSeparator
-from pyqtribbon_local.category import RibbonCategoryLayoutButton
+# import pyqtribbon_local as pyqtribbon
+# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon_local.panel import RibbonPanel
+# from pyqtribbon_local.toolbutton import RibbonToolButton
+# from pyqtribbon_local.separator import RibbonSeparator
+# from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
-# from pyqtribbon.tabbar import RibbonTabBar
+import pyqtribbon as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.category import RibbonCategoryLayoutButton
+from pyqtribbon.tabbar import RibbonTabBar
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -1124,9 +1124,10 @@ class ModernMenu(RibbonBar):
                                     action.icon(),
                                     alignment=Qt.AlignmentFlag.AlignLeft,
                                     showText=showText,
-                                    fixedHeight=False,
+                                    fixedHeight=Parameters_Ribbon.ICON_SIZE_LARGE + 20,
                                 )
-                                btn.setMinimumWidth(btn.maximumHeight() + 10)
+
+                                btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_LARGE)
                             else:
                                 raise NotImplementedError(
                                     translate(
@@ -1145,7 +1146,7 @@ class ModernMenu(RibbonBar):
                             if button.menu() is not None:
                                 btn.setMenu(button.menu())
                                 btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                                btn.setMinimumWidth(btn.height + 20)
+                                btn.setMinimumWidth(btn.width + 20)
                                 btn.setDefaultAction(btn.actions()[0])
 
                             # add the button text to the shadowList for checking if buttons are already there.
@@ -1208,11 +1209,10 @@ class ModernMenu(RibbonBar):
                     OptionButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
                     OptionButton.setText("more...")
 
-            # # Set the margins. In linux seems the style behavior different than on Windows
-            # Layout = panel.layout()
-            # Layout.setContentsMargins(3, 3, 3, 3)
-
         self.isWbLoaded[tabName] = True
+
+        # Set the ribbon height
+        # self.setRibbonHeight(self.iconSize * 3 + self.RibbonMinimalHeight)
 
         # Set the previous/next buttons
         category = self.currentCategory()

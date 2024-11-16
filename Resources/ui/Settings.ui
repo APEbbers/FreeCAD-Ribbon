@@ -66,7 +66,7 @@
       <string notr="true"/>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::TextElideMode::ElideRight</enum>
@@ -177,20 +177,10 @@
               <layout class="QGridLayout" name="gridLayout_5">
                <item row="0" column="0">
                 <layout class="QGridLayout" name="gridLayout">
-                 <item row="2" column="1">
-                  <widget class="QSpinBox" name="IconSize_ApplicationButton">
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>20</height>
-                    </size>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label_5">
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="label_23">
                    <property name="text">
-                    <string>Size of application button:</string>
+                    <string>Size of Tabbar tabs:</string>
                    </property>
                   </widget>
                  </item>
@@ -230,27 +220,13 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="label_11">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
+                 <item row="5" column="1">
+                  <widget class="QSpinBox" name="TabbarHeight">
                    <property name="minimumSize">
                     <size>
-                     <width>130</width>
-                     <height>0</height>
+                     <width>0</width>
+                     <height>20</height>
                     </size>
-                   </property>
-                   <property name="font">
-                    <font>
-                     <bold>false</bold>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>Size of medium buttons:</string>
                    </property>
                   </widget>
                  </item>
@@ -306,7 +282,7 @@
                   </widget>
                  </item>
                  <item row="3" column="1">
-                  <widget class="QSpinBox" name="IconSize_QuickAccessButton">
+                  <widget class="QSpinBox" name="IconSize_ApplicationButton">
                    <property name="minimumSize">
                     <size>
                      <width>0</width>
@@ -315,13 +291,17 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="5" column="1">
-                  <widget class="QSpinBox" name="IconSize_rightToolbarButton">
-                   <property name="minimumSize">
-                    <size>
-                     <width>0</width>
-                     <height>20</height>
-                    </size>
+                 <item row="6" column="0">
+                  <widget class="QLabel" name="label_22">
+                   <property name="text">
+                    <string>Size of right toolbar buttons</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="label_5">
+                   <property name="text">
+                    <string>Size of application button:</string>
                    </property>
                   </widget>
                  </item>
@@ -349,29 +329,39 @@
                    </property>
                   </widget>
                  </item>
-                 <item row="5" column="0">
-                  <widget class="QLabel" name="label_22">
-                   <property name="text">
-                    <string>Size of right toolbar buttons</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="0">
+                 <item row="4" column="0">
                   <widget class="QLabel" name="label_21">
                    <property name="text">
                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of quick access toolbar buttons: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="label_23">
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_11">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>130</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <bold>false</bold>
+                    </font>
+                   </property>
                    <property name="text">
-                    <string>Size of Tabbar tabs:</string>
+                    <string>Size of medium buttons:</string>
                    </property>
                   </widget>
                  </item>
                  <item row="4" column="1">
-                  <widget class="QSpinBox" name="TabbarHeight">
+                  <widget class="QSpinBox" name="IconSize_QuickAccessButton">
                    <property name="minimumSize">
                     <size>
                      <width>0</width>
@@ -379,6 +369,26 @@
                     </size>
                    </property>
                   </widget>
+                 </item>
+                 <item row="6" column="1">
+                  <widget class="QSpinBox" name="IconSize_rightToolbarButton">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>20</height>
+                    </size>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_25">
+                   <property name="text">
+                    <string>Size of large buttons:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QSpinBox" name="IconSize_Large"/>
                  </item>
                 </layout>
                </item>
