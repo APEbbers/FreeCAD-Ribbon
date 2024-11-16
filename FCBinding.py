@@ -649,7 +649,8 @@ class ModernMenu(RibbonBar):
         if self.ReproAdress != "" or self.ReproAdress is not None:
             if not self.ReproAdress.endswith("/"):
                 self.ReproAdress = self.ReproAdress + "/"
-            Adress = self.ReproAdress + "wiki" + "/06---What's-new%3F"
+
+            Adress = self.ReproAdress + """wiki/06-%E2%80%90-Change-log"""
             webbrowser.open(Adress, new=2, autoraise=True)
         return
 
