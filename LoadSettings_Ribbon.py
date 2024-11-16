@@ -80,8 +80,8 @@ class LoadDialog(Settings_ui.Ui_Form):
         self.form.tabWidget.removeTab(2)
 
         # Remove tabbar click settings for the time being
-        self.form.label_15().setHidden(True)
-        self.form.label_15().setDisabled(True)
+        self.form.label_15.setHidden(True)
+        self.form.label_15.setDisabled(True)
         self.fom.ScrollClicks_TabBar().setHidden(True)
         self.fom.ScrollClicks_TabBar().setDisabled(True)
 
