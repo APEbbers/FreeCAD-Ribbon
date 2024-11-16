@@ -1,6 +1,6 @@
 # *************************************************************************
 # *                                                                       *
-# * Copyright (c) 2019-2024 Hakan Seven, Geolta, Paul Ebbers              *
+# * Copyright (c) 2019-2024 Paul Ebbers                                   *
 # *                                                                       *
 # * This program is free software; you can redistribute it and/or modify  *
 # * it under the terms of the GNU Lesser General Public License (LGPL)    *

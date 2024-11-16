@@ -74,6 +74,7 @@ import webbrowser
 import LoadDesign_Ribbon
 import Parameters_Ribbon
 import LoadSettings_Ribbon
+import LoadLicenseForm_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
 import StyleMapping
 import platform
@@ -655,20 +656,7 @@ class ModernMenu(RibbonBar):
         return
 
     def on_AboutButton_clicked(self):
-        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
-        version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
-
-        file_path = os.path.join(os.path.dirname(__file__), "LICENSE")
-        with open(file_path, "r") as file:
-            LICENSE = file.read()
-
-        text = f"""FreeCAD Ribbon {version}
-        \na Ribbon UI for FreeCAD.\n
-
-        License:\n\n{LICENSE}
-        """
-
-        StandardFunctions.Mbox(text=text, title="About FreeCAD Ribbon", style=0, IconType="NoIcon")
+        LoadLicenseForm_Ribbon.main()
         return
 
     def on_RibbonHelpButton_clicked(self):
