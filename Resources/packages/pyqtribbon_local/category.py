@@ -71,12 +71,8 @@ class RibbonCategoryLayoutWidget(QFrame):
 
         # Category scroll area
         self._categoryScrollArea = RibbonCategoryScrollArea()  # type: ignore
-        self._categoryScrollArea.setHorizontalScrollBarPolicy(
-            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
-        )
-        self._categoryScrollArea.setVerticalScrollBarPolicy(
-            Qt.ScrollBarPolicy.ScrollBarAlwaysOff
-        )
+        self._categoryScrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self._categoryScrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self._categoryScrollArea.setWidget(self._categoryScrollAreaContents)
 
         # Previous/Next buttons
@@ -97,9 +93,7 @@ class RibbonCategoryLayoutWidget(QFrame):
         self._mainLayout = QHBoxLayout(self)
         self._mainLayout.setContentsMargins(0, 0, 0, 0)
         self._mainLayout.setSpacing(0)
-        self._mainLayout.addWidget(
-            self._previousButton, 0, Qt.AlignmentFlag.AlignVCenter
-        )
+        self._mainLayout.addWidget(self._previousButton, 0, Qt.AlignmentFlag.AlignVCenter)
         self._mainLayout.addWidget(self._categoryScrollArea, 1)
         self._mainLayout.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Policy.Expanding,
                                                              QSizePolicy.Policy.Minimum))  # fmt: skip
@@ -121,25 +115,21 @@ class RibbonCategoryLayoutWidget(QFrame):
     def autoSetScrollButtonsVisible(self):
         """Set the visibility of the scroll buttons."""
         horizontalScrollBar = self._categoryScrollArea.horizontalScrollBar()
-        self._previousButton.setVisible(
-            horizontalScrollBar.value() > horizontalScrollBar.minimum()
-        )
-        self._nextButton.setVisible(
-            horizontalScrollBar.value() < horizontalScrollBar.maximum()
-        )
+        self._previousButton.setVisible(horizontalScrollBar.value() > horizontalScrollBar.minimum())
+        self._nextButton.setVisible(horizontalScrollBar.value() < horizontalScrollBar.maximum())
         self._previousButton.setIconSize(QSize(12, self.size().height() - 15))
         self._nextButton.setIconSize(QSize(12, self.size().height() - 15))
 
-    def scrollPrevious(self):
+    def scrollPrevious(self, value: int):
         """Scroll the category to the previous widget."""
         horizontalScrollBar = self._categoryScrollArea.horizontalScrollBar()
-        horizontalScrollBar.setValue(horizontalScrollBar.value() - 50)
+        horizontalScrollBar.setValue(horizontalScrollBar.value() - value)
         self.autoSetScrollButtonsVisible()
 
-    def scrollNext(self):
+    def scrollNext(self, value: int):
         """Scroll the category to the next widget."""
         self._categoryScrollArea.horizontalScrollBar().setValue(
-            self._categoryScrollArea.horizontalScrollBar().value() + 50
+            self._categoryScrollArea.horizontalScrollBar().value() + value
         )
         self.autoSetScrollButtonsVisible()
 
@@ -203,15 +193,9 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
         :param color: The color of the context category.
         :param parent: The parent widget.
         """
-        if (args and not isinstance(args[0], QWidget)) or (
-            "title" in kwargs or "style" in kwargs or "color" in kwargs
-        ):
+        if (args and not isinstance(args[0], QWidget)) or ("title" in kwargs or "style" in kwargs or "color" in kwargs):
             title = args[0] if len(args) > 0 else kwargs.get("title", "")
-            style = (
-                args[1]
-                if len(args) > 1
-                else kwargs.get("style", RibbonCategoryStyle.Normal)
-            )
+            style = args[1] if len(args) > 1 else kwargs.get("style", RibbonCategoryStyle.Normal)
             color = args[2] if len(args) > 2 else kwargs.get("color", None)
             parent = args[3] if len(args) > 3 else kwargs.get("parent", None)
         else:
