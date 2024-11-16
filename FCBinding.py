@@ -89,19 +89,19 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-# import pyqtribbon_local as pyqtribbon
-# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon_local.panel import RibbonPanel
-# from pyqtribbon_local.toolbutton import RibbonToolButton
-# from pyqtribbon_local.separator import RibbonSeparator
-# from pyqtribbon_local.category import RibbonCategoryLayoutButton
+import pyqtribbon_local as pyqtribbon
+from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon_local.panel import RibbonPanel
+from pyqtribbon_local.toolbutton import RibbonToolButton
+from pyqtribbon_local.separator import RibbonSeparator
+from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-import pyqtribbon as pyqtribbon
-from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon.panel import RibbonPanel
-from pyqtribbon.toolbutton import RibbonToolButton
-from pyqtribbon.separator import RibbonSeparator
-from pyqtribbon.category import RibbonCategoryLayoutButton
+# import pyqtribbon as pyqtribbon
+# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon.panel import RibbonPanel
+# from pyqtribbon.toolbutton import RibbonToolButton
+# from pyqtribbon.separator import RibbonSeparator
+# from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -314,15 +314,17 @@ class ModernMenu(RibbonBar):
             delta = event.angleDelta().y()
             x += delta and delta // abs(delta)
 
-            NoClicks = 100 - (Parameters_Ribbon.Settings.GetIntSetting("TabBar_Scroll") * 10)
+            NoClicks = Parameters_Ribbon.Settings.GetIntSetting("TabBar_Scroll")
             if NoClicks == 0 or NoClicks is None:
-                NoClicks = 50
+                NoClicks = 1
 
             # go back or forward based on x.
             if x == 1:
-                self.currentCategory().scrollPrevious(NoClicks)
+                for i in range(NoClicks):
+                    self.currentCategory().scrollPrevious()
             if x == -1:
-                self.currentCategory().scrollNext(NoClicks)
+                for i in range(NoClicks):
+                    self.currentCategory().scrollNext()
         return
 
     # used to scroll the tabbar horizontally, when it's wider than the screen
