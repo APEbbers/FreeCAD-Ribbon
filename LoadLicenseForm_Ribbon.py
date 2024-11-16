@@ -69,11 +69,14 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
 
+        # set the title text
+        self.form.TitleText.setText("FreeCAD Ribbon")
+
         # Write here the introduction text and include the version
         self.form.Introduction.setText(
             f"""
-        FreeCAD Ribbon {version}.
-        a Customizable Ribbon UI for FreeCAD
+        A customizable ribbon UI for FreeCAD.
+        installed version: {version}
         """
         )
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'LicenseFormAcGHXv.ui'
+## Form generated from reading UI file 'LicenseFormDKzPgc.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -66,10 +66,24 @@ class Ui_Dialog(object):
         self.buttonBox.setOrientation(Qt.Orientation.Horizontal)
         self.buttonBox.setStandardButtons(QDialogButtonBox.StandardButton.Ok)
 
-        self.gridLayout.addWidget(self.buttonBox, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.buttonBox, 3, 0, 1, 1)
+
+        self.Introduction = QLabel(Dialog)
+        self.Introduction.setObjectName("Introduction")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.Introduction.sizePolicy().hasHeightForWidth())
+        self.Introduction.setSizePolicy(sizePolicy)
+        self.Introduction.setWordWrap(True)
+
+        self.gridLayout.addWidget(self.Introduction, 1, 0, 1, 1)
 
         self.groupBox_2 = QGroupBox(Dialog)
         self.groupBox_2.setObjectName("groupBox_2")
+        font = QFont()
+        font.setBold(True)
+        self.groupBox_2.setFont(font)
         self.gridLayout_2 = QGridLayout(self.groupBox_2)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.scrollArea = QScrollArea(self.groupBox_2)
@@ -82,6 +96,9 @@ class Ui_Dialog(object):
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.LicenseText = QLabel(self.scrollAreaWidgetContents)
         self.LicenseText.setObjectName("LicenseText")
+        font1 = QFont()
+        font1.setBold(False)
+        self.LicenseText.setFont(font1)
 
         self.gridLayout_3.addWidget(self.LicenseText, 0, 0, 1, 1)
 
@@ -89,13 +106,16 @@ class Ui_Dialog(object):
 
         self.gridLayout_2.addWidget(self.scrollArea, 0, 0, 1, 1)
 
-        self.gridLayout.addWidget(self.groupBox_2, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.groupBox_2, 2, 0, 1, 1)
 
-        self.Introduction = QLabel(Dialog)
-        self.Introduction.setObjectName("Introduction")
-        self.Introduction.setWordWrap(True)
+        self.TitleText = QLabel(Dialog)
+        self.TitleText.setObjectName("TitleText")
+        font2 = QFont()
+        font2.setPointSize(11)
+        font2.setBold(True)
+        self.TitleText.setFont(font2)
 
-        self.gridLayout.addWidget(self.Introduction, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.TitleText, 0, 0, 1, 1)
 
         self.retranslateUi(Dialog)
         self.buttonBox.accepted.connect(Dialog.accept)
@@ -107,7 +127,12 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QCoreApplication.translate("Dialog", "about FreeCAD Ribbon", None))
-        self.groupBox_2.setTitle(QCoreApplication.translate("Dialog", "License", None))
+        self.Introduction.setText(
+            QCoreApplication.translate(
+                "Dialog", "<html><head/><body><p>a Customizable Ribbon UI for FreeCAD</p></body></html>", None
+            )
+        )
+        self.groupBox_2.setTitle(QCoreApplication.translate("Dialog", " License ", None))
         self.LicenseText.setText(
             QCoreApplication.translate(
                 "Dialog",
@@ -762,12 +787,6 @@ class Ui_Dialog(object):
                 None,
             )
         )
-        self.Introduction.setText(
-            QCoreApplication.translate(
-                "Dialog",
-                "<html><head/><body><p>FreeCAD Ribbon</p><p>a Customizable Ribbon UI for FreeCAD</p></body></html>",
-                None,
-            )
-        )
+        self.TitleText.setText(QCoreApplication.translate("Dialog", "FreeCAD Ribbon", None))
 
     # retranslateUi
