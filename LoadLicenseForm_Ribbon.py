@@ -23,8 +23,9 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL
-from PySide.QtWidgets import QTabWidget, QSlider, QSpinBox, QCheckBox, QComboBox, QLabel
+from PySide6.QtCore import Qt, SIGNAL
+from PySide6.QtWidgets import QTabWidget, QSlider, QSpinBox, QCheckBox, QComboBox, QLabel
+from PySide6.QtGui import QIcon, QPixmap
 import sys
 
 import Standard_Functions_RIbbon as StandardFunctions
@@ -68,6 +69,14 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
 
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
+
+        # Add a logo
+        pixmap = QPixmap(os.path.join(pathIcons, "FreecadNew.svg"))
+        QLabel(self.form.LogoHolder).setPixmap(pixmap)
+
+        if QLabel(self.form.LogoHolder).pixmap() is None:
+            self.form.LogoHolder.setHidden(True)
+            self.form.LogoHolder.setDisabled(True)
 
         # set the title text
         self.form.TitleText.setText("FreeCAD Ribbon")
