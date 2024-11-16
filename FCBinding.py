@@ -91,20 +91,20 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-# import pyqtribbon_local as pyqtribbon
-# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon_local.panel import RibbonPanel
-# from pyqtribbon_local.toolbutton import RibbonToolButton
-# from pyqtribbon_local.separator import RibbonSeparator
-# from pyqtribbon_local.category import RibbonCategoryLayoutButton
+import pyqtribbon_local as pyqtribbon
+from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon_local.panel import RibbonPanel
+from pyqtribbon_local.toolbutton import RibbonToolButton
+from pyqtribbon_local.separator import RibbonSeparator
+from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-import pyqtribbon as pyqtribbon
-from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon.panel import RibbonPanel
-from pyqtribbon.toolbutton import RibbonToolButton
-from pyqtribbon.separator import RibbonSeparator
-from pyqtribbon.category import RibbonCategoryLayoutButton
-from pyqtribbon.tabbar import RibbonTabBar
+# import pyqtribbon as pyqtribbon
+# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon.panel import RibbonPanel
+# from pyqtribbon.toolbutton import RibbonToolButton
+# from pyqtribbon.separator import RibbonSeparator
+# from pyqtribbon.category import RibbonCategoryLayoutButton
+# from pyqtribbon.tabbar import RibbonTabBar
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -563,6 +563,8 @@ class ModernMenu(RibbonBar):
 
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
+        # Set the size policy for the ribbon
+        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
         return
 
     # Add the searchBar if it is present
@@ -1100,6 +1102,13 @@ class ModernMenu(RibbonBar):
                                 )
                                 if Parameters_Ribbon.SHOW_ICON_TEXT_SMALL is False:
                                     btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_SMALL + self.iconSize)
+
+                                # add dropdown menu if necessary
+                                if button.menu() is not None:
+                                    btn.setMenu(button.menu())
+                                    btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                                    btn.setMinimumWidth(btn.height() + 20)
+                                    btn.setDefaultAction(btn.actions()[0])
                             elif buttonSize == "medium":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
                                 if IconOnly is True:
@@ -1114,6 +1123,13 @@ class ModernMenu(RibbonBar):
                                 )
                                 if Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM is False:
                                     btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM + self.iconSize)
+
+                                # add dropdown menu if necessary
+                                if button.menu() is not None:
+                                    btn.setMenu(button.menu())
+                                    btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                                    btn.setMinimumWidth(btn.height() + 20)
+                                    btn.setDefaultAction(btn.actions()[0])
                             elif buttonSize == "large":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
                                 if IconOnly is True:
@@ -1124,10 +1140,19 @@ class ModernMenu(RibbonBar):
                                     action.icon(),
                                     alignment=Qt.AlignmentFlag.AlignLeft,
                                     showText=showText,
-                                    fixedHeight=Parameters_Ribbon.ICON_SIZE_LARGE + 20,
+                                    fixedHeight=Parameters_Ribbon.ICON_SIZE_LARGE,
                                 )
 
-                                btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_LARGE)
+                                btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_LARGE - 20)
+                                btn.setContentsMargins(3, 3, 3, 20)
+
+                                # add dropdown menu if necessary
+                                if button.menu() is not None:
+                                    btn.setMenu(button.menu())
+                                    btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                                    btn.setMinimumWidth(btn.height() + 20)
+                                    btn.setDefaultAction(btn.actions()[0])
+                                    btn.setIconSize(QSize(btn.height() - 20, btn.height() - 20))
                             else:
                                 raise NotImplementedError(
                                     translate(
@@ -1142,12 +1167,12 @@ class ModernMenu(RibbonBar):
                             # Set the stylesheet
                             btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
 
-                            # add dropdown menu if necessary
-                            if button.menu() is not None:
-                                btn.setMenu(button.menu())
-                                btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                                btn.setMinimumWidth(btn.width + 20)
-                                btn.setDefaultAction(btn.actions()[0])
+                            # # add dropdown menu if necessary
+                            # if button.menu() is not None:
+                            #     btn.setMenu(button.menu())
+                            #     btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                            #     btn.setMinimumWidth(btn.height() + 20)
+                            #     btn.setDefaultAction(btn.actions()[0])
 
                             # add the button text to the shadowList for checking if buttons are already there.
                             shadowList.append(button.text())

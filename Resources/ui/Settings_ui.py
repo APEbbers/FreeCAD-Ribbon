@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsLhurEo.ui'
+## Form generated from reading UI file 'SettingsGvfPyF.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -194,6 +194,9 @@ class Ui_Form(object):
         self.IconSize_ApplicationButton = QSpinBox(self.groupBox_4)
         self.IconSize_ApplicationButton.setObjectName("IconSize_ApplicationButton")
         self.IconSize_ApplicationButton.setMinimumSize(QSize(0, 20))
+        self.IconSize_ApplicationButton.setMinimum(30)
+        self.IconSize_ApplicationButton.setMaximum(200)
+        self.IconSize_ApplicationButton.setValue(100)
 
         self.gridLayout.addWidget(self.IconSize_ApplicationButton, 3, 1, 1, 1)
 
