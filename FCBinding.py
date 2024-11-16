@@ -1103,12 +1103,12 @@ class ModernMenu(RibbonBar):
                                 if Parameters_Ribbon.SHOW_ICON_TEXT_SMALL is False:
                                     btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_SMALL + self.iconSize)
 
-                                # add dropdown menu if necessary
-                                if button.menu() is not None:
-                                    btn.setMenu(button.menu())
-                                    btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                                    btn.setMinimumWidth(btn.MinimumWidth() + 20)
-                                    btn.setDefaultAction(btn.actions()[0])
+                                # # add dropdown menu if necessary
+                                # if button.menu() is not None:
+                                #     btn.setMenu(button.menu())
+                                #     btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                                #     btn.setMinimumWidth(btn.MinimumWidth() + 20)
+                                #     btn.setDefaultAction(btn.actions()[0])
                             elif buttonSize == "medium":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
                                 if IconOnly is True:
@@ -1124,12 +1124,12 @@ class ModernMenu(RibbonBar):
                                 if Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM is False:
                                     btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM + self.iconSize)
 
-                                # add dropdown menu if necessary
-                                if button.menu() is not None:
-                                    btn.setMenu(button.menu())
-                                    btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                                    btn.setMinimumWidth(btn.MinimumWidth() + 20)
-                                    btn.setDefaultAction(btn.actions()[0])
+                                # # add dropdown menu if necessary
+                                # if button.menu() is not None:
+                                #     btn.setMenu(button.menu())
+                                #     btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                                #     btn.setMinimumWidth(btn.MinimumWidth() + 20)
+                                #     btn.setDefaultAction(btn.actions()[0])
                             elif buttonSize == "large":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
                                 if IconOnly is True:
@@ -1148,10 +1148,6 @@ class ModernMenu(RibbonBar):
 
                                 # add dropdown menu if necessary
                                 if button.menu() is not None:
-                                    btn.setMenu(button.menu())
-                                    btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                                    btn.setMinimumWidth(btn.height() + 20)
-                                    btn.setDefaultAction(btn.actions()[0])
                                     btn.setIconSize(QSize(btn.height() - 20, btn.height() - 20))
                             else:
                                 raise NotImplementedError(
@@ -1167,12 +1163,12 @@ class ModernMenu(RibbonBar):
                             # Set the stylesheet
                             btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
 
-                            # # add dropdown menu if necessary
-                            # if button.menu() is not None:
-                            #     btn.setMenu(button.menu())
-                            #     btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                            #     btn.setMinimumWidth(btn.height() + 20)
-                            #     btn.setDefaultAction(btn.actions()[0])
+                            # add dropdown menu if necessary
+                            if button.menu() is not None:
+                                btn.setMenu(button.menu())
+                                btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                                btn.setMinimumWidth(btn.MinimumWidth() + 20)
+                                btn.setDefaultAction(btn.actions()[0])
 
                             # add the button text to the shadowList for checking if buttons are already there.
                             shadowList.append(button.text())
