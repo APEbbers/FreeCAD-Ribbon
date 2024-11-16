@@ -1107,7 +1107,7 @@ class ModernMenu(RibbonBar):
                                 if button.menu() is not None:
                                     btn.setMenu(button.menu())
                                     btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                                    btn.setMinimumWidth(btn.height() + 20)
+                                    btn.setMinimumWidth(btn.MinimumWidth() + 20)
                                     btn.setDefaultAction(btn.actions()[0])
                             elif buttonSize == "medium":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
@@ -1128,7 +1128,7 @@ class ModernMenu(RibbonBar):
                                 if button.menu() is not None:
                                     btn.setMenu(button.menu())
                                     btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                                    btn.setMinimumWidth(btn.height() + 20)
+                                    btn.setMinimumWidth(btn.MinimumWidth() + 20)
                                     btn.setDefaultAction(btn.actions()[0])
                             elif buttonSize == "large":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
