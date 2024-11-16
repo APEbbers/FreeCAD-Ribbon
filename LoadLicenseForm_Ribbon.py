@@ -54,7 +54,7 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         super(LoadDialog, self).__init__()
 
         # # this will create a Qt widget from our ui file
-        self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "Settings.ui"))
+        self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "LicenseForm.ui"))
 
         # Make sure that the dialog stays on top
         self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
