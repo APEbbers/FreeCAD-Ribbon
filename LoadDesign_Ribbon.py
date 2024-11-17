@@ -1956,6 +1956,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                     # There are a few dropdown buttons that need to be corrected
                                     if CommandName == "PartDesign_CompSketches":
                                         MenuName = "Create sketch"
+                                        MenuNameTableWidgetItem = MenuName
 
                                     # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
                                     for i4 in range(1, self.form.tableWidget.columnCount()):
@@ -2009,11 +2010,11 @@ class LoadDialog(Design_ui.Ui_Form):
                                         "icon": IconName,
                                     }
 
-                                    MenuName = Command.getInfo()["menuText"].replace("...", "")
-                                    if MenuNameTableWidgetItem == MenuName:
-                                        del self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][
-                                            Toolbar
-                                        ]["commands"][CommandName]["text"]
+                                    # MenuName = Command.getInfo()["menuText"].replace("...", "")
+                                    # if MenuNameTableWidgetItem == MenuName:
+                                    #     del self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][
+                                    #         Toolbar
+                                    #     ]["commands"][CommandName]["text"]
             except Exception:
                 continue
         return
