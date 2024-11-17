@@ -1085,6 +1085,10 @@ class ModernMenu(RibbonBar):
                                     Command = Gui.Command.get(CommandName)
                                     MenuName = Command.getInfo()["menuText"].replace("...", "")
 
+                                    # There are a few dropdown buttons that need to be corrected
+                                    if CommandName == "PartDesign_CompSketches":
+                                        MenuName = "Create sketch"
+
                                     if (
                                         CommandName
                                         == self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
