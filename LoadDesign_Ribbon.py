@@ -1310,6 +1310,10 @@ class LoadDialog(Design_ui.Ui_Form):
                 if IsInList is False:
                     # Get the text
                     MenuName = Command.getInfo()["menuText"].replace("&", "").replace("...", "")
+                    # There are a few dropdown buttons that need to be corrected
+                    if CommandName == "PartDesign_CompSketches":
+                        MenuName = "Create sketch"
+
                     textAddition = ""
                     IconName = ""
                     # get the icon for this command if there isn't one, leave it None
@@ -2009,12 +2013,6 @@ class LoadDialog(Design_ui.Ui_Form):
                                         "text": MenuNameTableWidgetItem,
                                         "icon": IconName,
                                     }
-
-                                    # MenuName = Command.getInfo()["menuText"].replace("...", "")
-                                    # if MenuNameTableWidgetItem == MenuName:
-                                    #     del self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][
-                                    #         Toolbar
-                                    #     ]["commands"][CommandName]["text"]
             except Exception:
                 continue
         return
