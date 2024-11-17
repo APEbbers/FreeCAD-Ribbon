@@ -20,9 +20,9 @@
 # *                                                                       *
 # *************************************************************************
 
-# This script can be used to help order toolbars.
-# it is particular helpfull to order global toolbars.
-# For example set all view panels at the begining of the ribbon for eacht workbench.
+# This script can be used to set the icon size for specific toolbars/panels.
+# it is particular helpfull for global toolbars.
+# For example set all icons for the structure panel to medium
 
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -42,8 +42,11 @@ JsonPath = ParentPath
 # This is the file used to reset the ribbon.
 JsonName = "RibbonStructure.json"
 
-# define panels/toolbars to sort. key=toolbarname, value is position S
-ToolbarsToAdd = {"View": 0, "Views - Ribbon": 1, "Individual views": 2}
+# Enter here the names of the toolbars for which you want to set the icon size
+ToolbarToUpdate = ["Structure"]  # ToolbarToUpdate = ["Structure", "Individual views"]
+
+# Set the size for the first icon in every toolbar/panel
+IconSize = "medium"  # set to "small" or medium as per preference
 
 # get the path for the Json file
 JsonFile = os.path.join(JsonPath, JsonName)
@@ -56,20 +59,26 @@ file.close()
 
 
 def main():
-    UpdateOrder()
+    UpdateJson()
     WriteJson()
 
 
-def UpdateOrder():
-
+def UpdateJson():
     # update the order for each workbench toolbar
+    #
+    # Go through each workbench in the Json file
     for WorkBench in ribbonStructure["workbenches"]:
-        orderList: list = ribbonStructure["workbenches"][WorkBench]["toolbars"]["order"]
-        for key, value in ToolbarsToAdd.items():
-            if key not in orderList:
-                orderList.insert(value, key)
+        # Go through the list with toolbars to update
+        for Item in ToolbarToUpdate:
+            # Go through the toolbars of the workbench. If the toolbar is the same as in the list if toolbars to update, continue
+            for ToolBar in ribbonStructure["workbenches"][WorkBench]["toolbars"]:
+                if ToolBar == Item:
+                    # Go through all commands for this toolbar and set the size
+                    for Command in ribbonStructure["workbenches"][WorkBench]["toolbars"][ToolBar]["commands"]:
+                        ribbonStructure["workbenches"][WorkBench]["toolbars"][ToolBar]["commands"][Command][
+                            "size"
+                        ] = IconSize
 
-        ribbonStructure["workbenches"][WorkBench]["toolbars"]["order"] = orderList
     return
 
 
