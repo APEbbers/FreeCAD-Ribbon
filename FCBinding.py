@@ -1143,8 +1143,7 @@ class ModernMenu(RibbonBar):
                                     showText=showText,
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_SMALL,
                                 )
-                                # if Parameters_Ribbon.SHOW_ICON_TEXT_SMALL is False:
-                                #     btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_SMALL + self.iconSize)
+
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
                                 padding = btn.height() / 3
@@ -1162,8 +1161,6 @@ class ModernMenu(RibbonBar):
                                     showText=showText,
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_MEDIUM,
                                 )
-                                # if Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM is False:
-                                #     btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM + self.iconSize)
 
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
@@ -1182,13 +1179,6 @@ class ModernMenu(RibbonBar):
                                     showText=showText,
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_LARGE,
                                 )
-
-                                btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_LARGE)
-                                btn.setContentsMargins(3, 3, 3, 20)
-
-                                # add dropdown menu if necessary
-                                if button.menu() is not None:
-                                    btn.setIconSize(QSize(btn.height() - 20, btn.height() - 20))
 
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
@@ -1282,9 +1272,6 @@ class ModernMenu(RibbonBar):
                     OptionButton.setText("more...")
 
         self.isWbLoaded[tabName] = True
-
-        # Set the ribbon height
-        # self.setRibbonHeight(self.iconSize * 3 + self.RibbonMinimalHeight)
 
         # Set the previous/next buttons
         category = self.currentCategory()
