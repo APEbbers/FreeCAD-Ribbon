@@ -1056,6 +1056,13 @@ class ModernMenu(RibbonBar):
                             # get the action text
                             text = StandardFunctions.TranslationsMapping(workbenchName, action.text())
 
+                            # There is a bug in freecad with the comp-sketch menu hase the wrong text
+                            if (
+                                action.data() == "PartDesign_CompSketches"
+                                and action.text().replace("...", "") == "Create datum"
+                            ):
+                                text = "Create sketch"
+
                             # try to get alternative text from ribbonStructure
                             try:
                                 textJSON = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
