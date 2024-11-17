@@ -26,7 +26,9 @@ The FreeCAD ribbon provides the following functions and features:
 * Scripts are provided to help setup your own customized Ribbon
 * And much more...
 
-See the [wiki page](https://github.com/APEbbers/FreeCAD-Ribbon/wiki) for more details and on how to customize the Ribbon to your preference.
+See the [wiki page](https://github.com/APEbbers/FreeCAD-Ribbon/wiki) for more details and on how to customize the Ribbon to your preference.  
+In the [Road map](https://github.com/APEbbers/FreeCAD-Ribbon/wiki/07-%E2%80%90-Road-map) you can see the development plan for the Ribbon.
+Please note that the road map is a live document that can change over time.
 
 ## Installation
 
