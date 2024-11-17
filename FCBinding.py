@@ -1028,7 +1028,7 @@ class ModernMenu(RibbonBar):
                 else:
                     # If the number of columns is more than allowed,
                     # Add the actions to the OptionPanel instead.
-                    if maxColumns > 0 or columnCount > 13:
+                    if maxColumns > 0 or columnCount > 10:
                         if columnCount > maxColumns + 1:
                             ButtonList.append(button)
                             panel.panelOptionButton().show()
