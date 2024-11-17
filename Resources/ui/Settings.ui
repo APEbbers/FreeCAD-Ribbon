@@ -66,7 +66,7 @@
       <string notr="true"/>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>3</number>
      </property>
      <property name="elideMode">
       <enum>Qt::TextElideMode::ElideRight</enum>
@@ -1566,6 +1566,11 @@
               <item>
                <property name="text">
                 <string>Views - Ribbon</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>None</string>
                </property>
               </item>
              </widget>

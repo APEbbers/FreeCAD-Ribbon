@@ -236,6 +236,10 @@ class ModernMenu(RibbonBar):
             ListIgnoredToolbars.append("Views")
             if "Views - Ribbon" in ListIgnoredToolbars:
                 ListIgnoredToolbars.remove("Views - Ribbon")
+        if PreferredToolbar == 3:
+            ListIgnoredToolbars.append("Individual views")
+            ListIgnoredToolbars.append("Views")
+            ListIgnoredToolbars.append("Views - Ribbon")
         self.ribbonStructure["ignoredToolbars"] = ListIgnoredToolbars
 
         # Get the address of the repository address

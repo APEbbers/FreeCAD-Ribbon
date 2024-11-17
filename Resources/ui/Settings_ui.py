@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingslkmXle.ui'
+## Form generated from reading UI file 'SettingsrVDMZB.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -606,14 +606,14 @@ class Ui_Form(object):
         self.groupBox_9.setObjectName("groupBox_9")
         self.gridLayout_23 = QGridLayout(self.groupBox_9)
         self.gridLayout_23.setObjectName("gridLayout_23")
-        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_23.addItem(self.horizontalSpacer_6, 1, 1, 1, 1)
-
         self.CustomIcons = QCheckBox(self.groupBox_9)
         self.CustomIcons.setObjectName("CustomIcons")
 
         self.gridLayout_23.addWidget(self.CustomIcons, 0, 0, 1, 1)
+
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_23.addItem(self.horizontalSpacer_6, 1, 1, 1, 1)
 
         self.IconS = QGroupBox(self.groupBox_9)
         self.IconS.setObjectName("IconS")
@@ -800,6 +800,7 @@ class Ui_Form(object):
         self.PreferedViewPanel.addItem("")
         self.PreferedViewPanel.addItem("")
         self.PreferedViewPanel.addItem("")
+        self.PreferedViewPanel.addItem("")
         self.PreferedViewPanel.setObjectName("PreferedViewPanel")
         self.PreferedViewPanel.setMinimumSize(QSize(200, 0))
 
@@ -822,7 +823,7 @@ class Ui_Form(object):
         self.CustomColors.toggled.connect(self.ColorS.setEnabled)
         self.CustomIcons.toggled.connect(self.IconS.setEnabled)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(3)
 
         QMetaObject.connectSlotsByName(Form)
 
@@ -959,6 +960,7 @@ class Ui_Form(object):
         self.PreferedViewPanel.setItemText(0, QCoreApplication.translate("Form", "Individual views - Native", None))
         self.PreferedViewPanel.setItemText(1, QCoreApplication.translate("Form", "Views - Native", None))
         self.PreferedViewPanel.setItemText(2, QCoreApplication.translate("Form", "Views - Ribbon", None))
+        self.PreferedViewPanel.setItemText(3, QCoreApplication.translate("Form", "None", None))
 
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("Form", "Miscellaneous", None)
