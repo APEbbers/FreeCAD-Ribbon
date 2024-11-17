@@ -144,6 +144,8 @@ class ModernMenu(RibbonBar):
 
     CategoryList = []
 
+    Position = []
+
     def __init__(self):
         """
         Constructor
@@ -326,6 +328,13 @@ class ModernMenu(RibbonBar):
             ScrollRightButton_Tab.setIcon(ScrollRightButton_Tab_Icon)
         else:
             ScrollRightButton_Tab.setArrowType(Qt.ArrowType.RightArrow)
+
+        # # store the position coordinates from the ribbon
+        # X1 = self.pos().x()
+        # Y1 = self.pos().y()
+        # X2 = X1 + self.width()
+        # Y2 = Y1 - self.height()
+        # self.Position = [X1, Y1, X2, Y2]
         return
 
     def eventFilter(self, obj, event):
@@ -478,6 +487,8 @@ class ModernMenu(RibbonBar):
         self.quickAccessToolBar().setSizePolicy(
             QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding
         )
+        # needed for excluding from hiding toolbars
+        self.quickAccessToolBar().setObjectName("quickAccessToolBar")
 
         # Set the tabbar height and textsize
         self.tabBar().setContentsMargins(3, 3, 3, 3)
@@ -589,6 +600,8 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setMinimumWidth(RightToolbarWidth - self.RightToolBarButtonSize * 1.5)
         # Set the size policy
         self.rightToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
+        # Set the objectName for the right toolbar. needed for excluding from hiding.
+        self.rightToolBar().setObjectName("rightToolBar")
 
         # Set the application button
         self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
@@ -1303,16 +1316,16 @@ class ModernMenu(RibbonBar):
     def hideClassicToolbars(self):
         for toolbar in mw.findChildren(QToolBar):
             parentWidget = toolbar.parentWidget()
-            if parentWidget.objectName() not in [
-                "statusBar",
+            # hide toolbars that are not in the statusBar and show toolbars that are in the statusbar.
+            toolbar.hide()
+            if parentWidget.objectName() == "statusBar" or parentWidget.objectName() == "StatusBarArea":
+                toolbar.show()
+            # Show specific toolbars and go to the next
+            if toolbar.objectName() in [
+                self.quickAccessToolBar().objectName(),
+                self.rightToolBar().objectName(),
             ]:
-                # Add here toolbars that are allowed to be shown
-                if toolbar.objectName() not in [
-                    "",
-                    "draft_status_scale_widget",
-                    "draft_snap_widget",
-                ]:
-                    toolbar.hide()
+                toolbar.show()
         return
 
     def List_ReturnCustomToolbars(self):

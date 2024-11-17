@@ -1154,6 +1154,13 @@
           <string>Icons</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_23">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="CustomIcons">
+            <property name="text">
+             <string>Enable custom icons</string>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="1">
            <spacer name="horizontalSpacer_6">
             <property name="orientation">
@@ -1166,13 +1173,6 @@
              </size>
             </property>
            </spacer>
-          </item>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="CustomIcons">
-            <property name="text">
-             <string>Enable custom icons</string>
-            </property>
-           </widget>
           </item>
           <item row="1" column="0">
            <widget class="QGroupBox" name="IconS">
