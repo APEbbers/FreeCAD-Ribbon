@@ -82,6 +82,59 @@ def UpdateJson():
                         ribbonStructure["workbenches"][WorkBench]["toolbars"][ToolBar]["commands"][Command][
                             "size"
                         ] = IconSize
+                if Item not in ribbonStructure["workbenches"][WorkBench]["toolbars"]:
+                    wbToolbars = Gui.getWorkbench(WorkBench).getToolbarItems()
+                    for key, value in list(wbToolbars.items()):
+                        if key == Item:
+                            for i in range(len(value)):
+                                CommandName = value[i]
+                                Command = Gui.Command.get(CommandName)
+                                if Command is not None:
+                                    IconName = Command.getInfo()["pixmap"]
+                                    MenuName = Command.getInfo()["menuText"].replace("&", "")
+
+                                    # Create an empty list for orders
+                                    Order = []
+                                    for j in range(len(value)):
+                                        CommandOrder = Gui.Command.get(value[j])
+                                        if CommandOrder is not None:
+                                            MenuNameOrder = (
+                                                CommandOrder.getInfo()["menuText"].replace("&", "").replace("...", "")
+                                            )
+                                            Order.append(MenuNameOrder)
+
+                                    Size = IconSize
+
+                                    add_keys_nested_dict(
+                                        ribbonStructure,
+                                        [
+                                            "workbenches",
+                                            WorkBench,
+                                            "toolbars",
+                                            key,
+                                            "order",
+                                        ],
+                                    )
+                                    add_keys_nested_dict(
+                                        ribbonStructure,
+                                        [
+                                            "workbenches",
+                                            WorkBench,
+                                            "toolbars",
+                                            key,
+                                            "commands",
+                                            CommandName,
+                                        ],
+                                    )
+
+                                    ribbonStructure["workbenches"][WorkBench]["toolbars"][key]["order"] = Order
+                                    ribbonStructure["workbenches"][WorkBench]["toolbars"][key]["commands"][
+                                        CommandName
+                                    ] = {
+                                        "size": Size,
+                                        "text": MenuName,
+                                        "icon": IconName,
+                                    }
 
     return
 
@@ -102,6 +155,18 @@ def WriteJson():
         json.dump(resultingDict, outfile, indent=4)
 
     outfile.close()
+    return
+
+
+def add_keys_nested_dict(dict, keys):
+    for key in keys:
+        if key not in dict:
+            dict[key] = {}
+        dict = dict[key]
+    try:
+        dict.setdefault(keys[-1], 1)
+    except Exception:
+        pass
     return
 
 
