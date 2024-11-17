@@ -162,6 +162,11 @@ class ModernMenu(RibbonBar):
         # connect the signals
         self.connectSignals()
 
+        # read ribbon structure from JSON file
+        with open(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, "r") as file:
+            self.ribbonStructure.update(json.load(file))
+        file.close()
+
         # if FreeCAD is version 0.21 create a custom toolbar "Individual Views"
         if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
             StandardFunctions.CreateToolbar(
@@ -182,6 +187,21 @@ class ModernMenu(RibbonBar):
                 Name="Individual views",
                 WorkBenchName="Global",
             )
+        # Add a toolbar "Views - Ribbon"
+        StandardFunctions.CreateToolbar(
+            Name="Views - Ribbon",
+            WorkBenchName="Global",
+            ButtonList=[
+                "Std_ViewGroup",
+                "Std_ViewFitAll",
+                "Std_ViewZoomOut",
+                "Std_ViewZoomIn",
+                "Std_ViewBoxZoom",
+                "Std_ViewFitAll",
+                "Std_AlignToSelection",
+                "Part_SelectFilter",
+            ],
+        )
         # Add a toolbar "tools"
         StandardFunctions.CreateToolbar(
             Name="Tools",
@@ -196,6 +216,22 @@ class ModernMenu(RibbonBar):
             ],
         )
 
+        # Set the preferred toolbars
+        PreferredToolbar = Parameters_Ribbon.Settings.GetIntSetting("Preferred_view")
+        ListIgnoredToolbars: list = self.ribbonStructure["ignoredToolbars"]
+        if PreferredToolbar == 0:
+            ListIgnoredToolbars.append("View")
+            ListIgnoredToolbars.append("Views - Ribbon")
+            ListIgnoredToolbars.remove("Individual views")
+        if PreferredToolbar == 1:
+            ListIgnoredToolbars.append("Individual views")
+            ListIgnoredToolbars.append("Views - Ribbon")
+            ListIgnoredToolbars.remove("Views")
+        if PreferredToolbar == 2:
+            ListIgnoredToolbars.append("Individual views")
+            ListIgnoredToolbars.append("Views")
+            ListIgnoredToolbars.remove("Views - Ribbon")
+
         # Get the address of the repository address
         self.ReproAdress = StandardFunctions.getRepoAdress(os.path.dirname(__file__))
         if self.ReproAdress != "" or self.ReproAdress is not None:
@@ -203,11 +239,6 @@ class ModernMenu(RibbonBar):
 
         # Set the icon size if parameters has none
         Parameters_Ribbon.Settings.WriteSettings()
-
-        # read ribbon structure from JSON file
-        with open(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, "r") as file:
-            self.ribbonStructure.update(json.load(file))
-        file.close()
 
         # Create the ribbon
         self.createModernMenu()
@@ -768,9 +799,6 @@ class ModernMenu(RibbonBar):
 
         # Get the list of toolbars from the active workbench
         ListToolbars: list = workbench.listToolbars()
-        # if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
-        #     ListToolbars.append("Individual views")
-        # ListToolbars.append("Tools")
         # Get custom toolbars that are created in the toolbar environment and add them to the list of toolbars
         CustomToolbars = self.List_ReturnCustomToolbars()
         for CustomToolbar in CustomToolbars:
@@ -1166,6 +1194,10 @@ class ModernMenu(RibbonBar):
             # remove any suffix from the panel title
             if panel.title().endswith("_custom"):
                 panel.setTitle(panel.title().replace("_custom", ""))
+
+            # Change the name of the view panels to "View"
+            if panel.title() == "Views - Ribbon" or panel.title() == "Individual views":
+                panel.setTitle(" Views ")
 
             # Setup the panelOptionButton
             actionList = []

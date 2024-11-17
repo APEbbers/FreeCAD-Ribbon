@@ -271,3 +271,11 @@ if Settings.GetIntSetting("Ribbon_Click") is None or Settings.GetIntSetting("Rib
     RIBBON_CLICKSPEED = int(1)
     Settings.SetIntSetting("Ribbon_Click", RIBBON_CLICKSPEED)
 # endregion ------------------------------------------------------------------------------------------------------------
+
+
+# region - Navigation settings -----------------------------------------------------------------------------------------
+PREFERRED_VIEW = Settings.GetIntSetting("Preferred_view")
+if Settings.GetIntSetting("Preferred_view") is None or Settings.GetIntSetting("Preferred_view") == 0:
+    PREFERRED_VIEW = int(2)
+    Settings.SetIntSetting("Preferred_view", PREFERRED_VIEW)
+# endregion ------------------------------------------------------------------------------------------------------------

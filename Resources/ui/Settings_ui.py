@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsGvfPyF.ui'
+## Form generated from reading UI file 'SettingslkmXle.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -311,27 +311,32 @@ class Ui_Form(object):
         self.groupBox_3.setFont(font1)
         self.gridLayout_2 = QGridLayout(self.groupBox_3)
         self.gridLayout_2.setObjectName("gridLayout_2")
-        self.verticalLayout = QVBoxLayout()
-        self.verticalLayout.setObjectName("verticalLayout")
+        self.gridLayout_26 = QGridLayout()
+        self.gridLayout_26.setObjectName("gridLayout_26")
         self.ShowText_Small = QCheckBox(self.groupBox_3)
         self.ShowText_Small.setObjectName("ShowText_Small")
         self.ShowText_Small.setFont(font1)
 
-        self.verticalLayout.addWidget(self.ShowText_Small)
+        self.gridLayout_26.addWidget(self.ShowText_Small, 0, 0, 1, 1)
 
         self.ShowText_Medium = QCheckBox(self.groupBox_3)
         self.ShowText_Medium.setObjectName("ShowText_Medium")
         self.ShowText_Medium.setFont(font1)
 
-        self.verticalLayout.addWidget(self.ShowText_Medium)
+        self.gridLayout_26.addWidget(self.ShowText_Medium, 1, 0, 1, 1)
 
         self.ShowText_Large = QCheckBox(self.groupBox_3)
         self.ShowText_Large.setObjectName("ShowText_Large")
         self.ShowText_Large.setFont(font1)
 
-        self.verticalLayout.addWidget(self.ShowText_Large)
+        self.gridLayout_26.addWidget(self.ShowText_Large, 2, 0, 1, 1)
 
-        self.gridLayout_2.addLayout(self.verticalLayout, 0, 0, 1, 1)
+        self.label_26 = QLabel(self.groupBox_3)
+        self.label_26.setObjectName("label_26")
+
+        self.gridLayout_26.addWidget(self.label_26, 2, 1, 1, 1)
+
+        self.gridLayout_2.addLayout(self.gridLayout_26, 0, 0, 1, 1)
 
         self.gridLayout_3.addWidget(self.groupBox_3, 2, 0, 1, 1)
 
@@ -615,6 +620,21 @@ class Ui_Form(object):
         self.IconS.setEnabled(False)
         self.gridLayout_22 = QGridLayout(self.IconS)
         self.gridLayout_22.setObjectName("gridLayout_22")
+        self.label_18 = QLabel(self.IconS)
+        self.label_18.setObjectName("label_18")
+
+        self.gridLayout_22.addWidget(self.label_18, 2, 0, 1, 1)
+
+        self.label_16 = QLabel(self.IconS)
+        self.label_16.setObjectName("label_16")
+
+        self.gridLayout_22.addWidget(self.label_16, 0, 0, 1, 1)
+
+        self.label_19 = QLabel(self.IconS)
+        self.label_19.setObjectName("label_19")
+
+        self.gridLayout_22.addWidget(self.label_19, 3, 0, 1, 1)
+
         self.Tab_Scroll_Left = QPushButton(self.IconS)
         self.Tab_Scroll_Left.setObjectName("Tab_Scroll_Left")
         sizePolicy3.setHeightForWidth(self.Tab_Scroll_Left.sizePolicy().hasHeightForWidth())
@@ -625,19 +645,34 @@ class Ui_Form(object):
 
         self.gridLayout_22.addWidget(self.Tab_Scroll_Left, 0, 1, 1, 1)
 
-        self.label_19 = QLabel(self.IconS)
-        self.label_19.setObjectName("label_19")
+        self.Ribbon_Scroll_Right = QPushButton(self.IconS)
+        self.Ribbon_Scroll_Right.setObjectName("Ribbon_Scroll_Right")
+        sizePolicy3.setHeightForWidth(self.Ribbon_Scroll_Right.sizePolicy().hasHeightForWidth())
+        self.Ribbon_Scroll_Right.setSizePolicy(sizePolicy3)
+        self.Ribbon_Scroll_Right.setMinimumSize(QSize(20, 60))
+        self.Ribbon_Scroll_Right.setMaximumSize(QSize(20, 60))
 
-        self.gridLayout_22.addWidget(self.label_19, 3, 0, 1, 1)
+        self.gridLayout_22.addWidget(self.Ribbon_Scroll_Right, 3, 1, 1, 1)
 
-        self.Ribbon_Scroll_Left = QPushButton(self.IconS)
-        self.Ribbon_Scroll_Left.setObjectName("Ribbon_Scroll_Left")
-        sizePolicy3.setHeightForWidth(self.Ribbon_Scroll_Left.sizePolicy().hasHeightForWidth())
-        self.Ribbon_Scroll_Left.setSizePolicy(sizePolicy3)
-        self.Ribbon_Scroll_Left.setMinimumSize(QSize(20, 60))
-        self.Ribbon_Scroll_Left.setMaximumSize(QSize(20, 60))
+        self.label_17 = QLabel(self.IconS)
+        self.label_17.setObjectName("label_17")
 
-        self.gridLayout_22.addWidget(self.Ribbon_Scroll_Left, 2, 1, 1, 1)
+        self.gridLayout_22.addWidget(self.label_17, 1, 0, 1, 1)
+
+        self.MoreCommands = QPushButton(self.IconS)
+        self.MoreCommands.setObjectName("MoreCommands")
+        sizePolicy3.setHeightForWidth(self.MoreCommands.sizePolicy().hasHeightForWidth())
+        self.MoreCommands.setSizePolicy(sizePolicy3)
+        self.MoreCommands.setMinimumSize(QSize(30, 30))
+        self.MoreCommands.setMaximumSize(QSize(30, 30))
+        self.MoreCommands.setBaseSize(QSize(30, 30))
+
+        self.gridLayout_22.addWidget(self.MoreCommands, 4, 1, 1, 1)
+
+        self.label_20 = QLabel(self.IconS)
+        self.label_20.setObjectName("label_20")
+
+        self.gridLayout_22.addWidget(self.label_20, 4, 0, 1, 1)
 
         self.Tab_Scroll_Right = QPushButton(self.IconS)
         self.Tab_Scroll_Right.setObjectName("Tab_Scroll_Right")
@@ -649,42 +684,28 @@ class Ui_Form(object):
 
         self.gridLayout_22.addWidget(self.Tab_Scroll_Right, 1, 1, 1, 1)
 
-        self.Ribbon_Scroll_Right = QPushButton(self.IconS)
-        self.Ribbon_Scroll_Right.setObjectName("Ribbon_Scroll_Right")
-        sizePolicy3.setHeightForWidth(self.Ribbon_Scroll_Right.sizePolicy().hasHeightForWidth())
-        self.Ribbon_Scroll_Right.setSizePolicy(sizePolicy3)
-        self.Ribbon_Scroll_Right.setMinimumSize(QSize(20, 60))
-        self.Ribbon_Scroll_Right.setMaximumSize(QSize(20, 60))
+        self.Ribbon_Scroll_Left = QPushButton(self.IconS)
+        self.Ribbon_Scroll_Left.setObjectName("Ribbon_Scroll_Left")
+        sizePolicy3.setHeightForWidth(self.Ribbon_Scroll_Left.sizePolicy().hasHeightForWidth())
+        self.Ribbon_Scroll_Left.setSizePolicy(sizePolicy3)
+        self.Ribbon_Scroll_Left.setMinimumSize(QSize(20, 60))
+        self.Ribbon_Scroll_Left.setMaximumSize(QSize(20, 60))
 
-        self.gridLayout_22.addWidget(self.Ribbon_Scroll_Right, 3, 1, 1, 1)
+        self.gridLayout_22.addWidget(self.Ribbon_Scroll_Left, 2, 1, 1, 1)
 
-        self.label_16 = QLabel(self.IconS)
-        self.label_16.setObjectName("label_16")
+        self.pinButton = QPushButton(self.IconS)
+        self.pinButton.setObjectName("pinButton")
+        sizePolicy3.setHeightForWidth(self.pinButton.sizePolicy().hasHeightForWidth())
+        self.pinButton.setSizePolicy(sizePolicy3)
+        self.pinButton.setMinimumSize(QSize(30, 30))
+        self.pinButton.setMaximumSize(QSize(30, 30))
 
-        self.gridLayout_22.addWidget(self.label_16, 0, 0, 1, 1)
+        self.gridLayout_22.addWidget(self.pinButton, 5, 1, 1, 1)
 
-        self.label_17 = QLabel(self.IconS)
-        self.label_17.setObjectName("label_17")
+        self.label_28 = QLabel(self.IconS)
+        self.label_28.setObjectName("label_28")
 
-        self.gridLayout_22.addWidget(self.label_17, 1, 0, 1, 1)
-
-        self.label_18 = QLabel(self.IconS)
-        self.label_18.setObjectName("label_18")
-
-        self.gridLayout_22.addWidget(self.label_18, 2, 0, 1, 1)
-
-        self.label_20 = QLabel(self.IconS)
-        self.label_20.setObjectName("label_20")
-
-        self.gridLayout_22.addWidget(self.label_20, 4, 0, 1, 1)
-
-        self.MoreCommands = QPushButton(self.IconS)
-        self.MoreCommands.setObjectName("MoreCommands")
-        sizePolicy3.setHeightForWidth(self.MoreCommands.sizePolicy().hasHeightForWidth())
-        self.MoreCommands.setSizePolicy(sizePolicy3)
-        self.MoreCommands.setMaximumSize(QSize(30, 16777215))
-
-        self.gridLayout_22.addWidget(self.MoreCommands, 4, 1, 1, 1)
+        self.gridLayout_22.addWidget(self.label_28, 5, 0, 1, 1)
 
         self.gridLayout_23.addWidget(self.IconS, 1, 0, 1, 1)
 
@@ -756,6 +777,43 @@ class Ui_Form(object):
         self.gridLayout_19.addItem(self.verticalSpacer_2, 2, 0, 1, 1)
 
         self.tabWidget.addTab(self.tab_2, "")
+        self.tab_3 = QWidget()
+        self.tab_3.setObjectName("tab_3")
+        self.gridLayout_30 = QGridLayout(self.tab_3)
+        self.gridLayout_30.setObjectName("gridLayout_30")
+        self.groupBox_11 = QGroupBox(self.tab_3)
+        self.groupBox_11.setObjectName("groupBox_11")
+        self.gridLayout_29 = QGridLayout(self.groupBox_11)
+        self.gridLayout_29.setObjectName("gridLayout_29")
+        self.horizontalSpacer_8 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_29.addItem(self.horizontalSpacer_8, 0, 1, 1, 1)
+
+        self.gridLayout_27 = QGridLayout()
+        self.gridLayout_27.setObjectName("gridLayout_27")
+        self.label_27 = QLabel(self.groupBox_11)
+        self.label_27.setObjectName("label_27")
+
+        self.gridLayout_27.addWidget(self.label_27, 0, 0, 1, 1)
+
+        self.PreferedViewPanel = QComboBox(self.groupBox_11)
+        self.PreferedViewPanel.addItem("")
+        self.PreferedViewPanel.addItem("")
+        self.PreferedViewPanel.addItem("")
+        self.PreferedViewPanel.setObjectName("PreferedViewPanel")
+        self.PreferedViewPanel.setMinimumSize(QSize(200, 0))
+
+        self.gridLayout_27.addWidget(self.PreferedViewPanel, 0, 1, 1, 1)
+
+        self.gridLayout_29.addLayout(self.gridLayout_27, 0, 0, 1, 1)
+
+        self.gridLayout_30.addWidget(self.groupBox_11, 0, 0, 1, 1)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 708, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_30.addItem(self.verticalSpacer_3, 1, 0, 1, 1)
+
+        self.tabWidget.addTab(self.tab_3, "")
 
         self.gridLayout_7.addWidget(self.tabWidget, 0, 0, 1, 1)
 
@@ -764,14 +822,14 @@ class Ui_Form(object):
         self.CustomColors.toggled.connect(self.ColorS.setEnabled)
         self.CustomIcons.toggled.connect(self.IconS.setEnabled)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
 
         QMetaObject.connectSlotsByName(Form)
 
     # setupUi
 
     def retranslateUi(self, Form):
-        Form.setWindowTitle(QCoreApplication.translate("Form", "Form", None))
+        Form.setWindowTitle(QCoreApplication.translate("Form", "Preferences", None))
         self.Cancel.setText(QCoreApplication.translate("Form", "Cancel", None))
         # if QT_CONFIG(shortcut)
         self.Cancel.setShortcut(QCoreApplication.translate("Form", "Esc", None))
@@ -814,6 +872,9 @@ class Ui_Form(object):
         self.ShowText_Small.setText(QCoreApplication.translate("Form", "Small buttons", None))
         self.ShowText_Medium.setText(QCoreApplication.translate("Form", "Medium buttons", None))
         self.ShowText_Large.setText(QCoreApplication.translate("Form", "Large buttons", None))
+        self.label_26.setText(
+            QCoreApplication.translate("Form", "Text for Large buttons with a size lower than 100 will", None)
+        )
         self.groupBox_10.setTitle(QCoreApplication.translate("Form", "Tab style", None))
         self.label_24.setText(
             QCoreApplication.translate("Form", "<html><head/><body><p>Set the tab style: </p></body></html>", None)
@@ -859,22 +920,24 @@ class Ui_Form(object):
         )
         self.groupBox_9.setTitle(QCoreApplication.translate("Form", "Icons", None))
         self.CustomIcons.setText(QCoreApplication.translate("Form", "Enable custom icons", None))
-        self.Tab_Scroll_Left.setText(QCoreApplication.translate("Form", "...", None))
-        self.label_19.setText(
-            QCoreApplication.translate("Form", "<html><head/><body><p>Ribbon bar scroll right:</p></body></html>", None)
-        )
-        self.Ribbon_Scroll_Left.setText(QCoreApplication.translate("Form", "...", None))
-        self.Tab_Scroll_Right.setText(QCoreApplication.translate("Form", "...", None))
-        self.Ribbon_Scroll_Right.setText(QCoreApplication.translate("Form", "...", None))
+        self.label_18.setText(QCoreApplication.translate("Form", "Ribbon bar scroll left:", None))
         self.label_16.setText(
             QCoreApplication.translate("Form", "<html><head/><body><p>Tab bar scroll left:</p></body></html>", None)
         )
+        self.label_19.setText(
+            QCoreApplication.translate("Form", "<html><head/><body><p>Ribbon bar scroll right:</p></body></html>", None)
+        )
+        self.Tab_Scroll_Left.setText(QCoreApplication.translate("Form", "...", None))
+        self.Ribbon_Scroll_Right.setText(QCoreApplication.translate("Form", "...", None))
         self.label_17.setText(QCoreApplication.translate("Form", "Tab bar scroll right:", None))
-        self.label_18.setText(QCoreApplication.translate("Form", "Ribbon bar scroll left:", None))
+        self.MoreCommands.setText(QCoreApplication.translate("Form", "...", None))
         self.label_20.setText(
             QCoreApplication.translate("Form", "<html><head/><body><p>More commands button:</p></body></html>", None)
         )
-        self.MoreCommands.setText(QCoreApplication.translate("Form", "...", None))
+        self.Tab_Scroll_Right.setText(QCoreApplication.translate("Form", "...", None))
+        self.Ribbon_Scroll_Left.setText(QCoreApplication.translate("Form", "...", None))
+        self.pinButton.setText(QCoreApplication.translate("Form", "...", None))
+        self.label_28.setText(QCoreApplication.translate("Form", "Pin button:", None))
         self.groupBox_8.setTitle(QCoreApplication.translate("Form", "Colors", None))
         self.CustomColors.setText(QCoreApplication.translate("Form", "Enable custom colors", None))
         self.label_9.setText(
@@ -890,6 +953,15 @@ class Ui_Form(object):
         self.label_6.setText(QCoreApplication.translate("Form", "Set the color for control borders:", None))
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("Form", "Colors and icons", None)
+        )
+        self.groupBox_11.setTitle(QCoreApplication.translate("Form", "Standard panels preference", None))
+        self.label_27.setText(QCoreApplication.translate("Form", "Select preferred standard view panel: ", None))
+        self.PreferedViewPanel.setItemText(0, QCoreApplication.translate("Form", "Individual views - Native", None))
+        self.PreferedViewPanel.setItemText(1, QCoreApplication.translate("Form", "Views - Native", None))
+        self.PreferedViewPanel.setItemText(2, QCoreApplication.translate("Form", "Views - Ribbon", None))
+
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("Form", "Miscellaneous", None)
         )
 
     # retranslateUi

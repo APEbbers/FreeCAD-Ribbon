@@ -129,6 +129,8 @@ class LoadDialog(Settings_ui.Ui_Form):
         self.form.ScrollClicks_TabBar.setValue(Parameters_Ribbon.TABBAR_CLICKSPEED)
         self.form.ScrollClicks_Ribbon.setValue(Parameters_Ribbon.RIBBON_CLICKSPEED)
 
+        self.form.PreferedViewPanel.setCurrentIndex(Parameters_Ribbon.PREFERRED_VIEW)
+
         # region - connect controls with functions----------------------------------------------------
         #
         # Connect Backup
@@ -166,11 +168,14 @@ class LoadDialog(Settings_ui.Ui_Form):
             self.on_Close_clicked(self)
 
         self.form.GenerateJsonExit.connect(self.form.GenerateJsonExit, SIGNAL("clicked()"), GenerateJsonExit)
+        # Connect the behavior settings
         self.form.EnableEnterEvent.clicked.connect(self.on_EnableEnterEvent_clicked)
         self.form.ScrollSpeed_TabBar.valueChanged.connect(self.on_ScrollSpeed_TabBar_valueCHanged)
         self.form.ScrollSpeed_Ribbon.valueChanged.connect(self.on_ScrollSpeed_Ribbon_valueCHanged)
         self.form.ScrollClicks_TabBar.textChanged.connect(self.on_ScrollClicks_TabBar_valueCHanged)
         self.form.ScrollClicks_Ribbon.textChanged.connect(self.on_ScrollClicks_Ribbon_valueCHanged)
+        # Connect the preferred panel settings
+        self.form.PreferedViewPanel.currentIndexChanged.connect(self.on_PreferedViewPanel_currentIndexChanged)
         # endregion
 
         return
@@ -323,6 +328,11 @@ class LoadDialog(Settings_ui.Ui_Form):
         Parameters_Ribbon.RIBBON_CLICKSPEED = self.form.ScrollClicks_Ribbon.value()
         self.settingChanged = True
 
+    def on_PreferedViewPanel_currentIndexChanged(self):
+        Parameters_Ribbon.PREFERRED_VIEW = self.form.PreferedViewPanel.currentIndex()
+        self.settingChanged = True
+        return
+
     @staticmethod
     def on_Cancel_clicked(self):
         # Close the form
@@ -364,6 +374,8 @@ class LoadDialog(Settings_ui.Ui_Form):
         Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Scroll", self.form.ScrollSpeed_Ribbon.value())
         Parameters_Ribbon.Settings.SetIntSetting("TabBar_Click", self.form.ScrollClicks_TabBar.value())
         Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Click", self.form.ScrollClicks_Ribbon.value())
+        # Save the preferred toolbars
+        Parameters_Ribbon.Settings.SetIntSetting("Preferred_view", self.form.PreferedViewPanel())
 
         # Close the form
         self.form.close()
