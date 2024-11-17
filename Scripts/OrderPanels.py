@@ -64,13 +64,12 @@ def UpdateOrder():
 
     # update the order for each workbench toolbar
     for WorkBench in ribbonStructure["workbenches"]:
-        for Toolbar in ribbonStructure["workbenches"][WorkBench]["toolbars"]:
-            if Toolbar == "order":
-                orderList: list = ribbonStructure["workbenches"][WorkBench]["toolbars"][Toolbar]["order"]
-                for key, value in ToolbarsToAdd.items():
-                    orderList.insert(value, key)
+        orderList: list = ribbonStructure["workbenches"][WorkBench]["toolbars"]["order"]
+        for key, value in ToolbarsToAdd.items():
+            if key not in orderList:
+                orderList.insert(value, key)
 
-                ribbonStructure["workbenches"][WorkBench]["toolbars"][Toolbar]["order"] = orderList
+        ribbonStructure["workbenches"][WorkBench]["toolbars"]["order"] = orderList
     return
 
 
