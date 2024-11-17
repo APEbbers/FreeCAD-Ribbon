@@ -22,7 +22,11 @@
 
 # This script can be used to set the icon size for specific toolbars/panels.
 # it is particular helpfull for global toolbars.
-# For example set all icons for the structure panel to medium
+# For example set all icons for the structure panel to medium.
+#
+# Warning!!
+# The scripts only looks in the toolbars currently present in the "RibbonStructure.json" file.
+# To create a complete file, run "CreateDefaultRibbonStructure.py" first.
 
 import FreeCAD as App
 import FreeCADGui as Gui

@@ -23,6 +23,10 @@
 # This script can be used to help order toolbars.
 # it is particular helpfull to order global toolbars.
 # For example set all view panels at the begining of the ribbon for eacht workbench.
+#
+# Warning!!
+# The scripts only looks in the toolbars currently present in the "RibbonStructure.json" file.
+# To create a complete file, run "CreateDefaultRibbonStructure.py" first.
 
 import FreeCAD as App
 import FreeCADGui as Gui
