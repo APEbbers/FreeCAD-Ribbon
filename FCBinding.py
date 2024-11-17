@@ -938,6 +938,13 @@ class ModernMenu(RibbonBar):
                             if action is not None:
                                 command = Gui.Command.get(action.data())
                                 Text = command.getInfo()["menuText"].replace("...", "")
+                                # There is a bug in freecad with the comp-sketch menu hase the wrong text
+                                if (
+                                    action.data() == "PartDesign_CompSketches"
+                                    and Text.replace("...", "") == "Create datum"
+                                ):
+                                    Text = "Create sketch"
+
                         except Exception:
                             pass
 
