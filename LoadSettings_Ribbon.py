@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 import os
 
 from PySide.QtCore import Qt, SIGNAL
-from PySide.QtWidgets import QTabWidget, QSlider, QSpinBox, QCheckBox, QComboBox, QLabel
+from PySide.QtWidgets import QTabWidget, QSlider, QSpinBox, QCheckBox, QComboBox, QLabel, QTabWidget
 import sys
 
 import Standard_Functions_RIbbon as StandardFunctions
@@ -177,6 +177,9 @@ class LoadDialog(Settings_ui.Ui_Form):
         # Connect the preferred panel settings
         self.form.PreferedViewPanel.currentIndexChanged.connect(self.on_PreferedViewPanel_currentIndexChanged)
         # endregion
+
+        # Set the first tab active
+        self.form.tabWidget.setCurrentIndex(0)
 
         return
 

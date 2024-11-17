@@ -1143,8 +1143,12 @@ class ModernMenu(RibbonBar):
                                     showText=showText,
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_SMALL,
                                 )
-                                if Parameters_Ribbon.SHOW_ICON_TEXT_SMALL is False:
-                                    btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_SMALL + self.iconSize)
+                                # if Parameters_Ribbon.SHOW_ICON_TEXT_SMALL is False:
+                                #     btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_SMALL + self.iconSize)
+                                # Set the stylesheet
+                                # Set the padding to align the icons to the left
+                                padding = btn.height() / 3
+                                btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
 
                             elif buttonSize == "medium":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
@@ -1158,8 +1162,13 @@ class ModernMenu(RibbonBar):
                                     showText=showText,
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_MEDIUM,
                                 )
-                                if Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM is False:
-                                    btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM + self.iconSize)
+                                # if Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM is False:
+                                #     btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM + self.iconSize)
+
+                                # Set the stylesheet
+                                # Set the padding to align the icons to the left
+                                padding = btn.height() / 4
+                                btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
 
                             elif buttonSize == "large":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
@@ -1174,12 +1183,19 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_LARGE,
                                 )
 
-                                btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_LARGE - 20)
+                                btn.setMinimumWidth(Parameters_Ribbon.ICON_SIZE_LARGE)
                                 btn.setContentsMargins(3, 3, 3, 20)
 
                                 # add dropdown menu if necessary
                                 if button.menu() is not None:
                                     btn.setIconSize(QSize(btn.height() - 20, btn.height() - 20))
+
+                                # Set the stylesheet
+                                # Set the padding to align the icons to the left
+                                padding = 0
+                                if button.menu() is not None:
+                                    padding = btn.height() / 6
+                                btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
                             else:
                                 raise NotImplementedError(
                                     translate(
@@ -1191,15 +1207,12 @@ class ModernMenu(RibbonBar):
                             # Set the default actiom
                             btn.setDefaultAction(action)
 
-                            # Set the stylesheet
-                            btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
-
                             # add dropdown menu if necessary
                             if button.menu() is not None:
                                 btn.setMenu(button.menu())
                                 btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                                 if btn.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
-                                    btn.setMinimumWidth(btn.height() + 20)
+                                    btn.setMinimumWidth(btn.height())
                                 else:
                                     btn.setMinimumWidth(btn.minimumWidth() + 5)
                                 btn.setDefaultAction(btn.actions()[0])

@@ -112,7 +112,7 @@ def ReturnStyleItem(ControlName):
         return None
 
 
-def ReturnStyleSheet(control, radius="2px"):
+def ReturnStyleSheet(control, radius="2px", padding="0px"):
     """
     Enter one of the names below:
 
@@ -139,7 +139,11 @@ def ReturnStyleSheet(control, radius="2px"):
         if BackgroundColor is not None and BorderColor is not None:
             if control.lower() == "toolbutton":
                 StyleSheet = (
-                    """QToolButton:hover {
+                    """QToolButton {
+                            padding-right: """
+                    + padding
+                    + """;}"""
+                    + """QToolButton:hover {
                             border: 0.5px solid"""
                     + BorderColor
                     + """;
