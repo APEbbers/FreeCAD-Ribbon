@@ -222,15 +222,19 @@ class ModernMenu(RibbonBar):
         if PreferredToolbar == 0:
             ListIgnoredToolbars.append("View")
             ListIgnoredToolbars.append("Views - Ribbon")
-            ListIgnoredToolbars.remove("Individual views")
+            if "Individual views" in ListIgnoredToolbars:
+                ListIgnoredToolbars.remove("Individual views")
         if PreferredToolbar == 1:
             ListIgnoredToolbars.append("Individual views")
             ListIgnoredToolbars.append("Views - Ribbon")
-            ListIgnoredToolbars.remove("Views")
+            if "View" in ListIgnoredToolbars:
+                ListIgnoredToolbars.remove("View")
         if PreferredToolbar == 2:
             ListIgnoredToolbars.append("Individual views")
             ListIgnoredToolbars.append("Views")
-            ListIgnoredToolbars.remove("Views - Ribbon")
+            if "Views - Ribbon" in ListIgnoredToolbars:
+                ListIgnoredToolbars.remove("Views - Ribbon")
+        self.ribbonStructure["ignoredToolbars"] = ListIgnoredToolbars
 
         # Get the address of the repository address
         self.ReproAdress = StandardFunctions.getRepoAdress(os.path.dirname(__file__))
