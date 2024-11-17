@@ -205,7 +205,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 MenuName = command.getInfo()["menuText"].replace("&", "")
                 # There are a few dropdown buttons that need to be corrected
                 if CommandName == "PartDesign_CompSketches":
-                    MenuName = "Create sketch..."
+                    MenuName = "Create sketch"
                 self.List_Commands.append([CommandName[0], Icon, MenuName, WorkBenchName])
         # add also custom commands
         Toolbars = self.List_ReturnCustomToolbars()
@@ -1315,7 +1315,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     MenuName = Command.getInfo()["menuText"].replace("&", "").replace("...", "")
                     # There are a few dropdown buttons that need to be corrected
                     if CommandName == "PartDesign_CompSketches":
-                        MenuName = "Create sketch..."
+                        MenuName = "Create sketch"
 
                     textAddition = ""
                     IconName = ""
@@ -1962,7 +1962,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
                                     # There are a few dropdown buttons that need to be corrected
                                     if CommandName == "PartDesign_CompSketches":
-                                        MenuName = "Create sketch..."
+                                        MenuName = "Create sketch"
                                         MenuNameTableWidgetItem = MenuName
 
                                     # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
