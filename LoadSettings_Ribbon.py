@@ -375,7 +375,7 @@ class LoadDialog(Settings_ui.Ui_Form):
         Parameters_Ribbon.Settings.SetIntSetting("TabBar_Click", self.form.ScrollClicks_TabBar.value())
         Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Click", self.form.ScrollClicks_Ribbon.value())
         # Save the preferred toolbars
-        Parameters_Ribbon.Settings.SetIntSetting("Preferred_view", self.form.PreferedViewPanel())
+        Parameters_Ribbon.Settings.SetIntSetting("Preferred_view", self.form.PreferedViewPanel.currentIndex())
 
         # Close the form
         self.form.close()
