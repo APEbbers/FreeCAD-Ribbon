@@ -1302,13 +1302,17 @@ class ModernMenu(RibbonBar):
 
     def hideClassicToolbars(self):
         for toolbar in mw.findChildren(QToolBar):
-            # Add here toolbars that are allowed to be shown
-            if toolbar.objectName() not in [
-                "",
-                "draft_status_scale_widget",
-                "draft_snap_widget",
+            parentWidget = toolbar.parentWidget()
+            if parentWidget.objectName() not in [
+                "statusBar",
             ]:
-                toolbar.hide()
+                # Add here toolbars that are allowed to be shown
+                if toolbar.objectName() not in [
+                    "",
+                    "draft_status_scale_widget",
+                    "draft_snap_widget",
+                ]:
+                    toolbar.hide()
         return
 
     def List_ReturnCustomToolbars(self):
