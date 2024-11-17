@@ -82,7 +82,14 @@ def UpdateJson():
                         ribbonStructure["workbenches"][WorkBench]["toolbars"][ToolBar]["commands"][Command][
                             "size"
                         ] = IconSize
-                if Item not in ribbonStructure["workbenches"][WorkBench]["toolbars"]:
+    # Go through the workbenches again. now add the toolbars when they are not present.
+    for WorkBench in ribbonStructure["workbenches"]:
+        # Go through the list with toolbars to update
+        for Item in ToolbarToUpdate:
+            if Item not in ribbonStructure["workbenches"][WorkBench]["toolbars"]:
+                try:
+                    # Activate the workbench. Otherwise, .listToolbars() returns empty
+                    Gui.activateWorkbench(WorkBench)
                     wbToolbars = Gui.getWorkbench(WorkBench).getToolbarItems()
                     for key, value in list(wbToolbars.items()):
                         if key == Item:
@@ -95,13 +102,6 @@ def UpdateJson():
 
                                     # Create an empty list for orders
                                     Order = []
-                                    for j in range(len(value)):
-                                        CommandOrder = Gui.Command.get(value[j])
-                                        if CommandOrder is not None:
-                                            MenuNameOrder = (
-                                                CommandOrder.getInfo()["menuText"].replace("&", "").replace("...", "")
-                                            )
-                                            Order.append(MenuNameOrder)
 
                                     Size = IconSize
 
@@ -135,7 +135,8 @@ def UpdateJson():
                                         "text": MenuName,
                                         "icon": IconName,
                                     }
-
+                except Exception:
+                    pass
     return
 
 
