@@ -239,7 +239,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 Icon = Gui.getIcon(CommandInfoCorrections("Std_Measure")["pixmap"])
             else:
                 Icon = None
-            MenuName = CommandInfoCorrections("Std_Measure").replace("&", "")
+            MenuName = CommandInfoCorrections("Std_Measure")["menuText"].replace("&", "")
             self.List_Commands.append(["Std_Measure", Icon, MenuName, "General"])
 
         #
