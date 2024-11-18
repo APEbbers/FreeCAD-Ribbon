@@ -19,10 +19,12 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+import pyqtribbon.panel
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 import time
+import numpy
 
 from PySide.QtGui import (
     QIcon,
@@ -105,7 +107,6 @@ from pyqtribbon_local.category import RibbonCategoryLayoutButton
 # from pyqtribbon.toolbutton import RibbonToolButton
 # from pyqtribbon.separator import RibbonSeparator
 # from pyqtribbon.category import RibbonCategoryLayoutButton
-# from pyqtribbon.tabbar import RibbonTabBar
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -966,10 +967,10 @@ class ModernMenu(RibbonBar):
                 []
             )  # if buttons are used in multiple workbenches, they can show up double. (Sketcher_NewSketch)
             # for button in allButtons:
-            NoSmallButtons = (
+            NoSmallButtons_spacer = (
                 0  # needed to count the number of small buttons in a column. (bug fix with adding separators)
             )
-            NoMediumButtons = (
+            NoMediumButtons_spacer = (
                 0  # needed to count the number of medium buttons in a column. (bug fix with adding separators)
             )
 
@@ -998,9 +999,9 @@ class ModernMenu(RibbonBar):
                         action.data()
                     ]["size"]
                     if buttonSize == "small":
-                        NoSmallButtons += 1
+                        NoSmallButtons_spacer += 1
                     if buttonSize == "medium":
-                        NoMediumButtons += 1
+                        NoMediumButtons_spacer += 1
                 except Exception:
                     pass
 
@@ -1028,7 +1029,7 @@ class ModernMenu(RibbonBar):
                 else:
                     # If the number of columns is more than allowed,
                     # Add the actions to the OptionPanel instead.
-                    if maxColumns > 0 or columnCount > 13:
+                    if maxColumns > 0:
                         if columnCount > maxColumns + 1:
                             ButtonList.append(button)
                             panel.panelOptionButton().show()
@@ -1044,17 +1045,17 @@ class ModernMenu(RibbonBar):
                         # despite the correct order of the button list.
                         # To correct this, empty and disabled buttons are added for spacing.
                         # (adding spacers did not work)
-                        if float((NoSmallButtons + 1) / 3).is_integer():
+                        if float((NoSmallButtons_spacer + 1) / 3).is_integer():
                             panel.addSmallButton().setEnabled(False)
-                        if float((NoSmallButtons + 2) / 3).is_integer():
+                        if float((NoSmallButtons_spacer + 2) / 3).is_integer():
                             panel.addSmallButton().setEnabled(False)
                             panel.addSmallButton().setEnabled(False)
                         # reset the counter after a separator is added.
-                        NoSmallButtons = 0
+                        NoSmallButtons_spacer = 0
                         # Same principle for medium buttons
-                        if float((NoMediumButtons + 1) / 2).is_integer():
+                        if float((NoMediumButtons_spacer + 1) / 2).is_integer():
                             panel.addMediumButton().setEnabled(False)
-                        NoMediumButtons = 0
+                        NoMediumButtons_spacer = 0
                         continue
                     else:
                         try:
@@ -1232,6 +1233,10 @@ class ModernMenu(RibbonBar):
                             if Parameters_Ribbon.DEBUG_MODE is True:
                                 print(f"{e.with_traceback(None)}, 2")
                             continue
+
+            # Set the size policy and increment. It has to be MinimumExpanding.
+            panel.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
+            panel.setSizeIncrement(self.iconSize, self.iconSize)
 
             # remove any suffix from the panel title
             if panel.title().endswith("_custom"):
