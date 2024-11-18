@@ -552,7 +552,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     ListWidgetItem.setText(
                         StandardFunctions.TranslationsMapping(workbenchName, MenuName) + textAddition
                     )
-                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Command)
                     ListWidgetItem.setIcon(Icon)
                     ListWidgetItem.setToolTip(ToolbarCommand[0])  # Use the tooltip to store the actual command.
 
@@ -595,7 +595,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     ListWidgetItem.setText(
                         StandardFunctions.TranslationsMapping(workbenchName, MenuName) + textAddition
                     )
-                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Command)
                     ListWidgetItem.setIcon(Icon)
                     ListWidgetItem.setToolTip(CommandName)  # Use the tooltip to store the actual command.
 
@@ -2088,9 +2088,9 @@ class LoadDialog(Design_ui.Ui_Form):
         SelectedCommands = self.ListWidgetItems(self.form.CommandsSelected)
         for i2 in range(len(SelectedCommands)):
             ListWidgetItem: QListWidgetItem = SelectedCommands[i2]
-            QuickAccessCommand = CommandInfoCorrections(ListWidgetItem.data(Qt.ItemDataRole.UserRole))["name"].replace(
-                "&", ""
-            )
+            QuickAccessCommand = CommandInfoCorrections(
+                ListWidgetItem.data(Qt.ItemDataRole.UserRole).getInfo()["name"]
+            )["name"]
             List_QuickAccessCommands.append(QuickAccessCommand)
 
         # IgnoredWorkbences
