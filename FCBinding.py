@@ -1197,9 +1197,7 @@ class ModernMenu(RibbonBar):
                                 padding = 0
                                 if button.menu() is not None:
                                     padding = btn.height() / 6
-                                btn.setStyleSheet(
-                                    StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px", "10px")
-                                )
+                                btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
                             else:
                                 raise NotImplementedError(
                                     translate(
