@@ -1113,7 +1113,7 @@ class ModernMenu(RibbonBar):
                                 text = action.text()
 
                             if action.icon() is None:
-                                commandName = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
+                                CommandName = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
                                     "commands"
                                 ][action.data()]
                                 action.setIcon(Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"]))
@@ -1191,6 +1191,13 @@ class ModernMenu(RibbonBar):
                                     showText=showText,
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_LARGE,
                                 )
+
+                                # if text is enabled for large buttons. The text will be behind the icon
+                                # To fix this, increase the height of the button with 20 and the set the icon size
+                                # to the heigt minus 20.
+                                if Parameters_Ribbon.SHOW_ICON_TEXT_LARGE is True:
+                                    btn.setFixedHeight(btn.height() + 20)
+                                    btn.setMaximumIconSize(btn.height() - 20)
 
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
