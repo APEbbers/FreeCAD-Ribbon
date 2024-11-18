@@ -126,7 +126,7 @@ class Settings:
         Settings.SetBoolSetting("DebugMode", DEBUG_MODE)
 
 
-# region - Define the resources
+# region - Define the resources ----------------------------------------------------------------------------------------
 ICON_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "icons")
 STYLESHEET_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "stylesheets")
 UI_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "ui")
@@ -142,6 +142,7 @@ DefaultSettings = {
     "QuickAccessButtonSize": int(30),
     "TabBarSize": int(30),
     "RightToolbarButtonSize": int(30),
+    "BackupEnabled": bool(True),
     "BackupFolder": os.path.dirname(__file__) + "/Backups",
     "TabOrder": App.ParamGet("User parameter:BaseApp/Preferences/Workbenches/").GetString("Ordered"),
     "AutoHideRibbon": bool(False),
@@ -213,6 +214,9 @@ if Settings.GetIntSetting("RightToolbarButtonSize") is None or Settings.GetIntSe
 
 # region - Backup parameters -------------------------------------------------------------------------------------------
 ENABLE_BACKUP = Settings.GetBoolSetting("BackupEnabled")
+if Settings.GetBoolSetting("BackupEnabled") is None:
+    ENABLE_BACKUP = DefaultSettings["BackupEnabled"]
+    Settings.SetBoolSetting("BackupEnabled", ENABLE_BACKUP)
 
 BACKUP_LOCATION = Settings.GetStringSetting("BackupFolder")
 if Settings.GetStringSetting("BackupFolder") == "":

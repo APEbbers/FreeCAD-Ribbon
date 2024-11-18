@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsrVDMZB.ui'
+## Form generated from reading UI file 'SettingsPgwkMr.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -73,17 +73,22 @@ class Ui_Form(object):
         self.gridLayout_6.setObjectName("gridLayout_6")
         self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout_6.addItem(self.horizontalSpacer_2, 0, 0, 1, 1)
-
-        self.Cancel = QPushButton(Form)
-        self.Cancel.setObjectName("Cancel")
-
-        self.gridLayout_6.addWidget(self.Cancel, 0, 1, 1, 1)
+        self.gridLayout_6.addItem(self.horizontalSpacer_2, 0, 1, 1, 1)
 
         self.GenerateJsonExit = QPushButton(Form)
         self.GenerateJsonExit.setObjectName("GenerateJsonExit")
 
-        self.gridLayout_6.addWidget(self.GenerateJsonExit, 0, 2, 1, 1)
+        self.gridLayout_6.addWidget(self.GenerateJsonExit, 0, 3, 1, 1)
+
+        self.Cancel = QPushButton(Form)
+        self.Cancel.setObjectName("Cancel")
+
+        self.gridLayout_6.addWidget(self.Cancel, 0, 2, 1, 1)
+
+        self.Reset = QPushButton(Form)
+        self.Reset.setObjectName("Reset")
+
+        self.gridLayout_6.addWidget(self.Reset, 0, 0, 1, 1)
 
         self.gridLayout_7.addLayout(self.gridLayout_6, 1, 0, 1, 1)
 
@@ -823,7 +828,7 @@ class Ui_Form(object):
         self.CustomColors.toggled.connect(self.ColorS.setEnabled)
         self.CustomIcons.toggled.connect(self.IconS.setEnabled)
 
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(Form)
 
@@ -831,14 +836,15 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", "Preferences", None))
-        self.Cancel.setText(QCoreApplication.translate("Form", "Cancel", None))
-        # if QT_CONFIG(shortcut)
-        self.Cancel.setShortcut(QCoreApplication.translate("Form", "Esc", None))
-        # endif // QT_CONFIG(shortcut)
         self.GenerateJsonExit.setText(QCoreApplication.translate("Form", "Close", None))
         # if QT_CONFIG(shortcut)
         self.GenerateJsonExit.setShortcut("")
         # endif // QT_CONFIG(shortcut)
+        self.Cancel.setText(QCoreApplication.translate("Form", "Cancel", None))
+        # if QT_CONFIG(shortcut)
+        self.Cancel.setShortcut(QCoreApplication.translate("Form", "Esc", None))
+        # endif // QT_CONFIG(shortcut)
+        self.Reset.setText(QCoreApplication.translate("Form", "Reset", None))
         self.DebugMode.setText(QCoreApplication.translate("Form", "Debug mode", None))
         self.label_3.setText(
             QCoreApplication.translate(

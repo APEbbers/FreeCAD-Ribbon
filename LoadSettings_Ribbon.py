@@ -29,6 +29,7 @@ import sys
 
 import Standard_Functions_RIbbon as StandardFunctions
 import Parameters_Ribbon
+from Parameters_Ribbon import DefaultSettings
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -168,6 +169,13 @@ class LoadDialog(Settings_ui.Ui_Form):
             self.on_Close_clicked(self)
 
         self.form.GenerateJsonExit.connect(self.form.GenerateJsonExit, SIGNAL("clicked()"), GenerateJsonExit)
+
+        # Connect the reset button
+        def Reset():
+            self.on_Reset_clicked(self)
+
+        self.form.Reset.connect(self.form.Reset, SIGNAL("clicked()"), Reset)
+
         # Connect the behavior settings
         self.form.EnableEnterEvent.clicked.connect(self.on_EnableEnterEvent_clicked)
         self.form.ScrollSpeed_TabBar.valueChanged.connect(self.on_ScrollSpeed_TabBar_valueCHanged)
@@ -387,6 +395,58 @@ class LoadDialog(Settings_ui.Ui_Form):
             result = StandardFunctions.RestartDialog()
             if result == "yes":
                 StandardFunctions.restart_freecad()
+        return
+
+    @staticmethod
+    def on_Reset_clicked(self):
+        # load all settings
+        self.form.EnableBackup.setChecked(DefaultSettings["BackupEnabled"])
+        self.form.label_4.setText(DefaultSettings["BackupFolder"])
+        self.form.TabbarStyle.setCurrentIndex(DefaultSettings["TabBar_Style"])
+        self.form.IconSize_Small.setValue(DefaultSettings["IconSize_Small"])
+        self.form.IconSize_Medium.setValue(DefaultSettings["IconSize_Medium"])
+        self.form.IconSize_Large.setValue(DefaultSettings["IconSize_Large"])
+        self.form.IconSize_ApplicationButton.setValue(DefaultSettings["ApplicationButtonSize"])
+        self.form.IconSize_QuickAccessButton.setValue(DefaultSettings["QuickAccessButtonSize"])
+        self.form.IconSize_rightToolbarButton.setValue(DefaultSettings["RightToolbarButtonSize"])
+        self.form.TabbarHeight.setValue(DefaultSettings["TabBarSize"])
+        self.form.label_7.setText(DefaultSettings["Stylesheet"])
+        if DefaultSettings["ShowIconText_Small"] is True:
+            self.form.ShowText_Small.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.ShowText_Small.setCheckState(Qt.CheckState.Unchecked)
+        if DefaultSettings["ShowIconText_Medium"] is True:
+            self.form.ShowText_Medium.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.ShowText_Medium.setCheckState(Qt.CheckState.Unchecked)
+        if DefaultSettings["ShowIconText_Large"] is True:
+            self.form.ShowText_Large.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.ShowText_Large.setCheckState(Qt.CheckState.Unchecked)
+        self.form.MaxPanelColumn.setValue(DefaultSettings["MaxColumnsPerPanel"])
+        if DefaultSettings["DebugMode"] is True:
+            self.form.DebugMode.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.DebugMode.setCheckState(Qt.CheckState.Unchecked)
+
+        if DefaultSettings["ShowOnHover"] is True:
+            self.form.EnableEnterEvent.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.EnableEnterEvent.setCheckState(Qt.CheckState.Unchecked)
+        # it is FreeCAD 1.0 disable this option.
+        if int(App.Version()[0]) > 0:
+            self.form.EnableEnterEvent.setDisabled(True)
+            self.form.EnableEnterEvent.setHidden(True)
+
+        self.form.ScrollSpeed_TabBar.setValue(DefaultSettings["TabBar_Scroll"])
+        self.form.ScrollSpeed_Ribbon.setValue(DefaultSettings["Ribbon_Scroll"])
+        self.form.ScrollClicks_TabBar.setValue(DefaultSettings["TabBar_Click"])
+        self.form.ScrollClicks_Ribbon.setValue(DefaultSettings["Ribbon_Click"])
+
+        self.form.PreferedViewPanel.setCurrentIndex(DefaultSettings["Preferred_view"])
+
+        self.settingChanged = True
+
         return
 
     # endregion---------------------------------------------------------------------------------------
