@@ -511,3 +511,16 @@ def TranslationsMapping(WorkBenchName: str, string: str):
                 result = string
 
     return result
+
+
+def CommandInfoCorrections(CommandName):
+    Command = Gui.Command.get(CommandName)
+    CommandInfo = Command.getInfo()
+
+    if CommandName == "PartDesign_CompSketches":
+        CommandInfo["menuText"] = "Create sketch"
+        CommandInfo["toolTip"] = "Create or edit a sketch"
+        CommandInfo["whatsThis"] = "PartDesign_CompSketches"
+        CommandInfo["statusTip"] = "Create or edit a sketch"
+
+    return CommandInfo

@@ -41,6 +41,7 @@ import json
 from datetime import datetime
 import shutil
 import Standard_Functions_RIbbon as StandardFunctions
+from Standard_Functions_RIbbon import CommandInfoCorrections
 import Parameters_Ribbon
 import webbrowser
 import time
@@ -198,11 +199,11 @@ class LoadDialog(Design_ui.Ui_Form):
             WorkBenchName = CommandName[1]
             if command is not None:
                 # get the icon for this command
-                if command.getInfo()["pixmap"] != "":
-                    Icon = Gui.getIcon(command.getInfo()["pixmap"])
+                if CommandInfoCorrections(CommandName)["pixmap"] != "":
+                    Icon = Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"])
                 else:
                     Icon = None
-                MenuName = command.getInfo()["menuText"].replace("&", "")
+                MenuName = CommandInfoCorrections(CommandName)["menuText"].replace("&", "")
                 # There are a few dropdown buttons that need to be corrected
                 if CommandName == "PartDesign_CompSketches":
                     MenuName = "Create sketch"
@@ -216,29 +217,29 @@ class LoadDialog(Design_ui.Ui_Form):
                     WorkBenchName = WorkBench[0]
                     for CustomCommand in Toolbar[2]:
                         command = Gui.Command.get(CustomCommand)
-                        if command.getInfo()["pixmap"] != "":
-                            Icon = Gui.getIcon(command.getInfo()["pixmap"])
+                        if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
+                            Icon = Gui.getIcon(CommandInfoCorrections(CustomCommand)["pixmap"])
                         else:
                             Icon = None
-                        MenuName = command.getInfo()["menuText"].replace("&", "")
+                        MenuName = CommandInfoCorrections(CustomCommand)["menuText"].replace("&", "")
                         self.List_Commands.append([CustomCommand, Icon, MenuName, WorkBenchName])
         Toolbars = self.List_ReturnCustomToolbars_Global()
         for Toolbar in Toolbars:
             for CustomCommand in Toolbar[2]:
                 command = Gui.Command.get(CustomCommand)
-                if command.getInfo()["pixmap"] != "":
-                    Icon = Gui.getIcon(command.getInfo()["pixmap"])
+                if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
+                    Icon = Gui.getIcon(CommandInfoCorrections(CustomCommand)["pixmap"])
                 else:
                     Icon = None
-                MenuName = command.getInfo()["menuText"].replace("&", "")
+                MenuName = CommandInfoCorrections(CustomCommand)["menuText"].replace("&", "")
                 self.List_Commands.append([CustomCommand, Icon, MenuName, Toolbar[1]])
         if int(App.Version()[0]) > 0:
             command = Gui.Command.get("Std_Measure")
-            if command.getInfo()["pixmap"] != "":
-                Icon = Gui.getIcon(command.getInfo()["pixmap"])
+            if CommandInfoCorrections("Std_Measure")["pixmap"] != "":
+                Icon = Gui.getIcon(CommandInfoCorrections("Std_Measure")["pixmap"])
             else:
                 Icon = None
-            MenuName = command.getInfo()["menuText"].replace("&", "")
+            MenuName = CommandInfoCorrections("menuText").replace("&", "")
             self.List_Commands.append(["Std_Measure", Icon, MenuName, "General"])
 
         #
@@ -594,7 +595,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     ListWidgetItem.setText(
                         StandardFunctions.TranslationsMapping(workbenchName, MenuName) + textAddition
                     )
-                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Command)
+                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
                     ListWidgetItem.setIcon(Icon)
                     ListWidgetItem.setToolTip(CommandName)  # Use the tooltip to store the actual command.
 
@@ -843,7 +844,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                     MenuName = CommandAction.text().replace("&", "")
 
                                     # get the icon for this command if there isn't one, leave it None
-                                    Icon = Gui.getIcon(Command.getInfo()["pixmap"])
+                                    Icon = Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"])
                                     action = Command.getAction()
                                     try:
                                         if len(action) > 1:
@@ -1238,7 +1239,7 @@ class LoadDialog(Design_ui.Ui_Form):
             try:
                 try:
                     Command = Gui.Command.get(item)
-                    MenuName = Command.getInfo()["menuText"].replace("&", "").replace("...", "")
+                    MenuName = CommandInfoCorrections(item)["menuText"].replace("&", "").replace("...", "")
                     item = MenuName
                 except Exception:
                     pass
@@ -1305,14 +1306,14 @@ class LoadDialog(Design_ui.Ui_Form):
                 Command = Gui.Command.get(ToolbarCommand)
                 if Command is None:
                     continue
-                CommandName = Command.getInfo()["name"]
+                CommandName = CommandInfoCorrections(ToolbarCommand)["name"]
 
                 # Check if the items is already there
                 IsInList = ShadowList.__contains__(CommandName)
                 # if not, continue
                 if IsInList is False:
                     # Get the text
-                    MenuName = Command.getInfo()["menuText"].replace("&", "").replace("...", "")
+                    MenuName = CommandInfoCorrections(ToolbarCommand)["menuText"].replace("&", "").replace("...", "")
                     # There are a few dropdown buttons that need to be corrected
                     if CommandName == "PartDesign_CompSketches":
                         MenuName = "Create sketch"
@@ -1320,8 +1321,8 @@ class LoadDialog(Design_ui.Ui_Form):
                     textAddition = ""
                     IconName = ""
                     # get the icon for this command if there isn't one, leave it None
-                    Icon = Gui.getIcon(Command.getInfo()["pixmap"])
-                    IconName = Command.getInfo()["pixmap"]
+                    Icon = Gui.getIcon(CommandInfoCorrections(ToolbarCommand)["pixmap"])
+                    IconName = CommandInfoCorrections(ToolbarCommand)["pixmap"]
                     action = Command.getAction()
                     try:
                         if len(action) > 1:
@@ -1366,7 +1367,9 @@ class LoadDialog(Design_ui.Ui_Form):
                                 continue
 
                     MenuNameTabelWidgetItem = ""
-                    if MenuNameJson != Command.getInfo()["menuText"].replace("&", "").replace("...", ""):
+                    if MenuNameJson != CommandInfoCorrections(ToolbarCommand)["menuText"].replace("&", "").replace(
+                        "...", ""
+                    ):
                         MenuNameTabelWidgetItem = MenuNameJson
                     else:
                         CommandAction = Command.getAction()[0]
@@ -1948,7 +1951,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                 if WorkBenchName == self.List_Commands[i3][3] or self.List_Commands[i3][3] == "Global":
                                     CommandName = self.List_Commands[i3][0]
                                     Command = Gui.Command.get(CommandName)
-                                    IconName = Command.getInfo()["pixmap"]
+                                    IconName = CommandInfoCorrections(CommandName)["pixmap"]
 
                                     # If the text in the tableitemwidget is equeal to the command menu text
                                     # Use the original menutext
@@ -1957,7 +1960,9 @@ class LoadDialog(Design_ui.Ui_Form):
                                         "...", ""
                                     ):
                                         MenuNameTableWidgetItem = (
-                                            Command.getInfo()["menuText"].replace("&", "").replace("...", "")
+                                            CommandInfoCorrections(CommandName)["menuText"]
+                                            .replace("&", "")
+                                            .replace("...", "")
                                         )
 
                                     # There are a few dropdown buttons that need to be corrected
@@ -2084,8 +2089,9 @@ class LoadDialog(Design_ui.Ui_Form):
         SelectedCommands = self.ListWidgetItems(self.form.CommandsSelected)
         for i2 in range(len(SelectedCommands)):
             ListWidgetItem: QListWidgetItem = SelectedCommands[i2]
-            Command = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
-            QuickAccessCommand = Command.getInfo()["name"].replace("&", "")
+            QuickAccessCommand = CommandInfoCorrections(ListWidgetItem.data(Qt.ItemDataRole.UserRole))["name"].replace(
+                "&", ""
+            )
             List_QuickAccessCommands.append(QuickAccessCommand)
 
         # IgnoredWorkbences

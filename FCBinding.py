@@ -75,6 +75,7 @@ import Parameters_Ribbon
 import LoadSettings_Ribbon
 import LoadLicenseForm_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
+from Standard_Functions_RIbbon import CommandInfoCorrections
 import StyleMapping
 import platform
 
@@ -935,7 +936,7 @@ class ModernMenu(RibbonBar):
                                 action = button.actions()[0]
                             if action is not None:
                                 command = Gui.Command.get(action.data())
-                                Text = command.getInfo()["menuText"].replace("...", "")
+                                Text = CommandInfoCorrections(action.data())["menuText"].replace("...", "")
                                 # There is a bug in freecad with the comp-sketch menu hase the wrong text
                                 if (
                                     action.data() == "PartDesign_CompSketches"
@@ -1088,11 +1089,7 @@ class ModernMenu(RibbonBar):
                                 # if so use the alternative, otherwise use original
                                 for CommandName in Gui.listCommands():
                                     Command = Gui.Command.get(CommandName)
-                                    MenuName = Command.getInfo()["menuText"].replace("...", "")
-
-                                    # There are a few dropdown buttons that need to be corrected
-                                    if CommandName == "PartDesign_CompSketches":
-                                        MenuName = "Create sketch"
+                                    MenuName = CommandInfoCorrections(CommandName)["menuText"].replace("...", "")
 
                                     if (
                                         CommandName
@@ -1120,7 +1117,7 @@ class ModernMenu(RibbonBar):
                                     "commands"
                                 ][action.data()]
                                 command = Gui.Command.get(commandName)
-                                action.setIcon(Gui.getIcon(command.getInfo()["pixmap"]))
+                                action.setIcon(Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"]))
 
                             # try to get alternative icon from ribbonStructure
                             try:
@@ -1398,7 +1395,7 @@ class ModernMenu(RibbonBar):
                 # get the menu text from the command list
                 for CommandName in Gui.listCommands():
                     Command = Gui.Command.get(CommandName)
-                    MenuText = Command.getInfo()["menuText"].replace("&", "")
+                    MenuText = CommandInfoCorrections(CommandName).replace("&", "")
 
                     if MenuText == key:
                         try:
