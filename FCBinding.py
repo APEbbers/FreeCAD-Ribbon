@@ -1116,7 +1116,6 @@ class ModernMenu(RibbonBar):
                                 commandName = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
                                     "commands"
                                 ][action.data()]
-                                command = Gui.Command.get(commandName)
                                 action.setIcon(Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"]))
 
                             # try to get alternative icon from ribbonStructure

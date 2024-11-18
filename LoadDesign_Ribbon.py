@@ -199,11 +199,11 @@ class LoadDialog(Design_ui.Ui_Form):
             WorkBenchName = CommandName[1]
             if command is not None:
                 # get the icon for this command
-                if CommandInfoCorrections(CommandName)["pixmap"] != "":
-                    Icon = Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"])
+                if CommandInfoCorrections(CommandName[0])["pixmap"] != "":
+                    Icon = Gui.getIcon(CommandInfoCorrections(CommandName[0])["pixmap"])
                 else:
                     Icon = None
-                MenuName = CommandInfoCorrections(CommandName)["menuText"].replace("&", "")
+                MenuName = CommandInfoCorrections(CommandName[0])["menuText"].replace("&", "")
                 # There are a few dropdown buttons that need to be corrected
                 if CommandName == "PartDesign_CompSketches":
                     MenuName = "Create sketch"
@@ -1238,7 +1238,6 @@ class LoadDialog(Design_ui.Ui_Form):
         def SortCommands(item):
             try:
                 try:
-                    Command = Gui.Command.get(item)
                     MenuName = CommandInfoCorrections(item)["menuText"].replace("&", "").replace("...", "")
                     item = MenuName
                 except Exception:
