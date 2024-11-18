@@ -19,12 +19,9 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
-import pyqtribbon.panel
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
-import time
-import numpy
 
 from PySide.QtGui import (
     QIcon,
