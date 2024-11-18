@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsPgwkMr.ui'
+## Form generated from reading UI file 'SettingsWUWdVN.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -257,6 +257,7 @@ class Ui_Form(object):
 
         self.IconSize_Large = QSpinBox(self.groupBox_4)
         self.IconSize_Large.setObjectName("IconSize_Large")
+        self.IconSize_Large.setMaximum(200)
 
         self.gridLayout.addWidget(self.IconSize_Large, 2, 1, 1, 1)
 
