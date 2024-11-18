@@ -552,7 +552,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     ListWidgetItem.setText(
                         StandardFunctions.TranslationsMapping(workbenchName, MenuName) + textAddition
                     )
-                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Command)
+                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
                     ListWidgetItem.setIcon(Icon)
                     ListWidgetItem.setToolTip(ToolbarCommand[0])  # Use the tooltip to store the actual command.
 
