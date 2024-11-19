@@ -143,7 +143,7 @@ DefaultSettings = {
     "TabBarSize": int(30),
     "RightToolbarButtonSize": int(30),
     "BackupEnabled": bool(True),
-    "BackupFolder": os.path.dirname(__file__) + "/Backups",
+    "BackupFolder": os.path.join(os.path.dirname(__file__) + "Backups"),
     "TabOrder": App.ParamGet("User parameter:BaseApp/Preferences/Workbenches/").GetString("Ordered"),
     "AutoHideRibbon": bool(False),
     "Stylesheet": os.path.join(os.path.join(STYLESHEET_LOCATION, "default.qss")),
