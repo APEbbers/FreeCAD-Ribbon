@@ -511,9 +511,10 @@ class LoadDialog(Design_ui.Ui_Form):
             self.form.RestoreJson.setVisible(True)
         # endregion
 
+        self.form.resizeEvent = lambda event: self.resizeEvent_custom(event)
         return
 
-    def resizeEvent(self):
+    def resizeEvent_custom(self, event):
         if self.form.tabWidget.currentIndex() == 4:
             Parameters_Ribbon.Settings.SetIntSetting("TabWidth_large", self.form.width())
         else:
