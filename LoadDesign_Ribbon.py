@@ -458,7 +458,7 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.ResetJson.connect(self.form.ResetJson, SIGNAL("clicked()"), self.on_ResetJson_clicked)
 
         # connect the change of the current tab event to a function to set the size per tab
-        self.form.tabWidget.currentChanged.connect(self.on_tabBar_currentIndex)
+        self.form.tabWidget.currentChanged.connect(self.on_tabBar_currentIndexChanged)
 
         # Connect the cancel button
         def Cancel():
@@ -1094,7 +1094,7 @@ class LoadDialog(Design_ui.Ui_Form):
     # endregion
 
     # region - Ribbon design tab
-    def on_tabBar_currentIndex(self):
+    def on_tabBar_currentIndexChanged(self):
         if self.form.tabWidget.currentIndex() == 4:
             # Set the default size of the form
             Geometry = self.form.geometry()
@@ -1106,7 +1106,8 @@ class LoadDialog(Design_ui.Ui_Form):
             self.form.MoveUp_Toolbar.show()
             self.form.ToolbarsOrder.show()
             self.form.setMinimumWidth(940)
-            # self.form.setMaximumWidth(940)
+            self.form.setMaximumWidth(940)
+            self.form.setMaximumWidth(120000)
         else:
             self.form.label_4.hide()
             self.form.MoveDown_Toolbar.hide()
@@ -1117,7 +1118,8 @@ class LoadDialog(Design_ui.Ui_Form):
             Geometry.setWidth(580)
             self.form.setGeometry(Geometry)
             self.form.setMinimumWidth(580)
-            # self.form.setMaximumWidth(580)
+            self.form.setMaximumWidth(580)
+            self.form.setMaximumWidth(120000)
 
     def on_WorkbenchList__TextChanged(self):
         # Set the workbench name.
