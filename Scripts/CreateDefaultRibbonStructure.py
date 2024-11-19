@@ -44,6 +44,15 @@ JsonPath = ParentPath
 # This is the file used to reset the ribbon.
 JsonName = "RibbonStructure_default.json"
 
+# Enable inclusion of customized workbenches.
+# See row 101
+IncludeCustomJson = True  # Set to false if not needed
+
+# Set the size for the first icon in every toolbar/panel
+FirstIconSize = "large"  # set to "small" or medium as per preference
+# Set the size for the remaining icons in every toolbar
+OtherIconSize = "small"  # set to "medium" or "large" as per preference
+
 # Define list of the workbenches, toolbars and commands on class level
 List_Workbenches = []
 StringList_Toolbars = []
@@ -140,7 +149,7 @@ CustomJson_Workbenches = {
             "toolbars": {
                 "Part Design Helper": {
                     "order": [
-                        "Create datum",
+                        "Create sketch",
                         "Create datum",
                         "Create body",
                         "Check Geometry",
@@ -2820,7 +2829,11 @@ def main():
 
 def CreateJson():
     # Add your custom workbenches
-    if CustomJson_Workbenches != "" or CustomJson_Workbenches is not None:
+    if (
+        CustomJson_Workbenches != ""
+        and CustomJson_Workbenches is not None
+        and IncludeCustomJson is True
+    ):
         for Workbench in CustomJson_Workbenches["workbenches"]:
             skipWorkbenchList.append(Workbench)
         Dict_RibbonCommandPanel.update(CustomJson_Workbenches)
@@ -2890,7 +2903,7 @@ def CreateJson():
 
                 if ToolbarToBeSkipped is False:
                     # create a empty size string
-                    Size = "small"
+                    Size = OtherIconSize
                     # Define empty strings for the command name and icon name
                     CommandName = ""
                     IconName = ""
@@ -2916,7 +2929,7 @@ def CreateJson():
 
                             # Set the first command to large
                             if i2 == 0:
-                                Size = "large"
+                                Size = FirstIconSize
 
                                 add_keys_nested_dict(
                                     Dict_RibbonCommandPanel,

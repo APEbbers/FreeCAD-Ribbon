@@ -1,6 +1,5 @@
 RibbonBar {
     border: none;
-    /*background-color: transparent;*/
 }
 
 RibbonApplicationButton::menu-indicator {
@@ -9,13 +8,13 @@ RibbonApplicationButton::menu-indicator {
 
 RibbonTitleWidget {
     border-radius: 10px;
-    background-color: transparent;
+    background-color: transparent;*/
 }
 
 RibbonStackedWidget {
     border: none;
     border-radius: 10px;
-    background-color: transparent;
+    /*background-color: transparent;*/
 }
 
 QToolButton, RibbonApplicationButton{
@@ -26,7 +25,7 @@ QToolButton, RibbonApplicationButton{
 	}
 	QToolButton:hover{
 		border: 0.5px solid;/* do not change this line. It is used to set the color by code */
-		border: 0.5px solid;/* do not change this line. It is used to set the color by code */
+		background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #444444, stop:1 #333333);
 		}
 	QToolButton::menu-arrow {
 		width: 20px;
@@ -41,7 +40,6 @@ QToolButton, RibbonApplicationButton{
 		subcontrol-position: right center;
 		}
 	QToolButton::menu-button:hover{
-		border-left: 0.5px solid;/* do not change this line. It is used to set the color by code */
 		border-left: 0.5px solid;/* do not change this line. It is used to set the color by code */
 	}
 	QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
@@ -62,12 +60,12 @@ QToolBar {
 }
 
 RibbonPanelOptionButton {
-	image: none;
+	/*image: none;*/
 	border-radius: none;
 	border-top: 0.5px solid;/* do not change this line. It is used to set the color by code */
 	}
 	RibbonPanelOptionButton::menu-indicator {
-		image: none;
+		/*image: none;*/
 		subcontrol-origin: padding;
 		subcontrol-position: right center;
 	}

@@ -41,6 +41,7 @@ import json
 from datetime import datetime
 import shutil
 import Standard_Functions_RIbbon as StandardFunctions
+from Standard_Functions_RIbbon import CommandInfoCorrections
 import Parameters_Ribbon
 import webbrowser
 import time
@@ -202,11 +203,16 @@ class LoadDialog(Design_ui.Ui_Form):
             WorkBenchName = CommandName[1]
             if command is not None:
                 # get the icon for this command
-                if command.getInfo()["pixmap"] != "":
-                    Icon = Gui.getIcon(command.getInfo()["pixmap"])
+                if CommandInfoCorrections(CommandName[0])["pixmap"] != "":
+                    Icon = Gui.getIcon(CommandInfoCorrections(CommandName[0])["pixmap"])
                 else:
                     Icon = None
-                MenuName = command.getInfo()["menuText"].replace("&", "")
+                MenuName = CommandInfoCorrections(CommandName[0])["menuText"].replace(
+                    "&", ""
+                )
+                # There are a few dropdown buttons that need to be corrected
+                if CommandName == "PartDesign_CompSketches":
+                    MenuName = "Create sketch"
                 self.List_Commands.append(
                     [CommandName[0], Icon, MenuName, WorkBenchName]
                 )
@@ -219,11 +225,15 @@ class LoadDialog(Design_ui.Ui_Form):
                     WorkBenchName = WorkBench[0]
                     for CustomCommand in Toolbar[2]:
                         command = Gui.Command.get(CustomCommand)
-                        if command.getInfo()["pixmap"] != "":
-                            Icon = Gui.getIcon(command.getInfo()["pixmap"])
+                        if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
+                            Icon = Gui.getIcon(
+                                CommandInfoCorrections(CustomCommand)["pixmap"]
+                            )
                         else:
                             Icon = None
-                        MenuName = command.getInfo()["menuText"].replace("&", "")
+                        MenuName = CommandInfoCorrections(CustomCommand)[
+                            "menuText"
+                        ].replace("&", "")
                         self.List_Commands.append(
                             [CustomCommand, Icon, MenuName, WorkBenchName]
                         )
@@ -231,12 +241,24 @@ class LoadDialog(Design_ui.Ui_Form):
         for Toolbar in Toolbars:
             for CustomCommand in Toolbar[2]:
                 command = Gui.Command.get(CustomCommand)
-                if command.getInfo()["pixmap"] != "":
-                    Icon = Gui.getIcon(command.getInfo()["pixmap"])
+                if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
+                    Icon = Gui.getIcon(CommandInfoCorrections(CustomCommand)["pixmap"])
                 else:
                     Icon = None
-                MenuName = command.getInfo()["menuText"].replace("&", "")
+                MenuName = CommandInfoCorrections(CustomCommand)["menuText"].replace(
+                    "&", ""
+                )
                 self.List_Commands.append([CustomCommand, Icon, MenuName, Toolbar[1]])
+        if int(App.Version()[0]) > 0:
+            command = Gui.Command.get("Std_Measure")
+            if CommandInfoCorrections("Std_Measure")["pixmap"] != "":
+                Icon = Gui.getIcon(CommandInfoCorrections("Std_Measure")["pixmap"])
+            else:
+                Icon = None
+            MenuName = CommandInfoCorrections("Std_Measure")["menuText"].replace(
+                "&", ""
+            )
+            self.List_Commands.append(["Std_Measure", Icon, MenuName, "General"])
 
         #
         # endregion ----------------------------------------------------------------------
@@ -482,7 +504,7 @@ class LoadDialog(Design_ui.Ui_Form):
         )
 
         # connect the change of the current tab event to a function to set the size per tab
-        self.form.tabWidget.currentChanged.connect(self.on_tabBar_currentIndex)
+        self.form.tabWidget.currentChanged.connect(self.on_tabBar_currentIndexChanged)
 
         # Connect the cancel button
         def Cancel():
@@ -537,6 +559,18 @@ class LoadDialog(Design_ui.Ui_Form):
             self.form.RestoreJson.setVisible(True)
         # endregion
 
+        self.form.resizeEvent = lambda event: self.resizeEvent_custom(event)
+        return
+
+    def resizeEvent_custom(self, event):
+        if self.form.tabWidget.currentIndex() == 4:
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "TabWidth_large", self.form.width()
+            )
+        else:
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "TabWidth_small", self.form.width()
+            )
         return
 
     # region - Control functions----------------------------------------------------------------------
@@ -552,7 +586,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for ToolbarCommand in self.List_Commands:
             CommandName = ToolbarCommand[0]
             workbenchName = ToolbarCommand[3]
-            IsInList = ShadowList.__contains__(CommandName)
+            IsInList = ShadowList.__contains__(f"{CommandName}, {workbenchName}")
 
             if IsInList is False and workbenchName != "Global":
                 Command = Gui.Command.get(CommandName)
@@ -589,7 +623,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     # Add the ListWidgetItem to the correct ListWidget
                     if Icon is not None:
                         self.form.CommandsAvailable.addItem(ListWidgetItem)
-            ShadowList.append(CommandName)
+            ShadowList.append(f"{CommandName}, {workbenchName}")
         return
 
     def on_SearchBar_1_TextChanged(self):
@@ -601,7 +635,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for ToolbarCommand in self.List_Commands:
             CommandName = ToolbarCommand[0]
             workbenchName = ToolbarCommand[3]
-            IsInList = ShadowList.__contains__(CommandName)
+            IsInList = ShadowList.__contains__(f"{CommandName}, {workbenchName}")
 
             if IsInList is False and workbenchName != "Global":
                 Command = Gui.Command.get(CommandName)
@@ -639,7 +673,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     # Add the ListWidgetItem to the correct ListWidget
                     if Icon is not None:
                         self.form.CommandsAvailable.addItem(ListWidgetItem)
-            ShadowList.append(CommandName)
+            ShadowList.append(f"{CommandName}, {workbenchName}")
         return
 
     def on_AddCommand_clicked(self):
@@ -893,7 +927,9 @@ class LoadDialog(Design_ui.Ui_Form):
                                     MenuName = CommandAction.text().replace("&", "")
 
                                     # get the icon for this command if there isn't one, leave it None
-                                    Icon = Gui.getIcon(Command.getInfo()["pixmap"])
+                                    Icon = Gui.getIcon(
+                                        CommandInfoCorrections(CommandName)["pixmap"]
+                                    )
                                     action = Command.getAction()
                                     try:
                                         if len(action) > 1:
@@ -1212,19 +1248,27 @@ class LoadDialog(Design_ui.Ui_Form):
     # endregion
 
     # region - Ribbon design tab
-    def on_tabBar_currentIndex(self):
+    def on_tabBar_currentIndexChanged(self):
+        width_small: int = Parameters_Ribbon.Settings.GetIntSetting("TabWidth_small")
+        if width_small is None:
+            width_small = 580
+        width_large: int = Parameters_Ribbon.Settings.GetIntSetting("TabWidth_large")
+        if width_large is None:
+            width_large = 940
+
         if self.form.tabWidget.currentIndex() == 4:
             # Set the default size of the form
             Geometry = self.form.geometry()
-            Geometry.setWidth(940)
+            Geometry.setWidth(width_large)
             self.form.setGeometry(Geometry)
 
             self.form.label_4.show()
             self.form.MoveDown_Toolbar.show()
             self.form.MoveUp_Toolbar.show()
             self.form.ToolbarsOrder.show()
-            self.form.setMinimumWidth(940)
-            self.form.setMaximumWidth(940)
+            self.form.setMinimumWidth(width_large)
+            self.form.setMaximumWidth(width_large)
+            self.form.setMaximumWidth(120000)
         else:
             self.form.label_4.hide()
             self.form.MoveDown_Toolbar.hide()
@@ -1232,10 +1276,11 @@ class LoadDialog(Design_ui.Ui_Form):
             self.form.ToolbarsOrder.hide()
             # Set the default size of the form
             Geometry = self.form.geometry()
-            Geometry.setWidth(580)
+            Geometry.setWidth(width_small)
             self.form.setGeometry(Geometry)
-            self.form.setMinimumWidth(580)
-            self.form.setMaximumWidth(580)
+            self.form.setMinimumWidth(width_small)
+            self.form.setMaximumWidth(width_small)
+            self.form.setMaximumWidth(120000)
 
     def on_WorkbenchList__TextChanged(self):
         # Set the workbench name.
@@ -1253,6 +1298,10 @@ class LoadDialog(Design_ui.Ui_Form):
         for CustomToolbar in CustomToolbars:
             if CustomToolbar[1] == WorkBenchTitle:
                 wbToolbars.append(CustomToolbar[0])
+        # Get the global custom toolbars
+        CustomToolbars = self.Dict_ReturnCustomToolbars_Global()
+        for CustomToolbar in CustomToolbars:
+            wbToolbars.append(CustomToolbar)
         # Get the custom panels
         CustomPanel = self.List_AddCustomToolbarsToWorkbench(
             WorkBenchName=WorkBenchName
@@ -1375,9 +1424,8 @@ class LoadDialog(Design_ui.Ui_Form):
         def SortCommands(item):
             try:
                 try:
-                    Command = Gui.Command.get(item)
                     MenuName = (
-                        Command.getInfo()["menuText"]
+                        CommandInfoCorrections(item)["menuText"]
                         .replace("&", "")
                         .replace("...", "")
                     )
@@ -1455,7 +1503,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 Command = Gui.Command.get(ToolbarCommand)
                 if Command is None:
                     continue
-                CommandName = Command.getInfo()["name"]
+                CommandName = CommandInfoCorrections(ToolbarCommand)["name"]
 
                 # Check if the items is already there
                 IsInList = ShadowList.__contains__(CommandName)
@@ -1463,15 +1511,19 @@ class LoadDialog(Design_ui.Ui_Form):
                 if IsInList is False:
                     # Get the text
                     MenuName = (
-                        Command.getInfo()["menuText"]
+                        CommandInfoCorrections(ToolbarCommand)["menuText"]
                         .replace("&", "")
                         .replace("...", "")
                     )
+                    # There are a few dropdown buttons that need to be corrected
+                    if CommandName == "PartDesign_CompSketches":
+                        MenuName = "Create sketch"
+
                     textAddition = ""
                     IconName = ""
                     # get the icon for this command if there isn't one, leave it None
-                    Icon = Gui.getIcon(Command.getInfo()["pixmap"])
-                    IconName = Command.getInfo()["pixmap"]
+                    Icon = Gui.getIcon(CommandInfoCorrections(ToolbarCommand)["pixmap"])
+                    IconName = CommandInfoCorrections(ToolbarCommand)["pixmap"]
                     action = Command.getAction()
                     try:
                         if len(action) > 1:
@@ -1524,9 +1576,9 @@ class LoadDialog(Design_ui.Ui_Form):
                                 continue
 
                     MenuNameTabelWidgetItem = ""
-                    if MenuNameJson != Command.getInfo()["menuText"].replace(
-                        "&", ""
-                    ).replace("...", ""):
+                    if MenuNameJson != CommandInfoCorrections(ToolbarCommand)[
+                        "menuText"
+                    ].replace("&", "").replace("...", ""):
                         MenuNameTabelWidgetItem = MenuNameJson
                     else:
                         CommandAction = Command.getAction()[0]
@@ -2154,7 +2206,9 @@ class LoadDialog(Design_ui.Ui_Form):
                                 ):
                                     CommandName = self.List_Commands[i3][0]
                                     Command = Gui.Command.get(CommandName)
-                                    IconName = Command.getInfo()["pixmap"]
+                                    IconName = CommandInfoCorrections(CommandName)[
+                                        "pixmap"
+                                    ]
 
                                     # If the text in the tableitemwidget is equeal to the command menu text
                                     # Use the original menutext
@@ -2166,7 +2220,9 @@ class LoadDialog(Design_ui.Ui_Form):
                                         .replace("...", "")
                                     ):
                                         MenuNameTableWidgetItem = (
-                                            Command.getInfo()["menuText"]
+                                            CommandInfoCorrections(CommandName)[
+                                                "menuText"
+                                            ]
                                             .replace("&", "")
                                             .replace("...", "")
                                         )
@@ -2174,6 +2230,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                     # There are a few dropdown buttons that need to be corrected
                                     if CommandName == "PartDesign_CompSketches":
                                         MenuName = "Create sketch"
+                                        MenuNameTableWidgetItem = MenuName
 
                                     # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
                                     for i4 in range(
@@ -2230,16 +2287,6 @@ class LoadDialog(Design_ui.Ui_Form):
                                         "text": MenuNameTableWidgetItem,
                                         "icon": IconName,
                                     }
-
-                                    MenuName = Command.getInfo()["menuText"].replace(
-                                        "...", ""
-                                    )
-                                    if MenuNameTableWidgetItem == MenuName:
-                                        del self.Dict_RibbonCommandPanel["workbenches"][
-                                            WorkBenchName
-                                        ]["toolbars"][Toolbar]["commands"][CommandName][
-                                            "text"
-                                        ]
             except Exception:
                 continue
         return
@@ -2308,8 +2355,9 @@ class LoadDialog(Design_ui.Ui_Form):
         SelectedCommands = self.ListWidgetItems(self.form.CommandsSelected)
         for i2 in range(len(SelectedCommands)):
             ListWidgetItem: QListWidgetItem = SelectedCommands[i2]
-            Command = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
-            QuickAccessCommand = Command.getInfo()["name"].replace("&", "")
+            QuickAccessCommand = CommandInfoCorrections(
+                ListWidgetItem.data(Qt.ItemDataRole.UserRole).getInfo()["name"]
+            )["name"]
             List_QuickAccessCommands.append(QuickAccessCommand)
 
         # IgnoredWorkbences
@@ -2615,9 +2663,9 @@ class LoadDialog(Design_ui.Ui_Form):
                     Name = Parameter.GetString("Name")
 
                     if Name != "":
+                        ListCommands = []
+                        # get list of all buttons in toolbar
                         try:
-                            ListCommands = []
-                            # get list of all buttons in toolbar
                             TB = mw.findChildren(QToolBar, Name)
                             allButtons: list = TB[0].findChildren(QToolButton)
                             for button in allButtons:
@@ -2654,21 +2702,17 @@ class LoadDialog(Design_ui.Ui_Form):
             Name = Parameter.GetString("Name")
 
             if Name != "":
-                try:
-                    ListCommands = []
-                    # get list of all buttons in toolbar
-                    TB = mw.findChildren(QToolBar, Name)
-                    allButtons: list = TB[0].findChildren(QToolButton)
-                    for button in allButtons:
-                        if button.text() == "":
-                            continue
-                        action = button.defaultAction()
-                        Command = action.objectName()
-                        ListCommands.append(Command)
-
-                        Toolbars[Name] = ListCommands
-                except Exception:
-                    continue
+                ListCommands = []
+                # get list of all buttons in toolbar
+                TB = mw.findChildren(QToolBar, Name)
+                allButtons: list = TB[0].findChildren(QToolButton)
+                for button in allButtons:
+                    if button.text() == "":
+                        continue
+                    action = button.defaultAction()
+                    Command = action.objectName()
+                    ListCommands.append(Command)
+                    Toolbars[Name] = ListCommands
 
         return Toolbars
 
