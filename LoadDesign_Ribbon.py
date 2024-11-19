@@ -1106,7 +1106,7 @@ class LoadDialog(Design_ui.Ui_Form):
             self.form.MoveUp_Toolbar.show()
             self.form.ToolbarsOrder.show()
             self.form.setMinimumWidth(940)
-            self.form.setMaximumWidth(940)
+            # self.form.setMaximumWidth(940)
         else:
             self.form.label_4.hide()
             self.form.MoveDown_Toolbar.hide()
@@ -1117,7 +1117,7 @@ class LoadDialog(Design_ui.Ui_Form):
             Geometry.setWidth(580)
             self.form.setGeometry(Geometry)
             self.form.setMinimumWidth(580)
-            self.form.setMaximumWidth(580)
+            # self.form.setMaximumWidth(580)
 
     def on_WorkbenchList__TextChanged(self):
         # Set the workbench name.
