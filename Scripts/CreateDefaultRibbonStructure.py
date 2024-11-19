@@ -149,7 +149,7 @@ CustomJson_Workbenches = {
             "toolbars": {
                 "Part Design Helper": {
                     "order": [
-                        "Create datum",
+                        "Create sketch",
                         "Create datum",
                         "Create body",
                         "Check Geometry",
