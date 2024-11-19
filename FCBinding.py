@@ -294,12 +294,13 @@ class ModernMenu(RibbonBar):
 
     # region - Hover function needed for handling the autohide function of the ribbon
     def enterEvent(self, QEvent):
-        TB = mw.findChildren(QDockWidget, "Ribbon")[0]
-
-        if self.ribbonVisible() is False:
-            TB.setMaximumHeight(200)
-            self.setRibbonVisible(True)
-        pass
+         if (int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21):
+            TB = mw.findChildren(QDockWidget, "Ribbon")[0]
+    
+            if self.ribbonVisible() is False:
+                TB.setMaximumHeight(200)
+                self.setRibbonVisible(True)
+            pass
 
     def leaveEvent(self, QEvent):
         TB = mw.findChildren(QDockWidget, "Ribbon")[0]
