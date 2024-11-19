@@ -512,7 +512,6 @@ def TranslationsMapping(WorkBenchName: str, string: str):
 
     return result
 
-
 def CommandInfoCorrections(CommandName):
     Command = Gui.Command.get(CommandName)
     CommandInfo = Command.getInfo()
@@ -524,3 +523,4 @@ def CommandInfoCorrections(CommandName):
         CommandInfo["statusTip"] = "Create or edit a sketch"
 
     return CommandInfo
+

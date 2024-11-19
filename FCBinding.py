@@ -30,7 +30,6 @@ from PySide.QtGui import (
     QScrollEvent,
     QKeyEvent,
     QActionGroup,
-    QHoverEvent,
     QRegion,
     QFont,
     QColor,
@@ -484,6 +483,7 @@ class ModernMenu(RibbonBar):
         self.quickAccessToolBar().show()
         # Set the height of the quickaccess toolbar
         self.quickAccessToolBar().setMinimumHeight(self.RibbonMinimalHeight)
+
         # Set the width of the quickaccess toolbar.
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
         # Set the size policy
@@ -499,6 +499,9 @@ class ModernMenu(RibbonBar):
         font.setPixelSize(self.TabBar_Size * 0.6)
         self.tabBar().setFont(font)
         self.tabBar().setIconSize(QSize(self.TabBar_Size - 6, self.TabBar_Size - 6))
+
+        # Set the tabbar height and textsize
+        self.tabBar().setIconSize(QSize(self.iconSize, self.iconSize))
 
         # Correct colors when no stylesheet is selected for FreeCAD.
         FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
@@ -1436,7 +1439,6 @@ class ModernMenu(RibbonBar):
                 App.loadFile(script)
         return
 
-
 # region - alternative loading
 # class run:
 #     """
@@ -1467,7 +1469,6 @@ class ModernMenu(RibbonBar):
 #             # Create the ribbon
 #             mw.setMenuBar(ribbon)
 # endregion
-
 
 class run:
     """
