@@ -256,6 +256,10 @@ class ModernMenu(RibbonBar):
         else:
             self.setMaximumHeight(200)
 
+        # connect a tabbar click event to the tarbar click funtion
+        # this used to replaced the native functions
+        self.tabBar().tabBarClicked.connect(self.onTabBarClicked)
+
         ScrollButtons = self.tabBar().children()
         ScrollLeftButton: QToolButton = ScrollButtons[0]
         ScrollRightButton: QToolButton = ScrollButtons[1]
@@ -641,6 +645,13 @@ class ModernMenu(RibbonBar):
         # create panels
         self.buildPanels()
         return
+
+    def onTabBarClicked(self):
+        TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+        TB.setMinimumHeight(200)
+        TB.setMaximumHeight(200)
+        self.setFixedHeight(200)
+        self.setRibbonVisible(True)
 
     def buildPanels(self):
         # Get the active workbench and get tis name
