@@ -78,10 +78,12 @@ def UpdateJson():
             for ToolBar in ribbonStructure["workbenches"][WorkBench]["toolbars"]:
                 if ToolBar == Item:
                     # Go through all commands for this toolbar and set the size
-                    for Command in ribbonStructure["workbenches"][WorkBench]["toolbars"][ToolBar]["commands"]:
-                        ribbonStructure["workbenches"][WorkBench]["toolbars"][ToolBar]["commands"][Command][
-                            "size"
-                        ] = IconSize
+                    for Command in ribbonStructure["workbenches"][WorkBench][
+                        "toolbars"
+                    ][ToolBar]["commands"]:
+                        ribbonStructure["workbenches"][WorkBench]["toolbars"][ToolBar][
+                            "commands"
+                        ][Command]["size"] = IconSize
     # Go through the workbenches again. now add the toolbars when they are not present.
     for WorkBench in ribbonStructure["workbenches"]:
         # Go through the list with toolbars to update
@@ -98,7 +100,9 @@ def UpdateJson():
                                 Command = Gui.Command.get(CommandName)
                                 if Command is not None:
                                     IconName = Command.getInfo()["pixmap"]
-                                    MenuName = Command.getInfo()["menuText"].replace("&", "")
+                                    MenuName = Command.getInfo()["menuText"].replace(
+                                        "&", ""
+                                    )
 
                                     # Create an empty list for orders
                                     Order = []
@@ -127,10 +131,12 @@ def UpdateJson():
                                         ],
                                     )
 
-                                    ribbonStructure["workbenches"][WorkBench]["toolbars"][key]["order"] = Order
-                                    ribbonStructure["workbenches"][WorkBench]["toolbars"][key]["commands"][
-                                        CommandName
-                                    ] = {
+                                    ribbonStructure["workbenches"][WorkBench][
+                                        "toolbars"
+                                    ][key]["order"] = Order
+                                    ribbonStructure["workbenches"][WorkBench][
+                                        "toolbars"
+                                    ][key]["commands"][CommandName] = {
                                         "size": Size,
                                         "text": MenuName,
                                         "icon": IconName,
