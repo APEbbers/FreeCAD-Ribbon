@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesigndLcYqF.ui'
+## Form generated from reading UI file 'DesignwWJQil.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -73,7 +73,7 @@ class Ui_Form(object):
         if not Form.objectName():
             Form.setObjectName("Form")
         Form.setWindowModality(Qt.WindowModality.WindowModal)
-        Form.resize(924, 724)
+        Form.resize(580, 724)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -84,56 +84,8 @@ class Ui_Form(object):
         Form.setBaseSize(QSize(0, 0))
         Form.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
         Form.setAutoFillBackground(False)
-        self.gridLayout_7 = QGridLayout(Form)
-        self.gridLayout_7.setObjectName("gridLayout_7")
-        self.gridLayout_6 = QGridLayout()
-        self.gridLayout_6.setObjectName("gridLayout_6")
-        self.horizontalSpacer = QSpacerItem(10, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_6.addItem(self.horizontalSpacer, 0, 1, 1, 1)
-
-        self.GenerateJsonExit = QPushButton(Form)
-        self.GenerateJsonExit.setObjectName("GenerateJsonExit")
-
-        self.gridLayout_6.addWidget(self.GenerateJsonExit, 0, 6, 1, 1)
-
-        self.HelpButton = QToolButton(Form)
-        self.HelpButton.setObjectName("HelpButton")
-
-        self.gridLayout_6.addWidget(self.HelpButton, 0, 8, 1, 1)
-
-        self.RestoreJson = QPushButton(Form)
-        self.RestoreJson.setObjectName("RestoreJson")
-        self.RestoreJson.setEnabled(True)
-
-        self.gridLayout_6.addWidget(self.RestoreJson, 0, 2, 1, 1)
-
-        self.GenerateJson = QPushButton(Form)
-        self.GenerateJson.setObjectName("GenerateJson")
-
-        self.gridLayout_6.addWidget(self.GenerateJson, 0, 4, 1, 1)
-
-        self.Cancel = QPushButton(Form)
-        self.Cancel.setObjectName("Cancel")
-
-        self.gridLayout_6.addWidget(self.Cancel, 0, 5, 1, 1)
-
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_6.addItem(self.horizontalSpacer_2, 0, 3, 1, 1)
-
-        self.ResetJson = QPushButton(Form)
-        self.ResetJson.setObjectName("ResetJson")
-        self.ResetJson.setEnabled(True)
-
-        self.gridLayout_6.addWidget(self.ResetJson, 0, 0, 1, 1)
-
-        self.horizontalSpacer_3 = QSpacerItem(10, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_6.addItem(self.horizontalSpacer_3, 0, 7, 1, 1)
-
-        self.gridLayout_7.addLayout(self.gridLayout_6, 1, 0, 1, 1)
-
+        self.gridLayout_24 = QGridLayout(Form)
+        self.gridLayout_24.setObjectName("gridLayout_24")
         self.tabWidget = QTabWidget(Form)
         self.tabWidget.setObjectName("tabWidget")
         self.tabWidget.setAutoFillBackground(False)
@@ -148,9 +100,10 @@ class Ui_Form(object):
         self.QAToolbars.setSizePolicy(sizePolicy1)
         self.QAToolbars.setMinimumSize(QSize(550, 0))
         self.QAToolbars.setAutoFillBackground(True)
+        self.gridLayout_7 = QGridLayout(self.QAToolbars)
+        self.gridLayout_7.setObjectName("gridLayout_7")
         self.frame = QFrame(self.QAToolbars)
         self.frame.setObjectName("frame")
-        self.frame.setGeometry(QRect(0, 10, 551, 631))
         self.frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.gridLayout_2 = QGridLayout(self.frame)
         self.gridLayout_2.setObjectName("gridLayout_2")
@@ -243,13 +196,16 @@ class Ui_Form(object):
 
         self.gridLayout_2.addWidget(self.SearchBar_1, 0, 0, 1, 3)
 
+        self.gridLayout_7.addWidget(self.frame, 0, 0, 1, 1)
+
         self.tabWidget.addTab(self.QAToolbars, "")
         self.Toolbars = QWidget()
         self.Toolbars.setObjectName("Toolbars")
         self.Toolbars.setAutoFillBackground(True)
+        self.gridLayout_22 = QGridLayout(self.Toolbars)
+        self.gridLayout_22.setObjectName("gridLayout_22")
         self.frame_6 = QFrame(self.Toolbars)
         self.frame_6.setObjectName("frame_6")
-        self.frame_6.setGeometry(QRect(0, 10, 551, 631))
         self.frame_6.setFrameShape(QFrame.Shape.StyledPanel)
         self.gridLayout_17 = QGridLayout(self.frame_6)
         self.gridLayout_17.setObjectName("gridLayout_17")
@@ -324,13 +280,16 @@ class Ui_Form(object):
 
         self.gridLayout_17.addWidget(self.SearchBar_2, 0, 0, 1, 3)
 
+        self.gridLayout_22.addWidget(self.frame_6, 0, 0, 1, 1)
+
         self.tabWidget.addTab(self.Toolbars, "")
         self.Workbenches = QWidget()
         self.Workbenches.setObjectName("Workbenches")
         self.Workbenches.setAutoFillBackground(True)
+        self.gridLayout_23 = QGridLayout(self.Workbenches)
+        self.gridLayout_23.setObjectName("gridLayout_23")
         self.frame1 = QFrame(self.Workbenches)
         self.frame1.setObjectName("frame1")
-        self.frame1.setGeometry(QRect(0, 10, 551, 631))
         self.frame1.setFrameShape(QFrame.Shape.StyledPanel)
         self.gridLayout_3 = QGridLayout(self.frame1)
         self.gridLayout_3.setObjectName("gridLayout_3")
@@ -383,6 +342,8 @@ class Ui_Form(object):
 
         self.gridLayout_3.addWidget(self.label_6, 0, 0, 1, 3)
 
+        self.gridLayout_23.addWidget(self.frame1, 0, 0, 1, 1)
+
         self.tabWidget.addTab(self.Workbenches, "")
         self.CombineToolbars = QWidget()
         self.CombineToolbars.setObjectName("CombineToolbars")
@@ -392,90 +353,90 @@ class Ui_Form(object):
         sizePolicy3.setHeightForWidth(self.CombineToolbars.sizePolicy().hasHeightForWidth())
         self.CombineToolbars.setSizePolicy(sizePolicy3)
         self.CombineToolbars.setMinimumSize(QSize(550, 0))
-        self.layoutWidget_2 = QWidget(self.CombineToolbars)
-        self.layoutWidget_2.setObjectName("layoutWidget_2")
-        self.layoutWidget_2.setGeometry(QRect(10, 10, 541, 103))
-        self.gridLayout_8 = QGridLayout(self.layoutWidget_2)
+        self.gridLayout_21 = QGridLayout(self.CombineToolbars)
+        self.gridLayout_21.setObjectName("gridLayout_21")
+        self.gridLayout_8 = QGridLayout()
         self.gridLayout_8.setObjectName("gridLayout_8")
         self.gridLayout_8.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.gridLayout_8.setContentsMargins(6, 6, 6, 6)
-        self.ToolbarName = QLineEdit(self.layoutWidget_2)
-        self.ToolbarName.setObjectName("ToolbarName")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.ToolbarName.sizePolicy().hasHeightForWidth())
-        self.ToolbarName.setSizePolicy(sizePolicy4)
-        self.ToolbarName.setMinimumSize(QSize(120, 0))
-
-        self.gridLayout_8.addWidget(self.ToolbarName, 3, 1, 2, 2)
-
-        self.label_10 = QLabel(self.layoutWidget_2)
-        self.label_10.setObjectName("label_10")
-        sizePolicy2.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
-        self.label_10.setSizePolicy(sizePolicy2)
-
-        self.gridLayout_8.addWidget(self.label_10, 3, 0, 2, 1)
-
-        self.label_7 = QLabel(self.layoutWidget_2)
-        self.label_7.setObjectName("label_7")
-        sizePolicy2.setHeightForWidth(self.label_7.sizePolicy().hasHeightForWidth())
-        self.label_7.setSizePolicy(sizePolicy2)
-
-        self.gridLayout_8.addWidget(self.label_7, 2, 0, 1, 1)
-
-        self.AddCustomToolbar = QPushButton(self.layoutWidget_2)
-        self.AddCustomToolbar.setObjectName("AddCustomToolbar")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(self.AddCustomToolbar.sizePolicy().hasHeightForWidth())
-        self.AddCustomToolbar.setSizePolicy(sizePolicy5)
-        self.AddCustomToolbar.setMinimumSize(QSize(10, 0))
-        self.AddCustomToolbar.setBaseSize(QSize(15, 0))
-
-        self.gridLayout_8.addWidget(self.AddCustomToolbar, 3, 3, 2, 1)
-
-        self.CustomToolbarSelector = QComboBox(self.layoutWidget_2)
-        self.CustomToolbarSelector.setObjectName("CustomToolbarSelector")
-        sizePolicy4.setHeightForWidth(self.CustomToolbarSelector.sizePolicy().hasHeightForWidth())
-        self.CustomToolbarSelector.setSizePolicy(sizePolicy4)
-        self.CustomToolbarSelector.setMinimumSize(QSize(150, 0))
-
-        self.gridLayout_8.addWidget(self.CustomToolbarSelector, 0, 1, 1, 2)
-
-        self.WorkbenchList_2 = QComboBox(self.layoutWidget_2)
-        self.WorkbenchList_2.setObjectName("WorkbenchList_2")
-        sizePolicy4.setHeightForWidth(self.WorkbenchList_2.sizePolicy().hasHeightForWidth())
-        self.WorkbenchList_2.setSizePolicy(sizePolicy4)
-        self.WorkbenchList_2.setMinimumSize(QSize(0, 0))
-
-        self.gridLayout_8.addWidget(self.WorkbenchList_2, 2, 1, 1, 2)
-
-        self.label_9 = QLabel(self.layoutWidget_2)
+        self.label_9 = QLabel(self.CombineToolbars)
         self.label_9.setObjectName("label_9")
         sizePolicy2.setHeightForWidth(self.label_9.sizePolicy().hasHeightForWidth())
         self.label_9.setSizePolicy(sizePolicy2)
 
         self.gridLayout_8.addWidget(self.label_9, 0, 0, 1, 1)
 
-        self.RemovePanel = QPushButton(self.layoutWidget_2)
-        self.RemovePanel.setObjectName("RemovePanel")
-        self.RemovePanel.setMinimumSize(QSize(10, 0))
-        self.RemovePanel.setBaseSize(QSize(15, 0))
+        self.AddCustomToolbar = QPushButton(self.CombineToolbars)
+        self.AddCustomToolbar.setObjectName("AddCustomToolbar")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.AddCustomToolbar.sizePolicy().hasHeightForWidth())
+        self.AddCustomToolbar.setSizePolicy(sizePolicy4)
+        self.AddCustomToolbar.setMinimumSize(QSize(10, 0))
+        self.AddCustomToolbar.setBaseSize(QSize(15, 0))
 
-        self.gridLayout_8.addWidget(self.RemovePanel, 0, 3, 1, 1)
+        self.gridLayout_8.addWidget(self.AddCustomToolbar, 3, 3, 2, 1)
 
-        self.line = QFrame(self.layoutWidget_2)
+        self.label_7 = QLabel(self.CombineToolbars)
+        self.label_7.setObjectName("label_7")
+        sizePolicy2.setHeightForWidth(self.label_7.sizePolicy().hasHeightForWidth())
+        self.label_7.setSizePolicy(sizePolicy2)
+
+        self.gridLayout_8.addWidget(self.label_7, 2, 0, 1, 1)
+
+        self.WorkbenchList_2 = QComboBox(self.CombineToolbars)
+        self.WorkbenchList_2.setObjectName("WorkbenchList_2")
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.WorkbenchList_2.sizePolicy().hasHeightForWidth())
+        self.WorkbenchList_2.setSizePolicy(sizePolicy5)
+        self.WorkbenchList_2.setMinimumSize(QSize(0, 0))
+
+        self.gridLayout_8.addWidget(self.WorkbenchList_2, 2, 1, 1, 2)
+
+        self.CustomToolbarSelector = QComboBox(self.CombineToolbars)
+        self.CustomToolbarSelector.setObjectName("CustomToolbarSelector")
+        sizePolicy5.setHeightForWidth(self.CustomToolbarSelector.sizePolicy().hasHeightForWidth())
+        self.CustomToolbarSelector.setSizePolicy(sizePolicy5)
+        self.CustomToolbarSelector.setMinimumSize(QSize(150, 0))
+
+        self.gridLayout_8.addWidget(self.CustomToolbarSelector, 0, 1, 1, 2)
+
+        self.line = QFrame(self.CombineToolbars)
         self.line.setObjectName("line")
         self.line.setFrameShape(QFrame.Shape.HLine)
         self.line.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.gridLayout_8.addWidget(self.line, 1, 0, 1, 4)
 
+        self.ToolbarName = QLineEdit(self.CombineToolbars)
+        self.ToolbarName.setObjectName("ToolbarName")
+        sizePolicy5.setHeightForWidth(self.ToolbarName.sizePolicy().hasHeightForWidth())
+        self.ToolbarName.setSizePolicy(sizePolicy5)
+        self.ToolbarName.setMinimumSize(QSize(120, 0))
+
+        self.gridLayout_8.addWidget(self.ToolbarName, 3, 1, 2, 2)
+
+        self.RemovePanel = QPushButton(self.CombineToolbars)
+        self.RemovePanel.setObjectName("RemovePanel")
+        self.RemovePanel.setMinimumSize(QSize(10, 0))
+        self.RemovePanel.setBaseSize(QSize(15, 0))
+
+        self.gridLayout_8.addWidget(self.RemovePanel, 0, 3, 1, 1)
+
+        self.label_10 = QLabel(self.CombineToolbars)
+        self.label_10.setObjectName("label_10")
+        sizePolicy2.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
+        self.label_10.setSizePolicy(sizePolicy2)
+
+        self.gridLayout_8.addWidget(self.label_10, 3, 0, 2, 1)
+
+        self.gridLayout_21.addLayout(self.gridLayout_8, 0, 0, 1, 1)
+
         self.frame_3 = QFrame(self.CombineToolbars)
         self.frame_3.setObjectName("frame_3")
-        self.frame_3.setGeometry(QRect(10, 120, 541, 521))
         self.frame_3.setSizeIncrement(QSize(0, 0))
         self.frame_3.setFrameShape(QFrame.Shape.StyledPanel)
         self.gridLayout_9 = QGridLayout(self.frame_3)
@@ -540,6 +501,8 @@ class Ui_Form(object):
         self.ToolbarsSelected.setSortingEnabled(False)
 
         self.gridLayout_9.addWidget(self.ToolbarsSelected, 1, 2, 1, 1)
+
+        self.gridLayout_21.addWidget(self.frame_3, 1, 0, 1, 1)
 
         self.tabWidget.addTab(self.CombineToolbars, "")
         self.RibbonDesign = QWidget()
@@ -787,11 +750,59 @@ class Ui_Form(object):
 
         self.tabWidget.addTab(self.RibbonDesign, "")
 
-        self.gridLayout_7.addWidget(self.tabWidget, 0, 0, 1, 1)
+        self.gridLayout_24.addWidget(self.tabWidget, 0, 0, 1, 1)
+
+        self.gridLayout_6 = QGridLayout()
+        self.gridLayout_6.setObjectName("gridLayout_6")
+        self.horizontalSpacer = QSpacerItem(10, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_6.addItem(self.horizontalSpacer, 0, 1, 1, 1)
+
+        self.GenerateJsonExit = QPushButton(Form)
+        self.GenerateJsonExit.setObjectName("GenerateJsonExit")
+
+        self.gridLayout_6.addWidget(self.GenerateJsonExit, 0, 6, 1, 1)
+
+        self.HelpButton = QToolButton(Form)
+        self.HelpButton.setObjectName("HelpButton")
+
+        self.gridLayout_6.addWidget(self.HelpButton, 0, 8, 1, 1)
+
+        self.RestoreJson = QPushButton(Form)
+        self.RestoreJson.setObjectName("RestoreJson")
+        self.RestoreJson.setEnabled(True)
+
+        self.gridLayout_6.addWidget(self.RestoreJson, 0, 2, 1, 1)
+
+        self.GenerateJson = QPushButton(Form)
+        self.GenerateJson.setObjectName("GenerateJson")
+
+        self.gridLayout_6.addWidget(self.GenerateJson, 0, 4, 1, 1)
+
+        self.Cancel = QPushButton(Form)
+        self.Cancel.setObjectName("Cancel")
+
+        self.gridLayout_6.addWidget(self.Cancel, 0, 5, 1, 1)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_6.addItem(self.horizontalSpacer_2, 0, 3, 1, 1)
+
+        self.ResetJson = QPushButton(Form)
+        self.ResetJson.setObjectName("ResetJson")
+        self.ResetJson.setEnabled(True)
+
+        self.gridLayout_6.addWidget(self.ResetJson, 0, 0, 1, 1)
+
+        self.horizontalSpacer_3 = QSpacerItem(10, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_6.addItem(self.horizontalSpacer_3, 0, 7, 1, 1)
+
+        self.gridLayout_24.addLayout(self.gridLayout_6, 1, 0, 1, 1)
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(4)
+        self.tabWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(Form)
 
@@ -799,15 +810,6 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", "Ribbon design", None))
-        self.GenerateJsonExit.setText(QCoreApplication.translate("Form", "Close", None))
-        self.HelpButton.setText(QCoreApplication.translate("Form", "...", None))
-        self.RestoreJson.setText(QCoreApplication.translate("Form", "Restore", None))
-        self.GenerateJson.setText(QCoreApplication.translate("Form", "Update", None))
-        self.Cancel.setText(QCoreApplication.translate("Form", "Cancel", None))
-        # if QT_CONFIG(shortcut)
-        self.Cancel.setShortcut(QCoreApplication.translate("Form", "Esc", None))
-        # endif // QT_CONFIG(shortcut)
-        self.ResetJson.setText(QCoreApplication.translate("Form", "Reset", None))
         self.MoveUp_Command.setText(QCoreApplication.translate("Form", "...", None))
         self.MoveDown_Command.setText(QCoreApplication.translate("Form", "...", None))
         self.Remove_Command.setText(QCoreApplication.translate("Form", "...", None))
@@ -890,14 +892,14 @@ class Ui_Form(object):
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.Workbenches), QCoreApplication.translate("Form", "Include workbenches", None)
         )
+        self.label_9.setText(QCoreApplication.translate("Form", "select custom panel: ", None))
+        self.AddCustomToolbar.setText(QCoreApplication.translate("Form", "Add", None))
+        self.label_7.setText(QCoreApplication.translate("Form", "Select workbench:", None))
         self.ToolbarName.setPlaceholderText(
             QCoreApplication.translate("Form", "Enter the name of your custom panel...", None)
         )
-        self.label_10.setText(QCoreApplication.translate("Form", "Panel name", None))
-        self.label_7.setText(QCoreApplication.translate("Form", "Select workbench:", None))
-        self.AddCustomToolbar.setText(QCoreApplication.translate("Form", "Add", None))
-        self.label_9.setText(QCoreApplication.translate("Form", "select custom panel: ", None))
         self.RemovePanel.setText(QCoreApplication.translate("Form", "Remove", None))
+        self.label_10.setText(QCoreApplication.translate("Form", "Panel name", None))
         self.label_11.setText(
             QCoreApplication.translate(
                 "Form", "<html><head/><body><p>Select panels to add to the custom panel.</p></body></html>", None
@@ -961,5 +963,14 @@ class Ui_Form(object):
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.RibbonDesign), QCoreApplication.translate("Form", "Ribbon design", None)
         )
+        self.GenerateJsonExit.setText(QCoreApplication.translate("Form", "Close", None))
+        self.HelpButton.setText(QCoreApplication.translate("Form", "...", None))
+        self.RestoreJson.setText(QCoreApplication.translate("Form", "Restore", None))
+        self.GenerateJson.setText(QCoreApplication.translate("Form", "Update", None))
+        self.Cancel.setText(QCoreApplication.translate("Form", "Cancel", None))
+        # if QT_CONFIG(shortcut)
+        self.Cancel.setShortcut(QCoreApplication.translate("Form", "Esc", None))
+        # endif // QT_CONFIG(shortcut)
+        self.ResetJson.setText(QCoreApplication.translate("Form", "Reset", None))
 
     # retranslateUi
