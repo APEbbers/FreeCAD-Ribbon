@@ -24,7 +24,15 @@ import FreeCADGui as Gui
 import os
 
 from PySide.QtCore import Qt, SIGNAL
-from PySide.QtWidgets import QTabWidget, QSlider, QSpinBox, QCheckBox, QComboBox, QLabel, QDialogButtonBox
+from PySide.QtWidgets import (
+    QTabWidget,
+    QSlider,
+    QSpinBox,
+    QCheckBox,
+    QComboBox,
+    QLabel,
+    QDialogButtonBox,
+)
 from PySide.QtGui import QIcon, QPixmap
 import sys
 
@@ -86,7 +94,7 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         self.form.Introduction.setText(
             f"""
         A customizable ribbon UI for FreeCAD.
-        
+
         Installed version: {version}
         """
         )
