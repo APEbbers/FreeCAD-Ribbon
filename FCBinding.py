@@ -514,6 +514,7 @@ class ModernMenu(RibbonBar):
         )
         # needed for excluding from hiding toolbars
         self.quickAccessToolBar().setObjectName("quickAccessToolBar")
+        self.quickAccessToolBar().setWindowTitle("quickAccessToolBar")
 
         # Set the tabbar height and textsize
         self.tabBar().setContentsMargins(3, 3, 3, 3)
@@ -1042,7 +1043,6 @@ class ModernMenu(RibbonBar):
                             if len(button.actions()) > 0:
                                 action = button.actions()[0]
                             if action is not None:
-                                command = Gui.Command.get(action.data())
                                 Text = CommandInfoCorrections(action.data())[
                                     "menuText"
                                 ].replace("...", "")

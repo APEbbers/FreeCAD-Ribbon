@@ -559,19 +559,19 @@ class LoadDialog(Design_ui.Ui_Form):
             self.form.RestoreJson.setVisible(True)
         # endregion
 
-        self.form.resizeEvent = lambda event: self.resizeEvent_custom(event)
+        # self.form.resizeEvent = lambda event: self.resizeEvent_custom(event)
         return
 
-    def resizeEvent_custom(self, event):
-        if self.form.tabWidget.currentIndex() == 4:
-            Parameters_Ribbon.Settings.SetIntSetting(
-                "TabWidth_large", self.form.width()
-            )
-        else:
-            Parameters_Ribbon.Settings.SetIntSetting(
-                "TabWidth_small", self.form.width()
-            )
-        return
+    # def resizeEvent_custom(self, event):
+    #     if self.form.tabWidget.currentIndex() == 4:
+    #         Parameters_Ribbon.Settings.SetIntSetting(
+    #             "TabWidth_large", self.form.width()
+    #         )
+    #     else:
+    #         Parameters_Ribbon.Settings.SetIntSetting(
+    #             "TabWidth_small", self.form.width()
+    #         )
+    #     return
 
     # region - Control functions----------------------------------------------------------------------
     # Add all toolbars of the selected workbench to the toolbar list(QComboBox)
@@ -1249,12 +1249,12 @@ class LoadDialog(Design_ui.Ui_Form):
 
     # region - Ribbon design tab
     def on_tabBar_currentIndexChanged(self):
-        width_small: int = Parameters_Ribbon.Settings.GetIntSetting("TabWidth_small")
-        if width_small is None:
-            width_small = 580
-        width_large: int = Parameters_Ribbon.Settings.GetIntSetting("TabWidth_large")
-        if width_large is None:
-            width_large = 940
+        # width_small: int = Parameters_Ribbon.Settings.GetIntSetting("TabWidth_small")
+        # if width_small is None:
+        width_small = 580
+        # width_large: int = Parameters_Ribbon.Settings.GetIntSetting("TabWidth_large")
+        # if width_large is None:
+        width_large = 940
 
         if self.form.tabWidget.currentIndex() == 4:
             # Set the default size of the form
