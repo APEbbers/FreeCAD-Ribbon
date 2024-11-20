@@ -23,9 +23,9 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL
-from PySide.QtWidgets import QTabWidget, QSlider, QSpinBox, QCheckBox, QComboBox, QLabel
-from PySide.QtGui import QIcon, QPixmap
+from PySide6.QtCore import Qt, SIGNAL
+from PySide6.QtWidgets import QTabWidget, QSlider, QSpinBox, QCheckBox, QComboBox, QLabel, QDialogButtonBox
+from PySide6.QtGui import QIcon, QPixmap
 import sys
 
 import Standard_Functions_RIbbon as StandardFunctions
@@ -97,6 +97,9 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
             LICENSE = file.read()
 
         self.form.LicenseText.setText(LICENSE)
+
+        # set only the ok button
+        self.form.buttonBox.setStandardButtons(self.form.buttonBox.StandardButton.Ok)
         return
 
 
