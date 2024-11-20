@@ -23,9 +23,17 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide6.QtCore import Qt, SIGNAL
-from PySide6.QtWidgets import QTabWidget, QSlider, QSpinBox, QCheckBox, QComboBox, QLabel, QDialogButtonBox
-from PySide6.QtGui import QIcon, QPixmap
+from PySide.QtCore import Qt, SIGNAL
+from PySide.QtWidgets import (
+    QTabWidget,
+    QSlider,
+    QSpinBox,
+    QCheckBox,
+    QComboBox,
+    QLabel,
+    QDialogButtonBox,
+)
+from PySide.QtGui import QIcon, QPixmap
 import sys
 
 import Standard_Functions_RIbbon as StandardFunctions

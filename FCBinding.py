@@ -1043,7 +1043,9 @@ class ModernMenu(RibbonBar):
                             if len(button.actions()) > 0:
                                 action = button.actions()[0]
                             if action is not None:
-                                Text = CommandInfoCorrections(action.data())["menuText"].replace("...", "")
+                                Text = CommandInfoCorrections(action.data())[
+                                    "menuText"
+                                ].replace("...", "")
                                 # There is a bug in freecad with the comp-sketch menu hase the wrong text
                                 if (
                                     action.data() == "PartDesign_CompSketches"
