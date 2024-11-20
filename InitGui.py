@@ -35,9 +35,13 @@ translate = App.Qt.translate
 
 # check if there is a "RibbonStructure.json". if not create one
 file = os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json")
-file_default = os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure_default.json")
+file_default = os.path.join(
+    os.path.dirname(FCBinding.__file__), "RibbonStructure_default.json"
+)
 source = os.path.join(os.path.dirname(FCBinding.__file__), "CreateStructure.txt")
-source_default = os.path.join(os.path.dirname(FCBinding.__file__), "CreateStructure.txt")
+source_default = os.path.join(
+    os.path.dirname(FCBinding.__file__), "CreateStructure.txt"
+)
 
 # check if file exits
 fileExists = os.path.isfile(file)

@@ -86,7 +86,7 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         self.form.Introduction.setText(
             f"""
         A customizable ribbon UI for FreeCAD.
-        
+
         Installed version: {version}
         """
         )
