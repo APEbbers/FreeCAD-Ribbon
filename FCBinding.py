@@ -1401,16 +1401,16 @@ class ModernMenu(RibbonBar):
                 # get the menu text from the command list
                 for CommandName in Gui.listCommands():
                     Command = Gui.Command.get(CommandName)
-                    MenuText = CommandInfoCorrections(CommandName).replace("&", "")
+                    MenuText = CommandInfoCorrections(CommandName)["menuText"]
 
-                    if MenuText == key:
+                    if MenuText == key.replace("&", "").replace("...", ""):
                         try:
                             # Get the original toolbar as QToolbar
                             OriginalToolBar = mw.findChild(QToolBar, value)
                             # Go through all it's QtoolButtons
                             for Child in OriginalToolBar.findChildren(QToolButton):
                                 CommandAction = Command.getAction()[0]
-                                MenuNameTranslated = CommandAction.text().replace("&", "")
+                                MenuNameTranslated = CommandAction.text()
                                 # If the text of the QToolButton matches the menu text
                                 # Add it to the button list.
                                 IsInList = False
