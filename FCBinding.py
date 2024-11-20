@@ -794,7 +794,7 @@ class ModernMenu(RibbonBar):
             # wait for 0.1s hoping that after that time the workbench is loaded
             timer.timeout.connect(self.onWbActivated)
             timer.setSingleShot(True)
-            timer.start(100)
+            timer.start(500)
             return
 
         # create panels
