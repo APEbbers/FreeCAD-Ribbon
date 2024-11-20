@@ -874,7 +874,7 @@ class ModernMenu(RibbonBar):
             # wait for 0.1s hoping that after that time the workbench is loaded
             timer.timeout.connect(self.onWbActivated)
             timer.setSingleShot(True)
-            timer.start(100)
+            timer.start(500)
             return
 
         # create panels
@@ -1574,9 +1574,9 @@ class ModernMenu(RibbonBar):
                 # get the menu text from the command list
                 for CommandName in Gui.listCommands():
                     Command = Gui.Command.get(CommandName)
-                    MenuText = CommandInfoCorrections(CommandName).replace("&", "")
+                    MenuText = CommandInfoCorrections(CommandName)["menuText"]
 
-                    if MenuText == key:
+                    if MenuText == key.replace("&", "").replace("...", ""):
                         try:
                             # Get the original toolbar as QToolbar
                             OriginalToolBar = mw.findChild(QToolBar, value)
