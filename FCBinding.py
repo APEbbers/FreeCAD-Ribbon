@@ -1526,3 +1526,5 @@ class run:
 
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
+
+            # Ribbon.setFeatures(PySide.QtWidgets.QDockWidget.DockWidgetFeature.DockWidgetClosable)
