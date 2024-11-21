@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingshynwmW.ui'
+## Form generated from reading UI file 'SettingstwpcnA.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -26,7 +26,7 @@ class Ui_Settings(object):
         if not Settings.objectName():
             Settings.setObjectName(u"Settings")
         Settings.setWindowModality(Qt.WindowModality.WindowModal)
-        Settings.resize(549, 722)
+        Settings.resize(757, 722)
         Settings.setMinimumSize(QSize(0, 600))
         Settings.setAutoFillBackground(False)
         self.gridLayout_31 = QGridLayout(Settings)
@@ -68,7 +68,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 515, 860))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 723, 860))
         self.gridLayout_28 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_28.setObjectName(u"gridLayout_28")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -113,6 +113,12 @@ class Ui_Settings(object):
         self.gridLayout_13.setObjectName(u"gridLayout_13")
         self.label_4 = QLabel(self.groupBox_Backup)
         self.label_4.setObjectName(u"label_4")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
+        self.label_4.setSizePolicy(sizePolicy2)
+        self.label_4.setMinimumSize(QSize(400, 0))
         self.label_4.setFrameShape(QFrame.Shape.Box)
         self.label_4.setScaledContents(True)
         self.label_4.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
@@ -121,14 +127,18 @@ class Ui_Settings(object):
 
         self.BackUpLocation = QPushButton(self.groupBox_Backup)
         self.BackUpLocation.setObjectName(u"BackUpLocation")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        sizePolicy2.setHorizontalStretch(20)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.BackUpLocation.sizePolicy().hasHeightForWidth())
-        self.BackUpLocation.setSizePolicy(sizePolicy2)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy3.setHorizontalStretch(20)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.BackUpLocation.sizePolicy().hasHeightForWidth())
+        self.BackUpLocation.setSizePolicy(sizePolicy3)
         self.BackUpLocation.setMinimumSize(QSize(20, 0))
 
         self.gridLayout_13.addWidget(self.BackUpLocation, 0, 1, 1, 1)
+
+        self.horizontalSpacer_9 = QSpacerItem(10, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_13.addItem(self.horizontalSpacer_9, 0, 2, 1, 1)
 
 
         self.gridLayout_8.addWidget(self.groupBox_Backup, 1, 0, 1, 1)
@@ -158,11 +168,11 @@ class Ui_Settings(object):
 
         self.IconSize_Medium = QSpinBox(self.groupBox_4)
         self.IconSize_Medium.setObjectName(u"IconSize_Medium")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.IconSize_Medium.sizePolicy().hasHeightForWidth())
-        self.IconSize_Medium.setSizePolicy(sizePolicy3)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.IconSize_Medium.sizePolicy().hasHeightForWidth())
+        self.IconSize_Medium.setSizePolicy(sizePolicy4)
         self.IconSize_Medium.setMinimumSize(QSize(50, 20))
         self.IconSize_Medium.setBaseSize(QSize(0, 0))
         self.IconSize_Medium.setFont(font1)
@@ -180,8 +190,8 @@ class Ui_Settings(object):
 
         self.IconSize_Small = QSpinBox(self.groupBox_4)
         self.IconSize_Small.setObjectName(u"IconSize_Small")
-        sizePolicy3.setHeightForWidth(self.IconSize_Small.sizePolicy().hasHeightForWidth())
-        self.IconSize_Small.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.IconSize_Small.sizePolicy().hasHeightForWidth())
+        self.IconSize_Small.setSizePolicy(sizePolicy4)
         self.IconSize_Small.setMinimumSize(QSize(50, 20))
         self.IconSize_Small.setSizeIncrement(QSize(0, 0))
         self.IconSize_Small.setBaseSize(QSize(0, 0))
@@ -216,8 +226,8 @@ class Ui_Settings(object):
 
         self.label_10 = QLabel(self.groupBox_4)
         self.label_10.setObjectName(u"label_10")
-        sizePolicy3.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
-        self.label_10.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
+        self.label_10.setSizePolicy(sizePolicy4)
         self.label_10.setMinimumSize(QSize(130, 0))
         self.label_10.setFont(font1)
 
@@ -230,8 +240,8 @@ class Ui_Settings(object):
 
         self.label_11 = QLabel(self.groupBox_4)
         self.label_11.setObjectName(u"label_11")
-        sizePolicy3.setHeightForWidth(self.label_11.sizePolicy().hasHeightForWidth())
-        self.label_11.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.label_11.sizePolicy().hasHeightForWidth())
+        self.label_11.setSizePolicy(sizePolicy4)
         self.label_11.setMinimumSize(QSize(130, 0))
         self.label_11.setFont(font1)
 
@@ -272,11 +282,11 @@ class Ui_Settings(object):
 
         self.groupBox_5 = QGroupBox(self.groupBox1)
         self.groupBox_5.setObjectName(u"groupBox_5")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.groupBox_5.sizePolicy().hasHeightForWidth())
-        self.groupBox_5.setSizePolicy(sizePolicy4)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.groupBox_5.sizePolicy().hasHeightForWidth())
+        self.groupBox_5.setSizePolicy(sizePolicy5)
         self.groupBox_5.setMinimumSize(QSize(0, 0))
         self.groupBox_5.setFont(font1)
         self.gridLayout_11 = QGridLayout(self.groupBox_5)
@@ -285,11 +295,11 @@ class Ui_Settings(object):
         self.gridLayout_10.setObjectName(u"gridLayout_10")
         self.MaxPanelColumn = QSpinBox(self.groupBox_5)
         self.MaxPanelColumn.setObjectName(u"MaxPanelColumn")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(self.MaxPanelColumn.sizePolicy().hasHeightForWidth())
-        self.MaxPanelColumn.setSizePolicy(sizePolicy5)
+        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(0)
+        sizePolicy6.setHeightForWidth(self.MaxPanelColumn.sizePolicy().hasHeightForWidth())
+        self.MaxPanelColumn.setSizePolicy(sizePolicy6)
         self.MaxPanelColumn.setMinimumSize(QSize(50, 20))
         self.MaxPanelColumn.setMinimum(0)
         self.MaxPanelColumn.setMaximum(99)
@@ -327,8 +337,8 @@ class Ui_Settings(object):
         self.gridLayout_26.setObjectName(u"gridLayout_26")
         self.ShowText_Small = QCheckBox(self.groupBox_3)
         self.ShowText_Small.setObjectName(u"ShowText_Small")
-        sizePolicy5.setHeightForWidth(self.ShowText_Small.sizePolicy().hasHeightForWidth())
-        self.ShowText_Small.setSizePolicy(sizePolicy5)
+        sizePolicy6.setHeightForWidth(self.ShowText_Small.sizePolicy().hasHeightForWidth())
+        self.ShowText_Small.setSizePolicy(sizePolicy6)
         self.ShowText_Small.setMinimumSize(QSize(100, 0))
         self.ShowText_Small.setFont(font1)
 
@@ -336,8 +346,8 @@ class Ui_Settings(object):
 
         self.ShowText_Medium = QCheckBox(self.groupBox_3)
         self.ShowText_Medium.setObjectName(u"ShowText_Medium")
-        sizePolicy5.setHeightForWidth(self.ShowText_Medium.sizePolicy().hasHeightForWidth())
-        self.ShowText_Medium.setSizePolicy(sizePolicy5)
+        sizePolicy6.setHeightForWidth(self.ShowText_Medium.sizePolicy().hasHeightForWidth())
+        self.ShowText_Medium.setSizePolicy(sizePolicy6)
         self.ShowText_Medium.setMinimumSize(QSize(100, 0))
         self.ShowText_Medium.setFont(font1)
 
@@ -345,8 +355,8 @@ class Ui_Settings(object):
 
         self.ShowText_Large = QCheckBox(self.groupBox_3)
         self.ShowText_Large.setObjectName(u"ShowText_Large")
-        sizePolicy5.setHeightForWidth(self.ShowText_Large.sizePolicy().hasHeightForWidth())
-        self.ShowText_Large.setSizePolicy(sizePolicy5)
+        sizePolicy6.setHeightForWidth(self.ShowText_Large.sizePolicy().hasHeightForWidth())
+        self.ShowText_Large.setSizePolicy(sizePolicy6)
         self.ShowText_Large.setMinimumSize(QSize(100, 0))
         self.ShowText_Large.setFont(font1)
 
@@ -369,11 +379,11 @@ class Ui_Settings(object):
 
         self.groupBox_10 = QGroupBox(self.groupBox1)
         self.groupBox_10.setObjectName(u"groupBox_10")
-        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
-        sizePolicy6.setHorizontalStretch(0)
-        sizePolicy6.setVerticalStretch(0)
-        sizePolicy6.setHeightForWidth(self.groupBox_10.sizePolicy().hasHeightForWidth())
-        self.groupBox_10.setSizePolicy(sizePolicy6)
+        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        sizePolicy7.setHorizontalStretch(0)
+        sizePolicy7.setVerticalStretch(0)
+        sizePolicy7.setHeightForWidth(self.groupBox_10.sizePolicy().hasHeightForWidth())
+        self.groupBox_10.setSizePolicy(sizePolicy7)
         self.groupBox_10.setMinimumSize(QSize(0, 0))
         self.gridLayout_25 = QGridLayout(self.groupBox_10)
         self.gridLayout_25.setObjectName(u"gridLayout_25")
@@ -407,11 +417,11 @@ class Ui_Settings(object):
 
         self.groupBox_2 = QGroupBox(self.groupBox1)
         self.groupBox_2.setObjectName(u"groupBox_2")
-        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
-        sizePolicy7.setHorizontalStretch(0)
-        sizePolicy7.setVerticalStretch(0)
-        sizePolicy7.setHeightForWidth(self.groupBox_2.sizePolicy().hasHeightForWidth())
-        self.groupBox_2.setSizePolicy(sizePolicy7)
+        sizePolicy8 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
+        sizePolicy8.setHorizontalStretch(0)
+        sizePolicy8.setVerticalStretch(0)
+        sizePolicy8.setHeightForWidth(self.groupBox_2.sizePolicy().hasHeightForWidth())
+        self.groupBox_2.setSizePolicy(sizePolicy8)
         self.groupBox_2.setMinimumSize(QSize(0, 60))
         self.groupBox_2.setFont(font1)
         self.gridLayout_12 = QGridLayout(self.groupBox_2)
@@ -427,8 +437,8 @@ class Ui_Settings(object):
 
         self.StyleSheetLocation = QPushButton(self.groupBox_2)
         self.StyleSheetLocation.setObjectName(u"StyleSheetLocation")
-        sizePolicy2.setHeightForWidth(self.StyleSheetLocation.sizePolicy().hasHeightForWidth())
-        self.StyleSheetLocation.setSizePolicy(sizePolicy2)
+        sizePolicy3.setHeightForWidth(self.StyleSheetLocation.sizePolicy().hasHeightForWidth())
+        self.StyleSheetLocation.setSizePolicy(sizePolicy3)
         self.StyleSheetLocation.setMinimumSize(QSize(20, 0))
 
         self.gridLayout_12.addWidget(self.StyleSheetLocation, 0, 1, 1, 1)
@@ -453,8 +463,8 @@ class Ui_Settings(object):
 
         self.label_3 = QLabel(self.General)
         self.label_3.setObjectName(u"label_3")
-        sizePolicy4.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
-        self.label_3.setSizePolicy(sizePolicy4)
+        sizePolicy5.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
+        self.label_3.setSizePolicy(sizePolicy5)
         self.label_3.setMinimumSize(QSize(300, 0))
         self.label_3.setMaximumSize(QSize(16777215, 16777215))
         self.label_3.setWordWrap(True)
@@ -481,8 +491,8 @@ class Ui_Settings(object):
         self.gridLayout_17.setObjectName(u"gridLayout_17")
         self.ScrollClicks_TabBar = QSpinBox(self.groupBox_7)
         self.ScrollClicks_TabBar.setObjectName(u"ScrollClicks_TabBar")
-        sizePolicy3.setHeightForWidth(self.ScrollClicks_TabBar.sizePolicy().hasHeightForWidth())
-        self.ScrollClicks_TabBar.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.ScrollClicks_TabBar.sizePolicy().hasHeightForWidth())
+        self.ScrollClicks_TabBar.setSizePolicy(sizePolicy4)
         self.ScrollClicks_TabBar.setMinimumSize(QSize(50, 0))
         self.ScrollClicks_TabBar.setSizeIncrement(QSize(0, 0))
         self.ScrollClicks_TabBar.setBaseSize(QSize(0, 0))
@@ -500,8 +510,8 @@ class Ui_Settings(object):
 
         self.label_14 = QLabel(self.groupBox_7)
         self.label_14.setObjectName(u"label_14")
-        sizePolicy3.setHeightForWidth(self.label_14.sizePolicy().hasHeightForWidth())
-        self.label_14.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.label_14.sizePolicy().hasHeightForWidth())
+        self.label_14.setSizePolicy(sizePolicy4)
         self.label_14.setMinimumSize(QSize(130, 0))
         self.label_14.setFont(font1)
 
@@ -509,8 +519,8 @@ class Ui_Settings(object):
 
         self.ScrollClicks_Ribbon = QSpinBox(self.groupBox_7)
         self.ScrollClicks_Ribbon.setObjectName(u"ScrollClicks_Ribbon")
-        sizePolicy3.setHeightForWidth(self.ScrollClicks_Ribbon.sizePolicy().hasHeightForWidth())
-        self.ScrollClicks_Ribbon.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.ScrollClicks_Ribbon.sizePolicy().hasHeightForWidth())
+        self.ScrollClicks_Ribbon.setSizePolicy(sizePolicy4)
         self.ScrollClicks_Ribbon.setMinimumSize(QSize(50, 0))
         self.ScrollClicks_Ribbon.setBaseSize(QSize(0, 0))
         self.ScrollClicks_Ribbon.setFont(font1)
@@ -524,8 +534,8 @@ class Ui_Settings(object):
 
         self.label_15 = QLabel(self.groupBox_7)
         self.label_15.setObjectName(u"label_15")
-        sizePolicy3.setHeightForWidth(self.label_15.sizePolicy().hasHeightForWidth())
-        self.label_15.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.label_15.sizePolicy().hasHeightForWidth())
+        self.label_15.setSizePolicy(sizePolicy4)
         self.label_15.setMinimumSize(QSize(130, 0))
         self.label_15.setFont(font1)
 
@@ -565,8 +575,8 @@ class Ui_Settings(object):
 
         self.label_12 = QLabel(self.groupBox_6)
         self.label_12.setObjectName(u"label_12")
-        sizePolicy3.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
-        self.label_12.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
+        self.label_12.setSizePolicy(sizePolicy4)
         self.label_12.setMinimumSize(QSize(130, 0))
         self.label_12.setFont(font1)
 
@@ -574,8 +584,8 @@ class Ui_Settings(object):
 
         self.label_13 = QLabel(self.groupBox_6)
         self.label_13.setObjectName(u"label_13")
-        sizePolicy3.setHeightForWidth(self.label_13.sizePolicy().hasHeightForWidth())
-        self.label_13.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.label_13.sizePolicy().hasHeightForWidth())
+        self.label_13.setSizePolicy(sizePolicy4)
         self.label_13.setMinimumSize(QSize(130, 0))
         self.label_13.setFont(font1)
 
@@ -583,11 +593,11 @@ class Ui_Settings(object):
 
         self.ScrollSpeed_TabBar = QSlider(self.groupBox_6)
         self.ScrollSpeed_TabBar.setObjectName(u"ScrollSpeed_TabBar")
-        sizePolicy8 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        sizePolicy8.setHorizontalStretch(0)
-        sizePolicy8.setVerticalStretch(0)
-        sizePolicy8.setHeightForWidth(self.ScrollSpeed_TabBar.sizePolicy().hasHeightForWidth())
-        self.ScrollSpeed_TabBar.setSizePolicy(sizePolicy8)
+        sizePolicy9 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy9.setHorizontalStretch(0)
+        sizePolicy9.setVerticalStretch(0)
+        sizePolicy9.setHeightForWidth(self.ScrollSpeed_TabBar.sizePolicy().hasHeightForWidth())
+        self.ScrollSpeed_TabBar.setSizePolicy(sizePolicy9)
         self.ScrollSpeed_TabBar.setMaximum(10)
         self.ScrollSpeed_TabBar.setSingleStep(1)
         self.ScrollSpeed_TabBar.setPageStep(1)
@@ -649,8 +659,8 @@ class Ui_Settings(object):
 
         self.Tab_Scroll_Left = QPushButton(self.IconS)
         self.Tab_Scroll_Left.setObjectName(u"Tab_Scroll_Left")
-        sizePolicy5.setHeightForWidth(self.Tab_Scroll_Left.sizePolicy().hasHeightForWidth())
-        self.Tab_Scroll_Left.setSizePolicy(sizePolicy5)
+        sizePolicy6.setHeightForWidth(self.Tab_Scroll_Left.sizePolicy().hasHeightForWidth())
+        self.Tab_Scroll_Left.setSizePolicy(sizePolicy6)
         self.Tab_Scroll_Left.setMinimumSize(QSize(10, 40))
         self.Tab_Scroll_Left.setMaximumSize(QSize(20, 40))
         self.Tab_Scroll_Left.setBaseSize(QSize(10, 40))
@@ -659,8 +669,8 @@ class Ui_Settings(object):
 
         self.Ribbon_Scroll_Right = QPushButton(self.IconS)
         self.Ribbon_Scroll_Right.setObjectName(u"Ribbon_Scroll_Right")
-        sizePolicy5.setHeightForWidth(self.Ribbon_Scroll_Right.sizePolicy().hasHeightForWidth())
-        self.Ribbon_Scroll_Right.setSizePolicy(sizePolicy5)
+        sizePolicy6.setHeightForWidth(self.Ribbon_Scroll_Right.sizePolicy().hasHeightForWidth())
+        self.Ribbon_Scroll_Right.setSizePolicy(sizePolicy6)
         self.Ribbon_Scroll_Right.setMinimumSize(QSize(20, 60))
         self.Ribbon_Scroll_Right.setMaximumSize(QSize(20, 60))
 
@@ -673,8 +683,8 @@ class Ui_Settings(object):
 
         self.MoreCommands = QPushButton(self.IconS)
         self.MoreCommands.setObjectName(u"MoreCommands")
-        sizePolicy5.setHeightForWidth(self.MoreCommands.sizePolicy().hasHeightForWidth())
-        self.MoreCommands.setSizePolicy(sizePolicy5)
+        sizePolicy6.setHeightForWidth(self.MoreCommands.sizePolicy().hasHeightForWidth())
+        self.MoreCommands.setSizePolicy(sizePolicy6)
         self.MoreCommands.setMinimumSize(QSize(30, 30))
         self.MoreCommands.setMaximumSize(QSize(30, 30))
         self.MoreCommands.setBaseSize(QSize(30, 30))
@@ -688,8 +698,8 @@ class Ui_Settings(object):
 
         self.Tab_Scroll_Right = QPushButton(self.IconS)
         self.Tab_Scroll_Right.setObjectName(u"Tab_Scroll_Right")
-        sizePolicy5.setHeightForWidth(self.Tab_Scroll_Right.sizePolicy().hasHeightForWidth())
-        self.Tab_Scroll_Right.setSizePolicy(sizePolicy5)
+        sizePolicy6.setHeightForWidth(self.Tab_Scroll_Right.sizePolicy().hasHeightForWidth())
+        self.Tab_Scroll_Right.setSizePolicy(sizePolicy6)
         self.Tab_Scroll_Right.setMinimumSize(QSize(10, 40))
         self.Tab_Scroll_Right.setMaximumSize(QSize(20, 40))
         self.Tab_Scroll_Right.setBaseSize(QSize(10, 40))
@@ -698,8 +708,8 @@ class Ui_Settings(object):
 
         self.Ribbon_Scroll_Left = QPushButton(self.IconS)
         self.Ribbon_Scroll_Left.setObjectName(u"Ribbon_Scroll_Left")
-        sizePolicy5.setHeightForWidth(self.Ribbon_Scroll_Left.sizePolicy().hasHeightForWidth())
-        self.Ribbon_Scroll_Left.setSizePolicy(sizePolicy5)
+        sizePolicy6.setHeightForWidth(self.Ribbon_Scroll_Left.sizePolicy().hasHeightForWidth())
+        self.Ribbon_Scroll_Left.setSizePolicy(sizePolicy6)
         self.Ribbon_Scroll_Left.setMinimumSize(QSize(20, 60))
         self.Ribbon_Scroll_Left.setMaximumSize(QSize(20, 60))
 
@@ -707,8 +717,8 @@ class Ui_Settings(object):
 
         self.pinButton = QPushButton(self.IconS)
         self.pinButton.setObjectName(u"pinButton")
-        sizePolicy5.setHeightForWidth(self.pinButton.sizePolicy().hasHeightForWidth())
-        self.pinButton.setSizePolicy(sizePolicy5)
+        sizePolicy6.setHeightForWidth(self.pinButton.sizePolicy().hasHeightForWidth())
+        self.pinButton.setSizePolicy(sizePolicy6)
         self.pinButton.setMinimumSize(QSize(30, 30))
         self.pinButton.setMaximumSize(QSize(30, 30))
 
@@ -758,15 +768,15 @@ class Ui_Settings(object):
 
         self.Color_Background = Gui_PrefColorButton(self.ColorS)
         self.Color_Background.setObjectName(u"Color_Background")
-        sizePolicy5.setHeightForWidth(self.Color_Background.sizePolicy().hasHeightForWidth())
-        self.Color_Background.setSizePolicy(sizePolicy5)
+        sizePolicy6.setHeightForWidth(self.Color_Background.sizePolicy().hasHeightForWidth())
+        self.Color_Background.setSizePolicy(sizePolicy6)
 
         self.gridLayout_20.addWidget(self.Color_Background, 1, 1, 1, 1)
 
         self.Color_Borders = Gui_PrefColorButton(self.ColorS)
         self.Color_Borders.setObjectName(u"Color_Borders")
-        sizePolicy5.setHeightForWidth(self.Color_Borders.sizePolicy().hasHeightForWidth())
-        self.Color_Borders.setSizePolicy(sizePolicy5)
+        sizePolicy6.setHeightForWidth(self.Color_Borders.sizePolicy().hasHeightForWidth())
+        self.Color_Borders.setSizePolicy(sizePolicy6)
 
         self.gridLayout_20.addWidget(self.Color_Borders, 0, 1, 1, 1)
 
@@ -777,8 +787,8 @@ class Ui_Settings(object):
 
         self.Color_Background_App = Gui_ColorButton(self.ColorS)
         self.Color_Background_App.setObjectName(u"Color_Background_App")
-        sizePolicy5.setHeightForWidth(self.Color_Background_App.sizePolicy().hasHeightForWidth())
-        self.Color_Background_App.setSizePolicy(sizePolicy5)
+        sizePolicy6.setHeightForWidth(self.Color_Background_App.sizePolicy().hasHeightForWidth())
+        self.Color_Background_App.setSizePolicy(sizePolicy6)
 
         self.gridLayout_20.addWidget(self.Color_Background_App, 2, 1, 1, 1)
 
