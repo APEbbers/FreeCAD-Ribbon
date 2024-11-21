@@ -23,7 +23,7 @@
 # 	Arch-based: $ sudo pacman -S qt6-tools python-pyqt6
 # - Make the script executable
 # 	$ chmod +x update_translation.sh
-# - The script has to be executed within the `freecad/freegrid/resources/translations` directory.
+# - The script has to be executed within the `translations` directory.
 # 	Executing the script with no flags invokes the help.
 # 	$ ./update_translation.sh
 #
@@ -39,7 +39,7 @@
 # NOTE: WORKFLOW MAINTAINER (CROWDIN)
 # - Execute the script passing the '-U' flag
 # 	$ ./update_translation.sh -U
-# - Once done, download the translated files, copy them to `freecad/freegrid/resources/translations`
+# - Once done, download the translated files, copy them to `translations`
 # - Upload the updated file to CrowdIn and wait for translators do their thing ;-)
 # 	and release all the files to update the changes
 # 	$ ./update_translation.sh -R
@@ -73,7 +73,7 @@ update_locale() {
 	if [ "$u" == "" ]; then
 		eval $LUPDATE "$FILES" -ts "${WB}.ts" # locale-agnostic file
 	else
-		eval $LUPDATE "$FILES" -source-language en-US -target-language "${locale//-/_}" \
+		eval $LUPDATE "$FILES" -source-language en_US -target-language "${locale//-/_}" \
 			-ts "${WB}_${locale}.ts"
 	fi
 }

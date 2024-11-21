@@ -809,7 +809,6 @@ class Ui_Form(object):
         self.SearchBar_1.setText("")
         self.SearchBar_1.setPlaceholderText(QCoreApplication.translate("Form", u"Type to search..", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.QAToolbars), QCoreApplication.translate("Form", u"Quick access toolbar", None))
-
         __sortingEnabled2 = self.ToolbarsToExclude.isSortingEnabled()
         self.ToolbarsToExclude.setSortingEnabled(False)
         ___qlistwidgetitem2 = self.ToolbarsToExclude.item(0)
@@ -844,7 +843,7 @@ class Ui_Form(object):
         ___qlistwidgetitem5 = self.WorkbenchesSelected.item(0)
         ___qlistwidgetitem5.setText(QCoreApplication.translate("Form", u"New Item", None));
         self.WorkbenchesSelected.setSortingEnabled(__sortingEnabled5)
-
+        
         self.Remove_Workbench.setText(QCoreApplication.translate("Form", u"...", None))
         self.Add_Workbench.setText(QCoreApplication.translate("Form", u"...", None))
         self.label_6.setText(QCoreApplication.translate("Form", u"<html><head/><body><p>Select workbenches to<span style=\" font-weight:600;\"> include</span> in the ribbon.</p></body></html>", None))

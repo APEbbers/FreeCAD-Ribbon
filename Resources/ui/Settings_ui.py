@@ -926,5 +926,6 @@ class Ui_Settings(object):
         self.PreferedViewPanel.setItemText(3, QCoreApplication.translate("Settings", u"None", None))
 
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("Settings", u"Miscellaneous", None))
+
     # retranslateUi
 
