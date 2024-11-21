@@ -99,7 +99,7 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>0</y>
+          <y>-192</y>
           <width>723</width>
           <height>860</height>
          </rect>
@@ -240,7 +240,7 @@
                       </size>
                      </property>
                      <property name="text">
-                      <string>Browse..</string>
+                      <string>Browse...</string>
                      </property>
                     </widget>
                    </item>
@@ -408,7 +408,7 @@
                        <item row="6" column="0">
                         <widget class="QLabel" name="label_22">
                          <property name="text">
-                          <string>Size of right toolbar buttons</string>
+                          <string>Size of right toolbar buttons:</string>
                          </property>
                         </widget>
                        </item>
@@ -446,7 +446,7 @@
                        <item row="4" column="0">
                         <widget class="QLabel" name="label_21">
                          <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of quick access toolbar buttons: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Size of quick access toolbar buttons:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                          </property>
                         </widget>
                        </item>
@@ -579,7 +579,7 @@
                        <item row="0" column="0">
                         <widget class="QLabel" name="label">
                          <property name="text">
-                          <string>No. of columns per panel</string>
+                          <string>No. of columns per panel:</string>
                          </property>
                         </widget>
                        </item>
@@ -844,7 +844,7 @@
                       </size>
                      </property>
                      <property name="text">
-                      <string>Browse..</string>
+                      <string>Browse...</string>
                      </property>
                     </widget>
                    </item>
