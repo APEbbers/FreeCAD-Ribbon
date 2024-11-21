@@ -56,7 +56,7 @@ import Settings_ui as Settings_ui
 translate = App.Qt.translate
 
 
-class LoadDialog(Settings_ui.Ui_Form):
+class LoadDialog(Settings_ui.Ui_Settings):
     Backup = Parameters_Ribbon.ENABLE_BACKUP
     BackupLocation = pathBackup
     StyleSheet = Parameters_Ribbon.STYLESHEET

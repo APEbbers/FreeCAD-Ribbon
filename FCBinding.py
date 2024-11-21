@@ -91,19 +91,19 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon_local.panel import RibbonPanel
-from pyqtribbon_local.toolbutton import RibbonToolButton
-from pyqtribbon_local.separator import RibbonSeparator
-from pyqtribbon_local.category import RibbonCategoryLayoutButton
-
 # import pyqtribbon_local as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
+# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon_local.panel import RibbonPanel
+# from pyqtribbon_local.toolbutton import RibbonToolButton
+# from pyqtribbon_local.separator import RibbonSeparator
+# from pyqtribbon_local.category import RibbonCategoryLayoutButton
+
+import pyqtribbon_local as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -239,6 +239,11 @@ class ModernMenu(RibbonBar):
             ListIgnoredToolbars.append("Views")
             ListIgnoredToolbars.append("Views - Ribbon")
         self.ribbonStructure["ignoredToolbars"] = ListIgnoredToolbars
+        # write the change to the json file
+        # Writing to sample.json
+        with open(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, "w") as outfile:
+            json.dump(self.ribbonStructure, outfile, indent=4)
+        outfile.close()
 
         # Get the address of the repository address
         self.ReproAdress = StandardFunctions.getRepoAdress(os.path.dirname(__file__))
@@ -351,13 +356,20 @@ class ModernMenu(RibbonBar):
         else:
             ScrollRightButton_Tab.setArrowType(Qt.ArrowType.RightArrow)
 
-        # # store the position coordinates from the ribbon
-        # X1 = self.pos().x()
-        # Y1 = self.pos().y()
-        # X2 = X1 + self.width()
-        # Y2 = Y1 - self.height()
-        # self.Position = [X1, Y1, X2, Y2]
+        # Add a custom close event to show the original menubar again
+        self.closeEvent = lambda close: self.closeEvent(close)
+        # self.hideEvent = lambda hide: self.hideEvent(hide)
         return
+
+    def closeEvent(self, event):
+        if self.isEnabled() is False:
+            mw.menuBar().show()
+        return True
+
+    # def hideEvent(self, event):
+    #     if self.isEnabled() is False:
+    #         mw.menuBar().show()
+    #     return True
 
     def eventFilter(self, obj, event):
         if int(App.Version()[0]) > 1:
@@ -1680,6 +1692,8 @@ class run:
             ribbonDock.setTitleBarWidget(QWidget())
             # attach the ribbon to the dockwidget
             ribbonDock.setWidget(ribbon)
+
+            ribbonDock.setEnabled(True)
 
             # if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
             #     ribbonDock.setMaximumHeight(ribbon.RibbonMinimalHeight)

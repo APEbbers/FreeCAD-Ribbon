@@ -2382,8 +2382,7 @@ class LoadDialog(Design_ui.Ui_Form):
         resultingDict.update(self.Dict_RibbonCommandPanel)
 
         # get the path for the Json file
-        JsonPath = os.path.dirname(__file__)
-        JsonFile = os.path.join(JsonPath, "RibbonStructure.json")
+        JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
 
         # create a copy and rename it as a backup if enabled
         if Parameters_Ribbon.ENABLE_BACKUP is True:
@@ -2701,7 +2700,12 @@ class LoadDialog(Design_ui.Ui_Form):
             )
             Name = Parameter.GetString("Name")
 
-            if Name != "":
+            IsIgnored = False
+            for ToolBar in self.List_IgnoredToolbars:
+                if ToolBar == Name:
+                    IsIgnored = True
+
+            if Name != "" and IsIgnored is False:
                 ListCommands = []
                 # get list of all buttons in toolbar
                 TB = mw.findChildren(QToolBar, Name)
