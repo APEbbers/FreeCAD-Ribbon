@@ -109,7 +109,7 @@
              </font>
             </property>
             <property name="text">
-             <string>                    GNU GENERAL PUBLIC LICENSE
+             <string notr="true">                    GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. &lt;https://fsf.org/&gt;

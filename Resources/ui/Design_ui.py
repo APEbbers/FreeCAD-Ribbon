@@ -930,7 +930,7 @@ class Ui_Form(object):
         self.SearchBar_1.setInputMask("")
         self.SearchBar_1.setText("")
         self.SearchBar_1.setPlaceholderText(
-            QCoreApplication.translate("Form", "Type to search..", None)
+            QCoreApplication.translate("Form", "Type to search...", None)
         )
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.QAToolbars),
@@ -967,7 +967,7 @@ class Ui_Form(object):
         self.SearchBar_2.setInputMask("")
         self.SearchBar_2.setText("")
         self.SearchBar_2.setPlaceholderText(
-            QCoreApplication.translate("Form", "Type to search..", None)
+            QCoreApplication.translate("Form", "Type to search...", None)
         )
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.Toolbars),
@@ -1004,7 +1004,7 @@ class Ui_Form(object):
             QCoreApplication.translate("Form", "Include workbenches", None),
         )
         self.label_9.setText(
-            QCoreApplication.translate("Form", "select custom panel: ", None)
+            QCoreApplication.translate("Form", "Select custom panel:", None)
         )
         self.AddCustomToolbar.setText(QCoreApplication.translate("Form", "Add", None))
         self.label_7.setText(
@@ -1058,7 +1058,7 @@ class Ui_Form(object):
         )
         self.IconOnly.setText(QCoreApplication.translate("Form", "Icon only", None))
         self.label_12.setText(
-            QCoreApplication.translate("Form", " Set the icon size", None)
+            QCoreApplication.translate("Form", "Set the icon size", None)
         )
         self.MoveUp_RibbonCommand.setText(
             QCoreApplication.translate("Form", "...", None)
@@ -1092,7 +1092,7 @@ class Ui_Form(object):
             QCoreApplication.translate("Form", "Remove separator", None)
         )
         self.label_4.setText(
-            QCoreApplication.translate("Form", " Set the panel order", None)
+            QCoreApplication.translate("Form", "Set the panel order", None)
         )
         self.MoveUp_Toolbar.setText(QCoreApplication.translate("Form", "...", None))
         self.MoveDown_Toolbar.setText(QCoreApplication.translate("Form", "...", None))

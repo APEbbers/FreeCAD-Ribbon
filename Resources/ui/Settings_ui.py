@@ -1014,7 +1014,7 @@ class Ui_Form(object):
         )
         self.label_7.setText(QCoreApplication.translate("Form", "...\\", None))
         self.StyleSheetLocation.setText(
-            QCoreApplication.translate("Form", "Browse..", None)
+            QCoreApplication.translate("Form", "Browse...", None)
         )
         self.groupBox1.setTitle(
             QCoreApplication.translate("Form", "Backup settings", None)
@@ -1027,7 +1027,7 @@ class Ui_Form(object):
         )
         self.label_4.setText(QCoreApplication.translate("Form", "...\\", None))
         self.BackUpLocation.setText(
-            QCoreApplication.translate("Form", "Browse..", None)
+            QCoreApplication.translate("Form", "Browse...", None)
         )
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.General),
@@ -1054,7 +1054,7 @@ class Ui_Form(object):
             QCoreApplication.translate("Form", "Mouse settings", None)
         )
         self.EnableEnterEvent.setText(
-            QCoreApplication.translate("Form", "Show ribbon on hover. ", None)
+            QCoreApplication.translate("Form", "Show ribbon on hover.", None)
         )
         self.label_12.setText(
             QCoreApplication.translate(
