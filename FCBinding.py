@@ -794,12 +794,11 @@ class ModernMenu(RibbonBar):
             if Parameters_Ribbon.DEBUG_MODE is True:
                 print(f"wb {workbench.MenuText} not loaded")
 
-            Gui.activateWorkbench(workbench.name())
             # wait for 0.1s hoping that after that time the workbench is loaded
             timer.timeout.connect(self.onWbActivated)
             timer.setSingleShot(True)
             timer.start(500)
-            # return
+            return
 
         # create panels
         self.buildPanels()
