@@ -704,7 +704,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>Browse..</string>
+                <string>Browse...</string>
                </property>
               </widget>
              </item>
@@ -812,7 +812,7 @@
                 </size>
                </property>
                <property name="text">
-                <string>Browse..</string>
+                <string>Browse...</string>
                </property>
               </widget>
              </item>
@@ -1026,7 +1026,7 @@
             <item row="0" column="0">
              <widget class="QCheckBox" name="EnableEnterEvent">
               <property name="text">
-               <string>Show ribbon on hover. </string>
+               <string>Show ribbon on hover.</string>
               </property>
              </widget>
             </item>
