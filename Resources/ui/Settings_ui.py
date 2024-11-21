@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsPxRDBh.ui'
+## Form generated from reading UI file 'SettingsOmcbaU.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -66,7 +66,7 @@ class Ui_Settings(object):
         if not Settings.objectName():
             Settings.setObjectName("Settings")
         Settings.setWindowModality(Qt.WindowModality.WindowModal)
-        Settings.resize(757, 722)
+        Settings.resize(787, 722)
         sizePolicy = QSizePolicy(
             QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred
         )
@@ -118,7 +118,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, -192, 723, 860))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 753, 860))
         self.gridLayout_28 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_28.setObjectName("gridLayout_28")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
