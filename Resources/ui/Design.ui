@@ -338,7 +338,11 @@
                    </widget>
                   </item>
                   <item row="0" column="1">
-                   <widget class="QComboBox" name="ListCategory_1"/>
+                   <widget class="QComboBox" name="ListCategory_1">
+                    <property name="insertPolicy">
+                     <enum>QComboBox::InsertPolicy::InsertAlphabetically</enum>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -547,7 +551,11 @@
                    </widget>
                   </item>
                   <item row="0" column="1">
-                   <widget class="QComboBox" name="ListCategory_2"/>
+                   <widget class="QComboBox" name="ListCategory_2">
+                    <property name="insertPolicy">
+                     <enum>QComboBox::InsertPolicy::InsertAlphabetically</enum>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -795,6 +803,9 @@
                    <height>0</height>
                   </size>
                  </property>
+                 <property name="insertPolicy">
+                  <enum>QComboBox::InsertPolicy::InsertAlphabetically</enum>
+                 </property>
                 </widget>
                </item>
                <item row="0" column="1" colspan="2">
@@ -810,6 +821,9 @@
                    <width>150</width>
                    <height>0</height>
                   </size>
+                 </property>
+                 <property name="insertPolicy">
+                  <enum>QComboBox::InsertPolicy::InsertAlphabetically</enum>
                  </property>
                 </widget>
                </item>
@@ -1091,10 +1105,17 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="insertPolicy">
+                  <enum>QComboBox::InsertPolicy::InsertAlphabetically</enum>
+                 </property>
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QComboBox" name="ToolbarList"/>
+                <widget class="QComboBox" name="ToolbarList">
+                 <property name="insertPolicy">
+                  <enum>QComboBox::InsertPolicy::InsertAlphabetically</enum>
+                 </property>
+                </widget>
                </item>
                <item row="0" column="0">
                 <widget class="QLabel" name="label">
