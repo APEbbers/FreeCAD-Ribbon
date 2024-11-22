@@ -23,27 +23,24 @@ QToolButton, RibbonApplicationButton{
 	border-radius: 4px;
 	text-align:left;
 	}
-	QToolButton:hover{
-		border: 0.5px solid;/* do not change this line. It is used to set the color by code */
-		background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #444444, stop:1 #333333);
-		}
 	QToolButton::menu-arrow {
 		width: 20px;
-		subcontrol-origin: content;
-		subcontrol-position: center center;
+		height:30px;
+		subcontrol-origin: margin;
+		subcontrol-position: top right;		
 		}
 	QToolButton::menu-button {
 		border-radius: 2px;
 		padding: 1px;
 		border-radius: 2px;
 		subcontrol-origin: padding;
-		subcontrol-position: right center;
+		subcontrol-position: top right;
 		}
 	QToolButton::menu-button:hover{
 		border-left: 0.5px solid;/* do not change this line. It is used to set the color by code */
 	}
 	QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
-		padding-right: 20px; /* make way for the popup button */
+		padding-right: 10px; /* make way for the popup button */
 		}
 		/* the subcontrols below are used only in the MenuButtonPopup mode */
 		QToolButton::menu-button {
