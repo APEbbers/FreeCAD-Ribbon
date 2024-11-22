@@ -156,11 +156,6 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px"):
                         subcontrol-origin: padding;
                         subcontrol-position: top right;
                     }"""
-                    + """QToolButton:hover {
-                            border: 0.5px solid"""
-                    + BorderColor
-                    + """;
-                    }"""
                     + """QToolButton::menu-button:hover {
                             border: 0.5px solid"""
                     + BorderColor
