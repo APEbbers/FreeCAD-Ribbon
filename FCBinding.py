@@ -226,25 +226,46 @@ class ModernMenu(RibbonBar):
         # Set the preferred toolbars
         PreferredToolbar = Parameters_Ribbon.Settings.GetIntSetting("Preferred_view")
         ListIgnoredToolbars: list = self.ribbonStructure["ignoredToolbars"]
+        # check if the toolbar is already ignored
+        View_Inlist = False
+        ViewsRibbon_Inlist = False
+        IndividualViews_Inlist = False
+        for ToolBar in ListIgnoredToolbars:
+            if ToolBar == "View":
+                View_Inlist = True
+            if ToolBar == "Views - Ribbon":
+                ViewsRibbon_Inlist = True
+            if ToolBar == "Individual views":
+                IndividualViews_Inlist = True
+
         if PreferredToolbar == 0:
-            ListIgnoredToolbars.append("View")
-            ListIgnoredToolbars.append("Views - Ribbon")
+            if View_Inlist is False:
+                ListIgnoredToolbars.append("View")
+            if ViewsRibbon_Inlist is False:
+                ListIgnoredToolbars.append("Views - Ribbon")
             if "Individual views" in ListIgnoredToolbars:
                 ListIgnoredToolbars.remove("Individual views")
         if PreferredToolbar == 1:
-            ListIgnoredToolbars.append("Individual views")
-            ListIgnoredToolbars.append("Views - Ribbon")
+            if IndividualViews_Inlist is False:
+                ListIgnoredToolbars.append("Individual views")
+            if ViewsRibbon_Inlist is False:
+                ListIgnoredToolbars.append("Views - Ribbon")
             if "View" in ListIgnoredToolbars:
                 ListIgnoredToolbars.remove("View")
         if PreferredToolbar == 2:
-            ListIgnoredToolbars.append("Individual views")
-            ListIgnoredToolbars.append("Views")
+            if IndividualViews_Inlist is False:
+                ListIgnoredToolbars.append("Individual views")
+            if View_Inlist is False:
+                ListIgnoredToolbars.append("View")
             if "Views - Ribbon" in ListIgnoredToolbars:
                 ListIgnoredToolbars.remove("Views - Ribbon")
         if PreferredToolbar == 3:
-            ListIgnoredToolbars.append("Individual views")
-            ListIgnoredToolbars.append("Views")
-            ListIgnoredToolbars.append("Views - Ribbon")
+            if IndividualViews_Inlist is False:
+                ListIgnoredToolbars.append("Individual views")
+            if View_Inlist is False:
+                ListIgnoredToolbars.append("View")
+            if ViewsRibbon_Inlist is False:
+                ListIgnoredToolbars.append("Views - Ribbon")
         self.ribbonStructure["ignoredToolbars"] = ListIgnoredToolbars
         # write the change to the json file
         # Writing to sample.json
