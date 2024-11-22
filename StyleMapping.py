@@ -112,7 +112,7 @@ def ReturnStyleItem(ControlName):
         return None
 
 
-def ReturnStyleSheet(control, radius="2px", padding_right="0px"):
+def ReturnStyleSheet(control, radius="2px", padding_right="0px", width="15px"):
     """
     Enter one of the names below:
 
@@ -143,12 +143,23 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px"):
                             padding-right: """
                     + padding_right
                     + """;}"""
-                    + """QToolButton:hover {
-                            border: 0.5px solid"""
-                    + BorderColor
-                    + """;
+                    + """QToolButton::menu-arrow {
+                        width: 10px;
+                        height:24px;
+                        subcontrol-origin: padding;
+                        subcontrol-position: top right;
                     }"""
-                    + """QToolButton::menu-button:hover {
+                    + """QToolButton::menu-button {
+                        width: """
+                    + width
+                    + """;
+                        border-radius: 2px;
+                        padding: 1px;
+                        border-radius: 2px;
+                        subcontrol-origin: padding;
+                        subcontrol-position: top right;
+                    }"""
+                    + """QToolButton:hover {
                             border: 0.5px solid"""
                     + BorderColor
                     + """;

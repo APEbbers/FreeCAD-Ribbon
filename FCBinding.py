@@ -33,6 +33,7 @@ from PySide.QtGui import (
     QRegion,
     QFont,
     QColor,
+    QStyleHints,
 )
 from PySide.QtWidgets import (
     QToolButton,
@@ -50,6 +51,11 @@ from PySide.QtWidgets import (
     QScrollArea,
     QTabBar,
     QWidgetAction,
+    QStylePainter,
+    QStyle,
+    QStyleOptionButton,
+    QPushButton,
+    QHBoxLayout,
 )
 from PySide.QtCore import (
     Qt,
@@ -63,6 +69,7 @@ from PySide.QtCore import (
     QCoreApplication,
     QSize,
     Slot,
+    QRect,
 )
 
 import json
@@ -91,15 +98,14 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-# import pyqtribbon_local as pyqtribbon
+import pyqtribbon_local as pyqtribbon
 from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
 from pyqtribbon_local.panel import RibbonPanel
 from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-import pyqtribbon_local as pyqtribbon
-
+# import pyqtribbon_local as pyqtribbon
 # from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
 # from pyqtribbon.panel import RibbonPanel
 # from pyqtribbon.toolbutton import RibbonToolButton
@@ -220,25 +226,46 @@ class ModernMenu(RibbonBar):
         # Set the preferred toolbars
         PreferredToolbar = Parameters_Ribbon.Settings.GetIntSetting("Preferred_view")
         ListIgnoredToolbars: list = self.ribbonStructure["ignoredToolbars"]
+        # check if the toolbar is already ignored
+        View_Inlist = False
+        ViewsRibbon_Inlist = False
+        IndividualViews_Inlist = False
+        for ToolBar in ListIgnoredToolbars:
+            if ToolBar == "View":
+                View_Inlist = True
+            if ToolBar == "Views - Ribbon":
+                ViewsRibbon_Inlist = True
+            if ToolBar == "Individual views":
+                IndividualViews_Inlist = True
+
         if PreferredToolbar == 0:
-            ListIgnoredToolbars.append("View")
-            ListIgnoredToolbars.append("Views - Ribbon")
+            if View_Inlist is False:
+                ListIgnoredToolbars.append("View")
+            if ViewsRibbon_Inlist is False:
+                ListIgnoredToolbars.append("Views - Ribbon")
             if "Individual views" in ListIgnoredToolbars:
                 ListIgnoredToolbars.remove("Individual views")
         if PreferredToolbar == 1:
-            ListIgnoredToolbars.append("Individual views")
-            ListIgnoredToolbars.append("Views - Ribbon")
+            if IndividualViews_Inlist is False:
+                ListIgnoredToolbars.append("Individual views")
+            if ViewsRibbon_Inlist is False:
+                ListIgnoredToolbars.append("Views - Ribbon")
             if "View" in ListIgnoredToolbars:
                 ListIgnoredToolbars.remove("View")
         if PreferredToolbar == 2:
-            ListIgnoredToolbars.append("Individual views")
-            ListIgnoredToolbars.append("Views")
+            if IndividualViews_Inlist is False:
+                ListIgnoredToolbars.append("Individual views")
+            if View_Inlist is False:
+                ListIgnoredToolbars.append("View")
             if "Views - Ribbon" in ListIgnoredToolbars:
                 ListIgnoredToolbars.remove("Views - Ribbon")
         if PreferredToolbar == 3:
-            ListIgnoredToolbars.append("Individual views")
-            ListIgnoredToolbars.append("Views")
-            ListIgnoredToolbars.append("Views - Ribbon")
+            if IndividualViews_Inlist is False:
+                ListIgnoredToolbars.append("Individual views")
+            if View_Inlist is False:
+                ListIgnoredToolbars.append("View")
+            if ViewsRibbon_Inlist is False:
+                ListIgnoredToolbars.append("Views - Ribbon")
         self.ribbonStructure["ignoredToolbars"] = ListIgnoredToolbars
         # write the change to the json file
         # Writing to sample.json
@@ -394,9 +421,9 @@ class ModernMenu(RibbonBar):
             and Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is True
         ):
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setMinimumHeight(self.RibbonMaximumHeight)
+            # TB.setMinimumHeight(self.RibbonMaximumHeight)
             TB.setMaximumHeight(self.RibbonMaximumHeight)
-            self.setFixedHeight(self.RibbonMaximumHeight)
+            # self.setFixedHeight(self.RibbonMaximumHeight)
 
             # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
@@ -693,10 +720,6 @@ class ModernMenu(RibbonBar):
 
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
-        # Set the size policy for the ribbon
-        self.setSizePolicy(
-            QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding
-        )
         return
 
     # Add the searchBar if it is present
@@ -768,6 +791,7 @@ class ModernMenu(RibbonBar):
                         ListScripts[i],
                         lambda i=i + 1: self.LoadMarcoFreeCAD(ListScripts[i - 1]),
                     )
+
         # Add a about button, a What's new? and a help button for this ribbon
         #
         # Get the version of this addon
@@ -834,9 +858,7 @@ class ModernMenu(RibbonBar):
             self.setRibbonVisible(True)
             return
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
-            TB.setMinimumHeight(self.RibbonMaximumHeight)
             TB.setMaximumHeight(self.RibbonMaximumHeight)
-            self.setFixedHeight(self.RibbonMaximumHeight)
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
             Parameters_Ribbon.AUTOHIDE_RIBBON = False
 
@@ -897,8 +919,6 @@ class ModernMenu(RibbonBar):
     def onTabBarClicked(self):
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
         TB.setMinimumHeight(self.RibbonMaximumHeight)
-        TB.setMaximumHeight(self.RibbonMaximumHeight)
-        self.setFixedHeight(self.RibbonMaximumHeight)
         self.setRibbonVisible(True)
 
     def buildPanels(self):
@@ -1282,7 +1302,6 @@ class ModernMenu(RibbonBar):
                                 if iconToolbar == toolbar:
                                     IconOnly = True
 
-                            btn = RibbonToolButton()
                             if buttonSize == "small":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
                                 if IconOnly is True:
@@ -1298,7 +1317,7 @@ class ModernMenu(RibbonBar):
 
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
-                                padding = btn.height() / 3
+                                padding = 4
                                 btn.setStyleSheet(
                                     StyleMapping.ReturnStyleSheet(
                                         "toolbutton", "2px", f"{padding}px"
@@ -1320,7 +1339,7 @@ class ModernMenu(RibbonBar):
 
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
-                                padding = btn.height() / 4
+                                padding = 0
                                 btn.setStyleSheet(
                                     StyleMapping.ReturnStyleSheet(
                                         "toolbutton", "2px", f"{padding}px"
@@ -1347,11 +1366,15 @@ class ModernMenu(RibbonBar):
                                     btn.setFixedHeight(btn.height() + 20)
                                     btn.setMaximumIconSize(btn.height() - 20)
 
+                                btn.setMaximumWidth(
+                                    Parameters_Ribbon.ICON_SIZE_LARGE + 20
+                                )
+
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
-                                padding = 0
-                                if button.menu() is not None:
-                                    padding = btn.height() / 6
+                                padding = 10
+                                # if button.menu() is not None:
+                                #     padding = btn.height() / 6
                                 btn.setStyleSheet(
                                     StyleMapping.ReturnStyleSheet(
                                         "toolbutton", "2px", f"{padding}px"
@@ -1390,7 +1413,7 @@ class ModernMenu(RibbonBar):
 
             # Set the size policy and increment. It has to be MinimumExpanding.
             panel.setSizePolicy(
-                QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred
+                QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding
             )
             panel.setSizeIncrement(self.iconSize, self.iconSize)
 
@@ -1494,6 +1517,29 @@ class ModernMenu(RibbonBar):
             )
         )
 
+        # Set the ribbon height.
+        ribbonHeight = self.RibbonMinimalHeight
+        # If text is enabled for large button, the height is modified.
+        LargeButtonHeight = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
+        if Parameters_Ribbon.SHOW_ICON_TEXT_LARGE is True:
+            LargeButtonHeight = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE + 20
+        # Check whichs is has the most height: 3 small buttons, 2 medium buttons or 1 large button
+        # and set the height accordingly
+        if (
+            Parameters_Ribbon.ICON_SIZE_SMALL * 3
+            > Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
+            and Parameters_Ribbon.ICON_SIZE_SMALL * 3 > LargeButtonHeight
+        ):
+            ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_SMALL * 3
+        elif (
+            Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
+            > Parameters_Ribbon.ICON_SIZE_SMALL * 3
+            and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 > LargeButtonHeight
+        ):
+            ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
+        else:
+            ribbonHeight = ribbonHeight + LargeButtonHeight
+        self.setRibbonHeight(ribbonHeight)
         return
 
     def on_ScrollButton_Category_clicked(
