@@ -105,7 +105,7 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
+# import pyqtribbon_local as pyqtribbon
 # from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
 # from pyqtribbon.panel import RibbonPanel
 # from pyqtribbon.toolbutton import RibbonToolButton
@@ -1193,8 +1193,6 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_SMALL,
                                 )
 
-                                # btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL)
-
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
                                 padding = 4
@@ -1212,8 +1210,6 @@ class ModernMenu(RibbonBar):
                                     showText=showText,
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_MEDIUM,
                                 )
-
-                                # btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
 
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
@@ -1233,14 +1229,14 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_LARGE,
                                 )
 
-                                # btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_LARGE)
-
                                 # if text is enabled for large buttons. The text will be behind the icon
                                 # To fix this, increase the height of the button with 20 and the set the icon size
                                 # to the heigt minus 20.
                                 if Parameters_Ribbon.SHOW_ICON_TEXT_LARGE is True:
                                     btn.setFixedHeight(btn.height() + 20)
                                     btn.setMaximumIconSize(btn.height() - 20)
+
+                                btn.setMaximumWidth(Parameters_Ribbon.ICON_SIZE_LARGE + 20)
 
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
@@ -1365,20 +1361,24 @@ class ModernMenu(RibbonBar):
 
         # Set the ribbon height.
         ribbonHeight = self.RibbonMinimalHeight
+        # If text is enabled for large button, the height is modified.
+        LargeButtonHeight = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
+        if Parameters_Ribbon.SHOW_ICON_TEXT_LARGE is True:
+            LargeButtonHeight = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE + 20
         # Check whichs is has the most height: 3 small buttons, 2 medium buttons or 1 large button
         # and set the height accordingly
         if (
             Parameters_Ribbon.ICON_SIZE_SMALL * 3 > Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
-            and Parameters_Ribbon.ICON_SIZE_SMALL * 3 > Parameters_Ribbon.ICON_SIZE_LARGE
+            and Parameters_Ribbon.ICON_SIZE_SMALL * 3 > LargeButtonHeight
         ):
             ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_SMALL * 3
         elif (
             Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 > Parameters_Ribbon.ICON_SIZE_SMALL * 3
-            and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 > Parameters_Ribbon.ICON_SIZE_LARGE
+            and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 > LargeButtonHeight
         ):
             ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
         else:
-            ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_LARGE
+            ribbonHeight = ribbonHeight + LargeButtonHeight
         self.setRibbonHeight(ribbonHeight)
         return
 
