@@ -1181,7 +1181,7 @@ class ModernMenu(RibbonBar):
 
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
-                                padding = 0
+                                padding = 4
                                 btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
 
                             elif buttonSize == "medium":
@@ -1201,7 +1201,7 @@ class ModernMenu(RibbonBar):
 
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
-                                padding = 4
+                                padding = 0
                                 btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
 
                             elif buttonSize == "large":
@@ -1240,8 +1240,6 @@ class ModernMenu(RibbonBar):
 
                             # Set the default actiom
                             btn.setDefaultAction(action)
-
-                            btn.setContentsMargins(0, 0, 16, 0)
 
                             # add dropdown menu if necessary
                             if button.menu() is not None:
