@@ -401,9 +401,9 @@ class ModernMenu(RibbonBar):
             and Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is True
         ):
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setMinimumHeight(self.RibbonMaximumHeight)
+            # TB.setMinimumHeight(self.RibbonMaximumHeight)
             TB.setMaximumHeight(self.RibbonMaximumHeight)
-            self.setFixedHeight(self.RibbonMaximumHeight)
+            # self.setFixedHeight(self.RibbonMaximumHeight)
 
             # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
@@ -661,8 +661,6 @@ class ModernMenu(RibbonBar):
 
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
-        # Set the size policy for the ribbon
-        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
         return
 
     # Add the searchBar if it is present
@@ -722,6 +720,7 @@ class ModernMenu(RibbonBar):
                         ListScripts[i],
                         lambda i=i + 1: self.LoadMarcoFreeCAD(ListScripts[i - 1]),
                     )
+
         # Add a about button, a What's new? and a help button for this ribbon
         #
         # Get the version of this addon
@@ -786,9 +785,7 @@ class ModernMenu(RibbonBar):
             self.setRibbonVisible(True)
             return
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
-            TB.setMinimumHeight(self.RibbonMaximumHeight)
             TB.setMaximumHeight(self.RibbonMaximumHeight)
-            self.setFixedHeight(self.RibbonMaximumHeight)
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
             Parameters_Ribbon.AUTOHIDE_RIBBON = False
 
@@ -847,8 +844,6 @@ class ModernMenu(RibbonBar):
     def onTabBarClicked(self):
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
         TB.setMinimumHeight(self.RibbonMaximumHeight)
-        TB.setMaximumHeight(self.RibbonMaximumHeight)
-        self.setFixedHeight(self.RibbonMaximumHeight)
         self.setRibbonVisible(True)
 
     def buildPanels(self):
@@ -1281,7 +1276,7 @@ class ModernMenu(RibbonBar):
                             continue
 
             # Set the size policy and increment. It has to be MinimumExpanding.
-            panel.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
+            panel.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
             panel.setSizeIncrement(self.iconSize, self.iconSize)
 
             # remove any suffix from the panel title
@@ -1368,6 +1363,23 @@ class ModernMenu(RibbonBar):
             clickRight, ScrollRightButton_Category
         )
 
+        # Set the ribbon height.
+        ribbonHeight = self.RibbonMinimalHeight
+        # Check whichs is has the most height: 3 small buttons, 2 medium buttons or 1 large button
+        # and set the height accordingly
+        if (
+            Parameters_Ribbon.ICON_SIZE_SMALL * 3 > Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
+            and Parameters_Ribbon.ICON_SIZE_SMALL * 3 > Parameters_Ribbon.ICON_SIZE_LARGE
+        ):
+            ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_SMALL * 3
+        elif (
+            Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 > Parameters_Ribbon.ICON_SIZE_SMALL * 3
+            and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 > Parameters_Ribbon.ICON_SIZE_LARGE
+        ):
+            ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
+        else:
+            ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_LARGE
+        self.setRibbonHeight(ribbonHeight)
         return
 
     def on_ScrollButton_Category_clicked(self, event, ScrollButton: RibbonCategoryLayoutButton):
@@ -1513,69 +1525,6 @@ class ModernMenu(RibbonBar):
 #             # Create the ribbon
 #             mw.setMenuBar(ribbon)
 # endregion
-
-
-class CustomButton(QPushButton):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._icon = self.icon()
-        if not self._icon.isNull():
-            super().setIcon(QIcon())
-
-    def sizeHint(self):
-        hint = super().sizeHint()
-        if not self.text() or self._icon.isNull():
-            return hint
-        style = self.style()
-        opt = QStyleOptionButton()
-        self.initStyleOption(opt)
-        margin = style.pixelMetric(style.PM_ButtonMargin, opt, self)
-        spacing = style.pixelMetric(style.PM_LayoutVerticalSpacing, opt, self)
-        # get the possible rect required for the current label
-        labelRect = self.fontMetrics().boundingRect(0, 0, 5000, 5000, Qt.TextShowMnemonic, self.text())
-        iconHeight = self.iconSize().height()
-        height = iconHeight + spacing + labelRect.height() + margin * 2
-        if height > hint.height():
-            hint.setHeight(height)
-        return hint
-
-    def setIcon(self, icon):
-        # setting an icon might change the horizontal hint, so we need to use a
-        # "local" reference for the actual icon and go on by letting Qt to *think*
-        # that it doesn't have an icon;
-        if icon == self._icon:
-            return
-        self._icon = icon
-        self.updateGeometry()
-
-    def paintEvent(self, event):
-        if self._icon.isNull() or not self.text():
-            super().paintEvent(event)
-            return
-        opt = QStyleOptionButton()
-        self.initStyleOption(opt)
-        opt.text = ""
-        qp = QStylePainter(self)
-        # draw the button without any text or icon
-        qp.drawControl(QStyle.CE_PushButton, opt)
-
-        rect = self.rect()
-        style = self.style()
-        margin = style.pixelMetric(style.PM_ButtonMargin, opt, self)
-        iconSize = self.iconSize()
-        iconRect = QRect((rect.width() - iconSize.width()) / 2, margin, iconSize.width(), iconSize.height())
-        if self.underMouse():
-            state = QIcon.Active
-        elif self.isEnabled():
-            state = QIcon.Normal
-        else:
-            state = QIcon.Disabled
-        qp.drawPixmap(iconRect, self._icon.pixmap(iconSize, state))
-
-        spacing = style.pixelMetric(style.PM_LayoutVerticalSpacing, opt, self)
-        labelRect = QRect(rect)
-        labelRect.setTop(iconRect.bottom() + spacing)
-        qp.drawText(labelRect, Qt.TextShowMnemonic | Qt.AlignHCenter | Qt.AlignTop, self.text())
 
 
 class run:
