@@ -27,7 +27,7 @@ QToolButton, RibbonApplicationButton{
 		width: 20px;
 		height:30px;
 		subcontrol-origin: margin;
-		subcontrol-position: top right;		
+		subcontrol-position: top right;
 		}
 	QToolButton::menu-button {
 		border-radius: 2px;

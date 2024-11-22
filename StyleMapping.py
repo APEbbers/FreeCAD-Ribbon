@@ -147,7 +147,7 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", width="15px"):
                         width: 10px;
                         height:24px;
                         subcontrol-origin: padding;
-                        subcontrol-position: top right;		
+                        subcontrol-position: top right;
                     }"""
                     + """QToolButton::menu-button {
                         width: """
