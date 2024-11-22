@@ -112,7 +112,7 @@ def ReturnStyleItem(ControlName):
         return None
 
 
-def ReturnStyleSheet(control, radius="2px", padding_right="0px"):
+def ReturnStyleSheet(control, radius="2px", padding_right="0px", width="15px"):
     """
     Enter one of the names below:
 
@@ -150,6 +150,9 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px"):
                         subcontrol-position: top right;		
                     }"""
                     + """QToolButton::menu-button {
+                        width: """
+                    + width
+                    + """;
                         border-radius: 2px;
                         padding: 1px;
                         border-radius: 2px;
