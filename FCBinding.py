@@ -1241,6 +1241,8 @@ class ModernMenu(RibbonBar):
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
                                 padding = 0
+                                if button.menu() is not None:
+                                    padding = btn.height() / 6
                                 btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
                             else:
                                 raise NotImplementedError(
