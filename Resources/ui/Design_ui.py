@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignAhmQKX.ui'
+## Form generated from reading UI file 'DesigntTVwbZ.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -245,6 +245,7 @@ class Ui_Form(object):
 
         self.ListCategory_1 = QComboBox(self.frame)
         self.ListCategory_1.setObjectName("ListCategory_1")
+        self.ListCategory_1.setInsertPolicy(QComboBox.InsertPolicy.InsertAlphabetically)
 
         self.gridLayout_10.addWidget(self.ListCategory_1, 0, 1, 1, 1)
 
@@ -361,6 +362,7 @@ class Ui_Form(object):
 
         self.ListCategory_2 = QComboBox(self.frame_6)
         self.ListCategory_2.setObjectName("ListCategory_2")
+        self.ListCategory_2.setInsertPolicy(QComboBox.InsertPolicy.InsertAlphabetically)
 
         self.gridLayout_11.addWidget(self.ListCategory_2, 0, 1, 1, 1)
 
@@ -500,6 +502,9 @@ class Ui_Form(object):
         )
         self.WorkbenchList_2.setSizePolicy(sizePolicy6)
         self.WorkbenchList_2.setMinimumSize(QSize(0, 0))
+        self.WorkbenchList_2.setInsertPolicy(
+            QComboBox.InsertPolicy.InsertAlphabetically
+        )
 
         self.gridLayout_8.addWidget(self.WorkbenchList_2, 2, 1, 1, 2)
 
@@ -510,6 +515,9 @@ class Ui_Form(object):
         )
         self.CustomToolbarSelector.setSizePolicy(sizePolicy6)
         self.CustomToolbarSelector.setMinimumSize(QSize(150, 0))
+        self.CustomToolbarSelector.setInsertPolicy(
+            QComboBox.InsertPolicy.InsertAlphabetically
+        )
 
         self.gridLayout_8.addWidget(self.CustomToolbarSelector, 0, 1, 1, 2)
 
@@ -653,11 +661,13 @@ class Ui_Form(object):
             self.WorkbenchList.sizePolicy().hasHeightForWidth()
         )
         self.WorkbenchList.setSizePolicy(sizePolicy7)
+        self.WorkbenchList.setInsertPolicy(QComboBox.InsertPolicy.InsertAlphabetically)
 
         self.gridLayout_5.addWidget(self.WorkbenchList, 0, 1, 1, 1)
 
         self.ToolbarList = QComboBox(self.RibbonDesign)
         self.ToolbarList.setObjectName("ToolbarList")
+        self.ToolbarList.setInsertPolicy(QComboBox.InsertPolicy.InsertAlphabetically)
 
         self.gridLayout_5.addWidget(self.ToolbarList, 1, 1, 1, 1)
 

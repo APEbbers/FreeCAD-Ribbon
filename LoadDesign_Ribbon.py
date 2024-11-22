@@ -2071,6 +2071,7 @@ class LoadDialog(Design_ui.Ui_Form):
             self.form.ListCategory_1.addItem(icon, workbench[2])
             self.form.ListCategory_2.addItem(icon, workbench[2])
 
+        # set the current text
         self.form.ListCategory_1.setCurrentText(All_KeyWord)
         self.form.ListCategory_2.setCurrentText(All_KeyWord)
 
@@ -2084,6 +2085,14 @@ class LoadDialog(Design_ui.Ui_Form):
             StandardFunctions.TranslationsMapping(
                 WorkbenchName, Gui.activeWorkbench().name()
             )
+        )
+
+        # set the workbenchLists so that they are sorted Alphabetically
+        self.form.WorkbenchList.setInsertPolicy(
+            QComboBox.InsertPolicy.InsertAlphabetically
+        )
+        self.form.WorkbenchList_2.setInsertPolicy(
+            QComboBox.InsertPolicy.InsertAlphabetically
         )
 
         return

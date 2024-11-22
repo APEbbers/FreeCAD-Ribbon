@@ -140,7 +140,7 @@ DefaultSettings = {
     "IconSize_Small": int(24),
     "IconSize_Medium": int(32),
     "IconSize_Large": int(50),
-    "ApplicationButtonSize": int(50),
+    "ApplicationButtonSize": int(40),
     "QuickAccessButtonSize": int(24),
     "TabBarSize": int(24),
     "RightToolbarButtonSize": int(24),
