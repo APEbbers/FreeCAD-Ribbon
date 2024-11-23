@@ -123,19 +123,52 @@ class LoadDialog(Design_ui.Ui_Form):
         Style = mw.style()
         self.form.setStyle(Style)
 
-        DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFilex.dat")
+        # Check if there is a datafile. if not, ask the user to create one.
+        DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFile.dat")
         if os.path.exists(DataFile) is True:
             # Read the jason file and fill the lists
             self.ReadJson()
+        else:
+            Question = (
+                translate("FreeCAD Ribbon", "The first time, a data file must be generated!")
+                + "\n"
+                + translate("FreeCAD Ribbon", "This can take a while! Do you want to proceed?")
+            )
+            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+            if Answer == "yes":
+                self.on_ReloadWB_clicked()
 
-        # if len(self.List_Workbenches) > 0 and len(self.StringList_Toolbars) > 0 and len(self.List_Commands) > 0:
-        # region - Load all controls------------------------------------------------------------------
+        # region - Load data------------------------------------------------------------------
         #
         Data = {}
         # read ribbon structure from JSON file
         with open(DataFile, "r") as file:
             Data.update(json.load(file))
         file.close()
+
+        # get the system language
+        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
+        try:
+            FCLanguage = FreeCAD_preferences.GetString("Language")
+            # Check if the language in the data file machtes the system language
+            IsSystemLanguage = True
+            if FCLanguage != Data["language"]:
+                IsSystemLanguage = False
+            # If the languguage doesn't match, ask the user to update the data
+            if IsSystemLanguage is False:
+                Question = (
+                    translate("FreeCAD Ribbon", "The data was generated for a differernt language!")
+                    + "\n"
+                    + translate("FreeCAD Ribbon", "Do you want to update the data?")
+                    + "\n"
+                    + translate("FreeCAD Ribbon", "This can take a while!")
+                )
+
+                Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+                if Answer == "yes":
+                    self.on_ReloadWB_clicked()
+        except Exception:
+            pass
 
         # Load the standard lists for Workbenches, toolbars and commands
         self.List_Workbenches = Data["List_Workbenches"]
@@ -155,6 +188,35 @@ class LoadDialog(Design_ui.Ui_Form):
         except Exception:
             pass
 
+        # check if the list with workbenches is up-to-date
+        missingWB = []
+        for WorkBenchName in Gui.listWorkbenches():
+            for j in range(len(self.List_Workbenches)):
+                if WorkBenchName == self.List_Workbenches[j][0] or WorkBenchName == "NoneWorkbench":
+                    break
+                if j == len(self.List_Workbenches) - 1:
+                    missingWB.append(WorkBenchName)
+        if len(missingWB) > 0:
+            ListWB = "  "
+            for WB in missingWB:
+                ListWB = ListWB + WB + "\n" + "  "
+            Question = (
+                translate("FreeCAD Ribbon", "The following workbenches are installed after the last data update: ")
+                + "\n"
+                + ListWB
+                + "\n"
+                + "\n"
+                + translate("FreeCAD Ribbon", "Do you want to update the data?")
+                + "\n"
+                + translate("FreeCAD Ribbon", "This can take a while!")
+            )
+            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+            if Answer == "yes":
+                self.on_ReloadWB_clicked()
+        # endregion
+
+        # region - Load all controls------------------------------------------------------------------
+        #
         # laod all controls
         self.LoadControls()
 
@@ -407,6 +469,10 @@ class LoadDialog(Design_ui.Ui_Form):
         self.StringList_Toolbars.clear()
         self.List_Commands.clear()
 
+        # get the system language
+        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
+        FCLanguage = FreeCAD_preferences.GetString("Language")
+
         # --- Workbenches ----------------------------------------------------------------------------------------------
         #
         # Create a list of all workbenches with their icon
@@ -562,19 +628,20 @@ class LoadDialog(Design_ui.Ui_Form):
         # Write the lists to a data file
         #
         # clear the data file. If not exists, create it
-        DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFilex.dat")
+        DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFile.dat")
         open(DataFile, "w").close()
 
         # Open de data file, load it as json and then close it again
         Data = {}
         # Update the data
+        Data["Language"] = FCLanguage
         Data["List_Workbenches"] = self.List_Workbenches
         Data["StringList_Toolbars"] = self.StringList_Toolbars
         Data["List_Commands"] = self.List_Commands
         Data["WorkBench_Icons"] = WorkbenchIcon
         Data["Command_Icons"] = CommandIcons
         # Write to the data file
-        DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFilex.dat")
+        DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFile.dat")
         with open(DataFile, "w") as outfile:
             json.dump(Data, outfile, indent=4)
 
@@ -2033,23 +2100,6 @@ class LoadDialog(Design_ui.Ui_Form):
                                     CommandName = self.List_Commands[i3][0]
                                     # Command = Gui.Command.get(CommandName)
                                     IconName = self.List_Commands[i3][1]
-
-                                    # # If the text in the tableitemwidget is equeal to the command menu text
-                                    # # Use the original menutext
-                                    # CommandAction = Command.getAction()[0]
-                                    # if MenuNameTableWidgetItem == CommandAction.text().replace("&", "").replace(
-                                    #     "...", ""
-                                    # ):
-                                    #     MenuNameTableWidgetItem = (
-                                    #         CommandInfoCorrections(CommandName)["menuText"]
-                                    #         .replace("&", "")
-                                    #         .replace("...", "")
-                                    #     )
-
-                                    # # There are a few dropdown buttons that need to be corrected
-                                    # if CommandName == "PartDesign_CompSketches":
-                                    #     MenuName = "Create sketch"
-                                    #     MenuNameTableWidgetItem = MenuName
 
                                     # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
                                     for i4 in range(1, self.form.tableWidget.columnCount()):
