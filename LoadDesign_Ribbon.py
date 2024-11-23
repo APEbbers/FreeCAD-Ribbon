@@ -43,6 +43,7 @@ import shutil
 import Standard_Functions_RIbbon as StandardFunctions
 from Standard_Functions_RIbbon import CommandInfoCorrections
 import Parameters_Ribbon
+import Serialize
 import webbrowser
 import time
 
@@ -86,9 +87,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
     List_IgnoredToolbars_internal = []
 
-    WorkbenchesActivated = False
-
-    Update_StringList_Toolbars = False
+    # Create the lists for the deserialized icons
+    List_CommandIcons = []
+    List_WorkBenchIcons = []
 
     def __init__(self):
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
@@ -135,9 +136,23 @@ class LoadDialog(Design_ui.Ui_Form):
         with open(DataFile, "r") as file:
             Data.update(json.load(file))
         file.close()
+
+        # Load the standard lists for Workbenches, toolbars and commands
         self.List_Workbenches = Data["List_Workbenches"]
         self.StringList_Toolbars = Data["StringList_Toolbars"]
         self.List_Commands = Data["List_Commands"]
+        # Load the lists for the deserialized icons
+        for IconItem in Data["WorkBench_Icons"]:
+            Icon: QIcon = Serialize.deserializeIcon(IconItem[1])
+            item = [IconItem[0], Icon]
+            self.List_WorkBenchIcons.append(item)
+        # Load the lists for the deserialized icons
+        for IconItem in Data["Command_Icons"]:
+            Icon: QIcon = Serialize.deserializeIcon(IconItem[1])
+            item = [IconItem[0], Icon]
+            self.List_CommandIcons.append(item)
+
+        # laod all controls
         self.LoadControls()
 
         # -- Custom panel tab --
@@ -389,6 +404,8 @@ class LoadDialog(Design_ui.Ui_Form):
         self.StringList_Toolbars.clear()
         self.List_Commands.clear()
 
+        # --- Workbenches ----------------------------------------------------------------------------------------------
+        #
         # Create a list of all workbenches with their icon
         self.List_Workbenches.clear()
         List_Workbenches = Gui.listWorkbenches().copy()
@@ -400,6 +417,8 @@ class LoadDialog(Design_ui.Ui_Form):
                     WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
                     self.List_Workbenches.append([str(WorkBenchName), IconName, WorkbenchTitle])
 
+        # --- Toolbars ----------------------------------------------------------------------------------------------
+        #
         # Store the current active workbench
         ActiveWB = Gui.activeWorkbench().name()
         # Go through the list of workbenches
@@ -436,6 +455,8 @@ class LoadDialog(Design_ui.Ui_Form):
         # re-activate the workbench that was stored.
         Gui.activateWorkbench(ActiveWB)
 
+        # --- Commands ----------------------------------------------------------------------------------------------
+        #
         # Create a list of all commands with their icon
         self.List_Commands.clear()
         # Create a list of command names
@@ -505,6 +526,28 @@ class LoadDialog(Design_ui.Ui_Form):
             MenuName = CommandInfoCorrections("Std_Measure")["ActionText"].replace("&", "")
             self.List_Commands.append(["Std_Measure", IconName, MenuName, "General"])
 
+        # --- Serialize Icons ------------------------------------------------------------------------------------------
+        #
+        WorkbenchIcon = []
+        for WorkBenchItem in self.List_Workbenches:
+            WorkBenchName = WorkBenchItem[0]
+            Icon = Gui.getIcon(WorkBenchItem[1])
+            SerializedIcon = Serialize.serializeIcon(Icon)
+
+            WorkbenchIcon.append([CommandName, SerializedIcon])
+            # add the icons also to the deserialized list
+            self.List_WorkBenchIcons.append([WorkBenchName, Icon])
+
+        CommandIcons = []
+        for CommandItem in self.List_Commands:
+            CommandName = CommandItem[0]
+            Icon = Gui.getIcon(CommandItem[1])
+            SerializedIcon = Serialize.serializeIcon(Icon)
+
+            CommandIcons.append([CommandName, SerializedIcon])
+            # add the icons also to the deserialized list
+            self.List_CommandIcons.append([CommandName, Icon])
+
         # Write the lists to a data file
         #
         # clear the data file. If not exists, create it
@@ -517,6 +560,8 @@ class LoadDialog(Design_ui.Ui_Form):
         Data["List_Workbenches"] = self.List_Workbenches
         Data["StringList_Toolbars"] = self.StringList_Toolbars
         Data["List_Commands"] = self.List_Commands
+        Data["WorkBench_Icons"] = WorkbenchIcon
+        Data["Command_Icons"] = CommandIcons
         # Write to the data file
         DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFilex.dat")
         with open(DataFile, "w") as outfile:
@@ -553,14 +598,13 @@ class LoadDialog(Design_ui.Ui_Form):
                 ):
                     # Define a new ListWidgetItem.
                     textAddition = ""
-                    Icon = Gui.getIcon(ToolbarCommand[1])
-                    # try:
-                    #     action = Command.getAction()
-                    #     if len(action) > 1:
-                    #         Icon = action[0].icon()
-                    #         textAddition = "..."
-                    # except Exception:
-                    #     pass
+                    Icon = QIcon()
+                    for item in self.List_CommandIcons:
+                        if item[0] == ToolbarCommand[0]:
+                            Icon = item[1]
+                    if Icon is None:
+                        Icon = Gui.getIcon(ToolbarCommand[1])
+
                     ListWidgetItem = QListWidgetItem()
                     ListWidgetItem.setText(
                         StandardFunctions.TranslationsMapping(workbenchName, MenuName) + textAddition
@@ -596,14 +640,12 @@ class LoadDialog(Design_ui.Ui_Form):
 
                     # Define a new ListWidgetItem.
                     textAddition = ""
-                    Icon = Gui.getIcon(ToolbarCommand[1])
-                    # action = Command.getAction()
-                    # try:
-                    #     if len(action) > 1:
-                    #         Icon = action[0].icon()
-                    #         textAddition = "..."
-                    # except Exception:
-                    #     pass
+                    Icon = QIcon()
+                    for item in self.List_CommandIcons:
+                        if item[0] == ToolbarCommand[0]:
+                            Icon = item[1]
+                    if Icon is None:
+                        Icon = Gui.getIcon(ToolbarCommand[1])
                     ListWidgetItem = QListWidgetItem()
                     ListWidgetItem.setText(
                         StandardFunctions.TranslationsMapping(workbenchName, MenuName) + textAddition
@@ -859,7 +901,12 @@ class LoadDialog(Design_ui.Ui_Form):
                                             MenuName = ToolbarCommand[2].replace("&", "")
 
                                             # get the icon for this command if there isn't one, leave it None
-                                            Icon = Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"])
+                                            Icon = QIcon()
+                                            for item in self.List_CommandIcons:
+                                                if item[0] == ToolbarCommand[0]:
+                                                    Icon = item[1]
+                                            if Icon is None:
+                                                Icon = Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"])
                                             action = Command.getAction()
                                             try:
                                                 if len(action) > 1:
@@ -1023,13 +1070,12 @@ class LoadDialog(Design_ui.Ui_Form):
                                         ListWidgetItem = QListWidgetItem()
                                         ListWidgetItem.setText(MenuName)
                                         ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandItem)
-                                        Icon = Gui.getIcon(CommandItem[1])
-                                        # action = Command.getAction()
-                                        # try:
-                                        #     if len(action) > 1:
-                                        #         Icon = action[0].icon()
-                                        # except Exception:
-                                        #     pass
+                                        Icon = QIcon()
+                                        for item in self.List_CommandIcons:
+                                            if item[0] == CommandItem[0]:
+                                                Icon = item[1]
+                                        if Icon is None:
+                                            Icon = Gui.getIcon(CommandItem[1])
                                         if Icon is not None:
                                             ListWidgetItem.setIcon(Icon)
 
@@ -1335,15 +1381,13 @@ class LoadDialog(Design_ui.Ui_Form):
                     textAddition = ""
                     IconName = ""
                     # get the icon for this command if there isn't one, leave it None
-                    Icon = Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"])
                     IconName = CommandInfoCorrections(CommandName)["pixmap"]
-                    # action = Command.getAction()
-                    # try:
-                    #     if len(action) > 1:
-                    #         Icon = action[0].icon()
-                    #         textAddition = "..."
-                    # except Exception:
-                    #     pass
+                    Icon = QIcon()
+                    for item in self.List_CommandIcons:
+                        if item[0] == CommandName:
+                            Icon = item[1]
+                    if Icon is None:
+                        Icon = Gui.getIcon(IconName)
 
                     # Set the default check states
                     checked_small = Qt.CheckState.Checked
@@ -1376,7 +1420,12 @@ class LoadDialog(Design_ui.Ui_Form):
                                     Toolbar
                                 ]["commands"][CommandName]["icon"]
                                 if Icon_Json_Name != "":
-                                    Icon = Gui.getIcon(Icon_Json_Name)
+                                    Icon = QIcon()
+                                    for item in self.List_CommandIcons:
+                                        if item[0] == CommandName:
+                                            Icon = item[1]
+                                    if Icon is None:
+                                        Icon = Gui.getIcon(Icon_Json_Name)
                             except Exception:
                                 continue
 
@@ -1824,7 +1873,13 @@ class LoadDialog(Design_ui.Ui_Form):
             ListWidgetItem = QListWidgetItem()
             ListWidgetItem.setText(StandardFunctions.TranslationsMapping(WorkbenchName, WorkbenchTitle))
             ListWidgetItem.setData(Qt.ItemDataRole.UserRole, workbench)
-            Icon = Gui.getIcon(workbench[1])
+            Icon = QIcon()
+            for item in self.List_WorkBenchIcons:
+                if item[0] == WorkbenchName:
+                    Icon = item[1]
+            if Icon is None:
+                Icon = Gui.getIcon(workbench[1])
+
             if Icon is not None:
                 ListWidgetItem.setIcon(Icon)
 
@@ -1909,14 +1964,13 @@ class LoadDialog(Design_ui.Ui_Form):
                 if MenuName != "":
                     # Define a new ListWidgetItem.
                     textAddition = ""
-                    Icon = Gui.getIcon(ToolbarCommand[1])
-                    # action = Command.getAction()
-                    # try:
-                    #     if len(action) > 1:
-                    #         Icon = action[0].icon()
-                    #         textAddition = "..."
-                    # except Exception:
-                    #     pass
+                    Icon = QIcon()
+                    for item in self.List_CommandIcons:
+                        if item[0] == ToolbarCommand[0]:
+                            Icon = item[1]
+                    if Icon is None:
+                        Icon = Gui.getIcon(ToolbarCommand[1])
+
                     ListWidgetItem = QListWidgetItem()
                     ListWidgetItem.setText(MenuName + textAddition)
                     if Icon is not None:
