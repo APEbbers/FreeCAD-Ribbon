@@ -1098,7 +1098,7 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_tabBar_currentIndexChanged(self):
         # width_small: int = Parameters_Ribbon.Settings.GetIntSetting("TabWidth_small")
         # if width_small is None:
-        width_small = 580
+        width_small = 730
         # width_large: int = Parameters_Ribbon.Settings.GetIntSetting("TabWidth_large")
         # if width_large is None:
         width_large = 940
