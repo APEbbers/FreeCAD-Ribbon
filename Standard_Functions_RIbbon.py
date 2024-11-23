@@ -529,14 +529,60 @@ def TranslationsMapping(WorkBenchName: str, string: str):
     return result
 
 
+# # Add or update the dict for the Ribbon command panel
+#         self.add_keys_nested_dict(
+#             self.Dict_RibbonCommandPanel,
+#             ["workbenches", WorkBenchName, "toolbars", Toolbar, "order"],
+#         )
+def add_keys_nested_dict(dict, keys):
+    """_summary_
+
+    Args:
+        dict (_type_): Enter dict to create or modify
+        keys (_type_): Enter key or list of keys
+
+    Returns:
+        bool: True if a new dict is created or modified. Otherwise False
+    """
+    for key in keys:
+        result = False
+        if key not in dict:
+            dict[key] = {}
+            result = True
+        dict = dict[key]
+    try:
+        dict.setdefault(keys[-1], 1)
+    except Exception:
+        pass
+    return result
+
+
 def CommandInfoCorrections(CommandName):
     Command = Gui.Command.get(CommandName)
-    CommandInfo = Command.getInfo()
+    if Command is not None:
+        CommandInfo = Command.getInfo()
 
-    if CommandName == "PartDesign_CompSketches":
-        CommandInfo["menuText"] = "Create sketch"
-        CommandInfo["toolTip"] = "Create or edit a sketch"
-        CommandInfo["whatsThis"] = "PartDesign_CompSketches"
-        CommandInfo["statusTip"] = "Create or edit a sketch"
+        # add an extra entry
+        add_keys_nested_dict(CommandInfo, "ActionText")
+        CommandActionList = Command.getAction()
+        if len(CommandActionList) > 0:
+            CommandAction = CommandActionList[0]
+            CommandInfo["ActionText"] = CommandAction.text()
+        else:
+            CommandInfo["ActionText"] = CommandInfo["menuText"]
 
-    return CommandInfo
+        if CommandName == "PartDesign_CompSketches":
+            CommandInfo["menuText"] = "Create sketch"
+            CommandInfo["toolTip"] = "Create or edit a sketch"
+            CommandInfo["whatsThis"] = "PartDesign_CompSketches"
+            CommandInfo["statusTip"] = "Create or edit a sketch"
+
+        return CommandInfo
+    else:
+        CommandInfo = {}
+        CommandInfo["menuText"] = ""
+        CommandInfo["toolTip"] = ""
+        CommandInfo["whatsThis"] = ""
+        CommandInfo["statusTip"] = ""
+        CommandInfo["pixmap"] = ""
+        return CommandInfo

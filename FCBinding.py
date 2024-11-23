@@ -814,13 +814,13 @@ class ModernMenu(RibbonBar):
         return
 
     def loadDesignMenu(self):
-        message = translate(
-            "FreeCAD Ribbon",
-            "All workbenches need to be loaded.\nThis can take a couple of minutes.\nDo you want to proceed?",
-        )
-        result = StandardFunctions.Mbox(message, "", 1, IconType="Question")
-        if result == "yes":
-            LoadDesign_Ribbon.main()
+        # message = translate(
+        #     "FreeCAD Ribbon",
+        #     "All workbenches need to be loaded.\nThis can take a couple of minutes.\nDo you want to proceed?",
+        # )
+        # result = StandardFunctions.Mbox(message, "", 1, IconType="Question")
+        # if result == "yes":
+        LoadDesign_Ribbon.main()
         return
 
     def loadSettingsMenu(self):
@@ -1089,13 +1089,6 @@ class ModernMenu(RibbonBar):
                                 Text = CommandInfoCorrections(action.data())[
                                     "menuText"
                                 ].replace("...", "")
-                                # There is a bug in freecad with the comp-sketch menu hase the wrong text
-                                if (
-                                    action.data() == "PartDesign_CompSketches"
-                                    and Text.replace("...", "") == "Create datum"
-                                ):
-                                    Text = "Create sketch"
-
                         except Exception:
                             pass
 
@@ -1208,9 +1201,7 @@ class ModernMenu(RibbonBar):
                             action = button.defaultAction()
 
                             # get the action text
-                            text = StandardFunctions.TranslationsMapping(
-                                workbenchName, action.text()
-                            )
+                            text = action.text()
 
                             # There is a bug in freecad with the comp-sketch menu hase the wrong text
                             if (
@@ -1244,7 +1235,7 @@ class ModernMenu(RibbonBar):
                                 for CommandName in Gui.listCommands():
                                     Command = Gui.Command.get(CommandName)
                                     MenuName = CommandInfoCorrections(CommandName)[
-                                        "menuText"
+                                        "ActionText"
                                     ].replace("...", "")
 
                                     if (
@@ -1418,7 +1409,7 @@ class ModernMenu(RibbonBar):
 
                         except Exception as e:
                             if Parameters_Ribbon.DEBUG_MODE is True:
-                                print(f"{e.with_traceback(None)}, 2")
+                                raise e
                             continue
 
             # Set the size policy and increment. It has to be MinimumExpanding.
@@ -1624,19 +1615,21 @@ class ModernMenu(RibbonBar):
             for key, value in list(Commands.items()):
                 # get the menu text from the command list
                 for CommandName in Gui.listCommands():
-                    Command = Gui.Command.get(CommandName)
-                    MenuText = CommandInfoCorrections(CommandName)["menuText"]
+                    # Command = Gui.Command.get(CommandName)
+                    MenuName = (
+                        CommandInfoCorrections(CommandName)["ActionText"]
+                        .replace("&", "")
+                        .replace("...", "")
+                    )
 
-                    if MenuText == key.replace("&", "").replace("...", ""):
+                    if MenuName == key.replace("&", "").replace("...", ""):
                         try:
                             # Get the original toolbar as QToolbar
                             OriginalToolBar = mw.findChild(QToolBar, value)
                             # Go through all it's QtoolButtons
                             for Child in OriginalToolBar.findChildren(QToolButton):
-                                CommandAction = Command.getAction()[0]
-                                MenuNameTranslated = CommandAction.text().replace(
-                                    "&", ""
-                                )
+                                # CommandAction = Command.getAction()[0]
+                                # MenuNameTranslated = CommandAction.text().replace("&", "")
                                 # If the text of the QToolButton matches the menu text
                                 # Add it to the button list.
                                 IsInList = False
@@ -1644,10 +1637,7 @@ class ModernMenu(RibbonBar):
                                     if Toolbutton.text() == Child.text():
                                         IsInList = True
 
-                                if (
-                                    Child.text() == MenuNameTranslated
-                                    and IsInList is False
-                                ):
+                                if Child.text() == MenuName and IsInList is False:
                                     ButtonList.append(Child)
                         except Exception as e:
                             if Parameters_Ribbon.DEBUG_MODE is True:

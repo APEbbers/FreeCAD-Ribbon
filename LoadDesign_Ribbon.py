@@ -35,7 +35,7 @@ from PySide.QtWidgets import (
     QMenu,
     QWidget,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread
+from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
 import json
 from datetime import datetime
@@ -43,6 +43,7 @@ import shutil
 import Standard_Functions_RIbbon as StandardFunctions
 from Standard_Functions_RIbbon import CommandInfoCorrections
 import Parameters_Ribbon
+import Serialize
 import webbrowser
 import time
 
@@ -64,6 +65,7 @@ translate = App.Qt.translate
 
 
 class LoadDialog(Design_ui.Ui_Form):
+
     ReproAdress: str = ""
 
     # Define list of the workbenches, toolbars and commands on class level
@@ -85,9 +87,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
     List_IgnoredToolbars_internal = []
 
-    WorkbenchesActivated = False
-
-    Update_StringList_Toolbars = False
+    # Create the lists for the deserialized icons
+    List_CommandIcons = []
+    List_WorkBenchIcons = []
 
     def __init__(self):
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
@@ -121,181 +123,117 @@ class LoadDialog(Design_ui.Ui_Form):
         Style = mw.style()
         self.form.setStyle(Style)
 
-        # region - create the lists ------------------------------------------------------------------
-        #
-        # Create a list of all workbenches with their icon
-        self.List_Workbenches.clear()
-        List_Workbenches = Gui.listWorkbenches().copy()
-        for WorkBenchName in List_Workbenches:
-            if str(WorkBenchName) != "" or WorkBenchName is not None:
-                if str(WorkBenchName) != "NoneWorkbench":
-                    Icon = None
-                    IconName = str(Gui.getWorkbench(WorkBenchName).Icon)
-                    if IconName != "":
-                        Icon = Gui.getIcon(IconName)
-                    WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
-                    self.List_Workbenches.append(
-                        [str(WorkBenchName), Icon, WorkbenchTitle]
-                    )
-
-        # Create a list of all toolbars
-        self.StringList_Toolbars.clear()
-        # Store the current active workbench
-        ActiveWB = Gui.activeWorkbench().name()
-        # Go through the list of workbenches
-        i = 0
-        for WorkBench in self.List_Workbenches:
-            wbToolbars = []
-            try:
-                wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
-            except Exception:
-                Gui.activateWorkbench(WorkBench[0])
-                wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
-            # Go through the toolbars
-            for Toolbar in wbToolbars:
-                # Go through the list of toolbars. If already present, skip it.
-                # Otherwise add it the the list.
-                IsInList = False
-                for i in range(len(self.StringList_Toolbars)):
-                    if Toolbar == self.StringList_Toolbars[i][0]:
-                        IsInList = True
-
-                if IsInList is False:
-                    self.StringList_Toolbars.append(
-                        [Toolbar, WorkBench[2], WorkBench[0]]
-                    )
-
-            time.sleep(1)
-
-        # Add the custom toolbars
-        CustomToolbars = self.List_ReturnCustomToolbars()
-        for Customtoolbar in CustomToolbars:
-            self.StringList_Toolbars.append(Customtoolbar)
-        CustomToolbars = self.List_ReturnCustomToolbars_Global()
-        for Customtoolbar in CustomToolbars:
-            self.StringList_Toolbars.append(Customtoolbar)
-        # re-activate the workbench that was stored.
-        Gui.activateWorkbench(ActiveWB)
-
-        # Create a list of all commands with their icon
-        self.List_Commands.clear()
-        # Create a list of command names
-        CommandNames = []
-        for i in range(len(self.List_Workbenches)):
-            WorkBench = Gui.getWorkbench(self.List_Workbenches[i][0])
-            ToolbarItems = WorkBench.getToolbarItems()
-
-            for key, value in list(ToolbarItems.items()):
-                for j in range(len(value)):
-                    Item = [value[j], self.List_Workbenches[i][0]]
-                    # if CommandNames.__contains__(Item) is False:
-                    IsInList = False
-                    for k in range(len(CommandNames)):
-                        if CommandNames[k][0] == value[j]:
-                            IsInList = True
-                    if IsInList is False:
-                        CommandNames.append(Item)
-
-        # Go through the list
-        for CommandName in CommandNames:
-            # get the command with this name
-            command = Gui.Command.get(CommandName[0])
-            WorkBenchName = CommandName[1]
-            if command is not None:
-                # get the icon for this command
-                if CommandInfoCorrections(CommandName[0])["pixmap"] != "":
-                    Icon = Gui.getIcon(CommandInfoCorrections(CommandName[0])["pixmap"])
-                else:
-                    Icon = None
-                MenuName = CommandInfoCorrections(CommandName[0])["menuText"].replace(
-                    "&", ""
+        # Check if there is a datafile. if not, ask the user to create one.
+        DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFile.dat")
+        if os.path.exists(DataFile) is True:
+            # Read the jason file and fill the lists
+            self.ReadJson()
+        else:
+            Question = (
+                translate(
+                    "FreeCAD Ribbon", "The first time, a data file must be generated!"
                 )
-                # There are a few dropdown buttons that need to be corrected
-                if CommandName == "PartDesign_CompSketches":
-                    MenuName = "Create sketch"
-                self.List_Commands.append(
-                    [CommandName[0], Icon, MenuName, WorkBenchName]
+                + "\n"
+                + translate(
+                    "FreeCAD Ribbon", "This can take a while! Do you want to proceed?"
                 )
-        # add also custom commands
-        Toolbars = self.List_ReturnCustomToolbars()
-        for Toolbar in Toolbars:
-            WorkbenchTitle = Toolbar[1]
-            for WorkBench in self.List_Workbenches:
-                if WorkbenchTitle == WorkBench[2]:
-                    WorkBenchName = WorkBench[0]
-                    for CustomCommand in Toolbar[2]:
-                        command = Gui.Command.get(CustomCommand)
-                        if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
-                            Icon = Gui.getIcon(
-                                CommandInfoCorrections(CustomCommand)["pixmap"]
-                            )
-                        else:
-                            Icon = None
-                        MenuName = CommandInfoCorrections(CustomCommand)[
-                            "menuText"
-                        ].replace("&", "")
-                        self.List_Commands.append(
-                            [CustomCommand, Icon, MenuName, WorkBenchName]
-                        )
-        Toolbars = self.List_ReturnCustomToolbars_Global()
-        for Toolbar in Toolbars:
-            for CustomCommand in Toolbar[2]:
-                command = Gui.Command.get(CustomCommand)
-                if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
-                    Icon = Gui.getIcon(CommandInfoCorrections(CustomCommand)["pixmap"])
-                else:
-                    Icon = None
-                MenuName = CommandInfoCorrections(CustomCommand)["menuText"].replace(
-                    "&", ""
-                )
-                self.List_Commands.append([CustomCommand, Icon, MenuName, Toolbar[1]])
-        if int(App.Version()[0]) > 0:
-            command = Gui.Command.get("Std_Measure")
-            if CommandInfoCorrections("Std_Measure")["pixmap"] != "":
-                Icon = Gui.getIcon(CommandInfoCorrections("Std_Measure")["pixmap"])
-            else:
-                Icon = None
-            MenuName = CommandInfoCorrections("Std_Measure")["menuText"].replace(
-                "&", ""
             )
-            self.List_Commands.append(["Std_Measure", Icon, MenuName, "General"])
+            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+            if Answer == "yes":
+                self.on_ReloadWB_clicked()
 
+        # region - Load data------------------------------------------------------------------
         #
-        # endregion ----------------------------------------------------------------------
+        Data = {}
+        # read ribbon structure from JSON file
+        with open(DataFile, "r") as file:
+            Data.update(json.load(file))
+        file.close()
 
-        # Read the jason file and fill the lists
-        self.ReadJson()
+        # get the system language
+        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
+        try:
+            FCLanguage = FreeCAD_preferences.GetString("Language")
+            # Check if the language in the data file machtes the system language
+            IsSystemLanguage = True
+            if FCLanguage != Data["language"]:
+                IsSystemLanguage = False
+            # If the languguage doesn't match, ask the user to update the data
+            if IsSystemLanguage is False:
+                Question = (
+                    translate(
+                        "FreeCAD Ribbon",
+                        "The data was generated for a differernt language!",
+                    )
+                    + "\n"
+                    + translate("FreeCAD Ribbon", "Do you want to update the data?")
+                    + "\n"
+                    + translate("FreeCAD Ribbon", "This can take a while!")
+                )
 
-        # Clear all listWidgets
-        self.form.WorkbenchList.clear()
-        self.form.WorkbenchesAvailable.clear()
-        self.form.WorkbenchesSelected.clear()
-        self.form.ToolbarsToExclude.clear()
-        self.form.ToolbarsExcluded.clear()
-        self.form.CommandsAvailable.clear()
-        self.form.CommandsSelected.clear()
-        self.form.ToolbarsAvailable.clear()
-        self.form.ToolbarsSelected.clear()
-        self.form.ToolbarsOrder.clear()
+                Answer = StandardFunctions.Mbox(
+                    Question, "FreeCAD Ribbon", 1, "Question"
+                )
+                if Answer == "yes":
+                    self.on_ReloadWB_clicked()
+        except Exception:
+            pass
+
+        # Load the standard lists for Workbenches, toolbars and commands
+        self.List_Workbenches = Data["List_Workbenches"]
+        self.StringList_Toolbars = Data["StringList_Toolbars"]
+        self.List_Commands = Data["List_Commands"]
+        # Load the lists for the deserialized icons
+        try:
+            for IconItem in Data["WorkBench_Icons"]:
+                Icon: QIcon = Serialize.deserializeIcon(IconItem[1])
+                item = [IconItem[0], Icon]
+                self.List_WorkBenchIcons.append(item)
+            # Load the lists for the deserialized icons
+            for IconItem in Data["Command_Icons"]:
+                Icon: QIcon = Serialize.deserializeIcon(IconItem[1])
+                item = [IconItem[0], Icon]
+                self.List_CommandIcons.append(item)
+        except Exception:
+            pass
+
+        # check if the list with workbenches is up-to-date
+        missingWB = []
+        for WorkBenchName in Gui.listWorkbenches():
+            for j in range(len(self.List_Workbenches)):
+                if (
+                    WorkBenchName == self.List_Workbenches[j][0]
+                    or WorkBenchName == "NoneWorkbench"
+                ):
+                    break
+                if j == len(self.List_Workbenches) - 1:
+                    missingWB.append(WorkBenchName)
+        if len(missingWB) > 0:
+            ListWB = "  "
+            for WB in missingWB:
+                ListWB = ListWB + WB + "\n" + "  "
+            Question = (
+                translate(
+                    "FreeCAD Ribbon",
+                    "The following workbenches are installed after the last data update: ",
+                )
+                + "\n"
+                + ListWB
+                + "\n"
+                + "\n"
+                + translate("FreeCAD Ribbon", "Do you want to update the data?")
+                + "\n"
+                + translate("FreeCAD Ribbon", "This can take a while!")
+            )
+            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+            if Answer == "yes":
+                self.on_ReloadWB_clicked()
+        # endregion
 
         # region - Load all controls------------------------------------------------------------------
         #
-        # -- Ribbon design tab --
-        # Add all workbenches to the ListItem Widget. In this case a dropdown list.
-        self.addWorkbenches()
-        # Add all toolbars of the selected workbench to the toolbar list(dropdown)
-        self.on_WorkbenchList__TextChanged()
-        self.on_WorkbenchList_2__activated(False)
-
-        # load the commands in the table.
-        self.on_ToolbarList__TextChanged()
-
-        # -- Excluded toolbars --
-        self.ExcludedToolbars()
-
-        # -- Quick access toolbar tab --
-        # Add all commands to the listbox for the quick access toolbar
-        self.QuickAccessCommands()
+        # laod all controls
+        self.LoadControls()
 
         # -- Custom panel tab --
         self.form.CustomToolbarSelector.addItem(translate("FreeCAD Ribbon", "New"))
@@ -320,6 +258,11 @@ class LoadDialog(Design_ui.Ui_Form):
         # region - connect controls with functions----------------------------------------------------
         #
         #
+        # --- Reload function -------------------
+        self.form.LoadWB.connect(
+            self.form.LoadWB, SIGNAL("clicked()"), self.on_ReloadWB_clicked
+        )
+
         # --- QuickCommandsTab ------------------
         #
         # Connect Add/Remove and move events to the buttons on the QuickAccess Tab
@@ -545,7 +488,8 @@ class LoadDialog(Design_ui.Ui_Form):
         helpAction = helpMenu.actions()[0]
         helpIcon = helpAction.icon()
 
-        self.form.HelpButton.setIcon(helpIcon)
+        if helpIcon is not None:
+            self.form.HelpButton.setIcon(helpIcon)
         self.form.HelpButton.setMinimumHeight(
             self.form.GenerateJsonExit.minimumHeight()
         )
@@ -557,21 +501,223 @@ class LoadDialog(Design_ui.Ui_Form):
         else:
             self.form.RestoreJson.setEnabled(True)
             self.form.RestoreJson.setVisible(True)
+
+        # Set the icon and size for the refresh button
+        self.form.LoadWB.setIcon(Gui.getIcon("view-refresh"))
+        self.form.LoadWB.setIconSize(QSize(20, 20))
         # endregion
 
         # self.form.resizeEvent = lambda event: self.resizeEvent_custom(event)
         return
 
-    # def resizeEvent_custom(self, event):
-    #     if self.form.tabWidget.currentIndex() == 4:
-    #         Parameters_Ribbon.Settings.SetIntSetting(
-    #             "TabWidth_large", self.form.width()
-    #         )
-    #     else:
-    #         Parameters_Ribbon.Settings.SetIntSetting(
-    #             "TabWidth_small", self.form.width()
-    #         )
-    #     return
+    def on_ReloadWB_clicked(self):
+        # clear the lists first
+        self.List_Workbenches.clear()
+        self.StringList_Toolbars.clear()
+        self.List_Commands.clear()
+
+        # get the system language
+        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
+        FCLanguage = FreeCAD_preferences.GetString("Language")
+
+        # --- Workbenches ----------------------------------------------------------------------------------------------
+        #
+        # Create a list of all workbenches with their icon
+        self.List_Workbenches.clear()
+        List_Workbenches = Gui.listWorkbenches().copy()
+        for WorkBenchName in List_Workbenches:
+            if str(WorkBenchName) != "" or WorkBenchName is not None:
+                if str(WorkBenchName) != "NoneWorkbench":
+                    IconName = ""
+                    IconName = str(Gui.getWorkbench(WorkBenchName).Icon)
+                    WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
+                    self.List_Workbenches.append(
+                        [str(WorkBenchName), IconName, WorkbenchTitle]
+                    )
+
+        # --- Toolbars ----------------------------------------------------------------------------------------------
+        #
+        # Store the current active workbench
+        ActiveWB = Gui.activeWorkbench().name()
+        # Go through the list of workbenches
+        i = 0
+        for WorkBench in self.List_Workbenches:
+            wbToolbars = []
+            if (
+                WorkBench[0] != "General"
+                and WorkBench[0] != ""
+                and WorkBench[0] is not None
+            ):
+                try:
+                    wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
+                except Exception:
+                    try:
+                        Gui.activateWorkbench(WorkBench[0])
+                    except Exception:
+                        wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
+                # Go through the toolbars
+                for Toolbar in wbToolbars:
+                    # Go through the list of toolbars. If already present, skip it.
+                    # Otherwise add it the the list.
+                    IsInList = False
+                    for i in range(len(self.StringList_Toolbars)):
+                        if Toolbar == self.StringList_Toolbars[i][0]:
+                            IsInList = True
+
+                    if IsInList is False:
+                        self.StringList_Toolbars.append(
+                            [Toolbar, WorkBench[2], WorkBench[0]]
+                        )
+
+            time.sleep(1)
+
+        # Add the custom toolbars
+        CustomToolbars = self.List_ReturnCustomToolbars()
+        for Customtoolbar in CustomToolbars:
+            self.StringList_Toolbars.append(Customtoolbar)
+        CustomToolbars = self.List_ReturnCustomToolbars_Global()
+        for Customtoolbar in CustomToolbars:
+            self.StringList_Toolbars.append(Customtoolbar)
+        # re-activate the workbench that was stored.
+        Gui.activateWorkbench(ActiveWB)
+
+        # --- Commands ----------------------------------------------------------------------------------------------
+        #
+        # Create a list of all commands with their icon
+        self.List_Commands.clear()
+        # Create a list of command names
+        CommandNames = []
+        for i in range(len(self.List_Workbenches)):
+            WorkBench = Gui.getWorkbench(self.List_Workbenches[i][0])
+            ToolbarItems = WorkBench.getToolbarItems()
+
+            for key, value in list(ToolbarItems.items()):
+                for j in range(len(value)):
+                    Item = [value[j], self.List_Workbenches[i][0]]
+                    # if CommandNames.__contains__(Item) is False:
+                    IsInList = False
+                    for k in range(len(CommandNames)):
+                        if CommandNames[k][0] == value[j]:
+                            IsInList = True
+                    if IsInList is False:
+                        CommandNames.append(Item)
+
+        # Go through the list
+        for CommandName in CommandNames:
+            # get the command with this name
+            command = Gui.Command.get(CommandName[0])
+            WorkBenchName = CommandName[1]
+            if command is not None:
+                # get the icon for this command
+                if CommandInfoCorrections(CommandName[0])["pixmap"] != "":
+                    IconName = CommandInfoCorrections(CommandName[0])["pixmap"]
+                else:
+                    IconName = ""
+                MenuName = CommandInfoCorrections(CommandName[0])["ActionText"].replace(
+                    "&", ""
+                )
+                # There are a few dropdown buttons that need to be corrected
+                if CommandName == "PartDesign_CompSketches":
+                    MenuName = "Create sketch"
+                self.List_Commands.append(
+                    [CommandName[0], IconName, MenuName, WorkBenchName]
+                )
+        # add also custom commands
+        Toolbars = self.List_ReturnCustomToolbars()
+        for Toolbar in Toolbars:
+            WorkbenchTitle = Toolbar[1]
+            for WorkBench in self.List_Workbenches:
+                if WorkbenchTitle == WorkBench[2]:
+                    WorkBenchName = WorkBench[0]
+                    for CustomCommand in Toolbar[2]:
+                        command = Gui.Command.get(CustomCommand)
+                        if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
+                            IconName = CommandInfoCorrections(CustomCommand)["pixmap"]
+                        else:
+                            IconName = ""
+                        MenuName = CommandInfoCorrections(CustomCommand)[
+                            "ActionText"
+                        ].replace("&", "")
+                        self.List_Commands.append(
+                            [CustomCommand, IconName, MenuName, WorkBenchName]
+                        )
+        Toolbars = self.List_ReturnCustomToolbars_Global()
+        for Toolbar in Toolbars:
+            for CustomCommand in Toolbar[2]:
+                command = Gui.Command.get(CustomCommand)
+                if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
+                    IconName = CommandInfoCorrections(CustomCommand)["pixmap"]
+                else:
+                    IconName = None
+                MenuName = CommandInfoCorrections(CustomCommand)["ActionText"].replace(
+                    "&", ""
+                )
+                self.List_Commands.append(
+                    [CustomCommand, IconName, MenuName, Toolbar[1]]
+                )
+        if int(App.Version()[0]) > 0:
+            command = Gui.Command.get("Std_Measure")
+            if CommandInfoCorrections("Std_Measure")["pixmap"] != "":
+                IconName = CommandInfoCorrections("Std_Measure")["pixmap"]
+            else:
+                IconName = ""
+            MenuName = CommandInfoCorrections("Std_Measure")["ActionText"].replace(
+                "&", ""
+            )
+            self.List_Commands.append(["Std_Measure", IconName, MenuName, "General"])
+
+        # --- Serialize Icons ------------------------------------------------------------------------------------------
+        #
+        WorkbenchIcon = []
+        for WorkBenchItem in self.List_Workbenches:
+            WorkBenchName = WorkBenchItem[0]
+            Icon = Gui.getIcon(WorkBenchItem[1])
+            if Icon is not None:
+                SerializedIcon = Serialize.serializeIcon(Icon)
+
+                WorkbenchIcon.append([WorkBenchName, SerializedIcon])
+                # add the icons also to the deserialized list
+                self.List_WorkBenchIcons.append([WorkBenchName, Icon])
+
+        CommandIcons = []
+        for CommandItem in self.List_Commands:
+            CommandName = CommandItem[0]
+            Icon = Gui.getIcon(CommandItem[1])
+            command = Gui.Command.get(CommandName)
+            action = command.getAction()[0]
+            if action is not None:
+                Icon = action.icon()
+            if Icon is not None:
+                SerializedIcon = Serialize.serializeIcon(Icon)
+
+                CommandIcons.append([CommandName, SerializedIcon])
+                # add the icons also to the deserialized list
+                self.List_CommandIcons.append([CommandName, Icon])
+
+        # Write the lists to a data file
+        #
+        # clear the data file. If not exists, create it
+        DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFile.dat")
+        open(DataFile, "w").close()
+
+        # Open de data file, load it as json and then close it again
+        Data = {}
+        # Update the data
+        Data["Language"] = FCLanguage
+        Data["List_Workbenches"] = self.List_Workbenches
+        Data["StringList_Toolbars"] = self.StringList_Toolbars
+        Data["List_Commands"] = self.List_Commands
+        Data["WorkBench_Icons"] = WorkbenchIcon
+        Data["Command_Icons"] = CommandIcons
+        # Write to the data file
+        DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFile.dat")
+        with open(DataFile, "w") as outfile:
+            json.dump(Data, outfile, indent=4)
+
+        outfile.close()
+
+        self.LoadControls()
+        return
 
     # region - Control functions----------------------------------------------------------------------
     # Add all toolbars of the selected workbench to the toolbar list(QComboBox)
@@ -588,10 +734,13 @@ class LoadDialog(Design_ui.Ui_Form):
             workbenchName = ToolbarCommand[3]
             IsInList = ShadowList.__contains__(f"{CommandName}, {workbenchName}")
 
-            if IsInList is False and workbenchName != "Global":
-                Command = Gui.Command.get(CommandName)
-                CommandAction = Command.getAction()[0]
-                MenuName = CommandAction.text().replace("&", "")
+            if (
+                IsInList is False
+                and workbenchName != "Global"
+                and workbenchName != "General"
+            ):
+                # Command = Gui.Command.get(CommandName)
+                MenuName = ToolbarCommand[2].replace("&", "")
 
                 WorkbenchTitle = Gui.getWorkbench(workbenchName).MenuText
                 if (
@@ -601,21 +750,21 @@ class LoadDialog(Design_ui.Ui_Form):
                 ):
                     # Define a new ListWidgetItem.
                     textAddition = ""
-                    Icon = QIcon(ToolbarCommand[1])
-                    try:
-                        action = Command.getAction()
-                        if len(action) > 1:
-                            Icon = action[0].icon()
-                            textAddition = "..."
-                    except Exception:
-                        pass
+                    Icon = QIcon()
+                    for item in self.List_CommandIcons:
+                        if item[0] == ToolbarCommand[0]:
+                            Icon = item[1]
+                    if Icon is None:
+                        Icon = Gui.getIcon(ToolbarCommand[1])
+
                     ListWidgetItem = QListWidgetItem()
                     ListWidgetItem.setText(
                         StandardFunctions.TranslationsMapping(workbenchName, MenuName)
                         + textAddition
                     )
-                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Command)
-                    ListWidgetItem.setIcon(Icon)
+                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+                    if Icon is not None:
+                        ListWidgetItem.setIcon(Icon)
                     ListWidgetItem.setToolTip(
                         ToolbarCommand[0]
                     )  # Use the tooltip to store the actual command.
@@ -638,34 +787,32 @@ class LoadDialog(Design_ui.Ui_Form):
             IsInList = ShadowList.__contains__(f"{CommandName}, {workbenchName}")
 
             if IsInList is False and workbenchName != "Global":
-                Command = Gui.Command.get(CommandName)
-                CommandAction = Command.getAction()[0]
-                MenuName = CommandAction.text().replace("&", "")
+                # Command = Gui.Command.get(CommandName)
+                MenuName = ToolbarCommand[2].replace("&", "")
 
                 if (
                     ToolbarCommand[2]
                     .lower()
                     .startswith(self.form.SearchBar_1.text().lower())
                 ):
-                    Command = Gui.Command.get(CommandName)
+                    # Command = Gui.Command.get(CommandName)
 
                     # Define a new ListWidgetItem.
                     textAddition = ""
-                    Icon = QIcon(ToolbarCommand[1])
-                    action = Command.getAction()
-                    try:
-                        if len(action) > 1:
-                            Icon = action[0].icon()
-                            textAddition = "..."
-                    except Exception:
-                        pass
+                    Icon = QIcon()
+                    for item in self.List_CommandIcons:
+                        if item[0] == ToolbarCommand[0]:
+                            Icon = item[1]
+                    if Icon is None:
+                        Icon = Gui.getIcon(ToolbarCommand[1])
                     ListWidgetItem = QListWidgetItem()
                     ListWidgetItem.setText(
                         StandardFunctions.TranslationsMapping(workbenchName, MenuName)
                         + textAddition
                     )
-                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Command)
-                    ListWidgetItem.setIcon(Icon)
+                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+                    if Icon is not None:
+                        ListWidgetItem.setIcon(Icon)
                     ListWidgetItem.setToolTip(
                         CommandName
                     )  # Use the tooltip to store the actual command.
@@ -918,50 +1065,64 @@ class LoadDialog(Design_ui.Ui_Form):
                         if key == toolbar:
                             for j in range(len(value)):
                                 CommandName = value[j]
-                                # Get the command
-                                Command = Gui.Command.get(CommandName)
-                                if Command is not None:
-                                    CommandAction = Command.getAction()[0]
-                                    if Command is None:
-                                        continue
-                                    MenuName = CommandAction.text().replace("&", "")
+                                for ToolbarCommand in self.List_Commands:
+                                    if ToolbarCommand[0] == CommandName:
+                                        # Get the command
+                                        Command = Gui.Command.get(CommandName)
+                                        if Command is not None:
+                                            if Command is None:
+                                                continue
+                                            MenuName = ToolbarCommand[2].replace(
+                                                "&", ""
+                                            )
 
-                                    # get the icon for this command if there isn't one, leave it None
-                                    Icon = Gui.getIcon(
-                                        CommandInfoCorrections(CommandName)["pixmap"]
-                                    )
-                                    action = Command.getAction()
-                                    try:
-                                        if len(action) > 1:
-                                            Icon = action[0].icon()
-                                    except Exception:
-                                        pass
+                                            # get the icon for this command if there isn't one, leave it None
+                                            Icon = QIcon()
+                                            for item in self.List_CommandIcons:
+                                                if item[0] == ToolbarCommand[0]:
+                                                    Icon = item[1]
+                                            if Icon is None:
+                                                Icon = Gui.getIcon(
+                                                    CommandInfoCorrections(CommandName)[
+                                                        "pixmap"
+                                                    ]
+                                                )
+                                            action = Command.getAction()
+                                            try:
+                                                if len(action) > 1:
+                                                    Icon = action[0].icon()
+                                            except Exception:
+                                                pass
 
-                                    # Define a new ListWidgetItem.
-                                    ListWidgetItem = QListWidgetItem()
-                                    ListWidgetItem.setText(
-                                        StandardFunctions.TranslationsMapping(
-                                            WorkbenchName, MenuName
-                                        )
-                                    )
-                                    icon = QIcon(Icon)
-                                    ListWidgetItem.setIcon(icon)
-                                    ListWidgetItem.setData(
-                                        Qt.ItemDataRole.UserRole, key
-                                    )  # add here the toolbar name as hidden data
+                                            # Define a new ListWidgetItem.
+                                            ListWidgetItem = QListWidgetItem()
+                                            ListWidgetItem.setText(
+                                                StandardFunctions.TranslationsMapping(
+                                                    WorkbenchName, MenuName
+                                                )
+                                            )
+                                            if Icon is not None:
+                                                ListWidgetItem.setIcon(Icon)
+                                            ListWidgetItem.setData(
+                                                Qt.ItemDataRole.UserRole, key
+                                            )  # add here the toolbar name as hidden data
 
-                                    IsInList = False
-                                    for k in range(self.form.ToolbarsSelected.count()):
-                                        if (
-                                            self.form.ToolbarsSelected.item(k).text()
-                                            == ListWidgetItem.text()
-                                        ):
-                                            IsInList = True
+                                            IsInList = False
+                                            for k in range(
+                                                self.form.ToolbarsSelected.count()
+                                            ):
+                                                if (
+                                                    self.form.ToolbarsSelected.item(
+                                                        k
+                                                    ).text()
+                                                    == ListWidgetItem.text()
+                                                ):
+                                                    IsInList = True
 
-                                    if IsInList is False:
-                                        self.form.ToolbarsSelected.addItem(
-                                            ListWidgetItem
-                                        )
+                                            if IsInList is False:
+                                                self.form.ToolbarsSelected.addItem(
+                                                    ListWidgetItem
+                                                )
 
         # Enable the apply button
         if self.CheckChanges() is True:
@@ -996,30 +1157,20 @@ class LoadDialog(Design_ui.Ui_Form):
                 MenuName = ""
                 for i in range(self.form.ToolbarsSelected.count()):
                     ListWidgetItem = self.form.ToolbarsSelected.item(i)
-                    MenuNameTranslated = ListWidgetItem.text().replace("&", "")
-                    # Get the original MenuName
+                    MenuName_ListWidgetItem = (
+                        ListWidgetItem.text().replace("&", "").replace("...", "")
+                    )
+                    # if the translated menuname from the ListWidgetItem is equel to the MenuName from the command
+                    # Add the commandName to the list commandslist for this custom panel
                     for CommandItem in self.List_Commands:
-                        Command = Gui.Command.get(CommandItem[0])
-                        CommandAction = Command.getAction()[0]
-                        if CommandAction.text().replace("&", "").replace(
-                            "...", ""
-                        ) == MenuNameTranslated.replace("&", "").replace("...", ""):
-                            MenuName = (
-                                CommandItem[2].replace("&", "").replace("...", "")
-                            )
-
-                    # Get the commands
-                    for j in range(len(self.List_Commands)):
-                        if (
-                            self.List_Commands[j][2] == MenuName
-                            and self.List_Commands[j][3] == WorkBenchName
-                        ):
-                            Command = self.List_Commands[j][0]
-                            Commands.append(Command)
+                        MenuName = CommandItem[2].replace("&", "").replace("...", "")
+                        if MenuName == MenuName_ListWidgetItem:
+                            CommandName = CommandItem[0]
+                            Commands.append(CommandName)
 
                     # Get the original toolbar
                     OriginalToolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
-
+                    # define the suffix
                     Suffix = "_custom"
 
                     # Create or modify the dict that will be entered
@@ -1061,7 +1212,9 @@ class LoadDialog(Design_ui.Ui_Form):
                 # Add the order of panels to the Json file
                 ToolbarOrder = []
                 for i2 in range(self.form.ToolbarsOrder.count()):
-                    ToolbarOrder.append(self.form.ToolbarsOrder.item(i2).text())
+                    ToolbarOrder.append(
+                        self.form.ToolbarsOrder.item(i2).data(Qt.ItemDataRole.UserRole)
+                    )
                 self.add_keys_nested_dict(
                     self.Dict_RibbonCommandPanel,
                     ["workbenches", WorkBenchName, "toolbars", "order"],
@@ -1117,33 +1270,36 @@ class LoadDialog(Design_ui.Ui_Form):
                                 CustomPanelTitle
                             ]["commands"].items()
                         ):
-                            for CommandListItem in self.List_Commands:
+                            for CommandItem in self.List_Commands:
                                 # Check if the items is already there
-                                IsInList = ShadowList.__contains__(CommandListItem[0])
+                                IsInList = ShadowList.__contains__(CommandItem[0])
                                 # if not, continue
                                 if IsInList is False:
                                     if (
-                                        CommandListItem[2] == key
-                                        and CommandListItem[3] == WorkBenchName
+                                        CommandItem[2] == key
+                                        and CommandItem[3] == WorkBenchName
                                     ):
-                                        Command = Gui.Command.get(CommandListItem[0])
-                                        CommandAction = Command.getAction()[0]
-                                        MenuName = CommandAction.text().replace("&", "")
+                                        # Command = Gui.Command.get(CommandItem[0])
+                                        MenuName = (
+                                            CommandItem[2]
+                                            .replace("&", "")
+                                            .replace("...", "")
+                                        )
 
                                         # Define a new ListWidgetItem.
                                         ListWidgetItem = QListWidgetItem()
                                         ListWidgetItem.setText(MenuName)
                                         ListWidgetItem.setData(
-                                            Qt.ItemDataRole.UserRole, CommandListItem
+                                            Qt.ItemDataRole.UserRole, CommandItem
                                         )
-                                        Icon = QIcon(CommandListItem[1])
-                                        action = Command.getAction()
-                                        try:
-                                            if len(action) > 1:
-                                                Icon = action[0].icon()
-                                        except Exception:
-                                            pass
-                                        ListWidgetItem.setIcon(Icon)
+                                        Icon = QIcon()
+                                        for item in self.List_CommandIcons:
+                                            if item[0] == CommandItem[0]:
+                                                Icon = item[1]
+                                        if Icon is None:
+                                            Icon = Gui.getIcon(CommandItem[1])
+                                        if Icon is not None:
+                                            ListWidgetItem.setIcon(Icon)
 
                                         if ListWidgetItem.text() != "":
                                             self.form.ToolbarsSelected.addItem(
@@ -1151,7 +1307,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                             )
 
                                         # Add the command to the shadow list
-                                        ShadowList.append(CommandListItem[0])
+                                        ShadowList.append(CommandItem[0])
 
             # Enable the apply button
             if self.CheckChanges() is True:
@@ -1251,7 +1407,7 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_tabBar_currentIndexChanged(self):
         # width_small: int = Parameters_Ribbon.Settings.GetIntSetting("TabWidth_small")
         # if width_small is None:
-        width_small = 580
+        width_small = 730
         # width_large: int = Parameters_Ribbon.Settings.GetIntSetting("TabWidth_large")
         # if width_large is None:
         width_large = 940
@@ -1290,6 +1446,10 @@ class LoadDialog(Design_ui.Ui_Form):
             if WorkBench[2] == self.form.WorkbenchList.currentData():
                 WorkBenchName = WorkBench[0]
                 WorkBenchTitle = WorkBench[2]
+
+        # If there is no workbench, return
+        if WorkBenchName == "":
+            return
 
         # Get the toolbars of the workbench
         wbToolbars: list = Gui.getWorkbench(WorkBenchName).listToolbars()
@@ -1500,37 +1660,31 @@ class LoadDialog(Design_ui.Ui_Form):
 
             if not ToolbarCommand.__contains__("separator"):
                 # Get the command
-                Command = Gui.Command.get(ToolbarCommand)
-                if Command is None:
-                    continue
-                CommandName = CommandInfoCorrections(ToolbarCommand)["name"]
+                CommandName = ToolbarCommand
 
                 # Check if the items is already there
                 IsInList = ShadowList.__contains__(CommandName)
                 # if not, continue
-                if IsInList is False:
+                if IsInList is False and CommandName is not None:
                     # Get the text
                     MenuName = (
-                        CommandInfoCorrections(ToolbarCommand)["menuText"]
+                        CommandInfoCorrections(CommandName)["menuText"]
                         .replace("&", "")
                         .replace("...", "")
                     )
-                    # There are a few dropdown buttons that need to be corrected
-                    if CommandName == "PartDesign_CompSketches":
-                        MenuName = "Create sketch"
+                    if MenuName == "":
+                        continue
 
                     textAddition = ""
                     IconName = ""
                     # get the icon for this command if there isn't one, leave it None
-                    Icon = Gui.getIcon(CommandInfoCorrections(ToolbarCommand)["pixmap"])
-                    IconName = CommandInfoCorrections(ToolbarCommand)["pixmap"]
-                    action = Command.getAction()
-                    try:
-                        if len(action) > 1:
-                            Icon = action[0].icon()
-                            textAddition = "..."
-                    except Exception:
-                        pass
+                    IconName = CommandInfoCorrections(CommandName)["pixmap"]
+                    Icon = QIcon()
+                    for item in self.List_CommandIcons:
+                        if item[0] == CommandName:
+                            Icon = item[1]
+                    if Icon is None:
+                        Icon = Gui.getIcon(IconName)
 
                     # Set the default check states
                     checked_small = Qt.CheckState.Checked
@@ -1571,7 +1725,12 @@ class LoadDialog(Design_ui.Ui_Form):
                                     "icon"
                                 ]
                                 if Icon_Json_Name != "":
-                                    Icon = Gui.getIcon(Icon_Json_Name)
+                                    Icon = QIcon()
+                                    for item in self.List_CommandIcons:
+                                        if item[0] == CommandName:
+                                            Icon = item[1]
+                                    if Icon is None:
+                                        Icon = Gui.getIcon(Icon_Json_Name)
                             except Exception:
                                 continue
 
@@ -1581,8 +1740,9 @@ class LoadDialog(Design_ui.Ui_Form):
                     ].replace("&", "").replace("...", ""):
                         MenuNameTabelWidgetItem = MenuNameJson
                     else:
-                        CommandAction = Command.getAction()[0]
-                        MenuNameTabelWidgetItem = CommandAction.text()
+                        for CommandItem in self.List_Commands:
+                            if CommandItem[0] == CommandName:
+                                MenuNameTabelWidgetItem = CommandItem[2]
 
                     # Create the row in the table
                     # add a row to the table widget
@@ -2047,8 +2207,15 @@ class LoadDialog(Design_ui.Ui_Form):
                 StandardFunctions.TranslationsMapping(WorkbenchName, WorkbenchTitle)
             )
             ListWidgetItem.setData(Qt.ItemDataRole.UserRole, workbench)
-            icon = QIcon(workbench[1])
-            ListWidgetItem.setIcon(icon)
+            Icon = QIcon()
+            for item in self.List_WorkBenchIcons:
+                if item[0] == WorkbenchName:
+                    Icon = item[1]
+            if Icon is None:
+                Icon = Gui.getIcon(workbench[1])
+
+            if Icon is not None:
+                ListWidgetItem.setIcon(Icon)
 
             # Add the ListWidgetItem to the correct ListWidget
             if IsSelected is False:
@@ -2056,22 +2223,21 @@ class LoadDialog(Design_ui.Ui_Form):
             if IsSelected is True:
                 self.form.WorkbenchesSelected.addItem(ListWidgetItem)
                 self.form.WorkbenchList.addItem(
-                    icon,
+                    Icon,
                     StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
                     workbench[2],
                 )
                 # Add the ListWidgetItem also to the second WorkbenchList.
                 self.form.WorkbenchList_2.addItem(
-                    icon,
+                    Icon,
                     StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
                     workbench[2],
                 )
 
             # Add the ListWidgetItem also to the categoryListWidgets
-            self.form.ListCategory_1.addItem(icon, workbench[2])
-            self.form.ListCategory_2.addItem(icon, workbench[2])
+            self.form.ListCategory_1.addItem(Icon, workbench[2])
+            self.form.ListCategory_2.addItem(Icon, workbench[2])
 
-        # set the current text
         self.form.ListCategory_1.setCurrentText(All_KeyWord)
         self.form.ListCategory_2.setCurrentText(All_KeyWord)
 
@@ -2085,14 +2251,6 @@ class LoadDialog(Design_ui.Ui_Form):
             StandardFunctions.TranslationsMapping(
                 WorkbenchName, Gui.activeWorkbench().name()
             )
-        )
-
-        # set the workbenchLists so that they are sorted Alphabetically
-        self.form.WorkbenchList.setInsertPolicy(
-            QComboBox.InsertPolicy.InsertAlphabetically
-        )
-        self.form.WorkbenchList_2.setInsertPolicy(
-            QComboBox.InsertPolicy.InsertAlphabetically
         )
 
         return
@@ -2133,9 +2291,8 @@ class LoadDialog(Design_ui.Ui_Form):
 
             if IsInList is False:
                 CommandName = ToolbarCommand[0]
-                Command = Gui.Command.get(CommandName)
-                CommandAction = Command.getAction()[0]
-                MenuName = CommandAction.text().replace("&", "")
+                # Command = Gui.Command.get(CommandName)
+                MenuName = ToolbarCommand[2]
                 workbenchName = ToolbarCommand[3]
 
                 # Default a command is not selected
@@ -2147,24 +2304,21 @@ class LoadDialog(Design_ui.Ui_Form):
                 if MenuName != "":
                     # Define a new ListWidgetItem.
                     textAddition = ""
-                    Icon = QIcon(ToolbarCommand[1])
-                    action = Command.getAction()
-                    try:
-                        if len(action) > 1:
-                            Icon = action[0].icon()
-                            textAddition = "..."
-                    except Exception:
-                        pass
+                    Icon = QIcon()
+                    for item in self.List_CommandIcons:
+                        if item[0] == ToolbarCommand[0]:
+                            Icon = item[1]
+                    if Icon is None:
+                        Icon = Gui.getIcon(ToolbarCommand[1])
+
                     ListWidgetItem = QListWidgetItem()
-                    ListWidgetItem.setText(
-                        StandardFunctions.TranslationsMapping(workbenchName, MenuName)
-                        + textAddition
-                    )
-                    ListWidgetItem.setIcon(Icon)
+                    ListWidgetItem.setText(MenuName + textAddition)
+                    if Icon is not None:
+                        ListWidgetItem.setIcon(Icon)
                     ListWidgetItem.setToolTip(
                         CommandName
                     )  # Use the tooltip to store the actual command.
-                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Command)
+                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, ToolbarCommand[0])
 
                     # Add the ListWidgetItem to the correct ListWidget
                     if Icon is not None:
@@ -2214,32 +2368,8 @@ class LoadDialog(Design_ui.Ui_Form):
                                     or self.List_Commands[i3][3] == "Global"
                                 ):
                                     CommandName = self.List_Commands[i3][0]
-                                    Command = Gui.Command.get(CommandName)
-                                    IconName = CommandInfoCorrections(CommandName)[
-                                        "pixmap"
-                                    ]
-
-                                    # If the text in the tableitemwidget is equeal to the command menu text
-                                    # Use the original menutext
-                                    CommandAction = Command.getAction()[0]
-                                    if (
-                                        MenuNameTableWidgetItem
-                                        == CommandAction.text()
-                                        .replace("&", "")
-                                        .replace("...", "")
-                                    ):
-                                        MenuNameTableWidgetItem = (
-                                            CommandInfoCorrections(CommandName)[
-                                                "menuText"
-                                            ]
-                                            .replace("&", "")
-                                            .replace("...", "")
-                                        )
-
-                                    # There are a few dropdown buttons that need to be corrected
-                                    if CommandName == "PartDesign_CompSketches":
-                                        MenuName = "Create sketch"
-                                        MenuNameTableWidgetItem = MenuName
+                                    # Command = Gui.Command.get(CommandName)
+                                    IconName = self.List_Commands[i3][1]
 
                                     # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
                                     for i4 in range(
@@ -2365,7 +2495,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for i2 in range(len(SelectedCommands)):
             ListWidgetItem: QListWidgetItem = SelectedCommands[i2]
             QuickAccessCommand = CommandInfoCorrections(
-                ListWidgetItem.data(Qt.ItemDataRole.UserRole).getInfo()["name"]
+                ListWidgetItem.data(Qt.ItemDataRole.UserRole)
             )["name"]
             List_QuickAccessCommands.append(QuickAccessCommand)
 
@@ -2893,6 +3023,54 @@ class LoadDialog(Design_ui.Ui_Form):
         ToolbarList.sort(key=SortList)
 
         return ToolbarList
+
+    def LoadControls(self):
+        # Clear all listWidgets
+        self.form.WorkbenchList.clear()
+        self.form.WorkbenchesAvailable.clear()
+        self.form.WorkbenchesSelected.clear()
+        self.form.ToolbarsToExclude.clear()
+        self.form.ToolbarsExcluded.clear()
+        self.form.CommandsAvailable.clear()
+        self.form.CommandsSelected.clear()
+        self.form.ToolbarsAvailable.clear()
+        self.form.ToolbarsSelected.clear()
+        self.form.ToolbarsOrder.clear()
+
+        # -- Ribbon design tab --
+        # Add all workbenches to the ListItem Widget. In this case a dropdown list.
+        self.addWorkbenches()
+        # Add all toolbars of the selected workbench to the toolbar list(dropdown)
+        self.on_WorkbenchList__TextChanged()
+        self.on_WorkbenchList_2__activated(False)
+
+        # load the commands in the table.
+        self.on_ToolbarList__TextChanged()
+
+        # -- Excluded toolbars --
+        self.ExcludedToolbars()
+
+        # -- Quick access toolbar tab --
+        # Add all commands to the listbox for the quick access toolbar
+        self.QuickAccessCommands()
+
+        # -- Custom panel tab --
+        self.form.CustomToolbarSelector.addItem(translate("FreeCAD Ribbon", "New"))
+        try:
+            for WorkBenchName in self.Dict_CustomToolbars["customToolbars"]:
+                WorkBenchTitle = ""
+                for WorkBenchItem in self.List_Workbenches:
+                    if WorkBenchItem[0] == WorkBenchName:
+                        WorkBenchTitle = WorkBenchItem[2]
+                for CustomPanelTitle in self.Dict_CustomToolbars["customToolbars"][
+                    WorkBenchName
+                ]:
+                    if WorkBenchTitle != "":
+                        self.form.CustomToolbarSelector.addItem(
+                            f"{CustomPanelTitle}, {WorkBenchTitle}"
+                        )
+        except Exception:
+            pass
 
 
 def main():
