@@ -1383,9 +1383,11 @@ class LoadDialog(Design_ui.Ui_Form):
                 # Check if the items is already there
                 IsInList = ShadowList.__contains__(CommandName)
                 # if not, continue
-                if IsInList is False:
+                if IsInList is False and CommandName is not None:
                     # Get the text
                     MenuName = CommandInfoCorrections(CommandName)["menuText"].replace("&", "").replace("...", "")
+                    if MenuName == "":
+                        continue
 
                     textAddition = ""
                     IconName = ""

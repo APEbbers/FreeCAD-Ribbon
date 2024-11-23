@@ -562,3 +562,11 @@ def CommandInfoCorrections(CommandName):
             CommandInfo["statusTip"] = "Create or edit a sketch"
 
         return CommandInfo
+    else:
+        CommandInfo = {}
+        CommandInfo["menuText"] = ""
+        CommandInfo["toolTip"] = ""
+        CommandInfo["whatsThis"] = ""
+        CommandInfo["statusTip"] = ""
+        CommandInfo["pixmap"] = ""
+        return CommandInfo
