@@ -142,15 +142,18 @@ class LoadDialog(Design_ui.Ui_Form):
         self.StringList_Toolbars = Data["StringList_Toolbars"]
         self.List_Commands = Data["List_Commands"]
         # Load the lists for the deserialized icons
-        for IconItem in Data["WorkBench_Icons"]:
-            Icon: QIcon = Serialize.deserializeIcon(IconItem[1])
-            item = [IconItem[0], Icon]
-            self.List_WorkBenchIcons.append(item)
-        # Load the lists for the deserialized icons
-        for IconItem in Data["Command_Icons"]:
-            Icon: QIcon = Serialize.deserializeIcon(IconItem[1])
-            item = [IconItem[0], Icon]
-            self.List_CommandIcons.append(item)
+        try:
+            for IconItem in Data["WorkBench_Icons"]:
+                Icon: QIcon = Serialize.deserializeIcon(IconItem[1])
+                item = [IconItem[0], Icon]
+                self.List_WorkBenchIcons.append(item)
+            # Load the lists for the deserialized icons
+            for IconItem in Data["Command_Icons"]:
+                Icon: QIcon = Serialize.deserializeIcon(IconItem[1])
+                item = [IconItem[0], Icon]
+                self.List_CommandIcons.append(item)
+        except Exception:
+            pass
 
         # laod all controls
         self.LoadControls()
@@ -532,21 +535,27 @@ class LoadDialog(Design_ui.Ui_Form):
         for WorkBenchItem in self.List_Workbenches:
             WorkBenchName = WorkBenchItem[0]
             Icon = Gui.getIcon(WorkBenchItem[1])
-            SerializedIcon = Serialize.serializeIcon(Icon)
+            if Icon is not None:
+                SerializedIcon = Serialize.serializeIcon(Icon)
 
-            WorkbenchIcon.append([CommandName, SerializedIcon])
-            # add the icons also to the deserialized list
-            self.List_WorkBenchIcons.append([WorkBenchName, Icon])
+                WorkbenchIcon.append([CommandName, SerializedIcon])
+                # add the icons also to the deserialized list
+                self.List_WorkBenchIcons.append([WorkBenchName, Icon])
 
         CommandIcons = []
         for CommandItem in self.List_Commands:
             CommandName = CommandItem[0]
             Icon = Gui.getIcon(CommandItem[1])
-            SerializedIcon = Serialize.serializeIcon(Icon)
+            command = Gui.Command.get(CommandName)
+            action = command.getAction()[0]
+            if action is not None:
+                Icon = action.icon()
+            if Icon is not None:
+                SerializedIcon = Serialize.serializeIcon(Icon)
 
-            CommandIcons.append([CommandName, SerializedIcon])
-            # add the icons also to the deserialized list
-            self.List_CommandIcons.append([CommandName, Icon])
+                CommandIcons.append([CommandName, SerializedIcon])
+                # add the icons also to the deserialized list
+                self.List_CommandIcons.append([CommandName, Icon])
 
         # Write the lists to a data file
         #

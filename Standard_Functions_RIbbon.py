@@ -543,21 +543,22 @@ def add_keys_nested_dict(dict, keys):
 
 def CommandInfoCorrections(CommandName):
     Command = Gui.Command.get(CommandName)
-    CommandInfo = Command.getInfo()
+    if Command is not None:
+        CommandInfo = Command.getInfo()
 
-    # add an extra entry
-    add_keys_nested_dict(CommandInfo, "ActionText")
-    CommandActionList = Command.getAction()
-    if len(CommandActionList) > 0:
-        CommandAction = CommandActionList[0]
-        CommandInfo["ActionText"] = CommandAction.text()
-    else:
-        CommandInfo["ActionText"] = CommandInfo["menuText"]
+        # add an extra entry
+        add_keys_nested_dict(CommandInfo, "ActionText")
+        CommandActionList = Command.getAction()
+        if len(CommandActionList) > 0:
+            CommandAction = CommandActionList[0]
+            CommandInfo["ActionText"] = CommandAction.text()
+        else:
+            CommandInfo["ActionText"] = CommandInfo["menuText"]
 
-    if CommandName == "PartDesign_CompSketches":
-        CommandInfo["menuText"] = "Create sketch"
-        CommandInfo["toolTip"] = "Create or edit a sketch"
-        CommandInfo["whatsThis"] = "PartDesign_CompSketches"
-        CommandInfo["statusTip"] = "Create or edit a sketch"
+        if CommandName == "PartDesign_CompSketches":
+            CommandInfo["menuText"] = "Create sketch"
+            CommandInfo["toolTip"] = "Create or edit a sketch"
+            CommandInfo["whatsThis"] = "PartDesign_CompSketches"
+            CommandInfo["statusTip"] = "Create or edit a sketch"
 
-    return CommandInfo
+        return CommandInfo
