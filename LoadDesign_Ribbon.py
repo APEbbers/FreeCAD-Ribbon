@@ -428,7 +428,7 @@ class LoadDialog(Design_ui.Ui_Form):
         i = 0
         for WorkBench in self.List_Workbenches:
             wbToolbars = []
-            if WorkBench[0] != "General" and WorkBench[0] != "" and WorkBench[0] != None:
+            if WorkBench[0] != "General" and WorkBench[0] != "" and WorkBench[0] is not None:
                 try:
                     wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
                 except Exception:
@@ -538,7 +538,7 @@ class LoadDialog(Design_ui.Ui_Form):
             if Icon is not None:
                 SerializedIcon = Serialize.serializeIcon(Icon)
 
-                WorkbenchIcon.append([CommandName, SerializedIcon])
+                WorkbenchIcon.append([WorkBenchName, SerializedIcon])
                 # add the icons also to the deserialized list
                 self.List_WorkBenchIcons.append([WorkBenchName, Icon])
 

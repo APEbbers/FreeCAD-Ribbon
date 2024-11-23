@@ -26,6 +26,7 @@ import FCBinding
 import Parameters_Ribbon
 import shutil
 from PySide.QtCore import Signal, QObject
+import sys
 
 
 def QT_TRANSLATE_NOOP(context, text):
