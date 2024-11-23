@@ -403,7 +403,7 @@ class LoadDialog(Design_ui.Ui_Form):
         i = 0
         for WorkBench in self.List_Workbenches:
             wbToolbars = []
-            if WorkBench[0] != "general" and WorkBench[0] != "" and WorkBench[0] != None:
+            if WorkBench[0] != "General" and WorkBench[0] != "" and WorkBench[0] != None:
                 try:
                     wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
                 except Exception:
@@ -534,7 +534,7 @@ class LoadDialog(Design_ui.Ui_Form):
             workbenchName = ToolbarCommand[3]
             IsInList = ShadowList.__contains__(f"{CommandName}, {workbenchName}")
 
-            if IsInList is False and workbenchName != "Global" and workbenchName != "general":
+            if IsInList is False and workbenchName != "Global" and workbenchName != "General":
                 # Command = Gui.Command.get(CommandName)
                 MenuName = ToolbarCommand[2].replace("&", "")
 
