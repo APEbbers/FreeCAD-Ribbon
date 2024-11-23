@@ -432,8 +432,10 @@ class LoadDialog(Design_ui.Ui_Form):
                 try:
                     wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
                 except Exception:
-                    Gui.activateWorkbench(WorkBench[0])
-                    wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
+                    try:
+                        Gui.activateWorkbench(WorkBench[0])
+                    except Exception:
+                        wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
                 # Go through the toolbars
                 for Toolbar in wbToolbars:
                     # Go through the list of toolbars. If already present, skip it.
