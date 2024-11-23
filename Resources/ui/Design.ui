@@ -1642,13 +1642,6 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="3">
-      <widget class="QProgressBar" name="progressBar">
-       <property name="value">
-        <number>24</number>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
   </layout>

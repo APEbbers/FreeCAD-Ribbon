@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -35,7 +35,7 @@ from PySide.QtWidgets import (
     QMenu,
     QWidget,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
 import json
 from datetime import datetime
@@ -64,6 +64,7 @@ translate = App.Qt.translate
 
 
 class LoadDialog(Design_ui.Ui_Form):
+
     ReproAdress: str = ""
 
     # Define list of the workbenches, toolbars and commands on class level
@@ -373,6 +374,10 @@ class LoadDialog(Design_ui.Ui_Form):
         else:
             self.form.RestoreJson.setEnabled(True)
             self.form.RestoreJson.setVisible(True)
+
+        # Set the icon and size for the refresh button
+        self.form.LoadWB.setIcon(Gui.getIcon("view-refresh"))
+        self.form.LoadWB.setIconSize(QSize(20, 20))
         # endregion
 
         # self.form.resizeEvent = lambda event: self.resizeEvent_custom(event)
@@ -518,6 +523,8 @@ class LoadDialog(Design_ui.Ui_Form):
             json.dump(Data, outfile, indent=4)
 
         outfile.close()
+
+        self.LoadControls()
         return
 
     # region - Control functions----------------------------------------------------------------------
@@ -1137,6 +1144,10 @@ class LoadDialog(Design_ui.Ui_Form):
             if WorkBench[2] == self.form.WorkbenchList.currentData():
                 WorkBenchName = WorkBench[0]
                 WorkBenchTitle = WorkBench[2]
+
+        # If there is no workbench, return
+        if WorkBenchName == "":
+            return
 
         # Get the toolbars of the workbench
         wbToolbars: list = Gui.getWorkbench(WorkBenchName).listToolbars()
@@ -2604,3 +2615,51 @@ def main():
     Dialog.show()
 
     return
+
+
+# region - Exception handler--------------------------------------------------------------
+#
+#
+# https://pyqribbon.readthedocs.io/en/stable/apidoc/pyqtribbon.logger.html
+# https: // timlehr.com/2018/01/python-exception-hooks-with-qt-message-box/index.html
+class UncaughtHook(QObject):
+    _exception_caught = Signal(object)
+
+    def __init__(self, *args, **kwargs):
+        super(UncaughtHook, self).__init__(*args, **kwargs)
+
+        # this registers the exception_hook() function as hook with the Python interpreter
+        sys.excepthook = self.exception_hook
+
+        # connect signal to execute the message box function always on main thread
+        # self._exception_caught.connect(show_exception_box)
+
+    def exception_hook(self, exc_type, exc_value, exc_traceback):
+        """Function handling uncaught exceptions.
+        It is triggered each time an uncaught exception occurs.
+        """
+        if issubclass(exc_type, KeyboardInterrupt):
+            # ignore keyboard interrupt to support console applications
+            sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        else:
+            # ----------Suppressed original handling---------------------------------------
+            exc_info = (exc_type, exc_value, exc_traceback)
+            # log_msg = '\n'.join([''.join(traceback.format_tb(exc_traceback)),
+            #                      '{0}: {1}'.format(exc_type.__name__, exc_value)])
+            # log.critical("Uncaught exception:\n {0}".format(log_msg), exc_info=exc_info)
+
+            # trigger message box show
+            # self._exception_caught.emit(log_msg)
+
+            App.Console.PrintWarning(
+                "RibbonUI: There was an error. This is probally caused by an incompatible FreeCAD plugin!"
+            )
+            App.Console.PrintWarning(exc_info)
+        return
+
+
+# create a global instance of our exception class to register the hook
+qt_exception_hook = UncaughtHook()
+#
+#
+# endregion=========================================================================================
