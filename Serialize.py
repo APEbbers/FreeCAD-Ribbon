@@ -62,8 +62,13 @@ def serializeIcon(icon):
             "selected": QIcon.Mode.Selected,
         }.items():
             iconPixmaps[strW][strH][strMode] = {}
-            for strState, state in {"off": QIcon.State.Off, "on": QIcon.State.On}.items():
-                iconPixmaps[strW][strH][strMode][strState] = iconToBase64(icon, sz, mode, state)
+            for strState, state in {
+                "off": QIcon.State.Off,
+                "on": QIcon.State.On,
+            }.items():
+                iconPixmaps[strW][strH][strMode][strState] = iconToBase64(
+                    icon, sz, mode, state
+                )
     return iconPixmaps
 
 
@@ -81,6 +86,8 @@ def deserializeIcon(iconPixmaps):
                 for strState, statePixmap in modePixmaps.items():
                     state = {"off": QIcon.State.Off, "on": QIcon.State.On}[strState]
                     pxm = QPixmap()
-                    pxm.loadFromData(QByteArray.fromBase64(bytearray(statePixmap.encode("utf-8"))))
+                    pxm.loadFromData(
+                        QByteArray.fromBase64(bytearray(statePixmap.encode("utf-8")))
+                    )
                     ico.addPixmap(pxm, mode, state)
     return ico
