@@ -387,6 +387,7 @@ class ModernMenu(RibbonBar):
         # Add a custom close event to show the original menubar again
         self.closeEvent = lambda close: self.closeEvent(close)
         # self.hideEvent = lambda hide: self.hideEvent(hide)
+
         return
 
     def closeEvent(self, event):
@@ -858,7 +859,9 @@ class ModernMenu(RibbonBar):
             self.setRibbonVisible(True)
             return
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
-            TB.setMaximumHeight(self.RibbonMaximumHeight)
+            if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
+                TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+                TB.setMaximumHeight(self.ribbonHeight() + 20)
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
             Parameters_Ribbon.AUTOHIDE_RIBBON = False
 
@@ -888,6 +891,10 @@ class ModernMenu(RibbonBar):
         return
 
     def onWbActivated(self):
+        if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
+            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            TB.setMaximumHeight(self.ribbonHeight() + 20)
+
         # Make sure that the text is readable
         self.tabBar().setStyleSheet(
             "color: " + StyleMapping.ReturnStyleItem("Border_Color") + ";"
@@ -917,8 +924,9 @@ class ModernMenu(RibbonBar):
         return
 
     def onTabBarClicked(self):
-        TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-        TB.setMinimumHeight(self.RibbonMaximumHeight)
+        if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
+            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            TB.setMaximumHeight(self.ribbonHeight() + 20)
         self.setRibbonVisible(True)
 
     def buildPanels(self):
@@ -1522,7 +1530,7 @@ class ModernMenu(RibbonBar):
         # If text is enabled for large button, the height is modified.
         LargeButtonHeight = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
         if Parameters_Ribbon.SHOW_ICON_TEXT_LARGE is True:
-            LargeButtonHeight = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE + 20
+            LargeButtonHeight = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
         # Check whichs is has the most height: 3 small buttons, 2 medium buttons or 1 large button
         # and set the height accordingly
         if (
@@ -1540,6 +1548,9 @@ class ModernMenu(RibbonBar):
         else:
             ribbonHeight = ribbonHeight + LargeButtonHeight
         self.setRibbonHeight(ribbonHeight)
+        if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
+            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            TB.setMaximumHeight(ribbonHeight + 20)
         return
 
     def on_ScrollButton_Category_clicked(
@@ -1728,7 +1739,7 @@ class run:
             layout = ribbon.layout()
             # Set spacing and content margins to zero
             layout.setSpacing(0)
-            layout.setContentsMargins(3, 0, 3, 0)
+            layout.setContentsMargins(0, 0, 0, 0)
             # update the layout
             ribbon.setLayout(layout)
             ribbonDock = QDockWidget()
@@ -1737,6 +1748,7 @@ class run:
             ribbonDock.setWindowTitle("Ribbon")
             # Set the titlebar to an empty widget (effectively hide it)
             ribbonDock.setTitleBarWidget(QWidget())
+            ribbonDock.setContentsMargins(0, 0, 0, 0)
             # attach the ribbon to the dockwidget
             ribbonDock.setWidget(ribbon)
 
