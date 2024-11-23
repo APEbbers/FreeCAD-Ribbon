@@ -136,7 +136,7 @@ class LoadDialog(Design_ui.Ui_Form):
         file.close()
         self.List_Workbenches = Data["List_Workbenches"]
         self.StringList_Toolbars = Data["StringList_Toolbars"]
-        self.List_Commands = Data["StringList_Toolbars"]
+        self.List_Commands = Data["List_Commands"]
         self.LoadControls()
 
         # -- Custom panel tab --
@@ -395,8 +395,6 @@ class LoadDialog(Design_ui.Ui_Form):
                     WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
                     self.List_Workbenches.append([str(WorkBenchName), IconName, WorkbenchTitle])
 
-        # Create a list of all toolbars
-        self.StringList_Toolbars.clear()
         # Store the current active workbench
         ActiveWB = Gui.activeWorkbench().name()
         # Go through the list of workbenches
@@ -503,16 +501,19 @@ class LoadDialog(Design_ui.Ui_Form):
             self.List_Commands.append(["Std_Measure", IconName, MenuName, "General"])
 
         # Write the lists to a data file
+        #
+        # clear the data file. If not exists, create it
         DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFilex.dat")
-        if not os.path.exists(DataFile):
-            open(DataFile, "w").close()
+        open(DataFile, "w").close()
 
+        # Open de data file, load it as json and then close it again
         Data = {}
+        # Update the data
         Data["List_Workbenches"] = self.List_Workbenches
         Data["StringList_Toolbars"] = self.StringList_Toolbars
-        Data["StringList_Toolbars"] = self.List_Commands
-
-        # Writing to sample.json
+        Data["List_Commands"] = self.List_Commands
+        # Write to the data file
+        DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFilex.dat")
         with open(DataFile, "w") as outfile:
             json.dump(Data, outfile, indent=4)
 
