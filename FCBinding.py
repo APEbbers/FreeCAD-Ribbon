@@ -1398,6 +1398,7 @@ class ModernMenu(RibbonBar):
     def hideClassicToolbars(self):
         for toolbar in mw.findChildren(QToolBar):
             name = toolbar.objectName()
+            # print(name)
             Parameters = App.ParamGet("User parameter:BaseApp/MainWindow/Toolbars")
             Parameters.SetBool(name, False)
             toolbar.hide()
