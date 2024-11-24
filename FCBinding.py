@@ -574,8 +574,9 @@ class ModernMenu(RibbonBar):
                     index_1 = WorkbenchOrderedList.index(WorkbenchOrderedList[i])
                     index_2 = WorkbenchOrderedList.index("AssemblyWorkbench")
 
-                    WorkbenchOrderedList.pop(index_2)
-                    WorkbenchOrderedList.insert(index_1 - 1, "AssemblyWorkbench")
+                    if index_1 < index_2:
+                        WorkbenchOrderedList.pop(index_2)
+                        WorkbenchOrderedList.insert(index_1 - 1, "AssemblyWorkbench")
                     break
                 except Exception:
                     pass
