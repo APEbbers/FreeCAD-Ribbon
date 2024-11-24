@@ -1400,7 +1400,7 @@ class ModernMenu(RibbonBar):
             name = toolbar.objectName()
             Parameters = App.ParamGet("User parameter:BaseApp/MainWindow/Toolbars")
             Parameters.SetBool(name, False)
-            toolbar.hide
+            toolbar.hide()
 
             parentWidget = toolbar.parentWidget()
             # hide toolbars that are not in the statusBar and show toolbars that are in the statusbar.
@@ -1411,7 +1411,7 @@ class ModernMenu(RibbonBar):
                 self.quickAccessToolBar().objectName(),
                 self.rightToolBar().objectName(),
             ]:
-                toolbar.show
+                toolbar.show()
 
         return
 
