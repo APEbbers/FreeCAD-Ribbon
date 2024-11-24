@@ -63,6 +63,9 @@ import Design_ui as Design_ui
 # Define the translation
 translate = App.Qt.translate
 
+# Get the main window of FreeCAD
+mw = Gui.getMainWindow()
+
 
 class LoadDialog(Design_ui.Ui_Form):
 
@@ -601,6 +604,28 @@ class LoadDialog(Design_ui.Ui_Form):
                             IsInList = True
                     if IsInList is False:
                         CommandNames.append(Item)
+                # allButtons: list = []
+                # toolbar = key
+                # try:
+                #     TB = mw.findChildren(QToolBar, toolbar)
+                #     allButtons = TB[0].findChildren(QToolButton)
+                #     # remove empty buttons
+                #     for i in range(len(allButtons)):
+                #         button: QToolButton = allButtons[i]
+                #         if allButtons[i].text() == "":
+                #             allButtons.pop(i)
+                # except Exception:
+                #     pass
+
+                # for button in allButtons:
+                #     action = button.defaultAction()
+                #     Item = [action.data(), self.List_Workbenches[i][0]]
+                #     IsInList = False
+                #     for k in range(len(CommandNames)):
+                #         if CommandNames[k][0] == value[j]:
+                #             IsInList = True
+                #     if IsInList is False:
+                #         CommandNames.append(Item)
 
         # Go through the list
         for CommandName in CommandNames:
@@ -665,6 +690,8 @@ class LoadDialog(Design_ui.Ui_Form):
                 "&", ""
             )
             self.List_Commands.append(["Std_Measure", IconName, MenuName, "General"])
+
+        self.List_Commands = StandardFunctions.addMissingCommands(self.List_Commands)
 
         # --- Serialize Icons ------------------------------------------------------------------------------------------
         #
@@ -2362,6 +2389,9 @@ class LoadDialog(Design_ui.Ui_Form):
                         # Go through the list with all available commands.
                         # If the commandText is in this list, get the command name.
                         for i3 in range(len(self.List_Commands)):
+                            # print(
+                            #     f"{self.List_Commands[i3][0]}, {self.List_Commands[i3][2]}, {self.List_Commands[i3][3]}"
+                            # )
                             if MenuName == self.List_Commands[i3][2]:
                                 if (
                                     WorkBenchName == self.List_Commands[i3][3]

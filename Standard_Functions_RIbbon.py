@@ -586,3 +586,27 @@ def CommandInfoCorrections(CommandName):
         CommandInfo["statusTip"] = ""
         CommandInfo["pixmap"] = ""
         return CommandInfo
+
+
+def addMissingCommands(CommandList: list):
+    MissingCommands = [
+        [
+            "Sketcher_NewSketch",
+            "Sketcher_NewSketch",
+            "Create sketch",
+            "SketcherWorkbench",
+        ],
+    ]
+
+    CopyList = CommandList.copy()
+
+    for Item in CommandList:
+        isInList = False
+        for MissingCommand in MissingCommands:
+            if Item[0] == MissingCommand:
+                isInList = True
+                break
+
+        if isInList is False:
+            CopyList.append(MissingCommand)
+    return CopyList

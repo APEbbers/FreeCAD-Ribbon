@@ -82,6 +82,7 @@ import LoadSettings_Ribbon
 import LoadLicenseForm_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
 from Standard_Functions_RIbbon import CommandInfoCorrections
+import Serialize
 import StyleMapping
 import platform
 
@@ -151,9 +152,9 @@ class ModernMenu(RibbonBar):
     PanelOffset = -20
     DockWidgetOffset = 0
 
-    CategoryList = []
-
-    Position = []
+    # Create the lists for the deserialized icons
+    List_CommandIcons = []
+    List_WorkBenchIcons = []
 
     def __init__(self):
         """
@@ -177,6 +178,27 @@ class ModernMenu(RibbonBar):
         with open(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, "r") as file:
             self.ribbonStructure.update(json.load(file))
         file.close()
+
+        DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFile.dat")
+        if os.path.exists(DataFile) is True:
+            # Load the lists for the deserialized icons
+            Data = {}
+            # read ribbon structure from JSON file
+            with open(DataFile, "r") as file:
+                Data.update(json.load(file))
+            file.close()
+            try:
+                for IconItem in Data["WorkBench_Icons"]:
+                    Icon: QIcon = Serialize.deserializeIcon(IconItem[1])
+                    item = [IconItem[0], Icon]
+                    self.List_WorkBenchIcons.append(item)
+                # Load the lists for the deserialized icons
+                for IconItem in Data["Command_Icons"]:
+                    Icon: QIcon = Serialize.deserializeIcon(IconItem[1])
+                    item = [IconItem[0], Icon]
+                    self.List_CommandIcons.append(item)
+            except Exception:
+                pass
 
         # if FreeCAD is version 0.21 create a custom toolbar "Individual Views"
         if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
@@ -634,9 +656,8 @@ class ModernMenu(RibbonBar):
                         # Set the tabbar according the style setting
                         if Parameters_Ribbon.TABBAR_STYLE == 0:
                             # set tab icon
-                            self.tabBar().setTabIcon(
-                                len(self.categories()) - 1, QIcon(workbench.Icon)
-                            )
+                            icon: QIcon = self.ReturnWorkbenchIcon(workbenchName)
+                            self.tabBar().setTabIcon(len(self.categories()) - 1, icon)
                         if Parameters_Ribbon.TABBAR_STYLE == 1:
                             self.tabBar().setTabIcon(
                                 len(self.categories()) - 1, QIcon()
@@ -1265,12 +1286,16 @@ class ModernMenu(RibbonBar):
                             except KeyError:
                                 text = action.text()
 
+                            # Get the icon from chache
+                            actionIcon = self.ReturnCommandIcon(action.data())
+                            action.setIcon(actionIcon)
+
                             if action.icon() is None:
                                 CommandName = self.ribbonStructure["workbenches"][
                                     workbenchName
                                 ]["toolbars"][toolbar]["commands"][action.data()]
                                 action.setIcon(
-                                    Gui.getIcon(
+                                    self.ReturnCommandIcon(
                                         CommandInfoCorrections(CommandName)["pixmap"]
                                     )
                                 )
@@ -1294,6 +1319,8 @@ class ModernMenu(RibbonBar):
                                 ]["toolbars"][toolbar]["commands"][action.data()][
                                     "size"
                                 ]
+                                if buttonSize == "":
+                                    buttonSize = "small"
                             except KeyError:
                                 buttonSize = "small"  # small as default
 
@@ -1680,6 +1707,44 @@ class ModernMenu(RibbonBar):
             ribbonHeight = ribbonHeight + LargeButtonHeight
 
         return ribbonHeight + offset
+
+    def ReturnCommandIcon(self, CommandName: str, pixmap: str = "") -> QIcon:
+        """_summary_
+
+        Args:
+            CommandName (str): Name of the command
+            pixmap (str, optional): Add a pixmap as backup. Defaults to "".
+
+        Returns:
+            QIcon: the command icon.
+        """
+        icon = QIcon()
+        for item in self.List_CommandIcons:
+            if item[0] == CommandName:
+                icon = item[1]
+        if icon is None:
+            if pixmap != "":
+                icon = Gui.getIcon(pixmap)
+        return icon
+
+    def ReturnWorkbenchIcon(self, WorkBenchName: str, pixmap: str = "") -> QIcon:
+        """_summary_
+
+        Args:
+            CommandName (str): Name of the command
+            pixmap (str, optional): Add a pixmap as backup. Defaults to "".
+
+        Returns:
+            QIcon: the command icon.
+        """
+        icon = QIcon()
+        for item in self.List_WorkBenchIcons:
+            if item[0] == WorkBenchName:
+                icon = item[1]
+        if icon is None:
+            if pixmap != "":
+                icon = Gui.getIcon(pixmap)
+        return icon
 
 
 # region - alternative loading
