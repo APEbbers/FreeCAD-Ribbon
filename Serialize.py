@@ -19,6 +19,9 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+
+# This code is based on the serialize function of the SearBar Addon.
+# Origina developer for the SearchBar addon is Suzanne Soy.
 from PySide.QtGui import QIcon, QPixmap
 from PySide.QtCore import (
     Qt,
