@@ -1176,15 +1176,17 @@ class ModernMenu(RibbonBar):
                             except KeyError:
                                 text = action.text()
 
-                            # Get the icon from chache
-                            actionIcon = self.ReturnCommandIcon(action.data())
-                            action.setIcon(actionIcon)
-
-                            if action.icon() is None:
-                                CommandName = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
+                            # Get the icon from cache. Use the pixmap as backup
+                            pixmap = ""
+                            try:
+                                pixmap = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
                                     "commands"
-                                ][action.data()]
-                                action.setIcon(self.ReturnCommandIcon(CommandInfoCorrections(CommandName)["pixmap"]))
+                                ][action.data()]["icon"]
+                            except Exception:
+                                pass
+                            actionIcon = self.ReturnCommandIcon(action.data(), pixmap)
+                            if actionIcon is not None:
+                                action.setIcon(actionIcon)
 
                             # try to get alternative icon from ribbonStructure
                             try:
