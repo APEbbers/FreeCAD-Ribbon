@@ -253,11 +253,9 @@ if Settings.GetStringSetting("BackupFolder") == "":
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Ribbon settings ---------------------------------------------------------------------------------------------
-TAB_ORDER = Settings.GetStringSetting("TabOrder")
-if Settings.GetStringSetting("TabOrder") == "":
-    WorkbenchOrderParam = "User parameter:BaseApp/Preferences/Workbenches/"
-    TAB_ORDER = App.ParamGet(WorkbenchOrderParam).GetString("Ordered")
-    Settings.SetStringSetting("TabOrder", TAB_ORDER)
+WorkbenchOrderParam = "User parameter:BaseApp/Preferences/Workbenches/"
+TAB_ORDER = App.ParamGet(WorkbenchOrderParam).GetString("Ordered")
+Settings.SetStringSetting("TabOrder", TAB_ORDER)
 
 AUTOHIDE_RIBBON = Settings.GetBoolSetting("AutoHideRibbon")
 if Settings.GetBoolSetting("AutoHideRibbon") is None:
