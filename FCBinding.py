@@ -1397,21 +1397,22 @@ class ModernMenu(RibbonBar):
 
     def hideClassicToolbars(self):
         for toolbar in mw.findChildren(QToolBar):
+            name = toolbar.objectName()
+            Parameters = App.ParamGet("User parameter:BaseApp/MainWindow/Toolbars")
+            Parameters.SetBool(name, False)
+            toolbar.hide
+
             parentWidget = toolbar.parentWidget()
             # hide toolbars that are not in the statusBar and show toolbars that are in the statusbar.
             if parentWidget.objectName() == "statusBar" or parentWidget.objectName() == "StatusBarArea":
                 toolbar.show()
             # Show specific toolbars and go to the next
-            elif toolbar.objectName() in [
+            if toolbar.objectName() in [
                 self.quickAccessToolBar().objectName(),
                 self.rightToolBar().objectName(),
             ]:
                 toolbar.show
-            else:
-                name = toolbar.objectName()
-                Parameters = App.ParamGet("User parameter:BaseApp/MainWindow/Toolbars")
-                Parameters.SetBool(name, False)
-                toolbar.hide
+
         return
 
     def List_ReturnCustomToolbars(self):
