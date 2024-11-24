@@ -1184,7 +1184,7 @@ class ModernMenu(RibbonBar):
                                 CommandName = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
                                     "commands"
                                 ][action.data()]
-                                action.setIcon(Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"]))
+                                action.setIcon(self.ReturnCommandIcon(CommandInfoCorrections(CommandName)["pixmap"]))
 
                             # try to get alternative icon from ribbonStructure
                             try:
@@ -1201,6 +1201,8 @@ class ModernMenu(RibbonBar):
                                 buttonSize = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
                                     "commands"
                                 ][action.data()]["size"]
+                                if buttonSize == "":
+                                    buttonSize = "small"
                             except KeyError:
                                 buttonSize = "small"  # small as default
 

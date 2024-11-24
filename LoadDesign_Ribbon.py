@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -35,7 +35,7 @@ from PySide.QtWidgets import (
     QMenu,
     QWidget,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
 import json
 from datetime import datetime
@@ -62,6 +62,9 @@ import Design_ui as Design_ui
 
 # Define the translation
 translate = App.Qt.translate
+
+# Get the main window of FreeCAD
+mw = Gui.getMainWindow()
 
 
 class LoadDialog(Design_ui.Ui_Form):
@@ -552,6 +555,28 @@ class LoadDialog(Design_ui.Ui_Form):
                             IsInList = True
                     if IsInList is False:
                         CommandNames.append(Item)
+                # allButtons: list = []
+                # toolbar = key
+                # try:
+                #     TB = mw.findChildren(QToolBar, toolbar)
+                #     allButtons = TB[0].findChildren(QToolButton)
+                #     # remove empty buttons
+                #     for i in range(len(allButtons)):
+                #         button: QToolButton = allButtons[i]
+                #         if allButtons[i].text() == "":
+                #             allButtons.pop(i)
+                # except Exception:
+                #     pass
+
+                # for button in allButtons:
+                #     action = button.defaultAction()
+                #     Item = [action.data(), self.List_Workbenches[i][0]]
+                #     IsInList = False
+                #     for k in range(len(CommandNames)):
+                #         if CommandNames[k][0] == value[j]:
+                #             IsInList = True
+                #     if IsInList is False:
+                #         CommandNames.append(Item)
 
         # Go through the list
         for CommandName in CommandNames:
