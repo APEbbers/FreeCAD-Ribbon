@@ -178,9 +178,7 @@ def restart_freecad():
 
     args = QtWidgets.QApplication.arguments()[1:]
     if Gui.getMainWindow().close():
-        QtCore.QProcess.startDetached(
-            QtWidgets.QApplication.applicationFilePath(), args
-        )
+        QtCore.QProcess.startDetached(QtWidgets.QApplication.applicationFilePath(), args)
 
     return
 
@@ -333,13 +331,9 @@ def GetFileDialog(Filter="", parent=None, DefaultPath="", SaveAs: bool = True) -
 
     file = ""
     if SaveAs is False:
-        file = QFileDialog.getOpenFileName(
-            parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter
-        )[0]
+        file = QFileDialog.getOpenFileName(parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter)[0]
     if SaveAs is True:
-        file = QFileDialog.getSaveFileName(
-            parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter
-        )[0]
+        file = QFileDialog.getSaveFileName(parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter)[0]
     return file
 
 
@@ -347,9 +341,7 @@ def GetFolder(parent=None, DefaultPath="") -> str:
     from PySide.QtWidgets import QFileDialog
 
     Directory = ""
-    Directory = QFileDialog.getExistingDirectory(
-        parent=parent, caption="Select Folder", dir=DefaultPath
-    )
+    Directory = QFileDialog.getExistingDirectory(parent=parent, caption="Select Folder", dir=DefaultPath)
 
     return Directory
 
@@ -377,18 +369,12 @@ def CreateToolbar(Name: str, WorkBenchName: str = "Global", ButtonList: list = [
     # Define the name for the toolbar
     ToolBarName = Name
     # define the parameter path for the toolbar
-    WorkbenchToolBarsParamPath = (
-        "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
-    )
+    WorkbenchToolBarsParamPath = "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
 
     # check if there is already a toolbar with the same name
-    CustomToolbars: list = App.ParamGet(
-        "User parameter:BaseApp/Workbench/Global/Toolbar"
-    ).GetGroups()
+    CustomToolbars: list = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar").GetGroups()
     for Group in CustomToolbars:
-        Parameter = App.ParamGet(
-            "User parameter:BaseApp/Workbench/Global/Toolbar/" + Group
-        )
+        Parameter = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar/" + Group)
         ItemName = Parameter.GetString("Name")
         if ItemName == ToolBarName:
             return ToolBarName
@@ -417,9 +403,7 @@ def RemoveWorkBenchToolbars(Name: str, WorkBenchName: str = "Global") -> None:
     # Define the name for the toolbar
     ToolBarName = Name
     # define the parameter path for the toolbar
-    ToolBarsParamPath = (
-        "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
-    )
+    ToolBarsParamPath = "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
 
     custom_toolbars = App.ParamGet(ToolBarsParamPath)
     custom_toolbars.RemGroup(ToolBarName)
@@ -586,3 +570,19 @@ def CommandInfoCorrections(CommandName):
         CommandInfo["statusTip"] = ""
         CommandInfo["pixmap"] = ""
         return CommandInfo
+
+
+def addMissingCommands(CommandList: list):
+    MissingCommands = [
+        ["Sketcher_NewSketch", Gui.getIcon("Sketcher_NewSketch"), "Create sketch", "SketcherWorkbench"],
+    ]
+
+    for Item in CommandList:
+        isInList = False
+        for MissingCommand in MissingCommands:
+            if Item[0] == MissingCommand:
+                isInList = True
+
+        if isInList is False:
+            CommandList.append(MissingCommand)
+    return
