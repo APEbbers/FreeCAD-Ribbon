@@ -188,13 +188,7 @@ class LoadDialog(Design_ui.Ui_Form):
             for key, value in list(ToolbarItems.items()):
                 for j in range(len(value)):
                     Item = [value[j], self.List_Workbenches[i][0]]
-                    # if CommandNames.__contains__(Item) is False:
-                    IsInList = False
-                    for k in range(len(CommandNames)):
-                        if CommandNames[k][0] == value[j]:
-                            IsInList = True
-                    if IsInList is False:
-                        CommandNames.append(Item)
+                    CommandNames.append(Item)
 
         # Go through the list
         for CommandName in CommandNames:
