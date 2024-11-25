@@ -146,6 +146,8 @@ class ModernMenu(RibbonBar):
 
     # Placeholders for toggle function of the ribbon
     RibbonMinimalHeight = ApplicationButtonSize + 10
+    if ApplicationButtonSize < iconSize:
+        RibbonMinimalHeight = iconSize + 10
     RibbonMaximumHeight = 240  # Will be redefined later
 
     # Declare default offsets
@@ -361,7 +363,7 @@ class ModernMenu(RibbonBar):
 
         # Set the maximum heigth for the ribbon
         self.RibbonMaximumHeight = (
-            self.currentCategory().height() + self.RibbonMinimalHeight
+            self.ReturnRibbonHeight(self.PanelOffset) + self.RibbonMinimalHeight
         )
 
         # override the default scroll behavior with a custom function
@@ -448,7 +450,11 @@ class ModernMenu(RibbonBar):
             and Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is True
         ):
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setMaximumHeight(self.ribbonHeight() + self.DockWidgetOffset)
+            TB.setMaximumHeight(
+                self.ReturnRibbonHeight(self.PanelOffset)
+                + self.DockWidgetOffset
+                + self.RibbonMinimalHeight
+            )
 
             # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
@@ -884,7 +890,11 @@ class ModernMenu(RibbonBar):
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
             # if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setMaximumHeight(self.ribbonHeight() + self.DockWidgetOffset)
+            TB.setMaximumHeight(
+                self.ReturnRibbonHeight(self.PanelOffset)
+                + self.DockWidgetOffset
+                + self.RibbonMinimalHeight
+            )
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
             Parameters_Ribbon.AUTOHIDE_RIBBON = False
 
@@ -916,7 +926,11 @@ class ModernMenu(RibbonBar):
     def onWbActivated(self):
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setMaximumHeight(self.ribbonHeight() + self.DockWidgetOffset)
+            TB.setMaximumHeight(
+                self.ReturnRibbonHeight(self.PanelOffset)
+                + self.DockWidgetOffset
+                + self.RibbonMinimalHeight
+            )
 
         # Make sure that the text is readable
         self.tabBar().setStyleSheet(
@@ -949,7 +963,11 @@ class ModernMenu(RibbonBar):
     def onTabBarClicked(self):
         # if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-        TB.setMaximumHeight(self.ribbonHeight() + self.DockWidgetOffset)
+        TB.setMaximumHeight(
+            self.ReturnRibbonHeight(self.PanelOffset)
+            + self.DockWidgetOffset
+            + self.RibbonMinimalHeight
+        )
         self.setRibbonVisible(True)
 
     def buildPanels(self):
@@ -1286,19 +1304,19 @@ class ModernMenu(RibbonBar):
                             except KeyError:
                                 text = action.text()
 
-                            # Get the icon from chache
-                            actionIcon = self.ReturnCommandIcon(action.data())
-                            action.setIcon(actionIcon)
-
-                            if action.icon() is None:
-                                CommandName = self.ribbonStructure["workbenches"][
+                            # Get the icon from cache. Use the pixmap as backup
+                            pixmap = ""
+                            try:
+                                pixmap = self.ribbonStructure["workbenches"][
                                     workbenchName
-                                ]["toolbars"][toolbar]["commands"][action.data()]
-                                action.setIcon(
-                                    self.ReturnCommandIcon(
-                                        CommandInfoCorrections(CommandName)["pixmap"]
-                                    )
-                                )
+                                ]["toolbars"][toolbar]["commands"][action.data()][
+                                    "icon"
+                                ]
+                            except Exception:
+                                pass
+                            actionIcon = self.ReturnCommandIcon(action.data(), pixmap)
+                            if actionIcon is not None:
+                                action.setIcon(actionIcon)
 
                             # try to get alternative icon from ribbonStructure
                             try:
@@ -1686,9 +1704,9 @@ class ModernMenu(RibbonBar):
         # Set the ribbon height.
         ribbonHeight = self.RibbonMinimalHeight
         # If text is enabled for large button, the height is modified.
-        LargeButtonHeight = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
+        LargeButtonHeight = Parameters_Ribbon.ICON_SIZE_LARGE
         if Parameters_Ribbon.SHOW_ICON_TEXT_LARGE is True:
-            LargeButtonHeight = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
+            LargeButtonHeight = Parameters_Ribbon.ICON_SIZE_LARGE + 20
         # Check whichs is has the most height: 3 small buttons, 2 medium buttons or 1 large button
         # and set the height accordingly
         if (
@@ -1704,8 +1722,7 @@ class ModernMenu(RibbonBar):
         ):
             ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
         else:
-            ribbonHeight = ribbonHeight + LargeButtonHeight
-
+            ribbonHeight = ribbonHeight + LargeButtonHeight + 5
         return ribbonHeight + offset
 
     def ReturnCommandIcon(self, CommandName: str, pixmap: str = "") -> QIcon:

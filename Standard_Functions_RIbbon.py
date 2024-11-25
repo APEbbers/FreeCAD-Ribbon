@@ -577,6 +577,13 @@ def CommandInfoCorrections(CommandName):
             CommandInfo["whatsThis"] = "PartDesign_CompSketches"
             CommandInfo["statusTip"] = "Create or edit a sketch"
 
+        if CommandName == "Sketcher_Grid":
+            CommandInfo["menuText"] = "Toggle grid"
+            CommandInfo["pixmap"] = "Sketcher_GridToggle_Deactivated"
+        if CommandName == "Sketcher_Snap":
+            CommandInfo["menuText"] = "Toggle grid"
+            CommandInfo["pixmap"] = "Sketcher_Snap_Deactivated"
+
         return CommandInfo
     else:
         CommandInfo = {}
