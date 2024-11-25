@@ -582,11 +582,17 @@ def CommandInfoCorrections(CommandName):
 def addMissingCommands(CommandList: list):
     MissingCommands = [
         [
-            "Sketcher_NewSketch",
-            "Sketcher_NewSketch",
-            "Create sketch",
-            "SketcherWorkbench",
+            "Sketcher_NewSketch",  # commandname
+            "Sketcher_NewSketch",  # iconname
+            "Create sketch",  # menu text
+            "SketcherWorkbench",  # workbench
         ],
+        ["Draft_Line", "Draft_Line", "Line", "DraftWorkbench"],
+        ["Draft_Move", "Draft_Move", "Move", "DraftWorkbench"],
+        ["Draft_LayerManager", "Draft_LayerManager", "Manage layers...", "DraftWorkbench"],
+        ["Draft_Snap_Lock", "Draft_Snap_Lock", "Snap lock", "DraftWorkbench"],
+        ["OpenSCAD_ReplaceObject", "OpenSCAD_ReplaceObject", "Replace Object", "OpenSCADWorkbench"],
+        ["Part_CheckGeometry", "Part_CheckGeometry", "Check Geometry", "OpenSCADWorkbench"],
     ]
 
     CopyList = CommandList.copy()
