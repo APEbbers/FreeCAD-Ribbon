@@ -563,10 +563,10 @@ def CommandInfoCorrections(CommandName):
 
         if CommandName == "Sketcher_Grid":
             CommandInfo["menuText"] = "Toggle grid"
-            CommandInfo["pixmap"] = "Sketcher_GridToggle_Deactivated"
+            CommandInfo["pixmap"] = "Sketcher_GridToggle_Deactivated.svg"
         if CommandName == "Sketcher_Snap":
             CommandInfo["menuText"] = "Toggle snap"
-            CommandInfo["pixmap"] = "Sketcher_Snap_Deactivated"
+            CommandInfo["pixmap"] = "Sketcher_Snap_Deactivated.svg"
 
         return CommandInfo
     else:
@@ -601,3 +601,13 @@ def addMissingCommands(CommandList: list):
         if isInList is False:
             CopyList.append(MissingCommand)
     return CopyList
+
+
+def returnQiCons_Commands(CommandName, pixmap):
+    icon = Gui.getIcon(pixmap)
+    if icon is None or (icon is not None and icon.isNull()):
+        Command = Gui.Command.get(CommandName)
+        action = Command.getAction()[0]
+        icon = action.icon()
+
+    return icon
