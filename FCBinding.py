@@ -572,9 +572,6 @@ class ModernMenu(RibbonBar):
         self.tabBar().setFont(font)
         self.tabBar().setIconSize(QSize(self.TabBar_Size - 6, self.TabBar_Size - 6))
 
-        # Set the tabbar height and textsize
-        self.tabBar().setIconSize(QSize(self.iconSize, self.iconSize))
-
         # Correct colors when no stylesheet is selected for FreeCAD.
         FreeCAD_preferences = App.ParamGet(
             "User parameter:BaseApp/Preferences/MainWindow"
