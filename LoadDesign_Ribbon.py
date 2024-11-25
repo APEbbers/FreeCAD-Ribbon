@@ -517,7 +517,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     # Otherwise add it the the list.
                     IsInList = False
                     for i in range(len(self.StringList_Toolbars)):
-                        if Toolbar == self.StringList_Toolbars[i][0]:
+                        if Toolbar == self.StringList_Toolbars[i][0] and WorkBench[0] == self.StringList_Toolbars[i][2]:
                             IsInList = True
 
                     if IsInList is False:
@@ -548,13 +548,7 @@ class LoadDialog(Design_ui.Ui_Form):
             for key, value in list(ToolbarItems.items()):
                 for j in range(len(value)):
                     Item = [value[j], self.List_Workbenches[i][0]]
-                    # if CommandNames.__contains__(Item) is False:
-                    IsInList = False
-                    for k in range(len(CommandNames)):
-                        if CommandNames[k][0] == value[j]:
-                            IsInList = True
-                    if IsInList is False:
-                        CommandNames.append(Item)
+                    CommandNames.append(Item)
 
         # Go through the list
         for CommandName in CommandNames:
@@ -568,9 +562,6 @@ class LoadDialog(Design_ui.Ui_Form):
                 else:
                     IconName = ""
                 MenuName = CommandInfoCorrections(CommandName[0])["ActionText"].replace("&", "")
-                # There are a few dropdown buttons that need to be corrected
-                if CommandName == "PartDesign_CompSketches":
-                    MenuName = "Create sketch"
                 self.List_Commands.append([CommandName[0], IconName, MenuName, WorkBenchName])
         # add also custom commands
         Toolbars = self.List_ReturnCustomToolbars()
@@ -606,7 +597,7 @@ class LoadDialog(Design_ui.Ui_Form):
             MenuName = CommandInfoCorrections("Std_Measure")["ActionText"].replace("&", "")
             self.List_Commands.append(["Std_Measure", IconName, MenuName, "General"])
 
-        self.List_Commands = StandardFunctions.addMissingCommands(self.List_Commands)
+        # self.List_Commands = StandardFunctions.addMissingCommands(self.List_Commands)
 
         # --- Serialize Icons ------------------------------------------------------------------------------------------
         #
@@ -2078,7 +2069,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for i1 in range(self.form.tableWidget.rowCount()):
             row = i1
 
-            WorkbenchTitle = self.form.WorkbenchList.currentData()
+            WorkbenchTitle = self.form.WorkbenchList.currentText()
             WorkBenchName = ""
             try:
                 for WorkbenchItem in self.List_Workbenches:
@@ -2098,14 +2089,14 @@ class LoadDialog(Design_ui.Ui_Form):
                         )
                         # Get the menu name from the stored data
                         MenuName = self.form.tableWidget.item(row, 0).data(Qt.ItemDataRole.UserRole)
-
                         # Go through the list with all available commands.
                         # If the commandText is in this list, get the command name.
                         for i3 in range(len(self.List_Commands)):
                             # print(
                             #     f"{self.List_Commands[i3][0]}, {self.List_Commands[i3][2]}, {self.List_Commands[i3][3]}"
                             # )
-                            if MenuName == self.List_Commands[i3][2]:
+
+                            if MenuName == self.List_Commands[i3][2] and WorkBenchName == self.List_Commands[i3][3]:
                                 if WorkBenchName == self.List_Commands[i3][3] or self.List_Commands[i3][3] == "Global":
                                     CommandName = self.List_Commands[i3][0]
                                     # Command = Gui.Command.get(CommandName)
