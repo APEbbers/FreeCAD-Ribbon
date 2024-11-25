@@ -579,10 +579,10 @@ def CommandInfoCorrections(CommandName):
 
         if CommandName == "Sketcher_Grid":
             CommandInfo["menuText"] = "Toggle grid"
-            CommandInfo["pixmap"] = "Sketcher_GridToggle_Deactivated"
+            CommandInfo["pixmap"] = "Sketcher_GridToggle_Deactivated.svg"
         if CommandName == "Sketcher_Snap":
-            CommandInfo["menuText"] = "Toggle grid"
-            CommandInfo["pixmap"] = "Sketcher_Snap_Deactivated"
+            CommandInfo["menuText"] = "Toggle snap"
+            CommandInfo["pixmap"] = "Sketcher_Snap_Deactivated.svg"
 
         return CommandInfo
     else:
@@ -598,10 +598,31 @@ def CommandInfoCorrections(CommandName):
 def addMissingCommands(CommandList: list):
     MissingCommands = [
         [
-            "Sketcher_NewSketch",
-            "Sketcher_NewSketch",
-            "Create sketch",
-            "SketcherWorkbench",
+            "Sketcher_NewSketch",  # commandname
+            "Sketcher_NewSketch",  # iconname
+            "Create sketch",  # menu text
+            "SketcherWorkbench",  # workbench
+        ],
+        ["Draft_Line", "Draft_Line", "Line", "DraftWorkbench"],
+        ["Draft_Move", "Draft_Move", "Move", "DraftWorkbench"],
+        [
+            "Draft_LayerManager",
+            "Draft_LayerManager",
+            "Manage layers...",
+            "DraftWorkbench",
+        ],
+        ["Draft_Snap_Lock", "Draft_Snap_Lock", "Snap lock", "DraftWorkbench"],
+        [
+            "OpenSCAD_ReplaceObject",
+            "OpenSCAD_ReplaceObject",
+            "Replace Object",
+            "OpenSCADWorkbench",
+        ],
+        [
+            "Part_CheckGeometry",
+            "Part_CheckGeometry",
+            "Check Geometry",
+            "OpenSCADWorkbench",
         ],
     ]
 
@@ -617,3 +638,13 @@ def addMissingCommands(CommandList: list):
         if isInList is False:
             CopyList.append(MissingCommand)
     return CopyList
+
+
+def returnQiCons_Commands(CommandName, pixmap):
+    icon = Gui.getIcon(pixmap)
+    if icon is None or (icon is not None and icon.isNull()):
+        Command = Gui.Command.get(CommandName)
+        action = Command.getAction()[0]
+        icon = action.icon()
+
+    return icon

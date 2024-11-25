@@ -1735,6 +1735,7 @@ class ModernMenu(RibbonBar):
         Returns:
             QIcon: the command icon.
         """
+
         icon = QIcon()
         for item in self.List_CommandIcons:
             if item[0] == CommandName:
