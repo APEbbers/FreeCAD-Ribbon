@@ -319,12 +319,20 @@ class ModernMenu(RibbonBar):
         hexColor = StyleMapping.ReturnStyleItem("Background_Color")
         if hexColor is not None and hexColor != "":
             # Set the quickaccess toolbar background color. This fixes a transparant toolbar.
-            self.quickAccessToolBar().setStyleSheet("QToolBar {background: " + hexColor + ";}")
+            self.quickAccessToolBar().setStyleSheet(
+                "QToolBar {background: " + hexColor + ";}"
+            )
             self.tabBar().setStyleSheet("background: " + hexColor + ";")
             # Set the background color. This fixes transparant backgrounds when FreeCAD has no stylesheet
-            StyleSheet_Addition = "\n\nQToolButton {background: solid " + hexColor + ";}"
+            StyleSheet_Addition = (
+                "\n\nQToolButton {background: solid " + hexColor + ";}"
+            )
             StyleSheet_Addition_2 = (
-                "\n\nRibbonBar {border: none;background: solid " + hexColor + ";color: " + hexColor + ";}"
+                "\n\nRibbonBar {border: none;background: solid "
+                + hexColor
+                + ";color: "
+                + hexColor
+                + ";}"
             )
             StyleSheet = StyleSheet_Addition_2 + StyleSheet + StyleSheet_Addition
         self.setStyleSheet(StyleSheet)
@@ -354,10 +362,14 @@ class ModernMenu(RibbonBar):
         self.tabBar().tabBarClicked.connect(self.onTabBarClicked)
 
         # Set the maximum heigth for the ribbon
-        self.RibbonMaximumHeight = self.ReturnRibbonHeight(self.PanelOffset) + self.RibbonMinimalHeight
+        self.RibbonMaximumHeight = (
+            self.ReturnRibbonHeight(self.PanelOffset) + self.RibbonMinimalHeight
+        )
 
         # override the default scroll behavior with a custom function
-        self.tabBar().wheelEvent = lambda event_tabBar: self.wheelEvent_TabBar(event_tabBar)
+        self.tabBar().wheelEvent = lambda event_tabBar: self.wheelEvent_TabBar(
+            event_tabBar
+        )
         self.wheelEvent = lambda event_CC: self.wheelEvent_CC(event_CC)
         self.tabBar().setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.currentCategory().setFocusPolicy(Qt.FocusPolicy.StrongFocus)
@@ -371,11 +383,17 @@ class ModernMenu(RibbonBar):
         ScrollRightButton_Tab: QToolButton = self.tabBar().findChildren(QToolButton)[1]
         # get the icons
         ScrollLeftButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab")
-        ScrollRightButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollRightButton_Tab")
+        ScrollRightButton_Tab_Icon = StyleMapping.ReturnStyleItem(
+            "ScrollRightButton_Tab"
+        )
         # Set the icons
         StyleSheet = "QToolButton {image: none};QToolButton::arrow {image: none};"
         BackgroundColor = StyleMapping.ReturnStyleItem("Background_Color")
-        if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21 and BackgroundColor is not None:
+        if (
+            int(App.Version()[0]) == 0
+            and int(App.Version()[1]) <= 21
+            and BackgroundColor is not None
+        ):
             StyleSheet = (
                 """QToolButton {image: none;background: """
                 + BackgroundColor
@@ -385,7 +403,9 @@ class ModernMenu(RibbonBar):
             ScrollLeftButton_Tab.setStyleSheet(StyleSheet)
             ScrollLeftButton_Tab.setIcon(ScrollLeftButton_Tab_Icon)
         else:
-            ScrollRightButton_Tab.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextOnly)
+            ScrollRightButton_Tab.setToolButtonStyle(
+                Qt.ToolButtonStyle.ToolButtonTextOnly
+            )
         if ScrollRightButton_Tab_Icon is not None:
             ScrollRightButton_Tab.setStyleSheet(StyleSheet)
             ScrollRightButton_Tab.setIcon(ScrollRightButton_Tab_Icon)
@@ -431,7 +451,9 @@ class ModernMenu(RibbonBar):
         ):
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             TB.setMaximumHeight(
-                self.ReturnRibbonHeight(self.PanelOffset) + self.DockWidgetOffset + self.RibbonMinimalHeight
+                self.ReturnRibbonHeight(self.PanelOffset)
+                + self.DockWidgetOffset
+                + self.RibbonMinimalHeight
             )
 
             # Make sure that the ribbon remains visible
@@ -519,7 +541,9 @@ class ModernMenu(RibbonBar):
         """
         # add quick access buttons
         i = 1  # Start value for button count. Used for width of quickaccess toolbar
-        toolBarWidth = ((self.QuickAccessButtonSize * self.sizeFactor) * i) + self.ApplicationButtonSize
+        toolBarWidth = (
+            (self.QuickAccessButtonSize * self.sizeFactor) * i
+        ) + self.ApplicationButtonSize
         for commandName in self.ribbonStructure["quickAccessCommands"]:
             i = i + 1
             width = 0
@@ -574,12 +598,16 @@ class ModernMenu(RibbonBar):
         self.tabBar().setIconSize(QSize(self.iconSize, self.iconSize))
 
         # Correct colors when no stylesheet is selected for FreeCAD.
-        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
+        FreeCAD_preferences = App.ParamGet(
+            "User parameter:BaseApp/Preferences/MainWindow"
+        )
         currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
         if currentStyleSheet == "":
             hexColor = StyleMapping.ReturnStyleItem("Background_Color")
             # Set the quickaccess toolbar background color
-            self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
+            self.quickAccessToolBar().setStyleSheet(
+                "background-color: " + hexColor + ";"
+            )
 
         # Get the order of workbenches from Parameters
         WorkbenchOrderedList: list = Parameters_Ribbon.TAB_ORDER.split(",")
@@ -595,7 +623,10 @@ class ModernMenu(RibbonBar):
         # There is an issue with the internal assembly wb showing the wrong panel
         # when assembly4 wb is installed and positioned for the internal assembly wb
         for i in range(len(WorkbenchOrderedList)):
-            if WorkbenchOrderedList[i] == "Assembly4Workbench" or WorkbenchOrderedList[i] == "Assembly3Workbench":
+            if (
+                WorkbenchOrderedList[i] == "Assembly4Workbench"
+                or WorkbenchOrderedList[i] == "Assembly3Workbench"
+            ):
                 try:
                     index_1 = WorkbenchOrderedList.index(WorkbenchOrderedList[i])
                     index_2 = WorkbenchOrderedList.index("AssemblyWorkbench")
@@ -634,35 +665,53 @@ class ModernMenu(RibbonBar):
                             icon: QIcon = self.ReturnWorkbenchIcon(workbenchName)
                             self.tabBar().setTabIcon(len(self.categories()) - 1, icon)
                         if Parameters_Ribbon.TABBAR_STYLE == 1:
-                            self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon())
+                            self.tabBar().setTabIcon(
+                                len(self.categories()) - 1, QIcon()
+                            )
 
         # Set the size of the collapseRibbonButton
-        self.collapseRibbonButton().setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+        self.collapseRibbonButton().setFixedSize(
+            self.RightToolBarButtonSize, self.RightToolBarButtonSize
+        )
 
         # add the searchbar if available
         SearchBarWidth = self.AddSearchBar()
 
         # Set the helpbutton
         self.helpRibbonButton().setEnabled(True)
-        self.helpRibbonButton().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.helpRibbonButton().setToolTip(translate("FreeCAD Ribbon", "Go to the FreeCAD help page"))
+        self.helpRibbonButton().setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+        )
+        self.helpRibbonButton().setToolTip(
+            translate("FreeCAD Ribbon", "Go to the FreeCAD help page")
+        )
         # Get the default help action from FreeCAD
         helpMenu = mw.findChildren(QMenu, "&Help")[0]
         helpAction = helpMenu.actions()[0]
         self.helpRibbonButton().setDefaultAction(helpAction)
-        self.helpRibbonButton().setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+        self.helpRibbonButton().setFixedSize(
+            self.RightToolBarButtonSize, self.RightToolBarButtonSize
+        )
 
         # Add a button the enable or disable AutoHide
         pinButton = QToolButton()
         pinButton.setCheckable(True)
-        pinButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        pinButton.setSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+        )
         pinButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
-        pinButton.setIconSize(QSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize))
+        pinButton.setIconSize(
+            QSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+        )
         pinButtonIcon = StyleMapping.ReturnStyleItem("PinButton_open")
         if pinButtonIcon is not None:
             pinButton.setIcon(pinButtonIcon)
         pinButton.setText(translate("FreeCAD Ribbon", "Pin Ribbon"))
-        pinButton.setToolTip(translate("FreeCAD Ribbon", "Click to toggle the autohide function on or off"))
+        pinButton.setToolTip(
+            translate(
+                "FreeCAD Ribbon", "Click to toggle the autohide function on or off"
+            )
+        )
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
             pinButton.setChecked(False)
         if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
@@ -674,20 +723,30 @@ class ModernMenu(RibbonBar):
         RightToolbarWidth = SearchBarWidth
         for child in self.rightToolBar().actions():
             RightToolbarWidth = RightToolbarWidth + self.RightToolBarButtonSize
-        self.rightToolBar().setMinimumWidth(RightToolbarWidth - self.RightToolBarButtonSize * 1.5)
+        self.rightToolBar().setMinimumWidth(
+            RightToolbarWidth - self.RightToolBarButtonSize * 1.5
+        )
         # Set the size policy
-        self.rightToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
+        self.rightToolBar().setSizePolicy(
+            QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred
+        )
         # Set the objectName for the right toolbar. needed for excluding from hiding.
         self.rightToolBar().setObjectName("rightToolBar")
 
         # Set the application button
-        self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
-        self.applicationOptionButton().setFixedSize(self.ApplicationButtonSize, self.ApplicationButtonSize)
+        self.applicationOptionButton().setToolTip(
+            translate("FreeCAD Ribbon", "FreeCAD Ribbon")
+        )
+        self.applicationOptionButton().setFixedSize(
+            self.ApplicationButtonSize, self.ApplicationButtonSize
+        )
         self.setApplicationIcon(Gui.getIcon("freecad"))
 
         # Set the border color and shape
         radius = str((self.applicationOptionButton().width() * 0.49) - 1) + "px"
-        self.applicationOptionButton().setStyleSheet(StyleMapping.ReturnStyleSheet("applicationbutton", radius))
+        self.applicationOptionButton().setStyleSheet(
+            StyleMapping.ReturnStyleSheet("applicationbutton", radius)
+        )
 
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
@@ -705,11 +764,17 @@ class ModernMenu(RibbonBar):
 
                 sea = SearchBoxLight.SearchBoxLight(
                     getItemGroups=lambda: __import__("GetItemGroups").getItemGroups(),
-                    getToolTip=lambda groupId, setParent: __import__("GetItemGroups").getToolTip(groupId, setParent),
-                    getItemDelegate=lambda: __import__("IndentedItemDelegate").IndentedItemDelegate(),
+                    getToolTip=lambda groupId, setParent: __import__(
+                        "GetItemGroups"
+                    ).getToolTip(groupId, setParent),
+                    getItemDelegate=lambda: __import__(
+                        "IndentedItemDelegate"
+                    ).IndentedItemDelegate(),
                 )
                 sea.resultSelected.connect(
-                    lambda index, groupId: __import__("GetItemGroups").onResultSelected(index, groupId)
+                    lambda index, groupId: __import__("GetItemGroups").onResultSelected(
+                        index, groupId
+                    )
                 )
                 sea.setFixedSize(width, self.iconSize)
                 BeforeAction = self.rightToolBar().actions()[1]
@@ -734,17 +799,23 @@ class ModernMenu(RibbonBar):
         # Add the ribbon design button
         Menu.addSeparator()
         DesignMenu = Menu.addMenu(translate("FreeCAD Ribbon", "Customize..."))
-        DesignButton = DesignMenu.addAction(translate("FreeCAD Ribbon", "Ribbon layout"))
+        DesignButton = DesignMenu.addAction(
+            translate("FreeCAD Ribbon", "Ribbon layout")
+        )
         DesignButton.triggered.connect(self.loadDesignMenu)
         # Add the preference button
-        PreferenceButton = DesignMenu.addAction(translate("FreeCAD Ribbon", "Ribbon preferences"))
+        PreferenceButton = DesignMenu.addAction(
+            translate("FreeCAD Ribbon", "Ribbon preferences")
+        )
         PreferenceButton.triggered.connect(self.loadSettingsMenu)
         # Add the script submenu with items
         ScriptDir = os.path.join(os.path.dirname(__file__), "Scripts")
         if os.path.exists(ScriptDir) is True:
             ListScripts = os.listdir(ScriptDir)
             if len(ListScripts) > 0:
-                ScriptButtonMenu = DesignMenu.addMenu(translate("FreeCAD Ribbon", "Scripts"))
+                ScriptButtonMenu = DesignMenu.addMenu(
+                    translate("FreeCAD Ribbon", "Scripts")
+                )
                 for i in range(len(ListScripts)):
                     ScriptButtonMenu.addAction(
                         ListScripts[i],
@@ -762,7 +833,9 @@ class ModernMenu(RibbonBar):
         WhatsNewButton.triggered.connect(self.on_WhatsNewButton_clicked)
         RibbonHelpButton = Menu.addAction(translate("FreeCAD Ribbon", "Ribbon help"))
         RibbonHelpButton.triggered.connect(self.on_RibbonHelpButton_clicked)
-        AboutButton = Menu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version)
+        AboutButton = Menu.addAction(
+            translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version
+        )
         AboutButton.triggered.connect(self.on_AboutButton_clicked)
 
         return
@@ -818,7 +891,9 @@ class ModernMenu(RibbonBar):
             # if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             TB.setMaximumHeight(
-                self.ReturnRibbonHeight(self.PanelOffset) + self.DockWidgetOffset + self.RibbonMinimalHeight
+                self.ReturnRibbonHeight(self.PanelOffset)
+                + self.DockWidgetOffset
+                + self.RibbonMinimalHeight
             )
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
             Parameters_Ribbon.AUTOHIDE_RIBBON = False
@@ -852,11 +927,15 @@ class ModernMenu(RibbonBar):
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             TB.setMaximumHeight(
-                self.ReturnRibbonHeight(self.PanelOffset) + self.DockWidgetOffset + self.RibbonMinimalHeight
+                self.ReturnRibbonHeight(self.PanelOffset)
+                + self.DockWidgetOffset
+                + self.RibbonMinimalHeight
             )
 
         # Make sure that the text is readable
-        self.tabBar().setStyleSheet("color: " + StyleMapping.ReturnStyleItem("Border_Color") + ";")
+        self.tabBar().setStyleSheet(
+            "color: " + StyleMapping.ReturnStyleItem("Border_Color") + ";"
+        )
 
         # switch tab if necessary
         self.updateCurrentTab()
@@ -885,7 +964,9 @@ class ModernMenu(RibbonBar):
         # if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
         TB.setMaximumHeight(
-            self.ReturnRibbonHeight(self.PanelOffset) + self.DockWidgetOffset + self.RibbonMinimalHeight
+            self.ReturnRibbonHeight(self.PanelOffset)
+            + self.DockWidgetOffset
+            + self.RibbonMinimalHeight
         )
         self.setRibbonVisible(True)
 
@@ -917,12 +998,14 @@ class ModernMenu(RibbonBar):
                 ListToolbars.append(CustomPanel)
 
                 # remove the original toolbars from the list
-                Commands = self.ribbonStructure["customToolbars"][workbenchName][CustomPanel]["commands"]
+                Commands = self.ribbonStructure["customToolbars"][workbenchName][
+                    CustomPanel
+                ]["commands"]
                 for Command in Commands:
                     try:
-                        OriginalToolbar = self.ribbonStructure["customToolbars"][workbenchName][CustomPanel][
-                            "commands"
-                        ][Command]
+                        OriginalToolbar = self.ribbonStructure["customToolbars"][
+                            workbenchName
+                        ][CustomPanel]["commands"][Command]
                         ListToolbars.remove(OriginalToolbar)
                     except Exception:
                         continue
@@ -933,7 +1016,9 @@ class ModernMenu(RibbonBar):
 
         try:
             # Get the order of toolbars
-            ToolbarOrder: list = self.ribbonStructure["workbenches"][workbenchName]["toolbars"]["order"]
+            ToolbarOrder: list = self.ribbonStructure["workbenches"][workbenchName][
+                "toolbars"
+            ]["order"]
 
             # Sort the list of toolbars according the toolbar order
             def SortToolbars(toolbar):
@@ -984,29 +1069,52 @@ class ModernMenu(RibbonBar):
 
             # add separators to the command list.
             if workbenchName in self.ribbonStructure["workbenches"]:
-                if toolbar != "" and toolbar in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]:
-                    if "order" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]:
+                if (
+                    toolbar != ""
+                    and toolbar
+                    in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]
+                ):
+                    if (
+                        "order"
+                        in self.ribbonStructure["workbenches"][workbenchName][
+                            "toolbars"
+                        ][toolbar]
+                    ):
                         for j in range(
-                            len(self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["order"])
+                            len(
+                                self.ribbonStructure["workbenches"][workbenchName][
+                                    "toolbars"
+                                ][toolbar]["order"]
+                            )
                         ):
                             if (
-                                self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["order"][j]
+                                self.ribbonStructure["workbenches"][workbenchName][
+                                    "toolbars"
+                                ][toolbar]["order"][j]
                                 .lower()
                                 .__contains__("separator")
                             ):
                                 separator = QToolButton()
                                 separator.setText(
-                                    self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["order"][j]
+                                    self.ribbonStructure["workbenches"][workbenchName][
+                                        "toolbars"
+                                    ][toolbar]["order"][j]
                                 )
                                 allButtons.insert(j, separator)
 
             if workbenchName in self.ribbonStructure["workbenches"]:
                 # order buttons like defined in ribbonStructure
                 if (
-                    toolbar in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]
-                    and "order" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]
+                    toolbar
+                    in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]
+                    and "order"
+                    in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][
+                        toolbar
+                    ]
                 ):
-                    OrderList: list = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["order"]
+                    OrderList: list = self.ribbonStructure["workbenches"][
+                        workbenchName
+                    ]["toolbars"][toolbar]["order"]
 
                     # XXX check that positionsList consists of strings only
                     def sortButtons(button: QToolButton):
@@ -1017,7 +1125,9 @@ class ModernMenu(RibbonBar):
                             if len(button.actions()) > 0:
                                 action = button.actions()[0]
                             if action is not None:
-                                Text = CommandInfoCorrections(action.data())["menuText"].replace("...", "")
+                                Text = CommandInfoCorrections(action.data())[
+                                    "menuText"
+                                ].replace("...", "")
                         except Exception:
                             pass
 
@@ -1039,12 +1149,8 @@ class ModernMenu(RibbonBar):
                 []
             )  # if buttons are used in multiple workbenches, they can show up double. (Sketcher_NewSketch)
             # for button in allButtons:
-            NoSmallButtons_spacer = (
-                0  # needed to count the number of small buttons in a column. (bug fix with adding separators)
-            )
-            NoMediumButtons_spacer = (
-                0  # needed to count the number of medium buttons in a column. (bug fix with adding separators)
-            )
+            NoSmallButtons_spacer = 0  # needed to count the number of small buttons in a column. (bug fix with adding separators)
+            NoMediumButtons_spacer = 0  # needed to count the number of medium buttons in a column. (bug fix with adding separators)
 
             # Define number of rows used per button size
             LargeButtonRows = 3
@@ -1067,9 +1173,9 @@ class ModernMenu(RibbonBar):
                 buttonSize = "small"
                 try:
                     action = button.defaultAction()
-                    buttonSize = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][
-                        action.data()
-                    ]["size"]
+                    buttonSize = self.ribbonStructure["workbenches"][workbenchName][
+                        "toolbars"
+                    ][toolbar]["commands"][action.data()]["size"]
                     if buttonSize == "small":
                         NoSmallButtons_spacer += 1
                     if buttonSize == "medium":
@@ -1145,16 +1251,20 @@ class ModernMenu(RibbonBar):
 
                             # try to get alternative text from ribbonStructure
                             try:
-                                textJSON = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
-                                    "commands"
-                                ][action.data()]["text"]
+                                textJSON = self.ribbonStructure["workbenches"][
+                                    workbenchName
+                                ]["toolbars"][toolbar]["commands"][action.data()][
+                                    "text"
+                                ]
 
                                 # There is a bug in freecad with the comp-sketch menu hase the wrong text
                                 if (
                                     action.data() == "PartDesign_CompSketches"
-                                    and self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
-                                        "commands"
-                                    ][action.data()]["text"]
+                                    and self.ribbonStructure["workbenches"][
+                                        workbenchName
+                                    ]["toolbars"][toolbar]["commands"][action.data()][
+                                        "text"
+                                    ]
                                     == "Create datum"
                                 ):
                                     textJSON = "Create sketch"
@@ -1163,19 +1273,27 @@ class ModernMenu(RibbonBar):
                                 # if so use the alternative, otherwise use original
                                 for CommandName in Gui.listCommands():
                                     Command = Gui.Command.get(CommandName)
-                                    MenuName = CommandInfoCorrections(CommandName)["ActionText"].replace("...", "")
+                                    MenuName = CommandInfoCorrections(CommandName)[
+                                        "ActionText"
+                                    ].replace("...", "")
 
                                     if (
                                         CommandName
-                                        == self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
-                                            "commands"
-                                        ][action.data()]
+                                        == self.ribbonStructure["workbenches"][
+                                            workbenchName
+                                        ]["toolbars"][toolbar]["commands"][
+                                            action.data()
+                                        ]
                                     ):
                                         if (
                                             MenuName
-                                            != self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
-                                                "commands"
-                                            ][action.data()]["text"]
+                                            != self.ribbonStructure["workbenches"][
+                                                workbenchName
+                                            ]["toolbars"][toolbar]["commands"][
+                                                action.data()
+                                            ][
+                                                "text"
+                                            ]
                                         ):
                                             text = textJSON
 
@@ -1189,9 +1307,11 @@ class ModernMenu(RibbonBar):
                             # Get the icon from cache. Use the pixmap as backup
                             pixmap = ""
                             try:
-                                pixmap = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
-                                    "commands"
-                                ][action.data()]["icon"]
+                                pixmap = self.ribbonStructure["workbenches"][
+                                    workbenchName
+                                ]["toolbars"][toolbar]["commands"][action.data()][
+                                    "icon"
+                                ]
                             except Exception:
                                 pass
                             actionIcon = self.ReturnCommandIcon(action.data(), pixmap)
@@ -1200,9 +1320,11 @@ class ModernMenu(RibbonBar):
 
                             # try to get alternative icon from ribbonStructure
                             try:
-                                icon_Json = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
-                                    "commands"
-                                ][action.data()]["icon"]
+                                icon_Json = self.ribbonStructure["workbenches"][
+                                    workbenchName
+                                ]["toolbars"][toolbar]["commands"][action.data()][
+                                    "icon"
+                                ]
                                 if icon_Json != "":
                                     action.setIcon(Gui.getIcon(icon_Json))
                             except KeyError:
@@ -1210,9 +1332,11 @@ class ModernMenu(RibbonBar):
 
                             # get button size from ribbonStructure
                             try:
-                                buttonSize = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
-                                    "commands"
-                                ][action.data()]["size"]
+                                buttonSize = self.ribbonStructure["workbenches"][
+                                    workbenchName
+                                ]["toolbars"][toolbar]["commands"][action.data()][
+                                    "size"
+                                ]
                                 if buttonSize == "":
                                     buttonSize = "small"
                             except KeyError:
@@ -1240,7 +1364,11 @@ class ModernMenu(RibbonBar):
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
                                 padding = 4
-                                btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
+                                btn.setStyleSheet(
+                                    StyleMapping.ReturnStyleSheet(
+                                        "toolbutton", "2px", f"{padding}px"
+                                    )
+                                )
 
                             elif buttonSize == "medium":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
@@ -1258,7 +1386,11 @@ class ModernMenu(RibbonBar):
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
                                 padding = 0
-                                btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
+                                btn.setStyleSheet(
+                                    StyleMapping.ReturnStyleSheet(
+                                        "toolbutton", "2px", f"{padding}px"
+                                    )
+                                )
 
                             elif buttonSize == "large":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
@@ -1280,14 +1412,20 @@ class ModernMenu(RibbonBar):
                                     btn.setFixedHeight(btn.height() + 20)
                                     btn.setMaximumIconSize(btn.height() - 20)
 
-                                btn.setMaximumWidth(Parameters_Ribbon.ICON_SIZE_LARGE + 20)
+                                btn.setMaximumWidth(
+                                    Parameters_Ribbon.ICON_SIZE_LARGE + 20
+                                )
 
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
                                 padding = 10
                                 # if button.menu() is not None:
                                 #     padding = btn.height() / 6
-                                btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
+                                btn.setStyleSheet(
+                                    StyleMapping.ReturnStyleSheet(
+                                        "toolbutton", "2px", f"{padding}px"
+                                    )
+                                )
                             else:
                                 raise NotImplementedError(
                                     translate(
@@ -1302,7 +1440,9 @@ class ModernMenu(RibbonBar):
                             # add dropdown menu if necessary
                             if button.menu() is not None:
                                 btn.setMenu(button.menu())
-                                btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                                btn.setPopupMode(
+                                    QToolButton.ToolButtonPopupMode.MenuButtonPopup
+                                )
                                 if btn.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
                                     btn.setMinimumWidth(btn.height())
                                 else:
@@ -1318,7 +1458,9 @@ class ModernMenu(RibbonBar):
                             continue
 
             # Set the size policy and increment. It has to be MinimumExpanding.
-            panel.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+            panel.setSizePolicy(
+                QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding
+            )
             panel.setSizeIncrement(self.iconSize, self.iconSize)
 
             # remove any suffix from the panel title
@@ -1369,7 +1511,9 @@ class ModernMenu(RibbonBar):
                 # Set the behavior of the option button
                 OptionButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
                 # Remove the image to avoid double arrows
-                OptionButton.setStyleSheet("RibbonPanelOptionButton::menu-indicator {image: none;}")
+                OptionButton.setStyleSheet(
+                    "RibbonPanelOptionButton::menu-indicator {image: none;}"
+                )
                 Menu = OptionButton.menu()
                 if Menu is not None:
                     hexColor = StyleMapping.ReturnStyleItem("Background_Color")
@@ -1380,20 +1524,30 @@ class ModernMenu(RibbonBar):
                     OptionButton.setIcon(OptionButton_Icon)
                 else:
                     OptionButton.setArrowType(Qt.ArrowType.DownArrow)
-                    OptionButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+                    OptionButton.setToolButtonStyle(
+                        Qt.ToolButtonStyle.ToolButtonTextBesideIcon
+                    )
                     OptionButton.setText("more...")
 
         self.isWbLoaded[tabName] = True
 
         # Set the previous/next buttons
         category = self.currentCategory()
-        ScrollLeftButton_Category: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[0]
-        ScrollRightButton_Category: RibbonCategoryLayoutButton = category.findChildren(RibbonCategoryLayoutButton)[1]
+        ScrollLeftButton_Category: RibbonCategoryLayoutButton = category.findChildren(
+            RibbonCategoryLayoutButton
+        )[0]
+        ScrollRightButton_Category: RibbonCategoryLayoutButton = category.findChildren(
+            RibbonCategoryLayoutButton
+        )[1]
         ScrollLeftButton_Category.setMinimumWidth(self.iconSize * 0.5)
         ScrollRightButton_Category.setMinimumWidth(self.iconSize * 0.5)
         # get the icons
-        ScrollLeftButton_Category_Icon = StyleMapping.ReturnStyleItem("ScrollLeftButton_Category")
-        ScrollRightButton_Category_Icon = StyleMapping.ReturnStyleItem("ScrollRightButton_Category")
+        ScrollLeftButton_Category_Icon = StyleMapping.ReturnStyleItem(
+            "ScrollLeftButton_Category"
+        )
+        ScrollRightButton_Category_Icon = StyleMapping.ReturnStyleItem(
+            "ScrollRightButton_Category"
+        )
         # Set the icons
         if ScrollLeftButton_Category_Icon is not None:
             ScrollLeftButton_Category.setIcon(ScrollLeftButton_Category_Icon)
@@ -1404,15 +1558,21 @@ class ModernMenu(RibbonBar):
         else:
             ScrollRightButton_Category.setArrowType(Qt.ArrowType.RightArrow)
         # Connect the custom click event
-        ScrollLeftButton_Category.mousePressEvent = lambda clickLeft: self.on_ScrollButton_Category_clicked(
-            clickLeft, ScrollLeftButton_Category
+        ScrollLeftButton_Category.mousePressEvent = (
+            lambda clickLeft: self.on_ScrollButton_Category_clicked(
+                clickLeft, ScrollLeftButton_Category
+            )
         )
-        ScrollRightButton_Category.mousePressEvent = lambda clickRight: self.on_ScrollButton_Category_clicked(
-            clickRight, ScrollRightButton_Category
+        ScrollRightButton_Category.mousePressEvent = (
+            lambda clickRight: self.on_ScrollButton_Category_clicked(
+                clickRight, ScrollRightButton_Category
+            )
         )
         return
 
-    def on_ScrollButton_Category_clicked(self, event, ScrollButton: RibbonCategoryLayoutButton):
+    def on_ScrollButton_Category_clicked(
+        self, event, ScrollButton: RibbonCategoryLayoutButton
+    ):
         for i in range(Parameters_Ribbon.RIBBON_CLICKSPEED):
             ScrollButton.click()
         return
@@ -1433,7 +1593,10 @@ class ModernMenu(RibbonBar):
             parentWidget = toolbar.parentWidget()
             # hide toolbars that are not in the statusBar and show toolbars that are in the statusbar.
             toolbar.hide()
-            if parentWidget.objectName() == "statusBar" or parentWidget.objectName() == "StatusBarArea":
+            if (
+                parentWidget.objectName() == "statusBar"
+                or parentWidget.objectName() == "StatusBarArea"
+            ):
                 toolbar.show()
             # Show specific toolbars and go to the next
             if toolbar.objectName() in [
@@ -1456,7 +1619,10 @@ class ModernMenu(RibbonBar):
 
                     for Group in CustomToolbars:
                         Parameter = App.ParamGet(
-                            "User parameter:BaseApp/Workbench/" + WorkBenchName + "/Toolbar/" + Group
+                            "User parameter:BaseApp/Workbench/"
+                            + WorkBenchName
+                            + "/Toolbar/"
+                            + Group
                         )
                         Name = Parameter.GetString("Name")
 
@@ -1467,10 +1633,14 @@ class ModernMenu(RibbonBar):
     def List_ReturnCustomToolbars_Global(self):
         Toolbars = []
 
-        CustomToolbars: list = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar").GetGroups()
+        CustomToolbars: list = App.ParamGet(
+            "User parameter:BaseApp/Workbench/Global/Toolbar"
+        ).GetGroups()
 
         for Group in CustomToolbars:
-            Parameter = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar/" + Group)
+            Parameter = App.ParamGet(
+                "User parameter:BaseApp/Workbench/Global/Toolbar/" + Group
+            )
             Name = Parameter.GetString("Name")
 
             Toolbars.append([Name, "Global"])
@@ -1482,14 +1652,20 @@ class ModernMenu(RibbonBar):
 
         try:
             # Get the commands from the custom panel
-            Commands = self.ribbonStructure["customToolbars"][WorkBenchName][CustomToolbar]["commands"]
+            Commands = self.ribbonStructure["customToolbars"][WorkBenchName][
+                CustomToolbar
+            ]["commands"]
 
             # Get the command and its original toolbar
             for key, value in list(Commands.items()):
                 # get the menu text from the command list
                 for CommandName in Gui.listCommands():
                     # Command = Gui.Command.get(CommandName)
-                    MenuName = CommandInfoCorrections(CommandName)["ActionText"].replace("&", "").replace("...", "")
+                    MenuName = (
+                        CommandInfoCorrections(CommandName)["ActionText"]
+                        .replace("&", "")
+                        .replace("...", "")
+                    )
 
                     if MenuName == key.replace("&", "").replace("...", ""):
                         try:
@@ -1534,12 +1710,14 @@ class ModernMenu(RibbonBar):
         # Check whichs is has the most height: 3 small buttons, 2 medium buttons or 1 large button
         # and set the height accordingly
         if (
-            Parameters_Ribbon.ICON_SIZE_SMALL * 3 > Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
+            Parameters_Ribbon.ICON_SIZE_SMALL * 3
+            > Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
             and Parameters_Ribbon.ICON_SIZE_SMALL * 3 > LargeButtonHeight
         ):
             ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_SMALL * 3
         elif (
-            Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 > Parameters_Ribbon.ICON_SIZE_SMALL * 3
+            Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
+            > Parameters_Ribbon.ICON_SIZE_SMALL * 3
             and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 > LargeButtonHeight
         ):
             ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
@@ -1656,7 +1834,9 @@ class run:
 
             ribbonDock.setEnabled(True)
 
-            ribbonDock.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+            ribbonDock.setSizePolicy(
+                QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred
+            )
 
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
