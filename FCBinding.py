@@ -153,6 +153,9 @@ class ModernMenu(RibbonBar):
     PanelOffset = -20
     DockWidgetOffset = 0
 
+    # define a placeholder for the panel title heihgt
+    panelTitleHeight = 0
+
     CategoryList = []
 
     Position = []
@@ -428,11 +431,7 @@ class ModernMenu(RibbonBar):
             and Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is True
         ):
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setMaximumHeight(
-                self.ReturnRibbonHeight(self.PanelOffset)
-                + self.DockWidgetOffset
-                + self.RibbonMinimalHeight
-            )
+            TB.setMaximumHeight(self.ribbonHeight() + self.panelTitleHeight)
 
             # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
@@ -867,11 +866,7 @@ class ModernMenu(RibbonBar):
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
             # if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setMaximumHeight(
-                self.ReturnRibbonHeight(self.PanelOffset)
-                + self.DockWidgetOffset
-                + self.RibbonMinimalHeight
-            )
+            TB.setMaximumHeight(self.ribbonHeight() + self.panelTitleHeight)
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
             Parameters_Ribbon.AUTOHIDE_RIBBON = False
 
@@ -903,11 +898,7 @@ class ModernMenu(RibbonBar):
     def onWbActivated(self):
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setMaximumHeight(
-                self.ReturnRibbonHeight(self.PanelOffset)
-                + self.DockWidgetOffset
-                + self.RibbonMinimalHeight
-            )
+            TB.setMaximumHeight(self.ribbonHeight() + self.panelTitleHeight)
 
         # Make sure that the text is readable
         self.tabBar().setStyleSheet(
@@ -940,11 +931,7 @@ class ModernMenu(RibbonBar):
     def onTabBarClicked(self):
         # if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-        TB.setMaximumHeight(
-            self.ReturnRibbonHeight(self.PanelOffset)
-            + self.DockWidgetOffset
-            + self.RibbonMinimalHeight
-        )
+        TB.setMaximumHeight(self.ribbonHeight() + self.panelTitleHeight)
         self.setRibbonVisible(True)
 
     def buildPanels(self):
@@ -1456,6 +1443,8 @@ class ModernMenu(RibbonBar):
             # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
             # add an offset to make room for the panel titles and icons
             panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelOffset))
+            panel._actionsLayout.setVerticalSpacing(0)
+            self.panelTitleHeight = panel._titleHeight
 
             # Setup the panelOptionButton
             actionList = []
@@ -1548,6 +1537,9 @@ class ModernMenu(RibbonBar):
                 clickRight, ScrollRightButton_Category
             )
         )
+
+        # Set the ribbonheight accordingly
+        self.setRibbonHeight(self.ReturnRibbonHeight(self.panelTitleHeight))
         return
 
     def on_ScrollButton_Category_clicked(
