@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -35,7 +35,7 @@ from PySide.QtGui import (
     QColor,
     QStyleHints,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -57,7 +57,7 @@ from PySide.QtWidgets import (
     QPushButton,
     QHBoxLayout,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -99,19 +99,19 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-# import pyqtribbon_local as pyqtribbon
-# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon_local.panel import RibbonPanel
-# from pyqtribbon_local.toolbutton import RibbonToolButton
-# from pyqtribbon_local.separator import RibbonSeparator
-# from pyqtribbon_local.category import RibbonCategoryLayoutButton
+import pyqtribbon_local as pyqtribbon
+from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon_local.panel import RibbonPanel
+from pyqtribbon_local.toolbutton import RibbonToolButton
+from pyqtribbon_local.separator import RibbonSeparator
+from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-import pyqtribbon as pyqtribbon
-from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon.panel import RibbonPanel
-from pyqtribbon.toolbutton import RibbonToolButton
-from pyqtribbon.separator import RibbonSeparator
-from pyqtribbon.category import RibbonCategoryLayoutButton
+# import pyqtribbon as pyqtribbon
+# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon.panel import RibbonPanel
+# from pyqtribbon.toolbutton import RibbonToolButton
+# from pyqtribbon.separator import RibbonSeparator
+# from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -145,14 +145,17 @@ class ModernMenu(RibbonBar):
     sizeFactor = 1.3
 
     # Placeholders for toggle function of the ribbon
-    RibbonMinimalHeight = ApplicationButtonSize + 10
+    RibbonMinimalHeight = ApplicationButtonSize
     if ApplicationButtonSize < iconSize:
-        RibbonMinimalHeight = iconSize + 10
+        RibbonMinimalHeight = iconSize
     RibbonMaximumHeight = 240  # Will be redefined later
 
     # Declare default offsets
     PanelOffset = -20
     DockWidgetOffset = 0
+
+    # define a placeholder for the panel title heihgt
+    panelTitleHeight = 0
 
     # Create the lists for the deserialized icons
     List_CommandIcons = []
@@ -356,9 +359,6 @@ class ModernMenu(RibbonBar):
         # Set the maximum heigth for the ribbon
         self.RibbonMaximumHeight = self.ReturnRibbonHeight(self.PanelOffset) + self.RibbonMinimalHeight
 
-        # set the size constraint for the ribbon main layout
-        self.setBaseSize(self.width(), self.RibbonMaximumHeight)
-
         # override the default scroll behavior with a custom function
         self.tabBar().wheelEvent = lambda event_tabBar: self.wheelEvent_TabBar(event_tabBar)
         self.wheelEvent = lambda event_CC: self.wheelEvent_CC(event_CC)
@@ -433,9 +433,7 @@ class ModernMenu(RibbonBar):
             and Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is True
         ):
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setMaximumHeight(
-                self.ReturnRibbonHeight(self.PanelOffset) + self.DockWidgetOffset + self.RibbonMinimalHeight
-            )
+            TB.setMaximumHeight(self.ribbonHeight() + self.panelTitleHeight)
 
             # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
@@ -604,7 +602,7 @@ class ModernMenu(RibbonBar):
                     index_2 = WorkbenchOrderedList.index("AssemblyWorkbench")
 
                     WorkbenchOrderedList.pop(index_2)
-                    WorkbenchOrderedList.insert(index_1 - 1, "AssemblyWorkbench")
+                    WorkbenchOrderedList.insert(index_1, "AssemblyWorkbench")
                     break
                 except Exception:
                     pass
@@ -820,9 +818,7 @@ class ModernMenu(RibbonBar):
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
             # if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setMaximumHeight(
-                self.ReturnRibbonHeight(self.PanelOffset) + self.DockWidgetOffset + self.RibbonMinimalHeight
-            )
+            TB.setMaximumHeight(self.ribbonHeight() + self.panelTitleHeight)
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
             Parameters_Ribbon.AUTOHIDE_RIBBON = False
 
@@ -854,9 +850,7 @@ class ModernMenu(RibbonBar):
     def onWbActivated(self):
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setMaximumHeight(
-                self.ReturnRibbonHeight(self.PanelOffset) + self.DockWidgetOffset + self.RibbonMinimalHeight
-            )
+            TB.setMaximumHeight(self.ribbonHeight() + self.panelTitleHeight)
 
         # Make sure that the text is readable
         self.tabBar().setStyleSheet("color: " + StyleMapping.ReturnStyleItem("Border_Color") + ";")
@@ -887,9 +881,7 @@ class ModernMenu(RibbonBar):
     def onTabBarClicked(self):
         # if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-        TB.setMaximumHeight(
-            self.ReturnRibbonHeight(self.PanelOffset) + self.DockWidgetOffset + self.RibbonMinimalHeight
-        )
+        TB.setMaximumHeight(self.ribbonHeight() + self.panelTitleHeight)
         self.setRibbonVisible(True)
 
     def buildPanels(self):
@@ -1323,6 +1315,7 @@ class ModernMenu(RibbonBar):
             # Set the size policy and increment. It has to be MinimumExpanding.
             panel.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
             panel.setSizeIncrement(self.iconSize, self.iconSize)
+            self.panelTitleHeight = panel._titleHeight
 
             # remove any suffix from the panel title
             if panel.title().endswith("_custom"):
@@ -1337,7 +1330,7 @@ class ModernMenu(RibbonBar):
             # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
             # add an offset to make room for the panel titles and icons
             panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelOffset))
-            LoadSettings_Ribbon.LoadDialog.RibbonHeight = self.ribbonHeight()
+            panel._actionsLayout.setVerticalSpacing(0)
 
             # Setup the panelOptionButton
             actionList = []
@@ -1414,6 +1407,9 @@ class ModernMenu(RibbonBar):
         ScrollRightButton_Category.mousePressEvent = lambda clickRight: self.on_ScrollButton_Category_clicked(
             clickRight, ScrollRightButton_Category
         )
+
+        # Set the ribbonheight accordingly
+        self.setRibbonHeight(self.ReturnRibbonHeight(self.panelTitleHeight))
         return
 
     def on_ScrollButton_Category_clicked(self, event, ScrollButton: RibbonCategoryLayoutButton):
@@ -1660,7 +1656,8 @@ class run:
 
             ribbonDock.setEnabled(True)
 
-            ribbonDock.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+            ribbonDock.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.MinimumExpanding)
+            ribbonDock.setSizeIncrement(1, 1)
 
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
