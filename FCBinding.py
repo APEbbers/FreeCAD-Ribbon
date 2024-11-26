@@ -145,9 +145,9 @@ class ModernMenu(RibbonBar):
     sizeFactor = 1.3
 
     # Placeholders for toggle function of the ribbon
-    RibbonMinimalHeight = ApplicationButtonSize
+    RibbonMinimalHeight = ApplicationButtonSize + 10
     if ApplicationButtonSize < iconSize:
-        RibbonMinimalHeight = iconSize
+        RibbonMinimalHeight = iconSize + 10
     RibbonMaximumHeight = 240  # Will be redefined later
 
     # Declare default offsets
