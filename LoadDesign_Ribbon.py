@@ -2258,7 +2258,13 @@ class LoadDialog(Design_ui.Ui_Form):
             List_IgnoredToolbars.append(IgnoredToolbar)
 
         # IconOnlyToolbars
-        List_IconOnlyToolbars = self.List_IconOnlyToolbars
+        for IconOnlyToolbar in self.List_IconOnlyToolbars:
+            IsInlist = False
+            for item in List_IconOnlyToolbars:
+                if item == IconOnlyToolbar:
+                    IsInlist = True
+            if IsInlist is False:
+                List_IconOnlyToolbars.append(IconOnlyToolbar)
 
         # QuickAccessCommands
         SelectedCommands = self.ListWidgetItems(self.form.CommandsSelected)
