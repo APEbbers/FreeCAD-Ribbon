@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide6.QtCore import Qt, SIGNAL
-from PySide6.QtWidgets import (
+from PySide.QtCore import Qt, SIGNAL
+from PySide.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,

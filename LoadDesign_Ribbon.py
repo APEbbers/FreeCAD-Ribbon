@@ -1326,9 +1326,40 @@ class LoadDialog(Design_ui.Ui_Form):
         # Clear the table
         self.form.tableWidget.setRowCount(0)
 
-        # Create the first row in the table
+        # Create the row in the table
         # add a row to the table widget
+        TableWidgetItem = QTableWidgetItem()
+        TableWidgetItem.setText("All")
         self.form.tableWidget.insertRow(self.form.tableWidget.rowCount())
+
+        # Get the last rownumber and set this row with the TableWidgetItem
+        RowNumber = 0
+        # update the data
+        TableWidgetItem.setData(Qt.ItemDataRole.UserRole, "All")
+
+        # Add the first cell with the table widget
+        self.form.tableWidget.setItem(RowNumber, 0, TableWidgetItem)
+
+        # Create the second cell and set the checkstate according the checkstate as defined earlier
+        Icon_small = QTableWidgetItem()
+        Icon_small.setText("All")
+        Icon_small.setCheckState(Qt.CheckState.Unchecked)
+        self.form.tableWidget.setItem(RowNumber, 1, Icon_small)
+
+        # Create the third cell and set the checkstate according the checkstate as defined earlier
+        Icon_medium = QTableWidgetItem()
+        Icon_medium.setText("")
+        Icon_medium.setCheckState(Qt.CheckState.Unchecked)
+        self.form.tableWidget.setItem(RowNumber, 2, Icon_medium)
+
+        # Create the last cell and set the checkstate according the checkstate as defined earlier
+        Icon_large = QTableWidgetItem()
+        Icon_large.setText("")
+        Icon_large.setCheckState(Qt.CheckState.Unchecked)
+        self.form.tableWidget.setItem(RowNumber, 3, Icon_large)
+
+        # Add the first cell with the table widget
+        self.form.tableWidget.setItem(RowNumber, 0, TableWidgetItem)
 
         ShadowList = []  # Create a shadow list. To check if items are already existing.
 
@@ -1400,49 +1431,18 @@ class LoadDialog(Design_ui.Ui_Form):
 
         ToolbarCommands.sort(key=SortCommands)
 
-        # Add a command "All"
-        ToolbarCommands.insert(0, "All")
-
         # Go through the list of toolbar commands
+        TableWidgetItem = QTableWidgetItem()
         for ToolbarCommand in ToolbarCommands:
-            if ToolbarCommand == "All":
-                # Create the row in the table
-                # add a row to the table widget
-                TableWidgetItem = QTableWidgetItem()
-                TableWidgetItem.setText("All")
-                TableWidgetItem.setData("All")
-                self.form.tableWidget.insertRow(self.form.tableWidget.rowCount())
-
-                # Get the last rownumber and set this row with the TableWidgetItem
-                RowNumber = 0
-                # update the data
-                TableWidgetItem.setData(Qt.ItemDataRole.UserRole, "All")
-
-                # Add the first cell with the table widget
-                self.form.tableWidget.setItem(RowNumber, 0, TableWidgetItem)
-
-                # Create the second cell and set the checkstate according the checkstate as defined earlier
-                Icon_small = QTableWidgetItem()
-                Icon_small.setText("All")
-                Icon_small.setCheckState(Qt.CheckState.Unchecked)
-                self.form.tableWidget.setItem(RowNumber, 1, Icon_small)
-
-                # Create the third cell and set the checkstate according the checkstate as defined earlier
-                Icon_medium = QTableWidgetItem()
-                Icon_medium.setText("")
-                Icon_medium.setCheckState(Qt.CheckState.Unchecked)
-                self.form.tableWidget.setItem(RowNumber, 2, Icon_medium)
-
-                # Create the last cell and set the checkstate according the checkstate as defined earlier
-                Icon_large = QTableWidgetItem()
-                Icon_large.setText("")
-                Icon_large.setCheckState(Qt.CheckState.Unchecked)
-                self.form.tableWidget.setItem(RowNumber, 3, Icon_large)
-
             if ToolbarCommand.__contains__("separator"):
                 # Create the row in the table
                 # add a row to the table widget
                 self.form.tableWidget.insertRow(self.form.tableWidget.rowCount())
+
+                # Define a table widget item
+                TableWidgetItem = QTableWidgetItem()
+                TableWidgetItem.setText("Separator")
+                TableWidgetItem.setData(Qt.ItemDataRole.UserRole, "separator")
 
                 # Get the last rownumber and set this row with the TableWidgetItem
                 RowNumber = self.form.tableWidget.rowCount() - 1
@@ -1765,15 +1765,28 @@ class LoadDialog(Design_ui.Ui_Form):
         if column == 0:
             return
 
-        # Get the checkedstate from the clicked cell
-        CheckState = self.form.tableWidget.item(row, column).checkState()
-        # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
-        for i3 in range(1, self.form.tableWidget.columnCount()):
-            if CheckState == Qt.CheckState.Checked:
-                if i3 == column:
-                    self.form.tableWidget.item(row, i3).setCheckState(Qt.CheckState.Checked)
-                else:
-                    self.form.tableWidget.item(row, i3).setCheckState(Qt.CheckState.Unchecked)
+        # Go through the cells in the first row. If checkstate is checked, uncheck the other cells in all other rows
+        if row == 0:
+            CheckState = self.form.tableWidget.item(0, column).checkState()
+            for i in range(1, self.form.tableWidget.columnCount()):
+                if i == column:
+                    for i1 in range(1, self.form.tableWidget.rowCount()):
+                        self.form.tableWidget.item(i1, column).setCheckState(Qt.CheckState.Checked)
+                if i != column:
+                    for i1 in range(1, self.form.tableWidget.rowCount()):
+                        self.form.tableWidget.item(i1, column).setCheckState(Qt.CheckState.Unchecked)
+
+        # else:
+        #     # Get the checkedstate from the clicked cell
+        #     CheckState = self.form.tableWidget.item(row, column).checkState()
+        #     # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
+        #     for i3 in range(1, self.form.tableWidget.columnCount()):
+        #         if CheckState == Qt.CheckState.Checked:
+        #             if i3 == column:
+        #                 self.form.tableWidget.item(row, i3).setCheckState(Qt.CheckState.Checked)
+        #             else:
+        #                 self.form.tableWidget.item(row, i3).setCheckState(Qt.CheckState.Unchecked)
+
         # Update the data
         self.UpdateData()
         # Update the order of the commands
@@ -2102,16 +2115,6 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     def UpdateData(self):
-        # Go through the cells in the first row. If checkstate is checked, uncheck the other cells in all other rows
-        for i0 in range(1, self.form.tableWidget.columnCount()):
-            CheckState = self.form.tableWidget.item(0, i0).checkState()
-            if CheckState == Qt.CheckState.Checked:
-                for i1 in range(1, self.form.tableWidget.rowCount()):
-                    self.form.tableWidget.item(i1, i0).setCheckState(True)
-            if CheckState == Qt.CheckState.Unchecked:
-                for i1 in range(1, self.form.tableWidget.rowCount()):
-                    self.form.tableWidget.item(i1, i0).setCheckState(False)
-
         for i1 in range(1, self.form.tableWidget.rowCount()):
             row = i1
 
