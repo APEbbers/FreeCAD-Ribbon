@@ -1653,11 +1653,8 @@ class run:
             ribbonDock.setContentsMargins(0, 0, 0, 0)
             # attach the ribbon to the dockwidget
             ribbonDock.setWidget(ribbon)
-
             ribbonDock.setEnabled(True)
-
-            ribbonDock.setSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.MinimumExpanding)
-            ribbonDock.setSizeIncrement(1, 1)
+            ribbonDock.setMinimumHeight(ribbon.height())
 
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
