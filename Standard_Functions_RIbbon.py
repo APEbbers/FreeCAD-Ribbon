@@ -628,7 +628,13 @@ def returnQiCons_Commands(CommandName, pixmap):
     icon = Gui.getIcon(pixmap)
     if icon is None or (icon is not None and icon.isNull()):
         Command = Gui.Command.get(CommandName)
+        CommandInfo = Command.getInfo()
+        pixmap = CommandInfo["pixmap"]
+        icon = Gui.getIcon(pixmap)
+        return icon
+    if icon is None or (icon is not None and icon.isNull()):
+        Command = Gui.Command.get(CommandName)
         action = Command.getAction()[0]
         icon = action.icon()
-
+        return icon
     return icon

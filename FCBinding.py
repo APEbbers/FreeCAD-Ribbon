@@ -1562,9 +1562,8 @@ class ModernMenu(RibbonBar):
         for item in self.List_CommandIcons:
             if item[0] == CommandName:
                 icon = item[1]
-        if icon is None:
-            if pixmap != "":
-                icon = Gui.getIcon(pixmap)
+        if icon is None or (icon is not None and icon.isNull()):
+            icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap)
         return icon
 
     def ReturnWorkbenchIcon(self, WorkBenchName: str, pixmap: str = "") -> QIcon:
@@ -1581,9 +1580,15 @@ class ModernMenu(RibbonBar):
         for item in self.List_WorkBenchIcons:
             if item[0] == WorkBenchName:
                 icon = item[1]
-        if icon is None:
+                return icon
+        if icon is None or (icon is not None and icon.isNull()):
+            workbench = Gui.getWorkbench(WorkBenchName)
+            icon = QIcon(workbench.Icon)
+            return icon
+        if icon is None or (icon is not None and icon.isNull()):
             if pixmap != "":
                 icon = Gui.getIcon(pixmap)
+                return icon
         return icon
 
 
