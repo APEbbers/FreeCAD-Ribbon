@@ -1476,7 +1476,6 @@ class ModernMenu(RibbonBar):
                         OptionButton.addAction(action_1)
                 if len(actionList) == 0:
                     panel.panelOptionButton().hide()
-                print(f"{workbenchName}, {toolbar}, {actionList}")
 
                 # Set the behavior of the option button
                 OptionButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
