@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignGpkRha.ui'
+## Form generated from reading UI file 'DesignMfPIlI.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -75,7 +75,7 @@ class Ui_Form(object):
         if not Form.objectName():
             Form.setObjectName("Form")
         Form.setWindowModality(Qt.WindowModality.WindowModal)
-        Form.resize(1066, 787)
+        Form.resize(730, 787)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -145,7 +145,7 @@ class Ui_Form(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1044, 703))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 708, 703))
         self.gridLayout_26 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_26.setObjectName("gridLayout_26")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
