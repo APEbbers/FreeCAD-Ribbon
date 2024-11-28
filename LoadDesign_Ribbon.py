@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -35,7 +35,7 @@ from PySide.QtWidgets import (
     QMenu,
     QWidget,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
 import json
 from datetime import datetime
@@ -792,13 +792,19 @@ class LoadDialog(Design_ui.Ui_Form):
                 WorkbenchTitle == self.form.ListCategory_2.currentText()
                 or self.form.ListCategory_2.currentText() == "All"
             ):
+                IsInlist = False
+                for i in range(self.form.ToolbarsToExclude.count()):
+                    ToolbarItem = self.form.ToolbarsToExclude.item(i)
+                    if ToolbarItem.text() == Toolbar:
+                        IsInlist = True
 
-                ListWidgetItem = QListWidgetItem()
-                ListWidgetItem.setText(StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]))
-                ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
+                if IsInlist is False:
+                    ListWidgetItem = QListWidgetItem()
+                    ListWidgetItem.setText(StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]))
+                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
 
-                # Add the ListWidgetItem to the correct ListWidget
-                self.form.ToolbarsToExclude.addItem(ListWidgetItem)
+                    # Add the ListWidgetItem to the correct ListWidget
+                    self.form.ToolbarsToExclude.addItem(ListWidgetItem)
 
     def on_SearchBar_2_TextChanged(self):
         self.form.ToolbarsToExclude.clear()
@@ -1077,7 +1083,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     if CustomToolbar == f"{CustomPanelTitle}, {WorkBenchTitle}":
                         IsInList = True
 
-                # If the custom panel is not in the jason file, add it to the QComboBox
+                # If the custom panel is not in the json file, add it to the QComboBox
                 if IsInList is False:
                     self.form.CustomToolbarSelector.addItem(f"{CustomPanelTitle}, {WorkBenchTitle}")
                 # Set the Custom panel as current text for the QComboBox
