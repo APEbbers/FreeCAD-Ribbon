@@ -2082,8 +2082,8 @@ class LoadDialog(Design_ui.Ui_Form):
                         if ToolbarItem.text() == Toolbar:
                             IsInlist = True
 
-                if IsInlist is False:
-                    self.form.ToolbarsExcluded.addItem(ListWidgetItem)
+                    if IsInlist is False:
+                        self.form.ToolbarsExcluded.addItem(ListWidgetItem)
         return
 
     def QuickAccessCommands(self):
