@@ -523,7 +523,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     if IsInList is False:
                         self.StringList_Toolbars.append([Toolbar, WorkBench[2], WorkBench[0]])
 
-            time.sleep(1)
+            # time.sleep(1)
 
         # Add the custom toolbars
         CustomToolbars = self.List_ReturnCustomToolbars()
@@ -542,8 +542,8 @@ class LoadDialog(Design_ui.Ui_Form):
         # Create a list of command names
         CommandNames = []
         for i in range(len(self.List_Workbenches)):
-            WorkBench = Gui.getWorkbench(self.List_Workbenches[i][0])
             Gui.activateWorkbench(self.List_Workbenches[i][0])
+            WorkBench = Gui.getWorkbench(self.List_Workbenches[i][0])
             ToolbarItems = WorkBench.getToolbarItems()
 
             for key, value in list(ToolbarItems.items()):
@@ -1766,25 +1766,25 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Go through the cells in the first row. If checkstate is checked, uncheck the other cells in all other rows
         if row == 0:
-            CheckState = self.form.tableWidget.item(0, column).checkState()
-            for i in range(1, self.form.tableWidget.columnCount()):
-                if i == column:
-                    for i1 in range(1, self.form.tableWidget.rowCount()):
-                        self.form.tableWidget.item(i1, column).setCheckState(Qt.CheckState.Checked)
-                if i != column:
-                    for i1 in range(1, self.form.tableWidget.rowCount()):
-                        self.form.tableWidget.item(i1, column).setCheckState(Qt.CheckState.Unchecked)
+            for i1 in range(1, self.form.tableWidget.columnCount()):
+                for i2 in range(1, self.form.tableWidget.rowCount()):
+                    if i1 == column:
+                        for i1 in range(1, self.form.tableWidget.rowCount()):
+                            self.form.tableWidget.item(i2, i1).setCheckState(Qt.CheckState.Checked)
+                    if i1 != column:
+                        for i1 in range(1, self.form.tableWidget.rowCount()):
+                            self.form.tableWidget.item(i2, i1).setCheckState(Qt.CheckState.Unchecked)
 
-        # else:
-        #     # Get the checkedstate from the clicked cell
-        #     CheckState = self.form.tableWidget.item(row, column).checkState()
-        #     # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
-        #     for i3 in range(1, self.form.tableWidget.columnCount()):
-        #         if CheckState == Qt.CheckState.Checked:
-        #             if i3 == column:
-        #                 self.form.tableWidget.item(row, i3).setCheckState(Qt.CheckState.Checked)
-        #             else:
-        #                 self.form.tableWidget.item(row, i3).setCheckState(Qt.CheckState.Unchecked)
+        else:
+            # Get the checkedstate from the clicked cell
+            CheckState = self.form.tableWidget.item(row, column).checkState()
+            # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
+            for i3 in range(1, self.form.tableWidget.columnCount()):
+                if CheckState == Qt.CheckState.Checked:
+                    if i3 == column:
+                        self.form.tableWidget.item(row, i3).setCheckState(Qt.CheckState.Checked)
+                    else:
+                        self.form.tableWidget.item(row, i3).setCheckState(Qt.CheckState.Unchecked)
 
         # Update the data
         self.UpdateData()
