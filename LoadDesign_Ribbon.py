@@ -2702,38 +2702,42 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def SortedToolbarList(self, ToolbarList: list, WorkBenchName):
         SortedList: list = []
-        if WorkBenchName in self.Dict_RibbonCommandPanel["workbenches"]:
-            if "order" in self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]:
-                if len(self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]) > 0:
-                    SortedList = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]
 
-                    IsInList = False
-                    for ToolBar in ToolbarList:
-                        for SortedToolBar in SortedList:
-                            if ToolBar == SortedToolBar:
-                                IsInList = True
+        try:
+            if WorkBenchName in self.Dict_RibbonCommandPanel["workbenches"]:
+                if "order" in self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]:
+                    if len(self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]) > 0:
+                        SortedList = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]
 
-                        if IsInList is False:
-                            SortedList.append(ToolBar)
+                        IsInList = False
+                        for ToolBar in ToolbarList:
+                            for SortedToolBar in SortedList:
+                                if ToolBar == SortedToolBar:
+                                    IsInList = True
+
+                            if IsInList is False:
+                                SortedList.append(ToolBar)
+                    else:
+                        SortedList = ToolbarList
                 else:
                     SortedList = ToolbarList
             else:
                 SortedList = ToolbarList
-        else:
-            SortedList = ToolbarList
 
-        def SortList(toolbar):
-            if toolbar == "":
-                return -1
+            def SortList(toolbar):
+                if toolbar == "":
+                    return -1
 
-            position = None
-            try:
-                position = SortedList.index(toolbar)
-            except ValueError:
-                position = 999999
-            return position
+                position = None
+                try:
+                    position = SortedList.index(toolbar)
+                except ValueError:
+                    position = 999999
+                return position
 
-        ToolbarList.sort(key=SortList)
+            ToolbarList.sort(key=SortList)
+        except Exception:
+            return ToolbarList
 
         return ToolbarList
 
