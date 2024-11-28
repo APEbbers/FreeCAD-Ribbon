@@ -74,6 +74,7 @@ class LoadDialog(Design_ui.Ui_Form):
     # Define list of the workbenches, toolbars and commands on class level
     List_Workbenches = []
     StringList_Toolbars = []
+    List_WorkBenchToolBarItems = []
     List_Commands = []
 
     # Create lists for the several list in the json file.
@@ -495,6 +496,11 @@ class LoadDialog(Design_ui.Ui_Form):
                     WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
                     self.List_Workbenches.append([str(WorkBenchName), IconName, WorkbenchTitle])
 
+                    Gui.activateWorkbench(WorkBenchName)
+                    WorkBench = Gui.getWorkbench(WorkBenchName)
+                    ToolbarItems: dict = WorkBench.getToolbarItems()
+                    self.List_WorkBenchToolBarItems.append([WorkBenchName, ToolbarItems])
+
         # --- Toolbars ----------------------------------------------------------------------------------------------
         #
         # Store the current active workbench
@@ -633,6 +639,7 @@ class LoadDialog(Design_ui.Ui_Form):
         Data["Language"] = FCLanguage
         Data["List_Workbenches"] = self.List_Workbenches
         Data["StringList_Toolbars"] = self.StringList_Toolbars
+        Data["List_WorkBenchToolBarItems"] = self.List_WorkBenchToolBarItems
         Data["List_Commands"] = self.List_Commands
         Data["WorkBench_Icons"] = WorkbenchIcon
         Data["Command_Icons"] = CommandIcons
@@ -875,7 +882,6 @@ class LoadDialog(Design_ui.Ui_Form):
                 WorkBenchTitle = WorkBench[2]
 
         # Get the toolbars of the workbench
-        # wbToolbars = Gui.getWorkbench(WorkBenchName).listToolbars()
         wbToolbars = self.returnWorkBenchToolbars(WorkBenchName)
         # Get all the custom toolbars from the toolbar layout
         CustomToolbars = self.List_ReturnCustomToolbars()
@@ -949,10 +955,9 @@ class LoadDialog(Design_ui.Ui_Form):
             # If the workbench title matches the selected workbench, continue
             if WorkBenchItem[2] == self.form.WorkbenchList_2.currentData():
                 WorkbenchName = WorkBenchItem[0]
-                WorkBench = Gui.getWorkbench(WorkbenchName)
 
                 # Get the dict with the toolbars of this workbench
-                ToolbarItems = WorkBench.getToolbarItems()
+                ToolbarItems = self.returnToolbarCommands(WorkbenchName)
                 # Get the custom toolbars from each installed workbench
                 CustomCommands = self.Dict_ReturnCustomToolbars(WorkbenchName)
                 ToolbarItems.update(CustomCommands)
@@ -1369,27 +1374,25 @@ class LoadDialog(Design_ui.Ui_Form):
             if WorkBench[2] == self.form.WorkbenchList.currentData():
                 WorkBenchName = WorkBench[0]
 
-        # Get the workbench object
-        Workbench = Gui.getWorkbench(WorkBenchName)
         # Get the toolbar name
         Toolbar = self.form.ToolbarList.currentData()
         # Copy the workbench Toolbars
-        Commands = Workbench.getToolbarItems().copy()
+        Toolbaritems = self.returnToolbarCommands(WorkBenchName)
         # Get the custom toolbars from each installed workbench
         CustomCommands = self.Dict_ReturnCustomToolbars(WorkBenchName)
-        Commands.update(CustomCommands)
+        Toolbaritems.update(CustomCommands)
         # Get the custom toolbars from global
         CustomCommands = self.Dict_ReturnCustomToolbars_Global()
-        Commands.update(CustomCommands)
+        Toolbaritems.update(CustomCommands)
         # Get the commands from
         CustomPanelCommands = self.Dict_AddCustomToolbarCommandsToWorkbench(WorkBenchName)
-        Commands.update(CustomPanelCommands)
+        Toolbaritems.update(CustomPanelCommands)
 
         # Get the commands in this toolbar
         ToolbarCommands = []
-        for key in Commands:
+        for key in Toolbaritems:
             if key == Toolbar:
-                ToolbarCommands = Commands[key]
+                ToolbarCommands = Toolbaritems[key]
 
         # add separators to the command list.
         index = 0
@@ -2780,12 +2783,23 @@ class LoadDialog(Design_ui.Ui_Form):
     def returnWorkBenchToolbars(self, WorkBenchName):
         wbToolbars = []
         try:
-            wbToolbars: list = Gui.getWorkbench(WorkBenchName).listToolbars()
-        except Exception:
             for WorkBench in self.StringList_Toolbars:
                 if WorkBench[2] == WorkBenchName:
                     wbToolbars.append(WorkBench[0])
+        except Exception:
+            Gui.activateWorkbench(WorkBenchName)
+            wbToolbars: list = Gui.getWorkbench(WorkBenchName).listToolbars()
         return wbToolbars
+
+    def returnToolbarCommands(self, WorkBenchName):
+        try:
+            for item in self.List_WorkBenchToolBarItems:
+                if item[0] == WorkBenchName:
+                    return item[1]
+        except Exception:
+            Gui.activateWorkbench(WorkBenchName)
+            ToolbarsDict: list = Gui.getWorkbench(WorkBenchName).getToolbarItems()
+            return ToolbarsDict
 
 
 def main():
