@@ -1237,7 +1237,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # if width_large is None:
         width_large = 940
 
-        if self.form.tabWidget.currentIndex() == 4:
+        if self.form.tabWidget.currentIndex() == 7:
             # Set the default size of the form
             Geometry = self.form.geometry()
             Geometry.setWidth(width_large)
@@ -1348,7 +1348,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Create the second cell and set the checkstate according the checkstate as defined earlier
         Icon_small = QTableWidgetItem()
-        Icon_small.setText("All")
+        Icon_small.setText("")
         Icon_small.setCheckState(Qt.CheckState.Unchecked)
         self.form.tableWidget.setItem(RowNumber, 1, Icon_small)
 
