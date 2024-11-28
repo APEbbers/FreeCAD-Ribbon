@@ -542,41 +542,50 @@ def add_keys_nested_dict(dict, keys):
 
 
 def CommandInfoCorrections(CommandName):
-    Command = Gui.Command.get(CommandName)
-    if Command is not None:
-        CommandInfo = Command.getInfo()
+    try:
+        Command = Gui.Command.get(CommandName)
+        if Command is not None:
+            CommandInfo = Command.getInfo()
 
-        # add an extra entry
-        add_keys_nested_dict(CommandInfo, "ActionText")
-        CommandActionList = Command.getAction()
-        if len(CommandActionList) > 0:
-            CommandAction = CommandActionList[0]
-            CommandInfo["ActionText"] = CommandAction.text()
+            # add an extra entry
+            add_keys_nested_dict(CommandInfo, "ActionText")
+            CommandActionList = Command.getAction()
+            if len(CommandActionList) > 0:
+                CommandAction = CommandActionList[0]
+                CommandInfo["ActionText"] = CommandAction.text()
+            else:
+                CommandInfo["ActionText"] = CommandInfo["menuText"]
+
+            if CommandName == "PartDesign_CompSketches":
+                CommandInfo["menuText"] = "Create sketch"
+                CommandInfo["toolTip"] = "Create or edit a sketch"
+                CommandInfo["whatsThis"] = "PartDesign_CompSketches"
+                CommandInfo["statusTip"] = "Create or edit a sketch"
+
+            if CommandName == "Sketcher_Grid":
+                CommandInfo["pixmap"] = "Sketcher_GridToggle_Deactivated.svg"
+            if CommandName == "Sketcher_Snap":
+                CommandInfo["pixmap"] = "Sketcher_Snap_Deactivated.svg"
+            if CommandName == "Sketcher_RenderingOrder":
+                CommandInfo["pixmap"] = "Sketcher_RenderingOrder_External.svg"
+
+            return CommandInfo
         else:
-            CommandInfo["ActionText"] = CommandInfo["menuText"]
-
-        if CommandName == "PartDesign_CompSketches":
-            CommandInfo["menuText"] = "Create sketch"
-            CommandInfo["toolTip"] = "Create or edit a sketch"
-            CommandInfo["whatsThis"] = "PartDesign_CompSketches"
-            CommandInfo["statusTip"] = "Create or edit a sketch"
-
-        if CommandName == "Sketcher_Grid":
-            CommandInfo["pixmap"] = "Sketcher_GridToggle_Deactivated.svg"
-        if CommandName == "Sketcher_Snap":
-            CommandInfo["pixmap"] = "Sketcher_Snap_Deactivated.svg"
-        if CommandName == "Sketcher_RenderingOrder":
-            CommandInfo["pixmap"] = "Sketcher_RenderingOrder_External.svg"
-
-        return CommandInfo
-    else:
+            CommandInfo = {}
+            CommandInfo["menuText"] = ""
+            CommandInfo["toolTip"] = ""
+            CommandInfo["whatsThis"] = ""
+            CommandInfo["statusTip"] = ""
+            CommandInfo["pixmap"] = ""
+    except Exception:
         CommandInfo = {}
         CommandInfo["menuText"] = ""
         CommandInfo["toolTip"] = ""
         CommandInfo["whatsThis"] = ""
         CommandInfo["statusTip"] = ""
         CommandInfo["pixmap"] = ""
-        return CommandInfo
+
+    return CommandInfo
 
 
 def addMissingCommands(CommandList: list):
@@ -628,14 +637,20 @@ def returnQiCons_Commands(CommandName, pixmap):
     if pixmap != "":
         icon = Gui.getIcon(pixmap)
     else:
-        Command = Gui.Command.get(CommandName)
-        CommandInfo = Command.getInfo()
-        pixmap = CommandInfo["pixmap"]
-        icon = Gui.getIcon(pixmap)
+        try:
+            Command = Gui.Command.get(CommandName)
+            CommandInfo = Command.getInfo()
+            pixmap = CommandInfo["pixmap"]
+            icon = Gui.getIcon(pixmap)
+        except Exception:
+            pass
 
     if icon is None or (icon is not None and icon.isNull()):
-        Command = Gui.Command.get(CommandName)
-        action = Command.getAction()[0]
-        icon = action.icon()
+        try:
+            Command = Gui.Command.get(CommandName)
+            action = Command.getAction()[0]
+            icon = action.icon()
+        except Exception:
+            return None
 
     return icon
