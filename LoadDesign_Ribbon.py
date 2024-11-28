@@ -532,8 +532,6 @@ class LoadDialog(Design_ui.Ui_Form):
         CustomToolbars = self.List_ReturnCustomToolbars_Global()
         for Customtoolbar in CustomToolbars:
             self.StringList_Toolbars.append(Customtoolbar)
-        # re-activate the workbench that was stored.
-        Gui.activateWorkbench(ActiveWB)
 
         # --- Commands ----------------------------------------------------------------------------------------------
         #
@@ -598,7 +596,8 @@ class LoadDialog(Design_ui.Ui_Form):
             MenuName = CommandInfoCorrections("Std_Measure")["ActionText"].replace("&", "")
             self.List_Commands.append(["Std_Measure", IconName, MenuName, "General"])
 
-        # self.List_Commands = StandardFunctions.addMissingCommands(self.List_Commands)
+        # re-activate the workbench that was stored.
+        Gui.activateWorkbench(ActiveWB)
 
         # --- Serialize Icons ------------------------------------------------------------------------------------------
         #
@@ -1765,15 +1764,14 @@ class LoadDialog(Design_ui.Ui_Form):
             return
 
         # Go through the cells in the first row. If checkstate is checked, uncheck the other cells in all other rows
+        CheckState = self.form.tableWidget.item(row, column).checkState()
         if row == 0:
             for i1 in range(1, self.form.tableWidget.columnCount()):
                 for i2 in range(1, self.form.tableWidget.rowCount()):
                     if i1 == column:
-                        for i1 in range(1, self.form.tableWidget.rowCount()):
-                            self.form.tableWidget.item(i2, i1).setCheckState(Qt.CheckState.Checked)
+                        self.form.tableWidget.item(i2, i1).setCheckState(CheckState)
                     if i1 != column:
-                        for i1 in range(1, self.form.tableWidget.rowCount()):
-                            self.form.tableWidget.item(i2, i1).setCheckState(Qt.CheckState.Unchecked)
+                        self.form.tableWidget.item(i2, i1).setCheckState(Qt.CheckState.Unchecked)
 
         else:
             # Get the checkedstate from the clicked cell
@@ -2800,7 +2798,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def returnToolbarCommands(self, WorkBenchName):
         try:
-            for item in self.List_WorkBenches:
+            for item in self.List_Workbenches:
                 if item[0] == WorkBenchName:
                     return item[3]
         except Exception:
