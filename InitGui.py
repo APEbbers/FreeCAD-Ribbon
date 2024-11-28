@@ -55,6 +55,9 @@ fileExists = os.path.isfile(file_default)
 if fileExists is False:
     shutil.copy(source_default, file_default)
 
+# remove the test workbench
+Gui.removeWorkbench("TestWorkbench")
+
 try:
     print(translate("FreeCAD Ribbon", "Activating Ribbon Bar..."))
     mw = Gui.getMainWindow()
