@@ -1767,6 +1767,11 @@ class LoadDialog(Design_ui.Ui_Form):
         CheckState = self.form.tableWidget.item(row, column).checkState()
         if row == 0:
             for i1 in range(1, self.form.tableWidget.columnCount()):
+                if CheckState == Qt.CheckState.Checked:
+                    if i1 == column:
+                        self.form.tableWidget.item(0, i1).setCheckState(Qt.CheckState.Checked)
+                    else:
+                        self.form.tableWidget.item(0, i1).setCheckState(Qt.CheckState.Unchecked)
                 for i2 in range(1, self.form.tableWidget.rowCount()):
                     if i1 == column:
                         self.form.tableWidget.item(i2, i1).setCheckState(CheckState)
