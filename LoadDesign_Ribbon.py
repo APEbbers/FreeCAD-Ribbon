@@ -2798,8 +2798,8 @@ class LoadDialog(Design_ui.Ui_Form):
                     return item[3]
         except Exception:
             Gui.activateWorkbench(WorkBenchName)
-            ToolbarsDict: list = Gui.getWorkbench(WorkBenchName).getToolbarItems()
-            return ToolbarsDict
+            Toolbars = Gui.getWorkbench(WorkBenchName).getToolbarItems()
+            return Toolbars
 
 
 def main():
