@@ -491,15 +491,14 @@ class LoadDialog(Design_ui.Ui_Form):
         for WorkBenchName in List_Workbenches:
             if str(WorkBenchName) != "" or WorkBenchName is not None:
                 if str(WorkBenchName) != "NoneWorkbench":
-                    IconName = ""
-                    IconName = str(Gui.getWorkbench(WorkBenchName).Icon)
-                    WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
-                    self.List_Workbenches.append([str(WorkBenchName), IconName, WorkbenchTitle])
-
                     Gui.activateWorkbench(WorkBenchName)
                     WorkBench = Gui.getWorkbench(WorkBenchName)
                     ToolbarItems: dict = WorkBench.getToolbarItems()
-                    self.List_WorkBenchToolBarItems.append([WorkBenchName, ToolbarItems])
+
+                    IconName = ""
+                    IconName = str(Gui.getWorkbench(WorkBenchName).Icon)
+                    WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
+                    self.List_Workbenches.append([str(WorkBenchName), IconName, WorkbenchTitle, ToolbarItems])
 
         # --- Toolbars ----------------------------------------------------------------------------------------------
         #
@@ -511,7 +510,7 @@ class LoadDialog(Design_ui.Ui_Form):
             wbToolbars = []
             if WorkBench[0] != "General" and WorkBench[0] != "" and WorkBench[0] is not None:
                 Gui.activateWorkbench(WorkBench[0])
-                wbToolbars = self.returnWorkBenchToolbars(WorkBench[0])
+                wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
                 # Go through the toolbars
                 for Toolbar in wbToolbars:
                     # Go through the list of toolbars. If already present, skip it.
@@ -637,7 +636,6 @@ class LoadDialog(Design_ui.Ui_Form):
         Data["Language"] = FCLanguage
         Data["List_Workbenches"] = self.List_Workbenches
         Data["StringList_Toolbars"] = self.StringList_Toolbars
-        Data["List_WorkBenchToolBarItems"] = self.List_WorkBenchToolBarItems
         Data["List_Commands"] = self.List_Commands
         Data["WorkBench_Icons"] = WorkbenchIcon
         Data["Command_Icons"] = CommandIcons
@@ -2795,9 +2793,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def returnToolbarCommands(self, WorkBenchName):
         try:
-            for item in self.List_WorkBenchToolBarItems:
+            for item in self.List_WorkBenches:
                 if item[0] == WorkBenchName:
-                    return item[1]
+                    return item[3]
         except Exception:
             Gui.activateWorkbench(WorkBenchName)
             ToolbarsDict: list = Gui.getWorkbench(WorkBenchName).getToolbarItems()
