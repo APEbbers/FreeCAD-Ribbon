@@ -2080,7 +2080,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     IsInlist = False
                     for i in range(self.form.ToolbarsExcluded.count()):
                         ToolbarItem = self.form.ToolbarsExcluded.item(i)
-                        if ToolbarItem.text() == Toolbar:
+                        if ToolbarItem.text() == Toolbar[0]:
                             IsInlist = True
 
                     if IsInlist is False:
