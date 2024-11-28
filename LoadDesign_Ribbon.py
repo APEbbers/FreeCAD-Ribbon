@@ -547,6 +547,7 @@ class LoadDialog(Design_ui.Ui_Form):
         CommandNames = []
         for i in range(len(self.List_Workbenches)):
             WorkBench = Gui.getWorkbench(self.List_Workbenches[i][0])
+            Gui.activateWorkbench(self.List_Workbenches[i][0])
             ToolbarItems = WorkBench.getToolbarItems()
 
             for key, value in list(ToolbarItems.items()):
