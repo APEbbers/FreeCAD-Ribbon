@@ -505,12 +505,13 @@ class LoadDialog(Design_ui.Ui_Form):
             wbToolbars = []
             if WorkBench[0] != "General" and WorkBench[0] != "" and WorkBench[0] is not None:
                 try:
-                    wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
+                    wbToolbars = self.returnWorkBenchToolbars(WorkBench[0])
                 except Exception:
                     try:
                         Gui.activateWorkbench(WorkBench[0])
                     except Exception:
-                        wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
+                        # wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
+                        wbToolbars = self.returnWorkBenchToolbars(WorkBench[0])
                 # Go through the toolbars
                 for Toolbar in wbToolbars:
                     # Go through the list of toolbars. If already present, skip it.
@@ -877,7 +878,8 @@ class LoadDialog(Design_ui.Ui_Form):
                 WorkBenchTitle = WorkBench[2]
 
         # Get the toolbars of the workbench
-        wbToolbars = Gui.getWorkbench(WorkBenchName).listToolbars()
+        # wbToolbars = Gui.getWorkbench(WorkBenchName).listToolbars()
+        wbToolbars = self.returnWorkBenchToolbars(WorkBenchName)
         # Get all the custom toolbars from the toolbar layout
         CustomToolbars = self.List_ReturnCustomToolbars()
         for CustomToolbar in CustomToolbars:
@@ -1272,7 +1274,8 @@ class LoadDialog(Design_ui.Ui_Form):
             return
 
         # Get the toolbars of the workbench
-        wbToolbars: list = Gui.getWorkbench(WorkBenchName).listToolbars()
+        # wbToolbars: list = Gui.getWorkbench(WorkBenchName).listToolbars()
+        wbToolbars = self.returnWorkBenchToolbars(WorkBenchName)
         # Get all the custom toolbars from the toolbar layout
         CustomToolbars = self.List_ReturnCustomToolbars()
         for CustomToolbar in CustomToolbars:
@@ -2776,6 +2779,16 @@ class LoadDialog(Design_ui.Ui_Form):
                         self.form.CustomToolbarSelector.addItem(f"{CustomPanelTitle}, {WorkBenchTitle}")
         except Exception:
             pass
+
+    def returnWorkBenchToolbars(self, WorkBenchName):
+        wbToolbars = []
+        try:
+            wbToolbars: list = Gui.getWorkbench(WorkBenchName).listToolbars()
+        except Exception:
+            for WorkBench in self.StringList_Toolbars:
+                if WorkBench[2] == WorkBenchName:
+                    wbToolbars.append(WorkBench[0])
+        return wbToolbars
 
 
 def main():
