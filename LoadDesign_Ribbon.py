@@ -510,11 +510,8 @@ class LoadDialog(Design_ui.Ui_Form):
         for WorkBench in self.List_Workbenches:
             wbToolbars = []
             if WorkBench[0] != "General" and WorkBench[0] != "" and WorkBench[0] is not None:
-                try:
-                    wbToolbars = self.returnWorkBenchToolbars(WorkBench[0])
-                except Exception:
-                    Gui.activateWorkbench(WorkBench[0])
-                    wbToolbars = self.returnWorkBenchToolbars(WorkBench[0])
+                Gui.activateWorkbench(WorkBench[0])
+                wbToolbars = self.returnWorkBenchToolbars(WorkBench[0])
                 # Go through the toolbars
                 for Toolbar in wbToolbars:
                     # Go through the list of toolbars. If already present, skip it.
