@@ -674,7 +674,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 ):
                     IsInlist = False
                     for i in range(self.form.CommandsAvailable.count()):
-                        CommandItem = self.form.self.form.CommandsAvailable.item(i)
+                        CommandItem = self.form.CommandsAvailable.item(i)
                         if CommandItem.text() == MenuName:
                             IsInlist = True
 
@@ -721,7 +721,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 if ToolbarCommand[2].lower().startswith(self.form.SearchBar_1.text().lower()):
                     IsInlist = False
                     for i in range(self.form.CommandsAvailable.count()):
-                        CommandItem = self.form.self.form.CommandsAvailable.item(i)
+                        CommandItem = self.form.CommandsAvailable.item(i)
                         if CommandItem.text() == MenuName:
                             IsInlist = True
 
@@ -2151,7 +2151,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         if IsSelected is False:
                             IsInlist = False
                             for i in range(self.form.CommandsAvailable.count()):
-                                CommandItem = self.form.self.form.CommandsAvailable.item(i)
+                                CommandItem = self.form.CommandsAvailable.item(i)
                                 if CommandItem.text() == MenuName:
                                     IsInlist = True
 
@@ -2160,7 +2160,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         if IsSelected is True:
                             IsInlist = False
                             for i in range(self.form.CommandsSelected.count()):
-                                CommandItem = self.form.self.form.CommandsSelected.item(i)
+                                CommandItem = self.form.CommandsSelected.item(i)
                                 if CommandItem.text() == MenuName:
                                     IsInlist = True
 
