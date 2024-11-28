@@ -2254,10 +2254,17 @@ class LoadDialog(Design_ui.Ui_Form):
         # IgnoredToolbars
         ExcludedToolbars = self.ListWidgetItems(self.form.ToolbarsExcluded)
         for i1 in range(len(ExcludedToolbars)):
+            IsInlist = False
             ListWidgetItem: QListWidgetItem = ExcludedToolbars[i1]
             Toolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
             IgnoredToolbar = Toolbar[0]
-            List_IgnoredToolbars.append(IgnoredToolbar)
+
+            for item in self.List_IgnoredToolbars:
+                if item == IgnoredToolbar:
+                    IsInlist = True
+
+            if IsInlist is False:
+                List_IgnoredToolbars.append(IgnoredToolbar)
 
         # IconOnlyToolbars
         for IconOnlyToolbar in self.List_IconOnlyToolbars:
