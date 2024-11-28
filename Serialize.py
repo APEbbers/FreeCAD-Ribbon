@@ -29,8 +29,6 @@ from PySide.QtCore import (
     QBuffer,
     QIODevice,
     QTextStream,
-    QStringDecoder,
-    QStringEncoder,
     QByteArray,
 )
 
@@ -46,6 +44,8 @@ def iconToBase64(icon, sz=QSize(64, 64), mode=QIcon.Mode.Normal, state=QIcon.Sta
 
         result = QTextCodec.codecForName("UTF-8").toUnicode(buf.data().toBase64())
     except Exception:
+        from PySide.QtCore import QStringDecoder, QStringEncoder
+
         t = QTextStream(buf.data().toBase64())
         t.setEncoding(QStringDecoder.Encoding.Utf8)
         result = t.readAll()
