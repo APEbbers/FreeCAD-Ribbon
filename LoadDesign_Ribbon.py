@@ -672,27 +672,34 @@ class LoadDialog(Design_ui.Ui_Form):
                     WorkbenchTitle == self.form.ListCategory_1.currentText()
                     or self.form.ListCategory_1.currentText() == translate("FreeCAD Ribbon", "All")
                 ):
-                    # Define a new ListWidgetItem.
-                    textAddition = ""
-                    Icon = QIcon()
-                    for item in self.List_CommandIcons:
-                        if item[0] == ToolbarCommand[0]:
-                            Icon = item[1]
-                    if Icon is None:
-                        Icon = Gui.getIcon(ToolbarCommand[1])
+                    IsInlist = False
+                    for i in range(self.form.CommandsAvailable.count()):
+                        CommandItem = self.form.self.form.CommandsAvailable.item(i)
+                        if CommandItem.text() == MenuName:
+                            IsInlist = True
 
-                    ListWidgetItem = QListWidgetItem()
-                    ListWidgetItem.setText(
-                        StandardFunctions.TranslationsMapping(workbenchName, MenuName) + textAddition
-                    )
-                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
-                    if Icon is not None:
-                        ListWidgetItem.setIcon(Icon)
-                    ListWidgetItem.setToolTip(ToolbarCommand[0])  # Use the tooltip to store the actual command.
+                    if IsInlist is False:
+                        # Define a new ListWidgetItem.
+                        textAddition = ""
+                        Icon = QIcon()
+                        for item in self.List_CommandIcons:
+                            if item[0] == ToolbarCommand[0]:
+                                Icon = item[1]
+                        if Icon is None:
+                            Icon = Gui.getIcon(ToolbarCommand[1])
 
-                    # Add the ListWidgetItem to the correct ListWidget
-                    if Icon is not None:
-                        self.form.CommandsAvailable.addItem(ListWidgetItem)
+                        ListWidgetItem = QListWidgetItem()
+                        ListWidgetItem.setText(
+                            StandardFunctions.TranslationsMapping(workbenchName, MenuName) + textAddition
+                        )
+                        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+                        if Icon is not None:
+                            ListWidgetItem.setIcon(Icon)
+                        ListWidgetItem.setToolTip(ToolbarCommand[0])  # Use the tooltip to store the actual command.
+
+                        # Add the ListWidgetItem to the correct ListWidget
+                        if Icon is not None:
+                            self.form.CommandsAvailable.addItem(ListWidgetItem)
             ShadowList.append(f"{CommandName}, {workbenchName}")
         return
 
@@ -712,28 +719,33 @@ class LoadDialog(Design_ui.Ui_Form):
                 MenuName = ToolbarCommand[2].replace("&", "")
 
                 if ToolbarCommand[2].lower().startswith(self.form.SearchBar_1.text().lower()):
-                    # Command = Gui.Command.get(CommandName)
+                    IsInlist = False
+                    for i in range(self.form.CommandsAvailable.count()):
+                        CommandItem = self.form.self.form.CommandsAvailable.item(i)
+                        if CommandItem.text() == MenuName:
+                            IsInlist = True
 
-                    # Define a new ListWidgetItem.
-                    textAddition = ""
-                    Icon = QIcon()
-                    for item in self.List_CommandIcons:
-                        if item[0] == ToolbarCommand[0]:
-                            Icon = item[1]
-                    if Icon is None:
-                        Icon = Gui.getIcon(ToolbarCommand[1])
-                    ListWidgetItem = QListWidgetItem()
-                    ListWidgetItem.setText(
-                        StandardFunctions.TranslationsMapping(workbenchName, MenuName) + textAddition
-                    )
-                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
-                    if Icon is not None:
-                        ListWidgetItem.setIcon(Icon)
-                    ListWidgetItem.setToolTip(CommandName)  # Use the tooltip to store the actual command.
+                    if IsInlist is False:
+                        # Define a new ListWidgetItem.
+                        textAddition = ""
+                        Icon = QIcon()
+                        for item in self.List_CommandIcons:
+                            if item[0] == ToolbarCommand[0]:
+                                Icon = item[1]
+                        if Icon is None:
+                            Icon = Gui.getIcon(ToolbarCommand[1])
+                        ListWidgetItem = QListWidgetItem()
+                        ListWidgetItem.setText(
+                            StandardFunctions.TranslationsMapping(workbenchName, MenuName) + textAddition
+                        )
+                        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+                        if Icon is not None:
+                            ListWidgetItem.setIcon(Icon)
+                        ListWidgetItem.setToolTip(CommandName)  # Use the tooltip to store the actual command.
 
-                    # Add the ListWidgetItem to the correct ListWidget
-                    if Icon is not None:
-                        self.form.CommandsAvailable.addItem(ListWidgetItem)
+                        # Add the ListWidgetItem to the correct ListWidget
+                        if Icon is not None:
+                            self.form.CommandsAvailable.addItem(ListWidgetItem)
             ShadowList.append(f"{CommandName}, {workbenchName}")
         return
 
@@ -816,8 +828,15 @@ class LoadDialog(Design_ui.Ui_Form):
                 ListWidgetItem.setText(StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]))
                 ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
 
-                # Add the ListWidgetItem to the correct ListWidget
-                self.form.ToolbarsToExclude.addItem(ListWidgetItem)
+                IsInlist = False
+                for i in range(self.form.ToolbarsToExclude.count()):
+                    ToolbarItem = self.form.ToolbarsToExclude.item(i)
+                    if ToolbarItem.text() == Toolbar[0]:
+                        IsInlist = True
+
+                if IsInlist is False:
+                    # Add the ListWidgetItem to the correct ListWidget
+                    self.form.ToolbarsToExclude.addItem(ListWidgetItem)
 
     def on_AddToolbar_clicked(self):
         self.AddItem(
@@ -2130,9 +2149,23 @@ class LoadDialog(Design_ui.Ui_Form):
                     # Add the ListWidgetItem to the correct ListWidget
                     if Icon is not None:
                         if IsSelected is False:
-                            self.form.CommandsAvailable.addItem(ListWidgetItem)
+                            IsInlist = False
+                            for i in range(self.form.CommandsAvailable.count()):
+                                CommandItem = self.form.self.form.CommandsAvailable.item(i)
+                                if CommandItem.text() == MenuName:
+                                    IsInlist = True
+
+                            if IsInlist is False:
+                                self.form.CommandsAvailable.addItem(ListWidgetItem)
                         if IsSelected is True:
-                            self.form.CommandsSelected.addItem(ListWidgetItem)
+                            IsInlist = False
+                            for i in range(self.form.CommandsSelected.count()):
+                                CommandItem = self.form.self.form.CommandsSelected.item(i)
+                                if CommandItem.text() == MenuName:
+                                    IsInlist = True
+
+                            if IsInlist is False:
+                                self.form.CommandsSelected.addItem(ListWidgetItem)
             ShadowList.append(ToolbarCommand[0])
         return
 
