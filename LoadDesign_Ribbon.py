@@ -2068,6 +2068,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 ListWidgetItem.setText(StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]))
                 ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
                 if IsSelected is False:
+                    IsInlist = False
                     for i in range(self.form.ToolbarsToExclude.count()):
                         ToolbarItem = self.form.ToolbarsToExclude.item(i)
                         if ToolbarItem.text() == Toolbar:
