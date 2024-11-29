@@ -128,7 +128,7 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.setStyle(Style)
 
         # Check if there is a datafile. if not, ask the user to create one.
-        DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFile.dat")
+        DataFile = os.path.join(os.path.dirname(__file__), "RibbonDataFile.dat")
         if os.path.exists(DataFile) is True:
             # Read the jason file and fill the lists
             self.ReadJson()
