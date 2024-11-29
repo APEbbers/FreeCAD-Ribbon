@@ -58,6 +58,10 @@ if fileExists is False:
 # remove the test workbench
 Gui.removeWorkbench("TestWorkbench")
 
+# make sure that the ribbon will be shown on startup -> reset OverlayTop
+preferences = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
+preferences.SetString("Widgets", "")
+
 try:
     print(translate("FreeCAD Ribbon", "Activating Ribbon Bar..."))
     mw = Gui.getMainWindow()
