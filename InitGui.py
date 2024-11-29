@@ -56,6 +56,13 @@ if fileExists is False:
 # remove the test workbench
 Gui.removeWorkbench("TestWorkbench")
 
+# # Disable the overlay function
+# preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
+# preferences.SetBool("ActivateOverlay", False)
+
+preferences = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
+preferences.SetString("Widgets", "")
+
 try:
     print(translate("FreeCAD Ribbon", "Activating Ribbon Bar..."))
     mw = Gui.getMainWindow()
