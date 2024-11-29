@@ -241,7 +241,7 @@ if Settings.GetStringSetting("Stylesheet") == "":
 SHOW_ICON_TEXT_SMALL = Settings.GetBoolSetting("ShowIconText_Small")
 if Settings.GetBoolSetting("ShowIconText_Small") is None:
     SHOW_ICON_TEXT_SMALL = DefaultSettings["ShowIconText_Small"]
-    Settings.SetBoolSetting("ShowIconText_Small", False)
+    Settings.SetBoolSetting("ShowIconText_Small", SHOW_ICON_TEXT_SMALL)
 
 SHOW_ICON_TEXT_MEDIUM = Settings.GetBoolSetting("ShowIconText_Medium")
 if Settings.GetBoolSetting("ShowIconText_Medium") is None:

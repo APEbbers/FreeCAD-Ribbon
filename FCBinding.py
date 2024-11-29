@@ -769,12 +769,6 @@ class ModernMenu(RibbonBar):
         return
 
     def loadDesignMenu(self):
-        # message = translate(
-        #     "FreeCAD Ribbon",
-        #     "All workbenches need to be loaded.\nThis can take a couple of minutes.\nDo you want to proceed?",
-        # )
-        # result = StandardFunctions.Mbox(message, "", 1, IconType="Question")
-        # if result == "yes":
         LoadDesign_Ribbon.main()
         return
 
@@ -1330,7 +1324,6 @@ class ModernMenu(RibbonBar):
             # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
             # add an offset to make room for the panel titles and icons
             panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelOffset))
-            panel._actionsLayout.setVerticalSpacing(0)
 
             # Setup the panelOptionButton
             actionList = []
@@ -1659,7 +1652,9 @@ class run:
             # attach the ribbon to the dockwidget
             ribbonDock.setWidget(ribbon)
             ribbonDock.setEnabled(True)
-            ribbonDock.setMinimumHeight(ribbon.height())
+            ribbonDock.setMinimumHeight(ribbon.RibbonMinimalHeight)
+            ribbonDock.setMaximumHeight(ribbon.height() - ribbon.RibbonMinimalHeight + ribbon.PanelOffset)
+            # ribbonDock.widget().setMinimumHeight(ribbon.RibbonMinimalHeight)
 
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)

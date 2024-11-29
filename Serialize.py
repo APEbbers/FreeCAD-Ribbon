@@ -33,24 +33,6 @@ from PySide.QtCore import (
 )
 
 
-# def iconToBase64(icon, sz=QSize(64, 64), mode=QIcon.Mode.Normal, state=QIcon.State.On):
-#     buf = QBuffer()
-#     buf.open(QIODevice.WriteOnly)
-#     icon.pixmap(sz, mode, state).save(buf, "PNG")
-
-#     result = None
-#     try:
-#         from PySide.QtCore import QTextCodec
-
-#         result = QTextCodec.codecForName("UTF-8").toUnicode(buf.data().toBase64())
-#     except Exception:
-#         from PySide.QtCore import QStringDecoder, QStringEncoder
-
-
-#         t = QTextStream(buf.data().toBase64())
-#         t.setEncoding(QStringDecoder.Encoding.Utf8)
-#         result = t.readAll()
-#     return result
 def iconToBase64(icon: QIcon, sz=QSize(64, 64), mode=QIcon.Mode.Normal, state=QIcon.State.On):
     """
     Converts a QIcon to a Base64-encoded string representation of its pixmap.
