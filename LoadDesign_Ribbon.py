@@ -634,7 +634,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Write the lists to a data file
         #
         # clear the data file. If not exists, create it
-        DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFile.dat")
+        DataFile = os.path.join(os.path.dirname(__file__), "RibbonDataFile.dat")
         open(DataFile, "w").close()
 
         # Open de data file, load it as json and then close it again
@@ -647,11 +647,15 @@ class LoadDialog(Design_ui.Ui_Form):
         Data["WorkBench_Icons"] = WorkbenchIcon
         Data["Command_Icons"] = CommandIcons
         # Write to the data file
-        DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFile.dat")
+        DataFile = os.path.join(os.path.dirname(__file__), "RibbonDataFile.dat")
         with open(DataFile, "w") as outfile:
             json.dump(Data, outfile, indent=4)
 
         outfile.close()
+
+        # If there is a RibbonStructure.json file, load it
+        os.path.isfile(os.path.join(os.path.dirname(__file__), "RibbonStructure.json"))
+        self.ReadJson()
 
         self.LoadControls()
         return
