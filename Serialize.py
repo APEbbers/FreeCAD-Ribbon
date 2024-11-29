@@ -69,8 +69,11 @@ def iconToBase64(icon: QIcon, sz=QSize(64, 64), mode=QIcon.Mode.Normal, state=QI
 
     # Save the pixmap of the icon to the buffer in PNG format
     pixmap: QPixmap = icon.pixmap(sz, mode, state)
-    if not pixmap.save(buf, "svg"):
-        raise ValueError("Failed to save icon to buffer. Ensure the icon is valid.")
+    try:
+        pixmap.save(buf, None)
+    except Exception as e:
+        # raise ValueError("Failed to save icon to buffer. Ensure the icon is valid.")
+        print(e)
 
     # Use standard Base64 encoding
     base64_data = buf.data().toBase64().data().decode("utf-8")
