@@ -605,23 +605,31 @@ class LoadDialog(Design_ui.Ui_Form):
         for WorkBenchItem in self.List_Workbenches:
             WorkBenchName = WorkBenchItem[0]
             Icon = Gui.getIcon(WorkBenchItem[1])
-            if Icon is not None:
-                SerializedIcon = Serialize.serializeIcon(Icon)
+            if Icon is not None and Icon.isNull() is False:
+                try:
+                    SerializedIcon = Serialize.serializeIcon(Icon)
 
-                WorkbenchIcon.append([WorkBenchName, SerializedIcon])
-                # add the icons also to the deserialized list
-                self.List_WorkBenchIcons.append([WorkBenchName, Icon])
+                    WorkbenchIcon.append([WorkBenchName, SerializedIcon])
+                    # add the icons also to the deserialized list
+                    self.List_WorkBenchIcons.append([WorkBenchName, Icon])
+                except Exception as e:
+                    if Parameters_Ribbon.DEBUG_MODE is True:
+                        print(e)
 
         CommandIcons = []
         for CommandItem in self.List_Commands:
             CommandName = CommandItem[0]
             Icon = StandardFunctions.returnQiCons_Commands(CommandName, CommandItem[1])
-            if Icon is not None:
-                SerializedIcon = Serialize.serializeIcon(Icon)
+            if Icon is not None and Icon.isNull() is False:
+                try:
+                    SerializedIcon = Serialize.serializeIcon(Icon)
 
-                CommandIcons.append([CommandName, SerializedIcon])
-                # add the icons also to the deserialized list
-                self.List_CommandIcons.append([CommandName, Icon])
+                    CommandIcons.append([CommandName, SerializedIcon])
+                    # add the icons also to the deserialized list
+                    self.List_CommandIcons.append([CommandName, Icon])
+                except Exception as e:
+                    if Parameters_Ribbon.DEBUG_MODE is True:
+                        print(e)
 
         # Write the lists to a data file
         #
