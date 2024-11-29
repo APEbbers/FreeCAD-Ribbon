@@ -60,6 +60,7 @@ Gui.removeWorkbench("TestWorkbench")
 # preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
 # preferences.SetBool("ActivateOverlay", False)
 
+# make sure that the ribbon will be shown on startup -> reset OverlayTop
 preferences = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
 preferences.SetString("Widgets", "")
 
