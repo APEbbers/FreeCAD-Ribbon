@@ -22,8 +22,8 @@
 
 # This code is based on the serialize function of the SearBar Addon.
 # Original developer for the SearchBar addon is Suzanne Soy.
-from PySide6.QtGui import QIcon, QPixmap
-from PySide6.QtCore import (
+from PySide.QtGui import QIcon, QPixmap
+from PySide.QtCore import (
     Qt,
     QSize,
     QBuffer,
