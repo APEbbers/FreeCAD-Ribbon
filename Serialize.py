@@ -22,8 +22,8 @@
 
 # This code is based on the serialize function of the SearBar Addon.
 # Original developer for the SearchBar addon is Suzanne Soy.
-from PySide.QtGui import QIcon, QPixmap
-from PySide.QtCore import (
+from PySide6.QtGui import QIcon, QPixmap
+from PySide6.QtCore import (
     Qt,
     QSize,
     QBuffer,
@@ -33,23 +33,49 @@ from PySide.QtCore import (
 )
 
 
-def iconToBase64(icon, sz=QSize(64, 64), mode=QIcon.Mode.Normal, state=QIcon.State.On):
+# def iconToBase64(icon, sz=QSize(64, 64), mode=QIcon.Mode.Normal, state=QIcon.State.On):
+#     buf = QBuffer()
+#     buf.open(QIODevice.WriteOnly)
+#     icon.pixmap(sz, mode, state).save(buf, "PNG")
+
+#     result = None
+#     try:
+#         from PySide.QtCore import QTextCodec
+
+#         result = QTextCodec.codecForName("UTF-8").toUnicode(buf.data().toBase64())
+#     except Exception:
+#         from PySide.QtCore import QStringDecoder, QStringEncoder
+
+
+#         t = QTextStream(buf.data().toBase64())
+#         t.setEncoding(QStringDecoder.Encoding.Utf8)
+#         result = t.readAll()
+#     return result
+def iconToBase64(icon: QIcon, sz=QSize(64, 64), mode=QIcon.Mode.Normal, state=QIcon.State.On):
+    """
+    Converts a QIcon to a Base64-encoded string representation of its pixmap.
+
+    Args:
+        icon (QIcon): The icon to encode.
+        sz (QSize): The size of the pixmap to generate.
+        mode (QIcon.Mode): The mode of the pixmap (e.g., Normal, Disabled).
+        state (QIcon.State): The state of the pixmap (e.g., On, Off).
+
+    Returns:
+        str: The Base64-encoded string of the icon's pixmap.
+    """
     buf = QBuffer()
-    buf.open(QIODevice.WriteOnly)
-    icon.pixmap(sz, mode, state).save(buf, "PNG")
+    buf.open(QIODevice.OpenModeFlag.WriteOnly)
 
-    result = None
-    try:
-        from PySide.QtCore import QTextCodec
+    # Save the pixmap of the icon to the buffer in PNG format
+    pixmap: QPixmap = icon.pixmap(sz, mode, state)
+    if not pixmap.save(buf, None):
+        raise ValueError("Failed to save icon to buffer. Ensure the icon is valid.")
 
-        result = QTextCodec.codecForName("UTF-8").toUnicode(buf.data().toBase64())
-    except Exception:
-        from PySide.QtCore import QStringDecoder, QStringEncoder
-
-        t = QTextStream(buf.data().toBase64())
-        t.setEncoding(QStringDecoder.Encoding.Utf8)
-        result = t.readAll()
-    return result
+    # Use standard Base64 encoding
+    base64_data = buf.data().toBase64().data().decode("utf-8")
+    buf.close()
+    return base64_data
 
 
 def serializeIcon(icon):
