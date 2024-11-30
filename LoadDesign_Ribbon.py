@@ -43,7 +43,7 @@ import shutil
 import Standard_Functions_RIbbon as StandardFunctions
 from Standard_Functions_RIbbon import CommandInfoCorrections
 import Parameters_Ribbon
-import Serialize
+import Serialize_Ribbon
 import webbrowser
 import time
 
@@ -184,12 +184,12 @@ class LoadDialog(Design_ui.Ui_Form):
         # Load the lists for the deserialized icons
         try:
             for IconItem in Data["WorkBench_Icons"]:
-                Icon: QIcon = Serialize.deserializeIcon(IconItem[1])
+                Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
                 item = [IconItem[0], Icon]
                 self.List_WorkBenchIcons.append(item)
             # Load the lists for the deserialized icons
             for IconItem in Data["Command_Icons"]:
-                Icon: QIcon = Serialize.deserializeIcon(IconItem[1])
+                Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
                 item = [IconItem[0], Icon]
                 self.List_CommandIcons.append(item)
         except Exception:
@@ -607,7 +607,7 @@ class LoadDialog(Design_ui.Ui_Form):
             Icon = Gui.getIcon(WorkBenchItem[1])
             if Icon is not None and Icon.isNull() is False:
                 try:
-                    SerializedIcon = Serialize.serializeIcon(Icon)
+                    SerializedIcon = Serialize_Ribbon.serializeIcon(Icon)
 
                     WorkbenchIcon.append([WorkBenchName, SerializedIcon])
                     # add the icons also to the deserialized list
@@ -622,7 +622,7 @@ class LoadDialog(Design_ui.Ui_Form):
             Icon = StandardFunctions.returnQiCons_Commands(CommandName, CommandItem[1])
             if Icon is not None and Icon.isNull() is False:
                 try:
-                    SerializedIcon = Serialize.serializeIcon(Icon)
+                    SerializedIcon = Serialize_Ribbon.serializeIcon(Icon)
 
                     CommandIcons.append([CommandName, SerializedIcon])
                     # add the icons also to the deserialized list

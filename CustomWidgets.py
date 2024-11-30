@@ -83,7 +83,7 @@ import LoadSettings_Ribbon
 import LoadLicenseForm_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
 from Standard_Functions_RIbbon import CommandInfoCorrections
-import Serialize
+import Serialize_Ribbon
 import StyleMapping
 import platform
 

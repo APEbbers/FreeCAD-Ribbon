@@ -82,7 +82,7 @@ import LoadSettings_Ribbon
 import LoadLicenseForm_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
 from Standard_Functions_RIbbon import CommandInfoCorrections
-import Serialize
+import Serialize_Ribbon
 import StyleMapping
 import platform
 
@@ -197,12 +197,12 @@ class ModernMenu(RibbonBar):
             file.close()
             try:
                 for IconItem in Data["WorkBench_Icons"]:
-                    Icon: QIcon = Serialize.deserializeIcon(IconItem[1])
+                    Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
                     item = [IconItem[0], Icon]
                     self.List_WorkBenchIcons.append(item)
                 # Load the lists for the deserialized icons
                 for IconItem in Data["Command_Icons"]:
-                    Icon: QIcon = Serialize.deserializeIcon(IconItem[1])
+                    Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
                     item = [IconItem[0], Icon]
                     self.List_CommandIcons.append(item)
             except Exception:
