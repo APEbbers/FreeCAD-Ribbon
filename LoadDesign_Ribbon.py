@@ -1508,7 +1508,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     )
                     self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar]["order"] = Order
 
-                if not ToolbarCommand.__contains__("separator") and ToolbarCommand.__contains__("All"):
+                if not ToolbarCommand.__contains__("separator") and not ToolbarCommand.__contains__("All"):
                     # Get the command
                     CommandName = ToolbarCommand
 
