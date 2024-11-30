@@ -547,15 +547,6 @@ def CommandInfoCorrections(CommandName):
         if Command is not None:
             CommandInfo = Command.getInfo()
 
-            # add an extra entry
-            add_keys_nested_dict(CommandInfo, "ActionText")
-            CommandActionList = Command.getAction()
-            if len(CommandActionList) > 0:
-                CommandAction = CommandActionList[0]
-                CommandInfo["ActionText"] = CommandAction.text()
-            else:
-                CommandInfo["ActionText"] = CommandInfo["menuText"]
-
             if CommandName == "PartDesign_CompSketches":
                 CommandInfo["menuText"] = "Create sketch"
                 CommandInfo["toolTip"] = "Create or edit a sketch"
@@ -569,6 +560,17 @@ def CommandInfoCorrections(CommandName):
             if CommandName == "Sketcher_RenderingOrder":
                 CommandInfo["pixmap"] = "Sketcher_RenderingOrder_External.svg"
 
+            # add an extra entry for action text
+            add_keys_nested_dict(CommandInfo, "ActionText")
+            CommandActionList = Command.getAction()
+            if len(CommandActionList) > 0:
+                CommandAction = CommandActionList[0]
+                CommandInfo["ActionText"] = CommandAction.text()
+            else:
+                CommandInfo["ActionText"] = CommandInfo["menuText"]
+            if CommandInfo["ActionText"] == "":
+                CommandInfo["ActionText"] = CommandInfo["menuText"]
+
             return CommandInfo
         else:
             CommandInfo = {}
@@ -578,7 +580,7 @@ def CommandInfoCorrections(CommandName):
             CommandInfo["statusTip"] = ""
             CommandInfo["pixmap"] = ""
             CommandInfo["ActionText"] = ""
-    except Exception:
+    except Exception as e:
         CommandInfo = {}
         CommandInfo["menuText"] = ""
         CommandInfo["toolTip"] = ""
@@ -586,6 +588,8 @@ def CommandInfoCorrections(CommandName):
         CommandInfo["statusTip"] = ""
         CommandInfo["pixmap"] = ""
         CommandInfo["ActionText"] = ""
+
+        raise e
 
     return CommandInfo
 
