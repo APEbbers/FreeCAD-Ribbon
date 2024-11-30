@@ -194,6 +194,15 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.PreferedViewPanel.currentIndexChanged.connect(self.on_PreferedViewPanel_currentIndexChanged)
         # endregion
 
+        # Set the minimum and maximum settings for the iconsizes
+        self.form.IconSize_Small.setMinimum(5)
+        self.form.IconSize_Medium.setMinimum(5)
+        self.form.IconSize_Large.setMinimum(5)
+        self.form.IconSize_ApplicationButton.setMinimum(5)
+        self.form.IconSize_QuickAccessButton.setMinimum(5)
+        self.form.IconSize_rightToolbarButton.setMinimum(5)
+        self.form.TabbarHeight.setMinimum(5)
+
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
 
