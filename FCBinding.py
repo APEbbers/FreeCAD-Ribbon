@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -35,7 +35,7 @@ from PySide.QtGui import (
     QColor,
     QStyleHints,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -57,7 +57,7 @@ from PySide.QtWidgets import (
     QPushButton,
     QHBoxLayout,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -99,19 +99,21 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon_local.panel import RibbonPanel
-from pyqtribbon_local.toolbutton import RibbonToolButton
-from pyqtribbon_local.separator import RibbonSeparator
-from pyqtribbon_local.category import RibbonCategoryLayoutButton
+# import pyqtribbon_local as pyqtribbon
+# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon_local.panel import RibbonPanel
+# from pyqtribbon_local.toolbutton import RibbonToolButton
+# from pyqtribbon_local.separator import RibbonSeparator
+# from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
+import pyqtribbon as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+
 # from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
+from CustomWidgets import CustomRibbonToolButton as RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -1213,12 +1215,13 @@ class ModernMenu(RibbonBar):
                                 if iconToolbar == toolbar:
                                     IconOnly = True
 
+                            btn = RibbonToolButton()
                             if buttonSize == "small":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
                                 if IconOnly is True:
                                     showText = False
 
-                                btn = panel.addSmallButton(
+                                btn: RibbonToolButton = panel.addSmallButton(
                                     action.text(),
                                     action.icon(),
                                     alignment=Qt.AlignmentFlag.AlignLeft,
@@ -1226,6 +1229,7 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_SMALL,
                                 )
 
+                                btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL)
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
                                 padding = 4
@@ -1236,7 +1240,7 @@ class ModernMenu(RibbonBar):
                                 if IconOnly is True:
                                     showText = False
 
-                                btn = panel.addMediumButton(
+                                btn: RibbonToolButton = panel.addMediumButton(
                                     action.text(),
                                     action.icon(),
                                     alignment=Qt.AlignmentFlag.AlignLeft,
@@ -1244,6 +1248,7 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_MEDIUM,
                                 )
 
+                                btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
                                 padding = 0
@@ -1254,7 +1259,7 @@ class ModernMenu(RibbonBar):
                                 if IconOnly is True:
                                     showText = False
 
-                                btn = panel.addLargeButton(
+                                btn: RibbonToolButton = panel.addLargeButton(
                                     action.text(),
                                     action.icon(),
                                     alignment=Qt.AlignmentFlag.AlignLeft,
@@ -1262,6 +1267,7 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_LARGE,
                                 )
 
+                                btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_LARGE)
                                 # if text is enabled for large buttons. The text will be behind the icon
                                 # To fix this, increase the height of the button with 20 and the set the icon size
                                 # to the heigt minus 20.
@@ -1269,7 +1275,7 @@ class ModernMenu(RibbonBar):
                                     btn.setFixedHeight(btn.height() + 20)
                                     btn.setMaximumIconSize(btn.height() - 20)
 
-                                btn.setMaximumWidth(Parameters_Ribbon.ICON_SIZE_LARGE + 20)
+                                    btn.setMaximumWidth(Parameters_Ribbon.ICON_SIZE_LARGE + 20)
 
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
@@ -1288,6 +1294,12 @@ class ModernMenu(RibbonBar):
                             # Set the default actiom
                             btn.setDefaultAction(action)
 
+                            layout = btn.layout()
+                            spacer = QWidget()
+                            spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+                            layout.addChildWidget(spacer)
+                            btn.layout().adoptLayout(layout)
+
                             # add dropdown menu if necessary
                             if button.menu() is not None:
                                 btn.setMenu(button.menu())
@@ -1295,7 +1307,7 @@ class ModernMenu(RibbonBar):
                                 if btn.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
                                     btn.setMinimumWidth(btn.height())
                                 else:
-                                    btn.setMinimumWidth(btn.minimumWidth() + 5)
+                                    btn.setMinimumWidth(btn.minimumWidth() + 10)
                                 btn.setDefaultAction(btn.actions()[0])
 
                             # add the button text to the shadowList for checking if buttons are already there.
@@ -1324,6 +1336,8 @@ class ModernMenu(RibbonBar):
             # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
             # add an offset to make room for the panel titles and icons
             panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelOffset))
+
+            panel._actionsLayout.setHorizontalSpacing(10)
 
             # Setup the panelOptionButton
             actionList = []
