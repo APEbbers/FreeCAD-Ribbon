@@ -127,12 +127,12 @@ class LoadDialog(Design_ui.Ui_Form):
         Style = mw.style()
         self.form.setStyle(Style)
 
+        # load the RibbonStructurex.json
+        self.ReadJson()
+
         # Check if there is a datafile. if not, ask the user to create one.
         DataFile = os.path.join(os.path.dirname(__file__), "RibbonDataFile.dat")
-        if os.path.exists(DataFile) is True:
-            # Read the jason file and fill the lists
-            self.ReadJson()
-        else:
+        if os.path.exists(DataFile) is False:
             Question = (
                 translate("FreeCAD Ribbon", "The first time, a data file must be generated!")
                 + "\n"
@@ -513,17 +513,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
                 # Go through the toolbars
                 for Toolbar in wbToolbars:
-                    # Go through the list of toolbars. If already present, skip it.
-                    # Otherwise add it the the list.
-                    IsInList = False
-                    for i in range(len(self.StringList_Toolbars)):
-                        if Toolbar == self.StringList_Toolbars[i][0] and WorkBench[0] == self.StringList_Toolbars[i][2]:
-                            IsInList = True
-
-                    if IsInList is False:
-                        self.StringList_Toolbars.append([Toolbar, WorkBench[2], WorkBench[0]])
-
-            # time.sleep(1)
+                    self.StringList_Toolbars.append([Toolbar, WorkBench[2], WorkBench[0]])
 
         # Add the custom toolbars
         CustomToolbars = self.List_ReturnCustomToolbars()
@@ -1366,17 +1356,17 @@ class LoadDialog(Design_ui.Ui_Form):
 
             # Create the row in the table
             # add a row to the table widget
-            TableWidgetItem = QTableWidgetItem()
-            TableWidgetItem.setText("All")
+            FirstItem = QTableWidgetItem()
+            FirstItem.setText("All")
             self.form.tableWidget.insertRow(self.form.tableWidget.rowCount())
 
             # Get the last rownumber and set this row with the TableWidgetItem
             RowNumber = 0
             # update the data
-            TableWidgetItem.setData(Qt.ItemDataRole.UserRole, "All")
+            FirstItem.setData(Qt.ItemDataRole.UserRole, "All")
 
             # Add the first cell with the table widget
-            self.form.tableWidget.setItem(RowNumber, 0, TableWidgetItem)
+            self.form.tableWidget.setItem(RowNumber, 0, FirstItem)
 
             # Create the second cell and set the checkstate according the checkstate as defined earlier
             Icon_small = QTableWidgetItem()
@@ -1396,8 +1386,8 @@ class LoadDialog(Design_ui.Ui_Form):
             Icon_large.setCheckState(Qt.CheckState.Unchecked)
             self.form.tableWidget.setItem(RowNumber, 3, Icon_large)
 
-            # Add the first cell with the table widget
-            self.form.tableWidget.setItem(RowNumber, 0, TableWidgetItem)
+            # # Add the first cell with the table widget
+            # self.form.tableWidget.setItem(RowNumber, 0, TableWidgetItem)
 
             ShadowList = []  # Create a shadow list. To check if items are already existing.
 
@@ -1472,7 +1462,6 @@ class LoadDialog(Design_ui.Ui_Form):
             ToolbarCommands.sort(key=SortCommands)
 
             # Go through the list of toolbar commands
-            TableWidgetItem = QTableWidgetItem()
             for ToolbarCommand in ToolbarCommands:
                 if ToolbarCommand.__contains__("separator"):
                     # Create the row in the table
@@ -1480,17 +1469,17 @@ class LoadDialog(Design_ui.Ui_Form):
                     self.form.tableWidget.insertRow(self.form.tableWidget.rowCount())
 
                     # Define a table widget item
-                    TableWidgetItem = QTableWidgetItem()
-                    TableWidgetItem.setText("Separator")
-                    TableWidgetItem.setData(Qt.ItemDataRole.UserRole, "separator")
+                    Separator = QTableWidgetItem()
+                    Separator.setText("Separator")
+                    Separator.setData(Qt.ItemDataRole.UserRole, "separator")
 
                     # Get the last rownumber and set this row with the TableWidgetItem
                     RowNumber = self.form.tableWidget.rowCount() - 1
                     # update the data
-                    TableWidgetItem.setData(Qt.ItemDataRole.UserRole, f"{RowNumber}_separator_{WorkBenchName}")
+                    Separator.setData(Qt.ItemDataRole.UserRole, f"{RowNumber}_separator_{WorkBenchName}")
 
                     # Add the first cell with the table widget
-                    self.form.tableWidget.setItem(RowNumber, 0, TableWidgetItem)
+                    self.form.tableWidget.setItem(RowNumber, 0, Separator)
 
                     # Create the second cell and set the checkstate according the checkstate as defined earlier
                     Icon_small = QTableWidgetItem()
@@ -1524,11 +1513,11 @@ class LoadDialog(Design_ui.Ui_Form):
                     CommandName = ToolbarCommand
 
                     # Check if the items is already there
-                    IsInList = ShadowList.__contains__(CommandName)
+                    IsInList = ShadowList.__contains__(f"{CommandName}, {WorkBenchName}")
                     # if not, continue
                     if IsInList is False and CommandName is not None:
                         # Get the text
-                        MenuName = CommandInfoCorrections(CommandName)["menuText"].replace("&", "").replace("...", "")
+                        MenuName = CommandInfoCorrections(CommandName)["ActionText"].replace("&", "").replace("...", "")
                         if MenuName == "":
                             continue
 
@@ -1536,12 +1525,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         IconName = ""
                         # get the icon for this command if there isn't one, leave it None
                         IconName = CommandInfoCorrections(CommandName)["pixmap"]
-                        Icon = QIcon()
-                        for item in self.List_CommandIcons:
-                            if item[0] == CommandName:
-                                Icon = item[1]
-                        if Icon is None:
-                            Icon = Gui.getIcon(IconName)
+                        Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
 
                         # Set the default check states
                         checked_small = Qt.CheckState.Checked
@@ -1573,13 +1557,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                     Icon_Json_Name = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName][
                                         "toolbars"
                                     ][Toolbar]["commands"][CommandName]["icon"]
-                                    if Icon_Json_Name != "":
-                                        Icon = QIcon()
-                                        for item in self.List_CommandIcons:
-                                            if item[0] == CommandName:
-                                                Icon = item[1]
-                                        if Icon is None:
-                                            Icon = Gui.getIcon(Icon_Json_Name)
+                                    Icon = StandardFunctions.returnQiCons_Commands(CommandName, Icon_Json_Name)
                                 except Exception:
                                     continue
 
@@ -1600,22 +1578,22 @@ class LoadDialog(Design_ui.Ui_Form):
                         # Fill the table widget ----------------------------------------------------------------------------------
                         #
                         # Define a table widget item
-                        TableWidgetItem = QTableWidgetItem()
-                        TableWidgetItem.setText(MenuNameTabelWidgetItem + textAddition)
-                        TableWidgetItem.setData(
+                        CommandWidgetItem = QTableWidgetItem()
+                        CommandWidgetItem.setText(MenuNameTabelWidgetItem + textAddition)
+                        CommandWidgetItem.setData(
                             Qt.ItemDataRole.UserRole,
                             MenuName.replace("&", "").replace("...", ""),
                         )
-                        TableWidgetItem.setFlags(TableWidgetItem.flags() | Qt.ItemFlag.ItemIsEditable)
+                        CommandWidgetItem.setFlags(CommandWidgetItem.flags() | Qt.ItemFlag.ItemIsEditable)
                         if Icon is not None:
-                            TableWidgetItem.setIcon(Icon)
+                            CommandWidgetItem.setIcon(Icon)
                         if Icon is None:
-                            TableWidgetItem.setFlags(TableWidgetItem.flags() & ~Qt.ItemFlag.ItemIsEnabled)
+                            CommandWidgetItem.setFlags(CommandWidgetItem.flags() & ~Qt.ItemFlag.ItemIsEnabled)
                         # Get the last rownumber and set this row with the TableWidgetItem
                         RowNumber = self.form.tableWidget.rowCount() - 1
 
                         # Add the first cell with the table widget
-                        self.form.tableWidget.setItem(RowNumber, 0, TableWidgetItem)
+                        self.form.tableWidget.setItem(RowNumber, 0, CommandWidgetItem)
 
                         # Create the second cell and set the checkstate according the checkstate as defined earlier
                         Icon_small = QTableWidgetItem()
@@ -1666,7 +1644,7 @@ class LoadDialog(Design_ui.Ui_Form):
                             CommandName
                         ] = {
                             "size": Size,
-                            "text": TableWidgetItem.data(Qt.ItemDataRole.UserRole),
+                            "text": CommandWidgetItem.data(Qt.ItemDataRole.UserRole),
                             "icon": IconName,
                         }
 
@@ -1681,7 +1659,7 @@ class LoadDialog(Design_ui.Ui_Form):
                             self.form.IconOnly.setCheckState(Qt.CheckState.Unchecked)
 
                         # Add the command to the shadow list
-                        ShadowList.append(CommandName)
+                        ShadowList.append(f"{CommandName}, {WorkBenchName}")
         return
 
     def on_AddSeparator_clicked(self):
@@ -1822,16 +1800,16 @@ class LoadDialog(Design_ui.Ui_Form):
                     if i1 != column:
                         self.form.tableWidget.item(i2, i1).setCheckState(Qt.CheckState.Unchecked)
 
-        else:
-            # Get the checkedstate from the clicked cell
-            CheckState = self.form.tableWidget.item(row, column).checkState()
-            # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
-            for i3 in range(1, self.form.tableWidget.columnCount()):
-                if CheckState == Qt.CheckState.Checked:
-                    if i3 == column:
-                        self.form.tableWidget.item(row, i3).setCheckState(Qt.CheckState.Checked)
-                    else:
-                        self.form.tableWidget.item(row, i3).setCheckState(Qt.CheckState.Unchecked)
+        # else:
+        # Get the checkedstate from the clicked cell
+        CheckState = self.form.tableWidget.item(row, column).checkState()
+        # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
+        for i3 in range(1, self.form.tableWidget.columnCount()):
+            if CheckState == Qt.CheckState.Checked:
+                if i3 == column:
+                    self.form.tableWidget.item(row, i3).setCheckState(Qt.CheckState.Checked)
+                else:
+                    self.form.tableWidget.item(row, i3).setCheckState(Qt.CheckState.Unchecked)
 
         # Update the data
         self.UpdateData()
@@ -2156,7 +2134,8 @@ class LoadDialog(Design_ui.Ui_Form):
                         if item[0] == ToolbarCommand[0]:
                             Icon = item[1]
                     if Icon is None:
-                        Icon = Gui.getIcon(ToolbarCommand[1])
+                        IconName = ToolbarCommand[1]
+                        Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
 
                     ListWidgetItem = QListWidgetItem()
                     ListWidgetItem.setText(MenuName + textAddition)
@@ -2200,7 +2179,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         WorkBenchName = WorkbenchItem[0]
 
                         # get the name of the toolbar
-                        Toolbar = self.form.ToolbarList.currentData()
+                        Toolbar = self.form.ToolbarList.currentText()
                         # create a empty size string
                         Size = "small"
                         # Define empty strings for the command name and icon name
@@ -2216,7 +2195,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         # Go through the list with all available commands.
                         # If the commandText is in this list, get the command name.
                         for i3 in range(len(self.List_Commands)):
-                            if MenuName == self.List_Commands[i3][2] and WorkBenchName == self.List_Commands[i3][3]:
+                            if MenuName == self.List_Commands[i3][2]:
                                 if WorkBenchName == self.List_Commands[i3][3] or self.List_Commands[i3][3] == "Global":
                                     CommandName = self.List_Commands[i3][0]
                                     # Command = Gui.Command.get(CommandName)
@@ -2234,7 +2213,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                                 Size = "large"
 
                                     Order = []
-                                    for i7 in range(self.form.tableWidget.rowCount()):
+                                    for i7 in range(1, self.form.tableWidget.rowCount()):
                                         Order.append(
                                             QTableWidgetItem(self.form.tableWidget.item(i7, 0)).data(
                                                 Qt.ItemDataRole.UserRole
@@ -2273,7 +2252,9 @@ class LoadDialog(Design_ui.Ui_Form):
                                         "text": MenuNameTableWidgetItem,
                                         "icon": IconName,
                                     }
-            except Exception:
+            except Exception as e:
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    print(f"{CommandName}, {WorkBenchName} {e}")
                 continue
         return
 
@@ -2333,13 +2314,7 @@ class LoadDialog(Design_ui.Ui_Form):
             ListWidgetItem: QListWidgetItem = ExcludedToolbars[i1]
             Toolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
             IgnoredToolbar = Toolbar[0]
-
-            for item in self.List_IgnoredToolbars:
-                if item == IgnoredToolbar:
-                    IsInlist = True
-
-            if IsInlist is False:
-                List_IgnoredToolbars.append(IgnoredToolbar)
+            List_IgnoredToolbars.append(IgnoredToolbar)
 
         # IconOnlyToolbars
         for IconOnlyToolbar in self.List_IconOnlyToolbars:
