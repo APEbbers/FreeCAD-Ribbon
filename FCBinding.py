@@ -110,8 +110,9 @@ import pyqtribbon as pyqtribbon
 from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
 from pyqtribbon.panel import RibbonPanel
 
-# from pyqtribbon.toolbutton import RibbonToolButton
-from CustomWidgets import CustomRibbonToolButton as RibbonToolButton
+from pyqtribbon.toolbutton import RibbonToolButton
+
+# from CustomWidgets import CustomRibbonToolButton as RibbonToolButton
 from pyqtribbon.separator import RibbonSeparator
 from pyqtribbon.category import RibbonCategoryLayoutButton
 
@@ -1229,7 +1230,7 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_SMALL,
                                 )
 
-                                # btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL)
+                                btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL)
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
                                 padding = 4
@@ -1248,7 +1249,7 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_MEDIUM,
                                 )
 
-                                # btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
+                                btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
                                 padding = 0
@@ -1267,7 +1268,7 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_LARGE,
                                 )
 
-                                # btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_LARGE)
+                                btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_LARGE)
                                 # if text is enabled for large buttons. The text will be behind the icon
                                 # To fix this, increase the height of the button with 20 and the set the icon size
                                 # to the heigt minus 20.
@@ -1276,7 +1277,6 @@ class ModernMenu(RibbonBar):
                                     btn.setMaximumIconSize(btn.height() - 20)
 
                                     btn.setMaximumWidth(Parameters_Ribbon.ICON_SIZE_LARGE + 20)
-
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
                                 padding = 10
@@ -1302,6 +1302,7 @@ class ModernMenu(RibbonBar):
                                     btn.setMinimumWidth(btn.height())
                                 else:
                                     btn.setMinimumWidth(btn.minimumWidth() + 10)
+                                    btn.setIcon(StandardFunctions.AddPaddingToIcon(btn.icon(), 10))
                                 btn.setDefaultAction(btn.actions()[0])
 
                             # add the button text to the shadowList for checking if buttons are already there.
