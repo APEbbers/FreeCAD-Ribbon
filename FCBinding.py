@@ -1413,7 +1413,16 @@ class ModernMenu(RibbonBar):
                                 if btn.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
                                     btn.setMinimumWidth(btn.height())
                                 else:
-                                    btn.setMinimumWidth(btn.minimumWidth() + 5)
+                                    # Set the padding
+                                    padding = self.PaddingRight
+                                    # increase the width equal with the padding
+                                    btn.setMinimumWidth(btn.minimumWidth() + 10)
+                                    # Set a stylesheet with the new padding
+                                    btn.setStyleSheet(
+                                        StyleMapping.ReturnStyleSheet(
+                                            "toolbutton", "2px", f"{padding}px"
+                                        )
+                                    )
                                 btn.setDefaultAction(btn.actions()[0])
 
                             # add the button text to the shadowList for checking if buttons are already there.
