@@ -1229,7 +1229,7 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_SMALL,
                                 )
 
-                                btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL)
+                                # btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL)
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
                                 padding = 4
@@ -1248,7 +1248,7 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_MEDIUM,
                                 )
 
-                                btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
+                                # btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
                                 padding = 0
@@ -1267,7 +1267,7 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_LARGE,
                                 )
 
-                                btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_LARGE)
+                                # btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_LARGE)
                                 # if text is enabled for large buttons. The text will be behind the icon
                                 # To fix this, increase the height of the button with 20 and the set the icon size
                                 # to the heigt minus 20.

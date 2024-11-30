@@ -34,6 +34,7 @@ from PySide6.QtGui import (
     QFont,
     QColor,
     QStyleHints,
+    QPainter,
 )
 from PySide6.QtWidgets import (
     QToolButton,
@@ -115,64 +116,34 @@ from pyqtribbon.category import RibbonCategoryLayoutButton
 
 
 class CustomRibbonToolButton(RibbonToolButton):
+    def __init__(self):
+        super().__init__()
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._icon = self.icon()
-        if not self._icon.isNull():
-            super().setIcon(QIcon())
+        layout = QHBoxLayout(self)
 
-    def sizeHint(self):
-        hint = super().sizeHint()
-        if not self.text() or self._icon.isNull():
-            return hint
-        style = self.style()
-        opt = QStyleOptionButton()
-        self.initStyleOption(opt)
-        margin = style.pixelMetric(style.PM_ButtonMargin, opt, self)
-        spacing = style.pixelMetric(style.PM_LayoutVerticalSpacing, opt, self)
-        # get the possible rect required for the current label
-        labelRect = self.fontMetrics().boundingRect(0, 0, 5000, 5000, Qt.TextShowMnemonic, self.text())
-        iconHeight = self.iconSize().height()
-        height = iconHeight + spacing + labelRect.height() + margin * 2
-        if height > hint.height():
-            hint.setHeight(height)
-        return hint
+        # Create a QToolButton with icon
+        button = QToolButton()
+        button_icon = QStyle.SP_ArrowDown
 
-    def setIcon(self, icon):
-        # setting an icon might change the horizontal hint, so we need to use a
-        # "local" reference for the actual icon and go on by letting Qt to *think*
-        # that it doesn't have an icon;
-        if icon == self._icon:
-            return
-        self._icon = icon
-        self.updateGeometry()
+        layout.addWidget(button)
+        self.setLayout(layout)
+        self.setIcon(button, button_icon)
 
-    def paintEvent(self, event):
-        if self._icon.isNull() or not self.text():
-            super().paintEvent(event)
-            return
-        opt = QStyleOptionButton()
-        self.initStyleOption(opt)
-        opt.text = ""
-        qp = QStylePainter(self)
-        # draw the button without any text or icon
-        qp.drawControl(QStyle.CE_PushButton, opt)
+    def setIcon(self, button, button_icon, padding=10):
+        # Load the original icon as a QPixmap.
+        original_icon = QPixmap(button.style().standardIcon(button_icon).pixmap(25, 22))
 
-        rect = self.rect()
-        style = self.style()
-        margin = style.pixelMetric(style.PM_ButtonMargin, opt, self)
-        iconSize = self.iconSize()
-        iconRect = QRect((rect.width() - iconSize.width()) / 2, margin, iconSize.width(), iconSize.height())
-        if self.underMouse():
-            state = QIcon.Active
-        elif self.isEnabled():
-            state = QIcon.Normal
-        else:
-            state = QIcon.Disabled
-        qp.drawPixmap(iconRect, self._icon.pixmap(iconSize, state))
+        # Create a new QPixmap with increased dimensions in preparation to offset the original icon's position. Fill with transparency.
+        padded_icon = QPixmap(original_icon.width() + padding, original_icon.height() + 0)
+        padded_icon.fill(Qt.transparent)
 
-        spacing = style.pixelMetric(style.PM_LayoutVerticalSpacing, opt, self)
-        labelRect = QRect(rect)
-        labelRect.setTop(iconRect.bottom() + spacing)
-        qp.drawText(labelRect, Qt.TextShowMnemonic | Qt.AlignHCenter | Qt.AlignTop, self.text())
+        # Paint the original icon onto the transparent QPixmap with an offset making the icon sit in the bottom-right.
+        painter = QPainter(padded_icon)
+        painter.drawPixmap(2, 0, original_icon)
+        painter.end()
+
+        # Convert the QPixmap to a QIcon and add it to the button.
+        button.setIcon(QIcon(padded_icon))
+
+
+#
