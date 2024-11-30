@@ -1294,12 +1294,6 @@ class ModernMenu(RibbonBar):
                             # Set the default actiom
                             btn.setDefaultAction(action)
 
-                            layout = btn.layout()
-                            spacer = QWidget()
-                            spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-                            layout.addChildWidget(spacer)
-                            btn.layout().adoptLayout(layout)
-
                             # add dropdown menu if necessary
                             if button.menu() is not None:
                                 btn.setMenu(button.menu())
