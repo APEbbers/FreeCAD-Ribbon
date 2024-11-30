@@ -653,29 +653,3 @@ def returnQiCons_Commands(CommandName, pixmap):
         except Exception:
             return None
     return icon
-
-
-def AddPaddingToIcon(icon, PaddingRight=10):
-    from PySide6.QtGui import QPixmap, QIcon, QPainter
-    from PySide6.QtCore import QSize, Qt
-
-    if PaddingRight > 0:
-        # Add padding to the pixmap
-        sz = QSize(64, 64)
-        mode = QIcon.Mode.Normal
-        state = QIcon.State.On
-        pixmap: QPixmap = icon.pixmap(sz, mode, state)
-        # Create a new QPixmap with increased dimensions in preparation to offset the original icon's position. Fill with transparency.
-        padded_icon = QPixmap(pixmap.width() + PaddingRight, pixmap.height() + 0)
-        padded_icon.fill(Qt.GlobalColor.transparent)
-
-        # Paint the original icon onto the transparent QPixmap with an offset making the icon sit in the bottom-right.
-        painter = QPainter(padded_icon)
-        painter.drawPixmap(0, 0, pixmap)
-        painter.end()
-
-        # Convert the QPixmap to a QIcon and add it to the button.
-        icon = QIcon(padded_icon)
-
-        return icon
-    return None

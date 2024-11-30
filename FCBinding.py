@@ -157,6 +157,9 @@ class ModernMenu(RibbonBar):
     PanelOffset = -20
     DockWidgetOffset = 0
 
+    # Declare the right padding for dropdown menus
+    PaddingRight = 10
+
     # define a placeholder for the panel title heihgt
     panelTitleHeight = 0
 
@@ -1233,7 +1236,7 @@ class ModernMenu(RibbonBar):
                                 btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL)
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
-                                padding = 4
+                                padding = 0
                                 btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
 
                             elif buttonSize == "medium":
@@ -1279,9 +1282,9 @@ class ModernMenu(RibbonBar):
                                     btn.setMaximumWidth(Parameters_Ribbon.ICON_SIZE_LARGE + 20)
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
-                                padding = 10
-                                # if button.menu() is not None:
-                                #     padding = btn.height() / 6
+                                padding = 0
+                                if button.menu() is not None:
+                                    padding = self.PaddingRight
                                 btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
                             else:
                                 raise NotImplementedError(
@@ -1301,8 +1304,14 @@ class ModernMenu(RibbonBar):
                                 if btn.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
                                     btn.setMinimumWidth(btn.height())
                                 else:
-                                    btn.setMinimumWidth(btn.minimumWidth() + 10)
-                                    btn.setIcon(StandardFunctions.AddPaddingToIcon(btn.icon(), 10))
+                                    # Set the padding
+                                    padding = self.PaddingRight
+                                    # increase the width equal with the padding
+                                    btn.setMinimumWidth(btn.minimumWidth() + padding)
+                                    # Set a stylesheet with the new padding
+                                    btn.setStyleSheet(
+                                        StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px")
+                                    )
                                 btn.setDefaultAction(btn.actions()[0])
 
                             # add the button text to the shadowList for checking if buttons are already there.
@@ -1331,8 +1340,7 @@ class ModernMenu(RibbonBar):
             # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
             # add an offset to make room for the panel titles and icons
             panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelOffset))
-
-            panel._actionsLayout.setHorizontalSpacing(0)
+            panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
 
             # Setup the panelOptionButton
             actionList = []
