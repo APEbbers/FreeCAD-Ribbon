@@ -1419,7 +1419,9 @@ class ModernMenu(RibbonBar):
                                     btn.setMinimumWidth(btn.minimumWidth() + 10)
                                     # Set a stylesheet with the new padding
                                     btn.setStyleSheet(
-                                        StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px")
+                                        StyleMapping.ReturnStyleSheet(
+                                            "toolbutton", "2px", f"{padding}px"
+                                        )
                                     )
                                 btn.setDefaultAction(btn.actions()[0])
 
