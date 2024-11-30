@@ -1331,7 +1331,7 @@ class ModernMenu(RibbonBar):
             # add an offset to make room for the panel titles and icons
             panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelOffset))
 
-            panel._actionsLayout.setHorizontalSpacing(10)
+            panel._actionsLayout.setHorizontalSpacing(0)
 
             # Setup the panelOptionButton
             actionList = []
