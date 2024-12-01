@@ -553,7 +553,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     IconName = CommandInfoCorrections(CommandName[0])["pixmap"]
                 else:
                     IconName = ""
-                MenuName = CommandInfoCorrections(CommandName[0])["ActionText"].replace("&", "")
+                MenuName = CommandInfoCorrections(CommandName[0])["menuText"].replace("&", "").replace("...", "")
                 self.List_Commands.append([CommandName[0], IconName, MenuName, WorkBenchName])
         # add also custom commands
         Toolbars = self.List_ReturnCustomToolbars()
@@ -568,7 +568,7 @@ class LoadDialog(Design_ui.Ui_Form):
                             IconName = CommandInfoCorrections(CustomCommand)["pixmap"]
                         else:
                             IconName = ""
-                        MenuName = CommandInfoCorrections(CustomCommand)["ActionText"].replace("&", "")
+                        MenuName = CommandInfoCorrections(CustomCommand)["menuText"].replace("&", "").replace("...", "")
                         self.List_Commands.append([CustomCommand, IconName, MenuName, WorkBenchName])
         Toolbars = self.List_ReturnCustomToolbars_Global()
         for Toolbar in Toolbars:
@@ -578,7 +578,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     IconName = CommandInfoCorrections(CustomCommand)["pixmap"]
                 else:
                     IconName = None
-                MenuName = CommandInfoCorrections(CustomCommand)["ActionText"].replace("&", "")
+                MenuName = CommandInfoCorrections(CustomCommand)["menuText"].replace("&", "").replace("...", "")
                 self.List_Commands.append([CustomCommand, IconName, MenuName, Toolbar[1]])
         if int(App.Version()[0]) > 0:
             command = Gui.Command.get("Std_Measure")
@@ -586,7 +586,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 IconName = CommandInfoCorrections("Std_Measure")["pixmap"]
             else:
                 IconName = ""
-            MenuName = CommandInfoCorrections("Std_Measure")["ActionText"].replace("&", "")
+            MenuName = CommandInfoCorrections("Std_Measure")["menuText"].replace("&", "").replace("...", "")
             self.List_Commands.append(["Std_Measure", IconName, MenuName, "General"])
 
         # re-activate the workbench that was stored.
@@ -668,8 +668,8 @@ class LoadDialog(Design_ui.Ui_Form):
             IsInList = ShadowList.__contains__(f"{CommandName}, {workbenchName}")
 
             if IsInList is False and workbenchName != "Global" and workbenchName != "General":
-                # Command = Gui.Command.get(CommandName)
-                MenuName = ToolbarCommand[2].replace("&", "")
+                # Get the translated menuname
+                MenuName = StandardFunctions.CommandInfoCorrections(CommandName)["ActionText"]
 
                 WorkbenchTitle = Gui.getWorkbench(workbenchName).MenuText
                 if (
@@ -694,7 +694,10 @@ class LoadDialog(Design_ui.Ui_Form):
 
                         ListWidgetItem = QListWidgetItem()
                         ListWidgetItem.setText(
-                            StandardFunctions.TranslationsMapping(workbenchName, MenuName) + textAddition
+                            (
+                                StandardFunctions.CommandInfoCorrections(CommandName)["ActionText"]
+                                + textAddition.replace("&", "")
+                            )
                         )
                         ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
                         if Icon is not None:
@@ -720,7 +723,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
             if IsInList is False and workbenchName != "Global":
                 # Command = Gui.Command.get(CommandName)
-                MenuName = ToolbarCommand[2].replace("&", "")
+                MenuName = StandardFunctions.CommandInfoCorrections(CommandName)["ActionText"]
 
                 if ToolbarCommand[2].lower().startswith(self.form.SearchBar_1.text().lower()):
                     IsInlist = False
@@ -740,7 +743,10 @@ class LoadDialog(Design_ui.Ui_Form):
                             Icon = Gui.getIcon(ToolbarCommand[1])
                         ListWidgetItem = QListWidgetItem()
                         ListWidgetItem.setText(
-                            StandardFunctions.TranslationsMapping(workbenchName, MenuName) + textAddition
+                            (
+                                StandardFunctions.CommandInfoCorrections(CommandName)["ActionText"]
+                                + textAddition.replace("&", "")
+                            )
                         )
                         ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
                         if Icon is not None:
@@ -811,7 +817,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 IsInlist = False
                 for i in range(self.form.ToolbarsToExclude.count()):
                     ToolbarItem = self.form.ToolbarsToExclude.item(i)
-                    if ToolbarItem.text() == Toolbar:
+                    if ToolbarItem.text() == StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]):
                         IsInlist = True
 
                 if IsInlist is False:
@@ -835,7 +841,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 IsInlist = False
                 for i in range(self.form.ToolbarsToExclude.count()):
                     ToolbarItem = self.form.ToolbarsToExclude.item(i)
-                    if ToolbarItem.text() == Toolbar[0]:
+                    if ToolbarItem.text() == StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]):
                         IsInlist = True
 
                 if IsInlist is False:
@@ -1571,7 +1577,9 @@ class LoadDialog(Design_ui.Ui_Form):
                         else:
                             for CommandItem in self.List_Commands:
                                 if CommandItem[0] == CommandName:
-                                    MenuNameTabelWidgetItem = CommandItem[2]
+                                    MenuNameTabelWidgetItem = StandardFunctions.CommandInfoCorrections(CommandName)[
+                                        "ActionText"
+                                    ]
 
                         # Create the row in the table
                         # add a row to the table widget
@@ -1581,7 +1589,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         #
                         # Define a table widget item
                         CommandWidgetItem = QTableWidgetItem()
-                        CommandWidgetItem.setText(MenuNameTabelWidgetItem + textAddition)
+                        CommandWidgetItem.setText((MenuNameTabelWidgetItem + textAddition).replace("&", ""))
                         CommandWidgetItem.setData(
                             Qt.ItemDataRole.UserRole,
                             MenuName.replace("&", "").replace("...", ""),
@@ -1646,7 +1654,7 @@ class LoadDialog(Design_ui.Ui_Form):
                             CommandName
                         ] = {
                             "size": Size,
-                            "text": CommandWidgetItem.data(Qt.ItemDataRole.UserRole),
+                            "text": MenuName,
                             "icon": IconName,
                         }
 
@@ -2089,7 +2097,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     IsInlist = False
                     for i in range(self.form.ToolbarsToExclude.count()):
                         ToolbarItem = self.form.ToolbarsToExclude.item(i)
-                        if ToolbarItem.text() == Toolbar[0]:
+                        if ToolbarItem.text() == StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]):
                             IsInlist = True
 
                     if IsInlist is False:
@@ -2098,7 +2106,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     IsInlist = False
                     for i in range(self.form.ToolbarsExcluded.count()):
                         ToolbarItem = self.form.ToolbarsExcluded.item(i)
-                        if ToolbarItem.text() == Toolbar[0]:
+                        if ToolbarItem.text() == StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]):
                             IsInlist = True
 
                     if IsInlist is False:
@@ -2119,7 +2127,7 @@ class LoadDialog(Design_ui.Ui_Form):
             if IsInList is False:
                 CommandName = ToolbarCommand[0]
                 # Command = Gui.Command.get(CommandName)
-                MenuName = ToolbarCommand[2]
+                MenuName = StandardFunctions.CommandInfoCorrections(CommandName)["ActionText"]
                 workbenchName = ToolbarCommand[3]
 
                 # Default a command is not selected
@@ -2140,11 +2148,11 @@ class LoadDialog(Design_ui.Ui_Form):
                         Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
 
                     ListWidgetItem = QListWidgetItem()
-                    ListWidgetItem.setText(MenuName + textAddition)
+                    ListWidgetItem.setText((MenuName + textAddition).replace("&", ""))
                     if Icon is not None:
                         ListWidgetItem.setIcon(Icon)
                     ListWidgetItem.setToolTip(CommandName)  # Use the tooltip to store the actual command.
-                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, ToolbarCommand[0])
+                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
 
                     # Add the ListWidgetItem to the correct ListWidget
                     if Icon is not None:
@@ -2187,10 +2195,10 @@ class LoadDialog(Design_ui.Ui_Form):
                         # Define empty strings for the command name and icon name
                         CommandName = ""
                         IconName = ""
-                        # Get the command text from the first cell in the row
-                        MenuNameTableWidgetItem = (
-                            self.form.tableWidget.item(row, 0).text().replace("&", "").replace("...", "")
-                        )
+                        # # Get the command text from the first cell in the row
+                        # MenuNameTableWidgetItem = (
+                        #     self.form.tableWidget.item(row, 0).text().replace("&", "").replace("...", "")
+                        # )
                         # Get the menu name from the stored data
                         MenuName = self.form.tableWidget.item(row, 0).data(Qt.ItemDataRole.UserRole)
 
@@ -2251,7 +2259,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                         "commands"
                                     ][CommandName] = {
                                         "size": Size,
-                                        "text": MenuNameTableWidgetItem,
+                                        "text": MenuName,
                                         "icon": IconName,
                                     }
             except Exception as e:
@@ -2312,7 +2320,6 @@ class LoadDialog(Design_ui.Ui_Form):
         # IgnoredToolbars
         ExcludedToolbars = self.ListWidgetItems(self.form.ToolbarsExcluded)
         for i1 in range(len(ExcludedToolbars)):
-            IsInlist = False
             ListWidgetItem: QListWidgetItem = ExcludedToolbars[i1]
             Toolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
             IgnoredToolbar = Toolbar[0]
