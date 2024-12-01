@@ -130,6 +130,9 @@ class LoadDialog(Design_ui.Ui_Form):
         # load the RibbonStructurex.json
         self.ReadJson()
 
+        # Update the RibbonStructurex.json
+        self.UpdateRibbonStructure()
+
         # Check if there is a datafile. if not, ask the user to create one.
         DataFile = os.path.join(os.path.dirname(__file__), "RibbonDataFile.dat")
         if os.path.exists(DataFile) is False:
@@ -640,7 +643,6 @@ class LoadDialog(Design_ui.Ui_Form):
         DataFile = os.path.join(os.path.dirname(__file__), "RibbonDataFile.dat")
         with open(DataFile, "w") as outfile:
             json.dump(Data, outfile, indent=4)
-
         outfile.close()
 
         # If there is a RibbonStructure.json file, load it
@@ -1081,7 +1083,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     Suffix = "_custom"
 
                     # Create or modify the dict that will be entered
-                    self.add_keys_nested_dict(
+                    StandardFunctions.add_keys_nested_dict(
                         self.Dict_CustomToolbars,
                         [
                             "customToolbars",
@@ -1114,7 +1116,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 ToolbarOrder = []
                 for i2 in range(self.form.ToolbarsOrder.count()):
                     ToolbarOrder.append(self.form.ToolbarsOrder.item(i2).data(Qt.ItemDataRole.UserRole))
-                self.add_keys_nested_dict(
+                StandardFunctions.add_keys_nested_dict(
                     self.Dict_RibbonCommandPanel,
                     ["workbenches", WorkBenchName, "toolbars", "order"],
                 )
@@ -1502,7 +1504,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         Order.append(QTableWidgetItem(self.form.tableWidget.item(j, 0)).data(Qt.ItemDataRole.UserRole))
 
                     # Add or update the dict for the Ribbon command panel
-                    self.add_keys_nested_dict(
+                    StandardFunctions.add_keys_nested_dict(
                         self.Dict_RibbonCommandPanel,
                         ["workbenches", WorkBenchName, "toolbars", Toolbar, "order"],
                     )
@@ -1624,11 +1626,11 @@ class LoadDialog(Design_ui.Ui_Form):
                             )
 
                         # Add or update the dict for the Ribbon command panel
-                        self.add_keys_nested_dict(
+                        StandardFunctions.add_keys_nested_dict(
                             self.Dict_RibbonCommandPanel,
                             ["workbenches", WorkBenchName, "toolbars", Toolbar, "order"],
                         )
-                        self.add_keys_nested_dict(
+                        StandardFunctions.add_keys_nested_dict(
                             self.Dict_RibbonCommandPanel,
                             [
                                 "workbenches",
@@ -1717,7 +1719,7 @@ class LoadDialog(Design_ui.Ui_Form):
             Order.append(QTableWidgetItem(self.form.tableWidget.item(i, 0)).data(Qt.ItemDataRole.UserRole))
 
         # Add or update the dict for the Ribbon command panel
-        self.add_keys_nested_dict(
+        StandardFunctions.add_keys_nested_dict(
             self.Dict_RibbonCommandPanel,
             ["workbenches", WorkBenchName, "toolbars", Toolbar, "order"],
         )
@@ -1871,7 +1873,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for i2 in range(self.form.ToolbarsOrder.count()):
             Toolbar = self.form.ToolbarsOrder.item(i2).data(Qt.ItemDataRole.UserRole)
             ToolbarOrder.append(Toolbar)
-        self.add_keys_nested_dict(
+        StandardFunctions.add_keys_nested_dict(
             self.Dict_RibbonCommandPanel,
             [
                 "workbenches",
@@ -2220,7 +2222,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                             )
                                         )
 
-                                    self.add_keys_nested_dict(
+                                    StandardFunctions.add_keys_nested_dict(
                                         self.Dict_RibbonCommandPanel,
                                         [
                                             "workbenches",
@@ -2230,7 +2232,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                             "order",
                                         ],
                                     )
-                                    self.add_keys_nested_dict(
+                                    StandardFunctions.add_keys_nested_dict(
                                         self.Dict_RibbonCommandPanel,
                                         [
                                             "workbenches",
@@ -2372,28 +2374,6 @@ class LoadDialog(Design_ui.Ui_Form):
         outfile.close()
         return
 
-    def add_keys_nested_dict(self, dict, keys):
-        """_summary_
-
-        Args:
-            dict (_type_): Enter dict to create or modify
-            keys (_type_): Enter key or list of keys
-
-        Returns:
-            bool: True if a new dict is created or modified. Otherwise False
-        """
-        for key in keys:
-            result = False
-            if key not in dict:
-                dict[key] = {}
-                result = True
-            dict = dict[key]
-        try:
-            dict.setdefault(keys[-1], 1)
-        except Exception:
-            pass
-        return result
-
     def ListWidgetItems(self, ListWidget: QListWidget) -> list:
         items = []
         for x in range(ListWidget.count()):
@@ -2494,7 +2474,7 @@ class LoadDialog(Design_ui.Ui_Form):
             Order.append(QTableWidgetItem(TableWidget.item(i, 0)).data(Qt.ItemDataRole.UserRole))
 
         # Add or update the dict for the Ribbon command panel
-        self.add_keys_nested_dict(
+        StandardFunctions.add_keys_nested_dict(
             self.Dict_RibbonCommandPanel,
             ["workbenches", WorkBenchName, "toolbars", Toolbar, "order"],
         )
@@ -2857,6 +2837,86 @@ class LoadDialog(Design_ui.Ui_Form):
             Gui.activateWorkbench(WorkBenchName)
             Toolbars = Gui.getWorkbench(WorkBenchName).getToolbarItems()
             return Toolbars
+
+    def UpdateRibbonStructure(self):
+        for WorkbenchItem in self.List_Workbenches:
+            WorkBenchName = WorkbenchItem[0]
+            ToolbarItems = WorkbenchItem[3]
+            for Toolbar, Commands in ToolbarItems.items():
+                # Write the keys if they don't exist
+                StandardFunctions.add_keys_nested_dict(
+                    self.Dict_RibbonCommandPanel,
+                    ["workbenches", WorkBenchName, "toolbars", "order"],
+                )
+
+                ToolbarOrder = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]
+                IsInList = False
+                for OrderedToolbar in ToolbarOrder:
+                    if OrderedToolbar == Toolbar:
+                        IsInList = True
+                if IsInList is False:
+                    ToolbarOrder.append(Toolbar)
+
+                for CommandName in Commands:
+                    # Write the keys if they don't exist
+                    StandardFunctions.add_keys_nested_dict(
+                        self.Dict_RibbonCommandPanel,
+                        ["workbenches", WorkBenchName, "toolbars", Toolbar, "order"],
+                    )
+                    StandardFunctions.add_keys_nested_dict(
+                        self.Dict_RibbonCommandPanel,
+                        ["workbenches", WorkBenchName, "toolbars", Toolbar, "commands", CommandName, "size"],
+                    )
+                    StandardFunctions.add_keys_nested_dict(
+                        self.Dict_RibbonCommandPanel,
+                        ["workbenches", WorkBenchName, "toolbars", Toolbar, "commands", CommandName, "text"],
+                    )
+                    StandardFunctions.add_keys_nested_dict(
+                        self.Dict_RibbonCommandPanel,
+                        ["workbenches", WorkBenchName, "toolbars", Toolbar, "commands", CommandName, "icon"],
+                    )
+
+                    # Set or update the command order
+                    CommandOrder = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
+                        "order"
+                    ]
+                    IsInList = False
+                    for OrderedCommand in CommandOrder:
+                        if OrderedCommand == Toolbar:
+                            IsInList = True
+                    if IsInList is False:
+                        CommandOrder.append(StandardFunctions.CommandInfoCorrections(CommandName)["ActionText"])
+
+                    # Get the size. If size is "", set size to "small"
+                    Size = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar]["commands"][
+                        CommandName
+                    ]["size"]
+                    if Size == "":
+                        Size = "small"
+
+                    # Get the Menutext. If empty, get the MenuText from FreeCAD
+                    MenuText = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
+                        "commands"
+                    ][CommandName]["text"]
+                    if MenuText == "":
+                        MenuText = StandardFunctions.CommandInfoCorrections(CommandName)["ActionText"]
+
+                    # Get the IconNmae. If empty, get the IconNmae from FreeCAD
+                    IconName = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
+                        "commands"
+                    ][CommandName]["icon"]
+                    if IconName == "":
+                        IconName = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
+
+                    # Write the entries
+                    self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar]["commands"][
+                        CommandName
+                    ] = {
+                        "size": Size,
+                        "text": MenuText,
+                        "icon": IconName,
+                    }
+        return
 
 
 def main():
