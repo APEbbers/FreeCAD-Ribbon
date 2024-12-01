@@ -1680,7 +1680,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 WorkBenchName = WorkBench[0]
 
         # Get the toolbar name
-        Toolbar = self.form.ToolbarList.currentText()
+        Toolbar = self.form.ToolbarList.currentData()
 
         # Define a table widget item
         TableWidgetItem = QTableWidgetItem()
@@ -1745,7 +1745,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def on_IconOnly_clicked(self):
         if self.form.IconOnly.isChecked() is True:
-            toolbar = self.form.ToolbarList.currentText()
+            toolbar = self.form.ToolbarList.currentData()
 
             isInList = False
             for item in self.List_IconOnlyToolbars:
@@ -1756,7 +1756,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 self.List_IconOnlyToolbars.append(toolbar)
 
         if self.form.IconOnly.isChecked() is False:
-            toolbar = self.form.ToolbarList.currentText()
+            toolbar = self.form.ToolbarList.currentData()
 
             isInList = False
             for item in self.List_IconOnlyToolbars:
@@ -2189,7 +2189,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         WorkBenchName = WorkbenchItem[0]
 
                         # get the name of the toolbar
-                        Toolbar = self.form.ToolbarList.currentText()
+                        Toolbar = self.form.ToolbarList.currentData()
                         # create a empty size string
                         Size = "small"
                         # Define empty strings for the command name and icon name
