@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -35,7 +35,7 @@ from PySide.QtWidgets import (
     QMenu,
     QWidget,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
 import json
 from datetime import datetime
@@ -1307,6 +1307,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Get the toolbars of the workbench
         # wbToolbars: list = Gui.getWorkbench(WorkBenchName).listToolbars()
+        wbToolbars = []
         wbToolbars = self.returnWorkBenchToolbars(WorkBenchName)
         # Get all the custom toolbars from the toolbar layout
         CustomToolbars = self.List_ReturnCustomToolbars()
@@ -1874,7 +1875,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Get the correct workbench name
         WorkBenchName = ""
         for WorkBench in self.List_Workbenches:
-            if WorkBench[2] == self.form.WorkbenchList.currentData():
+            if WorkBench[2] == self.form.WorkbenchList.currentData()[2]:
                 WorkBenchName = WorkBench[0]
 
         ToolbarOrder = []
@@ -2740,45 +2741,70 @@ class LoadDialog(Design_ui.Ui_Form):
         return IsChanged
 
     def SortedToolbarList(self, ToolbarList: list, WorkBenchName):
-        SortedList: list = []
-
+        JsonOrderList = []
         try:
-            if WorkBenchName in self.Dict_RibbonCommandPanel["workbenches"]:
-                if "order" in self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]:
-                    if len(self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]) > 0:
-                        SortedList = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]
-
-                        IsInList = False
-                        for ToolBar in ToolbarList:
-                            for SortedToolBar in SortedList:
-                                if ToolBar == SortedToolBar:
-                                    IsInList = True
-
-                            if IsInList is False:
-                                SortedList.append(ToolBar)
-                    else:
-                        SortedList = ToolbarList
-                else:
-                    SortedList = ToolbarList
-            else:
-                SortedList = ToolbarList
-
-            def SortList(toolbar):
-                if toolbar == "":
-                    return -1
-
-                position = None
-                try:
-                    position = SortedList.index(toolbar)
-                except ValueError:
-                    position = 999999
-                return position
-
-            ToolbarList.sort(key=SortList)
+            JsonOrderList = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]
+            print(f"{WorkBenchName}, {JsonOrderList}")
         except Exception:
-            return ToolbarList
+            JsonOrderList = ToolbarList
+
+        def SortList(toolbar):
+            if toolbar == "":
+                return -1
+
+            position = None
+            try:
+                position = JsonOrderList.index(toolbar)
+            except ValueError:
+                position = 999999
+            return position
+
+        ToolbarList.sort(key=SortList)
 
         return ToolbarList
+
+    # def SortedToolbarList(self, ToolbarList: list, WorkBenchName):
+    #     SortedList: list = []
+
+    #     try:
+    #         if WorkBenchName in self.Dict_RibbonCommandPanel["workbenches"]:
+    #             if "order" in self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]:
+    #                 if len(self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]) > 0:
+    #                     SortedList = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]
+
+    #                     IsInList = False
+    #                     for ToolBar in ToolbarList:
+    #                         for SortedToolBar in SortedList:
+    #                             if ToolBar == SortedToolBar:
+    #                                 IsInList = True
+
+    #                         if IsInList is False:
+    #                             SortedList.append(ToolBar)
+    #                 else:
+    #                     SortedList = ToolbarList
+    #             else:
+    #                 SortedList = ToolbarList
+    #         else:
+    #             SortedList = ToolbarList
+
+    #         print(SortedList)
+
+    #         def SortList(toolbar):
+    #             if toolbar == "":
+    #                 return -1
+
+    #             position = None
+    #             try:
+    #                 position = SortedList.index(toolbar)
+    #             except ValueError:
+    #                 position = 999999
+    #             return position
+
+    #         ToolbarList.sort(key=SortList)
+    #         return ToolbarList
+    #     except Exception as e:
+    #         print(e)
+    #         return ToolbarList
 
     def LoadControls(self):
         # Clear all listWidgets
