@@ -1128,12 +1128,13 @@ class ModernMenu(RibbonBar):
                             # get the action text
                             text = action.text()
 
-                            # There is a bug in freecad with the comp-sketch menu hase the wrong text
-                            if (
-                                action.data() == "PartDesign_CompSketches"
-                                and action.text().replace("...", "") == "Create datum"
-                            ):
-                                text = "Create sketch"
+                            text = StandardFunctions.CommandInfoCorrections(action.data())["ActionText"]
+                            # # There is a bug in freecad with the comp-sketch menu hase the wrong text
+                            # if (
+                            #     action.data() == "PartDesign_CompSketches"
+                            #     and action.text().replace("...", "") == "Create datum"
+                            # ):
+                            #     text = "Create sketch"
 
                             # try to get alternative text from ribbonStructure
                             try:
