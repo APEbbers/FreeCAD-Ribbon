@@ -2743,8 +2743,8 @@ class LoadDialog(Design_ui.Ui_Form):
     def SortedToolbarList(self, ToolbarList: list, WorkBenchName):
         JsonOrderList = []
         try:
-            JsonOrderList = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]
-            print(f"{WorkBenchName}, {JsonOrderList}")
+            if len(self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]) > 0:
+                JsonOrderList = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]
         except Exception:
             JsonOrderList = ToolbarList
 
@@ -2762,49 +2762,6 @@ class LoadDialog(Design_ui.Ui_Form):
         ToolbarList.sort(key=SortList)
 
         return ToolbarList
-
-    # def SortedToolbarList(self, ToolbarList: list, WorkBenchName):
-    #     SortedList: list = []
-
-    #     try:
-    #         if WorkBenchName in self.Dict_RibbonCommandPanel["workbenches"]:
-    #             if "order" in self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]:
-    #                 if len(self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]) > 0:
-    #                     SortedList = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]
-
-    #                     IsInList = False
-    #                     for ToolBar in ToolbarList:
-    #                         for SortedToolBar in SortedList:
-    #                             if ToolBar == SortedToolBar:
-    #                                 IsInList = True
-
-    #                         if IsInList is False:
-    #                             SortedList.append(ToolBar)
-    #                 else:
-    #                     SortedList = ToolbarList
-    #             else:
-    #                 SortedList = ToolbarList
-    #         else:
-    #             SortedList = ToolbarList
-
-    #         print(SortedList)
-
-    #         def SortList(toolbar):
-    #             if toolbar == "":
-    #                 return -1
-
-    #             position = None
-    #             try:
-    #                 position = SortedList.index(toolbar)
-    #             except ValueError:
-    #                 position = 999999
-    #             return position
-
-    #         ToolbarList.sort(key=SortList)
-    #         return ToolbarList
-    #     except Exception as e:
-    #         print(e)
-    #         return ToolbarList
 
     def LoadControls(self):
         # Clear all listWidgets
