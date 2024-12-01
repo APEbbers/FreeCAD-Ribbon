@@ -885,6 +885,7 @@ class ModernMenu(RibbonBar):
         # Get the active workbench and get tis name
         workbench = Gui.activeWorkbench()
         workbenchName = workbench.name()
+        workbenchTitle = workbench.MenuText
 
         # check if the panel is already loaded. If so exit this function
         tabName = self.tabBar().tabText(self.tabBar().currentIndex()).replace("&", "")
@@ -1324,16 +1325,30 @@ class ModernMenu(RibbonBar):
             panel.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
             panel.setSizeIncrement(self.iconSize, self.iconSize)
             self.panelTitleHeight = panel._titleHeight
-
-            # remove any suffix from the panel title
-            if panel.title().endswith("_custom"):
-                panel.setTitle(panel.title().replace("_custom", ""))
+            # panel._titleLabel.setWordWrap(True)
 
             # Change the name of the view panels to "View"
             if panel.title() == "Views - Ribbon" or panel.title() == "Individual views":
                 panel.setTitle(" Views ")
             else:
                 panel.setTitle(title)
+
+            # Remove possible workbench names from the titles
+            ListDelimiters = [" - ", "-"]
+            for delimiter in ListDelimiters:
+                if len(title.split(delimiter, 1)) > 1:
+                    title = title.split(delimiter, 1)[1]
+            if title.startswith(workbenchTitle) is True and title != workbenchTitle:
+                title = title.replace(workbenchTitle, "")
+            if title.startswith(" ") is True:
+                title = title.replace(" ", "")
+            panel.setTitle(title)
+
+            # remove any suffix from the panel title
+            if panel.title().endswith("_custom"):
+                panel.setTitle(panel.title().replace("_custom", ""))
+            if panel.title().endswith("_global"):
+                panel.setTitle(panel.title().replace("_global", ""))
 
             # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
             # add an offset to make room for the panel titles and icons
