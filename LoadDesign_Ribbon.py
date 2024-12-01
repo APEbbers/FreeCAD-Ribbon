@@ -1518,8 +1518,8 @@ class LoadDialog(Design_ui.Ui_Form):
                     IsInList = ShadowList.__contains__(f"{CommandName}, {WorkBenchName}")
                     # if not, continue
                     if IsInList is False and CommandName is not None:
-                        # Get the text
-                        MenuName = CommandInfoCorrections(CommandName)["ActionText"].replace("&", "").replace("...", "")
+                        # Get the untranslated text
+                        MenuName = CommandInfoCorrections(CommandName)["menuText"].replace("&", "").replace("...", "")
                         if MenuName == "":
                             continue
 

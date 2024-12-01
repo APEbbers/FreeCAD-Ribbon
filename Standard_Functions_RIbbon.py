@@ -640,6 +640,9 @@ def addMissingCommands(CommandList: list):
 
 
 def returnQiCons_Commands(CommandName, pixmap):
+    from PySide.QtGui import QIcon
+
+    icon = QIcon()
     if pixmap != "":
         icon = Gui.getIcon(pixmap)
     else:
