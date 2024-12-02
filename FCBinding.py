@@ -99,19 +99,19 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon_local.panel import RibbonPanel
-from pyqtribbon_local.toolbutton import RibbonToolButton
-from pyqtribbon_local.separator import RibbonSeparator
-from pyqtribbon_local.category import RibbonCategoryLayoutButton
+# import pyqtribbon_local as pyqtribbon
+# from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon_local.panel import RibbonPanel
+# from pyqtribbon_local.toolbutton import RibbonToolButton
+# from pyqtribbon_local.separator import RibbonSeparator
+# from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
+import pyqtribbon as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -1095,6 +1095,9 @@ class ModernMenu(RibbonBar):
                     # If the number of columns is more than allowed,
                     # Add the actions to the OptionPanel instead.
                     if maxColumns > 0:
+                        # if the last item before the optionpanel is an separator, skip it
+                        if columnCount > maxColumns and button.text().__contains__("separator"):
+                            continue
                         if columnCount > maxColumns + 1:
                             ButtonList.append(button)
                             panel.panelOptionButton().show()
@@ -1106,6 +1109,7 @@ class ModernMenu(RibbonBar):
                         separator = panel.addLargeVerticalSeparator(
                             alignment=Qt.AlignmentFlag.AlignLeft, fixedHeight=False
                         )
+                        separator.setObjectName("separator")
                         # there is a bug in pyqtribbon where the separator is placed in the wrong position
                         # despite the correct order of the button list.
                         # To correct this, empty and disabled buttons are added for spacing.
