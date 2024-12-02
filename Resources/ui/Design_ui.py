@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignpCmMSd.ui'
+## Form generated from reading UI file 'DesignsWIoEF.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##

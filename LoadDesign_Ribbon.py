@@ -2033,6 +2033,7 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.WorkbenchesAvailable_IW.clear()
         self.form.WorkbenchesSelected_IW.clear()
         self.form.WorkbenchList_CP.clear()
+        self.form.WorkbenchList_IS.clear()
 
         # Add "All" to the categoryListWidgets
         All_KeyWord = translate("FreeCAD Ribbon", "All")
