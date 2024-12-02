@@ -2290,7 +2290,7 @@ class LoadDialog(Design_ui.Ui_Form):
             self.List_IgnoredToolbars.append(IgnoredToolbar)
 
         # Get all the icon only toolbars
-        for IconOnly_Toolbar in data["IconOnly_Toolbars"]:
+        for IconOnly_Toolbar in data["iconOnlyToolbars"]:
             self.List_IconOnly_Toolbars.append(IconOnly_Toolbar)
 
         # Get all the quick access command
@@ -2364,7 +2364,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # add the various lists to the resulting dict.
         resultingDict["language"] = FCLanguage
         resultingDict["ignoredToolbars"] = List_IgnoredToolbars
-        resultingDict["IconOnly_Toolbars"] = List_IconOnly_Toolbars
+        resultingDict["iconOnlyToolbars"] = List_IconOnly_Toolbars
         resultingDict["quickAccessCommands"] = List_QuickAccessCommands
         resultingDict["ignoredWorkbenches"] = List_IgnoredWorkbenches
         resultingDict.update(self.Dict_CustomToolbars)
@@ -2736,7 +2736,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         if data["ignoredToolbars"].sort() == self.List_IgnoredToolbars.sort():
             IsChanged = True
-        if data["IconOnly_Toolbars"].sort() == self.List_IconOnly_Toolbars.sort():
+        if data["iconOnlyToolbars"].sort() == self.List_IconOnly_Toolbars.sort():
             IsChanged = True
         if data["quickAccessCommands"].sort() == self.List_QuickAccessCommands.sort():
             IsChanged = True
