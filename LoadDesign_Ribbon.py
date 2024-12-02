@@ -394,9 +394,9 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.PanelOrder_RD.indexesMoved.connect(self.on_PanelOrder_RD_changed)
 
         self.form.AddSeparator_RD.connect(
-            self.form.AddSeparator,
+            self.form.AddSeparator_RD,
             SIGNAL("clicked()"),
-            self.on_AddSeparator_clicked,
+            self.on_AddSeparator_RD_clicked,
         )
 
         self.form.RemoveSeparator_RD.connect(
@@ -1683,7 +1683,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         ShadowList.append(f"{CommandName}, {WorkBenchName}")
         return
 
-    def on_AddSeparator_clicked(self):
+    def on_AddSeparator_RD_clicked(self):
         # Get the correct workbench name
         WorkBenchName = ""
         for WorkBench in self.List_Workbenches:
