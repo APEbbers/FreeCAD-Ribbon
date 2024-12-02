@@ -733,7 +733,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 # Command = Gui.Command.get(CommandName)
                 MenuName = StandardFunctions.CommandInfoCorrections(CommandName)["ActionText"]
 
-                if ToolbarCommand[2].lower().startswith(self.form.SearchBar_QC.text().lower()):
+                if MenuName.lower().startswith(self.form.SearchBar_QC.text().lower()):
                     IsInlist = False
                     for i in range(self.form.CommandsAvailable_QC.count()):
                         CommandItem = self.form.CommandsAvailable_QC.item(i)
