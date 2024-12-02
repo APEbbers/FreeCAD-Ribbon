@@ -164,7 +164,9 @@ class ModernMenu(RibbonBar):
     List_CommandIcons = []
     List_WorkBenchIcons = []
 
+    # Declare the custom overlay function states
     OverlayToggled = False
+    TransparancyToggled = False
 
     def __init__(self):
         """
@@ -507,7 +509,9 @@ class ModernMenu(RibbonBar):
     # The backup keypress event
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_F3:
-            self.CustomOverlay(not self.OverlayToggled)
+            self.CustomOverlay()
+        if event.key() == Qt.Key.Key_F4:
+            self.CustomTransparancy()
 
     def connectSignals(self):
         self.tabBar().currentChanged.connect(self.onUserChangedWorkbench)
@@ -741,7 +745,9 @@ class ModernMenu(RibbonBar):
         Menu.addSeparator()
         OverlayMenu = Menu.addMenu(translate("FreeCAD Ribbon", "Overlay"))
         OverlayButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle overlay"))
-        OverlayButton.triggered.connect(self.CustomOverlay(not self.OverlayToggled))
+        OverlayButton.triggered.connect(self.CustomOverlay)
+        TransparancyButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle transparancy"))
+        TransparancyButton.triggered.connect(self.CustomTransparancy)
 
         # Add the ribbon design button
         Menu.addSeparator()
@@ -1626,7 +1632,11 @@ class ModernMenu(RibbonBar):
                 return icon
         return icon
 
-    def CustomOverlay(self, Enable=True):
+    def CustomOverlay(self):
+        Enable = True
+        if self.OverlayToggled is True:
+            Enable = False
+
         OverlayParam_Left = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft")
         OverlayParam_Right = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayRight")
         OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
@@ -1651,6 +1661,27 @@ class ModernMenu(RibbonBar):
         if Enable is False:
             OverlayParam_Left.SetString("Widgets", "")
             OverlayParam_Right.SetString("Widgets", "")
+
+            self.OverlayToggled = False
+
+        return self.OverlayToggled
+
+    def CustomTransparancy(self):
+        Enable = True
+        if self.TransparancyToggled is True:
+            Enable = False
+
+        OverlayParam_Left = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft")
+        OverlayParam_Right = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayRight")
+        OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
+        OverlayParam_Bottom = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom")
+
+        OverlayParam_Left.SetBool("Transparent", Enable)
+        OverlayParam_Right.SetBool("Transparent", Enable)
+        OverlayParam_Top.SetBool("Transparent", Enable)
+        OverlayParam_Bottom.SetBool("Transparent", Enable)
+
+        return self.TransparancyToggled
 
 
 # region - alternative loading
