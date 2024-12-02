@@ -25,9 +25,9 @@ import os
 from PySide.QtGui import QIcon, QPixmap, QAction
 from PySide.QtWidgets import (
     QListWidgetItem,
-    QCommandTable_RDItem,
+    QTableWidgetItem,
     QListWidget,
-    QCommandTable_RD,
+    QTableWidget,
     QToolBar,
     QToolButton,
     QComboBox,
@@ -1371,7 +1371,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
             # Create the row in the table
             # add a row to the table widget
-            FirstItem = QCommandTable_RDItem()
+            FirstItem = QTableWidgetItem()
             FirstItem.setText("All")
             self.form.CommandTable_RD.insertRow(self.form.CommandTable_RD.rowCount())
 
@@ -1384,19 +1384,19 @@ class LoadDialog(Design_ui.Ui_Form):
             self.form.CommandTable_RD.setItem(RowNumber, 0, FirstItem)
 
             # Create the second cell and set the checkstate according the checkstate as defined earlier
-            Icon_small = QCommandTable_RDItem()
+            Icon_small = QTableWidgetItem()
             Icon_small.setText("")
             Icon_small.setCheckState(Qt.CheckState.Unchecked)
             self.form.CommandTable_RD.setItem(RowNumber, 1, Icon_small)
 
             # Create the third cell and set the checkstate according the checkstate as defined earlier
-            Icon_medium = QCommandTable_RDItem()
+            Icon_medium = QTableWidgetItem()
             Icon_medium.setText("")
             Icon_medium.setCheckState(Qt.CheckState.Unchecked)
             self.form.CommandTable_RD.setItem(RowNumber, 2, Icon_medium)
 
             # Create the last cell and set the checkstate according the checkstate as defined earlier
-            Icon_large = QCommandTable_RDItem()
+            Icon_large = QTableWidgetItem()
             Icon_large.setText("")
             Icon_large.setCheckState(Qt.CheckState.Unchecked)
             self.form.CommandTable_RD.setItem(RowNumber, 3, Icon_large)
@@ -1484,7 +1484,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     self.form.CommandTable_RD.insertRow(self.form.CommandTable_RD.rowCount())
 
                     # Define a table widget item
-                    Separator = QCommandTable_RDItem()
+                    Separator = QTableWidgetItem()
                     Separator.setText("Separator")
                     Separator.setData(Qt.ItemDataRole.UserRole, "separator")
 
@@ -1497,17 +1497,17 @@ class LoadDialog(Design_ui.Ui_Form):
                     self.form.CommandTable_RD.setItem(RowNumber, 0, Separator)
 
                     # Create the second cell and set the checkstate according the checkstate as defined earlier
-                    Icon_small = QCommandTable_RDItem()
+                    Icon_small = QTableWidgetItem()
                     Icon_small.setText("")
                     self.form.CommandTable_RD.setItem(RowNumber, 1, Icon_small)
 
                     # Create the third cell and set the checkstate according the checkstate as defined earlier
-                    Icon_medium = QCommandTable_RDItem()
+                    Icon_medium = QTableWidgetItem()
                     Icon_medium.setText("")
                     self.form.CommandTable_RD.setItem(RowNumber, 2, Icon_medium)
 
                     # Create the last cell and set the checkstate according the checkstate as defined earlier
-                    Icon_large = QCommandTable_RDItem()
+                    Icon_large = QTableWidgetItem()
                     Icon_large.setText("")
                     self.form.CommandTable_RD.setItem(RowNumber, 3, Icon_large)
 
@@ -1515,7 +1515,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     Order = []
                     for j in range(self.form.CommandTable_RD.rowCount()):
                         Order.append(
-                            QCommandTable_RDItem(self.form.CommandTable_RD.item(j, 0)).data(Qt.ItemDataRole.UserRole)
+                            QTableWidgetItem(self.form.CommandTable_RD.item(j, 0)).data(Qt.ItemDataRole.UserRole)
                         )
 
                     # Add or update the dict for the Ribbon command panel
@@ -1597,7 +1597,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         # Fill the table widget ----------------------------------------------------------------------------------
                         #
                         # Define a table widget item
-                        CommandWidgetItem = QCommandTable_RDItem()
+                        CommandWidgetItem = QTableWidgetItem()
                         CommandWidgetItem.setText((MenuNameTabelWidgetItem + textAddition).replace("&", ""))
                         CommandWidgetItem.setData(
                             Qt.ItemDataRole.UserRole,
@@ -1615,17 +1615,17 @@ class LoadDialog(Design_ui.Ui_Form):
                         self.form.CommandTable_RD.setItem(RowNumber, 0, CommandWidgetItem)
 
                         # Create the second cell and set the checkstate according the checkstate as defined earlier
-                        Icon_small = QCommandTable_RDItem()
+                        Icon_small = QTableWidgetItem()
                         Icon_small.setCheckState(checked_small)
                         self.form.CommandTable_RD.setItem(RowNumber, 1, Icon_small)
 
                         # Create the third cell and set the checkstate according the checkstate as defined earlier
-                        Icon_medium = QCommandTable_RDItem()
+                        Icon_medium = QTableWidgetItem()
                         Icon_medium.setCheckState(checked_medium)
                         self.form.CommandTable_RD.setItem(RowNumber, 2, Icon_medium)
 
                         # Create the last cell and set the checkstate according the checkstate as defined earlier
-                        Icon_large = QCommandTable_RDItem()
+                        Icon_large = QTableWidgetItem()
                         Icon_large.setCheckState(checked_large)
                         self.form.CommandTable_RD.setItem(RowNumber, 3, Icon_large)
 
@@ -1639,9 +1639,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         Order = []
                         for j in range(self.form.CommandTable_RD.rowCount()):
                             Order.append(
-                                QCommandTable_RDItem(self.form.CommandTable_RD.item(j, 0)).data(
-                                    Qt.ItemDataRole.UserRole
-                                )
+                                QTableWidgetItem(self.form.CommandTable_RD.item(j, 0)).data(Qt.ItemDataRole.UserRole)
                             )
 
                         # Add or update the dict for the Ribbon command panel
@@ -1694,7 +1692,7 @@ class LoadDialog(Design_ui.Ui_Form):
         Toolbar = self.form.PanelList_RD.currentData()
 
         # Define a table widget item
-        CommandTable_RDItem = QCommandTable_RDItem()
+        CommandTable_RDItem = QTableWidgetItem()
         CommandTable_RDItem.setText("Separator")
         CommandTable_RDItem.setData(Qt.ItemDataRole.UserRole, "separator")
 
@@ -1710,17 +1708,17 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.CommandTable_RD.setItem(RowNumber, 0, CommandTable_RDItem)
 
         # Create the second cell and set the checkstate according the checkstate as defined earlier
-        Icon_small = QCommandTable_RDItem()
+        Icon_small = QTableWidgetItem()
         Icon_small.setText("")
         self.form.CommandTable_RD.setItem(RowNumber, 1, Icon_small)
 
         # Create the third cell and set the checkstate according the checkstate as defined earlier
-        Icon_medium = QCommandTable_RDItem()
+        Icon_medium = QTableWidgetItem()
         Icon_medium.setText("")
         self.form.CommandTable_RD.setItem(RowNumber, 2, Icon_medium)
 
         # Create the last cell and set the checkstate according the checkstate as defined earlier
-        Icon_large = QCommandTable_RDItem()
+        Icon_large = QTableWidgetItem()
         Icon_large.setText("")
         self.form.CommandTable_RD.setItem(RowNumber, 3, Icon_large)
 
@@ -1735,7 +1733,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Define the order based on the order in this table widget
         Order = []
         for i in range(self.form.CommandTable_RD.rowCount()):
-            Order.append(QCommandTable_RDItem(self.form.CommandTable_RD.item(i, 0)).data(Qt.ItemDataRole.UserRole))
+            Order.append(QTableWidgetItem(self.form.CommandTable_RD.item(i, 0)).data(Qt.ItemDataRole.UserRole))
 
         # Add or update the dict for the Ribbon command panel
         StandardFunctions.add_keys_nested_dict(
@@ -1746,7 +1744,7 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     def on_RemoveSeparator_RD_clicked(self):
-        self.remove_CommandTable_RD(self.form.CommandTable_RD, "separator")
+        self.Remove_TableItem(self.form.CommandTable_RD, "separator")
 
         # Enable the apply button
         if self.CheckChanges() is True:
@@ -1844,7 +1842,7 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     def on_MoveUpCommandTable_RD_clicked(self):
-        self.MoveItem_CommandTable_RD(self.form.CommandTable_RD, True)
+        self.MoveItem_CommandTable(self.form.CommandTable_RD, True)
 
         # Enable the apply button
         if self.CheckChanges() is True:
@@ -1853,7 +1851,7 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     def on_MoveDownCommandTable_RD_clicked(self):
-        self.MoveItem_CommandTable_RD(self.form.CommandTable_RD, False)
+        self.MoveItem_CommandTable(self.form.CommandTable_RD, False)
 
         # Enable the apply button
         if self.CheckChanges() is True:
@@ -2236,7 +2234,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                     Order = []
                                     for i7 in range(1, self.form.CommandTable_RD.rowCount()):
                                         Order.append(
-                                            QCommandTable_RDItem(self.form.CommandTable_RD.item(i7, 0)).data(
+                                            QTableWidgetItem(self.form.CommandTable_RD.item(i7, 0)).data(
                                                 Qt.ItemDataRole.UserRole
                                             )
                                         )
@@ -2445,37 +2443,37 @@ class LoadDialog(Design_ui.Ui_Form):
 
         return
 
-    def MoveItem_CommandTable_RD(self, CommandTable_RD: QCommandTable_RD, Up: bool = True):
-        row = CommandTable_RD.currentRow()
-        column = CommandTable_RD.currentColumn()
+    def MoveItem_CommandTable(self, CommandTable: QTableWidget, Up: bool = True):
+        row = CommandTable.currentRow()
+        column = CommandTable.currentColumn()
         if Up is False:
-            if row < CommandTable_RD.rowCount() - 1:
-                CommandTable_RD.insertRow(row + 2)
-                for i in range(CommandTable_RD.columnCount()):
-                    item = CommandTable_RD.takeItem(row, i)
-                    CommandTable_RD.setItem(row + 2, i, item)
-                    CommandTable_RD.setCurrentCell(row + 2, column)
-                CommandTable_RD.removeRow(row)
+            if row < CommandTable.rowCount() - 1:
+                CommandTable.insertRow(row + 2)
+                for i in range(CommandTable.columnCount()):
+                    item = CommandTable.takeItem(row, i)
+                    CommandTable.setItem(row + 2, i, item)
+                    CommandTable.setCurrentCell(row + 2, column)
+                CommandTable.removeRow(row)
 
         if Up is True:
             if row > 0:
-                CommandTable_RD.insertRow(row - 1)
-                for i in range(CommandTable_RD.columnCount()):
-                    item = CommandTable_RD.takeItem(row + 1, i)
-                    CommandTable_RD.setItem(row - 1, i, item)
-                    CommandTable_RD.setCurrentCell(row - 1, column)
-                CommandTable_RD.removeRow(row + 1)
+                CommandTable.insertRow(row - 1)
+                for i in range(CommandTable.columnCount()):
+                    item = CommandTable.takeItem(row + 1, i)
+                    CommandTable.setItem(row - 1, i, item)
+                    CommandTable.setCurrentCell(row - 1, column)
+                CommandTable.removeRow(row + 1)
 
         self.UpdateData()
         return
 
-    def remove_CommandTable_RD(self, CommandTable_RD: QCommandTable_RD, filter: str = ""):
-        row = CommandTable_RD.currentRow()
+    def Remove_TableItem(self, CommandTable: QTableWidget, filter: str = ""):
+        row = CommandTable.currentRow()
         if filter != "":
-            if CommandTable_RD.item(row, 0).text().lower() == "separator":
-                CommandTable_RD.removeRow(row)
+            if CommandTable.item(row, 0).text().lower() == "separator":
+                CommandTable.removeRow(row)
         else:
-            CommandTable_RD.removeRow(row)
+            CommandTable.removeRow(row)
 
         # Get the correct workbench name
         WorkBenchName = ""
@@ -2488,8 +2486,8 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Define the order based on the order in this table widget
         Order = []
-        for i in range(CommandTable_RD.rowCount()):
-            Order.append(QCommandTable_RDItem(CommandTable_RD.item(i, 0)).data(Qt.ItemDataRole.UserRole))
+        for i in range(CommandTable.rowCount()):
+            Order.append(QTableWidgetItem(CommandTable.item(i, 0)).data(Qt.ItemDataRole.UserRole))
 
         # Add or update the dict for the Ribbon command panel
         StandardFunctions.add_keys_nested_dict(
