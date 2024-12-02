@@ -2033,12 +2033,14 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.WorkbenchesAvailable_IW.clear()
         self.form.WorkbenchesSelected_IW.clear()
         self.form.WorkbenchList_CP.clear()
-        self.form.WorkbenchList_IS.clear()
+        # self.form.WorkbenchList_IS.clear()
 
         # Add "All" to the categoryListWidgets
         All_KeyWord = translate("FreeCAD Ribbon", "All")
         self.form.ListCategory_QC.addItem(All_KeyWord)
         self.form.ListCategory_EP.addItem(All_KeyWord)
+        self.form.ListCategory_NP.addItem(All_KeyWord)
+        self.form.ListCategory_DDB.addItem(All_KeyWord)
 
         for workbench in self.List_Workbenches:
             WorkbenchName = workbench[0]
@@ -2051,9 +2053,9 @@ class LoadDialog(Design_ui.Ui_Form):
                     IsSelected = False
 
             # Define a new ListWidgetItem.
-            ListWidgetItem = QListWidgetItem()
-            ListWidgetItem.setText(StandardFunctions.TranslationsMapping(WorkbenchName, WorkbenchTitle))
-            ListWidgetItem.setData(Qt.ItemDataRole.UserRole, workbench)
+            ListWidgetItem_IW = QListWidgetItem()
+            ListWidgetItem_IW.setText(StandardFunctions.TranslationsMapping(WorkbenchName, WorkbenchTitle))
+            ListWidgetItem_IW.setData(Qt.ItemDataRole.UserRole, workbench)
             Icon = QIcon()
             for item in self.List_WorkBenchIcons:
                 if item[0] == WorkbenchName:
@@ -2062,15 +2064,15 @@ class LoadDialog(Design_ui.Ui_Form):
                 Icon = Gui.getIcon(workbench[1])
 
             if Icon is not None:
-                ListWidgetItem.setIcon(Icon)
+                ListWidgetItem_IW.setIcon(Icon)
 
             # Add the ListWidgetItem to the correct ListWidget
             if IsSelected is False:
-                self.form.WorkbenchesAvailable_IW.addItem(ListWidgetItem)
+                self.form.WorkbenchesAvailable_IW.addItem(ListWidgetItem_IW)
             if IsSelected is True:
                 # Add the listwidgetItem to all workbench listwidgets
-                self.form.WorkbenchesSelected_IW.addItem(ListWidgetItem)
-                self.form.WorkbenchList_IS.addItem(ListWidgetItem)
+                self.form.WorkbenchesSelected_IW.addItem(ListWidgetItem_IW)
+                self.form.WorkbenchList_IS.addItem(ListWidgetItem_IW.clone())
                 self.form.WorkbenchList_RD.addItem(
                     Icon,
                     StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
@@ -2113,6 +2115,7 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.ListCategory_QC.setCurrentText(All_KeyWord)
         self.form.ListCategory_EP.setCurrentText(All_KeyWord)
         self.form.ListCategory_NP.setCurrentText(All_KeyWord)
+        self.form.ListCategory_DDB.setCurrentText(All_KeyWord)
 
         # Set the text in the combobox to the name of the active workbench
         self.form.WorkbenchList_RD.setCurrentText(
