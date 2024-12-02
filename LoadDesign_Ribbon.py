@@ -319,10 +319,10 @@ class LoadDialog(Design_ui.Ui_Form):
             SIGNAL("clicked()"),
             self.on_MoveUpPanelCommand_CP_clicked,
         )
-        self.form.MoveDown_PanelCommand.connect(
-            self.form.MoveDown_PanelCommand,
+        self.form.MoveDownPanelCommand_CP.connect(
+            self.form.MoveDownPanelCommand_CP,
             SIGNAL("clicked()"),
-            self.on_MoveDown_PanelCommand_clicked,
+            self.on_MoveDownPanelCommand_CP_clicked,
         )
 
         # Connect Add events to the buttons on the Custom Panels Tab for adding commands to the panel
