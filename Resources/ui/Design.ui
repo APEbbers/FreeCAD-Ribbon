@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>730</width>
+    <width>1031</width>
     <height>787</height>
    </rect>
   </property>
@@ -67,7 +67,7 @@
       </widget>
      </item>
      <item row="2" column="6">
-      <widget class="QPushButton" name="GenerateJsonExit">
+      <widget class="QPushButton" name="Close">
        <property name="text">
         <string>Close</string>
        </property>
@@ -167,7 +167,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>708</width>
+          <width>1009</width>
           <height>703</height>
          </rect>
         </property>
@@ -207,7 +207,7 @@
             <enum>QTabWidget::TabShape::Rounded</enum>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>6</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideNone</enum>
@@ -257,28 +257,28 @@
                  </property>
                  <layout class="QGridLayout" name="gridLayout_29">
                   <item row="3" column="0">
-                   <widget class="QPushButton" name="ImportDropDownButtons">
+                   <widget class="QPushButton" name="ImportDropDownButtons_IS">
                     <property name="text">
                      <string>Import dropdown buttons</string>
                     </property>
                    </widget>
                   </item>
                   <item row="2" column="0">
-                   <widget class="QPushButton" name="ImportCustomPanels">
+                   <widget class="QPushButton" name="ImportCustomPanels_IS">
                     <property name="text">
                      <string>Import custom panels</string>
                     </property>
                    </widget>
                   </item>
                   <item row="0" column="0">
-                   <widget class="QPushButton" name="Importlayout">
+                   <widget class="QPushButton" name="Importlayout_IS">
                     <property name="text">
                      <string>Import layout</string>
                     </property>
                    </widget>
                   </item>
                   <item row="1" column="0">
-                   <widget class="QPushButton" name="ExportLayout">
+                   <widget class="QPushButton" name="ExportLayout_IS">
                     <property name="text">
                      <string>Export layout</string>
                     </property>
@@ -294,7 +294,7 @@
                  </property>
                  <layout class="QGridLayout" name="gridLayout_27">
                   <item row="1" column="0" colspan="3">
-                   <widget class="QListWidget" name="Workbenches_10">
+                   <widget class="QListWidget" name="Workbenches_IS">
                     <property name="minimumSize">
                      <size>
                       <width>300</width>
@@ -332,7 +332,7 @@
                      </widget>
                     </item>
                     <item row="0" column="1">
-                     <widget class="QComboBox" name="DefaultButtonSize">
+                     <widget class="QComboBox" name="DefaultButtonSize_IS">
                       <item>
                        <property name="text">
                         <string>Small</string>
@@ -373,7 +373,7 @@
                    </layout>
                   </item>
                   <item row="2" column="2">
-                   <widget class="QPushButton" name="GenerateSetup">
+                   <widget class="QPushButton" name="GenerateSetup_IS">
                     <property name="text">
                      <string>Generate</string>
                     </property>
@@ -440,7 +440,7 @@
                 <item row="4" column="1">
                  <layout class="QGridLayout" name="gridLayout">
                   <item row="4" column="0">
-                   <widget class="QToolButton" name="MoveUp_Command">
+                   <widget class="QToolButton" name="MoveUp_Command_QC">
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -450,7 +450,7 @@
                    </widget>
                   </item>
                   <item row="5" column="0">
-                   <widget class="QToolButton" name="MoveDown_Command">
+                   <widget class="QToolButton" name="MoveDown_Command_QC">
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -460,7 +460,7 @@
                    </widget>
                   </item>
                   <item row="2" column="0">
-                   <widget class="QToolButton" name="Remove_Command">
+                   <widget class="QToolButton" name="Remove_Command_QC">
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -470,7 +470,7 @@
                    </widget>
                   </item>
                   <item row="1" column="0">
-                   <widget class="QToolButton" name="Add_Command">
+                   <widget class="QToolButton" name="Add_Command_QC">
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -539,7 +539,7 @@
                    </widget>
                   </item>
                   <item row="0" column="1">
-                   <widget class="QComboBox" name="ListCategory_1">
+                   <widget class="QComboBox" name="ListCategory_QC">
                     <property name="insertPolicy">
                      <enum>QComboBox::InsertPolicy::InsertAlphabetically</enum>
                     </property>
@@ -576,7 +576,7 @@
                  </widget>
                 </item>
                 <item row="4" column="0">
-                 <widget class="QListWidget" name="CommandsAvailable">
+                 <widget class="QListWidget" name="CommandsAvailable_QC">
                   <property name="selectionMode">
                    <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
                   </property>
@@ -594,7 +594,7 @@
                  </widget>
                 </item>
                 <item row="0" column="0" colspan="3">
-                 <widget class="QLineEdit" name="SearchBar_1">
+                 <widget class="QLineEdit" name="SearchBar_QC">
                   <property name="inputMask">
                    <string/>
                   </property>
@@ -638,7 +638,7 @@
                  <number>6</number>
                 </property>
                 <item row="3" column="0">
-                 <widget class="QListWidget" name="ToolbarsToExclude">
+                 <widget class="QListWidget" name="PanelsToExclude_EP">
                   <property name="selectionMode">
                    <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
                   </property>
@@ -684,7 +684,7 @@
                    </spacer>
                   </item>
                   <item row="2" column="0">
-                   <widget class="QToolButton" name="Remove_Toolbar">
+                   <widget class="QToolButton" name="RemovePanel_EP">
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -694,7 +694,7 @@
                    </widget>
                   </item>
                   <item row="1" column="0">
-                   <widget class="QToolButton" name="Add_Toolbar">
+                   <widget class="QToolButton" name="AddPanel_EP">
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -716,7 +716,7 @@
                  </widget>
                 </item>
                 <item row="3" column="2">
-                 <widget class="QListWidget" name="ToolbarsExcluded">
+                 <widget class="QListWidget" name="PanelsExcluded_EP">
                   <property name="defaultDropAction">
                    <enum>Qt::DropAction::MoveAction</enum>
                   </property>
@@ -752,7 +752,7 @@
                    </widget>
                   </item>
                   <item row="0" column="1">
-                   <widget class="QComboBox" name="ListCategory_2">
+                   <widget class="QComboBox" name="ListCategory_EP">
                     <property name="insertPolicy">
                      <enum>QComboBox::InsertPolicy::InsertAlphabetically</enum>
                     </property>
@@ -761,7 +761,7 @@
                  </layout>
                 </item>
                 <item row="0" column="0" colspan="3">
-                 <widget class="QLineEdit" name="SearchBar_2">
+                 <widget class="QLineEdit" name="SearchBar_EP">
                   <property name="inputMask">
                    <string/>
                   </property>
@@ -805,7 +805,7 @@
                  <number>6</number>
                 </property>
                 <item row="1" column="0">
-                 <widget class="QListWidget" name="WorkbenchesAvailable">
+                 <widget class="QListWidget" name="WorkbenchesAvailable_IW">
                   <property name="selectionMode">
                    <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
                   </property>
@@ -823,7 +823,7 @@
                  </widget>
                 </item>
                 <item row="1" column="2">
-                 <widget class="QListWidget" name="WorkbenchesSelected">
+                 <widget class="QListWidget" name="WorkbenchesSelected_IW">
                   <property name="defaultDropAction">
                    <enum>Qt::DropAction::MoveAction</enum>
                   </property>
@@ -856,7 +856,7 @@
                    </widget>
                   </item>
                   <item row="1" column="0">
-                   <widget class="QToolButton" name="Add_Workbench">
+                   <widget class="QToolButton" name="AddWorkbench_IW">
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -940,7 +940,7 @@
                 <number>6</number>
                </property>
                <item row="0" column="1" colspan="2">
-                <widget class="QComboBox" name="CustomToolbarSelector">
+                <widget class="QComboBox" name="CustomToolbarSelector_CP">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -959,7 +959,7 @@
                 </widget>
                </item>
                <item row="2" column="1" rowspan="2" colspan="2">
-                <widget class="QLineEdit" name="ToolbarName">
+                <widget class="QLineEdit" name="PanelName_CP">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -978,7 +978,7 @@
                 </widget>
                </item>
                <item row="2" column="3" rowspan="2">
-                <widget class="QPushButton" name="AddCustomToolbar">
+                <widget class="QPushButton" name="AddCustomPanel_CP">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1029,7 +1029,7 @@
                 </widget>
                </item>
                <item row="1" column="1" colspan="2">
-                <widget class="QComboBox" name="WorkbenchList_2">
+                <widget class="QComboBox" name="WorkbenchList_CP">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1048,7 +1048,7 @@
                 </widget>
                </item>
                <item row="0" column="3">
-                <widget class="QPushButton" name="RemovePanel">
+                <widget class="QPushButton" name="RemovePanel_CP">
                  <property name="minimumSize">
                   <size>
                    <width>10</width>
@@ -1261,7 +1261,7 @@
                 <number>6</number>
                </property>
                <item row="0" column="1" colspan="2">
-                <widget class="QComboBox" name="CustomToolbarSelector_20">
+                <widget class="QComboBox" name="CustomToolbarSelector_NP">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1280,7 +1280,7 @@
                 </widget>
                </item>
                <item row="2" column="1" rowspan="2" colspan="2">
-                <widget class="QLineEdit" name="ToolbarName_20">
+                <widget class="QLineEdit" name="PanelName_NP">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1299,7 +1299,7 @@
                 </widget>
                </item>
                <item row="2" column="3" rowspan="2">
-                <widget class="QPushButton" name="AddCustomToolbar_20">
+                <widget class="QPushButton" name="AddCustomToolbar_NP">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1350,7 +1350,7 @@
                 </widget>
                </item>
                <item row="1" column="1" colspan="2">
-                <widget class="QComboBox" name="WorkbenchList_20">
+                <widget class="QComboBox" name="WorkbenchList_NP">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1369,7 +1369,7 @@
                 </widget>
                </item>
                <item row="0" column="3">
-                <widget class="QPushButton" name="RemovePanel_20">
+                <widget class="QPushButton" name="RemovePanel_NP">
                  <property name="minimumSize">
                   <size>
                    <width>10</width>
@@ -1411,7 +1411,7 @@
                 <item row="2" column="0">
                  <layout class="QGridLayout" name="gridLayout_38">
                   <item row="0" column="0">
-                   <widget class="QLineEdit" name="SearchBar_20">
+                   <widget class="QLineEdit" name="SearchBar_NP">
                     <property name="inputMask">
                      <string/>
                     </property>
@@ -1424,7 +1424,7 @@
                    </widget>
                   </item>
                   <item row="2" column="0">
-                   <widget class="QListWidget" name="Commands_20">
+                   <widget class="QListWidget" name="CommandsAvailable_NP">
                     <property name="selectionMode">
                      <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
                     </property>
@@ -1457,7 +1457,7 @@
                      </widget>
                     </item>
                     <item row="0" column="1">
-                     <widget class="QComboBox" name="ListCategory_20">
+                     <widget class="QComboBox" name="ListCategory_NP">
                       <property name="insertPolicy">
                        <enum>QComboBox::InsertPolicy::InsertAlphabetically</enum>
                       </property>
@@ -1468,7 +1468,7 @@
                  </layout>
                 </item>
                 <item row="2" column="2">
-                 <widget class="QListWidget" name="NewPanel_20">
+                 <widget class="QListWidget" name="NewPanel_NP">
                   <property name="selectionMode">
                    <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
                   </property>
@@ -1495,7 +1495,7 @@
                 <item row="2" column="1">
                  <layout class="QGridLayout" name="gridLayout_34">
                   <item row="5" column="0">
-                   <widget class="QToolButton" name="MoveDown_PanelCommand_20">
+                   <widget class="QToolButton" name="MoveDownPanelCommand_NP">
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -1547,7 +1547,7 @@
                    </spacer>
                   </item>
                   <item row="2" column="0">
-                   <widget class="QToolButton" name="Add_PanelCommand_20">
+                   <widget class="QToolButton" name="AddPanelCommand_NP">
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -1557,7 +1557,7 @@
                    </widget>
                   </item>
                   <item row="4" column="0">
-                   <widget class="QToolButton" name="MoveUp_PanelCommand_20">
+                   <widget class="QToolButton" name="MoveUpPanelCommand_NP">
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -1567,7 +1567,7 @@
                    </widget>
                   </item>
                   <item row="1" column="0">
-                   <widget class="QToolButton" name="Remove_PanelCommand_20">
+                   <widget class="QToolButton" name="RemovePanelCommand_NP">
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -1598,7 +1598,7 @@
              <item row="1" column="0">
               <layout class="QGridLayout" name="gridLayout_40">
                <item row="0" column="0">
-                <widget class="QLineEdit" name="SearchBar_30">
+                <widget class="QLineEdit" name="SearchBar_DDB">
                  <property name="inputMask">
                   <string/>
                  </property>
@@ -1611,7 +1611,7 @@
                 </widget>
                </item>
                <item row="2" column="0">
-                <widget class="QListWidget" name="CommandsAvailable_30">
+                <widget class="QListWidget" name="CommandsAvailable_DDB">
                  <property name="selectionMode">
                   <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
                  </property>
@@ -1644,7 +1644,7 @@
                   </widget>
                  </item>
                  <item row="0" column="1">
-                  <widget class="QComboBox" name="ListCategory_30">
+                  <widget class="QComboBox" name="ListCategory_DDB">
                    <property name="insertPolicy">
                     <enum>QComboBox::InsertPolicy::InsertAlphabetically</enum>
                    </property>
@@ -1743,7 +1743,7 @@
              <item row="1" column="2">
               <layout class="QGridLayout" name="gridLayout_36">
                <item row="1" column="0">
-                <widget class="QListWidget" name="NewControl_30">
+                <widget class="QListWidget" name="NewControl_DDB">
                  <property name="selectionMode">
                   <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
                  </property>
@@ -1761,14 +1761,14 @@
                 </widget>
                </item>
                <item row="2" column="0">
-                <widget class="QPushButton" name="CreateControl_30">
+                <widget class="QPushButton" name="CreateControl_DDB">
                  <property name="text">
                   <string>Create dropdown button</string>
                  </property>
                 </widget>
                </item>
                <item row="0" column="0">
-                <widget class="QTextEdit" name="ControlName_30">
+                <widget class="QTextEdit" name="ControlName_DDB">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -1892,7 +1892,7 @@
                      </spacer>
                     </item>
                     <item>
-                     <widget class="QToolButton" name="MoveUp_RibbonCommand">
+                     <widget class="QToolButton" name="MoveUp_RibbonCommand_RD">
                       <property name="text">
                        <string>...</string>
                       </property>
@@ -1902,7 +1902,7 @@
                      </widget>
                     </item>
                     <item>
-                     <widget class="QToolButton" name="MoveDown_RibbonCommand">
+                     <widget class="QToolButton" name="MoveDown_RibbonCommand_RD">
                       <property name="text">
                        <string>...</string>
                       </property>
@@ -1927,7 +1927,7 @@
                    </layout>
                   </item>
                   <item row="0" column="0">
-                   <widget class="QTableWidget" name="tableWidget">
+                   <widget class="QTableWidget" name="CommandTable_RD">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
                       <horstretch>0</horstretch>
@@ -2094,7 +2094,7 @@
                 </spacer>
                </item>
                <item row="0" column="1">
-                <widget class="QPushButton" name="AddSeparator">
+                <widget class="QPushButton" name="AddSeparator_RD">
                  <property name="minimumSize">
                   <size>
                    <width>100</width>
@@ -2113,7 +2113,7 @@
                 </widget>
                </item>
                <item row="0" column="2">
-                <widget class="QPushButton" name="RemoveSeparator">
+                <widget class="QPushButton" name="RemoveSeparator_RD">
                  <property name="minimumSize">
                   <size>
                    <width>100</width>
@@ -2210,7 +2210,7 @@
                    <number>6</number>
                   </property>
                   <item row="1" column="0">
-                   <widget class="QListWidget" name="ToolbarsOrder">
+                   <widget class="QListWidget" name="PanelOrder_RD">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
                       <horstretch>0</horstretch>
@@ -2258,7 +2258,7 @@
                      </spacer>
                     </item>
                     <item row="1" column="0">
-                     <widget class="QToolButton" name="MoveUp_Toolbar">
+                     <widget class="QToolButton" name="MoveUpPanel_RD">
                       <property name="text">
                        <string>...</string>
                       </property>
@@ -2268,7 +2268,7 @@
                      </widget>
                     </item>
                     <item row="2" column="0">
-                     <widget class="QToolButton" name="MoveDown_Toolbar">
+                     <widget class="QToolButton" name="MoveDownPanel_RD">
                       <property name="text">
                        <string>...</string>
                       </property>
@@ -2319,7 +2319,7 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QComboBox" name="WorkbenchList">
+                <widget class="QComboBox" name="WorkbenchList_RD">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                    <horstretch>0</horstretch>
@@ -2332,7 +2332,7 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QComboBox" name="ToolbarList">
+                <widget class="QComboBox" name="PanelList_RD">
                  <property name="insertPolicy">
                   <enum>QComboBox::InsertPolicy::InsertAlphabetically</enum>
                  </property>
@@ -2346,7 +2346,7 @@
                 </widget>
                </item>
                <item row="1" column="2">
-                <widget class="QCheckBox" name="IconOnly">
+                <widget class="QCheckBox" name="IconOnly_RD">
                  <property name="text">
                   <string>Icon only</string>
                  </property>
