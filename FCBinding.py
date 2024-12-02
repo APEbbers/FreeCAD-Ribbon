@@ -506,9 +506,8 @@ class ModernMenu(RibbonBar):
 
     # The backup keypress event
     def keyPressEvent(self, event):
-        if self.UseQtKeyPress is True:
-            if event.key() == Qt.Key.Key_F3:
-                self.CustomOverlay(not self.OverlayToggled)
+        if event.key() == Qt.Key.Key_F3:
+            self.CustomOverlay(not self.OverlayToggled)
 
     def connectSignals(self):
         self.tabBar().currentChanged.connect(self.onUserChangedWorkbench)
