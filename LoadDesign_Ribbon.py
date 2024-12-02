@@ -1469,8 +1469,9 @@ class LoadDialog(Design_ui.Ui_Form):
             def SortCommands(item):
                 try:
                     try:
-                        MenuName = CommandInfoCorrections(item)["menuText"].replace("&", "").replace("...", "")
-                        item = MenuName
+                        if item.lower().__contains__("separator") is False:
+                            MenuName = CommandInfoCorrections(item)["menuText"].replace("&", "").replace("...", "")
+                            item = MenuName
                     except Exception:
                         pass
                     OrderList: list = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
