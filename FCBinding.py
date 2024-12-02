@@ -164,6 +164,8 @@ class ModernMenu(RibbonBar):
     List_CommandIcons = []
     List_WorkBenchIcons = []
 
+    OverlayToggled = False
+
     def __init__(self):
         """
         Constructor
@@ -409,11 +411,6 @@ class ModernMenu(RibbonBar):
             mw.menuBar().show()
         return True
 
-    # def hideEvent(self, event):
-    #     if self.isEnabled() is False:
-    #         mw.menuBar().show()
-    #     return True
-
     def eventFilter(self, obj, event):
         if int(App.Version()[0]) > 1:
             if event.type() == QEvent.Type.HoverMove:
@@ -506,6 +503,12 @@ class ModernMenu(RibbonBar):
                 for i in range(NoClicks):
                     ScrollRightButton_Tab.click()
         return
+
+    # The backup keypress event
+    def keyPressEvent(self, event):
+        if self.UseQtKeyPress is True:
+            if event.key() == Qt.Key.Key_F3:
+                self.CustomOverlay(not self.OverlayToggled)
 
     def connectSignals(self):
         self.tabBar().currentChanged.connect(self.onUserChangedWorkbench)
@@ -734,6 +737,12 @@ class ModernMenu(RibbonBar):
         # add the menus from the menubar to the application button
         MenuBar = mw.menuBar()
         Menu.addActions(MenuBar.actions())
+
+        # Add the overlay menu
+        Menu.addSeparator()
+        OverlayMenu = Menu.addMenu(translate("FreeCAD Ribbon", "Overlay"))
+        OverlayButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle overlay"))
+        OverlayButton.triggered.connect(self.CustomOverlay(not self.OverlayToggled))
 
         # Add the ribbon design button
         Menu.addSeparator()
@@ -1617,6 +1626,32 @@ class ModernMenu(RibbonBar):
                 icon = Gui.getIcon(pixmap)
                 return icon
         return icon
+
+    def CustomOverlay(self, Enable=True):
+        OverlayParam_Left = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft")
+        OverlayParam_Right = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayRight")
+        OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
+        OverlayParam_Bottom = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom")
+
+        if Enable is True:
+            PanelsLeft = ["Tasks", "Tree view", "Launcher"]
+            PanelsRight = ["Report view", "Python console", "Property view", "Selection view"]
+
+            EntryLeft = ""
+            for panel in PanelsLeft:
+                EntryLeft = EntryLeft + "," + panel
+            OverlayParam_Left.SetString("Widgets", EntryLeft)
+
+            EntryRight = ""
+            for panel in PanelsRight:
+                EntryRight = EntryRight + "," + panel
+            OverlayParam_Right.SetString("Widgets", EntryRight)
+
+            self.OverlayToggled = True
+
+        if Enable is False:
+            OverlayParam_Left.SetString("Widgets", "")
+            OverlayParam_Right.SetString("Widgets", "")
 
 
 # region - alternative loading
