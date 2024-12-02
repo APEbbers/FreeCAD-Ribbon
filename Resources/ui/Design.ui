@@ -438,14 +438,6 @@
                       <string>All</string>
                      </property>
                     </item>
-                    <item>
-                     <property name="text">
-                      <string>New Item</string>
-                     </property>
-                     <property name="checkState">
-                      <enum>Checked</enum>
-                     </property>
-                    </item>
                    </widget>
                   </item>
                   <item row="0" column="0" colspan="3">
