@@ -2069,8 +2069,8 @@ class LoadDialog(Design_ui.Ui_Form):
                 self.form.WorkbenchesAvailable_IW.addItem(ListWidgetItem)
             if IsSelected is True:
                 # Add the listwidgetItem to all workbench listwidgets
-                self.form.WorkbenchList_IS.addItem(ListWidgetItem)
                 self.form.WorkbenchesSelected_IW.addItem(ListWidgetItem)
+                self.form.WorkbenchList_IS.addItem(ListWidgetItem)
                 self.form.WorkbenchList_RD.addItem(
                     Icon,
                     StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),

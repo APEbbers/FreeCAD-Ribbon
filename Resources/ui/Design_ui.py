@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignsWIoEF.ui'
+## Form generated from reading UI file 'DesignhvgjRm.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -1295,7 +1295,7 @@ class Ui_Form(object):
         self.UpdateJson.setText(QCoreApplication.translate("Form", "Update", None))
         self.ResetJson.setText(QCoreApplication.translate("Form", "Reset", None))
         self.RestoreJson.setText(QCoreApplication.translate("Form", "Restore", None))
-        self.groupBox_2.setTitle(QCoreApplication.translate("Form", "Set inital button size - Global panels", None))
+        self.groupBox_2.setTitle(QCoreApplication.translate("Form", "Set inital button size - Panels", None))
         self.label_24.setText(QCoreApplication.translate("Form", "Set all button to: ", None))
         self.DefaultButtonSize_IS_2.setItemText(0, QCoreApplication.translate("Form", "Small", None))
         self.DefaultButtonSize_IS_2.setItemText(1, QCoreApplication.translate("Form", "Medium", None))
