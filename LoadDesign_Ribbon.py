@@ -2034,6 +2034,7 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.WorkbenchesSelected_IW.clear()
         self.form.WorkbenchList_CP.clear()
 
+        # Add "All" to the categoryListWidgets
         All_KeyWord = translate("FreeCAD Ribbon", "All")
         self.form.ListCategory_QC.addItem(All_KeyWord)
         self.form.ListCategory_EP.addItem(All_KeyWord)
@@ -2066,6 +2067,8 @@ class LoadDialog(Design_ui.Ui_Form):
             if IsSelected is False:
                 self.form.WorkbenchesAvailable_IW.addItem(ListWidgetItem)
             if IsSelected is True:
+                # Add the listwidgetItem to all workbench listwidgets
+                self.form.WorkbenchesSelected_IS.addItem(ListWidgetItem)
                 self.form.WorkbenchesSelected_IW.addItem(ListWidgetItem)
                 self.form.WorkbenchList_RD.addItem(
                     Icon,
@@ -2077,11 +2080,24 @@ class LoadDialog(Design_ui.Ui_Form):
                     Icon,
                     StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
                     workbench[2],
+                )  # Add the ListWidgetItem also to the second WorkbenchList_RD.
+                self.form.Workbenches_NP.addItem(
+                    Icon,
+                    StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
+                    workbench[2],
                 )
 
             # Add the ListWidgetItem also to the categoryListWidgets
-            self.form.ListCategory_QC.addItem(Icon, workbench[2])
-            self.form.ListCategory_EP.addItem(Icon, workbench[2])
+            self.form.ListCategory_QC.addItem(
+                Icon,
+                StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
+                workbench[2],
+            )
+            self.form.ListCategory_EP.addItem(
+                Icon,
+                StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
+                workbench[2],
+            )
 
         self.form.ListCategory_QC.setCurrentText(All_KeyWord)
         self.form.ListCategory_EP.setCurrentText(All_KeyWord)
