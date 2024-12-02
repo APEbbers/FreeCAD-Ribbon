@@ -258,17 +258,17 @@ class LoadDialog(Design_ui.Ui_Form):
         # --- QuickCommandsTab ------------------
         #
         # Connect Add/Remove and move events to the buttons on the QuickAccess Tab
-        self.form.Add_Command_QC.connect(self.form.Add_Command_QC, SIGNAL("clicked()"), self.on_AddCommand_clicked)
+        self.form.Add_Command_QC.connect(self.form.Add_Command_QC, SIGNAL("clicked()"), self.on_AddCommand_QC_clicked)
         self.form.Remove_Command_QC.connect(
-            self.form.Remove_Command_QC, SIGNAL("clicked()"), self.on_RemoveCommand_clicked
+            self.form.Remove_Command_QC, SIGNAL("clicked()"), self.on_RemoveCommand_QC_clicked
         )
         self.form.MoveUp_Command_QC.connect(
-            self.form.MoveUp_Command_QC, SIGNAL("clicked()"), self.on_MoveUpCommand_clicked
+            self.form.MoveUp_Command_QC, SIGNAL("clicked()"), self.on_MoveUpCommand_QC_clicked
         )
         self.form.MoveDown_Command_QC.connect(
             self.form.MoveDown_Command_QC,
             SIGNAL("clicked()"),
-            self.on_MoveDownCommand_clicked,
+            self.on_MoveDownCommand_QC_clicked,
         )
 
         # Connect the filter for the quick commands on the quickcommands tab
@@ -292,30 +292,32 @@ class LoadDialog(Design_ui.Ui_Form):
         # Connect the searchbar for the toolbars on the toolbar tab
         self.form.SearchBar_EP.textChanged.connect(self.on_SearchBar_EP_TextChanged)
         # Connect Add/Remove events to the buttons on the Toolbars Tab
-        self.form.AddPanel_EP.connect(self.form.AddPanel_EP, SIGNAL("clicked()"), self.on_AddToolbar_clicked)
+        self.form.AddPanel_EP.connect(self.form.AddPanel_EP, SIGNAL("clicked()"), self.on_AddToolbar_EP_clicked)
         self.form.RemovePanel_CP_EP.connect(
-            self.form.RemovePanel_CP_EP, SIGNAL("clicked()"), self.on_RemoveToolbar_clicked
+            self.form.RemovePanel_CP_EP, SIGNAL("clicked()"), self.on_RemoveToolbar_EP_clicked
         )
 
         #
         # --- IncludeWorkbenchTab ------------------
         #
         # Connect Add/Remove events to the buttons on the Workbench Tab
-        self.form.AddWorkbench_IW.connect(self.form.AddWorkbench_IW, SIGNAL("clicked()"), self.on_AddWorkbench_clicked)
+        self.form.AddWorkbench_IW.connect(
+            self.form.AddWorkbench_IW, SIGNAL("clicked()"), self.on_AddWorkbench_IW_clicked
+        )
         self.form.RemoveWorkbench_IW.connect(
             self.form.RemoveWorkbench_IW,
             SIGNAL("clicked()"),
-            self.on_RemoveWorkbench_clicked,
+            self.on_RemoveWorkbench_IW_clicked,
         )
 
         #
         # --- CustomPanelsTab ------------------
         #
         # Connect move and events to the buttons on the Custom Panels Tab
-        self.form.MoveUp_PanelCommand.connect(
-            self.form.MoveUp_PanelCommand,
+        self.form.MoveUpPanelCommand_CP.connect(
+            self.form.MoveUpPanelCommand_CP,
             SIGNAL("clicked()"),
-            self.on_MoveUp_PanelCommand_clicked,
+            self.on_MoveUpPanelCommand_CP_clicked,
         )
         self.form.MoveDown_PanelCommand.connect(
             self.form.MoveDown_PanelCommand,
@@ -324,7 +326,7 @@ class LoadDialog(Design_ui.Ui_Form):
         )
 
         # Connect Add events to the buttons on the Custom Panels Tab for adding commands to the panel
-        self.form.Add_Panel.connect(self.form.Add_Panel, SIGNAL("clicked()"), self.on_AddPanel_clicked)
+        self.form.AddPanel_CP.connect(self.form.Add_Panel, SIGNAL("clicked()"), self.on_AddPanel_CP_clicked)
 
         self.form.AddCustomPanel_CP.connect(
             self.form.AddCustomPanel_CP,
@@ -339,10 +341,10 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.WorkbenchList_CP.activated.connect(LoadWorkbenches_CP)
 
         # Connect custom toolbar selector on the Custom Panels Tab
-        def CustomToolbarSelect():
+        def CustomToolbarSelect_CP():
             self.on_CustomToolbarSelector_CP_activated()
 
-        self.form.CustomToolbarSelector_CP.activated.connect(CustomToolbarSelect)
+        self.form.CustomToolbarSelector_CP.activated.connect(CustomToolbarSelect_CP)
 
         self.form.RemovePanel_CP.connect(self.form.RemovePanel_CP, SIGNAL("clicked()"), self.on_RemovePanel_CP_clicked)
 
@@ -405,11 +407,11 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # --- Form controls ------------------
         #
-        # Connect the button GenerateJson with the function on_GenerateJson_clicked
-        def GenerateJson():
-            self.on_Update_clicked(self)
+        # Connect the button UpdateJson with the function on_UpdateJson_clicked
+        def UpdateJson():
+            self.on_UpdateJson_clicked(self)
 
-        self.form.GenerateJson.connect(self.form.GenerateJson, SIGNAL("clicked()"), GenerateJson)
+        self.form.UpdateJson.connect(self.form.UpdateJson, SIGNAL("clicked()"), UpdateJson)
 
         # Connect the button Close with the function on_Close_clicked
         def Close():
@@ -765,7 +767,7 @@ class LoadDialog(Design_ui.Ui_Form):
             ShadowList.append(f"{CommandName}, {workbenchName}")
         return
 
-    def on_AddCommand_clicked(self):
+    def on_AddCommand_QC_clicked(self):
         self.AddItem(
             SourceWidget=self.form.CommandsAvailable_QC,
             DestinationWidget=self.form.CommandsSelected_QC,
@@ -773,11 +775,11 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
-    def on_RemoveCommand_clicked(self):
+    def on_RemoveCommand_QC_clicked(self):
         self.AddItem(
             SourceWidget=self.form.CommandsSelected_QC,
             DestinationWidget=self.form.CommandsAvailable_QC,
@@ -785,25 +787,25 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
-    def on_MoveUpCommand_clicked(self):
+    def on_MoveUpCommand_QC_clicked(self):
         self.MoveItem(ListWidget=self.form.CommandsSelected_QC, Up=True)
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
-    def on_MoveDownCommand_clicked(self):
+    def on_MoveDownCommand_QC_clicked(self):
         self.MoveItem(ListWidget=self.form.CommandsSelected_QC, Up=False)
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -854,7 +856,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     # Add the ListWidgetItem to the correct ListWidget
                     self.form.PanelsToExclude_EP.addItem(ListWidgetItem)
 
-    def on_AddToolbar_clicked(self):
+    def on_AddToolbar_EP_clicked(self):
         self.AddItem(
             SourceWidget=self.form.PanelsToExclude_EP,
             DestinationWidget=self.form.PanelsExcluded_EP,
@@ -862,11 +864,11 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
-    def on_RemoveToolbar_clicked(self):
+    def on_RemoveToolbar_EP_clicked(self):
         self.AddItem(
             SourceWidget=self.form.PanelsExcluded_EP,
             DestinationWidget=self.form.PanelsToExclude_EP,
@@ -874,14 +876,14 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
     # endregion
 
     # region - Include workbench tab
-    def on_AddWorkbench_clicked(self):
+    def on_AddWorkbench_IW_clicked(self):
         self.AddItem(
             SourceWidget=self.form.WorkbenchesAvailable_IW,
             DestinationWidget=self.form.WorkbenchesSelected,
@@ -889,11 +891,11 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
-    def on_RemoveWorkbench_clicked(self):
+    def on_RemoveWorkbench_IW_clicked(self):
         self.AddItem(
             SourceWidget=self.form.WorkbenchesSelected,
             DestinationWidget=self.form.WorkbenchesAvailable_IW,
@@ -901,7 +903,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -938,7 +940,7 @@ class LoadDialog(Design_ui.Ui_Form):
         WorkBench = Gui.getWorkbench(WorkBenchName)
 
         # Clear the listwidget before filling it
-        self.form.ToolbarsAvailable.clear()
+        self.form.PanelAvailable_CP.clear()
         # Sort the toolbar list
         wbToolbars = self.SortedPanelList_RD(wbToolbars, WorkBenchName)
 
@@ -954,7 +956,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 ListWidgetItem = QListWidgetItem()
                 ListWidgetItem.setText(StandardFunctions.TranslationsMapping(WorkBenchName, Toolbar))
                 ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
-                self.form.ToolbarsAvailable.addItem(ListWidgetItem)
+                self.form.PanelAvailable_CP.addItem(ListWidgetItem)
 
                 if setCustomToolbarSelector_CP is True:
                     self.form.CustomToolbarSelector_CP.setCurrentText("New")
@@ -962,29 +964,29 @@ class LoadDialog(Design_ui.Ui_Form):
                 if CurrentText != "":
                     self.form.WorkbenchList_CP.setCurrentText(CurrentText)
 
-            self.form.ToolbarsSelected.clear()
+            self.form.PanelSelected_CP.clear()
         return
 
-    def on_MoveUp_PanelCommand_clicked(self):
-        self.MoveItem(ListWidget=self.form.ToolbarsSelected, Up=True)
+    def on_MoveUpPanelCommand_CP_clicked(self):
+        self.MoveItem(ListWidget=self.form.PanelSelected_CP, Up=True)
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
-    def on_MoveDown_PanelCommand_clicked(self):
-        self.MoveItem(ListWidget=self.form.ToolbarsSelected, Up=False)
+    def on_MoveDownPanelCommand_CP_clicked(self):
+        self.MoveItem(ListWidget=self.form.PanelSelected_CP, Up=False)
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
-    def on_AddPanel_clicked(self):
-        SelectedToolbars = self.form.ToolbarsAvailable.selectedItems()
+    def on_AddPanel_CP_clicked(self):
+        SelectedToolbars = self.form.PanelAvailable_CP.selectedItems()
 
         # Go through the list of workbenches
         for WorkBenchItem in self.List_Workbenches:
@@ -1042,16 +1044,16 @@ class LoadDialog(Design_ui.Ui_Form):
                                             )  # add here the toolbar name as hidden data
 
                                             IsInList = False
-                                            for k in range(self.form.ToolbarsSelected.count()):
-                                                if self.form.ToolbarsSelected.item(k).text() == ListWidgetItem.text():
+                                            for k in range(self.form.PanelSelected_CP.count()):
+                                                if self.form.PanelSelected_CP.item(k).text() == ListWidgetItem.text():
                                                     IsInList = True
 
                                             if IsInList is False:
-                                                self.form.ToolbarsSelected.addItem(ListWidgetItem)
+                                                self.form.PanelSelected_CP.addItem(ListWidgetItem)
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -1078,8 +1080,8 @@ class LoadDialog(Design_ui.Ui_Form):
                 # Create item that defines the custom toolbar
                 Commands = []
                 MenuName = ""
-                for i in range(self.form.ToolbarsSelected.count()):
-                    ListWidgetItem = self.form.ToolbarsSelected.item(i)
+                for i in range(self.form.PanelSelected_CP.count()):
+                    ListWidgetItem = self.form.PanelSelected_CP.item(i)
                     MenuName_ListWidgetItem = ListWidgetItem.text().replace("&", "").replace("...", "")
                     # if the translated menuname from the ListWidgetItem is equel to the MenuName from the command
                     # Add the commandName to the list commandslist for this custom panel
@@ -1136,16 +1138,16 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
     def on_CustomToolbarSelector_CP_activated(self):
-        self.form.ToolbarsSelected.clear()
+        self.form.PanelSelected_CP.clear()
 
         # If the selected item is "new", clear the list widgets and exit
         if self.form.CustomToolbarSelector_CP.currentText() == "New":
-            self.form.ToolbarsAvailable.clear()
+            self.form.PanelAvailable_CP.clear()
             self.form.PanelName_CP.clear()
             return
 
@@ -1196,14 +1198,14 @@ class LoadDialog(Design_ui.Ui_Form):
                                             ListWidgetItem.setIcon(Icon)
 
                                         if ListWidgetItem.text() != "":
-                                            self.form.ToolbarsSelected.addItem(ListWidgetItem)
+                                            self.form.PanelSelected_CP.addItem(ListWidgetItem)
 
                                         # Add the command to the shadow list
                                         ShadowList.append(CommandItem[0])
 
             # Enable the apply button
             if self.CheckChanges() is True:
-                self.form.GenerateJson.setEnabled(True)
+                self.form.UpdateJson.setEnabled(True)
         else:
             return
 
@@ -1254,7 +1256,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
                             # Enable the apply button
                             if self.CheckChanges() is True:
-                                self.form.GenerateJson.setEnabled(True)
+                                self.form.UpdateJson.setEnabled(True)
 
                             return
                 except Exception as e:
@@ -1748,7 +1750,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -1777,7 +1779,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -1793,7 +1795,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -1837,7 +1839,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -1846,7 +1848,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -1855,7 +1857,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -1865,7 +1867,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -1875,7 +1877,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Enable the apply button
         if self.CheckChanges() is True:
-            self.form.GenerateJson.setEnabled(True)
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -1979,10 +1981,10 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     @staticmethod
-    def on_Update_clicked(self):
+    def on_UpdateJson_clicked(self):
         self.WriteJson()
         # Set the button disabled
-        self.form.GenerateJson.setDisabled(True)
+        self.form.UpdateJson.setDisabled(True)
         return
 
     @staticmethod
@@ -2780,8 +2782,8 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.PanelsExcluded_EP.clear()
         self.form.CommandsAvailable_QC.clear()
         self.form.CommandsSelected_QC.clear()
-        self.form.ToolbarsAvailable.clear()
-        self.form.ToolbarsSelected.clear()
+        self.form.PanelAvailable_CP.clear()
+        self.form.PanelSelected_CP.clear()
         self.form.PanelOrder_RD.clear()
 
         # -- Ribbon design tab --
