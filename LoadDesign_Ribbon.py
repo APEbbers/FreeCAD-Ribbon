@@ -79,7 +79,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
     # Create lists for the several list in the json file.
     List_IgnoredToolbars = []
-    List_IconOnly_RDToolbars = []
+    List_IconOnly_Toolbars = []
     List_QuickAccessCommands = []
     List_IgnoredWorkbenches = []
     Dict_RibbonCommandPanel = {}
@@ -364,7 +364,7 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.PanelList_RD.currentTextChanged.connect(LoadPanels_RD)
 
         # Connect the icon only checkbox
-        self.form.IconOnly_RD_RD.clicked.connect(self.on_IconOnly_RD_clicked)
+        self.form.IconOnly_RD.clicked.connect(self.on_IconOnly_RD_clicked)
         # Connect a click event on the tablewidgit on the Ribbon design tab
         self.form.CommandTable_RD.itemClicked.connect(self.on_TableCell_RD_clicked)
         # Connect a change event on the tablewidgit on the Ribbon design tab to change the button text.
@@ -1669,9 +1669,9 @@ class LoadDialog(Design_ui.Ui_Form):
                             "icon": IconName,
                         }
 
-                        # Set the IconOnly_RDToolbars control
+                        # Set the IconOnly_Toolbars control
                         IsInList = False
-                        for item in self.List_IconOnly_RDToolbars:
+                        for item in self.List_IconOnly_Toolbars:
                             if item == Toolbar:
                                 IsInList = True
                         if IsInList is True:
@@ -1759,23 +1759,23 @@ class LoadDialog(Design_ui.Ui_Form):
             toolbar = self.form.PanelList_RD.currentData()
 
             isInList = False
-            for item in self.List_IconOnly_RDToolbars:
+            for item in self.List_IconOnly_Toolbars:
                 if item == toolbar:
                     isInList = True
 
             if isInList is False:
-                self.List_IconOnly_RDToolbars.append(toolbar)
+                self.List_IconOnly_Toolbars.append(toolbar)
 
         if self.form.IconOnly_RD.isChecked() is False:
             toolbar = self.form.PanelList_RD.currentData()
 
             isInList = False
-            for item in self.List_IconOnly_RDToolbars:
+            for item in self.List_IconOnly_Toolbars:
                 if item == toolbar:
                     isInList = True
 
             if isInList is True:
-                self.List_IconOnly_RDToolbars.remove(toolbar)
+                self.List_IconOnly_Toolbars.remove(toolbar)
 
         # Enable the apply button
         if self.CheckChanges() is True:
@@ -2290,8 +2290,8 @@ class LoadDialog(Design_ui.Ui_Form):
             self.List_IgnoredToolbars.append(IgnoredToolbar)
 
         # Get all the icon only toolbars
-        for IconOnly_RDToolbar in data["IconOnly_RDToolbars"]:
-            self.List_IconOnly_RDToolbars.append(IconOnly_RDToolbar)
+        for IconOnly_Toolbar in data["IconOnly_Toolbars"]:
+            self.List_IconOnly_Toolbars.append(IconOnly_Toolbar)
 
         # Get all the quick access command
         for QuickAccessCommand in data["quickAccessCommands"]:
@@ -2324,7 +2324,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Create the internal lists
         List_IgnoredToolbars = []
-        List_IconOnly_RDToolbars = []
+        List_IconOnly_Toolbars = []
         List_QuickAccessCommands = []
         List_IgnoredWorkbenches = []
 
@@ -2336,14 +2336,14 @@ class LoadDialog(Design_ui.Ui_Form):
             IgnoredToolbar = Toolbar[0]
             List_IgnoredToolbars.append(IgnoredToolbar)
 
-        # IconOnly_RDToolbars
-        for IconOnly_RDToolbar in self.List_IconOnly_RDToolbars:
+        # IconOnly_Toolbars
+        for IconOnly_Toolbar in self.List_IconOnly_Toolbars:
             IsInlist = False
-            for item in List_IconOnly_RDToolbars:
-                if item == IconOnly_RDToolbar:
+            for item in List_IconOnly_Toolbars:
+                if item == IconOnly_Toolbar:
                     IsInlist = True
             if IsInlist is False:
-                List_IconOnly_RDToolbars.append(IconOnly_RDToolbar)
+                List_IconOnly_Toolbars.append(IconOnly_Toolbar)
 
         # QuickAccessCommands
         SelectedCommands = self.ListWidgetItems(self.form.CommandsSelected_QC)
@@ -2364,7 +2364,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # add the various lists to the resulting dict.
         resultingDict["language"] = FCLanguage
         resultingDict["ignoredToolbars"] = List_IgnoredToolbars
-        resultingDict["IconOnly_RDToolbars"] = List_IconOnly_RDToolbars
+        resultingDict["IconOnly_Toolbars"] = List_IconOnly_Toolbars
         resultingDict["quickAccessCommands"] = List_QuickAccessCommands
         resultingDict["ignoredWorkbenches"] = List_IgnoredWorkbenches
         resultingDict.update(self.Dict_CustomToolbars)
@@ -2736,7 +2736,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         if data["ignoredToolbars"].sort() == self.List_IgnoredToolbars.sort():
             IsChanged = True
-        if data["IconOnly_RDToolbars"].sort() == self.List_IconOnly_RDToolbars.sort():
+        if data["IconOnly_Toolbars"].sort() == self.List_IconOnly_Toolbars.sort():
             IsChanged = True
         if data["quickAccessCommands"].sort() == self.List_QuickAccessCommands.sort():
             IsChanged = True
