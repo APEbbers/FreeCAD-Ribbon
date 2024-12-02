@@ -326,7 +326,7 @@ class LoadDialog(Design_ui.Ui_Form):
         )
 
         # Connect Add events to the buttons on the Custom Panels Tab for adding commands to the panel
-        self.form.AddPanel_CP.connect(self.form.Add_Panel, SIGNAL("clicked()"), self.on_AddPanel_CP_clicked)
+        self.form.AddPanel_CP.connect(self.form.AddPanel_CP, SIGNAL("clicked()"), self.on_AddPanel_CP_clicked)
 
         self.form.AddCustomPanel_CP.connect(
             self.form.AddCustomPanel_CP,
