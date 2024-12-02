@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignyanxUB.ui'
+## Form generated from reading UI file 'DesignpCmMSd.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -280,16 +280,16 @@ class Ui_Form(object):
         self.SetupBox.setObjectName("SetupBox")
         self.gridLayout_27 = QGridLayout(self.SetupBox)
         self.gridLayout_27.setObjectName("gridLayout_27")
-        self.Workbenches_IS = QListWidget(self.SetupBox)
-        QListWidgetItem(self.Workbenches_IS)
-        __qlistwidgetitem = QListWidgetItem(self.Workbenches_IS)
+        self.WorkbenchList_IS = QListWidget(self.SetupBox)
+        QListWidgetItem(self.WorkbenchList_IS)
+        __qlistwidgetitem = QListWidgetItem(self.WorkbenchList_IS)
         __qlistwidgetitem.setCheckState(Qt.Checked)
-        self.Workbenches_IS.setObjectName("Workbenches_IS")
-        self.Workbenches_IS.setMinimumSize(QSize(300, 0))
-        self.Workbenches_IS.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
-        self.Workbenches_IS.setSortingEnabled(True)
+        self.WorkbenchList_IS.setObjectName("WorkbenchList_IS")
+        self.WorkbenchList_IS.setMinimumSize(QSize(300, 0))
+        self.WorkbenchList_IS.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
+        self.WorkbenchList_IS.setSortingEnabled(True)
 
-        self.gridLayout_27.addWidget(self.Workbenches_IS, 1, 0, 1, 3)
+        self.gridLayout_27.addWidget(self.WorkbenchList_IS, 1, 0, 1, 3)
 
         self.gridLayout_31 = QGridLayout()
         self.gridLayout_31.setObjectName("gridLayout_31")
@@ -1270,7 +1270,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(Form)
 
@@ -1309,13 +1309,13 @@ class Ui_Form(object):
         self.ExportLayout_IS.setText(QCoreApplication.translate("Form", "Export layout", None))
         self.SetupBox.setTitle(QCoreApplication.translate("Form", "Set inital button size - Workbenches", None))
 
-        __sortingEnabled = self.Workbenches_IS.isSortingEnabled()
-        self.Workbenches_IS.setSortingEnabled(False)
-        ___qlistwidgetitem = self.Workbenches_IS.item(0)
+        __sortingEnabled = self.WorkbenchList_IS.isSortingEnabled()
+        self.WorkbenchList_IS.setSortingEnabled(False)
+        ___qlistwidgetitem = self.WorkbenchList_IS.item(0)
         ___qlistwidgetitem.setText(QCoreApplication.translate("Form", "All", None))
-        ___qlistwidgetitem1 = self.Workbenches_IS.item(1)
+        ___qlistwidgetitem1 = self.WorkbenchList_IS.item(1)
         ___qlistwidgetitem1.setText(QCoreApplication.translate("Form", "New Item", None))
-        self.Workbenches_IS.setSortingEnabled(__sortingEnabled)
+        self.WorkbenchList_IS.setSortingEnabled(__sortingEnabled)
 
         self.label_15.setText(QCoreApplication.translate("Form", "Set all button to: ", None))
         self.DefaultButtonSize_IS.setItemText(0, QCoreApplication.translate("Form", "Small", None))

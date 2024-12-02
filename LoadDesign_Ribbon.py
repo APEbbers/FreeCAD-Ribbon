@@ -2068,7 +2068,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 self.form.WorkbenchesAvailable_IW.addItem(ListWidgetItem)
             if IsSelected is True:
                 # Add the listwidgetItem to all workbench listwidgets
-                self.form.WorkbenchesSelected_IS.addItem(ListWidgetItem)
+                self.form.WorkbenchList_IS.addItem(ListWidgetItem)
                 self.form.WorkbenchesSelected_IW.addItem(ListWidgetItem)
                 self.form.WorkbenchList_RD.addItem(
                     Icon,
@@ -2081,7 +2081,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
                     workbench[2],
                 )  # Add the ListWidgetItem also to the second WorkbenchList_RD.
-                self.form.Workbenches_NP.addItem(
+                self.form.WorkbenchList_NP.addItem(
                     Icon,
                     StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
                     workbench[2],
@@ -2098,9 +2098,20 @@ class LoadDialog(Design_ui.Ui_Form):
                 StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
                 workbench[2],
             )
+            self.form.ListCategory_NP.addItem(
+                Icon,
+                StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
+                workbench[2],
+            )
+            self.form.ListCategory_DDB.addItem(
+                Icon,
+                StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
+                workbench[2],
+            )
 
         self.form.ListCategory_QC.setCurrentText(All_KeyWord)
         self.form.ListCategory_EP.setCurrentText(All_KeyWord)
+        self.form.ListCategory_NP.setCurrentText(All_KeyWord)
 
         # Set the text in the combobox to the name of the active workbench
         self.form.WorkbenchList_RD.setCurrentText(
