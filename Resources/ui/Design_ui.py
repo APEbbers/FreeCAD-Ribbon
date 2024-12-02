@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesigncWVdJH.ui'
+## Form generated from reading UI file 'DesignyanxUB.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -204,10 +204,10 @@ class Ui_Form(object):
         self.groupBox_2.setObjectName("groupBox_2")
         self.gridLayout_45 = QGridLayout(self.groupBox_2)
         self.gridLayout_45.setObjectName("gridLayout_45")
-        self.listWidget = QListWidget(self.groupBox_2)
-        self.listWidget.setObjectName("listWidget")
+        self.Panels_IS = QListWidget(self.groupBox_2)
+        self.Panels_IS.setObjectName("Panels_IS")
 
-        self.gridLayout_45.addWidget(self.listWidget, 1, 0, 1, 1)
+        self.gridLayout_45.addWidget(self.Panels_IS, 1, 0, 1, 1)
 
         self.gridLayout_44 = QGridLayout()
         self.gridLayout_44.setObjectName("gridLayout_44")
@@ -406,15 +406,15 @@ class Ui_Form(object):
 
         self.gridLayout_2.addWidget(self.label_5, 3, 0, 1, 3)
 
-        self.CommandsSelected = QListWidget(self.frame)
-        __qlistwidgetitem1 = QListWidgetItem(self.CommandsSelected)
+        self.CommandsSelected_QC = QListWidget(self.frame)
+        __qlistwidgetitem1 = QListWidgetItem(self.CommandsSelected_QC)
         __qlistwidgetitem1.setCheckState(Qt.Checked)
-        self.CommandsSelected.setObjectName("CommandsSelected")
-        self.CommandsSelected.setDefaultDropAction(Qt.DropAction.MoveAction)
-        self.CommandsSelected.setMovement(QListView.Movement.Free)
-        self.CommandsSelected.setSortingEnabled(False)
+        self.CommandsSelected_QC.setObjectName("CommandsSelected_QC")
+        self.CommandsSelected_QC.setDefaultDropAction(Qt.DropAction.MoveAction)
+        self.CommandsSelected_QC.setMovement(QListView.Movement.Free)
+        self.CommandsSelected_QC.setSortingEnabled(False)
 
-        self.gridLayout_2.addWidget(self.CommandsSelected, 4, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.CommandsSelected_QC, 4, 2, 1, 1)
 
         self.CommandsAvailable_QC = QListWidget(self.frame)
         __qlistwidgetitem2 = QListWidgetItem(self.CommandsAvailable_QC)
@@ -550,11 +550,11 @@ class Ui_Form(object):
 
         self.gridLayout_4 = QGridLayout()
         self.gridLayout_4.setObjectName("gridLayout_4")
-        self.Remove_Workbench = QToolButton(self.frame1)
-        self.Remove_Workbench.setObjectName("Remove_Workbench")
-        self.Remove_Workbench.setArrowType(Qt.ArrowType.LeftArrow)
+        self.RemoveWorkbench_IW = QToolButton(self.frame1)
+        self.RemoveWorkbench_IW.setObjectName("RemoveWorkbench_IW")
+        self.RemoveWorkbench_IW.setArrowType(Qt.ArrowType.LeftArrow)
 
-        self.gridLayout_4.addWidget(self.Remove_Workbench, 2, 0, 1, 1)
+        self.gridLayout_4.addWidget(self.RemoveWorkbench_IW, 2, 0, 1, 1)
 
         self.AddWorkbench_IW = QToolButton(self.frame1)
         self.AddWorkbench_IW.setObjectName("AddWorkbench_IW")
@@ -1270,7 +1270,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(4)
+        self.tabWidget.setCurrentIndex(3)
 
         QMetaObject.connectSlotsByName(Form)
 
@@ -1336,11 +1336,11 @@ class Ui_Form(object):
             QCoreApplication.translate("Form", "Select commands to add to the quick access toolbar", None)
         )
 
-        __sortingEnabled1 = self.CommandsSelected.isSortingEnabled()
-        self.CommandsSelected.setSortingEnabled(False)
-        ___qlistwidgetitem2 = self.CommandsSelected.item(0)
+        __sortingEnabled1 = self.CommandsSelected_QC.isSortingEnabled()
+        self.CommandsSelected_QC.setSortingEnabled(False)
+        ___qlistwidgetitem2 = self.CommandsSelected_QC.item(0)
         ___qlistwidgetitem2.setText(QCoreApplication.translate("Form", "New Item", None))
-        self.CommandsSelected.setSortingEnabled(__sortingEnabled1)
+        self.CommandsSelected_QC.setSortingEnabled(__sortingEnabled1)
 
         __sortingEnabled2 = self.CommandsAvailable_QC.isSortingEnabled()
         self.CommandsAvailable_QC.setSortingEnabled(False)
@@ -1397,7 +1397,7 @@ class Ui_Form(object):
         ___qlistwidgetitem7.setText(QCoreApplication.translate("Form", "New Item", None))
         self.WorkbenchesSelected_IW.setSortingEnabled(__sortingEnabled6)
 
-        self.Remove_Workbench.setText(QCoreApplication.translate("Form", "...", None))
+        self.RemoveWorkbench_IW.setText(QCoreApplication.translate("Form", "...", None))
         self.AddWorkbench_IW.setText(QCoreApplication.translate("Form", "...", None))
         self.label_6.setText(
             QCoreApplication.translate(

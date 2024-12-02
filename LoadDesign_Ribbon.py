@@ -293,8 +293,8 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.SearchBar_EP.textChanged.connect(self.on_SearchBar_EP_TextChanged)
         # Connect Add/Remove events to the buttons on the Toolbars Tab
         self.form.AddPanel_EP.connect(self.form.AddPanel_EP, SIGNAL("clicked()"), self.on_AddToolbar_EP_clicked)
-        self.form.RemovePanel_CP_EP.connect(
-            self.form.RemovePanel_CP_EP, SIGNAL("clicked()"), self.on_RemoveToolbar_EP_clicked
+        self.form.RemovePanel_EP.connect(
+            self.form.RemovePanel_EP, SIGNAL("clicked()"), self.on_RemoveToolbar_EP_clicked
         )
 
         #
