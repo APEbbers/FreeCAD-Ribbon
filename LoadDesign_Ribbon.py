@@ -886,7 +886,7 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_AddWorkbench_IW_clicked(self):
         self.AddItem(
             SourceWidget=self.form.WorkbenchesAvailable_IW,
-            DestinationWidget=self.form.WorkbenchesSelected,
+            DestinationWidget=self.form.WorkbenchesSelected_IW,
         )
 
         # Enable the apply button
@@ -897,7 +897,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def on_RemoveWorkbench_IW_clicked(self):
         self.AddItem(
-            SourceWidget=self.form.WorkbenchesSelected,
+            SourceWidget=self.form.WorkbenchesSelected_IW,
             DestinationWidget=self.form.WorkbenchesAvailable_IW,
         )
 
@@ -2024,7 +2024,7 @@ class LoadDialog(Design_ui.Ui_Form):
         """Fill the Workbenches available, selected and workbench list"""
         self.form.WorkbenchList_RD.clear()
         self.form.WorkbenchesAvailable_IW.clear()
-        self.form.WorkbenchesSelected.clear()
+        self.form.WorkbenchesSelected_IW.clear()
         self.form.WorkbenchList_CP.clear()
 
         All_KeyWord = translate("FreeCAD Ribbon", "All")
@@ -2059,7 +2059,7 @@ class LoadDialog(Design_ui.Ui_Form):
             if IsSelected is False:
                 self.form.WorkbenchesAvailable_IW.addItem(ListWidgetItem)
             if IsSelected is True:
-                self.form.WorkbenchesSelected.addItem(ListWidgetItem)
+                self.form.WorkbenchesSelected_IW.addItem(ListWidgetItem)
                 self.form.WorkbenchList_RD.addItem(
                     Icon,
                     StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
@@ -2777,7 +2777,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Clear all listWidgets
         self.form.WorkbenchList_RD.clear()
         self.form.WorkbenchesAvailable_IW.clear()
-        self.form.WorkbenchesSelected.clear()
+        self.form.WorkbenchesSelected_IW.clear()
         self.form.PanelsToExclude_EP.clear()
         self.form.PanelsExcluded_EP.clear()
         self.form.CommandsAvailable_QC.clear()
