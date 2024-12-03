@@ -2813,16 +2813,30 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def LoadControls(self):
         # Clear all listWidgets
-        self.form.WorkbenchList_RD.clear()
-        self.form.WorkbenchesAvailable_IW.clear()
-        self.form.WorkbenchesSelected_IW.clear()
-        self.form.PanelsToExclude_EP.clear()
-        self.form.PanelsExcluded_EP.clear()
+        self.form.WorkbenchList_IS.clear()
+        self.form.Panels_IS.clear()
+        #
         self.form.CommandsAvailable_QC.clear()
         self.form.CommandsSelected_QC.clear()
+        #
+        self.form.PanelsToExclude_EP.clear()
+        self.form.PanelsExcluded_EP.clear()
+        #
+        self.form.WorkbenchesAvailable_IW.clear()
+        self.form.WorkbenchesSelected_IW.clear()
+        #
         self.form.PanelAvailable_CP.clear()
         self.form.PanelSelected_CP.clear()
+        #
+        self.form.WorkbenchList_NP.clear()
+        self.form.CommandsAvailable_NP.clear()
+        self.form.NewPanel_NP.clear()
+        #
+        self.form.CommandsAvailable_DDB.clear()
+        self.form.NewControl_DDB.clear()
+        #
         self.form.PanelOrder_RD.clear()
+        self.form.WorkbenchList_RD.clear()
 
         # -- Ribbon design tab --
         # Add all workbenches to the ListItem Widget. In this case a dropdown list.
