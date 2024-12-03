@@ -378,6 +378,32 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.SearchBar_NP.textChanged.connect(self.on_SearchBar_NP_TextChanged)
 
         #
+        # --- CreateDropDownButtonTab ----------------
+        #
+        # Connect Add/Remove and move events to the buttons on the QuickAccess Tab
+        self.form.AddCommand_DDB.connect(self.form.AddCommand_DDB, SIGNAL("clicked()"), self.on_AddCommand_DDB_clicked)
+        self.form.RemoveCommand_NP.connect(
+            self.form.RemoveCommand_NP, SIGNAL("clicked()"), self.on_RemoveCommand_DDB_clicked
+        )
+        self.form.MoveUpCommand_NP.connect(
+            self.form.MoveUpCommand_NP, SIGNAL("clicked()"), self.on_MoveUpCommand_DDB_clicked
+        )
+        self.form.MoveDownCommand_NP.connect(
+            self.form.MoveDownCommand_NP,
+            SIGNAL("clicked()"),
+            self.on_MoveDownCommand_DDB_clicked,
+        )
+
+        # Connect the filter for the quick commands on the quickcommands tab
+        def FilterWorkbench_DDB():
+            self.on_ListCategory_DDB_TextChanged()
+
+        # Connect the filter for the quick commands on the quickcommands tab
+        self.form.ListCategory_DDB.currentTextChanged.connect(FilterWorkbench_DDB)
+        # Connect the searchbar for the quick commands on the quick commands tab
+        self.form.SearchBar_DDB.textChanged.connect(self.on_SearchBar_DDB_TextChanged)
+
+        #
         # --- RibbonDesignTab ------------------
         #
         # Connect LoadWorkbenches with the dropdown WorkbenchList on the Ribbon design tab
@@ -1277,6 +1303,55 @@ class LoadDialog(Design_ui.Ui_Form):
     # endregion---------------------------------------------------------------------------------------
 
     # region - Create dropdown buttons tab
+    def on_ListCategory_DDB_TextChanged(self):
+        self.FilterCommands_ListCategory(self.form.CommandsAvailable_DDB, self.form.ListCategory_DDB)
+        return
+
+    def on_SearchBar_DDB_TextChanged(self):
+        self.FilterCommands_SearchBar(self.form.CommandsAvailable_DDB, self.form.SearchBar_DDB)
+        return
+
+    def on_AddCommand_DDB_clicked(self):
+        self.AddItem(
+            SourceWidget=self.form.CommandsAvailable_DDB,
+            DestinationWidget=self.form.NewPanel_DDB,
+        )
+
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
+
+        return
+
+    def on_RemoveCommand_DDB_clicked(self):
+        self.AddItem(
+            SourceWidget=self.form.NewPanel_DDB,
+            DestinationWidget=self.form.CommandsAvailable_DDB,
+        )
+
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
+
+        return
+
+    def on_MoveUpCommand_DDB_clicked(self):
+        self.MoveItem(ListWidget=self.form.NewPanel_DDB, Up=True)
+
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
+
+        return
+
+    def on_MoveDownCommand_DDB_clicked(self):
+        self.MoveItem(ListWidget=self.form.NewPanel_DDB, Up=False)
+
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
+
+        return
 
     # endregion---------------------------------------------------------------------------------------
 
@@ -3002,7 +3077,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
             if IsInList is False and workbenchName != "Global" and workbenchName != "General":
                 WorkbenchTitle = Gui.getWorkbench(workbenchName).MenuText
-                if WorkbenchTitle == ListWidget_WorkBenches.currentText():
+                if WorkbenchTitle == ListWidget_WorkBenches.currentData():
                     IsInlist = False
                     for i in range(ListWidget_Commands.count()):
                         CommandItem = ListWidget_Commands.item(i)

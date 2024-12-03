@@ -1784,7 +1784,7 @@
              <item row="1" column="1">
               <layout class="QGridLayout" name="gridLayout_42">
                <item row="5" column="0">
-                <widget class="QToolButton" name="MoveDown_PanelCommand_30">
+                <widget class="QToolButton" name="MoveDownCommand_DDB">
                  <property name="text">
                   <string>...</string>
                  </property>
@@ -1836,7 +1836,7 @@
                 </spacer>
                </item>
                <item row="2" column="0">
-                <widget class="QToolButton" name="Add_Panel_30">
+                <widget class="QToolButton" name="AddCommand_DDB">
                  <property name="text">
                   <string>...</string>
                  </property>
@@ -1846,7 +1846,7 @@
                 </widget>
                </item>
                <item row="4" column="0">
-                <widget class="QToolButton" name="MoveUp_PanelCommand_30">
+                <widget class="QToolButton" name="MoveUpCommand_DDB">
                  <property name="text">
                   <string>...</string>
                  </property>
@@ -1856,7 +1856,7 @@
                 </widget>
                </item>
                <item row="1" column="0">
-                <widget class="QToolButton" name="toolButton_30">
+                <widget class="QToolButton" name="RemoveCommand_DDB">
                  <property name="text">
                   <string>...</string>
                  </property>

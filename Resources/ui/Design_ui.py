@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignlcXsdv.ui'
+## Form generated from reading UI file 'DesignmhVxXf.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -948,11 +948,11 @@ class Ui_Form(object):
 
         self.gridLayout_42 = QGridLayout()
         self.gridLayout_42.setObjectName("gridLayout_42")
-        self.MoveDown_PanelCommand_30 = QToolButton(self.tab)
-        self.MoveDown_PanelCommand_30.setObjectName("MoveDown_PanelCommand_30")
-        self.MoveDown_PanelCommand_30.setArrowType(Qt.ArrowType.DownArrow)
+        self.MoveDownCommand_DDB = QToolButton(self.tab)
+        self.MoveDownCommand_DDB.setObjectName("MoveDownCommand_DDB")
+        self.MoveDownCommand_DDB.setArrowType(Qt.ArrowType.DownArrow)
 
-        self.gridLayout_42.addWidget(self.MoveDown_PanelCommand_30, 5, 0, 1, 1)
+        self.gridLayout_42.addWidget(self.MoveDownCommand_DDB, 5, 0, 1, 1)
 
         self.verticalSpacer_19 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
@@ -966,23 +966,23 @@ class Ui_Form(object):
 
         self.gridLayout_42.addItem(self.verticalSpacer_21, 6, 0, 1, 1)
 
-        self.Add_Panel_30 = QToolButton(self.tab)
-        self.Add_Panel_30.setObjectName("Add_Panel_30")
-        self.Add_Panel_30.setArrowType(Qt.ArrowType.RightArrow)
+        self.AddCommand_DDB = QToolButton(self.tab)
+        self.AddCommand_DDB.setObjectName("AddCommand_DDB")
+        self.AddCommand_DDB.setArrowType(Qt.ArrowType.RightArrow)
 
-        self.gridLayout_42.addWidget(self.Add_Panel_30, 2, 0, 1, 1)
+        self.gridLayout_42.addWidget(self.AddCommand_DDB, 2, 0, 1, 1)
 
-        self.MoveUp_PanelCommand_30 = QToolButton(self.tab)
-        self.MoveUp_PanelCommand_30.setObjectName("MoveUp_PanelCommand_30")
-        self.MoveUp_PanelCommand_30.setArrowType(Qt.ArrowType.UpArrow)
+        self.MoveUpCommand_DDB = QToolButton(self.tab)
+        self.MoveUpCommand_DDB.setObjectName("MoveUpCommand_DDB")
+        self.MoveUpCommand_DDB.setArrowType(Qt.ArrowType.UpArrow)
 
-        self.gridLayout_42.addWidget(self.MoveUp_PanelCommand_30, 4, 0, 1, 1)
+        self.gridLayout_42.addWidget(self.MoveUpCommand_DDB, 4, 0, 1, 1)
 
-        self.toolButton_30 = QToolButton(self.tab)
-        self.toolButton_30.setObjectName("toolButton_30")
-        self.toolButton_30.setArrowType(Qt.ArrowType.LeftArrow)
+        self.RemoveCommand_DDB = QToolButton(self.tab)
+        self.RemoveCommand_DDB.setObjectName("RemoveCommand_DDB")
+        self.RemoveCommand_DDB.setArrowType(Qt.ArrowType.LeftArrow)
 
-        self.gridLayout_42.addWidget(self.toolButton_30, 1, 0, 1, 1)
+        self.gridLayout_42.addWidget(self.RemoveCommand_DDB, 1, 0, 1, 1)
 
         self.gridLayout_43.addLayout(self.gridLayout_42, 1, 1, 1, 1)
 
@@ -1487,10 +1487,10 @@ class Ui_Form(object):
         self.CommandsAvailable_DDB.setSortingEnabled(__sortingEnabled11)
 
         self.label_22.setText(QCoreApplication.translate("Form", "Category:", None))
-        self.MoveDown_PanelCommand_30.setText(QCoreApplication.translate("Form", "...", None))
-        self.Add_Panel_30.setText(QCoreApplication.translate("Form", "...", None))
-        self.MoveUp_PanelCommand_30.setText(QCoreApplication.translate("Form", "...", None))
-        self.toolButton_30.setText(QCoreApplication.translate("Form", "...", None))
+        self.MoveDownCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
+        self.AddCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
+        self.MoveUpCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
+        self.RemoveCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
 
         __sortingEnabled12 = self.NewControl_DDB.isSortingEnabled()
         self.NewControl_DDB.setSortingEnabled(False)
