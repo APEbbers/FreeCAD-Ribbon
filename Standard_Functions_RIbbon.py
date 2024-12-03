@@ -639,7 +639,7 @@ def addMissingCommands(CommandList: list):
     return CopyList
 
 
-def returnQiCons_Commands(CommandName, pixmap):
+def returnQiCons_Commands(CommandName, pixmap=""):
     from PySide.QtGui import QIcon
 
     icon = QIcon()

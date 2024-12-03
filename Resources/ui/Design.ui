@@ -246,7 +246,7 @@
             <enum>QTabWidget::TabShape::Rounded</enum>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>6</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideNone</enum>
@@ -281,7 +281,17 @@
                  </property>
                  <layout class="QGridLayout" name="gridLayout_45">
                   <item row="1" column="0">
-                   <widget class="QListWidget" name="Panels_IS"/>
+                   <widget class="QListWidget" name="Panels_IS">
+                    <property name="selectionMode">
+                     <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+                    </property>
+                    <property name="selectionBehavior">
+                     <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+                    </property>
+                    <property name="sortingEnabled">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
                   </item>
                   <item row="0" column="0">
                    <layout class="QGridLayout" name="gridLayout_44">
@@ -1587,7 +1597,7 @@
                 <item row="2" column="2">
                  <widget class="QListWidget" name="NewPanel_NP">
                   <property name="selectionMode">
-                   <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+                   <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
                   </property>
                   <property name="sortingEnabled">
                    <bool>true</bool>
@@ -1862,7 +1872,7 @@
                <item row="1" column="0">
                 <widget class="QListWidget" name="NewControl_DDB">
                  <property name="selectionMode">
-                  <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+                  <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
                  </property>
                  <property name="sortingEnabled">
                   <bool>true</bool>
