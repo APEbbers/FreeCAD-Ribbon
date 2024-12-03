@@ -382,14 +382,14 @@ class LoadDialog(Design_ui.Ui_Form):
         #
         # Connect Add/Remove and move events to the buttons on the QuickAccess Tab
         self.form.AddCommand_DDB.connect(self.form.AddCommand_DDB, SIGNAL("clicked()"), self.on_AddCommand_DDB_clicked)
-        self.form.RemoveCommand_NP.connect(
-            self.form.RemoveCommand_NP, SIGNAL("clicked()"), self.on_RemoveCommand_DDB_clicked
+        self.form.RemoveCommand_DDB.connect(
+            self.form.RemoveCommand_DDB, SIGNAL("clicked()"), self.on_RemoveCommand_DDB_clicked
         )
-        self.form.MoveUpCommand_NP.connect(
-            self.form.MoveUpCommand_NP, SIGNAL("clicked()"), self.on_MoveUpCommand_DDB_clicked
+        self.form.MoveUpCommand_DDB.connect(
+            self.form.MoveUpCommand_DDB, SIGNAL("clicked()"), self.on_MoveUpCommand_DDB_clicked
         )
-        self.form.MoveDownCommand_NP.connect(
-            self.form.MoveDownCommand_NP,
+        self.form.MoveDownCommand_DDB.connect(
+            self.form.MoveDownCommand_DDB,
             SIGNAL("clicked()"),
             self.on_MoveDownCommand_DDB_clicked,
         )
@@ -1314,7 +1314,7 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_AddCommand_DDB_clicked(self):
         self.AddItem(
             SourceWidget=self.form.CommandsAvailable_DDB,
-            DestinationWidget=self.form.NewPanel_DDB,
+            DestinationWidget=self.form.NewControl_DDB,
         )
 
         # Enable the apply button
@@ -1325,7 +1325,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def on_RemoveCommand_DDB_clicked(self):
         self.AddItem(
-            SourceWidget=self.form.NewPanel_DDB,
+            SourceWidget=self.form.NewControl_DDB,
             DestinationWidget=self.form.CommandsAvailable_DDB,
         )
 
@@ -1336,7 +1336,7 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     def on_MoveUpCommand_DDB_clicked(self):
-        self.MoveItem(ListWidget=self.form.NewPanel_DDB, Up=True)
+        self.MoveItem(ListWidget=self.form.NewControl_DDB, Up=True)
 
         # Enable the apply button
         if self.CheckChanges() is True:
@@ -1345,7 +1345,7 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     def on_MoveDownCommand_DDB_clicked(self):
-        self.MoveItem(ListWidget=self.form.NewPanel_DDB, Up=False)
+        self.MoveItem(ListWidget=self.form.NewControl_DDB, Up=False)
 
         # Enable the apply button
         if self.CheckChanges() is True:
