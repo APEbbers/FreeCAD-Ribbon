@@ -832,8 +832,8 @@ class LoadDialog(Design_ui.Ui_Form):
 
                 if IsInlist is False:
                     ListWidgetItem = QListWidgetItem()
-                    ListWidgetItem.setText(StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0])).replace(
-                        "&", ""
+                    ListWidgetItem.setText(
+                        StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]).replace("&", "")
                     )
                     ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
 
@@ -847,8 +847,8 @@ class LoadDialog(Design_ui.Ui_Form):
             if Toolbar[0].lower().startswith(self.form.SearchBar_EP.text().lower()):
                 WorkbenchName = Toolbar[2]
                 ListWidgetItem = QListWidgetItem()
-                ListWidgetItem.setText(StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0])).replace(
-                    "&", ""
+                ListWidgetItem.setText(
+                    StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]).replace("&", "")
                 )
                 ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
 

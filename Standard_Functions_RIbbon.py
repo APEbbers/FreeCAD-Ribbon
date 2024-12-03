@@ -643,7 +643,7 @@ def returnQiCons_Commands(CommandName, pixmap):
     from PySide.QtGui import QIcon
 
     icon = QIcon()
-    if pixmap != "":
+    if pixmap != "" and pixmap is not None:
         icon = Gui.getIcon(pixmap)
     else:
         try:
