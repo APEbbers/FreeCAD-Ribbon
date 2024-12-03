@@ -193,7 +193,7 @@ class LoadDialog(Design_ui.Ui_Form):
             Question = (
                 translate(
                     "FreeCAD Ribbon",
-                    "It seems that the data file is nt up-to-date.",
+                    "It seems that the data file is not up-to-date.",
                 )
                 + "\n"
                 + translate("FreeCAD Ribbon", "Do you want to update the data?")
@@ -2361,7 +2361,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for ToolBarItem in self.StringList_Toolbars:
             IsInList = ShadowList.__contains__(ToolBarItem[0])
 
-            if IsInList is False:
+            if IsInList is False and ToolBarItem[0] != "":
                 ListWidgetItem = QListWidgetItem()
                 ListWidgetItem.setText(ToolBarItem[0].replace("&", ""))
                 ListWidgetItem.setData(Qt.ItemDataRole.UserRole, ToolBarItem)
