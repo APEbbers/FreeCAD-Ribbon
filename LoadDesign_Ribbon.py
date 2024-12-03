@@ -2885,6 +2885,10 @@ class LoadDialog(Design_ui.Ui_Form):
         # Add all commands to the listbox for the quick access toolbar
         self.LoadCommands()
 
+        # -- Initial setup tab --
+        # Add all toolbar to the listbox for the panels
+        self.LoadPanels()
+
         # -- Custom panel tab --
         self.form.CustomToolbarSelector_CP.addItem(translate("FreeCAD Ribbon", "New"))
         try:
