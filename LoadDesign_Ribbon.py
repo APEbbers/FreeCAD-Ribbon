@@ -182,6 +182,28 @@ class LoadDialog(Design_ui.Ui_Form):
         self.List_Workbenches = Data["List_Workbenches"]
         self.StringList_Toolbars = Data["StringList_Toolbars"]
         self.List_Commands = Data["List_Commands"]
+        # test if List_Commands is correct
+        i = 5
+        if len(self.List_Commands) > 0:
+            for item in self.List_Commands:
+                if len(item) < 5:
+                    i = len(item)
+                    break
+        if i < 5:
+            Question = (
+                translate(
+                    "FreeCAD Ribbon",
+                    "It seems that the data file is nt up-to-date.",
+                )
+                + "\n"
+                + translate("FreeCAD Ribbon", "Do you want to update the data?")
+                + "\n"
+                + translate("FreeCAD Ribbon", "This can take a while!")
+            )
+            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+            if Answer == "yes":
+                self.on_ReloadWB_clicked()
+
         # Load the lists for the deserialized icons
         try:
             for IconItem in Data["WorkBench_Icons"]:
