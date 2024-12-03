@@ -2248,7 +2248,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
             if IsInList is False:
                 ListWidgetItem = QListWidgetItem()
-                ListWidgetItem.setText(ToolBarItem[0]).replace("&", "")
+                ListWidgetItem.setText(ToolBarItem[0].replace("&", ""))
                 ListWidgetItem.setData(Qt.ItemDataRole.UserRole, ToolBarItem)
 
                 self.form.Panels_IS.addItem(ListWidgetItem)
