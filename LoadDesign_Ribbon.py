@@ -2029,11 +2029,11 @@ class LoadDialog(Design_ui.Ui_Form):
     # region - Functions------------------------------------------------------------------------------
     def addWorkbenches(self):
         """Fill the Workbenches available, selected and workbench list"""
+        self.form.WorkbenchList_IS.clear()
         self.form.WorkbenchList_RD.clear()
         self.form.WorkbenchesAvailable_IW.clear()
         self.form.WorkbenchesSelected_IW.clear()
         self.form.WorkbenchList_CP.clear()
-        # self.form.WorkbenchList_IS.clear()
 
         # Add "All" to the categoryListWidgets
         All_KeyWord = translate("FreeCAD Ribbon", "All")
@@ -2041,6 +2041,10 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.ListCategory_EP.addItem(All_KeyWord)
         self.form.ListCategory_NP.addItem(All_KeyWord)
         self.form.ListCategory_DDB.addItem(All_KeyWord)
+
+        ListWidgetItem_IS = QListWidgetItem()
+        ListWidgetItem_IS.setText("All")
+        self.form.WorkbenchList_IS.addItem(ListWidgetItem_IS)
 
         for workbench in self.List_Workbenches:
             WorkbenchName = workbench[0]
@@ -2162,10 +2166,12 @@ class LoadDialog(Design_ui.Ui_Form):
                         self.form.PanelsExcluded_EP.addItem(ListWidgetItem)
         return
 
-    def QuickAccessCommands(self):
+    def LoadCommands(self):
         """Fill the Quick Commands Available and Selected"""
         self.form.CommandsAvailable_QC.clear()
         self.form.CommandsSelected_QC.clear()
+        #
+        self.form.CommandsAvailable_NP.clear()
 
         ShadowList = []  # List to add the commands and prevent duplicates
         IsInList = False
@@ -2223,7 +2229,30 @@ class LoadDialog(Design_ui.Ui_Form):
 
                             if IsInlist is False:
                                 self.form.CommandsSelected_QC.addItem(ListWidgetItem)
+
+                        # Add clones of the listWidgetItem to the other listwidgets
+                        self.form.CommandsAvailable_NP.addItem(ListWidgetItem.clone())
+                        self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
+
             ShadowList.append(ToolbarCommand[0])
+        return
+
+    def LoadPanels(self):
+        self.form.Panels_IS.clear()
+
+        ShadowList = []  # List to add the commands and prevent duplicates
+        IsInList = False
+
+        for ToolBarItem in self.StringList_Toolbars:
+            IsInList = ShadowList.__contains__(ToolBarItem[0])
+
+            if IsInList is False:
+                ListWidgetItem = QListWidgetItem()
+                ListWidgetItem.setText(ToolBarItem[0]).replace("&", "")
+                ListWidgetItem.setData(Qt.ItemDataRole.UserRole, ToolBarItem)
+
+                self.form.Panels_IS.addItem(ListWidgetItem)
+
         return
 
     def UpdateData(self):
@@ -2834,6 +2863,7 @@ class LoadDialog(Design_ui.Ui_Form):
         #
         self.form.CommandsAvailable_DDB.clear()
         self.form.NewControl_DDB.clear()
+        self.form.ListCategory_DDB.clear()
         #
         self.form.PanelOrder_RD.clear()
         self.form.WorkbenchList_RD.clear()
@@ -2853,7 +2883,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # -- Quick access toolbar tab --
         # Add all commands to the listbox for the quick access toolbar
-        self.QuickAccessCommands()
+        self.LoadCommands()
 
         # -- Custom panel tab --
         self.form.CustomToolbarSelector_CP.addItem(translate("FreeCAD Ribbon", "New"))
