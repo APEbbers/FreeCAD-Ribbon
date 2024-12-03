@@ -2253,6 +2253,8 @@ class LoadDialog(Design_ui.Ui_Form):
 
                 self.form.Panels_IS.addItem(ListWidgetItem)
 
+                ShadowList.append(ToolBarItem[0])
+
         return
 
     def UpdateData(self):
