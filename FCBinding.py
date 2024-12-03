@@ -1529,17 +1529,17 @@ class ModernMenu(RibbonBar):
             for key, value in list(Commands.items()):
                 # get the menu text from the command list
                 for CommandName in Gui.listCommands():
-                    # Command = Gui.Command.get(CommandName)
-                    MenuName = CommandInfoCorrections(CommandName)["ActionText"].replace("&", "").replace("...", "")
+                    # Get the english menutext
+                    MenuName = CommandInfoCorrections(CommandName)["menuText"]
+                    # Get the translated menutext
+                    MenuNameTtranslated = CommandInfoCorrections(CommandName)["ActionText"]
 
-                    if MenuName == key.replace("&", "").replace("...", ""):
+                    if MenuName == key:
                         try:
                             # Get the original toolbar as QToolbar
                             OriginalToolBar = mw.findChild(QToolBar, value)
                             # Go through all it's QtoolButtons
                             for Child in OriginalToolBar.findChildren(QToolButton):
-                                # CommandAction = Command.getAction()[0]
-                                # MenuNameTranslated = CommandAction.text().replace("&", "")
                                 # If the text of the QToolButton matches the menu text
                                 # Add it to the button list.
                                 IsInList = False
@@ -1547,7 +1547,7 @@ class ModernMenu(RibbonBar):
                                     if Toolbutton.text() == Child.text():
                                         IsInList = True
 
-                                if Child.text() == MenuName and IsInList is False:
+                                if Child.text() == MenuNameTtranslated and IsInList is False:
                                     ButtonList.append(Child)
                         except Exception as e:
                             if Parameters_Ribbon.DEBUG_MODE is True:

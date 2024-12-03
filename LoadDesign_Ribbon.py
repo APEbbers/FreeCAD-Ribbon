@@ -2276,16 +2276,15 @@ class LoadDialog(Design_ui.Ui_Form):
             if IsInList is False:
                 CommandName = ToolbarCommand[0]
                 # Command = Gui.Command.get(CommandName)
-                MenuName = StandardFunctions.CommandInfoCorrections(CommandName)["ActionText"]
-                workbenchName = ToolbarCommand[3]
+                MenuNameTranslated = ToolbarCommand[4]
 
                 # Default a command is not selected
-                IsSelected = False and workbenchName != "Global"
+                IsSelected = False
                 for QuickCommand in self.List_QuickAccessCommands:
                     if ToolbarCommand[0] == QuickCommand:
                         IsSelected = True
 
-                if MenuName != "":
+                if MenuNameTranslated != "":
                     # Define a new ListWidgetItem.
                     textAddition = ""
                     Icon = QIcon()
@@ -2297,7 +2296,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
 
                     ListWidgetItem = QListWidgetItem()
-                    ListWidgetItem.setText((MenuName + textAddition).replace("&", ""))
+                    ListWidgetItem.setText((MenuNameTranslated + textAddition).replace("&", ""))
                     if Icon is not None:
                         ListWidgetItem.setIcon(Icon)
                     ListWidgetItem.setToolTip(CommandName)  # Use the tooltip to store the actual command.
@@ -2309,7 +2308,7 @@ class LoadDialog(Design_ui.Ui_Form):
                             IsInlist = False
                             for i in range(self.form.CommandsAvailable_QC.count()):
                                 CommandItem = self.form.CommandsAvailable_QC.item(i)
-                                if CommandItem.text() == MenuName:
+                                if CommandItem.text() == MenuNameTranslated:
                                     IsInlist = True
 
                             if IsInlist is False:
@@ -2318,7 +2317,7 @@ class LoadDialog(Design_ui.Ui_Form):
                             IsInlist = False
                             for i in range(self.form.CommandsSelected_QC.count()):
                                 CommandItem = self.form.CommandsSelected_QC.item(i)
-                                if CommandItem.text() == MenuName:
+                                if CommandItem.text() == MenuNameTranslated:
                                     IsInlist = True
 
                             if IsInlist is False:
