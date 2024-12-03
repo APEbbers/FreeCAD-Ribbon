@@ -34,6 +34,7 @@ from PySide.QtWidgets import (
     QPushButton,
     QMenu,
     QWidget,
+    QLineEdit,
 )
 from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
@@ -347,6 +348,34 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.CustomToolbarSelector_CP.activated.connect(CustomToolbarSelect_CP)
 
         self.form.RemovePanel_CP.connect(self.form.RemovePanel_CP, SIGNAL("clicked()"), self.on_RemovePanel_CP_clicked)
+
+        #
+        # --- CreateNewPanelTab ----------------
+        #
+        # Connect Add/Remove and move events to the buttons on the QuickAccess Tab
+        self.form.AddPanelCommand_NP.connect(
+            self.form.AddPanelCommand_NP, SIGNAL("clicked()"), self.on_AddCommand_NP_clicked
+        )
+        self.form.RemovePanelCommand_NP.connect(
+            self.form.RemovePanelCommand_NP, SIGNAL("clicked()"), self.on_RemoveCommand_NP_clicked
+        )
+        self.form.MoveUpPanelCommand_NP.connect(
+            self.form.MoveUpPanelCommand_NP, SIGNAL("clicked()"), self.on_MoveUpCommand_NP_clicked
+        )
+        self.form.MoveDownPanelCommand_NP.connect(
+            self.form.MoveDownPanelCommand_NP,
+            SIGNAL("clicked()"),
+            self.on_MoveDownCommand_NP_clicked,
+        )
+
+        # Connect the filter for the quick commands on the quickcommands tab
+        def FilterWorkbench_NP():
+            self.on_ListCategory_NP_TextChanged()
+
+        # Connect the filter for the quick commands on the quickcommands tab
+        self.form.ListCategory_NP.currentTextChanged.connect(FilterWorkbench_NP)
+        # Connect the searchbar for the quick commands on the quick commands tab
+        self.form.SearchBar_NP.textChanged.connect(self.on_SearchBar_NP_TextChanged)
 
         #
         # --- RibbonDesignTab ------------------
@@ -677,13 +706,17 @@ class LoadDialog(Design_ui.Ui_Form):
     # region - Control functions----------------------------------------------------------------------
     # Add all toolbars of the selected workbench to the toolbar list(QComboBox)
     #
+    # region - Initial setup tab
+
+    # endregion---------------------------------------------------------------------------------------
+
     # region - QuickCommands tab
     def on_ListCategory_QC_TextChanged(self):
         self.FilterCommands_ListCategory(self.form.CommandsAvailable_QC, self.form.ListCategory_QC)
         return
 
     def on_SearchBar_QC_TextChanged(self):
-        self.FilterCommands_SearchBar(self.form.CommandsAvailable_QC)
+        self.FilterCommands_SearchBar(self.form.CommandsAvailable_QC, self.form.SearchBar_QC)
         return
 
     def on_AddCommand_QC_clicked(self):
@@ -834,7 +867,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
     # endregion
 
-    # region - Custom panels tab
+    # region - Combine panels tab
     def on_WorkbenchList_CP__activated(self, setCustomToolbarSelector_CP: bool = False, CurrentText=""):
         # Set the workbench name.
         WorkBenchName = ""
@@ -1189,6 +1222,63 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     # endregion
+
+    # region - Create new panels tab
+    def on_ListCategory_NP_TextChanged(self):
+        self.FilterCommands_ListCategory(self.form.CommandsAvailable_NP, self.form.ListCategory_NP)
+        return
+
+    def on_SearchBar_NP_TextChanged(self):
+        self.FilterCommands_SearchBar(self.form.CommandsAvailable_NP, self.form.SearchBar_NP)
+        return
+
+    def on_AddCommand_NP_clicked(self):
+        self.AddItem(
+            SourceWidget=self.form.CommandsAvailable_NP,
+            DestinationWidget=self.form.NewPanel_NP,
+        )
+
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
+
+        return
+
+    def on_RemoveCommand_NP_clicked(self):
+        self.AddItem(
+            SourceWidget=self.form.NewPanel_NP,
+            DestinationWidget=self.form.CommandsAvailable_NP,
+        )
+
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
+
+        return
+
+    def on_MoveUpCommand_NP_clicked(self):
+        self.MoveItem(ListWidget=self.form.NewPanel_NP, Up=True)
+
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
+
+        return
+
+    def on_MoveDownCommand_NP_clicked(self):
+        self.MoveItem(ListWidget=self.form.NewPanel_NP, Up=False)
+
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
+
+        return
+
+    # endregion---------------------------------------------------------------------------------------
+
+    # region - Create dropdown buttons tab
+
+    # endregion---------------------------------------------------------------------------------------
 
     # region - Ribbon design tab
     def on_tabBar_currentIndexChanged(self):
@@ -2855,7 +2945,7 @@ class LoadDialog(Design_ui.Ui_Form):
             Toolbars = Gui.getWorkbench(WorkBenchName).getToolbarItems()
             return Toolbars
 
-    def FilterCommands_SearchBar(self, ListWidget: QListWidget):
+    def FilterCommands_SearchBar(self, ListWidget: QListWidget, SearchBar: QLineEdit):
         ListWidget.clear()
 
         ShadowList = []  # List to add the commands and prevent duplicates
@@ -2869,7 +2959,7 @@ class LoadDialog(Design_ui.Ui_Form):
             IsInList = ShadowList.__contains__(f"{CommandName}, {workbenchName}")
 
             if IsInList is False and workbenchName != "Global":
-                if MenuNameTranslated.lower().startswith(self.form.SearchBar_QC.text().lower()):
+                if MenuNameTranslated.lower().startswith(SearchBar.text().lower()):
                     IsInlist = False
                     for i in range(ListWidget.count()):
                         CommandItem = ListWidget.item(i)
@@ -2878,7 +2968,6 @@ class LoadDialog(Design_ui.Ui_Form):
 
                     if IsInlist is False:
                         # Define a new ListWidgetItem.
-                        textAddition = ""
                         Icon = QIcon()
                         for item in self.List_CommandIcons:
                             if item[0] == ToolbarCommand[0]:
@@ -3072,6 +3161,8 @@ class LoadDialog(Design_ui.Ui_Form):
     #                     "icon": IconName,
     #                 }
     #     return
+
+    # endregion---------------------------------------------------------------------------------------
 
 
 def main():
