@@ -779,24 +779,24 @@ class LoadDialog(Design_ui.Ui_Form):
                     WorkBenchName=WorkBenchName,
                     Size=self.form.DefaultButtonSize_IS_Workbenches.currentText(),
                 )
-            except Exception as e:
-                raise (e)
-                # continue
+            except Exception:
+                continue
 
         self.LoadControls()
 
     def on_GenerateSetup_IS_Panels_clicked(self):
-        items = self.form.Panels_IS.selectedItems()
-        for i in range(len(items)):
-            ListWidgetItem: QListWidgetItem = items[i]
-            try:
-                Panel = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
-                self.CreateRibbonStructure_WB(
-                    PanelName=Panel,
-                    Size=self.form.DefaultButtonSize_IS_Panels.currentText(),
-                )
-            except Exception:
-                continue
+        # items = self.form.Panels_IS.selectedItems()
+        # for i in range(len(items)):
+        #     ListWidgetItem: QListWidgetItem = items[i]
+        #     try:
+        #         Panel = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
+        #         self.CreateRibbonStructure_WB(
+        #             PanelName=Panel,
+        #             Size=self.form.DefaultButtonSize_IS_Panels.currentText(),
+        #         )
+        #     except Exception:
+        #         continue
+        return
 
     # endregion---------------------------------------------------------------------------------------
 
