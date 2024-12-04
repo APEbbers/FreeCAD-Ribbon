@@ -215,7 +215,8 @@ class LoadDialog(Design_ui.Ui_Form):
                 Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
                 item = [IconItem[0], Icon]
                 self.List_CommandIcons.append(item)
-        except Exception:
+        except Exception as e:
+            print(e)
             pass
 
         # check if the list with workbenches is up-to-date
@@ -1705,9 +1706,9 @@ class LoadDialog(Design_ui.Ui_Form):
                         for item in self.List_CommandIcons:
                             if item[0] == CommandName:
                                 Icon = item[1]
-                            if Icon is None:
-                                IconName = item[1]
-                                Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
+                        if Icon is None or (Icon is not None and Icon.isNull()):
+                            IconName = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
+                            Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
 
                         # Set the default check states
                         checked_small = Qt.CheckState.Checked
@@ -1736,10 +1737,10 @@ class LoadDialog(Design_ui.Ui_Form):
                                         checked_small = Qt.CheckState.Unchecked
                                         checked_medium = Qt.CheckState.Unchecked
                                         checked_large = Qt.CheckState.Checked
-                                    Icon_Json_Name = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName][
-                                        "toolbars"
-                                    ][Toolbar]["commands"][CommandName]["icon"]
-                                    Icon = StandardFunctions.returnQiCons_Commands(CommandName, Icon_Json_Name)
+                                    # Icon_Json_Name = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName][
+                                    #     "toolbars"
+                                    # ][Toolbar]["commands"][CommandName]["icon"]
+                                    # Icon = StandardFunctions.returnQiCons_Commands(CommandName, Icon_Json_Name)
                                 except Exception:
                                     continue
 
