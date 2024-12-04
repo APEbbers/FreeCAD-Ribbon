@@ -772,12 +772,15 @@ class LoadDialog(Design_ui.Ui_Form):
         items = self.ListWidgetItems(self.form.WorkbenchList_IS)
         for i in range(len(items)):
             ListWidgetItem: QListWidgetItem = items[i]
-            WorkBenchName = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
-            self.CreateRibbonStructure(
-                WorkBenchName=WorkBenchName,
-                PanelName="all",
-                Size=self.form.DefaultButtonSize_IS_Workbenches.currentText(),
-            )
+            try:
+                WorkBenchName = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
+                self.CreateRibbonStructure(
+                    WorkBenchName=WorkBenchName,
+                    PanelName="all",
+                    Size=self.form.DefaultButtonSize_IS_Workbenches.currentText(),
+                )
+            except Exception:
+                continue
 
         self.LoadControls()
 
@@ -785,12 +788,15 @@ class LoadDialog(Design_ui.Ui_Form):
         items = self.ListWidgetItems(self.form.Panels_IS)
         for i in range(len(items)):
             ListWidgetItem: QListWidgetItem = items[i]
-            Panel = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
-            self.CreateRibbonStructure(
-                WorkBenchName="all",
-                PanelName=Panel,
-                Size=self.form.DefaultButtonSize_IS_Panels.currentText(),
-            )
+            try:
+                Panel = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
+                self.CreateRibbonStructure(
+                    WorkBenchName="all",
+                    PanelName=Panel,
+                    Size=self.form.DefaultButtonSize_IS_Panels.currentText(),
+                )
+            except Exception:
+                continue
 
     # endregion---------------------------------------------------------------------------------------
 
@@ -1684,16 +1690,24 @@ class LoadDialog(Design_ui.Ui_Form):
                     IsInList = ShadowList.__contains__(f"{CommandName}, {WorkBenchName}")
                     # if not, continue
                     if IsInList is False and CommandName is not None:
-                        # Get the untranslated text
-                        MenuName = CommandInfoCorrections(CommandName)["menuText"].replace("&", "").replace("...", "")
-                        if MenuName == "":
-                            continue
+                        MenuName = ""
+                        for CommandItem in self.List_Commands:
+                            if CommandItem[0] == CommandName:
+                                MenuName = CommandItem[2]
+                            if MenuName == "":
+                                MenuName = StandardFunctions.CommandInfoCorrections(CommandName)["menuText"]
+                            if MenuName == "":
+                                continue
 
-                        textAddition = ""
                         IconName = ""
                         # get the icon for this command if there isn't one, leave it None
-                        IconName = CommandInfoCorrections(CommandName)["pixmap"]
-                        Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
+                        Icon = QIcon()
+                        for item in self.List_CommandIcons:
+                            if item[0] == CommandName:
+                                Icon = item[1]
+                            if Icon is None:
+                                IconName = item[1]
+                                Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
 
                         # Set the default check states
                         checked_small = Qt.CheckState.Checked
@@ -1748,6 +1762,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         # Fill the table widget ----------------------------------------------------------------------------------
                         #
                         # Define a table widget item
+                        textAddition = ""
                         CommandWidgetItem = QTableWidgetItem()
                         CommandWidgetItem.setText((MenuNameTabelWidgetItem + textAddition).replace("&", ""))
                         CommandWidgetItem.setData(
