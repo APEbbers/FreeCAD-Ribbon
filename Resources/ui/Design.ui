@@ -329,27 +329,6 @@
                   <string>Set inital button size - Workbenches</string>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_27">
-                  <item row="1" column="0" colspan="3">
-                   <widget class="QListWidget" name="WorkbenchList_IS">
-                    <property name="minimumSize">
-                     <size>
-                      <width>300</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="selectionMode">
-                     <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
-                    </property>
-                    <property name="sortingEnabled">
-                     <bool>true</bool>
-                    </property>
-                    <item>
-                     <property name="text">
-                      <string>All</string>
-                     </property>
-                    </item>
-                   </widget>
-                  </item>
                   <item row="0" column="0" colspan="3">
                    <layout class="QGridLayout" name="gridLayout_31">
                     <item row="0" column="0">
@@ -372,7 +351,7 @@
                      </widget>
                     </item>
                     <item row="0" column="1">
-                     <widget class="QComboBox" name="DefaultButtonSize_IS">
+                     <widget class="QComboBox" name="DefaultButtonSize_IS_Workbenches">
                       <item>
                        <property name="text">
                         <string>Small</string>
@@ -412,6 +391,34 @@
                     </item>
                    </layout>
                   </item>
+                  <item row="1" column="0" colspan="3">
+                   <widget class="QListWidget" name="WorkbenchList_IS">
+                    <property name="minimumSize">
+                     <size>
+                      <width>300</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="selectionMode">
+                     <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+                    </property>
+                    <property name="sortingEnabled">
+                     <bool>true</bool>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>All</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="2" column="0" colspan="3">
+                   <widget class="QPushButton" name="GenerateSetup_IS_WorkBenches">
+                    <property name="text">
+                     <string>Generate</string>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
                 </widget>
                </item>
@@ -421,19 +428,6 @@
                   <string>Set inital button size - Panels</string>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_45">
-                  <item row="1" column="0">
-                   <widget class="QListWidget" name="Panels_IS">
-                    <property name="selectionMode">
-                     <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
-                    </property>
-                    <property name="selectionBehavior">
-                     <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
-                    </property>
-                    <property name="sortingEnabled">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
                   <item row="0" column="0">
                    <layout class="QGridLayout" name="gridLayout_44">
                     <item row="0" column="0">
@@ -456,7 +450,7 @@
                      </widget>
                     </item>
                     <item row="0" column="1">
-                     <widget class="QComboBox" name="DefaultButtonSize_IS_2">
+                     <widget class="QComboBox" name="DefaultButtonSize_IS_Panels">
                       <item>
                        <property name="text">
                         <string>Small</string>
@@ -496,14 +490,27 @@
                     </item>
                    </layout>
                   </item>
+                  <item row="1" column="0">
+                   <widget class="QListWidget" name="Panels_IS">
+                    <property name="selectionMode">
+                     <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+                    </property>
+                    <property name="selectionBehavior">
+                     <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+                    </property>
+                    <property name="sortingEnabled">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QPushButton" name="GenerateSetup_IS_Panels">
+                    <property name="text">
+                     <string>Generate</string>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
-                </widget>
-               </item>
-               <item row="2" column="1" colspan="2">
-                <widget class="QPushButton" name="GenerateSetup_IS">
-                 <property name="text">
-                  <string>Generate</string>
-                 </property>
                 </widget>
                </item>
               </layout>

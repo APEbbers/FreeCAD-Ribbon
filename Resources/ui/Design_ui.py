@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignmhVxXf.ui'
+## Form generated from reading UI file 'DesignqelqrE.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -196,58 +196,11 @@ class Ui_Form(object):
         self.gridLayout_32.setObjectName("gridLayout_32")
         self.gridLayout_30 = QGridLayout()
         self.gridLayout_30.setObjectName("gridLayout_30")
-        self.verticalSpacer_13 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_30.addItem(self.verticalSpacer_13, 1, 0, 1, 1)
-
-        self.groupBox_2 = QGroupBox(self.InItialSetup)
-        self.groupBox_2.setObjectName("groupBox_2")
-        self.gridLayout_45 = QGridLayout(self.groupBox_2)
-        self.gridLayout_45.setObjectName("gridLayout_45")
-        self.Panels_IS = QListWidget(self.groupBox_2)
-        self.Panels_IS.setObjectName("Panels_IS")
-        self.Panels_IS.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
-        self.Panels_IS.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
-        self.Panels_IS.setSortingEnabled(True)
-
-        self.gridLayout_45.addWidget(self.Panels_IS, 1, 0, 1, 1)
-
-        self.gridLayout_44 = QGridLayout()
-        self.gridLayout_44.setObjectName("gridLayout_44")
-        self.label_24 = QLabel(self.groupBox_2)
-        self.label_24.setObjectName("label_24")
+        self.ExportBox = QGroupBox(self.InItialSetup)
+        self.ExportBox.setObjectName("ExportBox")
         sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
         sizePolicy4.setHorizontalStretch(0)
         sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.label_24.sizePolicy().hasHeightForWidth())
-        self.label_24.setSizePolicy(sizePolicy4)
-        self.label_24.setMinimumSize(QSize(120, 0))
-
-        self.gridLayout_44.addWidget(self.label_24, 0, 0, 1, 1)
-
-        self.DefaultButtonSize_IS_2 = QComboBox(self.groupBox_2)
-        self.DefaultButtonSize_IS_2.addItem("")
-        self.DefaultButtonSize_IS_2.addItem("")
-        self.DefaultButtonSize_IS_2.addItem("")
-        self.DefaultButtonSize_IS_2.setObjectName("DefaultButtonSize_IS_2")
-
-        self.gridLayout_44.addWidget(self.DefaultButtonSize_IS_2, 0, 1, 1, 1)
-
-        self.label_25 = QLabel(self.groupBox_2)
-        self.label_25.setObjectName("label_25")
-
-        self.gridLayout_44.addWidget(self.label_25, 0, 3, 1, 1)
-
-        self.horizontalSpacer_9 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_44.addItem(self.horizontalSpacer_9, 0, 4, 1, 1)
-
-        self.gridLayout_45.addLayout(self.gridLayout_44, 0, 0, 1, 1)
-
-        self.gridLayout_30.addWidget(self.groupBox_2, 0, 3, 2, 1)
-
-        self.ExportBox = QGroupBox(self.InItialSetup)
-        self.ExportBox.setObjectName("ExportBox")
         sizePolicy4.setHeightForWidth(self.ExportBox.sizePolicy().hasHeightForWidth())
         self.ExportBox.setSizePolicy(sizePolicy4)
         self.ExportBox.setMinimumSize(QSize(200, 0))
@@ -275,23 +228,14 @@ class Ui_Form(object):
 
         self.gridLayout_30.addWidget(self.ExportBox, 0, 0, 1, 1)
 
-        self.horizontalSpacer_7 = QSpacerItem(40, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        self.verticalSpacer_13 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.gridLayout_30.addItem(self.horizontalSpacer_7, 0, 1, 1, 1)
+        self.gridLayout_30.addItem(self.verticalSpacer_13, 1, 0, 1, 1)
 
         self.SetupBox = QGroupBox(self.InItialSetup)
         self.SetupBox.setObjectName("SetupBox")
         self.gridLayout_27 = QGridLayout(self.SetupBox)
         self.gridLayout_27.setObjectName("gridLayout_27")
-        self.WorkbenchList_IS = QListWidget(self.SetupBox)
-        QListWidgetItem(self.WorkbenchList_IS)
-        self.WorkbenchList_IS.setObjectName("WorkbenchList_IS")
-        self.WorkbenchList_IS.setMinimumSize(QSize(300, 0))
-        self.WorkbenchList_IS.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
-        self.WorkbenchList_IS.setSortingEnabled(True)
-
-        self.gridLayout_27.addWidget(self.WorkbenchList_IS, 1, 0, 1, 3)
-
         self.gridLayout_31 = QGridLayout()
         self.gridLayout_31.setObjectName("gridLayout_31")
         self.label_15 = QLabel(self.SetupBox)
@@ -302,13 +246,13 @@ class Ui_Form(object):
 
         self.gridLayout_31.addWidget(self.label_15, 0, 0, 1, 1)
 
-        self.DefaultButtonSize_IS = QComboBox(self.SetupBox)
-        self.DefaultButtonSize_IS.addItem("")
-        self.DefaultButtonSize_IS.addItem("")
-        self.DefaultButtonSize_IS.addItem("")
-        self.DefaultButtonSize_IS.setObjectName("DefaultButtonSize_IS")
+        self.DefaultButtonSize_IS_Workbenches = QComboBox(self.SetupBox)
+        self.DefaultButtonSize_IS_Workbenches.addItem("")
+        self.DefaultButtonSize_IS_Workbenches.addItem("")
+        self.DefaultButtonSize_IS_Workbenches.addItem("")
+        self.DefaultButtonSize_IS_Workbenches.setObjectName("DefaultButtonSize_IS_Workbenches")
 
-        self.gridLayout_31.addWidget(self.DefaultButtonSize_IS, 0, 1, 1, 1)
+        self.gridLayout_31.addWidget(self.DefaultButtonSize_IS_Workbenches, 0, 1, 1, 1)
 
         self.label_16 = QLabel(self.SetupBox)
         self.label_16.setObjectName("label_16")
@@ -321,12 +265,69 @@ class Ui_Form(object):
 
         self.gridLayout_27.addLayout(self.gridLayout_31, 0, 0, 1, 3)
 
-        self.gridLayout_30.addWidget(self.SetupBox, 0, 2, 2, 1)
+        self.WorkbenchList_IS = QListWidget(self.SetupBox)
+        QListWidgetItem(self.WorkbenchList_IS)
+        self.WorkbenchList_IS.setObjectName("WorkbenchList_IS")
+        self.WorkbenchList_IS.setMinimumSize(QSize(300, 0))
+        self.WorkbenchList_IS.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
+        self.WorkbenchList_IS.setSortingEnabled(True)
 
-        self.GenerateSetup_IS = QPushButton(self.InItialSetup)
-        self.GenerateSetup_IS.setObjectName("GenerateSetup_IS")
+        self.gridLayout_27.addWidget(self.WorkbenchList_IS, 1, 0, 1, 3)
 
-        self.gridLayout_30.addWidget(self.GenerateSetup_IS, 2, 2, 1, 2)
+        self.GenerateSetup_IS_WorkBenches = QPushButton(self.SetupBox)
+        self.GenerateSetup_IS_WorkBenches.setObjectName("GenerateSetup_IS_WorkBenches")
+
+        self.gridLayout_27.addWidget(self.GenerateSetup_IS_WorkBenches, 2, 0, 1, 3)
+
+        self.gridLayout_30.addWidget(self.SetupBox, 0, 1, 2, 1)
+
+        self.groupBox_2 = QGroupBox(self.InItialSetup)
+        self.groupBox_2.setObjectName("groupBox_2")
+        self.gridLayout_45 = QGridLayout(self.groupBox_2)
+        self.gridLayout_45.setObjectName("gridLayout_45")
+        self.gridLayout_44 = QGridLayout()
+        self.gridLayout_44.setObjectName("gridLayout_44")
+        self.label_24 = QLabel(self.groupBox_2)
+        self.label_24.setObjectName("label_24")
+        sizePolicy4.setHeightForWidth(self.label_24.sizePolicy().hasHeightForWidth())
+        self.label_24.setSizePolicy(sizePolicy4)
+        self.label_24.setMinimumSize(QSize(120, 0))
+
+        self.gridLayout_44.addWidget(self.label_24, 0, 0, 1, 1)
+
+        self.DefaultButtonSize_IS_Panels = QComboBox(self.groupBox_2)
+        self.DefaultButtonSize_IS_Panels.addItem("")
+        self.DefaultButtonSize_IS_Panels.addItem("")
+        self.DefaultButtonSize_IS_Panels.addItem("")
+        self.DefaultButtonSize_IS_Panels.setObjectName("DefaultButtonSize_IS_Panels")
+
+        self.gridLayout_44.addWidget(self.DefaultButtonSize_IS_Panels, 0, 1, 1, 1)
+
+        self.label_25 = QLabel(self.groupBox_2)
+        self.label_25.setObjectName("label_25")
+
+        self.gridLayout_44.addWidget(self.label_25, 0, 3, 1, 1)
+
+        self.horizontalSpacer_9 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_44.addItem(self.horizontalSpacer_9, 0, 4, 1, 1)
+
+        self.gridLayout_45.addLayout(self.gridLayout_44, 0, 0, 1, 1)
+
+        self.Panels_IS = QListWidget(self.groupBox_2)
+        self.Panels_IS.setObjectName("Panels_IS")
+        self.Panels_IS.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
+        self.Panels_IS.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.Panels_IS.setSortingEnabled(True)
+
+        self.gridLayout_45.addWidget(self.Panels_IS, 1, 0, 1, 1)
+
+        self.GenerateSetup_IS_Panels = QPushButton(self.groupBox_2)
+        self.GenerateSetup_IS_Panels.setObjectName("GenerateSetup_IS_Panels")
+
+        self.gridLayout_45.addWidget(self.GenerateSetup_IS_Panels, 2, 0, 1, 1)
+
+        self.gridLayout_30.addWidget(self.groupBox_2, 0, 2, 2, 1)
 
         self.gridLayout_32.addLayout(self.gridLayout_30, 0, 0, 1, 1)
 
@@ -1271,7 +1272,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(6)
+        self.tabWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(Form)
 
@@ -1296,19 +1297,18 @@ class Ui_Form(object):
         self.UpdateJson.setText(QCoreApplication.translate("Form", "Update", None))
         self.ResetJson.setText(QCoreApplication.translate("Form", "Reset", None))
         self.RestoreJson.setText(QCoreApplication.translate("Form", "Restore", None))
-        self.groupBox_2.setTitle(QCoreApplication.translate("Form", "Set inital button size - Panels", None))
-        self.label_24.setText(QCoreApplication.translate("Form", "Set all button to: ", None))
-        self.DefaultButtonSize_IS_2.setItemText(0, QCoreApplication.translate("Form", "Small", None))
-        self.DefaultButtonSize_IS_2.setItemText(1, QCoreApplication.translate("Form", "Medium", None))
-        self.DefaultButtonSize_IS_2.setItemText(2, QCoreApplication.translate("Form", "Large", None))
-
-        self.label_25.setText(QCoreApplication.translate("Form", "for:", None))
         self.ExportBox.setTitle(QCoreApplication.translate("Form", "Import/Export", None))
         self.ImportDropDownButtons_IS.setText(QCoreApplication.translate("Form", "Import dropdown buttons", None))
         self.ImportCustomPanels_IS.setText(QCoreApplication.translate("Form", "Import custom panels", None))
         self.Importlayout_IS.setText(QCoreApplication.translate("Form", "Import layout", None))
         self.ExportLayout_IS.setText(QCoreApplication.translate("Form", "Export layout", None))
         self.SetupBox.setTitle(QCoreApplication.translate("Form", "Set inital button size - Workbenches", None))
+        self.label_15.setText(QCoreApplication.translate("Form", "Set all button to: ", None))
+        self.DefaultButtonSize_IS_Workbenches.setItemText(0, QCoreApplication.translate("Form", "Small", None))
+        self.DefaultButtonSize_IS_Workbenches.setItemText(1, QCoreApplication.translate("Form", "Medium", None))
+        self.DefaultButtonSize_IS_Workbenches.setItemText(2, QCoreApplication.translate("Form", "Large", None))
+
+        self.label_16.setText(QCoreApplication.translate("Form", "for:", None))
 
         __sortingEnabled = self.WorkbenchList_IS.isSortingEnabled()
         self.WorkbenchList_IS.setSortingEnabled(False)
@@ -1316,13 +1316,15 @@ class Ui_Form(object):
         ___qlistwidgetitem.setText(QCoreApplication.translate("Form", "All", None))
         self.WorkbenchList_IS.setSortingEnabled(__sortingEnabled)
 
-        self.label_15.setText(QCoreApplication.translate("Form", "Set all button to: ", None))
-        self.DefaultButtonSize_IS.setItemText(0, QCoreApplication.translate("Form", "Small", None))
-        self.DefaultButtonSize_IS.setItemText(1, QCoreApplication.translate("Form", "Medium", None))
-        self.DefaultButtonSize_IS.setItemText(2, QCoreApplication.translate("Form", "Large", None))
+        self.GenerateSetup_IS_WorkBenches.setText(QCoreApplication.translate("Form", "Generate", None))
+        self.groupBox_2.setTitle(QCoreApplication.translate("Form", "Set inital button size - Panels", None))
+        self.label_24.setText(QCoreApplication.translate("Form", "Set all button to: ", None))
+        self.DefaultButtonSize_IS_Panels.setItemText(0, QCoreApplication.translate("Form", "Small", None))
+        self.DefaultButtonSize_IS_Panels.setItemText(1, QCoreApplication.translate("Form", "Medium", None))
+        self.DefaultButtonSize_IS_Panels.setItemText(2, QCoreApplication.translate("Form", "Large", None))
 
-        self.label_16.setText(QCoreApplication.translate("Form", "for:", None))
-        self.GenerateSetup_IS.setText(QCoreApplication.translate("Form", "Generate", None))
+        self.label_25.setText(QCoreApplication.translate("Form", "for:", None))
+        self.GenerateSetup_IS_Panels.setText(QCoreApplication.translate("Form", "Generate", None))
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.InItialSetup), QCoreApplication.translate("Form", "Initial setup", None)
         )

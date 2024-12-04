@@ -276,7 +276,20 @@ class LoadDialog(Design_ui.Ui_Form):
         #
         #
         # --- Reload function -------------------
+        #
         self.form.LoadWB.connect(self.form.LoadWB, SIGNAL("clicked()"), self.on_ReloadWB_clicked)
+
+        # --- Initial setup functions -----------
+        #
+        # Connect the workbench generator
+        self.form.GenerateSetup_IS_WorkBenches.connect(
+            self.form.GenerateSetup_IS_WorkBenches, SIGNAL("clicked()"), self.on_GenerateSetup_IS_WorkBenches_clicked
+        )
+
+        # Connect the workbench generator
+        self.form.GenerateSetup_IS_Panels.connect(
+            self.form.GenerateSetup_IS_Panels, SIGNAL("clicked()"), self.on_GenerateSetup_IS_Panels_clicked
+        )
 
         # --- QuickCommandsTab ------------------
         #
@@ -755,6 +768,29 @@ class LoadDialog(Design_ui.Ui_Form):
     # Add all toolbars of the selected workbench to the toolbar list(QComboBox)
     #
     # region - Initial setup tab
+    def on_GenerateSetup_IS_WorkBenches_clicked(self):
+        items = self.ListWidgetItems(self.form.WorkbenchList_IS)
+        for i in range(len(items)):
+            ListWidgetItem: QListWidgetItem = items[i]
+            WorkBenchName = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
+            self.CreateRibbonStructure(
+                WorkBenchName=WorkBenchName,
+                PanelName="all",
+                Size=self.form.DefaultButtonSize_IS_Workbenches.currentText(),
+            )
+
+        self.LoadControls()
+
+    def on_GenerateSetup_IS_Panels_clicked(self):
+        items = self.ListWidgetItems(self.form.Panels_IS)
+        for i in range(len(items)):
+            ListWidgetItem: QListWidgetItem = items[i]
+            Panel = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
+            self.CreateRibbonStructure(
+                WorkBenchName="all",
+                PanelName=Panel,
+                Size=self.form.DefaultButtonSize_IS_Panels.currentText(),
+            )
 
     # endregion---------------------------------------------------------------------------------------
 
@@ -3158,6 +3194,42 @@ class LoadDialog(Design_ui.Ui_Form):
                             ListWidget_Commands.addItem(ListWidgetItem)
 
             ShadowList.append(f"{CommandName}, {workbenchName}")
+        return
+
+    def CreateRibbonStructure(self, WorkBenchName="all", PanelName="all", Size="small"):
+        RibbonStructure = {}
+
+        for WorkBenchItem in self.List_Workbenches:
+            if WorkBenchItem[0] == WorkBenchName or WorkBenchName == "all":
+                for ToolBar, Commands in WorkBenchItem[3].items():
+                    if (
+                        (ToolBar == PanelName and WorkBenchItem[0] == WorkBenchName)
+                        or (WorkBenchName == "all" and ToolBar == PanelName)
+                        or (WorkBenchName == "all" and PanelName == "all")
+                    ):
+                        for CommandName in Commands:
+                            StandardFunctions.add_keys_nested_dict(
+                                RibbonStructure,
+                                "workbenches",
+                                WorkBenchItem[0],
+                                "toolbars",
+                                ToolBar,
+                                "commands",
+                                CommandName,
+                            )
+                            MenuName = StandardFunctions.CommandInfoCorrections["ActionText"]
+                            IconName = StandardFunctions.CommandInfoCorrections["pixmap"]
+
+                            self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][
+                                CommandName
+                            ] = {
+                                "size": Size,
+                                "text": MenuName,
+                                "icon": IconName,
+                            }
+
+        self.Dict_RibbonCommandPanel.update(RibbonStructure)
+
         return
 
     # def UpdateRibbonStructure(self):
