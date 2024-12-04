@@ -777,7 +777,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 WorkBenchName = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
                 self.CreateRibbonStructure_WB(
                     WorkBenchName=WorkBenchName,
-                    Size=self.form.DefaultButtonSize_IS_Workbenches.currentText(),
+                    Size=self.form.DefaultButtonSize_IS_Workbenches.currentText().lower(),
                 )
             except Exception:
                 continue
