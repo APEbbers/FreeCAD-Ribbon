@@ -770,29 +770,28 @@ class LoadDialog(Design_ui.Ui_Form):
     #
     # region - Initial setup tab
     def on_GenerateSetup_IS_WorkBenches_clicked(self):
-        items = self.ListWidgetItems(self.form.WorkbenchList_IS)
+        items = self.form.WorkbenchList_IS.selectedItems()
         for i in range(len(items)):
             ListWidgetItem: QListWidgetItem = items[i]
             try:
                 WorkBenchName = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
-                self.CreateRibbonStructure(
+                self.CreateRibbonStructure_WB(
                     WorkBenchName=WorkBenchName,
-                    PanelName="all",
                     Size=self.form.DefaultButtonSize_IS_Workbenches.currentText(),
                 )
-            except Exception:
-                continue
+            except Exception as e:
+                raise (e)
+                # continue
 
         self.LoadControls()
 
     def on_GenerateSetup_IS_Panels_clicked(self):
-        items = self.ListWidgetItems(self.form.Panels_IS)
+        items = self.form.Panels_IS.selectedItems()
         for i in range(len(items)):
             ListWidgetItem: QListWidgetItem = items[i]
             try:
                 Panel = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
-                self.CreateRibbonStructure(
-                    WorkBenchName="all",
+                self.CreateRibbonStructure_WB(
                     PanelName=Panel,
                     Size=self.form.DefaultButtonSize_IS_Panels.currentText(),
                 )
@@ -3212,139 +3211,62 @@ class LoadDialog(Design_ui.Ui_Form):
             ShadowList.append(f"{CommandName}, {workbenchName}")
         return
 
-    def CreateRibbonStructure(self, WorkBenchName="all", PanelName="all", Size="small"):
-        RibbonStructure = {}
+    def CreateRibbonStructure_WB(self, WorkBenchName="all", Size="small"):
+        # Define a list for the workbenchName
+        ListWorkbenches = []
 
-        for WorkBenchItem in self.List_Workbenches:
-            if WorkBenchItem[0] == WorkBenchName or WorkBenchName == "all":
-                for ToolBar, Commands in WorkBenchItem[3].items():
-                    if (
-                        (ToolBar == PanelName and WorkBenchItem[0] == WorkBenchName)
-                        or (WorkBenchName == "all" and ToolBar == PanelName)
-                        or (WorkBenchName == "all" and PanelName == "all")
-                    ):
-                        for CommandName in Commands:
-                            StandardFunctions.add_keys_nested_dict(
-                                RibbonStructure,
-                                "workbenches",
-                                WorkBenchItem[0],
-                                "toolbars",
-                                ToolBar,
-                                "commands",
-                                CommandName,
-                            )
-                            MenuName = StandardFunctions.CommandInfoCorrections["ActionText"]
-                            IconName = StandardFunctions.CommandInfoCorrections["pixmap"]
+        # If WorkBenchName is "all", add all workbench names to the list.
+        # If not, add only the workbench name to the list.
+        if WorkBenchName == "all":
+            for WorkBenchItem in self.List_Workbenches:
+                ListWorkbenches.append(WorkBenchItem[0])
+        else:
+            ListWorkbenches = [WorkBenchName]
 
-                            self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][
-                                CommandName
-                            ] = {
-                                "size": Size,
-                                "text": MenuName,
-                                "icon": IconName,
-                            }
+        # Go trough the list
+        for WorkBenchItem in ListWorkbenches:
+            # Get the dict with the toolbars of this workbench
+            ToolbarItems = self.returnToolbarCommands(WorkBenchName)
+            # Get the custom toolbars from each installed workbench
+            CustomCommands = self.Dict_ReturnCustomToolbars(WorkBenchName)
+            ToolbarItems.update(CustomCommands)
 
-        self.Dict_RibbonCommandPanel.update(RibbonStructure)
+            # Go through the toolbars of the workbench
+            for key, value in list(ToolbarItems.items()):
+                for j in range(len(value)):
+                    CommandName = value[j]
+
+                    # Create a key if not present
+                    StandardFunctions.add_keys_nested_dict(
+                        self.Dict_RibbonCommandPanel,
+                        [
+                            "workbenches",
+                            WorkBenchItem,
+                            "toolbars",
+                            key,
+                            "commands",
+                            CommandName,
+                        ],
+                    )
+
+                    # Get the MenuName and IconName
+                    MenuName = ""
+                    IconName = ""
+                    for CommandItem in self.List_Commands:
+                        if CommandItem[0] == CommandName:
+                            IconName = CommandItem[1]
+                            MenuName = CommandItem[2]
+
+                    # Write the values
+                    self.Dict_RibbonCommandPanel["workbenches"][WorkBenchItem]["toolbars"][key]["commands"][
+                        CommandName
+                    ] = {
+                        "size": Size,
+                        "text": MenuName,
+                        "icon": IconName,
+                    }
 
         return
-
-    # def UpdateRibbonStructure(self):
-    #     for WorkbenchItem in self.List_Workbenches:
-    #         WorkBenchName = WorkbenchItem[0]
-    #         ToolbarItems = WorkbenchItem[3]
-
-    #         # Write the keys if they don't exist
-    #         StandardFunctions.add_keys_nested_dict(
-    #             self.Dict_RibbonCommandPanel, ["workbenches", WorkBenchName, "toolbars", "order"]
-    #         )
-    #         for Toolbar, Commands in ToolbarItems.items():
-    #             # Set the toolbar order
-    #             ToolbarOrder = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]
-    #             if type(ToolbarOrder) is not list:
-    #                 ToolbarOrder = []
-    #             OrderedToolbar = ""
-    #             IsInList = False
-    #             for OrderedToolbar in ToolbarOrder:
-    #                 if OrderedToolbar == Toolbar or Toolbar == "":
-    #                     IsInList = True
-    #             if IsInList is False:
-    #                 ToolbarOrder.append(Toolbar)
-    #             self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolbarOrder
-
-    #             # Write the keys if they don't exist
-    #             StandardFunctions.add_keys_nested_dict(
-    #                 self.Dict_RibbonCommandPanel,
-    #                 ["workbenches", WorkBenchName, "toolbars", Toolbar, "order"],
-    #             )
-    #             for CommandName in Commands:
-    #                 StandardFunctions.add_keys_nested_dict(
-    #                     self.Dict_RibbonCommandPanel,
-    #                     ["workbenches", WorkBenchName, "toolbars", Toolbar, "commands", CommandName],
-    #                 )
-
-    #                 # Set or update the command order
-    #                 CommandOrder = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
-    #                     "order"
-    #                 ]
-    #                 if type(CommandOrder) is not list:
-    #                     CommandOrder = []
-    #                 IsInList = False
-    #                 OrderedCommand = ""
-    #                 for OrderedCommand in CommandOrder:
-    #                     if (
-    #                         OrderedCommand == CommandName
-    #                         or OrderedCommand == ""
-    #                         or str(OrderedCommand).__contains__("separator")
-    #                     ):
-    #                         IsInList = True
-    #                 if IsInList is False:
-    #                     CommandOrder.append(StandardFunctions.CommandInfoCorrections(CommandName)["ActionText"])
-    #                 self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
-    #                     "order"
-    #                 ] = OrderedCommand
-
-    #                 # Get the size. If size is "", set size to "small"
-    #                 Size = ""
-    #                 try:
-    #                     Size = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
-    #                         "commands"
-    #                     ][CommandName]["size"]
-    #                 except Exception:
-    #                     pass
-    #                 if Size == "":
-    #                     Size = "small"
-
-    #                 # Get the Menutext. If empty, get the MenuText from FreeCAD
-    #                 MenuText = ""
-    #                 try:
-    #                     MenuText = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
-    #                         "commands"
-    #                     ][CommandName]["text"]
-    #                 except Exception:
-    #                     pass
-    #                 if MenuText == "":
-    #                     MenuText = StandardFunctions.CommandInfoCorrections(CommandName)["ActionText"]
-
-    #                 # Get the IconNmae. If empty, get the IconNmae from FreeCAD
-    #                 IconName = ""
-    #                 try:
-    #                     IconName = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
-    #                         "commands"
-    #                     ][CommandName]["icon"]
-    #                 except Exception:
-    #                     pass
-    #                 if IconName == "":
-    #                     IconName = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
-
-    #                 # Write the entries
-    #                 self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar]["commands"][
-    #                     CommandName
-    #                 ] = {
-    #                     "size": Size,
-    #                     "text": MenuText,
-    #                     "icon": IconName,
-    #                 }
-    #     return
 
     # endregion---------------------------------------------------------------------------------------
 
