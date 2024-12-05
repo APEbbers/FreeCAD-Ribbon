@@ -107,7 +107,8 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "Design.ui"))
 
         # Make sure that the dialog stays on top
-        self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+        self.form.raise_()
+        # self.form.setWindowFlags(Qt.WindowType.SubWindow)
         self.form.label_4.hide()
         self.form.MoveDownPanel_RD.hide()
         self.form.MoveUpPanel_RD.hide()
@@ -287,7 +288,7 @@ class LoadDialog(Design_ui.Ui_Form):
             self.form.GenerateSetup_IS_WorkBenches, SIGNAL("clicked()"), self.on_GenerateSetup_IS_WorkBenches_clicked
         )
 
-        # Connect the workbench generator
+        # Connect the panel generator
         self.form.GenerateSetup_IS_Panels.connect(
             self.form.GenerateSetup_IS_Panels, SIGNAL("clicked()"), self.on_GenerateSetup_IS_Panels_clicked
         )
@@ -771,31 +772,70 @@ class LoadDialog(Design_ui.Ui_Form):
     # region - Initial setup tab
     def on_GenerateSetup_IS_WorkBenches_clicked(self):
         items = self.form.WorkbenchList_IS.selectedItems()
+        WorkBenchName = ""
+        Size = self.form.DefaultButtonSize_IS_Workbenches.currentText().lower()
+        WorkBenchList = []
+
         for i in range(len(items)):
             ListWidgetItem: QListWidgetItem = items[i]
             try:
                 WorkBenchName = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
+                WorkBenchList.append(WorkBenchName)
                 self.CreateRibbonStructure_WB(
                     WorkBenchName=WorkBenchName,
-                    Size=self.form.DefaultButtonSize_IS_Workbenches.currentText().lower(),
+                    Size=Size,
                 )
-            except Exception:
-                continue
+            except Exception as e:
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    raise (e)
+                else:
+                    continue
 
         self.LoadControls()
 
+        message_1 = translate(
+            "FreeCAD Ribbon",
+            "Buttons are set to " + Size + translate("FreeCAD Ribbon", "for the following workbenches:\n"),
+        )
+        message_2 = ""
+        for WorkBenchName in WorkBenchList:
+            message_2 = message_2 + WorkBenchName + "\n" + "  "
+
+        StandardFunctions.Mbox(message_1 + message_2, "FreeCAD Ribbon", 0)
+
+        return
+
     def on_GenerateSetup_IS_Panels_clicked(self):
-        # items = self.form.Panels_IS.selectedItems()
-        # for i in range(len(items)):
-        #     ListWidgetItem: QListWidgetItem = items[i]
-        #     try:
-        #         Panel = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
-        #         self.CreateRibbonStructure_WB(
-        #             PanelName=Panel,
-        #             Size=self.form.DefaultButtonSize_IS_Panels.currentText(),
-        #         )
-        #     except Exception:
-        #         continue
+        items = self.form.Panels_IS.selectedItems()
+        Panel = ""
+        Size = self.form.DefaultButtonSize_IS_Panels.currentText().lower()
+        PanelList = []
+
+        for i in range(len(items)):
+            ListWidgetItem: QListWidgetItem = items[i]
+            try:
+                Panel = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
+                PanelList.append(Panel)
+                self.CreateRibbonStructure_Panels(
+                    PanelName=Panel,
+                    Size=Size,
+                )
+            except Exception as e:
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    raise (e)
+                else:
+                    continue
+
+        self.LoadControls()
+
+        message_1 = translate(
+            "FreeCAD Ribbon", "Buttons are set to " + Size + translate("FreeCAD Ribbon", "for the following panels:\n")
+        )
+        message_2 = ""
+        for Panel in PanelList:
+            message_2 = "\t" + message_2 + Panel + "\n" + "  "
+
+        StandardFunctions.Mbox(message_1 + message_2, "FreeCAD Ribbon", 0)
         return
 
     # endregion---------------------------------------------------------------------------------------
@@ -1423,7 +1463,7 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_tabBar_currentIndexChanged(self):
         # width_small: int = Parameters_Ribbon.Settings.GetIntSetting("TabWidth_small")
         # if width_small is None:
-        width_small = 850
+        width_small = 990
         # width_large: int = Parameters_Ribbon.Settings.GetIntSetting("TabWidth_large")
         # if width_large is None:
         width_large = 990
@@ -3265,6 +3305,65 @@ class LoadDialog(Design_ui.Ui_Form):
                         "text": MenuName,
                         "icon": IconName,
                     }
+
+        return
+
+    def CreateRibbonStructure_Panels(self, PanelName="all", Size="small"):
+        # Define a list for the workbenchName
+        ListPanels = []
+
+        # If WorkBenchName is "all", add all workbench names to the list.
+        # If not, add only the workbench name to the list.
+        if PanelName == "all":
+            for ToolbarItem in self.StringList_Toolbars:
+                ListPanels.append(ToolbarItem)
+        else:
+            for ToolbarItem in self.StringList_Toolbars:
+                if ToolbarItem[0] == PanelName:
+                    ListPanels.append(ToolbarItem)
+
+        # Go trough the list
+        for ToolbarItem in ListPanels:
+            for WorkBenchItem in self.List_Workbenches:
+                WorkBenchName = WorkBenchItem[0]
+
+                if ToolbarItem[2] == WorkBenchName:
+                    ToolbarItems = WorkBenchItem[3]
+                    # Go through the toolbars of the workbench
+                    for key, value in list(ToolbarItems.items()):
+                        if key == ToolbarItem[0]:
+                            for j in range(len(value)):
+                                CommandName = value[j]
+
+                                # Create a key if not present
+                                StandardFunctions.add_keys_nested_dict(
+                                    self.Dict_RibbonCommandPanel,
+                                    [
+                                        "workbenches",
+                                        WorkBenchName,
+                                        "toolbars",
+                                        key,
+                                        "commands",
+                                        CommandName,
+                                    ],
+                                )
+
+                                # Get the MenuName and IconName
+                                MenuName = ""
+                                IconName = ""
+                                for CommandItem in self.List_Commands:
+                                    if CommandItem[0] == CommandName:
+                                        IconName = CommandItem[1]
+                                        MenuName = CommandItem[2]
+
+                                # Write the values
+                                self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][key]["commands"][
+                                    CommandName
+                                ] = {
+                                    "size": Size,
+                                    "text": MenuName,
+                                    "icon": IconName,
+                                }
 
         return
 
