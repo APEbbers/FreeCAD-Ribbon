@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignTYYwLi.ui'
+## Form generated from reading UI file 'DesignflAPCE.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -63,7 +63,6 @@ from PySide.QtWidgets import (
     QTabWidget,
     QTableWidget,
     QTableWidgetItem,
-    QTextEdit,
     QToolButton,
     QVBoxLayout,
     QWidget,
@@ -734,6 +733,114 @@ class Ui_Form(object):
         self.gridLayout_21.addWidget(self.frame_3, 1, 0, 1, 1)
 
         self.tabWidget.addTab(self.CombineToolbars, "")
+        self.tab = QWidget()
+        self.tab.setObjectName("tab")
+        self.gridLayout_43 = QGridLayout(self.tab)
+        self.gridLayout_43.setObjectName("gridLayout_43")
+        self.label_23 = QLabel(self.tab)
+        self.label_23.setObjectName("label_23")
+
+        self.gridLayout_43.addWidget(self.label_23, 0, 0, 1, 1)
+
+        self.gridLayout_40 = QGridLayout()
+        self.gridLayout_40.setObjectName("gridLayout_40")
+        self.SearchBar_DDB = QLineEdit(self.tab)
+        self.SearchBar_DDB.setObjectName("SearchBar_DDB")
+
+        self.gridLayout_40.addWidget(self.SearchBar_DDB, 0, 0, 1, 1)
+
+        self.CommandsAvailable_DDB = QListWidget(self.tab)
+        __qlistwidgetitem8 = QListWidgetItem(self.CommandsAvailable_DDB)
+        __qlistwidgetitem8.setCheckState(Qt.Checked)
+        self.CommandsAvailable_DDB.setObjectName("CommandsAvailable_DDB")
+        self.CommandsAvailable_DDB.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
+        self.CommandsAvailable_DDB.setSortingEnabled(True)
+
+        self.gridLayout_40.addWidget(self.CommandsAvailable_DDB, 2, 0, 1, 1)
+
+        self.gridLayout_41 = QGridLayout()
+        self.gridLayout_41.setObjectName("gridLayout_41")
+        self.label_22 = QLabel(self.tab)
+        self.label_22.setObjectName("label_22")
+        sizePolicy4.setHeightForWidth(self.label_22.sizePolicy().hasHeightForWidth())
+        self.label_22.setSizePolicy(sizePolicy4)
+
+        self.gridLayout_41.addWidget(self.label_22, 0, 0, 1, 1)
+
+        self.ListCategory_DDB = QComboBox(self.tab)
+        self.ListCategory_DDB.setObjectName("ListCategory_DDB")
+        self.ListCategory_DDB.setInsertPolicy(QComboBox.InsertPolicy.InsertAlphabetically)
+
+        self.gridLayout_41.addWidget(self.ListCategory_DDB, 0, 1, 1, 1)
+
+        self.gridLayout_40.addLayout(self.gridLayout_41, 1, 0, 1, 1)
+
+        self.gridLayout_43.addLayout(self.gridLayout_40, 1, 0, 1, 1)
+
+        self.gridLayout_42 = QGridLayout()
+        self.gridLayout_42.setObjectName("gridLayout_42")
+        self.MoveDownCommand_DDB = QToolButton(self.tab)
+        self.MoveDownCommand_DDB.setObjectName("MoveDownCommand_DDB")
+        self.MoveDownCommand_DDB.setArrowType(Qt.ArrowType.DownArrow)
+
+        self.gridLayout_42.addWidget(self.MoveDownCommand_DDB, 5, 0, 1, 1)
+
+        self.verticalSpacer_19 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.gridLayout_42.addItem(self.verticalSpacer_19, 3, 0, 1, 1)
+
+        self.verticalSpacer_20 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_42.addItem(self.verticalSpacer_20, 0, 0, 1, 1)
+
+        self.verticalSpacer_21 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_42.addItem(self.verticalSpacer_21, 6, 0, 1, 1)
+
+        self.AddCommand_DDB = QToolButton(self.tab)
+        self.AddCommand_DDB.setObjectName("AddCommand_DDB")
+        self.AddCommand_DDB.setArrowType(Qt.ArrowType.RightArrow)
+
+        self.gridLayout_42.addWidget(self.AddCommand_DDB, 2, 0, 1, 1)
+
+        self.MoveUpCommand_DDB = QToolButton(self.tab)
+        self.MoveUpCommand_DDB.setObjectName("MoveUpCommand_DDB")
+        self.MoveUpCommand_DDB.setArrowType(Qt.ArrowType.UpArrow)
+
+        self.gridLayout_42.addWidget(self.MoveUpCommand_DDB, 4, 0, 1, 1)
+
+        self.RemoveCommand_DDB = QToolButton(self.tab)
+        self.RemoveCommand_DDB.setObjectName("RemoveCommand_DDB")
+        self.RemoveCommand_DDB.setArrowType(Qt.ArrowType.LeftArrow)
+
+        self.gridLayout_42.addWidget(self.RemoveCommand_DDB, 1, 0, 1, 1)
+
+        self.gridLayout_43.addLayout(self.gridLayout_42, 1, 1, 1, 1)
+
+        self.gridLayout_36 = QGridLayout()
+        self.gridLayout_36.setObjectName("gridLayout_36")
+        self.NewControl_DDB = QListWidget(self.tab)
+        __qlistwidgetitem9 = QListWidgetItem(self.NewControl_DDB)
+        __qlistwidgetitem9.setCheckState(Qt.Checked)
+        self.NewControl_DDB.setObjectName("NewControl_DDB")
+        self.NewControl_DDB.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.NewControl_DDB.setSortingEnabled(True)
+
+        self.gridLayout_36.addWidget(self.NewControl_DDB, 1, 0, 1, 1)
+
+        self.CreateControl_DDB = QPushButton(self.tab)
+        self.CreateControl_DDB.setObjectName("CreateControl_DDB")
+
+        self.gridLayout_36.addWidget(self.CreateControl_DDB, 2, 0, 1, 1)
+
+        self.ControlName_DDB = QLineEdit(self.tab)
+        self.ControlName_DDB.setObjectName("ControlName_DDB")
+
+        self.gridLayout_36.addWidget(self.ControlName_DDB, 0, 0, 1, 1)
+
+        self.gridLayout_43.addLayout(self.gridLayout_36, 1, 2, 1, 1)
+
+        self.tabWidget.addTab(self.tab, "")
         self.Createnewpanels = QWidget()
         self.Createnewpanels.setObjectName("Createnewpanels")
         self.gridLayout_35 = QGridLayout(self.Createnewpanels)
@@ -819,8 +926,8 @@ class Ui_Form(object):
         self.gridLayout_38.addWidget(self.SearchBar_NP, 0, 0, 1, 1)
 
         self.CommandsAvailable_NP = QListWidget(self.groupBox)
-        __qlistwidgetitem8 = QListWidgetItem(self.CommandsAvailable_NP)
-        __qlistwidgetitem8.setCheckState(Qt.Checked)
+        __qlistwidgetitem10 = QListWidgetItem(self.CommandsAvailable_NP)
+        __qlistwidgetitem10.setCheckState(Qt.Checked)
         self.CommandsAvailable_NP.setObjectName("CommandsAvailable_NP")
         self.CommandsAvailable_NP.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
         self.CommandsAvailable_NP.setSortingEnabled(True)
@@ -847,8 +954,8 @@ class Ui_Form(object):
         self.gridLayout_37.addLayout(self.gridLayout_38, 2, 0, 1, 1)
 
         self.NewPanel_NP = QListWidget(self.groupBox)
-        __qlistwidgetitem9 = QListWidgetItem(self.NewPanel_NP)
-        __qlistwidgetitem9.setCheckState(Qt.Checked)
+        __qlistwidgetitem11 = QListWidgetItem(self.NewPanel_NP)
+        __qlistwidgetitem11.setCheckState(Qt.Checked)
         self.NewPanel_NP.setObjectName("NewPanel_NP")
         self.NewPanel_NP.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.NewPanel_NP.setSortingEnabled(True)
@@ -903,121 +1010,6 @@ class Ui_Form(object):
         self.gridLayout_35.addWidget(self.groupBox, 1, 0, 1, 1)
 
         self.tabWidget.addTab(self.Createnewpanels, "")
-        self.tab = QWidget()
-        self.tab.setObjectName("tab")
-        self.gridLayout_43 = QGridLayout(self.tab)
-        self.gridLayout_43.setObjectName("gridLayout_43")
-        self.label_23 = QLabel(self.tab)
-        self.label_23.setObjectName("label_23")
-
-        self.gridLayout_43.addWidget(self.label_23, 0, 0, 1, 1)
-
-        self.gridLayout_40 = QGridLayout()
-        self.gridLayout_40.setObjectName("gridLayout_40")
-        self.SearchBar_DDB = QLineEdit(self.tab)
-        self.SearchBar_DDB.setObjectName("SearchBar_DDB")
-
-        self.gridLayout_40.addWidget(self.SearchBar_DDB, 0, 0, 1, 1)
-
-        self.CommandsAvailable_DDB = QListWidget(self.tab)
-        __qlistwidgetitem10 = QListWidgetItem(self.CommandsAvailable_DDB)
-        __qlistwidgetitem10.setCheckState(Qt.Checked)
-        self.CommandsAvailable_DDB.setObjectName("CommandsAvailable_DDB")
-        self.CommandsAvailable_DDB.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
-        self.CommandsAvailable_DDB.setSortingEnabled(True)
-
-        self.gridLayout_40.addWidget(self.CommandsAvailable_DDB, 2, 0, 1, 1)
-
-        self.gridLayout_41 = QGridLayout()
-        self.gridLayout_41.setObjectName("gridLayout_41")
-        self.label_22 = QLabel(self.tab)
-        self.label_22.setObjectName("label_22")
-        sizePolicy4.setHeightForWidth(self.label_22.sizePolicy().hasHeightForWidth())
-        self.label_22.setSizePolicy(sizePolicy4)
-
-        self.gridLayout_41.addWidget(self.label_22, 0, 0, 1, 1)
-
-        self.ListCategory_DDB = QComboBox(self.tab)
-        self.ListCategory_DDB.setObjectName("ListCategory_DDB")
-        self.ListCategory_DDB.setInsertPolicy(QComboBox.InsertPolicy.InsertAlphabetically)
-
-        self.gridLayout_41.addWidget(self.ListCategory_DDB, 0, 1, 1, 1)
-
-        self.gridLayout_40.addLayout(self.gridLayout_41, 1, 0, 1, 1)
-
-        self.gridLayout_43.addLayout(self.gridLayout_40, 1, 0, 1, 1)
-
-        self.gridLayout_42 = QGridLayout()
-        self.gridLayout_42.setObjectName("gridLayout_42")
-        self.MoveDownCommand_DDB = QToolButton(self.tab)
-        self.MoveDownCommand_DDB.setObjectName("MoveDownCommand_DDB")
-        self.MoveDownCommand_DDB.setArrowType(Qt.ArrowType.DownArrow)
-
-        self.gridLayout_42.addWidget(self.MoveDownCommand_DDB, 5, 0, 1, 1)
-
-        self.verticalSpacer_19 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.gridLayout_42.addItem(self.verticalSpacer_19, 3, 0, 1, 1)
-
-        self.verticalSpacer_20 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_42.addItem(self.verticalSpacer_20, 0, 0, 1, 1)
-
-        self.verticalSpacer_21 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_42.addItem(self.verticalSpacer_21, 6, 0, 1, 1)
-
-        self.AddCommand_DDB = QToolButton(self.tab)
-        self.AddCommand_DDB.setObjectName("AddCommand_DDB")
-        self.AddCommand_DDB.setArrowType(Qt.ArrowType.RightArrow)
-
-        self.gridLayout_42.addWidget(self.AddCommand_DDB, 2, 0, 1, 1)
-
-        self.MoveUpCommand_DDB = QToolButton(self.tab)
-        self.MoveUpCommand_DDB.setObjectName("MoveUpCommand_DDB")
-        self.MoveUpCommand_DDB.setArrowType(Qt.ArrowType.UpArrow)
-
-        self.gridLayout_42.addWidget(self.MoveUpCommand_DDB, 4, 0, 1, 1)
-
-        self.RemoveCommand_DDB = QToolButton(self.tab)
-        self.RemoveCommand_DDB.setObjectName("RemoveCommand_DDB")
-        self.RemoveCommand_DDB.setArrowType(Qt.ArrowType.LeftArrow)
-
-        self.gridLayout_42.addWidget(self.RemoveCommand_DDB, 1, 0, 1, 1)
-
-        self.gridLayout_43.addLayout(self.gridLayout_42, 1, 1, 1, 1)
-
-        self.gridLayout_36 = QGridLayout()
-        self.gridLayout_36.setObjectName("gridLayout_36")
-        self.NewControl_DDB = QListWidget(self.tab)
-        __qlistwidgetitem11 = QListWidgetItem(self.NewControl_DDB)
-        __qlistwidgetitem11.setCheckState(Qt.Checked)
-        self.NewControl_DDB.setObjectName("NewControl_DDB")
-        self.NewControl_DDB.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-        self.NewControl_DDB.setSortingEnabled(True)
-
-        self.gridLayout_36.addWidget(self.NewControl_DDB, 1, 0, 1, 1)
-
-        self.CreateControl_DDB = QPushButton(self.tab)
-        self.CreateControl_DDB.setObjectName("CreateControl_DDB")
-
-        self.gridLayout_36.addWidget(self.CreateControl_DDB, 2, 0, 1, 1)
-
-        self.ControlName_DDB = QTextEdit(self.tab)
-        self.ControlName_DDB.setObjectName("ControlName_DDB")
-        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        sizePolicy7.setHorizontalStretch(0)
-        sizePolicy7.setVerticalStretch(0)
-        sizePolicy7.setHeightForWidth(self.ControlName_DDB.sizePolicy().hasHeightForWidth())
-        self.ControlName_DDB.setSizePolicy(sizePolicy7)
-        self.ControlName_DDB.setMinimumSize(QSize(0, 30))
-        self.ControlName_DDB.setMaximumSize(QSize(16777215, 30))
-
-        self.gridLayout_36.addWidget(self.ControlName_DDB, 0, 0, 1, 1)
-
-        self.gridLayout_43.addLayout(self.gridLayout_36, 1, 2, 1, 1)
-
-        self.tabWidget.addTab(self.tab, "")
         self.RibbonDesign = QWidget()
         self.RibbonDesign.setObjectName("RibbonDesign")
         sizePolicy2.setHeightForWidth(self.RibbonDesign.sizePolicy().hasHeightForWidth())
@@ -1233,11 +1225,11 @@ class Ui_Form(object):
 
         self.WorkbenchList_RD = QComboBox(self.RibbonDesign)
         self.WorkbenchList_RD.setObjectName("WorkbenchList_RD")
-        sizePolicy8 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
-        sizePolicy8.setHorizontalStretch(0)
-        sizePolicy8.setVerticalStretch(0)
-        sizePolicy8.setHeightForWidth(self.WorkbenchList_RD.sizePolicy().hasHeightForWidth())
-        self.WorkbenchList_RD.setSizePolicy(sizePolicy8)
+        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
+        sizePolicy7.setHorizontalStretch(0)
+        sizePolicy7.setVerticalStretch(0)
+        sizePolicy7.setHeightForWidth(self.WorkbenchList_RD.sizePolicy().hasHeightForWidth())
+        self.WorkbenchList_RD.setSizePolicy(sizePolicy7)
         self.WorkbenchList_RD.setInsertPolicy(QComboBox.InsertPolicy.InsertAlphabetically)
 
         self.gridLayout_5.addWidget(self.WorkbenchList_RD, 0, 1, 1, 1)
@@ -1272,7 +1264,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(5)
 
         QMetaObject.connectSlotsByName(Form)
 
@@ -1442,6 +1434,36 @@ class Ui_Form(object):
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.CombineToolbars), QCoreApplication.translate("Form", "Combine panels", None)
         )
+        self.label_23.setText(QCoreApplication.translate("Form", "Select commands to add to the new panel", None))
+        self.SearchBar_DDB.setInputMask("")
+        self.SearchBar_DDB.setText("")
+        self.SearchBar_DDB.setPlaceholderText(QCoreApplication.translate("Form", "Type to search...", None))
+
+        __sortingEnabled9 = self.CommandsAvailable_DDB.isSortingEnabled()
+        self.CommandsAvailable_DDB.setSortingEnabled(False)
+        ___qlistwidgetitem9 = self.CommandsAvailable_DDB.item(0)
+        ___qlistwidgetitem9.setText(QCoreApplication.translate("Form", "New Item", None))
+        self.CommandsAvailable_DDB.setSortingEnabled(__sortingEnabled9)
+
+        self.label_22.setText(QCoreApplication.translate("Form", "Category:", None))
+        self.MoveDownCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
+        self.AddCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
+        self.MoveUpCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
+        self.RemoveCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
+
+        __sortingEnabled10 = self.NewControl_DDB.isSortingEnabled()
+        self.NewControl_DDB.setSortingEnabled(False)
+        ___qlistwidgetitem10 = self.NewControl_DDB.item(0)
+        ___qlistwidgetitem10.setText(QCoreApplication.translate("Form", "New Item", None))
+        self.NewControl_DDB.setSortingEnabled(__sortingEnabled10)
+
+        self.CreateControl_DDB.setText(QCoreApplication.translate("Form", "Create dropdown button", None))
+        self.ControlName_DDB.setInputMask("")
+        self.ControlName_DDB.setText("")
+        self.ControlName_DDB.setPlaceholderText(QCoreApplication.translate("Form", "Enter command name...", None))
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(self.tab), QCoreApplication.translate("Form", "Create dropdown buttons", None)
+        )
         self.PanelName_NP.setPlaceholderText(
             QCoreApplication.translate("Form", "Enter the name of your custom panel...", None)
         )
@@ -1455,19 +1477,19 @@ class Ui_Form(object):
         self.SearchBar_NP.setText("")
         self.SearchBar_NP.setPlaceholderText(QCoreApplication.translate("Form", "Type to search...", None))
 
-        __sortingEnabled9 = self.CommandsAvailable_NP.isSortingEnabled()
+        __sortingEnabled11 = self.CommandsAvailable_NP.isSortingEnabled()
         self.CommandsAvailable_NP.setSortingEnabled(False)
-        ___qlistwidgetitem9 = self.CommandsAvailable_NP.item(0)
-        ___qlistwidgetitem9.setText(QCoreApplication.translate("Form", "New Item", None))
-        self.CommandsAvailable_NP.setSortingEnabled(__sortingEnabled9)
+        ___qlistwidgetitem11 = self.CommandsAvailable_NP.item(0)
+        ___qlistwidgetitem11.setText(QCoreApplication.translate("Form", "New Item", None))
+        self.CommandsAvailable_NP.setSortingEnabled(__sortingEnabled11)
 
         self.label_21.setText(QCoreApplication.translate("Form", "Category:", None))
 
-        __sortingEnabled10 = self.NewPanel_NP.isSortingEnabled()
+        __sortingEnabled12 = self.NewPanel_NP.isSortingEnabled()
         self.NewPanel_NP.setSortingEnabled(False)
-        ___qlistwidgetitem10 = self.NewPanel_NP.item(0)
-        ___qlistwidgetitem10.setText(QCoreApplication.translate("Form", "New Item", None))
-        self.NewPanel_NP.setSortingEnabled(__sortingEnabled10)
+        ___qlistwidgetitem12 = self.NewPanel_NP.item(0)
+        ___qlistwidgetitem12.setText(QCoreApplication.translate("Form", "New Item", None))
+        self.NewPanel_NP.setSortingEnabled(__sortingEnabled12)
 
         self.label_20.setText(QCoreApplication.translate("Form", "Select commands to add to the new panel", None))
         self.MoveDownPanelCommand_NP.setText(QCoreApplication.translate("Form", "...", None))
@@ -1476,34 +1498,6 @@ class Ui_Form(object):
         self.RemovePanelCommand_NP.setText(QCoreApplication.translate("Form", "...", None))
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.Createnewpanels), QCoreApplication.translate("Form", "Create new panels", None)
-        )
-        self.label_23.setText(QCoreApplication.translate("Form", "Select commands to add to the new panel", None))
-        self.SearchBar_DDB.setInputMask("")
-        self.SearchBar_DDB.setText("")
-        self.SearchBar_DDB.setPlaceholderText(QCoreApplication.translate("Form", "Type to search...", None))
-
-        __sortingEnabled11 = self.CommandsAvailable_DDB.isSortingEnabled()
-        self.CommandsAvailable_DDB.setSortingEnabled(False)
-        ___qlistwidgetitem11 = self.CommandsAvailable_DDB.item(0)
-        ___qlistwidgetitem11.setText(QCoreApplication.translate("Form", "New Item", None))
-        self.CommandsAvailable_DDB.setSortingEnabled(__sortingEnabled11)
-
-        self.label_22.setText(QCoreApplication.translate("Form", "Category:", None))
-        self.MoveDownCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
-        self.AddCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
-        self.MoveUpCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
-        self.RemoveCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
-
-        __sortingEnabled12 = self.NewControl_DDB.isSortingEnabled()
-        self.NewControl_DDB.setSortingEnabled(False)
-        ___qlistwidgetitem12 = self.NewControl_DDB.item(0)
-        ___qlistwidgetitem12.setText(QCoreApplication.translate("Form", "New Item", None))
-        self.NewControl_DDB.setSortingEnabled(__sortingEnabled12)
-
-        self.CreateControl_DDB.setText(QCoreApplication.translate("Form", "Create dropdown button", None))
-        self.ControlName_DDB.setPlaceholderText(QCoreApplication.translate("Form", "Enter command name...", None))
-        self.tabWidget.setTabText(
-            self.tabWidget.indexOf(self.tab), QCoreApplication.translate("Form", "Create dropdown buttons", None)
         )
         self.label_12.setText(QCoreApplication.translate("Form", "Set the icon size", None))
         self.MoveUp_RibbonCommand_RD.setText(QCoreApplication.translate("Form", "...", None))

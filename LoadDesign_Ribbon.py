@@ -85,6 +85,7 @@ class LoadDialog(Design_ui.Ui_Form):
     List_IgnoredWorkbenches = []
     Dict_RibbonCommandPanel = {}
     Dict_CustomToolbars = {}
+    Dict_DropDownButtons = {}
 
     ShowText_Small = False
     ShowText_Medium = False
@@ -417,6 +418,11 @@ class LoadDialog(Design_ui.Ui_Form):
         #
         # --- CreateDropDownButtonTab ----------------
         #
+        # Connect the Create dropdown button
+        self.form.CreateControl_DDB.connect(
+            self.form.CreateControl_DDB, SIGNAL("clicked()"), self.on_CreateControl_DDB_clicked
+        )
+
         # Connect Add/Remove and move events to the buttons on the QuickAccess Tab
         self.form.AddCommand_DDB.connect(self.form.AddCommand_DDB, SIGNAL("clicked()"), self.on_AddCommand_DDB_clicked)
         self.form.RemoveCommand_DDB.connect(
@@ -1407,6 +1413,65 @@ class LoadDialog(Design_ui.Ui_Form):
     # endregion---------------------------------------------------------------------------------------
 
     # region - Create dropdown buttons tab
+    def on_CreateControl_DDB_clicked(self):
+        DropDownButton = []
+        DropDownName = ""
+        if self.form.ControlName_DDB.text() != "":
+            DropDownName = self.form.ControlName_DDB.text()
+        if self.form.ControlName_DDB.text() == "":
+            StandardFunctions.Mbox(
+                translate("FreeCAD Ribbon", "Enter a name for your dropdown button first!"),
+                "",
+                0,
+                "Warning",
+            )
+            return
+
+        # Add all commands for the new dropdown button in a list
+        MenuName = ""
+        for i in range(self.form.NewControl_DDB.count()):
+            ListWidgetItem = self.form.NewControl_DDB.item(i)
+            MenuName_ListWidgetItem = ListWidgetItem.text().replace("&", "").replace("...", "")
+
+            for CommandItem in self.List_Commands:
+                MenuName = CommandItem[2].replace("&", "").replace("...", "")
+                if MenuName == MenuName_ListWidgetItem:
+                    CommandName = CommandItem[0]
+                    DropDownButton.append(CommandName)
+
+            # Create or modify the dict that will be entered
+            StandardFunctions.add_keys_nested_dict(
+                self.Dict_DropDownButtons,
+                [
+                    "dropdownButtons",
+                    DropDownName,
+                ],
+            )
+
+            # Update the dict
+            self.Dict_DropDownButtons["dropdownButtons"][DropDownName] = DropDownButton
+
+            # Add the dropdown cbutton to the command list widgets
+            FirstCommand = DropDownButton[0]
+            Icon = QIcon()
+            for item in self.List_CommandIcons:
+                if item[0] == FirstCommand:
+                    Icon = item[1]
+            if Icon is None:
+                IconName = FirstCommand
+                Icon = StandardFunctions.returnQiCons_Commands(FirstCommand, IconName)
+            ListWidgetItem = QListWidgetItem()
+            ListWidgetItem.setText(DropDownName)
+            ListWidgetItem.setData(Qt.ItemDataRole.UserRole, DropDownName + "_DDB")
+            if Icon is not None:
+                ListWidgetItem.setIcon(Icon)
+
+            self.form.CommandsAvailable_QC.addItem(ListWidgetItem)
+            self.form.CommandsAvailable_NP.addItem(ListWidgetItem.clone())
+            self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
+
+        return
+
     def on_ListCategory_DDB_TextChanged(self):
         self.FilterCommands_ListCategory(self.form.CommandsAvailable_DDB, self.form.ListCategory_DDB)
         return
@@ -2582,6 +2647,12 @@ class LoadDialog(Design_ui.Ui_Form):
         except Exception:
             pass
 
+        # Get all the custom toolbars
+        try:
+            self.Dict_DropDownButtons["dropdownButtons"] = data["dropdownButtons"]
+        except Exception:
+            pass
+
         # Get the dict with the customized date for the buttons
         try:
             self.Dict_RibbonCommandPanel["workbenches"] = data["workbenches"]
@@ -2643,6 +2714,7 @@ class LoadDialog(Design_ui.Ui_Form):
         resultingDict["quickAccessCommands"] = List_QuickAccessCommands
         resultingDict["ignoredWorkbenches"] = List_IgnoredWorkbenches
         resultingDict.update(self.Dict_CustomToolbars)
+        resultingDict.update(self.Dict_DropDownButtons)
 
         # RibbonTabs
         # Get the Ribbon dictionary
