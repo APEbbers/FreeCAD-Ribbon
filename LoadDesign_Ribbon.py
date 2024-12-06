@@ -72,6 +72,8 @@ class LoadDialog(Design_ui.Ui_Form):
 
     ReproAdress: str = ""
 
+    DataFileVersion = "0.0"
+
     # Define list of the workbenches, toolbars and commands on class level
     List_Workbenches = []
     StringList_Toolbars = []
@@ -153,6 +155,34 @@ class LoadDialog(Design_ui.Ui_Form):
         with open(DataFile, "r") as file:
             Data.update(json.load(file))
         file.close()
+
+        DataUpdateNeeded = False
+        try:
+            FileVersion = Data["dataVersion"]
+            if FileVersion != self.DataFileVersion:
+                DataUpdateNeeded = True
+        except Exception:
+            DataUpdateNeeded = True
+        if DataUpdateNeeded is True:
+            Question = (
+                translate(
+                    "FreeCAD Ribbon",
+                    "The current data file is based on an older format!",
+                )
+                + "\n"
+                + translate(
+                    "FreeCAD Ribbon",
+                    "It is important to update the data!",
+                )
+                + "\n"
+                + translate("FreeCAD Ribbon", "Do you want to proceed?")
+                + "\n"
+                + translate("FreeCAD Ribbon", "This can take a while!")
+            )
+
+            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+            if Answer == "yes":
+                self.on_ReloadWB_clicked()
 
         # get the system language
         FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
@@ -264,7 +294,8 @@ class LoadDialog(Design_ui.Ui_Form):
                     [DropDownCommand, IconName, DropDownCommand.split("_")[0], "General", DropDownCommand.split("_")[0]]
                 )
         except Exception as e:
-            # print(e)
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                print(e)
             pass
 
         # endregion
@@ -771,6 +802,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Open de data file, load it as json and then close it again
         Data = {}
         # Update the data
+        Data["dataVersion"] = self.DataFileVersion
         Data["Language"] = FCLanguage
         Data["List_Workbenches"] = self.List_Workbenches
         Data["StringList_Toolbars"] = self.StringList_Toolbars
@@ -788,6 +820,9 @@ class LoadDialog(Design_ui.Ui_Form):
         self.ReadJson()
 
         self.LoadControls()
+
+        # Set the first tab active
+        self.form.tabWidget.setCurrentIndex(0)
         return
 
     # region - Control functions----------------------------------------------------------------------
@@ -2400,6 +2435,8 @@ class LoadDialog(Design_ui.Ui_Form):
         ListWidgetItem_IS = QListWidgetItem()
         ListWidgetItem_IS.setText("All")
         self.form.WorkbenchList_IS.addItem(ListWidgetItem_IS)
+
+        self.List_Workbenches.sort()
 
         for workbench in self.List_Workbenches:
             WorkbenchName = workbench[0]
