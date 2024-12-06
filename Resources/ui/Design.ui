@@ -246,7 +246,7 @@
             <enum>QTabWidget::TabShape::Rounded</enum>
            </property>
            <property name="currentIndex">
-            <number>6</number>
+            <number>5</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideNone</enum>
@@ -1515,28 +1515,20 @@
              </item>
              <item row="1" column="2">
               <layout class="QGridLayout" name="gridLayout_36">
-               <item row="2" column="0">
-                <widget class="QPushButton" name="CreateControl_DDB">
-                 <property name="text">
-                  <string>Create dropdown button</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLineEdit" name="ControlName_DDB">
-                 <property name="inputMask">
-                  <string/>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="placeholderText">
-                  <string>Enter command name...</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="0">
+               <item row="2" column="0" colspan="2">
                 <widget class="QListWidget" name="NewControl_DDB">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>300</width>
+                   <height>0</height>
+                  </size>
+                 </property>
                  <property name="selectionMode">
                   <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
                  </property>
@@ -1553,31 +1545,47 @@
                  </item>
                 </widget>
                </item>
-               <item row="3" column="0">
-                <layout class="QGridLayout" name="gridLayout_24">
-                 <item row="0" column="0">
-                  <widget class="QComboBox" name="CommandList_DDB"/>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QPushButton" name="RemoveControl_DDB">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="minimumSize">
-                    <size>
-                     <width>120</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="text">
-                    <string>Remove control</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
+               <item row="3" column="0" colspan="2">
+                <widget class="QPushButton" name="CreateControl_DDB">
+                 <property name="text">
+                  <string>Create/update dropdown button</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0" colspan="2">
+                <widget class="QLineEdit" name="ControlName_DDB">
+                 <property name="inputMask">
+                  <string/>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="placeholderText">
+                  <string>Enter command name...</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QPushButton" name="RemoveControl_DDB">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>120</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Remove control</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QComboBox" name="CommandList_DDB"/>
                </item>
               </layout>
              </item>

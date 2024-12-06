@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignAPIysL.ui'
+## Form generated from reading UI file 'DesignQbJean.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -819,31 +819,27 @@ class Ui_Form(object):
 
         self.gridLayout_36 = QGridLayout()
         self.gridLayout_36.setObjectName("gridLayout_36")
-        self.CreateControl_DDB = QPushButton(self.tab)
-        self.CreateControl_DDB.setObjectName("CreateControl_DDB")
-
-        self.gridLayout_36.addWidget(self.CreateControl_DDB, 2, 0, 1, 1)
-
-        self.ControlName_DDB = QLineEdit(self.tab)
-        self.ControlName_DDB.setObjectName("ControlName_DDB")
-
-        self.gridLayout_36.addWidget(self.ControlName_DDB, 0, 0, 1, 1)
-
         self.NewControl_DDB = QListWidget(self.tab)
         __qlistwidgetitem9 = QListWidgetItem(self.NewControl_DDB)
         __qlistwidgetitem9.setCheckState(Qt.Checked)
         self.NewControl_DDB.setObjectName("NewControl_DDB")
+        sizePolicy3.setHeightForWidth(self.NewControl_DDB.sizePolicy().hasHeightForWidth())
+        self.NewControl_DDB.setSizePolicy(sizePolicy3)
+        self.NewControl_DDB.setMinimumSize(QSize(300, 0))
         self.NewControl_DDB.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.NewControl_DDB.setSortingEnabled(True)
 
-        self.gridLayout_36.addWidget(self.NewControl_DDB, 1, 0, 1, 1)
+        self.gridLayout_36.addWidget(self.NewControl_DDB, 2, 0, 1, 2)
 
-        self.gridLayout_24 = QGridLayout()
-        self.gridLayout_24.setObjectName("gridLayout_24")
-        self.CommandList_DDB = QComboBox(self.tab)
-        self.CommandList_DDB.setObjectName("CommandList_DDB")
+        self.CreateControl_DDB = QPushButton(self.tab)
+        self.CreateControl_DDB.setObjectName("CreateControl_DDB")
 
-        self.gridLayout_24.addWidget(self.CommandList_DDB, 0, 0, 1, 1)
+        self.gridLayout_36.addWidget(self.CreateControl_DDB, 3, 0, 1, 2)
+
+        self.ControlName_DDB = QLineEdit(self.tab)
+        self.ControlName_DDB.setObjectName("ControlName_DDB")
+
+        self.gridLayout_36.addWidget(self.ControlName_DDB, 1, 0, 1, 2)
 
         self.RemoveControl_DDB = QPushButton(self.tab)
         self.RemoveControl_DDB.setObjectName("RemoveControl_DDB")
@@ -851,9 +847,12 @@ class Ui_Form(object):
         self.RemoveControl_DDB.setSizePolicy(sizePolicy1)
         self.RemoveControl_DDB.setMinimumSize(QSize(120, 0))
 
-        self.gridLayout_24.addWidget(self.RemoveControl_DDB, 0, 1, 1, 1)
+        self.gridLayout_36.addWidget(self.RemoveControl_DDB, 0, 1, 1, 1)
 
-        self.gridLayout_36.addLayout(self.gridLayout_24, 3, 0, 1, 1)
+        self.CommandList_DDB = QComboBox(self.tab)
+        self.CommandList_DDB.setObjectName("CommandList_DDB")
+
+        self.gridLayout_36.addWidget(self.CommandList_DDB, 0, 0, 1, 1)
 
         self.gridLayout_43.addLayout(self.gridLayout_36, 1, 2, 1, 1)
 
@@ -1281,7 +1280,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(6)
+        self.tabWidget.setCurrentIndex(5)
 
         QMetaObject.connectSlotsByName(Form)
 
@@ -1467,10 +1466,6 @@ class Ui_Form(object):
         self.RemoveCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
         self.MoveDownCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
         self.AddCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
-        self.CreateControl_DDB.setText(QCoreApplication.translate("Form", "Create dropdown button", None))
-        self.ControlName_DDB.setInputMask("")
-        self.ControlName_DDB.setText("")
-        self.ControlName_DDB.setPlaceholderText(QCoreApplication.translate("Form", "Enter command name...", None))
 
         __sortingEnabled10 = self.NewControl_DDB.isSortingEnabled()
         self.NewControl_DDB.setSortingEnabled(False)
@@ -1478,6 +1473,10 @@ class Ui_Form(object):
         ___qlistwidgetitem10.setText(QCoreApplication.translate("Form", "New Item", None))
         self.NewControl_DDB.setSortingEnabled(__sortingEnabled10)
 
+        self.CreateControl_DDB.setText(QCoreApplication.translate("Form", "Create/update dropdown button", None))
+        self.ControlName_DDB.setInputMask("")
+        self.ControlName_DDB.setText("")
+        self.ControlName_DDB.setPlaceholderText(QCoreApplication.translate("Form", "Enter command name...", None))
         self.RemoveControl_DDB.setText(QCoreApplication.translate("Form", "Remove control", None))
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tab), QCoreApplication.translate("Form", "Create dropdown buttons", None)

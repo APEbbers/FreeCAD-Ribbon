@@ -395,10 +395,10 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.WorkbenchList_CP.activated.connect(LoadWorkbenches_CP)
 
         # Connect custom toolbar selector on the Custom Panels Tab
-        def CustomToolbarSelect_CP():
+        def CommandList_DDB():
             self.on_CustomToolbarSelector_CP_activated()
 
-        self.form.CustomToolbarSelector_CP.activated.connect(CustomToolbarSelect_CP)
+        self.form.CustomToolbarSelector_CP.activated.connect(CommandList_DDB)
 
         self.form.RemovePanel_CP.connect(self.form.RemovePanel_CP, SIGNAL("clicked()"), self.on_RemovePanel_CP_clicked)
 
@@ -436,6 +436,17 @@ class LoadDialog(Design_ui.Ui_Form):
         # Connect the Create dropdown button
         self.form.CreateControl_DDB.connect(
             self.form.CreateControl_DDB, SIGNAL("clicked()"), self.on_CreateControl_DDB_clicked
+        )
+
+        # Connect  dropdownselector on the create dropdown button Tab
+        def CommandList_DDB():
+            self.on_CommandList_DDB_activated()
+
+        self.form.CommandList_DDB.activated.connect(CommandList_DDB)
+
+        # Connect the remove dropdown button
+        self.form.RemoveControl_DDB.connect(
+            self.form.RemoveControl_DDB, SIGNAL("clicked()"), self.on_RemoveControl_DDB_clicked
         )
 
         # Connect Add/Remove and move events to the buttons on the QuickAccess Tab
@@ -1470,7 +1481,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     IconName = CommandItem[1]
             Icon = StandardFunctions.returnQiCons_Commands(FirstCommand, IconName)
         ListWidgetItem = QListWidgetItem()
-        ListWidgetItem.setText(DropDownName.split("_")[0])
+        ListWidgetItem.setText(DropDownName)
         ListWidgetItem.setData(Qt.ItemDataRole.UserRole, DropDownName + Suffix)
         if Icon is not None:
             ListWidgetItem.setIcon(Icon)
@@ -1481,6 +1492,70 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Add the command to the list of commands
         self.List_Commands.append([DropDownName + Suffix, IconName, DropDownName, "General", DropDownName])
+
+        # Add the drop down buttoon to the combobox
+        self.form.CommandList_DDB.addItem(DropDownName)
+        # make sure that no command is selected by default
+        # to prevent accidental removal
+        self.form.CommandList_DDB.addItem("")
+        self.form.CommandList_DDB.setCurrentText("")
+
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
+
+        return
+
+    def on_CommandList_DDB_activated(self):
+        self.form.NewControl_DDB.clear()
+        DropDownControl = self.form.CommandList_DDB.currentText() + "_ddb"
+
+        # if the dropdown text is not empty, continue
+        if DropDownControl != "":
+            # Go through the dropdown buttons.
+            for DropDownButton, Commands in list(self.Dict_DropDownButtons["dropdownButtons"].items()):
+                # If the DropDownButton is equal to the text in the combobox, go through its commands
+                if DropDownButton == DropDownControl:
+                    for CommandName in Commands:
+                        for i in range(self.form.CommandsAvailable_DDB.count()):
+                            ListWidgetItem = self.form.CommandsAvailable_DDB.item(i)
+
+                            # If the command is equal to one in the commandsavaialble listwidget,
+                            # Move it to the listwidget for the dropdown button.
+                            if ListWidgetItem.data(Qt.ItemDataRole.UserRole) == CommandName:
+                                self.form.NewControl_DDB.addItem(ListWidgetItem.clone())
+                                self.form.CommandsAvailable_DDB.removeItemWidget(ListWidgetItem)
+                                # load the text as well
+                                self.form.ControlName_DDB.setText(DropDownControl.split("_")[0])
+
+        return
+
+    def on_RemoveControl_DDB_clicked(self):
+        DropDownControl = self.form.CommandList_DDB.currentText() + "_ddb"
+
+        if DropDownControl != "":
+            for DropDownButton, Commands in list(self.Dict_DropDownButtons["dropdownButtons"].items()):
+                if DropDownButton == DropDownControl:
+                    # remove the custom toolbar also from the workbenches dict
+                    del self.Dict_DropDownButtons["dropdownButtons"][DropDownButton]
+
+                    # remove the command from the quickaccess toolbar
+                    newList = []
+                    for item in self.List_QuickAccessCommands:
+                        if item != DropDownControl:
+                            newList.append(item)
+                    self.Dict_RibbonCommandPanel["quickAccessCommands"] = newList
+
+                    # remove the control from the combobox
+                    for i in range(self.form.CommandList_DDB.count()):
+                        if self.form.CommandList_DDB.itemText(i) + "_ddb" == DropDownControl:
+                            self.form.CommandList_DDB.removeItem(i)
+
+                    # TODO: remove control from new panels
+
+            # Enable the apply button
+            if self.CheckChanges() is True:
+                self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -3104,17 +3179,19 @@ class LoadDialog(Design_ui.Ui_Form):
 
         IsChanged = False
 
-        if data["ignoredToolbars"].sort() == self.List_IgnoredToolbars.sort():
+        if data["ignoredToolbars"].sort() != self.List_IgnoredToolbars.sort():
             IsChanged = True
-        if data["iconOnlyToolbars"].sort() == self.List_IconOnly_Toolbars.sort():
+        if data["iconOnlyToolbars"].sort() != self.List_IconOnly_Toolbars.sort():
             IsChanged = True
-        if data["quickAccessCommands"].sort() == self.List_QuickAccessCommands.sort():
+        if data["quickAccessCommands"].sort() != self.List_QuickAccessCommands.sort():
             IsChanged = True
-        if data["ignoredWorkbenches"].sort() == self.List_IgnoredWorkbenches.sort():
+        if data["ignoredWorkbenches"].sort() != self.List_IgnoredWorkbenches.sort():
             IsChanged = True
-        if data["customToolbars"] == self.Dict_CustomToolbars:
+        if data["customToolbars"] != self.Dict_CustomToolbars:
             IsChanged = True
-        if data["workbenches"] == self.Dict_RibbonCommandPanel:
+        if data["dropdownButtons"] != self.Dict_DropDownButtons:
+            IsChanged = True
+        if data["workbenches"] != self.Dict_RibbonCommandPanel:
             IsChanged = True
 
         JsonFile.close()
@@ -3205,6 +3282,23 @@ class LoadDialog(Design_ui.Ui_Form):
                         self.form.CustomToolbarSelector_CP.addItem(f"{CustomPanelTitle}, {WorkBenchTitle}")
         except Exception:
             pass
+
+        # -- Dropdown button tab -
+        try:
+            self.form.CommandList_DDB.addItem("")
+            for key, value in self.Dict_DropDownButtons["dropdownButtons"].items():
+                # Add the drop down buttoon to the combobox
+                self.form.CommandList_DDB.addItem(key.split("_")[0])
+            # make sure that no command is selected by default
+            # to prevent accidental removal
+            self.form.CommandList_DDB.setCurrentText("")
+        except Exception:
+            pass
+
+        # -- Form controls
+        self.form.UpdateJson.setDisabled(True)
+
+        return
 
     def returnWorkBenchToolbars(self, WorkBenchName):
         wbToolbars = []
