@@ -535,20 +535,31 @@ class ModernMenu(RibbonBar):
             width = 0
             button = QToolButton()
             try:
-                QuickAction = Gui.Command.get(commandName).getAction()
+                if commandName.endswith("_ddb") is False:
+                    QuickAction = Gui.Command.get(commandName).getAction()
 
-                if len(QuickAction) <= 1:
-                    button.setDefaultAction(QuickAction[0])
-                    width = self.QuickAccessButtonSize
-                    height = self.QuickAccessButtonSize
-                    button.setFixedSize(width, height)
-                elif len(QuickAction) > 1:
-                    button.addActions(QuickAction)
-                    button.setDefaultAction(QuickAction[0])
-                    width = (self.QuickAccessButtonSize) + self.QuickAccessButtonSize
-                    height = self.QuickAccessButtonSize
-                    button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                    button.setFixedSize(width, height)
+                    if len(QuickAction) <= 1:
+                        button.setDefaultAction(QuickAction[0])
+                        width = self.QuickAccessButtonSize
+                        height = self.QuickAccessButtonSize
+                        button.setFixedSize(width, height)
+                    elif len(QuickAction) > 1:
+                        button.addActions(QuickAction)
+                        button.setDefaultAction(QuickAction[0])
+                        width = (self.QuickAccessButtonSize) + self.QuickAccessButtonSize
+                        height = self.QuickAccessButtonSize
+                        button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                        button.setFixedSize(width, height)
+                if commandName.endswith("_ddb") is True:
+                    QuickAction = self.returnCustomDropDown(commandName)
+                    for action in QuickAction:
+                        button.addAction(action[0])
+                        button.setDefaultAction(action[0])
+                        width = (self.QuickAccessButtonSize) + self.QuickAccessButtonSize
+                        height = self.QuickAccessButtonSize
+                        button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                        button.setFixedSize(width, height)
+
                 button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
                 self.setQuickAccessButtonHeight(self.QuickAccessButtonSize)
 
@@ -556,7 +567,8 @@ class ModernMenu(RibbonBar):
                 self.addQuickAccessButton(button)
 
                 toolBarWidth = toolBarWidth + width
-            except Exception:
+            except Exception as e:
+                print(f"{commandName}, {e}")
                 continue
 
         self.quickAccessToolBar().show()
@@ -1682,6 +1694,20 @@ class ModernMenu(RibbonBar):
         OverlayParam_Bottom.SetBool("Transparent", Enable)
 
         return self.TransparancyToggled
+
+    def returnCustomDropDown(self, CommandName):
+        actionList = []
+
+        try:
+            for DropDownCommand, Commands in self.ribbonStructure["dropdownButtons"].items():
+                if CommandName == DropDownCommand:
+                    for CommandItem in Commands:
+                        Command = Gui.Command.get(CommandItem)
+                        action = Command.getAction()
+                        actionList.append(action)
+            return actionList
+        except Exception as e:
+            print(e)
 
 
 # region - alternative loading
