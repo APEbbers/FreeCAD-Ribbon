@@ -46,7 +46,7 @@
   <property name="autoFillBackground">
    <bool>false</bool>
   </property>
-  <layout class="QGridLayout" name="gridLayout_24">
+  <layout class="QGridLayout" name="gridLayout_46">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout_28">
      <item row="0" column="0">
@@ -1515,24 +1515,6 @@
              </item>
              <item row="1" column="2">
               <layout class="QGridLayout" name="gridLayout_36">
-               <item row="1" column="0">
-                <widget class="QListWidget" name="NewControl_DDB">
-                 <property name="selectionMode">
-                  <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
-                 </property>
-                 <property name="sortingEnabled">
-                  <bool>true</bool>
-                 </property>
-                 <item>
-                  <property name="text">
-                   <string>New Item</string>
-                  </property>
-                  <property name="checkState">
-                   <enum>Checked</enum>
-                  </property>
-                 </item>
-                </widget>
-               </item>
                <item row="2" column="0">
                 <widget class="QPushButton" name="CreateControl_DDB">
                  <property name="text">
@@ -1552,6 +1534,50 @@
                   <string>Enter command name...</string>
                  </property>
                 </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QListWidget" name="NewControl_DDB">
+                 <property name="selectionMode">
+                  <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+                 </property>
+                 <property name="sortingEnabled">
+                  <bool>true</bool>
+                 </property>
+                 <item>
+                  <property name="text">
+                   <string>New Item</string>
+                  </property>
+                  <property name="checkState">
+                   <enum>Checked</enum>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <layout class="QGridLayout" name="gridLayout_24">
+                 <item row="0" column="0">
+                  <widget class="QComboBox" name="CommandList_DDB"/>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QPushButton" name="RemoveControl_DDB">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>120</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Remove control</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
               </layout>
              </item>
