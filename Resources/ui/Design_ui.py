@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignVasMWN.ui'
+## Form generated from reading UI file 'DesignAPIysL.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -986,41 +986,41 @@ class Ui_Form(object):
 
         self.gridLayout_34 = QGridLayout()
         self.gridLayout_34.setObjectName("gridLayout_34")
+        self.verticalSpacer_14 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.gridLayout_34.addItem(self.verticalSpacer_14, 4, 0, 1, 1)
+
         self.MoveDownPanelCommand_NP = QToolButton(self.groupBox)
         self.MoveDownPanelCommand_NP.setObjectName("MoveDownPanelCommand_NP")
         self.MoveDownPanelCommand_NP.setArrowType(Qt.ArrowType.DownArrow)
 
-        self.gridLayout_34.addWidget(self.MoveDownPanelCommand_NP, 5, 0, 1, 1)
-
-        self.verticalSpacer_14 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.gridLayout_34.addItem(self.verticalSpacer_14, 3, 0, 1, 1)
-
-        self.verticalSpacer_17 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_34.addItem(self.verticalSpacer_17, 0, 0, 1, 1)
-
-        self.verticalSpacer_18 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_34.addItem(self.verticalSpacer_18, 6, 0, 1, 1)
-
-        self.AddPanelCommand_NP = QToolButton(self.groupBox)
-        self.AddPanelCommand_NP.setObjectName("AddPanelCommand_NP")
-        self.AddPanelCommand_NP.setArrowType(Qt.ArrowType.RightArrow)
-
-        self.gridLayout_34.addWidget(self.AddPanelCommand_NP, 2, 0, 1, 1)
+        self.gridLayout_34.addWidget(self.MoveDownPanelCommand_NP, 6, 0, 1, 1)
 
         self.MoveUpPanelCommand_NP = QToolButton(self.groupBox)
         self.MoveUpPanelCommand_NP.setObjectName("MoveUpPanelCommand_NP")
         self.MoveUpPanelCommand_NP.setArrowType(Qt.ArrowType.UpArrow)
 
-        self.gridLayout_34.addWidget(self.MoveUpPanelCommand_NP, 4, 0, 1, 1)
+        self.gridLayout_34.addWidget(self.MoveUpPanelCommand_NP, 5, 0, 1, 1)
+
+        self.verticalSpacer_18 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_34.addItem(self.verticalSpacer_18, 7, 0, 1, 1)
+
+        self.verticalSpacer_17 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_34.addItem(self.verticalSpacer_17, 0, 0, 1, 1)
 
         self.RemovePanelCommand_NP = QToolButton(self.groupBox)
         self.RemovePanelCommand_NP.setObjectName("RemovePanelCommand_NP")
         self.RemovePanelCommand_NP.setArrowType(Qt.ArrowType.LeftArrow)
 
-        self.gridLayout_34.addWidget(self.RemovePanelCommand_NP, 1, 0, 1, 1)
+        self.gridLayout_34.addWidget(self.RemovePanelCommand_NP, 2, 0, 1, 1)
+
+        self.AddPanelCommand_NP = QToolButton(self.groupBox)
+        self.AddPanelCommand_NP.setObjectName("AddPanelCommand_NP")
+        self.AddPanelCommand_NP.setArrowType(Qt.ArrowType.RightArrow)
+
+        self.gridLayout_34.addWidget(self.AddPanelCommand_NP, 1, 0, 1, 1)
 
         self.gridLayout_37.addLayout(self.gridLayout_34, 2, 1, 1, 1)
 
@@ -1271,7 +1271,7 @@ class Ui_Form(object):
 
         self.tabWidget.addTab(self.RibbonDesign, "")
 
-        self.gridLayout_26.addWidget(self.tabWidget, 1, 0, 1, 1)
+        self.gridLayout_26.addWidget(self.tabWidget, 0, 0, 1, 1)
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
@@ -1281,7 +1281,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(5)
+        self.tabWidget.setCurrentIndex(6)
 
         QMetaObject.connectSlotsByName(Form)
 
@@ -1511,9 +1511,9 @@ class Ui_Form(object):
 
         self.label_20.setText(QCoreApplication.translate("Form", "Select commands to add to the new panel", None))
         self.MoveDownPanelCommand_NP.setText(QCoreApplication.translate("Form", "...", None))
-        self.AddPanelCommand_NP.setText(QCoreApplication.translate("Form", "...", None))
         self.MoveUpPanelCommand_NP.setText(QCoreApplication.translate("Form", "...", None))
         self.RemovePanelCommand_NP.setText(QCoreApplication.translate("Form", "...", None))
+        self.AddPanelCommand_NP.setText(QCoreApplication.translate("Form", "...", None))
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.Createnewpanels), QCoreApplication.translate("Form", "Create new panels", None)
         )

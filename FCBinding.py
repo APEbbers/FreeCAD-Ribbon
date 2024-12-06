@@ -532,43 +532,68 @@ class ModernMenu(RibbonBar):
         toolBarWidth = ((self.QuickAccessButtonSize * self.sizeFactor) * i) + self.ApplicationButtonSize
         for commandName in self.ribbonStructure["quickAccessCommands"]:
             i = i + 1
+            # Define a width
             width = 0
+            # Define a button
             button = QToolButton()
+            # set the default padding to zero
+            padding = 0
+
             try:
+                # If it is a standard freecad button, set the command accordingly
                 if commandName.endswith("_ddb") is False:
                     QuickAction = Gui.Command.get(commandName).getAction()
 
-                    if len(QuickAction) <= 1:
+                    if len(QuickAction) == 1:
                         button.setDefaultAction(QuickAction[0])
                         width = self.QuickAccessButtonSize
                         height = self.QuickAccessButtonSize
                         button.setFixedSize(width, height)
                     elif len(QuickAction) > 1:
+                        # set the padding for a dropdown button
+                        padding = self.PaddingRight
+
                         button.addActions(QuickAction)
                         button.setDefaultAction(QuickAction[0])
-                        width = (self.QuickAccessButtonSize) + self.QuickAccessButtonSize
+                        # Set the width and height
+                        width = self.QuickAccessButtonSize + padding
                         height = self.QuickAccessButtonSize
-                        button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                         button.setFixedSize(width, height)
+                        # Set the PopupMode
+                        button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+
+                # If it is a custom dropdown, add the actions one by one.
                 if commandName.endswith("_ddb") is True:
+                    # set the padding for a dropdown button
+                    padding = self.PaddingRight
+                    # Get the actions and add them one by one
                     QuickAction = self.returnCustomDropDown(commandName)
                     for action in QuickAction:
                         button.addAction(action[0])
-                        button.setDefaultAction(action[0])
-                        width = (self.QuickAccessButtonSize) + self.QuickAccessButtonSize
-                        height = self.QuickAccessButtonSize
-                        button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                        button.setFixedSize(width, height)
+                    # Set the default action
+                    button.setDefaultAction(action[0])
+                    # Set the width and height
+                    width = self.QuickAccessButtonSize + padding
+                    height = self.QuickAccessButtonSize
+                    button.setFixedSize(width, height)
+                    # Set the PopupMode
+                    button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
 
-                button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
+                # Set the stylesheet
+                button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
+                # Set the height
                 self.setQuickAccessButtonHeight(self.QuickAccessButtonSize)
 
                 # Add the button to the quickaccess toolbar
-                self.addQuickAccessButton(button)
+                if len(button.actions()) > 0:
+                    self.addQuickAccessButton(button)
+                else:
+                    print(f"{commandName} did not contain any actions!")
 
                 toolBarWidth = toolBarWidth + width
             except Exception as e:
                 print(f"{commandName}, {e}")
+                # raise (e)
                 continue
 
         self.quickAccessToolBar().show()
@@ -1029,14 +1054,14 @@ class ModernMenu(RibbonBar):
 
                     # XXX check that positionsList consists of strings only
                     def sortButtons(button: QToolButton):
-                        Text = button.text().replace("...", "")
+                        Text = button.text()
 
                         try:
                             action = None
                             if len(button.actions()) > 0:
                                 action = button.actions()[0]
                             if action is not None:
-                                Text = CommandInfoCorrections(action.data())["menuText"].replace("...", "")
+                                Text = CommandInfoCorrections(action.data())["menuText"]
                         except Exception:
                             pass
 
@@ -1163,7 +1188,7 @@ class ModernMenu(RibbonBar):
                             # # There is a bug in freecad with the comp-sketch menu hase the wrong text
                             # if (
                             #     action.data() == "PartDesign_CompSketches"
-                            #     and action.text().replace("...", "") == "Create datum"
+                            #     and action.text() == "Create datum"
                             # ):
                             #     text = "Create sketch"
 
@@ -1187,7 +1212,7 @@ class ModernMenu(RibbonBar):
                                 # if so use the alternative, otherwise use original
                                 for CommandName in Gui.listCommands():
                                     Command = Gui.Command.get(CommandName)
-                                    MenuName = CommandInfoCorrections(CommandName)["ActionText"].replace("...", "")
+                                    MenuName = CommandInfoCorrections(CommandName)["ActionText"]
 
                                     if (
                                         CommandName

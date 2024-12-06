@@ -548,7 +548,7 @@ def CommandInfoCorrections(CommandName):
             CommandInfo = Command.getInfo()
 
             if CommandName == "PartDesign_CompSketches":
-                CommandInfo["menuText"] = "Create sketch"
+                CommandInfo["menuText"] = "Create sketch..."
                 CommandInfo["toolTip"] = "Create or edit a sketch"
                 CommandInfo["whatsThis"] = "PartDesign_CompSketches"
                 CommandInfo["statusTip"] = "Create or edit a sketch"

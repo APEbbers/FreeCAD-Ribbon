@@ -260,8 +260,11 @@ class LoadDialog(Design_ui.Ui_Form):
                 for CommandItem in self.List_Commands:
                     if CommandItem[0] == CommandName:
                         IconName = CommandItem[1]
-            self.List_Commands.append([DropDownCommand, IconName, DropDownCommand, "General", DropDownCommand])
-        except Exception:
+                self.List_Commands.append(
+                    [DropDownCommand, IconName, DropDownCommand.split("_")[0], "General", DropDownCommand.split("_")[0]]
+                )
+        except Exception as e:
+            # print(e)
             pass
 
         # endregion
@@ -671,10 +674,8 @@ class LoadDialog(Design_ui.Ui_Form):
                     IconName = CommandInfoCorrections(CommandName[0])["pixmap"]
                 else:
                     IconName = ""
-                MenuName = CommandInfoCorrections(CommandName[0])["menuText"].replace("&", "").replace("...", "")
-                MenuNameTranslated = (
-                    CommandInfoCorrections(CommandName[0])["ActionText"].replace("&", "").replace("...", "")
-                )
+                MenuName = CommandInfoCorrections(CommandName[0])["menuText"].replace("&", "")
+                MenuNameTranslated = CommandInfoCorrections(CommandName[0])["ActionText"].replace("&", "")
                 self.List_Commands.append([CommandName[0], IconName, MenuName, WorkBenchName, MenuNameTranslated])
         # add also custom commands
         Toolbars = self.List_ReturnCustomToolbars()
@@ -689,10 +690,8 @@ class LoadDialog(Design_ui.Ui_Form):
                             IconName = CommandInfoCorrections(CustomCommand)["pixmap"]
                         else:
                             IconName = ""
-                        MenuName = CommandInfoCorrections(CustomCommand)["menuText"].replace("&", "").replace("...", "")
-                        MenuNameTranslated = (
-                            CommandInfoCorrections(CommandName[0])["ActionText"].replace("&", "").replace("...", "")
-                        )
+                        MenuName = CommandInfoCorrections(CustomCommand)["menuText"].replace("&", "")
+                        MenuNameTranslated = CommandInfoCorrections(CommandName[0])["ActionText"].replace("&", "")
                         self.List_Commands.append(
                             [CustomCommand, IconName, MenuName, WorkBenchName, MenuNameTranslated]
                         )
@@ -704,10 +703,8 @@ class LoadDialog(Design_ui.Ui_Form):
                     IconName = CommandInfoCorrections(CustomCommand)["pixmap"]
                 else:
                     IconName = None
-                MenuName = CommandInfoCorrections(CustomCommand)["menuText"].replace("&", "").replace("...", "")
-                MenuNameTranslated = (
-                    CommandInfoCorrections(CommandName[0])["ActionText"].replace("&", "").replace("...", "")
-                )
+                MenuName = CommandInfoCorrections(CustomCommand)["menuText"].replace("&", "")
+                MenuNameTranslated = CommandInfoCorrections(CommandName[0])["ActionText"].replace("&", "")
                 self.List_Commands.append([CustomCommand, IconName, MenuName, Toolbar[1], MenuNameTranslated])
         if int(App.Version()[0]) > 0:
             command = Gui.Command.get("Std_Measure")
@@ -715,10 +712,8 @@ class LoadDialog(Design_ui.Ui_Form):
                 IconName = CommandInfoCorrections("Std_Measure")["pixmap"]
             else:
                 IconName = ""
-            MenuName = CommandInfoCorrections("Std_Measure")["menuText"].replace("&", "").replace("...", "")
-            MenuNameTranslated = (
-                CommandInfoCorrections(CommandName[0])["ActionText"].replace("&", "").replace("...", "")
-            )
+            MenuName = CommandInfoCorrections("Std_Measure")["menuText"].replace("&", "")
+            MenuNameTranslated = CommandInfoCorrections(CommandName[0])["ActionText"].replace("&", "")
             self.List_Commands.append(["Std_Measure", IconName, MenuName, "General", MenuNameTranslated])
 
         # re-activate the workbench that was stored.
@@ -1188,11 +1183,11 @@ class LoadDialog(Design_ui.Ui_Form):
                 MenuName = ""
                 for i in range(self.form.PanelSelected_CP.count()):
                     ListWidgetItem = self.form.PanelSelected_CP.item(i)
-                    MenuName_ListWidgetItem = ListWidgetItem.text().replace("&", "").replace("...", "")
+                    MenuName_ListWidgetItem = ListWidgetItem.text().replace("&", "")
                     # if the translated menuname from the ListWidgetItem is equel to the MenuName from the command
                     # Add the commandName to the list commandslist for this custom panel
                     for CommandItem in self.List_Commands:
-                        MenuName = CommandItem[2].replace("&", "").replace("...", "")
+                        MenuName = CommandItem[2].replace("&", "")
                         if MenuName == MenuName_ListWidgetItem:
                             CommandName = CommandItem[0]
                             Commands.append(CommandName)
@@ -1288,7 +1283,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                 if IsInList is False:
                                     if CommandItem[2] == key and CommandItem[3] == WorkBenchName:
                                         # Command = Gui.Command.get(CommandItem[0])
-                                        MenuName = CommandItem[2].replace("&", "").replace("...", "")
+                                        MenuName = CommandItem[2].replace("&", "")
 
                                         # Define a new ListWidgetItem.
                                         ListWidgetItem = QListWidgetItem()
@@ -1701,7 +1696,7 @@ class LoadDialog(Design_ui.Ui_Form):
             CustomCommands = self.Dict_ReturnCustomToolbars_Global()
             Toolbaritems.update(CustomCommands)
             # Get the commands from
-            CustomPanelCommands = self.Dict_AddCustomPanel_CPCommandsToWorkbench(WorkBenchName)
+            CustomPanelCommands = self.Dict_AddCustomPanel_CP(WorkBenchName)
             Toolbaritems.update(CustomPanelCommands)
 
             # Get the commands in this toolbar
@@ -1740,7 +1735,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 try:
                     try:
                         if item.lower().__contains__("separator") is False:
-                            MenuName = CommandInfoCorrections(item)["menuText"].replace("&", "").replace("...", "")
+                            MenuName = CommandInfoCorrections(item)["menuText"].replace("&", "")
                             item = MenuName
                     except Exception:
                         pass
@@ -1889,7 +1884,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         CommandWidgetItem.setText((MenuNameTabelWidgetItem + textAddition).replace("&", ""))
                         CommandWidgetItem.setData(
                             Qt.ItemDataRole.UserRole,
-                            MenuName.replace("&", "").replace("...", ""),
+                            MenuName.replace("&", ""),
                         )
                         CommandWidgetItem.setFlags(CommandWidgetItem.flags() | Qt.ItemFlag.ItemIsEditable)
                         if Icon is not None:
@@ -2490,13 +2485,13 @@ class LoadDialog(Design_ui.Ui_Form):
                             for DropDownCommand, Commands in self.Dict_DropDownButtons["dropdownButtons"].items():
                                 if Commands[0] == item[0]:
                                     Icon = item[1]
-                    if Icon is None:
-                        IconName = CommandItem[1]
-                        if str(CommandItem[0]).endswith("_ddb"):
-                            for DropDownCommand, Commands in self.Dict_DropDownButtons["dropdownButtons"].items():
-                                if Commands[0] == CommandItem[0]:
-                                    IconName = CommandItem[1]
-                        Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
+                        if Icon is None:
+                            IconName = CommandItem[1]
+                            if str(CommandItem[0]).endswith("_ddb"):
+                                for DropDownCommand, Commands in self.Dict_DropDownButtons["dropdownButtons"].items():
+                                    if Commands[0] == CommandItem[0]:
+                                        IconName = CommandItem[1]
+                            Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
 
                     ListWidgetItem = QListWidgetItem()
                     ListWidgetItem.setText((MenuNameTranslated + textAddition).replace("&", ""))
@@ -2511,7 +2506,7 @@ class LoadDialog(Design_ui.Ui_Form):
                             IsInlist = False
                             for i in range(self.form.CommandsAvailable_QC.count()):
                                 Command = self.form.CommandsAvailable_QC.item(i)
-                                if Command.text() == MenuNameTranslated:
+                                if Command.data(Qt.ItemDataRole.UserRole) == CommandName:
                                     IsInlist = True
 
                             if IsInlist is False:
@@ -2520,7 +2515,7 @@ class LoadDialog(Design_ui.Ui_Form):
                             IsInlist = False
                             for i in range(self.form.CommandsSelected_QC.count()):
                                 Command = self.form.CommandsSelected_QC.item(i)
-                                if Command.text() == MenuNameTranslated:
+                                if Command.data(Qt.ItemDataRole.UserRole) == CommandName:
                                     IsInlist = True
 
                             if IsInlist is False:
@@ -2573,7 +2568,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         IconName = ""
                         # # Get the command text from the first cell in the row
                         # MenuNameCommandTable_RDItem = (
-                        #     self.form.CommandTable_RD.item(row, 0).text().replace("&", "").replace("...", "")
+                        #     self.form.CommandTable_RD.item(row, 0).text().replace("&", "")
                         # )
                         # Get the menu name from the stored data
                         MenuName = self.form.CommandTable_RD.item(row, 0).data(Qt.ItemDataRole.UserRole)
@@ -2720,7 +2715,10 @@ class LoadDialog(Design_ui.Ui_Form):
         SelectedCommands = self.ListWidgetItems(self.form.CommandsSelected_QC)
         for i2 in range(len(SelectedCommands)):
             ListWidgetItem: QListWidgetItem = SelectedCommands[i2]
-            QuickAccessCommand = CommandInfoCorrections(ListWidgetItem.data(Qt.ItemDataRole.UserRole))["name"]
+            if ListWidgetItem.data(Qt.ItemDataRole.UserRole).endswith("_ddb") is False:
+                QuickAccessCommand = CommandInfoCorrections(ListWidgetItem.data(Qt.ItemDataRole.UserRole))["name"]
+            else:
+                QuickAccessCommand = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
             List_QuickAccessCommands.append(QuickAccessCommand)
 
         # IgnoredWorkbences
@@ -3075,7 +3073,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         return Toolbars
 
-    def Dict_AddCustomPanel_CPCommandsToWorkbench(self, WorkBenchName):
+    def Dict_AddCustomPanel_CP(self, WorkBenchName):
         Toolbars = {}
 
         try:
@@ -3238,16 +3236,14 @@ class LoadDialog(Design_ui.Ui_Form):
         for ToolbarCommand in self.List_Commands:
             CommandName = ToolbarCommand[0]
             MenuNameTranslated = ToolbarCommand[4]
-            workbenchName = ToolbarCommand[3]
-
-            IsInList = ShadowList.__contains__(f"{CommandName}, {workbenchName}")
+            IsInList = ShadowList.__contains__(f"{CommandName}")
 
             if IsInList is False:
                 if MenuNameTranslated.lower().startswith(SearchBar.text().lower()):
                     IsInlist = False
                     for i in range(ListWidget.count()):
                         CommandItem = ListWidget.item(i)
-                        if CommandItem.text() == MenuNameTranslated:
+                        if CommandItem.data(Qt.ItemDataRole.UserRole) == CommandName:
                             IsInlist = True
 
                     if IsInlist is False:
@@ -3276,7 +3272,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
                             # Add the ListWidgetItem to the correct ListWidget
                             ListWidget.addItem(ListWidgetItem)
-            ShadowList.append(f"{CommandName}, {workbenchName}")
+            ShadowList.append(f"{CommandName}")
 
         return
 
