@@ -571,7 +571,8 @@ class ModernMenu(RibbonBar):
                     for action in QuickAction:
                         button.addAction(action[0])
                     # Set the default action
-                    button.setDefaultAction(action[0])
+                    button.setDefaultAction(button.actions()[0])
+                    # Set the
                     # Set the width and height
                     width = self.QuickAccessButtonSize + padding
                     height = self.QuickAccessButtonSize
