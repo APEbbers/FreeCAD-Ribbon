@@ -1804,8 +1804,16 @@ class run:
             ribbonDock.setWidget(ribbon)
             ribbonDock.setEnabled(True)
             ribbonDock.setMinimumHeight(ribbon.RibbonMinimalHeight)
-            ribbonDock.setMaximumHeight(ribbon.height() - ribbon.RibbonMinimalHeight + ribbon.PanelOffset)
-            # ribbonDock.widget().setMinimumHeight(ribbon.RibbonMinimalHeight)
+            # make sure that there are no negative valules
+            maximumHeight = ribbon.height() - ribbon.RibbonMinimalHeight + ribbon.PanelOffset
+            if maximumHeight < ribbonDock.minimumHeight():
+                maximumHeight = ribbonDock.minimumHeight()
+            if maximumHeight < 0:
+                if ribbonDock.minimumHeight < 0:
+                    maximumHeight = 30
+                else:
+                    maximumHeight = ribbonDock.minimumHeight()
+            ribbonDock.setMaximumHeight(maximumHeight)
 
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
