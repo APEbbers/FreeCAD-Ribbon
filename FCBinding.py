@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -35,7 +35,7 @@ from PySide.QtGui import (
     QColor,
     QStyleHints,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -57,7 +57,7 @@ from PySide.QtWidgets import (
     QPushButton,
     QHBoxLayout,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1803,6 +1803,7 @@ class run:
             # attach the ribbon to the dockwidget
             ribbonDock.setWidget(ribbon)
             ribbonDock.setEnabled(True)
+            ribbonDock.setVisible(True)
             ribbonDock.setMinimumHeight(ribbon.RibbonMinimalHeight)
             # make sure that there are no negative valules
             maximumHeight = ribbon.height() - ribbon.RibbonMinimalHeight + ribbon.PanelOffset
