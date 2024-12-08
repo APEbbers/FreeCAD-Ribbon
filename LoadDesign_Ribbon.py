@@ -3443,23 +3443,30 @@ class LoadDialog(Design_ui.Ui_Form):
         data = json.load(JsonFile)
 
         IsChanged = False
-
-        if data["ignoredToolbars"].sort() != self.List_IgnoredToolbars.sort():
-            IsChanged = True
-        if data["iconOnlyToolbars"].sort() != self.List_IconOnly_Toolbars.sort():
-            IsChanged = True
-        if data["quickAccessCommands"].sort() != self.List_QuickAccessCommands.sort():
-            IsChanged = True
-        if data["ignoredWorkbenches"].sort() != self.List_IgnoredWorkbenches.sort():
-            IsChanged = True
-        if data["customToolbars"] != self.Dict_CustomToolbars:
-            IsChanged = True
-        if data["dropdownButtons"] != self.Dict_DropDownButtons:
-            IsChanged = True
-        if data["newPanels"] != self.Dict_DropDownButtons:
-            IsChanged = True
-        if data["workbenches"] != self.Dict_RibbonCommandPanel:
-            IsChanged = True
+        if "ignoredToolbars" in data:
+            if data["ignoredToolbars"].sort() != self.List_IgnoredToolbars.sort():
+                IsChanged = True
+        if "iconOnlyToolbars" in data:
+            if data["iconOnlyToolbars"].sort() != self.List_IconOnly_Toolbars.sort():
+                IsChanged = True
+        if "quickAccessCommands" in data:
+            if data["quickAccessCommands"].sort() != self.List_QuickAccessCommands.sort():
+                IsChanged = True
+        if "ignoredWorkbenches" in data:
+            if data["ignoredWorkbenches"].sort() != self.List_IgnoredWorkbenches.sort():
+                IsChanged = True
+        if "customToolbars" in data:
+            if data["customToolbars"] != self.Dict_CustomToolbars:
+                IsChanged = True
+        if "dropdownButtons" in data:
+            if data["dropdownButtons"] != self.Dict_DropDownButtons:
+                IsChanged = True
+        if "newPanels" in data:
+            if data["newPanels"] != self.Dict_DropDownButtons:
+                IsChanged = True
+        if "workbenches" in data:
+            if data["workbenches"] != self.Dict_RibbonCommandPanel:
+                IsChanged = True
 
         JsonFile.close()
         return IsChanged
