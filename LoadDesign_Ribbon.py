@@ -427,16 +427,30 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.WorkbenchList_CP.activated.connect(LoadWorkbenches_CP)
 
         # Connect custom toolbar selector on the Custom Panels Tab
-        def CommandList_DDB():
+        def CommandList_CP():
             self.on_CustomToolbarSelector_CP_activated()
 
-        self.form.CustomToolbarSelector_CP.activated.connect(CommandList_DDB)
+        self.form.CustomToolbarSelector_CP.activated.connect(CommandList_CP)
 
         self.form.RemovePanel_CP.connect(self.form.RemovePanel_CP, SIGNAL("clicked()"), self.on_RemovePanel_CP_clicked)
 
         #
         # --- CreateNewPanelTab ----------------
         #
+        # Connect custom toolbar selector on the Custom Panels Tab
+        def CommandList_NP():
+            self.on_CustomToolbarSelector_NP_activated()
+
+        self.form.CustomToolbarSelector_NP.activated.connect(CommandList_NP)
+
+        self.form.RemovePanel_NP.connect(self.form.RemovePanel_NP, SIGNAL("clicked()"), self.on_RemovePanel_NP_clicked)
+
+        self.form.AddCustomToolbar_NP.connect(
+            self.form.AddCustomToolbar_NP,
+            SIGNAL("clicked()"),
+            self.on_AddCustomToolbar_NP_clicked,
+        )
+
         # Connect Add/Remove and move events to the buttons on the QuickAccess Tab
         self.form.AddPanelCommand_NP.connect(
             self.form.AddPanelCommand_NP, SIGNAL("clicked()"), self.on_AddCommand_NP_clicked
@@ -1441,7 +1455,7 @@ class LoadDialog(Design_ui.Ui_Form):
         ListCommands = []
         for i in range(self.form.NewPanel_NP.count()):
             ListWidgetItem = self.form.NewPanel_NP.item(i)
-            ListCommands.append(ListWidgetItem.data())
+            ListCommands.append(ListWidgetItem.data(Qt.ItemDataRole.UserRole))
 
         if len(ListCommands) > 0:
             # define the suffix
@@ -3056,6 +3070,7 @@ class LoadDialog(Design_ui.Ui_Form):
         resultingDict["ignoredWorkbenches"] = List_IgnoredWorkbenches
         resultingDict.update(self.Dict_CustomToolbars)
         resultingDict.update(self.Dict_DropDownButtons)
+        resultingDict.update(self.Dict_NewPanels)
 
         # RibbonTabs
         # Get the Ribbon dictionary
