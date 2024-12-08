@@ -977,10 +977,13 @@ class ModernMenu(RibbonBar):
             pass
 
         # Add the new panels to the toolbar list
-        for WorkBenchItem in self.ribbonStructure["newPanels"]:
-            if WorkBenchItem == workbenchName or WorkBenchItem == "Global":
-                for Panel in self.ribbonStructure["newPanels"][WorkBenchItem]:
-                    ListToolbars.append(Panel)
+        try:
+            for WorkBenchItem in self.ribbonStructure["newPanels"]:
+                if WorkBenchItem == workbenchName or WorkBenchItem == "Global":
+                    for Panel in self.ribbonStructure["newPanels"][WorkBenchItem]:
+                        ListToolbars.append(Panel)
+        except Exception:
+            pass
 
         try:
             # Get the order of toolbars
