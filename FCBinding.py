@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -35,7 +35,7 @@ from PySide6.QtGui import (
     QColor,
     QStyleHints,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -57,7 +57,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QHBoxLayout,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -976,6 +976,12 @@ class ModernMenu(RibbonBar):
                 print(f"{e.with_traceback(e.__traceback__)}, 1")
             pass
 
+        # Add the new panels to the toolbar list
+        for WorkBenchItem in self.Dict_NewPanels["newPanels"]:
+            if WorkBenchItem == workbenchName or WorkBenchItem == "Global":
+                for Panel in self.Dict_NewPanels["newPanels"][WorkBenchItem]:
+                    ListToolbars.append(Panel)
+
         try:
             # Get the order of toolbars
             ToolbarOrder: list = self.ribbonStructure["workbenches"][workbenchName]["toolbars"]["order"]
@@ -1024,8 +1030,13 @@ class ModernMenu(RibbonBar):
             except Exception:
                 pass
 
-            customList = self.List_AddCustomToolbarsToWorkbench(workbenchName, toolbar)
+            # Add custom panels
+            customList = self.List_AddCustomToolBarToWorkbench(workbenchName, toolbar)
             allButtons.extend(customList)
+
+            # Add custom panels
+            NewPanelList = self.List_AddNewPanelToWorkbench(workbenchName, toolbar)
+            allButtons.extend(NewPanelList)
 
             # add separators to the command list.
             if workbenchName in self.ribbonStructure["workbenches"]:
@@ -1556,7 +1567,7 @@ class ModernMenu(RibbonBar):
 
         return Toolbars
 
-    def List_AddCustomToolbarsToWorkbench(self, WorkBenchName, CustomToolbar):
+    def List_AddCustomToolBarToWorkbench(self, WorkBenchName, CustomToolbar):
         ButtonList = []
 
         try:
@@ -1590,6 +1601,48 @@ class ModernMenu(RibbonBar):
                         except Exception as e:
                             if Parameters_Ribbon.DEBUG_MODE is True:
                                 print(f"{e.with_traceback(None)}, 3")
+                            continue
+        except Exception:
+            pass
+
+        return ButtonList
+
+    def List_AddNewPanelToWorkbench(self, WorkBenchName, NewPanel):
+        ButtonList = []
+
+        try:
+            # Get the commands from the custom panel
+            Commands = self.ribbonStructure["newPanels"][WorkBenchName][NewPanel]["commands"]
+
+            # Get the command and its original toolbar
+            for CommandItem in Commands:
+                # get the menu text from the command list
+                for CommandName in Gui.listCommands():
+                    # Get the english menutext
+                    MenuName = CommandInfoCorrections(CommandName)["menuText"]
+                    # Get the translated menutext
+                    MenuNameTtranslated = CommandInfoCorrections(CommandName)["ActionText"]
+
+                    if CommandItem == CommandName:
+                        try:
+                            Command = Gui.Command.get(CommandName)
+                            CommandActionList = Command.getAction()
+
+                            NewToolbutton = QToolButton()
+                            NewToolbutton.addActions(CommandActionList)
+                            NewToolbutton.setText(MenuNameTtranslated)
+                            # If the text of the QToolButton matches the menu text
+                            # Add it to the button list.
+                            IsInList = False
+                            for Toolbutton in ButtonList:
+                                if Toolbutton.text() == NewToolbutton.text():
+                                    IsInList = True
+
+                            if IsInList is False:
+                                ButtonList.append(NewToolbutton)
+                        except Exception as e:
+                            if Parameters_Ribbon.DEBUG_MODE is True:
+                                print(f"{e.with_traceback(None)}, ")
                             continue
         except Exception:
             pass
