@@ -1079,7 +1079,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for CustomToolbar in CustomToolbars:
             wbToolbars.append(CustomToolbar)
         # Get the custom panels
-        CustomPanel = self.List_AddCustomPanel(WorkBenchName=WorkBenchName)
+        CustomPanel = self.List_AddCustomPanel(self.Dict_CustomToolbars, WorkBenchName=WorkBenchName)
         for CustomToolbar in CustomPanel:
             if CustomToolbar[1] == WorkBenchTitle:
                 wbToolbars.append(CustomToolbar[0])
