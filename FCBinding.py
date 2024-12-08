@@ -977,9 +977,9 @@ class ModernMenu(RibbonBar):
             pass
 
         # Add the new panels to the toolbar list
-        for WorkBenchItem in self.Dict_NewPanels["newPanels"]:
+        for WorkBenchItem in self.ribbonStructure["newPanels"]:
             if WorkBenchItem == workbenchName or WorkBenchItem == "Global":
-                for Panel in self.Dict_NewPanels["newPanels"][WorkBenchItem]:
+                for Panel in self.ribbonStructure["newPanels"][WorkBenchItem]:
                     ListToolbars.append(Panel)
 
         try:
