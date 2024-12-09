@@ -1777,8 +1777,8 @@ class run:
             ribbonDock.setContentsMargins(0, 0, 0, 0)
             # attach the ribbon to the dockwidget
             ribbonDock.setWidget(ribbon)
-            ribbonDock.setEnabled(True)
-            ribbonDock.setVisible(True)
+            # ribbonDock.setEnabled(True)
+
             ribbonDock.setMinimumHeight(ribbon.RibbonMinimalHeight)
             # make sure that there are no negative valules
             maximumHeight = (
