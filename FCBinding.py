@@ -1198,7 +1198,10 @@ class ModernMenu(RibbonBar):
 
                             # get the action text
                             text = action.text()
-                            text = StandardFunctions.CommandInfoCorrections(action.data())["ActionText"]
+                            try:
+                                text = StandardFunctions.CommandInfoCorrections(action.data())["ActionText"]
+                            except Exception:
+                                pass
 
                             # try to get alternative text from ribbonStructure
                             try:
@@ -1626,18 +1629,29 @@ class ModernMenu(RibbonBar):
                         Command = Gui.Command.get(CommandName)
                         if Command is not None:
                             CommandActionList = Command.getAction()
+                            if len(CommandActionList) > 0:
 
-                            NewToolbutton = QToolButton()
-                            NewToolbutton.addActions(CommandActionList)
-                            NewToolbutton.setDefaultAction(NewToolbutton.actions()[0])
-                            NewToolbutton.setText(MenuNameTtranslated)
+                                NewToolbutton = QToolButton()
+                                if len(CommandActionList) == 1:
+                                    NewToolbutton.addAction(CommandActionList[0])
+                                    NewToolbutton.setDefaultAction(NewToolbutton.actions()[0])
+                                if len(CommandActionList) > 1:
+                                    menu = QMenu()
+                                    menu.addActions(CommandActionList)
+                                    NewToolbutton.setMenu(menu)
+                                    NewToolbutton.setDefaultAction(menu.actions()[0])
+                                NewToolbutton.setText(MenuNameTtranslated)
 
-                            ButtonList.append(NewToolbutton)
+                                ButtonList.append(NewToolbutton)
+                                print(CommandName)
+                        if Command is None:
+                            print(f"{CommandName} was None")
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
                 print(e)
             pass
 
+        print(ButtonList)
         return ButtonList
 
     def LoadMarcoFreeCAD(self, scriptName):

@@ -650,23 +650,23 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.LoadWB.setIcon(Gui.getIcon("view-refresh"))
         self.form.LoadWB.setIconSize(QSize(20, 20))
 
-        # Load the newPanels
-        try:
-            for WorkBenchName in self.Dict_NewPanels["newPanels"]:
-                WorkBenchTitle = ""
-                for WorkBenchItem in self.List_Workbenches:
-                    if WorkBenchItem[0] == WorkBenchName:
-                        WorkBenchTitle = WorkBenchItem[2]
+        # # Load the newPanels
+        # try:
+        #     for WorkBenchName in self.Dict_NewPanels["newPanels"]:
+        #         WorkBenchTitle = ""
+        #         for WorkBenchItem in self.List_Workbenches:
+        #             if WorkBenchItem[0] == WorkBenchName:
+        #                 WorkBenchTitle = WorkBenchItem[2]
 
-                for NewPanelItem in self.Dict_NewPanels["newPanels"][WorkBenchName]:
-                    NewPanelTitle = str(NewPanelItem).removesuffix("_newPanel")
-                    # If the custom panel is not in the json file, add it to the QComboBox
-                    self.form.CustomToolbarSelector_NP.addItem(f"{NewPanelTitle}, {WorkBenchTitle}")
-                    # Set the Custom panel as current text for the QComboBox
-                    self.form.CustomToolbarSelector_NP.setCurrentText(f"{NewPanelTitle}, {WorkBenchTitle}")
-            self.on_CustomToolbarSelector_NP_activated()
-        except Exception:
-            pass
+        #         for NewPanelItem in self.Dict_NewPanels["newPanels"][WorkBenchName]:
+        #             NewPanelTitle = str(NewPanelItem).removesuffix("_newPanel")
+        #             # If the custom panel is not in the json file, add it to the QComboBox
+        #             self.form.CustomToolbarSelector_NP.addItem(f"{NewPanelTitle}, {WorkBenchTitle}")
+        #             # Set the Custom panel as current text for the QComboBox
+        #             self.form.CustomToolbarSelector_NP.setCurrentText(f"{NewPanelTitle}, {WorkBenchTitle}")
+        #     self.on_CustomToolbarSelector_NP_activated()
+        # except Exception:
+        #     pass
         # endregion
 
         # self.form.resizeEvent = lambda event: self.resizeEvent_custom(event)
@@ -1600,12 +1600,13 @@ class LoadDialog(Design_ui.Ui_Form):
 
                         # Get the commands and their original toolbar
                         for Command in self.Dict_NewPanels["newPanels"][WorkBenchName][NewPanelTitle]:
+                            WorkBenchNameCMD = Command[1]
                             for CommandItem in self.List_Commands:
                                 # Check if the items is already there
                                 IsInList = ShadowList.__contains__(CommandItem[0])
                                 # if not, continue
                                 if IsInList is False:
-                                    if CommandItem[0] == Command[0] and CommandItem[3] == WorkBenchName:
+                                    if CommandItem[0] == Command[0] and CommandItem[3] == WorkBenchNameCMD:
                                         # Command = Gui.Command.get(CommandItem[0])
                                         MenuName = CommandItem[2].replace("&", "")
 
@@ -3595,7 +3596,29 @@ class LoadDialog(Design_ui.Ui_Form):
                 for CustomPanelTitle in self.Dict_CustomToolbars["customToolbars"][WorkBenchName]:
                     if WorkBenchTitle != "":
                         self.form.CustomToolbarSelector_CP.addItem(f"{CustomPanelTitle}, {WorkBenchTitle}")
-        except Exception:
+        except Exception as e:
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                raise (e)
+            pass
+
+        # Load the newPanels
+        try:
+            for WorkBenchName in self.Dict_NewPanels["newPanels"]:
+                WorkBenchTitle = ""
+                for WorkBenchItem in self.List_Workbenches:
+                    if WorkBenchItem[0] == WorkBenchName:
+                        WorkBenchTitle = WorkBenchItem[2]
+
+                for NewPanelItem in self.Dict_NewPanels["newPanels"][WorkBenchName]:
+                    NewPanelTitle = str(NewPanelItem).removesuffix("_newPanel")
+                    # If the custom panel is not in the json file, add it to the QComboBox
+                    self.form.CustomToolbarSelector_NP.addItem(f"{NewPanelTitle}, {WorkBenchTitle}")
+                    # Set the Custom panel as current text for the QComboBox
+                    self.form.CustomToolbarSelector_NP.setCurrentText(f"{NewPanelTitle}, {WorkBenchTitle}")
+            self.on_CustomToolbarSelector_NP_activated()
+        except Exception as e:
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                raise (e)
             pass
 
         # -- Dropdown button tab -
@@ -3607,7 +3630,9 @@ class LoadDialog(Design_ui.Ui_Form):
             # make sure that no command is selected by default
             # to prevent accidental removal
             self.form.CommandList_DDB.setCurrentText("")
-        except Exception:
+        except Exception as e:
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                raise (e)
             pass
 
         # -- Form controls
