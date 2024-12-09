@@ -649,6 +649,24 @@ class LoadDialog(Design_ui.Ui_Form):
         # Set the icon and size for the refresh button
         self.form.LoadWB.setIcon(Gui.getIcon("view-refresh"))
         self.form.LoadWB.setIconSize(QSize(20, 20))
+
+        # Load the newPanels
+        try:
+            for WorkBenchName in self.Dict_NewPanels["newPanels"]:
+                WorkBenchTitle = ""
+                for WorkBenchItem in self.List_Workbenches:
+                    if WorkBenchItem[0] == WorkBenchName:
+                        WorkBenchTitle = WorkBenchItem[2]
+
+                for NewPanelItem in self.Dict_NewPanels["newPanels"][WorkBenchName]:
+                    NewPanelTitle = str(NewPanelItem).removesuffix("_newPanel")
+                    # If the custom panel is not in the json file, add it to the QComboBox
+                    self.form.CustomToolbarSelector_NP.addItem(f"{NewPanelTitle}, {WorkBenchTitle}")
+                    # Set the Custom panel as current text for the QComboBox
+                    self.form.CustomToolbarSelector_NP.setCurrentText(f"{NewPanelTitle}, {WorkBenchTitle}")
+            self.on_CustomToolbarSelector_NP_activated()
+        except Exception:
+            pass
         # endregion
 
         # self.form.resizeEvent = lambda event: self.resizeEvent_custom(event)
@@ -1455,7 +1473,9 @@ class LoadDialog(Design_ui.Ui_Form):
         ListCommands = []
         for i in range(self.form.NewPanel_NP.count()):
             ListWidgetItem = self.form.NewPanel_NP.item(i)
-            ListCommands.append(ListWidgetItem.data(Qt.ItemDataRole.UserRole))
+            for CommandItem in self.List_Commands:
+                if CommandItem[0] == ListWidgetItem.data(Qt.ItemDataRole.UserRole):
+                    ListCommands.append([CommandItem[0], CommandItem[3]])
 
         if len(ListCommands) > 0:
             # define the suffix
@@ -1579,13 +1599,13 @@ class LoadDialog(Design_ui.Ui_Form):
                         WorkBenchName = WorkBench
 
                         # Get the commands and their original toolbar
-                        for CommandName in self.Dict_NewPanels["newPanels"][WorkBenchName][NewPanelTitle]["commands"]:
+                        for Command in self.Dict_NewPanels["newPanels"][WorkBenchName][NewPanelTitle]:
                             for CommandItem in self.List_Commands:
                                 # Check if the items is already there
                                 IsInList = ShadowList.__contains__(CommandItem[0])
                                 # if not, continue
                                 if IsInList is False:
-                                    if CommandItem[0] == CommandName and CommandItem[3] == WorkBenchName:
+                                    if CommandItem[0] == Command[0] and CommandItem[3] == WorkBenchName:
                                         # Command = Gui.Command.get(CommandItem[0])
                                         MenuName = CommandItem[2].replace("&", "")
 
@@ -3002,6 +3022,12 @@ class LoadDialog(Design_ui.Ui_Form):
         # Get all the custom toolbars
         try:
             self.Dict_DropDownButtons["dropdownButtons"] = data["dropdownButtons"]
+        except Exception:
+            pass
+
+        # Get all the custom toolbars
+        try:
+            self.Dict_NewPanels["newPanels"] = data["newPanels"]
         except Exception:
             pass
 

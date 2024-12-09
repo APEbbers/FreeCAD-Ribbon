@@ -1198,14 +1198,7 @@ class ModernMenu(RibbonBar):
 
                             # get the action text
                             text = action.text()
-
                             text = StandardFunctions.CommandInfoCorrections(action.data())["ActionText"]
-                            # # There is a bug in freecad with the comp-sketch menu hase the wrong text
-                            # if (
-                            #     action.data() == "PartDesign_CompSketches"
-                            #     and action.text() == "Create datum"
-                            # ):
-                            #     text = "Create sketch"
 
                             # try to get alternative text from ribbonStructure
                             try:
@@ -1419,6 +1412,8 @@ class ModernMenu(RibbonBar):
                 panel.setTitle(panel.title().replace("_custom", ""))
             if panel.title().endswith("_global"):
                 panel.setTitle(panel.title().replace("_global", ""))
+            if panel.title().endswith("_newPanel"):
+                panel.setTitle(panel.title().replace("_newPanel", ""))
 
             # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
             # add an offset to make room for the panel titles and icons
@@ -1614,40 +1609,33 @@ class ModernMenu(RibbonBar):
         ButtonList = []
 
         try:
-            # Get the commands from the custom panel
-            Commands = self.ribbonStructure["newPanels"][WorkBenchName][NewPanel]["commands"]
+            if WorkBenchName in self.ribbonStructure["newPanels"]:
+                if NewPanel in self.ribbonStructure["newPanels"][WorkBenchName]:
+                    # Get the commands from the custom panel
+                    Commands = self.ribbonStructure["newPanels"][WorkBenchName][NewPanel]
 
-            # Get the command and its original toolbar
-            for CommandItem in Commands:
-                # get the menu text from the command list
-                for CommandName in Gui.listCommands():
-                    # Get the english menutext
-                    MenuName = CommandInfoCorrections(CommandName)["menuText"]
-                    # Get the translated menutext
-                    MenuNameTtranslated = CommandInfoCorrections(CommandName)["ActionText"]
+                    # Get the command and its original toolbar
+                    for CommandItem in Commands:
+                        CommandName = CommandItem[0]
+                        # Activate the workbench if not loaded
+                        Gui.activateWorkbench(CommandItem[1])
 
-                    if CommandItem == CommandName:
-                        try:
-                            Command = Gui.Command.get(CommandName)
+                        # Get the translated menutext
+                        MenuNameTtranslated = CommandInfoCorrections(CommandName)["ActionText"]
+                        # try:
+                        Command = Gui.Command.get(CommandName)
+                        if Command is not None:
                             CommandActionList = Command.getAction()
 
                             NewToolbutton = QToolButton()
                             NewToolbutton.addActions(CommandActionList)
+                            NewToolbutton.setDefaultAction(NewToolbutton.actions()[0])
                             NewToolbutton.setText(MenuNameTtranslated)
-                            # If the text of the QToolButton matches the menu text
-                            # Add it to the button list.
-                            IsInList = False
-                            for Toolbutton in ButtonList:
-                                if Toolbutton.text() == NewToolbutton.text():
-                                    IsInList = True
 
-                            if IsInList is False:
-                                ButtonList.append(NewToolbutton)
-                        except Exception as e:
-                            if Parameters_Ribbon.DEBUG_MODE is True:
-                                print(f"{e.with_traceback(None)}, ")
-                            continue
-        except Exception:
+                            ButtonList.append(NewToolbutton)
+        except Exception as e:
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                print(e)
             pass
 
         return ButtonList
