@@ -588,9 +588,6 @@ def CommandInfoCorrections(CommandName):
         CommandInfo["statusTip"] = ""
         CommandInfo["pixmap"] = ""
         CommandInfo["ActionText"] = ""
-
-        raise e
-
     return CommandInfo
 
 
