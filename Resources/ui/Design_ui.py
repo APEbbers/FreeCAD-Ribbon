@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignQbJean.ui'
+## Form generated from reading UI file 'DesignNRNsIy.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -974,7 +974,7 @@ class Ui_Form(object):
         __qlistwidgetitem11.setCheckState(Qt.Checked)
         self.NewPanel_NP.setObjectName("NewPanel_NP")
         self.NewPanel_NP.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-        self.NewPanel_NP.setSortingEnabled(True)
+        self.NewPanel_NP.setSortingEnabled(False)
 
         self.gridLayout_37.addWidget(self.NewPanel_NP, 2, 2, 1, 1)
 
@@ -1280,7 +1280,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(5)
+        self.tabWidget.setCurrentIndex(6)
 
         QMetaObject.connectSlotsByName(Form)
 

@@ -1447,6 +1447,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
     # region - Create new panels tab
     def on_AddCustomToolbar_NP_clicked(self):
+        # define the suffix
+        Suffix = "_newPanel"
+
         # Set the workbench name.
         WorkBenchName = ""
         WorkBenchTitle = self.form.WorkbenchList_NP.currentText()
@@ -1470,16 +1473,23 @@ class LoadDialog(Design_ui.Ui_Form):
             )
             return
 
+        # Define a list for the commands
         ListCommands = []
+        # Try to get the commands that are already in the json file
+        try:
+            ListCommands = self.Dict_NewPanels["newPanels"][WorkBenchName][NewPanelTitle + Suffix]
+        except Exception:
+            pass
         for i in range(self.form.NewPanel_NP.count()):
             ListWidgetItem = self.form.NewPanel_NP.item(i)
             for CommandItem in self.List_Commands:
                 if CommandItem[0] == ListWidgetItem.data(Qt.ItemDataRole.UserRole):
-                    ListCommands.append([CommandItem[0], CommandItem[3]])
+                    ListItem = [CommandItem[0], CommandItem[3]]
+                    # if the commanditem is not yet in the list, add it.
+                    if ListCommands.__contains__(ListItem) is False:
+                        ListCommands.append([CommandItem[0], CommandItem[3]])
 
         if len(ListCommands) > 0:
-            # define the suffix
-            Suffix = "_newPanel"
             # Create or modify the dict that will be entered
             StandardFunctions.add_keys_nested_dict(
                 self.Dict_NewPanels,
@@ -1487,7 +1497,6 @@ class LoadDialog(Design_ui.Ui_Form):
                     "newPanels",
                     WorkBenchName,
                     NewPanelTitle + Suffix,
-                    "commands",
                 ],
             )
 

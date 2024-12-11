@@ -56,6 +56,8 @@ from PySide.QtWidgets import (
     QStyleOptionButton,
     QPushButton,
     QHBoxLayout,
+    QLabel,
+    QVBoxLayout,
 )
 from PySide.QtCore import (
     Qt,
@@ -109,7 +111,7 @@ from pyqtribbon_local.category import RibbonCategoryLayoutButton
 # import pyqtribbon as pyqtribbon
 # from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
 # from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
+# from pyqtribbon.toolbutton import RibbonToolButton, RibbonButtonStyle
 # from pyqtribbon.separator import RibbonSeparator
 # from pyqtribbon.category import RibbonCategoryLayoutButton
 
@@ -1629,29 +1631,34 @@ class ModernMenu(RibbonBar):
                         Command = Gui.Command.get(CommandName)
                         if Command is not None:
                             CommandActionList = Command.getAction()
+                            # if there are actions, proceed
                             if len(CommandActionList) > 0:
 
+                                # Define a new toolbutton
                                 NewToolbutton = QToolButton()
+                                # if there is only one action, add it directly
                                 if len(CommandActionList) == 1:
                                     NewToolbutton.addAction(CommandActionList[0])
                                     NewToolbutton.setDefaultAction(NewToolbutton.actions()[0])
+                                # if there are more actions, create a menu
                                 if len(CommandActionList) > 1:
                                     menu = QMenu()
                                     menu.addActions(CommandActionList)
                                     NewToolbutton.setMenu(menu)
+                                    NewToolbutton.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                                     NewToolbutton.setDefaultAction(menu.actions()[0])
+                                # Set the text for the toolbutton
                                 NewToolbutton.setText(MenuNameTtranslated)
 
+                                # add it to the list
                                 ButtonList.append(NewToolbutton)
-                                print(CommandName)
                         if Command is None:
-                            print(f"{CommandName} was None")
+                            if Parameters_Ribbon.DEBUG_MODE is True:
+                                print(f"{CommandName} was None")
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
                 print(e)
             pass
-
-        print(ButtonList)
         return ButtonList
 
     def LoadMarcoFreeCAD(self, scriptName):
