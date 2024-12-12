@@ -299,6 +299,20 @@ class LoadDialog(Design_ui.Ui_Form):
                 print(e)
             pass
 
+        # add commands from newpanels to the list of commands
+        for NewPanelWorkBench in self.Dict_NewPanels["newPanels"]:
+            for NewPanel in self.Dict_NewPanels["newPanels"][NewPanelWorkBench]:
+                for NewPanelCommand in self.Dict_NewPanels["newPanels"][NewPanelWorkBench][NewPanel]:
+                    # get the icon for this command
+                    if CommandInfoCorrections(NewPanelCommand[0])["pixmap"] != "":
+                        IconName = CommandInfoCorrections(NewPanelCommand[0])["pixmap"]
+                    else:
+                        IconName = ""
+                    MenuName = CommandInfoCorrections(NewPanelCommand[0])["menuText"].replace("&", "")
+                    MenuNameTranslated = CommandInfoCorrections(NewPanelCommand[0])["ActionText"].replace("&", "")
+                    self.List_Commands.append(
+                        [NewPanelCommand[0], IconName, MenuName, NewPanelWorkBench, MenuNameTranslated]
+                    )
         # endregion
 
         # region - Load all controls------------------------------------------------------------------
@@ -650,26 +664,8 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.LoadWB.setIcon(Gui.getIcon("view-refresh"))
         self.form.LoadWB.setIconSize(QSize(20, 20))
 
-        # # Load the newPanels
-        # try:
-        #     for WorkBenchName in self.Dict_NewPanels["newPanels"]:
-        #         WorkBenchTitle = ""
-        #         for WorkBenchItem in self.List_Workbenches:
-        #             if WorkBenchItem[0] == WorkBenchName:
-        #                 WorkBenchTitle = WorkBenchItem[2]
-
-        #         for NewPanelItem in self.Dict_NewPanels["newPanels"][WorkBenchName]:
-        #             NewPanelTitle = str(NewPanelItem).removesuffix("_newPanel")
-        #             # If the custom panel is not in the json file, add it to the QComboBox
-        #             self.form.CustomToolbarSelector_NP.addItem(f"{NewPanelTitle}, {WorkBenchTitle}")
-        #             # Set the Custom panel as current text for the QComboBox
-        #             self.form.CustomToolbarSelector_NP.setCurrentText(f"{NewPanelTitle}, {WorkBenchTitle}")
-        #     self.on_CustomToolbarSelector_NP_activated()
-        # except Exception:
-        #     pass
-        # endregion
-
         # self.form.resizeEvent = lambda event: self.resizeEvent_custom(event)
+
         return
 
     def on_ReloadWB_clicked(self):
@@ -1519,7 +1515,6 @@ class LoadDialog(Design_ui.Ui_Form):
             # Enable the apply button
             if self.CheckChanges() is True:
                 self.form.UpdateJson.setEnabled(True)
-
         return
 
     def on_RemovePanel_NP_clicked(self):
@@ -1949,6 +1944,11 @@ class LoadDialog(Design_ui.Ui_Form):
         for CustomToolbar in CustomPanels:
             if CustomToolbar[1] == WorkBenchTitle:
                 wbToolbars.append(CustomToolbar[0])
+        # Get the new panels
+        NewPanels = self.List_AddNewPanel(self.Dict_NewPanels, WorkBenchName=WorkBenchName, PanelDict="newPanels")
+        for Newpanel in NewPanels:
+            if Newpanel[1] == WorkBenchTitle:
+                wbToolbars.append(Newpanel[0])
 
         # Clear the listwidget before filling it
         self.form.PanelList_RD.clear()
@@ -2035,29 +2035,29 @@ class LoadDialog(Design_ui.Ui_Form):
             # Get the toolbar name
             Toolbar = self.form.PanelList_RD.currentData()
             # Copy the workbench Toolbars
-            Toolbaritems = self.returnToolbarCommands(WorkBenchName)
+            ToolbarItems = self.returnToolbarCommands(WorkBenchName)
             # Get the custom toolbars from each installed workbench
             CustomCommands = self.Dict_ReturnCustomToolbars(WorkBenchName)
-            Toolbaritems.update(CustomCommands)
+            ToolbarItems.update(CustomCommands)
             # Get the custom toolbars from global
             CustomCommands = self.Dict_ReturnCustomToolbars_Global()
-            Toolbaritems.update(CustomCommands)
+            ToolbarItems.update(CustomCommands)
             # Get the commands from the custom commands
             CustomPanelCommands = self.Dict_AddCustomPanel(
                 DictPanels=self.Dict_CustomToolbars, WorkBenchName=WorkBenchName, PanelDict="customToolbars"
             )
-            Toolbaritems.update(CustomPanelCommands)
+            ToolbarItems.update(CustomPanelCommands)
             # Get the commands from the custom commands
             NewPanelCommands = self.Dict_AddNewPanel(
                 DictPanels=self.Dict_NewPanels, WorkBenchName=WorkBenchName, PanelDict="newPanels"
             )
-            Toolbaritems.update(NewPanelCommands)
+            ToolbarItems.update(NewPanelCommands)
 
             # Get the commands in this toolbar
             ToolbarCommands = []
-            for key in Toolbaritems:
-                if key == Toolbar:
-                    ToolbarCommands = Toolbaritems[key]
+            for ToolbarItem in ToolbarItems:
+                if ToolbarItem == Toolbar:
+                    ToolbarCommands = ToolbarItems[ToolbarItem]
 
             # add separators to the command list.
             index = 0
@@ -2207,17 +2207,11 @@ class LoadDialog(Design_ui.Ui_Form):
                                         checked_small = Qt.CheckState.Unchecked
                                         checked_medium = Qt.CheckState.Unchecked
                                         checked_large = Qt.CheckState.Checked
-                                    # Icon_Json_Name = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName][
-                                    #     "toolbars"
-                                    # ][Toolbar]["commands"][CommandName]["icon"]
-                                    # Icon = StandardFunctions.returnQiCons_Commands(CommandName, Icon_Json_Name)
                                 except Exception:
                                     continue
 
                         MenuNameTabelWidgetItem = ""
-                        if MenuNameJson != CommandInfoCorrections(ToolbarCommand)["menuText"].replace("&", "").replace(
-                            "...", ""
-                        ):
+                        if MenuNameJson != CommandInfoCorrections(ToolbarCommand)["menuText"].replace("&", ""):
                             MenuNameTabelWidgetItem = MenuNameJson
                         else:
                             for CommandItem in self.List_Commands:
@@ -2520,13 +2514,14 @@ class LoadDialog(Design_ui.Ui_Form):
         # Get the correct workbench name
         WorkBenchName = ""
         for WorkBench in self.List_Workbenches:
-            if WorkBench[2] == self.form.WorkbenchList_RD.currentData()[2]:
+            if WorkBench[2] == self.form.WorkbenchList_RD.currentData():
                 WorkBenchName = WorkBench[0]
 
         ToolbarOrder = []
         for i2 in range(self.form.PanelOrder_RD.count()):
             Toolbar = self.form.PanelOrder_RD.item(i2).data(Qt.ItemDataRole.UserRole)
             ToolbarOrder.append(Toolbar)
+
         StandardFunctions.add_keys_nested_dict(
             self.Dict_RibbonCommandPanel,
             [
@@ -2928,10 +2923,6 @@ class LoadDialog(Design_ui.Ui_Form):
                         # Define empty strings for the command name and icon name
                         CommandName = ""
                         IconName = ""
-                        # # Get the command text from the first cell in the row
-                        # MenuNameCommandTable_RDItem = (
-                        #     self.form.CommandTable_RD.item(row, 0).text().replace("&", "")
-                        # )
                         # Get the menu name from the stored data
                         MenuName = self.form.CommandTable_RD.item(row, 0).data(Qt.ItemDataRole.UserRole)
 
@@ -3409,7 +3400,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         return Toolbars
 
-    def List_AddCustomPanel(self, DictPanels: dict, WorkBenchName="WorkBenchName", PanelDict="customToolbars"):
+    def List_AddCustomPanel(self, DictPanels: dict, WorkBenchName="Global", PanelDict="customToolbars"):
         Toolbars = []
 
         if str(WorkBenchName) != "" or WorkBenchName is not None:
@@ -3470,21 +3461,38 @@ class LoadDialog(Design_ui.Ui_Form):
         try:
             for NewPanel in DictPanels[PanelDict][WorkBenchName]:
                 ListCommands = []
-                Commands = DictPanels[PanelDict][WorkBenchName][NewPanel]["commands"]
+                Commands = DictPanels[PanelDict][WorkBenchName][NewPanel]
 
                 for commandName in Commands:
-                    ListCommands.append(commandName)
+                    ListCommands.append(commandName[0])
                 Toolbars[NewPanel] = ListCommands
 
             for NewPanel in DictPanels[PanelDict]["Global"]:
                 ListCommands = []
-                Commands = DictPanels[PanelDict][WorkBenchName][NewPanel]["commands"]
+                Commands = DictPanels[PanelDict][WorkBenchName][NewPanel]
 
                 for commandName in Commands:
-                    ListCommands.append(commandName)
+                    ListCommands.append(commandName[0])
                 Toolbars[NewPanel] = ListCommands
         except Exception:
             pass
+        print(Toolbars)
+        return Toolbars
+
+    def List_AddNewPanel(self, DictPanels: dict, WorkBenchName="Global", PanelDict="newPanels"):
+        Toolbars = []
+
+        if str(WorkBenchName) != "" or WorkBenchName is not None:
+            if str(WorkBenchName) != "NoneWorkbench":
+                try:
+                    for NewPanel in DictPanels[PanelDict][WorkBenchName]:
+                        if len(DictPanels[PanelDict][WorkBenchName]) > 0:
+                            ListCommands = DictPanels[PanelDict][WorkBenchName][NewPanel]
+                            WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
+
+                            Toolbars.append([NewPanel, WorkbenchTitle, ListCommands])
+                except Exception:
+                    pass
 
         return Toolbars
 
