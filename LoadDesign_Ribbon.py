@@ -72,7 +72,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
     ReproAdress: str = ""
 
-    DataFileVersion = "0.0"
+    DataFileVersion = "0.1"
 
     # Define list of the workbenches, toolbars and commands on class level
     List_Workbenches = []
@@ -762,7 +762,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         else:
                             IconName = ""
                         MenuName = CommandInfoCorrections(CustomCommand)["menuText"].replace("&", "")
-                        MenuNameTranslated = CommandInfoCorrections(CommandName[0])["ActionText"].replace("&", "")
+                        MenuNameTranslated = CommandInfoCorrections(CustomCommand)["ActionText"].replace("&", "")
                         self.List_Commands.append(
                             [CustomCommand, IconName, MenuName, WorkBenchName, MenuNameTranslated]
                         )
@@ -775,8 +775,9 @@ class LoadDialog(Design_ui.Ui_Form):
                 else:
                     IconName = None
                 MenuName = CommandInfoCorrections(CustomCommand)["menuText"].replace("&", "")
-                MenuNameTranslated = CommandInfoCorrections(CommandName[0])["ActionText"].replace("&", "")
+                MenuNameTranslated = CommandInfoCorrections(CustomCommand)["ActionText"].replace("&", "")
                 self.List_Commands.append([CustomCommand, IconName, MenuName, Toolbar[1], MenuNameTranslated])
+        # Add general commands
         if int(App.Version()[0]) > 0:
             command = Gui.Command.get("Std_Measure")
             if CommandInfoCorrections("Std_Measure")["pixmap"] != "":
@@ -784,7 +785,7 @@ class LoadDialog(Design_ui.Ui_Form):
             else:
                 IconName = ""
             MenuName = CommandInfoCorrections("Std_Measure")["menuText"].replace("&", "")
-            MenuNameTranslated = CommandInfoCorrections(CommandName[0])["ActionText"].replace("&", "")
+            MenuNameTranslated = CommandInfoCorrections("Std_Measure")["ActionText"].replace("&", "")
             self.List_Commands.append(["Std_Measure", IconName, MenuName, "General", MenuNameTranslated])
 
         # re-activate the workbench that was stored.
@@ -1449,9 +1450,12 @@ class LoadDialog(Design_ui.Ui_Form):
         # Set the workbench name.
         WorkBenchName = ""
         WorkBenchTitle = self.form.WorkbenchList_NP.currentText()
-        for WorkBench in self.List_Workbenches:
-            if WorkBench[2] == WorkBenchTitle:
-                WorkBenchName = WorkBench[0]
+        if WorkBenchTitle == "Global":
+            WorkBenchName = "Global"
+        else:
+            for WorkBench in self.List_Workbenches:
+                if WorkBench[2] == WorkBenchTitle:
+                    WorkBenchName = WorkBench[0]
 
         # If there is no workbench, return
         if WorkBenchName == "":
@@ -1482,7 +1486,11 @@ class LoadDialog(Design_ui.Ui_Form):
                 if CommandItem[0] == ListWidgetItem.data(Qt.ItemDataRole.UserRole):
                     ListItem = [CommandItem[0], CommandItem[3]]
                     # if the commanditem is not yet in the list, add it.
-                    if ListCommands.__contains__(ListItem) is False:
+                    IsInList = False
+                    for Item in ListCommands:
+                        if Item[0] == ListItem[0]:
+                            IsInList = True
+                    if IsInList is False:
                         ListCommands.append([CommandItem[0], CommandItem[3]])
 
         if len(ListCommands) > 0:
@@ -1617,7 +1625,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                         # Define a new ListWidgetItem.
                                         ListWidgetItem = QListWidgetItem()
                                         ListWidgetItem.setText(MenuName)
-                                        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandItem)
+                                        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandItem[0])
                                         Icon = QIcon()
                                         for item in self.List_CommandIcons:
                                             if item[0] == CommandItem[0]:
@@ -2671,7 +2679,7 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.ListCategory_NP.addItem(All_KeyWord)
         self.form.ListCategory_DDB.addItem(All_KeyWord)
 
-        # Add "Global" to the list for the new panels
+        # Add "Global" to the list for the panels
         Global_KeyWord = translate("FreeCAD Ribbon", "Global")
         self.form.WorkbenchList_NP.addItem(Gui.getIcon("freecad"), Global_KeyWord)
 
@@ -2818,11 +2826,10 @@ class LoadDialog(Design_ui.Ui_Form):
         IsInList = False
 
         for CommandItem in self.List_Commands:
-            IsInList = ShadowList.__contains__(CommandItem[0])
+            IsInList = ShadowList.__contains__(f"{CommandItem[0]}")
 
             if IsInList is False:
                 CommandName = CommandItem[0]
-                # Command = Gui.Command.get(CommandName)
                 MenuNameTranslated = CommandItem[4]
 
                 # Default a command is not selected
@@ -2882,7 +2889,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         self.form.CommandsAvailable_NP.addItem(ListWidgetItem.clone())
                         self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
 
-            ShadowList.append(CommandItem[0])
+            ShadowList.append(f"{CommandItem[0]}")
         return
 
     def LoadPanels(self):
@@ -3412,6 +3419,8 @@ class LoadDialog(Design_ui.Ui_Form):
                             Commands = DictPanels[PanelDict][WorkBenchName][CustomToolbar]["commands"]
 
                             WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
+                            if WorkBenchName == "Global":
+                                WorkbenchTitle = "Global"
 
                             for key, value in list(Commands.items()):
                                 for i in range(len(self.List_Commands)):
@@ -3604,6 +3613,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # -- Custom panel tab --
         self.form.CustomToolbarSelector_CP.addItem(translate("FreeCAD Ribbon", "New"))
+        self.form.CustomToolbarSelector_NP.addItem(translate("FreeCAD Ribbon", "New"))
         try:
             for WorkBenchName in self.Dict_CustomToolbars["customToolbars"]:
                 WorkBenchTitle = ""
@@ -3723,6 +3733,8 @@ class LoadDialog(Design_ui.Ui_Form):
 
                             # Add the ListWidgetItem to the correct ListWidget
                             ListWidget.addItem(ListWidgetItem)
+                        if Icon is None:
+                            print(CommandName)
             ShadowList.append(f"{CommandName}")
 
         return

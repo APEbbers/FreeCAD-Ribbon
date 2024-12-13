@@ -606,7 +606,8 @@ class ModernMenu(RibbonBar):
 
                 toolBarWidth = toolBarWidth + width
             except Exception as e:
-                print(f"{commandName}, {e}")
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    print(f"{commandName}, {e}")
                 # raise (e)
                 continue
 
@@ -1001,7 +1002,7 @@ class ModernMenu(RibbonBar):
         try:
             for WorkBenchItem in self.ribbonStructure["newPanels"]:
                 if WorkBenchItem == workbenchName or WorkBenchItem == "Global":
-                    for Panel in self.ribbonStructure["newPanels"][workbenchName]:
+                    for Panel in self.ribbonStructure["newPanels"][WorkBenchItem]:
                         ListToolbars.append(Panel)
         except Exception:
             pass
@@ -1009,7 +1010,6 @@ class ModernMenu(RibbonBar):
         try:
             # Get the order of toolbars
             ToolbarOrder: list = self.ribbonStructure["workbenches"][workbenchName]["toolbars"]["order"]
-            print(f"{workbenchName}, {ToolbarOrder}")
 
             # Sort the list of toolbars according the toolbar order
             def SortToolbars(toolbar):
@@ -1019,7 +1019,7 @@ class ModernMenu(RibbonBar):
                 position = None
                 try:
                     position = ToolbarOrder.index(toolbar)
-                except ValueError as e:
+                except ValueError:
                     position = 999999
                 return position
 
@@ -1059,8 +1059,11 @@ class ModernMenu(RibbonBar):
             customList = self.List_AddCustomToolBarToWorkbench(workbenchName, toolbar)
             allButtons.extend(customList)
 
-            # Add custom panels
+            # Add new Panels
             NewPanelList = self.List_AddNewPanelToWorkbench(workbenchName, toolbar)
+            allButtons.extend(NewPanelList)
+            # Add new global Panels
+            NewPanelList = self.List_AddNewPanelToWorkbench("Global", toolbar)
             allButtons.extend(NewPanelList)
 
             # add separators to the command list.
