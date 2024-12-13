@@ -133,6 +133,8 @@ UI_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "ui")
 # endregion ------------------------------------------------------------------------------------------------------------
 
 DefaultSettings = {
+    "ImportLocation": os.path.dirname(__file__),
+    "ExportLocation": os.path.dirname(__file__),
     "RibbonStructure": os.path.join(os.path.dirname(__file__), "RibbonStructure.json"),
     "TabBar_Style": int(0),
     "IconSize_Small": int(24),
@@ -159,6 +161,22 @@ DefaultSettings = {
     "Ribbon_Click": int(1),
     "Preferred_view": int(2),
 }
+
+# region - Define the import location ----------------------------------------------------------------------------------
+if Settings.GetStringSetting("ImportLocation") != "":
+    IMPORT_LOCATION = Settings.GetStringSetting("ImportLocation")
+else:
+    IMPORT_LOCATION = DefaultSettings["ImportLocation"]
+    Settings.SetStringSetting("ImportLocation", IMPORT_LOCATION)
+# endregion ------------------------------------------------------------------------------------------------------------
+
+# region - Define the export location ----------------------------------------------------------------------------------
+if Settings.GetStringSetting("ExportLocation") != "":
+    EXPORT_LOCATION = Settings.GetStringSetting("ExportLocation")
+else:
+    EXPORT_LOCATION = DefaultSettings["ExportLocation"]
+    Settings.SetStringSetting("exportLocation", EXPORT_LOCATION)
+# endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the Ribbon structure location ------------------------------------------------------------------------
 if Settings.GetStringSetting("RibbonStructure") != "":

@@ -345,6 +345,20 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # --- Initial setup functions -----------
         #
+        # Connect the import functions
+        self.form.Importlayout_IS.connect(
+            self.form.Importlayout_IS, SIGNAL("clicked()"), self.on_Importlayout_IS_clicked
+        )
+        self.form.ImportCustomPanels_IS.connect(
+            self.form.ImportCustomPanels_IS, SIGNAL("clicked()"), self.on_ImportCustomPanels_IS_clicked
+        )
+        self.form.ImportDropDownButtons_IS.connect(
+            self.form.ImportDropDownButtons_IS, SIGNAL("clicked()"), self.on_ImportDropDownButtons_IS_clicked
+        )
+        self.form.ExportLayout_IS.connect(
+            self.form.ExportLayout_IS, SIGNAL("clicked()"), self.on_ExportLayout_IS_clicked
+        )
+
         # Connect the workbench generator
         self.form.GenerateSetup_IS_WorkBenches.connect(
             self.form.GenerateSetup_IS_WorkBenches, SIGNAL("clicked()"), self.on_GenerateSetup_IS_WorkBenches_clicked
@@ -859,6 +873,57 @@ class LoadDialog(Design_ui.Ui_Form):
     # Add all toolbars of the selected workbench to the toolbar list(QComboBox)
     #
     # region - Initial setup tab
+    def on_Importlayout_IS_clicked(self):
+        JsonFile = StandardFunctions.GetFileDialog(
+            Filter="RibbonStructure (*.json)",
+            parent=None,
+            DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
+            SaveAs=False,
+        )
+        self.ReadJson(Section="All", JsonFile=JsonFile)
+
+        self.LoadControls()
+
+        return
+
+    def on_ImportCustomPanels_IS_clicked(self):
+        JsonFile = StandardFunctions.GetFileDialog(
+            Filter="RibbonStructure (*.json)",
+            parent=None,
+            DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
+            SaveAs=False,
+        )
+        self.ReadJson(Section="customToolbars", JsonFile=JsonFile)
+        self.ReadJson(Section="newPanels", JsonFile=JsonFile)
+
+        self.LoadControls()
+
+        return
+
+    def on_ImportDropDownButtons_IS_clicked(self):
+        JsonFile = StandardFunctions.GetFileDialog(
+            Filter="RibbonStructure (*.json)",
+            parent=None,
+            DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
+            SaveAs=False,
+        )
+        self.ReadJson(Section="dropdownButtons", JsonFile=JsonFile)
+
+        self.LoadControls(
+            ilter="RibbonStructure (*.json)",
+            parent=None,
+            DefaultPath=Parameters_Ribbon.EXPORT_LOCATION,
+            SaveAs=True,
+        )
+
+        return
+
+    def on_ExportLayout_IS_clicked(self):
+        # Update the ribbon structure file before copy
+        self.WriteJson()
+
+        StandardFunctions.GetFileDialog()
+
     def on_GenerateSetup_IS_WorkBenches_clicked(self):
         items = self.form.WorkbenchList_IS.selectedItems()
         WorkBenchName = ""
@@ -2999,51 +3064,60 @@ class LoadDialog(Design_ui.Ui_Form):
                 continue
         return
 
-    def ReadJson(self):
-        """Read the Json file and fill the lists and set settings"""
+    def ReadJson(self, Section="All", JsonFile=""):
         # Open the JsonFile and load the data
         JsonFile = open(os.path.join(os.path.dirname(__file__), "RibbonStructure.json"))
+        if JsonFile != "":
+            JsonFile = open(JsonFile)
         data = json.load(JsonFile)
 
         # Get all the ignored toolbars
-        for IgnoredToolbar in data["ignoredToolbars"]:
-            self.List_IgnoredToolbars.append(IgnoredToolbar)
+        if Section == "ignoredToolbars" or Section == "All":
+            for IgnoredToolbar in data["ignoredToolbars"]:
+                self.List_IgnoredToolbars.append(IgnoredToolbar)
 
         # Get all the icon only toolbars
-        for IconOnly_Toolbar in data["iconOnlyToolbars"]:
-            self.List_IconOnly_Toolbars.append(IconOnly_Toolbar)
+        if Section == "iconOnlyToolbars" or Section == "All":
+            for IconOnly_Toolbar in data["iconOnlyToolbars"]:
+                self.List_IconOnly_Toolbars.append(IconOnly_Toolbar)
 
         # Get all the quick access command
-        for QuickAccessCommand in data["quickAccessCommands"]:
-            self.List_QuickAccessCommands.append(QuickAccessCommand)
+        if Section == "quickAccessCommands" or Section == "All":
+            for QuickAccessCommand in data["quickAccessCommands"]:
+                self.List_QuickAccessCommands.append(QuickAccessCommand)
 
         # Get all the ignored workbenches
-        for IgnoredWorkbench in data["ignoredWorkbenches"]:
-            self.List_IgnoredWorkbenches.append(IgnoredWorkbench)
+        if Section == "ignoredWorkbenches" or Section == "All":
+            for IgnoredWorkbench in data["ignoredWorkbenches"]:
+                self.List_IgnoredWorkbenches.append(IgnoredWorkbench)
 
         # Get all the custom toolbars
-        try:
-            self.Dict_CustomToolbars["customToolbars"] = data["customToolbars"]
-        except Exception:
-            pass
+        if Section == "customToolbars" or Section == "All":
+            try:
+                self.Dict_CustomToolbars["customToolbars"] = data["customToolbars"]
+            except Exception:
+                pass
 
         # Get all the custom toolbars
-        try:
-            self.Dict_DropDownButtons["dropdownButtons"] = data["dropdownButtons"]
-        except Exception:
-            pass
+        if Section == "dropdownButtons" or Section == "All":
+            try:
+                self.Dict_DropDownButtons["dropdownButtons"] = data["dropdownButtons"]
+            except Exception:
+                pass
 
         # Get all the custom toolbars
-        try:
-            self.Dict_NewPanels["newPanels"] = data["newPanels"]
-        except Exception:
-            pass
+        if Section == "newPanels" or Section == "All":
+            try:
+                self.Dict_NewPanels["newPanels"] = data["newPanels"]
+            except Exception:
+                pass
 
         # Get the dict with the customized date for the buttons
-        try:
-            self.Dict_RibbonCommandPanel["workbenches"] = data["workbenches"]
-        except Exception:
-            pass
+        if Section == "iconOnlyToolbars" or Section == "All":
+            try:
+                self.Dict_RibbonCommandPanel["iconOnlyToolbars"] = data["workbenches"]
+            except Exception:
+                pass
 
         JsonFile.close()
         return

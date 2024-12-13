@@ -409,7 +409,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.close()
         # show the restart dialog
         if self.settingChanged is True:
-            result = StandardFunctions.RestartDialog()
+            result = StandardFunctions.RestartDialog(includeIcons=True)
             if result == "yes":
                 StandardFunctions.restart_freecad()
         return
