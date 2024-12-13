@@ -321,9 +321,20 @@ class ModernMenu(RibbonBar):
         # Set the icon size if parameters has none
         Parameters_Ribbon.Settings.WriteSettings()
 
+        # Activate the workbenches used in the new panels otherwise the panel stays empty
+        for WorkBenchName in self.ribbonStructure["newPanels"]:
+            for NewPanel in self.ribbonStructure["newPanels"][WorkBenchName]:
+                # Get the commands from the custom panel
+                Commands = self.ribbonStructure["newPanels"][WorkBenchName][NewPanel]
+
+                # Get the command and its original toolbar
+                for CommandItem in Commands:
+                    # # Activate the workbench if not loaded
+                    Gui.activateWorkbench(CommandItem[1])
+
         # Create the ribbon
         self.createModernMenu()
-        self.onUserChangedWorkbench()
+        self.onUserChangedWorkbench(False)
 
         # Set the custom stylesheet
         StyleSheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
@@ -686,6 +697,9 @@ class ModernMenu(RibbonBar):
                         if Parameters_Ribbon.TABBAR_STYLE == 1:
                             self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon())
 
+                        # Set the tab data
+                        self.tabBar().setTabData(len(self.categories()) - 1, workbenchName)
+
         # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
 
@@ -878,7 +892,7 @@ class ModernMenu(RibbonBar):
             return
         return
 
-    def onUserChangedWorkbench(self):
+    def onUserChangedWorkbench(self, tabActivated=True):
         """
         Import selected workbench toolbars to ModernMenu section.
         """
@@ -894,8 +908,10 @@ class ModernMenu(RibbonBar):
             tabName = tabName.replace("&", "")
             if self.wbNameMapping[tabName] is not None:
                 Gui.activateWorkbench(self.wbNameMapping[tabName])
-            self.onWbActivated()
-            self.ApplicationMenu()
+
+            if tabActivated is True:
+                self.onWbActivated()
+                self.ApplicationMenu()
         return
 
     def onWbActivated(self):
@@ -936,14 +952,17 @@ class ModernMenu(RibbonBar):
         self.setRibbonVisible(True)
 
     def buildPanels(self):
-        # Get the active workbench and get tis name
-        workbench = Gui.activeWorkbench()
-        workbenchName = workbench.name()
-        workbenchTitle = workbench.MenuText
+        # Get the active workbench and get its name
+        #
+        workbenchTitle = self.tabBar().tabText(self.tabBar().currentIndex())
+        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        if workbenchName is None:
+            return
+        workbench = Gui.getWorkbench(workbenchName)
 
         # check if the panel is already loaded. If so exit this function
-        tabName = self.tabBar().tabText(self.tabBar().currentIndex()).replace("&", "")
-        if self.isWbLoaded[tabName] or tabName == "":
+        tabName = workbenchTitle
+        if tabName in self.isWbLoaded and (self.isWbLoaded[tabName] or tabName == ""):
             return
 
         # Get the list of toolbars from the active workbench
@@ -982,7 +1001,7 @@ class ModernMenu(RibbonBar):
         try:
             for WorkBenchItem in self.ribbonStructure["newPanels"]:
                 if WorkBenchItem == workbenchName or WorkBenchItem == "Global":
-                    for Panel in self.ribbonStructure["newPanels"][WorkBenchItem]:
+                    for Panel in self.ribbonStructure["newPanels"][workbenchName]:
                         ListToolbars.append(Panel)
         except Exception:
             pass
@@ -990,6 +1009,7 @@ class ModernMenu(RibbonBar):
         try:
             # Get the order of toolbars
             ToolbarOrder: list = self.ribbonStructure["workbenches"][workbenchName]["toolbars"]["order"]
+            print(f"{workbenchName}, {ToolbarOrder}")
 
             # Sort the list of toolbars according the toolbar order
             def SortToolbars(toolbar):
@@ -999,7 +1019,7 @@ class ModernMenu(RibbonBar):
                 position = None
                 try:
                     position = ToolbarOrder.index(toolbar)
-                except ValueError:
+                except ValueError as e:
                     position = 999999
                 return position
 
@@ -1622,9 +1642,6 @@ class ModernMenu(RibbonBar):
                     # Get the command and its original toolbar
                     for CommandItem in Commands:
                         CommandName = CommandItem[0]
-                        # Activate the workbench if not loaded
-                        Gui.activateWorkbench(CommandItem[1])
-
                         # Get the translated menutext
                         MenuNameTtranslated = CommandInfoCorrections(CommandName)["ActionText"]
                         # try:
