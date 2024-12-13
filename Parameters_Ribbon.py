@@ -133,8 +133,8 @@ UI_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "ui")
 # endregion ------------------------------------------------------------------------------------------------------------
 
 DefaultSettings = {
-    "ImportLocation": os.path.dirname(__file__),
-    "ExportLocation": os.path.dirname(__file__),
+    "ImportLocation": os.path.join(os.path.dirname(__file__), ""),
+    "ExportLocation": os.path.join(os.path.dirname(__file__), ""),
     "RibbonStructure": os.path.join(os.path.dirname(__file__), "RibbonStructure.json"),
     "TabBar_Style": int(0),
     "IconSize_Small": int(24),

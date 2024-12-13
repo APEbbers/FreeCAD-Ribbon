@@ -880,9 +880,10 @@ class LoadDialog(Design_ui.Ui_Form):
             DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
             SaveAs=False,
         )
-        self.ReadJson(Section="All", JsonFile=JsonFile)
+        if JsonFile != "":
+            self.ReadJson(Section="All", JsonFile=JsonFile)
 
-        self.LoadControls()
+            self.LoadControls()
 
         return
 
@@ -893,10 +894,11 @@ class LoadDialog(Design_ui.Ui_Form):
             DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
             SaveAs=False,
         )
-        self.ReadJson(Section="customToolbars", JsonFile=JsonFile)
-        self.ReadJson(Section="newPanels", JsonFile=JsonFile)
+        if JsonFile != "":
+            self.ReadJson(Section="customToolbars", JsonFile=JsonFile)
+            self.ReadJson(Section="newPanels", JsonFile=JsonFile)
 
-        self.LoadControls()
+            self.LoadControls()
 
         return
 
@@ -907,22 +909,25 @@ class LoadDialog(Design_ui.Ui_Form):
             DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
             SaveAs=False,
         )
-        self.ReadJson(Section="dropdownButtons", JsonFile=JsonFile)
+        if JsonFile != "":
+            self.ReadJson(Section="dropdownButtons", JsonFile=JsonFile)
 
-        self.LoadControls(
-            ilter="RibbonStructure (*.json)",
-            parent=None,
-            DefaultPath=Parameters_Ribbon.EXPORT_LOCATION,
-            SaveAs=True,
-        )
+            self.LoadControls()
 
         return
 
     def on_ExportLayout_IS_clicked(self):
         # Update the ribbon structure file before copy
         self.WriteJson()
+        FileName = StandardFunctions.GetFileDialog(
+            Filter="RibbonStructure (*.json)",
+            parent=None,
+            DefaultPath=Parameters_Ribbon.EXPORT_LOCATION,
+            SaveAs=True,
+        )
+        shutil.copy(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, FileName)
 
-        StandardFunctions.GetFileDialog()
+        return
 
     def on_GenerateSetup_IS_WorkBenches_clicked(self):
         items = self.form.WorkbenchList_IS.selectedItems()
@@ -3066,9 +3071,12 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def ReadJson(self, Section="All", JsonFile=""):
         # Open the JsonFile and load the data
-        JsonFile = open(os.path.join(os.path.dirname(__file__), "RibbonStructure.json"))
-        if JsonFile != "":
-            JsonFile = open(JsonFile)
+        JsonFile = open(Parameters_Ribbon.RIBBON_STRUCTURE_JSON)
+        try:
+            if JsonFile != "":
+                JsonFile = open(JsonFile)
+        except Exception:
+            pass
         data = json.load(JsonFile)
 
         # Get all the ignored toolbars
@@ -3098,14 +3106,14 @@ class LoadDialog(Design_ui.Ui_Form):
             except Exception:
                 pass
 
-        # Get all the custom toolbars
+        # Get all the dropdown buttons
         if Section == "dropdownButtons" or Section == "All":
             try:
                 self.Dict_DropDownButtons["dropdownButtons"] = data["dropdownButtons"]
             except Exception:
                 pass
 
-        # Get all the custom toolbars
+        # Get all the new toolbars
         if Section == "newPanels" or Section == "All":
             try:
                 self.Dict_NewPanels["newPanels"] = data["newPanels"]
@@ -3113,9 +3121,9 @@ class LoadDialog(Design_ui.Ui_Form):
                 pass
 
         # Get the dict with the customized date for the buttons
-        if Section == "iconOnlyToolbars" or Section == "All":
+        if Section == "workbenches" or Section == "All":
             try:
-                self.Dict_RibbonCommandPanel["iconOnlyToolbars"] = data["workbenches"]
+                self.Dict_RibbonCommandPanel["workbenches"] = data["workbenches"]
             except Exception:
                 pass
 
