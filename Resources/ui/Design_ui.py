@@ -1536,7 +1536,7 @@ class Ui_Form(object):
 
         self.AddSeparator_RD.setText(QCoreApplication.translate("Form", "Add separator", None))
         self.RemoveSeparator_RD.setText(QCoreApplication.translate("Form", "Remove separator", None))
-        self.label_4.setText(QCoreApplication.translate("Form", " Set the panel order", None))
+        self.label_4.setText(QCoreApplication.translate("Form", "Set the panel order", None))
 
         __sortingEnabled14 = self.PanelOrder_RD.isSortingEnabled()
         self.PanelOrder_RD.setSortingEnabled(False)

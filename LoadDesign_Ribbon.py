@@ -140,10 +140,10 @@ class LoadDialog(Design_ui.Ui_Form):
         # Check if there is a datafile. if not, ask the user to create one.
         DataFile = os.path.join(os.path.dirname(__file__), "RibbonDataFile.dat")
         if os.path.exists(DataFile) is False:
-            Question = (
-                translate("FreeCAD Ribbon", "The first time, a data file must be generated!")
-                + "\n"
-                + translate("FreeCAD Ribbon", "This can take a while! Do you want to proceed?")
+            Question = translate(
+                "FreeCAD Ribbon",
+                "The first time, a data file must be generated!\n"
+                "This can take a while! Do you want to proceed?",
             )
             Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
             if Answer == "yes":
@@ -165,20 +165,12 @@ class LoadDialog(Design_ui.Ui_Form):
         except Exception:
             DataUpdateNeeded = True
         if DataUpdateNeeded is True:
-            Question = (
-                translate(
-                    "FreeCAD Ribbon",
-                    "The current data file is based on an older format!",
-                )
-                + "\n"
-                + translate(
-                    "FreeCAD Ribbon",
-                    "It is important to update the data!",
-                )
-                + "\n"
-                + translate("FreeCAD Ribbon", "Do you want to proceed?")
-                + "\n"
-                + translate("FreeCAD Ribbon", "This can take a while!")
+            Question = translate(
+                "FreeCAD Ribbon",
+                "The current data file is based on an older format!\n"
+                "It is important to update the data!\n"
+                "Do you want to proceed?\n"
+                "This can take a while!",
             )
 
             Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
@@ -195,15 +187,11 @@ class LoadDialog(Design_ui.Ui_Form):
                 IsSystemLanguage = False
             # If the languguage doesn't match, ask the user to update the data
             if IsSystemLanguage is False:
-                Question = (
-                    translate(
-                        "FreeCAD Ribbon",
-                        "The data was generated for a differernt language!",
-                    )
-                    + "\n"
-                    + translate("FreeCAD Ribbon", "Do you want to update the data?")
-                    + "\n"
-                    + translate("FreeCAD Ribbon", "This can take a while!")
+                Question = translate(
+                    "FreeCAD Ribbon",
+                    "The data was generated for a differernt language!\n"
+                    "Do you want to update the data?\n"
+                    "This can take a while!",
                 )
 
                 Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
@@ -225,15 +213,11 @@ class LoadDialog(Design_ui.Ui_Form):
                     i = len(item)
                     break
         if i < 5:
-            Question = (
-                translate(
-                    "FreeCAD Ribbon",
-                    "It seems that the data file is not up-to-date.",
-                )
-                + "\n"
-                + translate("FreeCAD Ribbon", "Do you want to update the data?")
-                + "\n"
-                + translate("FreeCAD Ribbon", "This can take a while!")
+            Question = translate(
+                "FreeCAD Ribbon",
+                "It seems that the data file is not up-to-date.\n"
+                "Do you want to update the data?\n"
+                "This can take a while!",
             )
             Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
             if Answer == "yes":
@@ -266,19 +250,13 @@ class LoadDialog(Design_ui.Ui_Form):
             ListWB = "  "
             for WB in missingWB:
                 ListWB = ListWB + WB + "\n" + "  "
-            Question = (
-                translate(
-                    "FreeCAD Ribbon",
-                    "The following workbenches are installed after the last data update: ",
-                )
-                + "\n"
-                + ListWB
-                + "\n"
-                + "\n"
-                + translate("FreeCAD Ribbon", "Do you want to update the data?")
-                + "\n"
-                + translate("FreeCAD Ribbon", "This can take a while!")
-            )
+            Question = translate(
+                "FreeCAD Ribbon",
+                "The following workbenches were installed after the last data update: \n"
+                "{}\n\n"
+                "Do you want to update the data?\n"
+                "This can take a while!",
+            ).format(ListWB)
             Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
             if Answer == "yes":
                 self.on_ReloadWB_clicked()
@@ -953,9 +931,8 @@ class LoadDialog(Design_ui.Ui_Form):
         self.LoadControls()
 
         message_1 = translate(
-            "FreeCAD Ribbon",
-            "Buttons are set to " + Size + translate("FreeCAD Ribbon", "for the following workbenches:\n"),
-        )
+            "FreeCAD Ribbon", "Buttons are set to {} for the following workbenches:\n"
+        ).format(Size)
         message_2 = ""
         for WorkBenchName in WorkBenchList:
             message_2 = message_2 + WorkBenchName + "\n" + "  "
@@ -988,8 +965,8 @@ class LoadDialog(Design_ui.Ui_Form):
         self.LoadControls()
 
         message_1 = translate(
-            "FreeCAD Ribbon", "Buttons are set to " + Size + translate("FreeCAD Ribbon", "for the following panels:\n")
-        )
+            "FreeCAD Ribbon", "Buttons are set to {} for the following panels:\n"
+        ).format(Size)
         message_2 = ""
         for Panel in PanelList:
             message_2 = "\t" + message_2 + Panel + "\n" + "  "
@@ -2642,19 +2619,16 @@ class LoadDialog(Design_ui.Ui_Form):
             BackupFile = os.path.join(pathBackup, SelectedFile)
             result = shutil.copy(BackupFile, JsonFile)
             StandardFunctions.Print(
-                translate("FreeCAD Ribbon", "Ribbon bar set back to settings from: ") + f"{result}!",
+                translate("FreeCAD Ribbon", "Ribbon bar set back to settings from: {}").format(
+                    result
+                ),
                 "Warning",
             )
 
-            message = (
-                translate("FreeCAD Ribbon", "Settings reset to ")
-                + SelectedFile
-                + "!\n"
-                + translate(
-                    "FreeCAD Ribbon",
-                    "You must restart FreeCAD for changes to take effect.",
-                )
-            )
+            message = translate(
+                "FreeCAD Ribbon",
+                "Settings reset to {}!\nYou must restart FreeCAD for changes to take effect.",
+            ).format(SelectedFile)
             answer = StandardFunctions.RestartDialog(message=message)
             if answer == "yes":
                 StandardFunctions.restart_freecad()
@@ -2670,15 +2644,14 @@ class LoadDialog(Design_ui.Ui_Form):
 
         BackupFile = os.path.join(JsonPath, "RibbonStructure_default.json")
 
-        message = (
-            translate("FreeCAD Ribbon", "Settings reset to default!")
-            + "\n"
-            + translate("FreeCAD Ribbon", "You must restart FreeCAD for changes to take effect.")
+        message = translate(
+            "FreeCAD Ribbon",
+            "Settings reset to default!\nYou must restart FreeCAD for changes to take effect.",
         )
 
         result = shutil.copy(BackupFile, JsonFile)
         StandardFunctions.Print(
-            translate("FreeCAD Ribbon", "Ribbon bar reset from ") + f"{result}!",
+            translate("FreeCAD Ribbon", "Ribbon bar reset from {}!").format(result),
             "Warning",
         )
         answer = StandardFunctions.RestartDialog(message=message)
