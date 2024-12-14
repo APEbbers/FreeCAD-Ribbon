@@ -233,7 +233,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 item = [IconItem[0], Icon]
                 self.List_CommandIcons.append(item)
         except Exception as e:
-            StandardFunctions.Print(str(e.with_traceback(e.__traceback__)), "Warning")
+            StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
             pass
 
         # check if the list with workbenches is up-to-date
@@ -282,7 +282,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     StandardFunctions.Print("dropdownbuttons have wrong format. Please create them again!", "Warning")
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
-                StandardFunctions.Print(str(e.with_traceback(e.__traceback__)), "Warning")
+                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
             pass
 
         # add commands from newpanels to the list of commands
@@ -878,7 +878,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     self.List_WorkBenchIcons.append([WorkBenchName, Icon])
                 except Exception as e:
                     if Parameters_Ribbon.DEBUG_MODE is True:
-                        StandardFunctions.Print(str(e.with_traceback(e.__traceback__)), "Warning")
+                        StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
 
         CommandIcons = []
         for CommandItem in self.List_Commands:
@@ -893,7 +893,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     self.List_CommandIcons.append([CommandName, Icon])
                 except Exception as e:
                     if Parameters_Ribbon.DEBUG_MODE is True:
-                        StandardFunctions.Print(str(e.with_traceback(e.__traceback__)), "Warning")
+                        StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
 
         # Write the lists to a data file
         #
@@ -2959,6 +2959,8 @@ class LoadDialog(Design_ui.Ui_Form):
             if IsInList is False:
                 CommandName = CommandItem[0]
                 MenuNameTranslated = CommandItem[4]
+                if CommandName.endswith("_ddb"):
+                    MenuNameTranslated = CommandName.replace("_ddb", "")
 
                 # Default a command is not selected
                 IsSelected = False
@@ -3762,7 +3764,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         self.form.CustomToolbarSelector_CP.addItem(f"{CustomPanelTitle}, {WorkBenchTitle}")
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
-                raise (e)
+                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
             pass
 
         # Load the newPanels
@@ -3782,7 +3784,7 @@ class LoadDialog(Design_ui.Ui_Form):
             self.on_CustomToolbarSelector_NP_activated()
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
-                raise (e)
+                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
             pass
 
         # -- Dropdown button tab -
@@ -3796,7 +3798,7 @@ class LoadDialog(Design_ui.Ui_Form):
             self.form.CommandList_DDB.setCurrentText("")
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
-                raise (e)
+                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
             pass
 
         # -- Form controls
@@ -3889,6 +3891,8 @@ class LoadDialog(Design_ui.Ui_Form):
         for ToolbarCommand in self.List_Commands:
             CommandName = ToolbarCommand[0]
             MenuNameTranslated = ToolbarCommand[4]
+            if CommandName.endswith("_ddb"):
+                MenuNameTranslated = CommandName.replace("_ddb", "")
             workbenchName = ToolbarCommand[3]
             IsInList = ShadowList.__contains__(f"{CommandName}, {workbenchName}")
 

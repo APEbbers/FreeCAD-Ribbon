@@ -1731,7 +1731,7 @@ class ModernMenu(RibbonBar):
 
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
-                StandardFunctions.Print(f"{e}, {MenuNameTtranslated}", "Warning")
+                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}, 4", "Warning")
             pass
         return ButtonList
 
@@ -1877,7 +1877,7 @@ class ModernMenu(RibbonBar):
                         actionList.append(action)
             return actionList
         except Exception as e:
-            StandardFunctions.Print(str(e.with_traceback(e.__traceback__)), "Warning")
+            StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
 
 
 # region - alternative loading
