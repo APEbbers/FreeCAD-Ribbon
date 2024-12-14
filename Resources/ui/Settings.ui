@@ -708,7 +708,7 @@
                           </font>
                          </property>
                          <property name="text">
-                          <string>Best to use with button size greater then 100.</string>
+                          <string>Best to use with button size greater than 100.</string>
                          </property>
                         </widget>
                        </item>
