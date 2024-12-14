@@ -479,7 +479,7 @@ This can take a while!</source>
     </message>
     <message>
         <location filename="../LoadDesign_Ribbon.py" line="259"/>
-        <source>The following workbenches were installed after the last data update: 
+        <source>The following workbenches were installed after the last data update:
 {}
 
 Do you want to update the data?
