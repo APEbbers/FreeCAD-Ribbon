@@ -3836,6 +3836,8 @@ class LoadDialog(Design_ui.Ui_Form):
         for ToolbarCommand in self.List_Commands:
             CommandName = ToolbarCommand[0]
             MenuNameTranslated = ToolbarCommand[4]
+            if CommandName.endswith("_ddb"):
+                MenuNameTranslated = CommandName.replace("_ddb", "")
             IsInList = ShadowList.__contains__(f"{CommandName}")
 
             if IsInList is False:
