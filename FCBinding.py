@@ -322,17 +322,33 @@ class ModernMenu(RibbonBar):
         Parameters_Ribbon.Settings.WriteSettings()
 
         # Activate the workbenches used in the new panels otherwise the panel stays empty
-        if "newPanels" in self.ribbonStructure:
-            for WorkBenchName in self.ribbonStructure["newPanels"]:
-                for NewPanel in self.ribbonStructure["newPanels"][WorkBenchName]:
-                    # Get the commands from the custom panel
-                    Commands = self.ribbonStructure["newPanels"][WorkBenchName][NewPanel]
+        try:
+            if "newPanels" in self.ribbonStructure:
+                for WorkBenchName in self.ribbonStructure["newPanels"]:
+                    for NewPanel in self.ribbonStructure["newPanels"][WorkBenchName]:
+                        # Get the commands from the custom panel
+                        Commands = self.ribbonStructure["newPanels"][WorkBenchName][NewPanel]
 
-                    # Get the command and its original toolbar
+                        # Get the command and its original toolbar
+                        for CommandItem in Commands:
+                            if CommandItem[1] != "General":
+                                # Activate the workbench if not loaded
+                                Gui.activateWorkbench(CommandItem[1])
+        except Exception:
+            StandardFunctions.Print("new panels have wrong format. Please create them again!", "Warning")
+            pass
+
+        # Activate the workbenches used in the dropdown buttons otherwise the button stays empty
+        try:
+            if "dropdownButtons" in self.ribbonStructure:
+                for DropDownCommand, Commands in self.ribbonStructure["dropdownButtons"].items():
                     for CommandItem in Commands:
                         if CommandItem[1] != "General":
                             # Activate the workbench if not loaded
                             Gui.activateWorkbench(CommandItem[1])
+        except Exception:
+            StandardFunctions.Print("dropdownbuttons have wrong format. Please create them again!", "Warning")
+            pass
 
         # Create the ribbon
         self.createModernMenu()
@@ -604,12 +620,12 @@ class ModernMenu(RibbonBar):
                 if len(button.actions()) > 0:
                     self.addQuickAccessButton(button)
                 else:
-                    print(f"{commandName} did not contain any actions!")
+                    StandardFunctions.Print(f"{commandName} did not contain any actions!", "Log")
 
                 toolBarWidth = toolBarWidth + width
             except Exception as e:
                 if Parameters_Ribbon.DEBUG_MODE is True:
-                    print(f"{commandName}, {e}")
+                    StandardFunctions.Print(f"{commandName}, {e}", "Warning")
                 # raise (e)
                 continue
 
@@ -936,7 +952,7 @@ class ModernMenu(RibbonBar):
         if not hasattr(workbench, "__Workbench__"):
             # XXX for debugging purposes
             if Parameters_Ribbon.DEBUG_MODE is True:
-                print(f"wb {workbench.MenuText} not loaded")
+                StandardFunctions.Print(f"wb {workbench.MenuText} not loaded", "Log")
 
             # wait for 0.1s hoping that after that time the workbench is loaded
             timer.timeout.connect(self.onWbActivated)
@@ -997,7 +1013,7 @@ class ModernMenu(RibbonBar):
                         continue
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
-                print(f"{e.with_traceback(e.__traceback__)}, 1")
+                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}, 1", "Warning")
             pass
 
         # Add the new panels to the toolbar list
@@ -1628,7 +1644,7 @@ class ModernMenu(RibbonBar):
                                     ButtonList.append(Child)
                         except Exception as e:
                             if Parameters_Ribbon.DEBUG_MODE is True:
-                                print(f"{e.with_traceback(None)}, 3")
+                                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}, 3", "Warning")
                             continue
         except Exception:
             pass
@@ -1657,6 +1673,8 @@ class ModernMenu(RibbonBar):
 
                             if Command is not None:
                                 CommandActionList = Command.getAction()
+                                if CommandActionList is None:
+                                    continue
                                 # if there are actions, proceed
                                 if len(CommandActionList) > 0:
                                     # Define a new toolbutton
@@ -1680,10 +1698,12 @@ class ModernMenu(RibbonBar):
 
                             if Command is None:
                                 if Parameters_Ribbon.DEBUG_MODE is True:
-                                    print(f"{CommandName} was None")
+                                    StandardFunctions.Print(f"{CommandName} was None", "Warning")
                         if CommandName.endswith("_ddb") is True:
                             MenuNameTtranslated = CommandName.replace("_ddb", "")
                             CommandActionList = self.returnCustomDropDown(CommandName)
+                            if CommandActionList is None:
+                                continue
 
                             # if there are actions, proceed
                             if len(CommandActionList) > 0:
@@ -1711,8 +1731,7 @@ class ModernMenu(RibbonBar):
 
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
-                raise (e)
-                print(f"{e}, {MenuNameTtranslated}")
+                StandardFunctions.Print(f"{e}, {MenuNameTtranslated}", "Warning")
             pass
         return ButtonList
 
@@ -1853,12 +1872,12 @@ class ModernMenu(RibbonBar):
             for DropDownCommand, Commands in self.ribbonStructure["dropdownButtons"].items():
                 if CommandName == DropDownCommand:
                     for CommandItem in Commands:
-                        Command = Gui.Command.get(CommandItem)
+                        Command = Gui.Command.get(CommandItem[0])
                         action = Command.getAction()
                         actionList.append(action)
             return actionList
         except Exception as e:
-            print(e)
+            StandardFunctions.Print(str(e.with_traceback(e.__traceback__)), "Warning")
 
 
 # region - alternative loading
