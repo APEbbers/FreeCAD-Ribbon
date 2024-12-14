@@ -322,15 +322,16 @@ class ModernMenu(RibbonBar):
         Parameters_Ribbon.Settings.WriteSettings()
 
         # Activate the workbenches used in the new panels otherwise the panel stays empty
-        for WorkBenchName in self.ribbonStructure["newPanels"]:
-            for NewPanel in self.ribbonStructure["newPanels"][WorkBenchName]:
-                # Get the commands from the custom panel
-                Commands = self.ribbonStructure["newPanels"][WorkBenchName][NewPanel]
+        if "newPanels" in self.ribbonStructure:
+            for WorkBenchName in self.ribbonStructure["newPanels"]:
+                for NewPanel in self.ribbonStructure["newPanels"][WorkBenchName]:
+                    # Get the commands from the custom panel
+                    Commands = self.ribbonStructure["newPanels"][WorkBenchName][NewPanel]
 
-                # Get the command and its original toolbar
-                for CommandItem in Commands:
-                    # # Activate the workbench if not loaded
-                    Gui.activateWorkbench(CommandItem[1])
+                    # Get the command and its original toolbar
+                    for CommandItem in Commands:
+                        # # Activate the workbench if not loaded
+                        Gui.activateWorkbench(CommandItem[1])
 
         # Create the ribbon
         self.createModernMenu()
