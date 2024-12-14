@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide6.QtGui import QIcon, QPixmap, QAction
-from PySide6.QtWidgets import (
+from PySide.QtGui import QIcon, QPixmap, QAction
+from PySide.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -36,7 +36,7 @@ from PySide6.QtWidgets import (
     QWidget,
     QLineEdit,
 )
-from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
+from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
 import json
 from datetime import datetime
@@ -286,25 +286,28 @@ class LoadDialog(Design_ui.Ui_Form):
             pass
 
         # add commands from newpanels to the list of commands
-        for NewPanelWorkBench in self.Dict_NewPanels["newPanels"]:
-            for NewPanel in self.Dict_NewPanels["newPanels"][NewPanelWorkBench]:
-                for NewPanelCommand in self.Dict_NewPanels["newPanels"][NewPanelWorkBench][NewPanel]:
-                    # get the icon for this command
-                    if CommandInfoCorrections(NewPanelCommand[0])["pixmap"] != "":
-                        IconName = CommandInfoCorrections(NewPanelCommand[0])["pixmap"]
-                    else:
-                        IconName = ""
-                    MenuName = CommandInfoCorrections(NewPanelCommand[0])["menuText"].replace("&", "")
-                    MenuNameTranslated = CommandInfoCorrections(NewPanelCommand[0])["ActionText"].replace("&", "")
-                    self.List_Commands.append(
-                        [
-                            NewPanelCommand[0],
-                            IconName,
-                            MenuName,
-                            NewPanelWorkBench,
-                            MenuNameTranslated,
-                        ]
-                    )
+        try:
+            for NewPanelWorkBench in self.Dict_NewPanels["newPanels"]:
+                for NewPanel in self.Dict_NewPanels["newPanels"][NewPanelWorkBench]:
+                    for NewPanelCommand in self.Dict_NewPanels["newPanels"][NewPanelWorkBench][NewPanel]:
+                        # get the icon for this command
+                        if CommandInfoCorrections(NewPanelCommand[0])["pixmap"] != "":
+                            IconName = CommandInfoCorrections(NewPanelCommand[0])["pixmap"]
+                        else:
+                            IconName = ""
+                        MenuName = CommandInfoCorrections(NewPanelCommand[0])["menuText"].replace("&", "")
+                        MenuNameTranslated = CommandInfoCorrections(NewPanelCommand[0])["ActionText"].replace("&", "")
+                        self.List_Commands.append(
+                            [
+                                NewPanelCommand[0],
+                                IconName,
+                                MenuName,
+                                NewPanelWorkBench,
+                                MenuNameTranslated,
+                            ]
+                        )
+        except Exception:
+            pass
         # endregion
 
         # region - Load all controls------------------------------------------------------------------
