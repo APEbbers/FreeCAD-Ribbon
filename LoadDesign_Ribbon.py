@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -36,7 +36,7 @@ from PySide.QtWidgets import (
     QWidget,
     QLineEdit,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
 import json
 from datetime import datetime
@@ -113,7 +113,6 @@ class LoadDialog(Design_ui.Ui_Form):
         # Make sure that the dialog stays on top
         self.form.raise_()
         self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
-        self.form.setWindowFlags(Qt.WindowType.Dialog)
         self.form.label_4.hide()
         self.form.MoveDownPanel_RD.hide()
         self.form.MoveUpPanel_RD.hide()
@@ -722,6 +721,9 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     def on_ReloadWB_clicked(self):
+        # minimize the dialog
+        self.form.setWindowFlag(Qt.WindowType.WindowStaysOnBottomHint)
+
         # clear the lists first
         self.List_Workbenches.clear()
         self.StringList_Toolbars.clear()
@@ -920,6 +922,10 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
+
+        # Show the dialog again
+        self.form.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)
+        self.form.show()
         return
 
     # region - Control functions----------------------------------------------------------------------
