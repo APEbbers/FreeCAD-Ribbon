@@ -108,7 +108,7 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon_local as pyqtribbon
+# import pyqtribbon as pyqtribbon
 # from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
 # from pyqtribbon.panel import RibbonPanel
 # from pyqtribbon.toolbutton import RibbonToolButton, RibbonButtonStyle
@@ -1647,17 +1647,46 @@ class ModernMenu(RibbonBar):
                     # Get the command and its original toolbar
                     for CommandItem in Commands:
                         CommandName = CommandItem[0]
-                        # Get the translated menutext
-                        MenuNameTtranslated = CommandInfoCorrections(CommandName)["ActionText"]
-                        # try:
-                        Command = Gui.Command.get(CommandName)
-                        if Command is not None:
-                            CommandActionList = Command.getAction()
+                        MenuNameTtranslated = ""
+                        # Define a new toolbutton
+                        NewToolbutton = QToolButton()
+                        if CommandName.endswith("_ddb") is False:
+                            # Get the translated menutext
+                            MenuNameTtranslated = CommandInfoCorrections(CommandName)["ActionText"]
+                            Command = Gui.Command.get(CommandName)
+
+                            if Command is not None:
+                                CommandActionList = Command.getAction()
+                                # if there are actions, proceed
+                                if len(CommandActionList) > 0:
+                                    # Define a new toolbutton
+                                    NewToolbutton = QToolButton()
+                                    # if there is only one action, add it directly
+                                    if len(CommandActionList) == 1:
+                                        NewToolbutton.addAction(CommandActionList[0])
+                                        NewToolbutton.setDefaultAction(NewToolbutton.actions()[0])
+                                    # if there are more actions, create a menu
+                                    if len(CommandActionList) > 1:
+                                        menu = QMenu()
+                                        menu.addActions(CommandActionList)
+                                        NewToolbutton.setMenu(menu)
+                                        NewToolbutton.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                                        NewToolbutton.setDefaultAction(menu.actions()[0])
+                                    # Set the text for the toolbutton
+                                    NewToolbutton.setText(MenuNameTtranslated)
+
+                                    # add it to the list
+                                    ButtonList.append(NewToolbutton)
+
+                            if Command is None:
+                                if Parameters_Ribbon.DEBUG_MODE is True:
+                                    print(f"{CommandName} was None")
+                        if CommandName.endswith("_ddb") is True:
+                            MenuNameTtranslated = CommandName.replace("_ddb", "")
+                            CommandActionList = self.returnCustomDropDown(CommandName)
+
                             # if there are actions, proceed
                             if len(CommandActionList) > 0:
-
-                                # Define a new toolbutton
-                                NewToolbutton = QToolButton()
                                 # if there is only one action, add it directly
                                 if len(CommandActionList) == 1:
                                     NewToolbutton.addAction(CommandActionList[0])
@@ -1665,21 +1694,25 @@ class ModernMenu(RibbonBar):
                                 # if there are more actions, create a menu
                                 if len(CommandActionList) > 1:
                                     menu = QMenu()
-                                    menu.addActions(CommandActionList)
+                                    # menu.addActions(CommandActionList)
+                                    for action in CommandActionList:
+                                        menu.addAction(action[0])
                                     NewToolbutton.setMenu(menu)
                                     NewToolbutton.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                                     NewToolbutton.setDefaultAction(menu.actions()[0])
-                                # Set the text for the toolbutton
-                                NewToolbutton.setText(MenuNameTtranslated)
+                                    # Do something with the menu. For some reason it will not be loaded otherwise
+                                    len(NewToolbutton.menu().actions())
 
-                                # add it to the list
-                                ButtonList.append(NewToolbutton)
-                        if Command is None:
-                            if Parameters_Ribbon.DEBUG_MODE is True:
-                                print(f"{CommandName} was None")
+                        # Set the text for the toolbutton
+                        NewToolbutton.setText(MenuNameTtranslated)
+
+                        # add it to the list
+                        ButtonList.append(NewToolbutton)
+
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
-                print(e)
+                raise (e)
+                print(f"{e}, {MenuNameTtranslated}")
             pass
         return ButtonList
 
