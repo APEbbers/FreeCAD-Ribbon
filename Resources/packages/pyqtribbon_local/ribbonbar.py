@@ -86,8 +86,12 @@ class RibbonBar(QWidget):
         :param maxRows: The maximum number of rows.
         :param parent: The parent widget of the ribbon.
         """
-        if (args and not isinstance(args[0], QWidget)) or ("title" in kwargs or "maxRows" in kwargs):
-            title = args[0] if len(args) > 0 else kwargs.get("title", "Ribbon Bar Title")
+        if (args and not isinstance(args[0], QWidget)) or (
+            "title" in kwargs or "maxRows" in kwargs
+        ):
+            title = (
+                args[0] if len(args) > 0 else kwargs.get("title", "Ribbon Bar Title")
+            )
             maxRows = args[1] if len(args) > 1 else kwargs.get("maxRows", 6)
             parent = args[2] if len(args) > 2 else kwargs.get("parent", None)
         else:
@@ -112,7 +116,9 @@ class RibbonBar(QWidget):
 
         # Connect signals
         self._titleWidget.helpButtonClicked.connect(self.helpButtonClicked)
-        self._titleWidget.collapseRibbonButtonClicked.connect(self._collapseButtonClicked)
+        self._titleWidget.collapseRibbonButtonClicked.connect(
+            self._collapseButtonClicked
+        )
         self._titleWidget.tabBar().currentChanged.connect(self.showCategoryByIndex)  # type: ignore
         self.setRibbonStyle(RibbonStyle.Default)
 
@@ -136,52 +142,84 @@ class RibbonBar(QWidget):
         return super().eventFilter(a0, a1)
 
     def actionAt(self, QPoint):
-        raise NotImplementedError("RibbonBar.actionAt() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.actionAt() is not implemented in the ribbon bar."
+        )
 
     def actionGeometry(self, QAction):
-        raise NotImplementedError("RibbonBar.actionGeometry() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.actionGeometry() is not implemented in the ribbon bar."
+        )
 
     def activeAction(self):
-        raise NotImplementedError("RibbonBar.activeAction() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.activeAction() is not implemented in the ribbon bar."
+        )
 
     def addMenu(self, *__args):
-        raise NotImplementedError("RibbonBar.addMenu() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.addMenu() is not implemented in the ribbon bar."
+        )
 
     def addAction(self, *__args):
-        raise NotImplementedError("RibbonBar.addAction() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.addAction() is not implemented in the ribbon bar."
+        )
 
     def addSeparator(self):
-        raise NotImplementedError("RibbonBar.addSeparator() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.addSeparator() is not implemented in the ribbon bar."
+        )
 
     def clear(self):
-        raise NotImplementedError("RibbonBar.clear() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.clear() is not implemented in the ribbon bar."
+        )
 
     def cornerWidget(self, corner=None, *args, **kwargs):
-        raise NotImplementedError("RibbonBar.cornerWidget() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.cornerWidget() is not implemented in the ribbon bar."
+        )
 
     def insertMenu(self, QAction, QMenu):
-        raise NotImplementedError("RibbonBar.insertMenu() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.insertMenu() is not implemented in the ribbon bar."
+        )
 
     def insertSeparator(self, QAction):
-        raise NotImplementedError("RibbonBar.insertSeparator() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.insertSeparator() is not implemented in the ribbon bar."
+        )
 
     def isDefaultUp(self):
-        raise NotImplementedError("RibbonBar.isDefaultUp() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.isDefaultUp() is not implemented in the ribbon bar."
+        )
 
     def isNativeMenuBar(self):
-        raise NotImplementedError("RibbonBar.isNativeMenuBar() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.isNativeMenuBar() is not implemented in the ribbon bar."
+        )
 
     def setActiveAction(self, QAction):
-        raise NotImplementedError("RibbonBar.setActiveAction() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.setActiveAction() is not implemented in the ribbon bar."
+        )
 
     def setCornerWidget(self, QWidget, corner=None, *args, **kwargs):
-        raise NotImplementedError("RibbonBar.setCornerWidget() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.setCornerWidget() is not implemented in the ribbon bar."
+        )
 
     def setDefaultUp(self, up):
-        raise NotImplementedError("RibbonBar.setDefaultUp() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.setDefaultUp() is not implemented in the ribbon bar."
+        )
 
     def setNativeMenuBar(self, bar):
-        raise NotImplementedError("RibbonBar.setNativeMenuBar() is not implemented in the ribbon bar.")
+        raise NotImplementedError(
+            "RibbonBar.setNativeMenuBar() is not implemented in the ribbon bar."
+        )
 
     def setRibbonStyle(self, style: RibbonStyle):
         """Set the style of the ribbon.
@@ -511,23 +549,33 @@ class RibbonBar(QWidget):
         if title in self._categories:
             self._stackedWidget.setCurrentWidget(self._categories[title])
 
-    def showContextCategory(self, category: typing.Union[RibbonContextCategory, RibbonContextCategories]):
+    def showContextCategory(
+        self, category: typing.Union[RibbonContextCategory, RibbonContextCategories]
+    ):
         """Show the given category or categories, if it is not a context category, nothing happens.
 
         :param category: The category to show.
         """
         if isinstance(category, RibbonContextCategory):
             self._titleWidget.tabBar().addTab(category.title(), category.color())
-            self._titleWidget.tabBar().setCurrentIndex(self._titleWidget.tabBar().count() - 1)
+            self._titleWidget.tabBar().setCurrentIndex(
+                self._titleWidget.tabBar().count() - 1
+            )
             self._stackedWidget.setCurrentWidget(category)
         elif isinstance(category, RibbonContextCategories):
             categories = category
             titles = list(categories.keys())
-            self._titleWidget.tabBar().addAssociatedTabs(categories.name(), titles, categories.color())
-            self._titleWidget.tabBar().setCurrentIndex(self._titleWidget.tabBar().count() - len(titles))
+            self._titleWidget.tabBar().addAssociatedTabs(
+                categories.name(), titles, categories.color()
+            )
+            self._titleWidget.tabBar().setCurrentIndex(
+                self._titleWidget.tabBar().count() - len(titles)
+            )
             self._stackedWidget.setCurrentWidget(categories[titles[0]])
 
-    def hideContextCategory(self, category: typing.Union[RibbonContextCategory, RibbonContextCategories]):
+    def hideContextCategory(
+        self, category: typing.Union[RibbonContextCategory, RibbonContextCategories]
+    ):
         """Hide the given category or categories, if it is not a context category, nothing happens.
 
         :param category: The category to hide.
@@ -571,7 +619,9 @@ class RibbonBar(QWidget):
         """
         self._stackedWidget.setCurrentWidget(category)
         if category.title() in self._titleWidget.tabBar().tabTitles():
-            self._titleWidget.tabBar().setCurrentIndex(self._titleWidget.tabBar().indexOf(category.title()))
+            self._titleWidget.tabBar().setCurrentIndex(
+                self._titleWidget.tabBar().indexOf(category.title())
+            )
         else:
             raise ValueError(
                 f"Category {category.title()} is not in the ribbon, "
@@ -583,7 +633,11 @@ class RibbonBar(QWidget):
 
         :return: The current category.
         """
-        return self._categories[self._titleWidget.tabBar().tabText(self._titleWidget.tabBar().currentIndex())]
+        return self._categories[
+            self._titleWidget.tabBar().tabText(
+                self._titleWidget.tabBar().currentIndex()
+            )
+        ]
 
     def minimumSizeHint(self) -> QSize:
         """Return the minimum size hint of the widget.

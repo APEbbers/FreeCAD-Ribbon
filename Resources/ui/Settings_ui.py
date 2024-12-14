@@ -1058,7 +1058,7 @@ class Ui_Settings(object):
         )
         self.label_26.setText(
             QCoreApplication.translate(
-                "Settings", "Best to use with button size greater then 100.", None
+                "Settings", "Best to use with button size greater than 100.", None
             )
         )
         self.groupBox_10.setTitle(

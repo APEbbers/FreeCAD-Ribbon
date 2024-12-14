@@ -107,7 +107,7 @@ translate = App.Qt.translate
 # from pyqtribbon_local.separator import RibbonSeparator
 # from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-import pyqtribbon as pyqtribbon
+import pyqtribbon_local as pyqtribbon
 from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
 from pyqtribbon.panel import RibbonPanel
 from pyqtribbon.toolbutton import RibbonToolButton
@@ -134,7 +134,9 @@ class CustomRibbonToolButton(RibbonToolButton):
         original_icon = QPixmap(button.style().standardIcon(button_icon).pixmap(25, 22))
 
         # Create a new QPixmap with increased dimensions in preparation to offset the original icon's position. Fill with transparency.
-        padded_icon = QPixmap(original_icon.width() + padding, original_icon.height() + 0)
+        padded_icon = QPixmap(
+            original_icon.width() + padding, original_icon.height() + 0
+        )
         padded_icon.fill(Qt.transparent)
 
         # Paint the original icon onto the transparent QPixmap with an offset making the icon sit in the bottom-right.
