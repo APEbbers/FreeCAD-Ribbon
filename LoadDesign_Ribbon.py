@@ -1155,12 +1155,16 @@ class LoadDialog(Design_ui.Ui_Form):
                 IsInlist = False
                 for i in range(self.form.PanelsToExclude_EP.count()):
                     ToolbarItem = self.form.PanelsToExclude_EP.item(i)
-                    if ToolbarItem.text() == StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]):
+                    if (
+                        ToolbarItem.text() == StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0])
+                        or ToolbarItem.text() == ""
+                    ):
                         IsInlist = True
 
                 if IsInlist is False:
                     # Add the ListWidgetItem to the correct ListWidget
-                    self.form.PanelsToExclude_EP.addItem(ListWidgetItem)
+                    if ListWidgetItem.text() != "":
+                        self.form.PanelsToExclude_EP.addItem(ListWidgetItem)
 
     def on_AddToolbar_EP_clicked(self):
         self.AddItem(
@@ -1973,9 +1977,11 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     def on_AddCommand_DDB_clicked(self):
+        Filter = [self.form.CommandList_DDB.currentText() + "_ddb"]
         self.AddItem(
             SourceWidget=self.form.CommandsAvailable_DDB,
             DestinationWidget=self.form.NewControl_DDB,
+            ExcludedItems=Filter,
         )
 
         # Enable the apply button
@@ -3283,7 +3289,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         return items
 
-    def AddItem(self, SourceWidget: QListWidget, DestinationWidget: QListWidget):
+    def AddItem(self, SourceWidget: QListWidget, DestinationWidget: QListWidget, ExcludedItems=[]):
         """Move a list item widgtet from one list to another
 
         Args:
@@ -3303,8 +3309,13 @@ class LoadDialog(Design_ui.Ui_Form):
                 if item.data(Qt.ItemDataRole.UserRole) == DestinationItem.data(Qt.ItemDataRole.UserRole):
                     IsInList = True
 
+            IsExcluded = False
+            for ExcludedItem in ExcludedItems:
+                if ExcludedItem == DestinationItem.data(Qt.ItemDataRole.UserRole):
+                    IsExcluded = True
+
             # Add the item to the list with current items
-            if IsInList is False:
+            if IsInList is False and IsExcluded is False:
                 DestinationWidget.addItem(DestinationItem)
 
                 # Go through the items on the list with items to add.
