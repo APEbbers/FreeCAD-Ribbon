@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -36,7 +36,7 @@ from PySide.QtWidgets import (
     QWidget,
     QLineEdit,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
 import json
 from datetime import datetime
@@ -1222,12 +1222,8 @@ class LoadDialog(Design_ui.Ui_Form):
     # region - Combine panels tab
     def on_WorkbenchList_CP__activated(self, setCustomToolbarSelector_CP: bool = False, CurrentText=""):
         # Set the workbench name.
-        WorkBenchName = ""
-        WorkBenchTitle = ""
-        for WorkBench in self.List_Workbenches:
-            if WorkBench[2] == self.form.WorkbenchList_CP.currentData():
-                WorkBenchName = WorkBench[0]
-                WorkBenchTitle = WorkBench[2]
+        WorkBenchName = self.form.WorkbenchList_CP.currentData(Qt.ItemDataRole.UserRole)[0]
+        WorkBenchTitle = self.form.WorkbenchList_CP.currentData(Qt.ItemDataRole.UserRole)[2]
 
         # Get the toolbars of the workbench
         wbToolbars = self.returnWorkBenchToolbars(WorkBenchName)
@@ -1298,68 +1294,65 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_AddPanel_CP_clicked(self):
         SelectedToolbars = self.form.PanelAvailable_CP.selectedItems()
 
-        # Go through the list of workbenches
-        for WorkBenchItem in self.List_Workbenches:
-            # If the workbench title matches the selected workbench, continue
-            if WorkBenchItem[2] == self.form.WorkbenchList_CP.currentData():
-                WorkbenchName = WorkBenchItem[0]
+        # Set the workbench name.
+        WorkbenchName = self.form.WorkbenchList_CP.currentData(Qt.ItemDataRole.UserRole)[0]
 
-                # Get the dict with the toolbars of this workbench
-                ToolbarItems = self.returnToolbarCommands(WorkbenchName)
-                # Get the custom toolbars from each installed workbench
-                CustomCommands = self.Dict_ReturnCustomToolbars(WorkbenchName)
-                ToolbarItems.update(CustomCommands)
-                # Get the global custom toolbars
-                CustomCommands = self.Dict_ReturnCustomToolbars_Global()
-                ToolbarItems.update(CustomCommands)
-                for key, value in list(ToolbarItems.items()):
-                    # Go through the selected items, if they mach continue
-                    for i in range(len(SelectedToolbars)):
-                        toolbar = QListWidgetItem(SelectedToolbars[i]).data(Qt.ItemDataRole.UserRole)
-                        if key == toolbar:
-                            for j in range(len(value)):
-                                CommandName = value[j]
-                                for ToolbarCommand in self.List_Commands:
-                                    if ToolbarCommand[0] == CommandName:
-                                        # Get the command
-                                        Command = Gui.Command.get(CommandName)
-                                        if Command is not None:
-                                            if Command is None:
-                                                continue
-                                            MenuName = ToolbarCommand[2].replace("&", "")
+        # Get the dict with the toolbars of this workbench
+        ToolbarItems = self.returnToolbarCommands(WorkbenchName)
+        # Get the custom toolbars from each installed workbench
+        CustomCommands = self.Dict_ReturnCustomToolbars(WorkbenchName)
+        ToolbarItems.update(CustomCommands)
+        # Get the global custom toolbars
+        CustomCommands = self.Dict_ReturnCustomToolbars_Global()
+        ToolbarItems.update(CustomCommands)
+        for key, value in list(ToolbarItems.items()):
+            # Go through the selected items, if they mach continue
+            for i in range(len(SelectedToolbars)):
+                toolbar = QListWidgetItem(SelectedToolbars[i]).data(Qt.ItemDataRole.UserRole)
+                if key == toolbar:
+                    for j in range(len(value)):
+                        CommandName = value[j]
+                        for ToolbarCommand in self.List_Commands:
+                            if ToolbarCommand[0] == CommandName:
+                                # Get the command
+                                Command = Gui.Command.get(CommandName)
+                                if Command is not None:
+                                    if Command is None:
+                                        continue
+                                    MenuName = ToolbarCommand[2].replace("&", "")
 
-                                            # get the icon for this command if there isn't one, leave it None
-                                            Icon = QIcon()
-                                            for item in self.List_CommandIcons:
-                                                if item[0] == ToolbarCommand[0]:
-                                                    Icon = item[1]
-                                            if Icon is None:
-                                                Icon = Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"])
-                                            action = Command.getAction()
-                                            try:
-                                                if len(action) > 1:
-                                                    Icon = action[0].icon()
-                                            except Exception:
-                                                pass
+                                    # get the icon for this command if there isn't one, leave it None
+                                    Icon = QIcon()
+                                    for item in self.List_CommandIcons:
+                                        if item[0] == ToolbarCommand[0]:
+                                            Icon = item[1]
+                                    if Icon is None:
+                                        Icon = Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"])
+                                    action = Command.getAction()
+                                    try:
+                                        if len(action) > 1:
+                                            Icon = action[0].icon()
+                                    except Exception:
+                                        pass
 
-                                            # Define a new ListWidgetItem.
-                                            ListWidgetItem = QListWidgetItem()
-                                            ListWidgetItem.setText(
-                                                StandardFunctions.TranslationsMapping(WorkbenchName, MenuName)
-                                            )
-                                            if Icon is not None:
-                                                ListWidgetItem.setIcon(Icon)
-                                            ListWidgetItem.setData(
-                                                Qt.ItemDataRole.UserRole, key
-                                            )  # add here the toolbar name as hidden data
+                                    # Define a new ListWidgetItem.
+                                    ListWidgetItem = QListWidgetItem()
+                                    ListWidgetItem.setText(
+                                        StandardFunctions.TranslationsMapping(WorkbenchName, MenuName)
+                                    )
+                                    if Icon is not None:
+                                        ListWidgetItem.setIcon(Icon)
+                                    ListWidgetItem.setData(
+                                        Qt.ItemDataRole.UserRole, key
+                                    )  # add here the toolbar name as hidden data
 
-                                            IsInList = False
-                                            for k in range(self.form.PanelSelected_CP.count()):
-                                                if self.form.PanelSelected_CP.item(k).text() == ListWidgetItem.text():
-                                                    IsInList = True
+                                    IsInList = False
+                                    for k in range(self.form.PanelSelected_CP.count()):
+                                        if self.form.PanelSelected_CP.item(k).text() == ListWidgetItem.text():
+                                            IsInList = True
 
-                                            if IsInList is False:
-                                                self.form.PanelSelected_CP.addItem(ListWidgetItem)
+                                    if IsInList is False:
+                                        self.form.PanelSelected_CP.addItem(ListWidgetItem)
 
         # Enable the apply button
         if self.CheckChanges() is True:
@@ -1380,70 +1373,66 @@ class LoadDialog(Design_ui.Ui_Form):
             )
             return
 
-        # Go through the list of workbenches
-        for WorkBenchItem in self.List_Workbenches:
-            WorkBenchName = self.form.WorkbenchList_CP.currentData()[0]
-            WorkBenchTitle = self.form.WorkbenchList_CP.currentData()[2]
-            # If the workbench title matches the selected workbench, continue
-            if WorkBenchName == WorkBenchItem[0] and WorkBenchItem[2] != "":
-                # Create item that defines the custom toolbar
-                Commands = []
-                MenuName = ""
-                for i in range(self.form.PanelSelected_CP.count()):
-                    ListWidgetItem = self.form.PanelSelected_CP.item(i)
-                    MenuName_ListWidgetItem = ListWidgetItem.text().replace("&", "")
-                    # if the translated menuname from the ListWidgetItem is equel to the MenuName from the command
-                    # Add the commandName to the list commandslist for this custom panel
-                    for CommandItem in self.List_Commands:
-                        MenuName = CommandItem[2].replace("&", "")
-                        if MenuName == MenuName_ListWidgetItem:
-                            CommandName = CommandItem[0]
-                            Commands.append(CommandName)
+        WorkBenchName = self.form.WorkbenchList_CP.currentData(Qt.ItemDataRole.UserRole)[0]
+        WorkBenchTitle = self.form.WorkbenchList_CP.currentData(Qt.ItemDataRole.UserRole)[2]
+        # Create item that defines the custom toolbar
+        Commands = []
+        MenuName = ""
+        for i in range(self.form.PanelSelected_CP.count()):
+            ListWidgetItem = self.form.PanelSelected_CP.item(i)
+            MenuName_ListWidgetItem = ListWidgetItem.text().replace("&", "")
+            # if the translated menuname from the ListWidgetItem is equel to the MenuName from the command
+            # Add the commandName to the list commandslist for this custom panel
+            for CommandItem in self.List_Commands:
+                MenuName = CommandItem[2].replace("&", "")
+                if MenuName == MenuName_ListWidgetItem:
+                    CommandName = CommandItem[0]
+                    Commands.append(CommandName)
 
-                    # Get the original toolbar
-                    OriginalToolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
-                    # define the suffix
-                    Suffix = "_custom"
+            # Get the original toolbar
+            OriginalToolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
+            # define the suffix
+            Suffix = "_custom"
 
-                    # Create or modify the dict that will be entered
-                    StandardFunctions.add_keys_nested_dict(
-                        self.Dict_CustomToolbars,
-                        [
-                            "customToolbars",
-                            WorkBenchName,
-                            CustomPanelTitle + Suffix,
-                            "commands",
-                            MenuName,
-                        ],
-                    )
+            # Create or modify the dict that will be entered
+            StandardFunctions.add_keys_nested_dict(
+                self.Dict_CustomToolbars,
+                [
+                    "customToolbars",
+                    WorkBenchName,
+                    CustomPanelTitle + Suffix,
+                    "commands",
+                    MenuName,
+                ],
+            )
 
-                    # Update the dict
-                    self.Dict_CustomToolbars["customToolbars"][WorkBenchName][CustomPanelTitle + Suffix]["commands"][
-                        MenuName
-                    ] = OriginalToolbar
+            # Update the dict
+            self.Dict_CustomToolbars["customToolbars"][WorkBenchName][CustomPanelTitle + Suffix]["commands"][
+                MenuName
+            ] = OriginalToolbar
 
-                # Check if the custom panel is selected in the Json file
-                IsInList = False
-                for j in range(self.form.CustomToolbarSelector_CP.count()):
-                    CustomToolbar = self.form.CustomToolbarSelector_CP.itemText(i)
-                    if CustomToolbar == f"{CustomPanelTitle}, {WorkBenchTitle}":
-                        IsInList = True
+        # Check if the custom panel is selected in the Json file
+        IsInList = False
+        for j in range(self.form.CustomToolbarSelector_CP.count()):
+            CustomToolbar = self.form.CustomToolbarSelector_CP.itemText(i)
+            if CustomToolbar == f"{CustomPanelTitle}, {WorkBenchTitle}":
+                IsInList = True
 
-                # If the custom panel is not in the json file, add it to the QComboBox
-                if IsInList is False:
-                    self.form.CustomToolbarSelector_CP.addItem(f"{CustomPanelTitle}, {WorkBenchTitle}")
-                # Set the Custom panel as current text for the QComboBox
-                self.form.CustomToolbarSelector_CP.setCurrentText(f"{CustomPanelTitle}, {WorkBenchTitle}")
+        # If the custom panel is not in the json file, add it to the QComboBox
+        if IsInList is False:
+            self.form.CustomToolbarSelector_CP.addItem(f"{CustomPanelTitle}, {WorkBenchTitle}")
+        # Set the Custom panel as current text for the QComboBox
+        self.form.CustomToolbarSelector_CP.setCurrentText(f"{CustomPanelTitle}, {WorkBenchTitle}")
 
-                # Add the order of panels to the Json file
-                ToolbarOrder = []
-                for i2 in range(self.form.PanelOrder_RD.count()):
-                    ToolbarOrder.append(self.form.PanelOrder_RD.item(i2).data(Qt.ItemDataRole.UserRole))
-                StandardFunctions.add_keys_nested_dict(
-                    self.Dict_RibbonCommandPanel,
-                    ["workbenches", WorkBenchName, "toolbars", "order"],
-                )
-                self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolbarOrder
+        # Add the order of panels to the Json file
+        ToolbarOrder = []
+        for i2 in range(self.form.PanelOrder_RD.count()):
+            ToolbarOrder.append(self.form.PanelOrder_RD.item(i2).data(Qt.ItemDataRole.UserRole))
+        StandardFunctions.add_keys_nested_dict(
+            self.Dict_RibbonCommandPanel,
+            ["workbenches", WorkBenchName, "toolbars", "order"],
+        )
+        self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolbarOrder
 
         # Enable the apply button
         if self.CheckChanges() is True:
@@ -1582,13 +1571,13 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Set the workbench name.
         WorkBenchName = ""
-        WorkBenchTitle = self.form.WorkbenchList_NP.currentText()
-        if WorkBenchTitle == "Global":
+        WorkBenchTitle = ""
+        if self.form.WorkbenchList_NP.currentText() == "Global":
             WorkBenchName = "Global"
+            WorkBenchTitle = "Global"
         else:
-            for WorkBench in self.List_Workbenches:
-                if WorkBench[2] == WorkBenchTitle:
-                    WorkBenchName = WorkBench[0]
+            WorkBenchName = self.form.WorkbenchList_NP.currentData(Qt.ItemDataRole.UserRole)[0]
+            WorkBenchTitle = self.form.WorkbenchList_NP.currentData(Qt.ItemDataRole.UserRole)[2]
 
         # If there is no workbench, return
         if WorkBenchName == "":
@@ -2097,8 +2086,8 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def on_WorkbenchList_RD__TextChanged(self):
         # Set the workbench name.
-        WorkBenchName = self.form.WorkbenchList_RD.currentData()
-        WorkBenchTitle = self.form.WorkbenchList_RD.currentText()
+        WorkBenchName = self.form.WorkbenchList_RD.currentData(Qt.ItemDataRole.UserRole)[0]
+        WorkBenchTitle = self.form.WorkbenchList_RD.currentData(Qt.ItemDataRole.UserRole)[2]
 
         # If there is no workbench, return
         if WorkBenchName == "":
@@ -2213,10 +2202,10 @@ class LoadDialog(Design_ui.Ui_Form):
             ShadowList = []  # Create a shadow list. To check if items are already existing.
 
             # Get the correct workbench name
-            WorkBenchName = self.form.WorkbenchList_RD.currentData()
+            WorkBenchName = self.form.WorkbenchList_RD.currentData(Qt.ItemDataRole.UserRole)[0]
 
             # Get the toolbar name
-            Toolbar = self.form.PanelList_RD.currentData()
+            Toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
             # Copy the workbench Toolbars
             ToolbarItems = self.returnToolbarCommands(WorkBenchName)
             # Get the custom toolbars from each installed workbench
@@ -2457,7 +2446,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         self.form.CommandTable_RD.setItem(RowNumber, 3, Icon_large)
 
                         # Double check the workbench name
-                        WorkBenchName = self.form.WorkbenchList_RD.currentData()
+                        WorkBenchName = self.form.WorkbenchList_RD.currentData(Qt.ItemDataRole.UserRole)[0]
 
                         # Define the order based on the order in this table widget
                         Order = []
@@ -2513,10 +2502,10 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def on_AddSeparator_RD_clicked(self):
         # Get the correct workbench name
-        WorkBenchName = self.form.WorkbenchList_RD.currentData()
+        WorkBenchName = self.form.WorkbenchList_RD.currentData(Qt.ItemDataRole.UserRole)[0]
 
         # Get the toolbar name
-        Toolbar = self.form.PanelList_RD.currentData()
+        Toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
 
         # Define a table widget item
         CommandTable_RDItem = QTableWidgetItem()
@@ -2552,7 +2541,7 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.CommandTable_RD.selectRow(RowNumber)
 
         # Double check the workbench name
-        WorkBenchName = self.form.WorkbenchList_RD.currentData()
+        WorkBenchName = self.form.WorkbenchList_RD.currentData(Qt.ItemDataRole.UserRole)[0]
 
         # Define the order based on the order in this table widget
         Order = []
@@ -2578,7 +2567,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def on_IconOnly_RD_clicked(self):
         if self.form.IconOnly_RD.isChecked() is True:
-            toolbar = self.form.PanelList_RD.currentData()
+            toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
 
             isInList = False
             for item in self.List_IconOnly_Toolbars:
@@ -2589,7 +2578,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 self.List_IconOnly_Toolbars.append(toolbar)
 
         if self.form.IconOnly_RD.isChecked() is False:
-            toolbar = self.form.PanelList_RD.currentData()
+            toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
 
             isInList = False
             for item in self.List_IconOnly_Toolbars:
@@ -2705,7 +2694,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def on_PanelOrder_RD_changed(self):
         # Get the correct workbench name
-        WorkBenchName = self.form.WorkbenchList_RD.currentData()
+        WorkBenchName = self.form.WorkbenchList_RD.currentData(Qt.ItemDataRole.UserRole)[0]
 
         ToolbarOrder = []
         for i2 in range(self.form.PanelOrder_RD.count()):
@@ -2869,12 +2858,12 @@ class LoadDialog(Design_ui.Ui_Form):
             WorkbenchName = workbench[0]
             WorkbenchTitle = workbench[2]
 
-            if ShadowList.__contains__([WorkbenchName, workbench[2]]) is False:
+            if ShadowList.__contains__([WorkbenchName, WorkbenchTitle]) is False:
                 # Default a workbench is selected
                 # if in List_IgnoredWorkbenches, set IsSelected to false
                 IsSelected = True
                 for IgnoredWorkbench in self.List_IgnoredWorkbenches:
-                    if workbench[2] == IgnoredWorkbench:
+                    if WorkbenchTitle == IgnoredWorkbench:
                         IsSelected = False
 
                 # Define a new ListWidgetItem.
@@ -2900,46 +2889,46 @@ class LoadDialog(Design_ui.Ui_Form):
                     self.form.WorkbenchList_IS.addItem(ListWidgetItem_IW.clone())
                     self.form.WorkbenchList_RD.addItem(
                         Icon,
-                        StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
-                        workbench[0],
+                        StandardFunctions.TranslationsMapping(WorkbenchName, WorkbenchTitle),
+                        workbench,
                     )
                     # Add the ListWidgetItem also to the second WorkbenchList_RD.
                     self.form.WorkbenchList_CP.addItem(
                         Icon,
-                        StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
-                        workbench[2],
+                        StandardFunctions.TranslationsMapping(WorkbenchName, WorkbenchTitle),
+                        workbench,
                     )
 
                     # Add the ListWidgetItem also to the second WorkbenchList_RD.
                     self.form.WorkbenchList_NP.addItem(
                         Icon,
-                        StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
-                        workbench[2],
+                        StandardFunctions.TranslationsMapping(WorkbenchName, WorkbenchTitle),
+                        workbench,
                     )
 
                 # Add the ListWidgetItem also to the categoryListWidgets
                 self.form.ListCategory_QC.addItem(
                     Icon,
-                    StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
-                    workbench[2],
+                    StandardFunctions.TranslationsMapping(WorkbenchName, WorkbenchTitle),
+                    workbench,
                 )
                 self.form.ListCategory_EP.addItem(
                     Icon,
-                    StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
-                    workbench[2],
+                    StandardFunctions.TranslationsMapping(WorkbenchName, WorkbenchTitle),
+                    workbench,
                 )
                 self.form.ListCategory_NP.addItem(
                     Icon,
-                    StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
-                    workbench[2],
+                    StandardFunctions.TranslationsMapping(WorkbenchName, WorkbenchTitle),
+                    workbench,
                 )
                 self.form.ListCategory_DDB.addItem(
                     Icon,
-                    StandardFunctions.TranslationsMapping(WorkbenchName, workbench[2]),
-                    workbench[2],
+                    StandardFunctions.TranslationsMapping(WorkbenchName, WorkbenchTitle),
+                    workbench,
                 )
 
-            ShadowList.append([WorkbenchName, workbench[2]])
+            ShadowList.append([WorkbenchName, WorkbenchTitle])
 
         self.form.ListCategory_QC.setCurrentText(All_KeyWord)
         self.form.ListCategory_EP.setCurrentText(All_KeyWord)
@@ -3097,13 +3086,13 @@ class LoadDialog(Design_ui.Ui_Form):
         for i1 in range(1, self.form.CommandTable_RD.rowCount()):
             row = i1
 
-            WorkBenchName = self.form.WorkbenchList_RD.currentData()
+            WorkBenchName = self.form.WorkbenchList_RD.currentData(Qt.ItemDataRole.UserRole)[0]
             try:
                 for WorkbenchItem in self.List_Workbenches:
                     WorkBenchName = WorkbenchItem[0]
 
                     # get the name of the toolbar
-                    Toolbar = self.form.PanelList_RD.currentData()
+                    Toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
                     # create a empty size string
                     Size = "small"
                     # Define empty strings for the command name and icon name
@@ -3272,10 +3261,10 @@ class LoadDialog(Design_ui.Ui_Form):
         SelectedCommands = self.ListWidgetItems(self.form.CommandsSelected_QC)
         for i2 in range(len(SelectedCommands)):
             ListWidgetItem: QListWidgetItem = SelectedCommands[i2]
-            if ListWidgetItem.data(Qt.ItemDataRole.UserRole).endswith("_ddb") is False:
-                QuickAccessCommand = CommandInfoCorrections(ListWidgetItem.data(Qt.ItemDataRole.UserRole))["name"]
-            else:
-                QuickAccessCommand = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
+            # if ListWidgetItem.data(Qt.ItemDataRole.UserRole).endswith("_ddb") is False:
+            #     QuickAccessCommand = CommandInfoCorrections(ListWidgetItem.data(Qt.ItemDataRole.UserRole))["name"]
+            # else:
+            QuickAccessCommand = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
             List_QuickAccessCommands.append(QuickAccessCommand)
 
         # IgnoredWorkbences
@@ -3418,10 +3407,10 @@ class LoadDialog(Design_ui.Ui_Form):
             CommandTable.removeRow(row)
 
         # Get the correct workbench name
-        WorkBenchName = self.form.WorkbenchList_RD.currentData()
+        WorkBenchName = self.form.WorkbenchList_RD.currentData(Qt.ItemDataRole.UserRole)[0]
 
         # Get the toolbar name
-        Toolbar = self.form.PanelList_RD.currentData()
+        Toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
 
         # Define the order based on the order in this table widget
         Order = []
@@ -3974,7 +3963,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
             if IsInList is False and workbenchName != "Global" and workbenchName != "General":
                 WorkbenchTitle = Gui.getWorkbench(workbenchName).MenuText
-                if WorkbenchTitle == ListWidget_WorkBenches.currentData():
+                if WorkbenchTitle == ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole)[2]:
                     IsInlist = False
                     for i in range(ListWidget_Commands.count()):
                         CommandItem = ListWidget_Commands.item(i)

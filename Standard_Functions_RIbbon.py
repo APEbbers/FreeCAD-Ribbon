@@ -580,7 +580,8 @@ def CommandInfoCorrections(CommandName):
             CommandInfo["statusTip"] = ""
             CommandInfo["pixmap"] = ""
             CommandInfo["ActionText"] = ""
-    except Exception as e:
+            CommandInfo["name"] = ""
+    except Exception:
         CommandInfo = {}
         CommandInfo["menuText"] = ""
         CommandInfo["toolTip"] = ""
@@ -588,6 +589,7 @@ def CommandInfoCorrections(CommandName):
         CommandInfo["statusTip"] = ""
         CommandInfo["pixmap"] = ""
         CommandInfo["ActionText"] = ""
+        CommandInfo["name"] = ""
     return CommandInfo
 
 
