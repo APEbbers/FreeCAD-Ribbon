@@ -1702,7 +1702,7 @@ class ModernMenu(RibbonBar):
                         if CommandName.endswith("_ddb") is True:
                             MenuNameTtranslated = CommandName.replace("_ddb", "")
                             CommandActionList = self.returnCustomDropDown(CommandName)
-                            if CommandActionList is None:
+                            if CommandActionList is None or len(CommandActionList) < 1:
                                 continue
 
                             # if there are actions, proceed
