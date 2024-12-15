@@ -35,6 +35,7 @@ from PySide.QtWidgets import (
     QMenu,
     QWidget,
     QLineEdit,
+    QSizePolicy,
 )
 from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
@@ -113,16 +114,31 @@ class LoadDialog(Design_ui.Ui_Form):
         # Make sure that the dialog stays on top
         self.form.raise_()
         self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
-        self.form.label_4.hide()
-        self.form.MoveDownPanel_RD.hide()
-        self.form.MoveUpPanel_RD.hide()
-        self.form.PanelOrder_RD.hide()
 
         # Position the dialog in front of FreeCAD
         centerPoint = mw.geometry().center()
         Rectangle = self.form.frameGeometry()
         Rectangle.moveCenter(centerPoint)
         self.form.move(Rectangle.topLeft())
+
+        # Set the size of the window to the previous state
+        #
+        # Get the previous values
+        LayoutDialog_Height = Parameters_Ribbon.Settings.GetIntSetting("LayoutDialog_Height")
+        if LayoutDialog_Height == 0 or LayoutDialog_Height is None:
+            LayoutDialog_Height = 800
+        LayoutDialog_Width = Parameters_Ribbon.Settings.GetIntSetting("LayoutDialog_Width")
+        if LayoutDialog_Width == 0 or LayoutDialog_Height is None:
+            LayoutDialog_Width = 990
+        # set a fixed size to force the form in to shape
+        self.form.setFixedSize(LayoutDialog_Width, LayoutDialog_Height)
+        # Set the size policy to fixed
+        self.form.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        # Set a minimum and maximum size
+        self.form.setMinimumSize(600, 600)
+        self.form.setMaximumSize(120000, 120000)
+        # change the sizepolicy to preferred, to allow stretching
+        self.form.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
         # Set the window title
         self.form.setWindowTitle(translate("FreeCAD Ribbon", "Ribbon design"))
@@ -661,8 +677,8 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.RestoreJson.connect(self.form.RestoreJson, SIGNAL("clicked()"), self.on_RestoreJson_clicked)
         self.form.ResetJson.connect(self.form.ResetJson, SIGNAL("clicked()"), self.on_ResetJson_clicked)
 
-        # connect the change of the current tab event to a function to set the size per tab
-        self.form.tabWidget.currentChanged.connect(self.on_tabBar_currentIndexChanged)
+        # # connect the change of the current tab event to a function to set the size per tab
+        # self.form.tabWidget.currentChanged.connect(self.on_tabBar_currentIndexChanged)
 
         # Connect the cancel button
         def Cancel():
@@ -691,11 +707,6 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.CommandTable_RD.resizeColumnToContents(1)
         self.form.CommandTable_RD.resizeColumnToContents(2)
         self.form.CommandTable_RD.resizeColumnToContents(3)
-        #
-        self.form.label_4.hide()
-        self.form.MoveDownPanel_RD.hide()
-        self.form.MoveUpPanel_RD.hide()
-        self.form.PanelOrder_RD.hide()
 
         # -- Form buttons --
         # Get the icon from the FreeCAD help
@@ -2050,40 +2061,6 @@ class LoadDialog(Design_ui.Ui_Form):
     # endregion---------------------------------------------------------------------------------------
 
     # region - Ribbon design tab
-    def on_tabBar_currentIndexChanged(self):
-        # width_small: int = Parameters_Ribbon.Settings.GetIntSetting("TabWidth_small")
-        # if width_small is None:
-        width_small = 990
-        # width_large: int = Parameters_Ribbon.Settings.GetIntSetting("TabWidth_large")
-        # if width_large is None:
-        width_large = 990
-
-        if self.form.tabWidget.currentIndex() == 7:
-            # Set the default size of the form
-            Geometry = self.form.geometry()
-            Geometry.setWidth(width_large)
-            self.form.setGeometry(Geometry)
-
-            self.form.label_4.show()
-            self.form.MoveDownPanel_RD.show()
-            self.form.MoveUpPanel_RD.show()
-            self.form.PanelOrder_RD.show()
-            self.form.setMinimumWidth(width_large)
-            self.form.setMaximumWidth(width_large)
-            self.form.setMaximumWidth(120000)
-        else:
-            self.form.label_4.hide()
-            self.form.MoveDownPanel_RD.hide()
-            self.form.MoveUpPanel_RD.hide()
-            self.form.PanelOrder_RD.hide()
-            # Set the default size of the form
-            Geometry = self.form.geometry()
-            Geometry.setWidth(width_small)
-            self.form.setGeometry(Geometry)
-            self.form.setMinimumWidth(width_small)
-            self.form.setMaximumWidth(width_small)
-            self.form.setMaximumWidth(120000)
-
     def on_WorkbenchList_RD__TextChanged(self):
         # Set the workbench name.
         WorkBenchName = self.form.WorkbenchList_RD.currentData(Qt.ItemDataRole.UserRole)[0]
@@ -2813,6 +2790,10 @@ class LoadDialog(Design_ui.Ui_Form):
     @staticmethod
     def on_Close_clicked(self):
         self.WriteJson()
+
+        # Set the size of the window to the previous state
+        Parameters_Ribbon.Settings.SetIntSetting("LayoutDialog_Height", self.form.height())
+        Parameters_Ribbon.Settings.SetIntSetting("LayoutDialog_Width", self.form.width())
         # Close the form
         self.form.close()
 
@@ -2824,6 +2805,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
     @staticmethod
     def on_Cancel_clicked(self):
+        # Set the size of the window to the previous state
+        Parameters_Ribbon.Settings.SetIntSetting("LayoutDialog_Height", self.form.height())
+        Parameters_Ribbon.Settings.SetIntSetting("LayoutDialog_Width", self.form.width())
         # Close the form
         self.form.close()
         return
