@@ -1674,41 +1674,51 @@ class LoadDialog(Design_ui.Ui_Form):
         for WorkBench in self.List_Workbenches:
             if WorkBench[2] == WorkBenchTitle or WorkBenchTitle == "Global":
                 WorkBenchName = WorkBench[0]
+                if WorkBenchTitle == "Global":
+                    WorkBenchName = WorkBenchTitle
                 try:
-                    for key, value in list(self.Dict_NewPanels["newPanels"][WorkBenchName].items()):
-                        if key == NewPanelTitle:
-                            # remove the custom toolbar from the combobox
-                            for i in range(self.form.CustomToolbarSelector_NP.count()):
-                                if self.form.CustomToolbarSelector_NP.itemText(i).split(", ")[0] == key:
-                                    if (
-                                        self.form.CustomToolbarSelector_NP.itemText(i).split(", ")[1] == WorkBenchTitle
-                                        and self.form.CustomToolbarSelector_NP.itemText(i).split(", ")[1] != ""
-                                    ):
-                                        self.form.CustomToolbarSelector_NP.removeItem(i)
-                                        self.form.CustomToolbarSelector_NP.setCurrentText(
-                                            self.form.CustomToolbarSelector_NP.itemText(i - 1)
-                                        )
+                    if WorkBenchName in self.Dict_NewPanels["newPanels"]:
+                        for key, value in list(self.Dict_NewPanels["newPanels"][WorkBenchName].items()):
+                            print(f"{key}, {NewPanelTitle}")
+                            if key == NewPanelTitle:
+                                # remove the custom toolbar from the combobox
+                                for i in range(self.form.CustomToolbarSelector_NP.count()):
+                                    print(
+                                        f'{self.form.CustomToolbarSelector_NP.itemText(i).split(", ")[0] + Suffix}, {key}'
+                                    )
+                                    if self.form.CustomToolbarSelector_NP.itemText(i).split(", ")[0] + Suffix == key:
+                                        if (
+                                            self.form.CustomToolbarSelector_NP.itemText(i).split(", ")[1]
+                                            == WorkBenchTitle
+                                            and self.form.CustomToolbarSelector_NP.itemText(i).split(", ")[1] != ""
+                                        ):
+                                            self.form.CustomToolbarSelector_NP.removeItem(i)
+                                            self.form.CustomToolbarSelector_NP.setCurrentText(
+                                                self.form.CustomToolbarSelector_NP.itemText(i - 1)
+                                            )
 
-                            # Get the current orderlist
-                            orderList: list = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][
-                                "order"
-                            ]
-                            if key in orderList:
-                                orderList.remove(key)
+                                # remove the custom toolbar also from the workbenches dict
+                                del self.Dict_NewPanels["newPanels"][WorkBenchName][key]
+                                # If the workbench is not Global, remove it also from the workbench dict
+                                if WorkBenchName != "Global":
+                                    # Get the current orderlist
+                                    orderList: list = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName][
+                                        "toolbars"
+                                    ]["order"]
+                                    if key in orderList:
+                                        orderList.remove(key)
 
-                            # remove the custom toolbar also from the workbenches dict
-                            del self.Dict_NewPanels["newPanels"][WorkBenchName][key]
-                            if key in self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]:
-                                del self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][key]
+                                    if key in self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]:
+                                        del self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][key]
 
-                            # update the order list
-                            self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["order"] = orderList
+                                    # update the order list
+                                    self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["order"] = orderList
 
-                            # Enable the apply button
-                            if self.CheckChanges() is True:
-                                self.form.UpdateJson.setEnabled(True)
+                                # Enable the apply button
+                                if self.CheckChanges() is True:
+                                    self.form.UpdateJson.setEnabled(True)
 
-                            return
+                                return
                 except Exception as e:
                     if Parameters_Ribbon.DEBUG_MODE is True:
                         raise (e)
@@ -3796,6 +3806,8 @@ class LoadDialog(Design_ui.Ui_Form):
                 for WorkBenchItem in self.List_Workbenches:
                     if WorkBenchItem[0] == WorkBenchName:
                         WorkBenchTitle = WorkBenchItem[2]
+                if WorkBenchName == "Global":
+                    WorkBenchTitle = WorkBenchName
 
                 for NewPanelItem in self.Dict_NewPanels["newPanels"][WorkBenchName]:
                     NewPanelTitle = str(NewPanelItem).removesuffix("_newPanel")
