@@ -1735,12 +1735,12 @@ class LoadDialog(Design_ui.Ui_Form):
             return
 
         # Get the current custom toolbar name
-        NewPanelTitle = ""
+        NewPanelName = ""
         WorkBenchTitle = ""
         # define the suffix
         Suffix = "_newPanel"
         if self.form.CustomToolbarSelector_NP.currentText() != "":
-            NewPanelTitle = self.form.CustomToolbarSelector_NP.currentText().split(", ")[0] + Suffix
+            NewPanelName = self.form.CustomToolbarSelector_NP.currentText().split(", ")[0] + Suffix
             WorkBenchTitle = self.form.CustomToolbarSelector_NP.currentText().split(", ")[1]
 
             # Set the workbench selector to the workbench to which this custom toolbar belongs
@@ -1750,41 +1750,69 @@ class LoadDialog(Design_ui.Ui_Form):
             WorkBenchName = ""
             for WorkBench in self.Dict_NewPanels["newPanels"]:
                 for NewPanel in self.Dict_NewPanels["newPanels"][WorkBench]:
-                    if NewPanel == NewPanelTitle:
+                    if NewPanel == NewPanelName:
                         WorkBenchName = WorkBench
 
                         # Get the commands and their original toolbar
-                        for Command in self.Dict_NewPanels["newPanels"][WorkBenchName][NewPanelTitle]:
+                        for Command in self.Dict_NewPanels["newPanels"][WorkBenchName][NewPanelName]:
                             WorkBenchNameCMD = Command[1]
-                            for CommandItem in self.List_Commands:
-                                # Check if the items is already there
-                                IsInList = ShadowList.__contains__(CommandItem[0])
-                                # if not, continue
-                                if IsInList is False:
-                                    if CommandItem[0] == Command[0] and CommandItem[3] == WorkBenchNameCMD:
-                                        # Command = Gui.Command.get(CommandItem[0])
-                                        MenuName = CommandItem[2].replace("&", "")
+                            CommandName = Command[0]
+
+                            # Check if the items is already there
+                            # if not, continue
+                            IsInList = ShadowList.__contains__(CommandName)
+                            if IsInList is False:
+                                # Check if the command is a dropdown button
+                                if CommandName.endswith("_ddb"):
+                                    for DropDownCommand, Commands in self.Dict_DropDownButtons[
+                                        "dropdownButtons"
+                                    ].items():
+                                        if CommandName == DropDownCommand:
+                                            MenuName = CommandName.replace("_ddb", "")
 
                                         # Define a new ListWidgetItem.
                                         ListWidgetItem = QListWidgetItem()
                                         ListWidgetItem.setText(MenuName)
-                                        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandItem[0])
+                                        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
                                         Icon = QIcon()
                                         for item in self.List_CommandIcons:
-                                            if item[0] == CommandItem[0]:
+                                            if item[0] == Commands[0][0]:
                                                 Icon = item[1]
                                         if Icon is None:
-                                            Icon = StandardFunctions.returnQiCons_Commands(
-                                                CommandItem[0], CommandItem[1]
-                                            )
+                                            for CommandItem in self.List_Commands:
+                                                if Commands[0][0] == CommandItem[0]:
+                                                    IconName = CommandItem[1]
+                                            Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
                                         if Icon is not None:
                                             ListWidgetItem.setIcon(Icon)
 
                                         if ListWidgetItem.text() != "":
                                             self.form.NewPanel_NP.addItem(ListWidgetItem)
+                                else:
+                                    # if not a drop down button check if the commandname is in the list of commands
+                                    for CommandItem in self.List_Commands:
+                                        if CommandItem[0] == CommandName and CommandItem[3] == WorkBenchNameCMD:
+                                            MenuName = CommandItem[2].replace("&", "")
 
-                                        # Add the command to the shadow list
-                                        ShadowList.append(CommandItem[0])
+                                            # Define a new ListWidgetItem.
+                                            ListWidgetItem = QListWidgetItem()
+                                            ListWidgetItem.setText(MenuName)
+                                            ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+                                            Icon = QIcon()
+                                            for item in self.List_CommandIcons:
+                                                if item[0] == CommandName:
+                                                    Icon = item[1]
+                                            if Icon is None:
+                                                IconName = CommandName
+                                                Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
+                                            if Icon is not None:
+                                                ListWidgetItem.setIcon(Icon)
+
+                                            if ListWidgetItem.text() != "":
+                                                self.form.NewPanel_NP.addItem(ListWidgetItem)
+
+                                # Add the command to the shadow list
+                                ShadowList.append(CommandName)
 
             # Enable the apply button
             if self.CheckChanges() is True:
