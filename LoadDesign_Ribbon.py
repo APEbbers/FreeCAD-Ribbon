@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide6.QtGui import QIcon, QPixmap, QAction
-from PySide6.QtWidgets import (
+from PySide.QtGui import QIcon, QPixmap, QAction
+from PySide.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -36,7 +36,7 @@ from PySide6.QtWidgets import (
     QWidget,
     QLineEdit,
 )
-from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
+from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
 import json
 from datetime import datetime
@@ -262,7 +262,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Add dropdownbuttons to the list of commands
         try:
             for DropDownCommand, Commands in self.Dict_DropDownButtons["dropdownButtons"].items():
-                if isinstance(Commands, [str, str]):
+                if isinstance(Commands, list):
                     CommandName = Commands[0][0]
                     IconName = ""
                     for CommandItem in self.List_Commands:
@@ -2122,7 +2122,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Get the new panels
         NewPanels = self.List_AddNewPanel(self.Dict_NewPanels, WorkBenchName="Global", PanelDict="newPanels")
         for Newpanel in NewPanels:
-            if Newpanel[1] == WorkBenchTitle:
+            if Newpanel[1] == "Global":
                 wbToolbars.append(Newpanel[0])
 
         # Get the order from the json file
@@ -2347,13 +2347,16 @@ class LoadDialog(Design_ui.Ui_Form):
                     # if not, continue
                     if IsInList is False and CommandName is not None:
                         MenuName = ""
-                        for CommandItem in self.List_Commands:
-                            if CommandItem[0] == CommandName:
-                                MenuName = CommandItem[2]
-                            if MenuName == "":
-                                MenuName = StandardFunctions.CommandInfoCorrections(CommandName)["menuText"]
-                            if MenuName == "":
-                                continue
+                        if CommandName.endswith("_ddb"):
+                            MenuName = CommandName.replace("_ddb", "")
+                        else:
+                            for CommandItem in self.List_Commands:
+                                if CommandItem[0] == CommandName:
+                                    MenuName = CommandItem[2]
+                                if MenuName == "":
+                                    MenuName = StandardFunctions.CommandInfoCorrections(CommandName)["menuText"]
+                                if MenuName == "":
+                                    continue
 
                         IconName = ""
                         # get the icon for this command if there isn't one, leave it None
@@ -2361,8 +2364,23 @@ class LoadDialog(Design_ui.Ui_Form):
                         for item in self.List_CommandIcons:
                             if item[0] == CommandName:
                                 Icon = item[1]
+                            if CommandName.endswith("_ddb"):
+                                for (
+                                    DropDownCommand,
+                                    Commands,
+                                ) in self.Dict_DropDownButtons["dropdownButtons"].items():
+                                    if Commands[0][0] == item[0]:
+                                        Icon = item[1]
                         if Icon is None or (Icon is not None and Icon.isNull()):
                             IconName = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
+                            if CommandName.endswith("_ddb"):
+                                for (
+                                    DropDownCommand,
+                                    Commands,
+                                ) in self.Dict_DropDownButtons["dropdownButtons"].items():
+                                    for CommandItem in self.List_Commands:
+                                        if Commands[0][0] == CommandItem[0]:
+                                            IconName = CommandItem[1]
                             Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
 
                         # Set the default check states
@@ -3679,18 +3697,19 @@ class LoadDialog(Design_ui.Ui_Form):
     def List_AddNewPanel(self, DictPanels: dict, WorkBenchName="Global", PanelDict="newPanels"):
         Toolbars = []
 
-        if str(WorkBenchName) != "" or WorkBenchName is not None:
-            if str(WorkBenchName) != "NoneWorkbench":
+        if WorkBenchName != "" or WorkBenchName is not None:
+            if WorkBenchName != "NoneWorkbench":
                 try:
                     for NewPanel in DictPanels[PanelDict][WorkBenchName]:
-                        if len(DictPanels[PanelDict][WorkBenchName]) > 0:
-                            ListCommands = DictPanels[PanelDict][WorkBenchName][NewPanel]
+                        ListCommands = DictPanels[PanelDict][WorkBenchName][NewPanel]
+                        if WorkBenchName == "Global":
+                            WorkbenchTitle = WorkBenchName
+                        else:
                             WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
 
-                            Toolbars.append([NewPanel, WorkbenchTitle, ListCommands])
+                        Toolbars.append([NewPanel, WorkbenchTitle, ListCommands])
                 except Exception:
                     pass
-
         return Toolbars
 
     def CheckChanges(self):
