@@ -1062,7 +1062,9 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     def on_SearchBar_QC_TextChanged(self):
-        self.FilterCommands_SearchBar(self.form.CommandsAvailable_QC, self.form.SearchBar_QC)
+        self.FilterCommands_SearchBar(
+            self.form.CommandsAvailable_QC, self.form.SearchBar_QC, self.form.CommandsSelected_QC
+        )
         return
 
     def on_AddCommand_QC_clicked(self):
@@ -1783,7 +1785,7 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     def on_SearchBar_NP_TextChanged(self):
-        self.FilterCommands_SearchBar(self.form.CommandsAvailable_NP, self.form.SearchBar_NP)
+        self.FilterCommands_SearchBar(self.form.CommandsAvailable_NP, self.form.SearchBar_NP, self.form.NewPanel_NP)
         return
 
     def on_AddCommand_NP_clicked(self):
@@ -1965,7 +1967,9 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     def on_SearchBar_DDB_TextChanged(self):
-        self.FilterCommands_SearchBar(self.form.CommandsAvailable_DDB, self.form.SearchBar_DDB)
+        self.FilterCommands_SearchBar(
+            self.form.CommandsAvailable_DDB, self.form.SearchBar_DDB, self.form.NewControl_DDB
+        )
         return
 
     def on_AddCommand_DDB_clicked(self):
@@ -3293,18 +3297,25 @@ class LoadDialog(Design_ui.Ui_Form):
             # Get the item text
             DestinationItem = QListWidgetItem(Value)
 
-            # Add the item to the list with current items
-            DestinationWidget.addItem(DestinationItem)
+            IsInList = False
+            for i in range(DestinationWidget.count()):
+                item = DestinationWidget.item(i)
+                if item.data(Qt.ItemDataRole.UserRole) == DestinationItem.data(Qt.ItemDataRole.UserRole):
+                    IsInList = True
 
-            # Go through the items on the list with items to add.
-            for i in range(SourceWidget.count()):
-                # Get the item
-                SourceItem = SourceWidget.item(i)
-                # If the item is not none and the item text is equal to itemText,
-                # remove it from the columns to add list.
-                if SourceItem is not None:
-                    if SourceItem.text() == DestinationItem.text():
-                        SourceWidget.takeItem(i)
+            # Add the item to the list with current items
+            if IsInList is False:
+                DestinationWidget.addItem(DestinationItem)
+
+                # Go through the items on the list with items to add.
+                for i in range(SourceWidget.count()):
+                    # Get the item
+                    SourceItem = SourceWidget.item(i)
+                    # If the item is not none and the item text is equal to itemText,
+                    # remove it from the columns to add list.
+                    if SourceItem is not None:
+                        if SourceItem.data(Qt.ItemDataRole.UserRole) == DestinationItem.data(Qt.ItemDataRole.UserRole):
+                            SourceWidget.takeItem(i)
 
         return
 
@@ -3827,7 +3838,14 @@ class LoadDialog(Design_ui.Ui_Form):
             Toolbars = Gui.getWorkbench(WorkBenchName).getToolbarItems()
             return Toolbars
 
-    def FilterCommands_SearchBar(self, ListWidget: QListWidget, SearchBar: QLineEdit):
+    def FilterCommands_SearchBar(self, ListWidget: QListWidget, SearchBar: QLineEdit, DestinationWidget: QListWidget):
+        # Create a list from the current commands
+        CurrentCommands = []
+        for i in range(ListWidget.count()):
+            CommandItem = ListWidget.item(i)
+            CurrentCommands.append(CommandItem.data(Qt.ItemDataRole.UserRole))
+
+        # Clear the listwidget
         ListWidget.clear()
 
         ShadowList = []  # List to add the commands and prevent duplicates
@@ -3876,6 +3894,11 @@ class LoadDialog(Design_ui.Ui_Form):
                             ListWidgetItem.setToolTip(CommandName)  # Use the tooltip to store the actual command.
 
                             # Add the ListWidgetItem to the correct ListWidget
+                            IsInList = False
+                            for i in range(DestinationWidget.count()):
+                                item = DestinationWidget.item(i)
+                                if item.data(Qt.ItemDataRole.UserRole) == ListWidgetItem.data(Qt.ItemDataRole.UserRole):
+                                    IsInList = True
                             ListWidget.addItem(ListWidgetItem)
                         if Icon is None:
                             if Parameters_Ribbon.DEBUG_MODE is True:
