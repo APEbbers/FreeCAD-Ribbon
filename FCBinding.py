@@ -1118,7 +1118,7 @@ class ModernMenu(RibbonBar):
                             action = None
                             if len(button.actions()) > 0:
                                 action = button.actions()[0]
-                            if action is not None:
+                            if action is not None and Text.endswith("_ddb") is False:
                                 Text = CommandInfoCorrections(action.data())["menuText"]
                         except Exception:
                             pass
@@ -1291,10 +1291,14 @@ class ModernMenu(RibbonBar):
 
                             # Get the icon from cache. Use the pixmap as backup
                             pixmap = ""
+                            CommandName = action.data()
+                            # If the command is an dropdown, use the button text instead of action data
+                            if button.text().endswith("_ddb"):
+                                CommandName = button.text()
                             try:
                                 pixmap = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
                                     "commands"
-                                ][action.data()]["icon"]
+                                ][CommandName]["icon"]
                             except Exception:
                                 pass
                             actionIcon = self.ReturnCommandIcon(action.data(), pixmap)
@@ -1305,7 +1309,7 @@ class ModernMenu(RibbonBar):
                             try:
                                 icon_Json = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
                                     "commands"
-                                ][action.data()]["icon"]
+                                ][CommandName]["icon"]
                                 if icon_Json != "":
                                     action.setIcon(Gui.getIcon(icon_Json))
                             except KeyError:
@@ -1315,7 +1319,7 @@ class ModernMenu(RibbonBar):
                             try:
                                 buttonSize = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
                                     "commands"
-                                ][action.data()]["size"]
+                                ][CommandName]["size"]
                                 if buttonSize == "":
                                     buttonSize = "small"
                             except KeyError:
@@ -1593,20 +1597,17 @@ class ModernMenu(RibbonBar):
                             "User parameter:BaseApp/Workbench/" + WorkBenchName + "/Toolbar/" + Group
                         )
                         Name = Parameter.GetString("Name")
-
                         Toolbars.append([Name, WorkBenchName])
 
         return Toolbars
 
     def List_ReturnCustomToolbars_Global(self):
         Toolbars = []
-
         CustomToolbars: list = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar").GetGroups()
 
         for Group in CustomToolbars:
             Parameter = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar/" + Group)
             Name = Parameter.GetString("Name")
-
             Toolbars.append([Name, "Global"])
 
         return Toolbars
@@ -1700,7 +1701,7 @@ class ModernMenu(RibbonBar):
                                 if Parameters_Ribbon.DEBUG_MODE is True:
                                     StandardFunctions.Print(f"{CommandName} was None", "Warning")
                         if CommandName.endswith("_ddb") is True:
-                            MenuNameTtranslated = CommandName.replace("_ddb", "")
+                            MenuNameTtranslated = CommandName  # do not remove "_ddb" here
                             CommandActionList = self.returnCustomDropDown(CommandName)
                             if CommandActionList is None or len(CommandActionList) < 1:
                                 continue
@@ -1720,6 +1721,9 @@ class ModernMenu(RibbonBar):
                                     NewToolbutton.setMenu(menu)
                                     NewToolbutton.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                                     NewToolbutton.setDefaultAction(menu.actions()[0])
+                                    # Add the commandname as the objectname to detect if it is a dropdownbutton
+                                    NewToolbutton.setObjectName(CommandName)
+
                                     # Do something with the menu. For some reason it will not be loaded otherwise
                                     len(NewToolbutton.menu().actions())
 
@@ -1810,16 +1814,20 @@ class ModernMenu(RibbonBar):
         return icon
 
     def CustomOverlay(self):
+        # Toggle the overlay
         Enable = True
         if self.OverlayToggled is True:
             Enable = False
 
+        # Get the different overlay areas
         OverlayParam_Left = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft")
         OverlayParam_Right = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayRight")
         OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
         OverlayParam_Bottom = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom")
 
+        # If overlay is enabled, go here
         if Enable is True:
+            # Define the various areas with panels. Currently only left and right areas are used.
             PanelsLeft = ["Tasks", "Tree view", "Launcher"]
             PanelsRight = [
                 "Report view",
@@ -1831,19 +1839,25 @@ class ModernMenu(RibbonBar):
             EntryLeft = ""
             for panel in PanelsLeft:
                 EntryLeft = EntryLeft + "," + panel
+            # Set the parameter
             OverlayParam_Left.SetString("Widgets", EntryLeft)
 
+            # Define the parameter value for the overlay on the right
             EntryRight = ""
             for panel in PanelsRight:
                 EntryRight = EntryRight + "," + panel
+            # Set the parameter
             OverlayParam_Right.SetString("Widgets", EntryRight)
 
+            # Set the overlay stat to be toggled
             self.OverlayToggled = True
 
         if Enable is False:
+            # Set the parameters to empty
             OverlayParam_Left.SetString("Widgets", "")
             OverlayParam_Right.SetString("Widgets", "")
 
+            # Set the overlay stat to be untoggled
             self.OverlayToggled = False
 
         return self.OverlayToggled
@@ -1878,6 +1892,7 @@ class ModernMenu(RibbonBar):
             return actionList
         except Exception as e:
             StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
+            return
 
 
 # region - alternative loading

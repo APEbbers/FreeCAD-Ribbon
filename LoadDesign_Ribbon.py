@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -36,7 +36,7 @@ from PySide.QtWidgets import (
     QWidget,
     QLineEdit,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
 import json
 from datetime import datetime
@@ -2348,7 +2348,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     if IsInList is False and CommandName is not None:
                         MenuName = ""
                         if CommandName.endswith("_ddb"):
-                            MenuName = CommandName.replace("_ddb", "")
+                            MenuName = CommandName
                         else:
                             for CommandItem in self.List_Commands:
                                 if CommandItem[0] == CommandName:
@@ -2416,6 +2416,8 @@ class LoadDialog(Design_ui.Ui_Form):
                         MenuNameTabelWidgetItem = ""
                         if MenuNameJson != CommandInfoCorrections(ToolbarCommand)["menuText"].replace("&", ""):
                             MenuNameTabelWidgetItem = MenuNameJson
+                        elif MenuName.endswith("_ddb"):
+                            MenuNameTabelWidgetItem = MenuName.replace("_ddb", "")
                         else:
                             for CommandItem in self.List_Commands:
                                 if CommandItem[0] == CommandName:
@@ -3121,64 +3123,68 @@ class LoadDialog(Design_ui.Ui_Form):
 
                     # Go through the list with all available commands.
                     # If the commandText is in this list, get the command name.
-                    for i3 in range(len(self.List_Commands)):
-                        if MenuName == self.List_Commands[i3][2]:
-                            if WorkBenchName == self.List_Commands[i3][3] or self.List_Commands[i3][3] == "Global":
-                                CommandName = self.List_Commands[i3][0]
-                                # Command = Gui.Command.get(CommandName)
-                                IconName = self.List_Commands[i3][1]
+                    if MenuName.endswith("_ddb"):
+                        for DropDownCommand, Commands in self.Dict_DropDownButtons["dropdownButtons"].items():
+                            if DropDownCommand == MenuName:
+                                CommandName = MenuName
+                                for CommandItem in self.List_Commands:
+                                    if CommandItem[0] == Commands[0][0]:
+                                        IconName = CommandItem[1]
+                    else:
+                        for i3 in range(len(self.List_Commands)):
+                            if MenuName == self.List_Commands[i3][2]:
+                                if WorkBenchName == self.List_Commands[i3][3] or self.List_Commands[i3][3] == "Global":
+                                    CommandName = self.List_Commands[i3][0]
+                                    # Command = Gui.Command.get(CommandName)
+                                    IconName = self.List_Commands[i3][1]
 
-                                # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
-                                for i6 in range(1, self.form.CommandTable_RD.columnCount()):
-                                    CheckState = self.form.CommandTable_RD.item(row, i6).checkState()
-                                    if CheckState == Qt.CheckState.Checked:
-                                        if i6 == 1:
-                                            Size = "small"
-                                        if i6 == 2:
-                                            Size = "medium"
-                                        if i6 == 3:
-                                            Size = "large"
+                    # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
+                    for i6 in range(1, self.form.CommandTable_RD.columnCount()):
+                        CheckState = self.form.CommandTable_RD.item(row, i6).checkState()
+                        if CheckState == Qt.CheckState.Checked:
+                            if i6 == 1:
+                                Size = "small"
+                            if i6 == 2:
+                                Size = "medium"
+                            if i6 == 3:
+                                Size = "large"
 
-                                Order = []
-                                for i7 in range(1, self.form.CommandTable_RD.rowCount()):
-                                    Order.append(
-                                        QTableWidgetItem(self.form.CommandTable_RD.item(i7, 0)).data(
-                                            Qt.ItemDataRole.UserRole
-                                        )
-                                    )
+                    Order = []
+                    for i7 in range(1, self.form.CommandTable_RD.rowCount()):
+                        Order.append(
+                            QTableWidgetItem(self.form.CommandTable_RD.item(i7, 0)).data(Qt.ItemDataRole.UserRole)
+                        )
 
-                                StandardFunctions.add_keys_nested_dict(
-                                    self.Dict_RibbonCommandPanel,
-                                    [
-                                        "workbenches",
-                                        WorkBenchName,
-                                        "toolbars",
-                                        Toolbar,
-                                        "order",
-                                    ],
-                                )
-                                StandardFunctions.add_keys_nested_dict(
-                                    self.Dict_RibbonCommandPanel,
-                                    [
-                                        "workbenches",
-                                        WorkBenchName,
-                                        "toolbars",
-                                        Toolbar,
-                                        "commands",
-                                        CommandName,
-                                    ],
-                                )
+                    StandardFunctions.add_keys_nested_dict(
+                        self.Dict_RibbonCommandPanel,
+                        [
+                            "workbenches",
+                            WorkBenchName,
+                            "toolbars",
+                            Toolbar,
+                            "order",
+                        ],
+                    )
+                    StandardFunctions.add_keys_nested_dict(
+                        self.Dict_RibbonCommandPanel,
+                        [
+                            "workbenches",
+                            WorkBenchName,
+                            "toolbars",
+                            Toolbar,
+                            "commands",
+                            CommandName,
+                        ],
+                    )
 
-                                self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
-                                    "order"
-                                ] = Order
-                                self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
-                                    "commands"
-                                ][CommandName] = {
-                                    "size": Size,
-                                    "text": MenuName,
-                                    "icon": IconName,
-                                }
+                    self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar]["order"] = Order
+                    self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar]["commands"][
+                        CommandName
+                    ] = {
+                        "size": Size,
+                        "text": MenuName,
+                        "icon": IconName,
+                    }
             except Exception as e:
                 if Parameters_Ribbon.DEBUG_MODE is True:
                     StandardFunctions.Print(f"{CommandName}, {WorkBenchName} {e}", "Warning")
