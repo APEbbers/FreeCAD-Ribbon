@@ -1454,6 +1454,15 @@ class ModernMenu(RibbonBar):
             if panel.title() == "Views - Ribbon" or panel.title() == "Individual views":
                 panel.setTitle(" Views ")
             else:
+                # Remove possible workbench names from the titles
+                ListDelimiters = [" - ", "-"]
+                for delimiter in ListDelimiters:
+                    if len(title.split(delimiter, 1)) > 1:
+                        title = title.split(delimiter, 1)[1]
+                if title.startswith(workbenchTitle) is True and title != workbenchTitle:
+                    title = title.replace(workbenchTitle, "")
+                if title.startswith(" ") is True:
+                    title = title.replace(" ", "")
                 panel.setTitle(title)
 
             # Set the size policy and increment. It has to be MinimumExpanding.
@@ -1461,17 +1470,6 @@ class ModernMenu(RibbonBar):
             panel.setSizeIncrement(self.iconSize, self.iconSize)
             self.panelTitleHeight = panel._titleHeight
             # panel._titleLabel.setWordWrap(True)
-
-            # Remove possible workbench names from the titles
-            ListDelimiters = [" - ", "-"]
-            for delimiter in ListDelimiters:
-                if len(title.split(delimiter, 1)) > 1:
-                    title = title.split(delimiter, 1)[1]
-            if title.startswith(workbenchTitle) is True and title != workbenchTitle:
-                title = title.replace(workbenchTitle, "")
-            if title.startswith(" ") is True:
-                title = title.replace(" ", "")
-            panel.setTitle(title)
 
             # remove any suffix from the panel title
             if panel.title().endswith("_custom"):
