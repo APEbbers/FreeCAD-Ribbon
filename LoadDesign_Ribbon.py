@@ -736,7 +736,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def on_ReloadWB_clicked(self):
         # minimize the dialog
-        self.form.setWindowFlag(Qt.WindowType.WindowStaysOnBottomHint)
+        self.form.hide()
 
         # clear the lists first
         self.List_Workbenches.clear()
@@ -938,7 +938,6 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.tabWidget.setCurrentIndex(0)
 
         # Show the dialog again
-        self.form.setWindowFlag(Qt.WindowType.WindowStaysOnTopHint)
         self.form.show()
         return
 
@@ -1233,8 +1232,17 @@ class LoadDialog(Design_ui.Ui_Form):
     # region - Combine panels tab
     def on_WorkbenchList_CP__activated(self, setCustomToolbarSelector_CP: bool = False, CurrentText=""):
         # Set the workbench name.
-        WorkBenchName = self.form.WorkbenchList_CP.currentData(Qt.ItemDataRole.UserRole)[0]
-        WorkBenchTitle = self.form.WorkbenchList_CP.currentData(Qt.ItemDataRole.UserRole)[2]
+        WorkBenchName = ""
+        WorkBenchTitle = ""
+        try:
+            WorkBenchName = self.form.WorkbenchList_CP.currentData(Qt.ItemDataRole.UserRole)[0]
+            WorkBenchTitle = self.form.WorkbenchList_CP.currentData(Qt.ItemDataRole.UserRole)[2]
+        except Exception:
+            pass
+
+        # If there is no workbench, return
+        if WorkBenchName == "" or WorkBenchTitle == "":
+            return
 
         # Get the toolbars of the workbench
         wbToolbars = self.returnWorkBenchToolbars(WorkBenchName)
@@ -1252,9 +1260,6 @@ class LoadDialog(Design_ui.Ui_Form):
         for CustomToolbar in CustomPanel:
             if CustomToolbar[1] == WorkBenchTitle:
                 wbToolbars.append(CustomToolbar[0])
-
-        # Get the workbench
-        WorkBench = Gui.getWorkbench(WorkBenchName)
 
         # Clear the listwidget before filling it
         self.form.PanelAvailable_CP.clear()
@@ -2063,11 +2068,16 @@ class LoadDialog(Design_ui.Ui_Form):
     # region - Ribbon design tab
     def on_WorkbenchList_RD__TextChanged(self):
         # Set the workbench name.
-        WorkBenchName = self.form.WorkbenchList_RD.currentData(Qt.ItemDataRole.UserRole)[0]
-        WorkBenchTitle = self.form.WorkbenchList_RD.currentData(Qt.ItemDataRole.UserRole)[2]
+        WorkBenchName = ""
+        WorkBenchTitle = ""
+        try:
+            WorkBenchName = self.form.WorkbenchList_RD.currentData(Qt.ItemDataRole.UserRole)[0]
+            WorkBenchTitle = self.form.WorkbenchList_RD.currentData(Qt.ItemDataRole.UserRole)[2]
+        except Exception:
+            pass
 
         # If there is no workbench, return
-        if WorkBenchName == "":
+        if WorkBenchName == "" or WorkBenchTitle == "":
             return
 
         # Get the toolbars of the workbench
@@ -3957,6 +3967,9 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     def FilterCommands_ListCategory(self, ListWidget_Commands: QListWidget, ListWidget_WorkBenches: QListWidget):
+        if ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole) is None:
+            return
+
         ListWidget_Commands.clear()
 
         ShadowList = []  # List to add the commands and prevent duplicates
