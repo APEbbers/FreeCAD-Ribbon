@@ -651,7 +651,7 @@ class ModernMenu(RibbonBar):
         self.quickAccessToolBar().setWindowTitle("quickAccessToolBar")
 
         # Set the tabbar height and textsize
-        self.tabBar().setContentsMargins(3, 3, 3, 3)
+        # self.tabBar().setContentsMargins(3, 3, 3, 3)
         font = self.tabBar().font()
         font.setPixelSize(self.TabBar_Size * 0.6)
         self.tabBar().setFont(font)
@@ -922,6 +922,9 @@ class ModernMenu(RibbonBar):
         """
         Import selected workbench toolbars to ModernMenu section.
         """
+        if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
+            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            TB.setMaximumHeight(self.ribbonHeight() + self.panelTitleHeight)
 
         index = self.tabBar().currentIndex()
         tabName = self.tabBar().tabText(index)
@@ -938,6 +941,9 @@ class ModernMenu(RibbonBar):
             if tabActivated is True:
                 self.onWbActivated()
                 self.ApplicationMenu()
+
+            # hide normal toolbars
+            self.hideClassicToolbars()
         return
 
     def onWbActivated(self):
@@ -947,12 +953,6 @@ class ModernMenu(RibbonBar):
 
         # Make sure that the text is readable
         self.tabBar().setStyleSheet("color: " + StyleMapping.ReturnStyleItem("Border_Color") + ";")
-
-        # switch tab if necessary
-        self.updateCurrentTab()
-
-        # hide normal toolbars
-        self.hideClassicToolbars()
 
         # ensure that workbench is already loaded
         workbench = Gui.activeWorkbench()
@@ -964,22 +964,26 @@ class ModernMenu(RibbonBar):
             # wait for 0.1s hoping that after that time the workbench is loaded
             timer.timeout.connect(self.onWbActivated)
             timer.setSingleShot(True)
-            timer.start(500)
+            timer.start(1000)
             return
+
+        # hide normal toolbars
+        self.hideClassicToolbars()
 
         # create panels
         self.buildPanels()
+
+        # switch tab if necessary
+        self.updateCurrentTab()
         return
 
     def onTabBarClicked(self):
-        # if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
         TB.setMaximumHeight(self.ribbonHeight() + self.panelTitleHeight)
         self.setRibbonVisible(True)
 
         # hide normal toolbars
         self.hideClassicToolbars()
-
         return
 
     def buildPanels(self):
@@ -1446,17 +1450,17 @@ class ModernMenu(RibbonBar):
                                 raise e
                             continue
 
-            # Set the size policy and increment. It has to be MinimumExpanding.
-            panel.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
-            panel.setSizeIncrement(self.iconSize, self.iconSize)
-            self.panelTitleHeight = panel._titleHeight
-            # panel._titleLabel.setWordWrap(True)
-
             # Change the name of the view panels to "View"
             if panel.title() == "Views - Ribbon" or panel.title() == "Individual views":
                 panel.setTitle(" Views ")
             else:
                 panel.setTitle(title)
+
+            # Set the size policy and increment. It has to be MinimumExpanding.
+            panel.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+            panel.setSizeIncrement(self.iconSize, self.iconSize)
+            self.panelTitleHeight = panel._titleHeight
+            # panel._titleLabel.setWordWrap(True)
 
             # Remove possible workbench names from the titles
             ListDelimiters = [" - ", "-"]
@@ -1982,7 +1986,7 @@ class run:
             if maximumHeight < ribbonDock.minimumHeight():
                 maximumHeight = ribbonDock.minimumHeight()
             if maximumHeight < 0:
-                if ribbonDock.minimumHeight < 0:
+                if ribbonDock.minimumHeight() < 0:
                     maximumHeight = 30
                 else:
                     maximumHeight = ribbonDock.minimumHeight()
