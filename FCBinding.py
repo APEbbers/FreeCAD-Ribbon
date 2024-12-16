@@ -435,8 +435,15 @@ class ModernMenu(RibbonBar):
 
         # Add a custom close event to show the original menubar again
         self.closeEvent = lambda close: self.closeEvent(close)
-        # self.hideEvent = lambda hide: self.hideEvent(hide)
 
+        # Remove persistant toolbars
+        PersistentToolbars = App.ParamGet("User parameter:Tux/PersistentToolbars/User").GetGroups()
+        for Group in PersistentToolbars:
+            Parameter = App.ParamGet("User parameter:Tux/PersistentToolbars/User/" + Group)
+            Parameter.SetString("Top", "")
+            Parameter.SetString("Left", "")
+            Parameter.SetString("Right", "")
+            Parameter.SetString("Bottom", "")
         return
 
     def closeEvent(self, event):
@@ -969,6 +976,11 @@ class ModernMenu(RibbonBar):
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
         TB.setMaximumHeight(self.ribbonHeight() + self.panelTitleHeight)
         self.setRibbonVisible(True)
+
+        # hide normal toolbars
+        self.hideClassicToolbars()
+
+        return
 
     def buildPanels(self):
         # Get the active workbench and get its name
@@ -1571,10 +1583,11 @@ class ModernMenu(RibbonBar):
             parentWidget = toolbar.parentWidget()
             # hide toolbars that are not in the statusBar and show toolbars that are in the statusbar.
             toolbar.hide()
+        for toolbar in mw.findChildren(QToolBar):
             if parentWidget.objectName() == "statusBar" or parentWidget.objectName() == "StatusBarArea":
                 toolbar.show()
             # Show specific toolbars and go to the next
-            if toolbar.objectName() in [
+            if toolbar.objectName() != "" and toolbar.objectName() in [
                 self.quickAccessToolBar().objectName(),
                 self.rightToolBar().objectName(),
             ]:
