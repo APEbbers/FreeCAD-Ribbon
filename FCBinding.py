@@ -249,19 +249,19 @@ class ModernMenu(RibbonBar):
                 "Part_SelectFilter",
             ],
         )
-        # Add a toolbar "tools"
-        StandardFunctions.CreateToolbar(
-            Name="Tools",
-            WorkBenchName="Global",
-            ButtonList=[
-                "Std_Measure",
-                "Std_UnitsCalculator",
-                "Std_Properties",
-                "Std_BoxElementSelection",
-                "Std_BoxSelection",
-                "Std_WhatsThis",
-            ],
-        )
+        # # Add a toolbar "tools"
+        # StandardFunctions.CreateToolbar(
+        #     Name="Tools",
+        #     WorkBenchName="Global",
+        #     ButtonList=[
+        #         "Std_Measure",
+        #         "Std_UnitsCalculator",
+        #         "Std_Properties",
+        #         "Std_BoxElementSelection",
+        #         "Std_BoxSelection",
+        #         "Std_WhatsThis",
+        #     ],
+        # )
 
         # Set the preferred toolbars
         PreferredToolbar = Parameters_Ribbon.Settings.GetIntSetting("Preferred_view")

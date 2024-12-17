@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -37,7 +37,7 @@ from PySide.QtWidgets import (
     QLineEdit,
     QSizePolicy,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
 import json
 from datetime import datetime
@@ -1033,13 +1033,18 @@ class LoadDialog(Design_ui.Ui_Form):
 
         self.LoadControls()
 
+        self.form.hide()
         message_1 = translate("FreeCAD Ribbon", "Buttons are set to {} for the following workbenches:\n").format(Size)
         message_2 = ""
         for WorkBenchName in WorkBenchList:
             message_2 = message_2 + WorkBenchName + "\n" + "  "
 
         StandardFunctions.Mbox(message_1 + message_2, "FreeCAD Ribbon", 0)
+        self.form.show()
 
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
         return
 
     def on_GenerateSetup_IS_Panels_clicked(self):
@@ -2873,6 +2878,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         ListWidgetItem_IS = QListWidgetItem()
         ListWidgetItem_IS.setText("All")
+        ListWidgetItem_IS.setData(Qt.ItemDataRole.UserRole, ["All", "", "All", {}])
         self.form.WorkbenchList_IS.addItem(ListWidgetItem_IS)
 
         self.List_Workbenches.sort()
@@ -3196,12 +3202,13 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def ReadJson(self, Section="All", JsonFile=""):
         # Open the JsonFile and load the data
-        JsonFile = open(Parameters_Ribbon.RIBBON_STRUCTURE_JSON)
         try:
             if JsonFile != "":
                 JsonFile = open(JsonFile)
+            else:
+                JsonFile = open(Parameters_Ribbon.RIBBON_STRUCTURE_JSON)
         except Exception:
-            pass
+            JsonFile = open(Parameters_Ribbon.RIBBON_STRUCTURE_JSON)
         data = json.load(JsonFile)
 
         # Get all the ignored toolbars
@@ -4081,13 +4088,13 @@ class LoadDialog(Design_ui.Ui_Form):
             ShadowList.append(f"{CommandName}, {workbenchName}")
         return
 
-    def CreateRibbonStructure_WB(self, WorkBenchName="all", Size="small"):
+    def CreateRibbonStructure_WB(self, WorkBenchName="All", Size="small"):
         # Define a list for the workbenchName
         ListWorkbenches = []
 
         # If WorkBenchName is "all", add all workbench names to the list.
         # If not, add only the workbench name to the list.
-        if WorkBenchName == "all":
+        if WorkBenchName == "All":
             for WorkBenchItem in self.List_Workbenches:
                 ListWorkbenches.append(WorkBenchItem[0])
         else:
@@ -4096,13 +4103,34 @@ class LoadDialog(Design_ui.Ui_Form):
         # Go trough the list
         for WorkBenchItem in ListWorkbenches:
             # Get the dict with the toolbars of this workbench
-            ToolbarItems = self.returnToolbarCommands(WorkBenchName)
+            ToolbarItems = self.returnToolbarCommands(WorkBenchItem)
             # Get the custom toolbars from each installed workbench
-            CustomCommands = self.Dict_ReturnCustomToolbars(WorkBenchName)
+            CustomCommands = self.Dict_ReturnCustomToolbars(WorkBenchItem)
             ToolbarItems.update(CustomCommands)
+            # Get the commands from the custom commands
+            CustomPanelCommands = self.Dict_AddCustomPanel(
+                DictPanels=self.Dict_CustomToolbars,
+                WorkBenchName=WorkBenchName,
+                PanelDict="customToolbars",
+            )
+            ToolbarItems.update(CustomPanelCommands)
+            # Get the commands from the custom commands
+            NewPanelCommands = self.Dict_AddNewPanel(
+                DictPanels=self.Dict_NewPanels,
+                WorkBenchName=WorkBenchName,
+                PanelDict="newPanels",
+            )
+            ToolbarItems.update(NewPanelCommands)
+            NewPanelCommands = self.Dict_AddNewPanel(
+                DictPanels=self.Dict_NewPanels,
+                WorkBenchName="Global",
+                PanelDict="newPanels",
+            )
+            ToolbarItems.update(NewPanelCommands)
 
             # Go through the toolbars of the workbench
             for key, value in list(ToolbarItems.items()):
+                print(f"{key}, {value}")
                 for j in range(len(value)):
                     CommandName = value[j]
 
