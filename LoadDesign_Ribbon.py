@@ -111,6 +111,10 @@ class LoadDialog(Design_ui.Ui_Form):
         # # this will create a Qt widget from our ui file
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "Design.ui"))
 
+        # Get the address of the repository address
+        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
+        self.ReproAdress = StandardFunctions.ReturnXML_Value(PackageXML, "url", "type", "repository")
+
         # Make sure that the dialog stays on top
         self.form.raise_()
         self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
@@ -2838,14 +2842,12 @@ class LoadDialog(Design_ui.Ui_Form):
 
     @staticmethod
     def on_Helpbutton_clicked(self):
-        if self.ReproAdress != "" or self.ReproAdress is not None:
+        if self.ReproAdres != "" or self.ReproAdress is not None:
             if not self.ReproAdress.endswith("/"):
                 self.ReproAdress = self.ReproAdress + "/"
 
             Adress = self.ReproAdress + "wiki"
-        else:
-            Adress = "https://github.com/APEbbers/FreeCAD-Ribbon/wiki/"
-        webbrowser.open(Adress, new=2, autoraise=True)
+            webbrowser.open(Adress, new=2, autoraise=True)
         return
 
     # endregion
