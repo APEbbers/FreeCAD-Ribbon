@@ -2842,8 +2842,10 @@ class LoadDialog(Design_ui.Ui_Form):
             if not self.ReproAdress.endswith("/"):
                 self.ReproAdress = self.ReproAdress + "/"
 
-            AboutAdress = self.ReproAdress + "wiki"
-            webbrowser.open(AboutAdress, new=2, autoraise=True)
+            Adress = self.ReproAdress + "wiki"
+        else:
+            Adress = "https://github.com/APEbbers/FreeCAD-Ribbon/wiki/"
+        webbrowser.open(Adress, new=2, autoraise=True)
         return
 
     # endregion
