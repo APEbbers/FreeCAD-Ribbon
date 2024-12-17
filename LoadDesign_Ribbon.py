@@ -4000,7 +4000,10 @@ class LoadDialog(Design_ui.Ui_Form):
             IsInList = ShadowList.__contains__(f"{CommandName}, {workbenchName}")
 
             if IsInList is False and workbenchName != "Global" and workbenchName != "General":
-                WorkbenchTitle = Gui.getWorkbench(workbenchName).MenuText
+                try:
+                    WorkbenchTitle = Gui.getWorkbench(workbenchName).MenuText
+                except Exception:
+                    return
                 if WorkbenchTitle == ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole)[2]:
                     IsInlist = False
                     for i in range(ListWidget_Commands.count()):
