@@ -235,33 +235,37 @@ class ModernMenu(RibbonBar):
                 WorkBenchName="Global",
             )
         # Add a toolbar "Views - Ribbon"
-        StandardFunctions.CreateToolbar(
-            Name="Views - Ribbon",
-            WorkBenchName="Global",
-            ButtonList=[
-                "Std_ViewGroup",
-                "Std_ViewFitAll",
-                "Std_ViewZoomOut",
-                "Std_ViewZoomIn",
-                "Std_ViewBoxZoom",
-                "Std_ViewFitAll",
-                "Std_AlignToSelection",
-                "Part_SelectFilter",
-            ],
+        #
+        # Create a key if not present
+        StandardFunctions.add_keys_nested_dict(
+            self.ribbonStructure,
+            ["newPanels", "Global", "Views - Ribbon_newPanel"],
         )
+        self.ribbonStructure["newPanels"]["Global"]["Views - Ribbon_newPanel"] = [
+            ["Std_ViewGroup", "AssemblyWorkbench"],
+            ["Std_ViewFitAll", "AssemblyWorkbench"],
+            ["Std_ViewFitSelection", "AssemblyWorkbench"],
+            ["Std_ViewZoomOut", "Global"],
+            ["Std_ViewZoomIn", "Global"],
+            ["Std_ViewBoxZoom", "Global"],
+            ["Std_AlignToSelection", "AssemblyWorkbench"],
+            ["Part_SelectFilter", "Global"],
+        ]
         # # Add a toolbar "tools"
-        # StandardFunctions.CreateToolbar(
-        #     Name="Tools",
-        #     WorkBenchName="Global",
-        #     ButtonList=[
-        #         "Std_Measure",
-        #         "Std_UnitsCalculator",
-        #         "Std_Properties",
-        #         "Std_BoxElementSelection",
-        #         "Std_BoxSelection",
-        #         "Std_WhatsThis",
-        #     ],
-        # )
+        #
+        # Create a key if not present
+        StandardFunctions.add_keys_nested_dict(
+            self.ribbonStructure,
+            ["newPanels", "Global", "Tools_newPanel"],
+        )
+        self.ribbonStructure["newPanels"]["Global"]["Tools_newPanel"] = [
+            ["Std_Measure", "Global"],
+            ["Std_UnitsCalculator", "Global"],
+            ["Std_Properties", "Global"],
+            ["Std_BoxElementSelection", "Global"],
+            ["Std_BoxSelection", "Global"],
+            ["Std_WhatsThis", "AssemblyWorkbench"],
+        ]
 
         # Set the preferred toolbars
         PreferredToolbar = Parameters_Ribbon.Settings.GetIntSetting("Preferred_view")
