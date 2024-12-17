@@ -318,7 +318,9 @@ class ModernMenu(RibbonBar):
         outfile.close()
 
         # Get the address of the repository address
-        self.ReproAdress = StandardFunctions.getRepoAdress(os.path.dirname(__file__))
+        # self.ReproAdress = StandardFunctions.getRepoAdress(os.path.dirname(__file__))
+        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
+        self.ReproAdress = StandardFunctions.ReturnXML_Value(PackageXML, "url", "type", "repository")
         if self.ReproAdress != "" or self.ReproAdress is not None:
             print(translate("FreeCAD Ribbon", "FreeCAD Ribbon: ") + self.ReproAdress)
 
@@ -883,26 +885,21 @@ class ModernMenu(RibbonBar):
         return
 
     def on_RibbonHelpButton_clicked(self):
-        if self.ReproAdress != "" and self.ReproAdress is not None:
+        if self.ReproAdress != "" or self.ReproAdress is not None:
             if not self.ReproAdress.endswith("/"):
                 self.ReproAdress = self.ReproAdress + "/"
 
             Adress = self.ReproAdress + "wiki"
-        else:
-            Adress = "https://github.com/APEbbers/FreeCAD-Ribbon/wiki/"
-
-        webbrowser.open(Adress, new=2, autoraise=True)
+            webbrowser.open(Adress, new=2, autoraise=True)
         return
 
     def on_WhatsNewButton_clicked(self):
-        if self.ReproAdress != "" and self.ReproAdress is not None:
+        if self.ReproAdress != "" or self.ReproAdress is not None:
             if not self.ReproAdress.endswith("/"):
                 self.ReproAdress = self.ReproAdress + "/"
 
             Adress = self.ReproAdress + """wiki/06-%E2%80%90-Change-log"""
-        else:
-            Adress = """https://github.com/APEbbers/FreeCAD-Ribbon/wiki/06-%E2%80%90-Change-log"""
-        webbrowser.open(Adress, new=2, autoraise=True)
+            webbrowser.open(Adress, new=2, autoraise=True)
         return
 
     def onPinClicked(self):

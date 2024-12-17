@@ -410,7 +410,7 @@ def RemoveWorkBenchToolbars(Name: str, WorkBenchName: str = "Global") -> None:
     return
 
 
-def ReturnXML_Value(path: str, ElementName: str):
+def ReturnXML_Value(path: str, ElementName: str, attribKey: str = "", attribValue: str = ""):
     import xml.etree.ElementTree as ET
     import os
 
@@ -425,8 +425,13 @@ def ReturnXML_Value(path: str, ElementName: str):
     result = ""
     for child in root:
         if str(child.tag).split("}")[1] == ElementName:
-            result = child.text
-
+            if attribKey != "" and attribValue != "":
+                for key, value in child.attrib.items():
+                    if key == attribKey and value == attribValue:
+                        result = child.text
+                        return result
+            else:
+                result = child.text
     return result
 
 
