@@ -883,21 +883,26 @@ class ModernMenu(RibbonBar):
         return
 
     def on_RibbonHelpButton_clicked(self):
-        if self.ReproAdress != "" or self.ReproAdress is not None:
+        if self.ReproAdress != "" and self.ReproAdress is not None:
             if not self.ReproAdress.endswith("/"):
                 self.ReproAdress = self.ReproAdress + "/"
 
             Adress = self.ReproAdress + "wiki"
-            webbrowser.open(Adress, new=2, autoraise=True)
+        else:
+            Adress = "https://github.com/APEbbers/FreeCAD-Ribbon/wiki/"
+
+        webbrowser.open(Adress, new=2, autoraise=True)
         return
 
     def on_WhatsNewButton_clicked(self):
-        if self.ReproAdress != "" or self.ReproAdress is not None:
+        if self.ReproAdress != "" and self.ReproAdress is not None:
             if not self.ReproAdress.endswith("/"):
                 self.ReproAdress = self.ReproAdress + "/"
 
             Adress = self.ReproAdress + """wiki/06-%E2%80%90-Change-log"""
-            webbrowser.open(Adress, new=2, autoraise=True)
+        else:
+            Adress = """https://github.com/APEbbers/FreeCAD-Ribbon/wiki/06-%E2%80%90-Change-log"""
+        webbrowser.open(Adress, new=2, autoraise=True)
         return
 
     def onPinClicked(self):
