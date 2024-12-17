@@ -957,6 +957,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
             self.LoadControls()
 
+            # Enable the apply button
+            if self.CheckChanges() is True:
+                self.form.UpdateJson.setEnabled(True)
         return
 
     def on_ImportCustomPanels_IS_clicked(self):
@@ -972,6 +975,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
             self.LoadControls()
 
+            # Enable the apply button
+            if self.CheckChanges() is True:
+                self.form.UpdateJson.setEnabled(True)
         return
 
     def on_ImportDropDownButtons_IS_clicked(self):
@@ -986,6 +992,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
             self.LoadControls()
 
+            # Enable the apply button
+            if self.CheckChanges() is True:
+                self.form.UpdateJson.setEnabled(True)
         return
 
     def on_ExportLayout_IS_clicked(self):
