@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -35,7 +35,7 @@ from PySide.QtGui import (
     QColor,
     QStyleHints,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -59,7 +59,7 @@ from PySide.QtWidgets import (
     QLabel,
     QVBoxLayout,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -338,8 +338,9 @@ class ModernMenu(RibbonBar):
                             if CommandItem[1] != "General":
                                 # Activate the workbench if not loaded
                                 Gui.activateWorkbench(CommandItem[1])
-        except Exception:
-            StandardFunctions.Print("new panels have wrong format. Please create them again!", "Warning")
+        except Exception as e:
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                StandardFunctions.Print(f"new panels have wrong format. Please create them again!\n\n{e}", "Error")
             pass
 
         # Activate the workbenches used in the dropdown buttons otherwise the button stays empty
@@ -1455,7 +1456,7 @@ class ModernMenu(RibbonBar):
                             continue
 
             # Change the name of the view panels to "View"
-            if panel.title() == "Views - Ribbon" or panel.title() == "Individual views":
+            if panel.title() == "Views - Ribbon_newPanel" or panel.title() == "Individual views":
                 panel.setTitle(" Views ")
             else:
                 # Remove possible workbench names from the titles
@@ -1701,19 +1702,23 @@ class ModernMenu(RibbonBar):
                                     continue
                                 # if there are actions, proceed
                                 if len(CommandActionList) > 0:
-                                    # Define a new toolbutton
-                                    NewToolbutton = QToolButton()
                                     # if there is only one action, add it directly
                                     if len(CommandActionList) == 1:
                                         NewToolbutton.addAction(CommandActionList[0])
                                         NewToolbutton.setDefaultAction(NewToolbutton.actions()[0])
                                     # if there are more actions, create a menu
-                                    if len(CommandActionList) > 1:
+                                    elif len(CommandActionList) > 1:
                                         menu = QMenu()
                                         menu.addActions(CommandActionList)
                                         NewToolbutton.setMenu(menu)
                                         NewToolbutton.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                                         NewToolbutton.setDefaultAction(menu.actions()[0])
+                                        # Add the commandname as the objectname to detect if it is a dropdownbutton
+                                        NewToolbutton.setObjectName(CommandName)
+
+                                        # Do something with the menu. For some reason it will not be loaded otherwise
+                                        len(NewToolbutton.menu().actions())
+
                                     # Set the text for the toolbutton
                                     NewToolbutton.setText(MenuNameTtranslated)
 
