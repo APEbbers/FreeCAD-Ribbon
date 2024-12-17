@@ -1458,7 +1458,7 @@ class ModernMenu(RibbonBar):
                             continue
 
             # Change the name of the view panels to "View"
-            if panel.title() == "Views - Ribbon_newPanel" or panel.title() == "Individual views":
+            if panel.title() in "Views - Ribbon_newPanel" or panel.title() in "Individual views":
                 panel.setTitle(" Views ")
             else:
                 # Remove possible workbench names from the titles
