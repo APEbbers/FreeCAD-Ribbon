@@ -2842,7 +2842,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
     @staticmethod
     def on_Helpbutton_clicked(self):
-        if self.ReproAdres != "" or self.ReproAdress is not None:
+        if self.ReproAdress != "" or self.ReproAdress is not None:
             if not self.ReproAdress.endswith("/"):
                 self.ReproAdress = self.ReproAdress + "/"
 
