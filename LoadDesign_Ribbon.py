@@ -4110,14 +4110,14 @@ class LoadDialog(Design_ui.Ui_Form):
             # Get the commands from the custom commands
             CustomPanelCommands = self.Dict_AddCustomPanel(
                 DictPanels=self.Dict_CustomToolbars,
-                WorkBenchName=WorkBenchName,
+                WorkBenchName=WorkBenchItem,
                 PanelDict="customToolbars",
             )
             ToolbarItems.update(CustomPanelCommands)
             # Get the commands from the custom commands
             NewPanelCommands = self.Dict_AddNewPanel(
                 DictPanels=self.Dict_NewPanels,
-                WorkBenchName=WorkBenchName,
+                WorkBenchName=WorkBenchItem,
                 PanelDict="newPanels",
             )
             ToolbarItems.update(NewPanelCommands)
@@ -4130,7 +4130,6 @@ class LoadDialog(Design_ui.Ui_Form):
 
             # Go through the toolbars of the workbench
             for key, value in list(ToolbarItems.items()):
-                print(f"{key}, {value}")
                 for j in range(len(value)):
                     CommandName = value[j]
 
