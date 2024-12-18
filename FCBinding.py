@@ -162,6 +162,9 @@ class ModernMenu(RibbonBar):
     # define a placeholder for the panel title heihgt
     panelTitleHeight = 0
 
+    # Create the list for the commands
+    List_Commands = []
+
     # Create the lists for the deserialized icons
     List_CommandIcons = []
     List_WorkBenchIcons = []
@@ -193,24 +196,32 @@ class ModernMenu(RibbonBar):
             self.ribbonStructure.update(json.load(file))
         file.close()
 
-        DataFile = os.path.join(os.path.dirname(__file__) + "RibbonDataFile.dat")
-        if os.path.exists(DataFile) is True:
-            # Load the lists for the deserialized icons
+        # DataFile = os.path.join(os.path.dirname(__file__), "RibbonDataFile.dat")
+        # if os.path.exists(DataFile) is True:
+        #     Data = {}
+        #     try:
+        #         # Load the lists for the deserialized icons
+        #         for IconItem in Data["WorkBench_Icons"]:
+        #             Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
+        #             item = [IconItem[0], Icon]
+        #             self.List_WorkBenchIcons.append(item)
+        #         # Load the lists for the deserialized icons
+        #         for IconItem in Data["Command_Icons"]:
+        #             Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
+        #             item = [IconItem[0], Icon]
+        #             self.List_CommandIcons.append(item)
+        #     except Exception:
+        #         pass
+        DataFile2 = os.path.join(os.path.dirname(__file__), "RibbonDataFile2.dat")
+        if os.path.exists(DataFile2) is True:
             Data = {}
             # read ribbon structure from JSON file
-            with open(DataFile, "r") as file:
+            with open(DataFile2, "r") as file:
                 Data.update(json.load(file))
             file.close()
             try:
-                for IconItem in Data["WorkBench_Icons"]:
-                    Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
-                    item = [IconItem[0], Icon]
-                    self.List_WorkBenchIcons.append(item)
-                # Load the lists for the deserialized icons
-                for IconItem in Data["Command_Icons"]:
-                    Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
-                    item = [IconItem[0], Icon]
-                    self.List_CommandIcons.append(item)
+                # Load the list of commands
+                self.List_Commands = Data["List_Commands"]
             except Exception:
                 pass
 
@@ -318,7 +329,6 @@ class ModernMenu(RibbonBar):
         outfile.close()
 
         # Get the address of the repository address
-        # self.ReproAdress = StandardFunctions.getRepoAdress(os.path.dirname(__file__))
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         self.ReproAdress = StandardFunctions.ReturnXML_Value(PackageXML, "url", "type", "repository")
         if self.ReproAdress != "" or self.ReproAdress is not None:
@@ -587,6 +597,14 @@ class ModernMenu(RibbonBar):
             try:
                 # If it is a standard freecad button, set the command accordingly
                 if commandName.endswith("_ddb") is False:
+                    try:
+                        if Gui.Command.get(commandName) is None:
+                            for CommandItem in self.List_Commands:
+                                if CommandItem[0] == commandName:
+                                    Gui.activateWorkbench(CommandItem[3])
+                                    break
+                    except Exception:
+                        pass
                     QuickAction = Gui.Command.get(commandName).getAction()
 
                     if len(QuickAction) == 1:

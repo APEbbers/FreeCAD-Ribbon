@@ -49,6 +49,8 @@ import Serialize_Ribbon
 import webbrowser
 import time
 
+from InitGui import DataFileVersion
+
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
 pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
@@ -73,7 +75,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
     ReproAdress: str = ""
 
-    DataFileVersion = "0.1"
+    DataFileVersion = DataFileVersion
 
     # Define list of the workbenches, toolbars and commands on class level
     List_Workbenches = []
@@ -930,6 +932,15 @@ class LoadDialog(Design_ui.Ui_Form):
         DataFile = os.path.join(os.path.dirname(__file__), "RibbonDataFile.dat")
         with open(DataFile, "w") as outfile:
             json.dump(Data, outfile, indent=4)
+        outfile.close()
+
+        # Write a second data file with the list of commands only
+        Data2 = {}
+        Data2["List_Commands"] = self.List_Commands
+        # Write to the data file
+        DataFile2 = os.path.join(os.path.dirname(__file__), "RibbonDataFile2.dat")
+        with open(DataFile2, "w") as outfile:
+            json.dump(Data2, outfile, indent=4)
         outfile.close()
 
         # If there is a RibbonStructure.json file, load it
@@ -3029,7 +3040,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
             if IsInList is False:
                 CommandName = CommandItem[0]
-                MenuNameTranslated = CommandItem[4]
+                MenuNameTranslated = CommandItem[2]
+                if len(CommandItem) == 5:
+                    MenuNameTranslated = CommandItem[4]
                 if CommandName.endswith("_ddb"):
                     MenuNameTranslated = CommandName.replace("_ddb", "")
 
@@ -3301,9 +3314,6 @@ class LoadDialog(Design_ui.Ui_Form):
         SelectedCommands = self.ListWidgetItems(self.form.CommandsSelected_QC)
         for i2 in range(len(SelectedCommands)):
             ListWidgetItem: QListWidgetItem = SelectedCommands[i2]
-            # if ListWidgetItem.data(Qt.ItemDataRole.UserRole).endswith("_ddb") is False:
-            #     QuickAccessCommand = CommandInfoCorrections(ListWidgetItem.data(Qt.ItemDataRole.UserRole))["name"]
-            # else:
             QuickAccessCommand = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
             List_QuickAccessCommands.append(QuickAccessCommand)
 
@@ -3999,7 +4009,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
         for ToolbarCommand in self.List_Commands:
             CommandName = ToolbarCommand[0]
-            MenuNameTranslated = ToolbarCommand[4]
+            MenuNameTranslated = ToolbarCommand[2]
+            if len(ToolbarCommand) == 5:
+                MenuNameTranslated = ToolbarCommand[4]
             if CommandName.endswith("_ddb"):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
             workbenchName = ToolbarCommand[3]
