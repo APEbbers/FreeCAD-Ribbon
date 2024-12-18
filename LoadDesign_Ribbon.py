@@ -49,8 +49,6 @@ import Serialize_Ribbon
 import webbrowser
 import time
 
-from InitGui import DataFileVersion
-
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
 pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
@@ -75,7 +73,8 @@ class LoadDialog(Design_ui.Ui_Form):
 
     ReproAdress: str = ""
 
-    DataFileVersion = DataFileVersion
+    # Set the data file version. Triggeres an question if an update is needed
+    DataFileVersion = "0.2"
 
     # Define list of the workbenches, toolbars and commands on class level
     List_Workbenches = []

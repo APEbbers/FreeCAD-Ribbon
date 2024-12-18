@@ -33,9 +33,6 @@ def QT_TRANSLATE_NOOP(context, text):
     return text
 
 
-# Set the data file version. Triggeres an question if an update is needed
-DataFileVersion = "0.2"
-
 translate = App.Qt.translate
 
 # check if there is a "RibbonStructure.json". if not create one
