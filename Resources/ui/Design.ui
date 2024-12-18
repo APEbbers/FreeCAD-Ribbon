@@ -246,7 +246,7 @@
             <enum>QTabWidget::TabShape::Rounded</enum>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>7</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideNone</enum>
@@ -559,6 +559,9 @@
                  <layout class="QGridLayout" name="gridLayout">
                   <item row="4" column="0">
                    <widget class="QToolButton" name="MoveUp_Command_QC">
+                    <property name="toolTip">
+                     <string>Move up</string>
+                    </property>
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -569,6 +572,9 @@
                   </item>
                   <item row="5" column="0">
                    <widget class="QToolButton" name="MoveDown_Command_QC">
+                    <property name="toolTip">
+                     <string>Move down</string>
+                    </property>
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -579,6 +585,9 @@
                   </item>
                   <item row="2" column="0">
                    <widget class="QToolButton" name="Remove_Command_QC">
+                    <property name="toolTip">
+                     <string>Remove command</string>
+                    </property>
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -589,6 +598,9 @@
                   </item>
                   <item row="1" column="0">
                    <widget class="QToolButton" name="Add_Command_QC">
+                    <property name="toolTip">
+                     <string>Add command</string>
+                    </property>
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -803,6 +815,9 @@
                   </item>
                   <item row="2" column="0">
                    <widget class="QToolButton" name="RemovePanel_EP">
+                    <property name="toolTip">
+                     <string>Include panel</string>
+                    </property>
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -813,6 +828,9 @@
                   </item>
                   <item row="1" column="0">
                    <widget class="QToolButton" name="AddPanel_EP">
+                    <property name="toolTip">
+                     <string>Exclude panel</string>
+                    </property>
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -965,6 +983,9 @@
                  <layout class="QGridLayout" name="gridLayout_4">
                   <item row="2" column="0">
                    <widget class="QToolButton" name="RemoveWorkbench_IW">
+                    <property name="toolTip">
+                     <string>Exclude workbench</string>
+                    </property>
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -975,6 +996,9 @@
                   </item>
                   <item row="1" column="0">
                    <widget class="QToolButton" name="AddWorkbench_IW">
+                    <property name="toolTip">
+                     <string>Include workbench</string>
+                    </property>
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -1237,6 +1261,9 @@
                  <layout class="QGridLayout" name="gridLayout_12">
                   <item row="4" column="0">
                    <widget class="QToolButton" name="MoveDownPanelCommand_CP">
+                    <property name="toolTip">
+                     <string>Move down</string>
+                    </property>
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -1276,6 +1303,9 @@
                   </item>
                   <item row="3" column="0">
                    <widget class="QToolButton" name="MoveUpPanelCommand_CP">
+                    <property name="toolTip">
+                     <string>Move up</string>
+                    </property>
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -1286,6 +1316,9 @@
                   </item>
                   <item row="1" column="0">
                    <widget class="QToolButton" name="AddPanel_CP">
+                    <property name="toolTip">
+                     <string>Add panel buttons</string>
+                    </property>
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -1447,6 +1480,9 @@
                </item>
                <item row="5" column="0">
                 <widget class="QToolButton" name="MoveUpCommand_DDB">
+                 <property name="toolTip">
+                  <string>Move up</string>
+                 </property>
                  <property name="text">
                   <string>...</string>
                  </property>
@@ -1470,6 +1506,9 @@
                </item>
                <item row="2" column="0">
                 <widget class="QToolButton" name="RemoveCommand_DDB">
+                 <property name="toolTip">
+                  <string>Remove command</string>
+                 </property>
                  <property name="text">
                   <string>...</string>
                  </property>
@@ -1480,6 +1519,9 @@
                </item>
                <item row="6" column="0">
                 <widget class="QToolButton" name="MoveDownCommand_DDB">
+                 <property name="toolTip">
+                  <string>Move down</string>
+                 </property>
                  <property name="text">
                   <string>...</string>
                  </property>
@@ -1503,6 +1545,9 @@
                </item>
                <item row="1" column="0">
                 <widget class="QToolButton" name="AddCommand_DDB">
+                 <property name="toolTip">
+                  <string>Add command</string>
+                 </property>
                  <property name="text">
                   <string>...</string>
                  </property>
@@ -1865,6 +1910,9 @@
                   </item>
                   <item row="6" column="0">
                    <widget class="QToolButton" name="MoveDownPanelCommand_NP">
+                    <property name="toolTip">
+                     <string>Move down</string>
+                    </property>
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -1875,6 +1923,9 @@
                   </item>
                   <item row="5" column="0">
                    <widget class="QToolButton" name="MoveUpPanelCommand_NP">
+                    <property name="toolTip">
+                     <string>Move up</string>
+                    </property>
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -1911,6 +1962,9 @@
                   </item>
                   <item row="2" column="0">
                    <widget class="QToolButton" name="RemovePanelCommand_NP">
+                    <property name="toolTip">
+                     <string>Remove command</string>
+                    </property>
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -1921,6 +1975,9 @@
                   </item>
                   <item row="1" column="0">
                    <widget class="QToolButton" name="AddPanelCommand_NP">
+                    <property name="toolTip">
+                     <string>Add command</string>
+                    </property>
                     <property name="text">
                      <string>...</string>
                     </property>
@@ -2033,6 +2090,9 @@
                     </item>
                     <item>
                      <widget class="QToolButton" name="MoveUp_RibbonCommand_RD">
+                      <property name="toolTip">
+                       <string>Move up</string>
+                      </property>
                       <property name="text">
                        <string>...</string>
                       </property>
@@ -2043,6 +2103,9 @@
                     </item>
                     <item>
                      <widget class="QToolButton" name="MoveDown_RibbonCommand_RD">
+                      <property name="toolTip">
+                       <string>Move down</string>
+                      </property>
                       <property name="text">
                        <string>...</string>
                       </property>
@@ -2399,6 +2462,9 @@
                     </item>
                     <item row="1" column="0">
                      <widget class="QToolButton" name="MoveUpPanel_RD">
+                      <property name="toolTip">
+                       <string>Move up</string>
+                      </property>
                       <property name="text">
                        <string>...</string>
                       </property>
@@ -2409,6 +2475,9 @@
                     </item>
                     <item row="2" column="0">
                      <widget class="QToolButton" name="MoveDownPanel_RD">
+                      <property name="toolTip">
+                       <string>Move down</string>
+                      </property>
                       <property name="text">
                        <string>...</string>
                       </property>

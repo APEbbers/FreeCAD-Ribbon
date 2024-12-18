@@ -1781,42 +1781,43 @@ class LoadDialog(Design_ui.Ui_Form):
                             WorkBenchNameCMD = Command[1]
                             CommandName = Command[0]
 
-                            # Check if the items is already there
-                            # if not, continue
-                            IsInList = ShadowList.__contains__(CommandName)
-                            if IsInList is False:
-                                # Check if the command is a dropdown button
-                                if CommandName.endswith("_ddb"):
-                                    for DropDownCommand, Commands in self.Dict_DropDownButtons[
-                                        "dropdownButtons"
-                                    ].items():
-                                        if CommandName == DropDownCommand:
-                                            MenuName = CommandName.replace("_ddb", "")
+                            # Check if the command is a dropdown button
+                            if CommandName.endswith("_ddb"):
+                                for DropDownCommand, Commands in self.Dict_DropDownButtons["dropdownButtons"].items():
+                                    if CommandName == DropDownCommand:
+                                        MenuName = CommandName.replace("_ddb", "")
 
-                                        # Define a new ListWidgetItem.
-                                        ListWidgetItem = QListWidgetItem()
-                                        ListWidgetItem.setText(MenuName)
-                                        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
-                                        Icon = QIcon()
-                                        for item in self.List_CommandIcons:
-                                            if item[0] == Commands[0][0]:
-                                                Icon = item[1]
-                                        if Icon is None:
-                                            for CommandItem in self.List_Commands:
-                                                if Commands[0][0] == CommandItem[0]:
-                                                    IconName = CommandItem[1]
-                                            Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
-                                        if Icon is not None:
-                                            ListWidgetItem.setIcon(Icon)
+                                    # Define a new ListWidgetItem.
+                                    ListWidgetItem = QListWidgetItem()
+                                    ListWidgetItem.setText(MenuName)
+                                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+                                    Icon = QIcon()
+                                    for item in self.List_CommandIcons:
+                                        if item[0] == Commands[0][0]:
+                                            Icon = item[1]
+                                    if Icon is None:
+                                        for CommandItem in self.List_Commands:
+                                            if Commands[0][0] == CommandItem[0]:
+                                                IconName = CommandItem[1]
+                                        Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
+                                    if Icon is not None:
+                                        ListWidgetItem.setIcon(Icon)
 
-                                        if ListWidgetItem.text() != "":
-                                            self.form.NewPanel_NP.addItem(ListWidgetItem)
-                                else:
-                                    # if not a drop down button check if the commandname is in the list of commands
-                                    for CommandItem in self.List_Commands:
-                                        if CommandItem[0] == CommandName and CommandItem[3] == WorkBenchNameCMD:
-                                            MenuName = CommandItem[2].replace("&", "")
+                                    if ListWidgetItem.text() != "":
+                                        self.form.NewPanel_NP.addItem(ListWidgetItem)
 
+                                    # Add the command to the shadow list
+                                    # ShadowList.append(f"{CommandName}, {WorkBenchName}")
+                            else:
+                                # if not a drop down button check if the commandname is in the list of commands
+                                for CommandItem in self.List_Commands:
+                                    if CommandItem[0] == CommandName and CommandItem[3] == WorkBenchNameCMD:
+                                        MenuName = CommandItem[2].replace("&", "")
+
+                                        # Check if the items is already there
+                                        # if not, continue
+                                        IsInList = ShadowList.__contains__(f"{CommandName}, {WorkBenchName}")
+                                        if IsInList is False:
                                             # Define a new ListWidgetItem.
                                             ListWidgetItem = QListWidgetItem()
                                             ListWidgetItem.setText(MenuName)
@@ -1834,8 +1835,8 @@ class LoadDialog(Design_ui.Ui_Form):
                                             if ListWidgetItem.text() != "":
                                                 self.form.NewPanel_NP.addItem(ListWidgetItem)
 
-                                # Add the command to the shadow list
-                                ShadowList.append(CommandName)
+                                            # Add the command to the shadow list
+                                            ShadowList.append(f"{CommandName}, {WorkBenchName}")
 
             # Enable the apply button
             if self.CheckChanges() is True:
@@ -3032,12 +3033,6 @@ class LoadDialog(Design_ui.Ui_Form):
                 if CommandName.endswith("_ddb"):
                     MenuNameTranslated = CommandName.replace("_ddb", "")
 
-                # Default a command is not selected
-                IsSelected = False
-                for QuickCommand in self.List_QuickAccessCommands:
-                    if CommandItem[0] == QuickCommand:
-                        IsSelected = True
-
                 if MenuNameTranslated != "":
                     # Define a new ListWidgetItem.
                     textAddition = ""
@@ -3068,6 +3063,13 @@ class LoadDialog(Design_ui.Ui_Form):
                     ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
 
                     # Add the ListWidgetItem to the correct ListWidget
+                    #
+                    # Default a command is not selected
+                    IsSelected = False
+                    for QuickCommand in self.List_QuickAccessCommands:
+                        if CommandItem[0] == QuickCommand:
+                            IsSelected = True
+
                     if Icon is not None:
                         if IsSelected is False:
                             IsInlist = False
@@ -3840,7 +3842,6 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # -- Custom panel tab --
         self.form.CustomToolbarSelector_CP.addItem(translate("FreeCAD Ribbon", "New"))
-        self.form.CustomToolbarSelector_NP.addItem(translate("FreeCAD Ribbon", "New"))
         try:
             for WorkBenchName in self.Dict_CustomToolbars["customToolbars"]:
                 WorkBenchTitle = ""
@@ -3855,7 +3856,8 @@ class LoadDialog(Design_ui.Ui_Form):
                 StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
             pass
 
-        # Load the newPanels
+        # -- Load the newPanels --
+        self.form.CustomToolbarSelector_NP.addItem(translate("FreeCAD Ribbon", "New"))
         try:
             for WorkBenchName in self.Dict_NewPanels["newPanels"]:
                 WorkBenchTitle = ""

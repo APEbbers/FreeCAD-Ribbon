@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignoKBcuA.ui'
+## Form generated from reading UI file 'DesignSjdLEL.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -1336,9 +1336,21 @@ class Ui_Form(object):
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.InItialSetup), QCoreApplication.translate("Form", "Initial setup", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.MoveUp_Command_QC.setToolTip(QCoreApplication.translate("Form", "Move up", None))
+        # endif // QT_CONFIG(tooltip)
         self.MoveUp_Command_QC.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.MoveDown_Command_QC.setToolTip(QCoreApplication.translate("Form", "Move down", None))
+        # endif // QT_CONFIG(tooltip)
         self.MoveDown_Command_QC.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.Remove_Command_QC.setToolTip(QCoreApplication.translate("Form", "Remove command", None))
+        # endif // QT_CONFIG(tooltip)
         self.Remove_Command_QC.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.Add_Command_QC.setToolTip(QCoreApplication.translate("Form", "Add command", None))
+        # endif // QT_CONFIG(tooltip)
         self.Add_Command_QC.setText(QCoreApplication.translate("Form", "...", None))
         self.label_3.setText(QCoreApplication.translate("Form", "Category:", None))
         self.label_5.setText(
@@ -1370,7 +1382,13 @@ class Ui_Form(object):
         ___qlistwidgetitem3.setText(QCoreApplication.translate("Form", "New Item", None))
         self.PanelsToExclude_EP.setSortingEnabled(__sortingEnabled3)
 
+        # if QT_CONFIG(tooltip)
+        self.RemovePanel_EP.setToolTip(QCoreApplication.translate("Form", "Include panel", None))
+        # endif // QT_CONFIG(tooltip)
         self.RemovePanel_EP.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.AddPanel_EP.setToolTip(QCoreApplication.translate("Form", "Exclude panel", None))
+        # endif // QT_CONFIG(tooltip)
         self.AddPanel_EP.setText(QCoreApplication.translate("Form", "...", None))
         self.label_13.setText(
             QCoreApplication.translate(
@@ -1406,7 +1424,13 @@ class Ui_Form(object):
         ___qlistwidgetitem6.setText(QCoreApplication.translate("Form", "New Item", None))
         self.WorkbenchesSelected_IW.setSortingEnabled(__sortingEnabled6)
 
+        # if QT_CONFIG(tooltip)
+        self.RemoveWorkbench_IW.setToolTip(QCoreApplication.translate("Form", "Exclude workbench", None))
+        # endif // QT_CONFIG(tooltip)
         self.RemoveWorkbench_IW.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.AddWorkbench_IW.setToolTip(QCoreApplication.translate("Form", "Include workbench", None))
+        # endif // QT_CONFIG(tooltip)
         self.AddWorkbench_IW.setText(QCoreApplication.translate("Form", "...", None))
         self.label_6.setText(
             QCoreApplication.translate(
@@ -1431,8 +1455,17 @@ class Ui_Form(object):
                 "Form", "<html><head/><body><p>Select panels to add to the custom panel.</p></body></html>", None
             )
         )
+        # if QT_CONFIG(tooltip)
+        self.MoveDownPanelCommand_CP.setToolTip(QCoreApplication.translate("Form", "Move down", None))
+        # endif // QT_CONFIG(tooltip)
         self.MoveDownPanelCommand_CP.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.MoveUpPanelCommand_CP.setToolTip(QCoreApplication.translate("Form", "Move up", None))
+        # endif // QT_CONFIG(tooltip)
         self.MoveUpPanelCommand_CP.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.AddPanel_CP.setToolTip(QCoreApplication.translate("Form", "Add panel buttons", None))
+        # endif // QT_CONFIG(tooltip)
         self.AddPanel_CP.setText(QCoreApplication.translate("Form", "...", None))
 
         __sortingEnabled7 = self.PanelAvailable_CP.isSortingEnabled()
@@ -1462,9 +1495,21 @@ class Ui_Form(object):
         self.CommandsAvailable_DDB.setSortingEnabled(__sortingEnabled9)
 
         self.label_22.setText(QCoreApplication.translate("Form", "Category:", None))
+        # if QT_CONFIG(tooltip)
+        self.MoveUpCommand_DDB.setToolTip(QCoreApplication.translate("Form", "Move up", None))
+        # endif // QT_CONFIG(tooltip)
         self.MoveUpCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.RemoveCommand_DDB.setToolTip(QCoreApplication.translate("Form", "Remove command", None))
+        # endif // QT_CONFIG(tooltip)
         self.RemoveCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.MoveDownCommand_DDB.setToolTip(QCoreApplication.translate("Form", "Move down", None))
+        # endif // QT_CONFIG(tooltip)
         self.MoveDownCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.AddCommand_DDB.setToolTip(QCoreApplication.translate("Form", "Add command", None))
+        # endif // QT_CONFIG(tooltip)
         self.AddCommand_DDB.setText(QCoreApplication.translate("Form", "...", None))
 
         __sortingEnabled10 = self.NewControl_DDB.isSortingEnabled()
@@ -1509,15 +1554,33 @@ class Ui_Form(object):
         self.NewPanel_NP.setSortingEnabled(__sortingEnabled12)
 
         self.label_20.setText(QCoreApplication.translate("Form", "Select commands to add to the new panel", None))
+        # if QT_CONFIG(tooltip)
+        self.MoveDownPanelCommand_NP.setToolTip(QCoreApplication.translate("Form", "Move down", None))
+        # endif // QT_CONFIG(tooltip)
         self.MoveDownPanelCommand_NP.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.MoveUpPanelCommand_NP.setToolTip(QCoreApplication.translate("Form", "Move up", None))
+        # endif // QT_CONFIG(tooltip)
         self.MoveUpPanelCommand_NP.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.RemovePanelCommand_NP.setToolTip(QCoreApplication.translate("Form", "Remove command", None))
+        # endif // QT_CONFIG(tooltip)
         self.RemovePanelCommand_NP.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.AddPanelCommand_NP.setToolTip(QCoreApplication.translate("Form", "Add command", None))
+        # endif // QT_CONFIG(tooltip)
         self.AddPanelCommand_NP.setText(QCoreApplication.translate("Form", "...", None))
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.Createnewpanels), QCoreApplication.translate("Form", "Create new panels", None)
         )
         self.label_12.setText(QCoreApplication.translate("Form", "Set the icon size", None))
+        # if QT_CONFIG(tooltip)
+        self.MoveUp_RibbonCommand_RD.setToolTip(QCoreApplication.translate("Form", "Move up", None))
+        # endif // QT_CONFIG(tooltip)
         self.MoveUp_RibbonCommand_RD.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.MoveDown_RibbonCommand_RD.setToolTip(QCoreApplication.translate("Form", "Move down", None))
+        # endif // QT_CONFIG(tooltip)
         self.MoveDown_RibbonCommand_RD.setText(QCoreApplication.translate("Form", "...", None))
         ___qtablewidgetitem = self.CommandTable_RD.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("Form", "Command", None))
@@ -1544,7 +1607,13 @@ class Ui_Form(object):
         ___qlistwidgetitem13.setText(QCoreApplication.translate("Form", "New Item", None))
         self.PanelOrder_RD.setSortingEnabled(__sortingEnabled14)
 
+        # if QT_CONFIG(tooltip)
+        self.MoveUpPanel_RD.setToolTip(QCoreApplication.translate("Form", "Move up", None))
+        # endif // QT_CONFIG(tooltip)
         self.MoveUpPanel_RD.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.MoveDownPanel_RD.setToolTip(QCoreApplication.translate("Form", "Move down", None))
+        # endif // QT_CONFIG(tooltip)
         self.MoveDownPanel_RD.setText(QCoreApplication.translate("Form", "...", None))
         self.label_2.setText(QCoreApplication.translate("Form", "Select panel:", None))
         self.label.setText(QCoreApplication.translate("Form", "Select workbench:", None))
