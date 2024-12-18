@@ -598,7 +598,10 @@ class ModernMenu(RibbonBar):
                 # If it is a standard freecad button, set the command accordingly
                 if commandName.endswith("_ddb") is False:
                     try:
-                        if Gui.Command.get(commandName) is None:
+                        # Check if the workbench is loaded. If not, actions will be an empty list
+                        # Find the command its workbench and activate it
+                        QuickAction = Gui.Command.get(commandName).getAction()
+                        if len(QuickAction) == 0:
                             for CommandItem in self.List_Commands:
                                 if CommandItem[0] == commandName:
                                     Gui.activateWorkbench(CommandItem[3])
