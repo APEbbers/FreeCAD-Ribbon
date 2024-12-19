@@ -1939,7 +1939,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 self.Dict_DropDownButtons,
                 [
                     "dropdownButtons",
-                    DropDownName,
+                    DropDownName + Suffix,
                 ],
             )
 
@@ -3052,13 +3052,13 @@ class LoadDialog(Design_ui.Ui_Form):
                     for item in self.List_CommandIcons:
                         if item[0] == CommandItem[0]:
                             Icon = item[1]
-                        if str(CommandItem[0]).endswith("_ddb"):
+                        if str(CommandItem[0]).endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
                             for DropDownCommand, Commands in self.Dict_DropDownButtons["dropdownButtons"].items():
                                 if Commands[0][0] == item[0]:
                                     Icon = item[1]
                         if Icon is None:
                             IconName = CommandItem[1]
-                            if str(CommandItem[0]).endswith("_ddb"):
+                            if str(CommandItem[0]).endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
                                 for (
                                     DropDownCommand,
                                     Commands,
