@@ -364,7 +364,8 @@ class ModernMenu(RibbonBar):
                             # Activate the workbench if not loaded
                             Gui.activateWorkbench(CommandItem[1])
         except Exception:
-            StandardFunctions.Print("dropdownbuttons have wrong format. Please create them again!", "Warning")
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                StandardFunctions.Print("dropdownbuttons have wrong format. Please create them again!", "Warning")
             pass
 
         # Create the ribbon
@@ -1942,7 +1943,8 @@ class ModernMenu(RibbonBar):
                         actionList.append(action)
             return actionList
         except Exception as e:
-            StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
             return
 
 
