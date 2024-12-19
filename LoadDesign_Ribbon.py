@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide6.QtGui import QIcon, QPixmap, QAction
-from PySide6.QtWidgets import (
+from PySide.QtGui import QIcon, QPixmap, QAction
+from PySide.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -37,7 +37,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QSizePolicy,
 )
-from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
+from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
 import json
 from datetime import datetime
@@ -1792,7 +1792,7 @@ class LoadDialog(Design_ui.Ui_Form):
                             CommandName = Command[0]
 
                             # Check if the command is a dropdown button
-                            if CommandName.endswith("_ddb"):
+                            if CommandName.endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
                                 for DropDownCommand, Commands in self.Dict_DropDownButtons["dropdownButtons"].items():
                                     if CommandName == DropDownCommand:
                                         MenuName = CommandName.replace("_ddb", "")
@@ -2016,7 +2016,7 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_RemoveControl_DDB_clicked(self):
         DropDownControl = self.form.CommandList_DDB.currentText() + "_ddb"
 
-        if DropDownControl != "":
+        if DropDownControl != "" and "dropdownButtons" in self.Dict_DropDownButtons:
             for DropDownButton, Commands in list(self.Dict_DropDownButtons["dropdownButtons"].items()):
                 if DropDownButton == DropDownControl:
                     # remove the custom toolbar also from the workbenches dict
@@ -2384,7 +2384,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         for item in self.List_CommandIcons:
                             if item[0] == CommandName:
                                 Icon = item[1]
-                            if CommandName.endswith("_ddb"):
+                            if CommandName.endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
                                 for (
                                     DropDownCommand,
                                     Commands,
@@ -2393,7 +2393,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                         Icon = item[1]
                         if Icon is None or (Icon is not None and Icon.isNull()):
                             IconName = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
-                            if CommandName.endswith("_ddb"):
+                            if CommandName.endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
                                 for (
                                     DropDownCommand,
                                     Commands,
@@ -3166,7 +3166,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
                     # Go through the list with all available commands.
                     # If the commandText is in this list, get the command name.
-                    if MenuName.endswith("_ddb"):
+                    if MenuName.endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
                         for DropDownCommand, Commands in self.Dict_DropDownButtons["dropdownButtons"].items():
                             if DropDownCommand == MenuName:
                                 CommandName = MenuName
@@ -4077,7 +4077,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                 CommandName_icon = CommandName
                                 # if the command name ends with "_ddb", it is a custom dropdown button
                                 # Use the command of the first command in this drop downmenu
-                                if CommandName_icon.endswith("_ddb"):
+                                if CommandName_icon.endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
                                     for (
                                         DropDownCommand,
                                         Commands,
@@ -4118,7 +4118,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     for item in self.List_CommandIcons:
                         if item[0] == CommandName:
                             Icon = item[1]
-                        if str(CommandName).endswith("_ddb"):
+                        if str(CommandName).endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
                             for (
                                 DropDownCommand,
                                 Commands,
@@ -4127,7 +4127,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                     Icon = item[1]
                     if Icon is None:
                         IconName = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
-                        if str(CommandName).endswith("_ddb"):
+                        if str(CommandName).endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
                             for (
                                 DropDownCommand,
                                 Commands,
