@@ -48,6 +48,7 @@ import Parameters_Ribbon
 import Serialize_Ribbon
 import webbrowser
 import time
+import math
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -1673,11 +1674,6 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Define a list for the commands
         ListCommands = []
-        # Try to get the commands that are already in the json file
-        try:
-            ListCommands = self.Dict_NewPanels["newPanels"][WorkBenchName][NewPanelTitle + Suffix]
-        except Exception:
-            pass
         for i in range(self.form.NewPanel_NP.count()):
             ListWidgetItem = self.form.NewPanel_NP.item(i)
             for CommandItem in self.List_Commands:
@@ -1795,8 +1791,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # If the selected item is "new", clear the list widgets and exit
         if self.form.CustomToolbarSelector_NP.currentText() == "New":
-            self.form.PanelAvailable_CP.clear()
-            self.form.PanelName_CP.clear()
+            self.form.PanelName_NP.clear()
             return
 
         # Get the current custom toolbar name
@@ -1860,7 +1855,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
                                         # Check if the items is already there
                                         # if not, continue
-                                        if not CommandName in ShadowList:
+                                        if CommandName not in ShadowList:
                                             # Define a new ListWidgetItem.
                                             ListWidgetItem = QListWidgetItem()
                                             ListWidgetItem.setText(MenuName)
@@ -1900,10 +1895,7 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     def on_AddCommand_NP_clicked(self):
-        self.AddItem(
-            SourceWidget=self.form.CommandsAvailable_NP,
-            DestinationWidget=self.form.NewPanel_NP,
-        )
+        self.AddItem(SourceWidget=self.form.CommandsAvailable_NP, DestinationWidget=self.form.NewPanel_NP)
 
         # Enable the apply button
         if self.CheckChanges() is True:
@@ -1915,6 +1907,7 @@ class LoadDialog(Design_ui.Ui_Form):
         self.AddItem(
             SourceWidget=self.form.NewPanel_NP,
             DestinationWidget=self.form.CommandsAvailable_NP,
+            CheckIfInList=False,
         )
 
         # Enable the apply button
@@ -3422,7 +3415,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         return items
 
-    def AddItem(self, SourceWidget: QListWidget, DestinationWidget: QListWidget, ExcludedItems=[]):
+    def AddItem(self, SourceWidget: QListWidget, DestinationWidget: QListWidget, ExcludedItems=[], CheckIfInList=True):
         """Move a list item widgtet from one list to another
 
         Args:
@@ -3437,10 +3430,11 @@ class LoadDialog(Design_ui.Ui_Form):
             DestinationItem = QListWidgetItem(Value)
 
             IsInList = False
-            for i in range(DestinationWidget.count()):
-                item = DestinationWidget.item(i)
-                if item.data(Qt.ItemDataRole.UserRole) == DestinationItem.data(Qt.ItemDataRole.UserRole):
-                    IsInList = True
+            if CheckIfInList is True:
+                for i in range(DestinationWidget.count()):
+                    item = DestinationWidget.item(i)
+                    if item.data(Qt.ItemDataRole.UserRole) == DestinationItem.data(Qt.ItemDataRole.UserRole):
+                        IsInList = True
 
             IsExcluded = False
             for ExcludedItem in ExcludedItems:
@@ -4252,6 +4246,15 @@ class LoadDialog(Design_ui.Ui_Form):
                                 # Get the MenuName and IconName
                                 MenuName = ""
                                 IconName = ""
+                                if CommandName.endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
+                                    for DropDownCommand, Commands in self.Dict_DropDownButtons[
+                                        "dropdownButtons"
+                                    ].items():
+                                        if DropDownCommand == CommandName:
+                                            for CommandItem in self.List_Commands:
+                                                if CommandItem[0] == CommandName:
+                                                    IconName = CommandItem[1]
+                                                    MenuName = CommandItem[2]
                                 for CommandItem in self.List_Commands:
                                     if CommandItem[0] == CommandName:
                                         IconName = CommandItem[1]
