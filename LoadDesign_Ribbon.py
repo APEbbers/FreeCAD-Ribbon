@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -37,7 +37,7 @@ from PySide.QtWidgets import (
     QLineEdit,
     QSizePolicy,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
 import json
 from datetime import datetime
@@ -72,6 +72,8 @@ mw = Gui.getMainWindow()
 class LoadDialog(Design_ui.Ui_Form):
 
     ReproAdress: str = ""
+
+    Restart = False
 
     # Set the data file version. Triggeres an question if an update is needed
     DataFileVersion = "0.2"
@@ -941,15 +943,28 @@ class LoadDialog(Design_ui.Ui_Form):
         outfile.close()
 
         # If there is a RibbonStructure.json file, load it
-        os.path.isfile(os.path.join(os.path.dirname(__file__), "RibbonStructure.json"))
-        self.ReadJson()
+        if os.path.isfile(os.path.join(os.path.dirname(__file__), "RibbonStructure.json")):
+            # Clear the lists first
+            self.List_IgnoredToolbars.clear()
+            self.List_IgnoredToolbars_internal.clear()
+            self.List_IconOnly_Toolbars.clear()
+            self.List_QuickAccessCommands.clear()
+            self.List_IgnoredWorkbenches.clear()
+            self.Dict_CustomToolbars.clear()
+            self.Dict_NewPanels.clear()
+            self.Dict_DropDownButtons.clear()
+            self.Dict_RibbonCommandPanel.clear()
+            # Load the RibbonStructure.json file
+            self.ReadJson()
 
+        # Load all controls
         self.LoadControls()
 
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
 
         # Show the dialog again
+        self.__init__()
         self.form.show()
         return
 
@@ -1028,6 +1043,16 @@ class LoadDialog(Design_ui.Ui_Form):
         Size = self.form.DefaultButtonSize_IS_Workbenches.currentText().lower()
         WorkBenchList = []
 
+        if len(items) == 0:
+            self.form.hide()
+            StandardFunctions.Mbox(
+                translate("FreeCAD Ribbon", "Please select at least one workbench!"),
+                "FreeCAD Ribbon",
+                0,
+            )
+            self.form.show()
+            return
+
         for i in range(len(items)):
             ListWidgetItem: QListWidgetItem = items[i]
             try:
@@ -1064,6 +1089,16 @@ class LoadDialog(Design_ui.Ui_Form):
         Panel = ""
         Size = self.form.DefaultButtonSize_IS_Panels.currentText().lower()
         PanelList = []
+
+        if len(items) == 0:
+            self.form.hide()
+            StandardFunctions.Mbox(
+                translate("FreeCAD Ribbon", "Please select at least one panel!"),
+                "FreeCAD Ribbon",
+                0,
+            )
+            self.form.show()
+            return
 
         for i in range(len(items)):
             ListWidgetItem: QListWidgetItem = items[i]
@@ -3007,7 +3042,7 @@ class LoadDialog(Design_ui.Ui_Form):
         """Fill the Quick Commands Available and Selected"""
         self.form.CommandsAvailable_QC.clear()
         self.form.CommandsSelected_QC.clear()
-        #
+        self.form.CommandsAvailable_DDB.clear()
         self.form.CommandsAvailable_NP.clear()
 
         ShadowList = []  # List to add the commands and prevent duplicates
@@ -3099,7 +3134,10 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def LoadPanels(self):
         self.form.Panels_IS.clear()
+        self.form.CustomToolbarSelector_CP.clear()
+        self.form.CustomToolbarSelector_NP.clear()
 
+        # -- Initial setup tab --
         ShadowList = []  # List to add the commands and prevent duplicates
         for ToolBarItem in self.StringList_Toolbars:
             if ToolBarItem[0] not in ShadowList and ToolBarItem[0] != "":
@@ -3110,6 +3148,45 @@ class LoadDialog(Design_ui.Ui_Form):
                 self.form.Panels_IS.addItem(ListWidgetItem)
 
                 ShadowList.append(ToolBarItem[0])
+
+        # -- Custom panel tab --
+        self.form.CustomToolbarSelector_CP.addItem(translate("FreeCAD Ribbon", "New"))
+        try:
+            for WorkBenchName in self.Dict_CustomToolbars["customToolbars"]:
+                WorkBenchTitle = ""
+                for WorkBenchItem in self.List_Workbenches:
+                    if WorkBenchItem[0] == WorkBenchName:
+                        WorkBenchTitle = WorkBenchItem[2]
+                for CustomPanelTitle in self.Dict_CustomToolbars["customToolbars"][WorkBenchName]:
+                    if WorkBenchTitle != "":
+                        self.form.CustomToolbarSelector_CP.addItem(f"{CustomPanelTitle}, {WorkBenchTitle}")
+        except Exception as e:
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
+            pass
+
+        # -- Load the newPanels --
+        self.form.CustomToolbarSelector_NP.addItem(translate("FreeCAD Ribbon", "New"))
+        try:
+            for WorkBenchName in self.Dict_NewPanels["newPanels"]:
+                WorkBenchTitle = ""
+                for WorkBenchItem in self.List_Workbenches:
+                    if WorkBenchItem[0] == WorkBenchName:
+                        WorkBenchTitle = WorkBenchItem[2]
+                if WorkBenchName == "Global":
+                    WorkBenchTitle = WorkBenchName
+
+                for NewPanelItem in self.Dict_NewPanels["newPanels"][WorkBenchName]:
+                    NewPanelTitle = str(NewPanelItem).removesuffix("_newPanel")
+                    # If the custom panel is not in the json file, add it to the QComboBox
+                    self.form.CustomToolbarSelector_NP.addItem(f"{NewPanelTitle}, {WorkBenchTitle}")
+                    # Set the Custom panel as current text for the QComboBox
+                    self.form.CustomToolbarSelector_NP.setCurrentText(f"{NewPanelTitle}, {WorkBenchTitle}")
+            self.on_CustomToolbarSelector_NP_activated()
+        except Exception as e:
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
+            pass
 
         return
 
@@ -3821,70 +3898,14 @@ class LoadDialog(Design_ui.Ui_Form):
         # -- Excluded toolbars --
         self.ExcludedToolbars()
 
-        # -- Quick access toolbar tab --
-        # Add all commands to the listbox for the quick access toolbar
+        # Add all commands to the listboxes with commands
         self.LoadCommands()
 
-        # -- Initial setup tab --
-        # Add all toolbar to the listbox for the panels
+        # Add all toolbar to the listboxes for the panels
         self.LoadPanels()
-
-        # -- Custom panel tab --
-        self.form.CustomToolbarSelector_CP.addItem(translate("FreeCAD Ribbon", "New"))
-        try:
-            for WorkBenchName in self.Dict_CustomToolbars["customToolbars"]:
-                WorkBenchTitle = ""
-                for WorkBenchItem in self.List_Workbenches:
-                    if WorkBenchItem[0] == WorkBenchName:
-                        WorkBenchTitle = WorkBenchItem[2]
-                for CustomPanelTitle in self.Dict_CustomToolbars["customToolbars"][WorkBenchName]:
-                    if WorkBenchTitle != "":
-                        self.form.CustomToolbarSelector_CP.addItem(f"{CustomPanelTitle}, {WorkBenchTitle}")
-        except Exception as e:
-            if Parameters_Ribbon.DEBUG_MODE is True:
-                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
-            pass
-
-        # -- Load the newPanels --
-        self.form.CustomToolbarSelector_NP.addItem(translate("FreeCAD Ribbon", "New"))
-        try:
-            for WorkBenchName in self.Dict_NewPanels["newPanels"]:
-                WorkBenchTitle = ""
-                for WorkBenchItem in self.List_Workbenches:
-                    if WorkBenchItem[0] == WorkBenchName:
-                        WorkBenchTitle = WorkBenchItem[2]
-                if WorkBenchName == "Global":
-                    WorkBenchTitle = WorkBenchName
-
-                for NewPanelItem in self.Dict_NewPanels["newPanels"][WorkBenchName]:
-                    NewPanelTitle = str(NewPanelItem).removesuffix("_newPanel")
-                    # If the custom panel is not in the json file, add it to the QComboBox
-                    self.form.CustomToolbarSelector_NP.addItem(f"{NewPanelTitle}, {WorkBenchTitle}")
-                    # Set the Custom panel as current text for the QComboBox
-                    self.form.CustomToolbarSelector_NP.setCurrentText(f"{NewPanelTitle}, {WorkBenchTitle}")
-            self.on_CustomToolbarSelector_NP_activated()
-        except Exception as e:
-            if Parameters_Ribbon.DEBUG_MODE is True:
-                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
-            pass
-
-        # -- Dropdown button tab -
-        try:
-            self.form.CommandList_DDB.addItem("")
-            for DropDownName, Commands in self.Dict_DropDownButtons["dropdownButtons"].items():
-                # Add the drop down buttoon to the combobox
-                self.form.CommandList_DDB.addItem(DropDownName.split("_")[0])
-            # make sure that no command is selected by default
-            # to prevent accidental removal
-            self.form.CommandList_DDB.setCurrentText("")
-        except Exception as e:
-            if Parameters_Ribbon.DEBUG_MODE is True:
-                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
-            pass
 
         # -- Form controls
         self.form.UpdateJson.setDisabled(True)
-
         return
 
     def returnWorkBenchToolbars(self, WorkBenchName):

@@ -1940,8 +1940,10 @@ class ModernMenu(RibbonBar):
                 if CommandName == DropDownCommand:
                     for CommandItem in Commands:
                         Command = Gui.Command.get(CommandItem[0])
-                        action = Command.getAction()
-                        actionList.append(action)
+                        if Command is not None:
+                            action = Command.getAction()
+                            if action is not None:
+                                actionList.append(action)
             return actionList
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
