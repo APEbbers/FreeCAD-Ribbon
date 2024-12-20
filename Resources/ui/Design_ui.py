@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignSjdLEL.ui'
+## Form generated from reading UI file 'DesignXfPaQY.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -1127,7 +1127,7 @@ class Ui_Form(object):
         self.CommandTable_RD.setSizeAdjustPolicy(QAbstractScrollArea.SizeAdjustPolicy.AdjustToContents)
         self.CommandTable_RD.setAlternatingRowColors(True)
         self.CommandTable_RD.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-        self.CommandTable_RD.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
+        self.CommandTable_RD.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectItems)
         self.CommandTable_RD.setIconSize(QSize(16, 16))
         self.CommandTable_RD.horizontalHeader().setVisible(False)
         self.CommandTable_RD.horizontalHeader().setCascadingSectionResizes(False)

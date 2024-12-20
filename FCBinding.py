@@ -1137,9 +1137,10 @@ class ModernMenu(RibbonBar):
                             len(self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["order"])
                         ):
                             if (
-                                self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["order"][j]
-                                .lower()
-                                .__contains__("separator")
+                                "separator"
+                                in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["order"][
+                                    j
+                                ].lower()
                             ):
                                 separator = QToolButton()
                                 separator.setText(
@@ -1231,7 +1232,7 @@ class ModernMenu(RibbonBar):
                     rowCount = rowCount + SmallButtonRows
                 if buttonSize == "medium":
                     rowCount = rowCount + MediumButtonRows
-                if buttonSize == "large" or button.text().__contains__("separator"):
+                if buttonSize == "large" or "separator" in button.text():
                     rowCount = rowCount + LargeButtonRows
 
                 # If the number of rows divided by 3 is a whole number,
@@ -1250,7 +1251,7 @@ class ModernMenu(RibbonBar):
                     # Add the actions to the OptionPanel instead.
                     if maxColumns > 0:
                         # if the last item before the optionpanel is an separator, skip it
-                        if columnCount > maxColumns and button.text().__contains__("separator"):
+                        if columnCount > maxColumns and "separator" in button.text():
                             continue
                         if columnCount > maxColumns + 1:
                             ButtonList.append(button)
@@ -1259,7 +1260,7 @@ class ModernMenu(RibbonBar):
 
                     # If the last item is not an separator, you can add an separator
                     # With an paneloptionbutton, use an offset of 2 instead of 1 for i.
-                    if button.text().__contains__("separator") and i < len(allButtons):
+                    if "separator" in button.text() and i < len(allButtons):
                         separator = panel.addLargeVerticalSeparator(
                             alignment=Qt.AlignmentFlag.AlignLeft, fixedHeight=False
                         )

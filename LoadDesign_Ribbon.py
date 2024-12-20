@@ -735,8 +735,6 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.LoadWB.setIcon(Gui.getIcon("view-refresh"))
         self.form.LoadWB.setIconSize(QSize(20, 20))
 
-        # self.form.resizeEvent = lambda event: self.resizeEvent_custom(event)
-
         return
 
     def on_ReloadWB_clicked(self):
@@ -1519,9 +1517,8 @@ class LoadDialog(Design_ui.Ui_Form):
                         ):
                             for CommandItem in self.List_Commands:
                                 # Check if the items is already there
-                                IsInList = ShadowList.__contains__(CommandItem[0])
                                 # if not, continue
-                                if IsInList is False:
+                                if not CommandItem[0] in ShadowList:
                                     if CommandItem[2] == key and CommandItem[3] == WorkBenchName:
                                         # Command = Gui.Command.get(CommandItem[0])
                                         MenuName = CommandItem[2].replace("&", "")
@@ -1828,8 +1825,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
                                         # Check if the items is already there
                                         # if not, continue
-                                        IsInList = ShadowList.__contains__(f"{CommandName}")
-                                        if IsInList is False:
+                                        if not CommandName in ShadowList:
                                             # Define a new ListWidgetItem.
                                             ListWidgetItem = QListWidgetItem()
                                             ListWidgetItem.setText(MenuName)
@@ -2263,38 +2259,32 @@ class LoadDialog(Design_ui.Ui_Form):
 
             # add separators to the command list.
             index = 0
-            if WorkBenchName in self.Dict_RibbonCommandPanel["workbenches"]:
-                if Toolbar != "" and Toolbar in self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]:
-                    if "order" in self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar]:
-                        for j in range(
-                            len(
-                                self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar]["order"]
-                            )
+            if Toolbar != "" and Toolbar in self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]:
+                if "order" in self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar]:
+                    for j in range(
+                        len(self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar]["order"])
+                    ):
+                        if (
+                            "separator"
+                            in self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar]["order"][
+                                j
+                            ].lower()
                         ):
-                            if (
+                            ToolbarCommands.insert(
+                                j + index,
                                 self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
                                     "order"
-                                ][j]
-                                .lower()
-                                .__contains__("separator")
-                            ):
-                                ToolbarCommands.insert(
-                                    j + index,
-                                    self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
-                                        "order"
-                                    ][j],
-                                )
-                                index = index + 1
+                                ][j],
+                            )
+                            index = index + 1
 
             # Sort the Toolbarcommands according the sorted list
             def SortCommands(item):
                 try:
-                    try:
-                        if item.lower().__contains__("separator") is False:
-                            MenuName = CommandInfoCorrections(item)["menuText"].replace("&", "")
-                            item = MenuName
-                    except Exception:
-                        pass
+                    if "separator" not in item.lower():
+                        MenuName = CommandInfoCorrections(item)["menuText"].replace("&", "")
+                        item = MenuName
+
                     OrderList: list = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
                         "order"
                     ]
@@ -2308,7 +2298,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
             # Go through the list of toolbar commands
             for ToolbarCommand in ToolbarCommands:
-                if ToolbarCommand.__contains__("separator"):
+                if "separator" in ToolbarCommand:
                     # Create the row in the table
                     # add a row to the table widget
                     self.form.CommandTable_RD.insertRow(self.form.CommandTable_RD.rowCount())
@@ -2358,50 +2348,47 @@ class LoadDialog(Design_ui.Ui_Form):
                     )
                     self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar]["order"] = Order
 
-                if not ToolbarCommand.__contains__("separator") and not ToolbarCommand.__contains__("All"):
+                if "separator" not in ToolbarCommand and "All" not in ToolbarCommand:
                     # Get the command
                     CommandName = ToolbarCommand
 
-                    # Check if the items is already there
-                    IsInList = ShadowList.__contains__(f"{CommandName}, {WorkBenchName}")
                     # if not, continue
-                    if IsInList is False and CommandName is not None:
-                        MenuName = ""
+                    if f"{CommandName}, {WorkBenchName}" not in ShadowList and CommandName is not None:
+                        MenuName = StandardFunctions.CommandInfoCorrections(CommandName)["menuText"]
                         if CommandName.endswith("_ddb"):
                             MenuName = CommandName
-                        else:
+                        if MenuName == "":
                             for CommandItem in self.List_Commands:
                                 if CommandItem[0] == CommandName:
                                     MenuName = CommandItem[2]
                                 if MenuName == "":
-                                    MenuName = StandardFunctions.CommandInfoCorrections(CommandName)["menuText"]
-                                if MenuName == "":
                                     continue
 
-                        IconName = ""
+                        IconName = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
+                        if CommandName.endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
+                            for (
+                                DropDownCommand,
+                                Commands,
+                            ) in self.Dict_DropDownButtons["dropdownButtons"].items():
+                                for CommandItem in self.List_Commands:
+                                    if Commands[0][0] == CommandItem[0]:
+                                        IconName = CommandItem[1]
+                                        break
                         # get the icon for this command if there isn't one, leave it None
-                        Icon = None
-                        for item in self.List_CommandIcons:
-                            if item[0] == CommandName:
-                                Icon = item[1]
-                            if CommandName.endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
-                                for (
-                                    DropDownCommand,
-                                    Commands,
-                                ) in self.Dict_DropDownButtons["dropdownButtons"].items():
-                                    if Commands[0][0] == item[0]:
-                                        Icon = item[1]
-                        if Icon is None or (Icon is not None and Icon.isNull()):
-                            IconName = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
-                            if CommandName.endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
-                                for (
-                                    DropDownCommand,
-                                    Commands,
-                                ) in self.Dict_DropDownButtons["dropdownButtons"].items():
-                                    for CommandItem in self.List_Commands:
-                                        if Commands[0][0] == CommandItem[0]:
-                                            IconName = CommandItem[1]
-                            Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
+                        Icon = StandardFunctions.returnQiCons_Commands(CommandName)
+                        if Icon is None:
+                            for item in self.List_CommandIcons:
+                                if item[0] == CommandName:
+                                    Icon = item[1]
+                                    break
+                                if CommandName.endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
+                                    for (
+                                        DropDownCommand,
+                                        Commands,
+                                    ) in self.Dict_DropDownButtons["dropdownButtons"].items():
+                                        if Commands[0][0] == item[0]:
+                                            Icon = item[1]
+                                            break
 
                         # Set the default check states
                         checked_small = Qt.CheckState.Checked
@@ -2444,6 +2431,8 @@ class LoadDialog(Design_ui.Ui_Form):
                                     MenuNameTabelWidgetItem = StandardFunctions.CommandInfoCorrections(CommandName)[
                                         "ActionText"
                                     ]
+                        if MenuNameTabelWidgetItem == "":
+                            MenuNameTabelWidgetItem = MenuName
 
                         # Create the row in the table
                         # add a row to the table widget
@@ -2527,11 +2516,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         }
 
                         # Set the IconOnly_Toolbars control
-                        IsInList = False
-                        for item in self.List_IconOnly_Toolbars:
-                            if item == Toolbar:
-                                IsInList = True
-                        if IsInList is True:
+                        if Toolbar in self.List_IconOnly_Toolbars:
                             self.form.IconOnly_RD.setCheckState(Qt.CheckState.Checked)
                         else:
                             self.form.IconOnly_RD.setCheckState(Qt.CheckState.Unchecked)
@@ -2608,49 +2593,38 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_IconOnly_RD_clicked(self):
         if self.form.IconOnly_RD.isChecked() is True:
             toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
-
-            isInList = False
-            for item in self.List_IconOnly_Toolbars:
-                if item == toolbar:
-                    isInList = True
-
-            if isInList is False:
+            if toolbar not in self.List_IconOnly_Toolbars:
                 self.List_IconOnly_Toolbars.append(toolbar)
 
         if self.form.IconOnly_RD.isChecked() is False:
             toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
-
-            isInList = False
-            for item in self.List_IconOnly_Toolbars:
-                if item == toolbar:
-                    isInList = True
-
-            if isInList is True:
+            if toolbar in self.List_IconOnly_Toolbars:
                 self.List_IconOnly_Toolbars.remove(toolbar)
 
-        # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+        # # Enable the apply button
+        # if self.CheckChanges() is True:
+        #     self.form.UpdateJson.setEnabled(True)
 
         return
 
-    def on_TableCell_RD_changed(self, Item):
-        text = Item.text()
-        if text == "":
-            Item.setText(Item.data(Qt.ItemDataRole.UserRole))
+    def on_TableCell_RD_changed(self, Item: QTableWidgetItem):
+        if Item.isSelected():
+            text = Item.text()
+            if text == "":
+                Item.setText(Item.data(Qt.ItemDataRole.UserRole))
 
-        # Update the data with the (text)changed
-        self.UpdateData()
-        # Update the order of the commands
-        self.on_PanelOrder_RD_changed()
+            # Update the data with the (text)changed
+            self.UpdateData()
+            # Update the order of the commands
+            self.on_PanelOrder_RD_changed()
 
-        # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+            # Enable the apply button
+            if self.CheckChanges() is True:
+                self.form.UpdateJson.setEnabled(True)
 
         return
 
-    def on_TableCell_RD_clicked(self, Item):
+    def on_TableCell_RD_clicked(self, Item: QTableWidgetItem):
         # Get the row and column of the clicked item (cell)
         row = Item.row()
         column = Item.column()
@@ -2672,16 +2646,17 @@ class LoadDialog(Design_ui.Ui_Form):
                     if i1 != column:
                         self.form.CommandTable_RD.item(i2, i1).setCheckState(Qt.CheckState.Unchecked)
 
-        # else:
         # Get the checkedstate from the clicked cell
         CheckState = self.form.CommandTable_RD.item(row, column).checkState()
         # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
         for i3 in range(1, self.form.CommandTable_RD.columnCount()):
             if CheckState == Qt.CheckState.Checked:
-                if i3 == column:
-                    self.form.CommandTable_RD.item(row, i3).setCheckState(Qt.CheckState.Checked)
-                else:
-                    self.form.CommandTable_RD.item(row, i3).setCheckState(Qt.CheckState.Unchecked)
+                TableCell = self.form.CommandTable_RD.item(row, i3)
+                if TableCell is not None:
+                    if i3 == column:
+                        TableCell.setCheckState(Qt.CheckState.Checked)
+                    else:
+                        TableCell.setCheckState(Qt.CheckState.Unchecked)
 
         # Update the data
         self.UpdateData()
@@ -2906,7 +2881,7 @@ class LoadDialog(Design_ui.Ui_Form):
             WorkbenchName = workbench[0]
             WorkbenchTitle = workbench[2]
 
-            if ShadowList.__contains__([WorkbenchName, WorkbenchTitle]) is False:
+            if [WorkbenchName, WorkbenchTitle] not in ShadowList:
                 # Default a workbench is selected
                 # if in List_IgnoredWorkbenches, set IsSelected to false
                 IsSelected = True
@@ -3036,12 +3011,9 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.CommandsAvailable_NP.clear()
 
         ShadowList = []  # List to add the commands and prevent duplicates
-        IsInList = False
 
         for CommandItem in self.List_Commands:
-            IsInList = ShadowList.__contains__(f"{CommandItem[0]}")
-
-            if IsInList is False:
+            if f"{CommandItem[0]}" not in ShadowList:
                 CommandName = CommandItem[0]
                 MenuNameTranslated = CommandItem[2]
                 if len(CommandItem) == 5:
@@ -3129,12 +3101,8 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.Panels_IS.clear()
 
         ShadowList = []  # List to add the commands and prevent duplicates
-        IsInList = False
-
         for ToolBarItem in self.StringList_Toolbars:
-            IsInList = ShadowList.__contains__(ToolBarItem[0])
-
-            if IsInList is False and ToolBarItem[0] != "":
+            if ToolBarItem[0] not in ShadowList and ToolBarItem[0] != "":
                 ListWidgetItem = QListWidgetItem()
                 ListWidgetItem.setText(ToolBarItem[0].replace("&", ""))
                 ListWidgetItem.setData(Qt.ItemDataRole.UserRole, ToolBarItem)
@@ -3161,8 +3129,9 @@ class LoadDialog(Design_ui.Ui_Form):
                     # Define empty strings for the command name and icon name
                     CommandName = ""
                     IconName = ""
-                    # Get the menu name from the stored data
+                    # Get the menu name from the text value. This can be changed.
                     MenuName = self.form.CommandTable_RD.item(row, 0).data(Qt.ItemDataRole.UserRole)
+                    MenuNameEntered = self.form.CommandTable_RD.item(row, 0).text()
 
                     # Go through the list with all available commands.
                     # If the commandText is in this list, get the command name.
@@ -3178,7 +3147,6 @@ class LoadDialog(Design_ui.Ui_Form):
                             if MenuName == self.List_Commands[i3][2]:
                                 if WorkBenchName == self.List_Commands[i3][3] or self.List_Commands[i3][3] == "Global":
                                     CommandName = self.List_Commands[i3][0]
-                                    # Command = Gui.Command.get(CommandName)
                                     IconName = self.List_Commands[i3][1]
 
                     # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
@@ -3225,7 +3193,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         CommandName
                     ] = {
                         "size": Size,
-                        "text": MenuName,
+                        "text": MenuNameEntered,
                         "icon": IconName,
                     }
             except Exception as e:
@@ -3318,11 +3286,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # IconOnly_Toolbars
         for IconOnly_Toolbar in self.List_IconOnly_Toolbars:
-            IsInlist = False
-            for item in List_IconOnly_Toolbars:
-                if item == IconOnly_Toolbar:
-                    IsInlist = True
-            if IsInlist is False:
+            if IconOnly_Toolbar not in List_IconOnly_Toolbars:
                 List_IconOnly_Toolbars.append(IconOnly_Toolbar)
 
         # QuickAccessCommands
@@ -3685,7 +3649,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                         Command = self.List_Commands[i][0]
                                         ListCommands.append(Command)
 
-                                if self.List_IgnoredToolbars_internal.__contains__(value) is False:
+                                if value not in self.List_IgnoredToolbars_internal:
                                     self.List_IgnoredToolbars_internal.append(f"{value}")
 
                             Toolbars.append([CustomToolbar, WorkbenchTitle, ListCommands])
@@ -3709,7 +3673,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                 Command = self.List_Commands[i][0]
                                 ListCommands.append(Command)
 
-                        if self.List_IgnoredToolbars_internal.__contains__(value) is False:
+                        if value not in self.List_IgnoredToolbars_internal:
                             self.List_IgnoredToolbars_internal.append(f"{value}")
 
                     Toolbars[CustomToolbar] = ListCommands
@@ -3960,16 +3924,13 @@ class LoadDialog(Design_ui.Ui_Form):
         ListWidget.clear()
 
         ShadowList = []  # List to add the commands and prevent duplicates
-        IsInList = False
-
         for ToolbarCommand in self.List_Commands:
             CommandName = ToolbarCommand[0]
             MenuNameTranslated = ToolbarCommand[4]
             if CommandName.endswith("_ddb"):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
-            IsInList = ShadowList.__contains__(f"{CommandName}")
 
-            if IsInList is False:
+            if f"{CommandName}" not in ShadowList:
                 if (
                     SearchBar.text() != "" and MenuNameTranslated.lower().startswith(SearchBar.text().lower())
                 ) or SearchBar.text() == "":
@@ -4025,7 +3986,8 @@ class LoadDialog(Design_ui.Ui_Form):
                                 item = DestinationWidget.item(i)
                                 if item.data(Qt.ItemDataRole.UserRole) == ListWidgetItem.data(Qt.ItemDataRole.UserRole):
                                     IsInList = True
-                            ListWidget.addItem(ListWidgetItem)
+                            if IsInList is False:
+                                ListWidget.addItem(ListWidgetItem)
                         if Icon is None:
                             if Parameters_Ribbon.DEBUG_MODE is True:
                                 StandardFunctions.Print(f"{CommandName} has no icon!", "Warning")
@@ -4043,8 +4005,6 @@ class LoadDialog(Design_ui.Ui_Form):
         ListWidget_Commands.clear()
 
         ShadowList = []  # List to add the commands and prevent duplicates
-        IsInList = False
-
         for ToolbarCommand in self.List_Commands:
             CommandName = ToolbarCommand[0]
             MenuNameTranslated = ToolbarCommand[2]
@@ -4055,8 +4015,11 @@ class LoadDialog(Design_ui.Ui_Form):
             workbenchName = ToolbarCommand[3]
 
             if ListWidget_WorkBenches.currentText() != translate("FreeCAD Ribbon", "All"):
-                IsInList = ShadowList.__contains__(f"{CommandName}, {workbenchName}")
-                if IsInList is False and workbenchName != "Global" and workbenchName != "General":
+                if (
+                    f"{CommandName}, {workbenchName}" not in ShadowList
+                    and workbenchName != "Global"
+                    and workbenchName != "General"
+                ):
                     try:
                         WorkbenchTitle = Gui.getWorkbench(workbenchName).MenuText
                     except Exception:
