@@ -666,3 +666,15 @@ def returnQiCons_Commands(CommandName, pixmap=""):
         except Exception:
             return None
     return icon
+
+
+def CorrectGetToolbarItems(WorkBenchName: str):
+    WorkBench = Gui.getWorkbench(WorkBenchName)
+    ToolbarItems: dict = WorkBench.getToolbarItems()
+
+    for key, value in list(ToolbarItems.items()):
+        if key == "Structure":
+            if "Part_Datums" not in value:
+                value.append("Part_Datums")
+
+    return ToolbarItems
