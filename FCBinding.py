@@ -1948,20 +1948,7 @@ class ModernMenu(RibbonBar):
                 StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
             return
 
-    def UpdateRibbonStructureFile(self, RibbonStructureDict: dict):
-        """Function for add-on developers to update the RibbonStructureFile with their specific settings.
-        The RibbonStructureFile must have at least one of the following keys:
-        - "igonreWorkbenches"
-        - "customToolbars"
-        - "newPanels"
-        - "dropdownButtons"
-        - "iconOnlyToolbars"
-        - "workbenches"
-
-        Args:
-            RibbonStructureFile (dict): a dictionary that follows the RibbonStructureFile format.\n
-            See the RibbonStructureFile.json for the format. (Located in the add-on directory)
-        """
+    def UpdateRibbonStructureFile_Proxy(self, RibbonStructureDict: dict):
         # get the path for the Json file
         JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
 
@@ -2058,3 +2045,21 @@ class run:
 
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
+
+
+def UpdateRibbonStructureFile(RibbonStructureDict: dict):
+    """Function for add-on developers to update the RibbonStructureFile with their specific settings.
+    The RibbonStructureFile must have at least one of the following keys:
+    - "igonreWorkbenches"
+    - "customToolbars"
+    - "newPanels"
+    - "dropdownButtons"
+    - "iconOnlyToolbars"
+    - "workbenches"
+
+    Args:
+        RibbonStructureFile (dict): a dictionary that follows the RibbonStructureFile format.\n
+        See the RibbonStructureFile.json for the format. (Located in the add-on directory)
+    """
+    ModernMenu.UpdateRibbonStructureFile_Proxy(RibbonStructureDict)
+    return
