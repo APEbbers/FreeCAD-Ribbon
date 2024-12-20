@@ -707,6 +707,15 @@ class LoadDialog(Design_ui.Ui_Form):
         # -- TabWidget
         # Set the first tab activated
         self.form.tabWidget.setCurrentWidget(self.form.tabWidget.widget(0))
+        #
+        # -- Initial setup tab --
+        self.form.DefaultButtonSize_IS_Workbenches.setItemData(0, "small", Qt.ItemDataRole.UserRole)
+        self.form.DefaultButtonSize_IS_Workbenches.setItemData(1, "medium", Qt.ItemDataRole.UserRole)
+        self.form.DefaultButtonSize_IS_Workbenches.setItemData(2, "large", Qt.ItemDataRole.UserRole)
+        self.form.DefaultButtonSize_IS_Panels.setItemData(0, "small", Qt.ItemDataRole.UserRole)
+        self.form.DefaultButtonSize_IS_Panels.setItemData(1, "medium", Qt.ItemDataRole.UserRole)
+        self.form.DefaultButtonSize_IS_Panels.setItemData(2, "large", Qt.ItemDataRole.UserRole)
+
         # -- Ribbon design tab --
         # Settings for the table widget
         self.form.CommandTable_RD.setEnabled(True)
@@ -1041,7 +1050,7 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_GenerateSetup_IS_WorkBenches_clicked(self):
         items = self.form.WorkbenchList_IS.selectedItems()
         WorkBenchName = ""
-        Size = self.form.DefaultButtonSize_IS_Workbenches.currentText().lower()
+        Size = self.form.DefaultButtonSize_IS_Workbenches.currentData(Qt.ItemDataRole.UserRole)
         WorkBenchList = []
 
         if len(items) == 0:
@@ -1088,7 +1097,7 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_GenerateSetup_IS_Panels_clicked(self):
         items = self.form.Panels_IS.selectedItems()
         Panel = ""
-        Size = self.form.DefaultButtonSize_IS_Panels.currentText().lower()
+        Size = self.form.DefaultButtonSize_IS_Panels.currentData(Qt.ItemDataRole.UserRole)
         PanelList = []
 
         if len(items) == 0:

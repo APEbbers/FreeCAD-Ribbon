@@ -87,6 +87,7 @@ from Standard_Functions_RIbbon import CommandInfoCorrections
 import Serialize_Ribbon
 import StyleMapping
 import platform
+import math
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -1238,7 +1239,11 @@ class ModernMenu(RibbonBar):
 
                 # If the number of rows divided by 3 is a whole number,
                 # the number of columns is the rowcount divided by 3.
-                columnCount = rowCount / 3
+                columnCount = math.ceil(rowCount / 3)
+                # if buttonSize == "medium":
+                #     columnCount = rowCount / 2
+                # if buttonSize == "large":
+                #     columnCount = rowCount
                 # ----------------------------------------------------------------------------------------
 
                 # if the button has not text, remove it, skip it and increase the counter.
@@ -1339,9 +1344,12 @@ class ModernMenu(RibbonBar):
                             # Get the icon from cache. Use the pixmap as backup
                             pixmap = ""
                             CommandName = action.data()
+                            if button.menu() is not None:
+                                CommandName = button.text()
                             # If the command is an dropdown, use the button text instead of action data
                             if button.text().endswith("_ddb"):
                                 CommandName = button.text()
+
                             try:
                                 pixmap = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
                                     "commands"
@@ -1360,7 +1368,7 @@ class ModernMenu(RibbonBar):
                                 if icon_Json != "":
                                     action.setIcon(Gui.getIcon(icon_Json))
                             except KeyError:
-                                icon_Json = action.icon()
+                                pass
 
                             # get button size from ribbonStructure
                             try:
@@ -1370,7 +1378,7 @@ class ModernMenu(RibbonBar):
                                 if buttonSize == "":
                                     buttonSize = "small"
                             except KeyError:
-                                buttonSize = "small"  # small as default
+                                pass
 
                             # Check if this is an icon only toolbar
                             IconOnly = False
@@ -1466,7 +1474,7 @@ class ModernMenu(RibbonBar):
                                     # Set the padding
                                     padding = self.PaddingRight
                                     # increase the width equal with the padding
-                                    btn.setMinimumWidth(btn.minimumWidth() + padding)
+                                    btn.setFixedSize(btn.width() + padding, btn.height())
                                     # Set a stylesheet with the new padding
                                     btn.setStyleSheet(
                                         StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px")
@@ -1716,7 +1724,7 @@ class ModernMenu(RibbonBar):
                         CommandName = CommandItem[0]
                         MenuNameTtranslated = ""
                         # Define a new toolbutton
-                        NewToolbutton = QToolButton()
+                        NewToolbutton = RibbonToolButton()
                         if CommandName.endswith("_ddb") is False:
                             # Get the translated menutext
                             MenuNameTtranslated = CommandInfoCorrections(CommandName)["ActionText"]
@@ -1735,9 +1743,10 @@ class ModernMenu(RibbonBar):
                                     # if there are more actions, create a menu
                                     elif len(CommandActionList) > 1:
                                         menu = QMenu()
-                                        menu.addActions(CommandActionList)
+                                        # menu.addActions(CommandActionList)
+                                        for action in CommandActionList:
+                                            menu.addAction(action)
                                         NewToolbutton.setMenu(menu)
-                                        NewToolbutton.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                                         NewToolbutton.setDefaultAction(menu.actions()[0])
                                         # Add the commandname as the objectname to detect if it is a dropdownbutton
                                         NewToolbutton.setObjectName(CommandName)
@@ -1746,7 +1755,7 @@ class ModernMenu(RibbonBar):
                                         len(NewToolbutton.menu().actions())
 
                                     # Set the text for the toolbutton
-                                    NewToolbutton.setText(MenuNameTtranslated)
+                                    NewToolbutton.setText(CommandName)
 
                                     # add it to the list
                                     ButtonList.append(NewToolbutton)
@@ -1773,7 +1782,6 @@ class ModernMenu(RibbonBar):
                                     for action in CommandActionList:
                                         menu.addAction(action[0])
                                     NewToolbutton.setMenu(menu)
-                                    NewToolbutton.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                                     NewToolbutton.setDefaultAction(menu.actions()[0])
                                     # Add the commandname as the objectname to detect if it is a dropdownbutton
                                     NewToolbutton.setObjectName(CommandName)
@@ -1781,11 +1789,11 @@ class ModernMenu(RibbonBar):
                                     # Do something with the menu. For some reason it will not be loaded otherwise
                                     len(NewToolbutton.menu().actions())
 
-                        # Set the text for the toolbutton
-                        NewToolbutton.setText(MenuNameTtranslated)
+                                # Set the text for the toolbutton
+                                NewToolbutton.setText(MenuNameTtranslated)
 
-                        # add it to the list
-                        ButtonList.append(NewToolbutton)
+                                # add it to the list
+                                ButtonList.append(NewToolbutton)
 
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
