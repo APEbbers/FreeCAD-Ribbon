@@ -1948,6 +1948,33 @@ class ModernMenu(RibbonBar):
                 StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
             return
 
+    def UpdateRibbonStructureFile(self, RibbonStructureDict: dict):
+        """Function for add-on developers to update the RibbonStructureFile with their specific settings.
+        The RibbonStructureFile must have at least one of the following keys:
+        - "igonreWorkbenches"
+        - "customToolbars"
+        - "newPanels"
+        - "dropdownButtons"
+        - "iconOnlyToolbars"
+        - "workbenches"
+
+        Args:
+            RibbonStructureFile (dict): a dictionary that follows the RibbonStructureFile format.\n
+            See the RibbonStructureFile.json for the format. (Located in the add-on directory)
+        """
+        # get the path for the Json file
+        JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+
+        with open(RibbonStructureDict, "r") as file:
+            self.ribbonStructure.update(json.load(file))
+
+        # Writing to sample.json
+        with open(JsonFile, "w") as outfile:
+            json.dump(self.ribbonStructure, outfile, indent=4)
+
+        outfile.close()
+        return
+
 
 # region - alternative loading
 # class run:
