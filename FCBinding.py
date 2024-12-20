@@ -347,12 +347,12 @@ class ModernMenu(RibbonBar):
 
                         # Get the command and its original toolbar
                         for CommandItem in Commands:
-                            if CommandItem[1] != "General":
+                            if CommandItem[1] != "General" and CommandItem[1] != "Global":
                                 # Activate the workbench if not loaded
                                 Gui.activateWorkbench(CommandItem[1])
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
-                StandardFunctions.Print(f"new panels have wrong format. Please create them again!\n\n{e}", "Error")
+                StandardFunctions.Print(f"new panels have wrong format. Please create them again!\n{e}", "Error")
             pass
 
         # Activate the workbenches used in the dropdown buttons otherwise the button stays empty
@@ -360,12 +360,12 @@ class ModernMenu(RibbonBar):
             if "dropdownButtons" in self.ribbonStructure:
                 for DropDownCommand, Commands in self.ribbonStructure["dropdownButtons"].items():
                     for CommandItem in Commands:
-                        if CommandItem[1] != "General":
+                        if CommandItem[1] != "General" and CommandItem[1] != "Global":
                             # Activate the workbench if not loaded
                             Gui.activateWorkbench(CommandItem[1])
-        except Exception:
+        except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
-                StandardFunctions.Print("dropdownbuttons have wrong format. Please create them again!", "Warning")
+                StandardFunctions.Print(f"dropdownbuttons have wrong format. Please create them again!\n{e}", "Warning")
             pass
 
         # Create the ribbon
@@ -1043,22 +1043,23 @@ class ModernMenu(RibbonBar):
 
         # Get the custom panels and add them to the list of toolbars
         try:
-            for CustomPanel in self.ribbonStructure["customToolbars"][workbenchName]:
-                ListToolbars.append(CustomPanel)
+            if workbenchName in self.ribbonStructure["customToolbars"]:
+                for CustomPanel in self.ribbonStructure["customToolbars"][workbenchName]:
+                    ListToolbars.append(CustomPanel)
 
-                # remove the original toolbars from the list
-                Commands = self.ribbonStructure["customToolbars"][workbenchName][CustomPanel]["commands"]
-                for Command in Commands:
-                    try:
-                        OriginalToolbar = self.ribbonStructure["customToolbars"][workbenchName][CustomPanel][
-                            "commands"
-                        ][Command]
-                        ListToolbars.remove(OriginalToolbar)
-                    except Exception:
-                        continue
+                    # remove the original toolbars from the list
+                    Commands = self.ribbonStructure["customToolbars"][workbenchName][CustomPanel]["commands"]
+                    for Command in Commands:
+                        try:
+                            OriginalToolbar = self.ribbonStructure["customToolbars"][workbenchName][CustomPanel][
+                                "commands"
+                            ][Command]
+                            ListToolbars.remove(OriginalToolbar)
+                        except Exception:
+                            continue
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
-                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}, 1", "Warning")
+                StandardFunctions.Print(f"{e}, 1", "Warning")
             pass
 
         # Add the new panels to the toolbar list
