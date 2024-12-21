@@ -772,7 +772,8 @@ class LoadDialog(Design_ui.Ui_Form):
                 if str(WorkBenchName) != "NoneWorkbench":
                     Gui.activateWorkbench(WorkBenchName)
                     WorkBench = Gui.getWorkbench(WorkBenchName)
-                    ToolbarItems: dict = StandardFunctions.CorrectGetToolbarItems(WorkBenchName)
+                    ToolbarItems: dict = WorkBench.getToolbarItems()
+                    # ToolbarItems: dict = StandardFunctions.CorrectGetToolbarItems(WorkBenchName)
 
                     IconName = ""
                     IconName = str(Gui.getWorkbench(WorkBenchName).Icon)
@@ -811,7 +812,8 @@ class LoadDialog(Design_ui.Ui_Form):
         for i in range(len(self.List_Workbenches)):
             Gui.activateWorkbench(self.List_Workbenches[i][0])
             WorkBench = Gui.getWorkbench(self.List_Workbenches[i][0])
-            ToolbarItems = StandardFunctions.CorrectGetToolbarItems(WorkBenchName)
+            ToolbarItems = WorkBench.getToolbarItems()
+            # ToolbarItems = StandardFunctions.CorrectGetToolbarItems(WorkBenchName)
 
             for key, value in list(ToolbarItems.items()):
                 for j in range(len(value)):
