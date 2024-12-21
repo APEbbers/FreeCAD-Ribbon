@@ -586,8 +586,7 @@ def CommandInfoCorrections(CommandName):
             CommandInfo["pixmap"] = ""
             CommandInfo["ActionText"] = ""
             CommandInfo["name"] = ""
-    except Exception as e:
-        print(e)
+    except Exception:
         CommandInfo = {}
         CommandInfo["menuText"] = ""
         CommandInfo["toolTip"] = ""
@@ -669,20 +668,13 @@ def returnQiCons_Commands(CommandName, pixmap=""):
     return icon
 
 
-def CorrectGetToolbarItems(WorkBenchName: str):
-    WorkBench = Gui.getWorkbench(WorkBenchName)
-    ToolbarItems: dict = WorkBench.getToolbarItems()
-    ToolbarItemsCopy = ToolbarItems.copy()
-
+def CorrectGetToolbarItems(ToolbarItems: dict):
     newCommands = []
 
-    for key, value in list(ToolbarItems.items()):
-        if key == "Structure":
-            newCommands.extend(value)
-            if "Part_Datums" not in value:
-                newCommands.append("Part_Datums")
-                ToolbarItems[key] = newCommands
+    if "Structure" in ToolbarItems:
+        newCommands = ToolbarItems["Structure"]
+        if "Part_Datums" not in newCommands:
+            newCommands.append("Part_Datums")
+            ToolbarItems.update({"Structure": newCommands})
 
-    ToolbarItemsCopy.update(ToolbarItems)
-
-    return ToolbarItemsCopy
+    return ToolbarItems
