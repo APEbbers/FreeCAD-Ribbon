@@ -947,29 +947,13 @@ class LoadDialog(Design_ui.Ui_Form):
             json.dump(Data2, outfile, indent=4)
         outfile.close()
 
-        # If there is a RibbonStructure.json file, load it
-        if os.path.isfile(os.path.join(os.path.dirname(__file__), "RibbonStructure.json")):
-            # Clear the lists first
-            self.List_IgnoredToolbars.clear()
-            self.List_IgnoredToolbars_internal.clear()
-            self.List_IconOnly_Toolbars.clear()
-            self.List_QuickAccessCommands.clear()
-            self.List_IgnoredWorkbenches.clear()
-            self.Dict_CustomToolbars.clear()
-            self.Dict_NewPanels.clear()
-            self.Dict_DropDownButtons.clear()
-            self.Dict_RibbonCommandPanel.clear()
-            # Load the RibbonStructure.json file
-            self.ReadJson()
-
-        # Load all controls
-        self.LoadControls()
+        # run init again
+        self.__init__()
 
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
 
         # Show the dialog again
-        self.__init__()
         self.form.show()
         return
 
@@ -3072,6 +3056,7 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.CommandsSelected_QC.clear()
         self.form.CommandsAvailable_DDB.clear()
         self.form.CommandsAvailable_NP.clear()
+        self.form.CommandList_DDB.clear()
 
         ShadowList = []  # List to add the commands and prevent duplicates
 
