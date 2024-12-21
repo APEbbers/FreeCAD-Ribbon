@@ -1593,6 +1593,8 @@ class LoadDialog(Design_ui.Ui_Form):
                                         # Add the command to the shadow list
                                         ShadowList.append(CommandItem[0])
 
+            self.form.PanelName_CP.setText(CustomPanelTitle.split("_")[0])
+
             # Enable the apply button
             if self.CheckChanges() is True:
                 self.form.UpdateJson.setEnabled(True)
@@ -1816,6 +1818,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
             # Set the workbench selector to the workbench to which this custom toolbar belongs
             self.form.WorkbenchList_NP.setCurrentText(WorkBenchTitle)
+            self.form.PanelName_NP.setText(NewPanelName.split("_")[0])
 
             ShadowList = []  # Create a shadow list. To check if items are already existing.
             WorkBenchName = ""
@@ -1855,9 +1858,6 @@ class LoadDialog(Design_ui.Ui_Form):
 
                                     if ListWidgetItem.text() != "":
                                         self.form.NewPanel_NP.addItem(ListWidgetItem)
-
-                                    # Add the command to the shadow list
-                                    # ShadowList.append(f"{CommandName}, {WorkBenchName}")
                             else:
                                 # if not a drop down button check if the commandname is in the list of commands
                                 for CommandItem in self.List_Commands:
@@ -2020,7 +2020,6 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.CommandList_DDB.addItem(DropDownName)
         # make sure that no command is selected by default
         # to prevent accidental removal
-        self.form.CommandList_DDB.addItem("")
         self.form.CommandList_DDB.setCurrentText("")
 
         # Enable the apply button
@@ -2032,6 +2031,10 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_CommandList_DDB_activated(self):
         self.form.NewControl_DDB.clear()
         DropDownControl = self.form.CommandList_DDB.currentText() + "_ddb"
+
+        if self.form.CommandList_DDB.currentData(Qt.ItemDataRole.UserRole) == "new":
+            self.form.NewControl_DDB.clear()
+            return
 
         # if the dropdown text is not empty, continue
         if DropDownControl != "" and "dropdownButtons" in self.Dict_DropDownButtons:
@@ -3154,10 +3157,15 @@ class LoadDialog(Design_ui.Ui_Form):
                         self.form.CommandsAvailable_NP.addItem(ListWidgetItem.clone())
                         self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
 
+                    # If there are any dropdown buttons in the json file, add them to the dropdown list
                     if str(CommandName).endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
                         self.form.CommandList_DDB.addItem(CommandName.replace("_ddb", ""))
 
             ShadowList.append(f"{CommandItem[0]}")
+
+        # Add a "new" item to the dropdown list
+        self.form.CommandList_DDB.addItem(translate("FreeCAD Ribbon", "New"), "new")
+        self.form.CommandList_DDB.setCurrentText(translate("FreeCAD Ribbon", "New"))
         return
 
     def LoadPanels(self):
@@ -3184,8 +3192,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 ShadowList.append(ToolBarItem[0])
 
         # -- Custom panel tab --
-        self.form.CustomToolbarSelector_CP.addItem(translate("FreeCAD Ribbon", "New"))
-        self.form.CustomToolbarSelector_CP.setItemData(0, "new", Qt.ItemDataRole.UserRole)
+        self.form.CustomToolbarSelector_CP.addItem(translate("FreeCAD Ribbon", "New"), "new")
         try:
             for WorkBenchName in self.Dict_CustomToolbars["customToolbars"]:
                 WorkBenchTitle = ""
@@ -3201,8 +3208,6 @@ class LoadDialog(Design_ui.Ui_Form):
             pass
 
         # -- Load the newPanels --
-        self.form.CustomToolbarSelector_NP.addItem(translate("FreeCAD Ribbon", "New"))
-        self.form.CustomToolbarSelector_NP.setItemData(0, "new", Qt.ItemDataRole.UserRole)
         try:
             for WorkBenchName in self.Dict_NewPanels["newPanels"]:
                 WorkBenchTitle = ""
@@ -3223,7 +3228,12 @@ class LoadDialog(Design_ui.Ui_Form):
             if Parameters_Ribbon.DEBUG_MODE is True:
                 StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
             pass
-
+        # Add a "new" item to the dropdown list and set it current
+        self.form.CustomToolbarSelector_NP.addItem(translate("FreeCAD Ribbon", "New"), "new")
+        self.form.CustomToolbarSelector_NP.setCurrentText(translate("FreeCAD Ribbon", "New"))
+        # clear the text of the panel name
+        self.form.PanelName_NP.clear()
+        self.form.NewPanel_NP.clear()
         return
 
     def UpdateData(self):
