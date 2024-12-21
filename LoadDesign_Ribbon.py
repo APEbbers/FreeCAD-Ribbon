@@ -205,7 +205,7 @@ class LoadDialog(Design_ui.Ui_Form):
             FCLanguage = FreeCAD_preferences.GetString("Language")
             # Check if the language in the data file machtes the system language
             IsSystemLanguage = True
-            if FCLanguage != Data["language"]:
+            if FCLanguage != Data["Language"]:
                 IsSystemLanguage = False
             # If the languguage doesn't match, ask the user to update the data
             if IsSystemLanguage is False:
@@ -1204,23 +1204,24 @@ class LoadDialog(Design_ui.Ui_Form):
             else:
                 ToolbarTransLated = Toolbar[0]
 
-            if (
-                WorkbenchTitle == self.form.ListCategory_EP.currentData(Qt.ItemDataRole.UserRole)[2]
-                or self.form.ListCategory_EP.currentData(Qt.ItemDataRole.UserRole) == "All"
-            ):
-                IsInlist = False
-                for i in range(self.form.PanelsToExclude_EP.count()):
-                    ToolbarItem = self.form.PanelsToExclude_EP.item(i)
-                    if ToolbarItem.data(Qt.ItemDataRole.UserRole) == Toolbar[0]:
-                        IsInlist = True
+            if self.form.ListCategory_EP.currentData(Qt.ItemDataRole.UserRole) is not None:
+                if (
+                    WorkbenchTitle == self.form.ListCategory_EP.currentData(Qt.ItemDataRole.UserRole)[2]
+                    or self.form.ListCategory_EP.currentData(Qt.ItemDataRole.UserRole) == "All"
+                ):
+                    IsInlist = False
+                    for i in range(self.form.PanelsToExclude_EP.count()):
+                        ToolbarItem = self.form.PanelsToExclude_EP.item(i)
+                        if ToolbarItem.data(Qt.ItemDataRole.UserRole) == Toolbar[0]:
+                            IsInlist = True
 
-                if IsInlist is False:
-                    ListWidgetItem = QListWidgetItem()
-                    ListWidgetItem.setText(ToolbarTransLated.replace("&", ""))
-                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar[0])
+                    if IsInlist is False:
+                        ListWidgetItem = QListWidgetItem()
+                        ListWidgetItem.setText(ToolbarTransLated.replace("&", ""))
+                        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar[0])
 
-                    # Add the ListWidgetItem to the correct ListWidget
-                    self.form.PanelsToExclude_EP.addItem(ListWidgetItem)
+                        # Add the ListWidgetItem to the correct ListWidget
+                        self.form.PanelsToExclude_EP.addItem(ListWidgetItem)
 
     def on_SearchBar_EP_TextChanged(self):
         self.form.PanelsToExclude_EP.clear()
