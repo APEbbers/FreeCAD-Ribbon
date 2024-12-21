@@ -1403,12 +1403,10 @@ class LoadDialog(Design_ui.Ui_Form):
             for i in range(len(SelectedToolbars)):
                 toolbar = SelectedToolbars[i].data(Qt.ItemDataRole.UserRole)
                 if key == toolbar:
-                    print(f"{key}, {value}")
                     for j in range(len(value)):
                         CommandName = value[j]
                         for ToolbarCommand in self.List_Commands:
                             if ToolbarCommand[0] == CommandName:
-                                print(CommandName)
                                 # Get the command
                                 MenuName = ToolbarCommand[4].replace("&", "")
 
@@ -1569,7 +1567,6 @@ class LoadDialog(Design_ui.Ui_Form):
                                 # if not, continue
                                 if not CommandItem[0] in ShadowList:
                                     MenuName_Command = CommandItem[2]
-                                    # print(f"{MenuName_Command}:{key}, {CommandItem[3]}:{WorkBenchName}")
                                     if MenuName_Command == key and CommandItem[3] == WorkBenchName:
                                         MenuName = CommandItem[4].replace("&", "")
 
@@ -1754,13 +1751,9 @@ class LoadDialog(Design_ui.Ui_Form):
                 try:
                     if WorkBenchName in self.Dict_NewPanels["newPanels"]:
                         for key, value in list(self.Dict_NewPanels["newPanels"][WorkBenchName].items()):
-                            print(f"{key}, {NewPanelTitle}")
                             if key == NewPanelTitle:
                                 # remove the custom toolbar from the combobox
                                 for i in range(self.form.CustomToolbarSelector_NP.count()):
-                                    print(
-                                        f'{self.form.CustomToolbarSelector_NP.itemText(i).split(", ")[0] + Suffix}, {key}'
-                                    )
                                     if self.form.CustomToolbarSelector_NP.itemText(i).split(", ")[0] + Suffix == key:
                                         if (
                                             self.form.CustomToolbarSelector_NP.itemText(i).split(", ")[1]
@@ -2048,7 +2041,6 @@ class LoadDialog(Design_ui.Ui_Form):
 
                             # If the command is equal to one in the commandsavaialble listwidget,
                             # Move it to the listwidget for the dropdown button.
-                            # print(f"{CommandName[0]}, {ListWidgetItem.data(Qt.ItemDataRole.UserRole)}")
                             if ListWidgetItem.data(Qt.ItemDataRole.UserRole) == CommandName[0]:
                                 self.form.NewControl_DDB.addItem(ListWidgetItem.clone())
                                 self.form.CommandsAvailable_DDB.removeItemWidget(ListWidgetItem)
@@ -2077,8 +2069,6 @@ class LoadDialog(Design_ui.Ui_Form):
                     for i in range(self.form.CommandList_DDB.count()):
                         if self.form.CommandList_DDB.itemText(i) + "_ddb" == DropDownControl:
                             self.form.CommandList_DDB.removeItem(i)
-
-                    # TODO: remove control from new panels
 
             # Enable the apply button
             if self.CheckChanges() is True:
