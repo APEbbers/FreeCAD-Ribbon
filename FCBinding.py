@@ -1391,7 +1391,6 @@ class ModernMenu(RibbonBar):
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
                                 if IconOnly is True:
                                     showText = False
-
                                 btn: RibbonToolButton = panel.addSmallButton(
                                     action.text(),
                                     action.icon(),
@@ -1400,7 +1399,8 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_SMALL,
                                 )
 
-                                btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL)
+                                if showText is False:
+                                    btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL)
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
                                 padding = 0
@@ -1419,7 +1419,8 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_MEDIUM,
                                 )
 
-                                btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
+                                if showText is False:
+                                    btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
                                 # Set the stylesheet
                                 # Set the padding to align the icons to the left
                                 padding = 0
