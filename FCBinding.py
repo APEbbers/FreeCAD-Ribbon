@@ -1778,7 +1778,6 @@ class ModernMenu(RibbonBar):
                                 # if there are more actions, create a menu
                                 if len(CommandActionList) > 1:
                                     menu = QMenu()
-                                    # menu.addActions(CommandActionList)
                                     for action in CommandActionList:
                                         menu.addAction(action[0])
                                     NewToolbutton.setMenu(menu)

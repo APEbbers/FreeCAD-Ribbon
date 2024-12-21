@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide6.QtGui import QIcon, QPixmap, QAction
-from PySide6.QtWidgets import (
+from PySide.QtGui import QIcon, QPixmap, QAction
+from PySide.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -37,7 +37,7 @@ from PySide6.QtWidgets import (
     QLineEdit,
     QSizePolicy,
 )
-from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
+from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
 import json
 from datetime import datetime
@@ -77,7 +77,7 @@ class LoadDialog(Design_ui.Ui_Form):
     Restart = False
 
     # Set the data file version. Triggeres an question if an update is needed
-    DataFileVersion = "0.2"
+    DataFileVersion = "0.3"
 
     # Define list of the workbenches, toolbars and commands on class level
     List_Workbenches = []
@@ -780,7 +780,8 @@ class LoadDialog(Design_ui.Ui_Form):
                 wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
                 # Go through the toolbars
                 for Toolbar in wbToolbars:
-                    self.StringList_Toolbars.append([Toolbar, WorkBench[2], WorkBench[0]])
+                    ToolBarTtranslated = StandardFunctions.TranslationsMapping(WorkBench[0], Toolbar)
+                    self.StringList_Toolbars.append([Toolbar, WorkBench[2], WorkBench[0], ToolBarTtranslated])
 
         # Add the custom toolbars
         CustomToolbars = self.List_ReturnCustomToolbars()
@@ -1118,12 +1119,17 @@ class LoadDialog(Design_ui.Ui_Form):
 
         self.LoadControls()
 
+        self.form.hide()
         message_1 = translate("FreeCAD Ribbon", "Buttons are set to {} for the following panels:\n").format(Size)
         message_2 = ""
         for Panel in PanelList:
             message_2 = "\t" + message_2 + Panel + "\n" + "  "
 
         StandardFunctions.Mbox(message_1 + message_2, "FreeCAD Ribbon", 0)
+        self.form.show()
+
+        # Enable the apply button
+
         return
 
     # endregion---------------------------------------------------------------------------------------
@@ -1189,7 +1195,12 @@ class LoadDialog(Design_ui.Ui_Form):
 
         for Toolbar in self.StringList_Toolbars:
             WorkbenchTitle = Toolbar[1]
-            WorkbenchName = Toolbar[2]
+            # Get the translated toolbar name
+            if len(Toolbar) == 4:
+                ToolbarTransLated = Toolbar[3]
+            else:
+                ToolbarTransLated = Toolbar[0]
+
             if (
                 WorkbenchTitle == self.form.ListCategory_EP.currentText()
                 or self.form.ListCategory_EP.currentText() == "All"
@@ -1197,17 +1208,13 @@ class LoadDialog(Design_ui.Ui_Form):
                 IsInlist = False
                 for i in range(self.form.PanelsToExclude_EP.count()):
                     ToolbarItem = self.form.PanelsToExclude_EP.item(i)
-                    if ToolbarItem.text().replace("&", "") == StandardFunctions.TranslationsMapping(
-                        WorkbenchName, Toolbar[0]
-                    ).replace("&", ""):
+                    if ToolbarItem.data(Qt.ItemDataRole.UserRole) == Toolbar[0]:
                         IsInlist = True
 
                 if IsInlist is False:
                     ListWidgetItem = QListWidgetItem()
-                    ListWidgetItem.setText(
-                        StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]).replace("&", "")
-                    )
-                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
+                    ListWidgetItem.setText(ToolbarTransLated.replace("&", ""))
+                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar[0])
 
                     # Add the ListWidgetItem to the correct ListWidget
                     self.form.PanelsToExclude_EP.addItem(ListWidgetItem)
@@ -1217,26 +1224,25 @@ class LoadDialog(Design_ui.Ui_Form):
 
         for Toolbar in self.StringList_Toolbars:
             if Toolbar[0].lower().startswith(self.form.SearchBar_EP.text().lower()):
-                WorkbenchName = Toolbar[2]
+                # Get the translated toolbar name
+                if len(Toolbar) == 4:
+                    ToolbarTransLated = Toolbar[3]
+                else:
+                    ToolbarTransLated = Toolbar[0]
+
                 ListWidgetItem = QListWidgetItem()
-                ListWidgetItem.setText(
-                    StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]).replace("&", "")
-                )
-                ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
+                ListWidgetItem.setText(ToolbarTransLated.replace("&", ""))
+                ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar[0])
 
                 IsInlist = False
                 for i in range(self.form.PanelsToExclude_EP.count()):
                     ToolbarItem = self.form.PanelsToExclude_EP.item(i)
-                    if (
-                        ToolbarItem.text() == StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0])
-                        or ToolbarItem.text() == ""
-                    ):
+                    if ToolbarItem.data(Qt.ItemDataRole.UserRole) == Toolbar[0]:
                         IsInlist = True
 
                 if IsInlist is False:
                     # Add the ListWidgetItem to the correct ListWidget
-                    if ListWidgetItem.text() != "":
-                        self.form.PanelsToExclude_EP.addItem(ListWidgetItem)
+                    self.form.PanelsToExclude_EP.addItem(ListWidgetItem)
 
     def on_AddToolbar_EP_clicked(self):
         self.AddItem(
@@ -1337,8 +1343,16 @@ class LoadDialog(Design_ui.Ui_Form):
 
             # If the are not to be ignored, add them to the listwidget
             if IsIgnored is False and Toolbar != "":
+                # Get the translated toolbar name
+                for ToolBarItem in self.StringList_Toolbars:
+                    if ToolBarItem[0] == Toolbar:
+                        if len(ToolBarItem) == 4:
+                            ToolbarTransLated = ToolBarItem[3]
+                        else:
+                            ToolbarTransLated = ToolBarItem[0]
+
                 ListWidgetItem = QListWidgetItem()
-                ListWidgetItem.setText(StandardFunctions.TranslationsMapping(WorkBenchName, Toolbar).replace("&", ""))
+                ListWidgetItem.setText(ToolbarTransLated.replace("&", ""))
                 ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
                 self.form.PanelAvailable_CP.addItem(ListWidgetItem)
 
@@ -1396,7 +1410,7 @@ class LoadDialog(Design_ui.Ui_Form):
                             if ToolbarCommand[0] == CommandName:
                                 print(CommandName)
                                 # Get the command
-                                MenuName = ToolbarCommand[2].replace("&", "")
+                                MenuName = ToolbarCommand[4].replace("&", "")
 
                                 # get the icon for this command if there isn't one, leave it None
                                 Icon = QIcon()
@@ -1851,7 +1865,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                 # if not a drop down button check if the commandname is in the list of commands
                                 for CommandItem in self.List_Commands:
                                     if CommandItem[0] == CommandName and CommandItem[3] == WorkBenchNameCMD:
-                                        MenuName = CommandItem[2].replace("&", "")
+                                        MenuName = CommandItem[4].replace("&", "")
 
                                         # Check if the items is already there
                                         # if not, continue
@@ -1959,7 +1973,12 @@ class LoadDialog(Design_ui.Ui_Form):
                 if CommandItem[0] == ListWidgetItem.data(Qt.ItemDataRole.UserRole):
                     CommandName = CommandItem[0]
                     WorkBenchName = CommandItem[3]
-                    DropDownButton.append([CommandName, WorkBenchName])
+                    IsInlist = False
+                    for item in DropDownButton:
+                        if item[0] == CommandName:
+                            IsInlist = True
+                    if IsInlist is False:
+                        DropDownButton.append([CommandName, WorkBenchName])
 
             # Create or modify the dict that will be entered
             Suffix = "_ddb"
@@ -2029,6 +2048,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
                             # If the command is equal to one in the commandsavaialble listwidget,
                             # Move it to the listwidget for the dropdown button.
+                            # print(f"{CommandName[0]}, {ListWidgetItem.data(Qt.ItemDataRole.UserRole)}")
                             if ListWidgetItem.data(Qt.ItemDataRole.UserRole) == CommandName[0]:
                                 self.form.NewControl_DDB.addItem(ListWidgetItem.clone())
                                 self.form.CommandsAvailable_DDB.removeItemWidget(ListWidgetItem)
@@ -2155,9 +2175,9 @@ class LoadDialog(Design_ui.Ui_Form):
             WorkBenchName=WorkBenchName,
             PanelDict="customToolbars",
         )
-        for CustomToolbar in CustomPanels:
-            if CustomToolbar[1] == WorkBenchTitle:
-                wbToolbars.append(CustomToolbar[0])
+        for CustomPanel in CustomPanels:
+            if CustomPanel[1] == WorkBenchTitle:
+                wbToolbars.append(CustomPanel[0])
         # Get the new panels
         NewPanels = self.List_AddNewPanel(self.Dict_NewPanels, WorkBenchName=WorkBenchName, PanelDict="newPanels")
         for Newpanel in NewPanels:
@@ -2186,16 +2206,23 @@ class LoadDialog(Design_ui.Ui_Form):
                 if Toolbar == IgnoredToolbar:
                     IsIgnored = True
 
+            # Get the translated toolbar name
+            ToolbarTransLated = Toolbar
+            for ToolBarItem in self.StringList_Toolbars:
+                if ToolBarItem[0] == Toolbar and ToolBarItem[2] == WorkBenchName:
+                    if len(ToolBarItem) == 4:
+                        ToolbarTransLated = ToolBarItem[3]
+
             # If the are not to be ignored, add them to the listwidget
             if IsIgnored is False:
                 if Toolbar != "":
                     self.form.PanelList_RD.addItem(
-                        StandardFunctions.TranslationsMapping(WorkBenchName, Toolbar),
+                        ToolbarTransLated,
                         Toolbar,
                     )
                     # Define a new ListWidgetItem.
                     ListWidgetItem = QListWidgetItem()
-                    ListWidgetItem.setText(StandardFunctions.TranslationsMapping(WorkBenchName, Toolbar))
+                    ListWidgetItem.setText(ToolbarTransLated)
                     ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
                     self.form.PanelOrder_RD.addItem(ListWidgetItem)
 
@@ -3007,15 +3034,20 @@ class LoadDialog(Design_ui.Ui_Form):
                     IsSelected = True
 
             if Toolbar[0] != "":
-                WorkbenchName = Toolbar[2]
+                # Get the translated toolbar name
+                if len(Toolbar) == 4:
+                    ToolbarTransLated = Toolbar[3]
+                else:
+                    ToolbarTransLated = Toolbar[0]
+
                 ListWidgetItem = QListWidgetItem()
-                ListWidgetItem.setText(StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]))
-                ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
+                ListWidgetItem.setText(ToolbarTransLated.replace("&", ""))
+                ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar[0])
                 if IsSelected is False:
                     IsInlist = False
                     for i in range(self.form.PanelsToExclude_EP.count()):
                         ToolbarItem = self.form.PanelsToExclude_EP.item(i)
-                        if ToolbarItem.text() == StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]):
+                        if ToolbarItem.data(Qt.ItemDataRole.UserRole) == Toolbar[0]:
                             IsInlist = True
 
                     if IsInlist is False:
@@ -3024,7 +3056,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     IsInlist = False
                     for i in range(self.form.PanelsExcluded_EP.count()):
                         ToolbarItem = self.form.PanelsExcluded_EP.item(i)
-                        if ToolbarItem.text() == StandardFunctions.TranslationsMapping(WorkbenchName, Toolbar[0]):
+                        if ToolbarItem.data(Qt.ItemDataRole.UserRole) == Toolbar[0]:
                             IsInlist = True
 
                     if IsInlist is False:
@@ -3122,6 +3154,9 @@ class LoadDialog(Design_ui.Ui_Form):
                         self.form.CommandsAvailable_NP.addItem(ListWidgetItem.clone())
                         self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
 
+                    if str(CommandName).endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
+                        self.form.CommandList_DDB.addItem(CommandName.replace("_ddb", ""))
+
             ShadowList.append(f"{CommandItem[0]}")
         return
 
@@ -3134,10 +3169,14 @@ class LoadDialog(Design_ui.Ui_Form):
         ShadowList = []  # List to add the commands and prevent duplicates
         for ToolBarItem in self.StringList_Toolbars:
             if ToolBarItem[0] not in ShadowList and ToolBarItem[0] != "":
+                # Get the translated toolbar name
+                if len(ToolBarItem) == 4:
+                    ToolbarTransLated = ToolBarItem[3]
+                else:
+                    ToolbarTransLated = ToolBarItem[0]
+
                 ListWidgetItem = QListWidgetItem()
-                ListWidgetItem.setText(
-                    StandardFunctions.TranslationsMapping(ToolBarItem[2], ToolBarItem[0]).replace("&", "")
-                )
+                ListWidgetItem.setText(ToolbarTransLated.replace("&", ""))
                 ListWidgetItem.setData(Qt.ItemDataRole.UserRole, ToolBarItem)
 
                 self.form.Panels_IS.addItem(ListWidgetItem)
@@ -3354,8 +3393,7 @@ class LoadDialog(Design_ui.Ui_Form):
         ExcludedToolbars = self.ListWidgetItems(self.form.PanelsExcluded_EP)
         for i1 in range(len(ExcludedToolbars)):
             ListWidgetItem: QListWidgetItem = ExcludedToolbars[i1]
-            Toolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
-            IgnoredToolbar = Toolbar[0]
+            IgnoredToolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
             List_IgnoredToolbars.append(IgnoredToolbar)
 
         # IconOnly_Toolbars
@@ -3574,7 +3612,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                     Command = action.objectName()
                                     ListCommands.append(Command)
 
-                            Toolbars.append([Name, WorkbenchTitle, ListCommands])
+                            Toolbars.append([Name, WorkbenchTitle, ListCommands, Name])
                         except Exception:
                             continue
 
@@ -3615,7 +3653,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         Command = action.objectName()
                         ListCommands.append(Command)
 
-                Toolbars.append([Name, "Global", ListCommands])
+                Toolbars.append([Name, "Global", ListCommands, Name])
             except Exception:
                 continue
 
@@ -3727,7 +3765,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                 if value not in self.List_IgnoredToolbars_internal:
                                     self.List_IgnoredToolbars_internal.append(f"{value}")
 
-                            Toolbars.append([CustomToolbar, WorkbenchTitle, ListCommands])
+                            Toolbars.append([CustomToolbar, WorkbenchTitle, ListCommands, CustomToolbar])
                 except Exception:
                     pass
 
@@ -3793,7 +3831,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         else:
                             WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
 
-                        Toolbars.append([NewPanel, WorkbenchTitle, ListCommands])
+                        Toolbars.append([NewPanel, WorkbenchTitle, ListCommands, NewPanel])
                 except Exception:
                     pass
         return Toolbars
