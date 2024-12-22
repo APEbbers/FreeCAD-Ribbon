@@ -89,10 +89,14 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Set the size of the window to the previous state
         #
         # Get the previous values
-        LayoutDialog_Height = Parameters_Ribbon.Settings.GetIntSetting("SettingsDialog_Height")
+        LayoutDialog_Height = Parameters_Ribbon.Settings.GetIntSetting(
+            "SettingsDialog_Height"
+        )
         if LayoutDialog_Height == 0 or LayoutDialog_Height is None:
             LayoutDialog_Height = 730
-        LayoutDialog_Width = Parameters_Ribbon.Settings.GetIntSetting("SettingsDialog_Width")
+        LayoutDialog_Width = Parameters_Ribbon.Settings.GetIntSetting(
+            "SettingsDialog_Width"
+        )
         if LayoutDialog_Width == 0 or LayoutDialog_Height is None:
             LayoutDialog_Width = 800
         # set a fixed size to force the form in to shape
@@ -103,7 +107,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.setMinimumSize(600, 600)
         self.form.setMaximumSize(120000, 120000)
         # change the sizepolicy to preferred, to allow stretching
-        self.form.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        self.form.setSizePolicy(
+            QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred
+        )
 
         # Disable custom Colors and Icons for the time being
         self.form.tabWidget.removeTab(2)
@@ -123,7 +129,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.IconSize_Large.setValue(Parameters_Ribbon.ICON_SIZE_LARGE)
         self.form.IconSize_ApplicationButton.setValue(Parameters_Ribbon.APP_ICON_SIZE)
         self.form.IconSize_QuickAccessButton.setValue(Parameters_Ribbon.QUICK_ICON_SIZE)
-        self.form.IconSize_rightToolbarButton.setValue(Parameters_Ribbon.RIGHT_ICON_SIZE)
+        self.form.IconSize_rightToolbarButton.setValue(
+            Parameters_Ribbon.RIGHT_ICON_SIZE
+        )
         self.form.TabbarHeight.setValue(Parameters_Ribbon.TABBAR_SIZE)
         self.form.label_7.setText(Parameters_Ribbon.STYLESHEET)
         if Parameters_Ribbon.SHOW_ICON_TEXT_SMALL is True:
@@ -166,14 +174,24 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.EnableBackup.clicked.connect(self.on_EnableBackup_clicked)
         self.form.BackUpLocation.clicked.connect(self.on_BackUpLocation_clicked)
         # Connect the tabbar style
-        self.form.TabbarStyle.currentIndexChanged.connect(self.on_TabbarStyle_currentIndexChanged)
+        self.form.TabbarStyle.currentIndexChanged.connect(
+            self.on_TabbarStyle_currentIndexChanged
+        )
         # Connect icon sizes
         self.form.IconSize_Small.textChanged.connect(self.on_IconSize_Small_TextChanged)
-        self.form.IconSize_Medium.textChanged.connect(self.on_IconSize_Medium_TextChanged)
+        self.form.IconSize_Medium.textChanged.connect(
+            self.on_IconSize_Medium_TextChanged
+        )
         self.form.IconSize_Large.textChanged.connect(self.on_IconSize_Large_TextChanged)
-        self.form.IconSize_ApplicationButton.textChanged.connect(self.on_IconSize_ApplicationButton_TextChanged)
-        self.form.IconSize_QuickAccessButton.textChanged.connect(self.on_IconSize_QuickAccessButton_TextChanged)
-        self.form.IconSize_rightToolbarButton.textChanged.connect(self.on_IconSize_rightToolbarButton_TextChanged)
+        self.form.IconSize_ApplicationButton.textChanged.connect(
+            self.on_IconSize_ApplicationButton_TextChanged
+        )
+        self.form.IconSize_QuickAccessButton.textChanged.connect(
+            self.on_IconSize_QuickAccessButton_TextChanged
+        )
+        self.form.IconSize_rightToolbarButton.textChanged.connect(
+            self.on_IconSize_rightToolbarButton_TextChanged
+        )
         self.form.TabbarHeight.textChanged.connect(self.on_TabbarHeight_TextChanged)
         # Connect stylesheet
         self.form.StyleSheetLocation.clicked.connect(self.on_StyleSheetLocation_clicked)
@@ -196,7 +214,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
         def GenerateJsonExit():
             self.on_Close_clicked(self)
 
-        self.form.GenerateJsonExit.connect(self.form.GenerateJsonExit, SIGNAL("clicked()"), GenerateJsonExit)
+        self.form.GenerateJsonExit.connect(
+            self.form.GenerateJsonExit, SIGNAL("clicked()"), GenerateJsonExit
+        )
 
         # Connect the reset button
         def Reset():
@@ -206,12 +226,22 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
         # Connect the behavior settings
         self.form.EnableEnterEvent.clicked.connect(self.on_EnableEnterEvent_clicked)
-        self.form.ScrollSpeed_TabBar.valueChanged.connect(self.on_ScrollSpeed_TabBar_valueCHanged)
-        self.form.ScrollSpeed_Ribbon.valueChanged.connect(self.on_ScrollSpeed_Ribbon_valueCHanged)
-        self.form.ScrollClicks_TabBar.textChanged.connect(self.on_ScrollClicks_TabBar_valueCHanged)
-        self.form.ScrollClicks_Ribbon.textChanged.connect(self.on_ScrollClicks_Ribbon_valueCHanged)
+        self.form.ScrollSpeed_TabBar.valueChanged.connect(
+            self.on_ScrollSpeed_TabBar_valueCHanged
+        )
+        self.form.ScrollSpeed_Ribbon.valueChanged.connect(
+            self.on_ScrollSpeed_Ribbon_valueCHanged
+        )
+        self.form.ScrollClicks_TabBar.textChanged.connect(
+            self.on_ScrollClicks_TabBar_valueCHanged
+        )
+        self.form.ScrollClicks_Ribbon.textChanged.connect(
+            self.on_ScrollClicks_Ribbon_valueCHanged
+        )
         # Connect the preferred panel settings
-        self.form.PreferedViewPanel.currentIndexChanged.connect(self.on_PreferedViewPanel_currentIndexChanged)
+        self.form.PreferedViewPanel.currentIndexChanged.connect(
+            self.on_PreferedViewPanel_currentIndexChanged
+        )
         # endregion
 
         # Set the minimum and maximum settings for the iconsizes
@@ -243,7 +273,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     def on_BackUpLocation_clicked(self):
         BackupFolder = ""
-        BackupFolder = StandardFunctions.GetFolder(parent=None, DefaultPath=Parameters_Ribbon.BACKUP_LOCATION)
+        BackupFolder = StandardFunctions.GetFolder(
+            parent=None, DefaultPath=Parameters_Ribbon.BACKUP_LOCATION
+        )
         if BackupFolder != "":
             self.pathBackup = BackupFolder
             self.form.label_4.setText(BackupFolder)
@@ -273,17 +305,23 @@ class LoadDialog(Settings_ui.Ui_Settings):
         return
 
     def on_IconSize_ApplicationButton_TextChanged(self):
-        Parameters_Ribbon.APP_ICON_SIZE = int(self.form.IconSize_ApplicationButton.text())
+        Parameters_Ribbon.APP_ICON_SIZE = int(
+            self.form.IconSize_ApplicationButton.text()
+        )
         self.settingChanged = True
         return
 
     def on_IconSize_QuickAccessButton_TextChanged(self):
-        Parameters_Ribbon.QUICK_ICON_SIZE = int(self.form.IconSize_QuickAccessButton.text())
+        Parameters_Ribbon.QUICK_ICON_SIZE = int(
+            self.form.IconSize_QuickAccessButton.text()
+        )
         self.settingChanged = True
         return
 
     def on_IconSize_rightToolbarButton_TextChanged(self):
-        Parameters_Ribbon.RIGHT_ICON_SIZE = int(self.form.IconSize_rightToolbarButton.text())
+        Parameters_Ribbon.RIGHT_ICON_SIZE = int(
+            self.form.IconSize_rightToolbarButton.text()
+        )
         self.settingChanged = True
         return
 
@@ -384,8 +422,12 @@ class LoadDialog(Settings_ui.Ui_Settings):
     @staticmethod
     def on_Cancel_clicked(self):
         # Set the size of the window to the previous state
-        Parameters_Ribbon.Settings.SetIntSetting("SettingsDialog_Height", self.form.height())
-        Parameters_Ribbon.Settings.SetIntSetting("SettingsDialog_Width", self.form.width())
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "SettingsDialog_Height", self.form.height()
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "SettingsDialog_Width", self.form.width()
+        )
         # Close the form
         self.form.close()
         return
@@ -396,11 +438,19 @@ class LoadDialog(Settings_ui.Ui_Settings):
         Parameters_Ribbon.Settings.SetBoolSetting("BackupEnabled", self.Backup)
         Parameters_Ribbon.Settings.SetStringSetting("BackupFolder", self.BackupLocation)
         # Save tabBar style
-        Parameters_Ribbon.Settings.SetIntSetting("TabBar_Style", self.form.TabbarStyle.currentIndex())
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "TabBar_Style", self.form.TabbarStyle.currentIndex()
+        )
         # Save icon sizes
-        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", int(self.form.IconSize_Small.text()))
-        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", int(self.form.IconSize_Medium.text()))
-        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", int(self.form.IconSize_Large.text()))
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "IconSize_Small", int(self.form.IconSize_Small.text())
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "IconSize_Medium", int(self.form.IconSize_Medium.text())
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "IconSize_Large", int(self.form.IconSize_Large.text())
+        )
         Parameters_Ribbon.Settings.SetStringSetting("Stylesheet", self.StyleSheet)
         Parameters_Ribbon.Settings.SetIntSetting(
             "ApplicationButtonSize", int(self.form.IconSize_ApplicationButton.text())
@@ -408,29 +458,53 @@ class LoadDialog(Settings_ui.Ui_Settings):
         Parameters_Ribbon.Settings.SetIntSetting(
             "QuickAccessButtonSize", int(self.form.IconSize_QuickAccessButton.text())
         )
-        Parameters_Ribbon.Settings.SetIntSetting("TabBarSize", int(self.form.TabbarHeight.text()))
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "TabBarSize", int(self.form.TabbarHeight.text())
+        )
         Parameters_Ribbon.Settings.SetIntSetting(
             "RightToolbarButtonSize", int(self.form.IconSize_rightToolbarButton.text())
         )
         # Save text settings
-        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", self.ShowText_Small)
-        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", self.ShowText_Medium)
-        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", self.ShowText_Large)
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "ShowIconText_Small", self.ShowText_Small
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "ShowIconText_Medium", self.ShowText_Medium
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "ShowIconText_Large", self.ShowText_Large
+        )
         # Save No of columns
-        Parameters_Ribbon.Settings.SetIntSetting("MaxColumnsPerPanel", int(self.form.MaxPanelColumn.text()))
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "MaxColumnsPerPanel", int(self.form.MaxPanelColumn.text())
+        )
         Parameters_Ribbon.Settings.SetBoolSetting("DebugMode", self.DebugMode)
         Parameters_Ribbon.Settings.SetBoolSetting("ShowOnHover", self.ShowOnHover)
         # Save behavior settings
-        Parameters_Ribbon.Settings.SetIntSetting("TabBar_Scroll", self.form.ScrollSpeed_TabBar.value())
-        Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Scroll", self.form.ScrollSpeed_Ribbon.value())
-        Parameters_Ribbon.Settings.SetIntSetting("TabBar_Click", self.form.ScrollClicks_TabBar.value())
-        Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Click", self.form.ScrollClicks_Ribbon.value())
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "TabBar_Scroll", self.form.ScrollSpeed_TabBar.value()
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "Ribbon_Scroll", self.form.ScrollSpeed_Ribbon.value()
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "TabBar_Click", self.form.ScrollClicks_TabBar.value()
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "Ribbon_Click", self.form.ScrollClicks_Ribbon.value()
+        )
         # Save the preferred toolbars
-        Parameters_Ribbon.Settings.SetIntSetting("Preferred_view", self.form.PreferedViewPanel.currentIndex())
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "Preferred_view", self.form.PreferedViewPanel.currentIndex()
+        )
 
         # Set the size of the window to the previous state
-        Parameters_Ribbon.Settings.SetIntSetting("SettingsDialog_Height", self.form.height())
-        Parameters_Ribbon.Settings.SetIntSetting("SettingsDialog_Width", self.form.width())
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "SettingsDialog_Height", self.form.height()
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "SettingsDialog_Width", self.form.width()
+        )
 
         # Close the form
         self.form.close()
@@ -450,9 +524,15 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.IconSize_Small.setValue(DefaultSettings["IconSize_Small"])
         self.form.IconSize_Medium.setValue(DefaultSettings["IconSize_Medium"])
         self.form.IconSize_Large.setValue(DefaultSettings["IconSize_Large"])
-        self.form.IconSize_ApplicationButton.setValue(DefaultSettings["ApplicationButtonSize"])
-        self.form.IconSize_QuickAccessButton.setValue(DefaultSettings["QuickAccessButtonSize"])
-        self.form.IconSize_rightToolbarButton.setValue(DefaultSettings["RightToolbarButtonSize"])
+        self.form.IconSize_ApplicationButton.setValue(
+            DefaultSettings["ApplicationButtonSize"]
+        )
+        self.form.IconSize_QuickAccessButton.setValue(
+            DefaultSettings["QuickAccessButtonSize"]
+        )
+        self.form.IconSize_rightToolbarButton.setValue(
+            DefaultSettings["RightToolbarButtonSize"]
+        )
         self.form.TabbarHeight.setValue(DefaultSettings["TabBarSize"])
         self.form.label_7.setText(DefaultSettings["Stylesheet"])
         if DefaultSettings["ShowIconText_Small"] is True:
