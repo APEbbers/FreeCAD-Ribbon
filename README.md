@@ -78,7 +78,6 @@ Feel free to discuss this addon on the [FreeCAD Forum](https://forum.freecad.org
 
 ## Known Issues
 
-- To retrieve all toolbars and command per workbench, all workbenches must be activated. Unfortunally, this results in a longer loading time for the Ribbon Design menu. (up to a few minutes)
 * When the Assembly4 Workbench is installed, make sure that the internal assembly workbench is placed before the Assembly4 workbench. If not, the ribbon for the internal assembly will show the wrong panel named "Assembly".
 
 ## License
