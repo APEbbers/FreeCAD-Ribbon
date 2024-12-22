@@ -248,6 +248,14 @@ class ModernMenu(RibbonBar):
                 Name="Individual views",
                 WorkBenchName="Global",
             )
+
+        # Check there is a custom toolbar "views - ribbon". If so, remove it
+        if Parameters_Ribbon.Settings.GetBoolSetting("RibbonViewRemoved") is False:
+            StandardFunctions.RemoveWorkBenchToolbars(
+                Name="Views - Ribbon",
+                WorkBenchName="Global",
+            )
+        Parameters_Ribbon.Settings.SetBoolSetting("RibbonViewRemoved", "True")
         # Add a toolbar "Views - Ribbon"
         #
         # Create a key if not present
