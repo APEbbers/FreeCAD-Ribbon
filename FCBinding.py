@@ -1403,7 +1403,7 @@ class ModernMenu(RibbonBar):
 
                                 # If showText is True, calculate the width of the button with the text
                                 if showText is True:
-                                    FontMetrics = QFontMetrics(action.text())
+                                    FontMetrics = QFontMetrics(action.text().strip())
                                     TextWidth = 0
                                     for i in action.text():
                                         TextWidth = TextWidth + FontMetrics.boundingRectChar(i).width()
@@ -1431,7 +1431,7 @@ class ModernMenu(RibbonBar):
 
                                 # If showText is True, calculate the width of the button with the text
                                 if showText is True:
-                                    FontMetrics = QFontMetrics(action.text())
+                                    FontMetrics = QFontMetrics(action.text().strip())
                                     TextWidth = 0
                                     for i in action.text():
                                         TextWidth = TextWidth + FontMetrics.boundingRectChar(i).width()
@@ -1610,6 +1610,12 @@ class ModernMenu(RibbonBar):
             ScrollRightButton_Category.setIcon(ScrollRightButton_Category_Icon)
         else:
             ScrollRightButton_Category.setArrowType(Qt.ArrowType.RightArrow)
+        # Set the heihgt of the buttons
+        ScrollLeftButton_Category.setFixedHeight(Parameters_Ribbon.ICON_SIZE_SMALL * 3)
+        ScrollRightButton_Category.setFixedHeight(Parameters_Ribbon.ICON_SIZE_SMALL * 3)
+        # Set the stylesheet
+        ScrollLeftButton_Category.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
+        ScrollRightButton_Category.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
         # Connect the custom click event
         ScrollLeftButton_Category.mousePressEvent = lambda clickLeft: self.on_ScrollButton_Category_clicked(
             clickLeft, ScrollLeftButton_Category
