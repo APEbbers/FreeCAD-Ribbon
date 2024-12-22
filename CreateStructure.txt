@@ -23,7 +23,8 @@
         "Std_Refresh",
         "Std_Cut",
         "Std_Copy",
-        "Std_Paste"
+        "Std_Paste",
+        "ExampleDropDown_ddb"
     ],
     "ignoredWorkbenches": [
         "Inspection",
@@ -70,6 +71,90 @@
                     "Body heat source": "Thermal boundary conditions and loads"
                 }
             }
+        }
+    },
+    "dropdownButtons": {
+        "ExampleDropDown_ddb": [
+            [
+                "Asm4_SelectionFilterEdgeCmd",
+                "Assembly4Workbench"
+            ],
+            [
+                "Asm4_SelectionFilterFaceCmd",
+                "Assembly4Workbench"
+            ],
+            [
+                "Asm4_SelectionFilterVertexCmd",
+                "Assembly4Workbench"
+            ],
+            [
+                "Std_UnitsCalculator",
+                "Global"
+            ]
+        ]
+    },
+    "newPanels": {
+        "Global": {
+            "Views - Ribbon_newPanel": [
+                [
+                    "Std_ViewGroup",
+                    "AssemblyWorkbench"
+                ],
+                [
+                    "Std_ViewFitAll",
+                    "AssemblyWorkbench"
+                ],
+                [
+                    "Std_ViewFitSelection",
+                    "AssemblyWorkbench"
+                ],
+                [
+                    "Std_ViewZoomOut",
+                    "Global"
+                ],
+                [
+                    "Std_ViewZoomIn",
+                    "Global"
+                ],
+                [
+                    "Std_ViewBoxZoom",
+                    "Global"
+                ],
+                [
+                    "Std_AlignToSelection",
+                    "AssemblyWorkbench"
+                ],
+                [
+                    "Part_SelectFilter",
+                    "Global"
+                ]
+            ],
+            "Tools_newPanel": [
+                [
+                    "Std_Measure",
+                    "Global"
+                ],
+                [
+                    "Std_UnitsCalculator",
+                    "Global"
+                ],
+                [
+                    "Std_Properties",
+                    "Global"
+                ],
+                [
+                    "Std_BoxElementSelection",
+                    "Global"
+                ],
+                [
+                    "Std_BoxSelection",
+                    "Global"
+                ],
+                [
+                    "Std_WhatsThis",
+                    "AssemblyWorkbench"
+                ]
+            ]
         }
     },
     "workbenches": {
