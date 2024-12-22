@@ -15,15 +15,20 @@ The FreeCAD ribbon provides the following functions and features:
 * Replace the default toolbars with a ribbon based on the original toolbars
 * The ribbon design is stored in a Json file for easy modification of the ribbon design.
 * A Ribbon Design dialog is provided for easy customization. (The changes are stored in the Json file). With this dialog you can:
+  * Set the button size to small, medium or large for:
+    * For individual buttons
+    * For one panel
+    * For more panels
+    * For all panels in a workbench
+    * for all panels in every workbench    
   * Include/exclude toolbars to be used as a panel in the ribbon
   * Include/exclude workbenches
-  * Create your own panels based on one or more toolbars
+  * Combine panels into your own custom panel
+  * Create your own custom panel with any button across workbenches
   * Change the order of the panels
   * Change the order of the buttons
-  * Customize button text
-  * Set the button size to small, medium or large
+  * Set your own text for the buttons
 * You can apply your own stylesheet
-* Scripts are provided to help setup your own customized Ribbon
 * And much more...
 
 See the [wiki page](https://github.com/APEbbers/FreeCAD-Ribbon/wiki) for more details and on how to customize the Ribbon to your preference.
