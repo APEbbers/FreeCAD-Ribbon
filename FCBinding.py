@@ -34,6 +34,8 @@ from PySide.QtGui import (
     QFont,
     QColor,
     QStyleHints,
+    QFontMetrics,
+    QTextOption,
 )
 from PySide.QtWidgets import (
     QToolButton,
@@ -1399,6 +1401,14 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_SMALL,
                                 )
 
+                                # If showText is True, calculate the width of the button with the text
+                                if showText is True:
+                                    FontMetrics = QFontMetrics(action.text())
+                                    TextWidth = 0
+                                    for i in action.text():
+                                        TextWidth = TextWidth + FontMetrics.boundingRectChar(i).width()
+                                    btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL + TextWidth)
+                                # If showText is False, set the width to the icon size
                                 if showText is False:
                                     btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL)
                                 # Set the stylesheet
@@ -1419,6 +1429,14 @@ class ModernMenu(RibbonBar):
                                     fixedHeight=Parameters_Ribbon.ICON_SIZE_MEDIUM,
                                 )
 
+                                # If showText is True, calculate the width of the button with the text
+                                if showText is True:
+                                    FontMetrics = QFontMetrics(action.text())
+                                    TextWidth = 0
+                                    for i in action.text():
+                                        TextWidth = TextWidth + FontMetrics.boundingRectChar(i).width()
+                                    btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM + TextWidth)
+                                # If showText is False, set the width to the icon size
                                 if showText is False:
                                     btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
                                 # Set the stylesheet
