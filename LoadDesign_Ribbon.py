@@ -1779,6 +1779,9 @@ class LoadDialog(Design_ui.Ui_Form):
                                 if self.CheckChanges() is True:
                                     self.form.UpdateJson.setEnabled(True)
 
+                                if self.form.CustomToolbarSelector_NP.currentText() == "New":
+                                    self.form.NewPanel_NP.clear()
+
                                 return
                 except Exception as e:
                     if Parameters_Ribbon.DEBUG_MODE is True:

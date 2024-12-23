@@ -322,7 +322,7 @@ if Settings.GetIntSetting("Preferred_view") is None or Settings.GetIntSetting("P
     PREFERRED_VIEW = DefaultSettings["Preferred_view"]
     Settings.SetIntSetting("Preferred_view", PREFERRED_VIEW)
 
-USE_TOOLSPANEL = Settings.GetIntSetting("UseToolsPanel")
+USE_TOOLSPANEL = Settings.GetBoolSetting("UseToolsPanel")
 if Settings.GetBoolSetting("UseToolsPanel") is None:
     USE_TOOLSPANEL = DefaultSettings["UseToolsPanel"]
     Settings.SetBoolSetting("UseToolsPanel", USE_TOOLSPANEL)
