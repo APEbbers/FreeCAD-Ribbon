@@ -123,6 +123,9 @@ class Settings:
         Settings.SetIntSetting("TabBar_Click", TABBAR_CLICKSPEED)
         Settings.SetIntSetting("Ribbon_Click", RIBBON_CLICKSPEED)
 
+        Settings.SetIntSetting("Preferred_view", PREFERRED_VIEW)
+        Settings.SetBoolSetting("UseToolsPanel", USE_TOOLSPANEL)
+
         Settings.SetBoolSetting("DebugMode", DEBUG_MODE)
 
 
