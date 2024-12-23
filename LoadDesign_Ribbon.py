@@ -2652,39 +2652,40 @@ class LoadDialog(Design_ui.Ui_Form):
 
             # add separators to the command list.
             index = 0
-            if (
-                Toolbar != ""
-                and Toolbar
-                in self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName][
-                    "toolbars"
-                ]
-            ):
+            if WorkBenchName in self.Dict_RibbonCommandPanel["workbenches"]:
                 if (
-                    "order"
+                    Toolbar != ""
+                    and Toolbar
                     in self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName][
                         "toolbars"
-                    ][Toolbar]
+                    ]
                 ):
-                    for j in range(
-                        len(
-                            self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName][
-                                "toolbars"
-                            ][Toolbar]["order"]
-                        )
+                    if (
+                        "order"
+                        in self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName][
+                            "toolbars"
+                        ][Toolbar]
                     ):
-                        if (
-                            "separator"
-                            in self.Dict_RibbonCommandPanel["workbenches"][
-                                WorkBenchName
-                            ]["toolbars"][Toolbar]["order"][j].lower()
-                        ):
-                            ToolbarCommands.insert(
-                                j + index,
+                        for j in range(
+                            len(
                                 self.Dict_RibbonCommandPanel["workbenches"][
                                     WorkBenchName
-                                ]["toolbars"][Toolbar]["order"][j],
+                                ]["toolbars"][Toolbar]["order"]
                             )
-                            index = index + 1
+                        ):
+                            if (
+                                "separator"
+                                in self.Dict_RibbonCommandPanel["workbenches"][
+                                    WorkBenchName
+                                ]["toolbars"][Toolbar]["order"][j].lower()
+                            ):
+                                ToolbarCommands.insert(
+                                    j + index,
+                                    self.Dict_RibbonCommandPanel["workbenches"][
+                                        WorkBenchName
+                                    ]["toolbars"][Toolbar]["order"][j],
+                                )
+                                index = index + 1
 
             # Sort the Toolbarcommands according the sorted list
             def SortCommands(item):
