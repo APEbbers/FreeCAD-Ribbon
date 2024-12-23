@@ -25,6 +25,8 @@ import FreeCADGui as Gui
 import FCBinding
 import Parameters_Ribbon
 import shutil
+from PySide.QtCore import Signal, QObject
+import sys
 
 
 def QT_TRANSLATE_NOOP(context, text):
@@ -57,6 +59,10 @@ if fileExists is False:
 
 # remove the test workbench
 Gui.removeWorkbench("TestWorkbench")
+
+# Disable the overlay function
+preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
+preferences.SetBool("ActivateOverlay", False)
 
 # make sure that the ribbon will be shown on startup -> reset OverlayTop
 preferences = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")

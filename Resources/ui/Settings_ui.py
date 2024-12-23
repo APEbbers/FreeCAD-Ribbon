@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsOmcbaU.ui'
+## Form generated from reading UI file 'SettingsxiKsrg.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -66,7 +66,7 @@ class Ui_Settings(object):
         if not Settings.objectName():
             Settings.setObjectName("Settings")
         Settings.setWindowModality(Qt.WindowModality.WindowModal)
-        Settings.resize(787, 722)
+        Settings.resize(794, 722)
         sizePolicy = QSizePolicy(
             QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred
         )
@@ -76,33 +76,8 @@ class Ui_Settings(object):
         Settings.setSizePolicy(sizePolicy)
         Settings.setMinimumSize(QSize(600, 600))
         Settings.setAutoFillBackground(False)
-        self.gridLayout_31 = QGridLayout(Settings)
-        self.gridLayout_31.setObjectName("gridLayout_31")
-        self.gridLayout_7 = QGridLayout()
-        self.gridLayout_7.setObjectName("gridLayout_7")
-        self.Reset = QPushButton(Settings)
-        self.Reset.setObjectName("Reset")
-
-        self.gridLayout_7.addWidget(self.Reset, 0, 0, 1, 1)
-
-        self.horizontalSpacer_2 = QSpacerItem(
-            40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
-        )
-
-        self.gridLayout_7.addItem(self.horizontalSpacer_2, 0, 1, 1, 1)
-
-        self.GenerateJsonExit = QPushButton(Settings)
-        self.GenerateJsonExit.setObjectName("GenerateJsonExit")
-
-        self.gridLayout_7.addWidget(self.GenerateJsonExit, 0, 2, 1, 1)
-
-        self.Cancel = QPushButton(Settings)
-        self.Cancel.setObjectName("Cancel")
-
-        self.gridLayout_7.addWidget(self.Cancel, 0, 3, 1, 1)
-
-        self.gridLayout_31.addLayout(self.gridLayout_7, 1, 0, 1, 1)
-
+        self.gridLayout_32 = QGridLayout(Settings)
+        self.gridLayout_32.setObjectName("gridLayout_32")
         self.gridLayout_6 = QGridLayout()
         self.gridLayout_6.setObjectName("gridLayout_6")
         self.scrollArea = QScrollArea(Settings)
@@ -118,7 +93,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 753, 860))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 772, 668))
         self.gridLayout_28 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_28.setObjectName("gridLayout_28")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -943,6 +918,21 @@ class Ui_Settings(object):
 
         self.gridLayout_29.addLayout(self.gridLayout_27, 0, 0, 1, 1)
 
+        self.gridLayout_31 = QGridLayout()
+        self.gridLayout_31.setObjectName("gridLayout_31")
+        self.EnableToolsPanel = QCheckBox(self.groupBox_11)
+        self.EnableToolsPanel.setObjectName("EnableToolsPanel")
+        self.EnableToolsPanel.setChecked(True)
+
+        self.gridLayout_31.addWidget(self.EnableToolsPanel, 0, 0, 1, 1)
+
+        self.label_29 = QLabel(self.groupBox_11)
+        self.label_29.setObjectName("label_29")
+
+        self.gridLayout_31.addWidget(self.label_29, 0, 1, 1, 1)
+
+        self.gridLayout_29.addLayout(self.gridLayout_31, 1, 0, 1, 1)
+
         self.gridLayout_30.addWidget(self.groupBox_11, 0, 0, 1, 1)
 
         self.verticalSpacer_3 = QSpacerItem(
@@ -959,14 +949,39 @@ class Ui_Settings(object):
 
         self.gridLayout_6.addWidget(self.scrollArea, 0, 0, 1, 4)
 
-        self.gridLayout_31.addLayout(self.gridLayout_6, 0, 0, 1, 1)
+        self.gridLayout_32.addLayout(self.gridLayout_6, 0, 0, 1, 1)
+
+        self.gridLayout_7 = QGridLayout()
+        self.gridLayout_7.setObjectName("gridLayout_7")
+        self.Reset = QPushButton(Settings)
+        self.Reset.setObjectName("Reset")
+
+        self.gridLayout_7.addWidget(self.Reset, 0, 0, 1, 1)
+
+        self.horizontalSpacer_2 = QSpacerItem(
+            40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
+        )
+
+        self.gridLayout_7.addItem(self.horizontalSpacer_2, 0, 1, 1, 1)
+
+        self.GenerateJsonExit = QPushButton(Settings)
+        self.GenerateJsonExit.setObjectName("GenerateJsonExit")
+
+        self.gridLayout_7.addWidget(self.GenerateJsonExit, 0, 2, 1, 1)
+
+        self.Cancel = QPushButton(Settings)
+        self.Cancel.setObjectName("Cancel")
+
+        self.gridLayout_7.addWidget(self.Cancel, 0, 3, 1, 1)
+
+        self.gridLayout_32.addLayout(self.gridLayout_7, 1, 0, 1, 1)
 
         self.retranslateUi(Settings)
         self.EnableBackup.toggled.connect(self.groupBox_Backup.setEnabled)
         self.CustomColors.toggled.connect(self.ColorS.setEnabled)
         self.CustomIcons.toggled.connect(self.IconS.setEnabled)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(3)
 
         QMetaObject.connectSlotsByName(Settings)
 
@@ -976,17 +991,6 @@ class Ui_Settings(object):
         Settings.setWindowTitle(
             QCoreApplication.translate("Settings", "Preferences", None)
         )
-        self.Reset.setText(QCoreApplication.translate("Settings", "Reset", None))
-        self.GenerateJsonExit.setText(
-            QCoreApplication.translate("Settings", "Close", None)
-        )
-        # if QT_CONFIG(shortcut)
-        self.GenerateJsonExit.setShortcut("")
-        # endif // QT_CONFIG(shortcut)
-        self.Cancel.setText(QCoreApplication.translate("Settings", "Cancel", None))
-        # if QT_CONFIG(shortcut)
-        self.Cancel.setShortcut(QCoreApplication.translate("Settings", "Esc", None))
-        # endif // QT_CONFIG(shortcut)
         self.groupBox.setTitle(
             QCoreApplication.translate("Settings", "Backup settings", None)
         )
@@ -1058,7 +1062,7 @@ class Ui_Settings(object):
         )
         self.label_26.setText(
             QCoreApplication.translate(
-                "Settings", "Best to use with button size greater then 100.", None
+                "Settings", "Best to use with button size greater than 100.", None
             )
         )
         self.groupBox_10.setTitle(
@@ -1237,9 +1241,31 @@ class Ui_Settings(object):
             3, QCoreApplication.translate("Settings", "None", None)
         )
 
+        self.EnableToolsPanel.setText(
+            QCoreApplication.translate("Settings", "Use standard Tools panel", None)
+        )
+        self.label_29.setText(
+            QCoreApplication.translate(
+                "Settings",
+                '<html><head/><body><p><span style=" font-style:italic;">(Can be modified afterwards)</span></p></body></html>',
+                None,
+            )
+        )
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tab_3),
             QCoreApplication.translate("Settings", "Miscellaneous", None),
         )
+        self.Reset.setText(QCoreApplication.translate("Settings", "Reset", None))
+        self.GenerateJsonExit.setText(
+            QCoreApplication.translate("Settings", "Close", None)
+        )
+        # if QT_CONFIG(shortcut)
+        self.GenerateJsonExit.setShortcut("")
+        # endif // QT_CONFIG(shortcut)
+        self.Cancel.setText(QCoreApplication.translate("Settings", "Cancel", None))
+        # if QT_CONFIG(shortcut)
+        self.Cancel.setShortcut(QCoreApplication.translate("Settings", "Esc", None))
 
-    # retranslateUi
+
+# endif // QT_CONFIG(shortcut)
+# retranslateUi

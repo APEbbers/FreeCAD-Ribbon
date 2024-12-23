@@ -123,6 +123,9 @@ class Settings:
         Settings.SetIntSetting("TabBar_Click", TABBAR_CLICKSPEED)
         Settings.SetIntSetting("Ribbon_Click", RIBBON_CLICKSPEED)
 
+        Settings.SetIntSetting("Preferred_view", PREFERRED_VIEW)
+        Settings.SetBoolSetting("UseToolsPanel", USE_TOOLSPANEL)
+
         Settings.SetBoolSetting("DebugMode", DEBUG_MODE)
 
 
@@ -135,6 +138,8 @@ UI_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "ui")
 # endregion ------------------------------------------------------------------------------------------------------------
 
 DefaultSettings = {
+    "ImportLocation": os.path.join(os.path.dirname(__file__), ""),
+    "ExportLocation": os.path.join(os.path.dirname(__file__), ""),
     "RibbonStructure": os.path.join(os.path.dirname(__file__), "RibbonStructure.json"),
     "TabBar_Style": int(0),
     "IconSize_Small": int(24),
@@ -145,7 +150,7 @@ DefaultSettings = {
     "TabBarSize": int(24),
     "RightToolbarButtonSize": int(24),
     "BackupEnabled": bool(True),
-    "BackupFolder": os.path.join(os.path.dirname(__file__) + "Backups"),
+    "BackupFolder": os.path.join(os.path.dirname(__file__), "Backups"),
     "TabOrder": App.ParamGet(
         "User parameter:BaseApp/Preferences/Workbenches/"
     ).GetString("Ordered"),
@@ -162,7 +167,24 @@ DefaultSettings = {
     "TabBar_Click": int(1),
     "Ribbon_Click": int(1),
     "Preferred_view": int(2),
+    "UseToolsPanel": bool(True),
 }
+
+# region - Define the import location ----------------------------------------------------------------------------------
+if Settings.GetStringSetting("ImportLocation") != "":
+    IMPORT_LOCATION = Settings.GetStringSetting("ImportLocation")
+else:
+    IMPORT_LOCATION = DefaultSettings["ImportLocation"]
+    Settings.SetStringSetting("ImportLocation", IMPORT_LOCATION)
+# endregion ------------------------------------------------------------------------------------------------------------
+
+# region - Define the export location ----------------------------------------------------------------------------------
+if Settings.GetStringSetting("ExportLocation") != "":
+    EXPORT_LOCATION = Settings.GetStringSetting("ExportLocation")
+else:
+    EXPORT_LOCATION = DefaultSettings["ExportLocation"]
+    Settings.SetStringSetting("exportLocation", EXPORT_LOCATION)
+# endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the Ribbon structure location ------------------------------------------------------------------------
 if Settings.GetStringSetting("RibbonStructure") != "":
@@ -269,7 +291,7 @@ if Settings.GetStringSetting("Stylesheet") == "":
 SHOW_ICON_TEXT_SMALL = Settings.GetBoolSetting("ShowIconText_Small")
 if Settings.GetBoolSetting("ShowIconText_Small") is None:
     SHOW_ICON_TEXT_SMALL = DefaultSettings["ShowIconText_Small"]
-    Settings.SetBoolSetting("ShowIconText_Small", False)
+    Settings.SetBoolSetting("ShowIconText_Small", SHOW_ICON_TEXT_SMALL)
 
 SHOW_ICON_TEXT_MEDIUM = Settings.GetBoolSetting("ShowIconText_Medium")
 if Settings.GetBoolSetting("ShowIconText_Medium") is None:
@@ -334,7 +356,7 @@ if (
 # endregion ------------------------------------------------------------------------------------------------------------
 
 
-# region - Navigation settings -----------------------------------------------------------------------------------------
+# region - Miscellaneous settings --------------------------------------------------------------------------------------
 PREFERRED_VIEW = Settings.GetIntSetting("Preferred_view")
 if (
     Settings.GetIntSetting("Preferred_view") is None
@@ -342,4 +364,9 @@ if (
 ):
     PREFERRED_VIEW = DefaultSettings["Preferred_view"]
     Settings.SetIntSetting("Preferred_view", PREFERRED_VIEW)
+
+USE_TOOLSPANEL = Settings.GetBoolSetting("UseToolsPanel")
+if Settings.GetBoolSetting("UseToolsPanel") is None:
+    USE_TOOLSPANEL = DefaultSettings["UseToolsPanel"]
+    Settings.SetBoolSetting("UseToolsPanel", USE_TOOLSPANEL)
 # endregion ------------------------------------------------------------------------------------------------------------
