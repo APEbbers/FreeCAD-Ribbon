@@ -263,38 +263,51 @@ class ModernMenu(RibbonBar):
                 WorkBenchName="Global",
             )
         Parameters_Ribbon.Settings.SetBoolSetting("ToolsRemoved", True)
+
         # Add a toolbar "Views - Ribbon"
         #
+        PreferredToolbar = Parameters_Ribbon.Settings.GetIntSetting("Preferred_view")
         # Create a key if not present
-        StandardFunctions.add_keys_nested_dict(
-            self.ribbonStructure,
-            ["newPanels", "Global", "Views - Ribbon_newPanel"],
-        )
-        self.ribbonStructure["newPanels"]["Global"]["Views - Ribbon_newPanel"] = [
-            ["Std_ViewGroup", "AssemblyWorkbench"],
-            ["Std_ViewFitAll", "AssemblyWorkbench"],
-            ["Std_ViewFitSelection", "AssemblyWorkbench"],
-            ["Std_ViewZoomOut", "Global"],
-            ["Std_ViewZoomIn", "Global"],
-            ["Std_ViewBoxZoom", "Global"],
-            ["Std_AlignToSelection", "AssemblyWorkbench"],
-            ["Part_SelectFilter", "Global"],
-        ]
+        if PreferredToolbar == 2:
+            StandardFunctions.add_keys_nested_dict(
+                self.ribbonStructure,
+                ["newPanels", "Global", "Views - Ribbon_newPanel"],
+            )
+            self.ribbonStructure["newPanels"]["Global"]["Views - Ribbon_newPanel"] = [
+                ["Std_ViewGroup", "AssemblyWorkbench"],
+                ["Std_ViewFitAll", "AssemblyWorkbench"],
+                ["Std_ViewFitSelection", "AssemblyWorkbench"],
+                ["Std_ViewZoomOut", "Global"],
+                ["Std_ViewZoomIn", "Global"],
+                ["Std_ViewBoxZoom", "Global"],
+                ["Std_AlignToSelection", "AssemblyWorkbench"],
+                ["Part_SelectFilter", "Global"],
+            ]
+        else:
+            if "Views - Ribbon_newPanel" in self.ribbonStructure["newPanels"]["Global"]:
+                del self.ribbonStructure["newPanels"]["Global"][
+                    "Views - Ribbon_newPanel"
+                ]
         # # Add a toolbar "tools"
         #
+        UseToolsPanel = Parameters_Ribbon.Settings.GetBoolSetting("UseToolsPanel")
         # Create a key if not present
-        StandardFunctions.add_keys_nested_dict(
-            self.ribbonStructure,
-            ["newPanels", "Global", "Tools_newPanel"],
-        )
-        self.ribbonStructure["newPanels"]["Global"]["Tools_newPanel"] = [
-            ["Std_Measure", "Global"],
-            ["Std_UnitsCalculator", "Global"],
-            ["Std_Properties", "Global"],
-            ["Std_BoxElementSelection", "Global"],
-            ["Std_BoxSelection", "Global"],
-            ["Std_WhatsThis", "AssemblyWorkbench"],
-        ]
+        if (
+            "Tools_newPanel" not in self.ribbonStructure["newPanels"]["Global"]
+            and UseToolsPanel is True
+        ):
+            StandardFunctions.add_keys_nested_dict(
+                self.ribbonStructure,
+                ["newPanels", "Global", "Tools_newPanel"],
+            )
+            self.ribbonStructure["newPanels"]["Global"]["Tools_newPanel"] = [
+                ["Std_Measure", "Global"],
+                ["Std_UnitsCalculator", "Global"],
+                ["Std_Properties", "Global"],
+                ["Std_BoxElementSelection", "Global"],
+                ["Std_BoxSelection", "Global"],
+                ["Std_WhatsThis", "AssemblyWorkbench"],
+            ]
 
         # Set the preferred toolbars
         PreferredToolbar = Parameters_Ribbon.Settings.GetIntSetting("Preferred_view")
@@ -306,7 +319,7 @@ class ModernMenu(RibbonBar):
         for ToolBar in ListIgnoredToolbars:
             if ToolBar == "View":
                 View_Inlist = True
-            if ToolBar == "Views - Ribbon":
+            if ToolBar == "Views - Ribbon_newPanel":
                 ViewsRibbon_Inlist = True
             if ToolBar == "Individual views":
                 IndividualViews_Inlist = True

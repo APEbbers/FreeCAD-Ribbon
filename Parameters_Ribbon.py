@@ -123,6 +123,9 @@ class Settings:
         Settings.SetIntSetting("TabBar_Click", TABBAR_CLICKSPEED)
         Settings.SetIntSetting("Ribbon_Click", RIBBON_CLICKSPEED)
 
+        Settings.SetIntSetting("Preferred_view", PREFERRED_VIEW)
+        Settings.SetBoolSetting("UseToolsPanel", USE_TOOLSPANEL)
+
         Settings.SetBoolSetting("DebugMode", DEBUG_MODE)
 
 
@@ -164,6 +167,7 @@ DefaultSettings = {
     "TabBar_Click": int(1),
     "Ribbon_Click": int(1),
     "Preferred_view": int(2),
+    "UseToolsPanel": bool(True),
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
@@ -352,7 +356,7 @@ if (
 # endregion ------------------------------------------------------------------------------------------------------------
 
 
-# region - Navigation settings -----------------------------------------------------------------------------------------
+# region - Miscellaneous settings --------------------------------------------------------------------------------------
 PREFERRED_VIEW = Settings.GetIntSetting("Preferred_view")
 if (
     Settings.GetIntSetting("Preferred_view") is None
@@ -360,4 +364,9 @@ if (
 ):
     PREFERRED_VIEW = DefaultSettings["Preferred_view"]
     Settings.SetIntSetting("Preferred_view", PREFERRED_VIEW)
+
+USE_TOOLSPANEL = Settings.GetBoolSetting("UseToolsPanel")
+if Settings.GetBoolSetting("UseToolsPanel") is None:
+    USE_TOOLSPANEL = DefaultSettings["UseToolsPanel"]
+    Settings.SetBoolSetting("UseToolsPanel", USE_TOOLSPANEL)
 # endregion ------------------------------------------------------------------------------------------------------------
