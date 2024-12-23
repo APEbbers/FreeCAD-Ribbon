@@ -288,19 +288,21 @@ class ModernMenu(RibbonBar):
                 del self.ribbonStructure["newPanels"]["Global"]["Views - Ribbon_newPanel"]
         # # Add a toolbar "tools"
         #
+        UseToolsPanel = Parameters_Ribbon.Settings.GetBoolSetting("UseToolsPanel")
         # Create a key if not present
-        StandardFunctions.add_keys_nested_dict(
-            self.ribbonStructure,
-            ["newPanels", "Global", "Tools_newPanel"],
-        )
-        self.ribbonStructure["newPanels"]["Global"]["Tools_newPanel"] = [
-            ["Std_Measure", "Global"],
-            ["Std_UnitsCalculator", "Global"],
-            ["Std_Properties", "Global"],
-            ["Std_BoxElementSelection", "Global"],
-            ["Std_BoxSelection", "Global"],
-            ["Std_WhatsThis", "AssemblyWorkbench"],
-        ]
+        if "Tools_newPanel" not in self.ribbonStructure["newPanels"]["Global"] and UseToolsPanel is True:
+            StandardFunctions.add_keys_nested_dict(
+                self.ribbonStructure,
+                ["newPanels", "Global", "Tools_newPanel"],
+            )
+            self.ribbonStructure["newPanels"]["Global"]["Tools_newPanel"] = [
+                ["Std_Measure", "Global"],
+                ["Std_UnitsCalculator", "Global"],
+                ["Std_Properties", "Global"],
+                ["Std_BoxElementSelection", "Global"],
+                ["Std_BoxSelection", "Global"],
+                ["Std_WhatsThis", "AssemblyWorkbench"],
+            ]
 
         # Set the preferred toolbars
         PreferredToolbar = Parameters_Ribbon.Settings.GetIntSetting("Preferred_view")

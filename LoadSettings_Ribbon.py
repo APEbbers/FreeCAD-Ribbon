@@ -66,6 +66,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
     ShowText_Large = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
     DebugMode = Parameters_Ribbon.DEBUG_MODE
     ShowOnHover = Parameters_Ribbon.SHOW_ON_HOVER
+    UseToolsPanel = Parameters_Ribbon.USE_TOOLSPANEL
 
     settingChanged = False
 
@@ -212,6 +213,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.ScrollClicks_Ribbon.textChanged.connect(self.on_ScrollClicks_Ribbon_valueCHanged)
         # Connect the preferred panel settings
         self.form.PreferedViewPanel.currentIndexChanged.connect(self.on_PreferedViewPanel_currentIndexChanged)
+        # Connect the EnableTools checkbox:
+        self.form.EnableToolsPanel.clicked.connect(self.on_EnableToolsPanelt_clicked)
         # endregion
 
         # Set the minimum and maximum settings for the iconsizes
@@ -253,47 +256,47 @@ class LoadDialog(Settings_ui.Ui_Settings):
         return
 
     def on_TabbarStyle_currentIndexChanged(self):
-        Parameters_Ribbon.TABBAR_STYLE = self.form.TabbarStyle.currentIndex()
+        # Parameters_Ribbon.TABBAR_STYLE = self.form.TabbarStyle.currentIndex()
         self.settingChanged = True
         return
 
     def on_IconSize_Small_TextChanged(self):
-        Parameters_Ribbon.ICON_SIZE_SMALL = int(self.form.IconSize_Small.text())
+        # Parameters_Ribbon.ICON_SIZE_SMALL = int(self.form.IconSize_Small.text())
         self.settingChanged = True
         return
 
     def on_IconSize_Medium_TextChanged(self):
-        Parameters_Ribbon.ICON_SIZE_MEDIUM = int(self.form.IconSize_Medium.text())
+        # Parameters_Ribbon.ICON_SIZE_MEDIUM = int(self.form.IconSize_Medium.text())
         self.settingChanged = True
         return
 
     def on_IconSize_Large_TextChanged(self):
-        Parameters_Ribbon.ICON_SIZE_LARGE = int(self.form.IconSize_Large.text())
+        # Parameters_Ribbon.ICON_SIZE_LARGE = int(self.form.IconSize_Large.text())
         self.settingChanged = True
         return
 
     def on_IconSize_ApplicationButton_TextChanged(self):
-        Parameters_Ribbon.APP_ICON_SIZE = int(self.form.IconSize_ApplicationButton.text())
+        # Parameters_Ribbon.APP_ICON_SIZE = int(self.form.IconSize_ApplicationButton.text())
         self.settingChanged = True
         return
 
     def on_IconSize_QuickAccessButton_TextChanged(self):
-        Parameters_Ribbon.QUICK_ICON_SIZE = int(self.form.IconSize_QuickAccessButton.text())
+        # Parameters_Ribbon.QUICK_ICON_SIZE = int(self.form.IconSize_QuickAccessButton.text())
         self.settingChanged = True
         return
 
     def on_IconSize_rightToolbarButton_TextChanged(self):
-        Parameters_Ribbon.RIGHT_ICON_SIZE = int(self.form.IconSize_rightToolbarButton.text())
+        # Parameters_Ribbon.RIGHT_ICON_SIZE = int(self.form.IconSize_rightToolbarButton.text())
         self.settingChanged = True
         return
 
     def on_TabbarHeight_TextChanged(self):
-        Parameters_Ribbon.TABBAR_SIZE = int(self.form.TabbarHeight.text())
+        # Parameters_Ribbon.TABBAR_SIZE = int(self.form.TabbarHeight.text())
         self.settingChanged = True
         return
 
     def on_MaxPanelColumn_TextChanged(self):
-        Parameters_Ribbon.MAX_COLUMN_PANELS = int(self.form.MaxPanelColumn.text())
+        # Parameters_Ribbon.MAX_COLUMN_PANELS = int(self.form.MaxPanelColumn.text())
         self.settingChanged = True
 
     def on_StyleSheetLocation_clicked(self):
@@ -306,78 +309,88 @@ class LoadDialog(Settings_ui.Ui_Settings):
         )
         if StyleSheet != "":
             self.form.label_7.setText(StyleSheet)
-            Parameters_Ribbon.STYLESHEET = StyleSheet
+            # Parameters_Ribbon.STYLESHEET = StyleSheet
             self.StyleSheet = StyleSheet
             self.settingChanged = True
         return
 
     def on_ShowTextSmall_clicked(self):
         if self.form.ShowText_Small.isChecked() is True:
-            Parameters_Ribbon.SHOW_ICON_TEXT_SMALL = True
+            # Parameters_Ribbon.SHOW_ICON_TEXT_SMALL = True
             self.ShowText_Small = True
         if self.form.ShowText_Small.isChecked() is False:
-            Parameters_Ribbon.SHOW_ICON_TEXT_SMALL = False
+            # Parameters_Ribbon.SHOW_ICON_TEXT_SMALL = False
             self.ShowText_Small = False
         self.settingChanged = True
         return
 
     def on_ShowTextMedium_clicked(self):
         if self.form.ShowText_Medium.isChecked() is True:
-            Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM = True
+            # Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM = True
             self.ShowText_Medium = True
         if self.form.ShowText_Medium.isChecked() is False:
-            Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM = False
+            # Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM = False
             self.ShowText_Medium = False
         self.settingChanged = True
         return
 
     def on_ShowTextLarge_clicked(self):
         if self.form.ShowText_Large.isChecked() is True:
-            Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = True
+            # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = True
             self.ShowText_Large = True
         if self.form.ShowText_Large.isChecked() is False:
-            Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = False
+            # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = False
             self.ShowText_Large = False
         self.settingChanged = True
         return
 
     def on_DebugMode_clicked(self):
         if self.form.DebugMode.isChecked() is True:
-            Parameters_Ribbon.DEBUG_MODE = True
+            # Parameters_Ribbon.DEBUG_MODE = True
             self.DebugMode = True
         if self.form.DebugMode.isChecked() is False:
-            Parameters_Ribbon.DEBUG_MODE = False
+            # Parameters_Ribbon.DEBUG_MODE = False
             self.DebugMode = False
         self.settingChanged = True
         return
 
     def on_EnableEnterEvent_clicked(self):
         if self.form.EnableEnterEvent.isChecked() is True:
-            Parameters_Ribbon.SHOW_ON_HOVER = True
+            # Parameters_Ribbon.SHOW_ON_HOVER = True
             self.ShowOnHover = True
         if self.form.EnableEnterEvent.isChecked() is False:
-            Parameters_Ribbon.SHOW_ON_HOVER = False
+            # Parameters_Ribbon.SHOW_ON_HOVER = False
             self.ShowOnHover = False
         self.settingChanged = True
 
     def on_ScrollSpeed_TabBar_valueCHanged(self):
-        Parameters_Ribbon.TABBAR_SCROLLSPEED = self.form.ScrollSpeed_TabBar.value()
+        # Parameters_Ribbon.TABBAR_SCROLLSPEED = self.form.ScrollSpeed_TabBar.value()
         self.settingChanged = True
 
     def on_ScrollSpeed_Ribbon_valueCHanged(self):
-        Parameters_Ribbon.RIBBON_SCROLLSPEED = self.form.ScrollSpeed_Ribbon.value()
+        # Parameters_Ribbon.RIBBON_SCROLLSPEED = self.form.ScrollSpeed_Ribbon.value()
         self.settingChanged = True
 
     def on_ScrollClicks_TabBar_valueCHanged(self):
-        Parameters_Ribbon.TABBAR_CLICKSPEED = self.form.ScrollClicks_TabBar.value()
+        # Parameters_Ribbon.TABBAR_CLICKSPEED = self.form.ScrollClicks_TabBar.value()
         self.settingChanged = True
 
     def on_ScrollClicks_Ribbon_valueCHanged(self):
-        Parameters_Ribbon.RIBBON_CLICKSPEED = self.form.ScrollClicks_Ribbon.value()
+        # Parameters_Ribbon.RIBBON_CLICKSPEED = self.form.ScrollClicks_Ribbon.value()
         self.settingChanged = True
 
     def on_PreferedViewPanel_currentIndexChanged(self):
-        Parameters_Ribbon.PREFERRED_VIEW = self.form.PreferedViewPanel.currentIndex()
+        # Parameters_Ribbon.PREFERRED_VIEW = self.form.PreferedViewPanel.currentIndex()
+        self.settingChanged = True
+        return
+
+    def on_EnableToolsPanelt_clicked(self):
+        if self.form.EnableToolsPanel.isChecked() is True:
+            # Parameters_Ribbon.USE_TOOLSPANEL = True
+            self.UseToolsPanel = True
+        if self.form.EnableToolsPanel.isChecked() is False:
+            # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = False
+            self.UseToolsPanel = False
         self.settingChanged = True
         return
 
