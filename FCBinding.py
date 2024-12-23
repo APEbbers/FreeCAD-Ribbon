@@ -1539,6 +1539,43 @@ class ModernMenu(RibbonBar):
                             except KeyError:
                                 pass
 
+                            # If the icon is still none, try to retrieve it from the data file
+                            if action.icon() is None or (
+                                action.icon() is not None and action.icon().isNull()
+                            ):
+                                StandardFunctions.Print(
+                                    f"An icon retrieved from data file for '{CommandName}'"
+                                )
+                                DataFile = os.path.join(
+                                    os.path.dirname(__file__), "RibbonDataFile.dat"
+                                )
+
+                                if os.path.exists(DataFile) is True:
+                                    Data = {}
+                                    # read ribbon structure from JSON file
+                                    with open(DataFile, "r") as file:
+                                        Data.update(json.load(file))
+                                    file.close()
+                                    try:
+                                        # Load the lists for the deserialized icons
+                                        for IconItem in Data["Command_Icons"]:
+                                            # This works only for FreeCAD Commands
+                                            CommandName_Icon = action.data()
+                                            if CommandName_Icon == IconItem[0]:
+                                                Icon: QIcon = (
+                                                    Serialize_Ribbon.deserializeIcon(
+                                                        IconItem[1]
+                                                    )
+                                                )
+                                                action.setIcon(Icon)
+                                    except Exception as e:
+                                        if Parameters_Ribbon.DEBUG_MODE is True:
+                                            StandardFunctions.Print(
+                                                f"Trying the get an icon for {CommandName}\n{e}",
+                                                "Warning",
+                                            )
+                                        pass
+
                             # get button size from ribbonStructure
                             try:
                                 buttonSize = self.ribbonStructure["workbenches"][
