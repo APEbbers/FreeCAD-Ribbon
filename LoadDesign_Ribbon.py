@@ -2322,6 +2322,12 @@ class LoadDialog(Design_ui.Ui_Form):
                 try:
                     if "separator" not in item.lower():
                         MenuName = CommandInfoCorrections(item)["menuText"].replace("&", "")
+                        if MenuName == "":
+                            for CommandItem in self.List_Commands:
+                                if CommandItem[0] == item:
+                                    MenuName = CommandItem[2]
+                                if MenuName == "":
+                                    continue
                         item = MenuName
 
                     OrderList: list = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
