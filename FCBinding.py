@@ -284,30 +284,39 @@ class ModernMenu(RibbonBar):
                 ["Part_SelectFilter", "Global"],
             ]
         else:
-            if "Views - Ribbon_newPanel" in self.ribbonStructure["newPanels"]["Global"]:
-                del self.ribbonStructure["newPanels"]["Global"][
+            try:
+                if (
                     "Views - Ribbon_newPanel"
-                ]
+                    in self.ribbonStructure["newPanels"]["Global"]
+                ):
+                    del self.ribbonStructure["newPanels"]["Global"][
+                        "Views - Ribbon_newPanel"
+                    ]
+            except Exception:
+                pass
         # # Add a toolbar "tools"
         #
         UseToolsPanel = Parameters_Ribbon.Settings.GetBoolSetting("UseToolsPanel")
         # Create a key if not present
-        if (
-            "Tools_newPanel" not in self.ribbonStructure["newPanels"]["Global"]
-            and UseToolsPanel is True
-        ):
-            StandardFunctions.add_keys_nested_dict(
-                self.ribbonStructure,
-                ["newPanels", "Global", "Tools_newPanel"],
-            )
-            self.ribbonStructure["newPanels"]["Global"]["Tools_newPanel"] = [
-                ["Std_Measure", "Global"],
-                ["Std_UnitsCalculator", "Global"],
-                ["Std_Properties", "Global"],
-                ["Std_BoxElementSelection", "Global"],
-                ["Std_BoxSelection", "Global"],
-                ["Std_WhatsThis", "AssemblyWorkbench"],
-            ]
+        try:
+            if (
+                "Tools_newPanel" not in self.ribbonStructure["newPanels"]["Global"]
+                and UseToolsPanel is True
+            ):
+                StandardFunctions.add_keys_nested_dict(
+                    self.ribbonStructure,
+                    ["newPanels", "Global", "Tools_newPanel"],
+                )
+                self.ribbonStructure["newPanels"]["Global"]["Tools_newPanel"] = [
+                    ["Std_Measure", "Global"],
+                    ["Std_UnitsCalculator", "Global"],
+                    ["Std_Properties", "Global"],
+                    ["Std_BoxElementSelection", "Global"],
+                    ["Std_BoxSelection", "Global"],
+                    ["Std_WhatsThis", "AssemblyWorkbench"],
+                ]
+        except Exception:
+            pass
 
         # Set the preferred toolbars
         PreferredToolbar = Parameters_Ribbon.Settings.GetIntSetting("Preferred_view")
