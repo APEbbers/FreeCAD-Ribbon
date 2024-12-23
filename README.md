@@ -20,7 +20,7 @@ The FreeCAD ribbon provides the following functions and features:
     * For one panel
     * For more panels
     * For all panels in a workbench
-    * for all panels in every workbench    
+    * for all panels in every workbench
   * Include/exclude toolbars to be used as a panel in the ribbon
   * Include/exclude workbenches
   * Combine panels into your own custom panel
