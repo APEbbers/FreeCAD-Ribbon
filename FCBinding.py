@@ -263,23 +263,29 @@ class ModernMenu(RibbonBar):
                 WorkBenchName="Global",
             )
         Parameters_Ribbon.Settings.SetBoolSetting("ToolsRemoved", True)
+
         # Add a toolbar "Views - Ribbon"
         #
+        PreferredToolbar = Parameters_Ribbon.Settings.GetIntSetting("Preferred_view")
         # Create a key if not present
-        StandardFunctions.add_keys_nested_dict(
-            self.ribbonStructure,
-            ["newPanels", "Global", "Views - Ribbon_newPanel"],
-        )
-        self.ribbonStructure["newPanels"]["Global"]["Views - Ribbon_newPanel"] = [
-            ["Std_ViewGroup", "AssemblyWorkbench"],
-            ["Std_ViewFitAll", "AssemblyWorkbench"],
-            ["Std_ViewFitSelection", "AssemblyWorkbench"],
-            ["Std_ViewZoomOut", "Global"],
-            ["Std_ViewZoomIn", "Global"],
-            ["Std_ViewBoxZoom", "Global"],
-            ["Std_AlignToSelection", "AssemblyWorkbench"],
-            ["Part_SelectFilter", "Global"],
-        ]
+        if PreferredToolbar == 2:
+            StandardFunctions.add_keys_nested_dict(
+                self.ribbonStructure,
+                ["newPanels", "Global", "Views - Ribbon_newPanel"],
+            )
+            self.ribbonStructure["newPanels"]["Global"]["Views - Ribbon_newPanel"] = [
+                ["Std_ViewGroup", "AssemblyWorkbench"],
+                ["Std_ViewFitAll", "AssemblyWorkbench"],
+                ["Std_ViewFitSelection", "AssemblyWorkbench"],
+                ["Std_ViewZoomOut", "Global"],
+                ["Std_ViewZoomIn", "Global"],
+                ["Std_ViewBoxZoom", "Global"],
+                ["Std_AlignToSelection", "AssemblyWorkbench"],
+                ["Part_SelectFilter", "Global"],
+            ]
+        else:
+            if "Views - Ribbon_newPanel" in self.ribbonStructure["newPanels"]["Global"]:
+                del self.ribbonStructure["newPanels"]["Global"]["Views - Ribbon_newPanel"]
         # # Add a toolbar "tools"
         #
         # Create a key if not present
@@ -306,7 +312,7 @@ class ModernMenu(RibbonBar):
         for ToolBar in ListIgnoredToolbars:
             if ToolBar == "View":
                 View_Inlist = True
-            if ToolBar == "Views - Ribbon":
+            if ToolBar == "Views - Ribbon_newPanel":
                 ViewsRibbon_Inlist = True
             if ToolBar == "Individual views":
                 IndividualViews_Inlist = True
