@@ -299,7 +299,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.on_ScrollClicks_Ribbon_valueCHanged
         )
         # Connect the preferred panel settings
-        self.form.PreferedViewPanel.currentIndexChanged.connect(self.on_PreferedViewPanel_currentIndexChanged)
+        self.form.PreferedViewPanel.currentIndexChanged.connect(
+            self.on_PreferedViewPanel_currentIndexChanged
+        )
         # Connect the EnableTools checkbox:
         self.form.EnableToolsPanel.clicked.connect(self.on_EnableToolsPanel_clicked)
         # endregion
@@ -373,19 +375,25 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     def on_IconSize_ApplicationButton_TextChanged(self):
         # Parameters_Ribbon.APP_ICON_SIZE = int(self.form.IconSize_ApplicationButton.text())
-        self.ValuesToUpdate["ApplicationButtonSize"] = int(self.form.IconSize_ApplicationButton.text())
+        self.ValuesToUpdate["ApplicationButtonSize"] = int(
+            self.form.IconSize_ApplicationButton.text()
+        )
         self.settingChanged = True
         return
 
     def on_IconSize_QuickAccessButton_TextChanged(self):
         # Parameters_Ribbon.QUICK_ICON_SIZE = int(self.form.IconSize_QuickAccessButton.text())
-        self.ValuesToUpdate["QuickAccessButtonSize"] = int(self.form.IconSize_QuickAccessButton.text())
+        self.ValuesToUpdate["QuickAccessButtonSize"] = int(
+            self.form.IconSize_QuickAccessButton.text()
+        )
         self.settingChanged = True
         return
 
     def on_IconSize_rightToolbarButton_TextChanged(self):
         # Parameters_Ribbon.RIGHT_ICON_SIZE = int(self.form.IconSize_rightToolbarButton.text())
-        self.ValuesToUpdate["RightToolbarButtonSize"] = int(self.form.IconSize_rightToolbarButton.text())
+        self.ValuesToUpdate["RightToolbarButtonSize"] = int(
+            self.form.IconSize_rightToolbarButton.text()
+        )
         self.settingChanged = True
         return
 
@@ -497,7 +505,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     def on_PreferedViewPanel_currentIndexChanged(self):
         # Parameters_Ribbon.PREFERRED_VIEW = self.form.PreferedViewPanel.currentIndex()
-        self.ValuesToUpdate["Preferred_view"] = self.form.PreferedViewPanel.currentIndex()
+        self.ValuesToUpdate["Preferred_view"] = (
+            self.form.PreferedViewPanel.currentIndex()
+        )
         self.settingChanged = True
         return
 
@@ -516,42 +526,82 @@ class LoadDialog(Settings_ui.Ui_Settings):
     @staticmethod
     def on_Cancel_clicked(self):
         # Save backup settings
-        Parameters_Ribbon.Settings.SetBoolSetting("BackupEnabled", self.OriginalValues["BackupEnabled"])
-        Parameters_Ribbon.Settings.SetStringSetting("BackupFolder", self.OriginalValues["BackupFolder"])
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "BackupEnabled", self.OriginalValues["BackupEnabled"]
+        )
+        Parameters_Ribbon.Settings.SetStringSetting(
+            "BackupFolder", self.OriginalValues["BackupFolder"]
+        )
         # Save tabBar style
-        Parameters_Ribbon.Settings.SetIntSetting("TabBar_Style", self.OriginalValues["TabBar_Style"])
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "TabBar_Style", self.OriginalValues["TabBar_Style"]
+        )
         # Save icon sizes
-        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", int(self.OriginalValues["IconSize_Small"]))
-        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", int(self.OriginalValues["IconSize_Medium"]))
-        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", int(self.OriginalValues["IconSize_Large"]))
-        Parameters_Ribbon.Settings.SetStringSetting("Stylesheet", self.OriginalValues["Stylesheet"])
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "IconSize_Small", int(self.OriginalValues["IconSize_Small"])
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "IconSize_Medium", int(self.OriginalValues["IconSize_Medium"])
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "IconSize_Large", int(self.OriginalValues["IconSize_Large"])
+        )
+        Parameters_Ribbon.Settings.SetStringSetting(
+            "Stylesheet", self.OriginalValues["Stylesheet"]
+        )
         Parameters_Ribbon.Settings.SetIntSetting(
             "ApplicationButtonSize", int(self.OriginalValues["ApplicationButtonSize"])
         )
         Parameters_Ribbon.Settings.SetIntSetting(
             "QuickAccessButtonSize", int(self.OriginalValues["QuickAccessButtonSize"])
         )
-        Parameters_Ribbon.Settings.SetIntSetting("TabBarSize", int(self.OriginalValues["TabBarSize"]))
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "TabBarSize", int(self.OriginalValues["TabBarSize"])
+        )
         Parameters_Ribbon.Settings.SetIntSetting(
             "RightToolbarButtonSize", int(self.OriginalValues["RightToolbarButtonSize"])
         )
         # Save text settings
-        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", self.OriginalValues["ShowIconText_Small"])
-        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", self.OriginalValues["ShowIconText_Medium"])
-        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", self.OriginalValues["ShowIconText_Large"])
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "ShowIconText_Small", self.OriginalValues["ShowIconText_Small"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "ShowIconText_Medium", self.OriginalValues["ShowIconText_Medium"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "ShowIconText_Large", self.OriginalValues["ShowIconText_Large"]
+        )
         # Save No of columns
-        Parameters_Ribbon.Settings.SetIntSetting("MaxColumnsPerPanel", int(self.OriginalValues["MaxColumnsPerPanel"]))
-        Parameters_Ribbon.Settings.SetBoolSetting("DebugMode", self.OriginalValues["DebugMode"])
-        Parameters_Ribbon.Settings.SetBoolSetting("ShowOnHover", self.OriginalValues["ShowOnHover"])
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "MaxColumnsPerPanel", int(self.OriginalValues["MaxColumnsPerPanel"])
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "DebugMode", self.OriginalValues["DebugMode"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "ShowOnHover", self.OriginalValues["ShowOnHover"]
+        )
         # Save behavior settings
-        Parameters_Ribbon.Settings.SetIntSetting("TabBar_Scroll", self.OriginalValues["TabBar_Scroll"])
-        Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Scroll", self.OriginalValues["Ribbon_Scroll"])
-        Parameters_Ribbon.Settings.SetIntSetting("TabBar_Click", self.OriginalValues["TabBar_Click"])
-        Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Click", self.OriginalValues["Ribbon_Click"])
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "TabBar_Scroll", self.OriginalValues["TabBar_Scroll"]
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "Ribbon_Scroll", self.OriginalValues["Ribbon_Scroll"]
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "TabBar_Click", self.OriginalValues["TabBar_Click"]
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "Ribbon_Click", self.OriginalValues["Ribbon_Click"]
+        )
         # Save the preferred toolbars
-        Parameters_Ribbon.Settings.SetIntSetting("Preferred_view", self.OriginalValues["Preferred_view"])
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "Preferred_view", self.OriginalValues["Preferred_view"]
+        )
         # Set the use of the tools panel
-        Parameters_Ribbon.Settings.SetBoolSetting("UseToolsPanel", self.OriginalValues["UseToolsPanel"])
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "UseToolsPanel", self.OriginalValues["UseToolsPanel"]
+        )
 
         # Set the size of the window to the previous state
         Parameters_Ribbon.Settings.SetIntSetting(
@@ -567,42 +617,82 @@ class LoadDialog(Settings_ui.Ui_Settings):
     @staticmethod
     def on_Close_clicked(self):
         # Save backup settings
-        Parameters_Ribbon.Settings.SetBoolSetting("BackupEnabled", self.ValuesToUpdate["BackupEnabled"])
-        Parameters_Ribbon.Settings.SetStringSetting("BackupFolder", self.ValuesToUpdate["BackupFolder"])
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "BackupEnabled", self.ValuesToUpdate["BackupEnabled"]
+        )
+        Parameters_Ribbon.Settings.SetStringSetting(
+            "BackupFolder", self.ValuesToUpdate["BackupFolder"]
+        )
         # Save tabBar style
-        Parameters_Ribbon.Settings.SetIntSetting("TabBar_Style", self.ValuesToUpdate["TabBar_Style"])
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "TabBar_Style", self.ValuesToUpdate["TabBar_Style"]
+        )
         # Save icon sizes
-        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", int(self.ValuesToUpdate["IconSize_Small"]))
-        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", int(self.ValuesToUpdate["IconSize_Medium"]))
-        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", int(self.ValuesToUpdate["IconSize_Large"]))
-        Parameters_Ribbon.Settings.SetStringSetting("Stylesheet", self.ValuesToUpdate["Stylesheet"])
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "IconSize_Small", int(self.ValuesToUpdate["IconSize_Small"])
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "IconSize_Medium", int(self.ValuesToUpdate["IconSize_Medium"])
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "IconSize_Large", int(self.ValuesToUpdate["IconSize_Large"])
+        )
+        Parameters_Ribbon.Settings.SetStringSetting(
+            "Stylesheet", self.ValuesToUpdate["Stylesheet"]
+        )
         Parameters_Ribbon.Settings.SetIntSetting(
             "ApplicationButtonSize", int(self.ValuesToUpdate["ApplicationButtonSize"])
         )
         Parameters_Ribbon.Settings.SetIntSetting(
             "QuickAccessButtonSize", int(self.ValuesToUpdate["QuickAccessButtonSize"])
         )
-        Parameters_Ribbon.Settings.SetIntSetting("TabBarSize", int(self.ValuesToUpdate["TabBarSize"]))
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "TabBarSize", int(self.ValuesToUpdate["TabBarSize"])
+        )
         Parameters_Ribbon.Settings.SetIntSetting(
             "RightToolbarButtonSize", int(self.ValuesToUpdate["RightToolbarButtonSize"])
         )
         # Save text settings
-        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", self.ValuesToUpdate["ShowIconText_Small"])
-        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", self.ValuesToUpdate["ShowIconText_Medium"])
-        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", self.ValuesToUpdate["ShowIconText_Large"])
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "ShowIconText_Small", self.ValuesToUpdate["ShowIconText_Small"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "ShowIconText_Medium", self.ValuesToUpdate["ShowIconText_Medium"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "ShowIconText_Large", self.ValuesToUpdate["ShowIconText_Large"]
+        )
         # Save No of columns
-        Parameters_Ribbon.Settings.SetIntSetting("MaxColumnsPerPanel", int(self.ValuesToUpdate["MaxColumnsPerPanel"]))
-        Parameters_Ribbon.Settings.SetBoolSetting("DebugMode", self.ValuesToUpdate["DebugMode"])
-        Parameters_Ribbon.Settings.SetBoolSetting("ShowOnHover", self.ValuesToUpdate["ShowOnHover"])
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "MaxColumnsPerPanel", int(self.ValuesToUpdate["MaxColumnsPerPanel"])
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "DebugMode", self.ValuesToUpdate["DebugMode"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "ShowOnHover", self.ValuesToUpdate["ShowOnHover"]
+        )
         # Save behavior settings
-        Parameters_Ribbon.Settings.SetIntSetting("TabBar_Scroll", self.ValuesToUpdate["TabBar_Scroll"])
-        Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Scroll", self.ValuesToUpdate["Ribbon_Scroll"])
-        Parameters_Ribbon.Settings.SetIntSetting("TabBar_Click", self.ValuesToUpdate["TabBar_Click"])
-        Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Click", self.ValuesToUpdate["Ribbon_Click"])
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "TabBar_Scroll", self.ValuesToUpdate["TabBar_Scroll"]
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "Ribbon_Scroll", self.ValuesToUpdate["Ribbon_Scroll"]
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "TabBar_Click", self.ValuesToUpdate["TabBar_Click"]
+        )
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "Ribbon_Click", self.ValuesToUpdate["Ribbon_Click"]
+        )
         # Save the preferred toolbars
-        Parameters_Ribbon.Settings.SetIntSetting("Preferred_view", self.ValuesToUpdate["Preferred_view"])
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "Preferred_view", self.ValuesToUpdate["Preferred_view"]
+        )
         # Set the use of the tools panel
-        Parameters_Ribbon.Settings.SetBoolSetting("UseToolsPanel", self.ValuesToUpdate["UseToolsPanel"])
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "UseToolsPanel", self.ValuesToUpdate["UseToolsPanel"]
+        )
 
         # Set the size of the window to the previous state
         Parameters_Ribbon.Settings.SetIntSetting(

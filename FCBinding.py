@@ -285,12 +285,17 @@ class ModernMenu(RibbonBar):
             ]
         else:
             if "Views - Ribbon_newPanel" in self.ribbonStructure["newPanels"]["Global"]:
-                del self.ribbonStructure["newPanels"]["Global"]["Views - Ribbon_newPanel"]
+                del self.ribbonStructure["newPanels"]["Global"][
+                    "Views - Ribbon_newPanel"
+                ]
         # # Add a toolbar "tools"
         #
         UseToolsPanel = Parameters_Ribbon.Settings.GetBoolSetting("UseToolsPanel")
         # Create a key if not present
-        if "Tools_newPanel" not in self.ribbonStructure["newPanels"]["Global"] and UseToolsPanel is True:
+        if (
+            "Tools_newPanel" not in self.ribbonStructure["newPanels"]["Global"]
+            and UseToolsPanel is True
+        ):
             StandardFunctions.add_keys_nested_dict(
                 self.ribbonStructure,
                 ["newPanels", "Global", "Tools_newPanel"],
