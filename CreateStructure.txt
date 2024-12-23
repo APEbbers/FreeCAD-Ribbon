@@ -76,20 +76,20 @@
     "dropdownButtons": {
         "ExampleDropDown_ddb": [
             [
-                "Asm4_SelectionFilterEdgeCmd",
-                "Assembly4Workbench"
-            ],
-            [
-                "Asm4_SelectionFilterFaceCmd",
-                "Assembly4Workbench"
-            ],
-            [
-                "Asm4_SelectionFilterVertexCmd",
-                "Assembly4Workbench"
-            ],
-            [
                 "Std_UnitsCalculator",
                 "Global"
+            ],
+            [
+                "Std_Measure",
+                "General"
+            ],
+            [
+                "Sketcher_NewSketch",
+                "PartWorkbench"
+            ],
+            [
+                "Std_DlgMacroExecute",
+                "AssemblyWorkbench"
             ]
         ]
     },
