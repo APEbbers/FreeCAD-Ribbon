@@ -1764,7 +1764,10 @@ class LoadDialog(Design_ui.Ui_Form):
         # Get the current custom toolbar name
         CustomPanelTitle = ""
         WorkBenchTitle = ""
-        if self.form.CustomToolbarSelector_CP.currentText() != "":
+        if (
+            self.form.CustomToolbarSelector_CP.currentText() != ""
+            or self.form.CustomToolbarSelector_CP.currentText() != "New"
+        ):
             CustomPanelTitle = self.form.CustomToolbarSelector_CP.currentText().split(
                 ", "
             )[0]
@@ -1838,6 +1841,13 @@ class LoadDialog(Design_ui.Ui_Form):
                             # Enable the apply button
                             if self.CheckChanges() is True:
                                 self.form.UpdateJson.setEnabled(True)
+
+                            if (
+                                self.form.CustomToolbarSelector_CP.currentText()
+                                == "New"
+                            ):
+                                self.form.PanelSelected_CP.clear()
+                                self.form.PanelName_CP.clear()
 
                             return
                 except Exception as e:
@@ -2387,6 +2397,10 @@ class LoadDialog(Design_ui.Ui_Form):
                             == DropDownControl
                         ):
                             self.form.CommandList_DDB.removeItem(i)
+
+                    if self.form.CommandList_DDB.currentText() == "New":
+                        self.form.NewControl_DDB.clear()
+                        self.form.ControlName_DDB.clear()
 
             # Enable the apply button
             if self.CheckChanges() is True:
