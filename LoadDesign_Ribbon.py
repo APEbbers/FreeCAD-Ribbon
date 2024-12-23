@@ -1726,7 +1726,10 @@ class LoadDialog(Design_ui.Ui_Form):
         WorkBenchTitle = ""
         # define the suffix
         Suffix = "_newPanel"
-        if self.form.CustomToolbarSelector_NP.currentText() != "":
+        if (
+            self.form.CustomToolbarSelector_NP.currentText() != ""
+            and self.form.CustomToolbarSelector_NP.currentText() != "New"
+        ):
             NewPanelTitle = self.form.CustomToolbarSelector_NP.currentText().split(", ")[0] + Suffix
             WorkBenchTitle = self.form.CustomToolbarSelector_NP.currentText().split(", ")[1]
         else:
