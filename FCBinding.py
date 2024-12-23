@@ -314,7 +314,7 @@ class ModernMenu(RibbonBar):
         for ToolBar in ListIgnoredToolbars:
             if ToolBar == "View":
                 View_Inlist = True
-            if ToolBar == "Views - Ribbon_newPanel":
+            if ToolBar == "Views - Ribbon":
                 ViewsRibbon_Inlist = True
             if ToolBar == "Individual views":
                 IndividualViews_Inlist = True
@@ -2036,19 +2036,17 @@ class ModernMenu(RibbonBar):
                 StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
             return
 
-    def UpdateRibbonStructureFile_Proxy(self, RibbonStructureDict: dict):
-        # get the path for the Json file
-        JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+    # def UpdateRibbonStructureFile_Proxy(self, RibbonStructureDict: dict):
+    #     # get the path for the Json file
+    #     JsonFile: dict = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
 
-        with open(RibbonStructureDict, "r") as file:
-            self.ribbonStructure.update(json.load(file))
+    #     # Writing to sample.json
+    #     with open(JsonFile, "w") as outfile:
+    #         JsonFile.update(RibbonStructureDict)
+    #         json.dump(self.ribbonStructure, outfile, indent=4)
 
-        # Writing to sample.json
-        with open(JsonFile, "w") as outfile:
-            json.dump(self.ribbonStructure, outfile, indent=4)
-
-        outfile.close()
-        return
+    #     outfile.close()
+    #     return
 
 
 # region - alternative loading
@@ -2135,19 +2133,42 @@ class run:
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
 
 
-def UpdateRibbonStructureFile(RibbonStructureDict: dict):
-    """Function for add-on developers to update the RibbonStructureFile with their specific settings.
-    The RibbonStructureFile must have at least one of the following keys:
-    - "igonreWorkbenches"
-    - "customToolbars"
-    - "newPanels"
-    - "dropdownButtons"
-    - "iconOnlyToolbars"
-    - "workbenches"
+# def UpdateRibbonStructureFile(RibbonStructureDict: dict = None, silent=True):
+#     """Function for add-on developers to update the RibbonStructureFile with their specific settings.
+#     The RibbonStructureFile must have at least one of the following keys:
+#     - "igonreWorkbenches"
+#     - "customToolbars"
+#     - "newPanels"
+#     - "dropdownButtons"
+#     - "iconOnlyToolbars"
+#     - "workbenches"
 
-    Args:
-        RibbonStructureFile (dict): a dictionary that follows the RibbonStructureFile format.\n
-        See the RibbonStructureFile.json for the format. (Located in the add-on directory)
-    """
-    ModernMenu.UpdateRibbonStructureFile_Proxy(RibbonStructureDict)
-    return
+#     Args:
+#         RibbonStructureFile (dict): a dictionary that follows the RibbonStructureFile format.\n
+#         See the RibbonStructureFile.json for the format. (Located in the add-on directory)
+#     """
+#     result = False
+
+#     if RibbonStructureDict is not None:
+#         try:
+#             preferences = App.ParamGet("User parameter:BaseApp/Preferences/Mod/FreeCAD-Ribbon")
+#             JsonFile = preferences.GetString("RibbonStructure")
+#             if JsonFile is not None or JsonFile != "":
+#                 with open(JsonFile, "r") as outfile:
+#                     data = json.load(outfile)
+#                 outfile.close()
+
+#                 merged_dict = data.copy()
+#                 merged_dict.update(RibbonStructureDict)
+
+#                 with open(JsonFile, "w") as outfile:
+#                     json.dump(merged_dict, outfile, indent=4)
+#                 outfile.close()
+#             result = True
+
+#         except Exception as e:
+#             if silent is False:
+#                 raise e
+#             else:
+#                 print(e)
+#     return result
