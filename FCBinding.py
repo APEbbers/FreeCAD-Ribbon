@@ -1035,11 +1035,11 @@ class ModernMenu(RibbonBar):
         # hide normal toolbars
         self.hideClassicToolbars()
 
-        # create panels
-        self.buildPanels()
-
         # switch tab if necessary
         self.updateCurrentTab()
+
+        # create panels
+        self.buildPanels()
         return
 
     def onTabBarClicked(self):
