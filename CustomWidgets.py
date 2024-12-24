@@ -92,8 +92,8 @@ class CustomControls:
             btn.setMenu(Menu)
             btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
             btn.setDefaultAction(btn.actions()[0])
-            btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{10}px"))
-            btn.setFixedWidth(btn.width() + 10)
+            btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{20}px"))
+            btn.setFixedWidth(btn.width() + 20)
 
         # If text must be shown wrapped, add a layout with label
         if showText is True and setWordWrap is True:
@@ -108,10 +108,10 @@ class CustomControls:
             Label_Text.setTextFormat(Qt.TextFormat.RichText)
             # Determine the height of a single row
             FontMetrics = QFontMetrics(Text)
-            SingleHeight = FontMetrics.boundingRect(Text).height()
+            SingleHeight = FontMetrics.tightBoundingRect(Text).height()
             # make sure that the label height is at least for two lines
             Label_Text.setMinimumHeight((SingleHeight * 2))
-            Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines))
+            Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines) + 3)
             # Enable wordwrap
             Label_Text.setWordWrap(True)
             # Set the width of the label based on the size of the button
