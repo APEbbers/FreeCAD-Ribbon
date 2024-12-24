@@ -1141,11 +1141,12 @@ class ModernMenu(RibbonBar):
         # hide normal toolbars
         self.hideClassicToolbars()
 
-        # create panels
-        self.buildPanels()
-
         # switch tab if necessary
         self.updateCurrentTab()
+
+        # create panels. Do this after updateCurrentTab.
+        # Otherwise, the sketcher workbench won;t be loaded properly the first time
+        self.buildPanels()
         return
 
     def onTabBarClicked(self):
