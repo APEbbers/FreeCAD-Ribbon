@@ -56,7 +56,8 @@ from PySide.QtWidgets import (
     QStyle,
     QStyleOptionButton,
     QPushButton,
-    QHBoxLayout,
+    QVBoxLayout,
+    QLabel,
 )
 from PySide.QtCore import (
     Qt,
@@ -73,19 +74,10 @@ from PySide.QtCore import (
     QRect,
 )
 
-import json
 import os
 import sys
-import webbrowser
-import LoadDesign_Ribbon
 import Parameters_Ribbon
-import LoadSettings_Ribbon
-import LoadLicenseForm_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
-from Standard_Functions_RIbbon import CommandInfoCorrections
-import Serialize_Ribbon
-import StyleMapping
-import platform
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -100,52 +92,61 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon_local.panel import RibbonPanel
-from pyqtribbon_local.toolbutton import RibbonToolButton
-from pyqtribbon_local.separator import RibbonSeparator
-from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon_local as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
-
-
-class CustomRibbonToolButton(RibbonToolButton):
-    def __init__(self):
-        super().__init__()
-
-        layout = QHBoxLayout(self)
-
-        # Create a QToolButton with icon
-        button = QToolButton()
-        button_icon = QStyle.SP_ArrowDown
-
-        layout.addWidget(button)
-        self.setLayout(layout)
-        self.setIcon(button, button_icon)
-
-    def setIcon(self, button, button_icon, padding=10):
-        # Load the original icon as a QPixmap.
-        original_icon = QPixmap(button.style().standardIcon(button_icon).pixmap(25, 22))
-
-        # Create a new QPixmap with increased dimensions in preparation to offset the original icon's position. Fill with transparency.
-        padded_icon = QPixmap(
-            original_icon.width() + padding, original_icon.height() + 0
-        )
-        padded_icon.fill(Qt.transparent)
-
-        # Paint the original icon onto the transparent QPixmap with an offset making the icon sit in the bottom-right.
-        painter = QPainter(padded_icon)
-        painter.drawPixmap(2, 0, original_icon)
-        painter.end()
-
-        # Convert the QPixmap to a QIcon and add it to the button.
-        button.setIcon(QIcon(padded_icon))
-
-
-#
+class CustomControls:
+    def LargeCustomToolButton(
+        Text: str,
+        Action: QAction,
+        Icon: QIcon,
+        IconSize: QSize,
+        ButtonSize: QSize,
+        FontSize: int = 10,
+        showText=True,
+        TextAlignment=Qt.AlignmentFlag.AlignCenter,
+        TextPositionAlignment=Qt.AlignmentFlag.AlignBottom,
+    ):
+        btn = QToolButton()
+        if showText is True:
+            # Create a label
+            Label_Text = QLabel(Text)
+            # Set the textFormat
+            Label_Text.setTextFormat(Qt.TextFormat.RichText)
+            # Enable wordwrap
+            Label_Text.setWordWrap(True)
+            # Set the width of the label based on the size of the button
+            Label_Text.setFixedWidth(ButtonSize.width())
+            # Adjust the size to be able to store the actual height
+            Label_Text.adjustSize()
+            # Set the font
+            Font = Label_Text.font()
+            Font.setPixelSize(FontSize)
+            Label_Text.setFont(Font)
+            # Set the text alignment
+            Label_Text.setAlignment(TextAlignment)
+            # Define a vertical layout
+            Layout = QVBoxLayout()
+            # Add the label with alignment
+            Layout.addWidget(Label_Text)
+            Layout.setAlignment(TextPositionAlignment)
+            # Set the content margins to zero
+            Layout.setContentsMargins(0, 0, 0, 0)
+            # Add the layout to the button
+            btn.setLayout(Layout)
+            # Add padding to the bottom. This makes room for the label
+            TextHeight = Label_Text.height()
+            btn.setStyleSheet(
+                """QToolButton {
+                padding-bottom: """
+                + str(TextHeight)
+                + """px;}"""
+            )
+        # Set the icon and its size
+        btn.setIcon(Icon)
+        btn.setIconSize(IconSize)
+        # Set the buttonSize
+        btn.setFixedSize(ButtonSize)
+        # Set the content margins to zero
+        btn.setContentsMargins(0, 0, 0, 0)
+        btn.addAction(Action)
+        btn.setDefaultAction(Action)
+        return btn
