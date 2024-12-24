@@ -70,7 +70,7 @@ class CustomControls:
         ButtonSize: QSize,
         FontSize: int = 10,
         showText=True,
-        TextAlignment=Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignHCenter,
+        TextAlignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter,
         TextPositionAlignment=Qt.AlignmentFlag.AlignBottom,
         setWordWrap=True,
         MaxNumberOfLines=2,
