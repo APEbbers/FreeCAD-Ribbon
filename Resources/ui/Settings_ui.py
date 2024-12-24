@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsxiKsrg.ui'
+## Form generated from reading UI file 'SettingsRkqPxT.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -93,7 +93,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 772, 668))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 760, 860))
         self.gridLayout_28 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_28.setObjectName("gridLayout_28")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -375,17 +375,6 @@ class Ui_Settings(object):
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.gridLayout_26 = QGridLayout()
         self.gridLayout_26.setObjectName("gridLayout_26")
-        self.ShowText_Small = QCheckBox(self.groupBox_3)
-        self.ShowText_Small.setObjectName("ShowText_Small")
-        sizePolicy6.setHeightForWidth(
-            self.ShowText_Small.sizePolicy().hasHeightForWidth()
-        )
-        self.ShowText_Small.setSizePolicy(sizePolicy6)
-        self.ShowText_Small.setMinimumSize(QSize(100, 0))
-        self.ShowText_Small.setFont(font1)
-
-        self.gridLayout_26.addWidget(self.ShowText_Small, 0, 0, 1, 1)
-
         self.ShowText_Medium = QCheckBox(self.groupBox_3)
         self.ShowText_Medium.setObjectName("ShowText_Medium")
         sizePolicy6.setHeightForWidth(
@@ -408,14 +397,27 @@ class Ui_Settings(object):
 
         self.gridLayout_26.addWidget(self.ShowText_Large, 2, 0, 1, 1)
 
-        self.label_26 = QLabel(self.groupBox_3)
-        self.label_26.setObjectName("label_26")
-        font2 = QFont()
-        font2.setBold(False)
-        font2.setItalic(True)
-        self.label_26.setFont(font2)
+        self.ShowText_Small = QCheckBox(self.groupBox_3)
+        self.ShowText_Small.setObjectName("ShowText_Small")
+        sizePolicy6.setHeightForWidth(
+            self.ShowText_Small.sizePolicy().hasHeightForWidth()
+        )
+        self.ShowText_Small.setSizePolicy(sizePolicy6)
+        self.ShowText_Small.setMinimumSize(QSize(100, 0))
+        self.ShowText_Small.setFont(font1)
 
-        self.gridLayout_26.addWidget(self.label_26, 2, 1, 1, 1)
+        self.gridLayout_26.addWidget(self.ShowText_Small, 0, 0, 1, 1)
+
+        self.horizontalSpacer_9 = QSpacerItem(
+            40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
+        )
+
+        self.gridLayout_26.addItem(self.horizontalSpacer_9, 0, 1, 1, 1)
+
+        self.EnableWrap_Large = QCheckBox(self.groupBox_3)
+        self.EnableWrap_Large.setObjectName("EnableWrap_Large")
+
+        self.gridLayout_26.addWidget(self.EnableWrap_Large, 2, 1, 1, 1)
 
         self.gridLayout_2.addLayout(self.gridLayout_26, 0, 0, 1, 1)
 
@@ -981,7 +983,7 @@ class Ui_Settings(object):
         self.CustomColors.toggled.connect(self.ColorS.setEnabled)
         self.CustomIcons.toggled.connect(self.IconS.setEnabled)
 
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(Settings)
 
@@ -1051,19 +1053,17 @@ class Ui_Settings(object):
         self.groupBox_3.setTitle(
             QCoreApplication.translate("Settings", "Show text", None)
         )
-        self.ShowText_Small.setText(
-            QCoreApplication.translate("Settings", "Small buttons", None)
-        )
         self.ShowText_Medium.setText(
             QCoreApplication.translate("Settings", "Medium buttons", None)
         )
         self.ShowText_Large.setText(
             QCoreApplication.translate("Settings", "Large buttons", None)
         )
-        self.label_26.setText(
-            QCoreApplication.translate(
-                "Settings", "Best to use with button size greater than 100.", None
-            )
+        self.ShowText_Small.setText(
+            QCoreApplication.translate("Settings", "Small buttons", None)
+        )
+        self.EnableWrap_Large.setText(
+            QCoreApplication.translate("Settings", "Enable two line for text", None)
         )
         self.groupBox_10.setTitle(
             QCoreApplication.translate("Settings", "Tab style", None)

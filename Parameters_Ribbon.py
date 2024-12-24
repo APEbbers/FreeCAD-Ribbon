@@ -168,6 +168,7 @@ DefaultSettings = {
     "Ribbon_Click": int(1),
     "Preferred_view": int(2),
     "UseToolsPanel": bool(True),
+    "WrapText_Large": bool(True),
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
@@ -307,6 +308,11 @@ MAX_COLUMN_PANELS = Settings.GetIntSetting("MaxColumnsPerPanel")
 if Settings.GetIntSetting("MaxColumnsPerPanel") is None:
     MAX_COLUMN_PANELS = DefaultSettings["MaxColumnsPerPanel"]
     Settings.SetIntSetting("MaxColumnsPerPanel", MAX_COLUMN_PANELS)
+
+WRAPTEXT_LARGE = Settings.GetBoolSetting("WrapText_Large")
+if Settings.GetBoolSetting("WrapText_Large") == "":
+    WRAPTEXT_LARGE = DefaultSettings["WrapText_Large"]
+    Settings.SetBoolSetting("WrapText_Large", WRAPTEXT_LARGE)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Get the Debug Mode ------------------------------------------------------------------------------------------

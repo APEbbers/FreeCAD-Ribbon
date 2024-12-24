@@ -26,51 +26,18 @@ from pathlib import Path
 from PySide.QtGui import (
     QIcon,
     QAction,
-    QPixmap,
-    QScrollEvent,
-    QKeyEvent,
-    QActionGroup,
-    QRegion,
+    QFontMetrics,
     QFont,
-    QColor,
-    QStyleHints,
-    QPainter,
 )
 from PySide.QtWidgets import (
     QToolButton,
-    QToolBar,
-    QSizePolicy,
-    QDockWidget,
-    QWidget,
-    QMenuBar,
-    QMenu,
-    QMainWindow,
-    QLayout,
-    QSpacerItem,
-    QLayoutItem,
-    QGridLayout,
-    QScrollArea,
-    QTabBar,
-    QWidgetAction,
-    QStylePainter,
-    QStyle,
-    QStyleOptionButton,
-    QPushButton,
     QVBoxLayout,
     QLabel,
+    QMenu,
 )
 from PySide.QtCore import (
     Qt,
-    QTimer,
-    Signal,
-    QObject,
-    QMetaMethod,
-    SIGNAL,
-    QEvent,
-    QMetaObject,
-    QCoreApplication,
     QSize,
-    Slot,
     QRect,
 )
 
@@ -78,6 +45,7 @@ import os
 import sys
 import Parameters_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
+import StyleMapping
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -102,25 +70,56 @@ class CustomControls:
         ButtonSize: QSize,
         FontSize: int = 10,
         showText=True,
-        TextAlignment=Qt.AlignmentFlag.AlignCenter,
+        TextAlignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter,
         TextPositionAlignment=Qt.AlignmentFlag.AlignBottom,
+        setWordWrap=True,
+        MaxNumberOfLines=2,
+        Menu: QMenu = None,
     ):
         btn = QToolButton()
-        if showText is True:
+        # Set the buttonSize
+        btn.setFixedSize(ButtonSize)
+        # Set the icon and its size
+        btn.setIcon(Icon)
+        btn.setIconSize(IconSize.expandedTo(btn.geometry().size()))
+        # Set the content margins to zero
+        btn.setContentsMargins(0, 0, 0, 0)
+        if len(Menu.actions()) == 0:
+            btn.addAction(Action)
+            print("Menu is None")
+        btn.setDefaultAction(Action)
+        if Menu is not None and len(Menu.actions()) > 1:
+            btn.setMenu(Menu)
+            btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+            btn.setDefaultAction(btn.actions()[0])
+            btn.setStyleSheet(
+                StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{20}px")
+            )
+            btn.setFixedWidth(btn.width() + 20)
+
+        # If text must be shown wrapped, add a layout with label
+        if showText is True and setWordWrap is True:
             # Create a label
-            Label_Text = QLabel(Text)
+            Label_Text = QLabel()
+            # Set the font
+            Font = QFont()
+            Font.setPointSize(FontSize)
+            Label_Text.setFont(Font)
+            Label_Text.setText(Text)
             # Set the textFormat
             Label_Text.setTextFormat(Qt.TextFormat.RichText)
+            # Determine the height of a single row
+            FontMetrics = QFontMetrics(Text)
+            SingleHeight = FontMetrics.tightBoundingRect(Text).height()
+            # make sure that the label height is at least for two lines
+            Label_Text.setMinimumHeight((SingleHeight * 2))
+            Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines) + 3)
             # Enable wordwrap
             Label_Text.setWordWrap(True)
             # Set the width of the label based on the size of the button
-            Label_Text.setFixedWidth(ButtonSize.width())
+            Label_Text.setFixedWidth(ButtonSize.width() + 5)
             # Adjust the size to be able to store the actual height
             Label_Text.adjustSize()
-            # Set the font
-            Font = Label_Text.font()
-            Font.setPixelSize(FontSize)
-            Label_Text.setFont(Font)
             # Set the text alignment
             Label_Text.setAlignment(TextAlignment)
             # Define a vertical layout
@@ -140,13 +139,11 @@ class CustomControls:
                 + str(TextHeight)
                 + """px;}"""
             )
-        # Set the icon and its size
-        btn.setIcon(Icon)
-        btn.setIconSize(IconSize)
-        # Set the buttonSize
-        btn.setFixedSize(ButtonSize)
-        # Set the content margins to zero
-        btn.setContentsMargins(0, 0, 0, 0)
-        btn.addAction(Action)
-        btn.setDefaultAction(Action)
+            if Label_Text.width() > btn.width():
+                btn.setFixedWidth(Label_Text.width())
+
+        # If text must be shown on one line, use the normal way
+        if showText is True and setWordWrap is False:
+            btn.setText(Text)
+
         return btn

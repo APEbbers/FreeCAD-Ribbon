@@ -64,6 +64,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
     ShowText_Small = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
     ShowText_Medium = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
     ShowText_Large = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
+    WrapText_Large = Parameters_Ribbon.WRAPTEXT_LARGE
     DebugMode = Parameters_Ribbon.DEBUG_MODE
     ShowOnHover = Parameters_Ribbon.SHOW_ON_HOVER
     UseToolsPanel = Parameters_Ribbon.USE_TOOLSPANEL
@@ -93,6 +94,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "Ribbon_Click": Parameters_Ribbon.RIBBON_CLICKSPEED,
         "Preferred_view": Parameters_Ribbon.PREFERRED_VIEW,
         "UseToolsPanel": Parameters_Ribbon.USE_TOOLSPANEL,
+        "WrapText_Large": Parameters_Ribbon.WRAPTEXT_LARGE,
     }
 
     # Store the current values before change
@@ -120,6 +122,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "Ribbon_Click": Parameters_Ribbon.RIBBON_CLICKSPEED,
         "Preferred_view": Parameters_Ribbon.PREFERRED_VIEW,
         "UseToolsPanel": Parameters_Ribbon.USE_TOOLSPANEL,
+        "WrapText_Large": Parameters_Ribbon.WRAPTEXT_LARGE,
     }
 
     settingChanged = False
@@ -259,6 +262,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.ShowText_Small.clicked.connect(self.on_ShowTextSmall_clicked)
         self.form.ShowText_Medium.clicked.connect(self.on_ShowTextMedium_clicked)
         self.form.ShowText_Large.clicked.connect(self.on_ShowTextLarge_clicked)
+        self.form.EnableWrap_Large.clicked.connect(self.on_EnableWrap_Large_clicked)
         # Connect column width
         self.form.MaxPanelColumn.textChanged.connect(self.on_MaxPanelColumn_TextChanged)
         # Connect debug mode
@@ -460,6 +464,18 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.settingChanged = True
         return
 
+    def on_EnableWrap_Large_clicked(self):
+        if self.form.EnableWrap_Large.isChecked() is True:
+            # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = True
+            self.ValuesToUpdate["WrapText_Large"] = True
+            self.WrapText_Large = True
+        if self.form.EnableWrap_Large.isChecked() is False:
+            # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = False
+            self.ValuesToUpdate["WrapText_Large"] = False
+            self.WrapText_Large = False
+        self.settingChanged = True
+        return
+
     def on_DebugMode_clicked(self):
         if self.form.DebugMode.isChecked() is True:
             # Parameters_Ribbon.DEBUG_MODE = True
@@ -571,6 +587,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
         Parameters_Ribbon.Settings.SetBoolSetting(
             "ShowIconText_Large", self.OriginalValues["ShowIconText_Large"]
         )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "WrapText_Large", self.OriginalValues["WrapText_Large"]
+        )
         # Save No of columns
         Parameters_Ribbon.Settings.SetIntSetting(
             "MaxColumnsPerPanel", int(self.OriginalValues["MaxColumnsPerPanel"])
@@ -661,6 +680,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
         )
         Parameters_Ribbon.Settings.SetBoolSetting(
             "ShowIconText_Large", self.ValuesToUpdate["ShowIconText_Large"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "WrapText_Large", self.OriginalValues["WrapText_Large"]
         )
         # Save No of columns
         Parameters_Ribbon.Settings.SetIntSetting(
