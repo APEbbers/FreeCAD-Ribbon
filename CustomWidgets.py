@@ -23,19 +23,19 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
     QFont,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QToolButton,
     QVBoxLayout,
     QLabel,
     QMenu,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QSize,
     QRect,
@@ -92,7 +92,9 @@ class CustomControls:
             btn.setMenu(Menu)
             btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
             btn.setDefaultAction(btn.actions()[0])
-            btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{20}px"))
+            btn.setStyleSheet(
+                StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{20}px")
+            )
             btn.setFixedWidth(btn.width() + 20)
 
         # If text must be shown wrapped, add a layout with label
