@@ -1515,6 +1515,9 @@ class ModernMenu(RibbonBar):
                                 # Create a custom toolbutton
                                 ButtonSize = QSize(Parameters_Ribbon.ICON_SIZE_LARGE, Parameters_Ribbon.ICON_SIZE_LARGE)
                                 IconSize = QSize(Parameters_Ribbon.ICON_SIZE_LARGE, Parameters_Ribbon.ICON_SIZE_LARGE)
+                                Menu = QMenu
+                                if button.menu() is not None:
+                                    Menu = button.menu()
                                 btn = CustomControls.LargeCustomToolButton(
                                     Text=action.text(),
                                     Action=action,
@@ -1523,6 +1526,7 @@ class ModernMenu(RibbonBar):
                                     ButtonSize=ButtonSize,
                                     FontSize=10,
                                     showText=showText,
+                                    Menu=Menu,
                                 )
                                 # add the button as large button
                                 panel.addLargeWidget(btn)
@@ -1555,11 +1559,11 @@ class ModernMenu(RibbonBar):
 
                             # add dropdown menu if necessary
                             if button.menu() is not None:
-                                btn.setMenu(button.menu())
-                                btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                                 if btn.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
                                     btn.setMinimumWidth(btn.height())
                                 else:
+                                    btn.setMenu(button.menu())
+                                    btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
                                     # Set the padding
                                     padding = self.PaddingRight
                                     # increase the width equal with the padding

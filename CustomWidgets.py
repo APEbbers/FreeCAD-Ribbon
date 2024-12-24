@@ -23,54 +23,20 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
-    QPixmap,
-    QScrollEvent,
-    QKeyEvent,
-    QActionGroup,
-    QRegion,
-    QFont,
-    QColor,
-    QStyleHints,
-    QPainter,
+    QFontMetrics,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
-    QToolBar,
-    QSizePolicy,
-    QDockWidget,
-    QWidget,
-    QMenuBar,
-    QMenu,
-    QMainWindow,
-    QLayout,
-    QSpacerItem,
-    QLayoutItem,
-    QGridLayout,
-    QScrollArea,
-    QTabBar,
-    QWidgetAction,
-    QStylePainter,
-    QStyle,
-    QStyleOptionButton,
-    QPushButton,
     QVBoxLayout,
     QLabel,
+    QMenu,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
-    QTimer,
-    Signal,
-    QObject,
-    QMetaMethod,
-    SIGNAL,
-    QEvent,
-    QMetaObject,
-    QCoreApplication,
     QSize,
-    Slot,
     QRect,
 )
 
@@ -78,6 +44,7 @@ import os
 import sys
 import Parameters_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
+import StyleMapping
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -102,15 +69,42 @@ class CustomControls:
         ButtonSize: QSize,
         FontSize: int = 10,
         showText=True,
-        TextAlignment=Qt.AlignmentFlag.AlignCenter,
+        TextAlignment=Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignHCenter,
         TextPositionAlignment=Qt.AlignmentFlag.AlignBottom,
+        setWordWrap=True,
+        MaxNumberOfLines=2,
+        Menu: QMenu = None,
     ):
         btn = QToolButton()
-        if showText is True:
+        # Set the buttonSize
+        btn.setFixedSize(ButtonSize)
+        # Set the icon and its size
+        btn.setIcon(Icon)
+        btn.setIconSize(IconSize.expandedTo(btn.geometry().size()))
+        # Set the content margins to zero
+        btn.setContentsMargins(0, 0, 0, 0)
+        if Menu is None:
+            btn.addAction(Action)
+        btn.setDefaultAction(Action)
+        if Menu is not None:
+            btn.setMenu(Menu)
+            btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+            btn.setDefaultAction(btn.actions()[0])
+            btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{10}px"))
+            btn.setFixedWidth(btn.width() + 10)
+
+        # If text must be shown wrapped, add a layout with label
+        if showText is True and setWordWrap is True:
             # Create a label
             Label_Text = QLabel(Text)
             # Set the textFormat
             Label_Text.setTextFormat(Qt.TextFormat.RichText)
+            # Determine the height of a single row
+            FontMetrics = QFontMetrics(Text)
+            SingleHeight = FontMetrics.boundingRect(Text).height()
+            # make sure that the label height is at least for two lines
+            Label_Text.setMinimumHeight((SingleHeight * 2))
+            Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines))
             # Enable wordwrap
             Label_Text.setWordWrap(True)
             # Set the width of the label based on the size of the button
@@ -140,13 +134,8 @@ class CustomControls:
                 + str(TextHeight)
                 + """px;}"""
             )
-        # Set the icon and its size
-        btn.setIcon(Icon)
-        btn.setIconSize(IconSize)
-        # Set the buttonSize
-        btn.setFixedSize(ButtonSize)
-        # Set the content margins to zero
-        btn.setContentsMargins(0, 0, 0, 0)
-        btn.addAction(Action)
-        btn.setDefaultAction(Action)
+        # If text must be shown on one line, use the normal way
+        if showText is True and setWordWrap is False:
+            btn.setText(Text)
+
         return btn
