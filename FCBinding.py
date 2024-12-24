@@ -1515,7 +1515,7 @@ class ModernMenu(RibbonBar):
                                 # Create a custom toolbutton
                                 ButtonSize = QSize(Parameters_Ribbon.ICON_SIZE_LARGE, Parameters_Ribbon.ICON_SIZE_LARGE)
                                 IconSize = QSize(Parameters_Ribbon.ICON_SIZE_LARGE, Parameters_Ribbon.ICON_SIZE_LARGE)
-                                Menu = QMenu
+                                Menu = QMenu()
                                 if button.menu() is not None:
                                     Menu = button.menu()
                                 btn = CustomControls.LargeCustomToolButton(
@@ -1524,7 +1524,7 @@ class ModernMenu(RibbonBar):
                                     Icon=action.icon(),
                                     IconSize=IconSize,
                                     ButtonSize=ButtonSize,
-                                    FontSize=10,
+                                    FontSize=8,
                                     showText=showText,
                                     Menu=Menu,
                                 )
