@@ -116,6 +116,7 @@ class Settings:
         Settings.SetBoolSetting("ShowIconText_Small", SHOW_ICON_TEXT_SMALL)
         Settings.SetBoolSetting("ShowIconText_Medium", SHOW_ICON_TEXT_MEDIUM)
         Settings.SetBoolSetting("ShowIconText_Large", SHOW_ICON_TEXT_LARGE)
+        Settings.SetBoolSetting("WrapText_Large", WRAPTEXT_LARGE)
 
         Settings.SetBoolSetting("ShowOnHover", SHOW_ON_HOVER)
         Settings.SetIntSetting("TabBar_Scroll", TABBAR_SCROLLSPEED)
@@ -131,9 +132,7 @@ class Settings:
 
 # region - Define the resources ----------------------------------------------------------------------------------------
 ICON_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "icons")
-STYLESHEET_LOCATION = os.path.join(
-    os.path.dirname(__file__), "Resources", "stylesheets"
-)
+STYLESHEET_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "stylesheets")
 UI_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "ui")
 # endregion ------------------------------------------------------------------------------------------------------------
 
@@ -151,9 +150,7 @@ DefaultSettings = {
     "RightToolbarButtonSize": int(24),
     "BackupEnabled": bool(True),
     "BackupFolder": os.path.join(os.path.dirname(__file__), "Backups"),
-    "TabOrder": App.ParamGet(
-        "User parameter:BaseApp/Preferences/Workbenches/"
-    ).GetString("Ordered"),
+    "TabOrder": App.ParamGet("User parameter:BaseApp/Preferences/Workbenches/").GetString("Ordered"),
     "AutoHideRibbon": bool(False),
     "Stylesheet": os.path.join(os.path.join(STYLESHEET_LOCATION, "default.qss")),
     "ShowIconText_Small": bool(False),
@@ -197,68 +194,44 @@ else:
 
 # region - Define the tabbar style -------------------------------------------------------------------------------------
 TABBAR_STYLE = Settings.GetIntSetting("TabBar_Style")
-if (
-    Settings.GetIntSetting("TabBar_Style") is None
-    or Settings.GetIntSetting("TabBar_Style") > 2
-):
+if Settings.GetIntSetting("TabBar_Style") is None or Settings.GetIntSetting("TabBar_Style") > 2:
     TABBAR_STYLE = DefaultSettings["TabBar_Style"]
     Settings.SetIntSetting("TabBar_Style", TABBAR_STYLE)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the icon sizes ---------------------------------------------------------------------------------------
 ICON_SIZE_SMALL = Settings.GetIntSetting("IconSize_Small")
-if (
-    Settings.GetIntSetting("IconSize_Small") is None
-    or Settings.GetIntSetting("IconSize_Small") == 0
-):
+if Settings.GetIntSetting("IconSize_Small") is None or Settings.GetIntSetting("IconSize_Small") == 0:
     ICON_SIZE_SMALL = DefaultSettings["IconSize_Small"]
     Settings.SetIntSetting("IconSize_Small", ICON_SIZE_SMALL)
 
 ICON_SIZE_MEDIUM = Settings.GetIntSetting("IconSize_Medium")
-if (
-    Settings.GetIntSetting("IconSize_Medium") is None
-    or Settings.GetIntSetting("IconSize_Medium") == 0
-):
+if Settings.GetIntSetting("IconSize_Medium") is None or Settings.GetIntSetting("IconSize_Medium") == 0:
     ICON_SIZE_MEDIUM = DefaultSettings["IconSize_Medium"]
     Settings.SetIntSetting("IconSize_Medium", ICON_SIZE_MEDIUM)
 
 ICON_SIZE_LARGE = Settings.GetIntSetting("IconSize_Large")
-if (
-    Settings.GetIntSetting("IconSize_Large") is None
-    or Settings.GetIntSetting("IconSize_Large") == 0
-):
+if Settings.GetIntSetting("IconSize_Large") is None or Settings.GetIntSetting("IconSize_Large") == 0:
     ICON_SIZE_LARGE = DefaultSettings["IconSize_Large"]
     Settings.SetIntSetting("IconSize_Large", ICON_SIZE_SMALL)
 
 APP_ICON_SIZE = Settings.GetIntSetting("ApplicationButtonSize")
-if (
-    Settings.GetIntSetting("ApplicationButtonSize") is None
-    or Settings.GetIntSetting("ApplicationButtonSize") == 0
-):
+if Settings.GetIntSetting("ApplicationButtonSize") is None or Settings.GetIntSetting("ApplicationButtonSize") == 0:
     APP_ICON_SIZE = DefaultSettings["ApplicationButtonSize"]
     Settings.SetIntSetting("ApplicationButtonSize", APP_ICON_SIZE)
 
 QUICK_ICON_SIZE = Settings.GetIntSetting("QuickAccessButtonSize")
-if (
-    Settings.GetIntSetting("QuickAccessButtonSize") is None
-    or Settings.GetIntSetting("QuickAccessButtonSize") == 0
-):
+if Settings.GetIntSetting("QuickAccessButtonSize") is None or Settings.GetIntSetting("QuickAccessButtonSize") == 0:
     QUICK_ICON_SIZE = DefaultSettings["QuickAccessButtonSize"]
     Settings.SetIntSetting("QuickAccessButtonSize", QUICK_ICON_SIZE)
 
 TABBAR_SIZE = Settings.GetIntSetting("TabBarSize")
-if (
-    Settings.GetIntSetting("TabBarSize") is None
-    or Settings.GetIntSetting("TabBarSize") == 0
-):
+if Settings.GetIntSetting("TabBarSize") is None or Settings.GetIntSetting("TabBarSize") == 0:
     TABBAR_SIZE = DefaultSettings["TabBarSize"]
     Settings.SetIntSetting("TabBarSize", TABBAR_SIZE)
 
 RIGHT_ICON_SIZE = Settings.GetIntSetting("RightToolbarButtonSize")
-if (
-    Settings.GetIntSetting("RightToolbarButtonSize") is None
-    or Settings.GetIntSetting("RightToolbarButtonSize") == 0
-):
+if Settings.GetIntSetting("RightToolbarButtonSize") is None or Settings.GetIntSetting("RightToolbarButtonSize") == 0:
     RIGHT_ICON_SIZE = DefaultSettings["RightToolbarButtonSize"]
     Settings.SetIntSetting("RightToolbarButtonSize", RIGHT_ICON_SIZE)
 # endregion ------------------------------------------------------------------------------------------------------------
@@ -329,34 +302,22 @@ if Settings.GetBoolSetting("ShowOnHover") is None:
     Settings.SetBoolSetting("ShowOnHover", False)
 
 TABBAR_SCROLLSPEED = Settings.GetIntSetting("TabBar_Scroll")
-if (
-    Settings.GetIntSetting("TabBar_Scroll") is None
-    or Settings.GetIntSetting("TabBar_Scroll") == 0
-):
+if Settings.GetIntSetting("TabBar_Scroll") is None or Settings.GetIntSetting("TabBar_Scroll") == 0:
     TABBAR_SCROLLSPEED = DefaultSettings["TabBar_Scroll"]
     Settings.SetIntSetting("TabBar_Scroll", TABBAR_SCROLLSPEED)
 
 RIBBON_SCROLLSPEED = Settings.GetIntSetting("Ribbon_Scroll")
-if (
-    Settings.GetIntSetting("Ribbon_Scroll") is None
-    or Settings.GetIntSetting("Ribbon_Scroll") == 0
-):
+if Settings.GetIntSetting("Ribbon_Scroll") is None or Settings.GetIntSetting("Ribbon_Scroll") == 0:
     RIBBON_SCROLLSPEED = DefaultSettings["Ribbon_Scroll"]
     Settings.SetIntSetting("Ribbon_Scroll", RIBBON_SCROLLSPEED)
 
 TABBAR_CLICKSPEED = Settings.GetIntSetting("TabBar_Click")
-if (
-    Settings.GetIntSetting("TabBar_Click") is None
-    or Settings.GetIntSetting("TabBar_Click") == 0
-):
+if Settings.GetIntSetting("TabBar_Click") is None or Settings.GetIntSetting("TabBar_Click") == 0:
     TABBAR_CLICKSPEED = DefaultSettings["TabBar_Click"]
     Settings.SetIntSetting("TabBar_Click", TABBAR_CLICKSPEED)
 
 RIBBON_CLICKSPEED = Settings.GetIntSetting("Ribbon_Click")
-if (
-    Settings.GetIntSetting("Ribbon_Click") is None
-    or Settings.GetIntSetting("Ribbon_Click") == 0
-):
+if Settings.GetIntSetting("Ribbon_Click") is None or Settings.GetIntSetting("Ribbon_Click") == 0:
     RIBBON_CLICKSPEED = DefaultSettings["Ribbon_Click"]
     Settings.SetIntSetting("Ribbon_Click", RIBBON_CLICKSPEED)
 # endregion ------------------------------------------------------------------------------------------------------------
@@ -364,10 +325,7 @@ if (
 
 # region - Miscellaneous settings --------------------------------------------------------------------------------------
 PREFERRED_VIEW = Settings.GetIntSetting("Preferred_view")
-if (
-    Settings.GetIntSetting("Preferred_view") is None
-    or Settings.GetIntSetting("Preferred_view") == 0
-):
+if Settings.GetIntSetting("Preferred_view") is None or Settings.GetIntSetting("Preferred_view") == 0:
     PREFERRED_VIEW = DefaultSettings["Preferred_view"]
     Settings.SetIntSetting("Preferred_view", PREFERRED_VIEW)
 
