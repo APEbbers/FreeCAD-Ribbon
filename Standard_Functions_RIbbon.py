@@ -426,7 +426,9 @@ def RemoveWorkBenchToolbars(Name: str, WorkBenchName: str = "Global") -> None:
     return
 
 
-def ReturnXML_Value(path: str, ElementName: str):
+def ReturnXML_Value(
+    path: str, ElementName: str, attribKey: str = "", attribValue: str = ""
+):
     import xml.etree.ElementTree as ET
     import os
 
@@ -441,13 +443,18 @@ def ReturnXML_Value(path: str, ElementName: str):
     result = ""
     for child in root:
         if str(child.tag).split("}")[1] == ElementName:
-            result = child.text
-
+            if attribKey != "" and attribValue != "":
+                for key, value in child.attrib.items():
+                    if key == attribKey and value == attribValue:
+                        result = child.text
+                        return result
+            else:
+                result = child.text
     return result
 
 
 def TranslationsMapping(WorkBenchName: str, string: str):
-    result = ""
+    result = string
 
     ListSpecialWB = [
         "Assembly4Workbench",
@@ -529,14 +536,163 @@ def TranslationsMapping(WorkBenchName: str, string: str):
     return result
 
 
+# # Add or update the dict for the Ribbon command panel
+#         self.add_keys_nested_dict(
+#             self.Dict_RibbonCommandPanel,
+#             ["workbenches", WorkBenchName, "toolbars", Toolbar, "order"],
+#         )
+def add_keys_nested_dict(dict, keys, default=1):
+    """_summary_
+
+    Args:
+        dict (_type_): Enter dict to create or modify
+        keys (_type_): Enter key or list of keys
+
+    Returns:
+        bool: True if a new dict is created or modified. Otherwise False
+    """
+    for key in keys:
+        result = False
+        if key not in dict:
+            dict[key] = {}
+            result = True
+        dict = dict[key]
+    try:
+        dict.setdefault(keys[-1], default)
+    except Exception:
+        pass
+    return result
+
+
 def CommandInfoCorrections(CommandName):
-    Command = Gui.Command.get(CommandName)
-    CommandInfo = Command.getInfo()
+    try:
+        Command = Gui.Command.get(CommandName)
+        if Command is not None:
+            CommandInfo = Command.getInfo()
 
-    if CommandName == "PartDesign_CompSketches":
-        CommandInfo["menuText"] = "Create sketch"
-        CommandInfo["toolTip"] = "Create or edit a sketch"
-        CommandInfo["whatsThis"] = "PartDesign_CompSketches"
-        CommandInfo["statusTip"] = "Create or edit a sketch"
+            if CommandName == "PartDesign_CompSketches":
+                CommandInfo["menuText"] = "Create sketch..."
+                CommandInfo["toolTip"] = "Create or edit a sketch"
+                CommandInfo["whatsThis"] = "PartDesign_CompSketches"
+                CommandInfo["statusTip"] = "Create or edit a sketch"
 
+            if CommandName == "Sketcher_Grid":
+                CommandInfo["pixmap"] = "Sketcher_GridToggle_Deactivated.svg"
+            if CommandName == "Sketcher_Snap":
+                CommandInfo["pixmap"] = "Sketcher_Snap_Deactivated.svg"
+            if CommandName == "Sketcher_RenderingOrder":
+                CommandInfo["pixmap"] = "Sketcher_RenderingOrder_External.svg"
+
+            # add an extra entry for action text
+            add_keys_nested_dict(CommandInfo, "ActionText")
+            CommandActionList = Command.getAction()
+            if len(CommandActionList) > 0:
+                CommandAction = CommandActionList[0]
+                CommandInfo["ActionText"] = CommandAction.text()
+            else:
+                CommandInfo["ActionText"] = CommandInfo["menuText"]
+            if CommandInfo["ActionText"] == "":
+                CommandInfo["ActionText"] = CommandInfo["menuText"]
+
+            return CommandInfo
+        else:
+            CommandInfo = {}
+            CommandInfo["menuText"] = ""
+            CommandInfo["toolTip"] = ""
+            CommandInfo["whatsThis"] = ""
+            CommandInfo["statusTip"] = ""
+            CommandInfo["pixmap"] = ""
+            CommandInfo["ActionText"] = ""
+            CommandInfo["name"] = ""
+    except Exception:
+        CommandInfo = {}
+        CommandInfo["menuText"] = ""
+        CommandInfo["toolTip"] = ""
+        CommandInfo["whatsThis"] = ""
+        CommandInfo["statusTip"] = ""
+        CommandInfo["pixmap"] = ""
+        CommandInfo["ActionText"] = ""
+        CommandInfo["name"] = ""
     return CommandInfo
+
+
+def addMissingCommands(CommandList: list):
+    MissingCommands = [
+        [
+            "Sketcher_NewSketch",  # commandname
+            "Sketcher_NewSketch",  # iconname
+            "Create sketch",  # menu text
+            "SketcherWorkbench",  # workbench
+        ],
+        ["Draft_Line", "Draft_Line", "Line", "DraftWorkbench"],
+        ["Draft_Move", "Draft_Move", "Move", "DraftWorkbench"],
+        [
+            "Draft_LayerManager",
+            "Draft_LayerManager",
+            "Manage layers...",
+            "DraftWorkbench",
+        ],
+        ["Draft_Snap_Lock", "Draft_Snap_Lock", "Snap lock", "DraftWorkbench"],
+        [
+            "OpenSCAD_ReplaceObject",
+            "OpenSCAD_ReplaceObject",
+            "Replace Object",
+            "OpenSCADWorkbench",
+        ],
+        [
+            "Part_CheckGeometry",
+            "Part_CheckGeometry",
+            "Check Geometry",
+            "OpenSCADWorkbench",
+        ],
+    ]
+
+    CopyList = CommandList.copy()
+
+    for Item in CommandList:
+        isInList = False
+        for MissingCommand in MissingCommands:
+            if Item[0] == MissingCommand:
+                isInList = True
+                break
+
+        if isInList is False:
+            CopyList.append(MissingCommand)
+    return CopyList
+
+
+def returnQiCons_Commands(CommandName, pixmap=""):
+    from PySide.QtGui import QIcon
+
+    icon = QIcon()
+    if pixmap != "" and pixmap is not None:
+        icon = Gui.getIcon(pixmap)
+    else:
+        try:
+            Command = Gui.Command.get(CommandName)
+            CommandInfo = Command.getInfo()
+            pixmap = CommandInfo["pixmap"]
+            icon = Gui.getIcon(pixmap)
+        except Exception:
+            pass
+
+    if icon is None or (icon is not None and icon.isNull()):
+        try:
+            Command = Gui.Command.get(CommandName)
+            action = Command.getAction()[0]
+            icon = action.icon()
+        except Exception:
+            return None
+    return icon
+
+
+def CorrectGetToolbarItems(ToolbarItems: dict):
+    newCommands = []
+
+    if "Structure" in ToolbarItems:
+        newCommands = ToolbarItems["Structure"]
+        if "Part_Datums" not in newCommands:
+            newCommands.append("Part_Datums")
+            ToolbarItems.update({"Structure": newCommands})
+
+    return ToolbarItems

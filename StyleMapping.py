@@ -125,6 +125,7 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", width="15px"):
         BorderColor = ReturnStyleItem("Border_Color")
         BackgroundColor = ReturnStyleItem("Background_Color")
         ApplicationButton = ReturnStyleItem("ApplicationButton_Background")
+        HoverColor = ReturnStyleItem("Background_Color_Hover")
 
         # AppColor_1 = ApplicationButton
         # AppColor_2 = BackgroundColor
@@ -160,10 +161,12 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", width="15px"):
                         subcontrol-position: center right;
                     }"""
                     + """QToolButton:hover {
-                            border: 0.5px solid"""
-                    + BorderColor
+                            background: """
+                    + HoverColor
                     + """;
-                    }"""
+                    border: 0.5px solid"""
+                    + BorderColor
+                    + """;}"""
                 )
                 return StyleSheet
             if control.lower() == "applicationbutton":
@@ -204,6 +207,7 @@ StyleMapping = {
     "Stylesheets": {
         "": {
             "Background_Color": "#f0f0f0",
+            "Background_Color_Hover": "#ced4da",
             "Border_Color": "#646464",
             "ApplicationButton_Background": "#e0e0e0",
             "ScrollLeftButton_Tab": "",
@@ -218,6 +222,7 @@ StyleMapping = {
         },
         "FreeCAD Dark.qss": {
             "Background_Color": "#333333",
+            "Background_Color_Hover": "#444444",
             "Border_Color": "#ffffff",
             "ApplicationButton_Background": "#2a2a2a",
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",
@@ -232,6 +237,7 @@ StyleMapping = {
         },
         "FreeCAD Light.qss": {
             "Background_Color": "#f0f0f0",
+            "Background_Color_Hover": "#ced4da",
             "Border_Color": "#646464",
             "ApplicationButton_Background": "#e0e0e0",
             "ScrollLeftButton_Tab": "backward_small_default.svg",
@@ -246,6 +252,7 @@ StyleMapping = {
         },
         "OpenLight.qss": {
             "Background_Color": "#dee2e6",
+            "Background_Color_Hover": "#a5d8ff",
             "Border_Color": "#1c7ed6",
             "ApplicationButton_Background": "#a5d8ff",
             "ScrollLeftButton_Tab": "backward_1.svg",
@@ -260,6 +267,7 @@ StyleMapping = {
         },
         "OpenDark.qss": {
             "Background_Color": "#212529",
+            "Background_Color_Hover": "#1f364d",
             "Border_Color": "#264b69",
             "ApplicationButton_Background": "#1f364d",
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",

@@ -46,7 +46,7 @@ class RibbonStackedWidget(QStackedWidget):
         self.setGraphicsEffect(effect)
 
 
-class RibbonBar(QMenuBar):
+class RibbonBar(QWidget):
     """The RibbonBar class is the top level widget that contains the ribbon."""
 
     #: Signal, the help button was clicked.
