@@ -81,20 +81,17 @@ class CustomControls:
         btn.setFixedSize(ButtonSize)
         # Set the icon and its size
         btn.setIcon(Icon)
-        btn.setIconSize(IconSize.expandedTo(btn.geometry().size()))
+        btn.setIconSize(IconSize)
         # Set the content margins to zero
         btn.setContentsMargins(0, 0, 0, 0)
         if len(Menu.actions()) == 0:
             btn.addAction(Action)
-            print("Menu is None")
         btn.setDefaultAction(Action)
         if Menu is not None and len(Menu.actions()) > 1:
             btn.setMenu(Menu)
             btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
             btn.setDefaultAction(btn.actions()[0])
-            btn.setStyleSheet(
-                StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{20}px")
-            )
+            btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{20}px"))
             btn.setFixedWidth(btn.width() + 20)
 
         # If text must be shown wrapped, add a layout with label
@@ -110,10 +107,10 @@ class CustomControls:
             Label_Text.setTextFormat(Qt.TextFormat.RichText)
             # Determine the height of a single row
             FontMetrics = QFontMetrics(Text)
-            SingleHeight = FontMetrics.tightBoundingRect(Text).height()
+            SingleHeight = FontMetrics.boundingRect(Text).height()
             # make sure that the label height is at least for two lines
             Label_Text.setMinimumHeight((SingleHeight * 2))
-            Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines) + 3)
+            Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines) - 10)
             # Enable wordwrap
             Label_Text.setWordWrap(True)
             # Set the width of the label based on the size of the button
