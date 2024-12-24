@@ -281,10 +281,10 @@ if Settings.GetIntSetting("MaxColumnsPerPanel") is None:
     MAX_COLUMN_PANELS = DefaultSettings["MaxColumnsPerPanel"]
     Settings.SetIntSetting("MaxColumnsPerPanel", MAX_COLUMN_PANELS)
 
-WRAPTEXT_LARGE = Settings.GetStringSetting("WrapText_Large")
-if Settings.GetStringSetting("WrapText_Large") == "":
+WRAPTEXT_LARGE = Settings.GetBoolSetting("WrapText_Large")
+if Settings.GetBoolSetting("WrapText_Large") == "":
     WRAPTEXT_LARGE = DefaultSettings["WrapText_Large"]
-    Settings.SetStringSetting("WrapText_Large", WRAPTEXT_LARGE)
+    Settings.SetBoolSetting("WrapText_Large", WRAPTEXT_LARGE)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Get the Debug Mode ------------------------------------------------------------------------------------------
