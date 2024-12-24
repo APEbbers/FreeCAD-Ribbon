@@ -1356,14 +1356,8 @@ class ModernMenu(RibbonBar):
                                 # if so use the alternative, otherwise use original
                                 for CommandName in Gui.listCommands():
                                     Command = Gui.Command.get(CommandName)
-                                    MenuName = CommandInfoCorrections(CommandName)["ActionText"]
-
-                                    if (
-                                        CommandName
-                                        == self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
-                                            "commands"
-                                        ][action.data()]
-                                    ):
+                                    MenuName = CommandInfoCorrections(CommandName)["menuText"].replace("&", "")
+                                    if CommandName == action.data():
                                         if (
                                             MenuName
                                             != self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
@@ -1376,7 +1370,8 @@ class ModernMenu(RibbonBar):
                                 # (e.g. when getting enabled / disabled), therefore the action itself
                                 # is manipulated.
                                 action.setText(text)
-                            except KeyError:
+                            except KeyError as e:
+                                print(f"{workbenchName}, {action.data()}, {e}")
                                 text = action.text()
 
                             # Get the icon from cache. Use the pixmap as backup
