@@ -1489,13 +1489,19 @@ class ModernMenu(RibbonBar):
                                 # if so use the alternative, otherwise use original
                                 for CommandName in Gui.listCommands():
                                     Command = Gui.Command.get(CommandName)
-                                    MenuName = CommandInfoCorrections(CommandName)["menuText"].replace("&", "")
+                                    MenuName = CommandInfoCorrections(CommandName)[
+                                        "menuText"
+                                    ].replace("&", "")
                                     if CommandName == action.data():
                                         if (
                                             MenuName
-                                            != self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
-                                                "commands"
-                                            ][action.data()]["text"]
+                                            != self.ribbonStructure["workbenches"][
+                                                workbenchName
+                                            ]["toolbars"][toolbar]["commands"][
+                                                action.data()
+                                            ][
+                                                "text"
+                                            ]
                                         ):
                                             text = textJSON
 
