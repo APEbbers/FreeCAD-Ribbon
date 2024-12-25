@@ -1529,6 +1529,8 @@ class ModernMenu(RibbonBar):
                                     ButtonSize=ButtonSize,
                                     FontSize=8,
                                     showText=showText,
+                                    setWordWrap=Parameters_Ribbon.WRAPTEXT_LARGE,
+                                    MaxNumberOfLines=2,
                                     Menu=Menu,
                                 )
                                 # add the button as large button
