@@ -127,6 +127,7 @@ class Settings:
         Settings.SetIntSetting("Preferred_view", PREFERRED_VIEW)
         Settings.SetBoolSetting("UseToolsPanel", USE_TOOLSPANEL)
         Settings.SetBoolSetting("UseFCOverlay", USE_FC_OVERLAY)
+        Settings.SetBoolSetting("ButtonBackground", BUTTON_BACKGROUND_ENABELED)
 
         Settings.SetBoolSetting("DebugMode", DEBUG_MODE)
 
@@ -168,6 +169,7 @@ DefaultSettings = {
     "UseToolsPanel": bool(True),
     "WrapText_Large": bool(True),
     "UseFCOverlay": bool(False),
+    "ButtonBackground": bool(True),
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
@@ -340,4 +342,9 @@ USE_FC_OVERLAY = Settings.GetBoolSetting("UseFCOverlay")
 if Settings.GetBoolSetting("UseFCOverlay") is None:
     USE_FC_OVERLAY = DefaultSettings["UseFCOverlay"]
     Settings.SetBoolSetting("UseFCOverlay", USE_FC_OVERLAY)
+
+BUTTON_BACKGROUND_ENABELED = Settings.GetBoolSetting("ButtonBackground")
+if Settings.GetBoolSetting("ButtonBackground") is None:
+    BUTTON_BACKGROUND_ENABELED = DefaultSettings["ButtonBackground"]
+    Settings.SetBoolSetting("ButtonBackground", BUTTON_BACKGROUND_ENABELED)
 # endregion ------------------------------------------------------------------------------------------------------------

@@ -121,6 +121,8 @@ from pyqtribbon_local.category import RibbonCategoryLayoutButton
 # from pyqtribbon.separator import RibbonSeparator
 # from pyqtribbon.category import RibbonCategoryLayoutButton
 
+Parameters_Ribbon.BUTTON_BACKGROUND_ENABELED = False
+
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
 
@@ -417,7 +419,7 @@ class ModernMenu(RibbonBar):
         StyleSheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
         # modify the stylesheet to set the border for a toolbar menu
         hexColor = StyleMapping.ReturnStyleItem("Background_Color")
-        if hexColor is not None and hexColor != "":
+        if hexColor is not None and hexColor != "" and Parameters_Ribbon.BUTTON_BACKGROUND_ENABELED is True:
             # Set the quickaccess toolbar background color. This fixes a transparant toolbar.
             self.quickAccessToolBar().setStyleSheet("QToolBar {background: " + hexColor + ";}")
             self.tabBar().setStyleSheet("background: " + hexColor + ";")
