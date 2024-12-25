@@ -167,7 +167,7 @@ DefaultSettings = {
     "Preferred_view": int(2),
     "UseToolsPanel": bool(True),
     "WrapText_Large": bool(True),
-    "UseFCOverlay": bool(True),
+    "UseFCOverlay": bool(False),
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
