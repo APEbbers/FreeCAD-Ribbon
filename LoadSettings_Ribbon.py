@@ -98,7 +98,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "UseToolsPanel": Parameters_Ribbon.USE_TOOLSPANEL,
         "WrapText_Large": Parameters_Ribbon.WRAPTEXT_LARGE,
         "UseFCOverlay": Parameters_Ribbon.USE_FC_OVERLAY,
-        "UseButtonBackground": Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED,
+        "UseButtonBackGround": Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED,
     }
 
     # Store the current values before change
@@ -128,7 +128,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "UseToolsPanel": Parameters_Ribbon.USE_TOOLSPANEL,
         "WrapText_Large": Parameters_Ribbon.WRAPTEXT_LARGE,
         "UseFCOverlay": Parameters_Ribbon.USE_FC_OVERLAY,
-        "UseButtonBackground": Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED,
+        "UseButtonBackGround": Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED,
     }
 
     settingChanged = False
