@@ -8,64 +8,64 @@ RibbonApplicationButton::menu-indicator {
 
 RibbonTitleWidget {
     border-radius: 10px;
-    background-color: transparent;*/
-}
+    background-color: transparent;
 
-RibbonStackedWidget {
-    border: none;
-    border-radius: 10px;
-    /*background-color: transparent;*/
-}
+	RibbonStackedWidget {
+		border: none;
+		border-radius: 10px;
+		/*background-color: transparent;*/
+	}
 
-QToolButton, RibbonApplicationButton{
-	margin: 1px 3px 1px 3px;
-	padding: 0px;
-	border-radius: 4px;
-	text-align:left;
-	}
-	QToolButton::menu-arrow {
-		width: 20px;
-		height:30px;
-		subcontrol-origin: margin;
-		subcontrol-position: top right;
+	QToolButton, RibbonApplicationButton{
+		margin: 1px 3px 1px 3px;
+		padding: 0px;
+		border-radius: 4px;
+		text-align:left;
 		}
-	QToolButton::menu-button {
-		border-radius: 2px;
-		padding: 1px;
-		border-radius: 2px;
-		subcontrol-origin: padding;
-		subcontrol-position: top right;
-		}
-	QToolButton::menu-button:hover{
-		border-left: 0.5px solid;/* do not change this line. It is used to set the color by code */
-	}
-	QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
-		padding-right: 10px; /* make way for the popup button */
-		}
-		/* the subcontrols below are used only in the MenuButtonPopup mode */
+		QToolButton::menu-arrow {
+			width: 20px;
+			height:30px;
+			subcontrol-origin: margin;
+			subcontrol-position: top right;
+			}
 		QToolButton::menu-button {
-			border-top-right-radius: 6px;
-			border-bottom-right-radius: 6px;
-			/* 16px width + 4px for border = 20px allocated above */
-			width: 16px;
+			border-radius: 2px;
+			padding: 1px;
+			border-radius: 2px;
+			subcontrol-origin: padding;
+			subcontrol-position: top right;
+			}
+		QToolButton::menu-button:hover{
+			border-left: 0.5px solid;/* do not change this line. It is used to set the color by code */
 		}
+		QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
+			padding-right: 10px; /* make way for the popup button */
+			}
+			/* the subcontrols below are used only in the MenuButtonPopup mode */
+			QToolButton::menu-button {
+				border-top-right-radius: 6px;
+				border-bottom-right-radius: 6px;
+				/* 16px width + 4px for border = 20px allocated above */
+				width: 16px;
+			}
 
-QToolBar {
-	margin: 3px 3px 3px 3px;
-	padding: 2px;
-	/*background-color: transparent;*/
-}
-
-RibbonPanelOptionButton {
-	/*image: none;*/
-	border-radius: none;
-	border-top: 0.5px solid;/* do not change this line. It is used to set the color by code */
+	QToolBar {
+		margin: 3px 3px 3px 3px;
+		padding: 2px;
+		/*background-color: transparent;*/
 	}
-	RibbonPanelOptionButton::menu-indicator {
+
+	RibbonPanelOptionButton {
 		/*image: none;*/
-		subcontrol-origin: padding;
-		subcontrol-position: right center;
-	}
-	RibbonPanelOptionButton:hover{
-		border-radius: 2px;
-	}
+		border-radius: none;
+		border-top: 0.5px solid;/* do not change this line. It is used to set the color by code */
+		}
+		RibbonPanelOptionButton::menu-indicator {
+			/*image: none;*/
+			subcontrol-origin: padding;
+			subcontrol-position: right center;
+		}
+		RibbonPanelOptionButton:hover{
+			border-radius: 2px;
+		}
+}
