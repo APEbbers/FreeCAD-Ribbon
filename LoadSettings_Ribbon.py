@@ -64,7 +64,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
     ShowText_Small = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
     ShowText_Medium = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
     ShowText_Large = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
-    WrapText_Large = Parameters_Ribbon.WRAPTEXT_LARGE
+    EnableWrap_Large = Parameters_Ribbon.WRAPTEXT_LARGE
     DebugMode = Parameters_Ribbon.DEBUG_MODE
     ShowOnHover = Parameters_Ribbon.SHOW_ON_HOVER
     UseToolsPanel = Parameters_Ribbon.USE_TOOLSPANEL
@@ -457,11 +457,11 @@ class LoadDialog(Settings_ui.Ui_Settings):
         if self.form.EnableWrap_Large.isChecked() is True:
             # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = True
             self.ValuesToUpdate["WrapText_Large"] = True
-            self.WrapText_Large = True
+            self.EnableWrap_Large = True
         if self.form.EnableWrap_Large.isChecked() is False:
             # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = False
             self.ValuesToUpdate["WrapText_Large"] = False
-            self.WrapText_Large = False
+            self.EnableWrap_Large = False
         self.settingChanged = True
         return
 

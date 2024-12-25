@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsemafnN.ui'
+## Form generated from reading UI file 'SettingsDzOEmM.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -383,6 +383,7 @@ class Ui_Settings(object):
 
         self.EnableWrap_Large = QCheckBox(self.groupBox_3)
         self.EnableWrap_Large.setObjectName("EnableWrap_Large")
+        self.EnableWrap_Large.setChecked(True)
 
         self.gridLayout_26.addWidget(self.EnableWrap_Large, 2, 1, 1, 1)
 
@@ -927,7 +928,7 @@ class Ui_Settings(object):
         self.CustomColors.toggled.connect(self.ColorS.setEnabled)
         self.CustomIcons.toggled.connect(self.IconS.setEnabled)
 
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(Settings)
 

@@ -76,7 +76,7 @@
             <string notr="true"/>
            </property>
            <property name="currentIndex">
-            <number>3</number>
+            <number>0</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideRight</enum>
@@ -678,6 +678,9 @@
                         <widget class="QCheckBox" name="EnableWrap_Large">
                          <property name="text">
                           <string>Enable two line for text</string>
+                         </property>
+                         <property name="checked">
+                          <bool>true</bool>
                          </property>
                         </widget>
                        </item>
