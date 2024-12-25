@@ -343,8 +343,8 @@ if Settings.GetBoolSetting("UseFCOverlay") is None:
     USE_FC_OVERLAY = DefaultSettings["UseFCOverlay"]
     Settings.SetBoolSetting("UseFCOverlay", USE_FC_OVERLAY)
 
-BUTTON_BACKGROUND_ENABLED = Settings.GetBoolSetting("ButtonBackground")
-if Settings.GetBoolSetting("ButtonBackground") is None:
-    BUTTON_BACKGROUND_ENABLED = DefaultSettings["ButtonBackground"]
-    Settings.SetBoolSetting("ButtonBackground", BUTTON_BACKGROUND_ENABLED)
+BUTTON_BACKGROUND_ENABLED = Settings.GetBoolSetting("UseButtonBackground")
+if Settings.GetBoolSetting("UseButtonBackground") is None:
+    BUTTON_BACKGROUND_ENABLED = DefaultSettings["UseButtonBackground"]
+    Settings.SetBoolSetting("UseButtonBackground", BUTTON_BACKGROUND_ENABLED)
 # endregion ------------------------------------------------------------------------------------------------------------
