@@ -979,16 +979,17 @@ class ModernMenu(RibbonBar):
         Menu.addActions(MenuBar.actions())
 
         # Add the overlay menu
-        Menu.addSeparator()
-        OverlayMenu = Menu.addMenu(translate("FreeCAD Ribbon", "Overlay"))
-        OverlayButton = OverlayMenu.addAction(
-            translate("FreeCAD Ribbon", "Toggle overlay")
-        )
-        OverlayButton.triggered.connect(self.CustomOverlay)
-        TransparancyButton = OverlayMenu.addAction(
-            translate("FreeCAD Ribbon", "Toggle transparancy")
-        )
-        TransparancyButton.triggered.connect(self.CustomTransparancy)
+        if Parameters_Ribbon.USE_FC_OVERLAY is False:
+            Menu.addSeparator()
+            OverlayMenu = Menu.addMenu(translate("FreeCAD Ribbon", "Overlay"))
+            OverlayButton = OverlayMenu.addAction(
+                translate("FreeCAD Ribbon", "Toggle overlay")
+            )
+            OverlayButton.triggered.connect(self.CustomOverlay)
+            TransparancyButton = OverlayMenu.addAction(
+                translate("FreeCAD Ribbon", "Toggle transparancy")
+            )
+            TransparancyButton.triggered.connect(self.CustomTransparancy)
 
         # Add the ribbon design button
         Menu.addSeparator()

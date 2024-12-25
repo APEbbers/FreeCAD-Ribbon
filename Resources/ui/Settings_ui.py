@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsxiKsrg.ui'
+## Form generated from reading UI file 'SettingsmWxPZb.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -66,7 +66,7 @@ class Ui_Settings(object):
         if not Settings.objectName():
             Settings.setObjectName("Settings")
         Settings.setWindowModality(Qt.WindowModality.WindowModal)
-        Settings.resize(794, 722)
+        Settings.resize(724, 722)
         sizePolicy = QSizePolicy(
             QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred
         )
@@ -76,8 +76,8 @@ class Ui_Settings(object):
         Settings.setSizePolicy(sizePolicy)
         Settings.setMinimumSize(QSize(600, 600))
         Settings.setAutoFillBackground(False)
-        self.gridLayout_32 = QGridLayout(Settings)
-        self.gridLayout_32.setObjectName("gridLayout_32")
+        self.gridLayout_34 = QGridLayout(Settings)
+        self.gridLayout_34.setObjectName("gridLayout_34")
         self.gridLayout_6 = QGridLayout()
         self.gridLayout_6.setObjectName("gridLayout_6")
         self.scrollArea = QScrollArea(Settings)
@@ -93,7 +93,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 772, 668))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 690, 992))
         self.gridLayout_28 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_28.setObjectName("gridLayout_28")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -375,17 +375,6 @@ class Ui_Settings(object):
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.gridLayout_26 = QGridLayout()
         self.gridLayout_26.setObjectName("gridLayout_26")
-        self.ShowText_Small = QCheckBox(self.groupBox_3)
-        self.ShowText_Small.setObjectName("ShowText_Small")
-        sizePolicy6.setHeightForWidth(
-            self.ShowText_Small.sizePolicy().hasHeightForWidth()
-        )
-        self.ShowText_Small.setSizePolicy(sizePolicy6)
-        self.ShowText_Small.setMinimumSize(QSize(100, 0))
-        self.ShowText_Small.setFont(font1)
-
-        self.gridLayout_26.addWidget(self.ShowText_Small, 0, 0, 1, 1)
-
         self.ShowText_Medium = QCheckBox(self.groupBox_3)
         self.ShowText_Medium.setObjectName("ShowText_Medium")
         sizePolicy6.setHeightForWidth(
@@ -408,14 +397,27 @@ class Ui_Settings(object):
 
         self.gridLayout_26.addWidget(self.ShowText_Large, 2, 0, 1, 1)
 
-        self.label_26 = QLabel(self.groupBox_3)
-        self.label_26.setObjectName("label_26")
-        font2 = QFont()
-        font2.setBold(False)
-        font2.setItalic(True)
-        self.label_26.setFont(font2)
+        self.ShowText_Small = QCheckBox(self.groupBox_3)
+        self.ShowText_Small.setObjectName("ShowText_Small")
+        sizePolicy6.setHeightForWidth(
+            self.ShowText_Small.sizePolicy().hasHeightForWidth()
+        )
+        self.ShowText_Small.setSizePolicy(sizePolicy6)
+        self.ShowText_Small.setMinimumSize(QSize(100, 0))
+        self.ShowText_Small.setFont(font1)
 
-        self.gridLayout_26.addWidget(self.label_26, 2, 1, 1, 1)
+        self.gridLayout_26.addWidget(self.ShowText_Small, 0, 0, 1, 1)
+
+        self.horizontalSpacer_9 = QSpacerItem(
+            40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
+        )
+
+        self.gridLayout_26.addItem(self.horizontalSpacer_9, 0, 1, 1, 1)
+
+        self.EnableWrap_Large = QCheckBox(self.groupBox_3)
+        self.EnableWrap_Large.setObjectName("EnableWrap_Large")
+
+        self.gridLayout_26.addWidget(self.EnableWrap_Large, 2, 1, 1, 1)
 
         self.gridLayout_2.addLayout(self.gridLayout_26, 0, 0, 1, 1)
 
@@ -889,6 +891,12 @@ class Ui_Settings(object):
         self.tab_3.setObjectName("tab_3")
         self.gridLayout_30 = QGridLayout(self.tab_3)
         self.gridLayout_30.setObjectName("gridLayout_30")
+        self.verticalSpacer_3 = QSpacerItem(
+            20, 708, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
+        )
+
+        self.gridLayout_30.addItem(self.verticalSpacer_3, 2, 0, 1, 1)
+
         self.groupBox_11 = QGroupBox(self.tab_3)
         self.groupBox_11.setObjectName("groupBox_11")
         self.gridLayout_29 = QGridLayout(self.groupBox_11)
@@ -926,20 +934,51 @@ class Ui_Settings(object):
 
         self.gridLayout_31.addWidget(self.EnableToolsPanel, 0, 0, 1, 1)
 
-        self.label_29 = QLabel(self.groupBox_11)
-        self.label_29.setObjectName("label_29")
-
-        self.gridLayout_31.addWidget(self.label_29, 0, 1, 1, 1)
-
         self.gridLayout_29.addLayout(self.gridLayout_31, 1, 0, 1, 1)
 
         self.gridLayout_30.addWidget(self.groupBox_11, 0, 0, 1, 1)
 
-        self.verticalSpacer_3 = QSpacerItem(
-            20, 708, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
+        self.groupBox_12 = QGroupBox(self.tab_3)
+        self.groupBox_12.setObjectName("groupBox_12")
+        sizePolicy10 = QSizePolicy(
+            QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding
+        )
+        sizePolicy10.setHorizontalStretch(0)
+        sizePolicy10.setVerticalStretch(0)
+        sizePolicy10.setHeightForWidth(
+            self.groupBox_12.sizePolicy().hasHeightForWidth()
+        )
+        self.groupBox_12.setSizePolicy(sizePolicy10)
+        self.gridLayout_32 = QGridLayout(self.groupBox_12)
+        self.gridLayout_32.setObjectName("gridLayout_32")
+        self.gridLayout_33 = QGridLayout()
+        self.gridLayout_33.setObjectName("gridLayout_33")
+        self.FCOverlayEnabled = QCheckBox(self.groupBox_12)
+        self.FCOverlayEnabled.setObjectName("FCOverlayEnabled")
+        self.FCOverlayEnabled.setChecked(False)
+
+        self.gridLayout_33.addWidget(self.FCOverlayEnabled, 0, 0, 1, 1)
+
+        self.label_26 = QLabel(self.groupBox_12)
+        self.label_26.setObjectName("label_26")
+        sizePolicy10.setHeightForWidth(self.label_26.sizePolicy().hasHeightForWidth())
+        self.label_26.setSizePolicy(sizePolicy10)
+        self.label_26.setMinimumSize(QSize(300, 80))
+        self.label_26.setSizeIncrement(QSize(0, 1))
+        self.label_26.setTextFormat(Qt.TextFormat.AutoText)
+        self.label_26.setWordWrap(True)
+
+        self.gridLayout_33.addWidget(self.label_26, 0, 1, 1, 1)
+
+        self.horizontalSpacer_10 = QSpacerItem(
+            40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
         )
 
-        self.gridLayout_30.addItem(self.verticalSpacer_3, 1, 0, 1, 1)
+        self.gridLayout_33.addItem(self.horizontalSpacer_10, 0, 2, 1, 1)
+
+        self.gridLayout_32.addLayout(self.gridLayout_33, 1, 1, 1, 1)
+
+        self.gridLayout_30.addWidget(self.groupBox_12, 1, 0, 1, 1)
 
         self.tabWidget.addTab(self.tab_3, "")
 
@@ -949,7 +988,7 @@ class Ui_Settings(object):
 
         self.gridLayout_6.addWidget(self.scrollArea, 0, 0, 1, 4)
 
-        self.gridLayout_32.addLayout(self.gridLayout_6, 0, 0, 1, 1)
+        self.gridLayout_34.addLayout(self.gridLayout_6, 0, 0, 1, 1)
 
         self.gridLayout_7 = QGridLayout()
         self.gridLayout_7.setObjectName("gridLayout_7")
@@ -974,7 +1013,7 @@ class Ui_Settings(object):
 
         self.gridLayout_7.addWidget(self.Cancel, 0, 3, 1, 1)
 
-        self.gridLayout_32.addLayout(self.gridLayout_7, 1, 0, 1, 1)
+        self.gridLayout_34.addLayout(self.gridLayout_7, 1, 0, 1, 1)
 
         self.retranslateUi(Settings)
         self.EnableBackup.toggled.connect(self.groupBox_Backup.setEnabled)
@@ -1051,19 +1090,17 @@ class Ui_Settings(object):
         self.groupBox_3.setTitle(
             QCoreApplication.translate("Settings", "Show text", None)
         )
-        self.ShowText_Small.setText(
-            QCoreApplication.translate("Settings", "Small buttons", None)
-        )
         self.ShowText_Medium.setText(
             QCoreApplication.translate("Settings", "Medium buttons", None)
         )
         self.ShowText_Large.setText(
             QCoreApplication.translate("Settings", "Large buttons", None)
         )
-        self.label_26.setText(
-            QCoreApplication.translate(
-                "Settings", "Best to use with button size greater than 100.", None
-            )
+        self.ShowText_Small.setText(
+            QCoreApplication.translate("Settings", "Small buttons", None)
+        )
+        self.EnableWrap_Large.setText(
+            QCoreApplication.translate("Settings", "Enable two line for text", None)
         )
         self.groupBox_10.setTitle(
             QCoreApplication.translate("Settings", "Tab style", None)
@@ -1244,10 +1281,28 @@ class Ui_Settings(object):
         self.EnableToolsPanel.setText(
             QCoreApplication.translate("Settings", "Use standard Tools panel", None)
         )
-        self.label_29.setText(
+        self.groupBox_12.setTitle(
+            QCoreApplication.translate("Settings", "Overlay preferences", None)
+        )
+        # if QT_CONFIG(tooltip)
+        self.FCOverlayEnabled.setToolTip(
             QCoreApplication.translate(
                 "Settings",
-                '<html><head/><body><p><span style=" font-style:italic;">(Can be modified afterwards)</span></p></body></html>',
+                "Use the overlay function from FreeCAD.\n"
+                "Uncheck this when there are issues with the overlay function and the FreeCAD Ribbon.",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
+        self.FCOverlayEnabled.setText(
+            QCoreApplication.translate(
+                "Settings", "Use FreeCAD's overlay function.", None
+            )
+        )
+        self.label_26.setText(
+            QCoreApplication.translate(
+                "Settings",
+                "<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">The overlay function can give issues. Use at your own risk.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">When there are issues, place a file </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; color:#ffffff;\">&quot;OVERLAY_DISABLED&quot; </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; color:#ffffff;\">in the folder of the add-on. (No extension) This will restore the ribbon and its own overlay function.</span></p></body></html>",
                 None,
             )
         )

@@ -67,6 +67,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
     DebugMode = Parameters_Ribbon.DEBUG_MODE
     ShowOnHover = Parameters_Ribbon.SHOW_ON_HOVER
     UseToolsPanel = Parameters_Ribbon.USE_TOOLSPANEL
+    UseFCOverlay = Parameters_Ribbon.USE_FC_OVERLAY
 
     # Store the current values before change
     OriginalValues = {
@@ -93,6 +94,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "Ribbon_Click": Parameters_Ribbon.RIBBON_CLICKSPEED,
         "Preferred_view": Parameters_Ribbon.PREFERRED_VIEW,
         "UseToolsPanel": Parameters_Ribbon.USE_TOOLSPANEL,
+        "UseFCOverlay": Parameters_Ribbon.USE_FC_OVERLAY,
     }
 
     # Store the current values before change
@@ -120,6 +122,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "Ribbon_Click": Parameters_Ribbon.RIBBON_CLICKSPEED,
         "Preferred_view": Parameters_Ribbon.PREFERRED_VIEW,
         "UseToolsPanel": Parameters_Ribbon.USE_TOOLSPANEL,
+        "UseFCOverlay": Parameters_Ribbon.USE_FC_OVERLAY,
     }
 
     settingChanged = False
@@ -228,6 +231,11 @@ class LoadDialog(Settings_ui.Ui_Settings):
         else:
             self.form.EnableToolsPanel.setCheckState(Qt.CheckState.Unchecked)
 
+        if Parameters_Ribbon.USE_FC_OVERLAY is True:
+            self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Unchecked)
+
         # region - connect controls with functions----------------------------------------------------
         #
         # Connect Backup
@@ -304,6 +312,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
         )
         # Connect the EnableTools checkbox:
         self.form.EnableToolsPanel.clicked.connect(self.on_EnableToolsPanel_clicked)
+        # Connect the overlay setting:
+        self.form.FCOverlayEnabled.clicked.connect(self.on_FCOverlayEnabled_clicked)
         # endregion
 
         # Set the minimum and maximum settings for the iconsizes
@@ -523,6 +533,18 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.settingChanged = True
         return
 
+    def on_FCOverlayEnabled_clicked(self):
+        if self.form.FCOverlayEnabled.isChecked() is True:
+            # Parameters_Ribbon.USE_TOOLSPANEL = True
+            self.ValuesToUpdate["UseFCOverlay"] = True
+            self.UseFCOverlay = True
+        if self.form.FCOverlayEnabled.isChecked() is False:
+            # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = False
+            self.ValuesToUpdate["UseFCOverlay"] = False
+            self.UseFCOverlay = False
+        self.settingChanged = True
+        return
+
     @staticmethod
     def on_Cancel_clicked(self):
         # Save backup settings
@@ -601,6 +623,10 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Set the use of the tools panel
         Parameters_Ribbon.Settings.SetBoolSetting(
             "UseToolsPanel", self.OriginalValues["UseToolsPanel"]
+        )
+        # Set the use of FreeCAD's overlay function
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "UseFCOverlay", self.OriginalValues["UseFCOverlay"]
         )
 
         # Set the size of the window to the previous state
@@ -693,6 +719,10 @@ class LoadDialog(Settings_ui.Ui_Settings):
         Parameters_Ribbon.Settings.SetBoolSetting(
             "UseToolsPanel", self.ValuesToUpdate["UseToolsPanel"]
         )
+        # Set the use of FreeCAD's overlay function
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "UseFCOverlay", self.ValuesToUpdate["UseFCOverlay"]
+        )
 
         # Set the size of the window to the previous state
         Parameters_Ribbon.Settings.SetIntSetting(
@@ -766,7 +796,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.ScrollClicks_Ribbon.setValue(DefaultSettings["Ribbon_Click"])
 
         self.form.PreferedViewPanel.setCurrentIndex(DefaultSettings["Preferred_view"])
-
+        self.form.FCOverlayEnabled.setCurrentIndex(DefaultSettings["Preferred_view"])
         self.settingChanged = True
 
         return
