@@ -69,6 +69,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
     ShowOnHover = Parameters_Ribbon.SHOW_ON_HOVER
     UseToolsPanel = Parameters_Ribbon.USE_TOOLSPANEL
     UseFCOverlay = Parameters_Ribbon.USE_FC_OVERLAY
+    UseButtonBackGround = Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED
 
     # Store the current values before change
     OriginalValues = {
@@ -528,9 +529,11 @@ class LoadDialog(Settings_ui.Ui_Settings):
         if self.form.UseButtonBackGround.isChecked() is True:
             # Parameters_Ribbon.SHOW_ON_HOVER = True
             self.ValuesToUpdate["UseButtonBackGround"] = True
+            self.UseButtonBackGround = True
         if self.form.UseButtonBackGround.isChecked() is False:
             # Parameters_Ribbon.SHOW_ON_HOVER = False
             self.ValuesToUpdate["UseButtonBackGround"] = False
+            self.UseButtonBackGround = False
         self.settingChanged = True
         return
 
