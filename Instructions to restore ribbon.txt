@@ -2,5 +2,5 @@ To restore the ribbon after issues with FreeCAD's overlay function place a file 
 Normally is this something like ../mod/FreeCAD-Ribbon/
 Make sure that the file has no extension!
 
-To make it easy, There is already a file named OVERLAY_DISABLED.bak. 
+To make it easy, There is already a file named OVERLAY_DISABLED.bak.
 Just remove ".bak" from it and the ribbon will be restored on the next startup of FreeCAD.
