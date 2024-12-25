@@ -56,8 +56,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>772</width>
-          <height>668</height>
+          <width>1154</width>
+          <height>656</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_28">
@@ -1685,7 +1685,7 @@
                 <item row="0" column="1">
                  <widget class="QLabel" name="label_26">
                   <property name="text">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;The overlay function can give issues. Use at your own risk.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;The overlay function can give issues. Use at your own risk.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;When there are issues, place a file &lt;/span&gt;&lt;span style=&quot; font-family:'Consolas','Courier New','monospace'; font-size:8pt; color:#ffffff;&quot;&gt;&amp;quot;OVERLAY_DISABLED&amp;quot; &lt;/span&gt;&lt;span style=&quot; font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; color:#ffffff;&quot;&gt;in the folder of the add-on. (No extension) This will restore the ribbon and its own overlay function.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
                  </widget>
                 </item>
