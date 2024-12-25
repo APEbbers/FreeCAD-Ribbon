@@ -627,7 +627,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", self.ValuesToUpdate["ShowIconText_Small"])
         Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", self.ValuesToUpdate["ShowIconText_Medium"])
         Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", self.ValuesToUpdate["ShowIconText_Large"])
-        Parameters_Ribbon.Settings.SetBoolSetting("WrapText_Large", self.OriginalValues["WrapText_Large"])
+        Parameters_Ribbon.Settings.SetBoolSetting("WrapText_Large", self.ValuesToUpdate["WrapText_Large"])
         # Save No of columns
         Parameters_Ribbon.Settings.SetIntSetting("MaxColumnsPerPanel", int(self.ValuesToUpdate["MaxColumnsPerPanel"]))
         Parameters_Ribbon.Settings.SetBoolSetting("DebugMode", self.ValuesToUpdate["DebugMode"])
