@@ -68,6 +68,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
     DebugMode = Parameters_Ribbon.DEBUG_MODE
     ShowOnHover = Parameters_Ribbon.SHOW_ON_HOVER
     UseToolsPanel = Parameters_Ribbon.USE_TOOLSPANEL
+    UseFCOverlay = Parameters_Ribbon.USE_FC_OVERLAY
 
     # Store the current values before change
     OriginalValues = {
@@ -512,9 +513,11 @@ class LoadDialog(Settings_ui.Ui_Settings):
         if self.form.FCOverlayEnabled.isChecked() is True:
             # Parameters_Ribbon.USE_TOOLSPANEL = True
             self.ValuesToUpdate["UseFCOverlay"] = True
+            self.UseFCOverlay = True
         if self.form.FCOverlayEnabled.isChecked() is False:
             # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = False
             self.ValuesToUpdate["UseFCOverlay"] = False
+            self.UseFCOverlay = False
         self.settingChanged = True
         return
 
@@ -673,7 +676,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.ScrollClicks_Ribbon.setValue(DefaultSettings["Ribbon_Click"])
 
         self.form.PreferedViewPanel.setCurrentIndex(DefaultSettings["Preferred_view"])
-
+        self.form.FCOverlayEnabled.setCurrentIndex(DefaultSettings["Preferred_view"])
         self.settingChanged = True
 
         return
