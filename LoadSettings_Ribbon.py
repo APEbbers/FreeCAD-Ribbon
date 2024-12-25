@@ -286,7 +286,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Connect the EnableTools checkbox:
         self.form.EnableToolsPanel.clicked.connect(self.on_EnableToolsPanel_clicked)
         # Connect the overlay setting:
-        self.form.FCOverlayEnabled.connect(self.on_FCOverlayEnabled_clicked)
+        self.form.FCOverlayEnabled.clicked.connect(self.on_FCOverlayEnabled_clicked)
         # endregion
 
         # Set the minimum and maximum settings for the iconsizes
