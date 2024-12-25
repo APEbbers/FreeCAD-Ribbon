@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsPGcuXw.ui'
+## Form generated from reading UI file 'SettingsiHHnok.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -66,7 +66,7 @@ class Ui_Settings(object):
         if not Settings.objectName():
             Settings.setObjectName("Settings")
         Settings.setWindowModality(Qt.WindowModality.WindowModal)
-        Settings.resize(794, 722)
+        Settings.resize(724, 722)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -74,8 +74,8 @@ class Ui_Settings(object):
         Settings.setSizePolicy(sizePolicy)
         Settings.setMinimumSize(QSize(600, 600))
         Settings.setAutoFillBackground(False)
-        self.gridLayout_33 = QGridLayout(Settings)
-        self.gridLayout_33.setObjectName("gridLayout_33")
+        self.gridLayout_34 = QGridLayout(Settings)
+        self.gridLayout_34.setObjectName("gridLayout_34")
         self.gridLayout_6 = QGridLayout()
         self.gridLayout_6.setObjectName("gridLayout_6")
         self.scrollArea = QScrollArea(Settings)
@@ -89,7 +89,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 772, 668))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 690, 992))
         self.gridLayout_28 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_28.setObjectName("gridLayout_28")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -848,22 +848,37 @@ class Ui_Settings(object):
 
         self.groupBox_12 = QGroupBox(self.tab_3)
         self.groupBox_12.setObjectName("groupBox_12")
+        sizePolicy10 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+        sizePolicy10.setHorizontalStretch(0)
+        sizePolicy10.setVerticalStretch(0)
+        sizePolicy10.setHeightForWidth(self.groupBox_12.sizePolicy().hasHeightForWidth())
+        self.groupBox_12.setSizePolicy(sizePolicy10)
         self.gridLayout_32 = QGridLayout(self.groupBox_12)
         self.gridLayout_32.setObjectName("gridLayout_32")
-        self.label_26 = QLabel(self.groupBox_12)
-        self.label_26.setObjectName("label_26")
-
-        self.gridLayout_32.addWidget(self.label_26, 0, 1, 1, 1)
-
+        self.gridLayout_33 = QGridLayout()
+        self.gridLayout_33.setObjectName("gridLayout_33")
         self.FCOverlayEnabled = QCheckBox(self.groupBox_12)
         self.FCOverlayEnabled.setObjectName("FCOverlayEnabled")
         self.FCOverlayEnabled.setChecked(False)
 
-        self.gridLayout_32.addWidget(self.FCOverlayEnabled, 0, 0, 1, 1)
+        self.gridLayout_33.addWidget(self.FCOverlayEnabled, 0, 0, 1, 1)
+
+        self.label_26 = QLabel(self.groupBox_12)
+        self.label_26.setObjectName("label_26")
+        sizePolicy10.setHeightForWidth(self.label_26.sizePolicy().hasHeightForWidth())
+        self.label_26.setSizePolicy(sizePolicy10)
+        self.label_26.setMinimumSize(QSize(300, 80))
+        self.label_26.setSizeIncrement(QSize(0, 1))
+        self.label_26.setTextFormat(Qt.TextFormat.AutoText)
+        self.label_26.setWordWrap(True)
+
+        self.gridLayout_33.addWidget(self.label_26, 0, 1, 1, 1)
 
         self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout_32.addItem(self.horizontalSpacer_10, 0, 2, 1, 1)
+        self.gridLayout_33.addItem(self.horizontalSpacer_10, 0, 2, 1, 1)
+
+        self.gridLayout_32.addLayout(self.gridLayout_33, 1, 1, 1, 1)
 
         self.gridLayout_30.addWidget(self.groupBox_12, 1, 0, 1, 1)
 
@@ -875,7 +890,7 @@ class Ui_Settings(object):
 
         self.gridLayout_6.addWidget(self.scrollArea, 0, 0, 1, 4)
 
-        self.gridLayout_33.addLayout(self.gridLayout_6, 0, 0, 1, 1)
+        self.gridLayout_34.addLayout(self.gridLayout_6, 0, 0, 1, 1)
 
         self.gridLayout_7 = QGridLayout()
         self.gridLayout_7.setObjectName("gridLayout_7")
@@ -898,7 +913,7 @@ class Ui_Settings(object):
 
         self.gridLayout_7.addWidget(self.Cancel, 0, 3, 1, 1)
 
-        self.gridLayout_33.addLayout(self.gridLayout_7, 1, 0, 1, 1)
+        self.gridLayout_34.addLayout(self.gridLayout_7, 1, 0, 1, 1)
 
         self.retranslateUi(Settings)
         self.EnableBackup.toggled.connect(self.groupBox_Backup.setEnabled)
@@ -1042,13 +1057,6 @@ class Ui_Settings(object):
 
         self.EnableToolsPanel.setText(QCoreApplication.translate("Settings", "Use standard Tools panel", None))
         self.groupBox_12.setTitle(QCoreApplication.translate("Settings", "Overlay preferences", None))
-        self.label_26.setText(
-            QCoreApplication.translate(
-                "Settings",
-                '<html><head/><body><p><span style=" font-size:8pt; font-style:italic;">The overlay function can give issues. Use at your own risk.</span></p></body></html>',
-                None,
-            )
-        )
         # if QT_CONFIG(tooltip)
         self.FCOverlayEnabled.setToolTip(
             QCoreApplication.translate(
@@ -1060,6 +1068,13 @@ class Ui_Settings(object):
         )
         # endif // QT_CONFIG(tooltip)
         self.FCOverlayEnabled.setText(QCoreApplication.translate("Settings", "Use FreeCAD's overlay function.", None))
+        self.label_26.setText(
+            QCoreApplication.translate(
+                "Settings",
+                "<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">The overlay function can give issues. Use at your own risk.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">When there are issues, place a file </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; color:#ffffff;\">&quot;OVERLAY_DISABLED&quot; </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; color:#ffffff;\">in the folder of the add-on. (No extension)</span></p></body></html>",
+                None,
+            )
+        )
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("Settings", "Miscellaneous", None)
         )
