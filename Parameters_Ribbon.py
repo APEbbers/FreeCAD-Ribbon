@@ -126,6 +126,7 @@ class Settings:
 
         Settings.SetIntSetting("Preferred_view", PREFERRED_VIEW)
         Settings.SetBoolSetting("UseToolsPanel", USE_TOOLSPANEL)
+        Settings.SetBoolSetting("UseFCOverlay", USE_FC_OVERLAY)
 
         Settings.SetBoolSetting("DebugMode", DEBUG_MODE)
 
@@ -166,6 +167,7 @@ DefaultSettings = {
     "Preferred_view": int(2),
     "UseToolsPanel": bool(True),
     "WrapText_Large": bool(True),
+    "UseFCOverlay": bool(True),
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
@@ -333,4 +335,9 @@ USE_TOOLSPANEL = Settings.GetBoolSetting("UseToolsPanel")
 if Settings.GetBoolSetting("UseToolsPanel") is None:
     USE_TOOLSPANEL = DefaultSettings["UseToolsPanel"]
     Settings.SetBoolSetting("UseToolsPanel", USE_TOOLSPANEL)
+
+USE_FC_OVERLAY = Settings.GetBoolSetting("UseFCOverlay")
+if Settings.GetBoolSetting("UseFCOverlay") is None:
+    USE_FC_OVERLAY = DefaultSettings["UseFCOverlay"]
+    Settings.SetBoolSetting("UseFCOverlay", USE_FC_OVERLAY)
 # endregion ------------------------------------------------------------------------------------------------------------
