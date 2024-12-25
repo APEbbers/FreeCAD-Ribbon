@@ -56,7 +56,8 @@ if fileExists is False:
 # remove the test workbench
 Gui.removeWorkbench("TestWorkbench")
 
-if Parameters_Ribbon.USE_FC_OVERLAY is False:
+USECUSTOMOVERLAY = os.path.join(os.path.dirname(FCBinding.__file__), "OVERLAY_DISABLED")
+if Parameters_Ribbon.USE_FC_OVERLAY is False or os.path.exists(USECUSTOMOVERLAY) is True:
     # Disable the overlay function
     preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
     preferences.SetBool("ActivateOverlay", False)
