@@ -325,8 +325,11 @@ class RibbonTitleWidget(QFrame):
 
     def topLevelWidget(self) -> QWidget:
         widget = self
-        while widget.parentWidget():
-            widget = widget.parentWidget()
+        try:
+            while widget.parentWidget():
+                widget = widget.parentWidget()
+        except Exception:
+            pass
         return widget
 
     def mousePressEvent(self, e: QMouseEvent):
@@ -334,13 +337,16 @@ class RibbonTitleWidget(QFrame):
         self._window_point = self.topLevelWidget().frameGeometry().topLeft()
 
     def mouseMoveEvent(self, e: QMouseEvent):
-        relpos = e.pos() - self._start_point if self._start_point else None
-        (
-            self.topLevelWidget().move(self._window_point + relpos)
-            if self._window_point and relpos
-            else None
-        )
-        self.topLevelWidget().windowHandle().startSystemMove()
+        try:
+            relpos = e.pos() - self._start_point if self._start_point else None
+            (
+                self.topLevelWidget().move(self._window_point + relpos)
+                if self._window_point and relpos
+                else None
+            )
+            self.topLevelWidget().windowHandle().startSystemMove()
+        except Exception:
+            pass
 
     def mouseDoubleClickEvent(self, e: QMouseEvent):
         mainwindow = self.topLevelWidget()
