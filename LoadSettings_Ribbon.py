@@ -194,14 +194,22 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.form.ShowText_Small.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.ShowText_Small.setCheckState(Qt.CheckState.Unchecked)
+
         if Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM is True:
             self.form.ShowText_Medium.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.ShowText_Medium.setCheckState(Qt.CheckState.Unchecked)
+
         if Parameters_Ribbon.SHOW_ICON_TEXT_LARGE is True:
             self.form.ShowText_Large.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.ShowText_Large.setCheckState(Qt.CheckState.Unchecked)
+
+        if Parameters_Ribbon.WRAPTEXT_LARGE is True:
+            self.form.EnableWrap_Large.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.EnableWrap_Large.setCheckState(Qt.CheckState.Unchecked)
+
         self.form.MaxPanelColumn.setValue(Parameters_Ribbon.MAX_COLUMN_PANELS)
         if Parameters_Ribbon.DEBUG_MODE is True:
             self.form.DebugMode.setCheckState(Qt.CheckState.Checked)
