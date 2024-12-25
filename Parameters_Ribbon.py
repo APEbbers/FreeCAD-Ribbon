@@ -127,7 +127,7 @@ class Settings:
         Settings.SetIntSetting("Preferred_view", PREFERRED_VIEW)
         Settings.SetBoolSetting("UseToolsPanel", USE_TOOLSPANEL)
         Settings.SetBoolSetting("UseFCOverlay", USE_FC_OVERLAY)
-        Settings.SetBoolSetting("ButtonBackground", BUTTON_BACKGROUND_ENABELED)
+        Settings.SetBoolSetting("ButtonBackground", BUTTON_BACKGROUND_ENABLED)
 
         Settings.SetBoolSetting("DebugMode", DEBUG_MODE)
 
@@ -343,8 +343,8 @@ if Settings.GetBoolSetting("UseFCOverlay") is None:
     USE_FC_OVERLAY = DefaultSettings["UseFCOverlay"]
     Settings.SetBoolSetting("UseFCOverlay", USE_FC_OVERLAY)
 
-BUTTON_BACKGROUND_ENABELED = Settings.GetBoolSetting("ButtonBackground")
+BUTTON_BACKGROUND_ENABLED = Settings.GetBoolSetting("ButtonBackground")
 if Settings.GetBoolSetting("ButtonBackground") is None:
-    BUTTON_BACKGROUND_ENABELED = DefaultSettings["ButtonBackground"]
-    Settings.SetBoolSetting("ButtonBackground", BUTTON_BACKGROUND_ENABELED)
+    BUTTON_BACKGROUND_ENABLED = DefaultSettings["ButtonBackground"]
+    Settings.SetBoolSetting("ButtonBackground", BUTTON_BACKGROUND_ENABLED)
 # endregion ------------------------------------------------------------------------------------------------------------

@@ -97,6 +97,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "UseToolsPanel": Parameters_Ribbon.USE_TOOLSPANEL,
         "WrapText_Large": Parameters_Ribbon.WRAPTEXT_LARGE,
         "UseFCOverlay": Parameters_Ribbon.USE_FC_OVERLAY,
+        "UseButtonBackground": Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED,
     }
 
     # Store the current values before change
@@ -126,6 +127,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "UseToolsPanel": Parameters_Ribbon.USE_TOOLSPANEL,
         "WrapText_Large": Parameters_Ribbon.WRAPTEXT_LARGE,
         "UseFCOverlay": Parameters_Ribbon.USE_FC_OVERLAY,
+        "UseButtonBackground": Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED,
     }
 
     settingChanged = False
@@ -288,6 +290,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.EnableToolsPanel.clicked.connect(self.on_EnableToolsPanel_clicked)
         # Connect the overlay setting:
         self.form.FCOverlayEnabled.clicked.connect(self.on_FCOverlayEnabled_clicked)
+        self.form.UseButtonBackGround.clicked.connect(self.on_UseButtonBackGround_clicked)
         # endregion
 
         # Set the minimum and maximum settings for the iconsizes
@@ -521,6 +524,16 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.settingChanged = True
         return
 
+    def on_UseButtonBackGround_clicked(self):
+        if self.form.UseButtonBackGround.isChecked() is True:
+            # Parameters_Ribbon.SHOW_ON_HOVER = True
+            self.ValuesToUpdate["UseButtonBackGround"] = True
+        if self.form.UseButtonBackGround.isChecked() is False:
+            # Parameters_Ribbon.SHOW_ON_HOVER = False
+            self.ValuesToUpdate["UseButtonBackGround"] = False
+        self.settingChanged = True
+        return
+
     @staticmethod
     def on_Cancel_clicked(self):
         # Save backup settings
@@ -563,6 +576,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         Parameters_Ribbon.Settings.SetBoolSetting("UseToolsPanel", self.OriginalValues["UseToolsPanel"])
         # Set the use of FreeCAD's overlay function
         Parameters_Ribbon.Settings.SetBoolSetting("UseFCOverlay", self.OriginalValues["UseFCOverlay"])
+        Parameters_Ribbon.Settings.SetBoolSetting("UseButtonBackGround", self.OriginalValues["UseButtonBackGround"])
 
         # Set the size of the window to the previous state
         Parameters_Ribbon.Settings.SetIntSetting("SettingsDialog_Height", self.form.height())
@@ -613,6 +627,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         Parameters_Ribbon.Settings.SetBoolSetting("UseToolsPanel", self.ValuesToUpdate["UseToolsPanel"])
         # Set the use of FreeCAD's overlay function
         Parameters_Ribbon.Settings.SetBoolSetting("UseFCOverlay", self.ValuesToUpdate["UseFCOverlay"])
+        Parameters_Ribbon.Settings.SetBoolSetting("UseButtonBackGround", self.ValuesToUpdate["UseButtonBackGround"])
 
         # Set the size of the window to the previous state
         Parameters_Ribbon.Settings.SetIntSetting("SettingsDialog_Height", self.form.height())

@@ -1620,7 +1620,14 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="1" colspan="2">
+                  <item row="1" column="0">
+                   <widget class="QCheckBox" name="UseButtonBackGround">
+                    <property name="text">
+                     <string>Use background on buttons</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1" rowspan="2" colspan="2">
                    <widget class="QLabel" name="label_26">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">

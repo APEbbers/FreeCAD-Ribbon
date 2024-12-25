@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsWVbZhd.ui'
+## Form generated from reading UI file 'SettingsemafnN.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -822,6 +822,11 @@ class Ui_Settings(object):
 
         self.gridLayout_30.addWidget(self.FCOverlayEnabled, 0, 0, 1, 1)
 
+        self.UseButtonBackGround = QCheckBox(self.groupBox_12)
+        self.UseButtonBackGround.setObjectName("UseButtonBackGround")
+
+        self.gridLayout_30.addWidget(self.UseButtonBackGround, 1, 0, 1, 1)
+
         self.label_26 = QLabel(self.groupBox_12)
         self.label_26.setObjectName("label_26")
         sizePolicy11 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
@@ -831,7 +836,7 @@ class Ui_Settings(object):
         self.label_26.setSizePolicy(sizePolicy11)
         self.label_26.setWordWrap(True)
 
-        self.gridLayout_30.addWidget(self.label_26, 0, 1, 1, 2)
+        self.gridLayout_30.addWidget(self.label_26, 0, 1, 2, 2)
 
         self.gridLayout_32.addLayout(self.gridLayout_30, 0, 0, 2, 2)
 
@@ -1062,6 +1067,7 @@ class Ui_Settings(object):
         )
         # endif // QT_CONFIG(tooltip)
         self.FCOverlayEnabled.setText(QCoreApplication.translate("Settings", "Use FreeCAD's overlay function.", None))
+        self.UseButtonBackGround.setText(QCoreApplication.translate("Settings", "Use background on buttons", None))
         self.label_26.setText(
             QCoreApplication.translate(
                 "Settings",
