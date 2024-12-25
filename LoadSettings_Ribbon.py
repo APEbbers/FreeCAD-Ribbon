@@ -234,6 +234,11 @@ class LoadDialog(Settings_ui.Ui_Settings):
         else:
             self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Unchecked)
 
+        if Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED is True:
+            self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Unchecked)
+
         # region - connect controls with functions----------------------------------------------------
         #
         # Connect Backup
