@@ -121,8 +121,6 @@ from pyqtribbon_local.category import RibbonCategoryLayoutButton
 # from pyqtribbon.separator import RibbonSeparator
 # from pyqtribbon.category import RibbonCategoryLayoutButton
 
-Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED = False
-
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
 
