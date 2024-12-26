@@ -165,10 +165,12 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
                     + """QToolButton:hover {
                             background: """
                     + HoverColor
+                    # + """;
+                    # border: 0.5px solid"""
+                    # + BorderColor
                     + """;
-                    border: 0.5px solid"""
-                    + BorderColor
-                    + """;}"""
+                    border: transparant
+                    ;}"""
                 )
                 return StyleSheet
             if control.lower() == "applicationbutton":
