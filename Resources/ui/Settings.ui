@@ -677,7 +677,7 @@
                        <item row="2" column="1">
                         <widget class="QCheckBox" name="EnableWrap_Large">
                          <property name="text">
-                          <string>Enable two line for text</string>
+                          <string>Enable two lines for text</string>
                          </property>
                          <property name="checked">
                           <bool>true</bool>
