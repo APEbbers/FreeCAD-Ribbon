@@ -728,12 +728,14 @@ class ModernMenu(RibbonBar):
         self.tabBar().setIconSize(QSize(self.TabBar_Size - 6, self.TabBar_Size - 6))
 
         # Correct colors when no stylesheet is selected for FreeCAD.
-        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
-        currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
-        if currentStyleSheet == "":
-            hexColor = StyleMapping.ReturnStyleItem("Background_Color")
-            # Set the quickaccess toolbar background color
-            self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
+        self.quickAccessToolBar().setStyleSheet("")
+        if Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED is True:
+            FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
+            currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
+            if currentStyleSheet == "":
+                hexColor = StyleMapping.ReturnStyleItem("Background_Color")
+                # Set the quickaccess toolbar background color
+                self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
 
         # Get the order of workbenches from Parameters
         WorkbenchOrderedList: list = Parameters_Ribbon.TAB_ORDER.split(",")
@@ -1373,7 +1375,7 @@ class ModernMenu(RibbonBar):
                                 # is manipulated.
                                 action.setText(text)
                             except KeyError as e:
-                                if Parameters_Ribbon.ENABLE_BACKUP is True:
+                                if Parameters_Ribbon.DEBUG_MODE is True:
                                     print(f"{workbenchName}, {action.data()}, {e}")
                                 text = action.text()
 
@@ -1522,7 +1524,6 @@ class ModernMenu(RibbonBar):
                                 Menu = QMenu()
                                 if button.menu() is not None:
                                     Menu = button.menu()
-                                print(Parameters_Ribbon.WRAPTEXT_LARGE)
                                 btn = CustomControls.LargeCustomToolButton(
                                     Text=action.text(),
                                     Action=action,
@@ -1545,14 +1546,6 @@ class ModernMenu(RibbonBar):
                                     btn.setMaximumIconSize(btn.height() - 20)
 
                                     btn.setMaximumWidth(Parameters_Ribbon.ICON_SIZE_LARGE + 20)
-                                # Set the stylesheet
-                                # Set the padding to align the icons to the left
-                                padding = 0
-                                if button.menu() is not None:
-                                    padding = self.PaddingRight
-                                btn.setStyleSheet(
-                                    StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px", 20)
-                                )
                             else:
                                 raise NotImplementedError(
                                     translate(

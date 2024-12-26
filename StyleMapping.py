@@ -112,7 +112,7 @@ def ReturnStyleItem(ControlName):
         return None
 
 
-def ReturnStyleSheet(control, radius="2px", padding_right="0px", width="15px"):
+def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom="0px", width="15px"):
     """
     Enter one of the names below:
 
@@ -141,8 +141,10 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", width="15px"):
             if control.lower() == "toolbutton":
                 StyleSheet = (
                     """QToolButton {
-                            padding-right: """
+                    padding-right: """
                     + padding_right
+                    + """;padding-bottom: """
+                    + padding_bottom
                     + """;}"""
                     + """QToolButton::menu-arrow {
                         width: 10px;

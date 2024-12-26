@@ -78,11 +78,14 @@ class CustomControls:
         Menu: QMenu = None,
     ):
         btn = QToolButton()
+        #
+        Padding_Right = 0
+        Padding_Bottom = 0
         # Set the buttonSize
         btn.setFixedSize(ButtonSize)
         # Set the icon and its size
         btn.setIcon(Icon)
-        btn.setIconSize(IconSize)
+        btn.setIconSize(IconSize.expandedTo(btn.size()))
         # Set the content margins to zero
         btn.setContentsMargins(0, 0, 0, 0)
         if len(Menu.actions()) == 0:
@@ -92,7 +95,7 @@ class CustomControls:
             btn.setMenu(Menu)
             btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
             btn.setDefaultAction(btn.actions()[0])
-            btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{20}px"))
+            Padding_Right = 20
             btn.setFixedWidth(btn.width() + 20)
 
         # If text must be shown wrapped, add a layout with label
@@ -104,18 +107,19 @@ class CustomControls:
             Font.setPointSize(FontSize)
             Label_Text.setFont(Font)
             Label_Text.setText(Text)
-            # If there is no WordWrap, set the ElideMode
+            # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
             if setWordWrap is False:
                 FontMetrics = QFontMetrics(Text)
                 Text = FontMetrics.elidedText(Text, ElideMode, btn.width(), Qt.TextFlag.TextSingleLine)
                 Label_Text.setText(Text)
+                MaxNumberOfLines = 1
             # Set the textFormat
             Label_Text.setTextFormat(Qt.TextFormat.RichText)
             # Determine the height of a single row
             FontMetrics = QFontMetrics(Text)
             SingleHeight = FontMetrics.boundingRect(Text).height()
             # make sure that the label height is at least for two lines
-            Label_Text.setMinimumHeight((SingleHeight * 2))
+            Label_Text.setMinimumHeight((SingleHeight * 1))
             Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines) - 10)
             # Enable wordwrap
             Label_Text.setWordWrap(setWordWrap)
@@ -135,19 +139,14 @@ class CustomControls:
             # Add the layout to the button
             btn.setLayout(Layout)
             # Add padding to the bottom. This makes room for the label
-            TextHeight = Label_Text.height()
-            btn.setStyleSheet(
-                """QToolButton {
-                padding-bottom: """
-                + str(TextHeight)
-                + """px;}"""
-            )
-            if Label_Text.width() > btn.width():
-                btn.setFixedWidth(Label_Text.width())
-            return btn
+            Padding_Bottom = Label_Text.height()
 
-        # # If text must be shown on one line, use the normal way
-        # if showText is True and setWordWrap is False:
-        #     btn.setText(Text)
-        #     return btn
+        btn.setStyleSheet(
+            StyleMapping.ReturnStyleSheet(
+                control="toolbutton",
+                radius="2px",
+                padding_right=str(Padding_Right) + "px",
+                padding_bottom=str(Padding_Bottom) + "px",
+            )
+        )
         return btn
