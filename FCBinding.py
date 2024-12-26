@@ -1373,7 +1373,8 @@ class ModernMenu(RibbonBar):
                                 # is manipulated.
                                 action.setText(text)
                             except KeyError as e:
-                                print(f"{workbenchName}, {action.data()}, {e}")
+                                if Parameters_Ribbon.ENABLE_BACKUP is True:
+                                    print(f"{workbenchName}, {action.data()}, {e}")
                                 text = action.text()
 
                             # Get the icon from cache. Use the pixmap as backup
@@ -1521,6 +1522,7 @@ class ModernMenu(RibbonBar):
                                 Menu = QMenu()
                                 if button.menu() is not None:
                                     Menu = button.menu()
+                                print(Parameters_Ribbon.WRAPTEXT_LARGE)
                                 btn = CustomControls.LargeCustomToolButton(
                                     Text=action.text(),
                                     Action=action,

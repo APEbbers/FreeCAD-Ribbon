@@ -23,19 +23,19 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
     QFont,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QVBoxLayout,
     QLabel,
     QMenu,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QSize,
     QRect,
@@ -73,6 +73,7 @@ class CustomControls:
         TextAlignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter,
         TextPositionAlignment=Qt.AlignmentFlag.AlignBottom,
         setWordWrap=True,
+        ElideMode=Qt.TextElideMode.ElideMiddle,
         MaxNumberOfLines=2,
         Menu: QMenu = None,
     ):
@@ -95,7 +96,7 @@ class CustomControls:
             btn.setFixedWidth(btn.width() + 20)
 
         # If text must be shown wrapped, add a layout with label
-        if showText is True and setWordWrap is True:
+        if showText is True:
             # Create a label
             Label_Text = QLabel()
             # Set the font
@@ -103,6 +104,11 @@ class CustomControls:
             Font.setPointSize(FontSize)
             Label_Text.setFont(Font)
             Label_Text.setText(Text)
+            # If there is no WordWrap, set the ElideMode
+            if setWordWrap is False:
+                FontMetrics = QFontMetrics(Text)
+                Text = FontMetrics.elidedText(Text, ElideMode, btn.width(), Qt.TextFlag.TextSingleLine)
+                Label_Text.setText(Text)
             # Set the textFormat
             Label_Text.setTextFormat(Qt.TextFormat.RichText)
             # Determine the height of a single row
@@ -112,7 +118,7 @@ class CustomControls:
             Label_Text.setMinimumHeight((SingleHeight * 2))
             Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines) - 10)
             # Enable wordwrap
-            Label_Text.setWordWrap(True)
+            Label_Text.setWordWrap(setWordWrap)
             # Set the width of the label based on the size of the button
             Label_Text.setFixedWidth(ButtonSize.width() + 5)
             # Adjust the size to be able to store the actual height
@@ -138,9 +144,10 @@ class CustomControls:
             )
             if Label_Text.width() > btn.width():
                 btn.setFixedWidth(Label_Text.width())
+            return btn
 
-        # If text must be shown on one line, use the normal way
-        if showText is True and setWordWrap is False:
-            btn.setText(Text)
-
+        # # If text must be shown on one line, use the normal way
+        # if showText is True and setWordWrap is False:
+        #     btn.setText(Text)
+        #     return btn
         return btn
