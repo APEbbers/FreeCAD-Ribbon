@@ -457,6 +457,9 @@ class ModernMenu(RibbonBar):
 
         # Set these settings and connections at init
         # Set the autohide behavior of the ribbon
+        preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
+        if preferences.GetBool("ActivateOverlay") is True:
+            Parameters_Ribbon.AUTOHIDE_RIBBON = False
         self.setAutoHideRibbon(Parameters_Ribbon.AUTOHIDE_RIBBON)
 
         # Remove the collapseble button
@@ -898,8 +901,14 @@ class ModernMenu(RibbonBar):
             pinButton.setChecked(False)
         if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
             pinButton.setChecked(True)
-        pinButton.clicked.connect(self.onPinClicked)
-        self.rightToolBar().addWidget(pinButton)
+        # If FreeCAD's overlay function is active, set the pinbutton to checked and then to disabled
+        preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
+        if preferences.GetBool("ActivateOverlay") is True:
+            pinButton.setChecked(True)
+            pinButton.setDisabled(True)
+        else:
+            pinButton.clicked.connect(self.onPinClicked)
+            self.rightToolBar().addWidget(pinButton)
 
         # Set the width of the right toolbar
         RightToolbarWidth = SearchBarWidth
