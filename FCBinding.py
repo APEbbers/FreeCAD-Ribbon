@@ -544,6 +544,14 @@ class ModernMenu(RibbonBar):
             Parameter.SetString("Left", "")
             Parameter.SetString("Right", "")
             Parameter.SetString("Bottom", "")
+
+        # The startpage to be enabled. The overlay function of FreeCAD hides the ribbon when no document is open.
+        # The menus are hidden, so the startpage will be shown instead.
+        preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
+        preferences_2 = App.ParamGet("User parameter:BaseApp/Preferences/Mod/Start")
+        if preferences.GetBool("ActivateOverlay") is True:
+            preferences_2.SetBool("ShowOnStartup", True)
+            Gui.runCommand("Start_Start", 0)
         return
 
     def closeEvent(self, event):
