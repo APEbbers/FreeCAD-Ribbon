@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -39,7 +39,7 @@ from PySide.QtGui import (
     QTextItem,
     QPainter,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -63,7 +63,7 @@ from PySide.QtWidgets import (
     QLabel,
     QVBoxLayout,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -114,12 +114,12 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
+import pyqtribbon as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -1152,7 +1152,7 @@ class ModernMenu(RibbonBar):
 
             # Create the panel, use the toolbar name as title
             title = StandardFunctions.TranslationsMapping(workbenchName, toolbar)
-            panel = self.currentCategory().addPanel(
+            panel: RibbonPanel = self.currentCategory().addPanel(
                 title=title,
                 showPanelOptionButton=True,
             )
@@ -1461,6 +1461,8 @@ class ModernMenu(RibbonBar):
                                     IconOnly = True
 
                             btn = RibbonToolButton()
+                            # Make sure that no strange "&" symbols are remainging
+                            action.setText(action.text().replace("&", ""))
                             if buttonSize == "small":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
                                 if IconOnly is True:
@@ -1493,29 +1495,54 @@ class ModernMenu(RibbonBar):
                                 if IconOnly is True:
                                     showText = False
 
-                                btn: RibbonToolButton = panel.addMediumButton(
-                                    action.text(),
-                                    action.icon(),
-                                    alignment=Qt.AlignmentFlag.AlignLeft,
-                                    showText=showText,
-                                    fixedHeight=Parameters_Ribbon.ICON_SIZE_MEDIUM,
+                                # btn: RibbonToolButton = panel.addMediumButton(
+                                #     action.text(),
+                                #     action.icon(),
+                                #     alignment=Qt.AlignmentFlag.AlignLeft,
+                                #     showText=showText,
+                                #     fixedHeight=Parameters_Ribbon.ICON_SIZE_MEDIUM,
+                                # )
+
+                                # # If showText is True, calculate the width of the button with the text
+                                # if showText is True:
+                                #     FontMetrics = QFontMetrics(action.text().strip())
+                                #     TextWidth = 0
+                                #     for i in action.text():
+                                #         TextWidth = TextWidth + FontMetrics.boundingRectChar(i).width()
+                                #     btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM + TextWidth)
+                                # # If showText is False, set the width to the icon size
+                                # if showText is False:
+                                #     btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
+                                # # Set the stylesheet
+                                # # Set the padding to align the icons to the left
+                                # padding = 0
+                                # btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
+                                # Create a custom toolbutton
+                                ButtonSize = QSize(
+                                    Parameters_Ribbon.ICON_SIZE_MEDIUM,
+                                    Parameters_Ribbon.ICON_SIZE_MEDIUM,
                                 )
-
-                                # If showText is True, calculate the width of the button with the text
-                                if showText is True:
-                                    FontMetrics = QFontMetrics(action.text().strip())
-                                    TextWidth = 0
-                                    for i in action.text():
-                                        TextWidth = TextWidth + FontMetrics.boundingRectChar(i).width()
-                                    btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM + TextWidth)
-                                # If showText is False, set the width to the icon size
-                                if showText is False:
-                                    btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
-                                # Set the stylesheet
-                                # Set the padding to align the icons to the left
-                                padding = 0
-                                btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
-
+                                IconSize = QSize(
+                                    Parameters_Ribbon.ICON_SIZE_MEDIUM,
+                                    Parameters_Ribbon.ICON_SIZE_MEDIUM,
+                                )
+                                Menu = QMenu()
+                                if button.menu() is not None:
+                                    Menu = button.menu()
+                                btn = CustomControls.CustomToolButton(
+                                    Text=action.text(),
+                                    Action=action,
+                                    Icon=action.icon(),
+                                    IconSize=IconSize,
+                                    ButtonSize=ButtonSize,
+                                    FontSize=8,
+                                    showText=showText,
+                                    setWordWrap=True,
+                                    MaxNumberOfLines=2,
+                                    Menu=Menu,
+                                )
+                                # add the button as large button
+                                panel.addMediumWidget(btn)
                             elif buttonSize == "large":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
                                 if IconOnly is True:
@@ -1547,9 +1574,9 @@ class ModernMenu(RibbonBar):
                                 )
                                 # add the button as large button
                                 panel.addLargeWidget(btn)
-                                # if text is enabled for large buttons. The text will be behind the icon
-                                # To fix this, increase the height of the button with 20 and the set the icon size
-                                # to the heigt minus 20.
+                                # # if text is enabled for large buttons. The text will be behind the icon
+                                # # To fix this, increase the height of the button with 20 and the set the icon size
+                                # # to the heigt minus 20.
                                 if Parameters_Ribbon.SHOW_ICON_TEXT_LARGE is True:
                                     btn.setFixedHeight(btn.height() + 20)
                                     btn.setMaximumIconSize(btn.height() - 20)
@@ -1568,7 +1595,10 @@ class ModernMenu(RibbonBar):
 
                             # add dropdown menu if necessary
                             if button.menu() is not None:
-                                if btn.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
+                                if (
+                                    btn.height() == Parameters_Ribbon.ICON_SIZE_LARGE
+                                    or btn.height() == Parameters_Ribbon.ICON_SIZE_MEDIUM
+                                ):
                                     btn.setMinimumWidth(btn.height())
                                 else:
                                     btn.setMenu(button.menu())
@@ -1607,7 +1637,7 @@ class ModernMenu(RibbonBar):
                 panel.setTitle(title)
 
             # Set the size policy and increment. It has to be MinimumExpanding.
-            panel.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+            panel.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.MinimumExpanding)
             panel.setSizeIncrement(self.iconSize, self.iconSize)
             self.panelTitleHeight = panel._titleHeight
             # panel._titleLabel.setWordWrap(True)
