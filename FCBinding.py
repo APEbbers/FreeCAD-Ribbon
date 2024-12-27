@@ -202,22 +202,6 @@ class ModernMenu(RibbonBar):
             self.ribbonStructure.update(json.load(file))
         file.close()
 
-        # DataFile = os.path.join(os.path.dirname(__file__), "RibbonDataFile.dat")
-        # if os.path.exists(DataFile) is True:
-        #     Data = {}
-        #     try:
-        #         # Load the lists for the deserialized icons
-        #         for IconItem in Data["WorkBench_Icons"]:
-        #             Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
-        #             item = [IconItem[0], Icon]
-        #             self.List_WorkBenchIcons.append(item)
-        #         # Load the lists for the deserialized icons
-        #         for IconItem in Data["Command_Icons"]:
-        #             Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
-        #             item = [IconItem[0], Icon]
-        #             self.List_CommandIcons.append(item)
-        #     except Exception:
-        #         pass
         DataFile2 = os.path.join(os.path.dirname(__file__), "RibbonDataFile2.dat")
         if os.path.exists(DataFile2) is True:
             Data = {}
@@ -821,11 +805,20 @@ class ModernMenu(RibbonBar):
         pinButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         pinButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
         pinButton.setIconSize(QSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize))
-        pinButtonIcon = StyleMapping.ReturnStyleItem("PinButton_open")
+        # Set the correct icon
+        if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
+            pinButtonIcon = StyleMapping.ReturnStyleItem("PinButton_closed")
+        if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
+            pinButtonIcon = StyleMapping.ReturnStyleItem("PinButton_open")
+        # Set the icon
         if pinButtonIcon is not None:
             pinButton.setIcon(pinButtonIcon)
+        # Set the text and objectname
         pinButton.setText(translate("FreeCAD Ribbon", "Pin Ribbon"))
+        pinButton.setObjectName("Pin Ribbon")
+        # Set the tooltip
         pinButton.setToolTip(translate("FreeCAD Ribbon", "Click to toggle the autohide function on or off"))
+        # Set the correct checkstate
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
             pinButton.setChecked(False)
         if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
@@ -983,6 +976,9 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", True)
             Parameters_Ribbon.AUTOHIDE_RIBBON = True
 
+            pinButton: QToolButton = self.rightToolBar().findChildren(QToolButton, "Pin Ribbon")[0]
+            pinButton.setIcon(StyleMapping.ReturnStyleItem("PinButton_closed"))
+
             # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
             return
@@ -992,6 +988,9 @@ class ModernMenu(RibbonBar):
             TB.setMaximumHeight(self.ribbonHeight() + self.panelTitleHeight)
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
             Parameters_Ribbon.AUTOHIDE_RIBBON = False
+
+            pinButton: QToolButton = self.rightToolBar().findChildren(QToolButton, "Pin Ribbon")[0]
+            pinButton.setIcon(StyleMapping.ReturnStyleItem("PinButton_open"))
 
             # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
@@ -1494,7 +1493,7 @@ class ModernMenu(RibbonBar):
                                     MenuButtonSpace=10,
                                 )
                                 # add the button as large button
-                                panel.addMediumWidget(btn)
+                                panel.addSmallWidget(btn)
 
                             elif buttonSize == "medium":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
