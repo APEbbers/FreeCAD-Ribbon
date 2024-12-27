@@ -25,7 +25,6 @@ import FreeCADGui as Gui
 from PySide.QtGui import QColor
 import os
 import sys
-import StyleMapping
 
 # Define the translation
 translate = App.Qt.translate
