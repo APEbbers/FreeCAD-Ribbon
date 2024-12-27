@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL
-from PySide.QtWidgets import (
+from PySide6.QtCore import Qt, SIGNAL, QSize
+from PySide6.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -34,6 +34,8 @@ from PySide.QtWidgets import (
     QTabWidget,
     QSizePolicy,
 )
+from PySide6.QtGui import QIcon
+
 import sys
 import StyleMapping
 import Standard_Functions_RIbbon as StandardFunctions
@@ -173,7 +175,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
         # Disable custom Colors and Icons for the time being
-        self.form.tabWidget.removeTab(2)
+        # self.form.tabWidget.removeTab(2)
 
         # Remove tabbar click settings for the time being
         self.form.label_15.setHidden(True)
@@ -257,12 +259,39 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
         # Set the color and icon buttons
         self.form.Tab_Scroll_Left.setIcon(StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab"))
+        self.form.Tab_Scroll_Left.setIconSize(
+            QSize(self.form.Tab_Scroll_Left.width() - 6, self.form.Tab_Scroll_Left.height() - 6)
+        )
+
         self.form.Tab_Scroll_Right.setIcon(StyleMapping.ReturnStyleItem("ScrollRightButton_Tab"))
+        self.form.Tab_Scroll_Right.setIconSize(
+            QSize(self.form.Tab_Scroll_Right.width() - 6, self.form.Tab_Scroll_Right.height() - 6)
+        )
+
         self.form.Ribbon_Scroll_Left.setIcon(StyleMapping.ReturnStyleItem("ScrollLeftButton_Category"))
+        self.form.Ribbon_Scroll_Left.setIconSize(
+            QSize(self.form.Ribbon_Scroll_Left.width() - 6, self.form.Ribbon_Scroll_Left.height() - 6)
+        )
+
         self.form.Ribbon_Scroll_Right.setIcon(StyleMapping.ReturnStyleItem("ScrollRightButton_Category"))
+        self.form.Ribbon_Scroll_Right.setIconSize(
+            QSize(self.form.Ribbon_Scroll_Right.width() - 6, self.form.Ribbon_Scroll_Right.height() - 6)
+        )
+
         self.form.MoreCommands.setIcon(StyleMapping.ReturnStyleItem("OptionButton"))
+        self.form.MoreCommands.setIconSize(
+            QSize(self.form.MoreCommands.width() - 6, self.form.MoreCommands.height() - 6)
+        )
+
         self.form.pinButton_open.setIcon(StyleMapping.ReturnStyleItem("PinButton_open"))
+        self.form.pinButton_open.setIconSize(
+            QSize(self.form.pinButton_open.width() - 6, self.form.pinButton_open.height() - 6)
+        )
+
         self.form.pinButton_closed.setIcon(StyleMapping.ReturnStyleItem("PinButton_closed"))
+        self.form.pinButton_closed.setIconSize(
+            QSize(self.form.pinButton_closed.width() - 6, self.form.pinButton_closed.height() - 6)
+        )
 
         # region - connect controls with functions----------------------------------------------------
         #
