@@ -35,7 +35,7 @@ from PySide.QtWidgets import (
     QSizePolicy,
 )
 import sys
-
+import StyleMapping
 import Standard_Functions_RIbbon as StandardFunctions
 import Parameters_Ribbon
 from Parameters_Ribbon import DefaultSettings
@@ -254,6 +254,15 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Unchecked)
+
+        # Set the color and icon buttons
+        self.form.Tab_Scroll_Left.setIcon(StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab"))
+        self.form.Tab_Scroll_Right.setIcon(StyleMapping.ReturnStyleItem("ScrollRightButton_Tab"))
+        self.form.Ribbon_Scroll_Left.setIcon(StyleMapping.ReturnStyleItem("ScrollLeftButton_Category"))
+        self.form.Ribbon_Scroll_Right.setIcon(StyleMapping.ReturnStyleItem("ScrollRightButton_Category"))
+        self.form.MoreCommands.setIcon(StyleMapping.ReturnStyleItem("OptionButton"))
+        self.form.pinButton_open.setIcon(StyleMapping.ReturnStyleItem("PinButton_open"))
+        self.form.pinButton_closed.setIcon(StyleMapping.ReturnStyleItem("PinButton_closed"))
 
         # region - connect controls with functions----------------------------------------------------
         #
