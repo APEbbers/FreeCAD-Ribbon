@@ -76,7 +76,7 @@
             <string notr="true"/>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>3</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideRight</enum>
@@ -615,6 +615,9 @@
                        </item>
                        <item row="2" column="2">
                         <widget class="QCheckBox" name="EnableWrap_Large">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
                          <property name="text">
                           <string>Enable text wrap</string>
                          </property>
@@ -686,6 +689,9 @@
                        </item>
                        <item row="1" column="2">
                         <widget class="QCheckBox" name="EnableWrap_Medium">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
                          <property name="text">
                           <string>Enable text wrap</string>
                          </property>
@@ -1635,6 +1641,9 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
                   </item>
                   <item row="1" column="0">
                    <widget class="QCheckBox" name="UseButtonBackGround">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="text">
                      <string>Use background on buttons</string>
                     </property>
@@ -1642,6 +1651,9 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
                   </item>
                   <item row="0" column="1" rowspan="2" colspan="2">
                    <widget class="QLabel" name="label_26">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
                       <horstretch>0</horstretch>
@@ -1649,7 +1661,7 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
                      </sizepolicy>
                     </property>
                     <property name="text">
-                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;The overlay function can give issues. Use at your own risk.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;When there are issues, place a file &lt;/span&gt;&lt;span style=&quot; font-family:'Consolas','Courier New','monospace'; font-size:8pt; color:#ffffff;&quot;&gt;&amp;quot;OVERLAY_DISABLED&amp;quot; &lt;/span&gt;&lt;span style=&quot; font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; color:#ffffff;&quot;&gt;in the folder of the add-on. (No extension) This will restore the ribbon and its own overlay function.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;The overlay function can give issues. Use at your own risk.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;When there are issues, place a file &lt;/span&gt;&lt;span style=&quot; font-family:'Consolas','Courier New','monospace'; font-size:8pt; &quot;&gt;&amp;quot;OVERLAY_DISABLED&amp;quot; &lt;/span&gt;&lt;span style=&quot; font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; &quot;&gt;in the folder of the add-on. (No extension) This will restore the ribbon and its own overlay function.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                     <property name="wordWrap">
                      <bool>true</bool>
@@ -1844,8 +1856,8 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>288</x>
-     <y>68</y>
+     <x>307</x>
+     <y>97</y>
     </hint>
     <hint type="destinationlabel">
      <x>288</x>
@@ -1864,8 +1876,8 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
      <y>83</y>
     </hint>
     <hint type="destinationlabel">
-     <x>433</x>
-     <y>101</y>
+     <x>455</x>
+     <y>188</y>
     </hint>
    </hints>
   </connection>
@@ -1876,12 +1888,76 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>158</x>
-     <y>267</y>
+     <x>180</x>
+     <y>295</y>
     </hint>
     <hint type="destinationlabel">
-     <x>170</x>
-     <y>277</y>
+     <x>192</x>
+     <y>554</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ShowText_Medium</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>EnableWrap_Medium</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>151</x>
+     <y>572</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>195</x>
+     <y>567</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ShowText_Large</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>EnableWrap_Large</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>124</x>
+     <y>593</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>208</x>
+     <y>594</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FCOverlayEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>UseButtonBackGround</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>141</x>
+     <y>206</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>141</x>
+     <y>256</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>FCOverlayEnabled</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_26</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>208</x>
+     <y>205</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>316</x>
+     <y>220</y>
     </hint>
    </hints>
   </connection>

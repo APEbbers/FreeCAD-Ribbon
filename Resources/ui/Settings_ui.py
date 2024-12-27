@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingshEDYfT.ui'
+## Form generated from reading UI file 'SettingsWnJbxS.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -361,6 +361,7 @@ class Ui_Settings(object):
 
         self.EnableWrap_Large = QCheckBox(self.groupBox_3)
         self.EnableWrap_Large.setObjectName("EnableWrap_Large")
+        self.EnableWrap_Large.setEnabled(False)
         self.EnableWrap_Large.setChecked(True)
 
         self.gridLayout_26.addWidget(self.EnableWrap_Large, 2, 2, 1, 1)
@@ -389,6 +390,7 @@ class Ui_Settings(object):
 
         self.EnableWrap_Medium = QCheckBox(self.groupBox_3)
         self.EnableWrap_Medium.setObjectName("EnableWrap_Medium")
+        self.EnableWrap_Medium.setEnabled(False)
         self.EnableWrap_Medium.setChecked(True)
 
         self.gridLayout_26.addWidget(self.EnableWrap_Medium, 1, 2, 1, 1)
@@ -831,11 +833,13 @@ class Ui_Settings(object):
 
         self.UseButtonBackGround = QCheckBox(self.groupBox_12)
         self.UseButtonBackGround.setObjectName("UseButtonBackGround")
+        self.UseButtonBackGround.setEnabled(False)
 
         self.gridLayout_30.addWidget(self.UseButtonBackGround, 1, 0, 1, 1)
 
         self.label_26 = QLabel(self.groupBox_12)
         self.label_26.setObjectName("label_26")
+        self.label_26.setEnabled(False)
         sizePolicy11 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
         sizePolicy11.setHorizontalStretch(0)
         sizePolicy11.setVerticalStretch(0)
@@ -933,8 +937,12 @@ class Ui_Settings(object):
         self.EnableBackup.toggled.connect(self.groupBox_Backup.setEnabled)
         self.CustomColors.toggled.connect(self.ColorS.setEnabled)
         self.CustomIcons.toggled.connect(self.IconS.setEnabled)
+        self.ShowText_Medium.toggled.connect(self.EnableWrap_Medium.setEnabled)
+        self.ShowText_Large.toggled.connect(self.EnableWrap_Large.setEnabled)
+        self.FCOverlayEnabled.toggled.connect(self.UseButtonBackGround.setEnabled)
+        self.FCOverlayEnabled.toggled.connect(self.label_26.setEnabled)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(3)
 
         QMetaObject.connectSlotsByName(Settings)
 
@@ -1079,7 +1087,7 @@ class Ui_Settings(object):
         self.label_26.setText(
             QCoreApplication.translate(
                 "Settings",
-                "<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">The overlay function can give issues. Use at your own risk.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">When there are issues, place a file </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; color:#ffffff;\">&quot;OVERLAY_DISABLED&quot; </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; color:#ffffff;\">in the folder of the add-on. (No extension) This will restore the ribbon and its own overlay function.</span></p></body></html>",
+                "<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">The overlay function can give issues. Use at your own risk.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">When there are issues, place a file </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; \">&quot;OVERLAY_DISABLED&quot; </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; \">in the folder of the add-on. (No extension) This will restore the ribbon and its own overlay function.</span></p></body></html>",
                 None,
             )
         )

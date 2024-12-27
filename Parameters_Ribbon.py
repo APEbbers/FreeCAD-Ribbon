@@ -25,6 +25,7 @@ import FreeCADGui as Gui
 from PySide.QtGui import QColor
 import os
 import sys
+import StyleMapping
 
 # Define the translation
 translate = App.Qt.translate
@@ -132,6 +133,18 @@ class Settings:
 
         Settings.SetBoolSetting("DebugMode", DEBUG_MODE)
 
+        Settings.SetStringSetting("Background_Color", BACKGROUND_COLOR)
+        Settings.SetStringSetting("Background_Color_Hover", BACKGROUND_COLOR_HOVER)
+        Settings.SetStringSetting("Border_Color", BORDER_COLOR)
+        Settings.SetStringSetting("ApplicationButton_Background", APPLICATION_BUTTON_COLOR)
+        Settings.SetStringSetting("ScrollLeftButton_Tab", SCROLL_LEFT_BUTTON_TAB)
+        Settings.SetStringSetting("ScrollRightButton_Tab", SCROLL_RIGHT_BUTTON_TAB)
+        Settings.SetStringSetting("ScrollLeftButton_Category", SCROLL_LEFT_BUTTON_CATEGORY)
+        Settings.SetStringSetting("ScrollRightButton_Category", SCROLL_RIGHT_BUTTON_CATEGORY)
+        Settings.SetStringSetting("OptionButton", OPTION_BUTTON)
+        Settings.SetStringSetting("PinButton_open", PIN_BUTTON_OPEN)
+        Settings.SetStringSetting("PinButton_closed", PIN_BUTTON_CLOSED)
+
 
 # region - Define the resources ----------------------------------------------------------------------------------------
 ICON_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "icons")
@@ -172,6 +185,17 @@ DefaultSettings = {
     "WrapText_Large": bool(True),
     "UseFCOverlay": bool(False),
     "UseButtonBackGround": bool(True),
+    "Background_Color": "",
+    "Background_Color_Hover": "",
+    "Border_Color": "",
+    "ApplicationButton_Background": "",
+    "ScrollLeftButton_Tab": "",
+    "ScrollRightButton_Tab": "",
+    "ScrollLeftButton_Category": "",
+    "ScrollRightButton_Category": "",
+    "OptionButton": "",
+    "PinButton_open": "",
+    "PinButton_closed": "",
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
@@ -354,4 +378,62 @@ BUTTON_BACKGROUND_ENABLED = Settings.GetBoolSetting("UseButtonBackGround")
 if Settings.GetBoolSetting("UseButtonBackGround") is None:
     BUTTON_BACKGROUND_ENABLED = DefaultSettings["UseButtonBackGround"]
     Settings.SetBoolSetting("UseButtonBackGround", BUTTON_BACKGROUND_ENABLED)
+# endregion ------------------------------------------------------------------------------------------------------------
+
+# region - Color and icon settings -------------------------------------------------------------------------------------
+BACKGROUND_COLOR = Settings.GetStringSetting("Background_Color")
+if Settings.GetStringSetting("Background_Color") == "":
+    BACKGROUND_COLOR = DefaultSettings["Background_Color"]
+    Settings.SetStringSetting("Background_Color", BACKGROUND_COLOR)
+
+BACKGROUND_COLOR_HOVER = Settings.GetStringSetting("Background_Color_Hover")
+if Settings.GetStringSetting("Background_Color_Hover") == "":
+    BACKGROUND_COLOR_HOVER = DefaultSettings["Background_Color_Hover"]
+    Settings.SetStringSetting("Background_Color_Hover", BACKGROUND_COLOR_HOVER)
+
+BORDER_COLOR = Settings.GetStringSetting("Border_Color")
+if Settings.GetStringSetting("Border_Color") == "":
+    BORDER_COLOR = DefaultSettings["Border_Color"]
+    Settings.SetStringSetting("Border_Color", BORDER_COLOR)
+
+APPLICATION_BUTTON_COLOR = Settings.GetStringSetting("ApplicationButton_Background")
+if Settings.GetStringSetting("ApplicationButton_Background") == "":
+    APPLICATION_BUTTON_COLOR = DefaultSettings["ApplicationButton_Background"]
+    Settings.SetStringSetting("ApplicationButton_Background", APPLICATION_BUTTON_COLOR)
+
+SCROLL_LEFT_BUTTON_TAB = Settings.GetStringSetting("ScrollLeftButton_Tab")
+if Settings.GetStringSetting("ScrollLeftButton_Tab") == "":
+    SCROLL_LEFT_BUTTON_TAB = DefaultSettings["ScrollLeftButton_Tab"]
+    Settings.SetStringSetting("ScrollLeftButton_Tab", SCROLL_LEFT_BUTTON_TAB)
+
+SCROLL_RIGHT_BUTTON_TAB = Settings.GetStringSetting("ScrollRightButton_Tab")
+if Settings.GetStringSetting("ScrollRightButton_Tab") == "":
+    SCROLL_RIGHT_BUTTON_TAB = DefaultSettings["ScrollRightButton_Tab"]
+    Settings.SetStringSetting("ScrollRightButton_Tab", SCROLL_RIGHT_BUTTON_TAB)
+
+SCROLL_LEFT_BUTTON_CATEGORY = Settings.GetStringSetting("ScrollLeftButton_Category")
+if Settings.GetStringSetting("ScrollLeftButton_Category") == "":
+    SCROLL_LEFT_BUTTON_CATEGORY = DefaultSettings["ScrollLeftButton_Category"]
+    Settings.SetStringSetting("ScrollLeftButton_Category", SCROLL_LEFT_BUTTON_CATEGORY)
+
+SCROLL_RIGHT_BUTTON_CATEGORY = Settings.GetStringSetting("ScrollRightButton_Category")
+if Settings.GetStringSetting("ScrollRightButton_Category") == "":
+    SCROLL_RIGHT_BUTTON_CATEGORY = DefaultSettings["ScrollRightButton_Category"]
+    Settings.SetStringSetting("ScrollRightButton_Category", SCROLL_RIGHT_BUTTON_CATEGORY)
+
+OPTION_BUTTON = Settings.GetStringSetting("OptionButton")
+if Settings.GetStringSetting("OptionButton") == "":
+    OPTION_BUTTON = DefaultSettings["OptionButton"]
+    Settings.SetStringSetting("OptionButton", OPTION_BUTTON)
+
+PIN_BUTTON_OPEN = Settings.GetStringSetting("PinButton_open")
+if Settings.GetStringSetting("PinButton_open") == "":
+    PIN_BUTTON_OPEN = DefaultSettings["PinButton_open"]
+    Settings.SetStringSetting("PinButton_open", PIN_BUTTON_OPEN)
+
+PIN_BUTTON_CLOSED = Settings.GetStringSetting("PinButton_closed")
+if Settings.GetStringSetting("PinButton_closed") == "":
+    PIN_BUTTON_CLOSED = DefaultSettings["PinButton_closed"]
+    Settings.SetStringSetting("PinButton_closed", PIN_BUTTON_CLOSED)
+
 # endregion ------------------------------------------------------------------------------------------------------------

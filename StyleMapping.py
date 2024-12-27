@@ -96,17 +96,21 @@ def ReturnStyleItem(ControlName):
 
     try:
         if isIcon is True:
-            PixmapName = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
-            if PixmapName == "":
-                PixmapName = StyleMapping["Stylesheets"][""][ControlName]
+            PixmapName = StyleMapping["Stylesheets"][ControlName]
+            if PixmapName == "" or PixmapName is None:
+                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
+                if PixmapName == "" or PixmapName is None:
+                    PixmapName = StyleMapping_default["Stylesheets"][""][ControlName]
             pixmap = QPixmap(os.path.join(pathIcons, PixmapName))
             result = QIcon()
             result.addPixmap(pixmap)
             return result
         if isIcon is False:
-            result = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
-            if result == "":
-                result = StyleMapping["Stylesheets"][""][ControlName]
+            result = StyleMapping["Stylesheets"][ControlName]
+            if result == "" or result is None:
+                result = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
+                if result == "" or result is None:
+                    result = StyleMapping_default["Stylesheets"][""][ControlName]
             return result
     except Exception:
         return None
@@ -209,6 +213,23 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
 
 StyleMapping = {
     "Stylesheets": {
+        "Background_Color": Parameters_Ribbon.BACKGROUND_COLOR,
+        "Background_Color_Hover": Parameters_Ribbon.BACKGROUND_COLOR_HOVER,
+        "Border_Color": Parameters_Ribbon.BORDER_COLOR,
+        "ApplicationButton_Background": Parameters_Ribbon.APPLICATION_BUTTON_COLOR,
+        "ScrollLeftButton_Tab": Parameters_Ribbon.SCROLL_LEFT_BUTTON_TAB,
+        "ScrollRightButton_Tab": Parameters_Ribbon.SCROLL_RIGHT_BUTTON_TAB,
+        "ScrollLeftButton_Category": Parameters_Ribbon.SCROLL_LEFT_BUTTON_CATEGORY,
+        "ScrollRightButton_Category": Parameters_Ribbon.SCROLL_RIGHT_BUTTON_CATEGORY,
+        "OptionButton": Parameters_Ribbon.OPTION_BUTTON,
+        "PinButton_open": Parameters_Ribbon.PIN_BUTTON_OPEN,
+        "PinButton_closed": Parameters_Ribbon.PIN_BUTTON_CLOSED,
+    }
+}
+
+
+StyleMapping_default = {
+    "Stylesheets": {
         "": {
             "Background_Color": "#f0f0f0",
             "Background_Color_Hover": "#ced4da",
@@ -221,8 +242,6 @@ StyleMapping = {
             "OptionButton": "more_default.svg",
             "PinButton_open": "pin-icon-open.svg",
             "PinButton_closed": "pin-icon-default.svg",
-            "collapseRibbonButton_up": "",
-            "collapseRibbonButton_down": "",
         },
         "FreeCAD Dark.qss": {
             "Background_Color": "#333333",
@@ -236,8 +255,6 @@ StyleMapping = {
             "OptionButton": "more_default_white.svg",
             "PinButton_open": "pin-icon-open_white.svg",
             "PinButton_closed": "pin-icon-default_white.svg",
-            "collapseRibbonButton_up": "",
-            "collapseRibbonButton_down": "",
         },
         "FreeCAD Light.qss": {
             "Background_Color": "#f0f0f0",
@@ -251,8 +268,6 @@ StyleMapping = {
             "OptionButton": "more_default.svg",
             "PinButton_open": "pin-icon-open.svg",
             "PinButton_closed": "pin-icon-default.svg",
-            "collapseRibbonButton_up": "",
-            "collapseRibbonButton_down": "",
         },
         "OpenLight.qss": {
             "Background_Color": "#dee2e6",
@@ -266,8 +281,6 @@ StyleMapping = {
             "OptionButton": "more_1.svg",
             "PinButton_open": "pin-icon-open.svg",
             "PinButton_closed": "pin-icon-closed.svg",
-            "collapseRibbonButton_up": "",
-            "collapseRibbonButton_down": "",
         },
         "OpenDark.qss": {
             "Background_Color": "#212529",
@@ -281,8 +294,6 @@ StyleMapping = {
             "OptionButton": "more_default_white.svg",
             "PinButton_open": "pin-icon-open_white.svg",
             "PinButton_closed": "pin-icon-default_white.svg",
-            "collapseRibbonButton_up": "",
-            "collapseRibbonButton_down": "",
         },
     }
 }
