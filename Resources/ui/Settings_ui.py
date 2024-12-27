@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsDzOEmM.ui'
+## Form generated from reading UI file 'SettingshEDYfT.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -359,6 +359,12 @@ class Ui_Settings(object):
 
         self.gridLayout_26.addWidget(self.ShowText_Medium, 1, 0, 1, 1)
 
+        self.EnableWrap_Large = QCheckBox(self.groupBox_3)
+        self.EnableWrap_Large.setObjectName("EnableWrap_Large")
+        self.EnableWrap_Large.setChecked(True)
+
+        self.gridLayout_26.addWidget(self.EnableWrap_Large, 2, 2, 1, 1)
+
         self.ShowText_Large = QCheckBox(self.groupBox_3)
         self.ShowText_Large.setObjectName("ShowText_Large")
         sizePolicy7.setHeightForWidth(self.ShowText_Large.sizePolicy().hasHeightForWidth())
@@ -379,13 +385,13 @@ class Ui_Settings(object):
 
         self.horizontalSpacer_9 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout_26.addItem(self.horizontalSpacer_9, 0, 1, 1, 1)
+        self.gridLayout_26.addItem(self.horizontalSpacer_9, 0, 2, 1, 1)
 
-        self.EnableWrap_Large = QCheckBox(self.groupBox_3)
-        self.EnableWrap_Large.setObjectName("EnableWrap_Large")
-        self.EnableWrap_Large.setChecked(True)
+        self.EnableWrap_Medium = QCheckBox(self.groupBox_3)
+        self.EnableWrap_Medium.setObjectName("EnableWrap_Medium")
+        self.EnableWrap_Medium.setChecked(True)
 
-        self.gridLayout_26.addWidget(self.EnableWrap_Large, 2, 1, 1, 1)
+        self.gridLayout_26.addWidget(self.EnableWrap_Medium, 1, 2, 1, 1)
 
         self.gridLayout_2.addLayout(self.gridLayout_26, 0, 0, 1, 1)
 
@@ -965,9 +971,10 @@ class Ui_Settings(object):
         )
         self.groupBox_3.setTitle(QCoreApplication.translate("Settings", "Show text", None))
         self.ShowText_Medium.setText(QCoreApplication.translate("Settings", "Medium buttons", None))
+        self.EnableWrap_Large.setText(QCoreApplication.translate("Settings", "Enable text wrap", None))
         self.ShowText_Large.setText(QCoreApplication.translate("Settings", "Large buttons", None))
         self.ShowText_Small.setText(QCoreApplication.translate("Settings", "Small buttons", None))
-        self.EnableWrap_Large.setText(QCoreApplication.translate("Settings", "Enable two line for text", None))
+        self.EnableWrap_Medium.setText(QCoreApplication.translate("Settings", "Enable text wrap", None))
         self.groupBox_10.setTitle(QCoreApplication.translate("Settings", "Tab style", None))
         self.label_24.setText(
             QCoreApplication.translate("Settings", "<html><head/><body><p>Set the tab style: </p></body></html>", None)

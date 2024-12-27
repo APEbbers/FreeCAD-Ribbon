@@ -116,6 +116,7 @@ class Settings:
         Settings.SetBoolSetting("ShowIconText_Small", SHOW_ICON_TEXT_SMALL)
         Settings.SetBoolSetting("ShowIconText_Medium", SHOW_ICON_TEXT_MEDIUM)
         Settings.SetBoolSetting("ShowIconText_Large", SHOW_ICON_TEXT_LARGE)
+        Settings.SetBoolSetting("WrapText_Medium", WRAPTEXT_MEDIUM)
         Settings.SetBoolSetting("WrapText_Large", WRAPTEXT_LARGE)
 
         Settings.SetBoolSetting("ShowOnHover", SHOW_ON_HOVER)
@@ -167,6 +168,7 @@ DefaultSettings = {
     "Ribbon_Click": int(1),
     "Preferred_view": int(2),
     "UseToolsPanel": bool(True),
+    "WrapText_Medium": bool(True),
     "WrapText_Large": bool(True),
     "UseFCOverlay": bool(False),
     "UseButtonBackGround": bool(True),
@@ -285,6 +287,11 @@ MAX_COLUMN_PANELS = Settings.GetIntSetting("MaxColumnsPerPanel")
 if Settings.GetIntSetting("MaxColumnsPerPanel") is None:
     MAX_COLUMN_PANELS = DefaultSettings["MaxColumnsPerPanel"]
     Settings.SetIntSetting("MaxColumnsPerPanel", MAX_COLUMN_PANELS)
+
+WRAPTEXT_MEDIUM = Settings.GetBoolSetting("WrapText_Medium")
+if Settings.GetBoolSetting("WrapText_Medium") == "":
+    WRAPTEXT_MEDIUM = DefaultSettings["WrapText_Medium"]
+    Settings.SetBoolSetting("WrapText_Medium", WRAPTEXT_MEDIUM)
 
 WRAPTEXT_LARGE = Settings.GetBoolSetting("WrapText_Large")
 if Settings.GetBoolSetting("WrapText_Large") == "":

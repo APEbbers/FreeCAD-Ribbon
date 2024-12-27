@@ -23,14 +23,14 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
     QFont,
     QTextOption,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QToolButton,
     QVBoxLayout,
     QHBoxLayout,
@@ -39,7 +39,7 @@ from PySide6.QtWidgets import (
     QSpacerItem,
     QSizePolicy,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QSize,
     QRect,
