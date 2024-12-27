@@ -1467,56 +1467,40 @@ class ModernMenu(RibbonBar):
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
                                 if IconOnly is True:
                                     showText = False
-                                btn: RibbonToolButton = panel.addSmallButton(
-                                    action.text(),
-                                    action.icon(),
-                                    alignment=Qt.AlignmentFlag.AlignLeft,
-                                    showText=showText,
-                                    fixedHeight=Parameters_Ribbon.ICON_SIZE_SMALL,
-                                )
 
-                                # If showText is True, calculate the width of the button with the text
-                                if showText is True:
-                                    FontMetrics = QFontMetrics(action.text().strip())
-                                    TextWidth = 0
-                                    for i in action.text():
-                                        TextWidth = TextWidth + FontMetrics.boundingRectChar(i).width()
-                                    btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL + TextWidth)
-                                # If showText is False, set the width to the icon size
-                                if showText is False:
-                                    btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL)
-                                # Set the stylesheet
-                                # Set the padding to align the icons to the left
-                                padding = 0
-                                btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
+                                # Create a custom toolbutton
+                                ButtonSize = QSize(
+                                    Parameters_Ribbon.ICON_SIZE_SMALL,
+                                    Parameters_Ribbon.ICON_SIZE_SMALL,
+                                )
+                                IconSize = QSize(
+                                    Parameters_Ribbon.ICON_SIZE_SMALL,
+                                    Parameters_Ribbon.ICON_SIZE_SMALL,
+                                )
+                                Menu = QMenu()
+                                if button.menu() is not None:
+                                    Menu = button.menu()
+                                btn = CustomControls.CustomToolButton(
+                                    Text=action.text(),
+                                    Action=action,
+                                    Icon=action.icon(),
+                                    IconSize=IconSize,
+                                    ButtonSize=ButtonSize,
+                                    FontSize=8,
+                                    showText=showText,
+                                    setWordWrap=False,
+                                    MaxNumberOfLines=2,
+                                    Menu=Menu,
+                                    MenuButtonSpace=10,
+                                )
+                                # add the button as large button
+                                panel.addMediumWidget(btn)
 
                             elif buttonSize == "medium":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
                                 if IconOnly is True:
                                     showText = False
 
-                                # btn: RibbonToolButton = panel.addMediumButton(
-                                #     action.text(),
-                                #     action.icon(),
-                                #     alignment=Qt.AlignmentFlag.AlignLeft,
-                                #     showText=showText,
-                                #     fixedHeight=Parameters_Ribbon.ICON_SIZE_MEDIUM,
-                                # )
-
-                                # # If showText is True, calculate the width of the button with the text
-                                # if showText is True:
-                                #     FontMetrics = QFontMetrics(action.text().strip())
-                                #     TextWidth = 0
-                                #     for i in action.text():
-                                #         TextWidth = TextWidth + FontMetrics.boundingRectChar(i).width()
-                                #     btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM + TextWidth)
-                                # # If showText is False, set the width to the icon size
-                                # if showText is False:
-                                #     btn.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
-                                # # Set the stylesheet
-                                # # Set the padding to align the icons to the left
-                                # padding = 0
-                                # btn.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
                                 # Create a custom toolbutton
                                 ButtonSize = QSize(
                                     Parameters_Ribbon.ICON_SIZE_MEDIUM,
@@ -1537,9 +1521,10 @@ class ModernMenu(RibbonBar):
                                     ButtonSize=ButtonSize,
                                     FontSize=8,
                                     showText=showText,
-                                    setWordWrap=True,
+                                    setWordWrap=Parameters_Ribbon.WRAPTEXT_MEDIUM,
                                     MaxNumberOfLines=2,
                                     Menu=Menu,
+                                    MenuButtonSpace=10,
                                 )
                                 # add the button as large button
                                 panel.addMediumWidget(btn)
@@ -1571,6 +1556,7 @@ class ModernMenu(RibbonBar):
                                     setWordWrap=Parameters_Ribbon.WRAPTEXT_LARGE,
                                     MaxNumberOfLines=2,
                                     Menu=Menu,
+                                    MenuButtonSpace=10,
                                 )
                                 # add the button as large button
                                 panel.addLargeWidget(btn)
@@ -1589,29 +1575,6 @@ class ModernMenu(RibbonBar):
                                         "Given button size not implemented, only small, medium and large are available.",
                                     )
                                 )
-
-                            # Set the default actiom
-                            btn.setDefaultAction(action)
-
-                            # add dropdown menu if necessary
-                            if button.menu() is not None:
-                                if (
-                                    btn.height() == Parameters_Ribbon.ICON_SIZE_LARGE
-                                    or btn.height() == Parameters_Ribbon.ICON_SIZE_MEDIUM
-                                ):
-                                    btn.setMinimumWidth(btn.height())
-                                else:
-                                    btn.setMenu(button.menu())
-                                    btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                                    # Set the padding
-                                    padding = self.PaddingRight
-                                    # increase the width equal with the padding
-                                    btn.setFixedSize(btn.width() + padding, btn.height())
-                                    # Set a stylesheet with the new padding
-                                    btn.setStyleSheet(
-                                        StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px")
-                                    )
-                                btn.setDefaultAction(btn.actions()[0])
 
                             # add the button text to the shadowList for checking if buttons are already there.
                             shadowList.append(button.text())

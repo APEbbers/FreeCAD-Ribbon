@@ -80,6 +80,7 @@ class CustomControls:
         ElideMode=Qt.TextElideMode.ElideMiddle,
         MaxNumberOfLines=2,
         Menu: QMenu = None,
+        MenuButtonSpace=10,
     ):
         btn = QToolButton()
         #
@@ -99,7 +100,7 @@ class CustomControls:
             btn.setMenu(Menu)
             btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
             btn.setDefaultAction(btn.actions()[0])
-            Padding_Right = 16
+            Padding_Right = MenuButtonSpace
             btn.setFixedWidth(btn.width() + Padding_Right)
 
         # If text must be shown wrapped, add a layout with label
@@ -169,6 +170,7 @@ class CustomControls:
         ElideMode=Qt.TextElideMode.ElideNone,
         MaxNumberOfLines=2,
         Menu: QMenu = None,
+        MenuButtonSpace=10,
     ):
         btn = QToolButton()
         #
@@ -187,7 +189,7 @@ class CustomControls:
             btn.setMenu(Menu)
             btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
             btn.setDefaultAction(btn.actions()[0])
-            Padding_Right = 16
+            Padding_Right = MenuButtonSpace
             btn.setFixedWidth(btn.width() + Padding_Right)
 
         # If text must be shown wrapped, add a layout with label
