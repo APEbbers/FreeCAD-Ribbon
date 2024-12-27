@@ -1477,8 +1477,8 @@
                        </property>
                        <property name="maximumSize">
                         <size>
-                         <width>20</width>
-                         <height>20</height>
+                         <width>30</width>
+                         <height>30</height>
                         </size>
                        </property>
                        <property name="text">
@@ -1503,8 +1503,8 @@
                        </property>
                        <property name="maximumSize">
                         <size>
-                         <width>20</width>
-                         <height>20</height>
+                         <width>30</width>
+                         <height>30</height>
                         </size>
                        </property>
                        <property name="baseSize">
