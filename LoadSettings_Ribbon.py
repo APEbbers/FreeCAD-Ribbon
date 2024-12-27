@@ -363,6 +363,12 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.IconSize_rightToolbarButton.setMinimum(5)
         self.form.TabbarHeight.setMinimum(5)
 
+        # Connect the controls for custom icons and colors
+        def TabScrollLeft():
+            self.on_Tab_Scroll_Left_clicked(self)
+
+        self.form.Tab_Scroll_Left.connect(self.form.Reset, SIGNAL("clicked()"), TabScrollLeft)
+
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
 
@@ -607,6 +613,18 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.ValuesToUpdate["UseButtonBackGround"] = False
             self.UseButtonBackGround = False
         self.settingChanged = True
+        return
+
+    def on_Tab_Scroll_Left_clicked(self):
+        File = StandardFunctions.SaveDialog([("png", "*png"), ("svg", "*.svg")])
+        if File is not None or File != "":
+            Parameters_Ribbon.Settings.SetStringSetting("ScrollLeftButton_Tab", File)
+
+        self.form.Tab_Scroll_Left.setIcon(StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab"))
+        self.form.Tab_Scroll_Left.setIconSize(
+            QSize(self.form.Tab_Scroll_Left.width() - 6, self.form.Tab_Scroll_Left.height() - 6)
+        )
+
         return
 
     @staticmethod

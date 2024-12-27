@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsltFhTP.ui'
+## Form generated from reading UI file 'SettingsXkwbrF.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -740,7 +740,7 @@ class Ui_Settings(object):
         self.pinButton_open.setObjectName("pinButton_open")
         sizePolicy7.setHeightForWidth(self.pinButton_open.sizePolicy().hasHeightForWidth())
         self.pinButton_open.setSizePolicy(sizePolicy7)
-        self.pinButton_open.setMinimumSize(QSize(20, 20))
+        self.pinButton_open.setMinimumSize(QSize(30, 30))
         self.pinButton_open.setMaximumSize(QSize(30, 30))
 
         self.gridLayout_22.addWidget(self.pinButton_open, 5, 1, 1, 1)
@@ -754,6 +754,7 @@ class Ui_Settings(object):
         self.pinButton_closed.setObjectName("pinButton_closed")
         sizePolicy7.setHeightForWidth(self.pinButton_closed.sizePolicy().hasHeightForWidth())
         self.pinButton_closed.setSizePolicy(sizePolicy7)
+        self.pinButton_closed.setMinimumSize(QSize(30, 30))
         self.pinButton_closed.setMaximumSize(QSize(30, 30))
         self.pinButton_closed.setBaseSize(QSize(30, 30))
 
