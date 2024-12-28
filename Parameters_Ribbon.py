@@ -135,8 +135,8 @@ class Settings:
         Settings.SetBoolSetting("CustomIcons", CUSTOM_ICONS_ENABLED)
         Settings.SetStringSetting("Background_Color", BACKGROUND_COLOR)
         Settings.SetStringSetting("Color_Background_Hover", COLOR_BACKGROUND_HOVER)
-        Settings.SetStringSetting("Border_Color", BORDER_COLOR)
-        Settings.SetStringSetting("ApplicationButton_Background", APPLICATION_BUTTON_COLOR)
+        Settings.SetStringSetting("Color_Borders", BORDER_COLOR)
+        Settings.SetStringSetting("Color_Background_App", APPLICATION_BUTTON_COLOR)
         Settings.SetStringSetting("ScrollLeftButton_Tab", SCROLL_LEFT_BUTTON_TAB)
         Settings.SetStringSetting("ScrollRightButton_Tab", SCROLL_RIGHT_BUTTON_TAB)
         Settings.SetStringSetting("ScrollLeftButton_Category", SCROLL_LEFT_BUTTON_CATEGORY)
@@ -396,25 +396,25 @@ if Settings.GetBoolSetting("CustomIcons") is None:
     CUSTOM_ICONS_ENABLED = DefaultSettings["CustomIcons"]
     Settings.SetBoolSetting("CustomIcons", CUSTOM_ICONS_ENABLED)
 
-BACKGROUND_COLOR = Settings.GetStringSetting("Background_Color")
-if Settings.GetStringSetting("Background_Color") == "":
-    BACKGROUND_COLOR = DefaultSettings["Background_Color"]
-    Settings.SetStringSetting("Background_Color", BACKGROUND_COLOR)
+BACKGROUND_COLOR = Settings.GetStringSetting("Color_Background")
+if Settings.GetStringSetting("Color_Background") == "":
+    BACKGROUND_COLOR = DefaultSettings["Color_Background"]
+    Settings.SetStringSetting("Color_Background", BACKGROUND_COLOR)
 
 COLOR_BACKGROUND_HOVER = Settings.GetStringSetting("Color_Background_Hover")
 if Settings.GetStringSetting("Color_Background_Hover") == "":
     COLOR_BACKGROUND_HOVER = DefaultSettings["Color_Background_Hover"]
     Settings.SetStringSetting("Color_Background_Hover", COLOR_BACKGROUND_HOVER)
 
-BORDER_COLOR = Settings.GetStringSetting("Border_Color")
-if Settings.GetStringSetting("Border_Color") == "":
-    BORDER_COLOR = DefaultSettings["Border_Color"]
-    Settings.SetStringSetting("Border_Color", BORDER_COLOR)
+BORDER_COLOR = Settings.GetStringSetting("Color_Borders")
+if Settings.GetStringSetting("Color_Borders") == "":
+    BORDER_COLOR = DefaultSettings["Color_Borders"]
+    Settings.SetStringSetting("Color_Borders", BORDER_COLOR)
 
-APPLICATION_BUTTON_COLOR = Settings.GetStringSetting("ApplicationButton_Background")
-if Settings.GetStringSetting("ApplicationButton_Background") == "":
-    APPLICATION_BUTTON_COLOR = DefaultSettings["ApplicationButton_Background"]
-    Settings.SetStringSetting("ApplicationButton_Background", APPLICATION_BUTTON_COLOR)
+APPLICATION_BUTTON_COLOR = Settings.GetStringSetting("Color_Background_App")
+if Settings.GetStringSetting("Color_Background_App") == "":
+    APPLICATION_BUTTON_COLOR = DefaultSettings["Color_Background_App"]
+    Settings.SetStringSetting("Color_Background_App", APPLICATION_BUTTON_COLOR)
 
 SCROLL_LEFT_BUTTON_TAB = Settings.GetStringSetting("ScrollLeftButton_Tab")
 if Settings.GetStringSetting("ScrollLeftButton_Tab") == "":
