@@ -145,6 +145,11 @@ class Settings:
         Settings.SetStringSetting("PinButton_open", PIN_BUTTON_OPEN)
         Settings.SetStringSetting("PinButton_closed", PIN_BUTTON_CLOSED)
 
+        Settings.SetBoolSetting("CustomColors", CUSTOM_COLORS_ENABLED)
+        Settings.SetStringSetting("Color_Borders", COLOR_BORDERS)
+        Settings.SetStringSetting("Color_Background", COLOR_BACKGROUND)
+        Settings.SetStringSetting("Color_Background_App", COLOR_APPLICATION_BUTTON_BACKGROUND)
+
 
 # region - Define the resources ----------------------------------------------------------------------------------------
 ICON_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "icons")
@@ -197,6 +202,10 @@ DefaultSettings = {
     "OptionButton": "",
     "PinButton_open": "",
     "PinButton_closed": "",
+    "CustomColors": bool(False),
+    "Color_Borders": "",
+    "Color_Background": "",
+    "Color_Background_App": "",
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
@@ -441,5 +450,25 @@ PIN_BUTTON_CLOSED = Settings.GetStringSetting("PinButton_closed")
 if Settings.GetStringSetting("PinButton_closed") == "":
     PIN_BUTTON_CLOSED = DefaultSettings["PinButton_closed"]
     Settings.SetStringSetting("PinButton_closed", PIN_BUTTON_CLOSED)
+
+CUSTOM_COLORS_ENABLED = Settings.GetBoolSetting("CustomColors")
+if Settings.GetBoolSetting("CustomColors") is None:
+    CUSTOM_COLORS_ENABLED = DefaultSettings["CustomColors"]
+    Settings.SetBoolSetting("CustomColors", CUSTOM_COLORS_ENABLED)
+
+COLOR_BORDERS = Settings.GetStringSetting("Color_Borders")
+if Settings.GetStringSetting("Color_Borders") == "":
+    COLOR_BORDERS = DefaultSettings["Color_Borders"]
+    Settings.SetStringSetting("Color_Borders", COLOR_BORDERS)
+
+COLOR_BACKGROUND = Settings.GetStringSetting("Color_Background")
+if Settings.GetStringSetting("Color_Background") == "":
+    COLOR_BACKGROUND = DefaultSettings["Color_Background"]
+    Settings.SetStringSetting("Color_Background", COLOR_BACKGROUND)
+
+COLOR_APPLICATION_BUTTON_BACKGROUND = Settings.GetStringSetting("Color_Background_App")
+if Settings.GetStringSetting("Color_Background_App") == "":
+    COLOR_APPLICATION_BUTTON_BACKGROUND = DefaultSettings["Color_Background_App"]
+    Settings.SetStringSetting("Color_Background_App", COLOR_APPLICATION_BUTTON_BACKGROUND)
 
 # endregion ------------------------------------------------------------------------------------------------------------

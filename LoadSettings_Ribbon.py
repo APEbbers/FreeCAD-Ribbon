@@ -74,7 +74,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
     UseFCOverlay = Parameters_Ribbon.USE_FC_OVERLAY
     UseButtonBackGround = Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED
     EnableWrap_Medium = Parameters_Ribbon.WRAPTEXT_MEDIUM
-    UseCustomIcons = Parameters_Ribbon.CUSTOM_ICONS_ENABLED
+    CustomIcons = Parameters_Ribbon.CUSTOM_ICONS_ENABLED
+    CustomColors = Parameters_Ribbon.CUSTOM_COLORS_ENABLED
 
     # Store the current values before change
     OriginalValues = {
@@ -302,6 +303,11 @@ class LoadDialog(Settings_ui.Ui_Settings):
             QSize(self.form.pinButton_closed.width() - 6, self.form.pinButton_closed.height() - 6)
         )
 
+        if Parameters_Ribbon.CUSTOM_COLORS_ENABLED is True:
+            self.form.CustomColors.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.CustomColors.setCheckState(Qt.CheckState.Unchecked)
+
         # region - connect controls with functions----------------------------------------------------
         #
         # Connect Backup
@@ -409,6 +415,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.on_pinButton_closed_clicked()
 
         self.form.pinButton_closed.connect(self.form.pinButton_closed, SIGNAL("clicked()"), PinButtonClosed)
+
+        self.form.CustomColors.clicked.connect(self.on_CustomColors_clicked)
 
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
@@ -781,6 +789,16 @@ class LoadDialog(Settings_ui.Ui_Settings):
                 QSize(self.form.pinButton_closed.width() - 6, self.form.pinButton_closed.height() - 6)
             )
             self.settingChanged = True
+        return
+
+    def on_CustomColors_clicked(self):
+        if self.form.CustomColors.isChecked() is True:
+            self.ValuesToUpdate["CustomColors"] = True
+            self.CustomColors = True
+        if self.form.CustomColors.isChecked() is False:
+            self.ValuesToUpdate["CustomColors"] = False
+            self.CustomColors = False
+        self.settingChanged = True
         return
 
     # endregion
