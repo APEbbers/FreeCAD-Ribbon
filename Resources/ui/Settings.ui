@@ -1551,19 +1551,6 @@
                    <bool>false</bool>
                   </property>
                   <layout class="QGridLayout" name="gridLayout_20">
-                   <item row="1" column="2">
-                    <spacer name="horizontalSpacer_5">
-                     <property name="orientation">
-                      <enum>Qt::Orientation::Horizontal</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>40</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
                    <item row="2" column="0">
                     <widget class="QLabel" name="label_9">
                      <property name="text">
@@ -1590,26 +1577,6 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="1">
-                    <widget class="Gui::PrefColorButton" name="Color_Background">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="Gui::PrefColorButton" name="Color_Borders">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="0" column="0">
                     <widget class="QLabel" name="label_6">
                      <property name="text">
@@ -1617,15 +1584,27 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="1">
-                    <widget class="Gui::ColorButton" name="Color_Background_App">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
+                   <item row="1" column="3">
+                    <spacer name="horizontalSpacer_5">
+                     <property name="orientation">
+                      <enum>Qt::Orientation::Horizontal</enum>
                      </property>
-                    </widget>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="Gui::ColorButton" name="Color_Borders"/>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="Gui::ColorButton" name="Color_Background"/>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="Gui::ColorButton" name="Color_Background_App"/>
                    </item>
                   </layout>
                  </widget>
@@ -1882,11 +1861,6 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <class>Gui::ColorButton</class>
    <extends>QPushButton</extends>
    <header>Gui/Widgets.h</header>
-  </customwidget>
-  <customwidget>
-   <class>Gui::PrefColorButton</class>
-   <extends>Gui::ColorButton</extends>
-   <header>Gui/PrefWidgets.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

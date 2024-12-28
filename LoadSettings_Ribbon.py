@@ -35,7 +35,7 @@ from PySide.QtWidgets import (
     QSizePolicy,
     QPushButton,
 )
-from PySide.QtGui import QIcon, QPixmap
+from PySide.QtGui import QIcon, QPixmap, QColor
 
 import sys
 import StyleMapping
@@ -418,6 +418,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
         self.form.CustomColors.clicked.connect(self.on_CustomColors_clicked)
 
+        self.form.Color_Borders.clicked.connect(self.on_Color_Borders_clicked)
+
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
 
@@ -799,6 +801,14 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.ValuesToUpdate["CustomColors"] = False
             self.CustomColors = False
         self.settingChanged = True
+        return
+
+    def on_Color_Borders_clicked(self):
+        Color = QColor(self.form.Color_Borders.property("color")).toTuple()  # RGB tupple
+        print(Color)
+        rgbaColor = StandardFunctions.ColorConvertor(Color, 0, True)
+        print(f"{Color}, {rgbaColor}")
+
         return
 
     # endregion

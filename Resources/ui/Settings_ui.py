@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsXkwbrF.ui'
+## Form generated from reading UI file 'SettingslxvhPy.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -780,10 +780,6 @@ class Ui_Settings(object):
         self.ColorS.setEnabled(False)
         self.gridLayout_20 = QGridLayout(self.ColorS)
         self.gridLayout_20.setObjectName("gridLayout_20")
-        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_20.addItem(self.horizontalSpacer_5, 1, 2, 1, 1)
-
         self.label_9 = QLabel(self.ColorS)
         self.label_9.setObjectName("label_9")
         self.label_9.setWordWrap(True)
@@ -797,31 +793,29 @@ class Ui_Settings(object):
 
         self.gridLayout_20.addWidget(self.label_8, 1, 0, 1, 1)
 
-        self.Color_Background = Gui_PrefColorButton(self.ColorS)
-        self.Color_Background.setObjectName("Color_Background")
-        sizePolicy7.setHeightForWidth(self.Color_Background.sizePolicy().hasHeightForWidth())
-        self.Color_Background.setSizePolicy(sizePolicy7)
-
-        self.gridLayout_20.addWidget(self.Color_Background, 1, 1, 1, 1)
-
-        self.Color_Borders = Gui_PrefColorButton(self.ColorS)
-        self.Color_Borders.setObjectName("Color_Borders")
-        sizePolicy7.setHeightForWidth(self.Color_Borders.sizePolicy().hasHeightForWidth())
-        self.Color_Borders.setSizePolicy(sizePolicy7)
-
-        self.gridLayout_20.addWidget(self.Color_Borders, 0, 1, 1, 1)
-
         self.label_6 = QLabel(self.ColorS)
         self.label_6.setObjectName("label_6")
 
         self.gridLayout_20.addWidget(self.label_6, 0, 0, 1, 1)
 
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_20.addItem(self.horizontalSpacer_5, 1, 3, 1, 1)
+
+        self.Color_Borders = Gui_ColorButton(self.ColorS)
+        self.Color_Borders.setObjectName("Color_Borders")
+
+        self.gridLayout_20.addWidget(self.Color_Borders, 0, 2, 1, 1)
+
+        self.Color_Background = Gui_ColorButton(self.ColorS)
+        self.Color_Background.setObjectName("Color_Background")
+
+        self.gridLayout_20.addWidget(self.Color_Background, 1, 2, 1, 1)
+
         self.Color_Background_App = Gui_ColorButton(self.ColorS)
         self.Color_Background_App.setObjectName("Color_Background_App")
-        sizePolicy7.setHeightForWidth(self.Color_Background_App.sizePolicy().hasHeightForWidth())
-        self.Color_Background_App.setSizePolicy(sizePolicy7)
 
-        self.gridLayout_20.addWidget(self.Color_Background_App, 2, 1, 1, 1)
+        self.gridLayout_20.addWidget(self.Color_Background_App, 2, 2, 1, 1)
 
         self.gridLayout_21.addWidget(self.ColorS, 1, 0, 1, 1)
 
