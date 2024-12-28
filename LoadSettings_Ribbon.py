@@ -368,7 +368,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.TabbarHeight.setMinimum(5)
 
         # Connect the controls for custom icons and colors
-        self.fom.CustomIcons.clicked.connect(self.on_CustomIcons_clicked)
+        self.form.CustomIcons.clicked.connect(self.on_CustomIcons_clicked)
 
         def TabScrollLeft():
             self.on_Tab_Scroll_Left_clicked()
