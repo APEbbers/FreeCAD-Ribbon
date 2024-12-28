@@ -262,6 +262,11 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Unchecked)
 
         # Set the color and icon buttons
+        if Parameters_Ribbon.CUSTOM_ICONS_ENABLED is True:
+            self.form.CustomIcons.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.CustomIcons.setCheckState(Qt.CheckState.Unchecked)
+
         self.form.Tab_Scroll_Left.setIcon(StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab"))
         self.form.Tab_Scroll_Left.setIconSize(
             QSize(self.form.Tab_Scroll_Left.width() - 6, self.form.Tab_Scroll_Left.height() - 6)
