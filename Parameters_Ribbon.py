@@ -132,6 +132,7 @@ class Settings:
 
         Settings.SetBoolSetting("DebugMode", DEBUG_MODE)
 
+        Settings.SetBoolSetting("CustomIcons", CUSTOM_ICONS_ENABLED)
         Settings.SetStringSetting("Background_Color", BACKGROUND_COLOR)
         Settings.SetStringSetting("Background_Color_Hover", BACKGROUND_COLOR_HOVER)
         Settings.SetStringSetting("Border_Color", BORDER_COLOR)
@@ -184,6 +185,7 @@ DefaultSettings = {
     "WrapText_Large": bool(True),
     "UseFCOverlay": bool(False),
     "UseButtonBackGround": bool(True),
+    "CustomIcons": bool(False),
     "Background_Color": "",
     "Background_Color_Hover": "",
     "Border_Color": "",
@@ -380,6 +382,11 @@ if Settings.GetBoolSetting("UseButtonBackGround") is None:
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Color and icon settings -------------------------------------------------------------------------------------
+CUSTOM_ICONS_ENABLED = Settings.GetBoolSetting("CustomIcons")
+if Settings.GetBoolSetting("CustomIcons") is None:
+    CUSTOM_ICONS_ENABLED = DefaultSettings["CustomIcons"]
+    Settings.SetBoolSetting("CustomIcons", CUSTOM_ICONS_ENABLED)
+
 BACKGROUND_COLOR = Settings.GetStringSetting("Background_Color")
 if Settings.GetStringSetting("Background_Color") == "":
     BACKGROUND_COLOR = DefaultSettings["Background_Color"]

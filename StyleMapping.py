@@ -96,7 +96,9 @@ def ReturnStyleItem(ControlName):
 
     try:
         if isIcon is True:
-            PixmapName = StyleMapping["Stylesheets"][ControlName]
+            PixmapName = ""
+            if Parameters_Ribbon.CUSTOM_ICONS_ENABLED is True:
+                PixmapName = StyleMapping["Stylesheets"][ControlName]
             if PixmapName == "" or PixmapName is None:
                 PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if PixmapName == "" or PixmapName is None:

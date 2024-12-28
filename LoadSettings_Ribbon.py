@@ -33,8 +33,9 @@ from PySide.QtWidgets import (
     QLabel,
     QTabWidget,
     QSizePolicy,
+    QPushButton,
 )
-from PySide.QtGui import QIcon
+from PySide.QtGui import QIcon, QPixmap
 
 import sys
 import StyleMapping
@@ -73,6 +74,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
     UseFCOverlay = Parameters_Ribbon.USE_FC_OVERLAY
     UseButtonBackGround = Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED
     EnableWrap_Medium = Parameters_Ribbon.WRAPTEXT_MEDIUM
+    UseCustomIcons = Parameters_Ribbon.CUSTOM_ICONS_ENABLED
 
     # Store the current values before change
     OriginalValues = {
@@ -103,6 +105,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "WrapText_Medium": Parameters_Ribbon.WRAPTEXT_LARGE,
         "UseFCOverlay": Parameters_Ribbon.USE_FC_OVERLAY,
         "UseButtonBackGround": Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED,
+        "CustomIcons": Parameters_Ribbon.CUSTOM_ICONS_ENABLED,
     }
 
     # Store the current values before change
@@ -134,6 +137,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "WrapText_Large": Parameters_Ribbon.WRAPTEXT_LARGE,
         "UseFCOverlay": Parameters_Ribbon.USE_FC_OVERLAY,
         "UseButtonBackGround": Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED,
+        "CustomIcons": Parameters_Ribbon.CUSTOM_ICONS_ENABLED,
     }
 
     settingChanged = False
@@ -364,10 +368,42 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.TabbarHeight.setMinimum(5)
 
         # Connect the controls for custom icons and colors
-        def TabScrollLeft():
-            self.on_Tab_Scroll_Left_clicked(self)
+        self.fom.CustomIcons.clicked.connect(self.on_CustomIcons_clicked)
 
-        self.form.Tab_Scroll_Left.connect(self.form.Reset, SIGNAL("clicked()"), TabScrollLeft)
+        def TabScrollLeft():
+            self.on_Tab_Scroll_Left_clicked()
+
+        self.form.Tab_Scroll_Left.connect(self.form.Tab_Scroll_Left, SIGNAL("clicked()"), TabScrollLeft)
+
+        def TabScrollRight():
+            self.on_Tab_Scroll_Right_clicked()
+
+        self.form.Tab_Scroll_Right.connect(self.form.Tab_Scroll_Right, SIGNAL("clicked()"), TabScrollRight)
+
+        def CategoryScrollLeft():
+            self.on_Ribbon_Scroll_Left_clicked()
+
+        self.form.Ribbon_Scroll_Left.connect(self.form.Ribbon_Scroll_Left, SIGNAL("clicked()"), CategoryScrollLeft)
+
+        def CategoryScrollRight():
+            self.on_Ribbon_Scroll_Right_clicked()
+
+        self.form.Ribbon_Scroll_Right.connect(self.form.Ribbon_Scroll_Right, SIGNAL("clicked()"), CategoryScrollRight)
+
+        def MoreCommands():
+            self.on_MoreCommands_clicked()
+
+        self.form.MoreCommands.connect(self.form.MoreCommands, SIGNAL("clicked()"), MoreCommands)
+
+        def PinButtonOpen():
+            self.on_pinButton_open_clicked()
+
+        self.form.pinButton_open.connect(self.form.pinButton_open, SIGNAL("clicked()"), PinButtonOpen)
+
+        def PinButtonClosed():
+            self.on_pinButton_closed_clicked()
+
+        self.form.pinButton_closed.connect(self.form.pinButton_closed, SIGNAL("clicked()"), PinButtonClosed)
 
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
@@ -378,11 +414,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     def on_EnableBackup_clicked(self):
         if self.form.EnableBackup.isChecked() is True:
-            # Parameters_Ribbon.ENABLE_BACKUP = True
             self.ValuesToUpdate["BackupEnabled"] = True
             self.Backup = True
         if self.form.EnableBackup.isChecked() is False:
-            # Parameters_Ribbon.ENABLE_BACKUP = False
             self.ValuesToUpdate["BackupEnabled"] = False
             self.Backup = False
 
@@ -395,62 +429,52 @@ class LoadDialog(Settings_ui.Ui_Settings):
         if BackupFolder != "":
             self.pathBackup = BackupFolder
             self.form.label_4.setText(BackupFolder)
-            # Parameters_Ribbon.BACKUP_LOCATION = BackupFolder
             self.ValuesToUpdate["BackupFolder"] = BackupFolder
             self.BackupLocation = BackupFolder
             self.settingChanged = True
         return
 
     def on_TabbarStyle_currentIndexChanged(self):
-        # Parameters_Ribbon.TABBAR_STYLE = self.form.TabbarStyle.currentIndex()
         self.ValuesToUpdate["TabBar_Style"] = self.form.TabbarStyle.currentIndex()
         self.settingChanged = True
         return
 
     def on_IconSize_Small_TextChanged(self):
-        # Parameters_Ribbon.ICON_SIZE_SMALL = int(self.form.IconSize_Small.text())
         self.ValuesToUpdate["IconSize_Small"] = int(self.form.IconSize_Small.text())
         self.settingChanged = True
         return
 
     def on_IconSize_Medium_TextChanged(self):
-        # Parameters_Ribbon.ICON_SIZE_MEDIUM = int(self.form.IconSize_Medium.text())
         self.ValuesToUpdate["IconSize_Medium"] = int(self.form.IconSize_Medium.text())
         self.settingChanged = True
         return
 
     def on_IconSize_Large_TextChanged(self):
-        # Parameters_Ribbon.ICON_SIZE_LARGE = int(self.form.IconSize_Large.text())
         self.ValuesToUpdate["IconSize_Large"] = int(self.form.IconSize_Large.text())
         self.settingChanged = True
         return
 
     def on_IconSize_ApplicationButton_TextChanged(self):
-        # Parameters_Ribbon.APP_ICON_SIZE = int(self.form.IconSize_ApplicationButton.text())
         self.ValuesToUpdate["ApplicationButtonSize"] = int(self.form.IconSize_ApplicationButton.text())
         self.settingChanged = True
         return
 
     def on_IconSize_QuickAccessButton_TextChanged(self):
-        # Parameters_Ribbon.QUICK_ICON_SIZE = int(self.form.IconSize_QuickAccessButton.text())
         self.ValuesToUpdate["QuickAccessButtonSize"] = int(self.form.IconSize_QuickAccessButton.text())
         self.settingChanged = True
         return
 
     def on_IconSize_rightToolbarButton_TextChanged(self):
-        # Parameters_Ribbon.RIGHT_ICON_SIZE = int(self.form.IconSize_rightToolbarButton.text())
         self.ValuesToUpdate["RightToolbarButtonSize"] = int(self.form.IconSize_rightToolbarButton.text())
         self.settingChanged = True
         return
 
     def on_TabbarHeight_TextChanged(self):
-        # Parameters_Ribbon.TABBAR_SIZE = int(self.form.TabbarHeight.text())
         self.ValuesToUpdate["TabBarSize"] = int(self.form.TabbarHeight.text())
         self.settingChanged = True
         return
 
     def on_MaxPanelColumn_TextChanged(self):
-        # Parameters_Ribbon.MAX_COLUMN_PANELS = int(self.form.MaxPanelColumn.text())
         self.ValuesToUpdate["MaxColumnsPerPanel"] = int(self.form.MaxPanelColumn.text())
         self.settingChanged = True
 
@@ -464,7 +488,6 @@ class LoadDialog(Settings_ui.Ui_Settings):
         )
         if StyleSheet != "":
             self.form.label_7.setText(StyleSheet)
-            # Parameters_Ribbon.STYLESHEET = StyleSheet
             self.ValuesToUpdate["Stylesheet"] = StyleSheet
             self.StyleSheet = StyleSheet
             self.settingChanged = True
@@ -472,11 +495,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     def on_ShowTextSmall_clicked(self):
         if self.form.ShowText_Small.isChecked() is True:
-            # Parameters_Ribbon.SHOW_ICON_TEXT_SMALL = True
             self.ValuesToUpdate["ShowIconText_Small"] = True
             self.ShowText_Small = True
         if self.form.ShowText_Small.isChecked() is False:
-            # Parameters_Ribbon.SHOW_ICON_TEXT_SMALL = False
             self.ValuesToUpdate["ShowIconText_Small"] = False
             self.ShowText_Small = False
         self.settingChanged = True
@@ -484,11 +505,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     def on_ShowTextMedium_clicked(self):
         if self.form.ShowText_Medium.isChecked() is True:
-            # Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM = True
             self.ValuesToUpdate["ShowIconText_Medium"] = True
             self.ShowText_Medium = True
         if self.form.ShowText_Medium.isChecked() is False:
-            # Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM = False
             self.ValuesToUpdate["ShowIconText_Medium"] = False
             self.ShowText_Medium = False
         self.settingChanged = True
@@ -496,11 +515,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     def on_ShowTextLarge_clicked(self):
         if self.form.ShowText_Large.isChecked() is True:
-            # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = True
             self.ValuesToUpdate["ShowIconText_Large"] = True
             self.ShowText_Large = True
         if self.form.ShowText_Large.isChecked() is False:
-            # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = False
             self.ValuesToUpdate["ShowIconText_Large"] = False
             self.ShowText_Large = False
         self.settingChanged = True
@@ -508,11 +525,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     def on_EnableWrap_Medium_clicked(self):
         if self.form.EnableWrap_Medium.isChecked() is True:
-            # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = True
             self.ValuesToUpdate["WrapText_Medium"] = True
             self.EnableWrap_Medium = True
         if self.form.EnableWrap_Medium.isChecked() is False:
-            # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = False
             self.ValuesToUpdate["WrapText_Medium"] = False
             self.EnableWrap_Medium = False
         self.settingChanged = True
@@ -520,11 +535,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     def on_EnableWrap_Large_clicked(self):
         if self.form.EnableWrap_Large.isChecked() is True:
-            # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = True
             self.ValuesToUpdate["WrapText_Large"] = True
             self.EnableWrap_Large = True
         if self.form.EnableWrap_Large.isChecked() is False:
-            # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = False
             self.ValuesToUpdate["WrapText_Large"] = False
             self.EnableWrap_Large = False
         self.settingChanged = True
@@ -532,11 +545,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     def on_DebugMode_clicked(self):
         if self.form.DebugMode.isChecked() is True:
-            # Parameters_Ribbon.DEBUG_MODE = True
             self.ValuesToUpdate["DebugMode"] = True
             self.DebugMode = True
         if self.form.DebugMode.isChecked() is False:
-            # Parameters_Ribbon.DEBUG_MODE = False
             self.ValuesToUpdate["DebugMode"] = False
             self.DebugMode = False
         self.settingChanged = True
@@ -544,48 +555,39 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     def on_EnableEnterEvent_clicked(self):
         if self.form.EnableEnterEvent.isChecked() is True:
-            # Parameters_Ribbon.SHOW_ON_HOVER = True
             self.ValuesToUpdate["ShowOnHover"] = True
             self.ShowOnHover = True
         if self.form.EnableEnterEvent.isChecked() is False:
-            # Parameters_Ribbon.SHOW_ON_HOVER = False
             self.ValuesToUpdate["ShowOnHover"] = False
             self.ShowOnHover = False
         self.settingChanged = True
 
     def on_ScrollSpeed_TabBar_valueCHanged(self):
-        # Parameters_Ribbon.TABBAR_SCROLLSPEED = self.form.ScrollSpeed_TabBar.value()
         self.ValuesToUpdate["TabBar_Scroll"] = self.form.ScrollSpeed_TabBar.value()
         self.settingChanged = True
 
     def on_ScrollSpeed_Ribbon_valueCHanged(self):
-        # Parameters_Ribbon.RIBBON_SCROLLSPEED = self.form.ScrollSpeed_Ribbon.value()
         self.ValuesToUpdate["Ribbon_Scroll"] = self.form.ScrollSpeed_Ribbon.value()
         self.settingChanged = True
 
     def on_ScrollClicks_TabBar_valueCHanged(self):
-        # Parameters_Ribbon.TABBAR_CLICKSPEED = self.form.ScrollClicks_TabBar.value()
         self.ValuesToUpdate["TabBar_Click"] = self.form.ScrollClicks_TabBar.value()
         self.settingChanged = True
 
     def on_ScrollClicks_Ribbon_valueCHanged(self):
-        # Parameters_Ribbon.RIBBON_CLICKSPEED = self.form.ScrollClicks_Ribbon.value()
         self.ValuesToUpdate["Ribbon_Click"] = self.form.ScrollClicks_Ribbon.value()
         self.settingChanged = True
 
     def on_PreferedViewPanel_currentIndexChanged(self):
-        # Parameters_Ribbon.PREFERRED_VIEW = self.form.PreferedViewPanel.currentIndex()
         self.ValuesToUpdate["Preferred_view"] = self.form.PreferedViewPanel.currentIndex()
         self.settingChanged = True
         return
 
     def on_EnableToolsPanel_clicked(self):
         if self.form.EnableToolsPanel.isChecked() is True:
-            # Parameters_Ribbon.USE_TOOLSPANEL = True
             self.ValuesToUpdate["UseToolsPanel"] = True
             self.UseToolsPanel = True
         if self.form.EnableToolsPanel.isChecked() is False:
-            # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = False
             self.ValuesToUpdate["UseToolsPanel"] = False
             self.UseToolsPanel = False
         self.settingChanged = True
@@ -593,11 +595,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     def on_FCOverlayEnabled_clicked(self):
         if self.form.FCOverlayEnabled.isChecked() is True:
-            # Parameters_Ribbon.USE_TOOLSPANEL = True
             self.ValuesToUpdate["UseFCOverlay"] = True
             self.UseFCOverlay = True
         if self.form.FCOverlayEnabled.isChecked() is False:
-            # Parameters_Ribbon.SHOW_ICON_TEXT_LARGE = False
             self.ValuesToUpdate["UseFCOverlay"] = False
             self.UseFCOverlay = False
         self.settingChanged = True
@@ -605,27 +605,169 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     def on_UseButtonBackGround_clicked(self):
         if self.form.UseButtonBackGround.isChecked() is True:
-            # Parameters_Ribbon.SHOW_ON_HOVER = True
             self.ValuesToUpdate["UseButtonBackGround"] = True
             self.UseButtonBackGround = True
         if self.form.UseButtonBackGround.isChecked() is False:
-            # Parameters_Ribbon.SHOW_ON_HOVER = False
             self.ValuesToUpdate["UseButtonBackGround"] = False
             self.UseButtonBackGround = False
         self.settingChanged = True
         return
 
-    def on_Tab_Scroll_Left_clicked(self):
-        File = StandardFunctions.SaveDialog([("png", "*png"), ("svg", "*.svg")])
-        if File is not None or File != "":
-            Parameters_Ribbon.Settings.SetStringSetting("ScrollLeftButton_Tab", File)
+    def on_CustomIcons_clicked(self):
+        if self.form.CustomIcons.isChecked() is True:
+            self.ValuesToUpdate["CustomIcons"] = True
+            self.CustomIcons = True
+        if self.form.CustomIcons.isChecked() is False:
+            self.ValuesToUpdate["CustomIcons"] = False
+            self.CustomIcons = False
+        self.settingChanged = True
+        return
 
-        self.form.Tab_Scroll_Left.setIcon(StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab"))
-        self.form.Tab_Scroll_Left.setIconSize(
-            QSize(self.form.Tab_Scroll_Left.width() - 6, self.form.Tab_Scroll_Left.height() - 6)
+    # region - Color and icon buttons
+    def on_Tab_Scroll_Left_clicked(self):
+        # Define th edefault path
+        DefaultPath = os.path.dirname(Parameters_Ribbon.SCROLL_LEFT_BUTTON_TAB)
+        if DefaultSettings != "":
+            DefaultPath = Parameters_Ribbon.ICON_LOCATION
+        # Get the file with a dialog
+        File = StandardFunctions.GetFileDialog(
+            Filter="Pictures (*.png *.svg)",
+            parent=None,
+            DefaultPath=DefaultPath,
+            SaveAs=False,
         )
+        # if File is not nothing, set the icon in settings and on the button
+        if File is not None and File != "" and os.path.isfile(File):
+            Parameters_Ribbon.Settings.SetStringSetting("ScrollLeftButton_Tab", File)
+            self.form.Tab_Scroll_Left.setIcon(QIcon(QPixmap(File)))
+            self.form.Tab_Scroll_Left.setIconSize(
+                QSize(self.form.Tab_Scroll_Left.width() - 6, self.form.Tab_Scroll_Left.height() - 6)
+            )
 
         return
+
+    def on_Tab_Scroll_Right_clicked(self):
+        # Define th edefault path
+        DefaultPath = os.path.dirname(Parameters_Ribbon.SCROLL_RIGHT_BUTTON_TAB)
+        if DefaultSettings != "":
+            DefaultPath = Parameters_Ribbon.ICON_LOCATION
+        # Get the file with a dialog
+        File = StandardFunctions.GetFileDialog(
+            Filter="Pictures (*.png *.svg)",
+            parent=None,
+            DefaultPath=DefaultPath,
+            SaveAs=False,
+        )
+        # if File is not nothing, set the icon in settings and on the button
+        if File is not None and File != "" and os.path.isfile(File):
+            Parameters_Ribbon.Settings.SetStringSetting("ScrollRightButton_Tab", File)
+            self.form.Tab_Scroll_Right.setIcon(QIcon(QPixmap(File)))
+            self.form.Tab_Scroll_Right.setIconSize(
+                QSize(self.form.Tab_Scroll_Right.width() - 6, self.form.Tab_Scroll_Right.height() - 6)
+            )
+
+    def on_Ribbon_Scroll_Left_clicked(self):
+        # Define th edefault path
+        DefaultPath = os.path.dirname(Parameters_Ribbon.SCROLL_LEFT_BUTTON_CATEGORY)
+        if DefaultSettings != "":
+            DefaultPath = Parameters_Ribbon.ICON_LOCATION
+        # Get the file with a dialog
+        File = StandardFunctions.GetFileDialog(
+            Filter="Pictures (*.png *.svg)",
+            parent=None,
+            DefaultPath=DefaultPath,
+            SaveAs=False,
+        )
+        # if File is not nothing, set the icon in settings and on the button
+        if File is not None and File != "" and os.path.isfile(File):
+            Parameters_Ribbon.Settings.SetStringSetting("ScrollLeftButton_Category", File)
+            self.form.Ribbon_Scroll_Left.setIcon(QIcon(QPixmap(File)))
+            self.form.Ribbon_Scroll_Left.setIconSize(
+                QSize(self.form.Ribbon_Scroll_Left.width() - 6, self.form.Ribbon_Scroll_Left.height() - 6)
+            )
+
+    def on_Ribbon_Scroll_Right_clicked(self):
+        # Define th edefault path
+        DefaultPath = os.path.dirname(Parameters_Ribbon.SCROLL_RIGHT_BUTTON_CATEGORY)
+        if DefaultSettings != "":
+            DefaultPath = Parameters_Ribbon.ICON_LOCATION
+        # Get the file with a dialog
+        File = StandardFunctions.GetFileDialog(
+            Filter="Pictures (*.png *.svg)",
+            parent=None,
+            DefaultPath=DefaultPath,
+            SaveAs=False,
+        )
+        # if File is not nothing, set the icon in settings and on the button
+        if File is not None and File != "" and os.path.isfile(File):
+            Parameters_Ribbon.Settings.SetStringSetting("ScrollRightButton_Category", File)
+            self.form.Ribbon_Scroll_Right.setIcon(QIcon(QPixmap(File)))
+            self.form.Ribbon_Scroll_Right.setIconSize(
+                QSize(self.form.Ribbon_Scroll_Right.width() - 6, self.form.Ribbon_Scroll_Right.height() - 6)
+            )
+
+    def on_MoreCommands_clicked(self):
+        # Define th edefault path
+        DefaultPath = os.path.dirname(Parameters_Ribbon.OPTION_BUTTON)
+        if DefaultSettings != "":
+            DefaultPath = Parameters_Ribbon.ICON_LOCATION
+        # Get the file with a dialog
+        File = StandardFunctions.GetFileDialog(
+            Filter="Pictures (*.png *.svg)",
+            parent=None,
+            DefaultPath=DefaultPath,
+            SaveAs=False,
+        )
+        # if File is not nothing, set the icon in settings and on the button
+        if File is not None and File != "" and os.path.isfile(File):
+            Parameters_Ribbon.Settings.SetStringSetting("OptionButton", File)
+            self.form.MoreCommands.setIcon(QIcon(QPixmap(File)))
+            self.form.MoreCommands.setIconSize(
+                QSize(self.form.MoreCommands.width() - 6, self.form.MoreCommands.height() - 6)
+            )
+
+    def on_pinButton_open_clicked(self):
+        # Define th edefault path
+        DefaultPath = os.path.dirname(Parameters_Ribbon.PIN_BUTTON_OPEN)
+        if DefaultSettings != "":
+            DefaultPath = Parameters_Ribbon.ICON_LOCATION
+        # Get the file with a dialog
+        File = StandardFunctions.GetFileDialog(
+            Filter="Pictures (*.png *.svg)",
+            parent=None,
+            DefaultPath=DefaultPath,
+            SaveAs=False,
+        )
+        # if File is not nothing, set the icon in settings and on the button
+        if File is not None and File != "" and os.path.isfile(File):
+            Parameters_Ribbon.Settings.SetStringSetting("PinButton_open", File)
+            self.form.pinButton_open.setIcon(QIcon(QPixmap(File)))
+            self.form.pinButton_open.setIconSize(
+                QSize(self.form.pinButton_open.width() - 6, self.form.pinButton_open.height() - 6)
+            )
+
+    def on_pinButton_closed_clicked(self):
+        # Define th edefault path
+        DefaultPath = os.path.dirname(Parameters_Ribbon.PIN_BUTTON_CLOSED)
+        if DefaultSettings != "":
+            DefaultPath = Parameters_Ribbon.ICON_LOCATION
+        # Get the file with a dialog
+        File = StandardFunctions.GetFileDialog(
+            Filter="Pictures (*.png *.svg)",
+            parent=None,
+            DefaultPath=DefaultPath,
+            SaveAs=False,
+        )
+        print(File)
+        # if File is not nothing, set the icon in settings and on the button
+        if File is not None and File != "" and os.path.isfile(File):
+            Parameters_Ribbon.Settings.SetStringSetting("PinButton_closed", File)
+            self.form.pinButton_closed.setIcon(QIcon(QPixmap(File)))
+            self.form.pinButton_closed.setIconSize(
+                QSize(self.form.pinButton_closed.width() - 6, self.form.pinButton_closed.height() - 6)
+            )
+
+    # endregion
 
     @staticmethod
     def on_Cancel_clicked(self):
@@ -671,6 +813,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Set the use of FreeCAD's overlay function
         Parameters_Ribbon.Settings.SetBoolSetting("UseFCOverlay", self.OriginalValues["UseFCOverlay"])
         Parameters_Ribbon.Settings.SetBoolSetting("UseButtonBackGround", self.OriginalValues["UseButtonBackGround"])
+        # Set the use of custom icons
+        Parameters_Ribbon.Settings.SetBoolSetting("CustomIcons", self.OriginalValues["CustomIcons"])
 
         # Set the size of the window to the previous state
         Parameters_Ribbon.Settings.SetIntSetting("SettingsDialog_Height", self.form.height())
@@ -723,6 +867,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Set the use of FreeCAD's overlay function
         Parameters_Ribbon.Settings.SetBoolSetting("UseFCOverlay", self.ValuesToUpdate["UseFCOverlay"])
         Parameters_Ribbon.Settings.SetBoolSetting("UseButtonBackGround", self.ValuesToUpdate["UseButtonBackGround"])
+        # Set the use of custom icons
+        Parameters_Ribbon.Settings.SetBoolSetting("CustomIcons", self.ValuesToUpdate["CustomIcons"])
 
         # Set the size of the window to the previous state
         Parameters_Ribbon.Settings.SetIntSetting("SettingsDialog_Height", self.form.height())
