@@ -134,7 +134,7 @@ class Settings:
 
         Settings.SetBoolSetting("CustomIcons", CUSTOM_ICONS_ENABLED)
         Settings.SetStringSetting("Background_Color", BACKGROUND_COLOR)
-        Settings.SetStringSetting("Background_Color_Hover", BACKGROUND_COLOR_HOVER)
+        Settings.SetStringSetting("Color_Background_Hover", COLOR_BACKGROUND_HOVER)
         Settings.SetStringSetting("Border_Color", BORDER_COLOR)
         Settings.SetStringSetting("ApplicationButton_Background", APPLICATION_BUTTON_COLOR)
         Settings.SetStringSetting("ScrollLeftButton_Tab", SCROLL_LEFT_BUTTON_TAB)
@@ -147,7 +147,9 @@ class Settings:
 
         Settings.SetBoolSetting("CustomColors", CUSTOM_COLORS_ENABLED)
         Settings.SetStringSetting("Color_Borders", COLOR_BORDERS)
+        Settings.SetBoolSetting("BorderTransparant", BORDER_TRANSPARANT)
         Settings.SetStringSetting("Color_Background", COLOR_BACKGROUND)
+        Settings.SetStringSetting("Color_Background_Hover", COLOR_BACKGROUND_HOVER)
         Settings.SetStringSetting("Color_Background_App", COLOR_APPLICATION_BUTTON_BACKGROUND)
 
 
@@ -190,11 +192,13 @@ DefaultSettings = {
     "WrapText_Large": bool(True),
     "UseFCOverlay": bool(False),
     "UseButtonBackGround": bool(True),
-    "CustomIcons": bool(False),
+    "CustomColors": bool(False),
     "Background_Color": "",
-    "Background_Color_Hover": "",
+    "Color_Background_Hover": "",
     "Border_Color": "",
+    "BorderTransparant": bool(True),
     "ApplicationButton_Background": "",
+    "CustomIcons": bool(False),
     "ScrollLeftButton_Tab": "",
     "ScrollRightButton_Tab": "",
     "ScrollLeftButton_Category": "",
@@ -202,10 +206,6 @@ DefaultSettings = {
     "OptionButton": "",
     "PinButton_open": "",
     "PinButton_closed": "",
-    "CustomColors": bool(False),
-    "Color_Borders": "",
-    "Color_Background": "",
-    "Color_Background_App": "",
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
@@ -401,10 +401,10 @@ if Settings.GetStringSetting("Background_Color") == "":
     BACKGROUND_COLOR = DefaultSettings["Background_Color"]
     Settings.SetStringSetting("Background_Color", BACKGROUND_COLOR)
 
-BACKGROUND_COLOR_HOVER = Settings.GetStringSetting("Background_Color_Hover")
-if Settings.GetStringSetting("Background_Color_Hover") == "":
-    BACKGROUND_COLOR_HOVER = DefaultSettings["Background_Color_Hover"]
-    Settings.SetStringSetting("Background_Color_Hover", BACKGROUND_COLOR_HOVER)
+COLOR_BACKGROUND_HOVER = Settings.GetStringSetting("Color_Background_Hover")
+if Settings.GetStringSetting("Color_Background_Hover") == "":
+    COLOR_BACKGROUND_HOVER = DefaultSettings["Color_Background_Hover"]
+    Settings.SetStringSetting("Color_Background_Hover", COLOR_BACKGROUND_HOVER)
 
 BORDER_COLOR = Settings.GetStringSetting("Border_Color")
 if Settings.GetStringSetting("Border_Color") == "":
@@ -456,6 +456,11 @@ if Settings.GetBoolSetting("CustomColors") is None:
     CUSTOM_COLORS_ENABLED = DefaultSettings["CustomColors"]
     Settings.SetBoolSetting("CustomColors", CUSTOM_COLORS_ENABLED)
 
+BORDER_TRANSPARANT = Settings.GetBoolSetting("BorderTransparant")
+if Settings.GetBoolSetting("BorderTransparant") is None:
+    BORDER_TRANSPARANT = DefaultSettings["BorderTransparant"]
+    Settings.SetBoolSetting("BorderTransparant", BORDER_TRANSPARANT)
+
 COLOR_BORDERS = Settings.GetStringSetting("Color_Borders")
 if Settings.GetStringSetting("Color_Borders") == "":
     COLOR_BORDERS = DefaultSettings["Color_Borders"]
@@ -465,6 +470,11 @@ COLOR_BACKGROUND = Settings.GetStringSetting("Color_Background")
 if Settings.GetStringSetting("Color_Background") == "":
     COLOR_BACKGROUND = DefaultSettings["Color_Background"]
     Settings.SetStringSetting("Color_Background", COLOR_BACKGROUND)
+
+COLOR_BACKGROUND_HOVER = Settings.GetStringSetting("Color_Background_Hover")
+if Settings.GetStringSetting("Color_Background_Hover") == "":
+    COLOR_BACKGROUND_HOVER = DefaultSettings["Color_Background_Hover"]
+    Settings.SetStringSetting("Color_Background_Hover", COLOR_BACKGROUND_HOVER)
 
 COLOR_APPLICATION_BUTTON_BACKGROUND = Settings.GetStringSetting("Color_Background_App")
 if Settings.GetStringSetting("Color_Background_App") == "":

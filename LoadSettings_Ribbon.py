@@ -107,6 +107,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "UseFCOverlay": Parameters_Ribbon.USE_FC_OVERLAY,
         "UseButtonBackGround": Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED,
         "CustomIcons": Parameters_Ribbon.CUSTOM_ICONS_ENABLED,
+        "CustomColors": Parameters_Ribbon.CUSTOM_COLORS_ENABLED,
+        "BorderTransparant": Parameters_Ribbon.BORDER_TRANSPARANT,
     }
 
     # Store the current values before change
@@ -139,6 +141,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "UseFCOverlay": Parameters_Ribbon.USE_FC_OVERLAY,
         "UseButtonBackGround": Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED,
         "CustomIcons": Parameters_Ribbon.CUSTOM_ICONS_ENABLED,
+        "CustomColors": Parameters_Ribbon.CUSTOM_COLORS_ENABLED,
+        "BorderTransparant": Parameters_Ribbon.BORDER_TRANSPARANT,
     }
 
     settingChanged = False
@@ -308,6 +312,11 @@ class LoadDialog(Settings_ui.Ui_Settings):
         else:
             self.form.CustomColors.setCheckState(Qt.CheckState.Unchecked)
 
+        if Parameters_Ribbon.BORDER_TRANSPARANT is True:
+            self.form.BorderTransparant.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.BorderTransparant.setCheckState(Qt.CheckState.Unchecked)
+
         # region - connect controls with functions----------------------------------------------------
         #
         # Connect Backup
@@ -419,6 +428,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.CustomColors.clicked.connect(self.on_CustomColors_clicked)
 
         self.form.Color_Borders.clicked.connect(self.on_Color_Borders_clicked)
+
+        self.form.BorderTransparant.clicked.connect(self.on_BorderTransparant_clicked)
 
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
@@ -808,8 +819,16 @@ class LoadDialog(Settings_ui.Ui_Settings):
         print(Color)
         rgbaColor = StandardFunctions.ColorConvertor(Color, 0, True)
         print(f"{Color}, {rgbaColor}")
-
         return
+
+    def on_BorderTransparant_clicked(self):
+        if self.form.BorderTransparant.isChecked() is True:
+            self.ValuesToUpdate["BorderTransparant"] = True
+            self.BorderTransparant = True
+        if self.form.BorderTransparant.isChecked() is False:
+            self.ValuesToUpdate["BorderTransparant"] = False
+            self.BorderTransparant = False
+        self.settingChanged = True
 
     # endregion
 
@@ -859,10 +878,14 @@ class LoadDialog(Settings_ui.Ui_Settings):
         Parameters_Ribbon.Settings.SetBoolSetting("UseButtonBackGround", self.OriginalValues["UseButtonBackGround"])
         # Set the use of custom icons
         Parameters_Ribbon.Settings.SetBoolSetting("CustomIcons", self.OriginalValues["CustomIcons"])
+        # Set the use of custom colors
+        Parameters_Ribbon.Settings.SetBoolSetting("CustomColors", self.OriginalValues["CustomColors"])
+        Parameters_Ribbon.Settings.SetBoolSetting("BorderTransparant", self.OriginalValues["BorderTransparant"])
 
         # Set the size of the window to the previous state
         Parameters_Ribbon.Settings.SetIntSetting("SettingsDialog_Height", self.form.height())
         Parameters_Ribbon.Settings.SetIntSetting("SettingsDialog_Width", self.form.width())
+
         # Close the form
         self.form.close()
         return
@@ -913,6 +936,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
         Parameters_Ribbon.Settings.SetBoolSetting("UseButtonBackGround", self.ValuesToUpdate["UseButtonBackGround"])
         # Set the use of custom icons
         Parameters_Ribbon.Settings.SetBoolSetting("CustomIcons", self.ValuesToUpdate["CustomIcons"])
+        # Set the use of custom colors
+        Parameters_Ribbon.Settings.SetBoolSetting("CustomColors", self.ValuesToUpdate["CustomColors"])
+        Parameters_Ribbon.Settings.SetBoolSetting("BorderTransparant", self.ValuesToUpdate["BorderTransparant"])
 
         # Set the size of the window to the previous state
         Parameters_Ribbon.Settings.SetIntSetting("SettingsDialog_Height", self.form.height())

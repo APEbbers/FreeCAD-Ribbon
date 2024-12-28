@@ -219,7 +219,7 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
 StyleMapping = {
     "Stylesheets": {
         "Background_Color": Parameters_Ribbon.BACKGROUND_COLOR,
-        "Background_Color_Hover": Parameters_Ribbon.BACKGROUND_COLOR_HOVER,
+        "Background_Color_Hover": Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
         "Border_Color": Parameters_Ribbon.BORDER_COLOR,
         "ApplicationButton_Background": Parameters_Ribbon.APPLICATION_BUTTON_COLOR,
         "ScrollLeftButton_Tab": Parameters_Ribbon.SCROLL_LEFT_BUTTON_TAB,
