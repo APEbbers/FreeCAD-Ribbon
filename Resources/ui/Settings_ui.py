@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsKHiHtM.ui'
+## Form generated from reading UI file 'SettingsKxonhT.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##

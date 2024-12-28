@@ -1621,7 +1621,7 @@
                       </widget>
                      </item>
                      <item row="2" column="1" colspan="2">
-                      <widget class="Gui::ColorButton" name="Color_Hover"/>
+                      <widget class="Gui::ColorButton" name="Color_Background_Hover"/>
                      </item>
                      <item row="3" column="1" colspan="2">
                       <widget class="Gui::ColorButton" name="Color_Background_App"/>
