@@ -56,7 +56,7 @@ sys.path.append(pathUI)
 sys.path.append(pathBackup)
 
 
-def ReturnStyleItem(ControlName):
+def ReturnStyleItem(ControlName, ShowCustomIcon=False):
     """
     Enter one of the names below:
 
@@ -97,7 +97,7 @@ def ReturnStyleItem(ControlName):
     try:
         if isIcon is True:
             PixmapName = ""
-            if Parameters_Ribbon.CUSTOM_ICONS_ENABLED is True:
+            if Parameters_Ribbon.CUSTOM_ICONS_ENABLED is True or ShowCustomIcon is True:
                 PixmapName = StyleMapping["Stylesheets"][ControlName]
             if PixmapName == "" or PixmapName is None:
                 PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]

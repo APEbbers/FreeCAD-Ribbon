@@ -267,37 +267,37 @@ class LoadDialog(Settings_ui.Ui_Settings):
         else:
             self.form.CustomIcons.setCheckState(Qt.CheckState.Unchecked)
 
-        self.form.Tab_Scroll_Left.setIcon(StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab"))
+        self.form.Tab_Scroll_Left.setIcon(StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab", True))
         self.form.Tab_Scroll_Left.setIconSize(
             QSize(self.form.Tab_Scroll_Left.width() - 6, self.form.Tab_Scroll_Left.height() - 6)
         )
 
-        self.form.Tab_Scroll_Right.setIcon(StyleMapping.ReturnStyleItem("ScrollRightButton_Tab"))
+        self.form.Tab_Scroll_Right.setIcon(StyleMapping.ReturnStyleItem("ScrollRightButton_Tab", True))
         self.form.Tab_Scroll_Right.setIconSize(
             QSize(self.form.Tab_Scroll_Right.width() - 6, self.form.Tab_Scroll_Right.height() - 6)
         )
 
-        self.form.Ribbon_Scroll_Left.setIcon(StyleMapping.ReturnStyleItem("ScrollLeftButton_Category"))
+        self.form.Ribbon_Scroll_Left.setIcon(StyleMapping.ReturnStyleItem("ScrollLeftButton_Category", True))
         self.form.Ribbon_Scroll_Left.setIconSize(
             QSize(self.form.Ribbon_Scroll_Left.width() - 6, self.form.Ribbon_Scroll_Left.height() - 6)
         )
 
-        self.form.Ribbon_Scroll_Right.setIcon(StyleMapping.ReturnStyleItem("ScrollRightButton_Category"))
+        self.form.Ribbon_Scroll_Right.setIcon(StyleMapping.ReturnStyleItem("ScrollRightButton_Category", True))
         self.form.Ribbon_Scroll_Right.setIconSize(
             QSize(self.form.Ribbon_Scroll_Right.width() - 6, self.form.Ribbon_Scroll_Right.height() - 6)
         )
 
-        self.form.MoreCommands.setIcon(StyleMapping.ReturnStyleItem("OptionButton"))
+        self.form.MoreCommands.setIcon(StyleMapping.ReturnStyleItem("OptionButton", True))
         self.form.MoreCommands.setIconSize(
             QSize(self.form.MoreCommands.width() - 6, self.form.MoreCommands.height() - 6)
         )
 
-        self.form.pinButton_open.setIcon(StyleMapping.ReturnStyleItem("PinButton_open"))
+        self.form.pinButton_open.setIcon(StyleMapping.ReturnStyleItem("PinButton_open", True))
         self.form.pinButton_open.setIconSize(
             QSize(self.form.pinButton_open.width() - 6, self.form.pinButton_open.height() - 6)
         )
 
-        self.form.pinButton_closed.setIcon(StyleMapping.ReturnStyleItem("PinButton_closed"))
+        self.form.pinButton_closed.setIcon(StyleMapping.ReturnStyleItem("PinButton_closed", True))
         self.form.pinButton_closed.setIconSize(
             QSize(self.form.pinButton_closed.width() - 6, self.form.pinButton_closed.height() - 6)
         )
@@ -648,7 +648,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.form.Tab_Scroll_Left.setIconSize(
                 QSize(self.form.Tab_Scroll_Left.width() - 6, self.form.Tab_Scroll_Left.height() - 6)
             )
-
+            self.settingChanged = True
         return
 
     def on_Tab_Scroll_Right_clicked(self):
@@ -670,6 +670,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.form.Tab_Scroll_Right.setIconSize(
                 QSize(self.form.Tab_Scroll_Right.width() - 6, self.form.Tab_Scroll_Right.height() - 6)
             )
+            self.settingChanged = True
+        return
 
     def on_Ribbon_Scroll_Left_clicked(self):
         # Define th edefault path
@@ -690,6 +692,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.form.Ribbon_Scroll_Left.setIconSize(
                 QSize(self.form.Ribbon_Scroll_Left.width() - 6, self.form.Ribbon_Scroll_Left.height() - 6)
             )
+            self.settingChanged = True
+        return
 
     def on_Ribbon_Scroll_Right_clicked(self):
         # Define th edefault path
@@ -710,6 +714,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.form.Ribbon_Scroll_Right.setIconSize(
                 QSize(self.form.Ribbon_Scroll_Right.width() - 6, self.form.Ribbon_Scroll_Right.height() - 6)
             )
+            self.settingChanged = True
+        return
 
     def on_MoreCommands_clicked(self):
         # Define th edefault path
@@ -730,6 +736,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.form.MoreCommands.setIconSize(
                 QSize(self.form.MoreCommands.width() - 6, self.form.MoreCommands.height() - 6)
             )
+            self.settingChanged = True
+        return
 
     def on_pinButton_open_clicked(self):
         # Define th edefault path
@@ -750,6 +758,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.form.pinButton_open.setIconSize(
                 QSize(self.form.pinButton_open.width() - 6, self.form.pinButton_open.height() - 6)
             )
+            self.settingChanged = True
+        return
 
     def on_pinButton_closed_clicked(self):
         # Define th edefault path
@@ -763,7 +773,6 @@ class LoadDialog(Settings_ui.Ui_Settings):
             DefaultPath=DefaultPath,
             SaveAs=False,
         )
-        print(File)
         # if File is not nothing, set the icon in settings and on the button
         if File is not None and File != "" and os.path.isfile(File):
             Parameters_Ribbon.Settings.SetStringSetting("PinButton_closed", File)
@@ -771,6 +780,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.form.pinButton_closed.setIconSize(
                 QSize(self.form.pinButton_closed.width() - 6, self.form.pinButton_closed.height() - 6)
             )
+            self.settingChanged = True
+        return
 
     # endregion
 
@@ -939,6 +950,44 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.PreferedViewPanel.setCurrentIndex(DefaultSettings["Preferred_view"])
         self.form.FCOverlayEnabled.setCurrentIndex(DefaultSettings["Preferred_view"])
         self.settingChanged = True
+
+        # Set the color and icon buttons
+        self.form.CustomIcons.setCheckState(Qt.CheckState.Unchecked)
+
+        self.form.Tab_Scroll_Left.setIcon(StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab", False))
+        self.form.Tab_Scroll_Left.setIconSize(
+            QSize(self.form.Tab_Scroll_Left.width() - 6, self.form.Tab_Scroll_Left.height() - 6)
+        )
+
+        self.form.Tab_Scroll_Right.setIcon(StyleMapping.ReturnStyleItem("ScrollRightButton_Tab", False))
+        self.form.Tab_Scroll_Right.setIconSize(
+            QSize(self.form.Tab_Scroll_Right.width() - 6, self.form.Tab_Scroll_Right.height() - 6)
+        )
+
+        self.form.Ribbon_Scroll_Left.setIcon(StyleMapping.ReturnStyleItem("ScrollLeftButton_Category", False))
+        self.form.Ribbon_Scroll_Left.setIconSize(
+            QSize(self.form.Ribbon_Scroll_Left.width() - 6, self.form.Ribbon_Scroll_Left.height() - 6)
+        )
+
+        self.form.Ribbon_Scroll_Right.setIcon(StyleMapping.ReturnStyleItem("ScrollRightButton_Category", False))
+        self.form.Ribbon_Scroll_Right.setIconSize(
+            QSize(self.form.Ribbon_Scroll_Right.width() - 6, self.form.Ribbon_Scroll_Right.height() - 6)
+        )
+
+        self.form.MoreCommands.setIcon(StyleMapping.ReturnStyleItem("OptionButton", False))
+        self.form.MoreCommands.setIconSize(
+            QSize(self.form.MoreCommands.width() - 6, self.form.MoreCommands.height() - 6)
+        )
+
+        self.form.pinButton_open.setIcon(StyleMapping.ReturnStyleItem("PinButton_open", False))
+        self.form.pinButton_open.setIconSize(
+            QSize(self.form.pinButton_open.width() - 6, self.form.pinButton_open.height() - 6)
+        )
+
+        self.form.pinButton_closed.setIcon(StyleMapping.ReturnStyleItem("PinButton_closed", False))
+        self.form.pinButton_closed.setIconSize(
+            QSize(self.form.pinButton_closed.width() - 6, self.form.pinButton_closed.height() - 6)
+        )
 
         return
 
