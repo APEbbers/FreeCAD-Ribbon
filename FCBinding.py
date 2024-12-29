@@ -1264,7 +1264,7 @@ class ModernMenu(RibbonBar):
                 button = allButtons[i]
 
                 # count the number of buttons per type. Needed for proper sorting the buttons later.
-                buttonSize = ""
+                buttonSize = "small"
                 try:
                     action = button.defaultAction()
                     buttonSize = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][
@@ -1448,8 +1448,8 @@ class ModernMenu(RibbonBar):
                                 buttonSize = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
                                     "commands"
                                 ][CommandName]["size"]
-                                # if buttonSize == "":
-                                #     buttonSize = "small"
+                                if buttonSize == "":
+                                    buttonSize = "small"
                             except KeyError:
                                 pass
 
@@ -1544,7 +1544,7 @@ class ModernMenu(RibbonBar):
                                 Menu = QMenu()
                                 if button.menu() is not None:
                                     Menu = button.menu()
-                                btn = CustomControls.LargeCustomToolButton(
+                                btn: QToolButton = CustomControls.LargeCustomToolButton(
                                     Text=action.text(),
                                     Action=action,
                                     Icon=action.icon(),
@@ -1564,16 +1564,14 @@ class ModernMenu(RibbonBar):
                                 # # to the heigt minus 20.
                                 if Parameters_Ribbon.SHOW_ICON_TEXT_LARGE is True:
                                     btn.setFixedHeight(btn.height() + 20)
-                                    btn.setMaximumIconSize(btn.height() - 20)
+                                    btn.setIconSize(QSize(btn.height() - 20, btn.height() - 20))
 
                                     btn.setMaximumWidth(Parameters_Ribbon.ICON_SIZE_LARGE + 20)
                             else:
-                                raise NotImplementedError(
-                                    translate(
-                                        "FreeCAD Ribbon",
-                                        "Given button size not implemented, only small, medium and large are available.",
-                                    )
-                                )
+                                if Parameters_Ribbon.DEBUG_MODE is True:
+                                    if buttonSize != "none":
+                                        print(f"{action.text()} is ignored. Its size was: {buttonSize}")
+                                pass
 
                             # add the button text to the shadowList for checking if buttons are already there.
                             shadowList.append(button.text())
@@ -1822,12 +1820,10 @@ class ModernMenu(RibbonBar):
                     # Get the command and its original toolbar
                     for CommandItem in Commands:
                         CommandName = CommandItem[0]
-                        MenuNameTtranslated = ""
                         # Define a new toolbutton
                         NewToolbutton = RibbonToolButton()
                         if CommandName.endswith("_ddb") is False:
                             # Get the translated menutext
-                            MenuNameTtranslated = CommandInfoCorrections(CommandName)["ActionText"]
                             Command = Gui.Command.get(CommandName)
 
                             if Command is not None:
@@ -1864,7 +1860,6 @@ class ModernMenu(RibbonBar):
                                 if Parameters_Ribbon.DEBUG_MODE is True:
                                     StandardFunctions.Print(f"{CommandName} was None", "Warning")
                         if CommandName.endswith("_ddb") is True:
-                            MenuNameTtranslated = CommandName  # do not remove "_ddb" here
                             CommandActionList = self.returnCustomDropDown(CommandName)
                             if CommandActionList is None or len(CommandActionList) < 1:
                                 continue
@@ -1889,7 +1884,7 @@ class ModernMenu(RibbonBar):
                                     len(NewToolbutton.menu().actions())
 
                                 # Set the text for the toolbutton
-                                NewToolbutton.setText(MenuNameTtranslated)
+                                NewToolbutton.setText(CommandName)
 
                                 # add it to the list
                                 ButtonList.append(NewToolbutton)

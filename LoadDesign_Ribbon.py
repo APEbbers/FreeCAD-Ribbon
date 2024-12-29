@@ -2511,7 +2511,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                         checked_medium = Qt.CheckState.Unchecked
                                         checked_large = Qt.CheckState.Checked
                                         Enabled = Qt.CheckState.Checked
-                                    if Size == "":
+                                    if Size == "none":
                                         checked_small = Qt.CheckState.Unchecked
                                         checked_medium = Qt.CheckState.Unchecked
                                         checked_large = Qt.CheckState.Unchecked
@@ -2759,6 +2759,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Get the checkedstate from the clicked cell
         CheckState = self.form.CommandTable_RD.item(row, column).checkState()
         # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
+        IsChecked = False
         for i3 in range(1, self.form.CommandTable_RD.columnCount() - 1):
             if CheckState == Qt.CheckState.Checked:
                 TableCell = self.form.CommandTable_RD.item(row, i3)
@@ -2766,11 +2767,17 @@ class LoadDialog(Design_ui.Ui_Form):
                     if i3 == column:
                         TableCell.setCheckState(Qt.CheckState.Checked)
                         self.form.CommandTable_RD.item(row, 4).setCheckState(Qt.CheckState.Checked)
+                        IsChecked = True
                     else:
                         TableCell.setCheckState(Qt.CheckState.Unchecked)
+        # If the selected cell is in the last column and is unchecked,
+        # the command will be disabled and all cells needs to be unchecked
         if column == 4 and self.form.CommandTable_RD.item(row, column).checkState() == Qt.CheckState.Unchecked:
             for i4 in range(1, self.form.CommandTable_RD.columnCount() - 1):
                 self.form.CommandTable_RD.item(row, i4).setCheckState(Qt.CheckState.Unchecked)
+        # If nothing is checked, the command is disabled. Set the last cell accordingly
+        if IsChecked is False:
+            self.form.CommandTable_RD.item(row, 4).setCheckState(Qt.CheckState.Unchecked)
 
         # Update the data
         self.UpdateData()
@@ -3334,7 +3341,7 @@ class LoadDialog(Design_ui.Ui_Form):
                             if i6 == 3:
                                 Size = "large"
                         if i6 == 4 and CheckState == Qt.CheckState.Unchecked:
-                            Size = ""
+                            Size = "none"
 
                     Order = []
                     for i7 in range(1, self.form.CommandTable_RD.rowCount()):
