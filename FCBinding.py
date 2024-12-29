@@ -1264,7 +1264,7 @@ class ModernMenu(RibbonBar):
                 button = allButtons[i]
 
                 # count the number of buttons per type. Needed for proper sorting the buttons later.
-                buttonSize = "small"
+                buttonSize = ""
                 try:
                     action = button.defaultAction()
                     buttonSize = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][
@@ -1448,8 +1448,8 @@ class ModernMenu(RibbonBar):
                                 buttonSize = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
                                     "commands"
                                 ][CommandName]["size"]
-                                if buttonSize == "":
-                                    buttonSize = "small"
+                                # if buttonSize == "":
+                                #     buttonSize = "small"
                             except KeyError:
                                 pass
 

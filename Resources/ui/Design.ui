@@ -2215,6 +2215,11 @@
                       <string>Large</string>
                      </property>
                     </column>
+                    <column>
+                     <property name="text">
+                      <string>Enabled</string>
+                     </property>
+                    </column>
                     <item row="0" column="0">
                      <property name="text">
                       <string>All</string>
@@ -2272,6 +2277,14 @@
                      </property>
                      <property name="flags">
                       <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                     </property>
+                    </item>
+                    <item row="0" column="4">
+                     <property name="text">
+                      <string>Enabled</string>
+                     </property>
+                     <property name="checkState">
+                      <enum>Checked</enum>
                      </property>
                     </item>
                    </widget>
