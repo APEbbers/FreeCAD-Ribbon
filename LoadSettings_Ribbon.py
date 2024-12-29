@@ -93,8 +93,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "CustomIcons": Parameters_Ribbon.CUSTOM_ICONS_ENABLED,
         "CustomColors": Parameters_Ribbon.CUSTOM_COLORS_ENABLED,
         "BorderTransparant": Parameters_Ribbon.BORDER_TRANSPARANT,
-        # "Color_Borders": Parameters_Ribbon.COLOR_BORDERS,
-        "Color_Background": Parameters_Ribbon.COLOR_BACKGROUND,
+        "Color_Borders": Parameters_Ribbon.COLOR_BORDERS,
+        # "Color_Background": Parameters_Ribbon.COLOR_BACKGROUND,
         "Color_Background_Hover": Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
         "Color_Background_App": Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND,
     }
@@ -131,8 +131,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "CustomIcons": Parameters_Ribbon.CUSTOM_ICONS_ENABLED,
         "CustomColors": Parameters_Ribbon.CUSTOM_COLORS_ENABLED,
         "BorderTransparant": Parameters_Ribbon.BORDER_TRANSPARANT,
-        # "Color_Borders": Parameters_Ribbon.COLOR_BORDERS,
-        "Color_Background": Parameters_Ribbon.COLOR_BACKGROUND,
+        "Color_Borders": Parameters_Ribbon.COLOR_BORDERS,
+        # "Color_Background": Parameters_Ribbon.COLOR_BACKGROUND,
         "Color_Background_Hover": Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
         "Color_Background_App": Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND,
     }
@@ -309,8 +309,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
         else:
             self.form.BorderTransparant.setCheckState(Qt.CheckState.Unchecked)
 
-        # self.form.Color_Borders.setProperty("color", QColor(Parameters_Ribbon.COLOR_BORDERS))
-        self.form.Color_Background.setProperty("color", QColor(Parameters_Ribbon.COLOR_BACKGROUND))
+        self.form.Color_Borders.setProperty("color", QColor(Parameters_Ribbon.COLOR_BORDERS))
+        # self.form.Color_Background.setProperty("color", QColor(Parameters_Ribbon.COLOR_BACKGROUND))
         self.form.Color_Background_Hover.setProperty("color", QColor(Parameters_Ribbon.COLOR_BACKGROUND_HOVER))
         self.form.Color_Background_App.setProperty(
             "color", QColor(Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND)
