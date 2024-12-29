@@ -1013,7 +1013,10 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.ScrollClicks_Ribbon.setValue(DefaultSettings["Ribbon_Click"])
 
         self.form.PreferedViewPanel.setCurrentIndex(DefaultSettings["Preferred_view"])
-        self.form.FCOverlayEnabled.setCurrentIndex(DefaultSettings["Preferred_view"])
+        if DefaultSettings["UseToolsPanel"] is True:
+            self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Unchecked)
         self.settingChanged = True
 
         # Set the color and icon buttons
