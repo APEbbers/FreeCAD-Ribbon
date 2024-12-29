@@ -136,9 +136,7 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
         BorderColor = ReturnStyleItem("Border_Color")
         if Parameters_Ribbon.COLOR_BORDERS != "":
             BorderColor = Parameters_Ribbon.COLOR_BORDERS
-        BackgroundColor = ""
-        if Parameters_Ribbon.COLOR_BACKGROUND != "" and Parameters_Ribbon.CUSTOM_COLORS_ENABLED is True:
-            BackgroundColor = Parameters_Ribbon.COLOR_BACKGROUND
+        BackgroundColor = ReturnStyleItem("Background_Color")
         ApplicationButton = ReturnStyleItem("ApplicationButton_Background")
         if (
             Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND != ""
