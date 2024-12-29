@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL, QSize
-from PySide.QtWidgets import (
+from PySide6.QtCore import Qt, SIGNAL, QSize
+from PySide6.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -35,7 +35,7 @@ from PySide.QtWidgets import (
     QSizePolicy,
     QPushButton,
 )
-from PySide.QtGui import QIcon, QPixmap, QColor
+from PySide6.QtGui import QIcon, QPixmap, QColor
 
 import sys
 import StyleMapping
@@ -109,6 +109,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "CustomIcons": Parameters_Ribbon.CUSTOM_ICONS_ENABLED,
         "CustomColors": Parameters_Ribbon.CUSTOM_COLORS_ENABLED,
         "BorderTransparant": Parameters_Ribbon.BORDER_TRANSPARANT,
+        "Color_Borders": Parameters_Ribbon.COLOR_BORDERS,
     }
 
     # Store the current values before change
@@ -143,6 +144,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "CustomIcons": Parameters_Ribbon.CUSTOM_ICONS_ENABLED,
         "CustomColors": Parameters_Ribbon.CUSTOM_COLORS_ENABLED,
         "BorderTransparant": Parameters_Ribbon.BORDER_TRANSPARANT,
+        "Color_Borders": Parameters_Ribbon.COLOR_BORDERS,
     }
 
     settingChanged = False
@@ -316,6 +318,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.form.BorderTransparant.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.BorderTransparant.setCheckState(Qt.CheckState.Unchecked)
+
+        self.form.Color_Borders(QColor(Parameters_Ribbon.COLOR_BORDERS))
 
         # region - connect controls with functions----------------------------------------------------
         #
@@ -815,10 +819,10 @@ class LoadDialog(Settings_ui.Ui_Settings):
         return
 
     def on_Color_Borders_clicked(self):
+
         Color = QColor(self.form.Color_Borders.property("color")).toTuple()  # RGB tupple
-        print(Color)
-        rgbaColor = StandardFunctions.ColorConvertor(Color, 0, True)
-        print(f"{Color}, {rgbaColor}")
+        HexColor = StandardFunctions.ColorConvertor(Color, 0, True)
+
         return
 
     def on_BorderTransparant_clicked(self):

@@ -132,6 +132,8 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
     StyleSheet = ""
     try:
         BorderColor = ReturnStyleItem("Border_Color")
+        if Parameters_Ribbon.COLOR_BORDERS != "":
+            BorderColor = Parameters_Ribbon.COLOR_BORDERS
         BackgroundColor = ReturnStyleItem("Background_Color")
         ApplicationButton = ReturnStyleItem("ApplicationButton_Background")
         HoverColor = ReturnStyleItem("Background_Color_Hover")
