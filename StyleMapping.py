@@ -150,6 +150,8 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
         AppBorder_2 = BorderColor
         if BackgroundColor is not None and BorderColor is not None:
             if control.lower() == "toolbutton":
+                if Parameters_Ribbon.BORDER_TRANSPARANT is True:
+                    BorderColor = "transparant"
                 StyleSheet = (
                     """QToolButton {
                     padding-right: """
@@ -176,12 +178,12 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
                     + """QToolButton:hover {
                             background: """
                     + HoverColor
-                    # + """;
-                    # border: 0.5px solid"""
-                    # + BorderColor
                     + """;
-                    border: transparant
-                    ;}"""
+                    border: 0.5px solid"""
+                    + BorderColor
+                    # + """;
+                    # border: transparant"""
+                    + """;}"""
                 )
                 return StyleSheet
             if control.lower() == "applicationbutton":
@@ -220,10 +222,10 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
 
 StyleMapping = {
     "Stylesheets": {
-        "Background_Color": Parameters_Ribbon.BACKGROUND_COLOR,
+        "Background_Color": Parameters_Ribbon.COLOR_BACKGROUND,
         "Background_Color_Hover": Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
-        "Border_Color": Parameters_Ribbon.BORDER_COLOR,
-        "ApplicationButton_Background": Parameters_Ribbon.APPLICATION_BUTTON_COLOR,
+        "Border_Color": Parameters_Ribbon.COLOR_BORDERS,
+        "ApplicationButton_Background": Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND,
         "ScrollLeftButton_Tab": Parameters_Ribbon.SCROLL_LEFT_BUTTON_TAB,
         "ScrollRightButton_Tab": Parameters_Ribbon.SCROLL_RIGHT_BUTTON_TAB,
         "ScrollLeftButton_Category": Parameters_Ribbon.SCROLL_LEFT_BUTTON_CATEGORY,

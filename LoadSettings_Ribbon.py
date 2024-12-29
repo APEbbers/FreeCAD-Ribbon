@@ -319,7 +319,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         else:
             self.form.BorderTransparant.setCheckState(Qt.CheckState.Unchecked)
 
-        self.form.Color_Borders(QColor(Parameters_Ribbon.COLOR_BORDERS))
+        self.form.Color_Borders.setProperty("color", QColor(Parameters_Ribbon.COLOR_BORDERS))
 
         # region - connect controls with functions----------------------------------------------------
         #
@@ -819,10 +819,10 @@ class LoadDialog(Settings_ui.Ui_Settings):
         return
 
     def on_Color_Borders_clicked(self):
-
-        Color = QColor(self.form.Color_Borders.property("color")).toTuple()  # RGB tupple
-        HexColor = StandardFunctions.ColorConvertor(Color, 0, True)
-
+        Color = QColor(self.form.Color_Borders.property("color")).toTuple()  # RGBA tupple
+        HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
+        self.ValuesToUpdate["Color_Borders"] = HexColor
+        self.settingChanged = True
         return
 
     def on_BorderTransparant_clicked(self):
@@ -943,6 +943,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Set the use of custom colors
         Parameters_Ribbon.Settings.SetBoolSetting("CustomColors", self.ValuesToUpdate["CustomColors"])
         Parameters_Ribbon.Settings.SetBoolSetting("BorderTransparant", self.ValuesToUpdate["BorderTransparant"])
+        Parameters_Ribbon.Settings.SetStringSetting("Color_Borders", self.ValuesToUpdate["Color_Borders"])
 
         # Set the size of the window to the previous state
         Parameters_Ribbon.Settings.SetIntSetting("SettingsDialog_Height", self.form.height())
@@ -1047,6 +1048,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
             QSize(self.form.pinButton_closed.width() - 6, self.form.pinButton_closed.height() - 6)
         )
 
+        self.form.Color_Borders.setProperty("color", QColor(StyleMapping.ReturnStyleItem("Border_Color")))
         return
 
     # endregion---------------------------------------------------------------------------------------

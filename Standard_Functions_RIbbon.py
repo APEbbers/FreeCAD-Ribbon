@@ -232,7 +232,7 @@ def GetNumberFromLetter(Letter):
     return number
 
 
-def ColorConvertor(ColorRGB: [], Alpha: float = 1, Hex=False):
+def ColorConvertor(ColorRGB: [], Alpha: float = 1, Hex=False, KeepHexAlpha=True):
     """
     A single function to convert colors to rgba colors as a tuple of float from 0-1
     ColorRGB:   [255,255,255]
@@ -248,7 +248,7 @@ def ColorConvertor(ColorRGB: [], Alpha: float = 1, Hex=False):
 
     result = mcolors.to_rgba(color, Alpha)
     if Hex is True:
-        result = mcolors.to_hex((ColorRed, colorGreen, colorBlue, Alpha), True)
+        result = mcolors.to_hex((ColorRed, colorGreen, colorBlue, Alpha), KeepHexAlpha)
 
     return result
 

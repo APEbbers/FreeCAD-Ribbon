@@ -133,10 +133,6 @@ class Settings:
         Settings.SetBoolSetting("DebugMode", DEBUG_MODE)
 
         Settings.SetBoolSetting("CustomIcons", CUSTOM_ICONS_ENABLED)
-        Settings.SetStringSetting("Background_Color", BACKGROUND_COLOR)
-        Settings.SetStringSetting("Color_Background_Hover", COLOR_BACKGROUND_HOVER)
-        Settings.SetStringSetting("Color_Borders", BORDER_COLOR)
-        Settings.SetStringSetting("Color_Background_App", APPLICATION_BUTTON_COLOR)
         Settings.SetStringSetting("ScrollLeftButton_Tab", SCROLL_LEFT_BUTTON_TAB)
         Settings.SetStringSetting("ScrollRightButton_Tab", SCROLL_RIGHT_BUTTON_TAB)
         Settings.SetStringSetting("ScrollLeftButton_Category", SCROLL_LEFT_BUTTON_CATEGORY)
