@@ -373,6 +373,9 @@ class LoadDialog(Design_ui.Ui_Form):
             SIGNAL("clicked()"),
             self.on_ExportLayout_IS_clicked,
         )
+        self.form.ImportWorkbench_IS.connect(
+            self.form.ImportWorkbench_IS, SIGNAL("clicked()"), self.on_ImportWorkbench_IS_clicked
+        )
 
         # Connect the workbench generator
         self.form.GenerateSetup_IS_WorkBenches.connect(
@@ -1033,6 +1036,30 @@ class LoadDialog(Design_ui.Ui_Form):
         )
         shutil.copy(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, FileName)
 
+        return
+
+    def on_ImportWorkbench_IS_clicked(self):
+        JsonFile = StandardFunctions.GetFileDialog(
+            Filter="RibbonStructure (*.json)",
+            parent=None,
+            DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
+            SaveAs=False,
+        )
+        JsonFile = open(JsonFile)
+        if JsonFile != "":
+            data = json.load(JsonFile)
+            WorkbenchName = self.form.ImportWorkbenchSelector_IS.currentData(Qt.ItemDataRole.UserRole)[0]
+            if "workbenches" in data:
+                # Add a key if not present
+                StandardFunctions.add_keys_nested_dict(data["workbenches"], WorkbenchName)
+                self.Dict_RibbonCommandPanel["workbenches"][WorkbenchName] = data["workbenches"][WorkbenchName]
+
+            self.LoadControls()
+
+            # Enable the apply button
+            if self.CheckChanges() is True:
+                self.form.UpdateJson.setEnabled(True)
+        JsonFile.close()
         return
 
     def on_GenerateSetup_IS_WorkBenches_clicked(self):
@@ -2971,6 +2998,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Fill the Workbenches available, selected and workbench list
         self.form.WorkbenchList_IS.clear()
+        self.form.ImportWorkbenchSelector_IS.clear()
         self.form.WorkbenchList_RD.clear()
         self.form.WorkbenchesAvailable_IW.clear()
         self.form.WorkbenchesSelected_IW.clear()
@@ -3057,6 +3085,11 @@ class LoadDialog(Design_ui.Ui_Form):
                     )
 
                 # Add the ListWidgetItem also to the categoryListWidgets
+                self.form.ImportWorkbenchSelector_IS.addItem(
+                    Icon,
+                    WorkbenchTitle,
+                    workbench,
+                )
                 self.form.ListCategory_QC.addItem(
                     Icon,
                     WorkbenchTitle,

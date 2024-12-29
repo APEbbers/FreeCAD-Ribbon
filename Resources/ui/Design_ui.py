@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignDYKwfz.ui'
+## Form generated from reading UI file 'DesignXFoCjX.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -205,15 +205,21 @@ class Ui_Form(object):
         self.ExportBox.setMinimumSize(QSize(200, 0))
         self.gridLayout_29 = QGridLayout(self.ExportBox)
         self.gridLayout_29.setObjectName("gridLayout_29")
-        self.ImportDropDownButtons_IS = QPushButton(self.ExportBox)
-        self.ImportDropDownButtons_IS.setObjectName("ImportDropDownButtons_IS")
+        self.groupBox_3 = QGroupBox(self.ExportBox)
+        self.groupBox_3.setObjectName("groupBox_3")
+        self.gridLayout_24 = QGridLayout(self.groupBox_3)
+        self.gridLayout_24.setObjectName("gridLayout_24")
+        self.ImportWorkbenchSelector_IS = QComboBox(self.groupBox_3)
+        self.ImportWorkbenchSelector_IS.setObjectName("ImportWorkbenchSelector_IS")
 
-        self.gridLayout_29.addWidget(self.ImportDropDownButtons_IS, 3, 0, 1, 1)
+        self.gridLayout_24.addWidget(self.ImportWorkbenchSelector_IS, 0, 0, 1, 1)
 
-        self.ImportCustomPanels_IS = QPushButton(self.ExportBox)
-        self.ImportCustomPanels_IS.setObjectName("ImportCustomPanels_IS")
+        self.ImportWorkbench_IS = QPushButton(self.groupBox_3)
+        self.ImportWorkbench_IS.setObjectName("ImportWorkbench_IS")
 
-        self.gridLayout_29.addWidget(self.ImportCustomPanels_IS, 2, 0, 1, 1)
+        self.gridLayout_24.addWidget(self.ImportWorkbench_IS, 1, 0, 1, 1)
+
+        self.gridLayout_29.addWidget(self.groupBox_3, 4, 0, 1, 1)
 
         self.Importlayout_IS = QPushButton(self.ExportBox)
         self.Importlayout_IS.setObjectName("Importlayout_IS")
@@ -224,6 +230,16 @@ class Ui_Form(object):
         self.ExportLayout_IS.setObjectName("ExportLayout_IS")
 
         self.gridLayout_29.addWidget(self.ExportLayout_IS, 1, 0, 1, 1)
+
+        self.ImportDropDownButtons_IS = QPushButton(self.ExportBox)
+        self.ImportDropDownButtons_IS.setObjectName("ImportDropDownButtons_IS")
+
+        self.gridLayout_29.addWidget(self.ImportDropDownButtons_IS, 3, 0, 1, 1)
+
+        self.ImportCustomPanels_IS = QPushButton(self.ExportBox)
+        self.ImportCustomPanels_IS.setObjectName("ImportCustomPanels_IS")
+
+        self.gridLayout_29.addWidget(self.ImportCustomPanels_IS, 2, 0, 1, 1)
 
         self.gridLayout_30.addWidget(self.ExportBox, 0, 0, 1, 1)
 
@@ -1285,7 +1301,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(7)
+        self.tabWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(Form)
 
@@ -1311,10 +1327,12 @@ class Ui_Form(object):
         self.ResetJson.setText(QCoreApplication.translate("Form", "Reset", None))
         self.RestoreJson.setText(QCoreApplication.translate("Form", "Restore", None))
         self.ExportBox.setTitle(QCoreApplication.translate("Form", "Import/Export", None))
-        self.ImportDropDownButtons_IS.setText(QCoreApplication.translate("Form", "Import dropdown buttons", None))
-        self.ImportCustomPanels_IS.setText(QCoreApplication.translate("Form", "Import custom panels", None))
+        self.groupBox_3.setTitle(QCoreApplication.translate("Form", "Import workbench layout", None))
+        self.ImportWorkbench_IS.setText(QCoreApplication.translate("Form", "Import workbench", None))
         self.Importlayout_IS.setText(QCoreApplication.translate("Form", "Import layout", None))
         self.ExportLayout_IS.setText(QCoreApplication.translate("Form", "Export layout", None))
+        self.ImportDropDownButtons_IS.setText(QCoreApplication.translate("Form", "Import dropdown buttons", None))
+        self.ImportCustomPanels_IS.setText(QCoreApplication.translate("Form", "Import custom panels", None))
         self.SetupBox.setTitle(QCoreApplication.translate("Form", "Set inital button size - Workbenches", None))
         self.label_15.setText(QCoreApplication.translate("Form", "Set all buttons to: ", None))
         self.DefaultButtonSize_IS_Workbenches.setItemText(0, QCoreApplication.translate("Form", "Small", None))

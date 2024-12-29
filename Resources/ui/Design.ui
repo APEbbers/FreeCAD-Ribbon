@@ -246,7 +246,7 @@
             <enum>QTabWidget::TabShape::Rounded</enum>
            </property>
            <property name="currentIndex">
-            <number>7</number>
+            <number>0</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideNone</enum>
@@ -279,18 +279,23 @@
                   <string>Import/Export</string>
                  </property>
                  <layout class="QGridLayout" name="gridLayout_29">
-                  <item row="3" column="0">
-                   <widget class="QPushButton" name="ImportDropDownButtons_IS">
-                    <property name="text">
-                     <string>Import dropdown buttons</string>
+                  <item row="4" column="0">
+                   <widget class="QGroupBox" name="groupBox_3">
+                    <property name="title">
+                     <string>Import workbench layout</string>
                     </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QPushButton" name="ImportCustomPanels_IS">
-                    <property name="text">
-                     <string>Import custom panels</string>
-                    </property>
+                    <layout class="QGridLayout" name="gridLayout_24">
+                     <item row="0" column="0">
+                      <widget class="QComboBox" name="ImportWorkbenchSelector_IS"/>
+                     </item>
+                     <item row="1" column="0">
+                      <widget class="QPushButton" name="ImportWorkbench_IS">
+                       <property name="text">
+                        <string>Import workbench</string>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
                    </widget>
                   </item>
                   <item row="0" column="0">
@@ -307,6 +312,20 @@
                     </property>
                    </widget>
                   </item>
+                  <item row="3" column="0">
+                   <widget class="QPushButton" name="ImportDropDownButtons_IS">
+                    <property name="text">
+                     <string>Import dropdown buttons</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QPushButton" name="ImportCustomPanels_IS">
+                    <property name="text">
+                     <string>Import custom panels</string>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
                 </widget>
                </item>
@@ -314,6 +333,9 @@
                 <spacer name="verticalSpacer_13">
                  <property name="orientation">
                   <enum>Qt::Orientation::Vertical</enum>
+                 </property>
+                 <property name="sizeType">
+                  <enum>QSizePolicy::Policy::Expanding</enum>
                  </property>
                  <property name="sizeHint" stdset="0">
                   <size>
