@@ -1558,7 +1558,7 @@
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="0">
+                <item row="2" column="0">
                  <widget class="QGroupBox" name="ColorS">
                   <property name="enabled">
                    <bool>false</bool>
@@ -1569,11 +1569,17 @@
                      <property name="verticalSpacing">
                       <number>6</number>
                      </property>
-                     <item row="0" column="1" colspan="2">
-                      <widget class="Gui::ColorButton" name="Color_Borders"/>
+                     <item row="2" column="1" colspan="2">
+                      <widget class="Gui::ColorButton" name="Color_Background_App"/>
                      </item>
-                     <item row="2" column="0">
+                     <item row="1" column="0">
                       <widget class="QLabel" name="label_30">
+                       <property name="minimumSize">
+                        <size>
+                         <width>200</width>
+                         <height>0</height>
+                        </size>
+                       </property>
                        <property name="maximumSize">
                         <size>
                          <width>200</width>
@@ -1588,11 +1594,20 @@
                        </property>
                       </widget>
                      </item>
+                     <item row="0" column="1" colspan="2">
+                      <widget class="Gui::ColorButton" name="Color_Borders"/>
+                     </item>
                      <item row="0" column="0">
                       <widget class="QLabel" name="label_6">
-                       <property name="maximumSize">
+                       <property name="minimumSize">
                         <size>
                          <width>200</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>300</width>
                          <height>16777215</height>
                         </size>
                        </property>
@@ -1604,8 +1619,14 @@
                        </property>
                       </widget>
                      </item>
-                     <item row="3" column="0">
+                     <item row="2" column="0">
                       <widget class="QLabel" name="label_9">
+                       <property name="minimumSize">
+                        <size>
+                         <width>200</width>
+                         <height>0</height>
+                        </size>
+                       </property>
                        <property name="maximumSize">
                         <size>
                          <width>200</width>
@@ -1620,43 +1641,8 @@
                        </property>
                       </widget>
                      </item>
-                     <item row="2" column="1" colspan="2">
-                      <widget class="Gui::ColorButton" name="Color_Background_Hover"/>
-                     </item>
-                     <item row="3" column="1" colspan="2">
-                      <widget class="Gui::ColorButton" name="Color_Background_App"/>
-                     </item>
-                     <item row="1" column="0">
-                      <widget class="QLabel" name="label_8">
-                       <property name="minimumSize">
-                        <size>
-                         <width>200</width>
-                         <height>40</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>200</width>
-                         <height>16777215</height>
-                        </size>
-                       </property>
-                       <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the background color for the controls and toolbars:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="wordWrap">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
                      <item row="1" column="1" colspan="2">
-                      <widget class="Gui::ColorButton" name="Color_Background"/>
-                     </item>
-                     <item row="0" column="3">
-                      <widget class="QCheckBox" name="BorderTransparant">
-                       <property name="text">
-                        <string>Set border invisible for ribbon buttons</string>
-                       </property>
-                      </widget>
+                      <widget class="Gui::ColorButton" name="Color_Background_Hover"/>
                      </item>
                     </layout>
                    </item>
@@ -1676,7 +1662,7 @@
                   </layout>
                  </widget>
                 </item>
-                <item row="1" column="1">
+                <item row="2" column="1">
                  <spacer name="verticalSpacer_4">
                   <property name="orientation">
                    <enum>Qt::Orientation::Vertical</enum>
@@ -1688,6 +1674,13 @@
                    </size>
                   </property>
                  </spacer>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QCheckBox" name="BorderTransparant">
+                  <property name="text">
+                   <string>Set border invisible for ribbon buttons</string>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </widget>
@@ -1943,8 +1936,8 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
      <y>83</y>
     </hint>
     <hint type="destinationlabel">
-     <x>130</x>
-     <y>103</y>
+     <x>137</x>
+     <y>154</y>
     </hint>
    </hints>
   </connection>
@@ -1987,12 +1980,12 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>130</x>
-     <y>88</y>
+     <x>152</x>
+     <y>579</y>
     </hint>
     <hint type="destinationlabel">
-     <x>130</x>
-     <y>88</y>
+     <x>273</x>
+     <y>579</y>
     </hint>
    </hints>
   </connection>
@@ -2003,12 +1996,12 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>130</x>
-     <y>88</y>
+     <x>152</x>
+     <y>605</y>
     </hint>
     <hint type="destinationlabel">
-     <x>130</x>
-     <y>88</y>
+     <x>273</x>
+     <y>605</y>
     </hint>
    </hints>
   </connection>
@@ -2019,12 +2012,12 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>130</x>
-     <y>89</y>
+     <x>141</x>
+     <y>215</y>
     </hint>
     <hint type="destinationlabel">
-     <x>130</x>
-     <y>89</y>
+     <x>141</x>
+     <y>263</y>
     </hint>
    </hints>
   </connection>
@@ -2035,12 +2028,12 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>130</x>
-     <y>89</y>
+     <x>141</x>
+     <y>215</y>
     </hint>
     <hint type="destinationlabel">
-     <x>130</x>
-     <y>89</y>
+     <x>414</x>
+     <y>222</y>
     </hint>
    </hints>
   </connection>

@@ -61,22 +61,6 @@ translate = App.Qt.translate
 
 
 class LoadDialog(Settings_ui.Ui_Settings):
-    Backup = Parameters_Ribbon.ENABLE_BACKUP
-    BackupLocation = pathBackup
-    StyleSheet = Parameters_Ribbon.STYLESHEET
-    ShowText_Small = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
-    ShowText_Medium = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
-    ShowText_Large = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
-    EnableWrap_Large = Parameters_Ribbon.WRAPTEXT_LARGE
-    DebugMode = Parameters_Ribbon.DEBUG_MODE
-    ShowOnHover = Parameters_Ribbon.SHOW_ON_HOVER
-    UseToolsPanel = Parameters_Ribbon.USE_TOOLSPANEL
-    UseFCOverlay = Parameters_Ribbon.USE_FC_OVERLAY
-    UseButtonBackGround = Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED
-    EnableWrap_Medium = Parameters_Ribbon.WRAPTEXT_MEDIUM
-    CustomIcons = Parameters_Ribbon.CUSTOM_ICONS_ENABLED
-    CustomColors = Parameters_Ribbon.CUSTOM_COLORS_ENABLED
-
     # Store the current values before change
     OriginalValues = {
         "BackupEnabled": Parameters_Ribbon.ENABLE_BACKUP,
@@ -109,7 +93,10 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "CustomIcons": Parameters_Ribbon.CUSTOM_ICONS_ENABLED,
         "CustomColors": Parameters_Ribbon.CUSTOM_COLORS_ENABLED,
         "BorderTransparant": Parameters_Ribbon.BORDER_TRANSPARANT,
-        "Color_Borders": Parameters_Ribbon.COLOR_BORDERS,
+        # "Color_Borders": Parameters_Ribbon.COLOR_BORDERS,
+        "Color_Background": Parameters_Ribbon.COLOR_BACKGROUND,
+        "Color_Background_Hover": Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
+        "Color_Background_App": Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND,
     }
 
     # Store the current values before change
@@ -144,7 +131,10 @@ class LoadDialog(Settings_ui.Ui_Settings):
         "CustomIcons": Parameters_Ribbon.CUSTOM_ICONS_ENABLED,
         "CustomColors": Parameters_Ribbon.CUSTOM_COLORS_ENABLED,
         "BorderTransparant": Parameters_Ribbon.BORDER_TRANSPARANT,
-        "Color_Borders": Parameters_Ribbon.COLOR_BORDERS,
+        # "Color_Borders": Parameters_Ribbon.COLOR_BORDERS,
+        "Color_Background": Parameters_Ribbon.COLOR_BACKGROUND,
+        "Color_Background_Hover": Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
+        "Color_Background_App": Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND,
     }
 
     settingChanged = False
@@ -319,7 +309,12 @@ class LoadDialog(Settings_ui.Ui_Settings):
         else:
             self.form.BorderTransparant.setCheckState(Qt.CheckState.Unchecked)
 
-        self.form.Color_Borders.setProperty("color", QColor(Parameters_Ribbon.COLOR_BORDERS))
+        # self.form.Color_Borders.setProperty("color", QColor(Parameters_Ribbon.COLOR_BORDERS))
+        self.form.Color_Background.setProperty("color", QColor(Parameters_Ribbon.COLOR_BACKGROUND))
+        self.form.Color_Background_Hover.setProperty("color", QColor(Parameters_Ribbon.COLOR_BACKGROUND_HOVER))
+        self.form.Color_Background_App.setProperty(
+            "color", QColor(Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND)
+        )
 
         # region - connect controls with functions----------------------------------------------------
         #
@@ -394,46 +389,53 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Connect the controls for custom icons and colors
         self.form.CustomIcons.clicked.connect(self.on_CustomIcons_clicked)
 
+        #
         def TabScrollLeft():
             self.on_Tab_Scroll_Left_clicked()
 
         self.form.Tab_Scroll_Left.connect(self.form.Tab_Scroll_Left, SIGNAL("clicked()"), TabScrollLeft)
 
+        #
         def TabScrollRight():
             self.on_Tab_Scroll_Right_clicked()
 
         self.form.Tab_Scroll_Right.connect(self.form.Tab_Scroll_Right, SIGNAL("clicked()"), TabScrollRight)
 
+        #
         def CategoryScrollLeft():
             self.on_Ribbon_Scroll_Left_clicked()
 
         self.form.Ribbon_Scroll_Left.connect(self.form.Ribbon_Scroll_Left, SIGNAL("clicked()"), CategoryScrollLeft)
 
+        #
         def CategoryScrollRight():
             self.on_Ribbon_Scroll_Right_clicked()
 
         self.form.Ribbon_Scroll_Right.connect(self.form.Ribbon_Scroll_Right, SIGNAL("clicked()"), CategoryScrollRight)
 
+        #
         def MoreCommands():
             self.on_MoreCommands_clicked()
 
         self.form.MoreCommands.connect(self.form.MoreCommands, SIGNAL("clicked()"), MoreCommands)
 
+        #
         def PinButtonOpen():
             self.on_pinButton_open_clicked()
 
         self.form.pinButton_open.connect(self.form.pinButton_open, SIGNAL("clicked()"), PinButtonOpen)
 
+        #
         def PinButtonClosed():
             self.on_pinButton_closed_clicked()
 
         self.form.pinButton_closed.connect(self.form.pinButton_closed, SIGNAL("clicked()"), PinButtonClosed)
-
         self.form.CustomColors.clicked.connect(self.on_CustomColors_clicked)
-
-        self.form.Color_Borders.clicked.connect(self.on_Color_Borders_clicked)
-
         self.form.BorderTransparant.clicked.connect(self.on_BorderTransparant_clicked)
+        self.form.Color_Borders.clicked.connect(self.on_Color_Borders_clicked)
+        # self.form.Color_Background.clicked.connect(self.on_Color_Background_clicked)
+        self.form.Color_Background_Hover.clicked.connect(self.on_Color_Background_Hover_clicked)
+        self.form.Color_Background_App.clicked.connect(self.on_Color_Background_App_clicked)
 
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
@@ -460,7 +462,6 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.pathBackup = BackupFolder
             self.form.label_4.setText(BackupFolder)
             self.ValuesToUpdate["BackupFolder"] = BackupFolder
-            self.BackupLocation = BackupFolder
             self.settingChanged = True
         return
 
@@ -519,77 +520,62 @@ class LoadDialog(Settings_ui.Ui_Settings):
         if StyleSheet != "":
             self.form.label_7.setText(StyleSheet)
             self.ValuesToUpdate["Stylesheet"] = StyleSheet
-            self.StyleSheet = StyleSheet
             self.settingChanged = True
         return
 
     def on_ShowTextSmall_clicked(self):
         if self.form.ShowText_Small.isChecked() is True:
             self.ValuesToUpdate["ShowIconText_Small"] = True
-            self.ShowText_Small = True
         if self.form.ShowText_Small.isChecked() is False:
             self.ValuesToUpdate["ShowIconText_Small"] = False
-            self.ShowText_Small = False
         self.settingChanged = True
         return
 
     def on_ShowTextMedium_clicked(self):
         if self.form.ShowText_Medium.isChecked() is True:
             self.ValuesToUpdate["ShowIconText_Medium"] = True
-            self.ShowText_Medium = True
         if self.form.ShowText_Medium.isChecked() is False:
             self.ValuesToUpdate["ShowIconText_Medium"] = False
-            self.ShowText_Medium = False
         self.settingChanged = True
         return
 
     def on_ShowTextLarge_clicked(self):
         if self.form.ShowText_Large.isChecked() is True:
             self.ValuesToUpdate["ShowIconText_Large"] = True
-            self.ShowText_Large = True
         if self.form.ShowText_Large.isChecked() is False:
             self.ValuesToUpdate["ShowIconText_Large"] = False
-            self.ShowText_Large = False
         self.settingChanged = True
         return
 
     def on_EnableWrap_Medium_clicked(self):
         if self.form.EnableWrap_Medium.isChecked() is True:
             self.ValuesToUpdate["WrapText_Medium"] = True
-            self.EnableWrap_Medium = True
         if self.form.EnableWrap_Medium.isChecked() is False:
             self.ValuesToUpdate["WrapText_Medium"] = False
-            self.EnableWrap_Medium = False
         self.settingChanged = True
         return
 
     def on_EnableWrap_Large_clicked(self):
         if self.form.EnableWrap_Large.isChecked() is True:
             self.ValuesToUpdate["WrapText_Large"] = True
-            self.EnableWrap_Large = True
         if self.form.EnableWrap_Large.isChecked() is False:
             self.ValuesToUpdate["WrapText_Large"] = False
-            self.EnableWrap_Large = False
         self.settingChanged = True
         return
 
     def on_DebugMode_clicked(self):
         if self.form.DebugMode.isChecked() is True:
             self.ValuesToUpdate["DebugMode"] = True
-            self.DebugMode = True
         if self.form.DebugMode.isChecked() is False:
             self.ValuesToUpdate["DebugMode"] = False
-            self.DebugMode = False
         self.settingChanged = True
         return
 
     def on_EnableEnterEvent_clicked(self):
         if self.form.EnableEnterEvent.isChecked() is True:
             self.ValuesToUpdate["ShowOnHover"] = True
-            self.ShowOnHover = True
         if self.form.EnableEnterEvent.isChecked() is False:
             self.ValuesToUpdate["ShowOnHover"] = False
-            self.ShowOnHover = False
         self.settingChanged = True
 
     def on_ScrollSpeed_TabBar_valueCHanged(self):
@@ -616,40 +602,32 @@ class LoadDialog(Settings_ui.Ui_Settings):
     def on_EnableToolsPanel_clicked(self):
         if self.form.EnableToolsPanel.isChecked() is True:
             self.ValuesToUpdate["UseToolsPanel"] = True
-            self.UseToolsPanel = True
         if self.form.EnableToolsPanel.isChecked() is False:
             self.ValuesToUpdate["UseToolsPanel"] = False
-            self.UseToolsPanel = False
         self.settingChanged = True
         return
 
     def on_FCOverlayEnabled_clicked(self):
         if self.form.FCOverlayEnabled.isChecked() is True:
             self.ValuesToUpdate["UseFCOverlay"] = True
-            self.UseFCOverlay = True
         if self.form.FCOverlayEnabled.isChecked() is False:
             self.ValuesToUpdate["UseFCOverlay"] = False
-            self.UseFCOverlay = False
         self.settingChanged = True
         return
 
     def on_UseButtonBackGround_clicked(self):
         if self.form.UseButtonBackGround.isChecked() is True:
             self.ValuesToUpdate["UseButtonBackGround"] = True
-            self.UseButtonBackGround = True
         if self.form.UseButtonBackGround.isChecked() is False:
             self.ValuesToUpdate["UseButtonBackGround"] = False
-            self.UseButtonBackGround = False
         self.settingChanged = True
         return
 
     def on_CustomIcons_clicked(self):
         if self.form.CustomIcons.isChecked() is True:
             self.ValuesToUpdate["CustomIcons"] = True
-            self.CustomIcons = True
         if self.form.CustomIcons.isChecked() is False:
             self.ValuesToUpdate["CustomIcons"] = False
-            self.CustomIcons = False
         self.settingChanged = True
         return
 
@@ -811,10 +789,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
     def on_CustomColors_clicked(self):
         if self.form.CustomColors.isChecked() is True:
             self.ValuesToUpdate["CustomColors"] = True
-            self.CustomColors = True
         if self.form.CustomColors.isChecked() is False:
             self.ValuesToUpdate["CustomColors"] = False
-            self.CustomColors = False
         self.settingChanged = True
         return
 
@@ -828,11 +804,30 @@ class LoadDialog(Settings_ui.Ui_Settings):
     def on_BorderTransparant_clicked(self):
         if self.form.BorderTransparant.isChecked() is True:
             self.ValuesToUpdate["BorderTransparant"] = True
-            self.BorderTransparant = True
         if self.form.BorderTransparant.isChecked() is False:
             self.ValuesToUpdate["BorderTransparant"] = False
-            self.BorderTransparant = False
         self.settingChanged = True
+
+    # def on_Color_Background_clicked(self):
+    #     Color = QColor(self.form.Color_Background.property("color")).toTuple()  # RGBA tupple
+    #     HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
+    #     self.ValuesToUpdate["Color_Background"] = HexColor
+    #     self.settingChanged = True
+    #     return
+
+    def on_Color_Background_Hover_clicked(self):
+        Color = QColor(self.form.Color_Background_Hover.property("color")).toTuple()  # RGBA tupple
+        HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
+        self.ValuesToUpdate["Color_Background_Hover"] = HexColor
+        self.settingChanged = True
+        return
+
+    def on_Color_Background_App_clicked(self):
+        Color = QColor(self.form.Color_Background_App.property("color")).toTuple()  # RGBA tupple
+        HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
+        self.ValuesToUpdate["Color_Background_App"] = HexColor
+        self.settingChanged = True
+        return
 
     # endregion
 
@@ -885,6 +880,12 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Set the use of custom colors
         Parameters_Ribbon.Settings.SetBoolSetting("CustomColors", self.OriginalValues["CustomColors"])
         Parameters_Ribbon.Settings.SetBoolSetting("BorderTransparant", self.OriginalValues["BorderTransparant"])
+        Parameters_Ribbon.Settings.SetStringSetting("Color_Borders", self.OriginalValues["Color_Borders"])
+        # Parameters_Ribbon.Settings.SetStringSetting("Color_Background", self.OriginalValues["Color_Background"])
+        Parameters_Ribbon.Settings.SetStringSetting(
+            "Color_Background_Hover", self.OriginalValues["Color_Background_Hover"]
+        )
+        Parameters_Ribbon.Settings.SetStringSetting("Color_Background_App", self.OriginalValues["Color_Background_App"])
 
         # Set the size of the window to the previous state
         Parameters_Ribbon.Settings.SetIntSetting("SettingsDialog_Height", self.form.height())
@@ -944,6 +945,11 @@ class LoadDialog(Settings_ui.Ui_Settings):
         Parameters_Ribbon.Settings.SetBoolSetting("CustomColors", self.ValuesToUpdate["CustomColors"])
         Parameters_Ribbon.Settings.SetBoolSetting("BorderTransparant", self.ValuesToUpdate["BorderTransparant"])
         Parameters_Ribbon.Settings.SetStringSetting("Color_Borders", self.ValuesToUpdate["Color_Borders"])
+        # Parameters_Ribbon.Settings.SetStringSetting("Color_Background", self.ValuesToUpdate["Color_Background"])
+        Parameters_Ribbon.Settings.SetStringSetting(
+            "Color_Background_Hover", self.ValuesToUpdate["Color_Background_Hover"]
+        )
+        Parameters_Ribbon.Settings.SetStringSetting("Color_Background_App", self.ValuesToUpdate["Color_Background_App"])
 
         # Set the size of the window to the previous state
         Parameters_Ribbon.Settings.SetIntSetting("SettingsDialog_Height", self.form.height())
@@ -996,7 +1002,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.form.EnableEnterEvent.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.EnableEnterEvent.setCheckState(Qt.CheckState.Unchecked)
-        # it is FreeCAD 1.0 disable this option.
+        # if it is FreeCAD 1.0 disable this option.
         if int(App.Version()[0]) > 0:
             self.form.EnableEnterEvent.setDisabled(True)
             self.form.EnableEnterEvent.setHidden(True)
@@ -1048,7 +1054,14 @@ class LoadDialog(Settings_ui.Ui_Settings):
             QSize(self.form.pinButton_closed.width() - 6, self.form.pinButton_closed.height() - 6)
         )
 
-        self.form.Color_Borders.setProperty("color", QColor(StyleMapping.ReturnStyleItem("Border_Color")))
+        self.form.Color_Borders.setProperty("color", QColor(StyleMapping.ReturnStyleItem("Color_Borders")))
+        # self.form.Color_Background.setProperty("color", QColor(StyleMapping.ReturnStyleItem("Color_Background")))
+        self.form.Color_Background_Hover.setProperty(
+            "color", QColor(StyleMapping.ReturnStyleItem("Color_Background_Hover"))
+        )
+        self.form.Color_Background_App.setProperty(
+            "color", QColor(StyleMapping.ReturnStyleItem("Color_Background_App"))
+        )
         return
 
     # endregion---------------------------------------------------------------------------------------
