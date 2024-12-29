@@ -680,3 +680,11 @@ def CorrectGetToolbarItems(ToolbarItems: dict):
             ToolbarItems.update({"Structure": newCommands})
 
     return ToolbarItems
+
+
+def ShortCutTaken(ShortCut: str):
+    ListWithCommands = Gui.Command.listByShortcut(ShortCut)
+
+    if len(ListWithCommands) > 0:
+        return True
+    return False

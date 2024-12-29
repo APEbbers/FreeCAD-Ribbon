@@ -899,6 +899,7 @@ class ModernMenu(RibbonBar):
             OverlayMenu = Menu.addMenu(translate("FreeCAD Ribbon", "Overlay..."))
             OverlayButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle overlay"))
             OverlayButton.triggered.connect(self.CustomOverlay)
+            OverlayButton.setShortcut("shift+F3")
             TransparancyButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle transparancy"))
             TransparancyButton.triggered.connect(self.CustomTransparancy)
 
