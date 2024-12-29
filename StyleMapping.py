@@ -112,6 +112,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
             return result
         if isIcon is False:
             result = ""
+
             if Parameters_Ribbon.CUSTOM_COLORS_ENABLED is True:
                 result = StyleMapping["Stylesheets"][ControlName]
             if result == "" or result is None:
@@ -134,18 +135,9 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
     StyleSheet = ""
     try:
         BorderColor = ReturnStyleItem("Border_Color")
-        if Parameters_Ribbon.COLOR_BORDERS != "":
-            BorderColor = Parameters_Ribbon.COLOR_BORDERS
         BackgroundColor = ReturnStyleItem("Background_Color")
         ApplicationButton = ReturnStyleItem("ApplicationButton_Background")
-        if (
-            Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND != ""
-            and Parameters_Ribbon.CUSTOM_COLORS_ENABLED is True
-        ):
-            ApplicationButton = Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND
         HoverColor = ReturnStyleItem("Background_Color_Hover")
-        if Parameters_Ribbon.COLOR_BACKGROUND_HOVER != "" and Parameters_Ribbon.CUSTOM_COLORS_ENABLED is True:
-            HoverColor = Parameters_Ribbon.COLOR_BACKGROUND_HOVER
 
         # AppColor_1 = ApplicationButton
         # AppColor_2 = BackgroundColor
