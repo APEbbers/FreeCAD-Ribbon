@@ -1654,7 +1654,7 @@
                      <item row="0" column="3">
                       <widget class="QCheckBox" name="BorderTransparant">
                        <property name="text">
-                        <string>Set border invisible</string>
+                        <string>Set border invisible for ribbon buttons</string>
                        </property>
                       </widget>
                      </item>
@@ -1939,12 +1939,12 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>307</x>
-     <y>97</y>
+     <x>130</x>
+     <y>83</y>
     </hint>
     <hint type="destinationlabel">
-     <x>288</x>
-     <y>112</y>
+     <x>130</x>
+     <y>103</y>
     </hint>
    </hints>
   </connection>
@@ -1987,12 +1987,12 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>151</x>
-     <y>572</y>
+     <x>130</x>
+     <y>88</y>
     </hint>
     <hint type="destinationlabel">
-     <x>195</x>
-     <y>567</y>
+     <x>130</x>
+     <y>88</y>
     </hint>
    </hints>
   </connection>
@@ -2003,12 +2003,12 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>124</x>
-     <y>593</y>
+     <x>130</x>
+     <y>88</y>
     </hint>
     <hint type="destinationlabel">
-     <x>208</x>
-     <y>594</y>
+     <x>130</x>
+     <y>88</y>
     </hint>
    </hints>
   </connection>
@@ -2019,12 +2019,12 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>141</x>
-     <y>206</y>
+     <x>130</x>
+     <y>89</y>
     </hint>
     <hint type="destinationlabel">
-     <x>141</x>
-     <y>256</y>
+     <x>130</x>
+     <y>89</y>
     </hint>
    </hints>
   </connection>
@@ -2035,28 +2035,12 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>208</x>
-     <y>205</y>
+     <x>130</x>
+     <y>89</y>
     </hint>
     <hint type="destinationlabel">
-     <x>316</x>
-     <y>220</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>BorderTransparant</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>Color_Borders</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>337</x>
-     <y>129</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>288</x>
-     <y>129</y>
+     <x>130</x>
+     <y>89</y>
     </hint>
    </hints>
   </connection>

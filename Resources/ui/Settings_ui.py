@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsKxonhT.ui'
+## Form generated from reading UI file 'SettingsOYhhRg.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -984,7 +984,6 @@ class Ui_Settings(object):
         self.ShowText_Large.toggled.connect(self.EnableWrap_Large.setEnabled)
         self.FCOverlayEnabled.toggled.connect(self.UseButtonBackGround.setEnabled)
         self.FCOverlayEnabled.toggled.connect(self.label_26.setEnabled)
-        self.BorderTransparant.toggled.connect(self.Color_Borders.setDisabled)
 
         self.tabWidget.setCurrentIndex(2)
 
@@ -1119,7 +1118,9 @@ class Ui_Settings(object):
                 None,
             )
         )
-        self.BorderTransparant.setText(QCoreApplication.translate("Settings", "Set border invisible", None))
+        self.BorderTransparant.setText(
+            QCoreApplication.translate("Settings", "Set border invisible for ribbon buttons", None)
+        )
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("Settings", "Colors and icons", None)
         )
