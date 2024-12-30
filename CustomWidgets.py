@@ -148,12 +148,13 @@ class CustomControls:
 
         btn.setStyleSheet(
             StyleMapping.ReturnStyleSheet(
-                control="toolbutton",
+                control="toolbuttonLarge",
                 radius="2px",
                 padding_right=str(Padding_Right) + "px",
                 padding_bottom=str(Padding_Bottom) + "px",
             )
         )
+
         return btn
 
     def CustomToolButton(

@@ -129,8 +129,9 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
     Enter one of the names below:
 
     control (string):
-        "toolbutton,
-        "applicationbutton,
+        toolbutton,
+        toolbuttonLarge,
+        applicationbutton,
     """
     StyleSheet = ""
     try:
@@ -175,6 +176,43 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
                         border-radius: 2px;
                         subcontrol-origin: padding;
                         subcontrol-position: center right;
+                    }"""
+                    + """QToolButton:hover {
+                            background: """
+                    + HoverColor
+                    + """;
+                    border: 0.5px solid"""
+                    + BorderColor
+                    # + """;
+                    # border: transparant"""
+                    + """;}"""
+                )
+                return StyleSheet
+            if control.lower() == "toolbuttonLarge":
+                if Parameters_Ribbon.BORDER_TRANSPARANT is True:
+                    BorderColor = "transparant"
+                StyleSheet = (
+                    """QToolButton {
+                    padding-right: """
+                    + padding_right
+                    + """;padding-bottom: """
+                    + padding_bottom
+                    + """;}"""
+                    + """QToolButton::menu-arrow {
+                        width: 10px;
+                        height:24px;
+                        subcontrol-origin: padding;
+                        subcontrol-position: center bottom;
+                    }"""
+                    + """QToolButton::menu-button {
+                        width: """
+                    + width
+                    + """;
+                        border-radius: 2px;
+                        padding: 1px;
+                        border-radius: 2px;
+                        subcontrol-origin: padding;
+                        subcontrol-position: center bottom;
                     }"""
                     + """QToolButton:hover {
                             background: """
