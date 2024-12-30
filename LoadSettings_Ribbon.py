@@ -852,7 +852,6 @@ class LoadDialog(Settings_ui.Ui_Settings):
         else:
             self.form.ShortcutTaken_1.setHidden(True)
             self.ValuesToUpdate["Shortcut_Application"] = shortCut
-            print(shortCut)
         self.settingChanged = True
         return
 

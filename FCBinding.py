@@ -810,6 +810,7 @@ class ModernMenu(RibbonBar):
         helpAction = helpMenu.actions()[0]
         self.helpRibbonButton().setDefaultAction(helpAction)
         self.helpRibbonButton().setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+        self.helpRibbonButton().setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px"))
 
         # Add a button the enable or disable AutoHide
         pinButton = QToolButton()
@@ -835,6 +836,7 @@ class ModernMenu(RibbonBar):
             pinButton.setChecked(False)
         if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
             pinButton.setChecked(True)
+        pinButton.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px"))
         # If FreeCAD's overlay function is active, set the pinbutton to checked and then to disabled
         preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
         if preferences.GetBool("ActivateOverlay") is True:
