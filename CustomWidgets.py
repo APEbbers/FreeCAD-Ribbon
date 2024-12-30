@@ -102,7 +102,7 @@ class CustomControls:
 
         # If text must not be show, set the text to an empty string
         # Still create a label to set up the button properly
-        if showText is True:
+        if showText is False:
             Text = ""
         # Create a label
         Label_Text = QLabel()
@@ -128,11 +128,12 @@ class CustomControls:
         # Enable wordwrap
         Label_Text.setWordWrap(setWordWrap)
         # Set the width of the label based on the size of the button
-        Label_Text.setFixedWidth(ButtonSize.width() + 5)
+        Label_Text.setFixedWidth(ButtonSize.width())
         # Adjust the size to be able to store the actual height
         Label_Text.adjustSize()
         # Set the textheight
-        textHeight = Label_Text.height()
+        if setWordWrap is True:
+            textHeight = Label_Text.height()
         # Set the text alignment
         Label_Text.setAlignment(TextAlignment)
         # Define a vertical layout
@@ -154,10 +155,15 @@ class CustomControls:
             ArrowButton.setFixedHeight(MenuButtonSpace)
             # Set the width according the commandbutton
             ArrowButton.setFixedWidth(CommandButton.width())
+            ArrowButton.adjustSize()
             # Set the arrow at the bottom
-            ArrowButton.setArrowType(Qt.ArrowType.DownArrow)
+            ArrowButton.setArrowType(Qt.ArrowType.NoArrow)
             # remove the menuindicator from the stylesheet
-            ArrowButton.setStyleSheet("QToolButton::menu-indicator {image: none;}")
+            ArrowButton.setStyleSheet(
+                "QToolButton::menu-indicator {padding-bottom: "
+                + str(MenuButtonSpace)
+                + "px;subcontrol-origin: padding;subcontrol-position: center bottom;}"
+            )
             # Set the content margins
             ArrowButton.setContentsMargins(0, 0, 0, 0)
             # Add the Arrow button to the layout
@@ -170,11 +176,12 @@ class CustomControls:
                     ArrowButton.animateClick()
 
                 Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
+                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
         else:
             MenuButtonSpace = 0
 
         CommandButton.setMinimumHeight(ButtonSize.height() - MenuButtonSpace - textHeight)
-
+        Layout.setSpacing(0)
         btn.setLayout(Layout)
         # Add padding to the bottom. This makes room for the label
 
@@ -188,7 +195,6 @@ class CustomControls:
         CommandButton.setStyleSheet(btn.styleSheet())
         btn.setFixedWidth(CommandButton.width() + Padding_Right)
         btn.setFixedHeight(CommandButton.height() + textHeight)
-
         return btn
 
     def CustomToolButton(

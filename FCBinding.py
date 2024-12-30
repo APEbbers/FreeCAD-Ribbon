@@ -1534,7 +1534,7 @@ class ModernMenu(RibbonBar):
 
                                 # Create a custom toolbutton
                                 ButtonSize = QSize(
-                                    Parameters_Ribbon.ICON_SIZE_LARGE,
+                                    Parameters_Ribbon.ICON_SIZE_LARGE + 5,
                                     Parameters_Ribbon.ICON_SIZE_LARGE,
                                 )
                                 IconSize = QSize(
@@ -1559,14 +1559,6 @@ class ModernMenu(RibbonBar):
                                 )
                                 # add the button as large button
                                 panel.addLargeWidget(btn)
-                                # # if text is enabled for large buttons. The text will be behind the icon
-                                # # To fix this, increase the height of the button with 20 and the set the icon size
-                                # # to the heigt minus 20.
-                                # if Parameters_Ribbon.SHOW_ICON_TEXT_LARGE is True:
-                                #     btn.setFixedHeight(btn.height() + 20)
-                                #     btn.setIconSize(QSize(btn.height() - 20, btn.height() - 20))
-
-                                # btn.setMaximumWidth(Parameters_Ribbon.ICON_SIZE_LARGE + 20)
                             else:
                                 if Parameters_Ribbon.DEBUG_MODE is True:
                                     if buttonSize != "none":
