@@ -1548,7 +1548,7 @@ class ModernMenu(RibbonBar):
                             elif buttonSize == "large":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
                                 if IconOnly is True:
-                                    showText = showText
+                                    showText = False
 
                                 # Create a custom toolbutton
                                 ButtonSize = QSize(
