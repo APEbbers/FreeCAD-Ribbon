@@ -38,6 +38,8 @@ from PySide.QtGui import (
     QTextOption,
     QTextItem,
     QPainter,
+    QKeySequence,
+    QShortcut,
 )
 from PySide.QtWidgets import (
     QToolButton,
@@ -490,6 +492,16 @@ class ModernMenu(RibbonBar):
             Parameter.SetString("Left", "")
             Parameter.SetString("Right", "")
             Parameter.SetString("Bottom", "")
+
+        # Connect shortcuts
+        #
+        # Application menu
+        KeyCombination = "Alt+A"
+        self.ShortCutApp = QShortcut(QKeySequence(KeyCombination), self)
+        self.ShortCutApp.activated.connect(self.ToggleApplicationButton)
+        ToolTip = self.applicationOptionButton().toolTip()
+        ToolTip = f"<b>{ToolTip}</b> ({KeyCombination})"
+        self.applicationOptionButton().setToolTip(ToolTip)
         return
 
     def closeEvent(self, event):
@@ -1065,6 +1077,9 @@ class ModernMenu(RibbonBar):
         # hide normal toolbars
         self.hideClassicToolbars()
         return
+
+    def ToggleApplicationButton(self):
+        self.applicationOptionButton().showMenu()
 
     def buildPanels(self):
         # Get the active workbench and get its name
