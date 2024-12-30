@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsmWmTUB.ui'
+## Form generated from reading UI file 'SettingsXKQUqT.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -75,12 +75,13 @@ class Ui_Settings(object):
         Settings.setSizePolicy(sizePolicy)
         Settings.setMinimumSize(QSize(600, 600))
         Settings.setAutoFillBackground(False)
-        self.widget = QWidget(Settings)
-        self.widget.setObjectName("widget")
-        self.gridLayout_6 = QGridLayout(self.widget)
+        self.layoutWidget = QWidget(Settings)
+        self.layoutWidget.setObjectName("layoutWidget")
+        self.layoutWidget.setGeometry(QRect(0, 0, 561, 552))
+        self.gridLayout_6 = QGridLayout(self.layoutWidget)
         self.gridLayout_6.setObjectName("gridLayout_6")
         self.gridLayout_6.setContentsMargins(0, 0, 0, 0)
-        self.scrollArea = QScrollArea(self.widget)
+        self.scrollArea = QScrollArea(self.layoutWidget)
         self.scrollArea.setObjectName("scrollArea")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
         sizePolicy1.setHorizontalStretch(0)
@@ -971,12 +972,13 @@ class Ui_Settings(object):
 
         self.gridLayout_6.addWidget(self.scrollArea, 0, 0, 1, 3)
 
-        self.widget1 = QWidget(Settings)
-        self.widget1.setObjectName("widget1")
-        self.gridLayout_7 = QGridLayout(self.widget1)
+        self.layoutWidget1 = QWidget(Settings)
+        self.layoutWidget1.setObjectName("layoutWidget1")
+        self.layoutWidget1.setGeometry(QRect(0, 0, 285, 26))
+        self.gridLayout_7 = QGridLayout(self.layoutWidget1)
         self.gridLayout_7.setObjectName("gridLayout_7")
         self.gridLayout_7.setContentsMargins(0, 0, 0, 0)
-        self.Reset = QPushButton(self.widget1)
+        self.Reset = QPushButton(self.layoutWidget1)
         self.Reset.setObjectName("Reset")
 
         self.gridLayout_7.addWidget(self.Reset, 0, 0, 1, 1)
@@ -985,12 +987,12 @@ class Ui_Settings(object):
 
         self.gridLayout_7.addItem(self.horizontalSpacer_2, 0, 1, 1, 1)
 
-        self.GenerateJsonExit = QPushButton(self.widget1)
+        self.GenerateJsonExit = QPushButton(self.layoutWidget1)
         self.GenerateJsonExit.setObjectName("GenerateJsonExit")
 
         self.gridLayout_7.addWidget(self.GenerateJsonExit, 0, 2, 1, 1)
 
-        self.Cancel = QPushButton(self.widget1)
+        self.Cancel = QPushButton(self.layoutWidget1)
         self.Cancel.setObjectName("Cancel")
 
         self.gridLayout_7.addWidget(self.Cancel, 0, 3, 1, 1)
