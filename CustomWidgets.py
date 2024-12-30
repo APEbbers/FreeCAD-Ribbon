@@ -303,7 +303,7 @@ class CustomControls:
             ArrowButton.setStyleSheet(
                 "QToolButton::menu-indicator {padding-right: "
                 + str(MenuButtonSpace + TextWidth)
-                + "px;subcontrol-origin: padding;subcontrol-position: center top;}"
+                + "px;subcontrol-origin: padding;subcontrol-position: center;}"
             )
             # Set the content margins
             ArrowButton.setContentsMargins(0, 0, 0, 0)
