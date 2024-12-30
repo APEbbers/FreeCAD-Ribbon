@@ -911,8 +911,10 @@ class ModernMenu(RibbonBar):
             OverlayMenu = Menu.addMenu(translate("FreeCAD Ribbon", "Overlay..."))
             OverlayButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle overlay"))
             OverlayButton.triggered.connect(self.CustomOverlay)
+            OverlayButton.setShortcut("F4")
             TransparancyButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle transparancy"))
             TransparancyButton.triggered.connect(self.CustomTransparancy)
+            TransparancyButton.setShortcut("Ctrl+F4")
 
         # Add the ribbon design button
         Menu.addSeparator()
@@ -2040,6 +2042,8 @@ class ModernMenu(RibbonBar):
         OverlayParam_Right.SetBool("Transparent", Enable)
         OverlayParam_Top.SetBool("Transparent", Enable)
         OverlayParam_Bottom.SetBool("Transparent", Enable)
+
+        self.TransparancyToggled = True
 
         return self.TransparancyToggled
 
