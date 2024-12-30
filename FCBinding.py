@@ -496,7 +496,7 @@ class ModernMenu(RibbonBar):
         # Connect shortcuts
         #
         # Application menu
-        KeyCombination = "Alt+A"
+        KeyCombination = Parameters_Ribbon.SHORTCUT_APPLICATION
         self.ShortCutApp = QShortcut(QKeySequence(KeyCombination), self)
         self.ShortCutApp.activated.connect(self.ToggleApplicationButton)
         ToolTip = self.applicationOptionButton().toolTip()

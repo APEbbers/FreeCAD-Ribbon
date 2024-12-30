@@ -56,8 +56,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>714</width>
-          <height>747</height>
+          <width>702</width>
+          <height>860</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_28">
@@ -1252,6 +1252,12 @@
                   </item>
                   <item row="0" column="5">
                    <widget class="QLabel" name="ShortcutTaken_1">
+                    <property name="minimumSize">
+                     <size>
+                      <width>120</width>
+                      <height>0</height>
+                     </size>
+                    </property>
                     <property name="font">
                      <font>
                       <italic>true</italic>
@@ -1259,6 +1265,9 @@
                     </property>
                     <property name="text">
                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#df2a06;&quot;&gt;Shortcut already taken&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                    <property name="wordWrap">
+                     <bool>true</bool>
                     </property>
                    </widget>
                   </item>
@@ -1298,15 +1307,30 @@
                     <property name="text">
                      <string>Set shortcut for application menu:</string>
                     </property>
+                    <property name="wordWrap">
+                     <bool>false</bool>
+                    </property>
                    </widget>
                   </item>
                   <item row="0" column="3">
                    <widget class="QLineEdit" name="AppShortCut">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>100</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
                     <property name="inputMethodHints">
                      <set>Qt::InputMethodHint::ImhNone</set>
                     </property>
                     <property name="maxLength">
-                     <number>2</number>
+                     <number>1</number>
                     </property>
                     <property name="placeholderText">
                      <string>Enter a key...</string>

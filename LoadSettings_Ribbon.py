@@ -383,7 +383,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.ScrollClicks_TabBar.textChanged.connect(self.on_ScrollClicks_TabBar_valueCHanged)
         self.form.ScrollClicks_Ribbon.textChanged.connect(self.on_ScrollClicks_Ribbon_valueCHanged)
         self.form.ApplyShortcutApp.clicked.connect(self.form.ApplyShortcutApp, self.on_ApplyShortcutApp_clicked)
-        QLineEdit(self.form.AppShortCut).textChanged.connect(self.on_AppShortCut_textChanged)
+        self.form.AppShortCut.textChanged.connect(self.on_AppShortCut_textChanged)
         # Connect the preferred panel settings
         self.form.PreferedViewPanel.currentIndexChanged.connect(self.on_PreferedViewPanel_currentIndexChanged)
         # Connect the EnableTools checkbox:
@@ -965,6 +965,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Scroll", self.ValuesToUpdate["Ribbon_Scroll"])
         Parameters_Ribbon.Settings.SetIntSetting("TabBar_Click", self.ValuesToUpdate["TabBar_Click"])
         Parameters_Ribbon.Settings.SetIntSetting("Ribbon_Click", self.ValuesToUpdate["Ribbon_Click"])
+        Parameters_Ribbon.Settings.SetStringSetting("Shortcut_Application", self.ValuesToUpdate["Shortcut_Application"])
         # Save the preferred toolbars
         Parameters_Ribbon.Settings.SetIntSetting("Preferred_view", self.ValuesToUpdate["Preferred_view"])
         # Set the use of the tools panel
@@ -1044,6 +1045,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.ScrollSpeed_Ribbon.setValue(DefaultSettings["Ribbon_Scroll"])
         self.form.ScrollClicks_TabBar.setValue(DefaultSettings["TabBar_Click"])
         self.form.ScrollClicks_Ribbon.setValue(DefaultSettings["Ribbon_Click"])
+        self.form.ModifierKeyApp.setCurrentText("Alt")
+        self.form.AppShortCut.clear()
 
         self.form.PreferedViewPanel.setCurrentIndex(DefaultSettings["Preferred_view"])
         if DefaultSettings["UseToolsPanel"] is True:

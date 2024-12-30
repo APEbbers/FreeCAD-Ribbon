@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingstOuMLB.ui'
+## Form generated from reading UI file 'SettingstycrEY.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -90,7 +90,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 714, 747))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 702, 860))
         self.gridLayout_28 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_28.setObjectName("gridLayout_28")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -647,9 +647,11 @@ class Ui_Settings(object):
 
         self.ShortcutTaken_1 = QLabel(self.groupBox_13)
         self.ShortcutTaken_1.setObjectName("ShortcutTaken_1")
+        self.ShortcutTaken_1.setMinimumSize(QSize(120, 0))
         font2 = QFont()
         font2.setItalic(True)
         self.ShortcutTaken_1.setFont(font2)
+        self.ShortcutTaken_1.setWordWrap(True)
 
         self.gridLayout_36.addWidget(self.ShortcutTaken_1, 0, 5, 1, 1)
 
@@ -669,13 +671,17 @@ class Ui_Settings(object):
 
         self.label_8 = QLabel(self.groupBox_13)
         self.label_8.setObjectName("label_8")
+        self.label_8.setWordWrap(False)
 
         self.gridLayout_36.addWidget(self.label_8, 0, 0, 1, 1)
 
         self.AppShortCut = QLineEdit(self.groupBox_13)
         self.AppShortCut.setObjectName("AppShortCut")
+        sizePolicy7.setHeightForWidth(self.AppShortCut.sizePolicy().hasHeightForWidth())
+        self.AppShortCut.setSizePolicy(sizePolicy7)
+        self.AppShortCut.setMaximumSize(QSize(100, 16777215))
         self.AppShortCut.setInputMethodHints(Qt.InputMethodHint.ImhNone)
-        self.AppShortCut.setMaxLength(2)
+        self.AppShortCut.setMaxLength(1)
         self.AppShortCut.setClearButtonEnabled(False)
 
         self.gridLayout_36.addWidget(self.AppShortCut, 0, 3, 1, 1)
