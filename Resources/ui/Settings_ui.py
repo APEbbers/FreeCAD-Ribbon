@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsoGrBWF.ui'
+## Form generated from reading UI file 'SettingstOuMLB.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -674,6 +674,9 @@ class Ui_Settings(object):
 
         self.AppShortCut = QLineEdit(self.groupBox_13)
         self.AppShortCut.setObjectName("AppShortCut")
+        self.AppShortCut.setInputMethodHints(Qt.InputMethodHint.ImhNone)
+        self.AppShortCut.setMaxLength(2)
+        self.AppShortCut.setClearButtonEnabled(False)
 
         self.gridLayout_36.addWidget(self.AppShortCut, 0, 3, 1, 1)
 

@@ -1306,13 +1306,13 @@
                      <set>Qt::InputMethodHint::ImhNone</set>
                     </property>
                     <property name="maxLength">
-                     <number>1</number>
+                     <number>2</number>
                     </property>
                     <property name="placeholderText">
                      <string>Enter a key...</string>
                     </property>
                     <property name="clearButtonEnabled">
-                     <bool>true</bool>
+                     <bool>false</bool>
                     </property>
                    </widget>
                   </item>

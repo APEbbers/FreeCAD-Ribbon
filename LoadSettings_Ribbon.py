@@ -246,13 +246,13 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.ScrollSpeed_Ribbon.setValue(Parameters_Ribbon.RIBBON_SCROLLSPEED)
         self.form.ScrollClicks_TabBar.setValue(Parameters_Ribbon.TABBAR_CLICKSPEED)
         self.form.ScrollClicks_Ribbon.setValue(Parameters_Ribbon.RIBBON_CLICKSPEED)
-        self.form.ModifierKeyApp.setCurrentText(Parameters_Ribbon.SHORTCUT_APPLICATION.split("+")[0])
-        self.form.ModifierKeyApp.setItemData(
-            self.form.ModifierKeyApp.currentIndex(),
-            Parameters_Ribbon.SHORTCUT_APPLICATION.split("+")[0],
-            Qt.ItemDataRole.UserRole,
-        )
-        self.form.AppShortCut.setText(Parameters_Ribbon.SHORTCUT_APPLICATION.split("+")[1])
+        self.form.ModifierKeyApp.setCurrentText(self.OriginalValues["Shortcut_Application"].split("+")[0])
+        # self.form.ModifierKeyApp.setItemData(
+        #     self.form.ModifierKeyApp.currentIndex(),
+        #     self.OriginalValues["Shortcut_Application"].split("+")[0],
+        #     Qt.ItemDataRole.UserRole,
+        # )
+        self.form.AppShortCut.setText(self.OriginalValues["Shortcut_Application"].split("+")[1])
         self.form.ShortcutTaken_1.setHidden(True)
 
         # Miscellaneous
@@ -382,9 +382,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.ScrollSpeed_Ribbon.valueChanged.connect(self.on_ScrollSpeed_Ribbon_valueCHanged)
         self.form.ScrollClicks_TabBar.textChanged.connect(self.on_ScrollClicks_TabBar_valueCHanged)
         self.form.ScrollClicks_Ribbon.textChanged.connect(self.on_ScrollClicks_Ribbon_valueCHanged)
-        self.form.ApplyShortcutApp.clicked.connect(
-            self.form.ApplyShortcutApp, SIGNAL("clicked()"), self.on_ApplyShortcutApp_clicked
-        )
+        self.form.ApplyShortcutApp.clicked.connect(self.form.ApplyShortcutApp, self.on_ApplyShortcutApp_clicked)
         QLineEdit(self.form.AppShortCut).textChanged.connect(self.on_AppShortCut_textChanged)
         # Connect the preferred panel settings
         self.form.PreferedViewPanel.currentIndexChanged.connect(self.on_PreferedViewPanel_currentIndexChanged)
@@ -848,12 +846,13 @@ class LoadDialog(Settings_ui.Ui_Settings):
         return
 
     def on_ApplyShortcutApp_clicked(self):
-        shortCut = f"{self.form.ModifierKeyApp.currentData(Qt.ItemDataRole.UserRole)}+{self.form.AppShortCut.text()}"
+        shortCut = f"{self.form.ModifierKeyApp.currentText()}+{self.form.AppShortCut.text()}"
         if StandardFunctions.ShortCutTaken(shortCut) is True:
             self.form.ShortcutTaken_1.setVisible(True)
         else:
             self.form.ShortcutTaken_1.setHidden(True)
             self.ValuesToUpdate["Shortcut_Application"] = shortCut
+            print(shortCut)
         self.settingChanged = True
         return
 
@@ -861,6 +860,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         test = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         if self.form.AppShortCut.text() not in test:
             self.form.AppShortCut.clear()
+        return
 
     # endregion
 
