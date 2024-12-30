@@ -210,7 +210,7 @@ class CustomControls:
         ButtonSize: QSize,
         FontSize: int = 10,
         showText=True,
-        TextAlignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft,
+        TextAlignment=Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignLeft,
         TextPositionAlignment=Qt.AlignmentFlag.AlignLeft,
         setWordWrap=True,
         ElideMode=Qt.TextElideMode.ElideNone,
@@ -261,6 +261,7 @@ class CustomControls:
             Label_Text.setWordWrap(True)
             Label_Text.adjustSize()
             SingleWidth = Label_Text.rect().width()
+            TextAlignment = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
         # check if the icon is not too small for wrap
         if btn.height() < SingleHeight:
             setWordWrap = False
