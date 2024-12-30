@@ -23,7 +23,6 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-
 from PySide.QtGui import (
     QIcon,
     QAction,
@@ -39,8 +38,6 @@ from PySide.QtGui import (
     QTextOption,
     QTextItem,
     QPainter,
-    QShortcut,
-    QKeySequence,
 )
 from PySide.QtWidgets import (
     QToolButton,
@@ -493,17 +490,6 @@ class ModernMenu(RibbonBar):
             Parameter.SetString("Left", "")
             Parameter.SetString("Right", "")
             Parameter.SetString("Bottom", "")
-
-        # Connect shortcuts
-        #
-        # Application menu
-        KeyCombination = "Alt+A"
-        self.ShortCutApp = QShortcut(QKeySequence(KeyCombination), self)
-        self.ShortCutApp.activated.connect(self.ToggleApplicationButton)
-        ToolTip = self.applicationOptionButton().toolTip()
-        ToolTip = f"<b>{ToolTip}</b> ({KeyCombination})"
-        self.applicationOptionButton().setToolTip(ToolTip)
-
         return
 
     def closeEvent(self, event):
@@ -604,12 +590,12 @@ class ModernMenu(RibbonBar):
                     ScrollRightButton_Tab.click()
         return
 
-    # # The backup keypress event
-    # def keyPressEvent(self, event):
-    #     if event.key() == Qt.Key.Key_F3:
-    #         self.CustomOverlay()
-    #     if event.key() == Qt.Key.Key_F4:
-    #         self.CustomTransparancy()
+    # The backup keypress event
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_F3:
+            self.CustomOverlay()
+        if event.key() == Qt.Key.Key_F4:
+            self.CustomTransparancy()
 
     def connectSignals(self):
         self.tabBar().currentChanged.connect(self.onUserChangedWorkbench)
@@ -913,7 +899,6 @@ class ModernMenu(RibbonBar):
             OverlayMenu = Menu.addMenu(translate("FreeCAD Ribbon", "Overlay..."))
             OverlayButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle overlay"))
             OverlayButton.triggered.connect(self.CustomOverlay)
-            OverlayButton.setShortcut("shift+F3")
             TransparancyButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle transparancy"))
             TransparancyButton.triggered.connect(self.CustomTransparancy)
 
@@ -951,7 +936,6 @@ class ModernMenu(RibbonBar):
         AboutButton = Menu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version)
         AboutButton.triggered.connect(self.on_AboutButton_clicked)
 
-        # self.applicationOptionButton().setShortcut(Qt.Key.Key_Alt | Qt.Key.Key_B)
         return
 
     def loadDesignMenu(self):
@@ -1080,11 +1064,7 @@ class ModernMenu(RibbonBar):
 
         # hide normal toolbars
         self.hideClassicToolbars()
-
         return
-
-    def ToggleApplicationButton(self):
-        self.applicationOptionButton().showMenu()
 
     def buildPanels(self):
         # Get the active workbench and get its name
@@ -1582,11 +1562,11 @@ class ModernMenu(RibbonBar):
                                 # # if text is enabled for large buttons. The text will be behind the icon
                                 # # To fix this, increase the height of the button with 20 and the set the icon size
                                 # # to the heigt minus 20.
-                                if Parameters_Ribbon.SHOW_ICON_TEXT_LARGE is True:
-                                    btn.setFixedHeight(btn.height() + 20)
-                                    btn.setIconSize(QSize(btn.height() - 20, btn.height() - 20))
+                                # if Parameters_Ribbon.SHOW_ICON_TEXT_LARGE is True:
+                                #     btn.setFixedHeight(btn.height() + 20)
+                                #     btn.setIconSize(QSize(btn.height() - 20, btn.height() - 20))
 
-                                    btn.setMaximumWidth(Parameters_Ribbon.ICON_SIZE_LARGE + 20)
+                                # btn.setMaximumWidth(Parameters_Ribbon.ICON_SIZE_LARGE + 20)
                             else:
                                 if Parameters_Ribbon.DEBUG_MODE is True:
                                     if buttonSize != "none":

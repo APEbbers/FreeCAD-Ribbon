@@ -83,77 +83,111 @@ class CustomControls:
         MenuButtonSpace=10,
     ):
         btn = QToolButton()
+        CommandButton = QToolButton()
+        ArrowButton = QToolButton()
+        Layout = QVBoxLayout()
         #
         Padding_Right = 0
-        Padding_Bottom = 0
+        textHeight = 0
         # Set the buttonSize
-        btn.setFixedSize(ButtonSize)
+        CommandButton.setMaximumSize(ButtonSize)
         # Set the icon and its size
-        btn.setIcon(Icon)
-        btn.setIconSize(IconSize.expandedTo(btn.size()))
+        CommandButton.setIcon(Icon)
+        CommandButton.setIconSize(IconSize)
         # Set the content margins to zero
-        btn.setContentsMargins(0, 0, 0, 0)
+        CommandButton.setContentsMargins(0, 0, 0, 0)
         if len(Menu.actions()) == 0:
-            btn.addAction(Action)
-        btn.setDefaultAction(Action)
-        if Menu is not None and len(Menu.actions()) > 1:
-            btn.setMenu(Menu)
-            btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-            btn.setDefaultAction(btn.actions()[0])
-            Padding_Right = MenuButtonSpace
-            btn.setFixedWidth(btn.width() + Padding_Right)
+            CommandButton.addAction(Action)
+        CommandButton.setDefaultAction(Action)
 
-        # If text must be shown wrapped, add a layout with label
+        # If text must not be show, set the text to an empty string
+        # Still create a label to set up the button properly
         if showText is True:
-            # Create a label
-            Label_Text = QLabel()
-            # Set the font
-            Font = QFont()
-            Font.setPointSize(FontSize)
-            Label_Text.setFont(Font)
-            Label_Text.setText(Text)
-            # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
-            if setWordWrap is False:
-                FontMetrics = QFontMetrics(Text)
-                Text = FontMetrics.elidedText(Text, ElideMode, btn.width(), Qt.TextFlag.TextSingleLine)
-                Label_Text.setText(Text)
-                MaxNumberOfLines = 1
-            # Set the textFormat
-            Label_Text.setTextFormat(Qt.TextFormat.RichText)
-            # Determine the height of a single row
+            Text = ""
+        # Create a label
+        Label_Text = QLabel()
+        # Set the font
+        Font = QFont()
+        Font.setPointSize(FontSize)
+        Label_Text.setFont(Font)
+        Label_Text.setText(Text)
+        # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
+        if setWordWrap is False:
             FontMetrics = QFontMetrics(Text)
-            SingleHeight = FontMetrics.boundingRect(Text).height()
-            # make sure that the label height is at least for two lines
-            Label_Text.setMinimumHeight((SingleHeight * 1))
-            Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines) - 10)
-            # Enable wordwrap
-            Label_Text.setWordWrap(setWordWrap)
-            # Set the width of the label based on the size of the button
-            Label_Text.setFixedWidth(ButtonSize.width() + 5)
-            # Adjust the size to be able to store the actual height
-            Label_Text.adjustSize()
-            # Set the text alignment
-            Label_Text.setAlignment(TextAlignment)
-            # Define a vertical layout
-            Layout = QVBoxLayout()
-            # Add the label with alignment
-            Layout.addWidget(Label_Text)
-            Layout.setAlignment(TextPositionAlignment)
-            # Set the content margins to zero
-            Layout.setContentsMargins(0, 0, 0, 0)
-            # Add the layout to the button
-            btn.setLayout(Layout)
-            # Add padding to the bottom. This makes room for the label
-            Padding_Bottom = Label_Text.height()
+            Text = FontMetrics.elidedText(Text, ElideMode, btn.width(), Qt.TextFlag.TextSingleLine)
+            Label_Text.setText(Text)
+            MaxNumberOfLines = 1
+        # Set the textFormat
+        Label_Text.setTextFormat(Qt.TextFormat.RichText)
+        # Determine the height of a single row
+        FontMetrics = QFontMetrics(Text)
+        SingleHeight = FontMetrics.boundingRect(Text).height()
+        # make sure that the label height is at least for two lines
+        Label_Text.setMinimumHeight((SingleHeight * 1))
+        Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines) - 10)
+        # Enable wordwrap
+        Label_Text.setWordWrap(setWordWrap)
+        # Set the width of the label based on the size of the button
+        Label_Text.setFixedWidth(ButtonSize.width() + 5)
+        # Adjust the size to be able to store the actual height
+        Label_Text.adjustSize()
+        # Set the textheight
+        textHeight = Label_Text.height()
+        # Set the text alignment
+        Label_Text.setAlignment(TextAlignment)
+        # Define a vertical layout
+        Layout = QVBoxLayout()
+        # Add the command button
+        Layout.addWidget(CommandButton)
+        # Add the label with alignment
+        Layout.addWidget(Label_Text)
+        # Layout.setAlignment(TextPositionAlignment)
+        # Set the content margins to zero
+        Layout.setContentsMargins(0, 0, 0, 0)
+        # Add the layout to the button
 
+        if Menu is not None and len(Menu.actions()) > 1:
+            # Define a menu
+            ArrowButton.setMenu(Menu)
+            ArrowButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+            # Set the height according the space for the menubutton
+            ArrowButton.setFixedHeight(MenuButtonSpace)
+            # Set the width according the commandbutton
+            ArrowButton.setFixedWidth(CommandButton.width())
+            # Set the arrow at the bottom
+            ArrowButton.setArrowType(Qt.ArrowType.DownArrow)
+            # remove the menuindicator from the stylesheet
+            ArrowButton.setStyleSheet("QToolButton::menu-indicator {image: none;}")
+            # Set the content margins
+            ArrowButton.setContentsMargins(0, 0, 0, 0)
+            # Add the Arrow button to the layout
+            Layout.addWidget(ArrowButton)
+
+            # Add the label to the area where the user can invoke the menu
+            if showText is True:
+
+                def mouseClickevent(event):
+                    ArrowButton.animateClick()
+
+                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
+        else:
+            MenuButtonSpace = 0
+
+        CommandButton.setMinimumHeight(ButtonSize.height() - MenuButtonSpace - textHeight)
+
+        btn.setLayout(Layout)
+        # Add padding to the bottom. This makes room for the label
+
+        # Set the stylesheet
         btn.setStyleSheet(
             StyleMapping.ReturnStyleSheet(
-                control="toolbuttonLarge",
+                control="toolbutton",
                 radius="2px",
-                padding_right=str(Padding_Right) + "px",
-                padding_bottom=str(Padding_Bottom) + "px",
             )
         )
+        CommandButton.setStyleSheet(btn.styleSheet())
+        btn.setFixedWidth(CommandButton.width() + Padding_Right)
+        btn.setFixedHeight(CommandButton.height() + textHeight)
 
         return btn
 
