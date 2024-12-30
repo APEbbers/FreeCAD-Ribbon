@@ -1075,7 +1075,7 @@ class ModernMenu(RibbonBar):
 
     def onTabBarClicked(self):
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-        TB.setMaximumHeight(self.ReturnRibbonHeight(self.panelTitleHeight))
+        TB.setMaximumHeight(self.ribbonHeight() + self.panelTitleHeight)
         self.setRibbonVisible(True)
 
         # hide normal toolbars
