@@ -124,6 +124,7 @@ class Settings:
         Settings.SetIntSetting("Ribbon_Scroll", RIBBON_SCROLLSPEED)
         Settings.SetIntSetting("TabBar_Click", TABBAR_CLICKSPEED)
         Settings.SetIntSetting("Ribbon_Click", RIBBON_CLICKSPEED)
+        Settings.SetStringSetting("Shortcut_Application", SHORTCUT_APPLICATION)
 
         Settings.SetIntSetting("Preferred_view", PREFERRED_VIEW)
         Settings.SetBoolSetting("UseToolsPanel", USE_TOOLSPANEL)
@@ -202,6 +203,7 @@ DefaultSettings = {
     "OptionButton": "",
     "PinButton_open": "",
     "PinButton_closed": "",
+    "Shortcut_Application": "Alt+A",
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
@@ -361,6 +363,12 @@ RIBBON_CLICKSPEED = Settings.GetIntSetting("Ribbon_Click")
 if Settings.GetIntSetting("Ribbon_Click") is None or Settings.GetIntSetting("Ribbon_Click") == 0:
     RIBBON_CLICKSPEED = DefaultSettings["Ribbon_Click"]
     Settings.SetIntSetting("Ribbon_Click", RIBBON_CLICKSPEED)
+
+SHORTCUT_APPLICATION = Settings.GetStringSetting("Shortcut_Application")
+if Settings.GetStringSetting("Shortcut_Application") == "":
+    SHORTCUT_APPLICATION = DefaultSettings["Shortcut_Application"]
+    Settings.SetStringSetting("Shortcut_Application", SHORTCUT_APPLICATION)
+
 # endregion ------------------------------------------------------------------------------------------------------------
 
 

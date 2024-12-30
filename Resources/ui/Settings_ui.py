@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsMvSjBq.ui'
+## Form generated from reading UI file 'SettingsoGrBWF.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -658,14 +658,14 @@ class Ui_Settings(object):
 
         self.gridLayout_36.addWidget(self.label_31, 0, 2, 1, 1)
 
-        self.comboBox = QComboBox(self.groupBox_13)
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.addItem("")
-        self.comboBox.setObjectName("comboBox")
+        self.ModifierKeyApp = QComboBox(self.groupBox_13)
+        self.ModifierKeyApp.addItem("")
+        self.ModifierKeyApp.addItem("")
+        self.ModifierKeyApp.addItem("")
+        self.ModifierKeyApp.addItem("")
+        self.ModifierKeyApp.setObjectName("ModifierKeyApp")
 
-        self.gridLayout_36.addWidget(self.comboBox, 0, 1, 1, 1, Qt.AlignmentFlag.AlignLeft)
+        self.gridLayout_36.addWidget(self.ModifierKeyApp, 0, 1, 1, 1, Qt.AlignmentFlag.AlignLeft)
 
         self.label_8 = QLabel(self.groupBox_13)
         self.label_8.setObjectName("label_8")
@@ -1123,10 +1123,10 @@ class Ui_Settings(object):
             )
         )
         self.label_31.setText(QCoreApplication.translate("Settings", "+", None))
-        self.comboBox.setItemText(0, QCoreApplication.translate("Settings", "Ctrl", None))
-        self.comboBox.setItemText(1, QCoreApplication.translate("Settings", "Shift", None))
-        self.comboBox.setItemText(2, QCoreApplication.translate("Settings", "Alt", None))
-        self.comboBox.setItemText(3, QCoreApplication.translate("Settings", "Space", None))
+        self.ModifierKeyApp.setItemText(0, QCoreApplication.translate("Settings", "Ctrl", None))
+        self.ModifierKeyApp.setItemText(1, QCoreApplication.translate("Settings", "Shift", None))
+        self.ModifierKeyApp.setItemText(2, QCoreApplication.translate("Settings", "Alt", None))
+        self.ModifierKeyApp.setItemText(3, QCoreApplication.translate("Settings", "Space", None))
 
         self.label_8.setText(QCoreApplication.translate("Settings", "Set shortcut for application menu:", None))
         self.AppShortCut.setPlaceholderText(QCoreApplication.translate("Settings", "Enter a key...", None))

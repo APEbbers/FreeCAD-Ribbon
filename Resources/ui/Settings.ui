@@ -1270,7 +1270,7 @@
                    </widget>
                   </item>
                   <item row="0" column="1" alignment="Qt::AlignmentFlag::AlignLeft">
-                   <widget class="QComboBox" name="comboBox">
+                   <widget class="QComboBox" name="ModifierKeyApp">
                     <item>
                      <property name="text">
                       <string>Ctrl</string>
@@ -1302,8 +1302,17 @@
                   </item>
                   <item row="0" column="3">
                    <widget class="QLineEdit" name="AppShortCut">
+                    <property name="inputMethodHints">
+                     <set>Qt::InputMethodHint::ImhNone</set>
+                    </property>
+                    <property name="maxLength">
+                     <number>1</number>
+                    </property>
                     <property name="placeholderText">
                      <string>Enter a key...</string>
+                    </property>
+                    <property name="clearButtonEnabled">
+                     <bool>true</bool>
                     </property>
                    </widget>
                   </item>
