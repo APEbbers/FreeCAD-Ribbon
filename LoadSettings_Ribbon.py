@@ -34,7 +34,7 @@ from PySide.QtWidgets import (
     QTabWidget,
     QSizePolicy,
     QPushButton,
-    QLineEdit.
+    QLineEdit,
 )
 from PySide.QtGui import QIcon, QPixmap, QColor
 
