@@ -1488,12 +1488,13 @@ class ModernMenu(RibbonBar):
                                     FontSize=8,
                                     showText=showText,
                                     setWordWrap=False,
+                                    ElideMode=Qt.TextElideMode.ElideNone,
                                     MaxNumberOfLines=2,
                                     Menu=Menu,
-                                    MenuButtonSpace=10,
+                                    MenuButtonSpace=7,
                                 )
                                 # add the button as large button
-                                panel.addSmallWidget(btn)
+                                panel.addSmallWidget(btn, alignment=Qt.AlignmentFlag.AlignLeft)
 
                             elif buttonSize == "medium":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
@@ -1523,10 +1524,10 @@ class ModernMenu(RibbonBar):
                                     setWordWrap=Parameters_Ribbon.WRAPTEXT_MEDIUM,
                                     MaxNumberOfLines=2,
                                     Menu=Menu,
-                                    MenuButtonSpace=10,
+                                    MenuButtonSpace=7,
                                 )
                                 # add the button as large button
-                                panel.addMediumWidget(btn)
+                                panel.addMediumWidget(btn, alignment=Qt.AlignmentFlag.AlignLeft)
                             elif buttonSize == "large":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
                                 if IconOnly is True:

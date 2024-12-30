@@ -75,7 +75,6 @@ class CustomControls:
         FontSize: int = 10,
         showText=True,
         TextAlignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter,
-        TextPositionAlignment=Qt.AlignmentFlag.AlignBottom,
         setWordWrap=True,
         ElideMode=Qt.TextElideMode.ElideMiddle,
         MaxNumberOfLines=2,
@@ -88,7 +87,7 @@ class CustomControls:
         Layout = QVBoxLayout()
         #
         Padding_Right = 0
-        textHeight = 0
+        TextHeight = 0
         # Set the buttonSize
         CommandButton.setMaximumSize(ButtonSize)
         # Set the icon and its size
@@ -124,7 +123,7 @@ class CustomControls:
         SingleHeight = FontMetrics.boundingRect(Text).height()
         # make sure that the label height is at least for two lines
         Label_Text.setMinimumHeight((SingleHeight * 1))
-        Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines) - 10)
+        Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines))
         # Enable wordwrap
         Label_Text.setWordWrap(setWordWrap)
         # Set the width of the label based on the size of the button
@@ -133,7 +132,7 @@ class CustomControls:
         Label_Text.adjustSize()
         # Set the textheight
         if setWordWrap is True:
-            textHeight = Label_Text.height()
+            TextHeight = Label_Text.height()
         # Set the text alignment
         Label_Text.setAlignment(TextAlignment)
         # Define a vertical layout
@@ -178,12 +177,18 @@ class CustomControls:
                 Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
                 ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
         else:
+
+            def mouseClickevent(event):
+                CommandButton.animateClick()
+
+            Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
+            ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
+            Label_Text.setToolTip(ArrowButton.toolTip())
             MenuButtonSpace = 0
 
-        CommandButton.setMinimumHeight(ButtonSize.height() - MenuButtonSpace - textHeight)
+        CommandButton.setMinimumHeight(ButtonSize.height() - MenuButtonSpace - TextHeight)
         Layout.setSpacing(0)
         btn.setLayout(Layout)
-        # Add padding to the bottom. This makes room for the label
 
         # Set the stylesheet
         btn.setStyleSheet(
@@ -194,7 +199,7 @@ class CustomControls:
         )
         CommandButton.setStyleSheet(btn.styleSheet())
         btn.setFixedWidth(CommandButton.width() + Padding_Right)
-        btn.setFixedHeight(CommandButton.height() + textHeight)
+        btn.setFixedHeight(CommandButton.height() + TextHeight)
         return btn
 
     def CustomToolButton(
@@ -205,7 +210,7 @@ class CustomControls:
         ButtonSize: QSize,
         FontSize: int = 10,
         showText=True,
-        TextAlignment=Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft,
+        TextAlignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft,
         TextPositionAlignment=Qt.AlignmentFlag.AlignLeft,
         setWordWrap=True,
         ElideMode=Qt.TextElideMode.ElideNone,
@@ -214,94 +219,127 @@ class CustomControls:
         MenuButtonSpace=10,
     ):
         btn = QToolButton()
+        CommandButton = QToolButton()
+        ArrowButton = QToolButton()
+        Layout = QHBoxLayout()
         #
-        Padding_Right = 0
+        TextWidth = 0
+        Text = Text.strip()
         # Set the buttonSize
-        btn.setFixedSize(ButtonSize)
+        CommandButton.setFixedSize(ButtonSize)
         # Set the icon and its size
-        btn.setIcon(Icon)
-        btn.setIconSize(IconSize.expandedTo(btn.size()))
+        CommandButton.setIcon(Icon)
+        CommandButton.setIconSize(IconSize)
         # Set the content margins to zero
-        btn.setContentsMargins(0, 0, 0, 0)
+        CommandButton.setContentsMargins(0, 0, 0, 0)
         if len(Menu.actions()) == 0:
-            btn.addAction(Action)
-        btn.setDefaultAction(Action)
-        if Menu is not None and len(Menu.actions()) > 1:
-            btn.setMenu(Menu)
-            btn.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-            btn.setDefaultAction(btn.actions()[0])
-            Padding_Right = MenuButtonSpace
-            btn.setFixedWidth(btn.width() + Padding_Right)
+            CommandButton.addAction(Action)
+        CommandButton.setDefaultAction(Action)
 
         # If text must be shown wrapped, add a layout with label
-        if showText is True:
-            Text = Text.strip()
-            # Create a label
-            Label_Text = QLabel()
-            # Set the font
-            Font = QFont()
-            Font.setPointSize(FontSize)
-            Label_Text.setFont(Font)
-            Label_Text.setText(Text)
-            # Determine the dimensions of a single row
-            FontMetrics = QFontMetrics(Text)
-            SingleHeight = FontMetrics.boundingRect(Text).height()
-            SingleWidth = FontMetrics.tightBoundingRect(Text).width()
-            if setWordWrap is True:
-                SingleWidth = 2 * btn.iconSize().width()
-            # check if the icon is not too small for wrap
-            if btn.iconSize().height() < 1.5 * SingleHeight:
-                setWordWrap = False
-            # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
-            if setWordWrap is False:
-                FontMetrics = QFontMetrics(Font)
-                SingleWidth = FontMetrics.tightBoundingRect(Text).width()
-                # print(f"{Text}, {SingleWidth}")
-                Text = FontMetrics.elidedText(Text, ElideMode, SingleWidth, Qt.TextFlag.TextSingleLine)
-                Label_Text.setText(Text)
-                MaxNumberOfLines = 1
-            # Set the textFormat
-            Label_Text.setTextFormat(Qt.TextFormat.RichText)
-            # Enable wordwrap
-            Label_Text.setWordWrap(setWordWrap)
-            # make sure that the label height is at least for two lines
-            Label_Text.setMinimumHeight((SingleHeight * 1))
-            Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines) - 10)
-            # Set the width of the label based on the size of the button
-            Label_Text.setFixedWidth(SingleWidth)
-            # Adjust the size to be able to store the actual height
-            Label_Text.adjustSize()
-            # Set the text alignment
-            Label_Text.setAlignment(TextAlignment)
-            # Define a vertical layout
-            Layout = QHBoxLayout()
-            # Add a spacer to prevent from text going through the icon
-            Spacer = QSpacerItem(
-                btn.iconSize().width() + 3, btn.height(), QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred
-            )
-            Layout.addSpacerItem(Spacer)
-            # Add the label with alignment
-            Layout.addWidget(Label_Text)
-            Layout.setAlignment(TextPositionAlignment)
-            # Set the content margins to zero
-            Layout.setContentsMargins(0, 0, 0, 0)
-            # Add the layout to the button
-            btn.setLayout(Layout)
-            btn.setMaximumWidth(btn.iconSize().width() + SingleWidth + Padding_Right)
-
-            btn.setStyleSheet(
-                StyleMapping.ReturnStyleSheet(
-                    control="toolbutton",
-                    radius="2px",
-                    padding_right=str(Label_Text.width() + Padding_Right) + "px",
-                )
-            )
         if showText is False:
-            btn.setStyleSheet(
-                StyleMapping.ReturnStyleSheet(
-                    control="toolbutton",
-                    radius="2px",
-                    padding_right=str(Padding_Right) + "px",
-                )
+            Text = ""
+        # Create a label
+        Label_Text = QLabel()
+        # Set the font
+        Font = QFont()
+        Font.setPointSize(FontSize)
+        Label_Text.setFont(Font)
+        Label_Text.setText(Text)
+        # Determine the dimensions of a single row
+        FontMetrics = QFontMetrics(Text)
+        SingleHeight = FontMetrics.boundingRect(Text).height()
+        SingleWidth = 0
+        for c in Text:
+            SingleWidth = SingleWidth + FontMetrics.boundingRectChar(c).width()
+        # Set the width of the label based on the size of the button
+        Label_Text.setMaximumWidth(SingleWidth)
+        # Adjust the size to be able to store the actual height
+        Label_Text.adjustSize()
+        if setWordWrap is True:
+            # Enable wordwrap
+            Label_Text.setWordWrap(True)
+            Label_Text.adjustSize()
+            SingleWidth = Label_Text.rect().width()
+        # check if the icon is not too small for wrap
+        if btn.height() < SingleHeight:
+            setWordWrap = False
+        # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
+        if setWordWrap is False and ElideMode == Qt.TextElideMode.ElideMiddle:
+            Label_Text.setMaximumSize(ButtonSize.width() * 3, SingleHeight)
+            Label_Text.adjustSize()
+            ElidedText = FontMetrics.elidedText(Text, ElideMode, SingleWidth, Qt.TextFlag.TextSingleLine)
+            Label_Text.setText(ElidedText)
+            MaxNumberOfLines = 1
+        # make sure that the label height is at least for two lines
+        Label_Text.setMinimumHeight(SingleHeight * 1)
+        Label_Text.setMaximumHeight(SingleHeight * MaxNumberOfLines)
+        # Set the text alignment
+        Label_Text.setAlignment(TextAlignment)
+        TextWidth = SingleWidth + 5
+        # Define a vertical layout
+        Layout = QHBoxLayout()
+        # Add the command button
+        Layout.addWidget(CommandButton)
+        # Add the label with alignment
+        Layout.addWidget(Label_Text)
+        Layout.setAlignment(TextPositionAlignment)
+        # Set the content margins to zero
+        Layout.setContentsMargins(0, 0, 0, 0)
+
+        if Menu is not None and len(Menu.actions()) > 1:
+            # Define a menu
+            ArrowButton.setMenu(Menu)
+            ArrowButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+            # Set the height according the space for the menubutton
+            ArrowButton.setFixedHeight(CommandButton.height())
+            # Set the width according the commandbutton
+            ArrowButton.setFixedWidth(MenuButtonSpace)
+            ArrowButton.adjustSize()
+            # Set the arrow at the bottom
+            ArrowButton.setArrowType(Qt.ArrowType.NoArrow)
+            # remove the menuindicator from the stylesheet
+            ArrowButton.setStyleSheet(
+                "QToolButton::menu-indicator {padding-right: "
+                + str(MenuButtonSpace + TextWidth)
+                + "px;subcontrol-origin: padding;subcontrol-position: center top;}"
             )
+            # Set the content margins
+            ArrowButton.setContentsMargins(0, 0, 0, 0)
+            # Add the Arrow button to the layout
+            Layout.addWidget(ArrowButton)
+
+            # Add the label to the area where the user can invoke the menu
+            if showText is True:
+
+                def mouseClickevent(event):
+                    ArrowButton.animateClick()
+
+                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
+                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
+        else:
+            # Add the label to the area where the user can invoke the menu
+            if showText is True:
+
+                def mouseClickevent(event):
+                    CommandButton.animateClick()
+
+                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
+                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
+                Label_Text.setToolTip(ArrowButton.toolTip())
+            MenuButtonSpace = 0
+
+        CommandButton.setMinimumHeight(ButtonSize.height())
+        Layout.setSpacing(3)
+        btn.setLayout(Layout)
+
+        btn.setStyleSheet(
+            StyleMapping.ReturnStyleSheet(
+                control="toolbutton",
+                radius="2px",
+            )
+        )
+        CommandButton.setStyleSheet(btn.styleSheet())
+        btn.setFixedWidth(CommandButton.width() + MenuButtonSpace + TextWidth)
+        btn.setFixedHeight(CommandButton.height())
         return btn
