@@ -291,7 +291,7 @@ StyleMapping_default = {
             "ScrollRightButton_Category": "forward_1.svg",
             "OptionButton": "more_1.svg",
             "PinButton_open": "pin-icon-open_1.svg",
-            "PinButton_closed": "pin-icon-default_1.svg",
+            "PinButton_closed": "pin-icon-closed_1.svg",
         },
         "OpenDark.qss": {
             "Background_Color": "#212529",
