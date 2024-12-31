@@ -404,7 +404,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         def ApplyShortcutKey():
             self.on_ApplyShortcutApp_clicked(self)
 
-        self.form.ApplyShortcutApp.clicked.connect(self.form.ApplyShortcutApp, ApplyShortcutKey)
+        self.form.ApplyShortcutApp.connect(self.form.ApplyShortcutApp, SIGNAL("clicked()"), ApplyShortcutKey)
 
         self.form.AppShortCut.textChanged.connect(self.on_AppShortCut_textChanged)
         # Connect the preferred panel settings
