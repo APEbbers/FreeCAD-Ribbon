@@ -113,7 +113,9 @@ class CustomControls:
         # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
         if setWordWrap is False:
             FontMetrics = QFontMetrics(Text)
-            Text = FontMetrics.elidedText(Text, ElideMode, btn.width(), Qt.TextFlag.TextSingleLine)
+            Text = FontMetrics.elidedText(
+                Text, ElideMode, btn.width(), Qt.TextFlag.TextSingleLine
+            )
             Label_Text.setText(Text)
             MaxNumberOfLines = 1
         # Set the textFormat
@@ -174,8 +176,12 @@ class CustomControls:
                 def mouseClickevent(event):
                     ArrowButton.animateClick()
 
-                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
-                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
+                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(
+                    mouseClick
+                )
+                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(
+                    mouseClick
+                )
         else:
 
             def mouseClickevent(event):
@@ -186,7 +192,9 @@ class CustomControls:
             Label_Text.setToolTip(ArrowButton.toolTip())
             MenuButtonSpace = 0
 
-        CommandButton.setMinimumHeight(ButtonSize.height() - MenuButtonSpace - TextHeight)
+        CommandButton.setMinimumHeight(
+            ButtonSize.height() - MenuButtonSpace - TextHeight
+        )
         Layout.setSpacing(0)
         btn.setLayout(Layout)
 
@@ -269,7 +277,9 @@ class CustomControls:
         if setWordWrap is False and ElideMode == Qt.TextElideMode.ElideMiddle:
             Label_Text.setMaximumSize(ButtonSize.width() * 3, SingleHeight)
             Label_Text.adjustSize()
-            ElidedText = FontMetrics.elidedText(Text, ElideMode, SingleWidth, Qt.TextFlag.TextSingleLine)
+            ElidedText = FontMetrics.elidedText(
+                Text, ElideMode, SingleWidth, Qt.TextFlag.TextSingleLine
+            )
             Label_Text.setText(ElidedText)
             MaxNumberOfLines = 1
         # make sure that the label height is at least for two lines
@@ -316,8 +326,12 @@ class CustomControls:
                 def mouseClickevent(event):
                     ArrowButton.animateClick()
 
-                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
-                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
+                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(
+                    mouseClick
+                )
+                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(
+                    mouseClick
+                )
         else:
             # Add the label to the area where the user can invoke the menu
             if showText is True:
@@ -325,8 +339,12 @@ class CustomControls:
                 def mouseClickevent(event):
                     CommandButton.animateClick()
 
-                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
-                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
+                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(
+                    mouseClick
+                )
+                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(
+                    mouseClick
+                )
                 Label_Text.setToolTip(ArrowButton.toolTip())
             MenuButtonSpace = 0
 
