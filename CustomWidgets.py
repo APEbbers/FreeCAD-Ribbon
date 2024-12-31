@@ -75,7 +75,7 @@ class CustomControls:
         ButtonSize: QSize,
         FontSize: int = 10,
         showText=True,
-        TextAlignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter,
+        TextAlignment=Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignHCenter,
         setWordWrap=True,
         ElideMode=Qt.TextElideMode.ElideMiddle,
         MaxNumberOfLines=2,
@@ -136,9 +136,7 @@ class CustomControls:
             Label_Text.setWordWrap(True)
             Label_Text.adjustSize()
             FontMetrics = QFontMetrics(Label_Text.text())
-            textOption = QTextOption()
-            textOption.setWrapMode(QTextOption.WrapMode.WordWrap)
-            rect = FontMetrics.boundingRect(Text, textOption)
+            rect = FontMetrics.boundingRect(Text)
             TextHeight = rect.height()
         # Set the text alignment
         Label_Text.setAlignment(TextAlignment)
