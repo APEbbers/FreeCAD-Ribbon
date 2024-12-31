@@ -116,12 +116,12 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-import pyqtribbon as pyqtribbon
-from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon.panel import RibbonPanel
-from pyqtribbon.toolbutton import RibbonToolButton
-from pyqtribbon.separator import RibbonSeparator
-from pyqtribbon.category import RibbonCategoryLayoutButton
+# import pyqtribbon as pyqtribbon
+# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon.panel import RibbonPanel
+# from pyqtribbon.toolbutton import RibbonToolButton
+# from pyqtribbon.separator import RibbonSeparator
+# from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -416,13 +416,17 @@ class ModernMenu(RibbonBar):
         self.setStyleSheet(StyleSheet)
 
         # If the text for the tabs is set to be disabled, update the stylesheet
-        if Parameters_Ribbon.TABBAR_STYLE == 2:
+        if Parameters_Ribbon.TABBAR_STYLE == 1:
             self.setStyleSheet(
                 """QTabBar::tab {
                         background: transparent;
                         color: transparent;
-                        min-width: 24px;
-                        max-width: 24px;
+                        min-width: """
+                + str(Parameters_Ribbon.TABBAR_SIZE)
+                + """px;
+                        max-width: """
+                + str(Parameters_Ribbon.TABBAR_SIZE)
+                + """px;
                         padding-left: 6px;
                         padding-right: 0px;
                     }"""
@@ -797,7 +801,7 @@ class ModernMenu(RibbonBar):
                         self.addCategory(name)
 
                         # Set the tabbar according the style setting
-                        if Parameters_Ribbon.TABBAR_STYLE == 0:
+                        if Parameters_Ribbon.TABBAR_STYLE <= 1:
                             # set tab icon
                             icon: QIcon = self.ReturnWorkbenchIcon(workbenchName)
                             self.tabBar().setTabIcon(len(self.categories()) - 1, icon)
