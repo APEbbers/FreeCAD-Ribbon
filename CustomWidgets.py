@@ -250,8 +250,8 @@ class CustomControls:
         Label_Text.setFont(Font)
         Label_Text.setText(Text)
         # Determine the dimensions of a single row
-        FontMetrics = QFontMetrics(Text)
-        SingleHeight = FontMetrics.boundingRect(Text).height()
+        FontMetrics = QFontMetrics(Label_Text.text())
+        SingleHeight = FontMetrics.boundingRect(Label_Text.text()).height()
         SingleWidth = 0
         for c in Text:
             SingleWidth = SingleWidth + FontMetrics.boundingRectChar(c).width()
@@ -272,7 +272,7 @@ class CustomControls:
         if setWordWrap is False and ElideMode == Qt.TextElideMode.ElideMiddle:
             Label_Text.setMaximumSize(ButtonSize.width() * 3, SingleHeight)
             Label_Text.adjustSize()
-            ElidedText = FontMetrics.elidedText(Text, ElideMode, SingleWidth, Qt.TextFlag.TextSingleLine)
+            ElidedText = FontMetrics.elidedText(Label_Text.text(), ElideMode, SingleWidth, Qt.TextFlag.TextSingleLine)
             Label_Text.setText(ElidedText)
             MaxNumberOfLines = 1
         # make sure that the label height is at least for two lines
@@ -280,7 +280,7 @@ class CustomControls:
         Label_Text.setMaximumHeight(SingleHeight * MaxNumberOfLines)
         # Set the text alignment
         Label_Text.setAlignment(TextAlignment)
-        TextWidth = SingleWidth + 5
+        TextWidth = SingleWidth
         # Define a vertical layout
         Layout = QHBoxLayout()
         # Add the command button
