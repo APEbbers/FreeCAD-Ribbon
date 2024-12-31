@@ -452,9 +452,14 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.ScrollClicks_Ribbon.textChanged.connect(
             self.on_ScrollClicks_Ribbon_valueCHanged
         )
-        self.form.ApplyShortcutApp.clicked.connect(
-            self.form.ApplyShortcutApp, self.on_ApplyShortcutApp_clicked
+
+        def ApplyShortcutKey():
+            self.on_ApplyShortcutApp_clicked(self)
+
+        self.form.ApplyShortcutApp.connect(
+            self.form.ApplyShortcutApp, SIGNAL("clicked()"), ApplyShortcutKey
         )
+
         self.form.AppShortCut.textChanged.connect(self.on_AppShortCut_textChanged)
         # Connect the preferred panel settings
         self.form.PreferedViewPanel.currentIndexChanged.connect(
