@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingstycrEY.ui'
+## Form generated from reading UI file 'SettingskgmBGr.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -418,6 +418,7 @@ class Ui_Settings(object):
         self.gridLayout_24.addWidget(self.label_24, 0, 0, 1, 1)
 
         self.TabbarStyle = QComboBox(self.groupBox_10)
+        self.TabbarStyle.addItem("")
         self.TabbarStyle.addItem("")
         self.TabbarStyle.addItem("")
         self.TabbarStyle.setObjectName("TabbarStyle")
@@ -1036,7 +1037,7 @@ class Ui_Settings(object):
         self.FCOverlayEnabled.toggled.connect(self.UseButtonBackGround.setEnabled)
         self.FCOverlayEnabled.toggled.connect(self.label_26.setEnabled)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(Settings)
 
@@ -1082,7 +1083,8 @@ class Ui_Settings(object):
             QCoreApplication.translate("Settings", "<html><head/><body><p>Set the tab style: </p></body></html>", None)
         )
         self.TabbarStyle.setItemText(0, QCoreApplication.translate("Settings", "Icon + text", None))
-        self.TabbarStyle.setItemText(1, QCoreApplication.translate("Settings", "Text only", None))
+        self.TabbarStyle.setItemText(1, QCoreApplication.translate("Settings", "Icon only", None))
+        self.TabbarStyle.setItemText(2, QCoreApplication.translate("Settings", "Text only", None))
 
         self.TabbarStyle.setCurrentText(QCoreApplication.translate("Settings", "Icon + text", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("Settings", "Select stylesheet", None))
