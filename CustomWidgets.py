@@ -69,7 +69,7 @@ class CustomControls:
         ButtonSize: QSize,
         FontSize: int = 10,
         showText=True,
-        TextAlignment=Qt.AlignmentFlag.AlignCenter,
+        TextAlignment=Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignHCenter,
         setWordWrap=True,
         ElideMode=Qt.TextElideMode.ElideMiddle,
         MaxNumberOfLines=2,
@@ -155,8 +155,6 @@ class CustomControls:
                 TextHeight = Label_Text.height()
             # Add the label with alignment
             Layout.addWidget(Label_Text)
-            # # Set the content margins to zero
-            # Layout.setContentsMargins(0, 0, 0, 0)
 
         if Menu is not None and len(Menu.actions()) > 1:
             # Define a menu
