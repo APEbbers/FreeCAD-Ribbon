@@ -24,13 +24,7 @@ import FreeCADGui as Gui
 from pathlib import Path
 import textwrap
 
-from PySide6.QtGui import (
-    QIcon,
-    QAction,
-    QFontMetrics,
-    QFont,
-    QTextOption,
-)
+from PySide6.QtGui import QIcon, QAction, QFontMetrics, QFont, QTextOption, QCursor, QPalette
 from PySide6.QtWidgets import (
     QToolButton,
     QVBoxLayout,
@@ -39,13 +33,12 @@ from PySide6.QtWidgets import (
     QMenu,
     QSpacerItem,
     QSizePolicy,
+    QTextEdit,
+    QStyleOption,
+    QFrame,
+    QGraphicsEffect,
 )
-from PySide6.QtCore import (
-    Qt,
-    QSize,
-    QRect,
-    QMargins,
-)
+from PySide6.QtCore import Qt, QSize, QRect, QMargins, QEvent
 
 import os
 import sys
@@ -104,8 +97,16 @@ class CustomControls:
         # Still create a label to set up the button properly
         if showText is False:
             Text = ""
-        # Create a label
-        Label_Text = QLabel()
+        # Create a label with the correct properties
+        Label_Text = QTextEdit()
+        Label_Text.setReadOnly(True)
+        Label_Text.setFrameShape(QFrame.Shape.NoFrame)
+        Label_Text.setFrameShadow(QFrame.Shadow.Plain)
+        Label_Text.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
+        Label_Text.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        Label_Text.document().setDocumentMargin(0)
+        Label_Text.viewport().setCursor(Qt.CursorShape.ArrowCursor)
+        Label_Text.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         # Set the font
         Font = QFont()
         Font.setPointSize(FontSize)
@@ -117,28 +118,33 @@ class CustomControls:
             Text = FontMetrics.elidedText(Text, ElideMode, btn.width(), Qt.TextFlag.TextSingleLine)
             Label_Text.setText(Text)
             MaxNumberOfLines = 1
-        # Set the textFormat
-        Label_Text.setTextFormat(Qt.TextFormat.RichText)
         # Determine the height of a single row
-        FontMetrics = QFontMetrics(Label_Text.text())
-        SingleHeight = FontMetrics.tightBoundingRect(Label_Text.text()).height()
+        SingleHeight = QFontMetrics(Font).boundingRect(Text).height() + 3
         # make sure that the label height is at least for two lines
         Label_Text.setMinimumHeight((SingleHeight * 1))
         Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines) + 3)
-        # Enable wordwrap
-        Label_Text.setWordWrap(setWordWrap)
+        # # Enable wordwrap
+        # Label_Text.setWordWrap(setWordWrap)
         # Set the width of the label based on the size of the button
         Label_Text.setFixedWidth(ButtonSize.width())
         # Adjust the size to be able to store the actual height
         Label_Text.adjustSize()
         # Set the textheight
         if setWordWrap is True:
-            # Enable wordwrap
-            Label_Text.setWordWrap(True)
-            Label_Text.setText(StandardFunctions.ReturnWrappedText(Text, ButtonSize.width(), MaxNumberOfLines, False))
-            FontMetrics = QFontMetrics(Label_Text.text())
-            rect = FontMetrics.boundingRect(Text)
-            TextHeight = rect.height()
+            # Determine the maximum length per line
+            FontMetrics = QFontMetrics(Text)
+            maxWidth = 0
+            maxLength = 0
+            for c in Text:
+                maxWidth = maxWidth + FontMetrics.boundingRectChar(c).width()
+                if maxWidth < ButtonSize.width():
+                    maxLength = maxLength + 1
+                if maxWidth >= ButtonSize.width():
+                    break
+            Label_Text.setText(StandardFunctions.ReturnWrappedText(Text, maxWidth, MaxNumberOfLines, False))
+            Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines))
+            Label_Text.adjustSize()
+            TextHeight = Label_Text.height()
         # Set the text alignment
         Label_Text.setAlignment(TextAlignment)
         # Define a vertical layout
@@ -175,20 +181,20 @@ class CustomControls:
             # Add the label to the area where the user can invoke the menu
             if showText is True:
 
-                def mouseClickevent(event):
+                def mouseClickEvent(event):
                     ArrowButton.animateClick()
 
-                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
-                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
+                Label_Text.mousePressEvent = lambda mouseClick: mouseClickEvent(mouseClick)
+                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickEvent(mouseClick)
         else:
 
-            def mouseClickevent(event):
+            def mouseClickEvent(event):
                 CommandButton.animateClick()
 
-            Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
-            ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
-            Label_Text.setToolTip(ArrowButton.toolTip())
-            MenuButtonSpace = 0
+            Label_Text.mousePressEvent = lambda mouseClick: mouseClickEvent(mouseClick)
+            ArrowButton.mousePressEvent = lambda mouseClick: mouseClickEvent(mouseClick)
+
+        Label_Text.setToolTip(CommandButton.toolTip())
 
         CommandButton.setMinimumHeight(ButtonSize.height() - MenuButtonSpace - TextHeight)
         Layout.setSpacing(0)
@@ -244,46 +250,59 @@ class CustomControls:
         if showText is False:
             Text = ""
         # Create a label
-        Label_Text = QLabel()
+        Label_Text = QTextEdit()
+        Label_Text.setReadOnly(True)
+        Label_Text.setFrameShape(QFrame.Shape.NoFrame)
+        Label_Text.setFrameShadow(QFrame.Shadow.Plain)
+        Label_Text.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
+        Label_Text.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        Label_Text.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        Label_Text.document().setDocumentMargin(0)
+        Label_Text.viewport().setCursor(Qt.CursorShape.ArrowCursor)
+        Label_Text.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        Label_Text.setSizeAdjustPolicy(QTextEdit.SizeAdjustPolicy.AdjustToContents)
+        Label_Text.setFixedHeight(ButtonSize.height())
         # Set the font
         Font = QFont()
         Font.setPointSize(FontSize)
         Label_Text.setFont(Font)
-        Label_Text.setText(Text)
-        # Determine the dimensions of a single row
-        FontMetrics = QFontMetrics(Label_Text.text())
-        SingleHeight = FontMetrics.tightBoundingRect(Label_Text.text()).height()
-        SingleWidth = 0
-        for c in Text:
-            SingleWidth = SingleWidth + FontMetrics.boundingRectChar(c).width()
-        # Set the maximum width
-        Label_Text.setMaximumWidth(SingleWidth)
-        # Adjust the size to be able to store the actual height
-        Label_Text.adjustSize()
+        FontMetrics = QFontMetrics(Font)
         if setWordWrap is True:
-            Label_Text.setMaximumWidth(ButtonSize.width() * 3)
-            # Enable wordwrap
-            Label_Text.setWordWrap(True)
-            Label_Text.setText(
-                StandardFunctions.ReturnWrappedText(Text, Label_Text.maximumWidth(), MaxNumberOfLines, False)
-            )
-            TextAlignment = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
-        # check if the icon is not too small for wrap
-        if btn.height() < SingleHeight:
-            setWordWrap = False
-        # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
-        if setWordWrap is False and ElideMode != Qt.TextElideMode.ElideNone:
-            Label_Text.setMaximumSize(ButtonSize.width() * 3, SingleHeight)
+            Label_Text.setWordWrapMode(QTextOption.WrapMode.WordWrap)
+            # Determine the maximum length per line
+            FontMetrics = QFontMetrics(Text)
+            maxWidth = 0
+            maxLength = 0
+            for c in Text:
+                maxWidth = maxWidth + FontMetrics.boundingRectChar(c).width()
+                if maxWidth < ButtonSize.width() * 2:
+                    maxLength = maxLength + 1
+                if maxWidth >= ButtonSize.width() * 2:
+                    break
+            Label_Text.setText(StandardFunctions.ReturnWrappedText(Text, maxLength, MaxNumberOfLines, False))
             Label_Text.adjustSize()
-            ElidedText = FontMetrics.elidedText(Label_Text.text(), ElideMode, SingleWidth, Qt.TextFlag.TextSingleLine)
-            Label_Text.setText(textwrap.dedent(ElidedText))
+
+            line1 = StandardFunctions.ReturnWrappedText(Text, maxLength, MaxNumberOfLines, True)[0]
+            try:
+                line2 = StandardFunctions.ReturnWrappedText(Text, maxLength, MaxNumberOfLines, True)[1]
+                if FontMetrics.boundingRect(line1).width() > FontMetrics.boundingRect(line2).width():
+                    TextWidth = FontMetrics.tightBoundingRect(textwrap.dedent(line1)).width()
+                else:
+                    TextWidth = FontMetrics.tightBoundingRect(textwrap.dedent(line2)).width()
+            except Exception:
+                TextWidth = FontMetrics.tightBoundingRect(textwrap.dedent(line1)).width()
+
+        if setWordWrap is False:
+            if ElideMode != Qt.TextElideMode.ElideNone:
+                Text = FontMetrics.elidedText(Text, ElideMode, ButtonSize.width() * 3, Qt.TextFlag.TextSingleLine)
             MaxNumberOfLines = 1
-        # make sure that the label height is at least for two lines
-        Label_Text.setMinimumHeight(SingleHeight * 1)
-        Label_Text.setMaximumHeight(SingleHeight * MaxNumberOfLines)
+            Label_Text.setWordWrapMode(QTextOption.WrapMode.NoWrap)
+            Label_Text.setText(textwrap.dedent(Text))
+            Label_Text.adjustSize()
+            TextWidth = FontMetrics.boundingRect(Text).width() + 6
         # Set the text alignment
+        TextAlignment = Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft
         Label_Text.setAlignment(TextAlignment)
-        TextWidth = SingleWidth
         # Define a vertical layout
         Layout = QHBoxLayout()
         # Add the command button
@@ -333,7 +352,7 @@ class CustomControls:
 
                 Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
                 ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
-                Label_Text.setToolTip(ArrowButton.toolTip())
+                Label_Text.setToolTip(CommandButton.toolTip())
             MenuButtonSpace = 0
 
         CommandButton.setMinimumHeight(ButtonSize.height())
