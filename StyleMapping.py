@@ -156,7 +156,9 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
                     BorderColor = "transparant"
                 StyleSheet = (
                     """QToolButton, QTextEdit {
-                    padding-bottom: """
+                        background-color: """
+                    + BackgroundColor
+                    + """;padding-bottom: """
                     + padding_bottom
                     + """;padding-right: """
                     + padding_right

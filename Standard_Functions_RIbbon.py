@@ -703,9 +703,12 @@ def ReturnWrappedText(text: str, max_length: int = 50, max_Lines=0, returnList=F
         line = textwrap.dedent(line)
 
     # remove any line that is more then allowed
-    if max_Lines > 0:
+    if max_Lines > 0 and len(wrapped_text) > max_Lines:
         for i in range(max_Lines, len(wrapped_text)):
-            wrapped_text.pop(i)
+            try:
+                wrapped_text.pop(i)
+            except Exception:
+                continue
 
     # return the desired result
     if returnList is False:
