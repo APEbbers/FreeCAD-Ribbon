@@ -24,8 +24,8 @@ import FreeCADGui as Gui
 from pathlib import Path
 import textwrap
 
-from PySide6.QtGui import QIcon, QAction, QFontMetrics, QFont, QTextOption, QCursor, QPalette
-from PySide6.QtWidgets import (
+from PySide.QtGui import QIcon, QAction, QFontMetrics, QFont, QTextOption, QCursor, QPalette
+from PySide.QtWidgets import (
     QToolButton,
     QVBoxLayout,
     QHBoxLayout,
@@ -38,7 +38,7 @@ from PySide6.QtWidgets import (
     QFrame,
     QGraphicsEffect,
 )
-from PySide6.QtCore import Qt, QSize, QRect, QMargins, QEvent
+from PySide.QtCore import Qt, QSize, QRect, QMargins, QEvent
 
 import os
 import sys
