@@ -22,15 +22,16 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
+import textwrap
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
     QFont,
     QTextOption,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QVBoxLayout,
     QHBoxLayout,
@@ -39,7 +40,7 @@ from PySide.QtWidgets import (
     QSpacerItem,
     QSizePolicy,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QSize,
     QRect,
@@ -113,9 +114,7 @@ class CustomControls:
         # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
         if setWordWrap is False:
             FontMetrics = QFontMetrics(Text)
-            Text = FontMetrics.elidedText(
-                Text, ElideMode, btn.width(), Qt.TextFlag.TextSingleLine
-            )
+            Text = FontMetrics.elidedText(Text, ElideMode, btn.width(), Qt.TextFlag.TextSingleLine)
             Label_Text.setText(Text)
             MaxNumberOfLines = 1
         # Set the textFormat
@@ -136,7 +135,7 @@ class CustomControls:
         if setWordWrap is True:
             # Enable wordwrap
             Label_Text.setWordWrap(True)
-            Label_Text.adjustSize()
+            Label_Text.setText(StandardFunctions.ReturnWrappedText(Text, ButtonSize.width(), MaxNumberOfLines, False))
             FontMetrics = QFontMetrics(Label_Text.text())
             rect = FontMetrics.boundingRect(Text)
             TextHeight = rect.height()
@@ -179,12 +178,8 @@ class CustomControls:
                 def mouseClickevent(event):
                     ArrowButton.animateClick()
 
-                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(
-                    mouseClick
-                )
-                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(
-                    mouseClick
-                )
+                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
+                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
         else:
 
             def mouseClickevent(event):
@@ -195,9 +190,7 @@ class CustomControls:
             Label_Text.setToolTip(ArrowButton.toolTip())
             MenuButtonSpace = 0
 
-        CommandButton.setMinimumHeight(
-            ButtonSize.height() - MenuButtonSpace - TextHeight
-        )
+        CommandButton.setMinimumHeight(ButtonSize.height() - MenuButtonSpace - TextHeight)
         Layout.setSpacing(0)
         btn.setLayout(Layout)
 
@@ -259,31 +252,31 @@ class CustomControls:
         Label_Text.setText(Text)
         # Determine the dimensions of a single row
         FontMetrics = QFontMetrics(Label_Text.text())
-        SingleHeight = FontMetrics.boundingRect(Label_Text.text()).height()
+        SingleHeight = FontMetrics.tightBoundingRect(Label_Text.text()).height()
         SingleWidth = 0
         for c in Text:
             SingleWidth = SingleWidth + FontMetrics.boundingRectChar(c).width()
-        # Set the width of the label based on the size of the button
+        # Set the maximum width
         Label_Text.setMaximumWidth(SingleWidth)
         # Adjust the size to be able to store the actual height
         Label_Text.adjustSize()
         if setWordWrap is True:
+            Label_Text.setMaximumWidth(ButtonSize.width() * 3)
             # Enable wordwrap
             Label_Text.setWordWrap(True)
-            Label_Text.adjustSize()
-            SingleWidth = Label_Text.rect().width()
+            Label_Text.setText(
+                StandardFunctions.ReturnWrappedText(Text, Label_Text.maximumWidth(), MaxNumberOfLines, False)
+            )
             TextAlignment = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft
         # check if the icon is not too small for wrap
         if btn.height() < SingleHeight:
             setWordWrap = False
         # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
-        if setWordWrap is False and ElideMode == Qt.TextElideMode.ElideMiddle:
+        if setWordWrap is False and ElideMode != Qt.TextElideMode.ElideNone:
             Label_Text.setMaximumSize(ButtonSize.width() * 3, SingleHeight)
             Label_Text.adjustSize()
-            ElidedText = FontMetrics.elidedText(
-                Label_Text.text(), ElideMode, SingleWidth, Qt.TextFlag.TextSingleLine
-            )
-            Label_Text.setText(ElidedText)
+            ElidedText = FontMetrics.elidedText(Label_Text.text(), ElideMode, SingleWidth, Qt.TextFlag.TextSingleLine)
+            Label_Text.setText(textwrap.dedent(ElidedText))
             MaxNumberOfLines = 1
         # make sure that the label height is at least for two lines
         Label_Text.setMinimumHeight(SingleHeight * 1)
@@ -329,12 +322,8 @@ class CustomControls:
                 def mouseClickevent(event):
                     ArrowButton.animateClick()
 
-                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(
-                    mouseClick
-                )
-                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(
-                    mouseClick
-                )
+                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
+                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
         else:
             # Add the label to the area where the user can invoke the menu
             if showText is True:
@@ -342,12 +331,8 @@ class CustomControls:
                 def mouseClickevent(event):
                     CommandButton.animateClick()
 
-                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(
-                    mouseClick
-                )
-                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(
-                    mouseClick
-                )
+                Label_Text.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
+                ArrowButton.mousePressEvent = lambda mouseClick: mouseClickevent(mouseClick)
                 Label_Text.setToolTip(ArrowButton.toolTip())
             MenuButtonSpace = 0
 
