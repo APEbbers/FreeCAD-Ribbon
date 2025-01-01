@@ -69,7 +69,7 @@ class CustomControls:
         ButtonSize: QSize,
         FontSize: int = 10,
         showText=True,
-        TextAlignment=Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignHCenter,
+        TextAlignment=Qt.AlignmentFlag.AlignCenter,
         setWordWrap=True,
         ElideMode=Qt.TextElideMode.ElideMiddle,
         MaxNumberOfLines=2,
@@ -150,14 +150,9 @@ class CustomControls:
                         break
                 Label_Text.setText(StandardFunctions.ReturnWrappedText(Text, maxWidth, MaxNumberOfLines, False))
                 Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines) - 3)
+                Label_Text.setAlignment(TextAlignment)
                 Label_Text.adjustSize()
                 TextHeight = Label_Text.height()
-            # # Set the text alignment
-            # Label_Text.setAlignment(TextAlignment)
-            # # Define a vertical layout
-            # Layout = QVBoxLayout()
-            # # Add the command button
-            # Layout.addWidget(CommandButton)
             # Add the label with alignment
             Layout.addWidget(Label_Text)
             # # Set the content margins to zero
