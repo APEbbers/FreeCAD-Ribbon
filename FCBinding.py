@@ -163,6 +163,7 @@ class ModernMenu(RibbonBar):
     # Declare default offsets
     PanelOffset = -20
     DockWidgetOffset = 0
+    LargeButtontextOffset = 20
 
     # Declare the right padding for dropdown menus
     PaddingRight = 10
@@ -721,6 +722,12 @@ class ModernMenu(RibbonBar):
                         width = self.QuickAccessButtonSize
                         height = self.QuickAccessButtonSize
                         button.setFixedSize(width, height)
+                        # Set the stylesheet
+                        button.setStyleSheet(
+                            StyleMapping.ReturnStyleSheet(
+                                "toolbutton", "2px", f"{padding}px"
+                            )
+                        )
                     elif len(QuickAction) > 1:
                         # set the padding for a dropdown button
                         padding = self.PaddingRight
@@ -733,7 +740,13 @@ class ModernMenu(RibbonBar):
                         button.setFixedSize(width, height)
                         # Set the PopupMode
                         button.setPopupMode(
-                            QToolButton.ToolButtonPopupMode.MenuButtonPopup
+                            QToolButton.ToolButtonPopupMode.InstantPopup
+                        )
+                        # Set the stylesheet
+                        button.setStyleSheet(
+                            StyleMapping.ReturnStyleSheet(
+                                "toolbutton", "2px", f"{padding}px"
+                            )
                         )
 
                 # If it is a custom dropdown, add the actions one by one.
@@ -752,12 +765,15 @@ class ModernMenu(RibbonBar):
                     height = self.QuickAccessButtonSize
                     button.setFixedSize(width, height)
                     # Set the PopupMode
-                    button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                    button.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
 
-                # Set the stylesheet
-                button.setStyleSheet(
-                    StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px")
-                )
+                    # Set the stylesheet
+                    button.setStyleSheet(
+                        StyleMapping.ReturnStyleSheet(
+                            "toolbutton", "2px", f"{padding}px"
+                        )
+                    )
+
                 # Set the height
                 self.setQuickAccessButtonHeight(self.QuickAccessButtonSize)
 
@@ -1762,6 +1778,9 @@ class ModernMenu(RibbonBar):
                                 )
                                 # add the button as large button
                                 panel.addLargeWidget(btn)
+
+                                # if showText is True:
+                                #     self.LargeButtontextOffset = btn.height() - Parameters_Ribbon.ICON_SIZE_LARGE
                             else:
                                 if Parameters_Ribbon.DEBUG_MODE is True:
                                     if buttonSize != "none":
@@ -2163,7 +2182,9 @@ class ModernMenu(RibbonBar):
         # If text is enabled for large button, the height is modified.
         LargeButtonHeight = Parameters_Ribbon.ICON_SIZE_LARGE
         if Parameters_Ribbon.SHOW_ICON_TEXT_LARGE is True:
-            LargeButtonHeight = Parameters_Ribbon.ICON_SIZE_LARGE + 20
+            LargeButtonHeight = (
+                Parameters_Ribbon.ICON_SIZE_LARGE + self.LargeButtontextOffset
+            )
         # Check whichs is has the most height: 3 small buttons, 2 medium buttons or 1 large button
         # and set the height accordingly
         if (

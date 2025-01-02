@@ -706,3 +706,32 @@ def ShortCutTaken(ShortCut: str):
     if len(ListWithCommands) > 0:
         return True
     return False
+
+
+def ReturnWrappedText(text: str, max_length: int = 50, max_Lines=0, returnList=False):
+    import textwrap
+
+    result = ""
+
+    # Wrap the text as list
+    wrapped_text = textwrap.wrap(text=text, width=max_length)
+
+    # remove spaces at the end of each line
+    for line in wrapped_text:
+        line = textwrap.dedent(line)
+
+    # remove any line that is more then allowed
+    if max_Lines > 0 and len(wrapped_text) > max_Lines:
+        for i in range(max_Lines, len(wrapped_text)):
+            try:
+                wrapped_text.pop(i)
+            except Exception:
+                continue
+
+    # return the desired result
+    if returnList is False:
+        result = "\n".join(wrapped_text)
+    else:
+        result = wrapped_text
+
+    return result
