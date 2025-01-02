@@ -24,7 +24,16 @@ import FreeCADGui as Gui
 from pathlib import Path
 import textwrap
 
-from PySide.QtGui import QIcon, QAction, QFontMetrics, QFont, QTextOption, QCursor, QPalette, QEnterEvent
+from PySide.QtGui import (
+    QIcon,
+    QAction,
+    QFontMetrics,
+    QFont,
+    QTextOption,
+    QCursor,
+    QPalette,
+    QEnterEvent,
+)
 from PySide.QtWidgets import (
     QToolButton,
     QVBoxLayout,
@@ -110,8 +119,8 @@ class CustomControls:
         Layout.setContentsMargins(0, 0, 0, 0)
 
         # if showText is False:
-        if MenuButtonSpace < 16:
-            MenuButtonSpace = 16
+        if MenuButtonSpace < 12:
+            MenuButtonSpace = 12
 
         # If text must not be show, set the text to an empty string
         # Still create a label to set up the button properly
@@ -233,7 +242,7 @@ class CustomControls:
                         + ";}"
                         + """QToolButton::menu-indicator {
                                 subcontrol-origin: padding;
-                                subcontrol-position: center bottom;
+                                subcontrol-position: center top;
                             }"""
                     )
                     StyleSheet_Addition_Label = (
@@ -265,7 +274,7 @@ class CustomControls:
                     )
                     StyleSheet_Addition = """QToolButton::menu-indicator {
                         subcontrol-origin: padding;
-                        subcontrol-position: center bottom;
+                        subcontrol-position: center top;
                     }"""
                     Label_Text.setStyleSheet(StyleSheet)
                     ArrowButton.setStyleSheet(StyleSheet_Addition + StyleSheet)
@@ -346,7 +355,7 @@ class CustomControls:
         StyleSheet = StyleMapping.ReturnStyleSheet(control="toolbutton", radius="2px")
         StyleSheet_Addition = """QToolButton::menu-indicator {
                         subcontrol-origin: padding;
-                        subcontrol-position: center bottom;
+                        subcontrol-position: center top;
                     }"""
         CommandButton.setStyleSheet(StyleSheet)
         Label_Text.setStyleSheet(StyleSheet)
@@ -363,7 +372,10 @@ class CustomControls:
             Space = 0
         ButtonSize = QSize(ButtonSize.width() + Space, ButtonSize.height() + TextHeight)
         CommandButton.setFixedSize(
-            QSize(CommandButton.width() + Space, ButtonSize.height() - MenuButtonSpace - TextHeight - 3)
+            QSize(
+                CommandButton.width() + Space,
+                ButtonSize.height() - MenuButtonSpace - TextHeight - Space,
+            )
         )
         btn.setFixedSize(ButtonSize)
 
@@ -422,8 +434,8 @@ class CustomControls:
         Layout.setContentsMargins(0, 0, 0, 0)
 
         # if showText is False:
-        if MenuButtonSpace < 16:
-            MenuButtonSpace = 16
+        if MenuButtonSpace < 12:
+            MenuButtonSpace = 12
 
         # If text must be shown wrapped, add a layout with label
         if showText is True and Text != "":
@@ -487,7 +499,12 @@ class CustomControls:
             if setWordWrap is False:
                 # if the text must be elided, return a updated text
                 if ElideMode != Qt.TextElideMode.ElideNone:
-                    Text = FontMetrics.elidedText(Text, ElideMode, ButtonSize.width() * 3, Qt.TextFlag.TextSingleLine)
+                    Text = FontMetrics.elidedText(
+                        Text,
+                        ElideMode,
+                        ButtonSize.width() * 3,
+                        Qt.TextFlag.TextSingleLine,
+                    )
                 # Set the number of lines to 1 and disable wrap
                 MaxNumberOfLines = 1
                 Label_Text.setWordWrapMode(QTextOption.WrapMode.NoWrap)
