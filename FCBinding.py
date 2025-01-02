@@ -1599,8 +1599,8 @@ class ModernMenu(RibbonBar):
                                 # add the button as large button
                                 panel.addLargeWidget(btn)
 
-                                if showText is True:
-                                    self.LargeButtontextOffset = btn.height() - Parameters_Ribbon.ICON_SIZE_LARGE
+                                # if showText is True:
+                                #     self.LargeButtontextOffset = btn.height() - Parameters_Ribbon.ICON_SIZE_LARGE
                             else:
                                 if Parameters_Ribbon.DEBUG_MODE is True:
                                     if buttonSize != "none":

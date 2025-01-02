@@ -173,9 +173,10 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
                         width: """
                     + width
                     + """;
-                        border-radius: 2px;
-                        padding: 1px;
-                        border-radius: 2px;
+                        border-radius: """
+                    + radius
+                    + """px;"""
+                    + """padding: 1px;
                         subcontrol-origin: padding;
                         subcontrol-position: center right;
                     }"""
