@@ -675,6 +675,8 @@ class ModernMenu(RibbonBar):
                         width = self.QuickAccessButtonSize
                         height = self.QuickAccessButtonSize
                         button.setFixedSize(width, height)
+                        # Set the stylesheet
+                        button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
                     elif len(QuickAction) > 1:
                         # set the padding for a dropdown button
                         padding = self.PaddingRight
@@ -686,7 +688,9 @@ class ModernMenu(RibbonBar):
                         height = self.QuickAccessButtonSize
                         button.setFixedSize(width, height)
                         # Set the PopupMode
-                        button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                        button.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+                        # Set the stylesheet
+                        button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
 
                 # If it is a custom dropdown, add the actions one by one.
                 if commandName.endswith("_ddb") is True:
@@ -704,10 +708,11 @@ class ModernMenu(RibbonBar):
                     height = self.QuickAccessButtonSize
                     button.setFixedSize(width, height)
                     # Set the PopupMode
-                    button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                    button.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
 
-                # Set the stylesheet
-                button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
+                    # Set the stylesheet
+                    button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
+
                 # Set the height
                 self.setQuickAccessButtonHeight(self.QuickAccessButtonSize)
 
