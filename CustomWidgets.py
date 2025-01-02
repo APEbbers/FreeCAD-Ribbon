@@ -505,6 +505,12 @@ class CustomControls:
                         ButtonSize.width() * 3,
                         Qt.TextFlag.TextSingleLine,
                     )
+                    Text = FontMetrics.elidedText(
+                        Text,
+                        ElideMode,
+                        ButtonSize.width() * 3,
+                        Qt.TextFlag.TextSingleLine,
+                    )
                 # Set the number of lines to 1 and disable wrap
                 MaxNumberOfLines = 1
                 Label_Text.setWordWrapMode(QTextOption.WrapMode.NoWrap)
