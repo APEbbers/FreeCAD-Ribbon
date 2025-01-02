@@ -24,8 +24,8 @@ import FreeCADGui as Gui
 from pathlib import Path
 import textwrap
 
-from PySide.QtGui import QIcon, QAction, QFontMetrics, QFont, QTextOption, QCursor, QPalette, QEnterEvent
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QAction, QFontMetrics, QFont, QTextOption, QCursor, QPalette, QEnterEvent
+from PySide6.QtWidgets import (
     QToolButton,
     QVBoxLayout,
     QHBoxLayout,
@@ -38,7 +38,7 @@ from PySide.QtWidgets import (
     QFrame,
     QGraphicsEffect,
 )
-from PySide.QtCore import Qt, QSize, QRect, QMargins, QEvent
+from PySide6.QtCore import Qt, QSize, QRect, QMargins, QEvent
 
 import os
 import sys
@@ -101,13 +101,13 @@ class CustomControls:
         # Set the content margins to zero
         Layout.setContentsMargins(0, 0, 0, 0)
 
-        if showText is False:
-            if MenuButtonSpace < 16:
-                MenuButtonSpace = 16
+        # if showText is False:
+        if MenuButtonSpace < 16:
+            MenuButtonSpace = 16
 
         # If text must not be show, set the text to an empty string
         # Still create a label to set up the button properly
-        if showText is True:
+        if showText is True and Text != "":
             # Create a label with the correct properties
             Label_Text = QTextEdit()
             Label_Text.setReadOnly(True)
@@ -156,7 +156,7 @@ class CustomControls:
                 Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines) - 3)
                 Label_Text.setAlignment(TextAlignment)
                 Label_Text.adjustSize()
-                TextHeight = Label_Text.height()
+                TextHeight = Label_Text.maximumHeight()
             # Add the label with alignment
             Layout.addWidget(Label_Text)
 
@@ -196,39 +196,40 @@ class CustomControls:
                 # Change the background color for commandbutton and label on hovering
                 def enterEventCustom(event):
                     if ArrowButton.underMouse():
-                        Label_Text.setStyleSheet(
-                            "background-color: " + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                        )
-                    if Label_Text.underMouse():
-                        ArrowButton.setStyleSheet(
-                            "QToolButton::menu-indicator {padding-bottom: "
-                            + str(MenuButtonSpace)
-                            + "px;subcontrol-origin: padding;subcontrol-position: center bottom;}"
-                            + "QToolButton { background-color: "
+                        StyleSheet_Addition = (
+                            "QToolButton, QTextEdit {background-color: "
                             + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                            + ";border: 0.5px solid"
+                            + StyleMapping.ReturnStyleItem("Border_Color")
                             + ";}"
                         )
+                        Label_Text.setStyleSheet(StyleSheet_Addition)
+                    if Label_Text.underMouse():
+                        StyleSheet_Addition = (
+                            "QToolButton, QTextEdit {background-color: "
+                            + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                            + ";border: 0.5px solid"
+                            + StyleMapping.ReturnStyleItem("Border_Color")
+                            + ";}"
+                        )
+                        ArrowButton.setStyleSheet(StyleSheet_Addition)
 
                 Label_Text.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
                 ArrowButton.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
 
                 # restore the stylesheets on leaving
                 def leaveEventCustom(event):
-                    ArrowButton.setStyleSheet(
-                        "QToolButton::menu-indicator {padding-bottom: "
-                        + str(MenuButtonSpace)
-                        + "px;subcontrol-origin: padding;subcontrol-position: center bottom;}"
+                    StyleSheet = StyleMapping.ReturnStyleSheet(
+                        control="toolbutton",
+                        radius="2px",
                     )
-                    Label_Text.setStyleSheet(
-                        StyleMapping.ReturnStyleSheet(
-                            control="toolbutton",
-                            radius="2px",
-                        )
-                    )
+                    Label_Text.setStyleSheet(StyleSheet)
+                    ArrowButton.setStyleSheet(StyleSheet)
 
                 Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
                 ArrowButton.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
         else:
+            MenuButtonSpace = 0
             if showText is True:
                 # Create custom events
                 #
@@ -241,51 +242,72 @@ class CustomControls:
 
                 # Change the background color for commandbutton and label on hovering
                 def enterEventCustom(event):
-                    CommandButton.setStyleSheet(
-                        "background-color: " + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                    )
-
-                    Label_Text.setStyleSheet(
-                        "background-color: " + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                    )
+                    if CommandButton.underMouse():
+                        StyleSheet_Addition = (
+                            "QToolButton, QTextEdit {background-color: "
+                            + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                            + ";border: 0.5px solid"
+                            + StyleMapping.ReturnStyleItem("Border_Color")
+                            + ";}"
+                        )
+                        Label_Text.setStyleSheet(StyleSheet_Addition)
+                    if Label_Text.underMouse():
+                        StyleSheet_Addition = (
+                            "QToolButton, QTextEdit {background-color: "
+                            + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                            + ";border: 0.5px solid"
+                            + StyleMapping.ReturnStyleItem("Border_Color")
+                            + ";}"
+                        )
+                        CommandButton.setStyleSheet(StyleSheet_Addition)
 
                 Label_Text.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
                 CommandButton.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
 
                 # restore the stylesheets on leaving
                 def leaveEventCustom(event):
-                    CommandButton.setStyleSheet(
-                        StyleMapping.ReturnStyleSheet(
-                            control="toolbutton",
-                            radius="2px",
-                        )
+                    StyleSheet = StyleMapping.ReturnStyleSheet(
+                        control="toolbutton",
+                        radius="2px",
                     )
-                    Label_Text.setStyleSheet(
-                        StyleMapping.ReturnStyleSheet(
-                            control="toolbutton",
-                            radius="2px",
-                        )
-                    )
+                    Label_Text.setStyleSheet(StyleSheet)
+                    CommandButton.setStyleSheet(StyleSheet)
 
                 Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
                 CommandButton.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
 
                 Label_Text.setToolTip(CommandButton.toolTip())
 
-        CommandButton.setMinimumHeight(ButtonSize.height() - MenuButtonSpace - TextHeight)
         Layout.setSpacing(0)
         btn.setLayout(Layout)
 
         # Set the stylesheet
-        btn.setStyleSheet(
+        CommandButton.setStyleSheet(
             StyleMapping.ReturnStyleSheet(
                 control="toolbutton",
                 radius="2px",
             )
         )
-        CommandButton.setStyleSheet(btn.styleSheet())
-        btn.setFixedWidth(CommandButton.width())
-        btn.setFixedHeight(CommandButton.height() + TextHeight)
+        Label_Text.setStyleSheet(
+            StyleMapping.ReturnStyleSheet(
+                control="toolbutton",
+                radius="2px",
+            )
+        )
+        ArrowButton.setStyleSheet(
+            StyleMapping.ReturnStyleSheet(
+                control="toolbutton",
+                radius="2px",
+            )
+        )
+        btn.setStyleSheet(
+            "QToolButton, QToolButton:hover {border: 0.5px solid"
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";}"
+        )
+        ButtonSize = QSize(ButtonSize.width(), ButtonSize.height() + TextHeight)
+        CommandButton.setFixedHeight(ButtonSize.height() - MenuButtonSpace - TextHeight - 3)
+        btn.setFixedSize(ButtonSize)
         return btn
 
     def CustomToolButton(
@@ -330,12 +352,12 @@ class CustomControls:
         # Set the content margins to zero
         Layout.setContentsMargins(0, 0, 0, 0)
 
-        if showText is False:
-            if MenuButtonSpace < 16:
-                MenuButtonSpace = 16
+        # if showText is False:
+        if MenuButtonSpace < 16:
+            MenuButtonSpace = 16
 
         # If text must be shown wrapped, add a layout with label
-        if showText is True:
+        if showText is True and Text != "":
             # Create a label
             Label_Text = QTextEdit()
             Label_Text.setReadOnly(True)
@@ -439,35 +461,35 @@ class CustomControls:
                 # Change the background color for commandbutton and label on hovering
                 def enterEventCustom(event):
                     if ArrowButton.underMouse():
-                        Label_Text.setStyleSheet(
-                            "background-color: " + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                        )
-                    if Label_Text.underMouse():
-                        ArrowButton.setStyleSheet(
-                            "QToolButton::menu-indicator {padding-right: "
-                            + str(MenuButtonSpace + TextWidth)
-                            + "px;subcontrol-origin: padding;subcontrol-position: center;}"
-                            + "QToolButton { background-color: "
+                        StyleSheet_Addition = (
+                            "QToolButton, QTextEdit {background-color: "
                             + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                            + ";border: 0.5px solid"
+                            + StyleMapping.ReturnStyleItem("Border_Color")
                             + ";}"
                         )
+                        Label_Text.setStyleSheet(StyleSheet_Addition)
+                    if Label_Text.underMouse():
+                        StyleSheet_Addition = (
+                            "QToolButton, QTextEdit {background-color: "
+                            + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                            + ";border: 0.5px solid"
+                            + StyleMapping.ReturnStyleItem("Border_Color")
+                            + ";}"
+                        )
+                        ArrowButton.setStyleSheet(StyleSheet_Addition)
 
                 Label_Text.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
                 ArrowButton.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
 
                 # restore the stylesheets on leaving
                 def leaveEventCustom(event):
-                    ArrowButton.setStyleSheet(
-                        "QToolButton::menu-indicator {padding-right: "
-                        + str(MenuButtonSpace + TextWidth)
-                        + "px;subcontrol-origin: padding;subcontrol-position: center;}"
+                    StyleSheet = StyleMapping.ReturnStyleSheet(
+                        control="toolbutton",
+                        radius="2px",
                     )
-                    Label_Text.setStyleSheet(
-                        StyleMapping.ReturnStyleSheet(
-                            control="toolbutton",
-                            radius="2px",
-                        )
-                    )
+                    Label_Text.setStyleSheet(StyleSheet)
+                    ArrowButton.setStyleSheet(StyleSheet)
 
                 Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
                 ArrowButton.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
@@ -530,7 +552,19 @@ class CustomControls:
         # Add the layout
         btn.setLayout(Layout)
         # Set the stylesheet for the whole button
-        btn.setStyleSheet(
+        CommandButton.setStyleSheet(
+            StyleMapping.ReturnStyleSheet(
+                control="toolbutton",
+                radius="2px",
+            )
+        )
+        Label_Text.setStyleSheet(
+            StyleMapping.ReturnStyleSheet(
+                control="toolbutton",
+                radius="2px",
+            )
+        )
+        ArrowButton.setStyleSheet(
             StyleMapping.ReturnStyleSheet(
                 control="toolbutton",
                 radius="2px",
