@@ -101,6 +101,10 @@ class CustomControls:
         # Set the content margins to zero
         Layout.setContentsMargins(0, 0, 0, 0)
 
+        if showText is False:
+            if MenuButtonSpace < 16:
+                MenuButtonSpace = 16
+
         # If text must not be show, set the text to an empty string
         # Still create a label to set up the button properly
         if showText is True:
@@ -325,6 +329,10 @@ class CustomControls:
         Layout.setAlignment(TextPositionAlignment)
         # Set the content margins to zero
         Layout.setContentsMargins(0, 0, 0, 0)
+
+        if showText is False:
+            if MenuButtonSpace < 16:
+                MenuButtonSpace = 16
 
         # If text must be shown wrapped, add a layout with label
         if showText is True:
