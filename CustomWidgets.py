@@ -24,8 +24,8 @@ import FreeCADGui as Gui
 from pathlib import Path
 import textwrap
 
-from PySide6.QtGui import QIcon, QAction, QFontMetrics, QFont, QTextOption, QCursor, QPalette, QEnterEvent
-from PySide6.QtWidgets import (
+from PySide.QtGui import QIcon, QAction, QFontMetrics, QFont, QTextOption, QCursor, QPalette, QEnterEvent
+from PySide.QtWidgets import (
     QToolButton,
     QVBoxLayout,
     QHBoxLayout,
@@ -38,7 +38,7 @@ from PySide6.QtWidgets import (
     QFrame,
     QGraphicsEffect,
 )
-from PySide6.QtCore import Qt, QSize, QRect, QMargins, QEvent
+from PySide.QtCore import Qt, QSize, QRect, QMargins, QEvent
 
 import os
 import sys
@@ -80,6 +80,7 @@ class CustomControls:
         CommandButton = QToolButton()
         ArrowButton = QToolButton()
         Layout = QVBoxLayout()
+        Label_Text = QTextEdit()
         #
         TextHeight = 0
         # Set the buttonSize
@@ -109,7 +110,7 @@ class CustomControls:
         # Still create a label to set up the button properly
         if showText is True and Text != "":
             # Create a label with the correct properties
-            Label_Text = QTextEdit()
+            # Label_Text = QTextEdit()
             Label_Text.setReadOnly(True)
             Label_Text.setFrameShape(QFrame.Shape.NoFrame)
             Label_Text.setFrameShadow(QFrame.Shadow.Plain)
@@ -169,14 +170,8 @@ class CustomControls:
             # Set the width according the commandbutton
             ArrowButton.setFixedWidth(CommandButton.width())
             ArrowButton.adjustSize()
-            # Set the arrow at the bottom
+            # Set the arrow to none
             ArrowButton.setArrowType(Qt.ArrowType.NoArrow)
-            # remove the menuindicator from the stylesheet
-            ArrowButton.setStyleSheet(
-                "QToolButton::menu-indicator {padding-bottom: "
-                + str(MenuButtonSpace)
-                + "px;subcontrol-origin: padding;subcontrol-position: center bottom;}"
-            )
             # Set the content margins
             ArrowButton.setContentsMargins(0, 0, 0, 0)
             # Add the Arrow button to the layout
@@ -197,20 +192,28 @@ class CustomControls:
                 def enterEventCustom(event):
                     if ArrowButton.underMouse():
                         StyleSheet_Addition = (
-                            "QToolButton, QTextEdit {background-color: "
+                            "QToolButton, QTextEdit {background: "
                             + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                             + ";border: 0.5px solid"
                             + StyleMapping.ReturnStyleItem("Border_Color")
                             + ";}"
+                            + """QToolButton::menu-indicator {
+                                subcontrol-origin: padding;
+                                subcontrol-position: center bottom;
+                            }"""
                         )
                         Label_Text.setStyleSheet(StyleSheet_Addition)
                     if Label_Text.underMouse():
                         StyleSheet_Addition = (
-                            "QToolButton, QTextEdit {background-color: "
+                            "QToolButton, QTextEdit {background: "
                             + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                             + ";border: 0.5px solid"
                             + StyleMapping.ReturnStyleItem("Border_Color")
                             + ";}"
+                            """QToolButton::menu-indicator {
+                                subcontrol-origin: padding;
+                                subcontrol-position: center bottom;
+                            }"""
                         )
                         ArrowButton.setStyleSheet(StyleSheet_Addition)
 
@@ -223,8 +226,12 @@ class CustomControls:
                         control="toolbutton",
                         radius="2px",
                     )
+                    StyleSheet_Addition = """QToolButton::menu-indicator {
+                        subcontrol-origin: padding;
+                        subcontrol-position: center bottom;
+                    }"""
                     Label_Text.setStyleSheet(StyleSheet)
-                    ArrowButton.setStyleSheet(StyleSheet)
+                    ArrowButton.setStyleSheet(StyleSheet_Addition + StyleSheet)
 
                 Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
                 ArrowButton.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
@@ -242,6 +249,7 @@ class CustomControls:
 
                 # Change the background color for commandbutton and label on hovering
                 def enterEventCustom(event):
+                    StyleSheet = StyleMapping.ReturnStyleSheet(control="toolbutton", radius="2px")
                     if CommandButton.underMouse():
                         StyleSheet_Addition = (
                             "QToolButton, QTextEdit {background-color: "
@@ -250,7 +258,7 @@ class CustomControls:
                             + StyleMapping.ReturnStyleItem("Border_Color")
                             + ";}"
                         )
-                        Label_Text.setStyleSheet(StyleSheet_Addition)
+                        Label_Text.setStyleSheet(StyleSheet_Addition + StyleSheet)
                     if Label_Text.underMouse():
                         StyleSheet_Addition = (
                             "QToolButton, QTextEdit {background-color: "
@@ -259,7 +267,7 @@ class CustomControls:
                             + StyleMapping.ReturnStyleItem("Border_Color")
                             + ";}"
                         )
-                        CommandButton.setStyleSheet(StyleSheet_Addition)
+                        CommandButton.setStyleSheet(StyleSheet_Addition + StyleSheet)
 
                 Label_Text.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
                 CommandButton.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
@@ -282,24 +290,14 @@ class CustomControls:
         btn.setLayout(Layout)
 
         # Set the stylesheet
-        CommandButton.setStyleSheet(
-            StyleMapping.ReturnStyleSheet(
-                control="toolbutton",
-                radius="2px",
-            )
-        )
-        Label_Text.setStyleSheet(
-            StyleMapping.ReturnStyleSheet(
-                control="toolbutton",
-                radius="2px",
-            )
-        )
-        ArrowButton.setStyleSheet(
-            StyleMapping.ReturnStyleSheet(
-                control="toolbutton",
-                radius="2px",
-            )
-        )
+        StyleSheet = StyleMapping.ReturnStyleSheet(control="toolbutton", radius="2px")
+        StyleSheet_Addition = """QToolButton::menu-indicator {
+                        subcontrol-origin: padding;
+                        subcontrol-position: center bottom;
+                    }"""
+        CommandButton.setStyleSheet(StyleSheet)
+        Label_Text.setStyleSheet(StyleSheet)
+        ArrowButton.setStyleSheet(StyleSheet_Addition + StyleSheet)
         btn.setStyleSheet(
             "QToolButton, QToolButton:hover {border: 0.5px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
@@ -330,6 +328,7 @@ class CustomControls:
         CommandButton = QToolButton()
         ArrowButton = QToolButton()
         Layout = QHBoxLayout()
+        Label_Text = QTextEdit()
         #
         TextWidth = 0
         Text = Text.strip()
@@ -359,7 +358,7 @@ class CustomControls:
         # If text must be shown wrapped, add a layout with label
         if showText is True and Text != "":
             # Create a label
-            Label_Text = QTextEdit()
+            # Label_Text = QTextEdit()
             Label_Text.setReadOnly(True)
             Label_Text.setFrameShape(QFrame.Shape.NoFrame)
             Label_Text.setFrameShadow(QFrame.Shadow.Plain)
