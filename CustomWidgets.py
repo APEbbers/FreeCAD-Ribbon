@@ -153,9 +153,10 @@ class CustomControls:
                     if maxWidth < ButtonSize.width():
                         maxLength = maxLength + 1
                     if maxWidth >= ButtonSize.width():
+                        limit = maxLength - 3
+                        Text = Text[:limit].strip() + "..."
                         break
                 # Set the text with a placeholder
-                Text = textwrap.shorten(text=Text, width=maxLength, placeholder="...")
                 Label_Text.setWordWrapMode(QTextOption.WrapMode.NoWrap)
                 Label_Text.setText(Text)
                 # Set the maximum number of lines to 1
@@ -384,21 +385,59 @@ class CustomControls:
 
         # Set the stylesheet
         StyleSheet = StyleMapping.ReturnStyleSheet(control="toolbutton", radius="2px")
-        CommandButton.setStyleSheet(StyleSheet)
-        StyleSheet_Addition = """QToolButton::menu-indicator {
-                        subcontrol-origin: padding;
-                        subcontrol-position: center top;
-                    }"""
-
-        ArrowButton.setStyleSheet(StyleSheet_Addition + StyleSheet)
-        StyleSheet_Addition = (
-            "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
+        StyleSheet_Addition_Label = (
+            "QToolButton, QTextEdit {background-color: "
+            + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+            + ";border: 0.5px solid"
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border-top: 0px solid"
+            + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+            + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
+            + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
+            + ";margin: 0px"
+            + ";spacing: 0px"
+            + ";}"
+        )
+        StyleSheet_Addition_Command = (
+            "QToolButton, QTextEdit {background-color: "
+            + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+            + ";border: 0.5px solid"
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border-bottom: 0px solid"
+            + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+            + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
+            + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
+            + ";margin: 0px"
+            + ";spacing: 0px"
+            + ";}"
+        )
+        StyleSheet_Addition_Button = (
+            "QToolButton, QTextEdit {background-color: "
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border: none"
             + ";}"
         )
-        Label_Text.setStyleSheet(StyleSheet_Addition + StyleSheet)
-        btn.setStyleSheet(StyleSheet_Addition + StyleSheet)
+        StyleSheet_Addition_Arrow = (
+            "QToolButton, QTextEdit {background-color: "
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border: 0.5px solid"
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border-top: 0px solid"
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
+            + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
+            + ";margin: 0px"
+            + ";spacing: 0px"
+            + ";}"
+            + """QToolButton::menu-indicator {
+                    subcontrol-origin: padding;
+                    subcontrol-position: center top;
+                }"""
+        )
+        CommandButton.setStyleSheet(StyleSheet_Addition_Command + StyleSheet)
+        ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow + StyleSheet)
+        Label_Text.setStyleSheet(StyleSheet_Addition_Label + StyleSheet)
+        btn.setStyleSheet(StyleSheet_Addition_Button + StyleSheet)
 
         # Set the final sizes
         #
@@ -429,7 +468,7 @@ class CustomControls:
         TextAlignment=Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft,
         TextPositionAlignment=Qt.AlignmentFlag.AlignLeft,
         setWordWrap=True,
-        ElideMode=Qt.TextElideMode.ElideNone,
+        ElideMode=False,
         MaxNumberOfLines=2,
         Menu: QMenu = None,
         MenuButtonSpace=16,
@@ -534,13 +573,19 @@ class CustomControls:
 
             if setWordWrap is False:
                 # if the text must be elided, return a updated text
-                if ElideMode != Qt.TextElideMode.ElideNone:
-                    Text = FontMetrics.elidedText(
-                        Text,
-                        ElideMode,
-                        ButtonSize.width() * 3,
-                        Qt.TextFlag.TextSingleLine,
-                    )
+                if ElideMode is True:
+                    # Determine the maximum length per line
+                    FontMetrics = QFontMetrics(Text)
+                    maxWidth = 0
+                    maxLength = 0
+                    for c in Text:
+                        maxWidth = maxWidth + FontMetrics.boundingRectChar(c).width()
+                        if maxWidth < ButtonSize.width() * 3:
+                            maxLength = maxLength + 1
+                        if maxWidth >= ButtonSize.width() * 3:
+                            limit = maxLength - 3
+                            Text = Text[:limit].strip() + "..."
+                            break
                 # Set the number of lines to 1 and disable wrap
                 MaxNumberOfLines = 1
                 Label_Text.setWordWrapMode(QTextOption.WrapMode.NoWrap)
@@ -757,20 +802,64 @@ class CustomControls:
         btn.setLayout(Layout)
         # Set the stylesheet for the controls
         StyleSheet = StyleMapping.ReturnStyleSheet(control="toolbutton")
-        CommandButton.setStyleSheet(StyleSheet)
-        ArrowButton.setStyleSheet(StyleSheet)
-        StyleSheet_Addition = (
+        StyleSheet_Addition_Label = (
+            "QToolButton, QTextEdit { "
+            + "background-color: "
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border: 0.5px solid"
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border-left: 0px solid"
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
+            + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+            + ";margin: 0px"
+            + ";spacing: 0px"
+            + ";}"
+        )
+        StyleSheet_Addition_Command = (
+            "QToolButton, QTextEdit { "
+            + "background-color: "
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border: 0.5px solid"
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border-right: 0px solid"
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
+            + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
+            + ";margin: 0px"
+            + ";spacing: 0px"
+            + ";}"
+        )
+        StyleSheet_Addition_Arrow = (
+            "QToolButton, QTextEdit { "
+            + "background-color: "
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border: 0.5px solid"
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border-left: 0px solid"
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
+            + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+            + ";margin: 0px"
+            + ";spacing: 0px"
+            + ";}"
+        )
+        StyleSheet_Addition_button = (
             "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border: none"
             + ";}"
         )
-        Label_Text.setStyleSheet(StyleSheet_Addition + StyleSheet)
-        btn.setStyleSheet(StyleSheet_Addition + StyleSheet)
+        CommandButton.setStyleSheet(StyleSheet_Addition_Command + StyleSheet)
+        ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow + StyleSheet)
+        Label_Text.setStyleSheet(StyleSheet_Addition_Label + StyleSheet)
+        btn.setStyleSheet(StyleSheet_Addition_button + StyleSheet)
+
         # Set the correct dimensions
         btn.setFixedWidth(CommandButton.width() + MenuButtonSpace + TextWidth)
         btn.setFixedHeight(CommandButton.height())
         btn.setFixedWidth(CommandButton.width() + MenuButtonSpace + TextWidth)
         btn.setFixedHeight(CommandButton.height())
+
         # return the new button
         return btn
