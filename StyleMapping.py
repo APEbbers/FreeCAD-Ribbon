@@ -196,37 +196,27 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
                     + padding_right
                     + """;border: 0.5px solid"""
                     + BorderColor
-                    # + """;
-                    # border: transparant"""
                     + """;}"""
                 )
                 return StyleSheet
             if control.lower() == "applicationbutton":
+                # if Parameters_Ribbon.BORDER_TRANSPARANT is True:
+                #     BorderColor = BackgroundColor
                 StyleSheet = (
                     """QToolButton {
-                            padding: 7px;
-                            border-radius : """
+                        border-radius : """
                     + radius
-                    + """;
-                    border: 0.5px solid"""
-                    + AppBorder_1
-                    + """;
-                    background: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 """
+                    + """;padding-right: """
+                    + padding_right
+                    + """;background-color: """
                     + AppColor_1
-                    + """, stop:0.9 """
-                    + AppColor_2
-                    + """, stop:1 """
-                    + AppColor_3
-                    + """)
-                    ;}"""
-                    + """QToolButton:hover {
-                            border-radius : """
-                    + radius
-                    + """;
-                    border: 3px solid"""
-                    + AppBorder_2
-                    + """;
-                    }"""
+                    + """;border: 0.5px solid"""
+                    + BorderColor
+                    + """;}"""
+                    + """QToolButton:hover { """
+                    + """border: 2px solid"""
+                    + BorderColor
+                    + """;}"""
                 )
 
             return StyleSheet

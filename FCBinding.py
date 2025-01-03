@@ -643,7 +643,7 @@ class ModernMenu(RibbonBar):
         Create menu tabs.
         """
         # add quick access buttons
-        i = 1  # Start value for button count. Used for width of quickaccess toolbar
+        i = 3  # Start value for button count. Used for width of quickaccess toolbar
         toolBarWidth = ((self.QuickAccessButtonSize * self.sizeFactor) * i) + self.ApplicationButtonSize
         for commandName in self.ribbonStructure["quickAccessCommands"]:
             i = i + 1
@@ -883,14 +883,27 @@ class ModernMenu(RibbonBar):
         # Set the objectName for the right toolbar. needed for excluding from hiding.
         self.rightToolBar().setObjectName("rightToolBar")
 
-        # Set the application button
-        self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
-        self.applicationOptionButton().setFixedSize(self.ApplicationButtonSize, self.ApplicationButtonSize)
-        self.setApplicationIcon(Gui.getIcon("freecad"))
+        Text = QLabel()
+        Text.setText(translate("FreeCAD Ribbon", "Menu"))
+        FontMetrics = QFontMetrics(Text.font())
+        Layout = QHBoxLayout()
+        Layout.addWidget(Text, 0, Qt.AlignmentFlag.AlignRight)
+        Layout.setContentsMargins(0, 0, 6, 0)
+        self.applicationOptionButton().setLayout(Layout)
+        self.applicationOptionButton().setContentsMargins(0, 0, 0, 0)
 
+        # Set the application button
+        self.applicationOptionButton().setFixedSize(
+            self.QuickAccessButtonSize + FontMetrics.boundingRect(Text.text()).width() + 12, self.QuickAccessButtonSize
+        )
+        self.setApplicationIcon(Gui.getIcon("freecad"))
         # Set the border color and shape
-        radius = str((self.applicationOptionButton().width() * 0.49) - 1) + "px"
-        self.applicationOptionButton().setStyleSheet(StyleMapping.ReturnStyleSheet("applicationbutton", radius))
+        self.applicationOptionButton().setStyleSheet(
+            StyleMapping.ReturnStyleSheet(
+                "applicationbutton", padding_right=str(FontMetrics.boundingRect(Text.text()).width() + 12) + "px"
+            )
+        )
+        self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
 
         # add the menus from the menubar to the application button
         self.ApplicationMenu()
