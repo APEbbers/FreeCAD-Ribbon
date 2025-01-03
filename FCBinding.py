@@ -116,12 +116,12 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-import pyqtribbon as pyqtribbon
-from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon.panel import RibbonPanel
-from pyqtribbon.toolbutton import RibbonToolButton
-from pyqtribbon.separator import RibbonSeparator
-from pyqtribbon.category import RibbonCategoryLayoutButton
+# import pyqtribbon as pyqtribbon
+# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon.panel import RibbonPanel
+# from pyqtribbon.toolbutton import RibbonToolButton
+# from pyqtribbon.separator import RibbonSeparator
+# from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -819,6 +819,7 @@ class ModernMenu(RibbonBar):
                         # Set the tab data
                         self.tabBar().setTabData(len(self.categories()) - 1, workbenchName)
         self.tabBar().stackUnder(self.applicationOptionButton())
+        self.currentCategory().stackUnder(self.applicationOptionButton())
 
         # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
