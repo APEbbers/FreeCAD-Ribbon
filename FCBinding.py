@@ -2197,7 +2197,7 @@ class run:
             ribbonDock.setWindowTitle("Ribbon")
             # Set the titlebar to an empty widget (effectively hide it)
             ribbonDock.setTitleBarWidget(QWidget())
-            ribbonDock.setContentsMargins(0, 0, 20, 0)
+            ribbonDock.setContentsMargins(0, 0, 0, 0)
             # attach the ribbon to the dockwidget
             ribbonDock.setWidget(ribbon)
             ribbonDock.setEnabled(True)
