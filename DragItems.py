@@ -104,9 +104,7 @@ class DragTargetIndicator(QLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setContentsMargins(25, 5, 25, 5)
-        self.setStyleSheet(
-            "QLabel { background-color: #ccc; border: 1px solid black; }"
-        )
+        self.setStyleSheet("QLabel { background-color: #ccc; border: 1px solid black; }")
 
 
 class DragRibbonToolButton(RibbonToolButton):
@@ -179,16 +177,10 @@ class DragRibbonToolButton(RibbonToolButton):
 
             if self.orientation == Qt.Orientation.Vertical:
                 # Drag drop vertically.
-                drop_here = (
-                    pos.y() >= w.y() - spacing
-                    and pos.y() <= w.y() + w.size().height() + spacing
-                )
+                drop_here = pos.y() >= w.y() - spacing and pos.y() <= w.y() + w.size().height() + spacing
             else:
                 # Drag drop horizontally.
-                drop_here = (
-                    pos.x() >= w.x() - spacing
-                    and pos.x() <= w.x() + w.size().width() + spacing
-                )
+                drop_here = pos.x() >= w.x() - spacing and pos.x() <= w.x() + w.size().width() + spacing
 
             if drop_here:
                 # Drop over this target.

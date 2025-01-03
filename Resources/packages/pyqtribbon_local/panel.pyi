@@ -47,9 +47,7 @@ class RibbonGridLayoutManager(object):
     cells: np.ndarray
 
     def __init__(self, rows: int): ...
-    def request_cells(
-        self, rowSpan: int = 1, colSpan: int = 1, mode: RibbonSpaceFindMode = ColumnWise
-    ): ...
+    def request_cells(self, rowSpan: int = 1, colSpan: int = 1, mode: RibbonSpaceFindMode = ColumnWise): ...
 
 class RibbonPanelItemWidget(QFrame):
     def __init__(self, parent=None): ...
@@ -79,9 +77,7 @@ class RibbonPanel(QFrame):
     _panelOption: RibbonPanelOptionButton
 
     @overload
-    def __init__(
-        self, title: str = "", maxRows: int = 6, showPanelOptionButton=True, parent=None
-    ): ...
+    def __init__(self, title: str = "", maxRows: int = 6, showPanelOptionButton=True, parent=None): ...
     @overload
     def __init__(self, parent=None): ...
     def __init__(self, *args, **kwargs): ...
@@ -148,14 +144,7 @@ class RibbonPanel(QFrame):
         icon: QIcon = None,
         showText: bool = True,
         slot: Callable = None,
-        shortcut: (
-            Qt.Key
-            | QKeySequence
-            | QKeyCombination
-            | QKeySequence.StandardKey
-            | str
-            | int
-        ) = None,
+        shortcut: Qt.Key | QKeySequence | QKeyCombination | QKeySequence.StandardKey | str | int = None,
         tooltip: str = None,
         statusTip: str = None,
         checkable: bool = False,
@@ -172,14 +161,7 @@ class RibbonPanel(QFrame):
         icon: QIcon = None,
         showText: bool = True,
         slot: Callable = None,
-        shortcut: (
-            Qt.Key
-            | QKeySequence
-            | QKeyCombination
-            | QKeySequence.StandardKey
-            | str
-            | int
-        ) = None,
+        shortcut: Qt.Key | QKeySequence | QKeyCombination | QKeySequence.StandardKey | str | int = None,
         tooltip: str = None,
         statusTip: str = None,
         checkable: bool = False,
@@ -195,14 +177,7 @@ class RibbonPanel(QFrame):
         icon: QIcon = None,
         showText: bool = True,
         slot: Callable = None,
-        shortcut: (
-            Qt.Key
-            | QKeySequence
-            | QKeyCombination
-            | QKeySequence.StandardKey
-            | str
-            | int
-        ) = None,
+        shortcut: Qt.Key | QKeySequence | QKeyCombination | QKeySequence.StandardKey | str | int = None,
         tooltip: str = None,
         statusTip: str = None,
         checkable: bool = False,
@@ -218,14 +193,7 @@ class RibbonPanel(QFrame):
         icon: QIcon = None,
         showText: bool = True,
         slot: Callable = None,
-        shortcut: (
-            Qt.Key
-            | QKeySequence
-            | QKeyCombination
-            | QKeySequence.StandardKey
-            | str
-            | int
-        ) = None,
+        shortcut: Qt.Key | QKeySequence | QKeyCombination | QKeySequence.StandardKey | str | int = None,
         tooltip: str = None,
         statusTip: str = None,
         checkable: bool = False,
@@ -241,14 +209,7 @@ class RibbonPanel(QFrame):
         icon: QIcon = None,
         showText: bool = True,
         slot: Callable = None,
-        shortcut: (
-            Qt.Key
-            | QKeySequence
-            | QKeyCombination
-            | QKeySequence.StandardKey
-            | str
-            | int
-        ) = None,
+        shortcut: Qt.Key | QKeySequence | QKeyCombination | QKeySequence.StandardKey | str | int = None,
         tooltip: str = None,
         statusTip: str = None,
         *,
@@ -264,14 +225,7 @@ class RibbonPanel(QFrame):
         icon: QIcon = None,
         showText: bool = True,
         slot: Callable = None,
-        shortcut: (
-            Qt.Key
-            | QKeySequence
-            | QKeyCombination
-            | QKeySequence.StandardKey
-            | str
-            | int
-        ) = None,
+        shortcut: Qt.Key | QKeySequence | QKeyCombination | QKeySequence.StandardKey | str | int = None,
         tooltip: str = None,
         statusTip: str = None,
         *,
@@ -286,14 +240,7 @@ class RibbonPanel(QFrame):
         icon: QIcon = None,
         showText: bool = True,
         slot: Callable = None,
-        shortcut: (
-            Qt.Key
-            | QKeySequence
-            | QKeyCombination
-            | QKeySequence.StandardKey
-            | str
-            | int
-        ) = None,
+        shortcut: Qt.Key | QKeySequence | QKeyCombination | QKeySequence.StandardKey | str | int = None,
         tooltip: str = None,
         statusTip: str = None,
         *,
@@ -308,14 +255,7 @@ class RibbonPanel(QFrame):
         icon: QIcon = None,
         showText: bool = True,
         slot: Callable = None,
-        shortcut: (
-            Qt.Key
-            | QKeySequence
-            | QKeyCombination
-            | QKeySequence.StandardKey
-            | str
-            | int
-        ) = None,
+        shortcut: Qt.Key | QKeySequence | QKeyCombination | QKeySequence.StandardKey | str | int = None,
         tooltip: str = None,
         statusTip: str = None,
         *,

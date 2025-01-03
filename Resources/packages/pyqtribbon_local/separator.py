@@ -33,14 +33,8 @@ class RibbonSeparator(QFrame):
         :param width: The width of the separator.
         :param parent: The parent widget.
         """
-        if (args and not isinstance(args[0], QWidget)) or (
-            "orientation" in kwargs or "width" in kwargs
-        ):
-            orientation = (
-                args[0]
-                if len(args) > 0
-                else kwargs.get("orientation", Qt.Orientation.Vertical)
-            )
+        if (args and not isinstance(args[0], QWidget)) or ("orientation" in kwargs or "width" in kwargs):
+            orientation = args[0] if len(args) > 0 else kwargs.get("orientation", Qt.Orientation.Vertical)
             width = args[1] if len(args) > 1 else kwargs.get("width", 6)
             parent = args[2] if len(args) > 2 else kwargs.get("parent", None)
         else:
@@ -51,10 +45,10 @@ class RibbonSeparator(QFrame):
         self._orientation = orientation
         if orientation == Qt.Orientation.Horizontal:
             self.setFixedHeight(width)
-            self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)  # type: ignore
+            self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)  # type: ignore
         else:
             self.setFixedWidth(width)
-            self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)  # type: ignore
+            self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)  # type: ignore
 
     def sizeHint(self) -> QSize:
         """Return the size hint."""
