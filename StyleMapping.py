@@ -100,9 +100,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
             if Parameters_Ribbon.CUSTOM_ICONS_ENABLED is True or ShowCustomIcon is True:
                 PixmapName = StyleMapping["Stylesheets"][ControlName]
             if PixmapName == "" or PixmapName is None:
-                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][
-                    ControlName
-                ]
+                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if PixmapName == "" or PixmapName is None:
                     PixmapName = StyleMapping_default["Stylesheets"][""][ControlName]
             if os.path.exists(PixmapName):
@@ -118,9 +116,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
             if Parameters_Ribbon.CUSTOM_COLORS_ENABLED is True:
                 result = StyleMapping["Stylesheets"][ControlName]
             if result == "" or result is None:
-                result = StyleMapping_default["Stylesheets"][currentStyleSheet][
-                    ControlName
-                ]
+                result = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if result == "" or result is None:
                     result = StyleMapping_default["Stylesheets"][""][ControlName]
             return result
@@ -128,9 +124,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
         return None
 
 
-def ReturnStyleSheet(
-    control, radius="2px", padding_right="0px", padding_bottom="0px", width="15px"
-):
+def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"):
     """
     Enter one of the names below:
 
@@ -159,34 +153,41 @@ def ReturnStyleSheet(
         if BackgroundColor is not None and BorderColor is not None:
             if control.lower() == "toolbutton":
                 if Parameters_Ribbon.BORDER_TRANSPARANT is True:
-                    BorderColor = "transparant"
+                    BorderColor = BackgroundColor
                 StyleSheet = (
-                    """QToolButton, QTextEdit {
+                    """QLayout {spacing: 0px}"""
+                    + """QToolButton, QTextEdit {
+                        margin: 0px 0px 0px 0px;
+                        padding: 0px;
                         background-color: """
                     + BackgroundColor
                     + """;padding-bottom: """
                     + padding_bottom
                     + """;padding-right: """
                     + padding_right
-                    + """;}"""
+                    + """;padding-left: 0px;
+                    spacing: 0px;}"""
                     + """QToolButton::menu-arrow {
-                        width: 10px;
-                        height:24px;
                         subcontrol-origin: padding;
                         subcontrol-position: center right;
                     }"""
                     + """QToolButton::menu-button {
+                        margin: 0px 0px 0px 0px;
+                        padding: 0px;
                         width: """
                     + width
                     + """;
                         border-radius: """
                     + radius
                     + """px;"""
-                    + """padding: 1px;
+                    + """padding: 0px;
                         subcontrol-origin: padding;
                         subcontrol-position: center right;
                     }"""
                     + """QToolButton:hover, QTextEdit:hover {
+                            margin: 0px 0px 0px 0px;
+                            padding: 0px;
+                            border: none;
                             background: """
                     + HoverColor
                     + """;

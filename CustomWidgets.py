@@ -205,7 +205,7 @@ class CustomControls:
             # Set the height according the space for the menubutton
             ArrowButton.setFixedHeight(MenuButtonSpace)
             # Set the width according the commandbutton
-            ArrowButton.setFixedWidth(CommandButton.width() + Space)
+            ArrowButton.setFixedWidth(ButtonSize.width() + Space)
             ArrowButton.adjustSize()
             # Set the arrow to none
             ArrowButton.setArrowType(Qt.ArrowType.NoArrow)
@@ -241,6 +241,8 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
                         + ";}"
                         + """QToolButton::menu-indicator {
                                 subcontrol-origin: padding;
@@ -256,6 +258,8 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
                         + ";}"
                     )
                     StyleSheet_Addition_Button = (
@@ -318,6 +322,8 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
                         + ";}"
                     )
                     StyleSheet_Addition_Command = (
@@ -329,6 +335,8 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
                         + ";}"
                     )
                     StyleSheet_Addition_Button = (
@@ -407,7 +415,6 @@ class CustomControls:
         Label_Text.setFixedWidth(CommandButton.width())
         ArrowButton.setFixedWidth(CommandButton.width())
         btn.setFixedSize(ButtonSize)
-
         # Return the button
         return btn
 
@@ -595,10 +602,12 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-right: 0.5px solid"
+                        + ";border-right: 0px solid"
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
                         + ";}"
                     )
                     StyleSheet_Addition_Arrow = (
@@ -607,10 +616,12 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-left: 0.5px solid"
+                        + ";border-left: 0px solid"
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
                         + ";}"
                     )
                     StyleSheet_Addition_Button = (
@@ -673,10 +684,12 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-left: 0.5px solid"
+                        + ";border-left: 0px solid"
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
                         + ";}"
                     )
                     StyleSheet_Addition_Command = (
@@ -685,10 +698,12 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-right: 0.5px solid"
+                        + ";border-right: 0px solid"
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
                         + ";}"
                     )
                     StyleSheet_Addition_Button = (
