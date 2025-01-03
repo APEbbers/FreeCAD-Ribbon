@@ -129,7 +129,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
 
 
 def ReturnStyleSheet(
-    control, radius="2px", padding_right="0px", padding_bottom="0px", width="15px"
+    control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"
 ):
     """
     Enter one of the names below:
@@ -159,38 +159,48 @@ def ReturnStyleSheet(
         if BackgroundColor is not None and BorderColor is not None:
             if control.lower() == "toolbutton":
                 if Parameters_Ribbon.BORDER_TRANSPARANT is True:
-                    BorderColor = "transparant"
+                    BorderColor = BackgroundColor
                 StyleSheet = (
-                    """QToolButton, QTextEdit {
+                    """QLayout {spacing: 0px}"""
+                    + """QToolButton, QTextEdit {
+                        margin: 0px;
+                        padding: 0px;
                         background-color: """
                     + BackgroundColor
                     + """;padding-bottom: """
                     + padding_bottom
                     + """;padding-right: """
                     + padding_right
-                    + """;}"""
+                    + """;padding-left: 0px;
+                    spacing: 0px;}"""
                     + """QToolButton::menu-arrow {
-                        width: 10px;
-                        height:24px;
                         subcontrol-origin: padding;
                         subcontrol-position: center right;
                     }"""
                     + """QToolButton::menu-button {
+                        margin: 0px;
+                        padding: 0px;
                         width: """
                     + width
                     + """;
                         border-radius: """
                     + radius
                     + """px;"""
-                    + """padding: 1px;
+                    + """padding: 0px;
                         subcontrol-origin: padding;
                         subcontrol-position: center right;
                     }"""
                     + """QToolButton:hover, QTextEdit:hover {
-                            background: """
+                        margin: 0px 0px 0px 0px;
+                        padding: 0px;
+                        border: none;
+                        background: """
                     + HoverColor
-                    + """;
-                    border: 0.5px solid"""
+                    + """;padding-bottom: """
+                    + padding_bottom
+                    + """;padding-right: """
+                    + padding_right
+                    + """;border: 0.5px solid"""
                     + BorderColor
                     # + """;
                     # border: transparant"""

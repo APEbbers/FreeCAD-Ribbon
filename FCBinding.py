@@ -191,11 +191,11 @@ class ModernMenu(RibbonBar):
 
         self.setWindowFlags(self.windowFlags() | Qt.Dialog)
 
-        # Get the style from the main window
-        palette = mw.palette()
-        self.setPalette(palette)
-        Style = mw.style()
-        self.setStyle(Style)
+        # # Get the style from the main window
+        # palette = mw.palette()
+        # self.setPalette(palette)
+        # Style = mw.style()
+        # self.setStyle(Style)
 
         # connect the signals
         self.connectSignals()
@@ -1702,10 +1702,10 @@ class ModernMenu(RibbonBar):
                                     FontSize=8,
                                     showText=showText,
                                     setWordWrap=False,
-                                    ElideMode=Qt.TextElideMode.ElideNone,
+                                    ElideMode=False,
                                     MaxNumberOfLines=2,
                                     Menu=Menu,
-                                    MenuButtonSpace=7,
+                                    MenuButtonSpace=16,
                                 )
                                 # add the button as large button
                                 panel.addSmallWidget(
@@ -1740,7 +1740,7 @@ class ModernMenu(RibbonBar):
                                     setWordWrap=Parameters_Ribbon.WRAPTEXT_MEDIUM,
                                     MaxNumberOfLines=2,
                                     Menu=Menu,
-                                    MenuButtonSpace=7,
+                                    MenuButtonSpace=16,
                                 )
                                 # add the button as large button
                                 panel.addMediumWidget(
@@ -1774,7 +1774,7 @@ class ModernMenu(RibbonBar):
                                     setWordWrap=Parameters_Ribbon.WRAPTEXT_LARGE,
                                     MaxNumberOfLines=2,
                                     Menu=Menu,
-                                    MenuButtonSpace=10,
+                                    MenuButtonSpace=16,
                                 )
                                 # add the button as large button
                                 panel.addLargeWidget(btn)
