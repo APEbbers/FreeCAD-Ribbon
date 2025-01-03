@@ -90,6 +90,8 @@ class CustomControls:
         ArrowButton = QToolButton()
         Layout = QVBoxLayout()
         Label_Text = QTextEdit()
+
+        btn.setStyleSheet("")
         # Define the parameters
         TextHeight = 0
         TextWidth = 0
@@ -99,7 +101,7 @@ class CustomControls:
         # Remove any trailing spaces
         Text = Text.strip()
         # Set the buttonSize
-        CommandButton.setMaximumSize(ButtonSize)
+        CommandButton.setFixedSize(ButtonSize)
         # Set the icon and its size
         CommandButton.setIcon(Icon)
         CommandButton.setIconSize(IconSize.expandedTo(CommandButton.size()))
@@ -187,7 +189,7 @@ class CustomControls:
                 # Set the text, use the wrapper function. It will only return the set number of lines
                 Label_Text.setText(StandardFunctions.ReturnWrappedText(Text, maxWidth, MaxNumberOfLines, False))
                 # Adjust the size of the label
-                Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines) - 3)
+                Label_Text.setFixedHeight((SingleHeight * MaxNumberOfLines) - 3)
                 Label_Text.setAlignment(TextAlignment)
                 Label_Text.adjustSize()
                 # Update the parameters for later
@@ -256,6 +258,13 @@ class CustomControls:
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
                         + ";}"
                     )
+                    StyleSheet_Addition_Button = (
+                        "QToolButton, QTextEdit {background-color: "
+                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + ";border: none"
+                        + ";}"
+                    )
+                    btn.setStyleSheet(StyleSheet_Addition_Button)
                     if ArrowButton.underMouse():
                         Label_Text.setStyleSheet(StyleSheet_Addition_Label)
                         ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
@@ -322,6 +331,13 @@ class CustomControls:
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
                         + ";}"
                     )
+                    StyleSheet_Addition_Button = (
+                        "QToolButton, QTextEdit {background-color: "
+                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + ";border: none"
+                        + ";}"
+                    )
+                    btn.setStyleSheet(StyleSheet_Addition_Button)
                     if CommandButton.underMouse():
                         Label_Text.setStyleSheet(StyleSheet_Addition_Label)
                         CommandButton.setStyleSheet(StyleSheet_Addition_Command)
@@ -338,7 +354,14 @@ class CustomControls:
                         control="toolbutton",
                         radius="2px",
                     )
-                    Label_Text.setStyleSheet(StyleSheet)
+                    StyleSheet_Addition = (
+                        "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
+                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + ";border: 0.5px solid"
+                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + ";}"
+                    )
+                    Label_Text.setStyleSheet(StyleSheet_Addition + StyleSheet)
                     CommandButton.setStyleSheet(StyleSheet)
 
                 Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
@@ -353,30 +376,36 @@ class CustomControls:
 
         # Set the stylesheet
         StyleSheet = StyleMapping.ReturnStyleSheet(control="toolbutton", radius="2px")
+        CommandButton.setStyleSheet(StyleSheet)
         StyleSheet_Addition = """QToolButton::menu-indicator {
                         subcontrol-origin: padding;
                         subcontrol-position: center top;
                     }"""
-        CommandButton.setStyleSheet(StyleSheet)
-        Label_Text.setStyleSheet(StyleSheet)
+
         ArrowButton.setStyleSheet(StyleSheet_Addition + StyleSheet)
-        btn.setStyleSheet(
-            "QToolButton, QToolButton:hover {border: 0.5px solid"
+        StyleSheet_Addition = (
+            "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
             + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border: none"
             + ";}"
         )
+        Label_Text.setStyleSheet(StyleSheet_Addition + StyleSheet)
+        btn.setStyleSheet(StyleSheet_Addition + StyleSheet)
+
         # Set the final sizes
         #
         # If the text width is smaller than the button, set the extra space to 0
         if TextWidth < ButtonSize.width():
             Space = 0
-        ButtonSize = QSize(ButtonSize.width() + Space, ButtonSize.height() + TextHeight)
+        ButtonSize = QSize(CommandButton.width() + Space, ButtonSize.height() + TextHeight)
         CommandButton.setFixedSize(
             QSize(
                 CommandButton.width() + Space,
                 ButtonSize.height() - MenuButtonSpace - TextHeight - Space,
             )
         )
+        Label_Text.setFixedWidth(CommandButton.width())
+        ArrowButton.setFixedWidth(CommandButton.width())
         btn.setFixedSize(ButtonSize)
 
         # Return the button
@@ -564,24 +593,33 @@ class CustomControls:
                         "QToolButton, QTextEdit { "
                         + "background-color: "
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                        + ";border: 1px solid"
+                        + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-right: 0px solid"
+                        + ";border-right: 0.5px solid"
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;border-top-right-radius: 0px;border-bottom-right-radius: 0px"
+                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
+                        + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
                         + ";}"
                     )
                     StyleSheet_Addition_Arrow = (
                         "QToolButton, QTextEdit { "
                         + "background-color: "
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                        + ";border: 1px solid"
+                        + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-left: 0px solid"
+                        + ";border-left: 0.5px solid"
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                        + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+                        + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
+                        + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
                         + ";}"
                     )
+                    StyleSheet_Addition_Button = (
+                        "QToolButton:hover {background-color: "
+                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + ";border: none"
+                        + ";}"
+                    )
+                    btn.setStyleSheet(StyleSheet_Addition_Button)
                     if ArrowButton.underMouse():
                         ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
                         Label_Text.setStyleSheet(StyleSheet_Addition_Label)
@@ -598,8 +636,15 @@ class CustomControls:
                         control="toolbutton",
                         radius="2px",
                     )
-                    Label_Text.setStyleSheet(StyleSheet)
-                    ArrowButton.setStyleSheet(StyleSheet)
+                    StyleSheet_Addition = (
+                        "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
+                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + ";border: 0.5px solid"
+                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + ";}"
+                    )
+                    Label_Text.setStyleSheet(StyleSheet_Addition + StyleSheet)
+                    ArrowButton.setStyleSheet(StyleSheet_Addition + StyleSheet)
 
                 Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
                 ArrowButton.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
@@ -628,9 +673,10 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-left: 0px solid"
+                        + ";border-left: 0.5px solid"
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                        + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+                        + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
+                        + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
                         + ";}"
                     )
                     StyleSheet_Addition_Command = (
@@ -639,11 +685,19 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-right: 0px solid"
+                        + ";border-right: 0.5px solid"
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;border-top-right-radius: 0px;border-bottom-right-radius: 0px"
+                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
+                        + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
                         + ";}"
                     )
+                    StyleSheet_Addition_Button = (
+                        "QToolButton:hover {background-color: "
+                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + ";border: none"
+                        + ";}"
+                    )
+                    btn.setStyleSheet(StyleSheet_Addition_Button)
                     if ArrowButton.underMouse():
                         CommandButton.setStyleSheet(StyleSheet_Addition_Command)
                         Label_Text.setStyleSheet(StyleSheet_Addition_Label)
@@ -660,8 +714,15 @@ class CustomControls:
                         control="toolbutton",
                         radius="2px",
                     )
-                    Label_Text.setStyleSheet(StyleSheet)
-                    CommandButton.setStyleSheet(StyleSheet)
+                    StyleSheet_Addition = (
+                        "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
+                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + ";border: 0.5px solid"
+                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + ";}"
+                    )
+                    Label_Text.setStyleSheet(StyleSheet_Addition + StyleSheet)
+                    CommandButton.setStyleSheet(StyleSheet_Addition + StyleSheet)
 
                 Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
                 CommandButton.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
@@ -682,11 +743,19 @@ class CustomControls:
         # Set the stylesheet for the controls
         StyleSheet = StyleMapping.ReturnStyleSheet(control="toolbutton")
         CommandButton.setStyleSheet(StyleSheet)
-        Label_Text.setStyleSheet(StyleSheet)
         ArrowButton.setStyleSheet(StyleSheet)
+        StyleSheet_Addition = (
+            "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border: none"
+            + ";}"
+        )
+        Label_Text.setStyleSheet(StyleSheet_Addition + StyleSheet)
+        btn.setStyleSheet(StyleSheet_Addition + StyleSheet)
         # Set the correct dimensions
         btn.setFixedWidth(CommandButton.width() + MenuButtonSpace + TextWidth)
         btn.setFixedHeight(CommandButton.height())
-
+        btn.setFixedWidth(CommandButton.width() + MenuButtonSpace + TextWidth)
+        btn.setFixedHeight(CommandButton.height())
         # return the new button
         return btn
