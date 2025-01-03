@@ -387,11 +387,11 @@ class CustomControls:
         StyleSheet = StyleMapping.ReturnStyleSheet(control="toolbutton", radius="2px")
         StyleSheet_Addition_Label = (
             "QToolButton, QTextEdit {background-color: "
-            + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+            + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border: 0.5px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-top: 0px solid"
-            + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+            + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
             + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
             + ";margin: 0px"
@@ -400,11 +400,11 @@ class CustomControls:
         )
         StyleSheet_Addition_Command = (
             "QToolButton, QTextEdit {background-color: "
-            + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+            + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border: 0.5px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-bottom: 0px solid"
-            + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+            + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
             + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
             + ";margin: 0px"
@@ -543,7 +543,6 @@ class CustomControls:
                         maxLength = maxLength + 1
                     if maxWidth >= ButtonSize.width() * 2:
                         break
-
                 # Get the first text line
                 line1 = StandardFunctions.ReturnWrappedText(Text, maxLength, MaxNumberOfLines, True)[0]
                 # Add the line with a space to avoid te need to set spacing. (Spacing breaks the hover background)
@@ -695,12 +694,11 @@ class CustomControls:
                     StyleSheet_Addition = (
                         "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
                         + StyleMapping.ReturnStyleItem("Background_Color")
-                        + ";border: 0.5px solid"
-                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + ";border: none"
                         + ";}"
                     )
-                    Label_Text.setStyleSheet(StyleSheet_Addition + StyleSheet)
-                    ArrowButton.setStyleSheet(StyleSheet_Addition + StyleSheet)
+                    Label_Text.setStyleSheet(StyleSheet + StyleSheet_Addition)
+                    ArrowButton.setStyleSheet(StyleSheet + StyleSheet_Addition)
 
                 Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
                 ArrowButton.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
@@ -777,12 +775,11 @@ class CustomControls:
                     StyleSheet_Addition = (
                         "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
                         + StyleMapping.ReturnStyleItem("Background_Color")
-                        + ";border: 0.5px solid"
-                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + ";border: none"
                         + ";}"
                     )
-                    Label_Text.setStyleSheet(StyleSheet_Addition + StyleSheet)
-                    CommandButton.setStyleSheet(StyleSheet_Addition + StyleSheet)
+                    Label_Text.setStyleSheet(StyleSheet + StyleSheet_Addition)
+                    CommandButton.setStyleSheet(StyleSheet + StyleSheet_Addition)
 
                 Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
                 CommandButton.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
@@ -856,8 +853,6 @@ class CustomControls:
         btn.setStyleSheet(StyleSheet_Addition_button + StyleSheet)
 
         # Set the correct dimensions
-        btn.setFixedWidth(CommandButton.width() + MenuButtonSpace + TextWidth)
-        btn.setFixedHeight(CommandButton.height())
         btn.setFixedWidth(CommandButton.width() + MenuButtonSpace + TextWidth)
         btn.setFixedHeight(CommandButton.height())
 
