@@ -200,8 +200,6 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
                 )
                 return StyleSheet
             if control.lower() == "applicationbutton":
-                # if Parameters_Ribbon.BORDER_TRANSPARANT is True:
-                #     BorderColor = BackgroundColor
                 StyleSheet = (
                     """QToolButton {
                         border-radius : """
@@ -216,6 +214,8 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
                     + """QToolButton:hover { """
                     + """border: 2px solid"""
                     + BorderColor
+                    + """;border-radius : """
+                    + radius
                     + """;}"""
                 )
 
