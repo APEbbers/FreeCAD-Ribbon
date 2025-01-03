@@ -953,6 +953,53 @@ class CustomControls:
                 Label_Text.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
                 CommandButton.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
 
+            if showText is False:
+                # Change the background color for commandbutton and label on hovering (CSS)
+                def enterEventCustom(event):
+                    BorderColor = StyleMapping.ReturnStyleItem("Border_Color")
+                    if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
+                        BorderColor = Parameters_Ribbon.COLOR_BORDERS
+                    if Parameters_Ribbon.BORDER_TRANSPARANT:
+                        BorderColor = StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                    StyleSheet_Addition_Label = (
+                        "QToolButton, QTextEdit { "
+                        + "background-color: "
+                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        + ";border-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
+                    StyleSheet_Addition_Command = (
+                        "QToolButton, QTextEdit { "
+                        + "background-color: "
+                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        + ";border-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
+                    StyleSheet_Addition_Button = (
+                        "QToolButton:hover {background-color: "
+                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + ";border: none"
+                        + ";}"
+                    )
+                    btn.setStyleSheet(StyleSheet_Addition_Button)
+                    if ArrowButton.underMouse():
+                        CommandButton.setStyleSheet(StyleSheet_Addition_Command)
+                        Label_Text.setStyleSheet(StyleSheet_Addition_Label)
+                    if Label_Text.underMouse():
+                        CommandButton.setStyleSheet(StyleSheet_Addition_Command)
+                        Label_Text.setStyleSheet(StyleSheet_Addition_Label)
+
+                Label_Text.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
+                CommandButton.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
+
             # restore the stylesheets on leaving
             def leaveEventCustom(event):
                 StyleSheet = StyleMapping.ReturnStyleSheet(

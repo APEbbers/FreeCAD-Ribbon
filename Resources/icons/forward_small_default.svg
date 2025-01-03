@@ -26,8 +26,8 @@
      showgrid="true"
      inkscape:lockguides="true"
      inkscape:zoom="11.313709"
-     inkscape:cx="17.147339"
-     inkscape:cy="27.53297"
+     inkscape:cx="17.191533"
+     inkscape:cy="27.532969"
      inkscape:window-width="3440"
      inkscape:window-height="1369"
      inkscape:window-x="-8"
@@ -58,7 +58,7 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="fill:#646464;fill-opacity:1;stroke:#646464;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
        d="M 5.4126561e-7,5.4126568e-7 16.933332,8.4666655 5.4126561e-7,16.933332"
        id="path1" />
   </g>
