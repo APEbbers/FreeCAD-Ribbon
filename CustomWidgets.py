@@ -485,8 +485,7 @@ class CustomControls:
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-top: 0px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
-            + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
-            + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
+            + ";border-radius: 2px"
             + ";margin: 0px"
             + ";spacing: 0px"
             + ";}"
@@ -498,8 +497,7 @@ class CustomControls:
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-bottom: 0px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
-            + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
-            + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
+            + ";border-radius: 2px"
             + ";margin: 0px"
             + ";spacing: 0px"
             + ";}"
@@ -517,8 +515,7 @@ class CustomControls:
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-top: 0px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
-            + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
-            + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
+            + ";border-radius: 2px"
             + ";margin: 0px"
             + ";spacing: 0px"
             + ";}"
@@ -955,7 +952,7 @@ class CustomControls:
 
             if showText is False:
                 # Change the background color for commandbutton and label on hovering (CSS)
-                def enterEventCustom(event):
+                def enterEventCustom_2(event):
                     BorderColor = StyleMapping.ReturnStyleItem("Border_Color")
                     if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
@@ -997,8 +994,8 @@ class CustomControls:
                         CommandButton.setStyleSheet(StyleSheet_Addition_Command)
                         Label_Text.setStyleSheet(StyleSheet_Addition_Label)
 
-                Label_Text.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
-                CommandButton.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
+                Label_Text.enterEvent = lambda enterEvent: enterEventCustom_2(enterEvent)
+                CommandButton.enterEvent = lambda enterEvent: enterEventCustom_2(enterEvent)
 
             # restore the stylesheets on leaving
             def leaveEventCustom(event):
@@ -1041,8 +1038,7 @@ class CustomControls:
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-left: 0px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
-            + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
-            + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+            + ";border-radius: 2px"
             + ";margin: 0px"
             + ";spacing: 0px"
             + ";}"
@@ -1055,8 +1051,7 @@ class CustomControls:
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-right: 0px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
-            + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
-            + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
+            + ";border-radius: 2px"
             + ";margin: 0px"
             + ";spacing: 0px"
             + ";}"
@@ -1069,8 +1064,7 @@ class CustomControls:
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-left: 0px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
-            + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
-            + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+            + ";border-radius: 2px"
             + ";margin: 0px"
             + ";spacing: 0px"
             + ";}"
