@@ -157,7 +157,7 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
                 StyleSheet = (
                     """QLayout {spacing: 0px}"""
                     + """QToolButton, QTextEdit {
-                        margin: 0px 0px 0px 0px;
+                        margin: 0px;
                         padding: 0px;
                         background-color: """
                     + BackgroundColor
@@ -172,7 +172,7 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
                         subcontrol-position: center right;
                     }"""
                     + """QToolButton::menu-button {
-                        margin: 0px 0px 0px 0px;
+                        margin: 0px;
                         padding: 0px;
                         width: """
                     + width
