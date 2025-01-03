@@ -185,13 +185,16 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
                         subcontrol-position: center right;
                     }"""
                     + """QToolButton:hover, QTextEdit:hover {
-                            margin: 0px 0px 0px 0px;
-                            padding: 0px;
-                            border: none;
-                            background: """
+                        margin: 0px 0px 0px 0px;
+                        padding: 0px;
+                        border: none;
+                        background: """
                     + HoverColor
-                    + """;
-                    border: 0.5px solid"""
+                    + """;padding-bottom: """
+                    + padding_bottom
+                    + """;padding-right: """
+                    + padding_right
+                    + """;border: 0.5px solid"""
                     + BorderColor
                     # + """;
                     # border: transparant"""
