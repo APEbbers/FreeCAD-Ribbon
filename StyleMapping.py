@@ -120,7 +120,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
                 and Parameters_Ribbon.USE_FC_OVERLAY is True
                 and ControlName == "Background_Color"
             ):
-                result = "transparant"
+                result = "none"
             if result == "" or result is None:
                 result = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if result == "" or result is None:
@@ -165,7 +165,7 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
                     + """QToolButton, QTextEdit {
                         margin: 0px;
                         padding: 0px;
-                        background-color: """
+                        background: """
                     + BackgroundColor
                     + """;padding-bottom: """
                     + padding_bottom
