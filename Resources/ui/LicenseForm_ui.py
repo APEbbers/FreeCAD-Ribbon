@@ -89,10 +89,14 @@ class Ui_Dialog(object):
 
         self.Introduction = QLabel(Dialog)
         self.Introduction.setObjectName("Introduction")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        sizePolicy1 = QSizePolicy(
+            QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum
+        )
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.Introduction.sizePolicy().hasHeightForWidth())
+        sizePolicy1.setHeightForWidth(
+            self.Introduction.sizePolicy().hasHeightForWidth()
+        )
         self.Introduction.setSizePolicy(sizePolicy1)
         self.Introduction.setWordWrap(True)
 
@@ -143,9 +147,13 @@ class Ui_Dialog(object):
     # setupUi
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", "about FreeCAD Ribbon", None))
+        Dialog.setWindowTitle(
+            QCoreApplication.translate("Dialog", "about FreeCAD Ribbon", None)
+        )
         self.LogoHolder.setText("")
-        self.TitleText.setText(QCoreApplication.translate("Dialog", "FreeCAD Ribbon", None))
+        self.TitleText.setText(
+            QCoreApplication.translate("Dialog", "FreeCAD Ribbon", None)
+        )
         self.Introduction.setText(
             QCoreApplication.translate(
                 "Dialog",
@@ -153,7 +161,9 @@ class Ui_Dialog(object):
                 None,
             )
         )
-        self.groupBox_2.setTitle(QCoreApplication.translate("Dialog", " License ", None))
+        self.groupBox_2.setTitle(
+            QCoreApplication.translate("Dialog", " License ", None)
+        )
         self.LicenseText.setText(
             QCoreApplication.translate(
                 "Dialog",

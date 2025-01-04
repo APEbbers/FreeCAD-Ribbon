@@ -37,9 +37,13 @@ translate = App.Qt.translate
 
 # check if there is a "RibbonStructure.json". if not create one
 file = os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json")
-file_default = os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure_default.json")
+file_default = os.path.join(
+    os.path.dirname(FCBinding.__file__), "RibbonStructure_default.json"
+)
 source = os.path.join(os.path.dirname(FCBinding.__file__), "CreateStructure.txt")
-source_default = os.path.join(os.path.dirname(FCBinding.__file__), "CreateStructure.txt")
+source_default = os.path.join(
+    os.path.dirname(FCBinding.__file__), "CreateStructure.txt"
+)
 
 # check if file exits
 fileExists = os.path.isfile(file)
@@ -57,13 +61,18 @@ if fileExists is False:
 Gui.removeWorkbench("TestWorkbench")
 
 USECUSTOMOVERLAY = os.path.join(os.path.dirname(FCBinding.__file__), "OVERLAY_DISABLED")
-if Parameters_Ribbon.USE_FC_OVERLAY is False or os.path.exists(USECUSTOMOVERLAY) is True:
+if (
+    Parameters_Ribbon.USE_FC_OVERLAY is False
+    or os.path.exists(USECUSTOMOVERLAY) is True
+):
     # Disable the overlay function
     preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
     preferences.SetBool("ActivateOverlay", False)
 
     # make sure that the ribbon will be shown on startup -> reset OverlayTop
-    preferences = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
+    preferences = App.ParamGet(
+        "User parameter:BaseApp/MainWindow/DockWindows/OverlayTop"
+    )
     preferences.SetString("Widgets", "")
 if Parameters_Ribbon.USE_FC_OVERLAY is True:
     # Disable the overlay function
