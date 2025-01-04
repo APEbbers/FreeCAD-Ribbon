@@ -1635,6 +1635,16 @@ class ModernMenu(RibbonBar):
                                         print(f"{action.text()} is ignored. Its size was: {buttonSize}")
                                 pass
 
+                            # Set the background always to background color.
+                            # Styling is managed in the custom button class
+                            StyleSheet_Addition_Button = (
+                                "QToolButton, QToolButton:hover {background-color: "
+                                + StyleMapping.ReturnStyleItem("Background_Color")
+                                + ";border: none"
+                                + ";}"
+                            )
+                            btn.setStyleSheet(StyleSheet_Addition_Button)
+
                             # add the button text to the shadowList for checking if buttons are already there.
                             shadowList.append(button.text())
 

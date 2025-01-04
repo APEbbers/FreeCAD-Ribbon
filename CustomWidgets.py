@@ -91,7 +91,14 @@ class CustomControls:
         Layout = QVBoxLayout()
         Label_Text = QTextEdit()
 
-        btn.setStyleSheet("")
+        # Set the default stylesheet
+        StyleSheet_Addition_Button = (
+            "QToolButton, QToolButton:hover {background-color: "
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border: none"
+            + ";}"
+        )
+        btn.setStyleSheet(StyleSheet_Addition_Button)
         # Define the parameters
         TextHeight = 0
         TextWidth = 0
@@ -302,16 +309,6 @@ class CustomControls:
                                 subcontrol-position: center top;
                             }"""
                     )
-                    StyleSheet_Addition_Label = (
-                        "QToolButton, QTextEdit {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                        + ";border: 0.5px solid"
-                        + BorderColor
-                        + ";border-radius: 2px"
-                        + ";margin: 0px"
-                        + ";spacing: 0px"
-                        + ";}"
-                    )
                     StyleSheet_Addition_Button = (
                         "QToolButton, QTextEdit {background-color: "
                         + StyleMapping.ReturnStyleItem("Background_Color")
@@ -320,10 +317,8 @@ class CustomControls:
                     )
                     btn.setStyleSheet(StyleSheet_Addition_Button)
                     if ArrowButton.underMouse():
-                        Label_Text.setStyleSheet(StyleSheet_Addition_Label)
                         ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
                     if Label_Text.underMouse():
-                        Label_Text.setStyleSheet(StyleSheet_Addition_Label)
                         ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
 
                 Label_Text.enterEvent = lambda enterEvent: enterEventCustom_2(enterEvent)
@@ -413,16 +408,6 @@ class CustomControls:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
                     if Parameters_Ribbon.BORDER_TRANSPARANT:
                         BorderColor = StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                    StyleSheet_Addition_Label = (
-                        "QToolButton, QTextEdit {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                        + ";border: 0.5px solid"
-                        + BorderColor
-                        + ";border-radius: 2px"
-                        + ";margin: 0px"
-                        + ";spacing: 0px"
-                        + ";}"
-                    )
                     StyleSheet_Addition_Command = (
                         "QToolButton, QTextEdit {background-color: "
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
@@ -441,10 +426,8 @@ class CustomControls:
                     )
                     btn.setStyleSheet(StyleSheet_Addition_Button)
                     if CommandButton.underMouse():
-                        Label_Text.setStyleSheet(StyleSheet_Addition_Label)
                         CommandButton.setStyleSheet(StyleSheet_Addition_Command)
                     if Label_Text.underMouse():
-                        Label_Text.setStyleSheet(StyleSheet_Addition_Label)
                         CommandButton.setStyleSheet(StyleSheet_Addition_Command)
 
                 Label_Text.enterEvent = lambda enterEvent: enterEventCustom_2(enterEvent)
@@ -569,6 +552,14 @@ class CustomControls:
         ArrowButton = QToolButton()
         Layout = QHBoxLayout()
         Label_Text = QTextEdit()
+        # Set the default stylesheet
+        StyleSheet_Addition_Button = (
+            "QToolButton, QToolButton:hover {background-color: "
+            + StyleMapping.ReturnStyleItem("Background_Color")
+            + ";border: none"
+            + ";}"
+        )
+        btn.setStyleSheet(StyleSheet_Addition_Button)
         # Define the parameters
         TextWidth = 0
         space = 6
@@ -783,17 +774,6 @@ class CustomControls:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
                     if Parameters_Ribbon.BORDER_TRANSPARANT:
                         BorderColor = StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                    StyleSheet_Addition_Label = (
-                        "QToolButton, QTextEdit { "
-                        + "background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                        + ";border: 0.5px solid"
-                        + BorderColor
-                        + ";border-radius: 2px"
-                        + ";margin: 0px"
-                        + ";spacing: 0px"
-                        + ";}"
-                    )
                     StyleSheet_Addition_Arrow = (
                         "QToolButton, QTextEdit { "
                         + "background-color: "
@@ -814,10 +794,8 @@ class CustomControls:
                     btn.setStyleSheet(StyleSheet_Addition_Button)
                     if ArrowButton.underMouse():
                         ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
-                        Label_Text.setStyleSheet(StyleSheet_Addition_Label)
                     if Label_Text.underMouse():
                         ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
-                        Label_Text.setStyleSheet(StyleSheet_Addition_Label)
 
                 Label_Text.enterEvent = lambda enterEvent: enterEventCustom_2(enterEvent)
                 ArrowButton.enterEvent = lambda enterEvent: enterEventCustom_2(enterEvent)
@@ -887,13 +865,13 @@ class CustomControls:
                         + ";}"
                     )
                     StyleSheet_Addition_Button = (
-                        "QToolButton:hover {background-color: "
+                        "QToolButton, QToolButton:hover {background-color: "
                         + StyleMapping.ReturnStyleItem("Background_Color")
                         + ";border: none"
                         + ";}"
                     )
                     btn.setStyleSheet(StyleSheet_Addition_Button)
-                    if ArrowButton.underMouse():
+                    if CommandButton.underMouse():
                         CommandButton.setStyleSheet(StyleSheet_Addition_Command)
                         Label_Text.setStyleSheet(StyleSheet_Addition_Label)
                     if Label_Text.underMouse():
@@ -911,17 +889,6 @@ class CustomControls:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
                     if Parameters_Ribbon.BORDER_TRANSPARANT:
                         BorderColor = StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                    StyleSheet_Addition_Label = (
-                        "QToolButton, QTextEdit { "
-                        + "background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                        + ";border: 0.5px solid"
-                        + BorderColor
-                        + ";border-radius: 2px"
-                        + ";margin: 0px"
-                        + ";spacing: 0px"
-                        + ";}"
-                    )
                     StyleSheet_Addition_Command = (
                         "QToolButton, QTextEdit { "
                         + "background-color: "
@@ -934,18 +901,16 @@ class CustomControls:
                         + ";}"
                     )
                     StyleSheet_Addition_Button = (
-                        "QToolButton:hover {background-color: "
+                        "QToolButton, QToolButton:hover {background-color: "
                         + StyleMapping.ReturnStyleItem("Background_Color")
                         + ";border: none"
                         + ";}"
                     )
                     btn.setStyleSheet(StyleSheet_Addition_Button)
-                    if ArrowButton.underMouse():
+                    if CommandButton.underMouse():
                         CommandButton.setStyleSheet(StyleSheet_Addition_Command)
-                        Label_Text.setStyleSheet(StyleSheet_Addition_Label)
                     if Label_Text.underMouse():
                         CommandButton.setStyleSheet(StyleSheet_Addition_Command)
-                        Label_Text.setStyleSheet(StyleSheet_Addition_Label)
 
                 Label_Text.enterEvent = lambda enterEvent: enterEventCustom_2(enterEvent)
                 CommandButton.enterEvent = lambda enterEvent: enterEventCustom_2(enterEvent)

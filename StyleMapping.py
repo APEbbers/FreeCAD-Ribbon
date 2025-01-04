@@ -115,6 +115,12 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
 
             if Parameters_Ribbon.CUSTOM_COLORS_ENABLED is True:
                 result = StyleMapping["Stylesheets"][ControlName]
+            if (
+                Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED is False
+                and Parameters_Ribbon.USE_FC_OVERLAY is True
+                and ControlName == "Background_Color"
+            ):
+                result = "transparant"
             if result == "" or result is None:
                 result = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if result == "" or result is None:
