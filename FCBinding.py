@@ -149,27 +149,25 @@ class ModernMenu(RibbonBar):
     ApplicationButtonSize = Parameters_Ribbon.APP_ICON_SIZE
     QuickAccessButtonSize = Parameters_Ribbon.QUICK_ICON_SIZE
     RightToolBarButtonSize = Parameters_Ribbon.RIGHT_ICON_SIZE
-    TabBar_Size = Parameters_Ribbon.TABBAR_SIZE
+    TabBar_Size = Parameters_Ribbon.TABBAR_SIZE  # Is overruled
+    LargeButtonSize = Parameters_Ribbon.ICON_SIZE_LARGE
 
     # Set a sixe factor for the buttons
     sizeFactor = 1.3
+    DynamicFactor = 10
+    if QuickAccessButtonSize - iconSize > 0:
+        DynamicFactor = DynamicFactor + QuickAccessButtonSize - iconSize
 
     # Placeholders for toggle function of the ribbon
-    # RibbonMinimalHeight = ApplicationButtonSize + 10
-    # if ApplicationButtonSize < iconSize:
-    RibbonMinimalHeight = iconSize + 10
-    RibbonMaximumHeight = 240  # Will be redefined later
+    RibbonMinimalHeight = QuickAccessButtonSize + 10
+    TabBar_Size = QuickAccessButtonSize
 
     # Declare default offsets
     PanelOffset = 20  # Set to zero to hide the panel titles
-    DockWidgetOffset = 0
     LargeButtontextOffset = 20
 
     # Declare the right padding for dropdown menus
     PaddingRight = 10
-
-    # define a placeholder for the panel title heihgt
-    panelTitleHeight = 20
 
     # Create the list for the commands
     List_Commands = []
@@ -481,6 +479,8 @@ class ModernMenu(RibbonBar):
         # make sure that the ribbon cannot "disappear"
         self.setMinimumHeight(self.RibbonMinimalHeight)
 
+        self.setSizeIncrement(1, 1)
+
         # Set the menuBar hidden as standard
         mw.menuBar().hide()
         if self.isEnabled() is False:
@@ -489,11 +489,6 @@ class ModernMenu(RibbonBar):
         # connect a tabbar click event to the tarbar click funtion
         # this used to replaced the native functions
         self.tabBar().tabBarClicked.connect(self.onTabBarClicked)
-
-        # Set the maximum heigth for the ribbon
-        self.RibbonMaximumHeight = (
-            self.ReturnRibbonHeight(self.PanelOffset) + self.RibbonMinimalHeight
-        )
 
         # override the default scroll behavior with a custom function
         self.tabBar().wheelEvent = lambda event_tabBar: self.wheelEvent_TabBar(
@@ -595,10 +590,12 @@ class ModernMenu(RibbonBar):
             and Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is True
         ):
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setFixedHeight(
-                self.ReturnRibbonHeight(self.panelTitleHeight) + self.PanelOffset
+            # TB.setFixedHeight(self.ReturnRibbonHeight(self.PanelOffset + 20))
+            TB.setMaximumHeight(
+                TB.setFixedHeight(
+                    self.ReturnRibbonHeight(self.PanelOffset + self.DynamicFactor)
+                )
             )
-
             # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
             return
@@ -815,7 +812,7 @@ class ModernMenu(RibbonBar):
                     )
 
                 # Set the height
-                self.setQuickAccessButtonHeight(self.QuickAccessButtonSize)
+                self.setQuickAccessButtonHeight(self.RibbonMinimalHeight)
 
                 # Add the button to the quickaccess toolbar
                 if len(button.actions()) > 0:
@@ -834,7 +831,7 @@ class ModernMenu(RibbonBar):
 
         self.quickAccessToolBar().show()
         # Set the height of the quickaccess toolbar
-        self.quickAccessToolBar().setMinimumHeight(self.RibbonMinimalHeight)
+        self.quickAccessToolBar().setMinimumHeight(self.QuickAccessButtonSize)
 
         # Set the width of the quickaccess toolbar.
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
@@ -1044,7 +1041,7 @@ class ModernMenu(RibbonBar):
                         index, groupId
                     )
                 )
-                sea.setFixedSize(width, self.iconSize)
+                sea.setFixedSize(width, self.QuickAccessButtonSize)
                 BeforeAction = self.rightToolBar().actions()[1]
                 self.rightToolBar().insertWidget(BeforeAction, sea)
                 width = sea.width()
@@ -1172,8 +1169,9 @@ class ModernMenu(RibbonBar):
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
             # if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            # TB.setFixedHeight(self.ReturnRibbonHeight(self.PanelOffset + 20))
             TB.setFixedHeight(
-                self.ReturnRibbonHeight(self.panelTitleHeight + self.PanelOffset)
+                self.ReturnRibbonHeight(self.PanelOffset + self.DynamicFactor)
             )
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
             Parameters_Ribbon.AUTOHIDE_RIBBON = False
@@ -1194,8 +1192,9 @@ class ModernMenu(RibbonBar):
         """
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            # TB.setFixedHeight(self.ReturnRibbonHeight(self.PanelOffset + 20))
             TB.setFixedHeight(
-                self.ReturnRibbonHeight(self.panelTitleHeight + self.PanelOffset)
+                self.ReturnRibbonHeight(self.PanelOffset + self.DynamicFactor)
             )
 
         index = self.tabBar().currentIndex()
@@ -1221,8 +1220,9 @@ class ModernMenu(RibbonBar):
     def onWbActivated(self):
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            # TB.setFixedHeight(self.ReturnRibbonHeight(self.PanelOffset + 20))
             TB.setFixedHeight(
-                self.ReturnRibbonHeight(self.panelTitleHeight + self.PanelOffset)
+                self.ReturnRibbonHeight(self.PanelOffset + self.DynamicFactor)
             )
 
         # Make sure that the text is readable
@@ -1256,8 +1256,9 @@ class ModernMenu(RibbonBar):
 
     def onTabBarClicked(self):
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+        # TB.setFixedHeight(self.ReturnRibbonHeight(self.PanelOffset + 20))
         TB.setFixedHeight(
-            self.ReturnRibbonHeight(self.panelTitleHeight) + self.PanelOffset
+            self.ReturnRibbonHeight(self.PanelOffset + self.DynamicFactor)
         )
         self.setRibbonVisible(True)
 
@@ -1790,7 +1791,7 @@ class ModernMenu(RibbonBar):
 
                                 # Create a custom toolbutton
                                 ButtonSize = QSize(
-                                    Parameters_Ribbon.ICON_SIZE_LARGE + 5,
+                                    Parameters_Ribbon.ICON_SIZE_LARGE,
                                     Parameters_Ribbon.ICON_SIZE_LARGE,
                                 )
                                 IconSize = QSize(
@@ -1816,10 +1817,15 @@ class ModernMenu(RibbonBar):
                                 # add the button as large button
                                 panel.addLargeWidget(btn, fixedHeight=True)
 
+                                # if btn.height() > self.LargeButtonSize:
+                                #     self.LargeButtonSize = (
+                                #         self.LargeButtonSize + (btn.height() - self.LargeButtonSize) * 0.5
+                                #     )
+
                                 if showText is True:
                                     self.LargeButtontextOffset = (
                                         btn.height() - Parameters_Ribbon.ICON_SIZE_LARGE
-                                    )
+                                    ) * 0.5
                             else:
                                 if Parameters_Ribbon.DEBUG_MODE is True:
                                     if buttonSize != "none":
@@ -1872,14 +1878,10 @@ class ModernMenu(RibbonBar):
             if panel.title().endswith("_newPanel"):
                 panel.setTitle(panel.title().replace("_newPanel", ""))
 
-            # print(panel.title())
             # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
             # add an offset to make room for the panel titles and icons
             panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
             panel._actionsLayout.setVerticalSpacing(0)
-            panel._actionsLayout.setSpacing(0)
-            panel.layout().setSpacing(0)
-            panel._mainLayout.setSpacing(0)
             panel.setFixedHeight(self.ReturnRibbonHeight())
             # panel.adjustSize()
 
@@ -1887,10 +1889,8 @@ class ModernMenu(RibbonBar):
             panel.setSizePolicy(
                 QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding
             )
-            panel.setSizeIncrement(self.iconSize, self.iconSize)
+            panel.setSizeIncrement(1, 1)
             panel.adjustSize()
-            self.panelTitleHeight = panel._titleHeight
-            # panel._titleLabel.setWordWrap(True)
 
             # Setup the panelOptionButton
             actionList = []
@@ -1995,7 +1995,9 @@ class ModernMenu(RibbonBar):
         )
 
         # Set the ribbonheight accordingly
-        self.setRibbonHeight(self.ReturnRibbonHeight(self.panelTitleHeight))
+        self.setRibbonHeight(
+            self.ReturnRibbonHeight(self.PanelOffset) + self.DynamicFactor
+        )
         return
 
     def on_ScrollButton_Category_clicked(
@@ -2234,25 +2236,25 @@ class ModernMenu(RibbonBar):
 
     def ReturnRibbonHeight(self, offset=0):
         # Set the ribbon height.
-        ribbonHeight = self.RibbonMinimalHeight
+        ribbonHeight = self.QuickAccessButtonSize
         # If text is enabled for large button, the height is modified.
-        LargeButtonHeight = Parameters_Ribbon.ICON_SIZE_LARGE
+        LargeButtonHeight = self.LargeButtonSize + self.LargeButtontextOffset
         # Check whichs is has the most height: 3 small buttons, 2 medium buttons or 1 large button
         # and set the height accordingly
         if (
             Parameters_Ribbon.ICON_SIZE_SMALL * 3
-            > Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
-            and Parameters_Ribbon.ICON_SIZE_SMALL * 3 > LargeButtonHeight
+            >= Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
+            and Parameters_Ribbon.ICON_SIZE_SMALL * 3 >= LargeButtonHeight
         ):
             ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_SMALL * 3
         elif (
             Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
-            > Parameters_Ribbon.ICON_SIZE_SMALL * 3
-            and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 > LargeButtonHeight
+            >= Parameters_Ribbon.ICON_SIZE_SMALL * 3
+            and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 >= LargeButtonHeight
         ):
             ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
         else:
-            ribbonHeight = ribbonHeight + LargeButtonHeight + 20
+            ribbonHeight = ribbonHeight + LargeButtonHeight
         return ribbonHeight + offset + 6
 
     def ReturnCommandIcon(self, CommandName: str, pixmap: str = "") -> QIcon:
@@ -2486,8 +2488,8 @@ class run:
             ribbonDock.setWidget(ribbon)
             ribbonDock.setEnabled(True)
             ribbonDock.setVisible(True)
-            # make sure that there are no negative valules
-
+            # # make sure that there are no negative valules
+            # ribbonDock.setMaximumHeight(ribbon.ReturnRibbonHeight() - 20)
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
 

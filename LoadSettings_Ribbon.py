@@ -189,6 +189,11 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.label_5.setHidden(True)
         self.form.IconSize_ApplicationButton.setDisabled(True)
         self.form.IconSize_ApplicationButton.setHidden(True)
+        # Disable and hide the controls for the tabbar size
+        self.form.label_23.setDisabled(True)
+        self.form.label_23.setHidden(True)
+        self.form.TabbarHeight.setDisabled(True)
+        self.form.TabbarHeight.setHidden(True)
 
         # Remove tabbar click settings for the time being
         self.form.label_15.setHidden(True)

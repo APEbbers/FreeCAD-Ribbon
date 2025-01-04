@@ -694,6 +694,21 @@ class CustomControls:
                 # Update a parameter for the width
                 TextWidth = TextWidth + space
 
+                # If the text is higher than the commandbutton, switch to no wrap
+                if (
+                    FontMetrics.boundingRect(line1).height() * MaxNumberOfLines
+                ) > ButtonSize.height():
+                    setWordWrap = False
+                    # reset the values
+                    TextWidth = 0
+                    Label_Text.setMaximumWidth(
+                        2000
+                    )  # set to a extra large value to avoid clipping
+                    StandardFunctions.Print(
+                        "Medium button is too small for text wrap!\n wrap setting is ignored",
+                        "Warning",
+                    )
+
             if setWordWrap is False:
                 # if the text must be elided, return a updated text
                 if ElideMode is True:
