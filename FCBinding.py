@@ -1985,7 +1985,7 @@ class ModernMenu(RibbonBar):
         # Set the ribbon height.
         ribbonHeight = self.RibbonMinimalHeight
         # If text is enabled for large button, the height is modified.
-        LargeButtonHeight = Parameters_Ribbon.ICON_SIZE_LARGE + 5
+        LargeButtonHeight = Parameters_Ribbon.ICON_SIZE_LARGE
         # Check whichs is has the most height: 3 small buttons, 2 medium buttons or 1 large button
         # and set the height accordingly
         if (
@@ -2000,7 +2000,7 @@ class ModernMenu(RibbonBar):
             ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
         else:
             ribbonHeight = ribbonHeight + LargeButtonHeight + 20
-        return ribbonHeight + offset
+        return ribbonHeight + offset + 6
 
     def ReturnCommandIcon(self, CommandName: str, pixmap: str = "") -> QIcon:
         """_summary_
@@ -2214,8 +2214,6 @@ class run:
             ribbonDock.setEnabled(True)
             ribbonDock.setVisible(True)
             # make sure that there are no negative valules
-            maximumHeight = ribbon.ReturnRibbonHeight(ribbon.panelTitleHeight)
-            # ribbonDock.setFixedHeight(maximumHeight)
 
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
