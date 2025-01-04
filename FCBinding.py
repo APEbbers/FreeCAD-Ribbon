@@ -161,7 +161,7 @@ class ModernMenu(RibbonBar):
     RibbonMaximumHeight = 240  # Will be redefined later
 
     # Declare default offsets
-    PanelOffset = -20
+    PanelOffset = 20  # Set to zero to hide the panel titles
     DockWidgetOffset = 0
     LargeButtontextOffset = 20
 
@@ -169,7 +169,7 @@ class ModernMenu(RibbonBar):
     PaddingRight = 10
 
     # define a placeholder for the panel title heihgt
-    panelTitleHeight = 0
+    panelTitleHeight = 20
 
     # Create the list for the commands
     List_Commands = []
@@ -550,7 +550,7 @@ class ModernMenu(RibbonBar):
             and Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is True
         ):
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setMaximumHeight(self.ReturnRibbonHeight(self.panelTitleHeight))
+            TB.setFixedHeight(self.ReturnRibbonHeight(self.panelTitleHeight) + self.PanelOffset)
 
             # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
@@ -642,9 +642,41 @@ class ModernMenu(RibbonBar):
         """
         Create menu tabs.
         """
+        # Define a label for the menu
+        Text = QLabel()
+        Text.setText(translate("FreeCAD Ribbon", "Menu"))
+        # Get its metrics
+        FontMetrics = QFontMetrics(Text.font())
+        # Define a layout and add the label
+        Layout = QHBoxLayout()
+        Layout.addWidget(Text, 0, Qt.AlignmentFlag.AlignRight)
+        Layout.setContentsMargins(0, 0, 6, 0)
+        # Add the layout to the menu button
+        self.applicationOptionButton().setLayout(Layout)
+        self.applicationOptionButton().setContentsMargins(0, 0, 0, 0)
+        # Set the size of the menu button
+        self.applicationOptionButton().setFixedSize(
+            self.QuickAccessButtonSize + FontMetrics.boundingRect(Text.text()).width() + 12, self.QuickAccessButtonSize
+        )
+        # Set the icon
+        self.setApplicationIcon(Gui.getIcon("freecad"))
+        # Set the styling of the button including padding (Text widht + 2*maring)
+        self.applicationOptionButton().setStyleSheet(
+            StyleMapping.ReturnStyleSheet(
+                "applicationbutton",
+                padding_right=str(FontMetrics.boundingRect(Text.text()).width() + 12) + "px",
+                radius="4px",
+            )
+        )
+        # Add the default tooltip
+        self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
+
+        # add the menus from the menubar to the application button
+        self.ApplicationMenu()
+
         # add quick access buttons
-        i = 2  # Start value for button count. Used for width of quickaccess toolbar
-        toolBarWidth = ((self.QuickAccessButtonSize * self.sizeFactor) * i) + self.ApplicationButtonSize
+        i = 1  # Start value for button count. Used for width of quickaccess toolbar
+        toolBarWidth = ((self.QuickAccessButtonSize * self.sizeFactor) * i) + self.applicationOptionButton().width()
         for commandName in self.ribbonStructure["quickAccessCommands"]:
             i = i + 1
             # Define a width
@@ -882,38 +914,6 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setSizeIncrement(1, 1)
         # Set the objectName for the right toolbar. needed for excluding from hiding.
         self.rightToolBar().setObjectName("rightToolBar")
-
-        # Define a label for the menu
-        Text = QLabel()
-        Text.setText(translate("FreeCAD Ribbon", "Menu"))
-        # Get its metrics
-        FontMetrics = QFontMetrics(Text.font())
-        # Define a layout and add the label
-        Layout = QHBoxLayout()
-        Layout.addWidget(Text, 0, Qt.AlignmentFlag.AlignRight)
-        Layout.setContentsMargins(0, 0, 6, 0)
-        # Add the layout to the menu button
-        self.applicationOptionButton().setLayout(Layout)
-        self.applicationOptionButton().setContentsMargins(0, 0, 0, 0)
-        # Set the size of the menu button
-        self.applicationOptionButton().setFixedSize(
-            self.QuickAccessButtonSize + FontMetrics.boundingRect(Text.text()).width() + 12, self.QuickAccessButtonSize
-        )
-        # Set the icon
-        self.setApplicationIcon(Gui.getIcon("freecad"))
-        # Set the styling of the button including padding (Text widht + 2*maring)
-        self.applicationOptionButton().setStyleSheet(
-            StyleMapping.ReturnStyleSheet(
-                "applicationbutton",
-                padding_right=str(FontMetrics.boundingRect(Text.text()).width() + 12) + "px",
-                radius="4px",
-            )
-        )
-        # Add the default tooltip
-        self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
-
-        # add the menus from the menubar to the application button
-        self.ApplicationMenu()
         return
 
     # Add the searchBar if it is present
@@ -1048,7 +1048,7 @@ class ModernMenu(RibbonBar):
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
             # if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setMaximumHeight(self.ReturnRibbonHeight(self.panelTitleHeight))
+            TB.setFixedHeight(self.ReturnRibbonHeight(self.panelTitleHeight + self.PanelOffset))
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
             Parameters_Ribbon.AUTOHIDE_RIBBON = False
 
@@ -1066,7 +1066,7 @@ class ModernMenu(RibbonBar):
         """
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setMaximumHeight(self.ReturnRibbonHeight(self.panelTitleHeight))
+            TB.setFixedHeight(self.ReturnRibbonHeight(self.panelTitleHeight + self.PanelOffset))
 
         index = self.tabBar().currentIndex()
         tabName = self.tabBar().tabText(index)
@@ -1091,7 +1091,7 @@ class ModernMenu(RibbonBar):
     def onWbActivated(self):
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setMaximumHeight(self.ReturnRibbonHeight(self.panelTitleHeight))
+            TB.setFixedHeight(self.ReturnRibbonHeight(self.panelTitleHeight + self.PanelOffset))
 
         # Make sure that the text is readable
         self.tabBar().setStyleSheet("color: " + StyleMapping.ReturnStyleItem("Border_Color") + ";")
@@ -1122,7 +1122,7 @@ class ModernMenu(RibbonBar):
 
     def onTabBarClicked(self):
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-        TB.setMaximumHeight(self.ReturnRibbonHeight(self.panelTitleHeight))
+        TB.setFixedHeight(self.ReturnRibbonHeight(self.panelTitleHeight) + self.PanelOffset)
         self.setRibbonVisible(True)
 
         # hide normal toolbars
@@ -1668,23 +1668,6 @@ class ModernMenu(RibbonBar):
                     title = title.replace(" ", "")
                 panel.setTitle(title)
 
-            # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
-            # add an offset to make room for the panel titles and icons
-            panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
-            panel._actionsLayout.setVerticalSpacing(0)
-            # panel._actionsLayout.setSpacing(0)
-            # panel.layout().setSpacing(0)
-            # panel._mainLayout.setSpacing(0)
-            panel.setFixedHeight(self.ReturnRibbonHeight())
-            panel.adjustSize()
-
-            # Set the size policy and increment. It has to be MinimumExpanding.
-            panel.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
-            panel.setSizeIncrement(self.iconSize, self.iconSize)
-            panel.adjustSize()
-            self.panelTitleHeight = panel._titleHeight
-            # panel._titleLabel.setWordWrap(True)
-
             # remove any suffix from the panel title
             if panel.title().endswith("_custom"):
                 panel.setTitle(panel.title().replace("_custom", ""))
@@ -1692,6 +1675,24 @@ class ModernMenu(RibbonBar):
                 panel.setTitle(panel.title().replace("_global", ""))
             if panel.title().endswith("_newPanel"):
                 panel.setTitle(panel.title().replace("_newPanel", ""))
+
+            # print(panel.title())
+            # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
+            # add an offset to make room for the panel titles and icons
+            panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
+            panel._actionsLayout.setVerticalSpacing(0)
+            panel._actionsLayout.setSpacing(0)
+            panel.layout().setSpacing(0)
+            panel._mainLayout.setSpacing(0)
+            panel.setFixedHeight(self.ReturnRibbonHeight())
+            # panel.adjustSize()
+
+            # Set the size policy and increment. It has to be MinimumExpanding.
+            panel.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+            panel.setSizeIncrement(self.iconSize, self.iconSize)
+            panel.adjustSize()
+            self.panelTitleHeight = panel._titleHeight
+            # panel._titleLabel.setWordWrap(True)
 
             # Setup the panelOptionButton
             actionList = []
@@ -1998,7 +1999,7 @@ class ModernMenu(RibbonBar):
         ):
             ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
         else:
-            ribbonHeight = ribbonHeight + LargeButtonHeight
+            ribbonHeight = ribbonHeight + LargeButtonHeight + 20
         return ribbonHeight + offset
 
     def ReturnCommandIcon(self, CommandName: str, pixmap: str = "") -> QIcon:
@@ -2212,10 +2213,9 @@ class run:
             ribbonDock.setWidget(ribbon)
             ribbonDock.setEnabled(True)
             ribbonDock.setVisible(True)
-            ribbonDock.setMinimumHeight(ribbon.RibbonMinimalHeight)
             # make sure that there are no negative valules
-            maximumHeight = ribbon.ReturnRibbonHeight() + ribbon.RibbonMinimalHeight
-            ribbonDock.setFixedHeight(maximumHeight)
+            maximumHeight = ribbon.ReturnRibbonHeight(ribbon.panelTitleHeight)
+            # ribbonDock.setFixedHeight(maximumHeight)
 
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
