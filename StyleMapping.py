@@ -146,11 +146,6 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
         ApplicationButton = ReturnStyleItem("ApplicationButton_Background")
         HoverColor = ReturnStyleItem("Background_Color_Hover")
 
-        # AppColor_1 = ApplicationButton
-        # AppColor_2 = BackgroundColor
-        # AppColor_3 = BackgroundColor
-        # AppBorder_1 = "transparant"
-        # AppBorder_2 = BorderColor
         AppColor_1 = ApplicationButton
         AppColor_2 = ApplicationButton
         AppColor_3 = ApplicationButton
