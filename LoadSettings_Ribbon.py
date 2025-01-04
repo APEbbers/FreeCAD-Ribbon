@@ -184,8 +184,11 @@ class LoadDialog(Settings_ui.Ui_Settings):
             QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred
         )
 
-        # Disable custom Colors and Icons for the time being
-        # self.form.tabWidget.removeTab(2)
+        # Disable and hide the controls for the old application button
+        self.form.label_5.setDisabled(True)
+        self.form.label_5.setHidden(True)
+        self.form.IconSize_ApplicationButton.setDisabled(True)
+        self.form.IconSize_ApplicationButton.setHidden(True)
 
         # Remove tabbar click settings for the time being
         self.form.label_15.setHidden(True)

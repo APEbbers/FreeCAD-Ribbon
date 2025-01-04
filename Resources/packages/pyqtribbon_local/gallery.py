@@ -157,7 +157,7 @@ class RibbonGallery(QFrame):
         self._popupLayout.addWidget(RibbonHorizontalSeparator())
 
         self._popupMenu = RibbonPermanentMenu()
-        self._popupMenu.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Minimum)  # type: ignore
+        self._popupMenu.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)  # type: ignore
         self._popupMenu.actionAdded.connect(self._handlePopupAction)
         self._popupLayout.addWidget(self._popupMenu)
 

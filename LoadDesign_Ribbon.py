@@ -3134,9 +3134,9 @@ class LoadDialog(Design_ui.Ui_Form):
             if toolbar in self.List_IconOnly_Toolbars:
                 self.List_IconOnly_Toolbars.remove(toolbar)
 
-        # # Enable the apply button
-        # if self.CheckChanges() is True:
-        #     self.form.UpdateJson.setEnabled(True)
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
 
         return
 

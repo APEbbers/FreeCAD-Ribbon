@@ -117,6 +117,12 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
 
             if Parameters_Ribbon.CUSTOM_COLORS_ENABLED is True:
                 result = StyleMapping["Stylesheets"][ControlName]
+            if (
+                Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED is False
+                and Parameters_Ribbon.USE_FC_OVERLAY is True
+                and ControlName == "Background_Color"
+            ):
+                result = "none"
             if result == "" or result is None:
                 result = StyleMapping_default["Stylesheets"][currentStyleSheet][
                     ControlName
@@ -146,11 +152,6 @@ def ReturnStyleSheet(
         ApplicationButton = ReturnStyleItem("ApplicationButton_Background")
         HoverColor = ReturnStyleItem("Background_Color_Hover")
 
-        # AppColor_1 = ApplicationButton
-        # AppColor_2 = BackgroundColor
-        # AppColor_3 = BackgroundColor
-        # AppBorder_1 = "transparant"
-        # AppBorder_2 = BorderColor
         AppColor_1 = ApplicationButton
         AppColor_2 = ApplicationButton
         AppColor_3 = ApplicationButton
@@ -165,7 +166,7 @@ def ReturnStyleSheet(
                     + """QToolButton, QTextEdit {
                         margin: 0px;
                         padding: 0px;
-                        background-color: """
+                        background: """
                     + BackgroundColor
                     + """;padding-bottom: """
                     + padding_bottom
@@ -202,37 +203,27 @@ def ReturnStyleSheet(
                     + padding_right
                     + """;border: 0.5px solid"""
                     + BorderColor
-                    # + """;
-                    # border: transparant"""
                     + """;}"""
                 )
                 return StyleSheet
             if control.lower() == "applicationbutton":
                 StyleSheet = (
                     """QToolButton {
-                            padding: 7px;
-                            border-radius : """
+                        border-radius : """
                     + radius
-                    + """;
-                    border: 0.5px solid"""
-                    + AppBorder_1
-                    + """;
-                    background: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 """
+                    + """;padding-right: """
+                    + padding_right
+                    + """;background-color: """
                     + AppColor_1
-                    + """, stop:0.9 """
-                    + AppColor_2
-                    + """, stop:1 """
-                    + AppColor_3
-                    + """)
-                    ;}"""
-                    + """QToolButton:hover {
-                            border-radius : """
+                    + """;border: 0.5px solid"""
+                    + BorderColor
+                    + """;}"""
+                    + """QToolButton:hover { """
+                    + """border: 2px solid"""
+                    + BorderColor
+                    + """;border-radius : """
                     + radius
-                    + """;
-                    border: 3px solid"""
-                    + AppBorder_2
-                    + """;
-                    }"""
+                    + """;}"""
                 )
 
             return StyleSheet

@@ -83,7 +83,7 @@ class RibbonTitleWidget(QFrame):
             parent = args[0] if len(args) > 0 else kwargs.get("parent", None)
         super().__init__(parent)
         # Tab bar layout
-        self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)  # type: ignore
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)  # type: ignore
         self._tabBarLayout = QHBoxLayout(self)
         self._tabBarLayout.setContentsMargins(0, 0, 0, 0)
         self._tabBarLayout.setSpacing(0)
@@ -140,7 +140,7 @@ class RibbonTitleWidget(QFrame):
         # category tab bar
         self._tabBar = RibbonTabBar(self)
         self._tabBar.setExpanding(False)
-        self._tabBar.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)  # type: ignore
+        self._tabBar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)  # type: ignore
         font = self._tabBar.font()
         font.setPointSize(font.pointSize() + 3)
         self._tabBar.setFont(font)
@@ -149,8 +149,8 @@ class RibbonTitleWidget(QFrame):
 
         # Title label
         self._titleLabel = RibbonTitleLabel(self)
-        self._titleLabel.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)  # type: ignore
-        self._titleLabel.setAlignment(Qt.AlignCenter | Qt.AlignBottom)  # type: ignore
+        self._titleLabel.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)  # type: ignore
+        self._titleLabel.setAlignment(Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignBottom)  # type: ignore
         self._titleLabel.setText(title)
         font = self._titleLabel.font()
         font.setPointSize(font.pointSize() + 3)
