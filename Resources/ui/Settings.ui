@@ -282,6 +282,12 @@
                          <property name="correctionMode">
                           <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
                          </property>
+                         <property name="minimum">
+                          <number>16</number>
+                         </property>
+                         <property name="maximum">
+                          <number>48</number>
+                         </property>
                          <property name="value">
                           <number>44</number>
                          </property>
@@ -341,7 +347,10 @@
                           <bool>false</bool>
                          </property>
                          <property name="minimum">
-                          <number>0</number>
+                          <number>16</number>
+                         </property>
+                         <property name="maximum">
+                          <number>36</number>
                          </property>
                          <property name="value">
                           <number>24</number>
@@ -444,6 +453,12 @@
                            <height>20</height>
                           </size>
                          </property>
+                         <property name="minimum">
+                          <number>16</number>
+                         </property>
+                         <property name="maximum">
+                          <number>36</number>
+                         </property>
                         </widget>
                        </item>
                        <item row="6" column="1">
@@ -465,8 +480,11 @@
                        </item>
                        <item row="2" column="1">
                         <widget class="QSpinBox" name="IconSize_Large">
+                         <property name="minimum">
+                          <number>16</number>
+                         </property>
                          <property name="maximum">
-                          <number>200</number>
+                          <number>120</number>
                          </property>
                         </widget>
                        </item>

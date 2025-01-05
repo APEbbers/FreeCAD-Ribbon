@@ -266,7 +266,7 @@ StyleMapping_default = {
         },
         "FreeCAD Dark.qss": {
             "Background_Color": "#333333",
-            "Background_Color_Hover": "#444444",
+            "Background_Color_Hover": "#48a0f8",
             "Border_Color": "#ffffff",
             "ApplicationButton_Background": "#2a2a2a",
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",

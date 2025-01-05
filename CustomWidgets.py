@@ -100,7 +100,7 @@ class CustomControls:
         )
         btn.setStyleSheet(StyleSheet_Addition_Button)
         # Define the parameters
-        TextHeight = 0
+        CommandButtonHeight = 0
         TextWidth = 0
         Space = 6
         if showText is False:
@@ -109,6 +109,7 @@ class CustomControls:
         Text = Text.strip()
         # Set the buttonSize
         CommandButton.setFixedSize(ButtonSize)
+        CommandButtonHeight = ButtonSize.height()
         # Set the icon and its size
         CommandButton.setIcon(Icon)
         CommandButton.setIconSize(IconSize.expandedTo(CommandButton.size()))
@@ -211,6 +212,7 @@ class CustomControls:
                 TextWidth = Label_Text.width()
             # Add the label with alignment
             Layout.addWidget(Label_Text)
+            CommandButtonHeight = CommandButtonHeight - Label_Text.height()
 
         if Menu is not None and len(Menu.actions()) > 1:
             # Define a menu
@@ -357,6 +359,8 @@ class CustomControls:
 
             Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
             ArrowButton.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
+
+            CommandButtonHeight = CommandButtonHeight - ArrowButton.height()
         else:
             MenuButtonSpace = 0
             if showText is True:
@@ -547,17 +551,18 @@ class CustomControls:
         # If the text width is smaller than the button, set the extra space to 0
         if TextWidth < ButtonSize.width():
             Space = 0
-        ButtonSize = QSize(
-            CommandButton.width() + Space, ButtonSize.height() + TextHeight
-        )
-        CommandButton.setFixedSize(
-            QSize(
-                CommandButton.width() + Space,
-                ButtonSize.height() - MenuButtonSpace - TextHeight - Space,
-            )
-        )
+        # ButtonSize = QSize(
+        #     CommandButton.width() + Space, ButtonSize.height() + TextHeight
+        # )
+        # CommandButton.setFixedSize(
+        #     QSize(
+        #         CommandButton.width() + Space,
+        #         ButtonSize.height() - MenuButtonSpace - TextHeight - Space,
+        #     )
+        # )
         Label_Text.setFixedWidth(CommandButton.width())
         ArrowButton.setFixedWidth(CommandButton.width())
+        CommandButton.setFixedSize(QSize(ButtonSize.width(), CommandButtonHeight))
         btn.setFixedSize(ButtonSize)
         # Return the button
         return btn

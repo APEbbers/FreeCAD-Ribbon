@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingskgmBGr.ui'
+## Form generated from reading UI file 'SettingsUwrsfD.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -223,6 +223,8 @@ class Ui_Settings(object):
         self.IconSize_Medium.setCorrectionMode(
             QAbstractSpinBox.CorrectionMode.CorrectToNearestValue
         )
+        self.IconSize_Medium.setMinimum(16)
+        self.IconSize_Medium.setMaximum(48)
         self.IconSize_Medium.setValue(44)
 
         self.gridLayout.addWidget(self.IconSize_Medium, 1, 1, 1, 1)
@@ -249,7 +251,8 @@ class Ui_Settings(object):
             QAbstractSpinBox.CorrectionMode.CorrectToNearestValue
         )
         self.IconSize_Small.setProperty("showGroupSeparator", False)
-        self.IconSize_Small.setMinimum(0)
+        self.IconSize_Small.setMinimum(16)
+        self.IconSize_Small.setMaximum(36)
         self.IconSize_Small.setValue(24)
 
         self.gridLayout.addWidget(self.IconSize_Small, 0, 1, 1, 1)
@@ -299,6 +302,8 @@ class Ui_Settings(object):
         self.IconSize_QuickAccessButton = QSpinBox(self.groupBox_4)
         self.IconSize_QuickAccessButton.setObjectName("IconSize_QuickAccessButton")
         self.IconSize_QuickAccessButton.setMinimumSize(QSize(0, 20))
+        self.IconSize_QuickAccessButton.setMinimum(16)
+        self.IconSize_QuickAccessButton.setMaximum(36)
 
         self.gridLayout.addWidget(self.IconSize_QuickAccessButton, 4, 1, 1, 1)
 
@@ -315,7 +320,8 @@ class Ui_Settings(object):
 
         self.IconSize_Large = QSpinBox(self.groupBox_4)
         self.IconSize_Large.setObjectName("IconSize_Large")
-        self.IconSize_Large.setMaximum(200)
+        self.IconSize_Large.setMinimum(16)
+        self.IconSize_Large.setMaximum(120)
 
         self.gridLayout.addWidget(self.IconSize_Large, 2, 1, 1, 1)
 
