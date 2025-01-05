@@ -100,9 +100,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
             if Parameters_Ribbon.CUSTOM_ICONS_ENABLED is True or ShowCustomIcon is True:
                 PixmapName = StyleMapping["Stylesheets"][ControlName]
             if PixmapName == "" or PixmapName is None:
-                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][
-                    ControlName
-                ]
+                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if PixmapName == "" or PixmapName is None:
                     PixmapName = StyleMapping_default["Stylesheets"][""][ControlName]
             if os.path.exists(PixmapName):
@@ -124,9 +122,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
             ):
                 result = "none"
             if result == "" or result is None:
-                result = StyleMapping_default["Stylesheets"][currentStyleSheet][
-                    ControlName
-                ]
+                result = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if result == "" or result is None:
                     result = StyleMapping_default["Stylesheets"][""][ControlName]
             return result
@@ -134,9 +130,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
         return None
 
 
-def ReturnStyleSheet(
-    control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"
-):
+def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"):
     """
     Enter one of the names below:
 
@@ -266,7 +260,7 @@ StyleMapping_default = {
         },
         "FreeCAD Dark.qss": {
             "Background_Color": "#333333",
-            "Background_Color_Hover": "#444444",
+            "Background_Color_Hover": "#48a0f8",
             "Border_Color": "#ffffff",
             "ApplicationButton_Background": "#2a2a2a",
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",

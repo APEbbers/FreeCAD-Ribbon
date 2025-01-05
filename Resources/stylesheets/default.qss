@@ -1,5 +1,7 @@
 RibbonBar {
     border: none;
+	margin: 0px;
+	padding: 0px;
 }
 
 RibbonApplicationButton::menu-indicator {
@@ -17,7 +19,7 @@ RibbonTitleWidget {
 	}
 
 QToolButton, RibbonApplicationButton{
-	margin: 0px 0px 0px 0px;
+	margin: 0px;
 	padding: 0px;
 	border-radius: 4px;
 	text-align:left;
@@ -56,4 +58,24 @@ RibbonPanelOptionButton {
 	RibbonPanelOptionButton:hover{
 		border-radius: 2px;
 	}
+}
+
+RibbonPanelTitle {
+	height: 20px
+	padding: 0px;
+}
+
+RibbonCategory {
+    margin: 0px;
+	padding: 0px;
+}
+
+RibbonCategoryScrollArea {
+    margin: 0px;
+	padding: 0px;
+}
+
+RibbonCategoryScrollAreaContents {
+    margin: 0px;
+	padding: 0px;
 }
