@@ -160,7 +160,9 @@ class ModernMenu(RibbonBar):
 
     # Placeholders for toggle function of the ribbon
     RibbonMinimalHeight = QuickAccessButtonSize + 10
+    # From v1.6.x, the size of tab bar and right toolbar are controlled by the size of the quickaccess toolbar
     TabBar_Size = QuickAccessButtonSize
+    RightToolBarButtonSize = QuickAccessButtonSize
 
     # Declare default offsets
     PanelOffset = 20  # Set to zero to hide the panel titles

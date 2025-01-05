@@ -188,6 +188,13 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.label_23.setHidden(True)
         self.form.TabbarHeight.setDisabled(True)
         self.form.TabbarHeight.setHidden(True)
+        # Disable and hide the controls for the right toolbar control size
+        self.form.label_22.setDisabled(True)
+        self.form.label_22.setHidden(True)
+        self.form.IconSize_rightToolbarButton.setDisabled(True)
+        self.form.IconSize_rightToolbarButton.setHidden(True)
+        # Change the text for the quick button label
+        self.form.label_10.setText("Size of tab bar")
 
         # Remove tabbar click settings for the time being
         self.form.label_15.setHidden(True)
