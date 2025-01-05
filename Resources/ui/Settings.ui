@@ -261,7 +261,7 @@
                          </property>
                          <property name="minimumSize">
                           <size>
-                           <width>100</width>
+                           <width>50</width>
                            <height>20</height>
                           </size>
                          </property>
@@ -297,7 +297,7 @@
                         <widget class="QSpinBox" name="TabbarHeight">
                          <property name="minimumSize">
                           <size>
-                           <width>100</width>
+                           <width>50</width>
                            <height>20</height>
                           </size>
                          </property>
@@ -316,7 +316,7 @@
                          </property>
                          <property name="minimumSize">
                           <size>
-                           <width>100</width>
+                           <width>50</width>
                            <height>20</height>
                           </size>
                          </property>
@@ -367,7 +367,7 @@
                         <widget class="QSpinBox" name="IconSize_ApplicationButton">
                          <property name="minimumSize">
                           <size>
-                           <width>100</width>
+                           <width>50</width>
                            <height>20</height>
                           </size>
                          </property>
@@ -458,7 +458,7 @@
                         <widget class="QSpinBox" name="IconSize_QuickAccessButton">
                          <property name="minimumSize">
                           <size>
-                           <width>100</width>
+                           <width>50</width>
                            <height>20</height>
                           </size>
                          </property>
@@ -477,7 +477,7 @@
                         <widget class="QSpinBox" name="IconSize_rightToolbarButton">
                          <property name="minimumSize">
                           <size>
-                           <width>100</width>
+                           <width>50</width>
                            <height>20</height>
                           </size>
                          </property>
@@ -497,7 +497,7 @@
                         <widget class="QSpinBox" name="IconSize_Large">
                          <property name="minimumSize">
                           <size>
-                           <width>100</width>
+                           <width>50</width>
                            <height>0</height>
                           </size>
                          </property>
@@ -568,6 +568,9 @@
                            <width>50</width>
                            <height>20</height>
                           </size>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
                          </property>
                          <property name="minimum">
                           <number>0</number>
