@@ -195,6 +195,11 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.IconSize_rightToolbarButton.setHidden(True)
         # Change the text for the quick button label
         self.form.label_21.setText("Size of tab bar")
+        # Set the limits fir the spinboxes
+        self.form.IconSize_Small.setRange(16, 36)
+        self.form.IconSize_Medium.setRange(16, 48)
+        self.form.IconSize_Large.setRange(16, 120)
+        self.form.IconSize_QuickAccessButton.setRange(16, 36)
 
         # Remove tabbar click settings for the time being
         self.form.label_15.setHidden(True)
@@ -262,11 +267,6 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.ScrollClicks_TabBar.setValue(Parameters_Ribbon.TABBAR_CLICKSPEED)
         self.form.ScrollClicks_Ribbon.setValue(Parameters_Ribbon.RIBBON_CLICKSPEED)
         self.form.ModifierKeyApp.setCurrentText(self.OriginalValues["Shortcut_Application"].split("+")[0])
-        # self.form.ModifierKeyApp.setItemData(
-        #     self.form.ModifierKeyApp.currentIndex(),
-        #     self.OriginalValues["Shortcut_Application"].split("+")[0],
-        #     Qt.ItemDataRole.UserRole,
-        # )
         self.form.AppShortCut.setText(self.OriginalValues["Shortcut_Application"].split("+")[1])
         self.form.ShortcutTaken_1.setHidden(True)
 
@@ -431,14 +431,14 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.UseButtonBackGround.clicked.connect(self.on_UseButtonBackGround_clicked)
         # endregion
 
-        # Set the minimum and maximum settings for the iconsizes
-        self.form.IconSize_Small.setMinimum(5)
-        self.form.IconSize_Medium.setMinimum(5)
-        self.form.IconSize_Large.setMinimum(5)
-        self.form.IconSize_ApplicationButton.setMinimum(5)
-        self.form.IconSize_QuickAccessButton.setMinimum(5)
-        self.form.IconSize_rightToolbarButton.setMinimum(5)
-        self.form.TabbarHeight.setMinimum(5)
+        # # Set the minimum and maximum settings for the iconsizes
+        # self.form.IconSize_Small.setMinimum(16)
+        # self.form.IconSize_Medium.setMinimum(16)
+        # self.form.IconSize_Large.setMinimum(16)
+        # self.form.IconSize_ApplicationButton.setMinimum(5)
+        # self.form.IconSize_QuickAccessButton.setMinimum(5)
+        # self.form.IconSize_rightToolbarButton.setMinimum(5)
+        # self.form.TabbarHeight.setMinimum(5)
 
         # Connect the controls for custom icons and colors
         self.form.CustomIcons.clicked.connect(self.on_CustomIcons_clicked)
