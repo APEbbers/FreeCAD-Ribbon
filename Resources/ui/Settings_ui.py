@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsUwrsfD.ui'
+## Form generated from reading UI file 'SettingsfJeyDY.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -196,7 +196,7 @@ class Ui_Settings(object):
         sizePolicy6.setVerticalStretch(0)
         sizePolicy6.setHeightForWidth(self.IconSize_Medium.sizePolicy().hasHeightForWidth())
         self.IconSize_Medium.setSizePolicy(sizePolicy6)
-        self.IconSize_Medium.setMinimumSize(QSize(50, 20))
+        self.IconSize_Medium.setMinimumSize(QSize(100, 20))
         self.IconSize_Medium.setBaseSize(QSize(0, 0))
         self.IconSize_Medium.setFont(font1)
         self.IconSize_Medium.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -209,7 +209,8 @@ class Ui_Settings(object):
 
         self.TabbarHeight = QSpinBox(self.groupBox_4)
         self.TabbarHeight.setObjectName("TabbarHeight")
-        self.TabbarHeight.setMinimumSize(QSize(0, 20))
+        self.TabbarHeight.setMinimumSize(QSize(100, 20))
+        self.TabbarHeight.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout.addWidget(self.TabbarHeight, 5, 1, 1, 1)
 
@@ -217,10 +218,11 @@ class Ui_Settings(object):
         self.IconSize_Small.setObjectName("IconSize_Small")
         sizePolicy6.setHeightForWidth(self.IconSize_Small.sizePolicy().hasHeightForWidth())
         self.IconSize_Small.setSizePolicy(sizePolicy6)
-        self.IconSize_Small.setMinimumSize(QSize(50, 20))
+        self.IconSize_Small.setMinimumSize(QSize(100, 20))
         self.IconSize_Small.setSizeIncrement(QSize(0, 0))
         self.IconSize_Small.setBaseSize(QSize(0, 0))
         self.IconSize_Small.setFont(font1)
+        self.IconSize_Small.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.IconSize_Small.setFrame(True)
         self.IconSize_Small.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.IconSize_Small.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
@@ -233,7 +235,8 @@ class Ui_Settings(object):
 
         self.IconSize_ApplicationButton = QSpinBox(self.groupBox_4)
         self.IconSize_ApplicationButton.setObjectName("IconSize_ApplicationButton")
-        self.IconSize_ApplicationButton.setMinimumSize(QSize(0, 20))
+        self.IconSize_ApplicationButton.setMinimumSize(QSize(100, 20))
+        self.IconSize_ApplicationButton.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.IconSize_ApplicationButton.setMinimum(30)
         self.IconSize_ApplicationButton.setMaximum(200)
         self.IconSize_ApplicationButton.setValue(100)
@@ -275,7 +278,8 @@ class Ui_Settings(object):
 
         self.IconSize_QuickAccessButton = QSpinBox(self.groupBox_4)
         self.IconSize_QuickAccessButton.setObjectName("IconSize_QuickAccessButton")
-        self.IconSize_QuickAccessButton.setMinimumSize(QSize(0, 20))
+        self.IconSize_QuickAccessButton.setMinimumSize(QSize(100, 20))
+        self.IconSize_QuickAccessButton.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.IconSize_QuickAccessButton.setMinimum(16)
         self.IconSize_QuickAccessButton.setMaximum(36)
 
@@ -283,7 +287,8 @@ class Ui_Settings(object):
 
         self.IconSize_rightToolbarButton = QSpinBox(self.groupBox_4)
         self.IconSize_rightToolbarButton.setObjectName("IconSize_rightToolbarButton")
-        self.IconSize_rightToolbarButton.setMinimumSize(QSize(0, 20))
+        self.IconSize_rightToolbarButton.setMinimumSize(QSize(100, 20))
+        self.IconSize_rightToolbarButton.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout.addWidget(self.IconSize_rightToolbarButton, 6, 1, 1, 1)
 
@@ -294,6 +299,8 @@ class Ui_Settings(object):
 
         self.IconSize_Large = QSpinBox(self.groupBox_4)
         self.IconSize_Large.setObjectName("IconSize_Large")
+        self.IconSize_Large.setMinimumSize(QSize(100, 0))
+        self.IconSize_Large.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.IconSize_Large.setMinimum(16)
         self.IconSize_Large.setMaximum(120)
 
