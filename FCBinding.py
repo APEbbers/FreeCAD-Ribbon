@@ -557,7 +557,7 @@ class ModernMenu(RibbonBar):
         ToolTip = self.applicationOptionButton().toolTip()
         ToolTip = f"<b>{ToolTip}</b> ({KeyCombination})"
         self.applicationOptionButton().setToolTip(ToolTip)
-        
+
         return
 
     def closeEvent(self, event):
@@ -1063,7 +1063,6 @@ class ModernMenu(RibbonBar):
             )
             TransparancyButton.triggered.connect(self.CustomTransparancy)
             TransparancyButton.setShortcut("Ctrl+F4")
-
 
         # Add the ribbon design button
         Menu.addSeparator()
