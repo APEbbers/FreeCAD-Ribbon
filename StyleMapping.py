@@ -99,6 +99,8 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
             PixmapName = ""
             if Parameters_Ribbon.CUSTOM_ICONS_ENABLED is True or ShowCustomIcon is True:
                 PixmapName = StyleMapping["Stylesheets"][ControlName]
+            else:
+                PixmapName = ""
             if PixmapName == "" or PixmapName is None:
                 PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][
                     ControlName
@@ -268,7 +270,7 @@ StyleMapping_default = {
             "Background_Color": "#333333",
             "Background_Color_Hover": "#48a0f8",
             "Border_Color": "#ffffff",
-            "ApplicationButton_Background": "#2a2a2a",
+            "ApplicationButton_Background": "#48a0f8",
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",
             "ScrollRightButton_Tab": "forward_small_default_white.svg",
             "ScrollLeftButton_Category": "backward_default_white.svg",
@@ -279,9 +281,9 @@ StyleMapping_default = {
         },
         "FreeCAD Light.qss": {
             "Background_Color": "#f0f0f0",
-            "Background_Color_Hover": "#ced4da",
+            "Background_Color_Hover": "#48a0f8",
             "Border_Color": "#646464",
-            "ApplicationButton_Background": "#e0e0e0",
+            "ApplicationButton_Background": "#48a0f8",
             "ScrollLeftButton_Tab": "backward_small_default.svg",
             "ScrollRightButton_Tab": "forward_small_default.svg",
             "ScrollLeftButton_Category": "backward_default.svg",

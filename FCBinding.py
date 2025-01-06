@@ -1513,7 +1513,7 @@ class ModernMenu(RibbonBar):
                         # if the last item before the optionpanel is an separator, skip it
                         if columnCount > maxColumns and "separator" in button.text():
                             continue
-                        if columnCount > maxColumns + 1:
+                        if columnCount > maxColumns + 2:
                             ButtonList.append(button)
                             panel.panelOptionButton().show()
                             continue

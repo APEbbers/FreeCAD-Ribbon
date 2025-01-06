@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsUwrsfD.ui'
+## Form generated from reading UI file 'SettingsmvYyZB.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -231,7 +231,8 @@ class Ui_Settings(object):
 
         self.TabbarHeight = QSpinBox(self.groupBox_4)
         self.TabbarHeight.setObjectName("TabbarHeight")
-        self.TabbarHeight.setMinimumSize(QSize(0, 20))
+        self.TabbarHeight.setMinimumSize(QSize(50, 20))
+        self.TabbarHeight.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout.addWidget(self.TabbarHeight, 5, 1, 1, 1)
 
@@ -245,6 +246,7 @@ class Ui_Settings(object):
         self.IconSize_Small.setSizeIncrement(QSize(0, 0))
         self.IconSize_Small.setBaseSize(QSize(0, 0))
         self.IconSize_Small.setFont(font1)
+        self.IconSize_Small.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.IconSize_Small.setFrame(True)
         self.IconSize_Small.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.IconSize_Small.setCorrectionMode(
@@ -259,7 +261,8 @@ class Ui_Settings(object):
 
         self.IconSize_ApplicationButton = QSpinBox(self.groupBox_4)
         self.IconSize_ApplicationButton.setObjectName("IconSize_ApplicationButton")
-        self.IconSize_ApplicationButton.setMinimumSize(QSize(0, 20))
+        self.IconSize_ApplicationButton.setMinimumSize(QSize(50, 20))
+        self.IconSize_ApplicationButton.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.IconSize_ApplicationButton.setMinimum(30)
         self.IconSize_ApplicationButton.setMaximum(200)
         self.IconSize_ApplicationButton.setValue(100)
@@ -301,7 +304,8 @@ class Ui_Settings(object):
 
         self.IconSize_QuickAccessButton = QSpinBox(self.groupBox_4)
         self.IconSize_QuickAccessButton.setObjectName("IconSize_QuickAccessButton")
-        self.IconSize_QuickAccessButton.setMinimumSize(QSize(0, 20))
+        self.IconSize_QuickAccessButton.setMinimumSize(QSize(50, 20))
+        self.IconSize_QuickAccessButton.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.IconSize_QuickAccessButton.setMinimum(16)
         self.IconSize_QuickAccessButton.setMaximum(36)
 
@@ -309,7 +313,8 @@ class Ui_Settings(object):
 
         self.IconSize_rightToolbarButton = QSpinBox(self.groupBox_4)
         self.IconSize_rightToolbarButton.setObjectName("IconSize_rightToolbarButton")
-        self.IconSize_rightToolbarButton.setMinimumSize(QSize(0, 20))
+        self.IconSize_rightToolbarButton.setMinimumSize(QSize(50, 20))
+        self.IconSize_rightToolbarButton.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.gridLayout.addWidget(self.IconSize_rightToolbarButton, 6, 1, 1, 1)
 
@@ -320,6 +325,8 @@ class Ui_Settings(object):
 
         self.IconSize_Large = QSpinBox(self.groupBox_4)
         self.IconSize_Large.setObjectName("IconSize_Large")
+        self.IconSize_Large.setMinimumSize(QSize(50, 0))
+        self.IconSize_Large.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.IconSize_Large.setMinimum(16)
         self.IconSize_Large.setMaximum(120)
 
@@ -355,6 +362,7 @@ class Ui_Settings(object):
         )
         self.MaxPanelColumn.setSizePolicy(sizePolicy7)
         self.MaxPanelColumn.setMinimumSize(QSize(50, 20))
+        self.MaxPanelColumn.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.MaxPanelColumn.setMinimum(0)
         self.MaxPanelColumn.setMaximum(99)
         self.MaxPanelColumn.setValue(6)

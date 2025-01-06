@@ -659,9 +659,9 @@ class CustomControls:
                 maxLength = 0
                 for c in Text:
                     maxWidth = maxWidth + FontMetrics.boundingRectChar(c).width()
-                    if maxWidth < ButtonSize.width() * 2:
+                    if maxWidth < ButtonSize.width() * 1.5:
                         maxLength = maxLength + 1
-                    if maxWidth >= ButtonSize.width() * 2:
+                    if maxWidth >= ButtonSize.width() * 1.5:
                         break
                 # Get the first text line
                 line1 = StandardFunctions.ReturnWrappedText(

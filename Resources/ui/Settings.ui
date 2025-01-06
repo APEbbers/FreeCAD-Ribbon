@@ -297,9 +297,12 @@
                         <widget class="QSpinBox" name="TabbarHeight">
                          <property name="minimumSize">
                           <size>
-                           <width>0</width>
+                           <width>50</width>
                            <height>20</height>
                           </size>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
                          </property>
                         </widget>
                        </item>
@@ -334,6 +337,9 @@
                            <bold>false</bold>
                           </font>
                          </property>
+                         <property name="focusPolicy">
+                          <enum>Qt::FocusPolicy::NoFocus</enum>
+                         </property>
                          <property name="frame">
                           <bool>true</bool>
                          </property>
@@ -361,9 +367,12 @@
                         <widget class="QSpinBox" name="IconSize_ApplicationButton">
                          <property name="minimumSize">
                           <size>
-                           <width>0</width>
+                           <width>50</width>
                            <height>20</height>
                           </size>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
                          </property>
                          <property name="minimum">
                           <number>30</number>
@@ -449,9 +458,12 @@
                         <widget class="QSpinBox" name="IconSize_QuickAccessButton">
                          <property name="minimumSize">
                           <size>
-                           <width>0</width>
+                           <width>50</width>
                            <height>20</height>
                           </size>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
                          </property>
                          <property name="minimum">
                           <number>16</number>
@@ -465,9 +477,12 @@
                         <widget class="QSpinBox" name="IconSize_rightToolbarButton">
                          <property name="minimumSize">
                           <size>
-                           <width>0</width>
+                           <width>50</width>
                            <height>20</height>
                           </size>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
                          </property>
                         </widget>
                        </item>
@@ -480,6 +495,15 @@
                        </item>
                        <item row="2" column="1">
                         <widget class="QSpinBox" name="IconSize_Large">
+                         <property name="minimumSize">
+                          <size>
+                           <width>50</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
+                         </property>
                          <property name="minimum">
                           <number>16</number>
                          </property>
@@ -544,6 +568,9 @@
                            <width>50</width>
                            <height>20</height>
                           </size>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
                          </property>
                          <property name="minimum">
                           <number>0</number>
