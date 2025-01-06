@@ -743,7 +743,7 @@
                          <property name="checked">
                           <bool>true</bool>
                          </property>
-                        </widget>
+                        </spacer>
                        </item>
                       </layout>
                      </item>

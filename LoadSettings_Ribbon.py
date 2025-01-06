@@ -487,6 +487,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.UseButtonBackGround.clicked.connect(
             self.on_UseButtonBackGround_clicked
         )
+
         # endregion
 
         # # Set the minimum and maximum settings for the iconsizes
@@ -1019,7 +1020,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         return
 
     # endregion
-
+    
     @staticmethod
     def on_Cancel_clicked(self):
         # Save backup settings
@@ -1133,6 +1134,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         Parameters_Ribbon.Settings.SetStringSetting(
             "Color_Background_App", self.OriginalValues["Color_Background_App"]
         )
+
 
         # Set the size of the window to the previous state
         Parameters_Ribbon.Settings.SetIntSetting(
