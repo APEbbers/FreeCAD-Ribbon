@@ -102,7 +102,9 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
             else:
                 PixmapName = ""
             if PixmapName == "" or PixmapName is None:
-                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
+                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][
+                    ControlName
+                ]
                 if PixmapName == "" or PixmapName is None:
                     PixmapName = StyleMapping_default["Stylesheets"][""][ControlName]
             if os.path.exists(PixmapName):
@@ -124,7 +126,9 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
             ):
                 result = "none"
             if result == "" or result is None:
-                result = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
+                result = StyleMapping_default["Stylesheets"][currentStyleSheet][
+                    ControlName
+                ]
                 if result == "" or result is None:
                     result = StyleMapping_default["Stylesheets"][""][ControlName]
             return result
@@ -132,7 +136,9 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
         return None
 
 
-def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"):
+def ReturnStyleSheet(
+    control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"
+):
     """
     Enter one of the names below:
 

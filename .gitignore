@@ -137,6 +137,6 @@ __pycache__
 /CreateTranslations.bat
 *.bak
 Backups/
-RibbonDataFile.dat
+RibbonDataFile*.dat
 RibbonStructure.json
 RibbonStructure_default.json

@@ -838,6 +838,8 @@ class ModernMenu(RibbonBar):
 
                         # Set the tab data
                         self.tabBar().setTabData(len(self.categories()) - 1, workbenchName)
+        self.tabBar().stackUnder(self.applicationOptionButton())
+        self.currentCategory().stackUnder(self.applicationOptionButton())
 
         # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
