@@ -150,6 +150,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "Settings.ui"))
 
         # Make sure that the dialog stays on top
+        self.form.raise_()
         self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
 
         # Get the style from the main window and use it for this form
