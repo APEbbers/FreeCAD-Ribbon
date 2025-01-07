@@ -148,8 +148,8 @@ class ModernMenu(RibbonBar):
     iconSize = Parameters_Ribbon.ICON_SIZE_SMALL
     ApplicationButtonSize = Parameters_Ribbon.APP_ICON_SIZE
     QuickAccessButtonSize = Parameters_Ribbon.QUICK_ICON_SIZE
-    RightToolBarButtonSize = Parameters_Ribbon.RIGHT_ICON_SIZE
-    TabBar_Size = Parameters_Ribbon.TABBAR_SIZE  # Is overruled
+    # RightToolBarButtonSize = Parameters_Ribbon.RIGHT_ICON_SIZE  # Is overruled
+    # TabBar_Size = Parameters_Ribbon.TABBAR_SIZE  # Is overruled
     LargeButtonSize = Parameters_Ribbon.ICON_SIZE_LARGE
 
     # Define a placeholder for the ribbon height
@@ -417,16 +417,16 @@ class ModernMenu(RibbonBar):
                         background: transparent;
                         color: transparent;
                         min-width: """
-                + str(Parameters_Ribbon.TABBAR_SIZE)
+                + str(self.TabBar_Size)
                 + """px;
                         max-width: """
-                + str(Parameters_Ribbon.TABBAR_SIZE)
+                + str(self.TabBar_Size)
                 + """px;
                         padding-left: 6px;
                         padding-right: 0px;
                     }"""
             )
-            StyleSheet = StyleSheet + StyleSheet_Addition_3
+            StyleSheet = StyleSheet_Addition_3 + StyleSheet
             self.setStyleSheet(StyleSheet)
 
         # get the state of the mainwindow
@@ -838,8 +838,6 @@ class ModernMenu(RibbonBar):
 
                         # Set the tab data
                         self.tabBar().setTabData(len(self.categories()) - 1, workbenchName)
-        self.tabBar().stackUnder(self.applicationOptionButton())
-        self.currentCategory().stackUnder(self.applicationOptionButton())
 
         # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
