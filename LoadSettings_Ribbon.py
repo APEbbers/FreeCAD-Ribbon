@@ -487,6 +487,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.UseButtonBackGround.clicked.connect(
             self.on_UseButtonBackGround_clicked
         )
+
         # endregion
 
         # # Set the minimum and maximum settings for the iconsizes

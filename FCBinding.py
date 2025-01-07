@@ -883,6 +883,7 @@ class ModernMenu(RibbonBar):
         if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
             pinButton.setChecked(True)
         pinButton.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px"))
+
         # If FreeCAD's overlay function is active, set the pinbutton to checked and then to disabled
         preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
         if preferences.GetBool("ActivateOverlay") is True:
@@ -949,7 +950,10 @@ class ModernMenu(RibbonBar):
             OverlayButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle overlay"))
             OverlayButton.triggered.connect(self.CustomOverlay)
             OverlayButton.setShortcut("F4")
-            TransparancyButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle transparancy"))
+
+            TransparancyButton = OverlayMenu.addAction(
+                translate("FreeCAD Ribbon", "Toggle transparancy")
+            )
             TransparancyButton.triggered.connect(self.CustomTransparancy)
             TransparancyButton.setShortcut("Ctrl+F4")
 
