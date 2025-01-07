@@ -150,6 +150,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "Settings.ui"))
 
         # Make sure that the dialog stays on top
+        self.form.raise_()
         self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
 
         # Get the style from the main window and use it for this form
@@ -589,7 +590,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
     def on_BackUpLocation_clicked(self):
         BackupFolder = ""
         BackupFolder = StandardFunctions.GetFolder(
-            parent=None, DefaultPath=Parameters_Ribbon.BACKUP_LOCATION
+            parent=self.form, DefaultPath=Parameters_Ribbon.BACKUP_LOCATION
         )
         if BackupFolder != "":
             self.pathBackup = BackupFolder
@@ -652,7 +653,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         StyleSheet = ""
         StyleSheet = StandardFunctions.GetFileDialog(
             Filter="Stylesheet (*.qss)",
-            parent=None,
+            parent=self.form,
             DefaultPath=os.path.dirname(Parameters_Ribbon.STYLESHEET),
             SaveAs=False,
         )
@@ -806,7 +807,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Get the file with a dialog
         File = StandardFunctions.GetFileDialog(
             Filter="Pictures (*.png *.svg)",
-            parent=None,
+            parent=self.form,
             DefaultPath=DefaultPath,
             SaveAs=False,
         )
@@ -831,7 +832,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Get the file with a dialog
         File = StandardFunctions.GetFileDialog(
             Filter="Pictures (*.png *.svg)",
-            parent=None,
+            parent=self.form,
             DefaultPath=DefaultPath,
             SaveAs=False,
         )
@@ -858,7 +859,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Get the file with a dialog
         File = StandardFunctions.GetFileDialog(
             Filter="Pictures (*.png *.svg)",
-            parent=None,
+            parent=self.form,
             DefaultPath=DefaultPath,
             SaveAs=False,
         )
@@ -885,7 +886,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Get the file with a dialog
         File = StandardFunctions.GetFileDialog(
             Filter="Pictures (*.png *.svg)",
-            parent=None,
+            parent=self.form,
             DefaultPath=DefaultPath,
             SaveAs=False,
         )
@@ -910,7 +911,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Get the file with a dialog
         File = StandardFunctions.GetFileDialog(
             Filter="Pictures (*.png *.svg)",
-            parent=None,
+            parent=self.form,
             DefaultPath=DefaultPath,
             SaveAs=False,
         )
@@ -935,7 +936,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Get the file with a dialog
         File = StandardFunctions.GetFileDialog(
             Filter="Pictures (*.png *.svg)",
-            parent=None,
+            parent=self.form,
             DefaultPath=DefaultPath,
             SaveAs=False,
         )

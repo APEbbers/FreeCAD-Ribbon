@@ -1068,7 +1068,7 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_Importlayout_IS_clicked(self):
         JsonFile = StandardFunctions.GetFileDialog(
             Filter="RibbonStructure (*.json)",
-            parent=None,
+            parent=self.form,
             DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
             SaveAs=False,
         )
@@ -1085,7 +1085,7 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_ImportCustomPanels_IS_clicked(self):
         JsonFile = StandardFunctions.GetFileDialog(
             Filter="RibbonStructure (*.json)",
-            parent=None,
+            parent=self.form,
             DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
             SaveAs=False,
         )
@@ -1103,7 +1103,7 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_ImportDropDownButtons_IS_clicked(self):
         JsonFile = StandardFunctions.GetFileDialog(
             Filter="RibbonStructure (*.json)",
-            parent=None,
+            parent=self.form,
             DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
             SaveAs=False,
         )
@@ -1122,7 +1122,7 @@ class LoadDialog(Design_ui.Ui_Form):
         self.WriteJson()
         FileName = StandardFunctions.GetFileDialog(
             Filter="RibbonStructure (*.json)",
-            parent=None,
+            parent=self.form,
             DefaultPath=Parameters_Ribbon.EXPORT_LOCATION,
             SaveAs=True,
         )
@@ -1133,7 +1133,7 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_ImportWorkbench_IS_clicked(self):
         JsonFile = StandardFunctions.GetFileDialog(
             Filter="RibbonStructure (*.json)",
-            parent=None,
+            parent=self.form,
             DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
             SaveAs=False,
         )
