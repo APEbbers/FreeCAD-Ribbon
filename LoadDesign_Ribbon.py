@@ -403,6 +403,11 @@ class LoadDialog(Design_ui.Ui_Form):
             SIGNAL("clicked()"),
             self.on_ExportLayout_IS_clicked,
         )
+        self.form.ImportWorkbench_IS.connect(
+            self.form.ImportWorkbench_IS,
+            SIGNAL("clicked()"),
+            self.on_ImportWorkbench_IS_clicked,
+        )
 
         # Connect the workbench generator
         self.form.GenerateSetup_IS_WorkBenches.connect(
@@ -1063,7 +1068,7 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_Importlayout_IS_clicked(self):
         JsonFile = StandardFunctions.GetFileDialog(
             Filter="RibbonStructure (*.json)",
-            parent=None,
+            parent=self.form,
             DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
             SaveAs=False,
         )
@@ -1080,7 +1085,7 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_ImportCustomPanels_IS_clicked(self):
         JsonFile = StandardFunctions.GetFileDialog(
             Filter="RibbonStructure (*.json)",
-            parent=None,
+            parent=self.form,
             DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
             SaveAs=False,
         )
@@ -1098,7 +1103,7 @@ class LoadDialog(Design_ui.Ui_Form):
     def on_ImportDropDownButtons_IS_clicked(self):
         JsonFile = StandardFunctions.GetFileDialog(
             Filter="RibbonStructure (*.json)",
-            parent=None,
+            parent=self.form,
             DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
             SaveAs=False,
         )
@@ -1117,12 +1122,43 @@ class LoadDialog(Design_ui.Ui_Form):
         self.WriteJson()
         FileName = StandardFunctions.GetFileDialog(
             Filter="RibbonStructure (*.json)",
-            parent=None,
+            parent=self.form,
             DefaultPath=Parameters_Ribbon.EXPORT_LOCATION,
             SaveAs=True,
         )
         shutil.copy(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, FileName)
 
+        return
+
+    def on_ImportWorkbench_IS_clicked(self):
+        JsonFile = StandardFunctions.GetFileDialog(
+            Filter="RibbonStructure (*.json)",
+            parent=self.form,
+            DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
+            SaveAs=False,
+        )
+        JsonFile = open(JsonFile)
+        if JsonFile != "":
+            data = json.load(JsonFile)
+            WorkbenchName = self.form.ImportWorkbenchSelector_IS.currentData(
+                Qt.ItemDataRole.UserRole
+            )[0]
+            if "workbenches" in data:
+                # Add a key if not present
+                StandardFunctions.add_keys_nested_dict(
+                    data["workbenches"], WorkbenchName
+                )
+                self.Dict_RibbonCommandPanel["workbenches"][WorkbenchName] = data[
+                    "workbenches"
+                ][WorkbenchName]
+
+            self.LoadControls()
+
+        JsonFile.close()
+
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
         return
 
     def on_GenerateSetup_IS_WorkBenches_clicked(self):
@@ -1223,6 +1259,8 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.show()
 
         # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -2595,11 +2633,17 @@ class LoadDialog(Design_ui.Ui_Form):
             Icon_medium.setCheckState(Qt.CheckState.Unchecked)
             self.form.CommandTable_RD.setItem(RowNumber, 2, Icon_medium)
 
-            # Create the last cell and set the checkstate according the checkstate as defined earlier
+            # Create the fourth cell and set the checkstate according the checkstate as defined earlier
             Icon_large = QTableWidgetItem()
             Icon_large.setText("")
             Icon_large.setCheckState(Qt.CheckState.Unchecked)
             self.form.CommandTable_RD.setItem(RowNumber, 3, Icon_large)
+
+            # Create the last cell and set the checkstaat according the checkstate as defined earlier
+            Enabled_item = QTableWidgetItem()
+            Enabled_item.setText("")
+            Enabled_item.setCheckState(Qt.CheckState.Checked)
+            self.form.CommandTable_RD.setItem(RowNumber, 4, Enabled_item)
 
             # # Add the first cell with the table widget
             # self.form.CommandTable_RD.setItem(RowNumber, 0, CommandTable_RDItem)
@@ -2832,6 +2876,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         checked_small = Qt.CheckState.Checked
                         checked_medium = Qt.CheckState.Unchecked
                         checked_large = Qt.CheckState.Unchecked
+                        Enabled = Qt.CheckState.Checked
                         # set the default size
                         Size = "small"
 
@@ -2857,10 +2902,17 @@ class LoadDialog(Design_ui.Ui_Form):
                                         checked_small = Qt.CheckState.Unchecked
                                         checked_medium = Qt.CheckState.Checked
                                         checked_large = Qt.CheckState.Unchecked
+                                        Enabled = Qt.CheckState.Checked
                                     if Size == "large":
                                         checked_small = Qt.CheckState.Unchecked
                                         checked_medium = Qt.CheckState.Unchecked
                                         checked_large = Qt.CheckState.Checked
+                                        Enabled = Qt.CheckState.Checked
+                                    if Size == "none":
+                                        checked_small = Qt.CheckState.Unchecked
+                                        checked_medium = Qt.CheckState.Unchecked
+                                        checked_large = Qt.CheckState.Unchecked
+                                        Enabled = Qt.CheckState.Unchecked
                                 except Exception:
                                     continue
 
@@ -2927,10 +2979,15 @@ class LoadDialog(Design_ui.Ui_Form):
                         Icon_medium.setCheckState(checked_medium)
                         self.form.CommandTable_RD.setItem(RowNumber, 2, Icon_medium)
 
-                        # Create the last cell and set the checkstate according the checkstate as defined earlier
+                        # Create the fourth cell and set the checkstate according the checkstate as defined earlier
                         Icon_large = QTableWidgetItem()
                         Icon_large.setCheckState(checked_large)
                         self.form.CommandTable_RD.setItem(RowNumber, 3, Icon_large)
+
+                        # Create the last cell and set the checkstaat according the checkstate as defined earlier
+                        Enabled_item = QTableWidgetItem()
+                        Enabled_item.setCheckState(Enabled)
+                        self.form.CommandTable_RD.setItem(RowNumber, 4, Enabled_item)
 
                         # Double check the workbench name
                         WorkBenchName = self.form.WorkbenchList_RD.currentData(
@@ -3077,9 +3134,9 @@ class LoadDialog(Design_ui.Ui_Form):
             if toolbar in self.List_IconOnly_Toolbars:
                 self.List_IconOnly_Toolbars.remove(toolbar)
 
-        # # Enable the apply button
-        # if self.CheckChanges() is True:
-        #     self.form.UpdateJson.setEnabled(True)
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -3110,10 +3167,13 @@ class LoadDialog(Design_ui.Ui_Form):
         # Go through the cells in the first row. If checkstate is checked, uncheck the other cells in all other rows
         CheckState = self.form.CommandTable_RD.item(row, column).checkState()
         if row == 0:
-            for i1 in range(1, self.form.CommandTable_RD.columnCount()):
+            for i1 in range(1, self.form.CommandTable_RD.columnCount() - 1):
                 if CheckState == Qt.CheckState.Checked:
                     if i1 == column:
                         self.form.CommandTable_RD.item(0, i1).setCheckState(
+                            Qt.CheckState.Checked
+                        )
+                        self.form.CommandTable_RD.item(0, 4).setCheckState(
                             Qt.CheckState.Checked
                         )
                     else:
@@ -3123,7 +3183,20 @@ class LoadDialog(Design_ui.Ui_Form):
                 for i2 in range(1, self.form.CommandTable_RD.rowCount()):
                     if i1 == column:
                         self.form.CommandTable_RD.item(i2, i1).setCheckState(CheckState)
+                        self.form.CommandTable_RD.item(i2, 4).setCheckState(
+                            Qt.CheckState.Checked
+                        )
                     if i1 != column:
+                        self.form.CommandTable_RD.item(i2, i1).setCheckState(
+                            Qt.CheckState.Unchecked
+                        )
+            if (
+                column == 4
+                and self.form.CommandTable_RD.item(0, column).checkState()
+                == Qt.CheckState.Unchecked
+            ):
+                for i1 in range(1, self.form.CommandTable_RD.columnCount()):
+                    for i2 in range(1, self.form.CommandTable_RD.rowCount()):
                         self.form.CommandTable_RD.item(i2, i1).setCheckState(
                             Qt.CheckState.Unchecked
                         )
@@ -3131,14 +3204,35 @@ class LoadDialog(Design_ui.Ui_Form):
         # Get the checkedstate from the clicked cell
         CheckState = self.form.CommandTable_RD.item(row, column).checkState()
         # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
-        for i3 in range(1, self.form.CommandTable_RD.columnCount()):
+        IsChecked = False
+        for i3 in range(1, self.form.CommandTable_RD.columnCount() - 1):
             if CheckState == Qt.CheckState.Checked:
                 TableCell = self.form.CommandTable_RD.item(row, i3)
                 if TableCell is not None:
                     if i3 == column:
                         TableCell.setCheckState(Qt.CheckState.Checked)
+                        self.form.CommandTable_RD.item(row, 4).setCheckState(
+                            Qt.CheckState.Checked
+                        )
+                        IsChecked = True
                     else:
                         TableCell.setCheckState(Qt.CheckState.Unchecked)
+        # If the selected cell is in the last column and is unchecked,
+        # the command will be disabled and all cells needs to be unchecked
+        if (
+            column == 4
+            and self.form.CommandTable_RD.item(row, column).checkState()
+            == Qt.CheckState.Unchecked
+        ):
+            for i4 in range(1, self.form.CommandTable_RD.columnCount() - 1):
+                self.form.CommandTable_RD.item(row, i4).setCheckState(
+                    Qt.CheckState.Unchecked
+                )
+        # If nothing is checked, the command is disabled. Set the last cell accordingly
+        if IsChecked is False:
+            self.form.CommandTable_RD.item(row, 4).setCheckState(
+                Qt.CheckState.Unchecked
+            )
 
         # Update the data
         self.UpdateData()
@@ -3346,6 +3440,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Fill the Workbenches available, selected and workbench list
         self.form.WorkbenchList_IS.clear()
+        self.form.ImportWorkbenchSelector_IS.clear()
         self.form.WorkbenchList_RD.clear()
         self.form.WorkbenchesAvailable_IW.clear()
         self.form.WorkbenchesSelected_IW.clear()
@@ -3432,6 +3527,11 @@ class LoadDialog(Design_ui.Ui_Form):
                     )
 
                 # Add the ListWidgetItem also to the categoryListWidgets
+                self.form.ImportWorkbenchSelector_IS.addItem(
+                    Icon,
+                    WorkbenchTitle,
+                    workbench,
+                )
                 self.form.ListCategory_QC.addItem(
                     Icon,
                     WorkbenchTitle,
@@ -3731,7 +3831,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         Qt.ItemDataRole.UserRole
                     )
                     # create a empty size string
-                    Size = "small"
+                    Size = ""
                     # Define empty strings for the command name and icon name
                     CommandName = ""
                     IconName = ""
@@ -3777,6 +3877,8 @@ class LoadDialog(Design_ui.Ui_Form):
                                 Size = "medium"
                             if i6 == 3:
                                 Size = "large"
+                        if i6 == 4 and CheckState == Qt.CheckState.Unchecked:
+                            Size = "none"
 
                     Order = []
                     for i7 in range(1, self.form.CommandTable_RD.rowCount()):

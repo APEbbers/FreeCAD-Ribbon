@@ -148,7 +148,10 @@ def RestartDialog(message="", includeIcons=False):
 
     # Set the message
     if message == "":
-        message = "You must restart FreeCAD for changes to take effect."
+        message = translate(
+            "FreeCAD Ribbon",
+            "You must restart FreeCAD for changes to take effect.",
+        )
 
     # Set the messagebox
     msgBox = QMessageBox()
@@ -158,8 +161,8 @@ def RestartDialog(message="", includeIcons=False):
     # Set the buttons and default button
     msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
     msgBox.setDefaultButton(QMessageBox.No)
-    msgBox.button(QMessageBox.Yes).setText("Restart now")
-    msgBox.button(QMessageBox.No).setText("Restart later")
+    msgBox.button(QMessageBox.Yes).setText(translate("FreeCAD Ribbon", "Restart now"))
+    msgBox.button(QMessageBox.No).setText(translate("FreeCAD Ribbon", "Restart later"))
     if includeIcons is True:
         msgBox.button(QMessageBox.No).setIcon(Gui.getIcon("edit_Cancel.svg"))
         msgBox.button(QMessageBox.Yes).setIcon(Gui.getIcon("edit_OK.svg"))
@@ -234,7 +237,7 @@ def GetNumberFromLetter(Letter):
     return number
 
 
-def ColorConvertor(ColorRGB: [], Alpha: float = 1) -> ():
+def ColorConvertor(ColorRGB: [], Alpha: float = 1, Hex=False, KeepHexAlpha=True):
     """
     A single function to convert colors to rgba colors as a tuple of float from 0-1
     ColorRGB:   [255,255,255]
@@ -249,6 +252,8 @@ def ColorConvertor(ColorRGB: [], Alpha: float = 1) -> ():
     color = (ColorRed, colorGreen, colorBlue)
 
     result = mcolors.to_rgba(color, Alpha)
+    if Hex is True:
+        result = mcolors.to_hex((ColorRed, colorGreen, colorBlue, Alpha), KeepHexAlpha)
 
     return result
 
@@ -696,3 +701,40 @@ def CorrectGetToolbarItems(ToolbarItems: dict):
             ToolbarItems.update({"Structure": newCommands})
 
     return ToolbarItems
+
+
+def ShortCutTaken(ShortCut: str):
+    ListWithCommands = Gui.Command.listByShortcut(ShortCut)
+
+    if len(ListWithCommands) > 0:
+        return True
+    return False
+
+
+def ReturnWrappedText(text: str, max_length: int = 50, max_Lines=0, returnList=False):
+    import textwrap
+
+    result = ""
+
+    # Wrap the text as list
+    wrapped_text = textwrap.wrap(text=text, width=max_length)
+
+    # remove spaces at the end of each line
+    for line in wrapped_text:
+        line = textwrap.dedent(line)
+
+    # remove any line that is more then allowed
+    if max_Lines > 0 and len(wrapped_text) > max_Lines:
+        for i in range(max_Lines, len(wrapped_text)):
+            try:
+                wrapped_text.pop(i)
+            except Exception:
+                continue
+
+    # return the desired result
+    if returnList is False:
+        result = "\n".join(wrapped_text)
+    else:
+        result = wrapped_text
+
+    return result

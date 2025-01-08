@@ -51,10 +51,10 @@ class RibbonSeparator(QFrame):
         self._orientation = orientation
         if orientation == Qt.Orientation.Horizontal:
             self.setFixedHeight(width)
-            self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)  # type: ignore
+            self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)  # type: ignore
         else:
             self.setFixedWidth(width)
-            self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)  # type: ignore
+            self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)  # type: ignore
 
     def sizeHint(self) -> QSize:
         """Return the size hint."""

@@ -56,7 +56,7 @@ sys.path.append(pathUI)
 sys.path.append(pathBackup)
 
 
-def ReturnStyleItem(ControlName):
+def ReturnStyleItem(ControlName, ShowCustomIcon=False):
     """
     Enter one of the names below:
 
@@ -96,29 +96,56 @@ def ReturnStyleItem(ControlName):
 
     try:
         if isIcon is True:
-            PixmapName = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
-            if PixmapName == "":
-                PixmapName = StyleMapping["Stylesheets"][""][ControlName]
-            pixmap = QPixmap(os.path.join(pathIcons, PixmapName))
+            PixmapName = ""
+            if Parameters_Ribbon.CUSTOM_ICONS_ENABLED is True or ShowCustomIcon is True:
+                PixmapName = StyleMapping["Stylesheets"][ControlName]
+            else:
+                PixmapName = ""
+            if PixmapName == "" or PixmapName is None:
+                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][
+                    ControlName
+                ]
+                if PixmapName == "" or PixmapName is None:
+                    PixmapName = StyleMapping_default["Stylesheets"][""][ControlName]
+            if os.path.exists(PixmapName):
+                pixmap = QPixmap(PixmapName)
+            else:
+                pixmap = QPixmap(os.path.join(pathIcons, PixmapName))
             result = QIcon()
             result.addPixmap(pixmap)
             return result
         if isIcon is False:
-            result = StyleMapping["Stylesheets"][currentStyleSheet][ControlName]
-            if result == "":
-                result = StyleMapping["Stylesheets"][""][ControlName]
+            result = ""
+
+            if Parameters_Ribbon.CUSTOM_COLORS_ENABLED is True:
+                result = StyleMapping["Stylesheets"][ControlName]
+            if (
+                Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED is False
+                and Parameters_Ribbon.USE_FC_OVERLAY is True
+                and ControlName == "Background_Color"
+            ):
+                result = "none"
+            if result == "" or result is None:
+                result = StyleMapping_default["Stylesheets"][currentStyleSheet][
+                    ControlName
+                ]
+                if result == "" or result is None:
+                    result = StyleMapping_default["Stylesheets"][""][ControlName]
             return result
     except Exception:
         return None
 
 
-def ReturnStyleSheet(control, radius="2px", padding_right="0px", width="15px"):
+def ReturnStyleSheet(
+    control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"
+):
     """
     Enter one of the names below:
 
     control (string):
-        "toolbutton,
-        "applicationbutton,
+        toolbutton,
+        toolbuttonLarge,
+        applicationbutton,
     """
     StyleSheet = ""
     try:
@@ -127,11 +154,6 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", width="15px"):
         ApplicationButton = ReturnStyleItem("ApplicationButton_Background")
         HoverColor = ReturnStyleItem("Background_Color_Hover")
 
-        # AppColor_1 = ApplicationButton
-        # AppColor_2 = BackgroundColor
-        # AppColor_3 = BackgroundColor
-        # AppBorder_1 = "transparant"
-        # AppBorder_2 = BorderColor
         AppColor_1 = ApplicationButton
         AppColor_2 = ApplicationButton
         AppColor_3 = ApplicationButton
@@ -139,32 +161,49 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", width="15px"):
         AppBorder_2 = BorderColor
         if BackgroundColor is not None and BorderColor is not None:
             if control.lower() == "toolbutton":
+                if Parameters_Ribbon.BORDER_TRANSPARANT is True:
+                    BorderColor = BackgroundColor
                 StyleSheet = (
-                    """QToolButton {
-                            padding-right: """
+                    """QLayout {spacing: 0px}"""
+                    + """QToolButton, QTextEdit {
+                        margin: 0px;
+                        padding: 0px;
+                        background: """
+                    + BackgroundColor
+                    + """;padding-bottom: """
+                    + padding_bottom
+                    + """;padding-right: """
                     + padding_right
-                    + """;}"""
+                    + """;padding-left: 0px;
+                    spacing: 0px;}"""
                     + """QToolButton::menu-arrow {
-                        width: 10px;
-                        height:24px;
                         subcontrol-origin: padding;
                         subcontrol-position: center right;
                     }"""
                     + """QToolButton::menu-button {
+                        margin: 0px;
+                        padding: 0px;
                         width: """
                     + width
                     + """;
-                        border-radius: 2px;
-                        padding: 1px;
-                        border-radius: 2px;
+                        border-radius: """
+                    + radius
+                    + """px;"""
+                    + """padding: 0px;
                         subcontrol-origin: padding;
                         subcontrol-position: center right;
                     }"""
-                    + """QToolButton:hover {
-                            background: """
+                    + """QToolButton:hover, QTextEdit:hover {
+                        margin: 0px 0px 0px 0px;
+                        padding: 0px;
+                        border: none;
+                        background: """
                     + HoverColor
-                    + """;
-                    border: 0.5px solid"""
+                    + """;padding-bottom: """
+                    + padding_bottom
+                    + """;padding-right: """
+                    + padding_right
+                    + """;border: 0.5px solid"""
                     + BorderColor
                     + """;}"""
                 )
@@ -172,29 +211,21 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", width="15px"):
             if control.lower() == "applicationbutton":
                 StyleSheet = (
                     """QToolButton {
-                            padding: 7px;
-                            border-radius : """
+                        border-radius : """
                     + radius
-                    + """;
-                    border: 0.5px solid"""
-                    + AppBorder_1
-                    + """;
-                    background: qradialgradient(spread:pad, cx:0.5, cy:0.5, radius:0.5, fx:0.5, fy:0.5, stop:0 """
+                    + """;padding-right: """
+                    + padding_right
+                    + """;background-color: """
                     + AppColor_1
-                    + """, stop:0.9 """
-                    + AppColor_2
-                    + """, stop:1 """
-                    + AppColor_3
-                    + """)
-                    ;}"""
-                    + """QToolButton:hover {
-                            border-radius : """
+                    + """;border: 0.5px solid"""
+                    + BorderColor
+                    + """;}"""
+                    + """QToolButton:hover { """
+                    + """border: 2px solid"""
+                    + BorderColor
+                    + """;border-radius : """
                     + radius
-                    + """;
-                    border: 3px solid"""
-                    + AppBorder_2
-                    + """;
-                    }"""
+                    + """;}"""
                 )
 
             return StyleSheet
@@ -204,6 +235,23 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", width="15px"):
 
 
 StyleMapping = {
+    "Stylesheets": {
+        "Background_Color": "",
+        "Background_Color_Hover": Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
+        "Border_Color": Parameters_Ribbon.COLOR_BORDERS,
+        "ApplicationButton_Background": Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND,
+        "ScrollLeftButton_Tab": Parameters_Ribbon.SCROLL_LEFT_BUTTON_TAB,
+        "ScrollRightButton_Tab": Parameters_Ribbon.SCROLL_RIGHT_BUTTON_TAB,
+        "ScrollLeftButton_Category": Parameters_Ribbon.SCROLL_LEFT_BUTTON_CATEGORY,
+        "ScrollRightButton_Category": Parameters_Ribbon.SCROLL_RIGHT_BUTTON_CATEGORY,
+        "OptionButton": Parameters_Ribbon.OPTION_BUTTON,
+        "PinButton_open": Parameters_Ribbon.PIN_BUTTON_OPEN,
+        "PinButton_closed": Parameters_Ribbon.PIN_BUTTON_CLOSED,
+    }
+}
+
+
+StyleMapping_default = {
     "Stylesheets": {
         "": {
             "Background_Color": "#f0f0f0",
@@ -215,40 +263,34 @@ StyleMapping = {
             "ScrollLeftButton_Category": "",
             "ScrollRightButton_Category": "",
             "OptionButton": "more_default.svg",
-            "PinButton_open": "pin-icon-default.svg",
+            "PinButton_open": "pin-icon-open.svg",
             "PinButton_closed": "pin-icon-default.svg",
-            "collapseRibbonButton_up": "",
-            "collapseRibbonButton_down": "",
         },
         "FreeCAD Dark.qss": {
             "Background_Color": "#333333",
-            "Background_Color_Hover": "#444444",
+            "Background_Color_Hover": "#48a0f8",
             "Border_Color": "#ffffff",
-            "ApplicationButton_Background": "#2a2a2a",
+            "ApplicationButton_Background": "#48a0f8",
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",
             "ScrollRightButton_Tab": "forward_small_default_white.svg",
             "ScrollLeftButton_Category": "backward_default_white.svg",
             "ScrollRightButton_Category": "forward_default_white.svg",
             "OptionButton": "more_default_white.svg",
-            "PinButton_open": "pin-icon-default_white.svg",
+            "PinButton_open": "pin-icon-open_white.svg",
             "PinButton_closed": "pin-icon-default_white.svg",
-            "collapseRibbonButton_up": "",
-            "collapseRibbonButton_down": "",
         },
         "FreeCAD Light.qss": {
             "Background_Color": "#f0f0f0",
-            "Background_Color_Hover": "#ced4da",
+            "Background_Color_Hover": "#48a0f8",
             "Border_Color": "#646464",
-            "ApplicationButton_Background": "#e0e0e0",
+            "ApplicationButton_Background": "#48a0f8",
             "ScrollLeftButton_Tab": "backward_small_default.svg",
             "ScrollRightButton_Tab": "forward_small_default.svg",
             "ScrollLeftButton_Category": "backward_default.svg",
             "ScrollRightButton_Category": "forward_default.svg",
             "OptionButton": "more_default.svg",
-            "PinButton_open": "pin-icon-default.svg",
+            "PinButton_open": "pin-icon-open.svg",
             "PinButton_closed": "pin-icon-default.svg",
-            "collapseRibbonButton_up": "",
-            "collapseRibbonButton_down": "",
         },
         "OpenLight.qss": {
             "Background_Color": "#dee2e6",
@@ -262,8 +304,6 @@ StyleMapping = {
             "OptionButton": "more_1.svg",
             "PinButton_open": "pin-icon-open_1.svg",
             "PinButton_closed": "pin-icon-closed_1.svg",
-            "collapseRibbonButton_up": "",
-            "collapseRibbonButton_down": "",
         },
         "OpenDark.qss": {
             "Background_Color": "#212529",
@@ -275,10 +315,8 @@ StyleMapping = {
             "ScrollLeftButton_Category": "backward_default_white.svg",
             "ScrollRightButton_Category": "forward_default_white.svg",
             "OptionButton": "more_default_white.svg",
-            "PinButton_open": "pin-icon-default_white.svg",
+            "PinButton_open": "pin-icon-open_white.svg",
             "PinButton_closed": "pin-icon-default_white.svg",
-            "collapseRibbonButton_up": "",
-            "collapseRibbonButton_down": "",
         },
     }
 }

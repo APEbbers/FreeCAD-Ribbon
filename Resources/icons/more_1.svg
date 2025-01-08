@@ -3,12 +3,12 @@
 
 <svg
    width="64"
-   height="64"
-   viewBox="0 0 64 64"
+   height="32"
+   viewBox="0 0 64 32"
    version="1.1"
    id="svg1"
-   inkscape:version="1.4 (e7c3feb100, 2024-10-09)"
-   sodipodi:docname="more.svg"
+   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+   sodipodi:docname="more_1.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -30,13 +30,13 @@
      inkscape:deskcolor="#191919"
      inkscape:document-units="px"
      showgrid="true"
-     inkscape:zoom="5.656854"
-     inkscape:cx="11.844039"
-     inkscape:cy="35.443729"
-     inkscape:window-width="1894"
-     inkscape:window-height="999"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:zoom="11.313708"
+     inkscape:cx="30.05204"
+     inkscape:cy="30.361399"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg1"
      showguides="true"
@@ -60,45 +60,53 @@
        enabled="true"
        visible="true" />
     <sodipodi:guide
-       position="-2,62"
+       position="-2,46"
        orientation="0,1"
        id="guide5"
        inkscape:locked="false"
        inkscape:label="top margin"
        inkscape:color="rgb(255,255,0)" />
     <sodipodi:guide
-       position="64,2"
+       position="64,-14"
        orientation="0,1"
        id="guide6"
        inkscape:locked="false"
        inkscape:label="bottom margin"
        inkscape:color="rgb(255,255,0)" />
     <sodipodi:guide
-       position="2,-2"
+       position="2,-18"
        orientation="-1,0"
        id="guide7"
        inkscape:locked="false"
        inkscape:label="right margin"
        inkscape:color="rgb(255,255,0)" />
     <sodipodi:guide
-       position="62,64"
+       position="62,48"
        orientation="-1,0"
        id="guide8"
        inkscape:locked="false"
        inkscape:label="left margin"
        inkscape:color="rgb(255,255,0)" />
     <sodipodi:guide
-       position="64,64"
+       position="64,48"
        orientation="0.70710678,-0.70710678"
        id="guide1"
        inkscape:locked="false" />
     <sodipodi:guide
-       position="0,64"
+       position="0,48"
        orientation="0.70710678,0.70710678"
        id="guide2"
        inkscape:label=""
        inkscape:locked="false"
        inkscape:color="rgb(255,255,0)" />
+    <inkscape:page
+       x="0"
+       y="0"
+       width="64"
+       height="32"
+       id="page1"
+       margin="0 0 22"
+       bleed="0" />
   </sodipodi:namedview>
   <defs
      id="defs1">
@@ -188,46 +196,51 @@
     </rdf:RDF>
   </metadata>
   <g
-     id="g28"
-     inkscape:label="Down arrow"
-     transform="translate(0.00390625,7.7519531)">
-    <path
-       d="M 23.199898,40.848327 5.5999492,23.248378 14.400051,14.448277 32,32 49.599949,14.400051 58.400051,23.200152 40.800102,40.800101 32,49.686502 Z"
-       fill-rule="evenodd"
-       stroke="#a40000"
-       stroke-width="3.80732"
-       fill="#cc0000"
-       id="path6"
-       inkscape:label="down"
-       style="display:inline;fill:#729fcf;stroke:#204a87;stroke-width:2;stroke-dasharray:none"
-       sodipodi:nodetypes="ccccccccc" />
-    <path
-       id="path7"
-       style="display:inline;fill:url(#linearGradient28);stroke:none;stroke-width:2;stroke-dasharray:none;stroke-opacity:1"
-       inkscape:label="gradient"
-       sodipodi:type="inkscape:offset"
-       inkscape:radius="-2.421875"
-       inkscape:original="M 49.599609 14.400391 L 32 32 L 14.400391 14.449219 L 5.5996094 23.248047 L 23.199219 40.847656 L 32 49.685547 L 40.800781 40.800781 L 58.400391 23.199219 L 49.599609 14.400391 z "
-       d="M 49.599609,17.826172 33.712891,33.712891 a 2.4221172,2.4221172 0 0 1 -3.423829,0.002 L 14.402344,17.871094 9.0253906,23.248047 24.912109,39.134766 a 2.4221172,2.4221172 0 0 1 0.0039,0.0039 l 7.080078,7.109375 7.083984,-7.152344 a 2.4221172,2.4221172 0 0 1 0.0078,-0.0078 L 54.974609,23.199219 Z" />
-  </g>
-  <g
-     id="g5"
-     inkscape:label="Bar">
-    <rect
-       style="fill:#729fcf;stroke:#204a87;stroke-width:2"
-       id="rect1"
-       width="56"
-       height="8"
-       x="4"
-       y="8"
-       ry="0" />
-    <path
-       id="rect2"
-       style="fill:url(#linearGradient5);fill-opacity:1;stroke:none;stroke-width:2"
-       sodipodi:type="inkscape:offset"
-       inkscape:radius="-2.762136"
-       inkscape:original="M 4.0214844 8 C 4.0092426 8 4 8.0092426 4 8.0214844 L 4 15.978516 C 4 15.990757 4.0092426 16 4.0214844 16 L 59.978516 16 C 59.990757 16 60 15.990757 60 15.978516 L 60 8.0214844 C 60 8.0092426 59.990757 8 59.978516 8 L 4.0214844 8 z "
-       d="m 6.7617187,10.761719 v 2.476562 H 57.238281 v -2.476562 z"
-       inkscape:label="gradient" />
+     id="g1"
+     transform="translate(0,-3.748586)">
+    <g
+       id="g28"
+       inkscape:label="Down arrow"
+       transform="matrix(1.0434946,0,0,0.4018827,-1.3657079,12.057974)">
+      <path
+         d="M 23.199898,40.848327 5.5999492,23.248378 8.9753295,9.808898 32,32 54.974609,9.808898 58.400051,23.200152 40.800102,40.800101 32,49.686502 Z"
+         fill-rule="evenodd"
+         stroke="#a40000"
+         stroke-width="3.80732"
+         fill="#cc0000"
+         id="path6"
+         inkscape:label="down"
+         style="display:inline;fill:#729fcf;stroke:#204a87;stroke-width:2;stroke-dasharray:none"
+         sodipodi:nodetypes="ccccccccc" />
+      <path
+         id="path7"
+         style="display:inline;fill:url(#linearGradient28);stroke:none;stroke-width:2;stroke-dasharray:none;stroke-opacity:1"
+         inkscape:label="gradient"
+         sodipodi:type="inkscape:offset"
+         inkscape:radius="-2.421875"
+         inkscape:original="M 49.599609 14.400391 L 32 32 L 14.400391 14.449219 L 5.5996094 23.248047 L 23.199219 40.847656 L 32 49.685547 L 40.800781 40.800781 L 58.400391 23.199219 L 49.599609 14.400391 z "
+         d="M 49.599609,17.826172 33.712891,33.712891 a 2.4221172,2.4221172 0 0 1 -3.423829,0.002 L 14.402344,17.871094 9.0253906,23.248047 24.912109,39.134766 a 2.4221172,2.4221172 0 0 1 0.0039,0.0039 l 7.080078,7.109375 7.083984,-7.152344 a 2.4221172,2.4221172 0 0 1 0.0078,-0.0078 L 54.974609,23.199219 Z" />
+    </g>
+    <g
+       id="g5"
+       inkscape:label="Bar"
+       transform="matrix(1,0,0,0.74012066,0,1.7198498)">
+      <rect
+         style="fill:#729fcf;stroke:#204a87;stroke-width:2"
+         id="rect1"
+         width="56"
+         height="8"
+         x="4"
+         y="8"
+         ry="0" />
+      <path
+         id="rect2"
+         style="fill:url(#linearGradient5);fill-opacity:1;stroke:none;stroke-width:2"
+         sodipodi:type="inkscape:offset"
+         inkscape:radius="-2.762136"
+         inkscape:original="M 4.0214844 8 C 4.0092426 8 4 8.0092426 4 8.0214844 L 4 15.978516 C 4 15.990757 4.0092426 16 4.0214844 16 L 59.978516 16 C 59.990757 16 60 15.990757 60 15.978516 L 60 8.0214844 C 60 8.0092426 59.990757 8 59.978516 8 L 4.0214844 8 z "
+         d="m 6.7617187,10.761719 v 2.476562 H 57.238281 v -2.476562 z"
+         inkscape:label="gradient" />
+    </g>
   </g>
 </svg>

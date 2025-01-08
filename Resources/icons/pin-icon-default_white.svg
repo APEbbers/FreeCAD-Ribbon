@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+
 <svg
-   width="24"
-   height="24"
-   viewBox="0 0 24 24"
+   fill="#000000"
+   width="64"
+   height="64"
+   viewBox="0 0 153.6 153.6"
    version="1.1"
    id="svg1"
    sodipodi:docname="pin-icon-default_white.svg"
@@ -22,21 +25,19 @@
      inkscape:pageopacity="0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
-     inkscape:zoom="34.559844"
-     inkscape:cx="12.442186"
-     inkscape:cy="13.180036"
-     inkscape:window-width="3440"
-     inkscape:window-height="1369"
+     inkscape:zoom="8"
+     inkscape:cx="44.3125"
+     inkscape:cy="44.0625"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg1" />
   <path
-     d="M 12.942541,6 18,10.203377 l -0.902026,0.942696 -1.462505,-0.369327 -2.255063,2.356741 0.164198,2.675058 -1.353039,1.414044 L 9.6628362,15.120901 7.8587847,17.006293 6,18 6.8472926,16.165618 8.6513445,14.280225 6.1226143,12.178537 7.475653,10.764492 10.345929,10.611461 12.600994,8.2547202 12.040514,6.9426964 Z"
+     d="M 96.286398,7.4880002 83.935406,19.165589 c -4.472174,4.23119 -5.106828,11.195081 -2.056602,16.468657 L 59.450089,56.854731 c -0.306155,0.281524 -0.496354,0.640371 -0.70212,0.989401 -9.966925,-5.29611 -22.722169,-4.158695 -31.325181,3.972669 l -7.26607,6.874792 27.243993,33.387927 -38.5454566,36.46895 c -1.6690272,1.57102 -1.8328799,4.30234 -0.365408,6.09155 0.7255365,0.89828 1.7244396,1.39175 2.7485876,1.463 1.024153,0.0712 2.07371,-0.27976 2.908488,-1.06957 l 38.545383,-36.46896 27.244501,33.37937 7.266145,-6.8747 c 5.630063,-5.31859 8.996875,-12.6895 9.480652,-20.75408 0.252231,-4.20455 -0.336432,-8.32055 -1.624386,-12.16511 0.192755,-0.13369 0.414012,-0.20487 0.592849,-0.37406 L 118.33638,80.313599 c 1.98478,1.738737 4.2671,2.935722 6.70756,3.105464 3.07259,0.213721 6.22914,-0.838612 8.71643,-3.191981 L 146.112,68.540952 Z"
+     fill-rule="evenodd"
      id="path1"
-     inkscape:label="path1"
-     sodipodi:nodetypes="cccccccccccccccccc"
-     inkscape:transform-center-x="-0.81801663"
-     inkscape:transform-center-y="-0.20674729"
-     style="stroke-width:0.65419;fill:#ffffff" />
+     style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.0737288;stroke-dasharray:none"
+     sodipodi:nodetypes="ccccccccccsccccscccsccc" />
 </svg>

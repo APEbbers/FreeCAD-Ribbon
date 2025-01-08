@@ -116,18 +116,44 @@ class Settings:
         Settings.SetBoolSetting("ShowIconText_Small", SHOW_ICON_TEXT_SMALL)
         Settings.SetBoolSetting("ShowIconText_Medium", SHOW_ICON_TEXT_MEDIUM)
         Settings.SetBoolSetting("ShowIconText_Large", SHOW_ICON_TEXT_LARGE)
+        Settings.SetBoolSetting("WrapText_Medium", WRAPTEXT_MEDIUM)
+        Settings.SetBoolSetting("WrapText_Large", WRAPTEXT_LARGE)
 
         Settings.SetBoolSetting("ShowOnHover", SHOW_ON_HOVER)
         Settings.SetIntSetting("TabBar_Scroll", TABBAR_SCROLLSPEED)
         Settings.SetIntSetting("Ribbon_Scroll", RIBBON_SCROLLSPEED)
         Settings.SetIntSetting("TabBar_Click", TABBAR_CLICKSPEED)
         Settings.SetIntSetting("Ribbon_Click", RIBBON_CLICKSPEED)
+        Settings.SetStringSetting("Shortcut_Application", SHORTCUT_APPLICATION)
 
         Settings.SetIntSetting("Preferred_view", PREFERRED_VIEW)
         Settings.SetBoolSetting("UseToolsPanel", USE_TOOLSPANEL)
         Settings.SetBoolSetting("UseFCOverlay", USE_FC_OVERLAY)
+        Settings.SetBoolSetting("UseButtonBackGround", BUTTON_BACKGROUND_ENABLED)
 
         Settings.SetBoolSetting("DebugMode", DEBUG_MODE)
+
+        Settings.SetBoolSetting("CustomIcons", CUSTOM_ICONS_ENABLED)
+        Settings.SetStringSetting("ScrollLeftButton_Tab", SCROLL_LEFT_BUTTON_TAB)
+        Settings.SetStringSetting("ScrollRightButton_Tab", SCROLL_RIGHT_BUTTON_TAB)
+        Settings.SetStringSetting(
+            "ScrollLeftButton_Category", SCROLL_LEFT_BUTTON_CATEGORY
+        )
+        Settings.SetStringSetting(
+            "ScrollRightButton_Category", SCROLL_RIGHT_BUTTON_CATEGORY
+        )
+        Settings.SetStringSetting("OptionButton", OPTION_BUTTON)
+        Settings.SetStringSetting("PinButton_open", PIN_BUTTON_OPEN)
+        Settings.SetStringSetting("PinButton_closed", PIN_BUTTON_CLOSED)
+
+        Settings.SetBoolSetting("CustomColors", CUSTOM_COLORS_ENABLED)
+        Settings.SetStringSetting("Color_Borders", COLOR_BORDERS)
+        Settings.SetBoolSetting("BorderTransparant", BORDER_TRANSPARANT)
+        # Settings.SetStringSetting("Color_Background", COLOR_BACKGROUND)
+        Settings.SetStringSetting("Color_Background_Hover", COLOR_BACKGROUND_HOVER)
+        Settings.SetStringSetting(
+            "Color_Background_App", COLOR_APPLICATION_BUTTON_BACKGROUND
+        )
 
 
 # region - Define the resources ----------------------------------------------------------------------------------------
@@ -144,8 +170,8 @@ DefaultSettings = {
     "RibbonStructure": os.path.join(os.path.dirname(__file__), "RibbonStructure.json"),
     "TabBar_Style": int(0),
     "IconSize_Small": int(24),
-    "IconSize_Medium": int(32),
-    "IconSize_Large": int(50),
+    "IconSize_Medium": int(36),
+    "IconSize_Large": int(72),
     "ApplicationButtonSize": int(40),
     "QuickAccessButtonSize": int(24),
     "TabBarSize": int(24),
@@ -159,7 +185,7 @@ DefaultSettings = {
     "Stylesheet": os.path.join(os.path.join(STYLESHEET_LOCATION, "default.qss")),
     "ShowIconText_Small": bool(False),
     "ShowIconText_Medium": bool(False),
-    "ShowIconText_Large": bool(False),
+    "ShowIconText_Large": bool(True),
     "MaxColumnsPerPanel": int(6),
     "DebugMode": bool(False),
     "ShowOnHover": bool(False),
@@ -169,7 +195,25 @@ DefaultSettings = {
     "Ribbon_Click": int(1),
     "Preferred_view": int(2),
     "UseToolsPanel": bool(True),
+    "WrapText_Medium": bool(True),
+    "WrapText_Large": bool(True),
     "UseFCOverlay": bool(False),
+    "UseButtonBackGround": bool(True),
+    "CustomColors": bool(False),
+    "BorderTransparant": bool(True),
+    "Color_Borders": "",
+    # "Color_Background": "",
+    "Color_Background_Hover": "",
+    "Color_Background_App": "",
+    "CustomIcons": bool(False),
+    "ScrollLeftButton_Tab": "",
+    "ScrollRightButton_Tab": "",
+    "ScrollLeftButton_Category": "",
+    "ScrollRightButton_Category": "",
+    "OptionButton": "",
+    "PinButton_open": "",
+    "PinButton_closed": "",
+    "Shortcut_Application": "Alt+A",
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
@@ -309,6 +353,16 @@ MAX_COLUMN_PANELS = Settings.GetIntSetting("MaxColumnsPerPanel")
 if Settings.GetIntSetting("MaxColumnsPerPanel") is None:
     MAX_COLUMN_PANELS = DefaultSettings["MaxColumnsPerPanel"]
     Settings.SetIntSetting("MaxColumnsPerPanel", MAX_COLUMN_PANELS)
+
+WRAPTEXT_MEDIUM = Settings.GetBoolSetting("WrapText_Medium")
+if Settings.GetBoolSetting("WrapText_Medium") == "":
+    WRAPTEXT_MEDIUM = DefaultSettings["WrapText_Medium"]
+    Settings.SetBoolSetting("WrapText_Medium", WRAPTEXT_MEDIUM)
+
+WRAPTEXT_LARGE = Settings.GetBoolSetting("WrapText_Large")
+if Settings.GetBoolSetting("WrapText_Large") == "":
+    WRAPTEXT_LARGE = DefaultSettings["WrapText_Large"]
+    Settings.SetBoolSetting("WrapText_Large", WRAPTEXT_LARGE)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Get the Debug Mode ------------------------------------------------------------------------------------------
@@ -355,6 +409,12 @@ if (
 ):
     RIBBON_CLICKSPEED = DefaultSettings["Ribbon_Click"]
     Settings.SetIntSetting("Ribbon_Click", RIBBON_CLICKSPEED)
+
+SHORTCUT_APPLICATION = Settings.GetStringSetting("Shortcut_Application")
+if Settings.GetStringSetting("Shortcut_Application") == "":
+    SHORTCUT_APPLICATION = DefaultSettings["Shortcut_Application"]
+    Settings.SetStringSetting("Shortcut_Application", SHORTCUT_APPLICATION)
+
 # endregion ------------------------------------------------------------------------------------------------------------
 
 
@@ -376,4 +436,86 @@ USE_FC_OVERLAY = Settings.GetBoolSetting("UseFCOverlay")
 if Settings.GetBoolSetting("UseFCOverlay") is None:
     USE_FC_OVERLAY = DefaultSettings["UseFCOverlay"]
     Settings.SetBoolSetting("UseFCOverlay", USE_FC_OVERLAY)
+
+BUTTON_BACKGROUND_ENABLED = Settings.GetBoolSetting("UseButtonBackGround")
+if Settings.GetBoolSetting("UseButtonBackGround") is None:
+    BUTTON_BACKGROUND_ENABLED = DefaultSettings["UseButtonBackGround"]
+    Settings.SetBoolSetting("UseButtonBackGround", BUTTON_BACKGROUND_ENABLED)
+# endregion ------------------------------------------------------------------------------------------------------------
+
+# region - Color and icon settings -------------------------------------------------------------------------------------
+CUSTOM_ICONS_ENABLED = Settings.GetBoolSetting("CustomIcons")
+if Settings.GetBoolSetting("CustomIcons") is None:
+    CUSTOM_ICONS_ENABLED = DefaultSettings["CustomIcons"]
+    Settings.SetBoolSetting("CustomIcons", CUSTOM_ICONS_ENABLED)
+
+SCROLL_LEFT_BUTTON_TAB = Settings.GetStringSetting("ScrollLeftButton_Tab")
+if Settings.GetStringSetting("ScrollLeftButton_Tab") == "":
+    SCROLL_LEFT_BUTTON_TAB = DefaultSettings["ScrollLeftButton_Tab"]
+    Settings.SetStringSetting("ScrollLeftButton_Tab", SCROLL_LEFT_BUTTON_TAB)
+
+SCROLL_RIGHT_BUTTON_TAB = Settings.GetStringSetting("ScrollRightButton_Tab")
+if Settings.GetStringSetting("ScrollRightButton_Tab") == "":
+    SCROLL_RIGHT_BUTTON_TAB = DefaultSettings["ScrollRightButton_Tab"]
+    Settings.SetStringSetting("ScrollRightButton_Tab", SCROLL_RIGHT_BUTTON_TAB)
+
+SCROLL_LEFT_BUTTON_CATEGORY = Settings.GetStringSetting("ScrollLeftButton_Category")
+if Settings.GetStringSetting("ScrollLeftButton_Category") == "":
+    SCROLL_LEFT_BUTTON_CATEGORY = DefaultSettings["ScrollLeftButton_Category"]
+    Settings.SetStringSetting("ScrollLeftButton_Category", SCROLL_LEFT_BUTTON_CATEGORY)
+
+SCROLL_RIGHT_BUTTON_CATEGORY = Settings.GetStringSetting("ScrollRightButton_Category")
+if Settings.GetStringSetting("ScrollRightButton_Category") == "":
+    SCROLL_RIGHT_BUTTON_CATEGORY = DefaultSettings["ScrollRightButton_Category"]
+    Settings.SetStringSetting(
+        "ScrollRightButton_Category", SCROLL_RIGHT_BUTTON_CATEGORY
+    )
+
+OPTION_BUTTON = Settings.GetStringSetting("OptionButton")
+if Settings.GetStringSetting("OptionButton") == "":
+    OPTION_BUTTON = DefaultSettings["OptionButton"]
+    Settings.SetStringSetting("OptionButton", OPTION_BUTTON)
+
+PIN_BUTTON_OPEN = Settings.GetStringSetting("PinButton_open")
+if Settings.GetStringSetting("PinButton_open") == "":
+    PIN_BUTTON_OPEN = DefaultSettings["PinButton_open"]
+    Settings.SetStringSetting("PinButton_open", PIN_BUTTON_OPEN)
+
+PIN_BUTTON_CLOSED = Settings.GetStringSetting("PinButton_closed")
+if Settings.GetStringSetting("PinButton_closed") == "":
+    PIN_BUTTON_CLOSED = DefaultSettings["PinButton_closed"]
+    Settings.SetStringSetting("PinButton_closed", PIN_BUTTON_CLOSED)
+
+CUSTOM_COLORS_ENABLED = Settings.GetBoolSetting("CustomColors")
+if Settings.GetBoolSetting("CustomColors") is None:
+    CUSTOM_COLORS_ENABLED = DefaultSettings["CustomColors"]
+    Settings.SetBoolSetting("CustomColors", CUSTOM_COLORS_ENABLED)
+
+BORDER_TRANSPARANT = Settings.GetBoolSetting("BorderTransparant")
+if Settings.GetBoolSetting("BorderTransparant") is None:
+    BORDER_TRANSPARANT = DefaultSettings["BorderTransparant"]
+    Settings.SetBoolSetting("BorderTransparant", BORDER_TRANSPARANT)
+
+COLOR_BORDERS = Settings.GetStringSetting("Color_Borders")
+if Settings.GetStringSetting("Color_Borders") == "":
+    COLOR_BORDERS = DefaultSettings["Color_Borders"]
+    Settings.SetStringSetting("Color_Borders", COLOR_BORDERS)
+
+# COLOR_BACKGROUND = Settings.GetStringSetting("Color_Background")
+# if Settings.GetStringSetting("Color_Background") == "":
+#     COLOR_BACKGROUND = DefaultSettings["Color_Background"]
+#     Settings.SetStringSetting("Color_Background", COLOR_BACKGROUND)
+
+COLOR_BACKGROUND_HOVER = Settings.GetStringSetting("Color_Background_Hover")
+if Settings.GetStringSetting("Color_Background_Hover") == "":
+    COLOR_BACKGROUND_HOVER = DefaultSettings["Color_Background_Hover"]
+    Settings.SetStringSetting("Color_Background_Hover", COLOR_BACKGROUND_HOVER)
+
+COLOR_APPLICATION_BUTTON_BACKGROUND = Settings.GetStringSetting("Color_Background_App")
+if Settings.GetStringSetting("Color_Background_App") == "":
+    COLOR_APPLICATION_BUTTON_BACKGROUND = DefaultSettings["Color_Background_App"]
+    Settings.SetStringSetting(
+        "Color_Background_App", COLOR_APPLICATION_BUTTON_BACKGROUND
+    )
+
 # endregion ------------------------------------------------------------------------------------------------------------

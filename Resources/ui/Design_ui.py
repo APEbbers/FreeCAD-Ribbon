@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignXfPaQY.ui'
+## Form generated from reading UI file 'DesignXFoCjX.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -219,15 +219,21 @@ class Ui_Form(object):
         self.ExportBox.setMinimumSize(QSize(200, 0))
         self.gridLayout_29 = QGridLayout(self.ExportBox)
         self.gridLayout_29.setObjectName("gridLayout_29")
-        self.ImportDropDownButtons_IS = QPushButton(self.ExportBox)
-        self.ImportDropDownButtons_IS.setObjectName("ImportDropDownButtons_IS")
+        self.groupBox_3 = QGroupBox(self.ExportBox)
+        self.groupBox_3.setObjectName("groupBox_3")
+        self.gridLayout_24 = QGridLayout(self.groupBox_3)
+        self.gridLayout_24.setObjectName("gridLayout_24")
+        self.ImportWorkbenchSelector_IS = QComboBox(self.groupBox_3)
+        self.ImportWorkbenchSelector_IS.setObjectName("ImportWorkbenchSelector_IS")
 
-        self.gridLayout_29.addWidget(self.ImportDropDownButtons_IS, 3, 0, 1, 1)
+        self.gridLayout_24.addWidget(self.ImportWorkbenchSelector_IS, 0, 0, 1, 1)
 
-        self.ImportCustomPanels_IS = QPushButton(self.ExportBox)
-        self.ImportCustomPanels_IS.setObjectName("ImportCustomPanels_IS")
+        self.ImportWorkbench_IS = QPushButton(self.groupBox_3)
+        self.ImportWorkbench_IS.setObjectName("ImportWorkbench_IS")
 
-        self.gridLayout_29.addWidget(self.ImportCustomPanels_IS, 2, 0, 1, 1)
+        self.gridLayout_24.addWidget(self.ImportWorkbench_IS, 1, 0, 1, 1)
+
+        self.gridLayout_29.addWidget(self.groupBox_3, 4, 0, 1, 1)
 
         self.Importlayout_IS = QPushButton(self.ExportBox)
         self.Importlayout_IS.setObjectName("Importlayout_IS")
@@ -238,6 +244,16 @@ class Ui_Form(object):
         self.ExportLayout_IS.setObjectName("ExportLayout_IS")
 
         self.gridLayout_29.addWidget(self.ExportLayout_IS, 1, 0, 1, 1)
+
+        self.ImportDropDownButtons_IS = QPushButton(self.ExportBox)
+        self.ImportDropDownButtons_IS.setObjectName("ImportDropDownButtons_IS")
+
+        self.gridLayout_29.addWidget(self.ImportDropDownButtons_IS, 3, 0, 1, 1)
+
+        self.ImportCustomPanels_IS = QPushButton(self.ExportBox)
+        self.ImportCustomPanels_IS.setObjectName("ImportCustomPanels_IS")
+
+        self.gridLayout_29.addWidget(self.ImportCustomPanels_IS, 2, 0, 1, 1)
 
         self.gridLayout_30.addWidget(self.ExportBox, 0, 0, 1, 1)
 
@@ -1206,8 +1222,8 @@ class Ui_Form(object):
         self.gridLayout_14.addLayout(self.verticalLayout, 0, 1, 1, 1)
 
         self.CommandTable_RD = QTableWidget(self.frame2)
-        if self.CommandTable_RD.columnCount() < 4:
-            self.CommandTable_RD.setColumnCount(4)
+        if self.CommandTable_RD.columnCount() < 5:
+            self.CommandTable_RD.setColumnCount(5)
         __qtablewidgetitem = QTableWidgetItem()
         self.CommandTable_RD.setHorizontalHeaderItem(0, __qtablewidgetitem)
         __qtablewidgetitem1 = QTableWidgetItem()
@@ -1216,35 +1232,40 @@ class Ui_Form(object):
         self.CommandTable_RD.setHorizontalHeaderItem(2, __qtablewidgetitem2)
         __qtablewidgetitem3 = QTableWidgetItem()
         self.CommandTable_RD.setHorizontalHeaderItem(3, __qtablewidgetitem3)
+        __qtablewidgetitem4 = QTableWidgetItem()
+        self.CommandTable_RD.setHorizontalHeaderItem(4, __qtablewidgetitem4)
         if self.CommandTable_RD.rowCount() < 1:
             self.CommandTable_RD.setRowCount(1)
-        __qtablewidgetitem4 = QTableWidgetItem()
-        __qtablewidgetitem4.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
-        self.CommandTable_RD.setItem(0, 0, __qtablewidgetitem4)
+        __qtablewidgetitem5 = QTableWidgetItem()
+        __qtablewidgetitem5.setFlags(Qt.ItemIsSelectable | Qt.ItemIsEnabled)
+        self.CommandTable_RD.setItem(0, 0, __qtablewidgetitem5)
         brush = QBrush(QColor(0, 0, 0, 255))
         brush.setStyle(Qt.NoBrush)
-        __qtablewidgetitem5 = QTableWidgetItem()
-        __qtablewidgetitem5.setCheckState(Qt.Checked)
-        __qtablewidgetitem5.setTextAlignment(Qt.AlignCenter)
-        __qtablewidgetitem5.setBackground(brush)
-        __qtablewidgetitem5.setFlags(
-            Qt.ItemIsSelectable | Qt.ItemIsUserCheckable | Qt.ItemIsEnabled
-        )
-        self.CommandTable_RD.setItem(0, 1, __qtablewidgetitem5)
         __qtablewidgetitem6 = QTableWidgetItem()
         __qtablewidgetitem6.setCheckState(Qt.Checked)
         __qtablewidgetitem6.setTextAlignment(Qt.AlignCenter)
+        __qtablewidgetitem6.setBackground(brush)
         __qtablewidgetitem6.setFlags(
             Qt.ItemIsSelectable | Qt.ItemIsUserCheckable | Qt.ItemIsEnabled
         )
-        self.CommandTable_RD.setItem(0, 2, __qtablewidgetitem6)
+        self.CommandTable_RD.setItem(0, 1, __qtablewidgetitem6)
         __qtablewidgetitem7 = QTableWidgetItem()
         __qtablewidgetitem7.setCheckState(Qt.Checked)
         __qtablewidgetitem7.setTextAlignment(Qt.AlignCenter)
         __qtablewidgetitem7.setFlags(
             Qt.ItemIsSelectable | Qt.ItemIsUserCheckable | Qt.ItemIsEnabled
         )
-        self.CommandTable_RD.setItem(0, 3, __qtablewidgetitem7)
+        self.CommandTable_RD.setItem(0, 2, __qtablewidgetitem7)
+        __qtablewidgetitem8 = QTableWidgetItem()
+        __qtablewidgetitem8.setCheckState(Qt.Checked)
+        __qtablewidgetitem8.setTextAlignment(Qt.AlignCenter)
+        __qtablewidgetitem8.setFlags(
+            Qt.ItemIsSelectable | Qt.ItemIsUserCheckable | Qt.ItemIsEnabled
+        )
+        self.CommandTable_RD.setItem(0, 3, __qtablewidgetitem8)
+        __qtablewidgetitem9 = QTableWidgetItem()
+        __qtablewidgetitem9.setCheckState(Qt.Checked)
+        self.CommandTable_RD.setItem(0, 4, __qtablewidgetitem9)
         self.CommandTable_RD.setObjectName("CommandTable_RD")
         sizePolicy2.setHeightForWidth(
             self.CommandTable_RD.sizePolicy().hasHeightForWidth()
@@ -1440,7 +1461,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(7)
+        self.tabWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(Form)
 
@@ -1468,17 +1489,23 @@ class Ui_Form(object):
         self.ExportBox.setTitle(
             QCoreApplication.translate("Form", "Import/Export", None)
         )
-        self.ImportDropDownButtons_IS.setText(
-            QCoreApplication.translate("Form", "Import dropdown buttons", None)
+        self.groupBox_3.setTitle(
+            QCoreApplication.translate("Form", "Import workbench layout", None)
         )
-        self.ImportCustomPanels_IS.setText(
-            QCoreApplication.translate("Form", "Import custom panels", None)
+        self.ImportWorkbench_IS.setText(
+            QCoreApplication.translate("Form", "Import workbench", None)
         )
         self.Importlayout_IS.setText(
             QCoreApplication.translate("Form", "Import layout", None)
         )
         self.ExportLayout_IS.setText(
             QCoreApplication.translate("Form", "Export layout", None)
+        )
+        self.ImportDropDownButtons_IS.setText(
+            QCoreApplication.translate("Form", "Import dropdown buttons", None)
+        )
+        self.ImportCustomPanels_IS.setText(
+            QCoreApplication.translate("Form", "Import custom panels", None)
         )
         self.SetupBox.setTitle(
             QCoreApplication.translate(
@@ -1919,11 +1946,19 @@ class Ui_Form(object):
         ___qtablewidgetitem2.setText(QCoreApplication.translate("Form", "Medium", None))
         ___qtablewidgetitem3 = self.CommandTable_RD.horizontalHeaderItem(3)
         ___qtablewidgetitem3.setText(QCoreApplication.translate("Form", "Large", None))
+        ___qtablewidgetitem4 = self.CommandTable_RD.horizontalHeaderItem(4)
+        ___qtablewidgetitem4.setText(
+            QCoreApplication.translate("Form", "Enabled", None)
+        )
 
         __sortingEnabled13 = self.CommandTable_RD.isSortingEnabled()
         self.CommandTable_RD.setSortingEnabled(False)
-        ___qtablewidgetitem4 = self.CommandTable_RD.item(0, 0)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("Form", "All", None))
+        ___qtablewidgetitem5 = self.CommandTable_RD.item(0, 0)
+        ___qtablewidgetitem5.setText(QCoreApplication.translate("Form", "All", None))
+        ___qtablewidgetitem6 = self.CommandTable_RD.item(0, 4)
+        ___qtablewidgetitem6.setText(
+            QCoreApplication.translate("Form", "Enabled", None)
+        )
         self.CommandTable_RD.setSortingEnabled(__sortingEnabled13)
 
         self.AddSeparator_RD.setText(

@@ -1,5 +1,7 @@
 RibbonBar {
     border: none;
+	margin: 0px;
+	padding: 0px;
 }
 
 RibbonApplicationButton::menu-indicator {
@@ -8,46 +10,34 @@ RibbonApplicationButton::menu-indicator {
 
 RibbonTitleWidget {
     border-radius: 10px;
-    background-color: transparent;*/
-}
+    background-color: transparent;
 
-RibbonStackedWidget {
-    border: none;
-    border-radius: 10px;
-    /*background-color: transparent;*/
-}
+	RibbonStackedWidget {
+		border: none;
+		border-radius: 10px;
+		/*background-color: transparent;*/
+	}
 
 QToolButton, RibbonApplicationButton{
-	margin: 1px 3px 1px 3px;
+	margin: 0px;
 	padding: 0px;
 	border-radius: 4px;
 	text-align:left;
+	border: none;
+	}
+	QToolButton:hover {
+		border: none;
 	}
 	QToolButton::menu-arrow {
-		width: 20px;
-		height:30px;
 		subcontrol-origin: margin;
 		subcontrol-position: top right;
 		}
 	QToolButton::menu-button {
 		border-radius: 2px;
-		padding: 1px;
+		padding: 0px;
 		border-radius: 2px;
 		subcontrol-origin: padding;
 		subcontrol-position: top right;
-		}
-	QToolButton::menu-button:hover{
-		border-left: 0.5px solid;/* do not change this line. It is used to set the color by code */
-	}
-	QToolButton[popupMode="1"] { /* only for MenuButtonPopup */
-		padding-right: 10px; /* make way for the popup button */
-		}
-		/* the subcontrols below are used only in the MenuButtonPopup mode */
-		QToolButton::menu-button {
-			border-top-right-radius: 6px;
-			border-bottom-right-radius: 6px;
-			/* 16px width + 4px for border = 20px allocated above */
-			width: 16px;
 		}
 
 QToolBar {
@@ -59,7 +49,6 @@ QToolBar {
 RibbonPanelOptionButton {
 	/*image: none;*/
 	border-radius: none;
-	border-top: 0.5px solid;/* do not change this line. It is used to set the color by code */
 	}
 	RibbonPanelOptionButton::menu-indicator {
 		/*image: none;*/
@@ -69,3 +58,24 @@ RibbonPanelOptionButton {
 	RibbonPanelOptionButton:hover{
 		border-radius: 2px;
 	}
+}
+
+RibbonPanelTitle {
+	height: 20px
+	padding: 0px;
+}
+
+RibbonCategory {
+    margin: 0px;
+	padding: 0px;
+}
+
+RibbonCategoryScrollArea {
+    margin: 0px;
+	padding: 0px;
+}
+
+RibbonCategoryScrollAreaContents {
+    margin: 0px;
+	padding: 0px;
+}
