@@ -159,7 +159,7 @@ class CustomControls:
                 maxWidth = 0
                 maxLength = 0
                 for c in Text:
-                    maxWidth = maxWidth + FontMetrics.boundingRectChar(c).width()
+                    maxWidth = maxWidth + FontMetrics.horizontalAdvance(c, -1)
                     if maxWidth < ButtonSize.width():
                         maxLength = maxLength + 1
                     if maxWidth >= ButtonSize.width():
@@ -178,9 +178,8 @@ class CustomControls:
             # make sure that the label height is at least for two lines
             Label_Text.setMinimumHeight((SingleHeight * 1))
             Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines))
-            TextHeight = Label_Text.maximumHeight()
             # Set the width of the label based on the size of the button
-            Label_Text.setFixedWidth(ButtonSize.width() + Space)
+            Label_Text.setFixedWidth(ButtonSize.width())
             # Adjust the size to be able to store the actual height
             Label_Text.adjustSize()
             # Set the textheight
@@ -188,27 +187,44 @@ class CustomControls:
                 # Set the wrap mode
                 Label_Text.setWordWrapMode(QTextOption.WrapMode.WordWrap)
                 # Determine the maximum length per line
-                FontMetrics = QFontMetrics(Text)
+                FontMetrics = QFontMetrics(Font)
                 maxWidth = 0
                 maxLength = 0
                 for c in Text:
-                    maxWidth = maxWidth + FontMetrics.boundingRectChar(c).width()
+                    maxWidth = maxWidth + FontMetrics.horizontalAdvance(c, -1)
                     if maxWidth < ButtonSize.width():
                         maxLength = maxLength + 1
                     if maxWidth >= ButtonSize.width():
                         break
-                # Set the text, use the wrapper function. It will only return the set number of lines
-                Label_Text.setText(
-                    StandardFunctions.ReturnWrappedText(
-                        Text, maxWidth, MaxNumberOfLines, False
-                    )
-                )
-                # Adjust the size of the label
-                Label_Text.setFixedHeight((SingleHeight * MaxNumberOfLines) - 3)
+
+                # Get the first text line
+                line1 = StandardFunctions.ReturnWrappedText(
+                    Text, maxLength, MaxNumberOfLines, True
+                )[0]
+                # Set the alignment
                 Label_Text.setAlignment(TextAlignment)
-                Label_Text.adjustSize()
+                # Add the line
+                Label_Text.append(line1)
+                # Set the correct height. Avoid a too big difference in icon sizes by only decreasing the height when there is a menu.
+                if Menu is not None and len(Menu.actions()) > 1:
+                    Label_Text.setFixedHeight(SingleHeight)
+                else:
+                    Label_Text.setFixedHeight((SingleHeight * MaxNumberOfLines) - 3)
+                # Try to get the second line if there is one
+                try:
+                    line2 = StandardFunctions.ReturnWrappedText(
+                        Text, maxLength, MaxNumberOfLines, True
+                    )[1]
+                    # Set the alignment
+                    Label_Text.setAlignment(TextAlignment)
+                    # Add the line
+                    Label_Text.append(line2)
+                    # Set the correct
+                    Label_Text.setFixedHeight((SingleHeight * MaxNumberOfLines) - 3)
+                except Exception:
+                    pass
+
                 # Update the parameters for later
-                TextHeight = Label_Text.height()
                 TextWidth = Label_Text.width()
             # Add the label with alignment
             Layout.addWidget(Label_Text)
@@ -547,23 +563,11 @@ class CustomControls:
         btn.setStyleSheet(StyleSheet_Addition_Button + StyleSheet)
 
         # Set the final sizes
-        #
-        # If the text width is smaller than the button, set the extra space to 0
-        if TextWidth < ButtonSize.width():
-            Space = 0
-        # ButtonSize = QSize(
-        #     CommandButton.width() + Space, ButtonSize.height() + TextHeight
-        # )
-        # CommandButton.setFixedSize(
-        #     QSize(
-        #         CommandButton.width() + Space,
-        #         ButtonSize.height() - MenuButtonSpace - TextHeight - Space,
-        #     )
-        # )
         Label_Text.setFixedWidth(CommandButton.width())
         ArrowButton.setFixedWidth(CommandButton.width())
         CommandButton.setFixedSize(QSize(ButtonSize.width(), CommandButtonHeight))
         btn.setFixedSize(ButtonSize)
+
         # Return the button
         return btn
 
@@ -658,10 +662,10 @@ class CustomControls:
                 maxWidth = 0
                 maxLength = 0
                 for c in Text:
-                    maxWidth = maxWidth + FontMetrics.boundingRectChar(c).width()
-                    if maxWidth < ButtonSize.width() * 1.5:
+                    maxWidth = maxWidth + FontMetrics.horizontalAdvance(c, -1)
+                    if maxWidth < ButtonSize.width() * 2:
                         maxLength = maxLength + 1
-                    if maxWidth >= ButtonSize.width() * 1.5:
+                    if maxWidth >= ButtonSize.width() * 2:
                         break
                 # Get the first text line
                 line1 = StandardFunctions.ReturnWrappedText(
@@ -722,7 +726,7 @@ class CustomControls:
                     maxWidth = 0
                     maxLength = 0
                     for c in Text:
-                        maxWidth = maxWidth + FontMetrics.boundingRectChar(c).width()
+                        maxWidth = maxWidth + FontMetrics.horizontalAdvance(c, -1)
                         if maxWidth < ButtonSize.width() * 3:
                             maxLength = maxLength + 1
                         if maxWidth >= ButtonSize.width() * 3:
