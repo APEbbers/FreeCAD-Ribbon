@@ -129,8 +129,8 @@ class CustomControls:
         Layout.setContentsMargins(0, 0, 0, 0)
 
         # if showText is False:
-        if MenuButtonSpace < 12:
-            MenuButtonSpace = 12
+        if MenuButtonSpace < 10:
+            MenuButtonSpace = 10
 
         # If text must not be show, set the text to an empty string
         # Still create a label to set up the button properly
@@ -152,6 +152,15 @@ class CustomControls:
             Font = QFont()
             Font.setPointSize(FontSize)
             Label_Text.setFont(Font)
+            # change the menubutton space because text is included in the click area
+            MenuButtonSpace = 10
+            # Determine the height of a single row
+            SingleHeight = QFontMetrics(Font).boundingRect(Text).height() + 3
+            Label_Text.setMinimumHeight(SingleHeight * 1)
+            Label_Text.setMaximumHeight(SingleHeight * MaxNumberOfLines)
+            # Set the width of the label based on the size of the button
+            Label_Text.setFixedWidth(ButtonSize.width())
+
             # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
             if setWordWrap is False:
                 # Determine the maximum length per line
@@ -173,16 +182,13 @@ class CustomControls:
                 MaxNumberOfLines = 1
                 # Set the proper alignment
                 Label_Text.setAlignment(TextAlignment)
-            # Determine the height of a single row
-            SingleHeight = QFontMetrics(Font).boundingRect(Text).height() + 3
-            # make sure that the label height is at least for two lines
-            Label_Text.setMinimumHeight((SingleHeight * 1))
-            Label_Text.setMaximumHeight((SingleHeight * MaxNumberOfLines))
-            # Set the width of the label based on the size of the button
-            Label_Text.setFixedWidth(ButtonSize.width())
-            # Adjust the size to be able to store the actual height
-            Label_Text.adjustSize()
-            # Set the textheight
+                # Lower the height when there is a menu
+                if Menu is not None and len(Menu.actions()) > 1:
+                    Label_Text.setFixedHeight(SingleHeight)
+                else:
+                    Label_Text.setFixedHeight(SingleHeight + Space)
+
+            # If wordwrap is enabled, set the text and height accordingly
             if setWordWrap is True:
                 # Set the wrap mode
                 Label_Text.setWordWrapMode(QTextOption.WrapMode.WordWrap)
@@ -209,7 +215,7 @@ class CustomControls:
                 if Menu is not None and len(Menu.actions()) > 1:
                     Label_Text.setFixedHeight(SingleHeight)
                 else:
-                    Label_Text.setFixedHeight((SingleHeight * MaxNumberOfLines) - 3)
+                    Label_Text.setFixedHeight((SingleHeight * MaxNumberOfLines) - Space)
                 # Try to get the second line if there is one
                 try:
                     line2 = StandardFunctions.ReturnWrappedText(
@@ -219,13 +225,11 @@ class CustomControls:
                     Label_Text.setAlignment(TextAlignment)
                     # Add the line
                     Label_Text.append(line2)
-                    # Set the correct
-                    Label_Text.setFixedHeight((SingleHeight * MaxNumberOfLines) - 3)
+                    # Set the correct height
+                    Label_Text.setFixedHeight((SingleHeight * MaxNumberOfLines) - Space)
                 except Exception:
                     pass
 
-                # Update the parameters for later
-                TextWidth = Label_Text.width()
             # Add the label with alignment
             Layout.addWidget(Label_Text)
             CommandButtonHeight = CommandButtonHeight - Label_Text.height()

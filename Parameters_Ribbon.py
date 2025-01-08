@@ -171,7 +171,7 @@ DefaultSettings = {
     "TabBar_Style": int(0),
     "IconSize_Small": int(24),
     "IconSize_Medium": int(36),
-    "IconSize_Large": int(80),
+    "IconSize_Large": int(72),
     "ApplicationButtonSize": int(40),
     "QuickAccessButtonSize": int(24),
     "TabBarSize": int(24),
