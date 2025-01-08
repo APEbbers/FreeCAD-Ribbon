@@ -638,10 +638,10 @@ class ModernMenu(RibbonBar):
         # Define a layout and add the label
         Layout = QHBoxLayout()
         Layout.addWidget(Text, 0, Qt.AlignmentFlag.AlignRight)
-        Layout.setContentsMargins(0, 0, 6, 0)
+        Layout.setContentsMargins(0, 0, 0, 0)
         # Add the layout to the menu button
         self.applicationOptionButton().setLayout(Layout)
-        self.applicationOptionButton().setContentsMargins(0, 0, 0, 0)
+        self.applicationOptionButton().setContentsMargins(0, 0, 9, 0)
         # Set the size of the menu button
         self.applicationOptionButton().setFixedSize(
             self.QuickAccessButtonSize + FontMetrics.boundingRect(Text.text()).width() + 12,
@@ -653,7 +653,7 @@ class ModernMenu(RibbonBar):
         self.applicationOptionButton().setStyleSheet(
             StyleMapping.ReturnStyleSheet(
                 "applicationbutton",
-                padding_right=str(FontMetrics.boundingRect(Text.text()).width() + 12) + "px",
+                padding_right=str(FontMetrics.horizontalAdvance(Text.text(), -1) + 12) + "px",
                 radius="4px",
             )
         )
