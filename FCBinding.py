@@ -544,8 +544,9 @@ class ModernMenu(RibbonBar):
             and Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is True
         ):
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setFixedHeight(self.RibbonHeight)
-            self.setRibbonHeight(self.RibbonHeight)
+            if self.RibbonHeight > 0:
+                TB.setFixedHeight(self.RibbonHeight)
+                self.setRibbonHeight(self.RibbonHeight)
 
             # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
@@ -1037,8 +1038,9 @@ class ModernMenu(RibbonBar):
             return
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setFixedHeight(self.RibbonHeight)
-            self.setRibbonHeight(self.RibbonHeight)
+            if self.RibbonHeight > 0:
+                TB.setFixedHeight(self.RibbonHeight)
+                self.setRibbonHeight(self.RibbonHeight)
 
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
             Parameters_Ribbon.AUTOHIDE_RIBBON = False
@@ -1057,8 +1059,9 @@ class ModernMenu(RibbonBar):
         """
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setFixedHeight(self.RibbonHeight)
-            self.setRibbonHeight(self.RibbonHeight)
+            if self.RibbonHeight > 0:
+                TB.setFixedHeight(self.RibbonHeight)
+                self.setRibbonHeight(self.RibbonHeight)
 
         index = self.tabBar().currentIndex()
         tabName = self.tabBar().tabText(index)
@@ -1083,8 +1086,9 @@ class ModernMenu(RibbonBar):
     def onWbActivated(self):
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.setFixedHeight(self.RibbonHeight)
-            self.setRibbonHeight(self.RibbonHeight)
+            if self.RibbonHeight > 0:
+                TB.setFixedHeight(self.RibbonHeight)
+                self.setRibbonHeight(self.RibbonHeight)
 
         # Make sure that the text is readable
         self.tabBar().setStyleSheet("color: " + StyleMapping.ReturnStyleItem("Border_Color") + ";")
@@ -1115,8 +1119,9 @@ class ModernMenu(RibbonBar):
 
     def onTabBarClicked(self):
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-        TB.setFixedHeight(self.RibbonHeight)
-        self.setRibbonHeight(self.RibbonHeight)
+        if self.RibbonHeight > 0:
+            TB.setFixedHeight(self.RibbonHeight)
+            self.setRibbonHeight(self.RibbonHeight)
         self.setRibbonVisible(True)
 
         # hide normal toolbars
@@ -2205,8 +2210,7 @@ class run:
             ribbonDock.setEnabled(True)
             ribbonDock.setVisible(True)
             # # make sure that there are no negative valules
-            ribbonDock.setMinimumHeight(0)
-            ribbonDock.setMaximumHeight(1200)
+            # ribbonDock.setMaximumHeight(ribbon.ReturnRibbonHeight() - 20)
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
 
