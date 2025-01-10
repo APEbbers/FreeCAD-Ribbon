@@ -470,7 +470,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         )
 
         def ApplyShortcutKey():
-            self.on_ApplyShortcutApp_clicked(self)
+            self.on_ApplyShortcutApp_clicked()
 
         self.form.ApplyShortcutApp.connect(
             self.form.ApplyShortcutApp, SIGNAL("clicked()"), ApplyShortcutKey
