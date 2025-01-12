@@ -1963,9 +1963,6 @@ class ModernMenu(RibbonBar):
             )
         )
 
-        # Set the maximum height to a high value to prevent from the ribbon to be clipped off
-        self.currentCategory().setMinimumHeight(self.RibbonHeight + self.RibbonOffset)
-        self.currentCategory().setMaximumHeight(1200)
         self.setRibbonHeight(self.RibbonHeight)
         return
 
