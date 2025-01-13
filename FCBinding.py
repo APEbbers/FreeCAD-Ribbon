@@ -1800,7 +1800,11 @@ class ModernMenu(RibbonBar):
                                     MenuButtonSpace=16,
                                 )
                                 # add the button as large button
-                                panel.addLargeWidget(btn, fixedHeight=True)
+                                panel.addLargeWidget(
+                                    btn,
+                                    fixedHeight=True,
+                                    alignment=Qt.AlignmentFlag.AlignTop,
+                                )
                             else:
                                 if Parameters_Ribbon.DEBUG_MODE is True:
                                     if buttonSize != "none":
@@ -1857,6 +1861,7 @@ class ModernMenu(RibbonBar):
             # add an offset to make room for the panel titles and icons
             panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
             panel._actionsLayout.setVerticalSpacing(0)
+            panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
             panel.setContentsMargins(0, 0, 0, 0)
             panel.setFixedHeight(self.ReturnRibbonHeight(self.PannleHeightOffset))
             self.RibbonHeight = self.ReturnRibbonHeight() + self.RibbonOffset
@@ -1963,6 +1968,9 @@ class ModernMenu(RibbonBar):
             )
         )
 
+        # Set the maximum height to a high value to prevent from the ribbon to be clipped off
+        self.currentCategory().setMinimumHeight(self.RibbonHeight)
+        self.currentCategory().setMaximumHeight(self.RibbonHeight)
         self.setRibbonHeight(self.RibbonHeight)
         return
 
