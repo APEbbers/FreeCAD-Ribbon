@@ -211,6 +211,8 @@ class CustomControls:
                 Label_Text.setAlignment(TextAlignment)
                 # Add the line
                 Label_Text.append(line1)
+                # get the text width
+                TextWidth = FontMetrics.horizontalAdvance(line1, -1)
                 # Set the correct height. Avoid a too big difference in icon sizes by only decreasing the height when there is a menu.
                 if Menu is not None and len(Menu.actions()) > 1:
                     Label_Text.setFixedHeight(SingleHeight)
@@ -227,6 +229,9 @@ class CustomControls:
                     Label_Text.append(line2)
                     # Set the correct height
                     Label_Text.setFixedHeight((SingleHeight * MaxNumberOfLines) - Space)
+                    # Update the text width if neccesary
+                    if FontMetrics.horizontalAdvance(line2, -1) > TextWidth:
+                        TextWidth = TextWidth = FontMetrics.horizontalAdvance(line2, -1)
                 except Exception:
                     pass
 
@@ -567,10 +572,15 @@ class CustomControls:
         btn.setStyleSheet(StyleSheet_Addition_Button + StyleSheet)
 
         # Set the final sizes
-        Label_Text.setFixedWidth(CommandButton.width())
-        ArrowButton.setFixedWidth(CommandButton.width())
-        CommandButton.setFixedSize(QSize(ButtonSize.width(), CommandButtonHeight))
-        btn.setFixedSize(ButtonSize)
+        width = ButtonSize.width()
+        if TextWidth > 0 and TextWidth < CommandButtonHeight + Space:
+            width = CommandButtonHeight + Space
+        if TextWidth > 0 and TextWidth > CommandButtonHeight + Space:
+            width = TextWidth + Space
+        Label_Text.setFixedWidth(width)
+        ArrowButton.setFixedWidth(width)
+        CommandButton.setFixedSize(QSize(width, CommandButtonHeight))
+        btn.setFixedSize(QSize(width, ButtonSize.height()))
 
         # Return the button
         return btn
