@@ -1529,7 +1529,9 @@ class ModernMenu(RibbonBar):
                     # With an paneloptionbutton, use an offset of 2 instead of 1 for i.
                     if "separator" in button.text() and i < len(allButtons):
                         separator = panel.addLargeVerticalSeparator(
-                            alignment=Qt.AlignmentFlag.AlignLeft, fixedHeight=False
+                            width=6,
+                            alignment=Qt.AlignmentFlag.AlignCenter,
+                            fixedHeight=False,
                         )
                         separator.setObjectName("separator")
                         # there is a bug in pyqtribbon where the separator is placed in the wrong position
@@ -1537,15 +1539,23 @@ class ModernMenu(RibbonBar):
                         # To correct this, empty and disabled buttons are added for spacing.
                         # (adding spacers did not work)
                         if float((NoSmallButtons_spacer + 1) / 3).is_integer():
-                            panel.addSmallButton().setEnabled(False)
+                            spacer_1 = panel.addSmallButton()
+                            spacer_1.setFixedWidth(self.iconSize)
+                            spacer_1.setEnabled(False)
                         if float((NoSmallButtons_spacer + 2) / 3).is_integer():
-                            panel.addSmallButton().setEnabled(False)
-                            panel.addSmallButton().setEnabled(False)
+                            spacer_1 = panel.addSmallButton()
+                            spacer_1.setFixedWidth(self.iconSize)
+                            spacer_1.setEnabled(False)
+                            spacer_2 = panel.addSmallButton()
+                            spacer_2.setFixedWidth(self.iconSize)
+                            spacer_2.setEnabled(False)
                         # reset the counter after a separator is added.
                         NoSmallButtons_spacer = 0
                         # Same principle for medium buttons
                         if float((NoMediumButtons_spacer + 1) / 2).is_integer():
-                            panel.addMediumButton().setEnabled(False)
+                            spacer_1 = panel.addMediumButton()
+                            spacer_1.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
+                            spacer_1.setEnabled(False)
                         NoMediumButtons_spacer = 0
                         continue
                     else:
@@ -2229,7 +2239,7 @@ class ModernMenu(RibbonBar):
             ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
         else:
             ribbonHeight = ribbonHeight + LargeButtonHeight
-        return ribbonHeight + offset + 6
+        return ribbonHeight + offset
 
     def ReturnCommandIcon(self, CommandName: str, pixmap: str = "") -> QIcon:
         """_summary_
