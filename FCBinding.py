@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -41,7 +41,7 @@ from PySide6.QtGui import (
     QKeySequence,
     QShortcut,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -65,7 +65,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QVBoxLayout,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1800,7 +1800,11 @@ class ModernMenu(RibbonBar):
                                     MenuButtonSpace=16,
                                 )
                                 # add the button as large button
-                                panel.addLargeWidget(btn, fixedHeight=True, alignment=Qt.AlignmentFlag.AlignTop)
+                                panel.addLargeWidget(
+                                    btn,
+                                    fixedHeight=True,
+                                    alignment=Qt.AlignmentFlag.AlignTop,
+                                )
                             else:
                                 if Parameters_Ribbon.DEBUG_MODE is True:
                                     if buttonSize != "none":
