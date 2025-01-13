@@ -116,12 +116,12 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-import pyqtribbon_local as pyqtribbon
-from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon.panel import RibbonPanel, RibbonPanelTitle
-from pyqtribbon.toolbutton import RibbonToolButton
-from pyqtribbon.separator import RibbonSeparator
-from pyqtribbon.category import RibbonCategoryLayoutButton
+# import pyqtribbon_local as pyqtribbon
+# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon.panel import RibbonPanel, RibbonPanelTitle
+# from pyqtribbon.toolbutton import RibbonToolButton
+# from pyqtribbon.separator import RibbonSeparator
+# from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -1383,7 +1383,7 @@ class ModernMenu(RibbonBar):
                     # With an paneloptionbutton, use an offset of 2 instead of 1 for i.
                     if "separator" in button.text() and i < len(allButtons):
                         separator = panel.addLargeVerticalSeparator(
-                            width=2, alignment=Qt.AlignmentFlag.AlignCenter, fixedHeight=False
+                            width=6, alignment=Qt.AlignmentFlag.AlignCenter, fixedHeight=False
                         )
                         separator.setObjectName("separator")
                         # there is a bug in pyqtribbon where the separator is placed in the wrong position
