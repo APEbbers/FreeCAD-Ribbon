@@ -78,6 +78,13 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
     # Get the current stylesheet for FreeCAD
     FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
     currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
+    IsInList = False
+    for key, value in StyleMapping_default["Stylesheets"]:
+        if key == currentStyleSheet:
+            IsInList = True
+            break
+    if IsInList is False:
+        currentStyleSheet = ""
 
     ListIcons = [
         "ScrollLeftButton_Tab",
@@ -102,9 +109,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
             else:
                 PixmapName = ""
             if PixmapName == "" or PixmapName is None:
-                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][
-                    ControlName
-                ]
+                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if PixmapName == "" or PixmapName is None:
                     PixmapName = StyleMapping_default["Stylesheets"][""][ControlName]
             if os.path.exists(PixmapName):
@@ -126,9 +131,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
             ):
                 result = "none"
             if result == "" or result is None:
-                result = StyleMapping_default["Stylesheets"][currentStyleSheet][
-                    ControlName
-                ]
+                result = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if result == "" or result is None:
                     result = StyleMapping_default["Stylesheets"][""][ControlName]
             return result
@@ -136,9 +139,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
         return None
 
 
-def ReturnStyleSheet(
-    control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"
-):
+def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"):
     """
     Enter one of the names below:
 
