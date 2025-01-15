@@ -78,6 +78,13 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
     # Get the current stylesheet for FreeCAD
     FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
     currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
+    IsInList = False
+    for key, value in StyleMapping_default["Stylesheets"]:
+        if key == currentStyleSheet:
+            IsInList = True
+            break
+    if IsInList is False:
+        currentStyleSheet = ""
 
     ListIcons = [
         "ScrollLeftButton_Tab",
