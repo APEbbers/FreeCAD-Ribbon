@@ -34,6 +34,7 @@ from PySide.QtWidgets import (
     QPushButton,
     QMenu,
     QWidget,
+    QMainWindow,
 )
 from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread
 import sys
@@ -84,7 +85,8 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
             IsInList = True
             break
     if IsInList is False:
-        currentStyleSheet = ""
+        currentStyleSheet = "none"
+    # currentStyleSheet = "none"
 
     ListIcons = [
         "ScrollLeftButton_Tab",
@@ -109,9 +111,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
             else:
                 PixmapName = ""
             if PixmapName == "" or PixmapName is None:
-                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][
-                    ControlName
-                ]
+                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if PixmapName == "" or PixmapName is None:
                     PixmapName = StyleMapping_default["Stylesheets"][""][ControlName]
             if os.path.exists(PixmapName):
@@ -133,9 +133,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
             ):
                 result = "none"
             if result == "" or result is None:
-                result = StyleMapping_default["Stylesheets"][currentStyleSheet][
-                    ControlName
-                ]
+                result = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if result == "" or result is None:
                     result = StyleMapping_default["Stylesheets"][""][ControlName]
             return result
@@ -143,9 +141,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
         return None
 
 
-def ReturnStyleSheet(
-    control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"
-):
+def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"):
     """
     Enter one of the names below:
 
@@ -241,6 +237,21 @@ def ReturnStyleSheet(
         return StyleSheet
 
 
+def ReturnColor(ColorType="Background_Color"):
+    mw: QMainWindow = Gui.getMainWindow()
+    palette = mw.style().standardPalette()
+    # Get the color
+    Color = palette.base().color().toTuple()  # RGBA tupple
+    if ColorType == "Border_Color":
+        Color = palette.buttonText().color().toTuple()
+    if ColorType == "Background_Color_Hover":
+        Color = palette.highlight().color().toTuple()
+
+    HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
+
+    return HexColor
+
+
 StyleMapping = {
     "Stylesheets": {
         "Background_Color": "",
@@ -265,10 +276,23 @@ StyleMapping_default = {
             "Background_Color_Hover": "#ced4da",
             "Border_Color": "#646464",
             "ApplicationButton_Background": "#e0e0e0",
-            "ScrollLeftButton_Tab": "",
-            "ScrollRightButton_Tab": "",
-            "ScrollLeftButton_Category": "",
-            "ScrollRightButton_Category": "",
+            "ScrollLeftButton_Tab": "backward_small_default.svg",
+            "ScrollRightButton_Tab": "forward_small_default.svg",
+            "ScrollLeftButton_Category": "backward_default.svg",
+            "ScrollRightButton_Category": "forward_default.svg",
+            "OptionButton": "more_default.svg",
+            "PinButton_open": "pin-icon-open.svg",
+            "PinButton_closed": "pin-icon-default.svg",
+        },
+        "none": {
+            "Background_Color": "none",
+            "Background_Color_Hover": "#48a0f8",
+            "Border_Color": ReturnColor("Border_Color"),
+            "ApplicationButton_Background": "#48a0f8",
+            "ScrollLeftButton_Tab": "backward_small_default.svg",
+            "ScrollRightButton_Tab": "forward_small_default.svg",
+            "ScrollLeftButton_Category": "backward_default.svg",
+            "ScrollRightButton_Category": "forward_default.svg",
             "OptionButton": "more_default.svg",
             "PinButton_open": "pin-icon-open.svg",
             "PinButton_closed": "pin-icon-default.svg",
