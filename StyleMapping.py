@@ -79,7 +79,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
     FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
     currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
     IsInList = False
-    for key, value in StyleMapping_default["Stylesheets"]:
+    for key, value in StyleMapping_default["Stylesheets"].items():
         if key == currentStyleSheet:
             IsInList = True
             break
