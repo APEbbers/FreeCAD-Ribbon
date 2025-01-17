@@ -997,11 +997,11 @@ class ModernMenu(RibbonBar):
                 MenuBar.addMenu(OverlayMenu)
             # Add the ribbon design button
             Menu.addSeparator()
-            MenuBar.addMenu(DesignMenu)
+            MenuBar.addMenu(DesignMenu).setMenuRole(QAction.MenuRole.PreferencesRole)
             Menu.addSeparator()
-            MenuBar.addMenu(WhatsNewButton)
-            MenuBar.addMenu(RibbonHelpButton)
-            MenuBar.addMenu(AboutButton)
+            MenuBar.addMenu(WhatsNewButton).setMenuRole(QAction.MenuRole.AboutRole)
+            MenuBar.addMenu(RibbonHelpButton).setMenuRole(QAction.MenuRole.AboutRole)
+            MenuBar.addMenu(QMenu(AboutButton)).setMenuRole(QAction.MenuRole.AboutRole)
         return
 
     def loadDesignMenu(self):
