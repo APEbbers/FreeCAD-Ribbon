@@ -86,7 +86,6 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
             break
     if IsInList is False:
         currentStyleSheet = "none"
-    # currentStyleSheet = "none"
 
     ListIcons = [
         "ScrollLeftButton_Tab",
@@ -252,6 +251,79 @@ def ReturnColor(ColorType="Background_Color"):
     return HexColor
 
 
+def GetIconBasedOnTag(ControlName=""):
+    import xml.etree.ElementTree as ET
+    import os
+
+    iconSet = {}
+    iconName = ""
+    IsDarkTheme = False
+
+    # Get the current stylesheet for FreeCAD
+    FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
+    currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
+
+    path = os.path.dirname(__file__)
+    # Get the folder with add-ons
+    for i in range(2):
+        # Starting point
+        path = os.path.dirname(path)
+
+    # Go through the sub-folders
+    for root, dirs, files in os.walk(path):
+        for name in dirs:
+            # if the current stylesheet matches a sub directory, try to geth the pacakgexml
+            if currentStyleSheet.replace(".qss", "").lower() in name.lower():
+                try:
+                    packageXML = os.path.join(path, name, "package.xml")
+
+                    # Get the tree and root of the xml file
+                    tree = ET.parse(packageXML)
+                    treeRoot = tree.getroot()
+
+                    # Get all the tag elements
+                    elements = []
+                    namespaces = {"i": "https://wiki.freecad.org/Package_Metadata"}
+                    elements = treeRoot.findall(".//i:content/i:preferencepack/i:tag", namespaces)
+
+                    # go throug all tags. If 'dark' in the element text, this is a dark theme
+                    for element in elements:
+                        if "dark" in element.text.lower():
+                            IsDarkTheme = True
+                            break
+                except Exception:
+                    continue
+
+    # if it is a dark theme, get the white icons, else get the black icons
+    if IsDarkTheme is True:
+        iconSet = {
+            "ScrollLeftButton_Tab": "backward_small_default_white.svg",
+            "ScrollRightButton_Tab": "forward_small_default_white.svg",
+            "ScrollLeftButton_Category": "backward_default_white.svg",
+            "ScrollRightButton_Category": "forward_default_white.svg",
+            "OptionButton": "more_default_white.svg",
+            "PinButton_open": "pin-icon-open_white.svg",
+            "PinButton_closed": "pin-icon-default_white.svg",
+        }
+    else:
+        iconSet = {
+            "ScrollLeftButton_Tab": "backward_small_default.svg",
+            "ScrollRightButton_Tab": "forward_small_default.svg",
+            "ScrollLeftButton_Category": "backward_default.svg",
+            "ScrollRightButton_Category": "forward_default.svg",
+            "OptionButton": "more_default.svg",
+            "PinButton_open": "pin-icon-open.svg",
+            "PinButton_closed": "pin-icon-default.svg",
+        }
+
+    # get the icon name for the requested control
+    if ControlName != "":
+        iconName = iconSet[ControlName]
+
+    # return the icon name
+    return iconName
+
+
 StyleMapping = {
     "Stylesheets": {
         "Background_Color": "",
@@ -289,13 +361,13 @@ StyleMapping_default = {
             "Background_Color_Hover": "#48a0f8",
             "Border_Color": ReturnColor("Border_Color"),
             "ApplicationButton_Background": "#48a0f8",
-            "ScrollLeftButton_Tab": "backward_small_default.svg",
-            "ScrollRightButton_Tab": "forward_small_default.svg",
-            "ScrollLeftButton_Category": "backward_default.svg",
-            "ScrollRightButton_Category": "forward_default.svg",
-            "OptionButton": "more_default.svg",
-            "PinButton_open": "pin-icon-open.svg",
-            "PinButton_closed": "pin-icon-default.svg",
+            "ScrollLeftButton_Tab": GetIconBasedOnTag("ScrollLeftButton_Tab"),
+            "ScrollRightButton_Tab": GetIconBasedOnTag("ScrollRightButton_Tab"),
+            "ScrollLeftButton_Category": GetIconBasedOnTag("ScrollLeftButton_Category"),
+            "ScrollRightButton_Category": GetIconBasedOnTag("ScrollRightButton_Category"),
+            "OptionButton": GetIconBasedOnTag("OptionButton"),
+            "PinButton_open": GetIconBasedOnTag("PinButton_open"),
+            "PinButton_closed": GetIconBasedOnTag("PinButton_closed"),
         },
         "FreeCAD Dark.qss": {
             "Background_Color": "#333333",
