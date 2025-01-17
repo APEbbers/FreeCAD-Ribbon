@@ -831,11 +831,18 @@ class ModernMenu(RibbonBar):
         self.quickAccessToolBar().setWindowTitle("quickAccessToolBar")
 
         # Set the tabbar height and textsize
-        # self.tabBar().setContentsMargins(3, 3, 3, 3)
+        self.tabBar().setContentsMargins(0, 0, 0, 0)
         font = self.tabBar().font()
         font.setPixelSize(self.TabBar_Size * 0.6)
         self.tabBar().setFont(font)
         self.tabBar().setIconSize(QSize(self.TabBar_Size - 6, self.TabBar_Size - 6))
+        # self.tabBar().setFixedHeight(self.QuickAccessButtonSize)
+        self.tabBar().setStyleSheet(
+            "margin: 0px;padding: 0px;height: " + str(self.QuickAccessButtonSize) + ";"
+        )
+        self.RibbonOffset = self.RibbonOffset + (
+            self.tabBar().height() - self.QuickAccessButtonSize
+        )
 
         # Correct colors when no stylesheet is selected for FreeCAD.
         self.quickAccessToolBar().setStyleSheet("")
@@ -916,8 +923,6 @@ class ModernMenu(RibbonBar):
                         self.tabBar().setTabData(
                             len(self.categories()) - 1, workbenchName
                         )
-        self.tabBar().stackUnder(self.applicationOptionButton())
-        self.currentCategory().stackUnder(self.applicationOptionButton())
 
         # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(
