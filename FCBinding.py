@@ -2243,7 +2243,7 @@ class ModernMenu(RibbonBar):
         ):
             ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
         else:
-            ribbonHeight = ribbonHeight + LargeButtonHeight + 6
+            ribbonHeight = ribbonHeight + LargeButtonHeight
         return ribbonHeight + offset
 
     def ReturnCommandIcon(self, CommandName: str, pixmap: str = "") -> QIcon:
