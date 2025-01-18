@@ -991,15 +991,15 @@ class ModernMenu(RibbonBar):
         AboutButton.triggered.connect(self.on_AboutButton_clicked)
 
         if platform.system() == "darwin":
-
+            SubMenu = QMenu()
             if Parameters_Ribbon.USE_FC_OVERLAY is False:
-                MenuBar.addMenu(OverlayMenu)
+                SubMenu.addMenu(OverlayMenu)
             # Add the ribbon design button
-            MenuBar.addMenu(DesignMenu)
-            MenuBar.addMenu(WhatsNewButton)
+            SubMenu.addMenu(DesignMenu)
+            SubMenu.addMenu(WhatsNewButton)
             # MenuBar.addMenu(RibbonHelpButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
             # MenuBar.addMenu(AboutButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
-            MenuBar.setNativeMenuBar(False)
+            MenuBar.addMenu(SubMenu)
 
         return
 
