@@ -158,7 +158,7 @@ class ModernMenu(RibbonBar):
     # Set a size factor for the buttons
     sizeFactor = 1.3
     # Create an offset for the panelheight
-    PannleHeightOffset = 30
+    PanelHeightOffset = 30
     # Create an offset for the whole ribbon height
     RibbonOffset = 40 + QuickAccessButtonSize  # Set to zero to hide the panel titles
 
@@ -1713,8 +1713,10 @@ class ModernMenu(RibbonBar):
             panel._actionsLayout.setVerticalSpacing(0)
             panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
             panel.setContentsMargins(0, 0, 0, 0)
-            panel.setFixedHeight(self.ReturnRibbonHeight(self.PannleHeightOffset))
-            self.RibbonHeight = self.ReturnRibbonHeight() + self.RibbonOffset
+            panel._titleWidget.setContentsMargins(0, 0, 0, 0)
+            panel._titleWidget.setFixedHeight(panel._titleWidget.height() + 3)
+            panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset) + 3)
+            self.RibbonHeight = self.ReturnRibbonHeight() + self.RibbonOffset + 6
 
             # Setup the panelOptionButton
             actionList = []
@@ -1799,8 +1801,7 @@ class ModernMenu(RibbonBar):
         )
 
         # Set the maximum height to a high value to prevent from the ribbon to be clipped off
-        self.currentCategory().setMinimumHeight(self.RibbonHeight)
-        self.currentCategory().setMaximumHeight(self.RibbonHeight)
+        self.currentCategory().setFixedHeight(self.RibbonHeight)
         self.setRibbonHeight(self.RibbonHeight)
         return
 
@@ -2169,38 +2170,6 @@ class ModernMenu(RibbonBar):
     #     return
 
 
-# region - alternative loading
-# class run:
-#     """
-#     Activate Modern UI.
-#     """
-
-#     def __init__(self, name):
-#         """
-#         Constructor
-#         """
-#         disable = 0
-#         if name != "NoneWorkbench":
-#             mw = Gui.getMainWindow()
-
-#             # Disable connection after activation
-#             mw.workbenchActivated.disconnect(run)
-#             if disable:
-#                 return
-
-#             ribbon = ModernMenu()
-#             # Get the layout
-#             layout = ribbon.layout()
-#             # Set spacing and content margins to zero
-#             layout.setSpacing(0)
-#             layout.setContentsMargins(3, 0, 3, 3)
-#             # update the layout
-#             ribbon.setLayout(layout)
-#             # Create the ribbon
-#             mw.setMenuBar(ribbon)
-# endregion
-
-
 class run:
     """
     Activate Modern UI.
@@ -2237,8 +2206,6 @@ class run:
             ribbonDock.setWidget(ribbon)
             ribbonDock.setEnabled(True)
             ribbonDock.setVisible(True)
-            # # make sure that there are no negative valules
-            # ribbonDock.setMaximumHeight(ribbon.ReturnRibbonHeight() - 20)
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
 
