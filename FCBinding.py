@@ -1001,7 +1001,7 @@ class ModernMenu(RibbonBar):
             MenuBar.addMenu(WhatsNewButton).setMenuRole(QAction.MenuRole.PreferencesRole)
             # MenuBar.addMenu(RibbonHelpButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
             # MenuBar.addMenu(AboutButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
-            MenuBar.setNativeMenuBar(True)
+            mw.setMenuBar(MenuBar)
         return
 
     def loadDesignMenu(self):
