@@ -991,17 +991,6 @@ class ModernMenu(RibbonBar):
         AboutButton = Menu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version)
         AboutButton.triggered.connect(self.on_AboutButton_clicked)
 
-        if platform.system() == "darwin":
-            if Parameters_Ribbon.USE_FC_OVERLAY is False:
-                Menu.addSeparator()
-                MenuBar.addMenu(OverlayMenu)
-            # Add the ribbon design button
-            Menu.addSeparator()
-            MenuBar.addMenu(DesignMenu).setMenuRole(QAction.MenuRole.PreferencesRole)
-            Menu.addSeparator()
-            MenuBar.addMenu(WhatsNewButton).setMenuRole(QAction.MenuRole.AboutRole)
-            MenuBar.addMenu(RibbonHelpButton).setMenuRole(QAction.MenuRole.AboutRole)
-            MenuBar.addMenu(QMenu(AboutButton)).setMenuRole(QAction.MenuRole.AboutRole)
         return
 
     def loadDesignMenu(self):
@@ -1079,7 +1068,7 @@ class ModernMenu(RibbonBar):
         tabName = self.tabBar().tabText(index)
 
         if tabName is not None and tabName != "" and tabName != "test":
-            Color = QColor(StyleMapping.ReturnStyleItem("Border_Color"))
+            Color = QColor(StyleMapping.ReturnStyleItem("FontColor"))
             self.tabBar().setTabTextColor(index, Color)
 
             # activate selected workbench
@@ -1103,7 +1092,7 @@ class ModernMenu(RibbonBar):
                 self.setRibbonHeight(self.RibbonHeight)
 
         # Make sure that the text is readable
-        self.tabBar().setStyleSheet("color: " + StyleMapping.ReturnStyleItem("Border_Color") + ";")
+        self.tabBar().setStyleSheet("color: " + StyleMapping.ReturnStyleItem("FontColor") + ";")
 
         # ensure that workbench is already loaded
         workbench = Gui.activeWorkbench()

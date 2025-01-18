@@ -155,6 +155,7 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
         BackgroundColor = ReturnStyleItem("Background_Color")
         ApplicationButton = ReturnStyleItem("ApplicationButton_Background")
         HoverColor = ReturnStyleItem("Background_Color_Hover")
+        FontColor = ReturnStyleItem("FontColor")
 
         AppColor_1 = ApplicationButton
         AppColor_2 = ApplicationButton
@@ -170,7 +171,9 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
                     + """QToolButton, QTextEdit {
                         margin: 0px;
                         padding: 0px;
-                        background: """
+                        color: """
+                    + FontColor
+                    + """;background: """
                     + BackgroundColor
                     + """;padding-bottom: """
                     + padding_bottom
@@ -252,11 +255,55 @@ def ReturnColor(ColorType="Background_Color"):
 
 
 def GetIconBasedOnTag(ControlName=""):
+    iconSet = {}
+    iconName = ""
+    IsDarkTheme = DarkMode()
+
+    # if it is a dark theme, get the white icons, else get the black icons
+    if IsDarkTheme is True:
+        iconSet = {
+            "ScrollLeftButton_Tab": "backward_small_default_white.svg",
+            "ScrollRightButton_Tab": "forward_small_default_white.svg",
+            "ScrollLeftButton_Category": "backward_default_white.svg",
+            "ScrollRightButton_Category": "forward_default_white.svg",
+            "OptionButton": "more_default_white.svg",
+            "PinButton_open": "pin-icon-open_white.svg",
+            "PinButton_closed": "pin-icon-default_white.svg",
+        }
+    else:
+        iconSet = {
+            "ScrollLeftButton_Tab": "backward_small_default.svg",
+            "ScrollRightButton_Tab": "forward_small_default.svg",
+            "ScrollLeftButton_Category": "backward_default.svg",
+            "ScrollRightButton_Category": "forward_default.svg",
+            "OptionButton": "more_default.svg",
+            "PinButton_open": "pin-icon-open.svg",
+            "PinButton_closed": "pin-icon-default.svg",
+        }
+
+    # get the icon name for the requested control
+    if ControlName != "":
+        iconName = iconSet[ControlName]
+
+    # return the icon name
+    return iconName
+
+
+def ReturnFontColor(StyleSheet=""):
+    fontColor = "#000000"
+    IsDarkTheme = DarkMode()
+
+    if IsDarkTheme is True:
+        fontColor = "#ffffff"
+
+    return fontColor
+
+
+def DarkMode():
     import xml.etree.ElementTree as ET
     import os
 
-    iconSet = {}
-    iconName = ""
+    # Define the standard result
     IsDarkTheme = False
 
     # Get the current stylesheet for FreeCAD
@@ -294,34 +341,7 @@ def GetIconBasedOnTag(ControlName=""):
                 except Exception:
                     continue
 
-    # if it is a dark theme, get the white icons, else get the black icons
-    if IsDarkTheme is True:
-        iconSet = {
-            "ScrollLeftButton_Tab": "backward_small_default_white.svg",
-            "ScrollRightButton_Tab": "forward_small_default_white.svg",
-            "ScrollLeftButton_Category": "backward_default_white.svg",
-            "ScrollRightButton_Category": "forward_default_white.svg",
-            "OptionButton": "more_default_white.svg",
-            "PinButton_open": "pin-icon-open_white.svg",
-            "PinButton_closed": "pin-icon-default_white.svg",
-        }
-    else:
-        iconSet = {
-            "ScrollLeftButton_Tab": "backward_small_default.svg",
-            "ScrollRightButton_Tab": "forward_small_default.svg",
-            "ScrollLeftButton_Category": "backward_default.svg",
-            "ScrollRightButton_Category": "forward_default.svg",
-            "OptionButton": "more_default.svg",
-            "PinButton_open": "pin-icon-open.svg",
-            "PinButton_closed": "pin-icon-default.svg",
-        }
-
-    # get the icon name for the requested control
-    if ControlName != "":
-        iconName = iconSet[ControlName]
-
-    # return the icon name
-    return iconName
+    return IsDarkTheme
 
 
 StyleMapping = {
@@ -348,6 +368,7 @@ StyleMapping_default = {
             "Background_Color_Hover": "#ced4da",
             "Border_Color": "#646464",
             "ApplicationButton_Background": "#e0e0e0",
+            "FontColor": ReturnFontColor(),
             "ScrollLeftButton_Tab": "backward_small_default.svg",
             "ScrollRightButton_Tab": "forward_small_default.svg",
             "ScrollLeftButton_Category": "backward_default.svg",
@@ -361,6 +382,7 @@ StyleMapping_default = {
             "Background_Color_Hover": "#48a0f8",
             "Border_Color": ReturnColor("Border_Color"),
             "ApplicationButton_Background": "#48a0f8",
+            "FontColor": ReturnFontColor(),
             "ScrollLeftButton_Tab": GetIconBasedOnTag("ScrollLeftButton_Tab"),
             "ScrollRightButton_Tab": GetIconBasedOnTag("ScrollRightButton_Tab"),
             "ScrollLeftButton_Category": GetIconBasedOnTag("ScrollLeftButton_Category"),
@@ -374,6 +396,7 @@ StyleMapping_default = {
             "Background_Color_Hover": "#48a0f8",
             "Border_Color": "#ffffff",
             "ApplicationButton_Background": "#48a0f8",
+            "FontColor": "#ffffff",
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",
             "ScrollRightButton_Tab": "forward_small_default_white.svg",
             "ScrollLeftButton_Category": "backward_default_white.svg",
@@ -387,6 +410,7 @@ StyleMapping_default = {
             "Background_Color_Hover": "#48a0f8",
             "Border_Color": "#646464",
             "ApplicationButton_Background": "#48a0f8",
+            "FontColor": "#000000",
             "ScrollLeftButton_Tab": "backward_small_default.svg",
             "ScrollRightButton_Tab": "forward_small_default.svg",
             "ScrollLeftButton_Category": "backward_default.svg",
@@ -400,6 +424,7 @@ StyleMapping_default = {
             "Background_Color_Hover": "#a5d8ff",
             "Border_Color": "#1c7ed6",
             "ApplicationButton_Background": "#a5d8ff",
+            "FontColor": "#000000",
             "ScrollLeftButton_Tab": "backward_1.svg",
             "ScrollRightButton_Tab": "forward_1.svg",
             "ScrollLeftButton_Category": "backward_1.svg",
@@ -413,6 +438,7 @@ StyleMapping_default = {
             "Background_Color_Hover": "#1f364d",
             "Border_Color": "#264b69",
             "ApplicationButton_Background": "#1f364d",
+            "FontColor": "#ffffff",
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",
             "ScrollRightButton_Tab": "forward_small_default_white.svg",
             "ScrollLeftButton_Category": "backward_default_white.svg",
