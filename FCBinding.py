@@ -991,15 +991,17 @@ class ModernMenu(RibbonBar):
         AboutButton.triggered.connect(self.on_AboutButton_clicked)
 
         if platform.system() == "darwin":
-            SubMenu = QMenu()
+            Menu = QMenu()
             if Parameters_Ribbon.USE_FC_OVERLAY is False:
-                SubMenu.addMenu(OverlayMenu)
+                Menu.addMenu(OverlayMenu)
             # Add the ribbon design button
-            SubMenu.addMenu(QMenu(DesignMenu)).setMenuRole(QAction.MenuRole.TextHeuristicRole)
-            SubMenu.addMenu(QMenu(WhatsNewButton)).setMenuRole(QAction.MenuRole.TextHeuristicRole)
+            SubMenu = Menu.addMenu(QMenu(DesignMenu))
+            SubMenu.setMenuRole(QAction.MenuRole.TextHeuristicRole)
+            # Menu.addMenu(QMenu(WhatsNewButton)).setMenuRole(QAction.MenuRole.TextHeuristicRole)
             # MenuBar.addMenu(RibbonHelpButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
             # MenuBar.addMenu(AboutButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
-            QMenuBar(MenuBar).addMenu(SubMenu).setMenuRole(QAction.MenuRole.TextHeuristicRole)
+            MenuAction = MenuBar.addMenu(Menu)
+            MenuAction.setMenuRole(QAction.MenuRole.TextHeuristicRole)
 
         return
 
