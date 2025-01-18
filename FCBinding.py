@@ -991,6 +991,17 @@ class ModernMenu(RibbonBar):
         AboutButton = Menu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version)
         AboutButton.triggered.connect(self.on_AboutButton_clicked)
 
+        if platform.system() == "darwin":
+            if Parameters_Ribbon.USE_FC_OVERLAY is False:
+                Menu.addSeparator()
+                MenuBar.addMenu(OverlayMenu)
+            # Add the ribbon design button
+            Menu.addSeparator()
+            MenuBar.addMenu(DesignMenu).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
+            Menu.addSeparator()
+            MenuBar.addMenu(WhatsNewButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
+            MenuBar.addMenu(RibbonHelpButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
+            MenuBar.addMenu(QMenu(AboutButton)).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
         return
 
     def loadDesignMenu(self):
