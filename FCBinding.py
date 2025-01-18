@@ -999,6 +999,7 @@ class ModernMenu(RibbonBar):
             MenuBar.addMenu(WhatsNewButton)
             # MenuBar.addMenu(RibbonHelpButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
             # MenuBar.addMenu(AboutButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
+            MenuBar.setNativeMenuBar(False)
 
         return
 
