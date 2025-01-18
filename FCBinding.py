@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -41,7 +41,7 @@ from PySide.QtGui import (
     QKeySequence,
     QShortcut,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -949,29 +949,21 @@ class ModernMenu(RibbonBar):
         if Parameters_Ribbon.USE_FC_OVERLAY is False:
             Menu.addSeparator()
             OverlayMenu = Menu.addMenu(translate("FreeCAD Ribbon", "Overlay..."))
-            OverlayButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle overlay")).setMenuRole(
-                QAction.MenuRole.ApplicationSpecificRole
-            )
+            OverlayButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle overlay"))
             OverlayButton.triggered.connect(self.CustomOverlay)
             OverlayButton.setShortcut("F4")
 
-            TransparancyButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle transparancy")).setMenuRole(
-                QAction.MenuRole.ApplicationSpecificRole
-            )
+            TransparancyButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle transparancy"))
             TransparancyButton.triggered.connect(self.CustomTransparancy)
             TransparancyButton.setShortcut("Ctrl+F4")
 
         # Add the ribbon design button
         Menu.addSeparator()
         DesignMenu = Menu.addMenu(translate("FreeCAD Ribbon", "Customize..."))
-        DesignButton = DesignMenu.addAction(translate("FreeCAD Ribbon", "Ribbon layout")).setMenuRole(
-            QAction.MenuRole.ApplicationSpecificRole
-        )
+        DesignButton = DesignMenu.addAction(translate("FreeCAD Ribbon", "Ribbon layout"))
         DesignButton.triggered.connect(self.loadDesignMenu)
         # Add the preference button
-        PreferenceButton = DesignMenu.addAction(translate("FreeCAD Ribbon", "Ribbon preferences")).setMenuRole(
-            QAction.MenuRole.ApplicationSpecificRole
-        )
+        PreferenceButton = DesignMenu.addAction(translate("FreeCAD Ribbon", "Ribbon preferences"))
         PreferenceButton.triggered.connect(self.loadSettingsMenu)
         # Add the script submenu with items
         ScriptDir = os.path.join(os.path.dirname(__file__), "Scripts")
@@ -983,8 +975,7 @@ class ModernMenu(RibbonBar):
                     ScriptButtonMenu.addAction(
                         ListScripts[i],
                         lambda i=i + 1: self.LoadMarcoFreeCAD(ListScripts[i - 1]),
-                    ).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
-
+                    )
         # Add a about button, a What's new? and a help button for this ribbon
         #
         # Get the version of this addon
@@ -1009,7 +1000,7 @@ class ModernMenu(RibbonBar):
             Menu.addSeparator()
             MenuBar.addMenu(WhatsNewButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
             MenuBar.addMenu(RibbonHelpButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
-            MenuBar.addMenu(QMenu(AboutButton)).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
+            MenuBar.addMenu(AboutButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
         return
 
     def loadDesignMenu(self):
