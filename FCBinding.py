@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -41,7 +41,7 @@ from PySide.QtGui import (
     QKeySequence,
     QShortcut,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -65,7 +65,7 @@ from PySide.QtWidgets import (
     QLabel,
     QVBoxLayout,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -991,7 +991,7 @@ class ModernMenu(RibbonBar):
         AboutButton.triggered.connect(self.on_AboutButton_clicked)
 
         if platform.system() == "darwin":
-            Menu = QMenu()
+            Menu = QMenu(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
             if Parameters_Ribbon.USE_FC_OVERLAY is False:
                 Menu.addMenu(OverlayMenu)
             # Add the ribbon design button
