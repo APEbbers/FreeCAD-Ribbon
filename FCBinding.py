@@ -1715,8 +1715,8 @@ class ModernMenu(RibbonBar):
             panel.setContentsMargins(0, 0, 0, 0)
             panel._titleWidget.setContentsMargins(0, 0, 0, 0)
             panel._titleWidget.setFixedHeight(panel._titleWidget.height() + 3)
-            panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset) + 3)
-            self.RibbonHeight = self.ReturnRibbonHeight() + self.RibbonOffset + 6
+            panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
+            self.RibbonHeight = self.ReturnRibbonHeight() + self.RibbonOffset
 
             # Setup the panelOptionButton
             actionList = []
@@ -1801,7 +1801,7 @@ class ModernMenu(RibbonBar):
         )
 
         # Set the maximum height to a high value to prevent from the ribbon to be clipped off
-        self.currentCategory().setFixedHeight(self.RibbonHeight)
+        self.currentCategory().setFixedHeight(self.RibbonHeight - self.TabBar_Size - 12)
         self.setRibbonHeight(self.RibbonHeight)
         return
 
@@ -2201,11 +2201,22 @@ class run:
             ribbonDock.setWindowTitle("Ribbon")
             # Set the titlebar to an empty widget (effectively hide it)
             ribbonDock.setTitleBarWidget(QWidget())
-            ribbonDock.setContentsMargins(0, 0, 0, 0)
             # attach the ribbon to the dockwidget
             ribbonDock.setWidget(ribbon)
             ribbonDock.setEnabled(True)
             ribbonDock.setVisible(True)
+            ribbonDock.setStyleSheet(
+                """
+                padding-top: 0px;
+                padding-bottom: 0px;
+                margin-top: 0px;
+                margin-right: 0px;
+                margin-left: 0px;
+                margin-bottom: 0px;
+                spacing: 0px;
+                """
+            )
+            # ribbonDock.setMaximumHeight(ribbonDock.height() - 20)
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
 
