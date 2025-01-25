@@ -995,13 +995,14 @@ class ModernMenu(RibbonBar):
             if Parameters_Ribbon.USE_FC_OVERLAY is False:
                 Menu.addMenu(OverlayMenu)
             # Add the ribbon design button
-            SubMenu = Menu.addMenu(QMenu(DesignMenu))
+            SubMenu: QAction = Menu.addMenu(QMenu(DesignMenu))
             SubMenu.setMenuRole(QAction.MenuRole.TextHeuristicRole)
-            # Menu.addMenu(QMenu(WhatsNewButton)).setMenuRole(QAction.MenuRole.TextHeuristicRole)
+            Menu.addMenu(QMenu(WhatsNewButton)).setMenuRole(QAction.MenuRole.TextHeuristicRole)
             # MenuBar.addMenu(RibbonHelpButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
             # MenuBar.addMenu(AboutButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
-            MenuAction = MenuBar.addMenu(Menu)
-            MenuAction.setMenuRole(QAction.MenuRole.TextHeuristicRole)
+            mw.menuBar().addMenu(Menu)
+            # MenuAction = MenuBar.addMenu(Menu)
+            # MenuAction.setMenuRole(QAction.MenuRole.TextHeuristicRole)
 
         return
 
