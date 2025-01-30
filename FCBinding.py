@@ -450,7 +450,7 @@ class ModernMenu(RibbonBar):
 
         # Set the menuBar hidden as standard
         mw.menuBar().hide()
-        if self.isEnabled() is False:
+        if self.isEnabled() is False or platform.system() == "darwin":
             mw.menuBar().show()
 
         # connect a tabbar click event to the tarbar click funtion
@@ -990,20 +990,20 @@ class ModernMenu(RibbonBar):
         AboutButton = Menu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version)
         AboutButton.triggered.connect(self.on_AboutButton_clicked)
 
-        if platform.system() == "darwin":
-            Menu = QMenu(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
-            if Parameters_Ribbon.USE_FC_OVERLAY is False:
-                Menu.addMenu(OverlayMenu)
-            # Add the ribbon design button
-            SubMenu: QAction = Menu.addMenu(QMenu(DesignMenu))
-            SubMenu.setMenuRole(QAction.MenuRole.TextHeuristicRole)
-            Menu.addMenu(QMenu(WhatsNewButton)).setMenuRole(QAction.MenuRole.TextHeuristicRole)
-            # MenuBar.addMenu(RibbonHelpButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
-            # MenuBar.addMenu(AboutButton).setMenuRole(QAction.MenuRole.ApplicationSpecificRole)
-            mw.menuBar().addMenu(Menu)
-            # MenuAction = MenuBar.addMenu(Menu)
-            # MenuAction.setMenuRole(QAction.MenuRole.TextHeuristicRole)
-
+        if platform.system().lower() == "darwin":
+            MenuExists = False
+            for action in MenuBar.actions():
+                if action.text() == translate("FreeCAD Ribbon", "FreeCAD Ribbon"):
+                    MenuExists = True
+                    break
+            if MenuExists is False:
+                Menu = QMenu(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
+                if Parameters_Ribbon.USE_FC_OVERLAY is False:
+                    Menu.addMenu(OverlayMenu)
+                # Add the ribbon design button
+                Menu.addMenu(DesignMenu)
+                Menu.addAction(WhatsNewButton)
+                MenuBar.addMenu(Menu)
         return
 
     def loadDesignMenu(self):
