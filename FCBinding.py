@@ -987,6 +987,7 @@ class ModernMenu(RibbonBar):
         WhatsNewButton.triggered.connect(self.on_WhatsNewButton_clicked)
         RibbonHelpButton = Menu.addAction(translate("FreeCAD Ribbon", "Ribbon help"))
         RibbonHelpButton.triggered.connect(self.on_RibbonHelpButton_clicked)
+        Menu.addSeparator()
         AboutButton = Menu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version)
         AboutButton.triggered.connect(self.on_AboutButton_clicked)
 
@@ -997,12 +998,20 @@ class ModernMenu(RibbonBar):
                     MenuExists = True
                     break
             if MenuExists is False:
+                # Create the menu for the ribbon
                 Menu = QMenu(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
+                # add menu buttons to it
                 if Parameters_Ribbon.USE_FC_OVERLAY is False:
                     Menu.addMenu(OverlayMenu)
-                # Add the ribbon design button
                 Menu.addMenu(DesignMenu)
+                Menu.addSeparator()
                 Menu.addAction(WhatsNewButton)
+                Menu.addAction(RibbonHelpButton)
+                # make sure that the about button doesn't replace FreeCAD's about button
+                AboutButton.setMenuRole(QAction.MenuRole.NoRole)
+                Menu.addSeparator()
+                Menu.addAction(AboutButton)
+                # Add the menu to the global menubar
                 MenuBar.addMenu(Menu)
         return
 
