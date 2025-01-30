@@ -198,7 +198,7 @@ DefaultSettings = {
     "WrapText_Medium": bool(True),
     "WrapText_Large": bool(True),
     "UseFCOverlay": bool(False),
-    "UseButtonBackGround": bool(True),
+    "UseButtonBackGround": bool(False),
     "CustomColors": bool(False),
     "BorderTransparant": bool(True),
     "Color_Borders": "",
