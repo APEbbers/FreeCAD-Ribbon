@@ -1340,9 +1340,18 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
         self.form.PreferedViewPanel.setCurrentIndex(DefaultSettings["Preferred_view"])
         if DefaultSettings["UseToolsPanel"] is True:
+            self.form.EnableToolsPanel.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.EnableToolsPanel.setCheckState(Qt.CheckState.Unchecked)
+        if DefaultSettings["UseFCOverlay"] is True:
             self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Unchecked)
+        if DefaultSettings["UseButtonBackGround"] is True:
+            self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Unchecked)
+
         self.settingChanged = True
 
         # Set the color and icon buttons
