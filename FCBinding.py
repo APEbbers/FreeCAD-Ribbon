@@ -992,28 +992,30 @@ class ModernMenu(RibbonBar):
         AboutButton.triggered.connect(self.on_AboutButton_clicked)
 
         if platform.system().lower() == "darwin":
-            # MenuExists = False
             for action in MenuBar.actions():
                 if action.text() == translate("FreeCAD Ribbon", "FreeCAD Ribbon"):
-                    # MenuExists = True
-                    QMenuBar(MenuBar).removeAction(action)
+                    MenuBar.removeAction(action)
                     break
-            # if MenuExists is False:
             # Create the menu for the ribbon
-            Menu = QMenu(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
+            MacMenu= QMenu(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
             # add menu buttons to it
             if Parameters_Ribbon.USE_FC_OVERLAY is False:
-                Menu.addMenu(OverlayMenu)
-            Menu.addMenu(DesignMenu)
-            Menu.addSeparator()
-            Menu.addAction(WhatsNewButton)
-            Menu.addAction(RibbonHelpButton)
+                MacMenu.addMenu(OverlayMenu)
+            MacMenu.addMenu(DesignMenu)
+            MacMenu.addSeparator()
+            MacMenu.addAction(WhatsNewButton)
+            MacMenu.addAction(RibbonHelpButton)
             # make sure that the about button doesn't replace FreeCAD's about button
             AboutButton.setMenuRole(QAction.MenuRole.NoRole)
-            Menu.addSeparator()
-            Menu.addAction(AboutButton)
+            MacMenu.addSeparator()
+            MacMenu.addAction(AboutButton)
             # Add the menu to the global menubar
-            MenuBar.addMenu(Menu)
+            MenuBar.addMenu(MacMenu)
+            # Remove the menu from the Ribbon Application Menu
+            for action in Menu.actions():
+                if action.text() == translate("FreeCAD Ribbon", "FreeCAD Ribbon"):
+                    Menu.removeAction(action)
+                    break
         return
 
     def loadDesignMenu(self):
