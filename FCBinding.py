@@ -1024,14 +1024,14 @@ class ModernMenu(RibbonBar):
             # Add the menu to the global menubar
             beforeAction = None
             for child in MenuBar.children():
-                if child.name.replace("&", "") == "Windows":
-                    beforeAction = child.menuAction()
-            MenuBar.insertMenu(beforeAction, MacMenu)
-            # Remove the menu from the Ribbon Application Menu
-            for action in Menu.actions():
-                if action.text() == translate("FreeCAD Ribbon", "FreeCAD Ribbon"):
-                    Menu.removeAction(action)
-                    break
+                if child.objectName() == "&Windows":
+                    beforeAction = child.menuAction
+                    MenuBar.insertMenu(beforeAction, MacMenu)
+                    # Remove the menu from the Ribbon Application Menu
+                    for action in Menu.actions():
+                        if action.text() == translate("FreeCAD Ribbon", "FreeCAD Ribbon"):
+                            Menu.removeAction(action)
+                            break
         return
 
     def loadDesignMenu(self):
