@@ -149,6 +149,8 @@ class Settings:
         Settings.SetStringSetting("Color_Background_Hover", COLOR_BACKGROUND_HOVER)
         Settings.SetStringSetting("Color_Background_App", COLOR_APPLICATION_BUTTON_BACKGROUND)
 
+        Settings.SetStringSetting("CustomPanelPosition", DEFAULT_PANEL_POSITION_CUSTOM)
+
 
 # region - Define the resources ----------------------------------------------------------------------------------------
 ICON_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "icons")
@@ -204,6 +206,7 @@ DefaultSettings = {
     "PinButton_open": "",
     "PinButton_closed": "",
     "Shortcut_Application": "Alt+A",
+    "CustomPanelPosition": "Right",
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
@@ -228,6 +231,14 @@ if Settings.GetStringSetting("RibbonStructure") != "":
 else:
     RIBBON_STRUCTURE_JSON = DefaultSettings["RibbonStructure"]
     Settings.SetStringSetting("RibbonStructure", RIBBON_STRUCTURE_JSON)
+# endregion ------------------------------------------------------------------------------------------------------------
+
+# region - Define the default position for global panels ---------------------------------------------------------------
+if Settings.GetStringSetting("CustomPanelPosition") != "":
+    DEFAULT_PANEL_POSITION_CUSTOM = Settings.GetStringSetting("CustomPanelPosition")
+else:
+    DEFAULT_PANEL_POSITION_CUSTOM = DefaultSettings["CustomPanelPosition"]
+    Settings.SetStringSetting("CustomPanelPosition", DEFAULT_PANEL_POSITION_CUSTOM)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the tabbar style -------------------------------------------------------------------------------------
