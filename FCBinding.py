@@ -1053,6 +1053,7 @@ class ModernMenu(RibbonBar):
         DesignButton.triggered.connect(self.loadDesignMenu)
         # Add the preference button
         PreferenceButton = RibbonMenu.addAction(translate("FreeCAD Ribbon", "Preferences"))
+        PreferenceButton.setMenuRole(QAction.MenuRole.NoRole)
         PreferenceButton.triggered.connect(self.loadSettingsMenu)
         # Add the script submenu with items
         ScriptDir = os.path.join(os.path.dirname(__file__), "Scripts")
