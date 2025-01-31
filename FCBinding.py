@@ -182,6 +182,10 @@ class ModernMenu(RibbonBar):
     OverlayToggled = False
     TransparancyToggled = False
 
+    RibbonMenu = QMenu()
+    HelpMenu = QMenu()
+    OverlayMenu = None
+
     def __init__(self):
         """
         Constructor
@@ -391,6 +395,7 @@ class ModernMenu(RibbonBar):
             pass
 
         # Create the ribbon
+        self.CreateMenus()
         self.createModernMenu()
         self.onUserChangedWorkbench(False)
 
@@ -672,7 +677,7 @@ class ModernMenu(RibbonBar):
         self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
 
         # add the menus from the menubar to the application button
-        self.ApplicationMenu()
+        self.ApplicationMenus()
 
         # add quick access buttons
         i = 1  # Start value for button count. Used for width of quickaccess toolbar
@@ -871,16 +876,48 @@ class ModernMenu(RibbonBar):
         # add the searchbar if available
         SearchBarWidth = self.AddSearchBar()
 
+        # add an overlay menu if Ribbon's overlay is enabled
+        if self.OverlayMenu is not None:
+            OverlayMenu = QToolButton()
+            OverlayMenu.setIcon(Gui.getIcon("Draft_Layer.svg"))
+            OverlayMenu.setToolTip(translate("FreeCAD Ribbon", "Overlay functions") + "...")
+            OverlayMenu.setMenu(self.OverlayMenu)
+            OverlayMenu.setFixedSize(self.RightToolBarButtonSize + 16, self.RightToolBarButtonSize)
+            OverlayMenu.setStyleSheet(StyleMapping.ReturnStyleSheet(control="toolbutton", padding_right="16px"))
+            OverlayMenu.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+            # add the settingsmenu to the right toolbar
+            self.rightToolBar().addWidget(OverlayMenu)
+
+        # add a settings button with menu
+        SettingsMenu = QToolButton()
+        # Get the freecad preference button
+        editMenu = mw.findChildren(QMenu, "&Edit")[0]
+        preferenceButton_FreeCAD = editMenu.actions()[len(editMenu.actions()) - 1]
+        preferenceButton_FreeCAD.setText(translate("FreeCAD Ribbon", "FreeCAD prefences"))
+        # add the preference button for FreeCAD
+        SettingsMenu.addAction(preferenceButton_FreeCAD)
+        # add the ribbon settings menu
+        SettingsMenu.addAction(self.RibbonMenu.menuAction())
+        SettingsMenu.setIcon(Gui.getIcon("Std_DlgParameter.svg"))
+        SettingsMenu.setToolTip(translate("FreeCAD Ribbon", "Preferences") + "...")
+        SettingsMenu.setFixedSize(self.RightToolBarButtonSize + 16, self.RightToolBarButtonSize)
+        SettingsMenu.setStyleSheet(StyleMapping.ReturnStyleSheet(control="toolbutton", padding_right="16px"))
+        SettingsMenu.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+        # add the settingsmenu to the right toolbar
+        self.rightToolBar().addWidget(SettingsMenu)
+
         # Set the helpbutton
         self.helpRibbonButton().setEnabled(True)
         self.helpRibbonButton().setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        self.helpRibbonButton().setToolTip(translate("FreeCAD Ribbon", "Go to the FreeCAD help page"))
+        self.helpRibbonButton().setToolTip(translate("FreeCAD Ribbon", "Help") + "...")
         # Get the default help action from FreeCAD
         helpMenu = mw.findChildren(QMenu, "&Help")[0]
         helpAction = helpMenu.actions()[0]
-        self.helpRibbonButton().setDefaultAction(helpAction)
-        self.helpRibbonButton().setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
-        self.helpRibbonButton().setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px"))
+        self.helpRibbonButton().setIcon(helpAction.icon())
+        self.helpRibbonButton().setMenu(self.HelpMenu)
+        self.helpRibbonButton().setFixedSize(self.RightToolBarButtonSize + 16, self.RightToolBarButtonSize)
+        self.helpRibbonButton().setStyleSheet(StyleMapping.ReturnStyleSheet(control="toolbutton", padding_right="16px"))
+        self.helpRibbonButton().setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
 
         # Add a button the enable or disable AutoHide
         pinButton = QToolButton()
@@ -955,22 +992,47 @@ class ModernMenu(RibbonBar):
                 pass
             return width
 
-    def ApplicationMenu(self):
+    def ApplicationMenus(self):
         # Add a file menu
-        Menu = self.addFileMenu()
+        ApplictionMenu = self.addFileMenu()
 
         # Remove the border, cause by creating it for the applicationOptionButton
         StyleSheet = """border: none;"""
-        Menu.setStyleSheet(StyleSheet)
+        ApplictionMenu.setStyleSheet(StyleSheet)
 
         # add the menus from the menubar to the application button
         MenuBar = mw.menuBar()
-        Menu.addActions(MenuBar.actions())
+        ApplictionMenu.addActions(MenuBar.actions())
 
-        # Add the overlay menu when the native overlay function is not used
+        for child in MenuBar.children():
+            if child.objectName() == "&Help":
+                # Remove the menu from the Ribbon Application Menu
+                MenuBar.removeAction(child.menuAction())
+
+        if platform.system().lower() == "darwin":
+            for action in MenuBar.actions():
+                if action.text() == translate("FreeCAD Ribbon", "FreeCAD Ribbon"):
+                    MenuBar.removeAction(action)
+                    break
+
+            beforeAction = None
+            for child in MenuBar.children():
+                if child.objectName() == "&Windows":
+                    beforeAction = child.menuAction()
+                    MenuBar.insertMenu(beforeAction, self.RibbonMenu)
+                    # Remove the menu from the Ribbon Application Menu
+                    for action in ApplictionMenu.actions():
+                        if action.text() == translate("FreeCAD Ribbon", "FreeCAD Ribbon"):
+                            ApplictionMenu.removeAction(action)
+                            break
+        return
+
+    def CreateMenus(self):
+        MenuBar = mw.menuBar()
+
+        # Create the overlay menu when the native overlay function is not used
         if Parameters_Ribbon.USE_FC_OVERLAY is False:
-            Menu.addSeparator()
-            OverlayMenu = Menu.addMenu(translate("FreeCAD Ribbon", "Overlay..."))
+            OverlayMenu = QMenu(translate("FreeCAD Ribbon", "Overlay") + "...")
             OverlayButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle overlay"))
             OverlayButton.triggered.connect(self.CustomOverlay)
             OverlayButton.setShortcut("F4")
@@ -979,69 +1041,81 @@ class ModernMenu(RibbonBar):
             TransparancyButton.triggered.connect(self.CustomTransparancy)
             TransparancyButton.setShortcut("Ctrl+F4")
 
+            self.OverlayMenu = OverlayMenu
+
+        # Create a ribbon menu
+        RibbonMenu = QMenu(translate("FreeCAD Ribbon", "FreeCAD Ribbon preferences") + "...")
+
         # Add the ribbon design button
-        Menu.addSeparator()
-        DesignMenu = Menu.addMenu(translate("FreeCAD Ribbon", "Customize..."))
-        DesignButton = DesignMenu.addAction(translate("FreeCAD Ribbon", "Ribbon layout"))
+        DesignButton = RibbonMenu.addAction(translate("FreeCAD Ribbon", "Ribbon layout"))
         DesignButton.triggered.connect(self.loadDesignMenu)
         # Add the preference button
-        PreferenceButton = DesignMenu.addAction(translate("FreeCAD Ribbon", "Ribbon preferences"))
+        PreferenceButton = RibbonMenu.addAction(translate("FreeCAD Ribbon", "Preferences"))
         PreferenceButton.triggered.connect(self.loadSettingsMenu)
         # Add the script submenu with items
         ScriptDir = os.path.join(os.path.dirname(__file__), "Scripts")
         if os.path.exists(ScriptDir) is True:
             ListScripts = os.listdir(ScriptDir)
             if len(ListScripts) > 0:
-                ScriptButtonMenu = DesignMenu.addMenu(translate("FreeCAD Ribbon", "Scripts"))
+                ScriptButtonMenu = RibbonMenu.addMenu(translate("FreeCAD Ribbon", "Scripts"))
                 for i in range(len(ListScripts)):
                     ScriptButtonMenu.addAction(
                         ListScripts[i],
                         lambda i=i + 1: self.LoadMarcoFreeCAD(ListScripts[i - 1]),
                     )
+        # Set the RibbonMenu
+        self.RibbonMenu = RibbonMenu
 
-        # Add a about button, a What's new? and a help button for this ribbon
-        #
+        # Create a help menu
+        HelpMenu = QMenu()
+        # Get the icons
+        HelpIcon = QIcon()
+        AboutIcon = Gui.getIcon("freecad")
+
+        actions = None
+
+        # Get the standard help menu from FreeCAD
+        for child in MenuBar.children():
+            if child.objectName() == "&Help":
+                actions = child.actions()
+                # change help to FreeCAD help
+                actions[0].setText(translate("FreeCAD Ribbon", "FreeCAD help"))
+                HelpMenu.addActions(actions)
+                # Store the help icon for the Ribbon help
+                HelpIcon = child.actions()[0].icon()
+                # Remove the menu from the Ribbon Application Menu
+                MenuBar.removeAction(child.menuAction())
+
+        # Add the ribbon helpbutton under the FreeCAD
+        RibbonHelpButton = QAction(translate("FreeCAD Ribbon", "FreeCAD Ribbon help"))
+        RibbonHelpButton.setIcon(HelpIcon)
+        RibbonHelpButton.triggered.connect(self.on_RibbonHelpButton_clicked)
+        HelpMenu.insertAction(actions[1], RibbonHelpButton)
+
+        # create an about button to store FreeCAD about, Ribbon about and what's new
+        AboutMenu = QMenu(translate("FreeCAD Ribbon", "About") + "...")
+        # set the icon for the menu
+        AboutMenu.setIcon(AboutIcon)
+        # get the the about button from freecad
+        AboutAction_FreeCAD = actions[len(actions) - 1]
+        # add the FreeCAd about button to the aboutmenu
+        AboutMenu.addAction(AboutAction_FreeCAD)
+        # remove the FreeCAd about button from the help menu
+        HelpMenu.removeAction(actions[len(actions) - 1])
         # Get the version of this addon
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
+        # Create the ribbon about button
+        AboutButton_Ribbon = AboutMenu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version)
+        AboutButton_Ribbon.setIcon(AboutIcon)
+        AboutButton_Ribbon.triggered.connect(self.on_AboutButton_clicked)
+        # Create the what's new button
+        WhatsNewButton_Ribbon = AboutMenu.addAction(translate("FreeCAD Ribbon", "What's new?"))
+        WhatsNewButton_Ribbon.triggered.connect(self.on_WhatsNewButton_clicked)
+        # add the aboutmenu to the help menu
+        HelpMenu.addMenu(AboutMenu)
 
-        Menu.addSeparator()
-        WhatsNewButton = Menu.addAction(translate("FreeCAD Ribbon", "What's new?"))
-        WhatsNewButton.triggered.connect(self.on_WhatsNewButton_clicked)
-        RibbonHelpButton = Menu.addAction(translate("FreeCAD Ribbon", "Ribbon help"))
-        RibbonHelpButton.triggered.connect(self.on_RibbonHelpButton_clicked)
-        AboutButton = Menu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version)
-        AboutButton.triggered.connect(self.on_AboutButton_clicked)
-
-        if platform.system().lower() == "darwin":
-            for action in MenuBar.actions():
-                if action.text() == translate("FreeCAD Ribbon", "FreeCAD Ribbon"):
-                    MenuBar.removeAction(action)
-                    break
-            # Create the menu for the ribbon
-            MacMenu = QMenu(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
-            # add menu buttons to it
-            if Parameters_Ribbon.USE_FC_OVERLAY is False:
-                MacMenu.addMenu(OverlayMenu)
-            MacMenu.addMenu(DesignMenu)
-            MacMenu.addSeparator()
-            MacMenu.addAction(WhatsNewButton)
-            MacMenu.addAction(RibbonHelpButton)
-            # make sure that the about button doesn't replace FreeCAD's about button
-            AboutButton.setMenuRole(QAction.MenuRole.NoRole)
-            MacMenu.addSeparator()
-            MacMenu.addAction(AboutButton)
-            # Add the menu to the global menubar
-            beforeAction = None
-            for child in MenuBar.children():
-                if child.objectName() == "&Windows":
-                    beforeAction = child.menuAction()
-                    MenuBar.insertMenu(beforeAction, MacMenu)
-                    # Remove the menu from the Ribbon Application Menu
-                    for action in Menu.actions():
-                        if action.text() == translate("FreeCAD Ribbon", "FreeCAD Ribbon"):
-                            Menu.removeAction(action)
-                            break
+        self.HelpMenu = HelpMenu
         return
 
     def loadDesignMenu(self):
@@ -1055,6 +1129,9 @@ class ModernMenu(RibbonBar):
     def on_AboutButton_clicked(self):
         LoadLicenseForm_Ribbon.main()
         return
+
+    def onHelpClicked(self):
+        self.helpRibbonButton().showMenu()
 
     def on_RibbonHelpButton_clicked(self):
         if self.ReproAdress != "" or self.ReproAdress is not None:
@@ -1129,7 +1206,7 @@ class ModernMenu(RibbonBar):
 
             if tabActivated is True:
                 self.onWbActivated()
-                self.ApplicationMenu()
+                self.ApplicationMenus()
 
             # hide normal toolbars
             self.hideClassicToolbars()
@@ -1861,7 +1938,7 @@ class ModernMenu(RibbonBar):
             self.disconnectSignals()
             self.tabBar().setCurrentIndex(currentWbIndex)
             self.connectSignals()
-        self.ApplicationMenu()
+        self.ApplicationMenus()
         return
 
     def hideClassicToolbars(self):
