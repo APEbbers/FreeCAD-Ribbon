@@ -29,12 +29,11 @@ from PySide.QtGui import (
     QAction,
     QFontMetrics,
     QFont,
+    QFontDatabase,
     QTextOption,
     QCursor,
     QPalette,
     QEnterEvent,
-    QColor,
-    QColorConstants,
 )
 from PySide.QtWidgets import (
     QToolButton,
@@ -48,7 +47,6 @@ from PySide.QtWidgets import (
     QStyleOption,
     QFrame,
     QGraphicsEffect,
-    QStyle,
 )
 from PySide.QtCore import Qt, QSize, QRect, QMargins, QEvent
 
@@ -71,8 +69,11 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
+FontType = "Helvetica"
+
 
 class CustomControls:
+
     def LargeCustomToolButton(
         Text: str,
         Action: QAction,
@@ -96,7 +97,7 @@ class CustomControls:
 
         # Set the default stylesheet
         StyleSheet_Addition_Button = (
-            "QToolButton, QToolButton:hover, QTextEdit {background-color: "
+            "QToolButton, QToolButton:hover {background-color: "
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border: none"
             + ";}"
@@ -148,12 +149,10 @@ class CustomControls:
             Label_Text.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
             Label_Text.document().setDocumentMargin(0)
             Label_Text.viewport().setCursor(Qt.CursorShape.ArrowCursor)
-            Label_Text.viewport().setStyleSheet("background: none")  # remove the background from the viewport
             Label_Text.setFocusPolicy(Qt.FocusPolicy.NoFocus)
             # Set the font
-            Font = QFont()
-            Font.setPointSize(FontSize)
-            Label_Text.setFont(Font)
+            Label_Text.setFont(QFont(FontType, FontSize))
+            Font = Label_Text.font()
             # change the menubutton space because text is included in the click area
             MenuButtonSpace = 10
             # Determine the height of a single row
@@ -267,7 +266,6 @@ class CustomControls:
                 # Change the background color for commandbutton and label on hovering (CSS)
                 def enterEventCustom(event):
                     BorderColor = StyleMapping.ReturnStyleItem("Border_Color")
-                    FontColor = StyleMapping.ReturnStyleItem("FontColor")
                     if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
                     if Parameters_Ribbon.BORDER_TRANSPARANT:
@@ -281,8 +279,7 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
-                        + ";margin: 0px 0px 0px 0px"
-                        + ";padding: 0px 0px 0px 0px"
+                        + ";margin: 0px"
                         + ";spacing: 0px"
                         + ";}"
                         + """QToolButton::menu-indicator {
@@ -291,9 +288,7 @@ class CustomControls:
                             }"""
                     )
                     StyleSheet_Addition_Label = (
-                        "QToolButton, QTextEdit {color: "
-                        + FontColor
-                        + ";background-color: "
+                        "QToolButton, QTextEdit {background-color: "
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
@@ -301,8 +296,7 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
-                        + ";margin: 0px 0px 0px 0px"
-                        + ";padding: 0px 0px 0px 0px"
+                        + ";margin: 0px"
                         + ";spacing: 0px"
                         + ";}"
                     )
@@ -337,8 +331,7 @@ class CustomControls:
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-radius: 2px"
-                        + ";margin: 0px 0px 0px 0px"
-                        + ";padding: 0px 0px 0px 0px"
+                        + ";margin: 0px"
                         + ";spacing: 0px"
                         + ";}"
                         + """QToolButton::menu-indicator {
@@ -392,15 +385,12 @@ class CustomControls:
                 # Change the background color for commandbutton and label on hovering (CSS)
                 def enterEventCustom(event):
                     BorderColor = StyleMapping.ReturnStyleItem("Border_Color")
-                    FontColor = StyleMapping.ReturnStyleItem("FontColor")
                     if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
                     if Parameters_Ribbon.BORDER_TRANSPARANT:
                         BorderColor = StyleMapping.ReturnStyleItem("Background_Color_Hover")
                     StyleSheet_Addition_Label = (
-                        "QToolButton, QTextEdit {color: "
-                        + FontColor
-                        + ";background-color: "
+                        "QToolButton, QTextEdit {background-color: "
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
@@ -408,8 +398,7 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
-                        + ";margin: 0px 0px 0px 0px"
-                        + ";padding: 0px 0px 0px 0px"
+                        + ";margin: 0px"
                         + ";spacing: 0px"
                         + ";}"
                     )
@@ -422,8 +411,7 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
-                        + ";margin: 0px 0px 0px 0px"
-                        + ";padding: 0px 0px 0px 0px"
+                        + ";margin: 0px"
                         + ";spacing: 0px"
                         + ";}"
                     )
@@ -458,8 +446,7 @@ class CustomControls:
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-radius: 2px"
-                        + ";margin: 0px 0px 0px 0px"
-                        + ";padding: 0px 0px 0px 0px"
+                        + ";margin: 0px"
                         + ";spacing: 0px"
                         + ";}"
                     )
@@ -514,8 +501,7 @@ class CustomControls:
             + ";border-top: 0px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-radius: 2px"
-            + ";margin: 0px 0px 0px 0px"
-            + ";padding: 0px 0px 0px 0px"
+            + ";margin: 0px"
             + ";spacing: 0px"
             + ";}"
         )
@@ -527,8 +513,7 @@ class CustomControls:
             + ";border-bottom: 0px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-radius: 2px"
-            + ";margin: 0px 0px 0px 0px"
-            + ";padding: 0px 0px 0px 0px"
+            + ";margin: 0px"
             + ";spacing: 0px"
             + ";}"
         )
@@ -546,8 +531,7 @@ class CustomControls:
             + ";border-top: 0px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-radius: 2px"
-            + ";margin: 0px 0px 0px 0px"
-            + ";padding: 0px 0px 0px 0px"
+            + ";margin: 0px"
             + ";spacing: 0px"
             + ";}"
             + """QToolButton::menu-indicator {
@@ -626,9 +610,6 @@ class CustomControls:
         # Add the command button
         Layout.addWidget(CommandButton)
         Layout.setAlignment(TextPositionAlignment)
-        Font = QFont()
-        Font.setPointSize(FontSize)
-        Label_Text.setFont(Font)
 
         # Set the content margins to zero
         Layout.setContentsMargins(0, 0, 0, 0)
@@ -639,6 +620,8 @@ class CustomControls:
 
         # If text must be shown wrapped, add a layout with label
         if showText is True and Text != "":
+            # Set the font
+            Label_Text.setFont(QFont(FontType, FontSize))
             # Create a label
             # Label_Text = QTextEdit()
             Label_Text.setReadOnly(True)
@@ -649,13 +632,12 @@ class CustomControls:
             Label_Text.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
             Label_Text.document().setDocumentMargin(0)
             Label_Text.viewport().setCursor(Qt.CursorShape.ArrowCursor)
-            Label_Text.viewport().setStyleSheet("background: none")  # remove the background from the viewport
             Label_Text.setFocusPolicy(Qt.FocusPolicy.NoFocus)
             Label_Text.setSizeAdjustPolicy(QTextEdit.SizeAdjustPolicy.AdjustToContents)
             Label_Text.setFixedHeight(CommandButton.height())
             # Set the font
-            Font = QFont()
-            Label_Text.setFont(Font)
+            Label_Text.setFont(QFont(FontType, FontSize))
+            Font = Label_Text.font()
             FontMetrics = QFontMetrics(Font)
             if setWordWrap is True:
                 Label_Text.setWordWrapMode(QTextOption.WrapMode.WordWrap)
@@ -773,16 +755,13 @@ class CustomControls:
                 # Change the background color for commandbutton and label on hovering (CSS)
                 def enterEventCustom(event):
                     BorderColor = StyleMapping.ReturnStyleItem("Border_Color")
-                    FontColor = StyleMapping.ReturnStyleItem("FontColor")
                     if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
                     if Parameters_Ribbon.BORDER_TRANSPARANT:
                         BorderColor = StyleMapping.ReturnStyleItem("Background_Color_Hover")
                     StyleSheet_Addition_Label = (
                         "QToolButton, QTextEdit { "
-                        + "color: "
-                        + FontColor
-                        + ";background-color: "
+                        + "background-color: "
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
@@ -790,8 +769,7 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
-                        + ";margin: 0px 0px 0px 0px"
-                        + ";padding: 0px 0px 0px 0px"
+                        + ";margin: 0px"
                         + ";spacing: 0px"
                         + ";}"
                     )
@@ -805,8 +783,7 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
-                        + ";margin: 0px 0px 0px 0px"
-                        + ";padding: 0px 0px 0px 0px"
+                        + ";margin: 0px"
                         + ";spacing: 0px"
                         + ";}"
                     )
@@ -842,8 +819,7 @@ class CustomControls:
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-radius: 2px"
-                        + ";margin: 0px 0px 0px 0px"
-                        + ";padding: 0px 0px 0px 0px"
+                        + ";margin: 0px"
                         + ";spacing: 0px"
                         + ";}"
                     )
@@ -874,8 +850,8 @@ class CustomControls:
                     + ";border: none"
                     + ";}"
                 )
-                Label_Text.setStyleSheet(StyleSheet_Addition + StyleSheet)
-                ArrowButton.setStyleSheet(StyleSheet_Addition + StyleSheet)
+                Label_Text.setStyleSheet(StyleSheet + StyleSheet_Addition)
+                ArrowButton.setStyleSheet(StyleSheet + StyleSheet_Addition)
 
             Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
             ArrowButton.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
@@ -894,16 +870,13 @@ class CustomControls:
                 # Change the background color for commandbutton and label on hovering (CSS)
                 def enterEventCustom(event):
                     BorderColor = StyleMapping.ReturnStyleItem("Border_Color")
-                    FontColor = StyleMapping.ReturnStyleItem("FontColor")
                     if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
                     if Parameters_Ribbon.BORDER_TRANSPARANT:
                         BorderColor = StyleMapping.ReturnStyleItem("Background_Color_Hover")
                     StyleSheet_Addition_Label = (
                         "QToolButton, QTextEdit { "
-                        + "color: "
-                        + FontColor
-                        + ";background-color: "
+                        + "background-color: "
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
@@ -911,8 +884,7 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
-                        + ";margin: 0px 0px 0px 0px"
-                        + ";padding: 0px 0px 0px 0px"
+                        + ";margin: 0px"
                         + ";spacing: 0px"
                         + ";}"
                     )
@@ -926,8 +898,7 @@ class CustomControls:
                         + StyleMapping.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
-                        + ";margin: 0px 0px 0px 0px"
-                        + ";padding: 0px 0px 0px 0px"
+                        + ";margin: 0px"
                         + ";spacing: 0px"
                         + ";}"
                     )
@@ -963,8 +934,7 @@ class CustomControls:
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-radius: 2px"
-                        + ";margin: 0px 0px 0px 0px"
-                        + ";padding: 0px 0px 0px 0px"
+                        + ";margin: 0px"
                         + ";spacing: 0px"
                         + ";}"
                     )
@@ -995,8 +965,8 @@ class CustomControls:
                     + ";border: none"
                     + ";}"
                 )
-                Label_Text.setStyleSheet(StyleSheet_Addition + StyleSheet)
-                CommandButton.setStyleSheet(StyleSheet_Addition + StyleSheet)
+                Label_Text.setStyleSheet(StyleSheet + StyleSheet_Addition)
+                CommandButton.setStyleSheet(StyleSheet + StyleSheet_Addition)
 
             Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
             CommandButton.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
@@ -1025,8 +995,7 @@ class CustomControls:
             + ";border-left: 0px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-radius: 2px"
-            + ";margin: 0px 0px 0px 0px"
-            + ";padding: 0px 0px 0px 0px"
+            + ";margin: 0px"
             + ";spacing: 0px"
             + ";}"
         )
@@ -1039,8 +1008,7 @@ class CustomControls:
             + ";border-right: 0px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-radius: 2px"
-            + ";margin: 0px 0px 0px 0px"
-            + ";padding: 0px 0px 0px 0px"
+            + ";margin: 0px"
             + ";spacing: 0px"
             + ";}"
         )
@@ -1053,8 +1021,7 @@ class CustomControls:
             + ";border-left: 0px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border-radius: 2px"
-            + ";margin: 0px 0px 0px 0px"
-            + ";padding: 0px 0px 0px 0px"
+            + ";margin: 0px"
             + ";spacing: 0px"
             + ";}"
         )
@@ -1063,9 +1030,6 @@ class CustomControls:
             + StyleMapping.ReturnStyleItem("Background_Color")
             + ";border: 0px solid"
             + StyleMapping.ReturnStyleItem("Background_Color")
-            + ";margin: 0px 0px 0px 0px"
-            + ";padding: 0px 0px 0px 0px"
-            + ";spacing: 0px"
             + ";}"
         )
         CommandButton.setStyleSheet(StyleSheet_Addition_Command + StyleSheet)
@@ -1074,7 +1038,7 @@ class CustomControls:
         btn.setStyleSheet(StyleSheet_Addition_button + StyleSheet)
 
         # Set the correct dimensions
-        btn.setFixedWidth(CommandButton.width() + MenuButtonSpace + TextWidth + 3)
+        btn.setFixedWidth(CommandButton.width() + MenuButtonSpace + TextWidth)
         btn.setFixedHeight(CommandButton.height())
 
         # return the new button
