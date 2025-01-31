@@ -103,7 +103,3 @@ RibbonPanelItemWidget {
 QTabBar {
     background-color: transparent;
 }
-
-QTabBar QToolButton {
-    background-color: transparent;
-}
