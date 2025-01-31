@@ -882,8 +882,8 @@ class ModernMenu(RibbonBar):
             OverlayMenu.setIcon(Gui.getIcon("Draft_Layer.svg"))
             OverlayMenu.setToolTip(translate("FreeCAD Ribbon", "Overlay functions") + "...")
             OverlayMenu.setMenu(self.OverlayMenu)
-            OverlayMenu.setFixedSize(self.RightToolBarButtonSize + 16, self.RightToolBarButtonSize)
-            OverlayMenu.setStyleSheet(StyleMapping.ReturnStyleSheet(control="toolbutton", padding_right="16px"))
+            OverlayMenu.setFixedSize(self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize)
+            OverlayMenu.setStyleSheet(StyleMapping.ReturnStyleSheet(control="toolbutton", padding_right="12px"))
             OverlayMenu.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
             # add the settingsmenu to the right toolbar
             self.rightToolBar().addWidget(OverlayMenu)
@@ -900,8 +900,8 @@ class ModernMenu(RibbonBar):
         SettingsMenu.addAction(self.RibbonMenu.menuAction())
         SettingsMenu.setIcon(Gui.getIcon("Std_DlgParameter.svg"))
         SettingsMenu.setToolTip(translate("FreeCAD Ribbon", "Preferences") + "...")
-        SettingsMenu.setFixedSize(self.RightToolBarButtonSize + 16, self.RightToolBarButtonSize)
-        SettingsMenu.setStyleSheet(StyleMapping.ReturnStyleSheet(control="toolbutton", padding_right="16px"))
+        SettingsMenu.setFixedSize(self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize)
+        SettingsMenu.setStyleSheet(StyleMapping.ReturnStyleSheet(control="toolbutton", padding_right="12px"))
         SettingsMenu.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         # add the settingsmenu to the right toolbar
         self.rightToolBar().addWidget(SettingsMenu)
@@ -915,8 +915,8 @@ class ModernMenu(RibbonBar):
         helpAction = helpMenu.actions()[0]
         self.helpRibbonButton().setIcon(helpAction.icon())
         self.helpRibbonButton().setMenu(self.HelpMenu)
-        self.helpRibbonButton().setFixedSize(self.RightToolBarButtonSize + 16, self.RightToolBarButtonSize)
-        self.helpRibbonButton().setStyleSheet(StyleMapping.ReturnStyleSheet(control="toolbutton", padding_right="16px"))
+        self.helpRibbonButton().setFixedSize(self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize)
+        self.helpRibbonButton().setStyleSheet(StyleMapping.ReturnStyleSheet(control="toolbutton", padding_right="12px"))
         self.helpRibbonButton().setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
 
         # Add a button the enable or disable AutoHide
@@ -957,8 +957,8 @@ class ModernMenu(RibbonBar):
         # Set the width of the right toolbar
         RightToolbarWidth = SearchBarWidth
         for child in self.rightToolBar().actions():
-            RightToolbarWidth = RightToolbarWidth + self.RightToolBarButtonSize
-        self.rightToolBar().setMinimumWidth(RightToolbarWidth - self.RightToolBarButtonSize * 1.5)
+            RightToolbarWidth = RightToolbarWidth + self.RightToolBarButtonSize + 2
+        self.rightToolBar().setMinimumWidth(RightToolbarWidth)
         # Set the size policy
         self.rightToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
         self.rightToolBar().setSizeIncrement(1, 1)
@@ -1019,6 +1019,8 @@ class ModernMenu(RibbonBar):
             for child in MenuBar.children():
                 if child.objectName() == "&Windows":
                     beforeAction = child.menuAction()
+                    Menu = self.RibbonMenu
+                    Menu.setTitle(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
                     MenuBar.insertMenu(beforeAction, self.RibbonMenu)
                     # Remove the menu from the Ribbon Application Menu
                     for action in ApplictionMenu.actions():
