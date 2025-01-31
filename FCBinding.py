@@ -1025,7 +1025,7 @@ class ModernMenu(RibbonBar):
             beforeAction = None
             for child in MenuBar.children():
                 if child.objectName() == "&Windows":
-                    beforeAction = child.menuAction
+                    beforeAction = child.menuAction()
                     MenuBar.insertMenu(beforeAction, MacMenu)
                     # Remove the menu from the Ribbon Application Menu
                     for action in Menu.actions():
