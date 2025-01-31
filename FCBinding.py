@@ -429,6 +429,16 @@ class ModernMenu(RibbonBar):
             StyleSheet = StyleSheet_Addition_3 + StyleSheet
             self.setStyleSheet(StyleSheet)
 
+        # Add an addition for selected tabs
+        StyleSheet_Addition_4 = (
+            """QTabBar::tab:selected, QTabBar::tab:hover {
+                background: """
+            + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+            + """}"""
+        )
+        StyleSheet = StyleSheet_Addition_4 + StyleSheet
+        self.setStyleSheet(StyleSheet)
+
         # get the state of the mainwindow
         self.MainWindowLoaded = True
 
