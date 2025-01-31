@@ -1100,13 +1100,12 @@ class ModernMenu(RibbonBar):
         # set the icon for the menu
         AboutMenu.setIcon(AboutIcon)
         # get the the about button from freecad
-        AboutAction_FreeCAD = None
+        AboutAction_FreeCAD = actions[len(actions) - 1]
         for action in actions:
-            if action.menuRole() == QAction.MenuRole.AboutQtRole:
+            if QAction(action).menuRole() == QAction.MenuRole.AboutRole:
                 AboutAction_FreeCAD = action
         # add the FreeCAd about button to the aboutmenu
-        if AboutAction_FreeCAD is not None:
-            AboutMenu.addAction(AboutAction_FreeCAD)
+        AboutMenu.addAction(AboutAction_FreeCAD)
         # remove the FreeCAd about button from the help menu
         HelpMenu.removeAction(actions[len(actions) - 1])
         # Get the version of this addon
