@@ -1170,10 +1170,18 @@ class LoadDialog(Design_ui.Ui_Form):
             Parameters_Ribbon.Settings.SetStringSetting("CustomPanelPosition", "Left")
             self.form.CustomPanelPositionRight.setChecked(False)
 
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
+
     def on_CustomPanelPositionRight_IS_clicked(self):
         if self.form.CustomPanelPositionRight.isChecked():
             Parameters_Ribbon.Settings.SetStringSetting("CustomPanelPosition", "Right")
             self.form.CustomPanelPositionLeft.setChecked(False)
+
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
 
     # endregion---------------------------------------------------------------------------------------
 
