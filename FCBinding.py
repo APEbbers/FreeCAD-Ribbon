@@ -1240,9 +1240,14 @@ class ModernMenu(RibbonBar):
 
                 position = None
                 try:
-                    position = ToolbarOrder.index(toolbar)
+                    position = ToolbarOrder.index(toolbar) + 1
                 except ValueError:
                     position = 999999
+                    if toolbar.endswith("_custom") or toolbar.endswith("_newPanel"):
+                        if Parameters_Ribbon.DEFAULT_PANEL_POSITION_CUSTOM == "Right":
+                            position = 999999
+                        else:
+                            position = 0
                 return position
 
             ListToolbars.sort(key=SortToolbars)
