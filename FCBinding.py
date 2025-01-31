@@ -1116,7 +1116,10 @@ class ModernMenu(RibbonBar):
         WhatsNewButton_Ribbon = AboutMenu.addAction(translate("FreeCAD Ribbon", "What's new?"))
         WhatsNewButton_Ribbon.triggered.connect(self.on_WhatsNewButton_clicked)
         # add the aboutmenu to the help menu
-        HelpMenu.addMenu(AboutMenu)
+        if platform.system().lower() != "darwin":
+            HelpMenu.addMenu(AboutMenu)
+        if platform.system().lower() == "darwin":
+            HelpMenu.addAction(AboutButton_Ribbon)
 
         self.HelpMenu = HelpMenu
         return
