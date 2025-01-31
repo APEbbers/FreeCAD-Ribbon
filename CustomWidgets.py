@@ -69,8 +69,6 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
-FontType = "Helvetica"
-
 
 class CustomControls:
 
@@ -80,7 +78,7 @@ class CustomControls:
         Icon: QIcon,
         IconSize: QSize,
         ButtonSize: QSize,
-        FontSize: int = 10,
+        FontSize: int = 11,
         showText=True,
         TextAlignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter,
         setWordWrap=True,
@@ -151,8 +149,9 @@ class CustomControls:
             Label_Text.viewport().setCursor(Qt.CursorShape.ArrowCursor)
             Label_Text.setFocusPolicy(Qt.FocusPolicy.NoFocus)
             # Set the font
-            Label_Text.setFont(QFont(FontType, FontSize))
-            Font = Label_Text.font()
+            Font = QFont()
+            Font.setPixelSize(FontSize)
+            Label_Text.setFont(Font)
             # change the menubutton space because text is included in the click area
             MenuButtonSpace = 10
             # Determine the height of a single row
@@ -564,7 +563,7 @@ class CustomControls:
         Icon: QIcon,
         IconSize: QSize,
         ButtonSize: QSize,
-        FontSize: int = 10,
+        FontSize: int = 11,
         showText=True,
         TextAlignment=Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft,
         TextPositionAlignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft,
@@ -620,8 +619,6 @@ class CustomControls:
 
         # If text must be shown wrapped, add a layout with label
         if showText is True and Text != "":
-            # Set the font
-            Label_Text.setFont(QFont(FontType, FontSize))
             # Create a label
             # Label_Text = QTextEdit()
             Label_Text.setReadOnly(True)
@@ -636,8 +633,9 @@ class CustomControls:
             Label_Text.setSizeAdjustPolicy(QTextEdit.SizeAdjustPolicy.AdjustToContents)
             Label_Text.setFixedHeight(CommandButton.height())
             # Set the font
-            Label_Text.setFont(QFont(FontType, FontSize))
-            Font = Label_Text.font()
+            Font = QFont()
+            Font.setPixelSize(FontSize)
+            Label_Text.setFont(Font)
             FontMetrics = QFontMetrics(Font)
             if setWordWrap is True:
                 Label_Text.setWordWrapMode(QTextOption.WrapMode.WordWrap)
