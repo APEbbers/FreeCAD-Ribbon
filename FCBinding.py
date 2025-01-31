@@ -158,7 +158,7 @@ class ModernMenu(RibbonBar):
     # Set a size factor for the buttons
     sizeFactor = 1.3
     # Create an offset for the panelheight
-    PanelHeightOffset = 30
+    PannleHeightOffset = 30
     # Create an offset for the whole ribbon height
     RibbonOffset = 40 + QuickAccessButtonSize  # Set to zero to hide the panel titles
 
@@ -450,7 +450,7 @@ class ModernMenu(RibbonBar):
 
         # Set the menuBar hidden as standard
         mw.menuBar().hide()
-        if self.isEnabled() is False or platform.system() == "darwin":
+        if self.isEnabled() is False:
             mw.menuBar().show()
 
         # connect a tabbar click event to the tarbar click funtion
@@ -843,6 +843,18 @@ class ModernMenu(RibbonBar):
                         # Set the tab data
                         self.tabBar().setTabData(len(self.categories()) - 1, workbenchName)
 
+                        # Set the tooltip
+                        MenuText = workbench.MenuText
+                        ToolTipText = workbench.ToolTip
+                        if (
+                            ToolTipText.lower() != MenuText.lower() + " workbench"
+                            and MenuText.lower() != ToolTipText.lower()
+                        ):
+                            MenuText = workbench.MenuText + "\n\n" + workbench.ToolTip
+                        else:
+                            MenuText = ToolTipText
+                        self.tabBar().setTabToolTip(len(self.categories()) - 1, MenuText)
+
         # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
 
@@ -976,6 +988,7 @@ class ModernMenu(RibbonBar):
                         ListScripts[i],
                         lambda i=i + 1: self.LoadMarcoFreeCAD(ListScripts[i - 1]),
                     )
+
         # Add a about button, a What's new? and a help button for this ribbon
         #
         # Get the version of this addon
@@ -987,35 +1000,9 @@ class ModernMenu(RibbonBar):
         WhatsNewButton.triggered.connect(self.on_WhatsNewButton_clicked)
         RibbonHelpButton = Menu.addAction(translate("FreeCAD Ribbon", "Ribbon help"))
         RibbonHelpButton.triggered.connect(self.on_RibbonHelpButton_clicked)
-        Menu.addSeparator()
         AboutButton = Menu.addAction(translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version)
         AboutButton.triggered.connect(self.on_AboutButton_clicked)
 
-        if platform.system().lower() == "darwin":
-            for action in MenuBar.actions():
-                if action.text() == translate("FreeCAD Ribbon", "FreeCAD Ribbon"):
-                    MenuBar.removeAction(action)
-                    break
-            # Create the menu for the ribbon
-            MacMenu= QMenu(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
-            # add menu buttons to it
-            if Parameters_Ribbon.USE_FC_OVERLAY is False:
-                MacMenu.addMenu(OverlayMenu)
-            MacMenu.addMenu(DesignMenu)
-            MacMenu.addSeparator()
-            MacMenu.addAction(WhatsNewButton)
-            MacMenu.addAction(RibbonHelpButton)
-            # make sure that the about button doesn't replace FreeCAD's about button
-            AboutButton.setMenuRole(QAction.MenuRole.NoRole)
-            MacMenu.addSeparator()
-            MacMenu.addAction(AboutButton)
-            # Add the menu to the global menubar
-            MenuBar.addMenu(MacMenu)
-            # Remove the menu from the Ribbon Application Menu
-            for action in Menu.actions():
-                if action.text() == translate("FreeCAD Ribbon", "FreeCAD Ribbon"):
-                    Menu.removeAction(action)
-                    break
         return
 
     def loadDesignMenu(self):
@@ -1093,7 +1080,7 @@ class ModernMenu(RibbonBar):
         tabName = self.tabBar().tabText(index)
 
         if tabName is not None and tabName != "" and tabName != "test":
-            Color = QColor(StyleMapping.ReturnStyleItem("FontColor"))
+            Color = QColor(StyleMapping.ReturnStyleItem("Border_Color"))
             self.tabBar().setTabTextColor(index, Color)
 
             # activate selected workbench
@@ -1117,7 +1104,7 @@ class ModernMenu(RibbonBar):
                 self.setRibbonHeight(self.RibbonHeight)
 
         # Make sure that the text is readable
-        self.tabBar().setStyleSheet("color: " + StyleMapping.ReturnStyleItem("FontColor") + ";")
+        self.tabBar().setStyleSheet("color: " + StyleMapping.ReturnStyleItem("Border_Color") + ";")
 
         # ensure that workbench is already loaded
         workbench = Gui.activeWorkbench()
@@ -1726,9 +1713,7 @@ class ModernMenu(RibbonBar):
             panel._actionsLayout.setVerticalSpacing(0)
             panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
             panel.setContentsMargins(0, 0, 0, 0)
-            panel._titleWidget.setContentsMargins(0, 0, 0, 0)
-            panel._titleWidget.setFixedHeight(panel._titleWidget.height() + 3)
-            panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
+            panel.setFixedHeight(self.ReturnRibbonHeight(self.PannleHeightOffset))
             self.RibbonHeight = self.ReturnRibbonHeight() + self.RibbonOffset
 
             # Setup the panelOptionButton
@@ -1814,7 +1799,8 @@ class ModernMenu(RibbonBar):
         )
 
         # Set the maximum height to a high value to prevent from the ribbon to be clipped off
-        self.currentCategory().setFixedHeight(self.RibbonHeight - self.TabBar_Size - 12)
+        self.currentCategory().setMinimumHeight(self.RibbonHeight)
+        self.currentCategory().setMaximumHeight(self.RibbonHeight)
         self.setRibbonHeight(self.RibbonHeight)
         return
 
@@ -2183,6 +2169,38 @@ class ModernMenu(RibbonBar):
     #     return
 
 
+# region - alternative loading
+# class run:
+#     """
+#     Activate Modern UI.
+#     """
+
+#     def __init__(self, name):
+#         """
+#         Constructor
+#         """
+#         disable = 0
+#         if name != "NoneWorkbench":
+#             mw = Gui.getMainWindow()
+
+#             # Disable connection after activation
+#             mw.workbenchActivated.disconnect(run)
+#             if disable:
+#                 return
+
+#             ribbon = ModernMenu()
+#             # Get the layout
+#             layout = ribbon.layout()
+#             # Set spacing and content margins to zero
+#             layout.setSpacing(0)
+#             layout.setContentsMargins(3, 0, 3, 3)
+#             # update the layout
+#             ribbon.setLayout(layout)
+#             # Create the ribbon
+#             mw.setMenuBar(ribbon)
+# endregion
+
+
 class run:
     """
     Activate Modern UI.
@@ -2214,22 +2232,13 @@ class run:
             ribbonDock.setWindowTitle("Ribbon")
             # Set the titlebar to an empty widget (effectively hide it)
             ribbonDock.setTitleBarWidget(QWidget())
+            ribbonDock.setContentsMargins(0, 0, 0, 0)
             # attach the ribbon to the dockwidget
             ribbonDock.setWidget(ribbon)
             ribbonDock.setEnabled(True)
             ribbonDock.setVisible(True)
-            ribbonDock.setStyleSheet(
-                """
-                padding-top: 0px;
-                padding-bottom: 0px;
-                margin-top: 0px;
-                margin-right: 0px;
-                margin-left: 0px;
-                margin-bottom: 0px;
-                spacing: 0px;
-                """
-            )
-            # ribbonDock.setMaximumHeight(ribbonDock.height() - 20)
+            # # make sure that there are no negative valules
+            # ribbonDock.setMaximumHeight(ribbon.ReturnRibbonHeight() - 20)
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
 
