@@ -1100,9 +1100,13 @@ class ModernMenu(RibbonBar):
         # set the icon for the menu
         AboutMenu.setIcon(AboutIcon)
         # get the the about button from freecad
-        AboutAction_FreeCAD = actions[len(actions) - 1]
+        AboutAction_FreeCAD = None
+        for action in actions:
+            if action.menuRole() == QAction.MenuRole.AboutQtRole:
+                AboutAction_FreeCAD = action
         # add the FreeCAd about button to the aboutmenu
-        AboutMenu.addAction(AboutAction_FreeCAD)
+        if AboutAction_FreeCAD is not None:
+            AboutMenu.addAction(AboutAction_FreeCAD)
         # remove the FreeCAd about button from the help menu
         HelpMenu.removeAction(actions[len(actions) - 1])
         # Get the version of this addon
@@ -1116,10 +1120,7 @@ class ModernMenu(RibbonBar):
         WhatsNewButton_Ribbon = AboutMenu.addAction(translate("FreeCAD Ribbon", "What's new?"))
         WhatsNewButton_Ribbon.triggered.connect(self.on_WhatsNewButton_clicked)
         # add the aboutmenu to the help menu
-        if platform.system().lower() != "darwin":
-            HelpMenu.addMenu(AboutMenu)
-        if platform.system().lower() == "darwin":
-            HelpMenu.addAction(AboutButton_Ribbon)
+        HelpMenu.addMenu(AboutMenu)
 
         self.HelpMenu = HelpMenu
         return
