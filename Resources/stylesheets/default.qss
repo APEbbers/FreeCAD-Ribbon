@@ -28,6 +28,10 @@ RibbonApplicationButton::menu-indicator {
     image: none;
 }
 
+QTabBar, QDockWidget QTabBar {
+  qproperty-drawBase: 0;
+}
+
 RibbonBar {
 	padding-top: 0px;
 	padding-bottom: 0px;
