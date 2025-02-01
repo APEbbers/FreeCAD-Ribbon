@@ -1,6 +1,6 @@
-QToolTip { 
-   background-color: #FFFFE1; 
-   color: black; 
+QToolTip {
+   background-color: #FFFFE1;
+   color: black;
    border: black solid 1px;
    border-radius: 2px;
    }
