@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -41,7 +41,7 @@ from PySide6.QtGui import (
     QKeySequence,
     QShortcut,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -66,7 +66,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QToolTip,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -852,6 +852,9 @@ class ModernMenu(RibbonBar):
                             # set tab icon
                             icon: QIcon = self.ReturnWorkbenchIcon(workbenchName)
                             self.tabBar().setTabIcon(len(self.categories()) - 1, icon)
+                            # Set the text color equal to the background
+                            Color = QColor(StyleMapping.ReturnStyleItem("Background_Color"))
+                            self.tabBar().setTabTextColor(Color)
                         if Parameters_Ribbon.TABBAR_STYLE == 2:
                             self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon())
 
