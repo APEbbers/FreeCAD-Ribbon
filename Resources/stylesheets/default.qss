@@ -1,3 +1,10 @@
+QToolTip { 
+   background-color: #FFFFE1; 
+   color: black; 
+   border: black solid 1px;
+   border-radius: 2px;
+   }
+
 QTabBar {
   margin: 0px;
   padding-bottom: 0px;
