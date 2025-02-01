@@ -469,8 +469,17 @@ class ModernMenu(RibbonBar):
             """QTabBar::tab:selected, QTabBar::tab:hover {
                 background: """
             + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-            + """}"""
+            + """;}"""
         )
+        if Parameters_Ribbon.TABBAR_STYLE == 1:
+            StyleSheet_Addition_4 = (
+                """QTabBar::tab:selected, QTabBar::tab:hover {
+                background: """
+                + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                + """;color: """
+                + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                + """;}"""
+            )
         StyleSheet = StyleSheet_Addition_4 + StyleSheet
         self.setStyleSheet(StyleSheet)
 
@@ -1075,7 +1084,11 @@ class ModernMenu(RibbonBar):
         # Set the width of the right toolbar
         RightToolbarWidth = SearchBarWidth
         for child in self.rightToolBar().actions():
-            RightToolbarWidth = RightToolbarWidth + self.RightToolBarButtonSize + 2
+            RightToolbarWidth = (
+                RightToolbarWidth
+                + self.RightToolBarButtonSize
+                + self.rightToolBar().layout().spacing()
+            )
         self.rightToolBar().setMinimumWidth(RightToolbarWidth)
         # Set the size policy
         self.rightToolBar().setSizePolicy(
@@ -1369,9 +1382,25 @@ class ModernMenu(RibbonBar):
                 TB.setFixedHeight(self.RibbonHeight)
                 self.setRibbonHeight(self.RibbonHeight)
 
-        self.tabBar().setStyleSheet(
-            "QTabBar::tab {color: " + StyleMapping.ReturnStyleItem("FontColor") + ";}"
-        )
+        # Set the text color depending in tabstyle
+        if Parameters_Ribbon.TABBAR_STYLE != 1:
+            self.tabBar().setStyleSheet(
+                "QTabBar::tab {color: "
+                + StyleMapping.ReturnStyleItem("FontColor")
+                + ";}"
+            )
+        if Parameters_Ribbon.TABBAR_STYLE == 1:
+            self.tabBar().setStyleSheet(
+                """QTabBar::tab {color: """
+                + StyleMapping.ReturnStyleItem("Background_Color")
+                + """;}"""
+                + """QTabBar::tab:selected, QTabBar::tab:hover {
+                background: """
+                + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                + """;color: """
+                + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                + """;}"""
+            )
 
         # ensure that workbench is already loaded
         workbench = Gui.activeWorkbench()
