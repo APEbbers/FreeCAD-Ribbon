@@ -946,9 +946,11 @@ class ModernMenu(RibbonBar):
                             ToolTipText.lower() != MenuText.lower() + " workbench"
                             and MenuText.lower() != ToolTipText.lower()
                         ):
-                            MenuText = f"<font color={StyleMapping.ReturnStyleItem('FontColor')}><b>{workbench.MenuText}</b><br>{workbench.ToolTip}</font>"
+                            MenuText = (
+                                f"<b>{workbench.MenuText}</b><br>{workbench.ToolTip}"
+                            )
                         else:
-                            MenuText = f"<font color={StyleMapping.ReturnStyleItem('FontColor')}>{ToolTipText}<b></font></p>"
+                            MenuText = f"<b>{MenuText}<b>"
 
                         self.tabBar().setTabToolTip(
                             len(self.categories()) - 1, MenuText
@@ -1347,9 +1349,6 @@ class ModernMenu(RibbonBar):
         tabName = self.tabBar().tabText(index)
 
         if tabName is not None and tabName != "" and tabName != "test":
-            Color = QColor(StyleMapping.ReturnStyleItem("Border_Color"))
-            self.tabBar().setTabTextColor(index, Color)
-
             # activate selected workbench
             tabName = tabName.replace("&", "")
             if self.wbNameMapping[tabName] is not None:
@@ -1370,9 +1369,8 @@ class ModernMenu(RibbonBar):
                 TB.setFixedHeight(self.RibbonHeight)
                 self.setRibbonHeight(self.RibbonHeight)
 
-        # Make sure that the text is readable
         self.tabBar().setStyleSheet(
-            "color: " + StyleMapping.ReturnStyleItem("Border_Color") + ";"
+            "QTabBar::tab {color: " + StyleMapping.ReturnStyleItem("FontColor") + ";}"
         )
 
         # ensure that workbench is already loaded
