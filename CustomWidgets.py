@@ -29,6 +29,7 @@ from PySide.QtGui import (
     QAction,
     QFontMetrics,
     QFont,
+    QFontDatabase,
     QTextOption,
     QCursor,
     QPalette,
@@ -70,13 +71,14 @@ translate = App.Qt.translate
 
 
 class CustomControls:
+
     def LargeCustomToolButton(
         Text: str,
         Action: QAction,
         Icon: QIcon,
         IconSize: QSize,
         ButtonSize: QSize,
-        FontSize: int = 10,
+        FontSize: int = 11,
         showText=True,
         TextAlignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter,
         setWordWrap=True,
@@ -150,7 +152,7 @@ class CustomControls:
             Label_Text.setFocusPolicy(Qt.FocusPolicy.NoFocus)
             # Set the font
             Font = QFont()
-            Font.setPointSize(FontSize)
+            Font.setPixelSize(FontSize)
             Label_Text.setFont(Font)
             # change the menubutton space because text is included in the click area
             MenuButtonSpace = 10
@@ -591,7 +593,7 @@ class CustomControls:
         Icon: QIcon,
         IconSize: QSize,
         ButtonSize: QSize,
-        FontSize: int = 10,
+        FontSize: int = 11,
         showText=True,
         TextAlignment=Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft,
         TextPositionAlignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft,
@@ -637,9 +639,6 @@ class CustomControls:
         # Add the command button
         Layout.addWidget(CommandButton)
         Layout.setAlignment(TextPositionAlignment)
-        Font = QFont()
-        Font.setPointSize(FontSize)
-        Label_Text.setFont(Font)
 
         # Set the content margins to zero
         Layout.setContentsMargins(0, 0, 0, 0)
@@ -667,6 +666,7 @@ class CustomControls:
             Label_Text.setFixedHeight(CommandButton.height())
             # Set the font
             Font = QFont()
+            Font.setPixelSize(FontSize)
             Label_Text.setFont(Font)
             FontMetrics = QFontMetrics(Font)
             if setWordWrap is True:

@@ -36,6 +36,7 @@ from PySide.QtWidgets import (
     QWidget,
     QLineEdit,
     QSizePolicy,
+    QRadioButton,
 )
 from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
@@ -421,6 +422,14 @@ class LoadDialog(Design_ui.Ui_Form):
             self.form.GenerateSetup_IS_Panels,
             SIGNAL("clicked()"),
             self.on_GenerateSetup_IS_Panels_clicked,
+        )
+
+        # Connect the buttons for the default panel position for custom panels
+        self.form.CustomPanelPositionLeft.clicked.connect(
+            self.on_CustomPanelPositionLeft_IS_clicked
+        )
+        self.form.CustomPanelPositionRight.clicked.connect(
+            self.on_CustomPanelPositionRight_IS_clicked
         )
 
         # --- QuickCommandsTab ------------------
@@ -1263,6 +1272,24 @@ class LoadDialog(Design_ui.Ui_Form):
             self.form.UpdateJson.setEnabled(True)
 
         return
+
+    def on_CustomPanelPositionLeft_IS_clicked(self):
+        if self.form.CustomPanelPositionLeft.isChecked():
+            Parameters_Ribbon.Settings.SetStringSetting("CustomPanelPosition", "Left")
+            self.form.CustomPanelPositionRight.setChecked(False)
+
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
+
+    def on_CustomPanelPositionRight_IS_clicked(self):
+        if self.form.CustomPanelPositionRight.isChecked():
+            Parameters_Ribbon.Settings.SetStringSetting("CustomPanelPosition", "Right")
+            self.form.CustomPanelPositionLeft.setChecked(False)
+
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
 
     # endregion---------------------------------------------------------------------------------------
 
@@ -4573,9 +4600,14 @@ class LoadDialog(Design_ui.Ui_Form):
 
             position = None
             try:
-                position = JsonOrderList.index(toolbar)
+                position = JsonOrderList.index(toolbar) + 1
             except ValueError:
                 position = 999999
+                if toolbar.endswith("_custom") or toolbar.endswith("_newPanel"):
+                    if Parameters_Ribbon.DEFAULT_PANEL_POSITION_CUSTOM == "Right":
+                        position = 999999
+                    else:
+                        position = 0
             return position
 
         PanelList_RD.sort(key=SortList)
