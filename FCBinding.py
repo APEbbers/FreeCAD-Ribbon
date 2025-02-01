@@ -64,6 +64,7 @@ from PySide.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QVBoxLayout,
+    QToolTip,
 )
 from PySide.QtCore import (
     Qt,
@@ -569,8 +570,8 @@ class ModernMenu(RibbonBar):
         KeyCombination = Parameters_Ribbon.SHORTCUT_APPLICATION
         self.ShortCutApp = QShortcut(QKeySequence(KeyCombination), self)
         self.ShortCutApp.activated.connect(self.ToggleApplicationButton)
-        ToolTip = self.applicationOptionButton().toolTip()
-        ToolTip = f"<b>{ToolTip}</b> ({KeyCombination})"
+        # ToolTip = self.applicationOptionButton().toolTip()
+        ToolTip = f"{KeyCombination}"
         self.applicationOptionButton().setToolTip(ToolTip)
 
         return
@@ -945,11 +946,10 @@ class ModernMenu(RibbonBar):
                             ToolTipText.lower() != MenuText.lower() + " workbench"
                             and MenuText.lower() != ToolTipText.lower()
                         ):
-                            MenuText = (
-                                f"<b>{workbench.MenuText}</b><br>{workbench.ToolTip}"
-                            )
+                            MenuText = f"<font color={StyleMapping.ReturnStyleItem('FontColor')}><b>{workbench.MenuText}</b><br>{workbench.ToolTip}</font>"
                         else:
-                            MenuText = f"<b>{ToolTipText}<b>"
+                            MenuText = f"<font color={StyleMapping.ReturnStyleItem('FontColor')}>{ToolTipText}<b></font></p>"
+
                         self.tabBar().setTabToolTip(
                             len(self.categories()) - 1, MenuText
                         )
@@ -987,9 +987,7 @@ class ModernMenu(RibbonBar):
         # Get the freecad preference button
         editMenu = mw.findChildren(QMenu, "&Edit")[0]
         preferenceButton_FreeCAD = editMenu.actions()[len(editMenu.actions()) - 1]
-        preferenceButton_FreeCAD.setText(
-            translate("FreeCAD Ribbon", "FreeCAD prefences")
-        )
+        # preferenceButton_FreeCAD.setText(translate("FreeCAD Ribbon", "FreeCAD prefences"))
         # add the preference button for FreeCAD
         SettingsMenu.addAction(preferenceButton_FreeCAD)
         # add the ribbon settings menu
@@ -1135,7 +1133,7 @@ class ModernMenu(RibbonBar):
 
         if platform.system().lower() == "darwin":
             for action in MenuBar.actions():
-                if action.text() == translate("FreeCAD Ribbon", "FreeCAD Ribbon"):
+                if action.text() == translate("FreeCAD Ribbon", "Ribbon UI"):
                     MenuBar.removeAction(action)
                     break
 
@@ -1144,13 +1142,11 @@ class ModernMenu(RibbonBar):
                 if child.objectName() == "&Windows":
                     beforeAction = child.menuAction()
                     Menu = self.RibbonMenu
-                    Menu.setTitle(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
+                    Menu.setTitle(translate("FreeCAD Ribbon", "Ribbon UI"))
                     MenuBar.insertMenu(beforeAction, self.RibbonMenu)
                     # Remove the menu from the Ribbon Application Menu
                     for action in ApplictionMenu.actions():
-                        if action.text() == translate(
-                            "FreeCAD Ribbon", "FreeCAD Ribbon"
-                        ):
+                        if action.text() == translate("FreeCAD Ribbon", "Ribbon UI"):
                             ApplictionMenu.removeAction(action)
                             break
         return
@@ -1177,7 +1173,7 @@ class ModernMenu(RibbonBar):
 
         # Create a ribbon menu
         RibbonMenu = QMenu(
-            translate("FreeCAD Ribbon", "FreeCAD Ribbon preferences") + "..."
+            translate("FreeCAD Ribbon", "Ribbon UI preferences") + " ..."
         )
 
         # Add the ribbon design button
@@ -1220,7 +1216,7 @@ class ModernMenu(RibbonBar):
             if child.objectName() == "&Help":
                 actions = child.actions()
                 # change help to FreeCAD help
-                actions[0].setText(translate("FreeCAD Ribbon", "FreeCAD help"))
+                actions[0].setText(translate("FreeCAD Ribbon", "Help"))
                 HelpMenu.addActions(actions)
                 # Store the help icon for the Ribbon help
                 HelpIcon = child.actions()[0].icon()
@@ -1228,13 +1224,13 @@ class ModernMenu(RibbonBar):
                 MenuBar.removeAction(child.menuAction())
 
         # Add the ribbon helpbutton under the FreeCAD
-        RibbonHelpButton = QAction(translate("FreeCAD Ribbon", "FreeCAD Ribbon help"))
+        RibbonHelpButton = QAction(translate("FreeCAD Ribbon", "Ribbon UI help"))
         RibbonHelpButton.setIcon(HelpIcon)
         RibbonHelpButton.triggered.connect(self.on_RibbonHelpButton_clicked)
         HelpMenu.insertAction(actions[1], RibbonHelpButton)
 
         # create an about button to store FreeCAD about, Ribbon about and what's new
-        AboutMenu = QMenu(translate("FreeCAD Ribbon", "About") + "...")
+        AboutMenu = QMenu(translate("FreeCAD Ribbon", "About") + " ...")
         # set the icon for the menu
         AboutMenu.setIcon(AboutIcon)
         # get the the about button from freecad
@@ -1252,7 +1248,7 @@ class ModernMenu(RibbonBar):
         version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
         # Create the ribbon about button
         AboutButton_Ribbon = AboutMenu.addAction(
-            translate("FreeCAD Ribbon", "About FreeCAD Ribbon ") + version
+            translate("FreeCAD Ribbon", "About Ribbon UI ") + version
         )
         AboutButton_Ribbon.setIcon(AboutIcon)
         AboutButton_Ribbon.triggered.connect(self.on_AboutButton_clicked)
