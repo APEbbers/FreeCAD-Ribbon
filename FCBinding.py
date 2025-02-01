@@ -1843,7 +1843,7 @@ class ModernMenu(RibbonBar):
             panel.setContentsMargins(0, 0, 0, 0)
             panel.setFixedHeight(self.ReturnRibbonHeight(self.PannleHeightOffset))
             Font = QFont()
-            Font.setPixelSize(10)
+            Font.setPixelSize(11)
             panel._titleLabel.setFont(Font)
             self.RibbonHeight = self.ReturnRibbonHeight() + self.RibbonOffset
 
