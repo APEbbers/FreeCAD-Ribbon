@@ -64,6 +64,7 @@ from PySide.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QVBoxLayout,
+    QToolTip,
 )
 from PySide.QtCore import (
     Qt,
@@ -442,14 +443,6 @@ class ModernMenu(RibbonBar):
             + """}"""
         )
         StyleSheet = StyleSheet_Addition_4 + StyleSheet
-        self.setStyleSheet(StyleSheet)
-
-        # Hardcode the tooltip apperance
-        StyleSheet_Addition_5 = """QToolTip { 
-                background-color: #FFFFE1; 
-                color: #000000; 
-            }"""
-        StyleSheet = StyleSheet_Addition_5 + StyleSheet
         self.setStyleSheet(StyleSheet)
 
         # get the state of the mainwindow
@@ -872,9 +865,12 @@ class ModernMenu(RibbonBar):
                             ToolTipText.lower() != MenuText.lower() + " workbench"
                             and MenuText.lower() != ToolTipText.lower()
                         ):
-                            MenuText = f"<font color=black><b>{workbench.MenuText}</b><br>{workbench.ToolTip}</font>"
+                            MenuText = f"<font color={StyleMapping.ReturnStyleItem('FontColor')}><b>{workbench.MenuText}</b><br>{workbench.ToolTip}</font>"
                         else:
-                            MenuText = f"<font color=black><b>{ToolTipText}<b></font>"
+                            MenuText = (
+                                f"<font color={StyleMapping.ReturnStyleItem('FontColor')}>{ToolTipText}<b></font></p>"
+                            )
+
                         self.tabBar().setTabToolTip(len(self.categories()) - 1, MenuText)
 
         # Set the size of the collapseRibbonButton
