@@ -1842,6 +1842,9 @@ class ModernMenu(RibbonBar):
             panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
             panel.setContentsMargins(0, 0, 0, 0)
             panel.setFixedHeight(self.ReturnRibbonHeight(self.PannleHeightOffset))
+            Font = QFont()
+            Font.setPixelSize(10)
+            panel.setFont(Font)
             self.RibbonHeight = self.ReturnRibbonHeight() + self.RibbonOffset
 
             # Setup the panelOptionButton
