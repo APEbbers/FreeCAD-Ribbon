@@ -854,7 +854,9 @@ class ModernMenu(RibbonBar):
                             self.tabBar().setTabIcon(len(self.categories()) - 1, icon)
                         if Parameters_Ribbon.TABBAR_STYLE == 1:
                             # Set the text color equal to the background
-                            self.tabBar().setTabTextColor(StyleMapping.ReturnStyleItem("Background_Color"))
+                            self.tabBar().setTabTextColor(
+                                len(self.categories()) - 1, StyleMapping.ReturnStyleItem("Background_Color")
+                            )
                         if Parameters_Ribbon.TABBAR_STYLE == 2:
                             self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon())
 
