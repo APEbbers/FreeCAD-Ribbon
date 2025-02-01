@@ -95,8 +95,6 @@ import Serialize_Ribbon
 import StyleMapping
 import platform
 import math
-import colorama
-import html
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
