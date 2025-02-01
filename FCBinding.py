@@ -95,6 +95,8 @@ import Serialize_Ribbon
 import StyleMapping
 import platform
 import math
+import colorama
+import html
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -785,7 +787,6 @@ class ModernMenu(RibbonBar):
         font.setPixelSize(self.TabBar_Size * 0.6)
         self.tabBar().setFont(font)
         self.tabBar().setIconSize(QSize(self.TabBar_Size - 6, self.TabBar_Size - 6))
-        # self.tabBar().setFixedHeight(self.QuickAccessButtonSize)
         self.tabBar().setStyleSheet("margin: 0px;padding: 0px;height: " + str(self.QuickAccessButtonSize) + ";")
         self.RibbonOffset = self.RibbonOffset + (self.tabBar().height() - self.QuickAccessButtonSize)
 
@@ -865,9 +866,9 @@ class ModernMenu(RibbonBar):
                             ToolTipText.lower() != MenuText.lower() + " workbench"
                             and MenuText.lower() != ToolTipText.lower()
                         ):
-                            MenuText = workbench.MenuText + "\n\n" + workbench.ToolTip
+                            MenuText = f"<b>{workbench.MenuText}</b><br>{workbench.ToolTip}"
                         else:
-                            MenuText = ToolTipText
+                            MenuText = f"<b>{ToolTipText}<b>"
                         self.tabBar().setTabToolTip(len(self.categories()) - 1, MenuText)
 
         # Set the size of the collapseRibbonButton
