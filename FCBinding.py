@@ -1844,7 +1844,7 @@ class ModernMenu(RibbonBar):
             panel.setFixedHeight(self.ReturnRibbonHeight(self.PannleHeightOffset))
             Font = QFont()
             Font.setPixelSize(10)
-            panel.setFont(Font)
+            panel._titleLabel.setFont(Font)
             self.RibbonHeight = self.ReturnRibbonHeight() + self.RibbonOffset
 
             # Setup the panelOptionButton
