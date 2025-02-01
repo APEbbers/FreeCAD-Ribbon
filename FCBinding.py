@@ -117,7 +117,7 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
+# import pyqtribbon_local as pyqtribbon
 # from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
 # from pyqtribbon.panel import RibbonPanel, RibbonPanelTitle
 # from pyqtribbon.toolbutton import RibbonToolButton
@@ -852,11 +852,6 @@ class ModernMenu(RibbonBar):
                             # set tab icon
                             icon: QIcon = self.ReturnWorkbenchIcon(workbenchName)
                             self.tabBar().setTabIcon(len(self.categories()) - 1, icon)
-                        if Parameters_Ribbon.TABBAR_STYLE == 1:
-                            # Set the text color equal to the background
-                            self.tabBar().setTabTextColor(
-                                len(self.categories()) - 1, StyleMapping.ReturnStyleItem("Background_Color")
-                            )
                         if Parameters_Ribbon.TABBAR_STYLE == 2:
                             self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon())
 
@@ -1229,7 +1224,12 @@ class ModernMenu(RibbonBar):
                 TB.setFixedHeight(self.RibbonHeight)
                 self.setRibbonHeight(self.RibbonHeight)
 
-        self.tabBar().setStyleSheet("QTabBar::tab {color: " + StyleMapping.ReturnStyleItem("FontColor") + ";}")
+        if Parameters_Ribbon.TABBAR_STYLE != 1:
+            self.tabBar().setStyleSheet("QTabBar::tab {color: " + StyleMapping.ReturnStyleItem("FontColor") + ";}")
+        if Parameters_Ribbon.TABBAR_STYLE == 1:
+            self.tabBar().setStyleSheet(
+                "QTabBar::tab {color: " + StyleMapping.ReturnStyleItem("Background_Color") + ";}"
+            )
 
         # ensure that workbench is already loaded
         workbench = Gui.activeWorkbench()
