@@ -965,7 +965,9 @@ class ModernMenu(RibbonBar):
         # add an overlay menu if Ribbon's overlay is enabled
         if self.OverlayMenu is not None:
             OverlayMenu = QToolButton()
-            OverlayMenu.setIcon(Gui.getIcon("Draft_Layer.svg"))
+            OverlayMenu.setIcon(
+                QIcon(QPixmap(os.path.join(pathIcons, "Draft_Layer.svg")))
+            )
             OverlayMenu.setToolTip(
                 translate("FreeCAD Ribbon", "Overlay functions") + "..."
             )

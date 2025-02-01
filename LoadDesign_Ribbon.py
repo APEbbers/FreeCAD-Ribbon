@@ -124,7 +124,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Make sure that the dialog stays on top
         self.form.raise_()
-        self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+        # self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+        self.form.setWindowFlags(Qt.WindowType.Tool)
+        self.form.setWindowModality(Qt.WindowModality.WindowModal)
 
         # Position the dialog in front of FreeCAD
         centerPoint = mw.geometry().center()

@@ -35,6 +35,7 @@ from PySide.QtWidgets import (
     QSizePolicy,
     QPushButton,
     QLineEdit,
+    QWidget,
 )
 from PySide.QtGui import QIcon, QPixmap, QColor
 
@@ -149,12 +150,15 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # # this will create a Qt widget from our ui file
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "Settings.ui"))
 
+        mw = Gui.getMainWindow()
+
         # Make sure that the dialog stays on top
         self.form.raise_()
-        self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+        # self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+        self.form.setWindowFlags(Qt.WindowType.Tool)
+        self.form.setWindowModality(Qt.WindowModality.WindowModal)
 
         # Get the style from the main window and use it for this form
-        mw = Gui.getMainWindow()
         palette = mw.palette()
         self.form.setPalette(palette)
         Style = mw.style()
