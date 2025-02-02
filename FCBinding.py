@@ -963,9 +963,9 @@ class ModernMenu(RibbonBar):
             self.rightToolBar().addWidget(pinButton)
 
         # Set the width of the right toolbar
-        RightToolbarWidth = SearchBarWidth - 16
-        for child in self.rightToolBar().actions():
-            RightToolbarWidth = RightToolbarWidth + self.RightToolBarButtonSize + 2
+        RightToolbarWidth = SearchBarWidth + 3 * (self.RightToolBarButtonSize + 16) + self.RightToolBarButtonSize
+        # for child in self.rightToolBar().actions():
+        #     RightToolbarWidth = RightToolbarWidth + self.RightToolBarButtonSize
         self.rightToolBar().setMinimumWidth(RightToolbarWidth)
         # Set the size policy
         self.rightToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
@@ -982,7 +982,7 @@ class ModernMenu(RibbonBar):
             try:
                 import SearchBoxLight
 
-                width = 200
+                width = 5 * self.RightToolBarButtonSize
 
                 sea = SearchBoxLight.SearchBoxLight(
                     getItemGroups=lambda: __import__("GetItemGroups").getItemGroups(),
@@ -992,10 +992,10 @@ class ModernMenu(RibbonBar):
                 sea.resultSelected.connect(
                     lambda index, groupId: __import__("GetItemGroups").onResultSelected(index, groupId)
                 )
-                sea.setFixedSize(width, self.QuickAccessButtonSize)
+                sea.setFixedSize(width, self.RightToolBarButtonSize)
                 BeforeAction = self.rightToolBar().actions()[1]
                 self.rightToolBar().insertWidget(BeforeAction, sea)
-                width = sea.width()
+                # width = sea.width()
             except Exception:
                 pass
             return width
