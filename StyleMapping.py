@@ -64,6 +64,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
     ControlName (string):
         "Background_Color" returns string,
         "Border_Color" returns string,
+        "FontColor" returns string,
         "ApplicationButton_Background" returns string,
         "ScrollLeftButton_Tab returns QIcon",
         "ScrollRightButton_Tab" returns QIcon,
@@ -74,7 +75,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
         "PinButton_closed" returns QIcon,
     """
     # define a result holder and a dict for the StyleMapping file
-    result = None
+    result = "none"
 
     # Get the current stylesheet for FreeCAD
     FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
@@ -104,6 +105,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
 
     try:
         if isIcon is True:
+            result = None
             PixmapName = ""
             if Parameters_Ribbon.CUSTOM_ICONS_ENABLED is True or ShowCustomIcon is True:
                 PixmapName = StyleMapping["Stylesheets"][ControlName]
@@ -140,7 +142,8 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
                 if result == "" or result is None:
                     result = StyleMapping_default["Stylesheets"][""][ControlName]
             return result
-    except Exception:
+    except Exception as e:
+        print(e)
         return None
 
 
@@ -352,12 +355,14 @@ def DarkMode():
     return IsDarkTheme
 
 
+# Used when custom colors are enabled
 StyleMapping = {
     "Stylesheets": {
         "Background_Color": "",
         "Background_Color_Hover": Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
         "Border_Color": Parameters_Ribbon.COLOR_BORDERS,
         "ApplicationButton_Background": Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND,
+        "FontColor": Parameters_Ribbon.COLOR_BORDERS,  # Set the font and border equal when custom colors is enabled
         "ScrollLeftButton_Tab": Parameters_Ribbon.SCROLL_LEFT_BUTTON_TAB,
         "ScrollRightButton_Tab": Parameters_Ribbon.SCROLL_RIGHT_BUTTON_TAB,
         "ScrollLeftButton_Category": Parameters_Ribbon.SCROLL_LEFT_BUTTON_CATEGORY,

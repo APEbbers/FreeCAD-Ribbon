@@ -476,7 +476,9 @@ class ModernMenu(RibbonBar):
                 """QTabBar::tab:selected, QTabBar::tab:hover {
                 background: """
                 + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                + """;color: transparent;}"""
+                + """;color: """
+                + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                + """;}"""
             )
         StyleSheet = StyleSheet_Addition_4 + StyleSheet
         self.setStyleSheet(StyleSheet)
@@ -1078,13 +1080,13 @@ class ModernMenu(RibbonBar):
             self.rightToolBar().addWidget(pinButton)
 
         # Set the width of the right toolbar
-        RightToolbarWidth = SearchBarWidth
-        for child in self.rightToolBar().actions():
-            RightToolbarWidth = (
-                RightToolbarWidth
-                + self.RightToolBarButtonSize
-                + self.rightToolBar().layout().spacing()
-            )
+        RightToolbarWidth = (
+            SearchBarWidth
+            + 3 * (self.RightToolBarButtonSize + 16)
+            + self.RightToolBarButtonSize
+        )
+        # for child in self.rightToolBar().actions():
+        #     RightToolbarWidth = RightToolbarWidth + self.RightToolBarButtonSize
         self.rightToolBar().setMinimumWidth(RightToolbarWidth)
         # Set the size policy
         self.rightToolBar().setSizePolicy(
@@ -1098,12 +1100,12 @@ class ModernMenu(RibbonBar):
     # Add the searchBar if it is present
     def AddSearchBar(self):
         TB: QToolBar = mw.findChildren(QToolBar, "SearchBar")
-        width = 0
+        width = 10
         if TB is not None:
             try:
                 import SearchBoxLight
 
-                width = 200
+                width = 5 * self.RightToolBarButtonSize
 
                 sea = SearchBoxLight.SearchBoxLight(
                     getItemGroups=lambda: __import__("GetItemGroups").getItemGroups(),
@@ -1119,10 +1121,10 @@ class ModernMenu(RibbonBar):
                         index, groupId
                     )
                 )
-                sea.setFixedSize(width, self.QuickAccessButtonSize)
+                sea.setFixedSize(width, self.RightToolBarButtonSize)
                 BeforeAction = self.rightToolBar().actions()[1]
                 self.rightToolBar().insertWidget(BeforeAction, sea)
-                width = sea.width()
+                # width = sea.width()
             except Exception:
                 pass
             return width
