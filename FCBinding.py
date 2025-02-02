@@ -963,7 +963,7 @@ class ModernMenu(RibbonBar):
             self.rightToolBar().addWidget(pinButton)
 
         # Set the width of the right toolbar
-        RightToolbarWidth = SearchBarWidth
+        RightToolbarWidth = SearchBarWidth - 16
         for child in self.rightToolBar().actions():
             RightToolbarWidth = RightToolbarWidth + self.RightToolBarButtonSize + 2
         self.rightToolBar().setMinimumWidth(RightToolbarWidth)
