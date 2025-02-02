@@ -353,6 +353,7 @@ StyleMapping = {
         "Background_Color_Hover": Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
         "Border_Color": Parameters_Ribbon.COLOR_BORDERS,
         "ApplicationButton_Background": Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND,
+        "FontColor": ReturnFontColor(),
         "ScrollLeftButton_Tab": Parameters_Ribbon.SCROLL_LEFT_BUTTON_TAB,
         "ScrollRightButton_Tab": Parameters_Ribbon.SCROLL_RIGHT_BUTTON_TAB,
         "ScrollLeftButton_Category": Parameters_Ribbon.SCROLL_LEFT_BUTTON_CATEGORY,
