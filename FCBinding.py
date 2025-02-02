@@ -476,9 +476,7 @@ class ModernMenu(RibbonBar):
                 """QTabBar::tab:selected, QTabBar::tab:hover {
                 background: """
                 + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                + """;color: """
-                + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                + """;}"""
+                + """;color: transparent;}"""
             )
         StyleSheet = StyleSheet_Addition_4 + StyleSheet
         self.setStyleSheet(StyleSheet)
