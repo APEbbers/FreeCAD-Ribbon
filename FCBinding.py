@@ -977,7 +977,7 @@ class ModernMenu(RibbonBar):
     # Add the searchBar if it is present
     def AddSearchBar(self):
         TB: QToolBar = mw.findChildren(QToolBar, "SearchBar")
-        width = 0
+        width = 10
         if TB is not None:
             try:
                 import SearchBoxLight
