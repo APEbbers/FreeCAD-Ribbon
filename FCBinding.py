@@ -862,9 +862,7 @@ class ModernMenu(RibbonBar):
         self.tabBar().setStyleSheet(
             "margin: 0px;padding: 0px;height: " + str(self.QuickAccessButtonSize) + ";"
         )
-        self.RibbonOffset = self.RibbonOffset + (
-            self.tabBar().height() - self.QuickAccessButtonSize
-        )
+        # self.RibbonOffset = self.RibbonOffset + (self.tabBar().height() - self.QuickAccessButtonSize)
 
         # Correct colors when no stylesheet is selected for FreeCAD.
         self.quickAccessToolBar().setStyleSheet("")
@@ -2066,7 +2064,7 @@ class ModernMenu(RibbonBar):
             Font = QFont()
             Font.setPixelSize(11)
             panel._titleLabel.setFont(Font)
-            self.RibbonHeight = self.ReturnRibbonHeight() + self.RibbonOffset
+            self.RibbonHeight = self.ReturnRibbonHeight(6) + self.RibbonOffset
 
             # Setup the panelOptionButton
             actionList = []
