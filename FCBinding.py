@@ -965,7 +965,7 @@ class ModernMenu(RibbonBar):
         # Set the width of the right toolbar
         RightToolbarWidth = SearchBarWidth
         for child in self.rightToolBar().actions():
-            RightToolbarWidth = RightToolbarWidth + self.RightToolBarButtonSize + self.rightToolBar().layout().spacing()
+            RightToolbarWidth = RightToolbarWidth + self.RightToolBarButtonSize + 2
         self.rightToolBar().setMinimumWidth(RightToolbarWidth)
         # Set the size policy
         self.rightToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
