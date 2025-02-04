@@ -159,9 +159,9 @@ class ModernMenu(RibbonBar):
     # Set a size factor for the buttons
     sizeFactor = 1.3
     # Create an offset for the panelheight
-    PannleHeightOffset = 30
+    PanelHeightOffset = 36
     # Create an offset for the whole ribbon height
-    RibbonOffset = 40 + QuickAccessButtonSize  # Set to zero to hide the panel titles
+    RibbonOffset = 46 + QuickAccessButtonSize  # Set to zero to hide the panel titles
 
     # Set the minimum height for the ribbon
     RibbonMinimalHeight = QuickAccessButtonSize + 10
@@ -413,13 +413,15 @@ class ModernMenu(RibbonBar):
             pass
 
         # Create the ribbon
-        self.CreateMenus()
-        self.createModernMenu()
-        self.onUserChangedWorkbench(False)
+        self.CreateMenus()  # Create the menus
+        self.createModernMenu()  # Create the ribbon
+        self.onUserChangedWorkbench(
+            False
+        )  # Set the dockwidget and ribbonheight as done after changing from workbench
 
         # Set the custom stylesheet
         StyleSheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
-        # modify the stylesheet to set the border for a toolbar menu
+        # modify the stylesheet to set the border and background for a toolbar and menu
         hexColor = StyleMapping.ReturnStyleItem("Background_Color")
         if (
             hexColor is not None
@@ -459,6 +461,7 @@ class ModernMenu(RibbonBar):
                 + """px;
                         padding-left: 6px;
                         padding-right: 0px;
+                        margin: 3px
                     }"""
             )
             StyleSheet = StyleSheet_Addition_3 + StyleSheet
@@ -471,6 +474,7 @@ class ModernMenu(RibbonBar):
             + StyleMapping.ReturnStyleItem("Background_Color_Hover")
             + """;}"""
         )
+        # If the tabs are set to icon only, set the text to the hover background color also
         if Parameters_Ribbon.TABBAR_STYLE == 1:
             StyleSheet_Addition_4 = (
                 """QTabBar::tab:selected, QTabBar::tab:hover {
@@ -1929,8 +1933,8 @@ class ModernMenu(RibbonBar):
                                 panel.addSmallWidget(
                                     btn,
                                     alignment=Qt.AlignmentFlag.AlignLeft,
-                                    fixedHeight=True,
-                                )
+                                    fixedHeight=False,
+                                )  # Set fixedheight to false. This is set in the custom widgets
 
                             elif buttonSize == "medium":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
@@ -1966,8 +1970,8 @@ class ModernMenu(RibbonBar):
                                 panel.addMediumWidget(
                                     btn,
                                     alignment=Qt.AlignmentFlag.AlignLeft,
-                                    fixedHeight=True,
-                                )
+                                    fixedHeight=False,
+                                )  # Set fixedheight to false. This is set in the custom widgets
                             elif buttonSize == "large":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
                                 if IconOnly is True:
@@ -2001,9 +2005,9 @@ class ModernMenu(RibbonBar):
                                 # add the button as large button
                                 panel.addLargeWidget(
                                     btn,
-                                    fixedHeight=True,
+                                    fixedHeight=False,
                                     alignment=Qt.AlignmentFlag.AlignTop,
-                                )
+                                )  # Set fixedheight to false. This is set in the custom widgets
                             else:
                                 if Parameters_Ribbon.DEBUG_MODE is True:
                                     if buttonSize != "none":
@@ -2058,15 +2062,17 @@ class ModernMenu(RibbonBar):
 
             # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
             # add an offset to make room for the panel titles and icons
-            panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
-            panel._actionsLayout.setVerticalSpacing(0)
-            panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+            # panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
+            # panel._actionsLayout.setSpacing(0)
+            # panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+            panel.layout().setSpacing(0)
             panel.setContentsMargins(0, 0, 0, 0)
-            panel.setFixedHeight(self.ReturnRibbonHeight(self.PannleHeightOffset))
+            panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
+            # panel._actionsLayout.setContentsMargins(0, 0, 0, 0)
             Font = QFont()
             Font.setPixelSize(11)
             panel._titleLabel.setFont(Font)
-            self.RibbonHeight = self.ReturnRibbonHeight(6) + self.RibbonOffset
+            self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset) + 6
 
             # Setup the panelOptionButton
             actionList = []
@@ -2419,16 +2425,16 @@ class ModernMenu(RibbonBar):
         # and set the height accordingly
         if (
             Parameters_Ribbon.ICON_SIZE_SMALL * 3
-            >= Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
-            and Parameters_Ribbon.ICON_SIZE_SMALL * 3 >= LargeButtonHeight
+            > Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
+            and Parameters_Ribbon.ICON_SIZE_SMALL * 3 > LargeButtonHeight
         ):
-            ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_SMALL * 3
+            ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_SMALL * 3 + 6
         elif (
             Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
-            >= Parameters_Ribbon.ICON_SIZE_SMALL * 3
-            and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 >= LargeButtonHeight
+            > Parameters_Ribbon.ICON_SIZE_SMALL * 3
+            and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 > LargeButtonHeight
         ):
-            ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
+            ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 + 4
         else:
             ribbonHeight = ribbonHeight + LargeButtonHeight
         return ribbonHeight + offset

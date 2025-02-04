@@ -154,9 +154,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
         # Make sure that the dialog stays on top
         self.form.raise_()
-        # self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
-        self.form.setWindowFlags(Qt.WindowType.Tool)
-        self.form.setWindowModality(Qt.WindowModality.WindowModal)
+        self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+        # self.form.setWindowFlags(Qt.WindowType.Tool)
+        # self.form.setWindowModality(Qt.WindowModality.WindowModal)
 
         # Get the style from the main window and use it for this form
         palette = mw.palette()
