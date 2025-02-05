@@ -117,7 +117,7 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
+# import pyqtribbon_local as pyqtribbon
 # from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
 # from pyqtribbon.panel import RibbonPanel, RibbonPanelTitle
 # from pyqtribbon.toolbutton import RibbonToolButton
@@ -1733,7 +1733,9 @@ class ModernMenu(RibbonBar):
                                 )
                                 # add the button as large button
                                 panel.addSmallWidget(
-                                    btn, alignment=Qt.AlignmentFlag.AlignLeft, fixedHeight=False
+                                    btn,
+                                    alignment=Qt.AlignmentFlag.AlignLeft,
+                                    fixedHeight=False,
                                 )  # Set fixedheight to false. This is set in the custom widgets
 
                             elif buttonSize == "medium":
@@ -1857,7 +1859,7 @@ class ModernMenu(RibbonBar):
 
             # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
             # add an offset to make room for the panel titles and icons
-            # panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
+            panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
             # panel._actionsLayout.setSpacing(0)
             # panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
             panel.layout().setSpacing(0)
