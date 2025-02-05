@@ -106,6 +106,9 @@ class LoadDialog(Design_ui.Ui_Form):
     List_CommandIcons = []
     List_WorkBenchIcons = []
 
+    # Create a tomporary list for newly added dropdown buttons
+    newDDBList = []
+
     def __init__(self):
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
         super(LoadDialog, self).__init__()
@@ -1909,6 +1912,9 @@ class LoadDialog(Design_ui.Ui_Form):
                             if self.CheckChanges() is True:
                                 self.form.UpdateJson.setEnabled(True)
 
+                            # Set the current text to new
+                            self.form.CustomToolbarSelector_CP.setCurrentText("New")
+
                             if (
                                 self.form.CustomToolbarSelector_CP.currentText()
                                 == "New"
@@ -2106,6 +2112,9 @@ class LoadDialog(Design_ui.Ui_Form):
                                 # Enable the apply button
                                 if self.CheckChanges() is True:
                                     self.form.UpdateJson.setEnabled(True)
+
+                                # Set the current text to new
+                                self.form.CustomToolbarSelector_NP.setCurrentText("New")
 
                                 if (
                                     self.form.CustomToolbarSelector_NP.currentText()
@@ -2329,6 +2338,11 @@ class LoadDialog(Design_ui.Ui_Form):
                 "Warning",
             )
             return
+        IsInlist = False
+        # If the dropdownbutton is already created, just return
+        for Button in self.newDDBList:
+            if DropDownName == Button:
+                return
 
         # Add all commands for the new dropdown button in a list
         for i in range(self.form.NewControl_DDB.count()):
@@ -2395,6 +2409,8 @@ class LoadDialog(Design_ui.Ui_Form):
         # make sure that no command is selected by default
         # to prevent accidental removal
         self.form.CommandList_DDB.setCurrentText("")
+        # Add the command to the temporary list
+        self.newDDBList.append(DropDownName)
 
         # Enable the apply button
         if self.CheckChanges() is True:
@@ -2464,6 +2480,9 @@ class LoadDialog(Design_ui.Ui_Form):
                             == DropDownControl
                         ):
                             self.form.CommandList_DDB.removeItem(i)
+
+                    # Set the current text to new
+                    self.form.CommandList_DDB.setCurrentText("New")
 
                     if self.form.CommandList_DDB.currentText() == "New":
                         self.form.NewControl_DDB.clear()
@@ -3392,21 +3411,28 @@ class LoadDialog(Design_ui.Ui_Form):
 
         BackupFile = os.path.join(JsonPath, "RibbonStructure_default.json")
 
+        # Add a warning message with an option to back out
         message = translate(
             "FreeCAD Ribbon",
-            "Settings reset to default!\nYou must restart FreeCAD for changes to take effect.",
+            "Do you really want to reset the ribbon? All customizations will be gone!",
         )
-
-        result = shutil.copy(BackupFile, JsonFile)
-        StandardFunctions.Print(
-            translate("FreeCAD Ribbon", "Ribbon bar reset from {}!").format(result),
-            "Warning",
-        )
-        answer = StandardFunctions.RestartDialog(message=message)
+        answer = StandardFunctions.Mbox(message, "FreeCAD Ribbon", 1, "Warning")
         if answer == "yes":
-            StandardFunctions.restart_freecad()
+            message = translate(
+                "FreeCAD Ribbon",
+                "Settings reset to default!\nYou must restart FreeCAD for changes to take effect.",
+            )
 
-        self.form.close()
+            result = shutil.copy(BackupFile, JsonFile)
+            StandardFunctions.Print(
+                translate("FreeCAD Ribbon", "Ribbon bar reset from {}!").format(result),
+                "Warning",
+            )
+            answer = StandardFunctions.RestartDialog(message=message)
+            if answer == "yes":
+                StandardFunctions.restart_freecad()
+
+            self.form.close()
         return
 
     @staticmethod
