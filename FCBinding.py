@@ -2062,7 +2062,7 @@ class ModernMenu(RibbonBar):
 
             # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
             # add an offset to make room for the panel titles and icons
-            # panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
+            panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
             # panel._actionsLayout.setSpacing(0)
             # panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
             panel.layout().setSpacing(0)
