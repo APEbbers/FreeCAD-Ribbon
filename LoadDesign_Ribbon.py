@@ -2978,21 +2978,28 @@ class LoadDialog(Design_ui.Ui_Form):
 
         BackupFile = os.path.join(JsonPath, "RibbonStructure_default.json")
 
+        # Add a warning message with an option to back out
         message = translate(
             "FreeCAD Ribbon",
-            "Settings reset to default!\nYou must restart FreeCAD for changes to take effect.",
+            "Do you really want to reset the ribbon? All customizations will be gone!",
         )
-
-        result = shutil.copy(BackupFile, JsonFile)
-        StandardFunctions.Print(
-            translate("FreeCAD Ribbon", "Ribbon bar reset from {}!").format(result),
-            "Warning",
-        )
-        answer = StandardFunctions.RestartDialog(message=message)
+        answer = StandardFunctions.Mbox(message, "FreeCAD Ribbon", 1, "Warning")
         if answer == "yes":
-            StandardFunctions.restart_freecad()
+            message = translate(
+                "FreeCAD Ribbon",
+                "Settings reset to default!\nYou must restart FreeCAD for changes to take effect.",
+            )
 
-        self.form.close()
+            result = shutil.copy(BackupFile, JsonFile)
+            StandardFunctions.Print(
+                translate("FreeCAD Ribbon", "Ribbon bar reset from {}!").format(result),
+                "Warning",
+            )
+            answer = StandardFunctions.RestartDialog(message=message)
+            if answer == "yes":
+                StandardFunctions.restart_freecad()
+
+            self.form.close()
         return
 
     @staticmethod
