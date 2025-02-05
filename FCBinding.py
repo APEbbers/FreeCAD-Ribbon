@@ -2489,6 +2489,9 @@ class ModernMenu(RibbonBar):
         if self.OverlayToggled is True:
             Enable = False
 
+        # mw.findChildren(PySide.QtWidgets.QDockWidget)
+        # mw.dockWidgetArea(child)
+
         # Get the different overlay areas
         OverlayParam_Left = App.ParamGet(
             "User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft"
@@ -2504,15 +2507,27 @@ class ModernMenu(RibbonBar):
         )
 
         # If overlay is enabled, go here
+        PanelsLeft = []
+        PanelsRight = []
+        PanelsBottom = []
+        PanelsTop = []
+
         if Enable is True:
-            # Define the various areas with panels. Currently only left and right areas are used.
-            PanelsLeft = ["Tasks", "Tree view", "Launcher"]
-            PanelsRight = [
-                "Report view",
-                "Python console",
-                "Property view",
-                "Selection view",
-            ]
+            # Get all the dockwidgets
+            DockWidgets = mw.findChildren(QDockWidget)
+            for DockWidget in DockWidgets:
+                # If the dockwidget is not the ribbon, continue
+                if DockWidget.objectName() != "Ribbon":
+                    # Get the location of the dockwidget
+                    Area = mw.dockWidgetArea(DockWidget)
+                    if Area == Qt.DockWidgetArea.LeftDockWidgetArea:
+                        PanelsLeft.append(DockWidget.objectName())
+                    if Area == Qt.DockWidgetArea.RightDockWidgetArea:
+                        PanelsRight.append(DockWidget.objectName())
+                    if Area == Qt.DockWidgetArea.TopDockWidgetArea:
+                        PanelsTop.append(DockWidget.objectName())
+                    if Area == Qt.DockWidgetArea.BottomDockWidgetArea:
+                        PanelsBottom.append(DockWidget.objectName())
 
             EntryLeft = ""
             for panel in PanelsLeft:
@@ -2526,6 +2541,20 @@ class ModernMenu(RibbonBar):
                 EntryRight = EntryRight + "," + panel
             # Set the parameter
             OverlayParam_Right.SetString("Widgets", EntryRight)
+
+            # Define the parameter value for the overlay on the right
+            EntryTop = ""
+            for panel in PanelsTop:
+                EntryTop = EntryTop + "," + panel
+            # Set the parameter
+            OverlayParam_Top.SetString("Widgets", EntryTop)
+
+            # Define the parameter value for the overlay on the right
+            EntryBottom = ""
+            for panel in PanelsBottom:
+                EntryBottom = EntryBottom + "," + panel
+            # Set the parameter
+            OverlayParam_Bottom.SetString("Widgets", EntryBottom)
 
             # Set the overlay stat to be toggled
             self.OverlayToggled = True
@@ -2541,10 +2570,6 @@ class ModernMenu(RibbonBar):
         return self.OverlayToggled
 
     def CustomTransparancy(self):
-        Enable = True
-        if self.TransparancyToggled is True:
-            Enable = False
-
         OverlayParam_Left = App.ParamGet(
             "User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft"
         )
@@ -2557,6 +2582,12 @@ class ModernMenu(RibbonBar):
         OverlayParam_Bottom = App.ParamGet(
             "User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom"
         )
+
+        Enable = None
+        if OverlayParam_Left.GetBool("Transparent") is False:
+            Enable = True
+        if OverlayParam_Left.GetBool("Transparent") is True:
+            Enable = False
 
         OverlayParam_Left.SetBool("Transparent", Enable)
         OverlayParam_Right.SetBool("Transparent", Enable)
