@@ -106,6 +106,9 @@ class LoadDialog(Design_ui.Ui_Form):
     List_CommandIcons = []
     List_WorkBenchIcons = []
 
+    # Create a tomporary list for newly added dropdown buttons
+    newDDBList = []
+
     def __init__(self):
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
         super(LoadDialog, self).__init__()
@@ -2042,6 +2045,11 @@ class LoadDialog(Design_ui.Ui_Form):
                 "Warning",
             )
             return
+        IsInlist = False
+        # If the dropdownbutton is already created, just return
+        for Button in self.newDDBList:
+            if DropDownName == Button:
+                return
 
         # Add all commands for the new dropdown button in a list
         for i in range(self.form.NewControl_DDB.count()):
@@ -2102,6 +2110,8 @@ class LoadDialog(Design_ui.Ui_Form):
         # make sure that no command is selected by default
         # to prevent accidental removal
         self.form.CommandList_DDB.setCurrentText("")
+        # Add the command to the temporary list
+        self.newDDBList.append(DropDownName)
 
         # Enable the apply button
         if self.CheckChanges() is True:
