@@ -1711,7 +1711,7 @@ class ModernMenu(RibbonBar):
                             action.setText(action.text().replace("&", ""))
                             if buttonSize == "small":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
-                                if IconOnly is True:
+                                if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
                                     showText = False
 
                                 # Create a custom toolbutton
@@ -1749,7 +1749,7 @@ class ModernMenu(RibbonBar):
 
                             elif buttonSize == "medium":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
-                                if IconOnly is True:
+                                if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
                                     showText = False
 
                                 # Create a custom toolbutton
@@ -1785,7 +1785,7 @@ class ModernMenu(RibbonBar):
                                 )  # Set fixedheight to false. This is set in the custom widgets
                             elif buttonSize == "large":
                                 showText = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
-                                if IconOnly is True:
+                                if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
                                     showText = False
 
                                 # Create a custom toolbutton
