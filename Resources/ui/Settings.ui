@@ -242,7 +242,7 @@
                      <string>Button size</string>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_5">
-                     <item row="0" column="0">
+                     <item row="1" column="0">
                       <layout class="QGridLayout" name="gridLayout">
                        <item row="5" column="0">
                         <widget class="QLabel" name="label_23">
@@ -303,63 +303,6 @@
                          </property>
                          <property name="alignment">
                           <set>Qt::AlignmentFlag::AlignCenter</set>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="1">
-                        <widget class="QSpinBox" name="IconSize_Small">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>50</width>
-                           <height>20</height>
-                          </size>
-                         </property>
-                         <property name="sizeIncrement">
-                          <size>
-                           <width>0</width>
-                           <height>0</height>
-                          </size>
-                         </property>
-                         <property name="baseSize">
-                          <size>
-                           <width>0</width>
-                           <height>0</height>
-                          </size>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <bold>false</bold>
-                          </font>
-                         </property>
-                         <property name="focusPolicy">
-                          <enum>Qt::FocusPolicy::NoFocus</enum>
-                         </property>
-                         <property name="frame">
-                          <bool>true</bool>
-                         </property>
-                         <property name="alignment">
-                          <set>Qt::AlignmentFlag::AlignCenter</set>
-                         </property>
-                         <property name="correctionMode">
-                          <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
-                         </property>
-                         <property name="showGroupSeparator" stdset="0">
-                          <bool>false</bool>
-                         </property>
-                         <property name="minimum">
-                          <number>16</number>
-                         </property>
-                         <property name="maximum">
-                          <number>36</number>
-                         </property>
-                         <property name="value">
-                          <number>24</number>
                          </property>
                         </widget>
                        </item>
@@ -512,9 +455,66 @@
                          </property>
                         </widget>
                        </item>
+                       <item row="0" column="1">
+                        <widget class="QSpinBox" name="IconSize_Small">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>50</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                         <property name="sizeIncrement">
+                          <size>
+                           <width>0</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="baseSize">
+                          <size>
+                           <width>0</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="focusPolicy">
+                          <enum>Qt::FocusPolicy::WheelFocus</enum>
+                         </property>
+                         <property name="frame">
+                          <bool>true</bool>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
+                         </property>
+                         <property name="correctionMode">
+                          <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+                         </property>
+                         <property name="showGroupSeparator" stdset="0">
+                          <bool>false</bool>
+                         </property>
+                         <property name="minimum">
+                          <number>16</number>
+                         </property>
+                         <property name="maximum">
+                          <number>36</number>
+                         </property>
+                         <property name="value">
+                          <number>24</number>
+                         </property>
+                        </widget>
+                       </item>
                       </layout>
                      </item>
-                     <item row="0" column="1">
+                     <item row="1" column="1">
                       <spacer name="horizontalSpacer_3">
                        <property name="orientation">
                         <enum>Qt::Orientation::Horizontal</enum>
@@ -1915,7 +1915,7 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
                      </sizepolicy>
                     </property>
                     <property name="text">
-                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;The overlay function can give issues. Use at your own risk.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;When there are issues, place a file &lt;/span&gt;&lt;span style=&quot; font-family:'Consolas','Courier New','monospace'; font-size:8pt; &quot;&gt;&amp;quot;OVERLAY_DISABLED&amp;quot; &lt;/span&gt;&lt;span style=&quot; font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; &quot;&gt;in the folder of the add-on. (No extension) This will restore the ribbon and its own overlay function.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;The FreeCAD overlay function can give issues. Use at your own risk. Few functions are disabled when using the FreeCAD overlay function.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;When there are issues, place a file &lt;/span&gt;&lt;span style=&quot; font-family:'Consolas','Courier New','monospace'; font-size:8pt; &quot;&gt;&amp;quot;OVERLAY_DISABLED&amp;quot; &lt;/span&gt;&lt;span style=&quot; font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; &quot;&gt;in the folder of the add-on. (No extension) This will restore the ribbon and its own overlay function.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                     <property name="wordWrap">
                      <bool>true</bool>
