@@ -33,6 +33,7 @@ QDockWidget::title QToolButton, QDockWidget::title QWidget#Selector > QToolButto
 
 RibbonApplicationButton::menu-indicator {
     image: none;
+	border: none;
 }
 
 QTabBar, QDockWidget QTabBar {
