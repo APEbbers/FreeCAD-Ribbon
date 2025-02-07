@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -41,7 +41,7 @@ from PySide.QtGui import (
     QKeySequence,
     QShortcut,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -65,8 +65,9 @@ from PySide.QtWidgets import (
     QLabel,
     QVBoxLayout,
     QToolTip,
+    QWidgetItem,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -460,12 +461,21 @@ class ModernMenu(RibbonBar):
         self.setStyleSheet(StyleSheet)
 
         # Add an addition for Font sizes
-        StyleSheet_Addition_5 = """QMenu, QMenu::item, QAction, RibbonApplicationButton, RibbonMenu, RibbonMenu::item, 
-                RibbonPanelTitle, QToolButton, QToolButton::menu, QLabel, QTextEdit, SearchBoxLight {
-                    font-size:11px;}
-                QTabBar {
-                    font-size:14px;
-                    }"""
+        StyleSheet_Addition_5 = """
+        QWidgetItem, 
+        QMenu, QMenu::item, 
+        QAction, 
+        RibbonApplicationButton, 
+        RibbonMenu, 
+        RibbonMenu::item, 
+        RibbonPanelTitle, 
+        RibbonToolButton::item, 
+        QToolButton, QToolButton::menu, 
+        QLabel, 
+        QTextEdit, 
+        SearchBoxLight 
+            { font-size:12px;}
+                QTabBar {font-size:14px;}"""
         StyleSheet = StyleSheet_Addition_5 + StyleSheet
         self.setStyleSheet(StyleSheet)
 
