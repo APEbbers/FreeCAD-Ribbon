@@ -88,7 +88,7 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
             self.form.LogoHolder.setDisabled(True)
 
         # set the title text
-        self.form.TitleText.setText("FreeCAD Ribbon")
+        self.form.TitleText.setText("Ribbon UI")
 
         # Write here the introduction text and include the version
         self.form.Introduction.setText(
