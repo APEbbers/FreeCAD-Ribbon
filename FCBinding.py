@@ -474,7 +474,7 @@ class ModernMenu(RibbonBar):
         QLabel, 
         QTextEdit, 
         SearchBoxLight 
-            { font-size:12px;}
+            { font-size:11px;}
                 QTabBar {font-size:14px;}"""
         StyleSheet = StyleSheet_Addition_5 + StyleSheet
         self.setStyleSheet(StyleSheet)
