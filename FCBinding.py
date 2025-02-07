@@ -459,6 +459,16 @@ class ModernMenu(RibbonBar):
         StyleSheet = StyleSheet_Addition_4 + StyleSheet
         self.setStyleSheet(StyleSheet)
 
+        # Add an addition for Font sizes
+        StyleSheet_Addition_5 = """QMenu, QMenu::item, QAction, RibbonApplicationButton, RibbonMenu, RibbonMenu::item, 
+                RibbonPanelTitle, QToolButton, QToolButton::menu, QLabel, QTextEdit, SearchBoxLight {
+                    font-size:11px;}
+                QTabBar {
+                    font-size:14px;
+                    }"""
+        StyleSheet = StyleSheet_Addition_5 + StyleSheet
+        self.setStyleSheet(StyleSheet)
+
         # get the state of the mainwindow
         self.MainWindowLoaded = True
 
@@ -1014,14 +1024,14 @@ class ModernMenu(RibbonBar):
         # Add a file menu
         ApplictionMenu = self.addFileMenu()
 
-        # Set the font size for the application menu
-        Font = ApplictionMenu.font()
-        Font.setPixelSize(11)
-        ApplictionMenu.setFont(Font)
+        # # Set the font size for the application menu
+        # Font = ApplictionMenu.font()
+        # Font.setPixelSize(11)
+        # ApplictionMenu.setFont(Font)
 
-        # Remove the border, cause by creating it for the applicationOptionButton
-        StyleSheet = """border: none;"""
-        ApplictionMenu.setStyleSheet(StyleSheet)
+        # # Remove the border, cause by creating it for the applicationOptionButton
+        # StyleSheet = """border: none;"""
+        # ApplictionMenu.setStyleSheet(StyleSheet)
 
         # add the menus from the menubar to the application button
         MenuBar = mw.menuBar()
@@ -1051,8 +1061,8 @@ class ModernMenu(RibbonBar):
                             ApplictionMenu.removeAction(action)
                             break
 
-        for child in ApplictionMenu.findChildren(QMenu):
-            child.setFont(Font)
+        # for child in ApplictionMenu.findChildren(QMenu):
+        #     child.setFont(Font)
         return
 
     def CreateMenus(self):
@@ -1060,7 +1070,7 @@ class ModernMenu(RibbonBar):
 
         # Create the overlay menu when the native overlay function is not used
         if Parameters_Ribbon.USE_FC_OVERLAY is False:
-            OverlayMenu = QMenu(translate("FreeCAD Ribbon", "Overlay") + "...")
+            OverlayMenu = QMenu(translate("FreeCAD Ribbon", "Overlay") + "...", self)
             OverlayButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle overlay"))
             OverlayButton.triggered.connect(self.CustomOverlay)
             OverlayButton.setShortcut("F4")
@@ -1072,7 +1082,7 @@ class ModernMenu(RibbonBar):
             self.OverlayMenu = OverlayMenu
 
         # Create a ribbon menu
-        RibbonMenu = QMenu(translate("FreeCAD Ribbon", "Ribbon UI preferences") + " ...")
+        RibbonMenu = QMenu(translate("FreeCAD Ribbon", "Ribbon UI preferences") + " ...", self)
 
         # Add the ribbon design button
         DesignButton = RibbonMenu.addAction(translate("FreeCAD Ribbon", "Ribbon layout"))
@@ -1096,7 +1106,7 @@ class ModernMenu(RibbonBar):
         self.RibbonMenu = RibbonMenu
 
         # Create a help menu
-        HelpMenu = QMenu()
+        HelpMenu = QMenu(self)
         # Get the icons
         HelpIcon = QIcon()
         AboutIcon = Gui.getIcon("freecad")
@@ -1122,7 +1132,7 @@ class ModernMenu(RibbonBar):
         HelpMenu.insertAction(actions[1], RibbonHelpButton)
 
         # create an about button to store FreeCAD about, Ribbon about and what's new
-        AboutMenu = QMenu(translate("FreeCAD Ribbon", "About") + " ...")
+        AboutMenu = QMenu(translate("FreeCAD Ribbon", "About") + " ...", self)
         # set the icon for the menu
         AboutMenu.setIcon(AboutIcon)
         # get the the about button from freecad
@@ -1734,7 +1744,7 @@ class ModernMenu(RibbonBar):
                                     Parameters_Ribbon.ICON_SIZE_SMALL,
                                     Parameters_Ribbon.ICON_SIZE_SMALL,
                                 )
-                                Menu = QMenu()
+                                Menu = QMenu(self)
                                 if button.menu() is not None:
                                     Menu = button.menu()
                                 btn = CustomControls.CustomToolButton(
@@ -1772,7 +1782,7 @@ class ModernMenu(RibbonBar):
                                     Parameters_Ribbon.ICON_SIZE_MEDIUM,
                                     Parameters_Ribbon.ICON_SIZE_MEDIUM,
                                 )
-                                Menu = QMenu()
+                                Menu = QMenu(self)
                                 if button.menu() is not None:
                                     Menu = button.menu()
                                 btn = CustomControls.CustomToolButton(
@@ -1808,7 +1818,7 @@ class ModernMenu(RibbonBar):
                                     Parameters_Ribbon.ICON_SIZE_LARGE,
                                     Parameters_Ribbon.ICON_SIZE_LARGE,
                                 )
-                                Menu = QMenu()
+                                Menu = QMenu(self)
                                 if button.menu() is not None:
                                     Menu = button.menu()
                                 btn: QToolButton = CustomControls.LargeCustomToolButton(
