@@ -1,81 +1,116 @@
-RibbonBar {
-    border: none;
+/* QToolTip {
+   background-color: #FFFFE1;
+   color: black;
+   border: black solid 1px;
+   border-radius: 2px;
+   } */
+
+QTabBar {
+  margin: 0px;
+  padding-bottom: 0px;
+  padding-top: 0px;}
+  QTabBar::tab {
+  	background: transparent;
+	margin-top: 4px;
+	margin-bottom: 4px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	spacing: 0px;}
+  QTabBar::scroller {
+    min-width: 40px;}
+
+QDockWidget {
 	margin: 0px;
-	padding: 0px;
-}
+	padding-bottom: 0px;
+	padding-top: 0px;}
+	QDockWidget::title {
+		margin: 0px;
+		padding: 0px;
+		text-align: center; }
+
+QDockWidget::title QToolButton, QDockWidget::title QWidget#Selector > QToolButton {
+	margin: 1px; }
 
 RibbonApplicationButton::menu-indicator {
     image: none;
 }
 
-RibbonTitleWidget {
-    border-radius: 10px;
-    background-color: transparent;
-
-	RibbonStackedWidget {
-		border: none;
-		border-radius: 10px;
-		/*background-color: transparent;*/
-	}
-
-QToolButton, RibbonApplicationButton{
-	margin: 0px;
-	padding: 0px;
-	border-radius: 4px;
-	text-align:left;
-	border: none;
-	}
-	QToolButton:hover {
-		border: none;
-	}
-	QToolButton::menu-arrow {
-		subcontrol-origin: margin;
-		subcontrol-position: top right;
-		}
-	QToolButton::menu-button {
-		border-radius: 2px;
-		padding: 0px;
-		border-radius: 2px;
-		subcontrol-origin: padding;
-		subcontrol-position: top right;
-		}
-
-QToolBar {
-	margin: 3px 3px 3px 3px;
-	padding: 2px;
-	/*background-color: transparent;*/
+QTabBar, QDockWidget QTabBar {
+  qproperty-drawBase: 0;
 }
 
-RibbonPanelOptionButton {
-	/*image: none;*/
-	border-radius: none;
-	}
-	RibbonPanelOptionButton::menu-indicator {
-		/*image: none;*/
-		subcontrol-origin: padding;
-		subcontrol-position: right center;
-	}
-	RibbonPanelOptionButton:hover{
-		border-radius: 2px;
-	}
-}
-
-RibbonPanelTitle {
-	height: 20px
-	padding: 0px;
+RibbonBar {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	margin-bottom: 0px;
+	spacing: 0px;
 }
 
 RibbonCategory {
-    margin: 0px;
-	padding: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	margin-bottom: 0px;
+	spacing: 0px;
 }
 
 RibbonCategoryScrollArea {
-    margin: 0px;
-	padding: 0px;
+    background-color: transparent;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	margin-bottom: 0px;
+	spacing: 0px;
 }
 
 RibbonCategoryScrollAreaContents {
-    margin: 0px;
-	padding: 0px;
+    background-color: transparent;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	margin-bottom: 0px;
+	spacing: 0px;
+}
+
+RibbonPanel {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	margin-bottom: 0px;
+	spacing: 0px;
+}
+
+RibbonPanelTitle {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	margin-bottom: 0px;
+	spacing: 0px;
+}
+
+RibbonPanelItemWidget {
+    padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	margin-bottom: 0px;
+	spacing: 0px;
+}
+
+QTabBar {
+    background-color: transparent;
 }

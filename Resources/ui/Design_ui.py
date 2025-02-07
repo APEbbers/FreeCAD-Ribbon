@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignXFoCjX.ui'
+## Form generated from reading UI file 'DesignizYoFo.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -57,6 +57,7 @@ from PySide.QtWidgets import (
     QListWidget,
     QListWidgetItem,
     QPushButton,
+    QRadioButton,
     QScrollArea,
     QSizePolicy,
     QSpacerItem,
@@ -207,62 +208,6 @@ class Ui_Form(object):
         self.gridLayout_32.setObjectName("gridLayout_32")
         self.gridLayout_30 = QGridLayout()
         self.gridLayout_30.setObjectName("gridLayout_30")
-        self.ExportBox = QGroupBox(self.InItialSetup)
-        self.ExportBox.setObjectName("ExportBox")
-        sizePolicy4 = QSizePolicy(
-            QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred
-        )
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.ExportBox.sizePolicy().hasHeightForWidth())
-        self.ExportBox.setSizePolicy(sizePolicy4)
-        self.ExportBox.setMinimumSize(QSize(200, 0))
-        self.gridLayout_29 = QGridLayout(self.ExportBox)
-        self.gridLayout_29.setObjectName("gridLayout_29")
-        self.groupBox_3 = QGroupBox(self.ExportBox)
-        self.groupBox_3.setObjectName("groupBox_3")
-        self.gridLayout_24 = QGridLayout(self.groupBox_3)
-        self.gridLayout_24.setObjectName("gridLayout_24")
-        self.ImportWorkbenchSelector_IS = QComboBox(self.groupBox_3)
-        self.ImportWorkbenchSelector_IS.setObjectName("ImportWorkbenchSelector_IS")
-
-        self.gridLayout_24.addWidget(self.ImportWorkbenchSelector_IS, 0, 0, 1, 1)
-
-        self.ImportWorkbench_IS = QPushButton(self.groupBox_3)
-        self.ImportWorkbench_IS.setObjectName("ImportWorkbench_IS")
-
-        self.gridLayout_24.addWidget(self.ImportWorkbench_IS, 1, 0, 1, 1)
-
-        self.gridLayout_29.addWidget(self.groupBox_3, 4, 0, 1, 1)
-
-        self.Importlayout_IS = QPushButton(self.ExportBox)
-        self.Importlayout_IS.setObjectName("Importlayout_IS")
-
-        self.gridLayout_29.addWidget(self.Importlayout_IS, 0, 0, 1, 1)
-
-        self.ExportLayout_IS = QPushButton(self.ExportBox)
-        self.ExportLayout_IS.setObjectName("ExportLayout_IS")
-
-        self.gridLayout_29.addWidget(self.ExportLayout_IS, 1, 0, 1, 1)
-
-        self.ImportDropDownButtons_IS = QPushButton(self.ExportBox)
-        self.ImportDropDownButtons_IS.setObjectName("ImportDropDownButtons_IS")
-
-        self.gridLayout_29.addWidget(self.ImportDropDownButtons_IS, 3, 0, 1, 1)
-
-        self.ImportCustomPanels_IS = QPushButton(self.ExportBox)
-        self.ImportCustomPanels_IS.setObjectName("ImportCustomPanels_IS")
-
-        self.gridLayout_29.addWidget(self.ImportCustomPanels_IS, 2, 0, 1, 1)
-
-        self.gridLayout_30.addWidget(self.ExportBox, 0, 0, 1, 1)
-
-        self.verticalSpacer_13 = QSpacerItem(
-            20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
-        )
-
-        self.gridLayout_30.addItem(self.verticalSpacer_13, 1, 0, 1, 1)
-
         self.SetupBox = QGroupBox(self.InItialSetup)
         self.SetupBox.setObjectName("SetupBox")
         self.gridLayout_27 = QGridLayout(self.SetupBox)
@@ -271,6 +216,11 @@ class Ui_Form(object):
         self.gridLayout_31.setObjectName("gridLayout_31")
         self.label_15 = QLabel(self.SetupBox)
         self.label_15.setObjectName("label_15")
+        sizePolicy4 = QSizePolicy(
+            QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred
+        )
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
         sizePolicy4.setHeightForWidth(self.label_15.sizePolicy().hasHeightForWidth())
         self.label_15.setSizePolicy(sizePolicy4)
         self.label_15.setMinimumSize(QSize(120, 0))
@@ -316,7 +266,7 @@ class Ui_Form(object):
 
         self.gridLayout_27.addWidget(self.GenerateSetup_IS_WorkBenches, 2, 0, 1, 3)
 
-        self.gridLayout_30.addWidget(self.SetupBox, 0, 1, 2, 1)
+        self.gridLayout_30.addWidget(self.SetupBox, 0, 1, 3, 1)
 
         self.groupBox_2 = QGroupBox(self.InItialSetup)
         self.groupBox_2.setObjectName("groupBox_2")
@@ -368,7 +318,76 @@ class Ui_Form(object):
 
         self.gridLayout_45.addWidget(self.GenerateSetup_IS_Panels, 2, 0, 1, 1)
 
-        self.gridLayout_30.addWidget(self.groupBox_2, 0, 2, 2, 1)
+        self.gridLayout_30.addWidget(self.groupBox_2, 0, 2, 3, 1)
+
+        self.verticalSpacer_13 = QSpacerItem(
+            20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
+        )
+
+        self.gridLayout_30.addItem(self.verticalSpacer_13, 2, 0, 1, 1)
+
+        self.ExportBox = QGroupBox(self.InItialSetup)
+        self.ExportBox.setObjectName("ExportBox")
+        sizePolicy4.setHeightForWidth(self.ExportBox.sizePolicy().hasHeightForWidth())
+        self.ExportBox.setSizePolicy(sizePolicy4)
+        self.ExportBox.setMinimumSize(QSize(200, 0))
+        self.gridLayout_29 = QGridLayout(self.ExportBox)
+        self.gridLayout_29.setObjectName("gridLayout_29")
+        self.groupBox_3 = QGroupBox(self.ExportBox)
+        self.groupBox_3.setObjectName("groupBox_3")
+        self.gridLayout_24 = QGridLayout(self.groupBox_3)
+        self.gridLayout_24.setObjectName("gridLayout_24")
+        self.ImportWorkbenchSelector_IS = QComboBox(self.groupBox_3)
+        self.ImportWorkbenchSelector_IS.setObjectName("ImportWorkbenchSelector_IS")
+
+        self.gridLayout_24.addWidget(self.ImportWorkbenchSelector_IS, 0, 0, 1, 1)
+
+        self.ImportWorkbench_IS = QPushButton(self.groupBox_3)
+        self.ImportWorkbench_IS.setObjectName("ImportWorkbench_IS")
+
+        self.gridLayout_24.addWidget(self.ImportWorkbench_IS, 1, 0, 1, 1)
+
+        self.gridLayout_29.addWidget(self.groupBox_3, 4, 0, 1, 1)
+
+        self.Importlayout_IS = QPushButton(self.ExportBox)
+        self.Importlayout_IS.setObjectName("Importlayout_IS")
+
+        self.gridLayout_29.addWidget(self.Importlayout_IS, 0, 0, 1, 1)
+
+        self.ExportLayout_IS = QPushButton(self.ExportBox)
+        self.ExportLayout_IS.setObjectName("ExportLayout_IS")
+
+        self.gridLayout_29.addWidget(self.ExportLayout_IS, 1, 0, 1, 1)
+
+        self.ImportDropDownButtons_IS = QPushButton(self.ExportBox)
+        self.ImportDropDownButtons_IS.setObjectName("ImportDropDownButtons_IS")
+
+        self.gridLayout_29.addWidget(self.ImportDropDownButtons_IS, 3, 0, 1, 1)
+
+        self.ImportCustomPanels_IS = QPushButton(self.ExportBox)
+        self.ImportCustomPanels_IS.setObjectName("ImportCustomPanels_IS")
+
+        self.gridLayout_29.addWidget(self.ImportCustomPanels_IS, 2, 0, 1, 1)
+
+        self.gridLayout_30.addWidget(self.ExportBox, 0, 0, 1, 1)
+
+        self.groupBox_4 = QGroupBox(self.InItialSetup)
+        self.groupBox_4.setObjectName("groupBox_4")
+        self.groupBox_4.setMinimumSize(QSize(0, 80))
+        self.gridLayout_47 = QGridLayout(self.groupBox_4)
+        self.gridLayout_47.setObjectName("gridLayout_47")
+        self.CustomPanelPositionLeft = QRadioButton(self.groupBox_4)
+        self.CustomPanelPositionLeft.setObjectName("CustomPanelPositionLeft")
+
+        self.gridLayout_47.addWidget(self.CustomPanelPositionLeft, 0, 0, 1, 1)
+
+        self.CustomPanelPositionRight = QRadioButton(self.groupBox_4)
+        self.CustomPanelPositionRight.setObjectName("CustomPanelPositionRight")
+        self.CustomPanelPositionRight.setChecked(True)
+
+        self.gridLayout_47.addWidget(self.CustomPanelPositionRight, 1, 0, 1, 1)
+
+        self.gridLayout_30.addWidget(self.groupBox_4, 1, 0, 1, 1)
 
         self.gridLayout_32.addLayout(self.gridLayout_30, 0, 0, 1, 1)
 
@@ -1486,27 +1505,6 @@ class Ui_Form(object):
         self.UpdateJson.setText(QCoreApplication.translate("Form", "Update", None))
         self.ResetJson.setText(QCoreApplication.translate("Form", "Reset", None))
         self.RestoreJson.setText(QCoreApplication.translate("Form", "Restore", None))
-        self.ExportBox.setTitle(
-            QCoreApplication.translate("Form", "Import/Export", None)
-        )
-        self.groupBox_3.setTitle(
-            QCoreApplication.translate("Form", "Import workbench layout", None)
-        )
-        self.ImportWorkbench_IS.setText(
-            QCoreApplication.translate("Form", "Import workbench", None)
-        )
-        self.Importlayout_IS.setText(
-            QCoreApplication.translate("Form", "Import layout", None)
-        )
-        self.ExportLayout_IS.setText(
-            QCoreApplication.translate("Form", "Export layout", None)
-        )
-        self.ImportDropDownButtons_IS.setText(
-            QCoreApplication.translate("Form", "Import dropdown buttons", None)
-        )
-        self.ImportCustomPanels_IS.setText(
-            QCoreApplication.translate("Form", "Import custom panels", None)
-        )
         self.SetupBox.setTitle(
             QCoreApplication.translate(
                 "Form", "Set inital button size - Workbenches", None
@@ -1555,6 +1553,36 @@ class Ui_Form(object):
         self.label_25.setText(QCoreApplication.translate("Form", "for:", None))
         self.GenerateSetup_IS_Panels.setText(
             QCoreApplication.translate("Form", "Generate", None)
+        )
+        self.ExportBox.setTitle(
+            QCoreApplication.translate("Form", "Import/Export", None)
+        )
+        self.groupBox_3.setTitle(
+            QCoreApplication.translate("Form", "Import workbench layout", None)
+        )
+        self.ImportWorkbench_IS.setText(
+            QCoreApplication.translate("Form", "Import workbench", None)
+        )
+        self.Importlayout_IS.setText(
+            QCoreApplication.translate("Form", "Import layout", None)
+        )
+        self.ExportLayout_IS.setText(
+            QCoreApplication.translate("Form", "Export layout", None)
+        )
+        self.ImportDropDownButtons_IS.setText(
+            QCoreApplication.translate("Form", "Import dropdown buttons", None)
+        )
+        self.ImportCustomPanels_IS.setText(
+            QCoreApplication.translate("Form", "Import custom panels", None)
+        )
+        self.groupBox_4.setTitle(
+            QCoreApplication.translate("Form", "Default custom panel position", None)
+        )
+        self.CustomPanelPositionLeft.setText(
+            QCoreApplication.translate("Form", "Position custom panels left", None)
+        )
+        self.CustomPanelPositionRight.setText(
+            QCoreApplication.translate("Form", "Position custom panels right", None)
         )
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.InItialSetup),
