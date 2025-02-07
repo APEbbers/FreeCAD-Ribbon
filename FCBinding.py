@@ -65,6 +65,7 @@ from PySide.QtWidgets import (
     QLabel,
     QVBoxLayout,
     QToolTip,
+    QWidgetItem,
 )
 from PySide.QtCore import (
     Qt,
@@ -491,12 +492,21 @@ class ModernMenu(RibbonBar):
         self.setStyleSheet(StyleSheet)
 
         # Add an addition for Font sizes
-        StyleSheet_Addition_5 = """QMenu, QMenu::item, QAction, RibbonApplicationButton, RibbonMenu, RibbonMenu::item,
-                RibbonPanelTitle, QToolButton, QToolButton::menu, QLabel, QTextEdit, SearchBoxLight {
-                    font-size:11px;}
-                QTabBar {
-                    font-size:14px;
-                    }"""
+        StyleSheet_Addition_5 = """
+        QWidgetItem,
+        QMenu, QMenu::item,
+        QAction,
+        RibbonApplicationButton,
+        RibbonMenu,
+        RibbonMenu::item,
+        RibbonPanelTitle,
+        RibbonToolButton::item,
+        QToolButton, QToolButton::menu,
+        QLabel,
+        QTextEdit,
+        SearchBoxLight
+            { font-size:11px;}
+                QTabBar {font-size:14px;}"""
         StyleSheet = StyleSheet_Addition_5 + StyleSheet
         self.setStyleSheet(StyleSheet)
 
@@ -1153,15 +1163,6 @@ class ModernMenu(RibbonBar):
         # Add a file menu
         ApplictionMenu = self.addFileMenu()
 
-        # # Set the font size for the application menu
-        # Font = ApplictionMenu.font()
-        # Font.setPixelSize(11)
-        # ApplictionMenu.setFont(Font)
-
-        # # Remove the border, cause by creating it for the applicationOptionButton
-        # StyleSheet = """border: none;"""
-        # ApplictionMenu.setStyleSheet(StyleSheet)
-
         # add the menus from the menubar to the application button
         MenuBar = mw.menuBar()
         ApplictionMenu.addActions(MenuBar.actions())
@@ -1190,8 +1191,6 @@ class ModernMenu(RibbonBar):
                             ApplictionMenu.removeAction(action)
                             break
 
-        # for child in ApplictionMenu.findChildren(QMenu):
-        #     child.setFont(Font)
         return
 
     def CreateMenus(self):
@@ -1203,11 +1202,20 @@ class ModernMenu(RibbonBar):
             OverlayButton = OverlayMenu.addAction(
                 translate("FreeCAD Ribbon", "Toggle overlay")
             )
+            OverlayButton.setToolTip(
+                translate("FreeCAD Ribbon", "Click to toggle the overlay function")
+            )
             OverlayButton.triggered.connect(self.CustomOverlay)
             OverlayButton.setShortcut("F4")
 
             TransparancyButton = OverlayMenu.addAction(
                 translate("FreeCAD Ribbon", "Toggle transparancy")
+            )
+            TransparancyButton.setToolTip(
+                translate(
+                    "FreeCAD Ribbon",
+                    "Toggle transparancy for panels when overlay is enabled",
+                )
             )
             TransparancyButton.triggered.connect(self.CustomTransparancy)
             TransparancyButton.setShortcut("Ctrl+F4")
@@ -1223,10 +1231,16 @@ class ModernMenu(RibbonBar):
         DesignButton = RibbonMenu.addAction(
             translate("FreeCAD Ribbon", "Ribbon layout")
         )
+        DesignButton.setToolTip(
+            translate("FreeCAD Ribbon", "Design the ribbon to your preference")
+        )
         DesignButton.triggered.connect(self.loadDesignMenu)
         # Add the preference button
         PreferenceButton = RibbonMenu.addAction(
             translate("FreeCAD Ribbon", "Preferences")
+        )
+        PreferenceButton.setToolTip(
+            translate("FreeCAD Ribbon", "Set preferences for the Ribbon UI")
         )
         PreferenceButton.setMenuRole(QAction.MenuRole.NoRole)
         PreferenceButton.triggered.connect(self.loadSettingsMenu)
@@ -1237,6 +1251,9 @@ class ModernMenu(RibbonBar):
             if len(ListScripts) > 0:
                 ScriptButtonMenu = RibbonMenu.addMenu(
                     translate("FreeCAD Ribbon", "Scripts")
+                )
+                ScriptButtonMenu.setToolTip(
+                    translate("FreeCAD Ribbon", "Scripts to help setup the ribbon.")
                 )
                 for i in range(len(ListScripts)):
                     ScriptButtonMenu.addAction(
@@ -1268,6 +1285,11 @@ class ModernMenu(RibbonBar):
 
         # Add the ribbon helpbutton under the FreeCAD
         RibbonHelpButton = QAction(translate("FreeCAD Ribbon", "Ribbon UI help"))
+        RibbonHelpButton.setToolTip(
+            translate(
+                "FreeCAD Ribbon", "Open the help page for the Ribbon UI in your browser"
+            )
+        )
         RibbonHelpButton.setIcon(HelpIcon)
         RibbonHelpButton.triggered.connect(self.on_RibbonHelpButton_clicked)
         HelpMenu.insertAction(actions[1], RibbonHelpButton)
