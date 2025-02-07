@@ -767,6 +767,8 @@ class ModernMenu(RibbonBar):
                 # Set the height
                 self.setQuickAccessButtonHeight(self.RibbonMinimalHeight)
 
+                button.setContentsMargins(3, 3, 3, 3)
+
                 # Add the button to the quickaccess toolbar
                 if len(button.actions()) > 0:
                     self.addQuickAccessButton(button)
@@ -797,7 +799,7 @@ class ModernMenu(RibbonBar):
         # Set the tabbar height and textsize
         self.tabBar().setContentsMargins(0, 0, 0, 0)
         font = self.tabBar().font()
-        font.setPixelSize(16)
+        font.setPixelSize(14)
         self.tabBar().setFont(font)
 
         self.tabBar().setIconSize(QSize(self.TabBar_Size - 6, self.TabBar_Size - 6))
@@ -1012,6 +1014,11 @@ class ModernMenu(RibbonBar):
         # Add a file menu
         ApplictionMenu = self.addFileMenu()
 
+        # Set the font size for the application menu
+        Font = ApplictionMenu.font()
+        Font.setPixelSize(11)
+        ApplictionMenu.setFont(Font)
+
         # Remove the border, cause by creating it for the applicationOptionButton
         StyleSheet = """border: none;"""
         ApplictionMenu.setStyleSheet(StyleSheet)
@@ -1043,6 +1050,9 @@ class ModernMenu(RibbonBar):
                         if action.text() == translate("FreeCAD Ribbon", "Ribbon UI"):
                             ApplictionMenu.removeAction(action)
                             break
+
+        for child in ApplictionMenu.findChildren(QMenu):
+            child.setFont(Font)
         return
 
     def CreateMenus(self):
