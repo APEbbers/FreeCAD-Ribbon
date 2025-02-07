@@ -204,6 +204,7 @@ class CustomControls:
                         maxLength = maxLength + 1
                     if maxWidth >= ButtonSize.width():
                         break
+                maxLength = maxLength + 3
 
                 # Get the first text line
                 line1 = StandardFunctions.ReturnWrappedText(

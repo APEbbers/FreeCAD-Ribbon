@@ -57,7 +57,7 @@ sys.path.append(pathUI)
 sys.path.append(pathBackup)
 
 
-def ReturnStyleItem(ControlName, ShowCustomIcon=False):
+def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
     """
     Enter one of the names below:
 
@@ -133,6 +133,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False):
                 Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED is False
                 and Parameters_Ribbon.USE_FC_OVERLAY is True
                 and ControlName == "Background_Color"
+                and IgnoreOverlay is False
             ):
                 result = "none"
             if result == "" or result is None:

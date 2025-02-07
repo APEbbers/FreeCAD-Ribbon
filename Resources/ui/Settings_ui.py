@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsmvYyZB.ui'
+## Form generated from reading UI file 'SettingsuaFdPK.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -236,29 +236,6 @@ class Ui_Settings(object):
 
         self.gridLayout.addWidget(self.TabbarHeight, 5, 1, 1, 1)
 
-        self.IconSize_Small = QSpinBox(self.groupBox_4)
-        self.IconSize_Small.setObjectName("IconSize_Small")
-        sizePolicy6.setHeightForWidth(
-            self.IconSize_Small.sizePolicy().hasHeightForWidth()
-        )
-        self.IconSize_Small.setSizePolicy(sizePolicy6)
-        self.IconSize_Small.setMinimumSize(QSize(50, 20))
-        self.IconSize_Small.setSizeIncrement(QSize(0, 0))
-        self.IconSize_Small.setBaseSize(QSize(0, 0))
-        self.IconSize_Small.setFont(font1)
-        self.IconSize_Small.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.IconSize_Small.setFrame(True)
-        self.IconSize_Small.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.IconSize_Small.setCorrectionMode(
-            QAbstractSpinBox.CorrectionMode.CorrectToNearestValue
-        )
-        self.IconSize_Small.setProperty("showGroupSeparator", False)
-        self.IconSize_Small.setMinimum(16)
-        self.IconSize_Small.setMaximum(36)
-        self.IconSize_Small.setValue(24)
-
-        self.gridLayout.addWidget(self.IconSize_Small, 0, 1, 1, 1)
-
         self.IconSize_ApplicationButton = QSpinBox(self.groupBox_4)
         self.IconSize_ApplicationButton.setObjectName("IconSize_ApplicationButton")
         self.IconSize_ApplicationButton.setMinimumSize(QSize(50, 20))
@@ -332,13 +309,36 @@ class Ui_Settings(object):
 
         self.gridLayout.addWidget(self.IconSize_Large, 2, 1, 1, 1)
 
-        self.gridLayout_5.addLayout(self.gridLayout, 0, 0, 1, 1)
+        self.IconSize_Small = QSpinBox(self.groupBox_4)
+        self.IconSize_Small.setObjectName("IconSize_Small")
+        sizePolicy6.setHeightForWidth(
+            self.IconSize_Small.sizePolicy().hasHeightForWidth()
+        )
+        self.IconSize_Small.setSizePolicy(sizePolicy6)
+        self.IconSize_Small.setMinimumSize(QSize(50, 20))
+        self.IconSize_Small.setSizeIncrement(QSize(0, 0))
+        self.IconSize_Small.setBaseSize(QSize(0, 0))
+        self.IconSize_Small.setFont(font1)
+        self.IconSize_Small.setFocusPolicy(Qt.FocusPolicy.WheelFocus)
+        self.IconSize_Small.setFrame(True)
+        self.IconSize_Small.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.IconSize_Small.setCorrectionMode(
+            QAbstractSpinBox.CorrectionMode.CorrectToNearestValue
+        )
+        self.IconSize_Small.setProperty("showGroupSeparator", False)
+        self.IconSize_Small.setMinimum(16)
+        self.IconSize_Small.setMaximum(36)
+        self.IconSize_Small.setValue(24)
+
+        self.gridLayout.addWidget(self.IconSize_Small, 0, 1, 1, 1)
+
+        self.gridLayout_5.addLayout(self.gridLayout, 1, 0, 1, 1)
 
         self.horizontalSpacer_3 = QSpacerItem(
             40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
         )
 
-        self.gridLayout_5.addItem(self.horizontalSpacer_3, 0, 1, 1, 1)
+        self.gridLayout_5.addItem(self.horizontalSpacer_3, 1, 1, 1, 1)
 
         self.gridLayout_3.addWidget(self.groupBox_4, 1, 0, 1, 1)
 
@@ -1458,7 +1458,7 @@ class Ui_Settings(object):
         self.label_26.setText(
             QCoreApplication.translate(
                 "Settings",
-                "<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">The overlay function can give issues. Use at your own risk.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">When there are issues, place a file </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; \">&quot;OVERLAY_DISABLED&quot; </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; \">in the folder of the add-on. (No extension) This will restore the ribbon and its own overlay function.</span></p></body></html>",
+                "<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">The FreeCAD overlay function can give issues. Use at your own risk. Few functions are disabled when using the FreeCAD overlay function.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">When there are issues, place a file </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; \">&quot;OVERLAY_DISABLED&quot; </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; \">in the folder of the add-on. (No extension) This will restore the ribbon and its own overlay function.</span></p></body></html>",
                 None,
             )
         )

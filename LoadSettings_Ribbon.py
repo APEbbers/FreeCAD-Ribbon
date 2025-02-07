@@ -296,6 +296,12 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
         if Parameters_Ribbon.USE_FC_OVERLAY is True:
             self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Checked)
+            # Disable the texts because they are not compatible with FreeCAD's overlay
+            self.form.ShowText_Small.setDisabled(True)
+            self.form.ShowText_Medium.setDisabled(True)
+            self.form.ShowText_Large.setDisabled(True)
+            self.form.EnableWrap_Medium.setDisabled(True)
+            self.form.EnableWrap_Large.setDisabled(True)
         else:
             self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Unchecked)
 
@@ -756,8 +762,22 @@ class LoadDialog(Settings_ui.Ui_Settings):
     def on_FCOverlayEnabled_clicked(self):
         if self.form.FCOverlayEnabled.isChecked() is True:
             self.ValuesToUpdate["UseFCOverlay"] = True
+
+            # Disable the texts because they are not compatible with FreeCAD's overlay
+            self.form.ShowText_Small.setDisabled(True)
+            self.form.ShowText_Medium.setDisabled(True)
+            self.form.ShowText_Large.setDisabled(True)
+            self.form.EnableWrap_Medium.setDisabled(True)
+            self.form.EnableWrap_Large.setDisabled(True)
         if self.form.FCOverlayEnabled.isChecked() is False:
             self.ValuesToUpdate["UseFCOverlay"] = False
+
+            # Enable the texts again
+            self.form.ShowText_Small.setEnabled(True)
+            self.form.ShowText_Medium.setEnabled(True)
+            self.form.ShowText_Large.setEnabled(True)
+            self.form.EnableWrap_Medium.setEnabled(True)
+            self.form.EnableWrap_Large.setEnabled(True)
         self.settingChanged = True
         return
 
