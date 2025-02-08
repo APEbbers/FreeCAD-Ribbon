@@ -593,7 +593,7 @@ class ModernMenu(RibbonBar):
         #     and int(App.Version()[1]) <= 21
         #     and Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is True
         # ):
-        if Parameters_Ribbon.USE_FC_OVERLAY is False:
+        if Parameters_Ribbon.USE_FC_OVERLAY is False and Parameters_Ribbon.SHOW_ON_HOVER is True:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             if self.RibbonHeight > 0:
                 TB.setFixedHeight(self.RibbonHeight)
