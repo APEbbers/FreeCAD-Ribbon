@@ -264,8 +264,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.form.EnableEnterEvent.setCheckState(Qt.CheckState.Unchecked)
         # # it is FreeCAD 1.0 disable this option.
         # if int(App.Version()[0]) > 0:
-        self.form.EnableEnterEvent.setDisabled(True)
-        self.form.EnableEnterEvent.setHidden(True)
+        # self.form.EnableEnterEvent.setDisabled(True)
+        # self.form.EnableEnterEvent.setHidden(True)
 
         self.form.ScrollSpeed_TabBar.setValue(Parameters_Ribbon.TABBAR_SCROLLSPEED)
         self.form.ScrollSpeed_Ribbon.setValue(Parameters_Ribbon.RIBBON_SCROLLSPEED)
