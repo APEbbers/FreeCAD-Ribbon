@@ -1218,7 +1218,7 @@ class ModernMenu(RibbonBar):
                 )
             )
             TransparancyButton.triggered.connect(self.CustomTransparancy)
-            TransparancyButton.setShortcut("Ctrl+F4")
+            TransparancyButton.setShortcut("Shift+F4")
 
             self.OverlayMenu = OverlayMenu
 
