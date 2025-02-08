@@ -118,7 +118,7 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon_local as pyqtribbon
+# import pyqtribbon as pyqtribbon
 # from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
 # from pyqtribbon.panel import RibbonPanel, RibbonPanelTitle
 # from pyqtribbon.toolbutton import RibbonToolButton
@@ -165,7 +165,7 @@ class ModernMenu(RibbonBar):
     RibbonOffset = 46 + QuickAccessButtonSize  # Set to zero to hide the panel titles
 
     # Set the minimum height for the ribbon
-    RibbonMinimalHeight = QuickAccessButtonSize + 10
+    RibbonMinimalHeight = QuickAccessButtonSize + 12
     # From v1.6.x, the size of tab bar and right toolbar are controlled by the size of the quickaccess toolbar
     TabBar_Size = QuickAccessButtonSize
     RightToolBarButtonSize = QuickAccessButtonSize
@@ -520,6 +520,10 @@ class ModernMenu(RibbonBar):
         # Set the scroll buttons on the tabbar
         ScrollLeftButton_Tab: QToolButton = self.tabBar().findChildren(QToolButton)[0]
         ScrollRightButton_Tab: QToolButton = self.tabBar().findChildren(QToolButton)[1]
+        # # Set its height
+        # ScrollLeftButton_Tab.setMaximumHeight(self.tabBar().height())
+        # ScrollRightButton_Tab.setMaximumHeight(self.tabBar().height())
+
         # get the icons
         ScrollLeftButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab")
         ScrollRightButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollRightButton_Tab")
@@ -564,7 +568,6 @@ class ModernMenu(RibbonBar):
         # ToolTip = self.applicationOptionButton().toolTip()
         ToolTip = f"{KeyCombination}"
         self.applicationOptionButton().setToolTip(ToolTip)
-
         return
 
     def closeEvent(self, event):
@@ -1261,11 +1264,11 @@ class ModernMenu(RibbonBar):
         return
 
     def onWbActivated(self):
-        if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
-            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            if self.RibbonHeight > 0:
-                TB.setFixedHeight(self.RibbonHeight)
-                self.setRibbonHeight(self.RibbonHeight)
+        # if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
+        #     TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+        #     if self.RibbonHeight > 0:
+        #         TB.setFixedHeight(self.RibbonHeight)
+        #         self.setRibbonHeight(self.RibbonHeight)
 
         # Set the text color depending in tabstyle
         if Parameters_Ribbon.TABBAR_STYLE != 1:
@@ -2450,6 +2453,7 @@ class run:
             layout.setContentsMargins(0, 0, 0, 0)
             # update the layout
             ribbon.setLayout(layout)
+            ribbon.hideRibbon()
             ribbonDock = QDockWidget()
             # set the name of the object and the window title
             ribbonDock.setObjectName("Ribbon")
@@ -2461,10 +2465,21 @@ class run:
             ribbonDock.setWidget(ribbon)
             ribbonDock.setEnabled(True)
             ribbonDock.setVisible(True)
-            # # make sure that there are no negative valules
-            # ribbonDock.setMaximumHeight(ribbon.ReturnRibbonHeight() - 20)
+            viewWidget = mw.centralWidget()
+            viewWidget.stackUnder(ribbonDock)
+            # #
+            # make sure that there are no negative valules
+            ribbonDock.setMinimumHeight(ribbon.RibbonMinimalHeight)
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
+            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
+                TB.setMinimumHeight(ribbon.RibbonMinimalHeight)
+                TB.setMaximumHeight(ribbon.RibbonMinimalHeight)
+
+                # Make sure that the ribbon remains visible
+                ribbon.setRibbonVisible(True)
+                pass
 
 
 # def UpdateRibbonStructureFile(RibbonStructureDict: dict = None, silent=True):
