@@ -520,9 +520,6 @@ class ModernMenu(RibbonBar):
         # Set the scroll buttons on the tabbar
         ScrollLeftButton_Tab: QToolButton = self.tabBar().findChildren(QToolButton)[0]
         ScrollRightButton_Tab: QToolButton = self.tabBar().findChildren(QToolButton)[1]
-        # # Set its height
-        # ScrollLeftButton_Tab.setMaximumHeight(self.tabBar().height())
-        # ScrollRightButton_Tab.setMaximumHeight(self.tabBar().height())
 
         # get the icons
         ScrollLeftButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab")
@@ -2453,7 +2450,9 @@ class run:
             layout.setContentsMargins(0, 0, 0, 0)
             # update the layout
             ribbon.setLayout(layout)
-            ribbon.hideRibbon()
+            # If autohide is enabled, hide the ribbon
+            if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
+                ribbon.hideRibbon()
             ribbonDock = QDockWidget()
             # set the name of the object and the window title
             ribbonDock.setObjectName("Ribbon")
@@ -2472,14 +2471,16 @@ class run:
             ribbonDock.setMinimumHeight(ribbon.RibbonMinimalHeight)
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
-            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            # set the height when autohide is enabled
             if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
-                TB.setMinimumHeight(ribbon.RibbonMinimalHeight)
-                TB.setMaximumHeight(ribbon.RibbonMinimalHeight)
+                TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+                if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
+                    TB.setMinimumHeight(ribbon.RibbonMinimalHeight)
+                    TB.setMaximumHeight(ribbon.RibbonMinimalHeight)
 
-                # Make sure that the ribbon remains visible
-                ribbon.setRibbonVisible(True)
-                pass
+                    # Make sure that the ribbon remains visible
+                    ribbon.setRibbonVisible(True)
+                    pass
 
 
 # def UpdateRibbonStructureFile(RibbonStructureDict: dict = None, silent=True):
