@@ -1080,7 +1080,7 @@ class ModernMenu(RibbonBar):
                 translate("FreeCAD Ribbon", "Toggle transparancy for panels when overlay is enabled")
             )
             TransparancyButton.triggered.connect(self.CustomTransparancy)
-            TransparancyButton.setShortcut("Ctrl+F4")
+            TransparancyButton.setShortcut("Shift+F4")
 
             self.OverlayMenu = OverlayMenu
 
