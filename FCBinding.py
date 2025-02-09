@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -41,7 +41,7 @@ from PySide.QtGui import (
     QKeySequence,
     QShortcut,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -67,7 +67,7 @@ from PySide.QtWidgets import (
     QToolTip,
     QWidgetItem,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -98,7 +98,6 @@ import StyleMapping
 import platform
 import math
 import requests_local as requests
-
 import xml.etree.ElementTree as ET
 
 # Get the resources
@@ -121,12 +120,12 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel, RibbonPanelTitle
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
+import pyqtribbon as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel, RibbonPanelTitle
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -190,6 +189,9 @@ class ModernMenu(RibbonBar):
     RibbonMenu = QMenu()
     HelpMenu = QMenu()
     OverlayMenu = None
+
+    UpdateVersion = ""
+    DeveloperVersion = ""
 
     def __init__(self):
         """
@@ -400,18 +402,37 @@ class ModernMenu(RibbonBar):
             pass
 
         # Check if there is a new version
-        url = "https://raw.githubusercontent.com/APEbbers/FreeCAD-Ribbon/main/package.xml"
-        response = requests.get(url)
-        data = response.content
-        root = ET.fromstring(data)
-        LatestVersion = ""
-        for child in root:
-            if str(child.tag).split("}")[1] == "version":
-                result = child.text
-                LatestVersion = result
+        # Get the latest version
+        User = ("APEbbers",)
+        Repo = "FreeCAD-Ribbon"
+        Branch = "main"
+        File = "package.xml"
+        ElementName = "version"
+        LatestVersion = StandardFunctions.ReturnXML_Value_Git(User, Repo, Branch, File, ElementName)
+        # Get the current version
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         CurrentVersion = StandardFunctions.ReturnXML_Value(PackageXML, "version")
-        print(f"latest version is: {LatestVersion}, Current vesion is: {CurrentVersion}")
+        # Check if you are on a developer version. If so set developer version
+        if CurrentVersion.lower().endswith("x"):
+            self.DeveloperVersion = CurrentVersion
+            self.UpdateVersion = ""
+        # If you are not on a developer version, check if you have the latest version
+        if CurrentVersion.lower().endswith("x") is False:
+            # Create arrays from the versions
+            LatestVersionArray = LatestVersion.split(".")
+            CurrentVersionArray = CurrentVersion.split(".")
+
+            # Set the length to the shortest lenght
+            ArrayLenght = len(LatestVersionArray)
+            if len(CurrentVersionArray) < ArrayLenght:
+                ArrayLenght = len(CurrentVersionArray)
+
+            # Check per level if the latest version has the highest number
+            # if so set update version
+            for i in range(ArrayLenght - 1):
+                if LatestVersionArray[i] > CurrentVersionArray[i]:
+                    print(f"{LatestVersionArray[i]}, {CurrentVersionArray[i]}")
+                    self.UpdateVersion = LatestVersion
 
         # Create the ribbon
         self.CreateMenus()  # Create the menus
@@ -1061,6 +1082,7 @@ class ModernMenu(RibbonBar):
                 # Remove the menu from the Ribbon Application Menu
                 MenuBar.removeAction(child.menuAction())
 
+        # If you are on macOS, add the ribbon menu to the menubar
         if platform.system().lower() == "darwin":
             for action in MenuBar.actions():
                 if action.text() == translate("FreeCAD Ribbon", "Ribbon UI"):
@@ -1079,7 +1101,25 @@ class ModernMenu(RibbonBar):
                         if action.text() == translate("FreeCAD Ribbon", "Ribbon UI"):
                             ApplictionMenu.removeAction(action)
                             break
+        # if you are on a developer version, add a label
+        if self.DeveloperVersion != "":
+            color = "#66ff66"
+            Label = QLabel()
+            Label.setText("Development version")
+            Label.setStyleSheet(f"color: {color};border: 1px solid {color};border-radius: 2px;")
+            ApplictionMenu.addWidget(Label)
+        # if there is an update, add a button that opens the addon manager
+        if self.UpdateVersion != "" and self.DeveloperVersion == "":
+            color = "#ffb340"
+            Button = QToolButton()
+            Button.setText(translate("FreeCAD Ribbon", "Update available"))
+            Button.setStyleSheet(f"color: {color};border: 1px solid {color};border-radius: 2px;background: none")
 
+            def OpenAddOnManager():
+                Gui.runCommand("Std_AddonMgr", 0)
+
+            Button.clicked.connect(OpenAddOnManager)
+            ApplictionMenu.addWidget(Button)
         return
 
     def CreateMenus(self):
