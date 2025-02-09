@@ -403,7 +403,7 @@ class ModernMenu(RibbonBar):
 
         # Check if there is a new version
         # Get the latest version
-        User = ("APEbbers",)
+        User = "APEbbers"
         Repo = "FreeCAD-Ribbon"
         Branch = "main"
         File = "package.xml"
