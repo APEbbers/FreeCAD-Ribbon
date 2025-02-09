@@ -66,6 +66,9 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
         "Border_Color" returns string,
         "FontColor" returns string,
         "ApplicationButton_Background" returns string,
+        "FontColor" returns string,
+        "UpdateColor" returns string,
+        "DevelopColor" returns string,
         "ScrollLeftButton_Tab returns QIcon",
         "ScrollRightButton_Tab" returns QIcon,
         "ScrollLeftButton_Category" returns QIcon,
@@ -304,7 +307,7 @@ def ReturnFontColor():
 
 
 def ReturnUpdateColor():
-    fontColor = "#BF360C"
+    fontColor = "#CB7A00"
     IsDarkTheme = DarkMode()
 
     if IsDarkTheme is True:
@@ -318,7 +321,7 @@ def ReturnDevelopColor():
     IsDarkTheme = DarkMode()
 
     if IsDarkTheme is True:
-        fontColor = "#66ff66"
+        fontColor = "#538E1F"
 
     return fontColor
 
@@ -376,6 +379,8 @@ StyleMapping = {
         "Border_Color": Parameters_Ribbon.COLOR_BORDERS,
         "ApplicationButton_Background": Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND,
         "FontColor": Parameters_Ribbon.COLOR_BORDERS,  # Set the font and border equal when custom colors is enabled
+        "UpdateColor": ReturnUpdateColor(),
+        "DevelopColor": ReturnDevelopColor(),
         "ScrollLeftButton_Tab": Parameters_Ribbon.SCROLL_LEFT_BUTTON_TAB,
         "ScrollRightButton_Tab": Parameters_Ribbon.SCROLL_RIGHT_BUTTON_TAB,
         "ScrollLeftButton_Category": Parameters_Ribbon.SCROLL_LEFT_BUTTON_CATEGORY,
@@ -395,6 +400,8 @@ StyleMapping_default = {
             "Border_Color": "#646464",
             "ApplicationButton_Background": "#e0e0e0",
             "FontColor": ReturnFontColor(),
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
             "ScrollLeftButton_Tab": "backward_small_default.svg",
             "ScrollRightButton_Tab": "forward_small_default.svg",
             "ScrollLeftButton_Category": "backward_default.svg",
@@ -409,6 +416,8 @@ StyleMapping_default = {
             "Border_Color": ReturnColor("Border_Color"),
             "ApplicationButton_Background": "#48a0f8",
             "FontColor": ReturnFontColor(),
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
             "ScrollLeftButton_Tab": GetIconBasedOnTag("ScrollLeftButton_Tab"),
             "ScrollRightButton_Tab": GetIconBasedOnTag("ScrollRightButton_Tab"),
             "ScrollLeftButton_Category": GetIconBasedOnTag("ScrollLeftButton_Category"),
@@ -423,6 +432,8 @@ StyleMapping_default = {
             "Border_Color": "#ffffff",
             "ApplicationButton_Background": "#48a0f8",
             "FontColor": "#ffffff",
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",
             "ScrollRightButton_Tab": "forward_small_default_white.svg",
             "ScrollLeftButton_Category": "backward_default_white.svg",
@@ -437,6 +448,8 @@ StyleMapping_default = {
             "Border_Color": "#646464",
             "ApplicationButton_Background": "#48a0f8",
             "FontColor": "#000000",
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
             "ScrollLeftButton_Tab": "backward_small_default.svg",
             "ScrollRightButton_Tab": "forward_small_default.svg",
             "ScrollLeftButton_Category": "backward_default.svg",
@@ -451,6 +464,8 @@ StyleMapping_default = {
             "Border_Color": "#1c7ed6",
             "ApplicationButton_Background": "#a5d8ff",
             "FontColor": "#000000",
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
             "ScrollLeftButton_Tab": "backward_1.svg",
             "ScrollRightButton_Tab": "forward_1.svg",
             "ScrollLeftButton_Category": "backward_1.svg",
@@ -465,6 +480,8 @@ StyleMapping_default = {
             "Border_Color": "#264b69",
             "ApplicationButton_Background": "#1f364d",
             "FontColor": "#ffffff",
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",
             "ScrollRightButton_Tab": "forward_small_default_white.svg",
             "ScrollLeftButton_Category": "backward_default_white.svg",
@@ -479,6 +496,8 @@ StyleMapping_default = {
             "Border_Color": "#3a7400",
             "ApplicationButton_Background": "#557bb6",
             "FontColor": ReturnFontColor(),
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",
             "ScrollRightButton_Tab": "forward_small_default_white.svg",
             "ScrollLeftButton_Category": "backward_default_white.svg",
@@ -493,6 +512,8 @@ StyleMapping_default = {
             "Border_Color": "#adc5ed",
             "ApplicationButton_Background": "#557bb6",
             "FontColor": ReturnFontColor(),
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",
             "ScrollRightButton_Tab": "forward_small_default_white.svg",
             "ScrollLeftButton_Category": "backward_default_white.svg",
@@ -521,6 +542,8 @@ StyleMapping_default = {
             "Border_Color": "#646464",
             "ApplicationButton_Background": "#4aa5ff",
             "FontColor": ReturnFontColor(),
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
             "ScrollLeftButton_Tab": "backward_small_default.svg",
             "ScrollRightButton_Tab": "forward_small_default.svg",
             "ScrollLeftButton_Category": "backward_default.svg",
@@ -549,6 +572,8 @@ StyleMapping_default = {
             "Border_Color": "#787878",
             "ApplicationButton_Background": "#4aa5ff",
             "FontColor": ReturnFontColor(),
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",
             "ScrollRightButton_Tab": "forward_small_default_white.svg",
             "ScrollLeftButton_Category": "backward_default_white.svg",
