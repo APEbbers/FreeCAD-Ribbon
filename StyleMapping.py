@@ -112,9 +112,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
             else:
                 PixmapName = ""
             if PixmapName == "" or PixmapName is None:
-                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][
-                    ControlName
-                ]
+                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if PixmapName == "" or PixmapName is None:
                     PixmapName = StyleMapping_default["Stylesheets"][""][ControlName]
             if os.path.exists(PixmapName):
@@ -137,9 +135,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
             ):
                 result = "none"
             if result == "" or result is None:
-                result = StyleMapping_default["Stylesheets"][currentStyleSheet][
-                    ControlName
-                ]
+                result = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if result == "" or result is None:
                     result = StyleMapping_default["Stylesheets"][""][ControlName]
             return result
@@ -148,9 +144,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
         return None
 
 
-def ReturnStyleSheet(
-    control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"
-):
+def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"):
     """
     Enter one of the names below:
 
@@ -299,12 +293,32 @@ def GetIconBasedOnTag(ControlName=""):
     return iconName
 
 
-def ReturnFontColor(StyleSheet=""):
+def ReturnFontColor():
     fontColor = "#000000"
     IsDarkTheme = DarkMode()
 
     if IsDarkTheme is True:
         fontColor = "#ffffff"
+
+    return fontColor
+
+
+def ReturnUpdateColor():
+    fontColor = "#BF360C"
+    IsDarkTheme = DarkMode()
+
+    if IsDarkTheme is True:
+        fontColor = "#ffb340"
+
+    return fontColor
+
+
+def ReturnDevelopColor():
+    fontColor = "#1B5E20"
+    IsDarkTheme = DarkMode()
+
+    if IsDarkTheme is True:
+        fontColor = "#66ff66"
 
     return fontColor
 
@@ -341,9 +355,7 @@ def DarkMode():
                     # Get all the tag elements
                     elements = []
                     namespaces = {"i": "https://wiki.freecad.org/Package_Metadata"}
-                    elements = treeRoot.findall(
-                        ".//i:content/i:preferencepack/i:tag", namespaces
-                    )
+                    elements = treeRoot.findall(".//i:content/i:preferencepack/i:tag", namespaces)
 
                     # go throug all tags. If 'dark' in the element text, this is a dark theme
                     for element in elements:
@@ -400,9 +412,7 @@ StyleMapping_default = {
             "ScrollLeftButton_Tab": GetIconBasedOnTag("ScrollLeftButton_Tab"),
             "ScrollRightButton_Tab": GetIconBasedOnTag("ScrollRightButton_Tab"),
             "ScrollLeftButton_Category": GetIconBasedOnTag("ScrollLeftButton_Category"),
-            "ScrollRightButton_Category": GetIconBasedOnTag(
-                "ScrollRightButton_Category"
-            ),
+            "ScrollRightButton_Category": GetIconBasedOnTag("ScrollRightButton_Category"),
             "OptionButton": GetIconBasedOnTag("OptionButton"),
             "PinButton_open": GetIconBasedOnTag("PinButton_open"),
             "PinButton_closed": GetIconBasedOnTag("PinButton_closed"),
@@ -468,6 +478,7 @@ StyleMapping_default = {
             "Background_Color_Hover": "#557bb6",
             "Border_Color": "#3a7400",
             "ApplicationButton_Background": "#557bb6",
+            "FontColor": ReturnFontColor(),
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",
             "ScrollRightButton_Tab": "forward_small_default_white.svg",
             "ScrollLeftButton_Category": "backward_default_white.svg",
@@ -481,6 +492,7 @@ StyleMapping_default = {
             "Background_Color_Hover": "#557bb6",
             "Border_Color": "#adc5ed",
             "ApplicationButton_Background": "#557bb6",
+            "FontColor": ReturnFontColor(),
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",
             "ScrollRightButton_Tab": "forward_small_default_white.svg",
             "ScrollLeftButton_Category": "backward_default_white.svg",
@@ -494,6 +506,7 @@ StyleMapping_default = {
             "Background_Color_Hover": "#4aa5ff",
             "Border_Color": "#696968",
             "ApplicationButton_Background": "#4aa5ff",
+            "FontColor": ReturnFontColor(),
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",
             "ScrollRightButton_Tab": "forward_small_default_white.svg",
             "ScrollLeftButton_Category": "backward_default_white.svg",
@@ -507,6 +520,7 @@ StyleMapping_default = {
             "Background_Color_Hover": "#4aa5ff",
             "Border_Color": "#646464",
             "ApplicationButton_Background": "#4aa5ff",
+            "FontColor": ReturnFontColor(),
             "ScrollLeftButton_Tab": "backward_small_default.svg",
             "ScrollRightButton_Tab": "forward_small_default.svg",
             "ScrollLeftButton_Category": "backward_default.svg",
@@ -520,6 +534,7 @@ StyleMapping_default = {
             "Background_Color_Hover": "#4aa5ff",
             "Border_Color": "#ffffff",
             "ApplicationButton_Background": "#4aa5ff",
+            "FontColor": ReturnFontColor(),
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",
             "ScrollRightButton_Tab": "forward_small_default_white.svg",
             "ScrollLeftButton_Category": "backward_default_white.svg",
@@ -533,6 +548,7 @@ StyleMapping_default = {
             "Background_Color_Hover": "#4aa5ff",
             "Border_Color": "#787878",
             "ApplicationButton_Background": "#4aa5ff",
+            "FontColor": ReturnFontColor(),
             "ScrollLeftButton_Tab": "backward_small_default_white.svg",
             "ScrollRightButton_Tab": "forward_small_default_white.svg",
             "ScrollLeftButton_Category": "backward_default_white.svg",

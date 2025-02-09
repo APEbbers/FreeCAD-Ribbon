@@ -1103,14 +1103,14 @@ class ModernMenu(RibbonBar):
                             break
         # if you are on a developer version, add a label
         if self.DeveloperVersion != "":
-            color = "#66ff66"
+            color = StyleMapping.ReturnDevelopColor()
             Label = QLabel()
             Label.setText("Development version")
             Label.setStyleSheet(f"color: {color};border: 1px solid {color};border-radius: 2px;")
             ApplictionMenu.addWidget(Label)
         # if there is an update, add a button that opens the addon manager
         if self.UpdateVersion != "" and self.DeveloperVersion == "":
-            color = "#ffb340"
+            color = StyleMapping.ReturnUpdateColor()
             Button = QToolButton()
             Button.setText(translate("FreeCAD Ribbon", "Update available"))
             Button.setStyleSheet(f"color: {color};border: 1px solid {color};border-radius: 2px;background: none")
