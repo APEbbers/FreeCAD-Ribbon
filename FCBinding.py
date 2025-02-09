@@ -97,6 +97,9 @@ import Serialize_Ribbon
 import StyleMapping
 import platform
 import math
+import requests_local as requests
+
+import xml.etree.ElementTree as ET
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -396,6 +399,20 @@ class ModernMenu(RibbonBar):
                 )
             pass
 
+        # Check if there is a new version
+        url = "https://raw.githubusercontent.com/APEbbers/FreeCAD-Ribbon/main/package.xml"
+        response = requests.get(url)
+        data = response.content
+        root = ET.fromstring(data)
+        LatestVersion = ""
+        for child in root:
+            if str(child.tag).split("}")[1] == "version":
+                result = child.text
+                LatestVersion = result
+        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
+        CurrentVersion = StandardFunctions.ReturnXML_Value(PackageXML, "version")
+        print(f"latest version is: {LatestVersion}, Current vesion is: {CurrentVersion}")
+
         # Create the ribbon
         self.CreateMenus()  # Create the menus
         self.createModernMenu()  # Create the ribbon
@@ -426,7 +443,7 @@ class ModernMenu(RibbonBar):
                 + StyleMapping.ReturnStyleItem("Background_Color_Hover", True, True)
                 + """;color: """
                 + StyleMapping.ReturnStyleItem("Background_Color_Hover", True, True)
-                + """min-width: """
+                + """;min-width: """
                 + str(self.TabBar_Size)
                 + """px;
                             max-width: """

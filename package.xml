@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
 
   <name>FreeCAD Ribbon</name>
@@ -32,3 +32,4 @@
   </content>
 
 </package>
+</xml>
