@@ -1818,7 +1818,6 @@ class LoadDialog(Design_ui.Ui_Form):
                                             .replace("_custom", "")
                                         )
 
-
                                         # Define a new ListWidgetItem.
                                         ListWidgetItem = QListWidgetItem()
                                         ListWidgetItem.setText(MenuName)
