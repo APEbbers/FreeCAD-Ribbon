@@ -457,7 +457,7 @@ class ModernMenu(RibbonBar):
                 + StyleMapping.ReturnStyleItem("Background_Color_Hover", True, True)
                 + """;color: """
                 + StyleMapping.ReturnStyleItem("Background_Color_Hover", True, True)
-                + """min-width: """
+                + """;min-width: """
                 + str(self.TabBar_Size)
                 + """px;
                             max-width: """
