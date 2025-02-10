@@ -181,9 +181,7 @@ def restart_freecad():
 
     args = QtWidgets.QApplication.arguments()[1:]
     if Gui.getMainWindow().close():
-        QtCore.QProcess.startDetached(
-            QtWidgets.QApplication.applicationFilePath(), args
-        )
+        QtCore.QProcess.startDetached(QtWidgets.QApplication.applicationFilePath(), args)
 
     return
 
@@ -338,13 +336,9 @@ def GetFileDialog(Filter="", parent=None, DefaultPath="", SaveAs: bool = True) -
 
     file = ""
     if SaveAs is False:
-        file = QFileDialog.getOpenFileName(
-            parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter
-        )[0]
+        file = QFileDialog.getOpenFileName(parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter)[0]
     if SaveAs is True:
-        file = QFileDialog.getSaveFileName(
-            parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter
-        )[0]
+        file = QFileDialog.getSaveFileName(parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter)[0]
     return file
 
 
@@ -352,9 +346,7 @@ def GetFolder(parent=None, DefaultPath="") -> str:
     from PySide.QtWidgets import QFileDialog
 
     Directory = ""
-    Directory = QFileDialog.getExistingDirectory(
-        parent=parent, caption="Select Folder", dir=DefaultPath
-    )
+    Directory = QFileDialog.getExistingDirectory(parent=parent, caption="Select Folder", dir=DefaultPath)
 
     return Directory
 
@@ -382,18 +374,12 @@ def CreateToolbar(Name: str, WorkBenchName: str = "Global", ButtonList: list = [
     # Define the name for the toolbar
     ToolBarName = Name
     # define the parameter path for the toolbar
-    WorkbenchToolBarsParamPath = (
-        "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
-    )
+    WorkbenchToolBarsParamPath = "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
 
     # check if there is already a toolbar with the same name
-    CustomToolbars: list = App.ParamGet(
-        "User parameter:BaseApp/Workbench/Global/Toolbar"
-    ).GetGroups()
+    CustomToolbars: list = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar").GetGroups()
     for Group in CustomToolbars:
-        Parameter = App.ParamGet(
-            "User parameter:BaseApp/Workbench/Global/Toolbar/" + Group
-        )
+        Parameter = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar/" + Group)
         ItemName = Parameter.GetString("Name")
         if ItemName == ToolBarName:
             return ToolBarName
@@ -422,18 +408,14 @@ def RemoveWorkBenchToolbars(Name: str, WorkBenchName: str = "Global") -> None:
     # Define the name for the toolbar
     ToolBarName = Name
     # define the parameter path for the toolbar
-    ToolBarsParamPath = (
-        "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
-    )
+    ToolBarsParamPath = "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
 
     custom_toolbars = App.ParamGet(ToolBarsParamPath)
     custom_toolbars.RemGroup(ToolBarName)
     return
 
 
-def ReturnXML_Value(
-    path: str, ElementName: str, attribKey: str = "", attribValue: str = ""
-):
+def ReturnXML_Value(path: str, ElementName: str, attribKey: str = "", attribValue: str = ""):
     import xml.etree.ElementTree as ET
     import os
 
@@ -445,6 +427,38 @@ def ReturnXML_Value(
     # getting the parent tag of
     # the xml document
     root = tree.getroot()
+    result = ""
+    for child in root:
+        if str(child.tag).split("}")[1] == ElementName:
+            if attribKey != "" and attribValue != "":
+                for key, value in child.attrib.items():
+                    if key == attribKey and value == attribValue:
+                        result = child.text
+                        return result
+            else:
+                result = child.text
+    return result
+
+
+def ReturnXML_Value_Git(
+    User="APEbbers",
+    Repository="FreeCAD-Ribbon",
+    Branch="main",
+    File="package.xml",
+    ElementName: str = "",
+    attribKey: str = "",
+    attribValue: str = "",
+):
+    import requests_local as requests
+    import xml.etree.ElementTree as ET
+
+    # Passing the path of the
+    # xml document to enable the
+    # parsing process
+    url = f"https://raw.githubusercontent.com/{User}/{Repository}/{Branch}/{File}"
+    response = requests.get(url)
+    data = response.content
+    root = ET.fromstring(data)
     result = ""
     for child in root:
         if str(child.tag).split("}")[1] == ElementName:
