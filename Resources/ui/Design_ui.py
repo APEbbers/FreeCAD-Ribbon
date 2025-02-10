@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignizYoFo.ui'
+## Form generated from reading UI file 'DesignRCtDBn.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.2
 ##
@@ -75,7 +75,7 @@ class Ui_Form(object):
         if not Form.objectName():
             Form.setObjectName("Form")
         Form.setWindowModality(Qt.WindowModality.WindowModal)
-        Form.resize(990, 787)
+        Form.resize(1031, 787)
         sizePolicy = QSizePolicy(
             QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding
         )
@@ -88,8 +88,8 @@ class Ui_Form(object):
         Form.setBaseSize(QSize(730, 0))
         Form.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
         Form.setAutoFillBackground(False)
-        self.gridLayout_46 = QGridLayout(Form)
-        self.gridLayout_46.setObjectName("gridLayout_46")
+        self.gridLayout_49 = QGridLayout(Form)
+        self.gridLayout_49.setObjectName("gridLayout_49")
         self.gridLayout_28 = QGridLayout()
         self.gridLayout_28.setObjectName("gridLayout_28")
         self.LoadWB = QPushButton(Form)
@@ -117,7 +117,7 @@ class Ui_Form(object):
 
         self.gridLayout_28.addWidget(self.label_14, 0, 1, 1, 1)
 
-        self.gridLayout_46.addLayout(self.gridLayout_28, 0, 0, 1, 1)
+        self.gridLayout_49.addLayout(self.gridLayout_28, 0, 0, 1, 1)
 
         self.gridLayout_6 = QGridLayout()
         self.gridLayout_6.setObjectName("gridLayout_6")
@@ -184,7 +184,7 @@ class Ui_Form(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 968, 703))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1009, 703))
         self.gridLayout_26 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_26.setObjectName("gridLayout_26")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -712,17 +712,6 @@ class Ui_Form(object):
 
         self.gridLayout_8.addWidget(self.PanelName_CP, 2, 1, 2, 2)
 
-        self.AddCustomPanel_CP = QPushButton(self.CombineToolbars)
-        self.AddCustomPanel_CP.setObjectName("AddCustomPanel_CP")
-        sizePolicy1.setHeightForWidth(
-            self.AddCustomPanel_CP.sizePolicy().hasHeightForWidth()
-        )
-        self.AddCustomPanel_CP.setSizePolicy(sizePolicy1)
-        self.AddCustomPanel_CP.setMinimumSize(QSize(10, 0))
-        self.AddCustomPanel_CP.setBaseSize(QSize(15, 0))
-
-        self.gridLayout_8.addWidget(self.AddCustomPanel_CP, 2, 3, 2, 1)
-
         self.label_7 = QLabel(self.CombineToolbars)
         self.label_7.setObjectName("label_7")
         sizePolicy4.setHeightForWidth(self.label_7.sizePolicy().hasHeightForWidth())
@@ -752,7 +741,11 @@ class Ui_Form(object):
 
         self.RemovePanel_CP = QPushButton(self.CombineToolbars)
         self.RemovePanel_CP.setObjectName("RemovePanel_CP")
-        self.RemovePanel_CP.setMinimumSize(QSize(10, 0))
+        sizePolicy1.setHeightForWidth(
+            self.RemovePanel_CP.sizePolicy().hasHeightForWidth()
+        )
+        self.RemovePanel_CP.setSizePolicy(sizePolicy1)
+        self.RemovePanel_CP.setMinimumSize(QSize(100, 0))
         self.RemovePanel_CP.setBaseSize(QSize(15, 0))
 
         self.gridLayout_8.addWidget(self.RemovePanel_CP, 0, 3, 1, 1)
@@ -779,25 +772,55 @@ class Ui_Form(object):
 
         self.gridLayout_9.addWidget(self.label_11, 0, 0, 1, 3)
 
+        self.PanelAvailable_CP = QListWidget(self.frame_3)
+        __qlistwidgetitem6 = QListWidgetItem(self.PanelAvailable_CP)
+        __qlistwidgetitem6.setCheckState(Qt.Checked)
+        self.PanelAvailable_CP.setObjectName("PanelAvailable_CP")
+        self.PanelAvailable_CP.setSelectionMode(
+            QAbstractItemView.SelectionMode.MultiSelection
+        )
+        self.PanelAvailable_CP.setSortingEnabled(True)
+
+        self.gridLayout_9.addWidget(self.PanelAvailable_CP, 1, 0, 1, 1)
+
+        self.gridLayout_48 = QGridLayout()
+        self.gridLayout_48.setObjectName("gridLayout_48")
+        self.PanelSelected_CP = QListWidget(self.frame_3)
+        __qlistwidgetitem7 = QListWidgetItem(self.PanelSelected_CP)
+        __qlistwidgetitem7.setCheckState(Qt.Checked)
+        self.PanelSelected_CP.setObjectName("PanelSelected_CP")
+        self.PanelSelected_CP.setDefaultDropAction(Qt.DropAction.CopyAction)
+        self.PanelSelected_CP.setMovement(QListView.Movement.Free)
+        self.PanelSelected_CP.setViewMode(QListView.ViewMode.ListMode)
+        self.PanelSelected_CP.setSortingEnabled(False)
+
+        self.gridLayout_48.addWidget(self.PanelSelected_CP, 0, 0, 1, 1)
+
+        self.AddCustomPanel_CP = QPushButton(self.frame_3)
+        self.AddCustomPanel_CP.setObjectName("AddCustomPanel_CP")
+        sizePolicy7 = QSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+        )
+        sizePolicy7.setHorizontalStretch(0)
+        sizePolicy7.setVerticalStretch(0)
+        sizePolicy7.setHeightForWidth(
+            self.AddCustomPanel_CP.sizePolicy().hasHeightForWidth()
+        )
+        self.AddCustomPanel_CP.setSizePolicy(sizePolicy7)
+        self.AddCustomPanel_CP.setMinimumSize(QSize(10, 0))
+        self.AddCustomPanel_CP.setBaseSize(QSize(15, 0))
+
+        self.gridLayout_48.addWidget(self.AddCustomPanel_CP, 1, 0, 1, 1)
+
+        self.gridLayout_9.addLayout(self.gridLayout_48, 1, 2, 1, 1)
+
         self.gridLayout_12 = QGridLayout()
         self.gridLayout_12.setObjectName("gridLayout_12")
-        self.MoveDownPanelCommand_CP = QToolButton(self.frame_3)
-        self.MoveDownPanelCommand_CP.setObjectName("MoveDownPanelCommand_CP")
-        self.MoveDownPanelCommand_CP.setArrowType(Qt.ArrowType.DownArrow)
-
-        self.gridLayout_12.addWidget(self.MoveDownPanelCommand_CP, 4, 0, 1, 1)
-
-        self.verticalSpacer_10 = QSpacerItem(
-            20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed
-        )
-
-        self.gridLayout_12.addItem(self.verticalSpacer_10, 2, 0, 1, 1)
-
-        self.verticalSpacer_6 = QSpacerItem(
+        self.verticalSpacer_7 = QSpacerItem(
             20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
         )
 
-        self.gridLayout_12.addItem(self.verticalSpacer_6, 0, 0, 1, 1)
+        self.gridLayout_12.addItem(self.verticalSpacer_7, 5, 0, 1, 1)
 
         self.MoveUpPanelCommand_CP = QToolButton(self.frame_3)
         self.MoveUpPanelCommand_CP.setObjectName("MoveUpPanelCommand_CP")
@@ -811,35 +834,25 @@ class Ui_Form(object):
 
         self.gridLayout_12.addWidget(self.AddPanel_CP, 1, 0, 1, 1)
 
-        self.verticalSpacer_7 = QSpacerItem(
+        self.verticalSpacer_10 = QSpacerItem(
+            20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed
+        )
+
+        self.gridLayout_12.addItem(self.verticalSpacer_10, 2, 0, 1, 1)
+
+        self.verticalSpacer_6 = QSpacerItem(
             20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
         )
 
-        self.gridLayout_12.addItem(self.verticalSpacer_7, 5, 0, 1, 1)
+        self.gridLayout_12.addItem(self.verticalSpacer_6, 0, 0, 1, 1)
+
+        self.MoveDownPanelCommand_CP = QToolButton(self.frame_3)
+        self.MoveDownPanelCommand_CP.setObjectName("MoveDownPanelCommand_CP")
+        self.MoveDownPanelCommand_CP.setArrowType(Qt.ArrowType.DownArrow)
+
+        self.gridLayout_12.addWidget(self.MoveDownPanelCommand_CP, 4, 0, 1, 1)
 
         self.gridLayout_9.addLayout(self.gridLayout_12, 1, 1, 1, 1)
-
-        self.PanelAvailable_CP = QListWidget(self.frame_3)
-        __qlistwidgetitem6 = QListWidgetItem(self.PanelAvailable_CP)
-        __qlistwidgetitem6.setCheckState(Qt.Checked)
-        self.PanelAvailable_CP.setObjectName("PanelAvailable_CP")
-        self.PanelAvailable_CP.setSelectionMode(
-            QAbstractItemView.SelectionMode.MultiSelection
-        )
-        self.PanelAvailable_CP.setSortingEnabled(True)
-
-        self.gridLayout_9.addWidget(self.PanelAvailable_CP, 1, 0, 1, 1)
-
-        self.PanelSelected_CP = QListWidget(self.frame_3)
-        __qlistwidgetitem7 = QListWidgetItem(self.PanelSelected_CP)
-        __qlistwidgetitem7.setCheckState(Qt.Checked)
-        self.PanelSelected_CP.setObjectName("PanelSelected_CP")
-        self.PanelSelected_CP.setDefaultDropAction(Qt.DropAction.CopyAction)
-        self.PanelSelected_CP.setMovement(QListView.Movement.Free)
-        self.PanelSelected_CP.setViewMode(QListView.ViewMode.ListMode)
-        self.PanelSelected_CP.setSortingEnabled(False)
-
-        self.gridLayout_9.addWidget(self.PanelSelected_CP, 1, 2, 1, 1)
 
         self.gridLayout_21.addWidget(self.frame_3, 1, 0, 1, 1)
 
@@ -988,148 +1001,10 @@ class Ui_Form(object):
         self.Createnewpanels.setObjectName("Createnewpanels")
         self.gridLayout_35 = QGridLayout(self.Createnewpanels)
         self.gridLayout_35.setObjectName("gridLayout_35")
-        self.gridLayout_33 = QGridLayout()
-        self.gridLayout_33.setObjectName("gridLayout_33")
-        self.gridLayout_33.setSizeConstraint(
-            QLayout.SizeConstraint.SetDefaultConstraint
-        )
-        self.gridLayout_33.setContentsMargins(6, 6, 6, 6)
-        self.CustomToolbarSelector_NP = QComboBox(self.Createnewpanels)
-        self.CustomToolbarSelector_NP.setObjectName("CustomToolbarSelector_NP")
-        sizePolicy6.setHeightForWidth(
-            self.CustomToolbarSelector_NP.sizePolicy().hasHeightForWidth()
-        )
-        self.CustomToolbarSelector_NP.setSizePolicy(sizePolicy6)
-        self.CustomToolbarSelector_NP.setMinimumSize(QSize(150, 0))
-        self.CustomToolbarSelector_NP.setInsertPolicy(
-            QComboBox.InsertPolicy.InsertAlphabetically
-        )
-
-        self.gridLayout_33.addWidget(self.CustomToolbarSelector_NP, 0, 1, 1, 2)
-
-        self.PanelName_NP = QLineEdit(self.Createnewpanels)
-        self.PanelName_NP.setObjectName("PanelName_NP")
-        sizePolicy6.setHeightForWidth(
-            self.PanelName_NP.sizePolicy().hasHeightForWidth()
-        )
-        self.PanelName_NP.setSizePolicy(sizePolicy6)
-        self.PanelName_NP.setMinimumSize(QSize(120, 0))
-
-        self.gridLayout_33.addWidget(self.PanelName_NP, 2, 1, 2, 2)
-
-        self.AddCustomToolbar_NP = QPushButton(self.Createnewpanels)
-        self.AddCustomToolbar_NP.setObjectName("AddCustomToolbar_NP")
-        sizePolicy1.setHeightForWidth(
-            self.AddCustomToolbar_NP.sizePolicy().hasHeightForWidth()
-        )
-        self.AddCustomToolbar_NP.setSizePolicy(sizePolicy1)
-        self.AddCustomToolbar_NP.setMinimumSize(QSize(10, 0))
-        self.AddCustomToolbar_NP.setBaseSize(QSize(15, 0))
-
-        self.gridLayout_33.addWidget(self.AddCustomToolbar_NP, 2, 3, 2, 1)
-
-        self.label_17 = QLabel(self.Createnewpanels)
-        self.label_17.setObjectName("label_17")
-        sizePolicy4.setHeightForWidth(self.label_17.sizePolicy().hasHeightForWidth())
-        self.label_17.setSizePolicy(sizePolicy4)
-
-        self.gridLayout_33.addWidget(self.label_17, 1, 0, 1, 1)
-
-        self.label_18 = QLabel(self.Createnewpanels)
-        self.label_18.setObjectName("label_18")
-        sizePolicy4.setHeightForWidth(self.label_18.sizePolicy().hasHeightForWidth())
-        self.label_18.setSizePolicy(sizePolicy4)
-
-        self.gridLayout_33.addWidget(self.label_18, 0, 0, 1, 1)
-
-        self.WorkbenchList_NP = QComboBox(self.Createnewpanels)
-        self.WorkbenchList_NP.setObjectName("WorkbenchList_NP")
-        sizePolicy6.setHeightForWidth(
-            self.WorkbenchList_NP.sizePolicy().hasHeightForWidth()
-        )
-        self.WorkbenchList_NP.setSizePolicy(sizePolicy6)
-        self.WorkbenchList_NP.setMinimumSize(QSize(0, 0))
-        self.WorkbenchList_NP.setInsertPolicy(
-            QComboBox.InsertPolicy.InsertAlphabetically
-        )
-
-        self.gridLayout_33.addWidget(self.WorkbenchList_NP, 1, 1, 1, 2)
-
-        self.RemovePanel_NP = QPushButton(self.Createnewpanels)
-        self.RemovePanel_NP.setObjectName("RemovePanel_NP")
-        self.RemovePanel_NP.setMinimumSize(QSize(10, 0))
-        self.RemovePanel_NP.setBaseSize(QSize(15, 0))
-
-        self.gridLayout_33.addWidget(self.RemovePanel_NP, 0, 3, 1, 1)
-
-        self.label_19 = QLabel(self.Createnewpanels)
-        self.label_19.setObjectName("label_19")
-        sizePolicy4.setHeightForWidth(self.label_19.sizePolicy().hasHeightForWidth())
-        self.label_19.setSizePolicy(sizePolicy4)
-
-        self.gridLayout_33.addWidget(self.label_19, 2, 0, 2, 1)
-
-        self.gridLayout_35.addLayout(self.gridLayout_33, 0, 0, 1, 1)
-
         self.groupBox = QGroupBox(self.Createnewpanels)
         self.groupBox.setObjectName("groupBox")
         self.gridLayout_37 = QGridLayout(self.groupBox)
         self.gridLayout_37.setObjectName("gridLayout_37")
-        self.gridLayout_38 = QGridLayout()
-        self.gridLayout_38.setObjectName("gridLayout_38")
-        self.SearchBar_NP = QLineEdit(self.groupBox)
-        self.SearchBar_NP.setObjectName("SearchBar_NP")
-
-        self.gridLayout_38.addWidget(self.SearchBar_NP, 0, 0, 1, 1)
-
-        self.CommandsAvailable_NP = QListWidget(self.groupBox)
-        __qlistwidgetitem10 = QListWidgetItem(self.CommandsAvailable_NP)
-        __qlistwidgetitem10.setCheckState(Qt.Checked)
-        self.CommandsAvailable_NP.setObjectName("CommandsAvailable_NP")
-        self.CommandsAvailable_NP.setSelectionMode(
-            QAbstractItemView.SelectionMode.MultiSelection
-        )
-        self.CommandsAvailable_NP.setSortingEnabled(True)
-
-        self.gridLayout_38.addWidget(self.CommandsAvailable_NP, 2, 0, 1, 1)
-
-        self.gridLayout_39 = QGridLayout()
-        self.gridLayout_39.setObjectName("gridLayout_39")
-        self.label_21 = QLabel(self.groupBox)
-        self.label_21.setObjectName("label_21")
-        sizePolicy4.setHeightForWidth(self.label_21.sizePolicy().hasHeightForWidth())
-        self.label_21.setSizePolicy(sizePolicy4)
-
-        self.gridLayout_39.addWidget(self.label_21, 0, 0, 1, 1)
-
-        self.ListCategory_NP = QComboBox(self.groupBox)
-        self.ListCategory_NP.setObjectName("ListCategory_NP")
-        self.ListCategory_NP.setInsertPolicy(
-            QComboBox.InsertPolicy.InsertAlphabetically
-        )
-
-        self.gridLayout_39.addWidget(self.ListCategory_NP, 0, 1, 1, 1)
-
-        self.gridLayout_38.addLayout(self.gridLayout_39, 1, 0, 1, 1)
-
-        self.gridLayout_37.addLayout(self.gridLayout_38, 2, 0, 1, 1)
-
-        self.NewPanel_NP = QListWidget(self.groupBox)
-        __qlistwidgetitem11 = QListWidgetItem(self.NewPanel_NP)
-        __qlistwidgetitem11.setCheckState(Qt.Checked)
-        self.NewPanel_NP.setObjectName("NewPanel_NP")
-        self.NewPanel_NP.setSelectionMode(
-            QAbstractItemView.SelectionMode.SingleSelection
-        )
-        self.NewPanel_NP.setSortingEnabled(False)
-
-        self.gridLayout_37.addWidget(self.NewPanel_NP, 2, 2, 1, 1)
-
-        self.label_20 = QLabel(self.groupBox)
-        self.label_20.setObjectName("label_20")
-
-        self.gridLayout_37.addWidget(self.label_20, 0, 0, 2, 1)
-
         self.gridLayout_34 = QGridLayout()
         self.gridLayout_34.setObjectName("gridLayout_34")
         self.verticalSpacer_14 = QSpacerItem(
@@ -1176,7 +1051,153 @@ class Ui_Form(object):
 
         self.gridLayout_37.addLayout(self.gridLayout_34, 2, 1, 1, 1)
 
+        self.label_20 = QLabel(self.groupBox)
+        self.label_20.setObjectName("label_20")
+
+        self.gridLayout_37.addWidget(self.label_20, 0, 0, 2, 1)
+
+        self.gridLayout_38 = QGridLayout()
+        self.gridLayout_38.setObjectName("gridLayout_38")
+        self.SearchBar_NP = QLineEdit(self.groupBox)
+        self.SearchBar_NP.setObjectName("SearchBar_NP")
+
+        self.gridLayout_38.addWidget(self.SearchBar_NP, 0, 0, 1, 1)
+
+        self.CommandsAvailable_NP = QListWidget(self.groupBox)
+        __qlistwidgetitem10 = QListWidgetItem(self.CommandsAvailable_NP)
+        __qlistwidgetitem10.setCheckState(Qt.Checked)
+        self.CommandsAvailable_NP.setObjectName("CommandsAvailable_NP")
+        self.CommandsAvailable_NP.setSelectionMode(
+            QAbstractItemView.SelectionMode.MultiSelection
+        )
+        self.CommandsAvailable_NP.setSortingEnabled(True)
+
+        self.gridLayout_38.addWidget(self.CommandsAvailable_NP, 2, 0, 1, 1)
+
+        self.gridLayout_39 = QGridLayout()
+        self.gridLayout_39.setObjectName("gridLayout_39")
+        self.label_21 = QLabel(self.groupBox)
+        self.label_21.setObjectName("label_21")
+        sizePolicy4.setHeightForWidth(self.label_21.sizePolicy().hasHeightForWidth())
+        self.label_21.setSizePolicy(sizePolicy4)
+
+        self.gridLayout_39.addWidget(self.label_21, 0, 0, 1, 1)
+
+        self.ListCategory_NP = QComboBox(self.groupBox)
+        self.ListCategory_NP.setObjectName("ListCategory_NP")
+        self.ListCategory_NP.setInsertPolicy(
+            QComboBox.InsertPolicy.InsertAlphabetically
+        )
+
+        self.gridLayout_39.addWidget(self.ListCategory_NP, 0, 1, 1, 1)
+
+        self.gridLayout_38.addLayout(self.gridLayout_39, 1, 0, 1, 1)
+
+        self.gridLayout_37.addLayout(self.gridLayout_38, 2, 0, 1, 1)
+
+        self.gridLayout_46 = QGridLayout()
+        self.gridLayout_46.setObjectName("gridLayout_46")
+        self.NewPanel_NP = QListWidget(self.groupBox)
+        __qlistwidgetitem11 = QListWidgetItem(self.NewPanel_NP)
+        __qlistwidgetitem11.setCheckState(Qt.Checked)
+        self.NewPanel_NP.setObjectName("NewPanel_NP")
+        self.NewPanel_NP.setSelectionMode(
+            QAbstractItemView.SelectionMode.SingleSelection
+        )
+        self.NewPanel_NP.setSortingEnabled(False)
+
+        self.gridLayout_46.addWidget(self.NewPanel_NP, 0, 0, 1, 1)
+
+        self.AddCustomToolbar_NP = QPushButton(self.groupBox)
+        self.AddCustomToolbar_NP.setObjectName("AddCustomToolbar_NP")
+        sizePolicy7.setHeightForWidth(
+            self.AddCustomToolbar_NP.sizePolicy().hasHeightForWidth()
+        )
+        self.AddCustomToolbar_NP.setSizePolicy(sizePolicy7)
+        self.AddCustomToolbar_NP.setMinimumSize(QSize(10, 0))
+        self.AddCustomToolbar_NP.setBaseSize(QSize(15, 0))
+
+        self.gridLayout_46.addWidget(self.AddCustomToolbar_NP, 1, 0, 1, 1)
+
+        self.gridLayout_37.addLayout(self.gridLayout_46, 2, 2, 1, 1)
+
         self.gridLayout_35.addWidget(self.groupBox, 1, 0, 1, 1)
+
+        self.gridLayout_33 = QGridLayout()
+        self.gridLayout_33.setObjectName("gridLayout_33")
+        self.gridLayout_33.setSizeConstraint(
+            QLayout.SizeConstraint.SetDefaultConstraint
+        )
+        self.gridLayout_33.setContentsMargins(6, 6, 6, 6)
+        self.CustomToolbarSelector_NP = QComboBox(self.Createnewpanels)
+        self.CustomToolbarSelector_NP.setObjectName("CustomToolbarSelector_NP")
+        sizePolicy6.setHeightForWidth(
+            self.CustomToolbarSelector_NP.sizePolicy().hasHeightForWidth()
+        )
+        self.CustomToolbarSelector_NP.setSizePolicy(sizePolicy6)
+        self.CustomToolbarSelector_NP.setMinimumSize(QSize(150, 0))
+        self.CustomToolbarSelector_NP.setInsertPolicy(
+            QComboBox.InsertPolicy.InsertAlphabetically
+        )
+
+        self.gridLayout_33.addWidget(self.CustomToolbarSelector_NP, 0, 1, 1, 2)
+
+        self.PanelName_NP = QLineEdit(self.Createnewpanels)
+        self.PanelName_NP.setObjectName("PanelName_NP")
+        sizePolicy6.setHeightForWidth(
+            self.PanelName_NP.sizePolicy().hasHeightForWidth()
+        )
+        self.PanelName_NP.setSizePolicy(sizePolicy6)
+        self.PanelName_NP.setMinimumSize(QSize(120, 0))
+
+        self.gridLayout_33.addWidget(self.PanelName_NP, 2, 1, 2, 2)
+
+        self.label_17 = QLabel(self.Createnewpanels)
+        self.label_17.setObjectName("label_17")
+        sizePolicy4.setHeightForWidth(self.label_17.sizePolicy().hasHeightForWidth())
+        self.label_17.setSizePolicy(sizePolicy4)
+
+        self.gridLayout_33.addWidget(self.label_17, 1, 0, 1, 1)
+
+        self.label_18 = QLabel(self.Createnewpanels)
+        self.label_18.setObjectName("label_18")
+        sizePolicy4.setHeightForWidth(self.label_18.sizePolicy().hasHeightForWidth())
+        self.label_18.setSizePolicy(sizePolicy4)
+
+        self.gridLayout_33.addWidget(self.label_18, 0, 0, 1, 1)
+
+        self.WorkbenchList_NP = QComboBox(self.Createnewpanels)
+        self.WorkbenchList_NP.setObjectName("WorkbenchList_NP")
+        sizePolicy6.setHeightForWidth(
+            self.WorkbenchList_NP.sizePolicy().hasHeightForWidth()
+        )
+        self.WorkbenchList_NP.setSizePolicy(sizePolicy6)
+        self.WorkbenchList_NP.setMinimumSize(QSize(0, 0))
+        self.WorkbenchList_NP.setInsertPolicy(
+            QComboBox.InsertPolicy.InsertAlphabetically
+        )
+
+        self.gridLayout_33.addWidget(self.WorkbenchList_NP, 1, 1, 1, 2)
+
+        self.RemovePanel_NP = QPushButton(self.Createnewpanels)
+        self.RemovePanel_NP.setObjectName("RemovePanel_NP")
+        sizePolicy1.setHeightForWidth(
+            self.RemovePanel_NP.sizePolicy().hasHeightForWidth()
+        )
+        self.RemovePanel_NP.setSizePolicy(sizePolicy1)
+        self.RemovePanel_NP.setMinimumSize(QSize(100, 0))
+        self.RemovePanel_NP.setBaseSize(QSize(15, 0))
+
+        self.gridLayout_33.addWidget(self.RemovePanel_NP, 0, 3, 1, 1)
+
+        self.label_19 = QLabel(self.Createnewpanels)
+        self.label_19.setObjectName("label_19")
+        sizePolicy4.setHeightForWidth(self.label_19.sizePolicy().hasHeightForWidth())
+        self.label_19.setSizePolicy(sizePolicy4)
+
+        self.gridLayout_33.addWidget(self.label_19, 2, 0, 2, 1)
+
+        self.gridLayout_35.addLayout(self.gridLayout_33, 0, 0, 1, 1)
 
         self.tabWidget.addTab(self.Createnewpanels, "")
         self.RibbonDesign = QWidget()
@@ -1435,15 +1456,15 @@ class Ui_Form(object):
 
         self.WorkbenchList_RD = QComboBox(self.RibbonDesign)
         self.WorkbenchList_RD.setObjectName("WorkbenchList_RD")
-        sizePolicy7 = QSizePolicy(
+        sizePolicy8 = QSizePolicy(
             QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed
         )
-        sizePolicy7.setHorizontalStretch(0)
-        sizePolicy7.setVerticalStretch(0)
-        sizePolicy7.setHeightForWidth(
+        sizePolicy8.setHorizontalStretch(0)
+        sizePolicy8.setVerticalStretch(0)
+        sizePolicy8.setHeightForWidth(
             self.WorkbenchList_RD.sizePolicy().hasHeightForWidth()
         )
-        self.WorkbenchList_RD.setSizePolicy(sizePolicy7)
+        self.WorkbenchList_RD.setSizePolicy(sizePolicy8)
         self.WorkbenchList_RD.setInsertPolicy(
             QComboBox.InsertPolicy.InsertAlphabetically
         )
@@ -1476,11 +1497,11 @@ class Ui_Form(object):
 
         self.gridLayout_6.addWidget(self.scrollArea, 1, 0, 1, 9)
 
-        self.gridLayout_46.addLayout(self.gridLayout_6, 1, 0, 1, 1)
+        self.gridLayout_49.addLayout(self.gridLayout_6, 1, 0, 1, 1)
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(4)
 
         QMetaObject.connectSlotsByName(Form)
 
@@ -1738,14 +1759,15 @@ class Ui_Form(object):
                 "Form", "Enter the name of your custom panel...", None
             )
         )
-        self.AddCustomPanel_CP.setText(QCoreApplication.translate("Form", "Add", None))
         self.label_7.setText(
             QCoreApplication.translate("Form", "Select workbench:", None)
         )
         self.label_9.setText(
             QCoreApplication.translate("Form", "Select custom panel:", None)
         )
-        self.RemovePanel_CP.setText(QCoreApplication.translate("Form", "Remove", None))
+        self.RemovePanel_CP.setText(
+            QCoreApplication.translate("Form", "Remove panel", None)
+        )
         self.label_10.setText(QCoreApplication.translate("Form", "Panel name", None))
         self.label_11.setText(
             QCoreApplication.translate(
@@ -1754,28 +1776,6 @@ class Ui_Form(object):
                 None,
             )
         )
-        # if QT_CONFIG(tooltip)
-        self.MoveDownPanelCommand_CP.setToolTip(
-            QCoreApplication.translate("Form", "Move down", None)
-        )
-        # endif // QT_CONFIG(tooltip)
-        self.MoveDownPanelCommand_CP.setText(
-            QCoreApplication.translate("Form", "...", None)
-        )
-        # if QT_CONFIG(tooltip)
-        self.MoveUpPanelCommand_CP.setToolTip(
-            QCoreApplication.translate("Form", "Move up", None)
-        )
-        # endif // QT_CONFIG(tooltip)
-        self.MoveUpPanelCommand_CP.setText(
-            QCoreApplication.translate("Form", "...", None)
-        )
-        # if QT_CONFIG(tooltip)
-        self.AddPanel_CP.setToolTip(
-            QCoreApplication.translate("Form", "Add panel buttons", None)
-        )
-        # endif // QT_CONFIG(tooltip)
-        self.AddPanel_CP.setText(QCoreApplication.translate("Form", "...", None))
 
         __sortingEnabled7 = self.PanelAvailable_CP.isSortingEnabled()
         self.PanelAvailable_CP.setSortingEnabled(False)
@@ -1793,6 +1793,31 @@ class Ui_Form(object):
         )
         self.PanelSelected_CP.setSortingEnabled(__sortingEnabled8)
 
+        self.AddCustomPanel_CP.setText(
+            QCoreApplication.translate("Form", "Create/update panel", None)
+        )
+        # if QT_CONFIG(tooltip)
+        self.MoveUpPanelCommand_CP.setToolTip(
+            QCoreApplication.translate("Form", "Move up", None)
+        )
+        # endif // QT_CONFIG(tooltip)
+        self.MoveUpPanelCommand_CP.setText(
+            QCoreApplication.translate("Form", "...", None)
+        )
+        # if QT_CONFIG(tooltip)
+        self.AddPanel_CP.setToolTip(
+            QCoreApplication.translate("Form", "Add panel buttons", None)
+        )
+        # endif // QT_CONFIG(tooltip)
+        self.AddPanel_CP.setText(QCoreApplication.translate("Form", "...", None))
+        # if QT_CONFIG(tooltip)
+        self.MoveDownPanelCommand_CP.setToolTip(
+            QCoreApplication.translate("Form", "Move down", None)
+        )
+        # endif // QT_CONFIG(tooltip)
+        self.MoveDownPanelCommand_CP.setText(
+            QCoreApplication.translate("Form", "...", None)
+        )
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.CombineToolbars),
             QCoreApplication.translate("Form", "Combine panels", None),
@@ -1867,52 +1892,7 @@ class Ui_Form(object):
             self.tabWidget.indexOf(self.tab),
             QCoreApplication.translate("Form", "Create dropdown buttons", None),
         )
-        self.PanelName_NP.setPlaceholderText(
-            QCoreApplication.translate(
-                "Form", "Enter the name of your custom panel...", None
-            )
-        )
-        self.AddCustomToolbar_NP.setText(
-            QCoreApplication.translate("Form", "Add", None)
-        )
-        self.label_17.setText(
-            QCoreApplication.translate("Form", "Select workbench:", None)
-        )
-        self.label_18.setText(
-            QCoreApplication.translate("Form", "Select custom panel:", None)
-        )
-        self.RemovePanel_NP.setText(QCoreApplication.translate("Form", "Remove", None))
-        self.label_19.setText(QCoreApplication.translate("Form", "Panel name", None))
         self.groupBox.setTitle("")
-        self.SearchBar_NP.setInputMask("")
-        self.SearchBar_NP.setText("")
-        self.SearchBar_NP.setPlaceholderText(
-            QCoreApplication.translate("Form", "Type to search...", None)
-        )
-
-        __sortingEnabled11 = self.CommandsAvailable_NP.isSortingEnabled()
-        self.CommandsAvailable_NP.setSortingEnabled(False)
-        ___qlistwidgetitem11 = self.CommandsAvailable_NP.item(0)
-        ___qlistwidgetitem11.setText(
-            QCoreApplication.translate("Form", "New Item", None)
-        )
-        self.CommandsAvailable_NP.setSortingEnabled(__sortingEnabled11)
-
-        self.label_21.setText(QCoreApplication.translate("Form", "Category:", None))
-
-        __sortingEnabled12 = self.NewPanel_NP.isSortingEnabled()
-        self.NewPanel_NP.setSortingEnabled(False)
-        ___qlistwidgetitem12 = self.NewPanel_NP.item(0)
-        ___qlistwidgetitem12.setText(
-            QCoreApplication.translate("Form", "New Item", None)
-        )
-        self.NewPanel_NP.setSortingEnabled(__sortingEnabled12)
-
-        self.label_20.setText(
-            QCoreApplication.translate(
-                "Form", "Select commands to add to the new panel", None
-            )
-        )
         # if QT_CONFIG(tooltip)
         self.MoveDownPanelCommand_NP.setToolTip(
             QCoreApplication.translate("Form", "Move down", None)
@@ -1943,6 +1923,53 @@ class Ui_Form(object):
         )
         # endif // QT_CONFIG(tooltip)
         self.AddPanelCommand_NP.setText(QCoreApplication.translate("Form", "...", None))
+        self.label_20.setText(
+            QCoreApplication.translate(
+                "Form", "Select commands to add to the new panel", None
+            )
+        )
+        self.SearchBar_NP.setInputMask("")
+        self.SearchBar_NP.setText("")
+        self.SearchBar_NP.setPlaceholderText(
+            QCoreApplication.translate("Form", "Type to search...", None)
+        )
+
+        __sortingEnabled11 = self.CommandsAvailable_NP.isSortingEnabled()
+        self.CommandsAvailable_NP.setSortingEnabled(False)
+        ___qlistwidgetitem11 = self.CommandsAvailable_NP.item(0)
+        ___qlistwidgetitem11.setText(
+            QCoreApplication.translate("Form", "New Item", None)
+        )
+        self.CommandsAvailable_NP.setSortingEnabled(__sortingEnabled11)
+
+        self.label_21.setText(QCoreApplication.translate("Form", "Category:", None))
+
+        __sortingEnabled12 = self.NewPanel_NP.isSortingEnabled()
+        self.NewPanel_NP.setSortingEnabled(False)
+        ___qlistwidgetitem12 = self.NewPanel_NP.item(0)
+        ___qlistwidgetitem12.setText(
+            QCoreApplication.translate("Form", "New Item", None)
+        )
+        self.NewPanel_NP.setSortingEnabled(__sortingEnabled12)
+
+        self.AddCustomToolbar_NP.setText(
+            QCoreApplication.translate("Form", "Create/update panel", None)
+        )
+        self.PanelName_NP.setPlaceholderText(
+            QCoreApplication.translate(
+                "Form", "Enter the name of your custom panel...", None
+            )
+        )
+        self.label_17.setText(
+            QCoreApplication.translate("Form", "Select workbench:", None)
+        )
+        self.label_18.setText(
+            QCoreApplication.translate("Form", "Select custom panel:", None)
+        )
+        self.RemovePanel_NP.setText(
+            QCoreApplication.translate("Form", "Remove panel", None)
+        )
+        self.label_19.setText(QCoreApplication.translate("Form", "Panel name", None))
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.Createnewpanels),
             QCoreApplication.translate("Form", "Create new panels", None),
