@@ -66,7 +66,9 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "LicenseForm.ui"))
 
         # Make sure that the dialog stays on top
-        self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+        # self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+        self.form.setWindowFlags(Qt.WindowType.Tool)
+        self.form.setWindowModality(Qt.WindowModality.WindowModal)
 
         # Get the style from the main window and use it for this form
         mw = Gui.getMainWindow()

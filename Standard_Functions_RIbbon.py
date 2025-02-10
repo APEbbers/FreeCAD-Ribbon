@@ -458,6 +458,38 @@ def ReturnXML_Value(
     return result
 
 
+def ReturnXML_Value_Git(
+    User="APEbbers",
+    Repository="FreeCAD-Ribbon",
+    Branch="main",
+    File="package.xml",
+    ElementName: str = "",
+    attribKey: str = "",
+    attribValue: str = "",
+):
+    import requests_local as requests
+    import xml.etree.ElementTree as ET
+
+    # Passing the path of the
+    # xml document to enable the
+    # parsing process
+    url = f"https://raw.githubusercontent.com/{User}/{Repository}/{Branch}/{File}"
+    response = requests.get(url)
+    data = response.content
+    root = ET.fromstring(data)
+    result = ""
+    for child in root:
+        if str(child.tag).split("}")[1] == ElementName:
+            if attribKey != "" and attribValue != "":
+                for key, value in child.attrib.items():
+                    if key == attribKey and value == attribValue:
+                        result = child.text
+                        return result
+            else:
+                result = child.text
+    return result
+
+
 def TranslationsMapping(WorkBenchName: str, string: str):
     result = string
 
