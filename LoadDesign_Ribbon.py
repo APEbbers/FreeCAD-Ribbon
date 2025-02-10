@@ -1522,12 +1522,14 @@ class LoadDialog(Design_ui.Ui_Form):
             return
 
         if self.form.PanelSelected_CP.count() == 0:
+            self.form.setWindowFlags(Qt.WindowType.WindowStaysOnBottomHint)
             StandardFunctions.Mbox(
                 translate("FreeCAD Ribbon", "Add at least one panel first!"),
                 "",
                 0,
                 "Warning",
             )
+            self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
             return
 
         WorkBenchName = self.form.WorkbenchList_CP.currentData(Qt.ItemDataRole.UserRole)[0]
