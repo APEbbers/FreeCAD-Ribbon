@@ -1208,8 +1208,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 else:
                     continue
 
-        self.LoadControls()
-
+        # Show a message
         self.form.hide()
         message_1 = translate(
             "FreeCAD Ribbon", "Buttons are set to {} for the following workbenches:\n"
@@ -1220,6 +1219,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
         StandardFunctions.Mbox(message_1 + message_2, "FreeCAD Ribbon", 0)
         self.form.show()
+
+        # Load all controls
+        self.LoadControls()
 
         # Enable the apply button
         if self.CheckChanges() is True:
@@ -1527,6 +1529,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
             # If the are not to be ignored, add them to the listwidget
             if IsIgnored is False and Toolbar != "":
+                ToolbarTransLated = Toolbar
                 # Get the translated toolbar name
                 for ToolBarItem in self.StringList_Toolbars:
                     if ToolBarItem[0] == Toolbar:
@@ -1534,6 +1537,10 @@ class LoadDialog(Design_ui.Ui_Form):
                             ToolbarTransLated = ToolBarItem[3]
                         else:
                             ToolbarTransLated = ToolBarItem[0]
+                # If it is a custom toolbar, remove the suffix
+                ToolbarTransLated = ToolbarTransLated.replace("_custom", "").replace(
+                    "_newPanel", ""
+                )
 
                 ListWidgetItem = QListWidgetItem()
                 ListWidgetItem.setText(ToolbarTransLated.replace("&", ""))
@@ -1630,7 +1637,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                 if Icon is not None:
                                     ListWidgetItem.setIcon(Icon)
                                 ListWidgetItem.setData(
-                                    Qt.ItemDataRole.UserRole, key
+                                    Qt.ItemDataRole.UserRole, [key, CommandName]
                                 )  # add here the toolbar name as hidden data
 
                                 IsInList = False
@@ -1651,6 +1658,8 @@ class LoadDialog(Design_ui.Ui_Form):
         return
 
     def on_AddCustomPanel_CP_clicked(self):
+        # define the suffix
+        Suffix = "_custom"
         CustomPanelTitle = ""
         if self.form.PanelName_CP.text() != "":
             CustomPanelTitle = self.form.PanelName_CP.text()
@@ -1682,45 +1691,39 @@ class LoadDialog(Design_ui.Ui_Form):
             Qt.ItemDataRole.UserRole
         )[2]
         # Create item that defines the custom toolbar
-        Commands = []
         MenuName = ""
         for i in range(self.form.PanelSelected_CP.count()):
             ListWidgetItem = self.form.PanelSelected_CP.item(i)
-            MenuName_ListWidgetItem = ListWidgetItem.text().replace("&", "")
             # if the translated menuname from the ListWidgetItem is equel to the MenuName from the command
             # Add the commandName to the list commandslist for this custom panel
             for CommandItem in self.List_Commands:
-                MenuName = CommandItem[2].replace("&", "")
-                if MenuName == MenuName_ListWidgetItem:
-                    CommandName = CommandItem[0]
-                    Commands.append(CommandName)
+                if CommandItem[0] == ListWidgetItem.data(Qt.ItemDataRole.UserRole)[1]:
+                    MenuName = CommandItem[2].replace("&", "")
 
-            # Get the original toolbar
-            OriginalToolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
-            # define the suffix
-            Suffix = "_custom"
+                    # Get the original toolbar
+                    OriginalToolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
 
-            # Create or modify the dict that will be entered
-            StandardFunctions.add_keys_nested_dict(
-                self.Dict_CustomToolbars,
-                [
-                    "customToolbars",
-                    WorkBenchName,
-                    CustomPanelTitle + Suffix,
-                    "commands",
-                    MenuName,
-                ],
-            )
+                    # Create or modify the dict that will be entered
+                    StandardFunctions.add_keys_nested_dict(
+                        self.Dict_CustomToolbars,
+                        [
+                            "customToolbars",
+                            WorkBenchName,
+                            CustomPanelTitle + Suffix,
+                            "commands",
+                            MenuName,
+                        ],
+                    )
 
-            # Update the dict
-            self.Dict_CustomToolbars["customToolbars"][WorkBenchName][
-                CustomPanelTitle + Suffix
-            ]["commands"][MenuName] = OriginalToolbar
+                    # Update the dict
+                    self.Dict_CustomToolbars["customToolbars"][WorkBenchName][
+                        CustomPanelTitle + Suffix
+                    ]["commands"][MenuName] = OriginalToolbar
 
         # Check if the custom panel is selected in the Json file
         IsInList = False
         for j in range(self.form.CustomToolbarSelector_CP.count()):
-            CustomToolbar = self.form.CustomToolbarSelector_CP.itemText(i)
+            CustomToolbar = self.form.CustomToolbarSelector_CP.itemText(j)
             if CustomToolbar == f"{CustomPanelTitle}, {WorkBenchTitle}":
                 IsInList = True
 
@@ -1729,24 +1732,25 @@ class LoadDialog(Design_ui.Ui_Form):
             self.form.CustomToolbarSelector_CP.addItem(
                 f"{CustomPanelTitle}, {WorkBenchTitle}"
             )
-        # Set the Custom panel as current text for the QComboBox
-        self.form.CustomToolbarSelector_CP.setCurrentText(
-            f"{CustomPanelTitle}, {WorkBenchTitle}"
-        )
 
-        # Add the order of panels to the Json file
-        ToolbarOrder = []
-        for i2 in range(self.form.PanelOrder_RD.count()):
-            ToolbarOrder.append(
-                self.form.PanelOrder_RD.item(i2).data(Qt.ItemDataRole.UserRole)
+            # Set the Custom panel as current text for the QComboBox
+            self.form.CustomToolbarSelector_CP.setCurrentText(
+                f"{CustomPanelTitle}, {WorkBenchTitle}"
             )
-        StandardFunctions.add_keys_nested_dict(
-            self.Dict_RibbonCommandPanel,
-            ["workbenches", WorkBenchName, "toolbars", "order"],
-        )
-        self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][
-            "order"
-        ] = ToolbarOrder
+
+            # Add the order of panels to the Json file
+            ToolbarOrder = []
+            for i2 in range(self.form.PanelOrder_RD.count()):
+                ToolbarOrder.append(
+                    self.form.PanelOrder_RD.item(i2).data(Qt.ItemDataRole.UserRole)
+                )
+            StandardFunctions.add_keys_nested_dict(
+                self.Dict_RibbonCommandPanel,
+                ["workbenches", WorkBenchName, "toolbars", "order"],
+            )
+            self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][
+                "order"
+            ] = ToolbarOrder
 
         # Enable the apply button
         if self.CheckChanges() is True:
@@ -1770,9 +1774,10 @@ class LoadDialog(Design_ui.Ui_Form):
         CustomPanelTitle = ""
         WorkBenchTitle = ""
         if self.form.CustomToolbarSelector_CP.currentText() != "":
-            CustomPanelTitle = self.form.CustomToolbarSelector_CP.currentText().split(
-                ", "
-            )[0]
+            CustomPanelTitle = (
+                self.form.CustomToolbarSelector_CP.currentText().split(", ")[0]
+                + "_custom"
+            )
             WorkBenchTitle = self.form.CustomToolbarSelector_CP.currentText().split(
                 ", "
             )[1]
@@ -1807,7 +1812,11 @@ class LoadDialog(Design_ui.Ui_Form):
                                         MenuName_Command == key
                                         and CommandItem[3] == WorkBenchName
                                     ):
-                                        MenuName = CommandItem[4].replace("&", "")
+                                        MenuName = (
+                                            CommandItem[4]
+                                            .replace("&", "")
+                                            .replace("_custom", "")
+                                        )
 
                                         # Define a new ListWidgetItem.
                                         ListWidgetItem = QListWidgetItem()
@@ -3834,7 +3843,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 ]:
                     if WorkBenchTitle != "":
                         self.form.CustomToolbarSelector_CP.addItem(
-                            f"{CustomPanelTitle}, {WorkBenchTitle}"
+                            f"{CustomPanelTitle.replace("_custom", "")}, {WorkBenchTitle}"
                         )
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
