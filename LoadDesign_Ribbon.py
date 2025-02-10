@@ -1732,6 +1732,7 @@ class LoadDialog(Design_ui.Ui_Form):
             self.form.CustomToolbarSelector_CP.addItem(
                 f"{CustomPanelTitle}, {WorkBenchTitle}"
             )
+
             # Set the Custom panel as current text for the QComboBox
             self.form.CustomToolbarSelector_CP.setCurrentText(
                 f"{CustomPanelTitle}, {WorkBenchTitle}"
@@ -1860,7 +1861,7 @@ class LoadDialog(Design_ui.Ui_Form):
         ):
             CustomPanelTitle = self.form.CustomToolbarSelector_CP.currentText().split(
                 ", "
-            )[0]
+            )[0] +"_custom"
             WorkBenchTitle = self.form.CustomToolbarSelector_CP.currentText().split(
                 ", "
             )[1]
