@@ -1402,9 +1402,10 @@ class LoadDialog(Design_ui.Ui_Form):
 
             # If the are not to be ignored, add them to the listwidget
             if IsIgnored is False and Toolbar != "":
+                ToolbarTransLated = Toolbar
                 # Get the translated toolbar name
                 for ToolBarItem in self.StringList_Toolbars:
-                    if ToolBarItem[0] == Toolbar:
+                    if ToolBarItem[0] == Toolbar and Toolbar.endswith("_custom") is False:
                         if len(ToolBarItem) == 4:
                             ToolbarTransLated = ToolBarItem[3]
                         else:
