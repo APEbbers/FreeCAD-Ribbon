@@ -163,9 +163,11 @@ class RequestEncodingMixin:
 
                     new_fields.append(
                         (
-                            field.decode("utf-8")
-                            if isinstance(field, bytes)
-                            else field,
+                            (
+                                field.decode("utf-8")
+                                if isinstance(field, bytes)
+                                else field
+                            ),
                             v.encode("utf-8") if isinstance(v, str) else v,
                         )
                     )

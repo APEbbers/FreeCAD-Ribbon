@@ -166,7 +166,6 @@ def listen_keyboard(
     max_thread_pool_workers: Optional[int] = None,
     sleep: float = 0.01,
 ) -> None:
-
     """Listen for keyboard events and fire `on_press` and `on_release` callback
     functions
 
@@ -283,18 +282,14 @@ async def listen_keyboard_manual(
     )
     # Check the state
     assert not _running, "Only one listener allowed at a time"
-    assert (
-        not _should_run
-    ), "Should have ended listening properly the last time"
+    assert not _should_run, "Should have ended listening properly the last time"
     # Check the parameters
     assert (
         on_press is not None or on_release is not None
     ), "Either on_press or on_release should be defined"
     _check_callback_ok(on_press, "on_press")
     _check_callback_ok(on_release, "on_release")
-    assert until is None or isinstance(
-        until, str
-    ), "'until' has to be a string or None"
+    assert until is None or isinstance(until, str), "'until' has to be a string or None"
     assert isinstance(sequential, bool), "'sequential' has to be boolean"
     assert isinstance(
         delay_second_char, (int, float)
@@ -406,10 +401,7 @@ def _default_empty_params(function):
     return tuple(
         param.name
         for param in sig.parameters.values()
-        if (
-            param.kind == param.POSITIONAL_OR_KEYWORD
-            and param.default is param.empty
-        )
+        if (param.kind == param.POSITIONAL_OR_KEYWORD and param.default is param.empty)
     )
 
 
