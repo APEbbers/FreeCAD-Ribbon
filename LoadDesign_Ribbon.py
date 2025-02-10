@@ -1106,8 +1106,7 @@ class LoadDialog(Design_ui.Ui_Form):
                 else:
                     continue
 
-        self.LoadControls()
-
+        # Show a message
         self.form.hide()
         message_1 = translate("FreeCAD Ribbon", "Buttons are set to {} for the following workbenches:\n").format(Size)
         message_2 = ""
@@ -1116,6 +1115,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
         StandardFunctions.Mbox(message_1 + message_2, "FreeCAD Ribbon", 0)
         self.form.show()
+
+        # Load all controls
+        self.LoadControls()
 
         # Enable the apply button
         if self.CheckChanges() is True:
