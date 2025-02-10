@@ -1491,7 +1491,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                 if Icon is not None:
                                     ListWidgetItem.setIcon(Icon)
                                 ListWidgetItem.setData(
-                                    Qt.ItemDataRole.UserRole, key
+                                    Qt.ItemDataRole.UserRole, [key, CommandName]
                                 )  # add here the toolbar name as hidden data
 
                                 IsInList = False
@@ -1536,40 +1536,36 @@ class LoadDialog(Design_ui.Ui_Form):
         WorkBenchName = self.form.WorkbenchList_CP.currentData(Qt.ItemDataRole.UserRole)[0]
         WorkBenchTitle = self.form.WorkbenchList_CP.currentData(Qt.ItemDataRole.UserRole)[2]
         # Create item that defines the custom toolbar
-        Commands = []
         MenuName = ""
         for i in range(self.form.PanelSelected_CP.count()):
             ListWidgetItem = self.form.PanelSelected_CP.item(i)
-            MenuName_ListWidgetItem = ListWidgetItem.text().replace("&", "")
             # if the translated menuname from the ListWidgetItem is equel to the MenuName from the command
             # Add the commandName to the list commandslist for this custom panel
             for CommandItem in self.List_Commands:
-                MenuName = CommandItem[2].replace("&", "")
-                if MenuName == MenuName_ListWidgetItem:
-                    CommandName = CommandItem[0]
-                    Commands.append(CommandName)
+                if CommandItem[0] == ListWidgetItem.data(Qt.ItemDataRole.UserRole)[1]:
+                    MenuName = CommandItem[2].replace("&", "")
 
-            # Get the original toolbar
-            OriginalToolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
-            # define the suffix
-            Suffix = "_custom"
+                    # Get the original toolbar
+                    OriginalToolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
+                    # define the suffix
+                    Suffix = "_custom"
 
-            # Create or modify the dict that will be entered
-            StandardFunctions.add_keys_nested_dict(
-                self.Dict_CustomToolbars,
-                [
-                    "customToolbars",
-                    WorkBenchName,
-                    CustomPanelTitle + Suffix,
-                    "commands",
-                    MenuName,
-                ],
-            )
+                    # Create or modify the dict that will be entered
+                    StandardFunctions.add_keys_nested_dict(
+                        self.Dict_CustomToolbars,
+                        [
+                            "customToolbars",
+                            WorkBenchName,
+                            CustomPanelTitle + Suffix,
+                            "commands",
+                            MenuName,
+                        ],
+                    )
 
-            # Update the dict
-            self.Dict_CustomToolbars["customToolbars"][WorkBenchName][CustomPanelTitle + Suffix]["commands"][
-                MenuName
-            ] = OriginalToolbar
+                    # Update the dict
+                    self.Dict_CustomToolbars["customToolbars"][WorkBenchName][CustomPanelTitle + Suffix]["commands"][
+                        MenuName
+                    ] = OriginalToolbar
 
         # Check if the custom panel is selected in the Json file
         IsInList = False
