@@ -115,7 +115,9 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
             else:
                 PixmapName = ""
             if PixmapName == "" or PixmapName is None:
-                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
+                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][
+                    ControlName
+                ]
                 if PixmapName == "" or PixmapName is None:
                     PixmapName = StyleMapping_default["Stylesheets"][""][ControlName]
             if os.path.exists(PixmapName):
@@ -138,7 +140,9 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
             ):
                 result = "none"
             if result == "" or result is None:
-                result = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
+                result = StyleMapping_default["Stylesheets"][currentStyleSheet][
+                    ControlName
+                ]
                 if result == "" or result is None:
                     result = StyleMapping_default["Stylesheets"][""][ControlName]
             return result
@@ -147,7 +151,9 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
         return None
 
 
-def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"):
+def ReturnStyleSheet(
+    control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"
+):
     """
     Enter one of the names below:
 
@@ -358,7 +364,9 @@ def DarkMode():
                     # Get all the tag elements
                     elements = []
                     namespaces = {"i": "https://wiki.freecad.org/Package_Metadata"}
-                    elements = treeRoot.findall(".//i:content/i:preferencepack/i:tag", namespaces)
+                    elements = treeRoot.findall(
+                        ".//i:content/i:preferencepack/i:tag", namespaces
+                    )
 
                     # go throug all tags. If 'dark' in the element text, this is a dark theme
                     for element in elements:
@@ -421,7 +429,9 @@ StyleMapping_default = {
             "ScrollLeftButton_Tab": GetIconBasedOnTag("ScrollLeftButton_Tab"),
             "ScrollRightButton_Tab": GetIconBasedOnTag("ScrollRightButton_Tab"),
             "ScrollLeftButton_Category": GetIconBasedOnTag("ScrollLeftButton_Category"),
-            "ScrollRightButton_Category": GetIconBasedOnTag("ScrollRightButton_Category"),
+            "ScrollRightButton_Category": GetIconBasedOnTag(
+                "ScrollRightButton_Category"
+            ),
             "OptionButton": GetIconBasedOnTag("OptionButton"),
             "PinButton_open": GetIconBasedOnTag("PinButton_open"),
             "PinButton_closed": GetIconBasedOnTag("PinButton_closed"),

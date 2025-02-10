@@ -1,6 +1,7 @@
 """
 Backport of the asyncio.runners module from Python 3.7 to Python 3.6.
 """
+
 # Source:
 # https://gist.github.com/nickdavies/4a37c6cd9dcc7041fddd2d2a81cee383
 # https://github.com/python/cpython/blob/a4afcdfa55ddffa4b9ae3b0cf101628c7bff4102/Lib/asyncio/runners.py
@@ -71,9 +72,7 @@ def _patch_loop(loop):
 
 
 def run36(
-    main: Union[Coroutine[Any, None, _T], Awaitable[_T]],
-    *,
-    debug: bool = False
+    main: Union[Coroutine[Any, None, _T], Awaitable[_T]], *, debug: bool = False
 ) -> _T:
     """Run a coroutine.
     This function runs the passed coroutine, taking care of
@@ -97,9 +96,7 @@ def run36(
     except RuntimeError:
         loop = None
     if loop is not None:
-        raise RuntimeError(
-            "asyncio.run() cannot be called from a running event loop"
-        )
+        raise RuntimeError("asyncio.run() cannot be called from a running event loop")
 
     if not asyncio.iscoroutine(main):
         raise ValueError("a coroutine was expected, got {!r}".format(main))
@@ -139,9 +136,7 @@ def _cancel_all_tasks(loop, tasks):
         if task.exception() is not None:
             loop.call_exception_handler(
                 {
-                    "message": (
-                        "unhandled exception during asyncio.run() shutdown"
-                    ),
+                    "message": ("unhandled exception during asyncio.run() shutdown"),
                     "exception": task.exception(),
                     "task": task,
                 }
