@@ -1859,9 +1859,10 @@ class LoadDialog(Design_ui.Ui_Form):
             self.form.CustomToolbarSelector_CP.currentText() != ""
             or self.form.CustomToolbarSelector_CP.currentText() != "New"
         ):
-            CustomPanelTitle = self.form.CustomToolbarSelector_CP.currentText().split(
-                ", "
-            )[0] +"_custom"
+            CustomPanelTitle = (
+                self.form.CustomToolbarSelector_CP.currentText().split(", ")[0]
+                + "_custom"
+            )
             WorkBenchTitle = self.form.CustomToolbarSelector_CP.currentText().split(
                 ", "
             )[1]
