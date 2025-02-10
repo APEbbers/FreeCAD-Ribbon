@@ -54,9 +54,7 @@ class RibbonTabBar(QTabBar):
         self._tabColors[text] = color
         return super().addTab(text)
 
-    def addAssociatedTabs(
-        self, name: str, texts: typing.List[str], color: QColor
-    ) -> typing.List[int]:
+    def addAssociatedTabs(self, name: str, texts: typing.List[str], color: QColor) -> typing.List[int]:
         """Add associated multiple tabs which have the same color to the tab bar.
 
         :param name: The name of the context category.
@@ -93,12 +91,12 @@ class RibbonTabBar(QTabBar):
         """Change tab's color."""
 
         if self.count() > 0:
-            currentTabText = self.tabText(inx)
-            currentTabColor = self._tabColors[currentTabText]
-            if currentTabColor is not None:
-                self.setStyleSheet(
-                    "RibbonTabBar::tab:selected {color: %s;}"
-                    % QColor(currentTabColor).name()
-                )
-            else:
-                self.setStyleSheet("RibbonTabBar::tab:selected {color: black;}")
+            try:
+                currentTabText = self.tabText(inx)
+                currentTabColor = self._tabColors[currentTabText]
+                if currentTabColor is not None:
+                    self.setStyleSheet("RibbonTabBar::tab:selected {color: %s;}" % QColor(currentTabColor).name())
+                else:
+                    self.setStyleSheet("RibbonTabBar::tab:selected {color: black;}")
+            except Exception as e:
+                print(e)
