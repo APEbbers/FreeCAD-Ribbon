@@ -2826,7 +2826,7 @@ class LoadDialog(Design_ui.Ui_Form):
             return
 
         # Go through the cells in the first row. If checkstate is checked, uncheck the other cells in all other rows
-        try
+        try:
             CheckState = self.form.CommandTable_RD.item(row, column).checkState()
             if row == 0:
                 for i1 in range(1, self.form.CommandTable_RD.columnCount() - 1):
