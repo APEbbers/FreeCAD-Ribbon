@@ -2881,7 +2881,7 @@ class LoadDialog(Design_ui.Ui_Form):
         except Exception as e:
             if Parameters_Ribbon.DEBUG_MODE is True:
                 print(e)
-            pass        
+            pass
 
         return
 
