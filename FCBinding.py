@@ -396,6 +396,39 @@ class ModernMenu(RibbonBar):
                 )
             pass
 
+        # Check if there is a new version
+        # Get the latest version
+        User = "APEbbers"
+        Repo = "FreeCAD-Ribbon"
+        Branch = "main"
+        File = "package.xml"
+        ElementName = "version"
+        LatestVersion = StandardFunctions.ReturnXML_Value_Git(User, Repo, Branch, File, ElementName)
+        # Get the current version
+        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
+        CurrentVersion = StandardFunctions.ReturnXML_Value(PackageXML, "version")
+        # Check if you are on a developer version. If so set developer version
+        if CurrentVersion.lower().endswith("x"):
+            self.DeveloperVersion = CurrentVersion
+            self.UpdateVersion = ""
+        # If you are not on a developer version, check if you have the latest version
+        if CurrentVersion.lower().endswith("x") is False:
+            # Create arrays from the versions
+            LatestVersionArray = LatestVersion.split(".")
+            CurrentVersionArray = CurrentVersion.split(".")
+
+            # Set the length to the shortest lenght
+            ArrayLenght = len(LatestVersionArray)
+            if len(CurrentVersionArray) < ArrayLenght:
+                ArrayLenght = len(CurrentVersionArray)
+
+            # Check per level if the latest version has the highest number
+            # if so set update version
+            for i in range(ArrayLenght - 1):
+                if LatestVersionArray[i] > CurrentVersionArray[i]:
+                    print(f"{LatestVersionArray[i]}, {CurrentVersionArray[i]}")
+                    self.UpdateVersion = LatestVersion
+
         # Create the ribbon
         self.CreateMenus()  # Create the menus
         self.createModernMenu()  # Create the ribbon
@@ -1043,6 +1076,7 @@ class ModernMenu(RibbonBar):
                 # Remove the menu from the Ribbon Application Menu
                 MenuBar.removeAction(child.menuAction())
 
+        # if you on macOS, add the ribbon menus to the menubar
         if platform.system().lower() == "darwin":
             for action in MenuBar.actions():
                 if action.text() == translate("FreeCAD Ribbon", "Ribbon UI"):
@@ -1061,6 +1095,34 @@ class ModernMenu(RibbonBar):
                         if action.text() == translate("FreeCAD Ribbon", "Ribbon UI"):
                             ApplictionMenu.removeAction(action)
                             break
+
+        # if you are on a developer version, add a label
+        if self.DeveloperVersion != "":
+            ApplictionMenu.addSeparator()
+            color = StyleMapping.ReturnStyleItem("DevelopColor")
+            Label = QLabel()
+            Label.setText("Development version")
+            Label.setStyleSheet(f"color: {color};border: 1px solid {color};border-radius: 2px;")
+            ApplictionMenu.addWidget(Label)
+        # if there is an update, add a button that opens the addon manager
+        if self.UpdateVersion != "" and self.DeveloperVersion == "":
+            ApplictionMenu.addSeparator()
+            color = StyleMapping.ReturnStyleItem("UpdateColor")
+            Button = QToolButton()
+            Button.setText(translate("FreeCAD Ribbon", "Update available"))
+            Button.setStyleSheet(
+                "QToolButton{"
+                + f"color: {color};border: 1px solid {color};border-radius: 2px;background: none"
+                + "}QToolButton:hover{background-color: "
+                + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                + ";}"
+            )
+
+            def OpenAddOnManager():
+                Gui.runCommand("Std_AddonMgr", 0)
+
+            Button.clicked.connect(OpenAddOnManager)
+            ApplictionMenu.addWidget(Button)
 
         return
 
