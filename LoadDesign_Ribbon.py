@@ -2875,6 +2875,7 @@ class LoadDialog(Design_ui.Ui_Form):
             # Update the order of the commands
             self.on_PanelOrder_RD_changed()
 
+
             # Enable the apply button
             if self.CheckChanges() is True:
                 self.form.UpdateJson.setEnabled(True)
