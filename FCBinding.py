@@ -188,6 +188,9 @@ class ModernMenu(RibbonBar):
     HelpMenu = QMenu()
     OverlayMenu = None
 
+    UpdateVersion = ""
+    DeveloperVersion = ""
+
     def __init__(self):
         """
         Constructor
