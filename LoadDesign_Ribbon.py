@@ -2826,57 +2826,62 @@ class LoadDialog(Design_ui.Ui_Form):
             return
 
         # Go through the cells in the first row. If checkstate is checked, uncheck the other cells in all other rows
-        CheckState = self.form.CommandTable_RD.item(row, column).checkState()
-        if row == 0:
-            for i1 in range(1, self.form.CommandTable_RD.columnCount() - 1):
-                if CheckState == Qt.CheckState.Checked:
-                    if i1 == column:
-                        self.form.CommandTable_RD.item(0, i1).setCheckState(Qt.CheckState.Checked)
-                        self.form.CommandTable_RD.item(0, 4).setCheckState(Qt.CheckState.Checked)
-                    else:
-                        self.form.CommandTable_RD.item(0, i1).setCheckState(Qt.CheckState.Unchecked)
-                for i2 in range(1, self.form.CommandTable_RD.rowCount()):
-                    if i1 == column:
-                        self.form.CommandTable_RD.item(i2, i1).setCheckState(CheckState)
-                        self.form.CommandTable_RD.item(i2, 4).setCheckState(Qt.CheckState.Checked)
-                    if i1 != column:
-                        self.form.CommandTable_RD.item(i2, i1).setCheckState(Qt.CheckState.Unchecked)
-            if column == 4 and self.form.CommandTable_RD.item(0, column).checkState() == Qt.CheckState.Unchecked:
-                for i1 in range(1, self.form.CommandTable_RD.columnCount()):
+        try
+            CheckState = self.form.CommandTable_RD.item(row, column).checkState()
+            if row == 0:
+                for i1 in range(1, self.form.CommandTable_RD.columnCount() - 1):
+                    if CheckState == Qt.CheckState.Checked:
+                        if i1 == column:
+                            self.form.CommandTable_RD.item(0, i1).setCheckState(Qt.CheckState.Checked)
+                            self.form.CommandTable_RD.item(0, 4).setCheckState(Qt.CheckState.Checked)
+                        else:
+                            self.form.CommandTable_RD.item(0, i1).setCheckState(Qt.CheckState.Unchecked)
                     for i2 in range(1, self.form.CommandTable_RD.rowCount()):
-                        self.form.CommandTable_RD.item(i2, i1).setCheckState(Qt.CheckState.Unchecked)
+                        if i1 == column:
+                            self.form.CommandTable_RD.item(i2, i1).setCheckState(CheckState)
+                            self.form.CommandTable_RD.item(i2, 4).setCheckState(Qt.CheckState.Checked)
+                        if i1 != column:
+                            self.form.CommandTable_RD.item(i2, i1).setCheckState(Qt.CheckState.Unchecked)
+                if column == 4 and self.form.CommandTable_RD.item(0, column).checkState() == Qt.CheckState.Unchecked:
+                    for i1 in range(1, self.form.CommandTable_RD.columnCount()):
+                        for i2 in range(1, self.form.CommandTable_RD.rowCount()):
+                            self.form.CommandTable_RD.item(i2, i1).setCheckState(Qt.CheckState.Unchecked)
 
-        # Get the checkedstate from the clicked cell
-        CheckState = self.form.CommandTable_RD.item(row, column).checkState()
-        # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
-        IsChecked = False
-        for i3 in range(1, self.form.CommandTable_RD.columnCount() - 1):
-            if CheckState == Qt.CheckState.Checked:
-                TableCell = self.form.CommandTable_RD.item(row, i3)
-                if TableCell is not None:
-                    if i3 == column:
-                        TableCell.setCheckState(Qt.CheckState.Checked)
-                        self.form.CommandTable_RD.item(row, 4).setCheckState(Qt.CheckState.Checked)
-                        IsChecked = True
-                    else:
-                        TableCell.setCheckState(Qt.CheckState.Unchecked)
-        # If the selected cell is in the last column and is unchecked,
-        # the command will be disabled and all cells needs to be unchecked
-        if column == 4 and self.form.CommandTable_RD.item(row, column).checkState() == Qt.CheckState.Unchecked:
-            for i4 in range(1, self.form.CommandTable_RD.columnCount() - 1):
-                self.form.CommandTable_RD.item(row, i4).setCheckState(Qt.CheckState.Unchecked)
-        # If nothing is checked, the command is disabled. Set the last cell accordingly
-        if IsChecked is False:
-            self.form.CommandTable_RD.item(row, 4).setCheckState(Qt.CheckState.Unchecked)
+            # Get the checkedstate from the clicked cell
+            CheckState = self.form.CommandTable_RD.item(row, column).checkState()
+            # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
+            IsChecked = False
+            for i3 in range(1, self.form.CommandTable_RD.columnCount() - 1):
+                if CheckState == Qt.CheckState.Checked:
+                    TableCell = self.form.CommandTable_RD.item(row, i3)
+                    if TableCell is not None:
+                        if i3 == column:
+                            TableCell.setCheckState(Qt.CheckState.Checked)
+                            self.form.CommandTable_RD.item(row, 4).setCheckState(Qt.CheckState.Checked)
+                            IsChecked = True
+                        else:
+                            TableCell.setCheckState(Qt.CheckState.Unchecked)
+            # If the selected cell is in the last column and is unchecked,
+            # the command will be disabled and all cells needs to be unchecked
+            if column == 4 and self.form.CommandTable_RD.item(row, column).checkState() == Qt.CheckState.Unchecked:
+                for i4 in range(1, self.form.CommandTable_RD.columnCount() - 1):
+                    self.form.CommandTable_RD.item(row, i4).setCheckState(Qt.CheckState.Unchecked)
+            # If nothing is checked, the command is disabled. Set the last cell accordingly
+            if IsChecked is False:
+                self.form.CommandTable_RD.item(row, 4).setCheckState(Qt.CheckState.Unchecked)
 
-        # Update the data
-        self.UpdateData()
-        # Update the order of the commands
-        self.on_PanelOrder_RD_changed()
+            # Update the data
+            self.UpdateData()
+            # Update the order of the commands
+            self.on_PanelOrder_RD_changed()
 
-        # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+            # Enable the apply button
+            if self.CheckChanges() is True:
+                self.form.UpdateJson.setEnabled(True)
+        except Exception as e:
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                print(e)
+            pass        
 
         return
 
