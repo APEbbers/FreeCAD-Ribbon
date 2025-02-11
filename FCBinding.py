@@ -1668,18 +1668,19 @@ class ModernMenu(RibbonBar):
                     def sortButtons(button: QToolButton):
                         Text = button.text()
 
-                        try:
-                            action = None
-                            if len(button.actions()) > 0:
-                                action = button.actions()[0]
-                            if action is not None and Text.endswith("_ddb") is False:
-                                Text = CommandInfoCorrections(action.data())["menuText"]
-                        except Exception:
-                            pass
+                        # try:
+                        #     action = None
+                        #     if len(button.actions()) > 0 and Text.endswith("_ddb") is True:
+                        #         action = button.actions()[0]
+                        #         if action is not None:
+                        #             Text = CommandInfoCorrections(action.data())["menuText"]
+                        # except Exception:
+                        #     pass
 
                         if Text == "":
                             return -1
 
+                        print(Text)
                         position = None
                         try:
                             position = OrderList.index(Text)
@@ -2420,8 +2421,11 @@ class ModernMenu(RibbonBar):
                                         len(NewToolbutton.menu().actions())
 
                                     # Set the text for the toolbutton
-                                    NewToolbutton.setText(CommandName)
-
+                                    NewToolbutton.setText(
+                                        CommandInfoCorrections(CommandName)[
+                                            "menuText"
+                                        ].replace("&", "")
+                                    )
                                     # add it to the list
                                     ButtonList.append(NewToolbutton)
 
