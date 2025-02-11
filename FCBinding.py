@@ -97,8 +97,6 @@ import Serialize_Ribbon
 import StyleMapping
 import platform
 import math
-import requests_local as requests
-import xml.etree.ElementTree as ET
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -167,7 +165,7 @@ class ModernMenu(RibbonBar):
     RibbonOffset = 46 + QuickAccessButtonSize  # Set to zero to hide the panel titles
 
     # Set the minimum height for the ribbon
-    RibbonMinimalHeight = QuickAccessButtonSize + 12
+    RibbonMinimalHeight = QuickAccessButtonSize + 10
     # From v1.6.x, the size of tab bar and right toolbar are controlled by the size of the quickaccess toolbar
     TabBar_Size = QuickAccessButtonSize
     RightToolBarButtonSize = QuickAccessButtonSize
@@ -189,9 +187,6 @@ class ModernMenu(RibbonBar):
     RibbonMenu = QMenu()
     HelpMenu = QMenu()
     OverlayMenu = None
-
-    UpdateVersion = ""
-    DeveloperVersion = ""
 
     def __init__(self):
         """
@@ -401,39 +396,6 @@ class ModernMenu(RibbonBar):
                 )
             pass
 
-        # Check if there is a new version
-        # Get the latest version
-        User = "APEbbers"
-        Repo = "FreeCAD-Ribbon"
-        Branch = "main"
-        File = "package.xml"
-        ElementName = "version"
-        LatestVersion = StandardFunctions.ReturnXML_Value_Git(User, Repo, Branch, File, ElementName)
-        # Get the current version
-        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
-        CurrentVersion = StandardFunctions.ReturnXML_Value(PackageXML, "version")
-        # Check if you are on a developer version. If so set developer version
-        if CurrentVersion.lower().endswith("x"):
-            self.DeveloperVersion = CurrentVersion
-            self.UpdateVersion = ""
-        # If you are not on a developer version, check if you have the latest version
-        if CurrentVersion.lower().endswith("x") is False:
-            # Create arrays from the versions
-            LatestVersionArray = LatestVersion.split(".")
-            CurrentVersionArray = CurrentVersion.split(".")
-
-            # Set the length to the shortest lenght
-            ArrayLenght = len(LatestVersionArray)
-            if len(CurrentVersionArray) < ArrayLenght:
-                ArrayLenght = len(CurrentVersionArray)
-
-            # Check per level if the latest version has the highest number
-            # if so set update version
-            for i in range(ArrayLenght - 1):
-                if LatestVersionArray[i] > CurrentVersionArray[i]:
-                    print(f"{LatestVersionArray[i]}, {CurrentVersionArray[i]}")
-                    self.UpdateVersion = LatestVersion
-
         # Create the ribbon
         self.CreateMenus()  # Create the menus
         self.createModernMenu()  # Create the ribbon
@@ -558,7 +520,6 @@ class ModernMenu(RibbonBar):
         # Set the scroll buttons on the tabbar
         ScrollLeftButton_Tab: QToolButton = self.tabBar().findChildren(QToolButton)[0]
         ScrollRightButton_Tab: QToolButton = self.tabBar().findChildren(QToolButton)[1]
-
         # get the icons
         ScrollLeftButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab")
         ScrollRightButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollRightButton_Tab")
@@ -603,6 +564,7 @@ class ModernMenu(RibbonBar):
         # ToolTip = self.applicationOptionButton().toolTip()
         ToolTip = f"{KeyCombination}"
         self.applicationOptionButton().setToolTip(ToolTip)
+
         return
 
     def closeEvent(self, event):
@@ -626,12 +588,11 @@ class ModernMenu(RibbonBar):
     def enterEvent(self, QEvent):
         # In FreeCAD 1.0, Overlays are introduced. These have also an enterEvent which results in strange behavior
         # Therefore this function is only activated on older versions of FreeCAD.
-        # if (
-        #     int(App.Version()[0]) == 0
-        #     and int(App.Version()[1]) <= 21
-        #     and Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is True
-        # ):
-        if Parameters_Ribbon.USE_FC_OVERLAY is False and Parameters_Ribbon.SHOW_ON_HOVER is True:
+        if (
+            int(App.Version()[0]) == 0
+            and int(App.Version()[1]) <= 21
+            and Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is True
+        ):
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             if self.RibbonHeight > 0:
                 TB.setFixedHeight(self.RibbonHeight)
@@ -1082,7 +1043,6 @@ class ModernMenu(RibbonBar):
                 # Remove the menu from the Ribbon Application Menu
                 MenuBar.removeAction(child.menuAction())
 
-        # If you are on macOS, add the ribbon menu to the menubar
         if platform.system().lower() == "darwin":
             for action in MenuBar.actions():
                 if action.text() == translate("FreeCAD Ribbon", "Ribbon UI"):
@@ -1101,33 +1061,7 @@ class ModernMenu(RibbonBar):
                         if action.text() == translate("FreeCAD Ribbon", "Ribbon UI"):
                             ApplictionMenu.removeAction(action)
                             break
-        # if you are on a developer version, add a label
-        if self.DeveloperVersion != "":
-            ApplictionMenu.addSeparator()
-            color = StyleMapping.ReturnStyleItem("DevelopColor")
-            Label = QLabel()
-            Label.setText("Development version")
-            Label.setStyleSheet(f"color: {color};border: 1px solid {color};border-radius: 2px;")
-            ApplictionMenu.addWidget(Label)
-        # if there is an update, add a button that opens the addon manager
-        if self.UpdateVersion != "" and self.DeveloperVersion == "":
-            ApplictionMenu.addSeparator()
-            color = StyleMapping.ReturnStyleItem("UpdateColor")
-            Button = QToolButton()
-            Button.setText(translate("FreeCAD Ribbon", "Update available"))
-            Button.setStyleSheet(
-                "QToolButton{"
-                + f"color: {color};border: 1px solid {color};border-radius: 2px;background: none"
-                + "}QToolButton:hover{background-color: "
-                + StyleMapping.ReturnStyleItem("Background_Color_Hover")
-                + ";}"
-            )
 
-            def OpenAddOnManager():
-                Gui.runCommand("Std_AddonMgr", 0)
-
-            Button.clicked.connect(OpenAddOnManager)
-            ApplictionMenu.addWidget(Button)
         return
 
     def CreateMenus(self):
@@ -1329,11 +1263,11 @@ class ModernMenu(RibbonBar):
         return
 
     def onWbActivated(self):
-        # if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
-        #     TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-        #     if self.RibbonHeight > 0:
-        #         TB.setFixedHeight(self.RibbonHeight)
-        #         self.setRibbonHeight(self.RibbonHeight)
+        if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
+            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            if self.RibbonHeight > 0:
+                TB.setFixedHeight(self.RibbonHeight)
+                self.setRibbonHeight(self.RibbonHeight)
 
         # Set the text color depending in tabstyle
         if Parameters_Ribbon.TABBAR_STYLE != 1:
@@ -1542,19 +1476,9 @@ class ModernMenu(RibbonBar):
                     def sortButtons(button: QToolButton):
                         Text = button.text()
 
-                        # try:
-                        #     action = None
-                        #     if len(button.actions()) > 0 and Text.endswith("_ddb") is True:
-                        #         action = button.actions()[0]
-                        #         if action is not None:
-                        #             Text = CommandInfoCorrections(action.data())["menuText"]
-                        # except Exception:
-                        #     pass
-
                         if Text == "":
                             return -1
 
-                        print(Text)
                         position = None
                         try:
                             position = OrderList.index(Text)
@@ -2276,17 +2200,18 @@ class ModernMenu(RibbonBar):
         # Check whichs is has the most height: 3 small buttons, 2 medium buttons or 1 large button
         # and set the height accordingly
         if (
-            Parameters_Ribbon.ICON_SIZE_SMALL * 3 > Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
-            and Parameters_Ribbon.ICON_SIZE_SMALL * 3 > LargeButtonHeight
+            Parameters_Ribbon.ICON_SIZE_SMALL * 3 >= Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
+            and Parameters_Ribbon.ICON_SIZE_SMALL * 3 >= LargeButtonHeight
         ):
             ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_SMALL * 3 + 6
         elif (
-            Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 > Parameters_Ribbon.ICON_SIZE_SMALL * 3
-            and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 > LargeButtonHeight
+            Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 >= Parameters_Ribbon.ICON_SIZE_SMALL * 3
+            and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 >= LargeButtonHeight
         ):
             ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 + 4
         else:
             ribbonHeight = ribbonHeight + LargeButtonHeight
+
         return ribbonHeight + offset
 
     def ReturnCommandIcon(self, CommandName: str, pixmap: str = "") -> QIcon:
@@ -2520,9 +2445,6 @@ class run:
             layout.setContentsMargins(0, 0, 0, 0)
             # update the layout
             ribbon.setLayout(layout)
-            # If autohide is enabled, hide the ribbon
-            if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
-                ribbon.hideRibbon()
             ribbonDock = QDockWidget()
             # set the name of the object and the window title
             ribbonDock.setObjectName("Ribbon")
@@ -2534,23 +2456,10 @@ class run:
             ribbonDock.setWidget(ribbon)
             ribbonDock.setEnabled(True)
             ribbonDock.setVisible(True)
-            viewWidget = mw.centralWidget()
-            viewWidget.stackUnder(ribbonDock)
-            # #
-            # make sure that there are no negative valules
-            ribbonDock.setMinimumHeight(ribbon.RibbonMinimalHeight)
+            # # make sure that there are no negative valules
+            # ribbonDock.setMaximumHeight(ribbon.ReturnRibbonHeight() - 20)
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
-            # set the height when autohide is enabled
-            if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
-                TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-                if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
-                    TB.setMinimumHeight(ribbon.RibbonMinimalHeight)
-                    TB.setMaximumHeight(ribbon.RibbonMinimalHeight)
-
-                    # Make sure that the ribbon remains visible
-                    ribbon.setRibbonVisible(True)
-                    pass
 
 
 # def UpdateRibbonStructureFile(RibbonStructureDict: dict = None, silent=True):
