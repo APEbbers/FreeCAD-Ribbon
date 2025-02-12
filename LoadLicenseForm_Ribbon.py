@@ -105,7 +105,7 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
 
         Installed version: {version}
         Branch: {branch}
-        Commit id: {CommitID}
+        SHA: {CommitID}
         """
         )
 

@@ -473,46 +473,40 @@ def ReturnXML_Value_Git(
 
 
 def GetGitData(PrintErrors=False):
-    from pathlib import Path
+    import os
 
-    GitDir = ""
     commit = None
     branch = None
-    result = None
+    result = [commit, branch]
 
-    base = Path(__file__).absolute()
-    for path in base.parents:
-        if (path / ".git").exists():
-            GitDir = path
+    git_root = os.path.join(os.path.dirname(__file__), ".git")
+    if os.path.exists(git_root) is False:
+        return result
+    git_head = os.path.join(git_root, "HEAD")
+    if os.path.exists(git_head) is False:
+        return result
 
-    if GitDir != "":
-        git_root = Path(path) / ".git"
-        git_head = git_root / "HEAD"
-        if not git_head.exists():
-            return None
+    # Read .git/HEAD file
+    with open(git_head, "r") as fd:
+        head_ref = fd.read()
 
-        # Read .git/HEAD file
-        with git_head.open("r") as fd:
-            head_ref = fd.read()
+    # Find head file .git/HEAD (e.g. ref: ref/heads/master => .git/ref/heads/master)
+    if not head_ref.startswith("ref: ") and PrintErrors is True:
+        print(f"expected 'ref: path/to/head' in {git_head}")
+        return result
+    head_ref = head_ref[5:].strip()
 
-        # Find head file .git/HEAD (e.g. ref: ref/heads/master => .git/ref/heads/master)
-        if not head_ref.startswith("ref: ") and PrintErrors is True:
-            print(f"expected 'ref: path/to/head' in {git_head}")
-            return None
-        head_ref = head_ref[5:].strip()
+    # Read commit id from head file
+    head_path = os.path.join(git_root, head_ref)
+    if os.path.exists(head_path) is False and PrintErrors is True:
+        print(f"path {head_path} referenced from {git_head} does not exist")
+        return result
 
-        # Read commit id from head file
-        head_path = git_root.joinpath(*head_ref.split("/"))
-        if not head_path.exists() and PrintErrors is True:
-            print(f"path {head_path} referenced from {git_head} does not exist")
-            return None
-
-        with head_path.open("r") as fd:
-            line = fd.readlines(1)[0]
-            commit = line.strip()
-            if "branch" in line:
-                branch = line.split("'")[1]
-            result = [commit, branch]
+    branch = head_path.rsplit("/", 1)[1]
+    with open(head_path, "r") as fd:
+        line = fd.readlines()[0]
+        commit = line.strip()
+    result = [commit, branch]
     return result
 
 
