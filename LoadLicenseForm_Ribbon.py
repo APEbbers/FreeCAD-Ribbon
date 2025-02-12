@@ -79,6 +79,12 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
 
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
+        CommitID = StandardFunctions.GetGitData()[0]
+        if CommitID is None:
+            CommitID = "-"
+        branch = StandardFunctions.GetGitData()[1]
+        if branch is None:
+            branch = "-"
 
         # Add a logo
         pixmap = QPixmap(os.path.join(pathIcons, "FreecadNew.svg"))
@@ -98,6 +104,8 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         A customizable ribbon UI for FreeCAD.
 
         Installed version: {version}
+        Branch: {branch}
+        Commit id: {CommitID}
         """
         )
 

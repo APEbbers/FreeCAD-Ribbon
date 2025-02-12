@@ -181,9 +181,7 @@ def restart_freecad():
 
     args = QtWidgets.QApplication.arguments()[1:]
     if Gui.getMainWindow().close():
-        QtCore.QProcess.startDetached(
-            QtWidgets.QApplication.applicationFilePath(), args
-        )
+        QtCore.QProcess.startDetached(QtWidgets.QApplication.applicationFilePath(), args)
 
     return
 
@@ -338,13 +336,9 @@ def GetFileDialog(Filter="", parent=None, DefaultPath="", SaveAs: bool = True) -
 
     file = ""
     if SaveAs is False:
-        file = QFileDialog.getOpenFileName(
-            parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter
-        )[0]
+        file = QFileDialog.getOpenFileName(parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter)[0]
     if SaveAs is True:
-        file = QFileDialog.getSaveFileName(
-            parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter
-        )[0]
+        file = QFileDialog.getSaveFileName(parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter)[0]
     return file
 
 
@@ -352,9 +346,7 @@ def GetFolder(parent=None, DefaultPath="") -> str:
     from PySide.QtWidgets import QFileDialog
 
     Directory = ""
-    Directory = QFileDialog.getExistingDirectory(
-        parent=parent, caption="Select Folder", dir=DefaultPath
-    )
+    Directory = QFileDialog.getExistingDirectory(parent=parent, caption="Select Folder", dir=DefaultPath)
 
     return Directory
 
@@ -382,18 +374,12 @@ def CreateToolbar(Name: str, WorkBenchName: str = "Global", ButtonList: list = [
     # Define the name for the toolbar
     ToolBarName = Name
     # define the parameter path for the toolbar
-    WorkbenchToolBarsParamPath = (
-        "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
-    )
+    WorkbenchToolBarsParamPath = "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
 
     # check if there is already a toolbar with the same name
-    CustomToolbars: list = App.ParamGet(
-        "User parameter:BaseApp/Workbench/Global/Toolbar"
-    ).GetGroups()
+    CustomToolbars: list = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar").GetGroups()
     for Group in CustomToolbars:
-        Parameter = App.ParamGet(
-            "User parameter:BaseApp/Workbench/Global/Toolbar/" + Group
-        )
+        Parameter = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar/" + Group)
         ItemName = Parameter.GetString("Name")
         if ItemName == ToolBarName:
             return ToolBarName
@@ -422,18 +408,14 @@ def RemoveWorkBenchToolbars(Name: str, WorkBenchName: str = "Global") -> None:
     # Define the name for the toolbar
     ToolBarName = Name
     # define the parameter path for the toolbar
-    ToolBarsParamPath = (
-        "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
-    )
+    ToolBarsParamPath = "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
 
     custom_toolbars = App.ParamGet(ToolBarsParamPath)
     custom_toolbars.RemGroup(ToolBarName)
     return
 
 
-def ReturnXML_Value(
-    path: str, ElementName: str, attribKey: str = "", attribValue: str = ""
-):
+def ReturnXML_Value(path: str, ElementName: str, attribKey: str = "", attribValue: str = ""):
     import xml.etree.ElementTree as ET
     import os
 
@@ -487,6 +469,50 @@ def ReturnXML_Value_Git(
                         return result
             else:
                 result = child.text
+    return result
+
+
+def GetGitData(PrintErrors=False):
+    from pathlib import Path
+
+    GitDir = ""
+    commit = None
+    branch = None
+    result = None
+
+    base = Path(__file__).absolute()
+    for path in base.parents:
+        if (path / ".git").exists():
+            GitDir = path
+
+    if GitDir != "":
+        git_root = Path(path) / ".git"
+        git_head = git_root / "HEAD"
+        if not git_head.exists():
+            return None
+
+        # Read .git/HEAD file
+        with git_head.open("r") as fd:
+            head_ref = fd.read()
+
+        # Find head file .git/HEAD (e.g. ref: ref/heads/master => .git/ref/heads/master)
+        if not head_ref.startswith("ref: ") and PrintErrors is True:
+            print(f"expected 'ref: path/to/head' in {git_head}")
+            return None
+        head_ref = head_ref[5:].strip()
+
+        # Read commit id from head file
+        head_path = git_root.joinpath(*head_ref.split("/"))
+        if not head_path.exists() and PrintErrors is True:
+            print(f"path {head_path} referenced from {git_head} does not exist")
+            return None
+
+        with head_path.open("r") as fd:
+            line = fd.readlines(1)[0]
+            commit = line.strip()
+            if "branch" in line:
+                branch = line.split("'")[1]
+            result = [commit, branch]
     return result
 
 
