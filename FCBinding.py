@@ -624,11 +624,7 @@ class ModernMenu(RibbonBar):
     def enterEvent(self, QEvent):
         # In FreeCAD 1.0, Overlays are introduced. These have also an enterEvent which results in strange behavior
         # Therefore this function is only activated on older versions of FreeCAD.
-        if (
-            int(App.Version()[0]) == 0
-            and int(App.Version()[1]) <= 21
-            and Parameters_Ribbon.Settings.GetBoolSetting("ShowOnHover") is True
-        ):
+        if Parameters_Ribbon.SHOW_ON_HOVER is True and Parameters_Ribbon.USE_FC_OVERLAY is False:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             if self.RibbonHeight > 0:
                 TB.setFixedHeight(self.RibbonHeight)
