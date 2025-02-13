@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL
-from PySide.QtWidgets import (
+from PySide6.QtCore import Qt, SIGNAL
+from PySide6.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -34,8 +34,9 @@ from PySide.QtWidgets import (
     QDialogButtonBox,
     QApplication,
     QPushButton,
+    QDialog,
 )
-from PySide.QtGui import QIcon, QPixmap
+from PySide6.QtGui import QIcon, QPixmap
 import sys
 
 import Standard_Functions_RIbbon as StandardFunctions
@@ -59,6 +60,8 @@ translate = App.Qt.translate
 
 
 class LoadDialog(LicenseForm_ui.Ui_Dialog):
+
+    FormLoaded = False
 
     def __init__(self):
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
@@ -111,7 +114,12 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         """
         )
         # Add the copybutton
-        self.form.CopyVersionInfo.clicked.connect(self.on_CopyVersionInfo_Clicked)
+        self.form.CopyVersionInfo.clicked.connect(
+            lambda: self.on_CopyVersionInfo_Clicked(
+                self,
+                f"Installed version: {version}\nBranch: {branch}\nSHA: {CommitID}",
+            ),
+        )
 
         # Read the license file from the add-on directory
         file_path = os.path.join(os.path.dirname(__file__), "LICENSE")
@@ -124,8 +132,10 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         self.form.buttonBox.setStandardButtons(self.form.buttonBox.StandardButton.Ok)
         return
 
+    @staticmethod
     def on_CopyVersionInfo_Clicked(self, Text):
         StandardFunctions.AddToClipboard(Text)
+        print(Text)
         return
 
 
