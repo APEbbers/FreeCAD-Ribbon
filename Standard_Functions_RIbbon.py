@@ -790,3 +790,11 @@ def ReturnWrappedText(text: str, max_length: int = 50, max_Lines=0, returnList=F
         result = wrapped_text
 
     return result
+
+
+def AddToClipboard(Text):
+    import subprocess
+    import platform
+
+    cmd = "clip" if platform.system() == "Windows" else "pbcopy"
+    subprocess.run(cmd, input=Text, text=True, shell=True)

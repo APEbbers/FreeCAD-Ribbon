@@ -32,6 +32,8 @@ from PySide.QtWidgets import (
     QComboBox,
     QLabel,
     QDialogButtonBox,
+    QApplication,
+    QPushButton,
 )
 from PySide.QtGui import QIcon, QPixmap
 import sys
@@ -108,6 +110,8 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         SHA: {CommitID}
         """
         )
+        # Add the copybutton
+        self.form.CopyVersionInfo.clicked.connect(self.on_CopyVersionInfo_Clicked)
 
         # Read the license file from the add-on directory
         file_path = os.path.join(os.path.dirname(__file__), "LICENSE")
@@ -118,6 +122,10 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
 
         # set only the ok button
         self.form.buttonBox.setStandardButtons(self.form.buttonBox.StandardButton.Ok)
+        return
+
+    def on_CopyVersionInfo_Clicked(self, Text):
+        StandardFunctions.AddToClipboard(Text)
         return
 
 
