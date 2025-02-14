@@ -195,7 +195,7 @@ class ModernMenu(RibbonBar):
         """
         Constructor
         """
-        super().__init__(title="", iconSize=self.iconSize)
+        super().__init__(title="")
         self.setObjectName("Ribbon")
 
         self.setWindowFlags(self.windowFlags() | Qt.Dialog)
@@ -582,6 +582,9 @@ class ModernMenu(RibbonBar):
         # Add a custom close event to show the original menubar again
         self.closeEvent = lambda close: self.closeEvent(close)
 
+        # Add a custom enter event to the tabbar
+        self.tabBar().enterEvent = lambda enter: self.enterEvent_Tabbar(enter)
+
         # Remove persistant toolbars
         PersistentToolbars = App.ParamGet("User parameter:Tux/PersistentToolbars/User").GetGroups()
         for Group in PersistentToolbars:
@@ -597,10 +600,8 @@ class ModernMenu(RibbonBar):
         KeyCombination = Parameters_Ribbon.SHORTCUT_APPLICATION
         self.ShortCutApp = QShortcut(QKeySequence(KeyCombination), self)
         self.ShortCutApp.activated.connect(self.ToggleApplicationButton)
-        # ToolTip = self.applicationOptionButton().toolTip()
         ToolTip = f"{KeyCombination}"
         self.applicationOptionButton().setToolTip(ToolTip)
-
         return
 
     def closeEvent(self, event):
@@ -621,7 +622,11 @@ class ModernMenu(RibbonBar):
         else:
             return True
 
-    def enterEvent(self, QEvent):
+    def enterEvent(self, event):
+        event.ignore()
+        return
+
+    def enterEvent_Tabbar(self, QEvent):
         # In FreeCAD 1.0, Overlays are introduced. These have also an enterEvent which results in strange behavior
         # Therefore this function is only activated on older versions of FreeCAD.
         if Parameters_Ribbon.SHOW_ON_HOVER is True and Parameters_Ribbon.USE_FC_OVERLAY is False:
@@ -1302,9 +1307,13 @@ class ModernMenu(RibbonBar):
         """
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            if self.RibbonHeight > 0:
-                TB.setFixedHeight(self.RibbonHeight)
-                self.setRibbonHeight(self.RibbonHeight)
+            if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
+                if self.RibbonHeight > 0:
+                    TB.setFixedHeight(self.RibbonHeight)
+                    self.setRibbonHeight(self.RibbonHeight)
+            else:
+                TB.setMinimumHeight(self.RibbonMinimalHeight)
+                TB.setMaximumHeight(self.RibbonMinimalHeight)
 
         index = self.tabBar().currentIndex()
         tabName = self.tabBar().tabText(index)
@@ -1326,9 +1335,13 @@ class ModernMenu(RibbonBar):
     def onWbActivated(self):
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            if self.RibbonHeight > 0:
-                TB.setFixedHeight(self.RibbonHeight)
-                self.setRibbonHeight(self.RibbonHeight)
+            if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
+                if self.RibbonHeight > 0:
+                    TB.setFixedHeight(self.RibbonHeight)
+                    self.setRibbonHeight(self.RibbonHeight)
+            else:
+                TB.setMinimumHeight(self.RibbonMinimalHeight)
+                TB.setMaximumHeight(self.RibbonMinimalHeight)
 
         # Set the text color depending in tabstyle
         if Parameters_Ribbon.TABBAR_STYLE != 1:
