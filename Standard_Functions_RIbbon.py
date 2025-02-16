@@ -721,6 +721,19 @@ def addMissingCommands(CommandList: list):
 def returnQiCons_Commands(CommandName, pixmap=""):
     from PySide.QtGui import QIcon
 
+    try:
+        if len(CommandName.split(", ")) > 1:
+            CommandName_1 = CommandName.split(", ")[0]
+            ActionNumber = int(CommandName.split(", ")[1])
+            ParentCommand = Gui.Command.get(CommandName_1)
+            if ParentCommand is not None:
+                action = ParentCommand.getAction()[ActionNumber]
+                icon = action.icon()
+                return icon
+    except Exception:
+        # raise (e)
+        pass
+
     icon = QIcon()
     if pixmap != "" and pixmap is not None:
         icon = Gui.getIcon(pixmap)
@@ -775,7 +788,7 @@ def ReturnWrappedText(text: str, max_length: int = 50, max_Lines=0, returnList=F
     for line in wrapped_text:
         line = textwrap.dedent(line)
 
-    # remove any line that is more then allowed
+    # remove any line that is more then> allowed
     if max_Lines > 0 and len(wrapped_text) > max_Lines:
         for i in range(max_Lines, len(wrapped_text)):
             try:
