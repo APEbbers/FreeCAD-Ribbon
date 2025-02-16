@@ -40,6 +40,7 @@ from PySide.QtGui import (
     QPainter,
     QKeySequence,
     QShortcut,
+    QCursor,
 )
 from PySide.QtWidgets import (
     QToolButton,
@@ -80,6 +81,7 @@ from PySide.QtCore import (
     QSize,
     Slot,
     QRect,
+    QPoint,
 )
 from CustomWidgets import CustomControls
 
@@ -97,6 +99,8 @@ import Serialize_Ribbon
 import StyleMapping
 import platform
 import math
+
+# from CustomWidgets import myMenu as QMenu
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -191,6 +195,13 @@ class ModernMenu(RibbonBar):
     UpdateVersion = ""
     DeveloperVersion = ""
 
+    MenuEntered = False
+    MenuLeaved = False
+
+    cursorMove = Signal(QPoint)
+
+    EventDetect = Signal(QEvent)
+
     def __init__(self):
         """
         Constructor
@@ -198,7 +209,7 @@ class ModernMenu(RibbonBar):
         super().__init__(title="")
         self.setObjectName("Ribbon")
 
-        self.setWindowFlags(self.windowFlags() | Qt.Dialog)
+        self.setWindowModality(Qt.WindowModality.NonModal)
 
         # connect the signals
         self.connectSignals()
@@ -579,12 +590,6 @@ class ModernMenu(RibbonBar):
         else:
             ScrollRightButton_Tab.setArrowType(Qt.ArrowType.RightArrow)
 
-        # Add a custom close event to show the original menubar again
-        self.closeEvent = lambda close: self.closeEvent(close)
-
-        # Add a custom enter event to the tabbar
-        self.tabBar().enterEvent = lambda enter: self.enterEvent_Tabbar(enter)
-
         # Remove persistant toolbars
         PersistentToolbars = App.ParamGet("User parameter:Tux/PersistentToolbars/User").GetGroups()
         for Group in PersistentToolbars:
@@ -602,53 +607,44 @@ class ModernMenu(RibbonBar):
         self.ShortCutApp.activated.connect(self.ToggleApplicationButton)
         ToolTip = f"{KeyCombination}"
         self.applicationOptionButton().setToolTip(ToolTip)
+
+        # Add a custom close event to show the original menubar again
+        self.closeEvent = lambda close: self.closeEvent(close)
+        # Add a custom enter event to the tabbar
+        self.tabBar().enterEvent = lambda enter: self.enterEvent_Custom(enter)
+        # When hovering over the menu button, hide the ribbon
+        self.applicationOptionButton().enterEvent = lambda enter: self.leaveEvent(enter)
         return
 
+    def CustomFocusEvent(self, event):
+        # self.FoldRibbon()
+        print("folded")
+        if self.geometry().contains(self.cursor().pos()):
+            self.FoldRibbon()
+        return True
+
     def closeEvent(self, event):
-        if self.isEnabled() is False:
-            mw.menuBar().show()
+        mw.menuBar().show()
         return True
 
     def eventFilter(self, obj, event):
-        if int(App.Version()[0]) > 1:
-            if event.type() == QEvent.Type.HoverMove:
-                # swallow events
-                # print("Event swallowed")
-                event.ignore()
-                return False
-            else:
-                # bubble events
-                return True
-        else:
-            return True
+        # Disable the standard hover behavior
+        if event.type() == QEvent.Type.HoverMove:
+            event.ignore()
+            return False
+        return False
 
-    def enterEvent(self, event):
-        event.ignore()
-        return
-
-    def enterEvent_Tabbar(self, QEvent):
+    def enterEvent_Custom(self, QEvent):
         # In FreeCAD 1.0, Overlays are introduced. These have also an enterEvent which results in strange behavior
         # Therefore this function is only activated on older versions of FreeCAD.
         if Parameters_Ribbon.SHOW_ON_HOVER is True and Parameters_Ribbon.USE_FC_OVERLAY is False:
-            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            if self.RibbonHeight > 0:
-                TB.setFixedHeight(self.RibbonHeight)
-                self.setRibbonHeight(self.RibbonHeight)
-
-            # Make sure that the ribbon remains visible
-            self.setRibbonVisible(True)
+            self.UnfoldRibbon()
             return
 
     def leaveEvent(self, QEvent):
-        if self.LeaveEventEnabled is True:
-            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
-                TB.setMinimumHeight(self.RibbonMinimalHeight)
-                TB.setMaximumHeight(self.RibbonMinimalHeight)
-
-                # Make sure that the ribbon remains visible
-                self.setRibbonVisible(True)
-                pass
+        if Parameters_Ribbon.AUTOHIDE_RIBBON is True and self.MenuEntered is False:
+            self.FoldRibbon()
+            # print("LeaveEvent")
 
     # implementation to add actions to the Filemenu. Needed for the accessories menu
     def addAction(self, action: QAction):
@@ -1136,6 +1132,7 @@ class ModernMenu(RibbonBar):
         # Create the overlay menu when the native overlay function is not used
         if Parameters_Ribbon.USE_FC_OVERLAY is False:
             OverlayMenu = QMenu(translate("FreeCAD Ribbon", "Overlay") + "...", self)
+            OverlayMenu.setToolTipsVisible(True)
             OverlayButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle overlay"))
             OverlayButton.setToolTip(translate("FreeCAD Ribbon", "Click to toggle the overlay function"))
             OverlayButton.triggered.connect(self.CustomOverlay)
@@ -1155,7 +1152,7 @@ class ModernMenu(RibbonBar):
 
         # Create a ribbon menu
         RibbonMenu = QMenu(translate("FreeCAD Ribbon", "Ribbon UI preferences") + " ...", self)
-
+        RibbonMenu.setToolTipsVisible(True)
         # Add the ribbon design button
         DesignButton = RibbonMenu.addAction(translate("FreeCAD Ribbon", "Ribbon layout"))
         DesignButton.setToolTip(translate("FreeCAD Ribbon", "Design the ribbon to your preference"))
@@ -1182,6 +1179,7 @@ class ModernMenu(RibbonBar):
 
         # Create a help menu
         HelpMenu = QMenu(self)
+        HelpMenu.setToolTipsVisible(True)
         # Get the icons
         HelpIcon = QIcon()
         AboutIcon = Gui.getIcon("freecad")
@@ -1271,10 +1269,8 @@ class ModernMenu(RibbonBar):
         return
 
     def onPinClicked(self):
-        TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
         if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
-            TB.setMinimumHeight(self.RibbonMinimalHeight)
-            TB.setMaximumHeight(self.RibbonMinimalHeight)
+            self.FoldRibbon()
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", True)
             Parameters_Ribbon.AUTOHIDE_RIBBON = True
 
@@ -1285,10 +1281,7 @@ class ModernMenu(RibbonBar):
             self.setRibbonVisible(True)
             return
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
-            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            if self.RibbonHeight > 0:
-                TB.setFixedHeight(self.RibbonHeight)
-                self.setRibbonHeight(self.RibbonHeight)
+            self.UnfoldRibbon()
 
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
             Parameters_Ribbon.AUTOHIDE_RIBBON = False
@@ -1306,14 +1299,10 @@ class ModernMenu(RibbonBar):
         Import selected workbench toolbars to ModernMenu section.
         """
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
-            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
-                if self.RibbonHeight > 0:
-                    TB.setFixedHeight(self.RibbonHeight)
-                    self.setRibbonHeight(self.RibbonHeight)
+                self.UnfoldRibbon()
             else:
-                TB.setMinimumHeight(self.RibbonMinimalHeight)
-                TB.setMaximumHeight(self.RibbonMinimalHeight)
+                self.FoldRibbon()
 
         index = self.tabBar().currentIndex()
         tabName = self.tabBar().tabText(index)
@@ -1334,14 +1323,10 @@ class ModernMenu(RibbonBar):
 
     def onWbActivated(self):
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
-            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
-                if self.RibbonHeight > 0:
-                    TB.setFixedHeight(self.RibbonHeight)
-                    self.setRibbonHeight(self.RibbonHeight)
+                self.UnfoldRibbon()
             else:
-                TB.setMinimumHeight(self.RibbonMinimalHeight)
-                TB.setMaximumHeight(self.RibbonMinimalHeight)
+                self.FoldRibbon()
 
         # Set the text color depending in tabstyle
         if Parameters_Ribbon.TABBAR_STYLE != 1:
@@ -1386,10 +1371,7 @@ class ModernMenu(RibbonBar):
         return
 
     def onTabBarClicked(self):
-        TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-        if self.RibbonHeight > 0:
-            TB.setFixedHeight(self.RibbonHeight)
-            self.setRibbonHeight(self.RibbonHeight)
+        self.UnfoldRibbon()
         self.setRibbonVisible(True)
 
         # hide normal toolbars
@@ -1835,6 +1817,7 @@ class ModernMenu(RibbonBar):
                                     MaxNumberOfLines=2,
                                     Menu=Menu,
                                     MenuButtonSpace=16,
+                                    parent=self,
                                 )
                                 # add the button as large button
                                 panel.addSmallWidget(
@@ -1872,6 +1855,7 @@ class ModernMenu(RibbonBar):
                                     MaxNumberOfLines=2,
                                     Menu=Menu,
                                     MenuButtonSpace=16,
+                                    parent=self,
                                 )
                                 # add the button as large button
                                 panel.addMediumWidget(
@@ -1908,6 +1892,7 @@ class ModernMenu(RibbonBar):
                                     MaxNumberOfLines=2,
                                     Menu=Menu,
                                     MenuButtonSpace=16,
+                                    parent=self,
                                 )
                                 # add the button as large button
                                 panel.addLargeWidget(
@@ -1920,6 +1905,14 @@ class ModernMenu(RibbonBar):
                                     if buttonSize != "none":
                                         print(f"{action.text()} is ignored. Its size was: {buttonSize}")
                                 pass
+
+                            if btn.menu() is not None:
+                                btn.popupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+
+                                def LeaveEvent(event):
+                                    print("test)")
+
+                                btn.menu().leaveEvent = lambda leave: LeaveEvent(leave)
 
                             # Set the background always to background color.
                             # Styling is managed in the custom button class
@@ -2098,6 +2091,22 @@ class ModernMenu(RibbonBar):
         StatusArea = mw.findChildren(QWidget, "StatusBarArea")
         for Widget in StatusArea:
             Widget.show()
+        return
+
+    def UnfoldRibbon(self):
+        if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
+            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            if self.RibbonHeight > 0:
+                TB.setFixedHeight(self.RibbonHeight)
+                self.setRibbonHeight(self.RibbonHeight)
+        return
+
+    def FoldRibbon(self):
+        if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
+            if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
+                TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+                TB.setMinimumHeight(self.RibbonMinimalHeight)
+                TB.setMaximumHeight(self.RibbonMinimalHeight)
         return
 
     def List_ReturnCustomToolbars(self):
@@ -2491,6 +2500,21 @@ class ModernMenu(RibbonBar):
 #             # Create the ribbon
 #             mw.setMenuBar(ribbon)
 # endregion
+
+
+class EventInspector(QObject):
+    def __init__(self, parent):
+        super(EventInspector, self).__init__(parent)
+
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.Type.HoverMove:
+            event.ignore()
+        if event.type() == QEvent.Type.Leave:
+            print("obj >>", obj)
+            print("event >>", event)
+            pos = QCursor.pos()
+            print(f"x: {pos.x()}, y: {pos.y()}")
+        return False
 
 
 class run:
