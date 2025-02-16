@@ -834,13 +834,15 @@ class LoadDialog(Design_ui.Ui_Form):
 
             for key, value in list(ToolbarItems.items()):
                 for j in range(len(value)):
-                    Item = [value[j], self.List_Workbenches[i][0]]
-                    CommandNames.append(Item)
+                    if value[j] != "Std_Workbench":
+                        Item = [value[j], self.List_Workbenches[i][0]]
+                        CommandNames.append(Item)
 
         # Go through the list
         for CommandName in CommandNames:
             # get the command with this name
             command = Gui.Command.get(CommandName[0])
+            ChildCommands = self.returnDropDownCommands(command)
             WorkBenchName = CommandName[1]
             if command is not None:
                 # get the icon for this command
@@ -850,6 +852,10 @@ class LoadDialog(Design_ui.Ui_Form):
                     IconName = ""
                 MenuName = CommandInfoCorrections(CommandName[0])["menuText"].replace("&", "")
                 MenuNameTranslated = CommandInfoCorrections(CommandName[0])["ActionText"].replace("&", "")
+                if len(ChildCommands) > 1:
+                    MenuName = MenuName + "..."
+                    MenuNameTranslated = MenuNameTranslated + "..."
+
                 self.List_Commands.append(
                     [
                         CommandName[0],
@@ -859,6 +865,19 @@ class LoadDialog(Design_ui.Ui_Form):
                         MenuNameTranslated,
                     ]
                 )
+                # Add children of the commands if there are any
+                if len(ChildCommands) > 0:
+                    for childCommand in ChildCommands:
+                        self.List_Commands.append(
+                            [
+                                childCommand[0],
+                                childCommand[1],
+                                childCommand[2],
+                                WorkBenchName,
+                                childCommand[3],
+                            ]
+                        )
+
         # add also custom commands
         Toolbars = self.List_ReturnCustomToolbars()
         for Toolbar in Toolbars:
@@ -4162,6 +4181,18 @@ class LoadDialog(Design_ui.Ui_Form):
             Gui.activateWorkbench(WorkBenchName)
             Toolbars = Gui.getWorkbench(WorkBenchName).getToolbarItems()
             return Toolbars
+
+    def returnDropDownCommands(self, command):
+        Commands = []
+        if command is not None:
+            if len(command.getAction()) > 1:
+                for i in range(len(command.getAction())):
+                    action = command.getAction()[i]
+                    if action is not None and (action.icon() is not None and not action.icon().isNull()):
+                        Commands.append(
+                            [f"{command.getInfo()['name']}, {i}", "actionIcon", action.text(), action.text()]
+                        )
+        return Commands
 
     def FilterCommands_SearchBar(
         self,
