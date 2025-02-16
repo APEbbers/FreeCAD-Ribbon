@@ -188,19 +188,22 @@ class ModernMenu(RibbonBar):
     OverlayToggled = False
     TransparancyToggled = False
 
+    # Define the menus
     RibbonMenu = QMenu()
     HelpMenu = QMenu()
     OverlayMenu = None
 
+    # Define the versions for update and developments
     UpdateVersion = ""
     DeveloperVersion = ""
 
+    # Define a boolan to detect if an menu is entered.
+    # used to keep the ribbon unfolded, when clicking on a dropdown menu
     MenuEntered = False
-    MenuLeaved = False
 
-    cursorMove = Signal(QPoint)
-
-    EventDetect = Signal(QEvent)
+    # Store a value when the ribbon is loaded
+    # used to hide the ribbon on startup
+    isLoaded = False
 
     def __init__(self):
         """
@@ -614,14 +617,10 @@ class ModernMenu(RibbonBar):
         self.tabBar().enterEvent = lambda enter: self.enterEvent_Custom(enter)
         # When hovering over the menu button, hide the ribbon
         self.applicationOptionButton().enterEvent = lambda enter: self.leaveEvent(enter)
-        return
 
-    def CustomFocusEvent(self, event):
-        # self.FoldRibbon()
-        print("folded")
-        if self.geometry().contains(self.cursor().pos()):
-            self.FoldRibbon()
-        return True
+        self.isLoaded = True
+        self.FoldRibbon()
+        return
 
     def closeEvent(self, event):
         mw.menuBar().show()
@@ -1979,35 +1978,14 @@ class ModernMenu(RibbonBar):
                     actionList.append(button.actions())
             OptionButton = panel.panelOptionButton()
             if len(actionList) > 0:
-                for i in range(len(actionList)):
-                    action = actionList[i]
-                    if isinstance(action, QAction):
-                        OptionButton.addAction(action)
-                    if isinstance(action, list):
-                        # if it is a submenu, it is a list with two items
-                        # The first, is the default action with text
-                        # The second is the action with all the subactions, but without text or icon
-
-                        # Get the first action
-                        action_0 = action[0]
-                        # Get the second action
-                        action_1 = action[1]
-                        # Set the text and icon for the second action with those from the first action
-                        action_1.setText(action_0.text())
-                        action_1.setIcon(action_0.icon())
-                        # Add the second action
-                        OptionButton.addAction(action_1)
-                if len(actionList) == 0:
-                    panel.panelOptionButton().hide()
-
+                Menu = CustomControls.CustomOptionMenu(OptionButton.menu(), actionList, self)
+                OptionButton.setMenu(Menu)
                 # Set the behavior of the option button
                 OptionButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
                 # Remove the image to avoid double arrows
                 OptionButton.setStyleSheet("RibbonPanelOptionButton::menu-indicator {image: none;}")
                 Menu = OptionButton.menu()
-                if Menu is not None:
-                    hexColor = StyleMapping.ReturnStyleItem("Background_Color")
-                    Menu.setStyleSheet("background-color: " + hexColor)
+
                 # Set the icon
                 OptionButton_Icon = StyleMapping.ReturnStyleItem("OptionButton")
                 if OptionButton_Icon is not None:
@@ -2016,6 +1994,8 @@ class ModernMenu(RibbonBar):
                     OptionButton.setArrowType(Qt.ArrowType.DownArrow)
                     OptionButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
                     OptionButton.setText("more...")
+            if len(actionList) == 0:
+                panel.panelOptionButton().hide()
 
         self.isWbLoaded[tabName] = True
 
@@ -2102,7 +2082,7 @@ class ModernMenu(RibbonBar):
         return
 
     def FoldRibbon(self):
-        if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
+        if Parameters_Ribbon.AUTOHIDE_RIBBON is True and self.isLoaded is True:
             if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
                 TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
                 TB.setMinimumHeight(self.RibbonMinimalHeight)

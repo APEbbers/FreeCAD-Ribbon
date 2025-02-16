@@ -1100,3 +1100,59 @@ class CustomControls:
 
         # return the new button
         return btn
+
+    def CustomOptionMenu(Menu=None, actionList=None, parent=None):
+        # If menu is none, define a new one
+        if Menu is None:
+            Menu = QMenu()
+        # add all the actions from the action list
+        for i in range(len(actionList)):
+            action = actionList[i]
+            if isinstance(action, QAction):
+                Menu.addAction(action)
+            if isinstance(action, list):
+                # if it is a submenu, it is a list with two items
+                # The first, is the default action with text
+                # The second is the action with all the subactions, but without text or icon
+
+                # Get the first action
+                action_0 = action[0]
+                # Get the second action
+                action_1 = action[1]
+                # Set the text and icon for the second action with those from the first action
+                action_1.setText(action_0.text())
+                action_1.setIcon(action_0.icon())
+                # Add the second action
+                Menu.addAction(action_1)
+
+        # Set the stylesheet
+        hexColor = StyleMapping.ReturnStyleItem("Background_Color")
+        Menu.setStyleSheet("background-color: " + hexColor)
+
+        # Define an custom enter event, to set "MenuEntered" to True on the ribbon and unfold the ribbon
+        def enterEventCustom(event):
+            if parent is not None:
+                # Set the value in the parent for detecting that the menu is entered.
+                # Needed for keeping the ribbon open while showing a dropdown menu
+                parent.MenuEntered = True
+                parent.UnfoldRibbon()
+
+        Menu.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
+
+        # Set MenuEntered to True. This keeps the ribbon visible
+        def on_OptionButton_clicked():
+            parent.MenuEntered = True
+
+        Menu.aboutToShow.connect(on_OptionButton_clicked)
+
+        # Set MenuEntered to False. This allows the ribbon to fold after leaving the menu and the ribbon.
+        def SetToFoldRibbon():
+            if parent is not None:
+                # If the menu is hidden, set the value in the parent for detecting that the menu is entered to False.
+                parent.MenuEntered = False
+                pos = QCursor.pos()
+                if parent.geometry().contains(pos) is False:
+                    parent.FoldRibbon()
+
+        Menu.aboutToHide.connect(SetToFoldRibbon)
+        return Menu
