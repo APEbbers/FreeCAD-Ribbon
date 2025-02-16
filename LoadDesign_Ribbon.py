@@ -2556,7 +2556,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                         IconName = CommandItem[1]
                                         break
                         # get the icon for this command if there isn't one, leave it None
-                        Icon = StandardFunctions.returnQiCons_Commands(CommandName)
+                        Icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap=IconName)
                         if Icon is None:
                             for item in self.List_CommandIcons:
                                 if item[0] == CommandName:
