@@ -1300,8 +1300,8 @@ class ModernMenu(RibbonBar):
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
                 self.UnfoldRibbon()
-            else:
-                self.FoldRibbon()
+            # else:
+            #     self.FoldRibbon(True)
 
         index = self.tabBar().currentIndex()
         tabName = self.tabBar().tabText(index)
@@ -1324,8 +1324,8 @@ class ModernMenu(RibbonBar):
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
                 self.UnfoldRibbon()
-            else:
-                self.FoldRibbon()
+            # else:
+            #     self.FoldRibbon(True)
 
         # Set the text color depending in tabstyle
         if Parameters_Ribbon.TABBAR_STYLE != 1:
@@ -2081,8 +2081,8 @@ class ModernMenu(RibbonBar):
                 self.setRibbonHeight(self.RibbonHeight)
         return
 
-    def FoldRibbon(self):
-        if Parameters_Ribbon.AUTOHIDE_RIBBON is True and self.isLoaded is True:
+    def FoldRibbon(self, Ignore=False):
+        if Parameters_Ribbon.AUTOHIDE_RIBBON is True and self.isLoaded is True and Ignore is False:
             if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
                 TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
                 TB.setMinimumHeight(self.RibbonMinimalHeight)
@@ -2502,6 +2502,8 @@ class run:
     Activate Modern UI.
     """
 
+    import Parameters_Ribbon
+
     def __init__(self, name):
         """
         Constructor
@@ -2534,7 +2536,8 @@ class run:
             ribbonDock.setEnabled(True)
             ribbonDock.setVisible(True)
             # # make sure that there are no negative valules
-            # ribbonDock.setMaximumHeight(ribbon.ReturnRibbonHeight() - 20)
+            if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
+                ribbonDock.setMaximumHeight(ribbon.RibbonMinimalHeight)
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
 
