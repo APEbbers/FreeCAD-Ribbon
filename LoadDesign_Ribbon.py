@@ -827,6 +827,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for i in range(len(self.List_Workbenches)):
             Gui.activateWorkbench(self.List_Workbenches[i][0])
             WorkBench = Gui.getWorkbench(self.List_Workbenches[i][0])
+            WorkBenchName = self.List_Workbenches[i][0]
             # Get the toolbar items
             ToolbarItems: dict = WorkBench.getToolbarItems()
             # Update the toolbar items with corrections
@@ -835,8 +836,17 @@ class LoadDialog(Design_ui.Ui_Form):
             for key, value in list(ToolbarItems.items()):
                 for j in range(len(value)):
                     if value[j] != "Std_Workbench":
-                        Item = [value[j], self.List_Workbenches[i][0]]
-                        CommandNames.append(Item)
+                        if value[j].startswith("Std_"):
+                            Item = [value[j], "Standard"]
+                        else:
+                            Item = [value[j], WorkBenchName]
+                        IsInList = False
+                        for CommandNamesItem in CommandNames:
+                            if CommandNamesItem == Item:
+                                IsInList = True
+                                break
+                        if IsInList is False:
+                            CommandNames.append(Item)
 
         # Go through the list
         for CommandName in CommandNames:
@@ -3113,6 +3123,13 @@ class LoadDialog(Design_ui.Ui_Form):
         Global_KeyWord = translate("FreeCAD Ribbon", "Global")
         self.form.WorkbenchList_NP.addItem(Gui.getIcon("freecad"), Global_KeyWord)
 
+        # Add "Global" to the list for the panels
+        Standard_KeyWord = translate("FreeCAD Ribbon", "Standard")
+        self.form.ListCategory_QC.addItem(Gui.getIcon("freecad"), Standard_KeyWord)
+        self.form.ListCategory_EP.addItem(Gui.getIcon("freecad"), Standard_KeyWord)
+        self.form.WorkbenchList_NP.addItem(Gui.getIcon("freecad"), Standard_KeyWord)
+        self.form.ListCategory_DDB.addItem(Gui.getIcon("freecad"), Standard_KeyWord)
+
         ListWidgetItem_IS = QListWidgetItem()
         ListWidgetItem_IS.setText("All")
         ListWidgetItem_IS.setData(Qt.ItemDataRole.UserRole, ["All", "", "All", {}])
@@ -4186,7 +4203,7 @@ class LoadDialog(Design_ui.Ui_Form):
         Commands = []
         if command is not None:
             if len(command.getAction()) > 1:
-                for i in range(len(command.getAction())):
+                for i in range(len(command.getAction()) - 1):
                     action = command.getAction()[i]
                     if action is not None and (action.icon() is not None and not action.icon().isNull()):
                         Commands.append(
@@ -4286,18 +4303,19 @@ class LoadDialog(Design_ui.Ui_Form):
         ShadowList = []  # List to add the commands and prevent duplicates
         for ToolbarCommand in self.List_Commands:
             CommandName = ToolbarCommand[0]
-            MenuNameTranslated = ToolbarCommand[2]
+            MenuNameTranslated = ToolbarCommand[2]  # Not transleted!
+            workbenchName = ToolbarCommand[3]
             if len(ToolbarCommand) == 5:
-                MenuNameTranslated = ToolbarCommand[4]
+                MenuNameTranslated = ToolbarCommand[4]  # Translated
             if CommandName.endswith("_ddb"):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
-            workbenchName = ToolbarCommand[3]
 
             if ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole) != "All":
                 if (
                     f"{CommandName}, {workbenchName}" not in ShadowList
                     and workbenchName != "Global"
                     and workbenchName != "General"
+                    and workbenchName != "Standard"
                 ):
                     try:
                         WorkbenchTitle = Gui.getWorkbench(workbenchName).MenuText
@@ -4305,6 +4323,7 @@ class LoadDialog(Design_ui.Ui_Form):
                         return
                     if WorkbenchTitle == ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole)[2]:
                         IsInlist = False
+
                         for i in range(ListWidget_Commands.count()):
                             CommandItem = ListWidget_Commands.item(i)
                             if CommandItem.data(Qt.ItemDataRole.UserRole) == CommandName:
@@ -4346,6 +4365,31 @@ class LoadDialog(Design_ui.Ui_Form):
                                 ListWidget_Commands.addItem(ListWidgetItem)
 
                     ShadowList.append(f"{CommandName}, {workbenchName}")
+            if f"{CommandName}, {workbenchName}" not in ShadowList and workbenchName == "Standard":
+                WorkbenchTitle = workbenchName
+                if WorkbenchTitle == ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole)[2]:
+                    IsInlist = False
+                    for i in range(ListWidget_Commands.count()):
+                        CommandItem = ListWidget_Commands.item(i)
+                        if CommandItem.data(Qt.ItemDataRole.UserRole) == CommandName:
+                            IsInlist = True
+
+                        if IsInlist is False:
+                            # Define a commandname for the icon
+                            CommandName_Icon = CommandName
+                            Icon = StandardFunctions.returnQiCons_Commands(CommandName_Icon)
+                            Text = MenuNameTranslated
+                            ListWidgetItem = QListWidgetItem()
+                            ListWidgetItem.setText(Text)
+                            ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+                            if Icon is not None:
+                                ListWidgetItem.setIcon(Icon)
+                            ListWidgetItem.setToolTip(CommandName)  # Use the tooltip to store the actual command.
+
+                            # Add the ListWidgetItem to the correct ListWidget
+                            if Icon is not None:
+                                ListWidget_Commands.addItem(ListWidgetItem)
+
             if ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole) == "All":
                 IsInlist = False
                 for i in range(ListWidget_Commands.count()):
