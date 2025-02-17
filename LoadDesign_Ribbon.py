@@ -430,7 +430,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Connect the filter for the quick commands on the quickcommands tab
         self.form.ListCategory_QC.currentTextChanged.connect(FilterQuickCommands_QC)
         # Connect the searchbar for the quick commands on the quick commands tab
-        self.form.SearchBar_QC.textChanged.connect(self.on_SearchBar_QC_TextChanged)
+        self.form.SearchBar_QC.cursorPositionChanged.connect(self.on_SearchBar_QC_TextChanged)
 
         #
         # --- ExcludePanelsTab ------------------
@@ -442,7 +442,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Connect the filter for the toolbars on the toolbar tab
         self.form.ListCategory_EP.currentTextChanged.connect(FilterPanels_EP)
         # Connect the searchbar for the toolbars on the toolbar tab
-        self.form.SearchBar_EP.textChanged.connect(self.on_SearchBar_EP_TextChanged)
+        self.form.SearchBar_EP.cursorPositionChanged.connect(self.on_SearchBar_EP_TextChanged)
         # Connect Add/Remove events to the buttons on the Toolbars Tab
         self.form.AddPanel_EP.connect(self.form.AddPanel_EP, SIGNAL("clicked()"), self.on_AddToolbar_EP_clicked)
         self.form.RemovePanel_EP.connect(
@@ -558,7 +558,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Connect the filter for the quick commands on the quickcommands tab
         self.form.ListCategory_NP.currentTextChanged.connect(FilterWorkbench_NP)
         # Connect the searchbar for the quick commands on the quick commands tab
-        self.form.SearchBar_NP.textChanged.connect(self.on_SearchBar_NP_TextChanged)
+        self.form.SearchBar_NP.cursorPositionChanged.connect(self.on_SearchBar_NP_TextChanged)
 
         #
         # --- CreateDropDownButtonTab ----------------
@@ -612,7 +612,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Connect the filter for the quick commands on the quickcommands tab
         self.form.ListCategory_DDB.currentTextChanged.connect(FilterWorkbench_DDB)
         # Connect the searchbar for the quick commands on the quick commands tab
-        self.form.SearchBar_DDB.textChanged.connect(self.on_SearchBar_DDB_TextChanged)
+        self.form.SearchBar_DDB.cursorPositionChanged.connect(self.on_SearchBar_DDB_TextChanged)
 
         #
         # --- RibbonDesignTab ------------------
