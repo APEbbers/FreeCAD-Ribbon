@@ -2573,6 +2573,16 @@ class LoadDialog(Design_ui.Ui_Form):
                                     MenuName = CommandItem[2]
                                 if MenuName == "":
                                     continue
+                        if len(CommandName.split(", ")) > 1:
+                            # Split the commandname
+                            CommandName_1 = CommandName.split(", ")[0]
+                            ActionNumber = int(CommandName.split(", ")[1])
+                            # Get the parent command
+                            ParentCommand = Gui.Command.get(CommandName_1)
+                            # If parent is not none, get the action based on the number
+                            if ParentCommand is not None:
+                                action = ParentCommand.getAction()[ActionNumber]
+                                MenuName = action.text()
 
                         IconName = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
                         if CommandName.endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons:
@@ -3472,9 +3482,15 @@ class LoadDialog(Design_ui.Ui_Form):
                     else:
                         for i3 in range(len(self.List_Commands)):
                             if MenuName == self.List_Commands[i3][2]:
-                                if WorkBenchName == self.List_Commands[i3][3] or self.List_Commands[i3][3] == "Global":
+                                if len(self.List_Commands[i3][0].split(", ")) <= 1:
+                                    if (
+                                        WorkBenchName == self.List_Commands[i3][3]
+                                        or self.List_Commands[i3][3] == "Global"
+                                    ):
+                                        CommandName = self.List_Commands[i3][0]
+                                        IconName = self.List_Commands[i3][1]
+                                if len(self.List_Commands[i3][0].split(", ")) > 1:
                                     CommandName = self.List_Commands[i3][0]
-                                    IconName = self.List_Commands[i3][1]
 
                     # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
                     for i6 in range(1, self.form.CommandTable_RD.columnCount()):

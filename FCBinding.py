@@ -1693,9 +1693,23 @@ class ModernMenu(RibbonBar):
                                 # Check if the original menutext is different
                                 # if so use the alternative, otherwise use original
                                 for CommandName in Gui.listCommands():
-                                    Command = Gui.Command.get(CommandName)
-                                    MenuName = CommandInfoCorrections(CommandName)["menuText"].replace("&", "")
-                                    if CommandName == action.data():
+                                    # if it is a normal command:
+                                    if len(action.data().split(", ")) <= 1:
+                                        Command = Gui.Command.get(CommandName)
+                                        MenuName = CommandInfoCorrections(CommandName)["menuText"].replace("&", "")
+                                        if CommandName == action.data():
+                                            if (
+                                                MenuName
+                                                != self.ribbonStructure["workbenches"][workbenchName]["toolbars"][
+                                                    toolbar
+                                                ]["commands"][action.data()]["text"]
+                                                and MenuName != ""
+                                                and textJSON != ""
+                                            ):
+                                                text = textJSON
+                                    # if it is a member of a FreeCAD dropdown:
+                                    if len(action.data().split(", ")) > 1:
+                                        MenuName = action.text()
                                         if (
                                             MenuName
                                             != self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
@@ -1911,11 +1925,6 @@ class ModernMenu(RibbonBar):
 
                             if btn.menu() is not None:
                                 btn.popupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-
-                                def LeaveEvent(event):
-                                    print("test)")
-
-                                btn.menu().leaveEvent = lambda leave: LeaveEvent(leave)
 
                             # Set the background always to background color.
                             # Styling is managed in the custom button class
@@ -2202,6 +2211,9 @@ class ModernMenu(RibbonBar):
                                 if len(CommandActionList) == 1:
                                     NewToolbutton.addAction(CommandActionList[0])
                                     NewToolbutton.setDefaultAction(NewToolbutton.actions()[0])
+                                    # If the commandname is from a FreeCAD dropdown, set the commandname as text
+                                    if len(CommandName.split(", ")) > 1:
+                                        NewToolbutton.setText(NewToolbutton.actions()[0].text())
                                 # if there are more actions, create a menu
                                 elif len(CommandActionList) > 1:
                                     menu = QMenu()
@@ -2221,8 +2233,9 @@ class ModernMenu(RibbonBar):
                                     NewToolbutton.setText(
                                         CommandInfoCorrections(CommandName)["menuText"].replace("&", "")
                                     )
-                                if len(CommandName.split(", ")) > 1:
-                                    NewToolbutton.setText(CommandName)
+                                # # If the commandname is from a FreeCAD dropdown, set the commandname as text
+                                # if len(CommandName.split(", ")) > 1:
+                                #     NewToolbutton.setText(CommandName)
                                 # add it to the list
                                 ButtonList.append(NewToolbutton)
                         if CommandName.endswith("_ddb") is True:
@@ -2276,7 +2289,6 @@ class ModernMenu(RibbonBar):
                     action = ParentCommand.getAction()[ActionNumber]
                     # Set the commandname as data
                     action.setData(CommandName)
-                    print(action)
                     # return as a list
                     return [action]
         except Exception as e:
