@@ -307,12 +307,12 @@ class ModernMenu(RibbonBar):
                     ["newPanels", "Global", "Tools_newPanel"],
                 )
                 self.ribbonStructure["newPanels"]["Global"]["Tools_newPanel"] = [
-                    ["Std_Measure", "Global"],
-                    ["Std_UnitsCalculator", "Global"],
-                    ["Std_Properties", "Global"],
-                    ["Std_BoxElementSelection", "Global"],
-                    ["Std_BoxSelection", "Global"],
-                    ["Std_WhatsThis", "AssemblyWorkbench"],
+                    ["Std_Measure", "Standard"],
+                    ["Std_UnitsCalculator", "Standard"],
+                    ["Std_Properties", "Standard"],
+                    ["Std_BoxElementSelection", "Standard"],
+                    ["Std_BoxSelection", "Standard"],
+                    ["Std_WhatsThis", "Standard"],
                 ]
         except Exception:
             pass
@@ -1668,7 +1668,9 @@ class ModernMenu(RibbonBar):
                             # get the action text
                             text = action.text()
                             try:
-                                text = StandardFunctions.CommandInfoCorrections(action.data())["ActionText"]
+                                # If the text is not from a hardcoded dropdown:
+                                if len(action.data().split(", ")) <= 1:
+                                    text = StandardFunctions.CommandInfoCorrections(action.data())["ActionText"]
                             except Exception:
                                 pass
 
@@ -1699,6 +1701,8 @@ class ModernMenu(RibbonBar):
                                             != self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar][
                                                 "commands"
                                             ][action.data()]["text"]
+                                            and MenuName != ""
+                                            and textJSON != ""
                                         ):
                                             text = textJSON
 
@@ -2175,43 +2179,52 @@ class ModernMenu(RibbonBar):
                         # Define a new toolbutton
                         NewToolbutton = RibbonToolButton()
                         if CommandName.endswith("_ddb") is False:
+                            CommandActionList = None
                             # Get the translated menutext
-                            Command = Gui.Command.get(CommandName)
+                            # if the commandname cannot be split, it is a nromal command
+                            if len(CommandName.split(", ")) <= 1:
+                                # Get the command
+                                Command = Gui.Command.get(CommandName)
+                                if Command is not None:
+                                    # Get tis action
+                                    CommandActionList = Command.getAction()
+                                if Command is None:
+                                    if Parameters_Ribbon.DEBUG_MODE is True:
+                                        StandardFunctions.Print(f"{CommandName} was None", "Warning")
+                            # If the commandname can be splitted, it is a FreeCAD dropdown
+                            if len(CommandName.split(", ")) > 1:
+                                CommandActionList = self.LoadDropDownAction(CommandName)
+                            if CommandActionList is None:
+                                continue
+                            # if there are actions, proceed
+                            if len(CommandActionList) > 0:
+                                # if there is only one action, add it directly
+                                if len(CommandActionList) == 1:
+                                    NewToolbutton.addAction(CommandActionList[0])
+                                    NewToolbutton.setDefaultAction(NewToolbutton.actions()[0])
+                                # if there are more actions, create a menu
+                                elif len(CommandActionList) > 1:
+                                    menu = QMenu()
+                                    # menu.addActions(CommandActionList)
+                                    for action in CommandActionList:
+                                        menu.addAction(action)
+                                    NewToolbutton.setMenu(menu)
+                                    NewToolbutton.setDefaultAction(menu.actions()[0])
+                                    # Add the commandname as the objectname to detect if it is a dropdownbutton
+                                    NewToolbutton.setObjectName(CommandName)
 
-                            if Command is not None:
-                                CommandActionList = Command.getAction()
-                                if CommandActionList is None:
-                                    continue
-                                # if there are actions, proceed
-                                if len(CommandActionList) > 0:
-                                    # if there is only one action, add it directly
-                                    if len(CommandActionList) == 1:
-                                        NewToolbutton.addAction(CommandActionList[0])
-                                        NewToolbutton.setDefaultAction(NewToolbutton.actions()[0])
-                                    # if there are more actions, create a menu
-                                    elif len(CommandActionList) > 1:
-                                        menu = QMenu()
-                                        # menu.addActions(CommandActionList)
-                                        for action in CommandActionList:
-                                            menu.addAction(action)
-                                        NewToolbutton.setMenu(menu)
-                                        NewToolbutton.setDefaultAction(menu.actions()[0])
-                                        # Add the commandname as the objectname to detect if it is a dropdownbutton
-                                        NewToolbutton.setObjectName(CommandName)
+                                    # Do something with the menu. For some reason it will not be loaded otherwise
+                                    len(NewToolbutton.menu().actions())
 
-                                        # Do something with the menu. For some reason it will not be loaded otherwise
-                                        len(NewToolbutton.menu().actions())
-
-                                    # Set the text for the toolbutton
+                                # Set the text for the toolbutton
+                                if len(CommandName.split(", ")) <= 1:
                                     NewToolbutton.setText(
                                         CommandInfoCorrections(CommandName)["menuText"].replace("&", "")
                                     )
-                                    # add it to the list
-                                    ButtonList.append(NewToolbutton)
-
-                            if Command is None:
-                                if Parameters_Ribbon.DEBUG_MODE is True:
-                                    StandardFunctions.Print(f"{CommandName} was None", "Warning")
+                                if len(CommandName.split(", ")) > 1:
+                                    NewToolbutton.setText(CommandName)
+                                # add it to the list
+                                ButtonList.append(NewToolbutton)
                         if CommandName.endswith("_ddb") is True:
                             CommandActionList = self.returnCustomDropDown(CommandName)
                             if CommandActionList is None or len(CommandActionList) < 1:
@@ -2243,10 +2256,34 @@ class ModernMenu(RibbonBar):
                                 ButtonList.append(NewToolbutton)
 
         except Exception as e:
+            # raise e
             if Parameters_Ribbon.DEBUG_MODE is True:
                 StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}, 4", "Warning")
             pass
         return ButtonList
+
+    def LoadDropDownAction(self, CommandName):
+        try:
+            # If the commandname can be split into a name and number, it is part of a FreeCAD dropdown
+            if len(CommandName.split(", ")) > 1:
+                # Split the commandname
+                CommandName_1 = CommandName.split(", ")[0]
+                ActionNumber = int(CommandName.split(", ")[1])
+                # Get the parent command
+                ParentCommand = Gui.Command.get(CommandName_1)
+                # If parent is not none, get the action based on the number
+                if ParentCommand is not None:
+                    action = ParentCommand.getAction()[ActionNumber]
+                    # Set the commandname as data
+                    action.setData(CommandName)
+                    print(action)
+                    # return as a list
+                    return [action]
+        except Exception as e:
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                print(e)
+            # raise (e)
+            pass
 
     def LoadMarcoFreeCAD(self, scriptName):
         if self.MainWindowLoaded is True:
