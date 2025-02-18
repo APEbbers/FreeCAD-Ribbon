@@ -3385,7 +3385,7 @@ class LoadDialog(Design_ui.Ui_Form):
                             if IsInlist is False:
                                 self.form.CommandsSelected_QC.addItem(ListWidgetItem)
                                 # Add them also the list with all command listwidget items for filtering
-                                self.ListWidgetitems_Commands.append(ListWidgetItem)
+                                self.ListWidgetitems_Commands.append(ListWidgetItem.clone())
 
                         # Add clones of the listWidgetItem to the other listwidgets
                         self.form.CommandsAvailable_NP.addItem(ListWidgetItem.clone())
