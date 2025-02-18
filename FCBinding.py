@@ -1135,7 +1135,17 @@ class ModernMenu(RibbonBar):
             OverlayButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle overlay"))
             OverlayButton.setToolTip(translate("FreeCAD Ribbon", "Click to toggle the overlay function"))
             OverlayButton.triggered.connect(self.CustomOverlay)
-            OverlayButton.setShortcut("F4")
+            # Get the shortcut from the original command
+            ShortcutKey = ""
+            try:
+                CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/ShortCut")
+                ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayAll")
+            except Exception:
+                ShortcutKey = "F4"
+            if ShortcutKey != "":
+                OverlayButton.setShortcut(ShortcutKey)
+            else:
+                OverlayButton.setShortcut("F4")
 
             TransparancyButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle transparancy"))
             TransparancyButton.setToolTip(
@@ -1145,7 +1155,17 @@ class ModernMenu(RibbonBar):
                 )
             )
             TransparancyButton.triggered.connect(self.CustomTransparancy)
-            TransparancyButton.setShortcut("Shift+F4")
+            # Get the shortcut from the original command
+            ShortcutKey = ""
+            try:
+                CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/ShortCut")
+                ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayTransparentAll")
+            except Exception:
+                ShortcutKey = "Shift+F4"
+            if ShortcutKey != "":
+                TransparancyButton.setShortcut(ShortcutKey)
+            else:
+                TransparancyButton.setShortcut("Shift+F4")
 
             self.OverlayMenu = OverlayMenu
 
@@ -2395,7 +2415,7 @@ class ModernMenu(RibbonBar):
             DockWidgets = mw.findChildren(QDockWidget)
             for DockWidget in DockWidgets:
                 # If the dockwidget is not the ribbon, continue
-                if DockWidget.objectName() != "Ribbon":
+                if DockWidget.objectName() != "Ribbon" and DockWidget.isVisible():
                     # Get the location of the dockwidget
                     Area = mw.dockWidgetArea(DockWidget)
                     if Area == Qt.DockWidgetArea.LeftDockWidgetArea:
