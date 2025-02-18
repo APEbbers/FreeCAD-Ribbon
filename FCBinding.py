@@ -2283,7 +2283,7 @@ class ModernMenu(RibbonBar):
             DockWidgets = mw.findChildren(QDockWidget)
             for DockWidget in DockWidgets:
                 # If the dockwidget is not the ribbon, continue
-                if DockWidget.objectName() != "Ribbon":
+                if DockWidget.objectName() != "Ribbon" and DockWidget.isVisible():
                     # Get the location of the dockwidget
                     Area = mw.dockWidgetArea(DockWidget)
                     if Area == Qt.DockWidgetArea.LeftDockWidgetArea:
