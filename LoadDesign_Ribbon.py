@@ -109,6 +109,9 @@ class LoadDialog(Design_ui.Ui_Form):
     # Create a tomporary list for newly added dropdown buttons
     newDDBList = []
 
+    # Create list for all listwidgetitems with commands
+    ListWidgetitems_Commands = []
+
     def __init__(self):
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
         super(LoadDialog, self).__init__()
@@ -3369,6 +3372,8 @@ class LoadDialog(Design_ui.Ui_Form):
 
                             if IsInlist is False:
                                 self.form.CommandsSelected_QC.addItem(ListWidgetItem)
+                                # Add them also the list with all command listwidget items for filtering
+                                self.ListWidgetitems_Commands.append(ListWidgetItem)
 
                         # Add clones of the listWidgetItem to the other listwidgets
                         self.form.CommandsAvailable_NP.addItem(ListWidgetItem.clone())
@@ -4241,11 +4246,6 @@ class LoadDialog(Design_ui.Ui_Form):
     ):
         SearchbarText = SearchBar.text().lower()
 
-        # Define a list for the current ListWidget items
-        ListWidgetItem_List = []
-        for i in range(ListWidget.count()):
-            ListWidgetItem_List.append(ListWidget.item(i).clone())
-
         # Clear the listwidget
         ListWidget.clear()
 
@@ -4282,8 +4282,8 @@ class LoadDialog(Design_ui.Ui_Form):
                         ):
 
                             IsInlist = False
-                            for i in range(len(ListWidgetItem_List) - 1):
-                                CommandItem = ListWidgetItem_List[i]
+                            for i in range(len(self.ListWidgetitems_Commands) - 1):
+                                CommandItem = self.ListWidgetitems_Commands[i]
                                 if CommandItem.data(Qt.ItemDataRole.UserRole) == CommandName:
                                     IsInlist = True
 
