@@ -4130,8 +4130,8 @@ class LoadDialog(Design_ui.Ui_Form):
         self.on_WorkbenchList_RD__TextChanged()
         self.on_WorkbenchList_CP__activated(False)
 
-        # load the commands in the table.
-        self.on_PanelList_RD__TextChanged()
+        # # load the commands in the table.
+        # self.on_PanelList_RD__TextChanged()
 
         # -- Excluded toolbars --
         self.ExcludedToolbars()
