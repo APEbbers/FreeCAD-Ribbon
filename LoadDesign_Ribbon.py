@@ -2773,6 +2773,10 @@ class LoadDialog(Design_ui.Ui_Form):
             ["workbenches", WorkBenchName, "toolbars", Toolbar, "order"],
         )
         self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar]["order"] = Order
+
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
         return
 
     def on_RemoveSeparator_RD_clicked(self):
