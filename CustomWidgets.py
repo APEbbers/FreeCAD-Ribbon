@@ -242,6 +242,12 @@ class CustomControls:
         if Menu is not None and len(Menu.actions()) > 1:
             # Define a menu
             Menu.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+            StyleSheet_Menu = (
+                "QMenu::item, QMenu::menuAction, QMenuBar::item, QMenu>QLabel {font-size: "
+                + str(Parameters_Ribbon.FONTSIZE_MENUS)
+                + "px;}"
+            )
+            Menu.setStyleSheet(StyleSheet_Menu)
             ArrowButton.setMenu(Menu)
             ArrowButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
             # Set the height according the space for the menubutton
@@ -759,6 +765,12 @@ class CustomControls:
             # Define a menu
             ArrowButton.setMenu(Menu)
             Menu.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+            StyleSheet_Menu = (
+                "QMenu::item, QMenu::menuAction, QMenuBar::item, QMenu>QLabel {font-size: "
+                + str(Parameters_Ribbon.FONTSIZE_MENUS)
+                + "px;}"
+            )
+            Menu.setStyleSheet(StyleSheet_Menu)
             ArrowButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
             # Set the height according the space for the menubutton
             ArrowButton.setFixedHeight(CommandButton.height())

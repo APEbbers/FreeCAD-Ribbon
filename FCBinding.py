@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -42,7 +42,7 @@ from PySide.QtGui import (
     QShortcut,
     QCursor,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -68,7 +68,7 @@ from PySide.QtWidgets import (
     QToolTip,
     QWidgetItem,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -122,7 +122,7 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon_local as pyqtribbon
+# import pyqtribbon as pyqtribbon
 # from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
 # from pyqtribbon.panel import RibbonPanel, RibbonPanelTitle
 # from pyqtribbon.toolbutton import RibbonToolButton
@@ -513,23 +513,32 @@ class ModernMenu(RibbonBar):
         StyleSheet = StyleSheet_Addition_4 + StyleSheet
         self.setStyleSheet(StyleSheet)
 
-        # Add an addition for Font sizes
-        StyleSheet_Addition_5 = """
-        QWidgetItem,
-        QMenu, QMenu::item,
-        QAction,
-        RibbonApplicationButton,
-        RibbonMenu,
-        RibbonMenu::item,
-        RibbonPanelTitle,
-        RibbonToolButton::item,
-        QToolButton, QToolButton::menu,
-        QLabel,
-        QTextEdit,
-        SearchBoxLight
-            { font-size:11px;}
-                QTabBar {font-size:14px;}"""
-        StyleSheet = StyleSheet_Addition_5 + StyleSheet
+        # # Add an addition for Font sizes
+        # StyleSheet_Addition_5 = """
+        # QWidgetItem,
+        # QMenu, QMenu::item,
+        # QAction,
+        # RibbonApplicationButton,
+        # RibbonMenu,
+        # RibbonMenu::item,
+        # RibbonPanelTitle,
+        # RibbonToolButton::item,
+        # QToolButton, QToolButton::menu,
+        # QLabel,
+        # QTextEdit,
+        # SearchBoxLight
+        #     { font-size:11px;}
+        #         QTabBar {font-size:14px;}"""
+        # StyleSheet = StyleSheet_Addition_5 + StyleSheet
+        # self.setStyleSheet(StyleSheet)
+
+        # add a stylesheet entry for the fontsize for menus
+        StyleSheet_Addition_6 = (
+            "QMenu::item, QMenu::menuAction, QMenuBar::item, RibbonMenu, RibbonToolButton, RibbonMenu::item, QMenu>QLabel {font-size: "
+            + str(Parameters_Ribbon.FONTSIZE_MENUS)
+            + "px;}"
+        )
+        StyleSheet = StyleSheet + StyleSheet_Addition_6
         self.setStyleSheet(StyleSheet)
 
         # get the state of the mainwindow
@@ -653,6 +662,8 @@ class ModernMenu(RibbonBar):
     # implementation to add actions to the Filemenu. Needed for the accessories menu
     def addAction(self, action: QAction):
         menu = self.findChild(RibbonMenu, "Ribbon")
+        StyleSheet_Menu = "* {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
+        menu.setStyleSheet(StyleSheet_Menu)
         if menu is None:
             menu = self.addFileMenu()
         menu.addAction(action)
@@ -1077,17 +1088,15 @@ class ModernMenu(RibbonBar):
         # add the menus from the menubar to the application button
         MenuBar = mw.menuBar()
 
-        MenuBar.setStyleSheet(
-            "QMenuBar::item, QMenu::item, QAction::menu {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
-        )
+        # Set a stylesheet specific for the menubar. Otherwise the fontsize of the menus will not be applied
+        StyleSheet_MenuBar = "* {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
+        MenuBar.setStyleSheet(StyleSheet_MenuBar)
+        # Add teh actions of the menubar to the application menu
         ApplictionMenu.addActions(MenuBar.actions())
-        ApplictionMenu.setStyleSheet(
-            "QMenuBar::item, QMenu::item, QAction::menu {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
-        )
 
+        # Remove the menu from the Ribbon Application Menu
         for child in MenuBar.children():
             if child.objectName() == "&Help":
-                # Remove the menu from the Ribbon Application Menu
                 MenuBar.removeAction(child.menuAction())
 
         # if you on macOS, add the ribbon menus to the menubar
@@ -1862,7 +1871,7 @@ class ModernMenu(RibbonBar):
                                     Icon=action.icon(),
                                     IconSize=IconSize,
                                     ButtonSize=ButtonSize,
-                                    FontSize=11,
+                                    FontSize=Parameters_Ribbon.FONTSIZE_BUTTONS,
                                     showText=showText,
                                     setWordWrap=False,
                                     ElideMode=False,
@@ -1901,7 +1910,7 @@ class ModernMenu(RibbonBar):
                                     Icon=action.icon(),
                                     IconSize=IconSize,
                                     ButtonSize=ButtonSize,
-                                    FontSize=11,
+                                    FontSize=Parameters_Ribbon.FONTSIZE_BUTTONS,
                                     showText=showText,
                                     setWordWrap=Parameters_Ribbon.WRAPTEXT_MEDIUM,
                                     MaxNumberOfLines=2,
@@ -1938,7 +1947,7 @@ class ModernMenu(RibbonBar):
                                     Icon=action.icon(),
                                     IconSize=IconSize,
                                     ButtonSize=ButtonSize,
-                                    FontSize=11,
+                                    FontSize=Parameters_Ribbon.FONTSIZE_BUTTONS,
                                     showText=showText,
                                     setWordWrap=Parameters_Ribbon.WRAPTEXT_LARGE,
                                     MaxNumberOfLines=2,
@@ -2012,7 +2021,7 @@ class ModernMenu(RibbonBar):
             panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
             # panel._actionsLayout.setContentsMargins(0, 0, 0, 0)
             Font = QFont()
-            Font.setPixelSize(11)
+            Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
             panel._titleLabel.setFont(Font)
             self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset) + 6
 
@@ -2020,6 +2029,8 @@ class ModernMenu(RibbonBar):
             actionList = []
             for i in range(len(ButtonList)):
                 button = ButtonList[i]
+                StyleSheet_Menu = "* {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
+                button.setStyleSheet(StyleSheet_Menu)
                 if len(button.actions()) == 1:
                     actionList.append(button.actions()[0])
                 if len(button.actions()) > 1:
@@ -2028,6 +2039,8 @@ class ModernMenu(RibbonBar):
             if len(actionList) > 0:
                 Menu = CustomControls.CustomOptionMenu(OptionButton.menu(), actionList, self)
                 OptionButton.setMenu(Menu)
+                StyleSheet_Menu = "* {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
+                Menu.setStyleSheet(StyleSheet_Menu)
                 # Set the behavior of the option button
                 OptionButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
                 # Remove the image to avoid double arrows
