@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -42,7 +42,7 @@ from PySide.QtGui import (
     QShortcut,
     QCursor,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -68,7 +68,7 @@ from PySide.QtWidgets import (
     QToolTip,
     QWidgetItem,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -122,12 +122,12 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon_local as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel, RibbonPanelTitle
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
+import pyqtribbon_local as pyqtribbon
+from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon.panel import RibbonPanel, RibbonPanelTitle
+from pyqtribbon.toolbutton import RibbonToolButton
+from pyqtribbon.separator import RibbonSeparator
+from pyqtribbon.category import RibbonCategoryLayoutButton
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
@@ -373,7 +373,7 @@ class ModernMenu(RibbonBar):
         if self.ReproAdress != "" or self.ReproAdress is not None:
             print(translate("FreeCAD Ribbon", "FreeCAD Ribbon: ") + self.ReproAdress)
 
-        # Set the icon size if parameters has none
+        # Write parameters has if they are not set yet
         Parameters_Ribbon.Settings.WriteSettings()
 
         # Activate the workbenches used in the new panels otherwise the panel stays empty
@@ -620,6 +620,8 @@ class ModernMenu(RibbonBar):
 
         self.isLoaded = True
         self.FoldRibbon()
+
+        # Parameters_Ribbon.FONTSIZE_MENUS = 8
         return
 
     def closeEvent(self, event):
@@ -851,7 +853,7 @@ class ModernMenu(RibbonBar):
         # Set the tabbar height and textsize
         self.tabBar().setContentsMargins(0, 0, 0, 0)
         font = self.tabBar().font()
-        font.setPixelSize(14)
+        font.setPixelSize(Parameters_Ribbon.FONTSIZE_TABS)
         self.tabBar().setFont(font)
 
         self.tabBar().setIconSize(QSize(self.TabBar_Size - 6, self.TabBar_Size - 6))
@@ -955,6 +957,9 @@ class ModernMenu(RibbonBar):
             OverlayMenu.setFixedSize(self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize)
             OverlayMenu.setStyleSheet(StyleMapping.ReturnStyleSheet(control="toolbutton", padding_right="12px"))
             OverlayMenu.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+            Font = OverlayMenu.font()
+            Font.setPixelSize(Parameters_Ribbon.FONTSIZE_MENUS)
+            OverlayMenu.setFont(Font)
             # add the settingsmenu to the right toolbar
             self.rightToolBar().addWidget(OverlayMenu)
 
@@ -1068,7 +1073,14 @@ class ModernMenu(RibbonBar):
 
         # add the menus from the menubar to the application button
         MenuBar = mw.menuBar()
+
+        MenuBar.setStyleSheet(
+            "QMenuBar::item, QMenu::item, QAction::menu {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
+        )
         ApplictionMenu.addActions(MenuBar.actions())
+        ApplictionMenu.setStyleSheet(
+            "QMenuBar::item, QMenu::item, QAction::menu {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
+        )
 
         for child in MenuBar.children():
             if child.objectName() == "&Help":
