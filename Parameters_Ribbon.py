@@ -58,7 +58,7 @@ class Settings:
     def GetBoolSetting(settingName: str) -> bool:
         result = preferences.GetBool(settingName)
         if str(result).lower() == "none":
-            result = False
+            result = None
         return result
 
     def GetColorSetting(settingName: str) -> object:
@@ -212,7 +212,7 @@ DefaultSettings = {
     "PinButton_closed": "",
     "Shortcut_Application": "Alt+A",
     "CustomPanelPosition": "Right",
-    "FontSize_Menus": int(8),
+    "FontSize_Menus": int(11),
     "FontSize_Buttons": int(11),
     "FontSize_Tabs": int(14),
     "FontSize_Panels": int(11),
@@ -321,7 +321,7 @@ if Settings.GetStringSetting("Stylesheet") == "":
     Settings.SetStringSetting("Stylesheet", STYLESHEET)
 
 SHOW_ICON_TEXT_SMALL = Settings.GetBoolSetting("ShowIconText_Small")
-if Settings.GetBoolSetting("ShowIconText_Small") is None:
+if Settings.GetBoolSetting("ShowIconText_Small") is FileExistsError:
     SHOW_ICON_TEXT_SMALL = DefaultSettings["ShowIconText_Small"]
     Settings.SetBoolSetting("ShowIconText_Small", SHOW_ICON_TEXT_SMALL)
 
@@ -351,22 +351,22 @@ if Settings.GetBoolSetting("WrapText_Large") == "":
     Settings.SetBoolSetting("WrapText_Large", WRAPTEXT_LARGE)
 
 FONTSIZE_MENUS = Settings.GetIntSetting("FontSize_Menus")
-if Settings.GetIntSetting("FontSize_Menus") == "":
+if Settings.GetIntSetting("FontSize_Menus") is None or Settings.GetIntSetting("FontSize_Menus") == 0:
     FONTSIZE_MENUS = DefaultSettings["FontSize_Menus"]
     Settings.SetIntSetting("FontSize_Menus", FONTSIZE_MENUS)
 
 FONTSIZE_BUTTONS = Settings.GetIntSetting("FontSize_Buttons")
-if Settings.GetIntSetting("FontSize_Buttons") == "":
+if Settings.GetIntSetting("FontSize_Buttons") is None or Settings.GetIntSetting("FontSize_Buttons") == 0:
     FONTSIZE_BUTTONS = DefaultSettings["FontSize_Buttons"]
     Settings.SetIntSetting("FontSize_Buttons", FONTSIZE_BUTTONS)
 
 FONTSIZE_TABS = Settings.GetIntSetting("FontSize_Tabs")
-if Settings.GetIntSetting("FontSize_Tabs") == "":
+if Settings.GetIntSetting("FontSize_Tabs") is None or Settings.GetIntSetting("FontSize_Tabs") == 0:
     FONTSIZE_TABS = DefaultSettings["FontSize_Tabs"]
     Settings.SetIntSetting("FontSize_Tabs", FONTSIZE_TABS)
 
 FONTSIZE_PANELS = Settings.GetIntSetting("FontSize_Panels")
-if Settings.GetIntSetting("FontSize_Panels") == "":
+if Settings.GetIntSetting("FontSize_Panels") is None or Settings.GetIntSetting("FontSize_Panels") == 0:
     FONTSIZE_PANELS = DefaultSettings["FontSize_Panels"]
     Settings.SetIntSetting("FontSize_Panels", FONTSIZE_PANELS)
 # endregion ------------------------------------------------------------------------------------------------------------

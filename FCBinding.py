@@ -135,6 +135,9 @@ mw = Gui.getMainWindow()
 # Define a timer
 timer = QTimer()
 
+# Write all settings, if they are not present yet
+Parameters_Ribbon.Settings.WriteSettings()
+
 
 class ModernMenu(RibbonBar):
     """
@@ -373,8 +376,8 @@ class ModernMenu(RibbonBar):
         if self.ReproAdress != "" or self.ReproAdress is not None:
             print(translate("FreeCAD Ribbon", "FreeCAD Ribbon: ") + self.ReproAdress)
 
-        # Write parameters has if they are not set yet
-        Parameters_Ribbon.Settings.WriteSettings()
+        # # Set the icon size if parameters has none
+        # Parameters_Ribbon.Settings.WriteSettings()
 
         # Activate the workbenches used in the new panels otherwise the panel stays empty
         try:
