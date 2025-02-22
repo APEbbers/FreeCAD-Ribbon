@@ -29,7 +29,7 @@ If applicable, add screenshots to help explain your problem.
    Go to "Help->About ...-> About FreeCAD". Click on "Copy to clipboard" and past here.
 - Ribbon information (Develop version only):
   Go to "Help->About ...->About Ribbon UI". Click on "Copy to clipboard" and past here.
-- Export your layout, zip it and add it to your issue by dragging it.
+- Export your layout, zip it and add it to your issue by dragging it or use the button below.
 
 **Additional context**
 Add any other context about the problem here. Like settings that you have changed or settings that are related to the issue. For example, icon sizes, text enabled, etc.
