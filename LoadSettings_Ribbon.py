@@ -583,7 +583,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         return
 
     def on_TextSize_Menus_TextChanged(self):
-        self.ValuesToUpdate["FontSize_Panels"] = int(self.form.TextSize_Menus.text())
+        self.ValuesToUpdate["FontSize_Menus"] = int(self.form.TextSize_Menus.text())
         self.settingChanged = True
         return
 

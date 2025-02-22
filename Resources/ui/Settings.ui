@@ -55,9 +55,9 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>-131</y>
+          <y>-289</y>
           <width>702</width>
-          <height>946</height>
+          <height>1036</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_28">
@@ -930,19 +930,6 @@
                          </property>
                         </widget>
                        </item>
-                       <item row="0" column="2">
-                        <spacer name="horizontalSpacer_12">
-                         <property name="orientation">
-                          <enum>Qt::Orientation::Horizontal</enum>
-                         </property>
-                         <property name="sizeHint" stdset="0">
-                          <size>
-                           <width>40</width>
-                           <height>20</height>
-                          </size>
-                         </property>
-                        </spacer>
-                       </item>
                        <item row="1" column="1">
                         <widget class="QSpinBox" name="TextSize_Buttons">
                          <property name="font">
@@ -1010,6 +997,19 @@
                         </widget>
                        </item>
                       </layout>
+                     </item>
+                     <item row="0" column="1">
+                      <spacer name="horizontalSpacer_12">
+                       <property name="orientation">
+                        <enum>Qt::Orientation::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
                      </item>
                     </layout>
                    </widget>
