@@ -135,7 +135,9 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
             for Contributor in Contributers:
                 text_2 = text_2 + " - " + Contributor + "\n"
 
-        self.form.ContributersText.setText(text_1 + text_2)
+            self.form.ContributersText.setText(text_1 + text_2)
+        else:
+            self.form.ContributersText.setText(text_1)
 
         # Read the license file from the add-on directory
         file_path = os.path.join(os.path.dirname(__file__), "LICENSE")
