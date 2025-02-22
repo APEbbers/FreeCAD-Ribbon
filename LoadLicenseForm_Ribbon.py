@@ -86,7 +86,7 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
 
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
-        Developer = StandardFunctions.ReturnXML_Value(PackageXML, "maintainer")
+        Maintainer = StandardFunctions.ReturnXML_Value(PackageXML, "maintainer")
         CommitID = GitData[0]
         if CommitID is None:
             CommitID = "-"
@@ -111,11 +111,12 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
             translate(
                 "FreeCAD Ribbon",
                 f"""
-        A customizable ribbon UI for FreeCAD.
+        A customizable ribbon UI for FreeCAD. 
 
-        Information:
-            Developer: {Developer}
-        
+        Developed by Paul Ebbers.
+        Current maintainer: {Maintainer} 
+
+        Version information:       
             Installed version: {version}
             Branch: {branch}
             CommitID: {CommitID}
@@ -134,11 +135,11 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
 
         Contributers = GitData[2]
         if len(Contributers) > 0:
-            text_2 = translate("FreeCAD Ribbon", "Contributors:\n")
+            text = translate("FreeCAD Ribbon", "Contributors:\n")
             for Contributor in Contributers:
-                text_2 = text_2 + " - " + Contributor + "\n"
+                text = text + " - " + Contributor + "\n"
 
-            self.form.ContributersText.setText(text_2)
+            self.form.ContributersText.setText(text)
         else:
             self.form.groupBox.setDisabled(True)
             self.form.groupBox.setHidden(True)
