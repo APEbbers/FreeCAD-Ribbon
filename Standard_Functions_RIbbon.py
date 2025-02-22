@@ -518,9 +518,38 @@ def GetGitData(PrintErrors=False):
     if GitInstalled is True:
         repo = git.Repo(git_root)
         Git = repo.git
-        Contributers = Git.execute("shortlog -sn --all", with_extended_output=True)
-        print(Contributers)
-    result = [commit, branch]
+        List = Git.execute(
+            ["git", "shortlog", "-sn", "-e", "--all"],
+            as_process=False,
+            stdout_as_string=True,
+        )
+        UserList = []
+        for line in List.splitlines():
+            Commits = str(line)[: len("  1418  ") - 1]
+            Commits = int(Commits.strip())
+            User = str(line)[len("  1418  ") - 1 :].split("<")[0].strip()
+            email = str(line)[len("  1418  ") - 1 :].split("<")[1].replace(">", "").strip()
+
+            UserList.append([Commits, User, email])
+
+        tempList = []
+        for i in range(len(UserList) - 1):
+            User = UserList[i]
+            if User[1] not in Contributers and User[1] != "pre-commit-ci[bot]":
+                Contributers.append(User[1])
+                tempList.append(User)
+            if User[1] in Contributers:
+                for j in range(len(UserList) - 1):
+                    tempUser = UserList[j]
+                    if tempUser[2] == User[2] and tempUser[0] > User[0]:
+                        Contributers.pop()
+                        if tempUser[1] not in Contributers and tempUser[1] != "pre-commit-ci[bot]":
+                            Contributers.append(tempUser[1])
+
+        # get the short commit id
+        commit = repo.git.rev_parse(repo.head, short=True)
+
+    result = [commit, branch, Contributers]
     return result
 
 

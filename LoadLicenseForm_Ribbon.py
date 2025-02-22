@@ -82,12 +82,14 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         Style = mw.style()
         self.form.setStyle(Style)
 
+        GitData = StandardFunctions.GetGitData()
+
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
-        CommitID = StandardFunctions.GetGitData()[0]
+        CommitID = GitData[0]
         if CommitID is None:
             CommitID = "-"
-        branch = StandardFunctions.GetGitData()[1]
+        branch = GitData[1]
         if branch is None:
             branch = "-"
 
@@ -105,13 +107,16 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
 
         # Write here the introduction text and include the version
         self.form.Introduction.setText(
-            f"""
+            translate(
+                "FreeCAD Ribbon",
+                f"""
         A customizable ribbon UI for FreeCAD.
 
         Installed version: {version}
         Branch: {branch}
         CommitID: {CommitID}
-        """
+        """,
+            )
         )
         # Add the copybutton
         self.form.CopyVersionInfo.clicked.connect(
@@ -123,16 +128,14 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
 
         # Write the text for credits
         Developer = StandardFunctions.ReturnXML_Value(PackageXML, "maintainer")
-        Contributers = StandardFunctions.GetGitData()[2]
-        # self.form.ContributersText.setText(
-        #     f"""
-        #     Developer:  {}
+        Contributers = GitData[2]
+        text_1 = translate("FreeCAD Ribbon", f"Developer:  {Developer}")
+        if len(Contributers) > 0:
+            text_2 = translate("FreeCAD Ribbon", "\n\nContributors:\n")
+            for Contributor in Contributers:
+                text_2 = text_2 + " - " + Contributor + "\n"
 
-        #     Contributers:
-        #     \t{}
-
-        #     """
-        # )
+        self.form.ContributersText.setText(text_1 + text_2)
 
         # Read the license file from the add-on directory
         file_path = os.path.join(os.path.dirname(__file__), "LICENSE")
