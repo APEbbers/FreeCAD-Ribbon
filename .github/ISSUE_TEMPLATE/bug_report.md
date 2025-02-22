@@ -26,7 +26,8 @@ If applicable, add screenshots to help explain your problem.
 **Desktop (please complete the following information):**
  - OS: [e.g. iOS]
  - FreeCAD information: 
-   Go to "Help->About ...-> About FreeCAD". Click on "Copy to clipboard" and past here
+   Go to "Help->About ...-> About FreeCAD". Click on "Copy to clipboard" and past here.
+- Export your layout, zip it and add it to your issue
 
 **Additional context**
 Add any other context about the problem here.
