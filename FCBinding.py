@@ -1171,18 +1171,16 @@ class ModernMenu(RibbonBar):
             OverlayButton.setToolTip(translate("FreeCAD Ribbon", "Click to toggle the overlay function"))
             OverlayButton.triggered.connect(self.CustomOverlay)
             # Get the shortcut from the original command
-            ShortcutKey = ""
+            ShortcutKey = "F4"
             try:
                 CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/Shortcut")
-                ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayAll")
+                if "Std_DockOverlayAll" in CustomShortCuts.GetStrings():
+                    ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayAll")
             except Exception as e:
                 if Parameters_Ribbon.DEBUG_MODE is True:
                     print(e.with_traceback())
                 ShortcutKey = "F4"
-            if ShortcutKey != "":
-                OverlayButton.setShortcut(ShortcutKey)
-            else:
-                OverlayButton.setShortcut("F4")
+            OverlayButton.setShortcut(ShortcutKey)
 
             TransparancyButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle transparancy"))
             TransparancyButton.setToolTip(
@@ -1193,16 +1191,16 @@ class ModernMenu(RibbonBar):
             )
             TransparancyButton.triggered.connect(self.CustomTransparancy)
             # Get the shortcut from the original command
-            ShortcutKey = ""
+            ShortcutKey = "Shift+F4"
             try:
                 CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/Shortcut")
-                ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayTransparentAll")
-            except Exception:
+                if "Std_DockOverlayTransparentAll" in CustomShortCuts.GetStrings():
+                    ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayTransparentAll")
+            except Exception as e:
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    print(e.with_traceback())
                 ShortcutKey = "Shift+F4"
-            if ShortcutKey != "":
-                TransparancyButton.setShortcut(ShortcutKey)
-            else:
-                TransparancyButton.setShortcut("Shift+F4")
+            TransparancyButton.setShortcut(ShortcutKey)
 
             self.OverlayMenu = OverlayMenu
 
