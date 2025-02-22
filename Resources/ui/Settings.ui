@@ -31,7 +31,7 @@
   <property name="autoFillBackground">
    <bool>false</bool>
   </property>
-  <layout class="QGridLayout" name="gridLayout_38">
+  <layout class="QGridLayout" name="gridLayout_40">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout_6">
      <item row="0" column="0" colspan="3">
@@ -55,9 +55,9 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>0</y>
+          <y>-131</y>
           <width>702</width>
-          <height>860</height>
+          <height>946</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_28">
@@ -231,6 +231,208 @@
                <layout class="QGridLayout" name="gridLayout_4">
                 <item row="0" column="0">
                  <layout class="QGridLayout" name="gridLayout_3">
+                  <item row="2" column="0">
+                   <widget class="QGroupBox" name="groupBox_3">
+                    <property name="font">
+                     <font>
+                      <bold>false</bold>
+                     </font>
+                    </property>
+                    <property name="title">
+                     <string>Show text</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_2">
+                     <item row="0" column="0">
+                      <layout class="QGridLayout" name="gridLayout_26">
+                       <item row="1" column="0">
+                        <widget class="QCheckBox" name="ShowText_Medium">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>100</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Medium buttons</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="2" column="2">
+                        <widget class="QCheckBox" name="EnableWrap_Large">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="text">
+                          <string>Enable text wrap</string>
+                         </property>
+                         <property name="checked">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="2" column="0">
+                        <widget class="QCheckBox" name="ShowText_Large">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>100</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Large buttons</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="0">
+                        <widget class="QCheckBox" name="ShowText_Small">
+                         <property name="sizePolicy">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                           <horstretch>0</horstretch>
+                           <verstretch>0</verstretch>
+                          </sizepolicy>
+                         </property>
+                         <property name="minimumSize">
+                          <size>
+                           <width>100</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Small buttons</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="2">
+                        <spacer name="horizontalSpacer_9">
+                         <property name="orientation">
+                          <enum>Qt::Orientation::Horizontal</enum>
+                         </property>
+                         <property name="sizeHint" stdset="0">
+                          <size>
+                           <width>40</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                        </spacer>
+                       </item>
+                       <item row="1" column="2">
+                        <widget class="QCheckBox" name="EnableWrap_Medium">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
+                         <property name="text">
+                          <string>Enable text wrap</string>
+                         </property>
+                         <property name="checked">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
+                  <item row="0" column="0">
+                   <widget class="QGroupBox" name="groupBox_10">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>0</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="title">
+                     <string>Tab style</string>
+                    </property>
+                    <layout class="QGridLayout" name="gridLayout_25">
+                     <item row="0" column="0">
+                      <layout class="QGridLayout" name="gridLayout_24">
+                       <item row="0" column="0">
+                        <widget class="QLabel" name="label_24">
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the tab style: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="0" column="1">
+                        <widget class="QComboBox" name="TabbarStyle">
+                         <property name="minimumSize">
+                          <size>
+                           <width>100</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="currentText">
+                          <string>Icon + text</string>
+                         </property>
+                         <item>
+                          <property name="text">
+                           <string>Icon + text</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Icon only</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Text only</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                      </layout>
+                     </item>
+                     <item row="0" column="1">
+                      <spacer name="horizontalSpacer_7">
+                       <property name="orientation">
+                        <enum>Qt::Orientation::Horizontal</enum>
+                       </property>
+                       <property name="sizeHint" stdset="0">
+                        <size>
+                         <width>40</width>
+                         <height>20</height>
+                        </size>
+                       </property>
+                      </spacer>
+                     </item>
+                    </layout>
+                   </widget>
+                  </item>
                   <item row="1" column="0">
                    <widget class="QGroupBox" name="groupBox_4">
                     <property name="font">
@@ -530,7 +732,7 @@
                     </layout>
                    </widget>
                   </item>
-                  <item row="3" column="0">
+                  <item row="4" column="0">
                    <widget class="QGroupBox" name="groupBox_5">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -621,91 +823,62 @@
                     </layout>
                    </widget>
                   </item>
-                  <item row="2" column="0">
-                   <widget class="QGroupBox" name="groupBox_3">
+                  <item row="3" column="0">
+                   <widget class="QGroupBox" name="groupBox_14">
                     <property name="font">
                      <font>
                       <bold>false</bold>
                      </font>
                     </property>
                     <property name="title">
-                     <string>Show text</string>
+                     <string>Text size</string>
                     </property>
-                    <layout class="QGridLayout" name="gridLayout_2">
+                    <layout class="QGridLayout" name="gridLayout_39">
                      <item row="0" column="0">
-                      <layout class="QGridLayout" name="gridLayout_26">
-                       <item row="1" column="0">
-                        <widget class="QCheckBox" name="ShowText_Medium">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
+                      <layout class="QGridLayout" name="gridLayout_38">
+                       <item row="0" column="0">
+                        <widget class="QLabel" name="label_32">
                          <property name="minimumSize">
                           <size>
-                           <width>100</width>
+                           <width>191</width>
                            <height>0</height>
                           </size>
                          </property>
-                         <property name="font">
-                          <font>
-                           <bold>false</bold>
-                          </font>
-                         </property>
                          <property name="text">
-                          <string>Medium buttons</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="2" column="2">
-                        <widget class="QCheckBox" name="EnableWrap_Large">
-                         <property name="enabled">
-                          <bool>false</bool>
-                         </property>
-                         <property name="text">
-                          <string>Enable text wrap</string>
-                         </property>
-                         <property name="checked">
-                          <bool>true</bool>
+                          <string>Text size of menus</string>
                          </property>
                         </widget>
                        </item>
                        <item row="2" column="0">
-                        <widget class="QCheckBox" name="ShowText_Large">
-                         <property name="sizePolicy">
-                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                           <horstretch>0</horstretch>
-                           <verstretch>0</verstretch>
-                          </sizepolicy>
-                         </property>
-                         <property name="minimumSize">
-                          <size>
-                           <width>100</width>
-                           <height>0</height>
-                          </size>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <bold>false</bold>
-                          </font>
-                         </property>
+                        <widget class="QLabel" name="label_34">
                          <property name="text">
-                          <string>Large buttons</string>
+                          <string>Text size of tabs</string>
                          </property>
                         </widget>
                        </item>
-                       <item row="0" column="0">
-                        <widget class="QCheckBox" name="ShowText_Small">
+                       <item row="0" column="1">
+                        <widget class="QSpinBox" name="TextSize_Menus">
                          <property name="sizePolicy">
-                          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                            <horstretch>0</horstretch>
                            <verstretch>0</verstretch>
                           </sizepolicy>
                          </property>
                          <property name="minimumSize">
                           <size>
-                           <width>100</width>
+                           <width>50</width>
+                           <height>20</height>
+                          </size>
+                         </property>
+                         <property name="sizeIncrement">
+                          <size>
+                           <width>0</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="baseSize">
+                          <size>
+                           <width>0</width>
                            <height>0</height>
                           </size>
                          </property>
@@ -714,13 +887,51 @@
                            <bold>false</bold>
                           </font>
                          </property>
+                         <property name="focusPolicy">
+                          <enum>Qt::FocusPolicy::WheelFocus</enum>
+                         </property>
+                         <property name="frame">
+                          <bool>true</bool>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
+                         </property>
+                         <property name="correctionMode">
+                          <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+                         </property>
+                         <property name="showGroupSeparator" stdset="0">
+                          <bool>false</bool>
+                         </property>
+                         <property name="minimum">
+                          <number>8</number>
+                         </property>
+                         <property name="maximum">
+                          <number>24</number>
+                         </property>
+                         <property name="value">
+                          <number>11</number>
+                         </property>
+                         <property name="displayIntegerBase">
+                          <number>10</number>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="3" column="0">
+                        <widget class="QLabel" name="label_35">
                          <property name="text">
-                          <string>Small buttons</string>
+                          <string>Text size of panel titels</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="0">
+                        <widget class="QLabel" name="label_33">
+                         <property name="text">
+                          <string>Text size of buttons</string>
                          </property>
                         </widget>
                        </item>
                        <item row="0" column="2">
-                        <spacer name="horizontalSpacer_9">
+                        <spacer name="horizontalSpacer_12">
                          <property name="orientation">
                           <enum>Qt::Orientation::Horizontal</enum>
                          </property>
@@ -732,93 +943,73 @@
                          </property>
                         </spacer>
                        </item>
-                       <item row="1" column="2">
-                        <widget class="QCheckBox" name="EnableWrap_Medium">
-                         <property name="enabled">
-                          <bool>false</bool>
+                       <item row="1" column="1">
+                        <widget class="QSpinBox" name="TextSize_Buttons">
+                         <property name="font">
+                          <font>
+                           <bold>false</bold>
+                          </font>
                          </property>
-                         <property name="text">
-                          <string>Enable text wrap</string>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
                          </property>
-                         <property name="checked">
-                          <bool>true</bool>
+                         <property name="correctionMode">
+                          <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+                         </property>
+                         <property name="minimum">
+                          <number>8</number>
+                         </property>
+                         <property name="maximum">
+                          <number>24</number>
+                         </property>
+                         <property name="value">
+                          <number>11</number>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="2" column="1">
+                        <widget class="QSpinBox" name="TextSize_Tabs">
+                         <property name="font">
+                          <font>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
+                         </property>
+                         <property name="minimum">
+                          <number>8</number>
+                         </property>
+                         <property name="maximum">
+                          <number>24</number>
+                         </property>
+                         <property name="value">
+                          <number>14</number>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="3" column="1">
+                        <widget class="QSpinBox" name="TextSize_Panels">
+                         <property name="font">
+                          <font>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="alignment">
+                          <set>Qt::AlignmentFlag::AlignCenter</set>
+                         </property>
+                         <property name="minimum">
+                          <number>8</number>
+                         </property>
+                         <property name="maximum">
+                          <number>24</number>
+                         </property>
+                         <property name="value">
+                          <number>11</number>
                          </property>
                         </widget>
                        </item>
                       </layout>
-                     </item>
-                    </layout>
-                   </widget>
-                  </item>
-                  <item row="0" column="0">
-                   <widget class="QGroupBox" name="groupBox_10">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>0</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <property name="title">
-                     <string>Tab style</string>
-                    </property>
-                    <layout class="QGridLayout" name="gridLayout_25">
-                     <item row="0" column="0">
-                      <layout class="QGridLayout" name="gridLayout_24">
-                       <item row="0" column="0">
-                        <widget class="QLabel" name="label_24">
-                         <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the tab style: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                        </widget>
-                       </item>
-                       <item row="0" column="1">
-                        <widget class="QComboBox" name="TabbarStyle">
-                         <property name="minimumSize">
-                          <size>
-                           <width>100</width>
-                           <height>0</height>
-                          </size>
-                         </property>
-                         <property name="currentText">
-                          <string>Icon + text</string>
-                         </property>
-                         <item>
-                          <property name="text">
-                           <string>Icon + text</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Icon only</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Text only</string>
-                          </property>
-                         </item>
-                        </widget>
-                       </item>
-                      </layout>
-                     </item>
-                     <item row="0" column="1">
-                      <spacer name="horizontalSpacer_7">
-                       <property name="orientation">
-                        <enum>Qt::Orientation::Horizontal</enum>
-                       </property>
-                       <property name="sizeHint" stdset="0">
-                        <size>
-                         <width>40</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                      </spacer>
                      </item>
                     </layout>
                    </widget>
