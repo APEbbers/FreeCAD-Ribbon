@@ -127,7 +127,7 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         self.form.CopyVersionInfo.clicked.connect(
             lambda: self.on_CopyVersionInfo_Clicked(
                 self,
-                f"Installed version: {version}\nBranch: {branch}\nSHA: {CommitID}",
+                f"Installed version: {version}\nBranch: {branch}\nCommit ID: {CommitID}",
             ),
         )
 
