@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Suggest an idea for the Ribbon UI
 title: ''
 labels: enhancement
 assignees: APEbbers
