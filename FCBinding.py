@@ -982,10 +982,18 @@ class ModernMenu(RibbonBar):
         SettingsMenu = QToolButton()
         # Get the freecad preference button
         editMenu = mw.findChildren(QMenu, "&Edit")[0]
-        preferenceButton_FreeCAD = editMenu.actions()[len(editMenu.actions()) - 1]
-        # preferenceButton_FreeCAD.setText(translate("FreeCAD Ribbon", "FreeCAD prefences"))
+        for action in editMenu.actions():
+            if action.objectName() == "Std_DlgPreferences":
+                preferenceButton_FreeCAD = action
+                SettingsMenu.addAction(preferenceButton_FreeCAD)
         # add the preference button for FreeCAD
         SettingsMenu.addAction(preferenceButton_FreeCAD)
+        # Get the customize button from FreeCAD
+        toolsMenu = mw.findChildren(QMenu, "&Tools")[0]
+        for action in toolsMenu.actions():
+            if action.objectName() == "Std_DlgCustomize":
+                CustomizeButton_FreeCAD = action
+                SettingsMenu.addAction(CustomizeButton_FreeCAD)
         # add the ribbon settings menu
         SettingsMenu.addAction(self.RibbonMenu.menuAction())
         SettingsMenu.setIcon(Gui.getIcon("Std_DlgParameter.svg"))
