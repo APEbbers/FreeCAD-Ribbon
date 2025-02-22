@@ -113,8 +113,9 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
                 f"""
         A customizable ribbon UI for FreeCAD.
 
-        Version information:
+        Information:
             Developer: {Developer}
+        
             Installed version: {version}
             Branch: {branch}
             CommitID: {CommitID}
@@ -133,7 +134,7 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
 
         Contributers = GitData[2]
         if len(Contributers) > 0:
-            text_2 = translate("FreeCAD Ribbon", "\n\nContributors:\n")
+            text_2 = translate("FreeCAD Ribbon", "Contributors:\n")
             for Contributor in Contributers:
                 text_2 = text_2 + " - " + Contributor + "\n"
 
