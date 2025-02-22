@@ -86,6 +86,7 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
 
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
+        Developer = StandardFunctions.ReturnXML_Value(PackageXML, "maintainer")
         CommitID = GitData[0]
         if CommitID is None:
             CommitID = "-"
@@ -112,6 +113,9 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
                 f"""
         A customizable ribbon UI for FreeCAD.
 
+        Developer: {CommitID}
+
+
         Installed version: {version}
         Branch: {branch}
         CommitID: {CommitID}
@@ -127,17 +131,17 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         )
 
         # Write the text for credits
-        Developer = StandardFunctions.ReturnXML_Value(PackageXML, "maintainer")
+
         Contributers = GitData[2]
-        text_1 = translate("FreeCAD Ribbon", f"Developer:  {Developer}")
         if len(Contributers) > 0:
             text_2 = translate("FreeCAD Ribbon", "\n\nContributors:\n")
             for Contributor in Contributers:
                 text_2 = text_2 + " - " + Contributor + "\n"
 
-            self.form.ContributersText.setText(text_1 + text_2)
+            self.form.ContributersText.setText(text_2)
         else:
-            self.form.ContributersText.setText(text_1)
+            self.form.ContributersText.setDisabled(True)
+            self.form.ContributersText.setHidden(True)
 
         # Read the license file from the add-on directory
         file_path = os.path.join(os.path.dirname(__file__), "LICENSE")
