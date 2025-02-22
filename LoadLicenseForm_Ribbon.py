@@ -110,7 +110,7 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
 
         Installed version: {version}
         Branch: {branch}
-        SHA: {CommitID}
+        CommitID: {CommitID}
         """
         )
         # Add the copybutton
@@ -120,6 +120,19 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
                 f"Installed version: {version}\nBranch: {branch}\nSHA: {CommitID}",
             ),
         )
+
+        # Write the text for credits
+        Developer = StandardFunctions.ReturnXML_Value(PackageXML, "maintainer")
+        Contributers = StandardFunctions.GetGitData()[2]
+        # self.form.ContributersText.setText(
+        #     f"""
+        #     Developer:  {}
+
+        #     Contributers:
+        #     \t{}
+
+        #     """
+        # )
 
         # Read the license file from the add-on directory
         file_path = os.path.join(os.path.dirname(__file__), "LICENSE")

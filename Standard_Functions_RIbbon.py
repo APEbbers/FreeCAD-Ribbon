@@ -473,11 +473,18 @@ def ReturnXML_Value_Git(
 
 
 def GetGitData(PrintErrors=False):
+    GitInstalled = True
     import os
+
+    try:
+        import git
+    except ImportError:
+        GitInstalled = False
 
     commit = None
     branch = None
-    result = [commit, branch]
+    Contributers = []
+    result = [commit, branch, Contributers]
 
     git_root = os.path.join(os.path.dirname(__file__), ".git")
     if os.path.exists(git_root) is False:
@@ -501,11 +508,18 @@ def GetGitData(PrintErrors=False):
     if os.path.exists(head_path) is False and PrintErrors is True:
         print(f"path {head_path} referenced from {git_head} does not exist")
         return result
-
+    # Read the branch version
     branch = head_path.rsplit("/", 1)[1]
     with open(head_path, "r") as fd:
         line = fd.readlines()[0]
         commit = line.strip()
+
+    # If gitpython is installed, get the list of contributors
+    if GitInstalled is True:
+        repo = git.Repo(git_root)
+        Git = repo.git
+        Contributers = Git.execute("shortlog -sn --all", with_extended_output=True)
+        print(Contributers)
     result = [commit, branch]
     return result
 
