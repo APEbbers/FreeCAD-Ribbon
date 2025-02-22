@@ -113,12 +113,11 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
                 f"""
         A customizable ribbon UI for FreeCAD.
 
-        Developer: {CommitID}
-
-
-        Installed version: {version}
-        Branch: {branch}
-        CommitID: {CommitID}
+        Version information:
+            Developer: {Developer}
+            Installed version: {version}
+            Branch: {branch}
+            CommitID: {CommitID}
         """,
             )
         )
