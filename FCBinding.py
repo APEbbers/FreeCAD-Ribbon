@@ -1173,9 +1173,11 @@ class ModernMenu(RibbonBar):
             # Get the shortcut from the original command
             ShortcutKey = ""
             try:
-                CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/ShortCut")
+                CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/Shortcut")
                 ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayAll")
-            except Exception:
+            except Exception as e:
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    print(e.with_traceback())
                 ShortcutKey = "F4"
             if ShortcutKey != "":
                 OverlayButton.setShortcut(ShortcutKey)
@@ -1193,7 +1195,7 @@ class ModernMenu(RibbonBar):
             # Get the shortcut from the original command
             ShortcutKey = ""
             try:
-                CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/ShortCut")
+                CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/Shortcut")
                 ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayTransparentAll")
             except Exception:
                 ShortcutKey = "Shift+F4"
