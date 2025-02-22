@@ -140,8 +140,8 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
 
             self.form.ContributersText.setText(text_2)
         else:
-            self.form.ContributersText.setDisabled(True)
-            self.form.ContributersText.setHidden(True)
+            self.form.groupBox.setDisabled(True)
+            self.form.groupBox.setHidden(True)
 
         # Read the license file from the add-on directory
         file_path = os.path.join(os.path.dirname(__file__), "LICENSE")
