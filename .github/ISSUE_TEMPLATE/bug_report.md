@@ -27,7 +27,7 @@ If applicable, add screenshots to help explain your problem.
  - OS: [e.g. iOS]
  - FreeCAD information: 
    Go to "Help->About ...-> About FreeCAD". Click on "Copy to clipboard" and past here.
-- Export your layout, zip it and add it to your issue
+- Export your layout, zip it and add it to your issue by dragging it.
 
 **Additional context**
 Add any other context about the problem here.
