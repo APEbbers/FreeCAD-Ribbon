@@ -195,6 +195,7 @@ class ModernMenu(RibbonBar):
     RibbonMenu = QMenu()
     HelpMenu = QMenu()
     OverlayMenu = None
+    AccessoriesMenu = None
 
     # Define the versions for update and developments
     UpdateVersion = ""
@@ -1091,13 +1092,12 @@ class ModernMenu(RibbonBar):
         # Set a stylesheet specific for the menubar. Otherwise the fontsize of the menus will not be applied
         StyleSheet_MenuBar = "* {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
         MenuBar.setStyleSheet(StyleSheet_MenuBar)
-        # Add teh actions of the menubar to the application menu
-        ApplictionMenu.addActions(MenuBar.actions())
-
-        # Remove the menu from the Ribbon Application Menu
-        for child in MenuBar.children():
-            if child.objectName() == "&Help":
-                MenuBar.removeAction(child.menuAction())
+        # # Add the actions of the menubar to the application menu
+        for child in MenuBar.actions():
+            if child.objectName() != "&Help" and child.objectName != "AccessoriesMenu":
+                ApplictionMenu.addAction(child)
+            if child.objectName == "AccessoriesMenu" and self.AccessoriesMenu is not None:
+                ApplictionMenu.addMenu(self.AccessoriesMenu)
 
         # if you on macOS, add the ribbon menus to the menubar
         if platform.system().lower() == "darwin":
@@ -1151,6 +1151,17 @@ class ModernMenu(RibbonBar):
 
     def CreateMenus(self):
         MenuBar = mw.menuBar()
+
+        # Create a accessories menu
+        AccessoriesMenu = None
+        for action in MenuBar.children():
+            if action.objectName() == "AccessoriesMenu":
+                AccessoriesMenu = action.menu()
+                self.AccessoriesMenu = QMenu()
+                subMenus = []
+                for subAction in AccessoriesMenu.actions():
+                    subMenus.append(subAction)
+                self.AccessoriesMenu.addActions(subMenus)
 
         # Create the overlay menu when the native overlay function is not used
         if Parameters_Ribbon.USE_FC_OVERLAY is False:
@@ -1230,16 +1241,16 @@ class ModernMenu(RibbonBar):
         actions = None
 
         # Get the standard help menu from FreeCAD
-        for child in MenuBar.children():
-            if child.objectName() == "&Help":
-                actions = child.actions()
+        for action in MenuBar.children():
+            if action.objectName() == "&Help":
+                actions = action.actions()
                 # change help to FreeCAD help
                 actions[0].setText(translate("FreeCAD Ribbon", "Help"))
                 HelpMenu.addActions(actions)
                 # Store the help icon for the Ribbon help
-                HelpIcon = child.actions()[0].icon()
+                HelpIcon = action.actions()[0].icon()
                 # Remove the menu from the Ribbon Application Menu
-                MenuBar.removeAction(child.menuAction())
+                MenuBar.removeAction(action.menuAction())
 
         # Add the ribbon helpbutton under the FreeCAD
         RibbonHelpButton = QAction(translate("FreeCAD Ribbon", "Ribbon UI help"))
@@ -2534,50 +2545,6 @@ class ModernMenu(RibbonBar):
                 StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
             return
 
-    # def UpdateRibbonStructureFile_Proxy(self, RibbonStructureDict: dict):
-    #     # get the path for the Json file
-    #     JsonFile: dict = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
-
-    #     # Writing to sample.json
-    #     with open(JsonFile, "w") as outfile:
-    #         JsonFile.update(RibbonStructureDict)
-    #         json.dump(self.ribbonStructure, outfile, indent=4)
-
-    #     outfile.close()
-    #     return
-
-
-# region - alternative loading
-# class run:
-#     """
-#     Activate Modern UI.
-#     """
-
-#     def __init__(self, name):
-#         """
-#         Constructor
-#         """
-#         disable = 0
-#         if name != "NoneWorkbench":
-#             mw = Gui.getMainWindow()
-
-#             # Disable connection after activation
-#             mw.workbenchActivated.disconnect(run)
-#             if disable:
-#                 return
-
-#             ribbon = ModernMenu()
-#             # Get the layout
-#             layout = ribbon.layout()
-#             # Set spacing and content margins to zero
-#             layout.setSpacing(0)
-#             layout.setContentsMargins(3, 0, 3, 3)
-#             # update the layout
-#             ribbon.setLayout(layout)
-#             # Create the ribbon
-#             mw.setMenuBar(ribbon)
-# endregion
-
 
 class EventInspector(QObject):
     def __init__(self, parent):
@@ -2599,15 +2566,13 @@ class run:
     Activate Modern UI.
     """
 
-    import Parameters_Ribbon
-
     def __init__(self, name):
         """
         Constructor
         """
         disable = 0
         if name != "NoneWorkbench":
-            mw = Gui.getMainWindow()
+            mw: QMainWindow = Gui.getMainWindow()
             # Disable connection after activation
             mw.workbenchActivated.disconnect(run)
             if disable:
@@ -2632,49 +2597,9 @@ class run:
             ribbonDock.setWidget(ribbon)
             ribbonDock.setEnabled(True)
             ribbonDock.setVisible(True)
+
             # # make sure that there are no negative valules
             if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
                 ribbonDock.setMaximumHeight(ribbon.RibbonMinimalHeight)
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
-
-
-# def UpdateRibbonStructureFile(RibbonStructureDict: dict = None, silent=True):
-#     """Function for add-on developers to update the RibbonStructureFile with their specific settings.
-#     The RibbonStructureFile must have at least one of the following keys:
-#     - "igonreWorkbenches"
-#     - "customToolbars"
-#     - "newPanels"
-#     - "dropdownButtons"
-#     - "iconOnlyToolbars"
-#     - "workbenches"
-
-#     Args:
-#         RibbonStructureFile (dict): a dictionary that follows the RibbonStructureFile format.\n
-#         See the RibbonStructureFile.json for the format. (Located in the add-on directory)
-#     """
-#     result = False
-
-#     if RibbonStructureDict is not None:
-#         try:
-#             preferences = App.ParamGet("User parameter:BaseApp/Preferences/Mod/FreeCAD-Ribbon")
-#             JsonFile = preferences.GetString("RibbonStructure")
-#             if JsonFile is not None or JsonFile != "":
-#                 with open(JsonFile, "r") as outfile:
-#                     data = json.load(outfile)
-#                 outfile.close()
-
-#                 merged_dict = data.copy()
-#                 merged_dict.update(RibbonStructureDict)
-
-#                 with open(JsonFile, "w") as outfile:
-#                     json.dump(merged_dict, outfile, indent=4)
-#                 outfile.close()
-#             result = True
-
-#         except Exception as e:
-#             if silent is False:
-#                 raise e
-#             else:
-#                 print(e)
-#     return result
