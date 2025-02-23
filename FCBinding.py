@@ -162,10 +162,10 @@ class ModernMenu(RibbonBar):
     # Create an offset for the panelheight
     PanelHeightOffset = 36
     # Create an offset for the whole ribbon height
-    RibbonOffset = 46 + QuickAccessButtonSize  # Set to zero to hide the panel titles
+    RibbonOffset = 46 + QuickAccessButtonSize * 2  # Set to zero to hide the panel titles
 
     # Set the minimum height for the ribbon
-    RibbonMinimalHeight = QuickAccessButtonSize + 10
+    RibbonMinimalHeight = QuickAccessButtonSize * 2 + 10
     # From v1.6.x, the size of tab bar and right toolbar are controlled by the size of the quickaccess toolbar
     TabBar_Size = QuickAccessButtonSize
     RightToolBarButtonSize = QuickAccessButtonSize
@@ -1068,7 +1068,7 @@ class ModernMenu(RibbonBar):
             try:
                 import SearchBoxLight
 
-                width = 5 * self.RightToolBarButtonSize
+                width = 10 * self.RightToolBarButtonSize
 
                 sea = SearchBoxLight.SearchBoxLight(
                     getItemGroups=lambda: __import__("GetItemGroups").getItemGroups(),
