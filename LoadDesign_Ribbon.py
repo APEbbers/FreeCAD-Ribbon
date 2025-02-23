@@ -1008,6 +1008,10 @@ class LoadDialog(Design_ui.Ui_Form):
             json.dump(Data2, outfile, indent=4)
         outfile.close()
 
+        # Write a time stamp to preferences
+        TimeStamp = datetime.now().strftime("%B %d, %Y, %H:%M:%S")
+        Parameters_Ribbon.Settings.SetStringSetting("ReloadTimeStamp", TimeStamp)
+
         # run init again
         self.__init__()
 
@@ -1016,10 +1020,6 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Hide the progress message
         self.loadAllWorkbenches(HideOnly=True)
-
-        # Write a time stamp to preferences
-        TimeStamp = datetime.now().strftime("%B %d, %Y, %H:%M:%S")
-        Parameters_Ribbon.Settings.SetStringSetting("ReloadTimeStamp", TimeStamp)
 
         # Show the dialog again
         self.form.show()
@@ -4700,12 +4700,21 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def loadAllWorkbenches(self, AutoHide=True, HideOnly=False, FinishMessage=""):
         lbl = QLabel(translate("FreeCAD Ribbon", "Loading workbench … (…/…)"))
+        lbl.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
         if HideOnly is False:
             activeWorkbench = Gui.activeWorkbench().name()
             lbl.show()
             lst = Gui.listWorkbenches()
             for i, wb in enumerate(lst):
-                msg = translate("FreeCAD Ribbon", "Loading workbench ") + wb + " (" + str(i) + "/" + str(len(lst)) + ")"
+                msg = (
+                    translate("FreeCAD Ribbon", "Loading workbench ")
+                    + wb
+                    + " ("
+                    + str(i + 1)
+                    + "/"
+                    + str(len(lst))
+                    + ")"
+                )
                 print(msg)
                 lbl.setText(msg)
                 geo = lbl.geometry()
@@ -4719,6 +4728,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     pass
             if FinishMessage != "":
                 lbl.setText(FinishMessage)
+                print(FinishMessage)
             Gui.activateWorkbench(activeWorkbench)
         if AutoHide is True or HideOnly is True:
             lbl.hide()
