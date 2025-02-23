@@ -122,13 +122,6 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
-# import pyqtribbon as pyqtribbon
-# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel, RibbonPanelTitle
-# from pyqtribbon.toolbutton import RibbonToolButton
-# from pyqtribbon.separator import RibbonSeparator
-# from pyqtribbon.category import RibbonCategoryLayoutButton
-
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
 
@@ -875,7 +868,6 @@ class ModernMenu(RibbonBar):
 
         self.tabBar().setIconSize(QSize(self.TabBar_Size - 6, self.TabBar_Size - 6))
         self.tabBar().setStyleSheet("margin: 0px;padding: 0px;height: " + str(self.QuickAccessButtonSize) + ";")
-        # self.RibbonOffset = self.RibbonOffset + (self.tabBar().height() - self.QuickAccessButtonSize)
 
         # Correct colors when no stylesheet is selected for FreeCAD.
         self.quickAccessToolBar().setStyleSheet("")
@@ -968,7 +960,7 @@ class ModernMenu(RibbonBar):
         # add an overlay menu if Ribbon's overlay is enabled
         if self.OverlayMenu is not None:
             OverlayMenu = QToolButton()
-            OverlayMenu.setIcon(QIcon(QPixmap(os.path.join(pathIcons, "Draft_Layer.svg"))))
+            OverlayMenu.setIcon(QIcon(os.path.join(pathIcons, "Draft_Layer.svg")))
             OverlayMenu.setToolTip(translate("FreeCAD Ribbon", "Overlay functions") + "...")
             OverlayMenu.setMenu(self.OverlayMenu)
             OverlayMenu.setFixedSize(self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize)
@@ -1024,7 +1016,6 @@ class ModernMenu(RibbonBar):
         pinButton.setCheckable(True)
         pinButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         pinButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
-        pinButton.setIconSize(QSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize))
         # Set the correct icon
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
             pinButtonIcon = StyleMapping.ReturnStyleItem("PinButton_closed")
@@ -1059,6 +1050,7 @@ class ModernMenu(RibbonBar):
         if Parameters_Ribbon.USE_FC_OVERLAY is True:
             RightToolbarWidth = SearchBarWidth + 2 * (self.RightToolBarButtonSize + 16)
         self.rightToolBar().setMinimumWidth(RightToolbarWidth)
+        self.setRightToolBarHeight(self.RibbonMinimalHeight)
         # Set the size policy
         self.rightToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
         self.rightToolBar().setSizeIncrement(1, 1)
