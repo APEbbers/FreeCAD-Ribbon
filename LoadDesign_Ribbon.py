@@ -359,7 +359,7 @@ class LoadDialog(Design_ui.Ui_Form):
         TimeStamp = Parameters_Ribbon.Settings.GetStringSetting("ReloadTimeStamp")
         if TimeStamp == "" or TimeStamp is None:
             TimeStamp = "-"
-        self.form.TimeStamp_Reloaded.setText(translate("FreeCAD Ribbon, Last reloaded on: ") + TimeStamp)
+        self.form.TimeStamp_Reloaded.setText(translate("FreeCAD Ribbon", "Last reloaded on: ") + TimeStamp)
 
         # --- Initial setup functions -----------
         #
