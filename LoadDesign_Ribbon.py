@@ -356,6 +356,10 @@ class LoadDialog(Design_ui.Ui_Form):
         # --- Reload function -------------------
         #
         self.form.LoadWB.connect(self.form.LoadWB, SIGNAL("clicked()"), self.on_ReloadWB_clicked)
+        TimeStamp = Parameters_Ribbon.Settings.GetStringSetting("ReloadTimeStamp")
+        if TimeStamp == "" or TimeStamp is None:
+            TimeStamp = "-"
+        self.form.TimeStamp_Reloaded.setText(translate("FreeCAD Ribbon, Last reloaded on: ") + TimeStamp)
 
         # --- Initial setup functions -----------
         #
@@ -1012,6 +1016,10 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Hide the progress message
         self.loadAllWorkbenches(HideOnly=True)
+
+        # Write a time stamp to preferences
+        TimeStamp = datetime.now().strftime("%B %d, %Y, %H:%M:%S")
+        Parameters_Ribbon.Settings.SetStringSetting("ReloadTimeStamp", TimeStamp)
 
         # Show the dialog again
         self.form.show()

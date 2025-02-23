@@ -49,7 +49,36 @@
   <layout class="QGridLayout" name="gridLayout_49">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout_28">
-     <item row="0" column="0">
+     <property name="verticalSpacing">
+      <number>0</number>
+     </property>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_14">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Reload workbenches. Be aware that this may take a while!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="TimeStamp_Reloaded">
+       <property name="font">
+        <font>
+         <pointsize>7</pointsize>
+         <italic>true</italic>
+        </font>
+       </property>
+       <property name="text">
+        <string>Last reloaded on: -</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" rowspan="2">
       <widget class="QPushButton" name="LoadWB">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -68,19 +97,6 @@
        </property>
        <property name="icon">
         <iconset theme="QIcon::ThemeIcon::ViewRefresh"/>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="label_14">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-style:italic;&quot;&gt;Reload workbenches. This may take a while.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
@@ -207,7 +223,7 @@
           <x>0</x>
           <y>0</y>
           <width>1009</width>
-          <height>703</height>
+          <height>699</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_26">

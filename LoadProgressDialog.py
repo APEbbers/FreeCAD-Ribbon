@@ -59,7 +59,7 @@ import ui_ProgressDialog as ui_ProgressDialog
 translate = App.Qt.translate
 
 
-class LoadDialog(ui_ProgressDialog.Ui_Dialog):
+class LoadDialog(ui_ProgressDialog.Ui_dialog):
 
     Text = ""
 
