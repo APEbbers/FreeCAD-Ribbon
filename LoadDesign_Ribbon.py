@@ -22,7 +22,7 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction
+from PySide.QtGui import QIcon, QPixmap, QAction, QGuiApplication
 from PySide.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
@@ -49,8 +49,7 @@ from Standard_Functions_RIbbon import CommandInfoCorrections
 import Parameters_Ribbon
 import Serialize_Ribbon
 import webbrowser
-import time
-import math
+import StyleMapping
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -762,7 +761,9 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.hide()
 
         # Load the workbenches
-        self.loadAllWorkbenches(AutoHide=False, FinishMessage="Writing data file")
+        self.loadAllWorkbenches(
+            AutoHide=False, FinishMessage=translate("FreeCAD Ribbon", "Ribbon UI: Cache has been written.")
+        )
 
         # clear the lists first
         self.List_Workbenches.clear()
@@ -4701,6 +4702,14 @@ class LoadDialog(Design_ui.Ui_Form):
     def loadAllWorkbenches(self, AutoHide=True, HideOnly=False, FinishMessage=""):
         lbl = QLabel(translate("FreeCAD Ribbon", "Loading workbench … (…/…)"))
         lbl.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+
+        # Get the stylesheet from the main window and use it for this form
+        lbl.setStyleSheet("background-color: " + StyleMapping.ReturnStyleItem("Background_Color") + ";")
+
+        # Center the widget
+        cp = QGuiApplication.screenAt(self.form.pos()).geometry().center()
+        lbl.move(cp)
+
         if HideOnly is False:
             activeWorkbench = Gui.activeWorkbench().name()
             lbl.show()
