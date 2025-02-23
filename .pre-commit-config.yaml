@@ -1,7 +1,7 @@
 # .pre-commit-config.yaml
 repos:
 -   repo: https://github.com/mattlqx/pre-commit-search-and-replace
-    rev: v1.1.7
+    rev: v1.1.8
     hooks:
     -   id: search-and-replace
 -   repo: https://github.com/pre-commit/pre-commit-hooks
