@@ -96,7 +96,7 @@ import LoadLicenseForm_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
 from Standard_Functions_RIbbon import CommandInfoCorrections
 import Serialize_Ribbon
-import StyleMapping
+import StyleMapping_Ribbon
 import platform
 import math
 
@@ -451,8 +451,8 @@ class ModernMenu(RibbonBar):
         # Set the custom stylesheet
         StyleSheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
         # modify the stylesheet to set the border and background for a toolbar and menu
-        hexColor = StyleMapping.ReturnStyleItem("Background_Color")
-        hexColorTab = StyleMapping.ReturnStyleItem("Background_Color", True, True)
+        hexColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        hexColorTab = StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
         if hexColor is not None and hexColor != "" and Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED is True:
             # Set the quickaccess toolbar background color. This fixes a transparant toolbar.
             self.quickAccessToolBar().setStyleSheet("QToolBar {background: " + hexColor + ";}")
@@ -470,9 +470,9 @@ class ModernMenu(RibbonBar):
             StyleSheet_Addition_3 = (
                 """QTabBar::tab {
                     background: """
-                + StyleMapping.ReturnStyleItem("Background_Color_Hover", True, True)
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover", True, True)
                 + """;color: """
-                + StyleMapping.ReturnStyleItem("Background_Color_Hover", True, True)
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover", True, True)
                 + """;min-width: """
                 + str(self.TabBar_Size)
                 + """px;
@@ -491,7 +491,7 @@ class ModernMenu(RibbonBar):
         StyleSheet_Addition_4 = (
             """QTabBar::tab:selected, QTabBar::tab:hover {
                 background: """
-            + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
             + """;}"""
         )
         # If the tabs are set to icon only, set the text to the hover background color also
@@ -499,9 +499,9 @@ class ModernMenu(RibbonBar):
             StyleSheet_Addition_4 = (
                 """QTabBar::tab:selected, QTabBar::tab:hover {
                 background: """
-                + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                 + """;color: """
-                + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                 + """;}"""
             )
         StyleSheet = StyleSheet_Addition_4 + StyleSheet
@@ -577,11 +577,11 @@ class ModernMenu(RibbonBar):
         ScrollLeftButton_Tab: QToolButton = self.tabBar().findChildren(QToolButton)[0]
         ScrollRightButton_Tab: QToolButton = self.tabBar().findChildren(QToolButton)[1]
         # get the icons
-        ScrollLeftButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollLeftButton_Tab")
-        ScrollRightButton_Tab_Icon = StyleMapping.ReturnStyleItem("ScrollRightButton_Tab")
+        ScrollLeftButton_Tab_Icon = StyleMapping_Ribbon.ReturnStyleItem("ScrollLeftButton_Tab")
+        ScrollRightButton_Tab_Icon = StyleMapping_Ribbon.ReturnStyleItem("ScrollRightButton_Tab")
         # Set the icons
         StyleSheet = "QToolButton {image: none};QToolButton::arrow {image: none};"
-        BackgroundColor = StyleMapping.ReturnStyleItem("Background_Color")
+        BackgroundColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
         if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21 and BackgroundColor is not None:
             StyleSheet = (
                 """QToolButton {image: none;background: """
@@ -746,7 +746,7 @@ class ModernMenu(RibbonBar):
         self.setApplicationIcon(Gui.getIcon("freecad"))
         # Set the styling of the button including padding (Text widht + 2*maring)
         self.applicationOptionButton().setStyleSheet(
-            StyleMapping.ReturnStyleSheet(
+            StyleMapping_Ribbon.ReturnStyleSheet(
                 "applicationbutton",
                 padding_right=str(FontMetrics.horizontalAdvance(Text.text(), -1) + 12) + "px",
                 radius="4px",
@@ -792,7 +792,7 @@ class ModernMenu(RibbonBar):
                         height = self.QuickAccessButtonSize
                         button.setFixedSize(width, height)
                         # Set the stylesheet
-                        button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
+                        button.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
                     elif len(QuickAction) > 1:
                         # set the padding for a dropdown button
                         padding = self.PaddingRight
@@ -806,7 +806,7 @@ class ModernMenu(RibbonBar):
                         # Set the PopupMode
                         button.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
                         # Set the stylesheet
-                        button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
+                        button.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
 
                 # If it is a custom dropdown, add the actions one by one.
                 if commandName.endswith("_ddb") is True:
@@ -826,7 +826,7 @@ class ModernMenu(RibbonBar):
                     button.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
 
                     # Set the stylesheet
-                    button.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
+                    button.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
 
                 # Set the height
                 self.setQuickAccessButtonHeight(self.RibbonMinimalHeight)
@@ -875,7 +875,7 @@ class ModernMenu(RibbonBar):
             FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
             currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
             if currentStyleSheet == "":
-                hexColor = StyleMapping.ReturnStyleItem("Background_Color")
+                hexColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                 # Set the quickaccess toolbar background color
                 self.quickAccessToolBar().setStyleSheet("background-color: " + hexColor + ";")
 
@@ -964,7 +964,7 @@ class ModernMenu(RibbonBar):
             OverlayMenu.setToolTip(translate("FreeCAD Ribbon", "Overlay functions") + "...")
             OverlayMenu.setMenu(self.OverlayMenu)
             OverlayMenu.setFixedSize(self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize)
-            OverlayMenu.setStyleSheet(StyleMapping.ReturnStyleSheet(control="toolbutton", padding_right="12px"))
+            OverlayMenu.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet(control="toolbutton", padding_right="12px"))
             OverlayMenu.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
             Font = OverlayMenu.font()
             Font.setPixelSize(Parameters_Ribbon.FONTSIZE_MENUS)
@@ -993,7 +993,7 @@ class ModernMenu(RibbonBar):
         SettingsMenu.setIcon(Gui.getIcon("Std_DlgParameter.svg"))
         SettingsMenu.setToolTip(translate("FreeCAD Ribbon", "Preferences") + "...")
         SettingsMenu.setFixedSize(self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize)
-        SettingsMenu.setStyleSheet(StyleMapping.ReturnStyleSheet(control="toolbutton", padding_right="12px"))
+        SettingsMenu.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet(control="toolbutton", padding_right="12px"))
         SettingsMenu.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         # add the settingsmenu to the right toolbar
         self.rightToolBar().addWidget(SettingsMenu)
@@ -1008,7 +1008,9 @@ class ModernMenu(RibbonBar):
         self.helpRibbonButton().setIcon(helpAction.icon())
         self.helpRibbonButton().setMenu(self.HelpMenu)
         self.helpRibbonButton().setFixedSize(self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize)
-        self.helpRibbonButton().setStyleSheet(StyleMapping.ReturnStyleSheet(control="toolbutton", padding_right="12px"))
+        self.helpRibbonButton().setStyleSheet(
+            StyleMapping_Ribbon.ReturnStyleSheet(control="toolbutton", padding_right="12px")
+        )
         self.helpRibbonButton().setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
 
         # Add a button the enable or disable AutoHide
@@ -1018,9 +1020,9 @@ class ModernMenu(RibbonBar):
         pinButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
         # Set the correct icon
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
-            pinButtonIcon = StyleMapping.ReturnStyleItem("PinButton_closed")
+            pinButtonIcon = StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed")
         if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
-            pinButtonIcon = StyleMapping.ReturnStyleItem("PinButton_open")
+            pinButtonIcon = StyleMapping_Ribbon.ReturnStyleItem("PinButton_open")
         # Set the icon
         if pinButtonIcon is not None:
             pinButton.setIcon(pinButtonIcon)
@@ -1034,7 +1036,7 @@ class ModernMenu(RibbonBar):
             pinButton.setChecked(False)
         if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
             pinButton.setChecked(True)
-        pinButton.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton", "2px"))
+        pinButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
 
         # If FreeCAD's overlay function is active, set the pinbutton to checked and then to disabled
         preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
@@ -1124,7 +1126,7 @@ class ModernMenu(RibbonBar):
         # if you are on a developer version, add a label
         if self.DeveloperVersion != "":
             ApplictionMenu.addSeparator()
-            color = StyleMapping.ReturnStyleItem("DevelopColor")
+            color = StyleMapping_Ribbon.ReturnStyleItem("DevelopColor")
             Label = QLabel()
             Label.setText("Development version")
             Label.setStyleSheet(f"color: {color};border: 1px solid {color};border-radius: 2px;")
@@ -1132,14 +1134,14 @@ class ModernMenu(RibbonBar):
         # if there is an update, add a button that opens the addon manager
         if self.UpdateVersion != "" and self.DeveloperVersion == "":
             ApplictionMenu.addSeparator()
-            color = StyleMapping.ReturnStyleItem("UpdateColor")
+            color = StyleMapping_Ribbon.ReturnStyleItem("UpdateColor")
             Button = QToolButton()
             Button.setText(translate("FreeCAD Ribbon", "Update available"))
             Button.setStyleSheet(
                 "QToolButton{"
                 + f"color: {color};border: 1px solid {color};border-radius: 2px;background: none"
                 + "}QToolButton:hover{background-color: "
-                + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                 + ";}"
             )
 
@@ -1331,7 +1333,7 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.AUTOHIDE_RIBBON = True
 
             pinButton: QToolButton = self.rightToolBar().findChildren(QToolButton, "Pin Ribbon")[0]
-            pinButton.setIcon(StyleMapping.ReturnStyleItem("PinButton_closed"))
+            pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
 
             # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
@@ -1343,7 +1345,7 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.AUTOHIDE_RIBBON = False
 
             pinButton: QToolButton = self.rightToolBar().findChildren(QToolButton, "Pin Ribbon")[0]
-            pinButton.setIcon(StyleMapping.ReturnStyleItem("PinButton_open"))
+            pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
 
             # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
@@ -1386,19 +1388,21 @@ class ModernMenu(RibbonBar):
 
         # Set the text color depending in tabstyle
         if Parameters_Ribbon.TABBAR_STYLE != 1:
-            self.tabBar().setStyleSheet("QTabBar::tab {color: " + StyleMapping.ReturnStyleItem("FontColor") + ";}")
+            self.tabBar().setStyleSheet(
+                "QTabBar::tab {color: " + StyleMapping_Ribbon.ReturnStyleItem("FontColor") + ";}"
+            )
         if Parameters_Ribbon.TABBAR_STYLE == 1:
             self.tabBar().setStyleSheet(
                 """QTabBar::tab {background: """
-                + StyleMapping.ReturnStyleItem("Background_Color", True, True)
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
                 + """;color: """
-                + StyleMapping.ReturnStyleItem("Background_Color", True, True)
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
                 + """;}"""
                 + """QTabBar::tab:selected, QTabBar::tab:hover {
                 background: """
-                + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                 + """;color: """
-                + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                 + """;}"""
             )
 
@@ -1987,7 +1991,7 @@ class ModernMenu(RibbonBar):
                             # Styling is managed in the custom button class
                             StyleSheet_Addition_Button = (
                                 "QToolButton, QToolButton:hover {background-color: "
-                                + StyleMapping.ReturnStyleItem("Background_Color")
+                                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                                 + ";border: none"
                                 + ";}"
                             )
@@ -2061,7 +2065,7 @@ class ModernMenu(RibbonBar):
                 Menu = OptionButton.menu()
 
                 # Set the icon
-                OptionButton_Icon = StyleMapping.ReturnStyleItem("OptionButton")
+                OptionButton_Icon = StyleMapping_Ribbon.ReturnStyleItem("OptionButton")
                 if OptionButton_Icon is not None:
                     OptionButton.setIcon(OptionButton_Icon)
                 else:
@@ -2080,8 +2084,8 @@ class ModernMenu(RibbonBar):
         ScrollLeftButton_Category.setMinimumWidth(self.iconSize * 0.5)
         ScrollRightButton_Category.setMinimumWidth(self.iconSize * 0.5)
         # get the icons
-        ScrollLeftButton_Category_Icon = StyleMapping.ReturnStyleItem("ScrollLeftButton_Category")
-        ScrollRightButton_Category_Icon = StyleMapping.ReturnStyleItem("ScrollRightButton_Category")
+        ScrollLeftButton_Category_Icon = StyleMapping_Ribbon.ReturnStyleItem("ScrollLeftButton_Category")
+        ScrollRightButton_Category_Icon = StyleMapping_Ribbon.ReturnStyleItem("ScrollRightButton_Category")
         # Set the icons
         if ScrollLeftButton_Category_Icon is not None:
             ScrollLeftButton_Category.setIcon(ScrollLeftButton_Category_Icon)
@@ -2095,8 +2099,8 @@ class ModernMenu(RibbonBar):
         ScrollLeftButton_Category.setFixedHeight(Parameters_Ribbon.ICON_SIZE_SMALL * 3)
         ScrollRightButton_Category.setFixedHeight(Parameters_Ribbon.ICON_SIZE_SMALL * 3)
         # Set the stylesheet
-        ScrollLeftButton_Category.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
-        ScrollRightButton_Category.setStyleSheet(StyleMapping.ReturnStyleSheet("toolbutton"))
+        ScrollLeftButton_Category.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton"))
+        ScrollRightButton_Category.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton"))
         # Connect the custom click event
         ScrollLeftButton_Category.mousePressEvent = lambda clickLeft: self.on_ScrollButton_Category_clicked(
             clickLeft, ScrollLeftButton_Category

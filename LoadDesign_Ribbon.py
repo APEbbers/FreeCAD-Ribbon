@@ -49,7 +49,7 @@ from Standard_Functions_RIbbon import CommandInfoCorrections
 import Parameters_Ribbon
 import Serialize_Ribbon
 import webbrowser
-import StyleMapping
+import StyleMapping_Ribbon
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -4704,7 +4704,7 @@ class LoadDialog(Design_ui.Ui_Form):
         lbl.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
 
         # Get the stylesheet from the main window and use it for this form
-        lbl.setStyleSheet("background-color: " + StyleMapping.ReturnStyleItem("Background_Color") + ";")
+        lbl.setStyleSheet("background-color: " + StyleMapping_Ribbon.ReturnStyleItem("Background_Color") + ";")
 
         # Center the widget
         cp = QGuiApplication.screenAt(self.form.pos()).geometry().center()
