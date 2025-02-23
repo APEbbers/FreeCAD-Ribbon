@@ -122,6 +122,13 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
+# import pyqtribbon as pyqtribbon
+# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon.panel import RibbonPanel
+# from pyqtribbon.toolbutton import RibbonToolButton
+# from pyqtribbon.separator import RibbonSeparator
+# from pyqtribbon.category import RibbonCategoryLayoutButton
+
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
 
@@ -627,7 +634,28 @@ class ModernMenu(RibbonBar):
         self.isLoaded = True
         self.FoldRibbon()
 
-        # Parameters_Ribbon.FONTSIZE_MENUS = 8
+        # Rearrange the tabbar and toolbars
+        if Parameters_Ribbon.TOOLBAR_POSITION == 1:
+            # Get the widgets
+            _quickAccessToolBarWidget = self.quickAccessToolBar()
+            _titleLabel = self._titleWidget._titleLabel
+            _rightToolBar = self.rightToolBar()
+            _tabBar = self.tabBar()
+            # Remove the widgets
+            self._titleWidget._tabBarLayout.removeWidget(_quickAccessToolBarWidget)
+            self._titleWidget._tabBarLayout.removeWidget(_titleLabel)
+            self._titleWidget._tabBarLayout.removeWidget(_rightToolBar)
+            self._titleWidget._tabBarLayout.removeWidget(_tabBar)
+            # Add the widgets again in a different position
+            self._titleWidget._tabBarLayout.addWidget(
+                _quickAccessToolBarWidget, 0, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter
+            )
+            self._titleWidget._tabBarLayout.addWidget(_titleLabel, 0, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter)
+            self._titleWidget._tabBarLayout.addWidget(_rightToolBar, 0, 2, 1, 1, Qt.AlignmentFlag.AlignVCenter)
+            self._titleWidget._tabBarLayout.addWidget(_tabBar, 0, 1, 1, 1, Qt.AlignmentFlag.AlignVCenter)
+            # Change the offsets
+            self.RibbonMinimalHeight = self.QuickAccessButtonSize + 10
+            self.RibbonOffset = 46 + self.QuickAccessButtonSize
         return
 
     def closeEvent(self, event):
