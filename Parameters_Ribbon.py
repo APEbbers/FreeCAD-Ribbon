@@ -111,6 +111,7 @@ class Settings:
         Settings.SetIntSetting("ApplicationButtonSize", APP_ICON_SIZE)
         Settings.SetIntSetting("QuickAccessButtonSize", QUICK_ICON_SIZE)
         Settings.SetIntSetting("TabBarSize", TABBAR_SIZE)
+        Settings.SetIntSetting("Toolbar_Position", TOOLBAR_POSITION)
         Settings.SetIntSetting("RightToolbarButtonSize", RIGHT_ICON_SIZE)
 
         Settings.SetBoolSetting("ShowIconText_Small", SHOW_ICON_TEXT_SMALL)
@@ -216,6 +217,7 @@ DefaultSettings = {
     "FontSize_Buttons": int(11),
     "FontSize_Tabs": int(14),
     "FontSize_Panels": int(11),
+    "Toolbar_Position": int(0),
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
@@ -255,6 +257,11 @@ TABBAR_STYLE = Settings.GetIntSetting("TabBar_Style")
 if Settings.GetIntSetting("TabBar_Style") is None or Settings.GetIntSetting("TabBar_Style") > 2:
     TABBAR_STYLE = DefaultSettings["TabBar_Style"]
     Settings.SetIntSetting("TabBar_Style", TABBAR_STYLE)
+
+TOOLBAR_POSITION = Settings.GetIntSetting("Toolbar_Position")
+if Settings.GetIntSetting("Toolbar_Position") is None or Settings.GetIntSetting("Toolbar_Position") > 1:
+    TOOLBAR_POSITION = DefaultSettings["Toolbar_Position"]
+    Settings.SetIntSetting("Toolbar_Position", TOOLBAR_POSITION)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the icon sizes ---------------------------------------------------------------------------------------
