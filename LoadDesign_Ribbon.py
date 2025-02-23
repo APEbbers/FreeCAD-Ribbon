@@ -37,6 +37,7 @@ from PySide.QtWidgets import (
     QLineEdit,
     QSizePolicy,
     QRadioButton,
+    QLabel,
 )
 from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
 import sys
@@ -756,6 +757,9 @@ class LoadDialog(Design_ui.Ui_Form):
         # minimize the dialog
         self.form.hide()
 
+        # Load the workbenches
+        self.loadAllWorkbenches(AutoHide=False, FinishMessage="Writing data file")
+
         # clear the lists first
         self.List_Workbenches.clear()
         self.StringList_Toolbars.clear()
@@ -773,7 +777,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for WorkBenchName in List_Workbenches:
             if str(WorkBenchName) != "" or WorkBenchName is not None:
                 if str(WorkBenchName) != "NoneWorkbench":
-                    Gui.activateWorkbench(WorkBenchName)
+                    # Gui.activateWorkbench(WorkBenchName)
                     WorkBench = Gui.getWorkbench(WorkBenchName)
                     # Get the toolbar items
                     ToolbarItems: dict = WorkBench.getToolbarItems()
@@ -803,7 +807,7 @@ class LoadDialog(Design_ui.Ui_Form):
         for WorkBench in self.List_Workbenches:
             wbToolbars = []
             if WorkBench[0] != "General" and WorkBench[0] != "" and WorkBench[0] is not None:
-                Gui.activateWorkbench(WorkBench[0])
+                # Gui.activateWorkbench(WorkBench[0])
                 wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
                 # Go through the toolbars
                 for Toolbar in wbToolbars:
@@ -825,7 +829,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # Create a list of command names
         CommandNames = []
         for i in range(len(self.List_Workbenches)):
-            Gui.activateWorkbench(self.List_Workbenches[i][0])
+            # Gui.activateWorkbench(self.List_Workbenches[i][0])
             WorkBench = Gui.getWorkbench(self.List_Workbenches[i][0])
             WorkBenchName = self.List_Workbenches[i][0]
             # Get the toolbar items
@@ -934,8 +938,8 @@ class LoadDialog(Design_ui.Ui_Form):
             MenuNameTranslated = CommandInfoCorrections("Std_Measure")["ActionText"].replace("&", "")
             self.List_Commands.append(["Std_Measure", IconName, MenuName, "General", MenuNameTranslated])
 
-        # re-activate the workbench that was stored.
-        Gui.activateWorkbench(ActiveWB)
+        # # re-activate the workbench that was stored.
+        # Gui.activateWorkbench(ActiveWB)
 
         # --- Serialize Icons ------------------------------------------------------------------------------------------
         #
@@ -1005,6 +1009,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
+
+        # Hide the progress message
+        self.loadAllWorkbenches(HideOnly=True)
 
         # Show the dialog again
         self.form.show()
@@ -4682,6 +4689,31 @@ class LoadDialog(Design_ui.Ui_Form):
                                 }
 
         return
+
+    def loadAllWorkbenches(self, AutoHide=True, HideOnly=False, FinishMessage=""):
+        lbl = QLabel(translate("FreeCAD Ribbon", "Loading workbench … (…/…)"))
+        if HideOnly is False:
+            activeWorkbench = Gui.activeWorkbench().name()
+            lbl.show()
+            lst = Gui.listWorkbenches()
+            for i, wb in enumerate(lst):
+                msg = translate("FreeCAD Ribbon", "Loading workbench ") + wb + " (" + str(i) + "/" + str(len(lst)) + ")"
+                print(msg)
+                lbl.setText(msg)
+                geo = lbl.geometry()
+                geo.setSize(lbl.sizeHint())
+                lbl.setGeometry(geo)
+                lbl.repaint()
+                Gui.updateGui()  # Probably slower with this, because it redraws the entire GUI with all tool buttons changed etc. but allows the label to actually be updated, and it looks nice and gives a quick overview of all the workbenches…
+                try:
+                    Gui.activateWorkbench(wb)
+                except Exception:
+                    pass
+            if FinishMessage != "":
+                lbl.setText(FinishMessage)
+            Gui.activateWorkbench(activeWorkbench)
+        if AutoHide is True or HideOnly is True:
+            lbl.hide()
 
     # endregion---------------------------------------------------------------------------------------
 
