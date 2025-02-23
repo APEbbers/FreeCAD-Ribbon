@@ -128,7 +128,7 @@ class RibbonTitleWidget(QFrame):
 
         # category tab bar
         self._tabBar = RibbonTabBar(self)
-        self._tabBar.setExpanding(True)
+        self._tabBar.setExpanding(False)
         self._tabBar.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)  # type: ignore
         font = self._tabBar.font()
         font.setPointSize(font.pointSize() + 3)
