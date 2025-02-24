@@ -169,10 +169,10 @@ class ModernMenu(RibbonBar):
     # Create an offset for the panelheight
     PanelHeightOffset = 36
     # Create an offset for the whole ribbon height
-    RibbonOffset = 46 + QuickAccessButtonSize * 2 + 10  # Set to zero to hide the panel titles
+    RibbonOffset = 50 + QuickAccessButtonSize * 2  # Set to zero to hide the panel titles
 
     # Set the minimum height for the ribbon
-    RibbonMinimalHeight = QuickAccessButtonSize * 2 + 20
+    RibbonMinimalHeight = QuickAccessButtonSize * 2 + 16
     # From v1.6.x, the size of tab bar and right toolbar are controlled by the size of the quickaccess toolbar
     TabBar_Size = QuickAccessButtonSize
     RightToolBarButtonSize = QuickAccessButtonSize
@@ -625,7 +625,7 @@ class ModernMenu(RibbonBar):
             self._titleWidget._tabBarLayout.removeWidget(_titleLabel)
             self._titleWidget._tabBarLayout.removeWidget(_rightToolBar)
             self._titleWidget._tabBarLayout.removeWidget(_tabBar)
-            if Parameters_Ribbon.TOOLBAR_POSITION == 0:
+            if Parameters_Ribbon.TOOLBAR_POSITION == 0:  # Toolbars above tabbar
                 self._titleWidget._tabBarLayout.addWidget(
                     _quickAccessToolBarWidget, 0, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
@@ -633,18 +633,18 @@ class ModernMenu(RibbonBar):
                 self._titleWidget._tabBarLayout.addWidget(_rightToolBar, 0, 2, 1, 2, Qt.AlignmentFlag.AlignVCenter)
                 self._titleWidget._tabBarLayout.addWidget(_tabBar, 1, 0, 1, 4, Qt.AlignmentFlag.AlignVCenter)
                 # Change the offsets
-                self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
-                self.RibbonOffset = 46 + self.QuickAccessButtonSize * 2 + 10
+                self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 16
+                self.RibbonOffset = 50 + self.QuickAccessButtonSize * 2
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(0, self.QuickAccessButtonSize)
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(1, self.TabBar_Size)
-            if Parameters_Ribbon.TOOLBAR_POSITION == 1:
+            if Parameters_Ribbon.TOOLBAR_POSITION == 1:  # Toolbars inline with tabbar
                 # Add the widgets again in a different position
                 self._titleWidget._tabBarLayout.addWidget(
                     _quickAccessToolBarWidget, 0, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
-                self._titleWidget._tabBarLayout.addWidget(_titleLabel, 0, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter)
-                self._titleWidget._tabBarLayout.addWidget(_rightToolBar, 0, 2, 1, 1, Qt.AlignmentFlag.AlignVCenter)
                 self._titleWidget._tabBarLayout.addWidget(_tabBar, 0, 1, 1, 1, Qt.AlignmentFlag.AlignVCenter)
+                self._titleWidget._tabBarLayout.addWidget(_titleLabel, 0, 2, 1, 1, Qt.AlignmentFlag.AlignVCenter)
+                self._titleWidget._tabBarLayout.addWidget(_rightToolBar, 0, 3, 1, 2, Qt.AlignmentFlag.AlignVCenter)
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize + 10
                 self.RibbonOffset = 46 + self.QuickAccessButtonSize
