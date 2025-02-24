@@ -635,7 +635,8 @@ class ModernMenu(RibbonBar):
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
                 self.RibbonOffset = 46 + self.QuickAccessButtonSize * 2 + 10
-                self._titleWidget._tabBarLayout.setRowMinimumHeight(0, self.QuickAccessButtonSize + 10)
+                self._titleWidget._tabBarLayout.setRowMinimumHeight(0, self.QuickAccessButtonSize)
+                self._titleWidget._tabBarLayout.setRowMinimumHeight(1, self.TabBar_Size)
             if Parameters_Ribbon.TOOLBAR_POSITION == 1:
                 # Add the widgets again in a different position
                 self._titleWidget._tabBarLayout.addWidget(
@@ -887,7 +888,7 @@ class ModernMenu(RibbonBar):
         self.tabBar().setFont(font)
 
         self.tabBar().setIconSize(QSize(self.TabBar_Size - 6, self.TabBar_Size - 6))
-        self.tabBar().setStyleSheet("margin: 0px;padding: 0px;height: " + str(self.QuickAccessButtonSize) + ";")
+        self.tabBar().setStyleSheet("margin: 0px;padding: 0px;height: " + str(self.TabBar_Size) + ";")
 
         # Correct colors when no stylesheet is selected for FreeCAD.
         self.quickAccessToolBar().setStyleSheet("")
@@ -1074,7 +1075,7 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setMinimumWidth(RightToolbarWidth)
         self.setRightToolBarHeight(self.RibbonMinimalHeight)
         # Set the size policy
-        self.rightToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
+        self.rightToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
         self.rightToolBar().setSizeIncrement(1, 1)
         # Set the objectName for the right toolbar. needed for excluding from hiding.
         self.rightToolBar().setObjectName("rightToolBar")
