@@ -663,8 +663,8 @@ class ModernMenu(RibbonBar):
         return False
 
     def enterEvent_Custom(self, QEvent):
-        # Hide any possible toolbar
-        self.hideClassicToolbars()
+        # # Hide any possible toolbar
+        # self.hideClassicToolbars()
         # In FreeCAD 1.0, Overlays are introduced. These have also an enterEvent which results in strange behavior
         # Therefore this function is only activated when FreeCAD's overlay function is disabled.
         if Parameters_Ribbon.SHOW_ON_HOVER is True and Parameters_Ribbon.USE_FC_OVERLAY is False:
