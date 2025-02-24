@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsCNeZlv.ui'
+## Form generated from reading UI file 'SettingsgIcVMs.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.8.1
 ##
@@ -75,8 +75,8 @@ class Ui_Settings(object):
         Settings.setSizePolicy(sizePolicy)
         Settings.setMinimumSize(QSize(600, 600))
         Settings.setAutoFillBackground(False)
-        self.gridLayout_40 = QGridLayout(Settings)
-        self.gridLayout_40.setObjectName("gridLayout_40")
+        self.gridLayout_41 = QGridLayout(Settings)
+        self.gridLayout_41.setObjectName("gridLayout_41")
         self.gridLayout_6 = QGridLayout()
         self.gridLayout_6.setObjectName("gridLayout_6")
         self.scrollArea = QScrollArea(Settings)
@@ -90,7 +90,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, -131, 702, 946))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 702, 1068))
         self.gridLayout_28 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_28.setObjectName("gridLayout_28")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -258,9 +258,22 @@ class Ui_Settings(object):
         self.TabbarStyle.addItem("")
         self.TabbarStyle.addItem("")
         self.TabbarStyle.setObjectName("TabbarStyle")
-        self.TabbarStyle.setMinimumSize(QSize(100, 0))
+        self.TabbarStyle.setMinimumSize(QSize(180, 0))
 
         self.gridLayout_24.addWidget(self.TabbarStyle, 0, 1, 1, 1)
+
+        self.label_36 = QLabel(self.groupBox_10)
+        self.label_36.setObjectName("label_36")
+
+        self.gridLayout_24.addWidget(self.label_36, 1, 0, 1, 1)
+
+        self.ToolbarPositions = QComboBox(self.groupBox_10)
+        self.ToolbarPositions.addItem("")
+        self.ToolbarPositions.addItem("")
+        self.ToolbarPositions.setObjectName("ToolbarPositions")
+        self.ToolbarPositions.setMinimumSize(QSize(180, 0))
+
+        self.gridLayout_24.addWidget(self.ToolbarPositions, 1, 1, 1, 1)
 
         self.gridLayout_25.addLayout(self.gridLayout_24, 0, 0, 1, 1)
 
@@ -496,10 +509,6 @@ class Ui_Settings(object):
 
         self.gridLayout_38.addWidget(self.label_33, 1, 0, 1, 1)
 
-        self.horizontalSpacer_12 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_38.addItem(self.horizontalSpacer_12, 0, 2, 1, 1)
-
         self.TextSize_Buttons = QSpinBox(self.groupBox_14)
         self.TextSize_Buttons.setObjectName("TextSize_Buttons")
         self.TextSize_Buttons.setFont(font1)
@@ -532,6 +541,10 @@ class Ui_Settings(object):
         self.gridLayout_38.addWidget(self.TextSize_Panels, 3, 1, 1, 1)
 
         self.gridLayout_39.addLayout(self.gridLayout_38, 0, 0, 1, 1)
+
+        self.horizontalSpacer_12 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_39.addItem(self.horizontalSpacer_12, 0, 1, 1, 1)
 
         self.gridLayout_3.addWidget(self.groupBox_14, 3, 0, 1, 1)
 
@@ -1104,7 +1117,7 @@ class Ui_Settings(object):
 
         self.gridLayout_6.addWidget(self.scrollArea, 0, 0, 1, 3)
 
-        self.gridLayout_40.addLayout(self.gridLayout_6, 0, 0, 1, 1)
+        self.gridLayout_41.addLayout(self.gridLayout_6, 0, 0, 1, 1)
 
         self.gridLayout_7 = QGridLayout()
         self.gridLayout_7.setObjectName("gridLayout_7")
@@ -1127,7 +1140,7 @@ class Ui_Settings(object):
 
         self.gridLayout_7.addWidget(self.Cancel, 0, 3, 1, 1)
 
-        self.gridLayout_40.addLayout(self.gridLayout_7, 1, 0, 1, 1)
+        self.gridLayout_41.addLayout(self.gridLayout_7, 1, 0, 1, 1)
 
         self.retranslateUi(Settings)
         self.EnableBackup.toggled.connect(self.groupBox_Backup.setEnabled)
@@ -1167,8 +1180,19 @@ class Ui_Settings(object):
         self.TabbarStyle.setItemText(2, QCoreApplication.translate("Settings", "Text only", None))
 
         self.TabbarStyle.setCurrentText(QCoreApplication.translate("Settings", "Icon + text", None))
+        self.label_36.setText(
+            QCoreApplication.translate(
+                "Settings", "<html><head/><body><p>Set the toolbar positions: </p></body></html>", None
+            )
+        )
+        self.ToolbarPositions.setItemText(0, QCoreApplication.translate("Settings", "Toolbars above tabbar", None))
+        self.ToolbarPositions.setItemText(
+            1, QCoreApplication.translate("Settings", "Toolbars inline with tabbar", None)
+        )
+
+        self.ToolbarPositions.setCurrentText(QCoreApplication.translate("Settings", "Toolbars above tabbar", None))
         self.groupBox_4.setTitle(QCoreApplication.translate("Settings", "Button size", None))
-        self.label_23.setText(QCoreApplication.translate("Settings", "Size of Tabbar tabs:", None))
+        self.label_23.setText(QCoreApplication.translate("Settings", "Size of tabbar tabs:", None))
         self.label_22.setText(QCoreApplication.translate("Settings", "Size of right toolbar buttons:", None))
         self.label_5.setText(QCoreApplication.translate("Settings", "Size of application button:", None))
         self.label_10.setText(QCoreApplication.translate("Settings", "Size of small buttons:", None))
@@ -1191,7 +1215,7 @@ class Ui_Settings(object):
         self.groupBox_14.setTitle(QCoreApplication.translate("Settings", "Text size", None))
         self.label_32.setText(QCoreApplication.translate("Settings", "Text size of menus", None))
         self.label_34.setText(QCoreApplication.translate("Settings", "Text size of tabs", None))
-        self.label_35.setText(QCoreApplication.translate("Settings", "Text size of panel titels", None))
+        self.label_35.setText(QCoreApplication.translate("Settings", "Text size of panel titles", None))
         self.label_33.setText(QCoreApplication.translate("Settings", "Text size of buttons", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("Settings", "Select stylesheet", None))
         self.label_7.setText(QCoreApplication.translate("Settings", "...\\", None))

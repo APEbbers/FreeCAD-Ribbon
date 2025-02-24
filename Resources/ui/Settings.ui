@@ -31,7 +31,7 @@
   <property name="autoFillBackground">
    <bool>false</bool>
   </property>
-  <layout class="QGridLayout" name="gridLayout_40">
+  <layout class="QGridLayout" name="gridLayout_41">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout_6">
      <item row="0" column="0" colspan="3">
@@ -55,9 +55,9 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>-192</y>
+          <y>0</y>
           <width>702</width>
-          <height>1036</height>
+          <height>1068</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_28">
@@ -391,7 +391,7 @@
                         <widget class="QComboBox" name="TabbarStyle">
                          <property name="minimumSize">
                           <size>
-                           <width>100</width>
+                           <width>180</width>
                            <height>0</height>
                           </size>
                          </property>
@@ -411,6 +411,36 @@
                          <item>
                           <property name="text">
                            <string>Text only</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                       <item row="1" column="0">
+                        <widget class="QLabel" name="label_36">
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the toolbar positions: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="1">
+                        <widget class="QComboBox" name="ToolbarPositions">
+                         <property name="minimumSize">
+                          <size>
+                           <width>180</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="currentText">
+                          <string>Toolbars above tabbar</string>
+                         </property>
+                         <item>
+                          <property name="text">
+                           <string>Toolbars above tabbar</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Toolbars inline with tabbar</string>
                           </property>
                          </item>
                         </widget>
@@ -449,7 +479,7 @@
                        <item row="5" column="0">
                         <widget class="QLabel" name="label_23">
                          <property name="text">
-                          <string>Size of Tabbar tabs:</string>
+                          <string>Size of tabbar tabs:</string>
                          </property>
                         </widget>
                        </item>

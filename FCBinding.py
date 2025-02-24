@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -42,7 +42,7 @@ from PySide.QtGui import (
     QShortcut,
     QCursor,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -68,7 +68,7 @@ from PySide.QtWidgets import (
     QToolTip,
     QWidgetItem,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -122,6 +122,13 @@ from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
+# import pyqtribbon as pyqtribbon
+# from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
+# from pyqtribbon.panel import RibbonPanel
+# from pyqtribbon.toolbutton import RibbonToolButton
+# from pyqtribbon.separator import RibbonSeparator
+# from pyqtribbon.category import RibbonCategoryLayoutButton
+
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
 
@@ -162,10 +169,10 @@ class ModernMenu(RibbonBar):
     # Create an offset for the panelheight
     PanelHeightOffset = 36
     # Create an offset for the whole ribbon height
-    RibbonOffset = 46 + QuickAccessButtonSize  # Set to zero to hide the panel titles
+    RibbonOffset = 46 + QuickAccessButtonSize * 2 + 10  # Set to zero to hide the panel titles
 
     # Set the minimum height for the ribbon
-    RibbonMinimalHeight = QuickAccessButtonSize + 10
+    RibbonMinimalHeight = QuickAccessButtonSize * 2 + 20
     # From v1.6.x, the size of tab bar and right toolbar are controlled by the size of the quickaccess toolbar
     TabBar_Size = QuickAccessButtonSize
     RightToolBarButtonSize = QuickAccessButtonSize
@@ -208,8 +215,6 @@ class ModernMenu(RibbonBar):
         """
         super().__init__(title="")
         self.setObjectName("Ribbon")
-
-        self.setWindowModality(Qt.WindowModality.NonModal)
 
         # connect the signals
         self.connectSignals()
@@ -507,32 +512,13 @@ class ModernMenu(RibbonBar):
         StyleSheet = StyleSheet_Addition_4 + StyleSheet
         self.setStyleSheet(StyleSheet)
 
-        # # Add an addition for Font sizes
-        # StyleSheet_Addition_5 = """
-        # QWidgetItem,
-        # QMenu, QMenu::item,
-        # QAction,
-        # RibbonApplicationButton,
-        # RibbonMenu,
-        # RibbonMenu::item,
-        # RibbonPanelTitle,
-        # RibbonToolButton::item,
-        # QToolButton, QToolButton::menu,
-        # QLabel,
-        # QTextEdit,
-        # SearchBoxLight
-        #     { font-size:11px;}
-        #         QTabBar {font-size:14px;}"""
-        # StyleSheet = StyleSheet_Addition_5 + StyleSheet
-        # self.setStyleSheet(StyleSheet)
-
         # add a stylesheet entry for the fontsize for menus
-        StyleSheet_Addition_6 = (
+        StyleSheet_Addition_5 = (
             "QMenu::item, QMenu::menuAction, QMenuBar::item, RibbonMenu, RibbonToolButton, RibbonMenu::item, QMenu>QLabel {font-size: "
             + str(Parameters_Ribbon.FONTSIZE_MENUS)
             + "px;}"
         )
-        StyleSheet = StyleSheet + StyleSheet_Addition_6
+        StyleSheet = StyleSheet + StyleSheet_Addition_5
         self.setStyleSheet(StyleSheet)
 
         # get the state of the mainwindow
@@ -580,13 +566,13 @@ class ModernMenu(RibbonBar):
         ScrollLeftButton_Tab_Icon = StyleMapping_Ribbon.ReturnStyleItem("ScrollLeftButton_Tab")
         ScrollRightButton_Tab_Icon = StyleMapping_Ribbon.ReturnStyleItem("ScrollRightButton_Tab")
         # Set the icons
-        StyleSheet = "QToolButton {image: none};QToolButton::arrow {image: none};"
+        StyleSheet = "QToolButton {image: none;margin-top:6px;margin-bottom:6px;};QToolButton::arrow {image: none};"
         BackgroundColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
         if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21 and BackgroundColor is not None:
             StyleSheet = (
                 """QToolButton {image: none;background: """
                 + BackgroundColor
-                + """};QToolButton::arrow {image: none};"""
+                + """};QToolButton::arrow {image: none;margin-top:6px;margin-bottom:6px;};"""
             )
         if ScrollLeftButton_Tab_Icon is not None:
             ScrollLeftButton_Tab.setStyleSheet(StyleSheet)
@@ -627,7 +613,41 @@ class ModernMenu(RibbonBar):
         self.isLoaded = True
         self.FoldRibbon()
 
-        # Parameters_Ribbon.FONTSIZE_MENUS = 8
+        # Rearrange the tabbar and toolbars
+        if Parameters_Ribbon.TOOLBAR_POSITION == 0 or Parameters_Ribbon.TOOLBAR_POSITION == 1:
+            # Get the widgets
+            _quickAccessToolBarWidget = self.quickAccessToolBar()
+            _titleLabel = self._titleWidget._titleLabel
+            _rightToolBar = self.rightToolBar()
+            _tabBar = self.tabBar()
+            # Remove the widgets
+            self._titleWidget._tabBarLayout.removeWidget(_quickAccessToolBarWidget)
+            self._titleWidget._tabBarLayout.removeWidget(_titleLabel)
+            self._titleWidget._tabBarLayout.removeWidget(_rightToolBar)
+            self._titleWidget._tabBarLayout.removeWidget(_tabBar)
+            if Parameters_Ribbon.TOOLBAR_POSITION == 0:
+                self._titleWidget._tabBarLayout.addWidget(
+                    _quickAccessToolBarWidget, 0, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                )
+                self._titleWidget._tabBarLayout.addWidget(_titleLabel, 0, 1, 1, 1, Qt.AlignmentFlag.AlignVCenter)
+                self._titleWidget._tabBarLayout.addWidget(_rightToolBar, 0, 2, 1, 2, Qt.AlignmentFlag.AlignVCenter)
+                self._titleWidget._tabBarLayout.addWidget(_tabBar, 1, 0, 1, 4, Qt.AlignmentFlag.AlignVCenter)
+                # Change the offsets
+                self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
+                self.RibbonOffset = 46 + self.QuickAccessButtonSize * 2 + 10
+                self._titleWidget._tabBarLayout.setRowMinimumHeight(0, self.QuickAccessButtonSize + 10)
+            if Parameters_Ribbon.TOOLBAR_POSITION == 1:
+                # Add the widgets again in a different position
+                self._titleWidget._tabBarLayout.addWidget(
+                    _quickAccessToolBarWidget, 0, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                )
+                self._titleWidget._tabBarLayout.addWidget(_titleLabel, 0, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter)
+                self._titleWidget._tabBarLayout.addWidget(_rightToolBar, 0, 2, 1, 1, Qt.AlignmentFlag.AlignVCenter)
+                self._titleWidget._tabBarLayout.addWidget(_tabBar, 0, 1, 1, 1, Qt.AlignmentFlag.AlignVCenter)
+                # Change the offsets
+                self.RibbonMinimalHeight = self.QuickAccessButtonSize + 10
+                self.RibbonOffset = 46 + self.QuickAccessButtonSize
+                self._titleWidget._tabBarLayout.setRowMinimumHeight(0, self.QuickAccessButtonSize)
         return
 
     def closeEvent(self, event):
@@ -1068,7 +1088,7 @@ class ModernMenu(RibbonBar):
             try:
                 import SearchBoxLight
 
-                width = 5 * self.RightToolBarButtonSize
+                width = 10 * self.RightToolBarButtonSize
 
                 sea = SearchBoxLight.SearchBoxLight(
                     getItemGroups=lambda: __import__("GetItemGroups").getItemGroups(),
@@ -2110,8 +2130,8 @@ class ModernMenu(RibbonBar):
         )
 
         # Set the maximum height to a high value to prevent from the ribbon to be clipped off
-        self.currentCategory().setMinimumHeight(self.RibbonHeight)
-        self.currentCategory().setMaximumHeight(self.RibbonHeight)
+        self.currentCategory().setMinimumHeight(self.RibbonHeight - self.RibbonMinimalHeight - 3)
+        self.currentCategory().setMaximumHeight(self.RibbonHeight - self.RibbonMinimalHeight - 3)
         self.setRibbonHeight(self.RibbonHeight)
         return
 

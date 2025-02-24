@@ -4706,9 +4706,9 @@ class LoadDialog(Design_ui.Ui_Form):
         # Get the stylesheet from the main window and use it for this form
         lbl.setStyleSheet("background-color: " + StyleMapping_Ribbon.ReturnStyleItem("Background_Color") + ";")
 
-        # Center the widget
-        cp = QGuiApplication.screenAt(self.form.pos()).geometry().center()
-        lbl.move(cp)
+        # # Center the widget
+        # cp = QGuiApplication.screenAt(self.form.pos()).geometry().center()
+        # lbl.move(cp)
 
         if HideOnly is False:
             activeWorkbench = Gui.activeWorkbench().name()
