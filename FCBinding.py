@@ -1074,6 +1074,9 @@ class ModernMenu(RibbonBar):
         except Exception:
             pass
         # Set the tooltip
+        ToolTip = translate("FreeCAD Ribbon", "Click to toggle the autohide function on or off")
+        if ShortcutKey != "none":
+            ToolTip = ToolTip + f"<br></br><i>{ShortcutKey}</i>"
         pinButton.setToolTip(
             translate(
                 "FreeCAD Ribbon", "Click to toggle the autohide function on or off" + f"<br></br><i>{ShortcutKey}</i>"
