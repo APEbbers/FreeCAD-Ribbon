@@ -62,9 +62,15 @@ class RibbonLayout_Class:
         }
 
     def Activated(self):
-        import LoadDesign_Ribbon
+        from PySide.QtWidgets import QDockWidget
+        from FCBinding import ModernMenu
 
-        LoadDesign_Ribbon.main()
+        # Get the main window of FreeCAD
+        mw = Gui.getMainWindow()
+
+        DockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+        Ribbon = DockWidget.findChildren(ModernMenu, "Ribbon")[0]
+        Ribbon.loadDesignMenu()
         return
 
 
@@ -78,9 +84,15 @@ class RibbonPreferences_Class:
         }
 
     def Activated(self):
-        import LoadDesign_Ribbon
+        from PySide.QtWidgets import QDockWidget
+        from FCBinding import ModernMenu
 
-        LoadDesign_Ribbon.main()
+        # Get the main window of FreeCAD
+        mw = Gui.getMainWindow()
+
+        DockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+        Ribbon = DockWidget.findChildren(ModernMenu, "Ribbon")[0]
+        Ribbon.loadSettingsMenu()
         return
 
 

@@ -1058,8 +1058,6 @@ class ModernMenu(RibbonBar):
         # Set the text and objectname
         pinButton.setText(translate("FreeCAD Ribbon", "Pin Ribbon"))
         pinButton.setObjectName("Pin Ribbon")
-        # Set the tooltip
-        pinButton.setToolTip(translate("FreeCAD Ribbon", "Click to toggle the autohide function on or off"))
         # Set the correct checkstate
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
             pinButton.setChecked(False)
@@ -1075,6 +1073,12 @@ class ModernMenu(RibbonBar):
                 pinButton.setShortcut(ShortcutKey)
         except Exception:
             pass
+        # Set the tooltip
+        pinButton.setToolTip(
+            translate(
+                "FreeCAD Ribbon", "Click to toggle the autohide function on or off" + f"<br></br><i>{ShortcutKey}</i>"
+            )
+        )
 
         # If FreeCAD's overlay function is active, set the pinbutton to checked and then to disabled
         preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
