@@ -55,6 +55,7 @@ class RibbonApplicationMenu_Class:
 class RibbonLayout_Class:
     def GetResources(self):
         return {
+            "Pixmap": "FreecadNew.svg",
             "MenuText": "Ribbon Layout",
             "ToolTip": "Design the ribbon to your preference",
         }
@@ -69,6 +70,7 @@ class RibbonLayout_Class:
 class RibbonPreferences_Class:
     def GetResources(self):
         return {
+            "Pixmap": "FreecadNew.svg",
             "MenuText": "Ribbon Preferences",
             "ToolTip": "Set preferences for the Ribbon UI",
         }
