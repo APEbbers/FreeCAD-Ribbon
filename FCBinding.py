@@ -605,7 +605,7 @@ class ModernMenu(RibbonBar):
         if "Ribbon_Menu" in CustomShortCuts.GetStrings():
             ShortcutKey = CustomShortCuts.GetString("Ribbon_Menu")
         else:
-            ShortcutKey = CustomShortCuts.GetString("Alt+A")
+            ShortcutKey = "Alt+A"
         self.applicationOptionButton().setShortcut(ShortcutKey)
         ToolTip = f"{ShortcutKey}"
         self.applicationOptionButton().setToolTip(ToolTip)
