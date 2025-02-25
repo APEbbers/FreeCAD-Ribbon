@@ -52,4 +52,58 @@ class RibbonApplicationMenu_Class:
         return
 
 
+class RibbonLayout_Class:
+    def GetResources(self):
+        return {
+            "MenuText": "Ribbon Layout",
+            "ToolTip": "Design the ribbon to your preference",
+        }
+
+    def Activated(self):
+        import LoadDesign_Ribbon
+
+        LoadDesign_Ribbon.main()
+        return
+
+
+class RibbonPreferences_Class:
+    def GetResources(self):
+        return {
+            "MenuText": "Ribbon Preferences",
+            "ToolTip": "Set preferences for the Ribbon UI",
+        }
+
+    def Activated(self):
+        import LoadDesign_Ribbon
+
+        LoadDesign_Ribbon.main()
+        return
+
+
+class RibbonPin_Class:
+    def GetResources(self):
+        return {
+            "Pixmap": "pin-icon-default.svg",
+            "MenuText": "Pin button",
+            "ToolTip": "Click to toggle the autohide function on or off",
+        }
+
+    def Activated(self):
+        from PySide.QtWidgets import QDockWidget, QToolButton
+        from FCBinding import ModernMenu
+
+        # Get the main window of FreeCAD
+        mw = Gui.getMainWindow()
+
+        DockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+        Ribbon = DockWidget.findChildren(ModernMenu, "Ribbon")[0]
+        RightToolbar = Ribbon.rightToolBar()
+        PinButton = RightToolbar.findChildren(QToolButton, "Pin Ribbon")[0]
+        PinButton.animateClick()
+        return
+
+
 Gui.addCommand("Ribbon_Menu", RibbonApplicationMenu_Class())
+Gui.addCommand("Ribbon_Layout", RibbonLayout_Class())
+Gui.addCommand("Ribbon_Preferences", RibbonPreferences_Class())
+Gui.addCommand("Ribbon_Pin", RibbonPin_Class())

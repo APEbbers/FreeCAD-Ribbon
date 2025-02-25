@@ -600,12 +600,13 @@ class ModernMenu(RibbonBar):
         # Connect shortcuts
         #
         # Application menu
-        # KeyCombination = Parameters_Ribbon.SHORTCUT_APPLICATION
-        CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/Shortcut")
-        if "Ribbon_Menu" in CustomShortCuts.GetStrings():
-            ShortcutKey = CustomShortCuts.GetString("Ribbon_Menu")
-        else:
-            ShortcutKey = "Alt+A"
+        ShortcutKey = "Alt+A"
+        try:
+            CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/Shortcut")
+            if "Ribbon_Menu" in CustomShortCuts.GetStrings():
+                ShortcutKey = CustomShortCuts.GetString("Ribbon_Menu")
+        except Exception:
+            pass
         self.applicationOptionButton().setShortcut(ShortcutKey)
         ToolTip = f"{ShortcutKey}"
         self.applicationOptionButton().setToolTip(ToolTip)
@@ -1065,6 +1066,15 @@ class ModernMenu(RibbonBar):
         if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
             pinButton.setChecked(True)
         pinButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
+        ShortcutKey = ""
+        try:
+            CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/Shortcut")
+            if "Ribbon_Pin" in CustomShortCuts.GetStrings():
+                ShortcutKey = CustomShortCuts.GetString("Ribbon_Pin")
+            if ShortcutKey != "" and ShortcutKey is not None:
+                pinButton.setShortcut(ShortcutKey)
+        except Exception:
+            pass
 
         # If FreeCAD's overlay function is active, set the pinbutton to checked and then to disabled
         preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
@@ -1243,11 +1253,29 @@ class ModernMenu(RibbonBar):
         DesignButton = RibbonMenu.addAction(translate("FreeCAD Ribbon", "Ribbon layout"))
         DesignButton.setToolTip(translate("FreeCAD Ribbon", "Design the ribbon to your preference"))
         DesignButton.triggered.connect(self.loadDesignMenu)
+        ShortcutKey = ""
+        try:
+            CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/Shortcut")
+            if "Ribbon_Layout" in CustomShortCuts.GetStrings():
+                ShortcutKey = CustomShortCuts.GetString("Ribbon_Layout")
+        except Exception:
+            pass
+        if ShortcutKey != "" and ShortcutKey is not None:
+            DesignButton.setShortcut(ShortcutKey)
         # Add the preference button
         PreferenceButton = RibbonMenu.addAction(translate("FreeCAD Ribbon", "Preferences"))
         PreferenceButton.setToolTip(translate("FreeCAD Ribbon", "Set preferences for the Ribbon UI"))
         PreferenceButton.setMenuRole(QAction.MenuRole.NoRole)
         PreferenceButton.triggered.connect(self.loadSettingsMenu)
+        ShortcutKey = ""
+        try:
+            CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/Shortcut")
+            if "Ribbon_Preferences" in CustomShortCuts.GetStrings():
+                ShortcutKey = CustomShortCuts.GetString("Ribbon_Preferences")
+        except Exception:
+            pass
+        if ShortcutKey != "" and ShortcutKey is not None:
+            PreferenceButton.setShortcut(ShortcutKey)
         # Add the script submenu with items
         ScriptDir = os.path.join(os.path.dirname(__file__), "Scripts")
         if os.path.exists(ScriptDir) is True:
