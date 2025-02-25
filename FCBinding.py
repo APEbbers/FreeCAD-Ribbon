@@ -600,10 +600,14 @@ class ModernMenu(RibbonBar):
         # Connect shortcuts
         #
         # Application menu
-        KeyCombination = Parameters_Ribbon.SHORTCUT_APPLICATION
-        self.ShortCutApp = QShortcut(QKeySequence(KeyCombination), self)
-        self.ShortCutApp.activated.connect(self.ToggleApplicationButton)
-        ToolTip = f"{KeyCombination}"
+        # KeyCombination = Parameters_Ribbon.SHORTCUT_APPLICATION
+        CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/Shortcut")
+        if "Ribbon_Menu" in CustomShortCuts.GetStrings():
+            ShortcutKey = CustomShortCuts.GetString("Ribbon_Menu")
+        else:
+            ShortcutKey = CustomShortCuts.GetString("Alt+A")
+        self.applicationOptionButton().setShortcut(ShortcutKey)
+        ToolTip = f"{ShortcutKey}"
         self.applicationOptionButton().setToolTip(ToolTip)
 
         # Add a custom close event to show the original menubar again

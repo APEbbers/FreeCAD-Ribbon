@@ -219,6 +219,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.TextSize_Buttons.setRange(8, 24)
         self.form.TextSize_Tabs.setRange(8, 24)
         self.form.TextSize_Panels.setRange(8, 24)
+        # Disable and hide the shortcut controls
+        self.form.groupBox_13.setDisabled(True)
+        self.form.groupBox_13.setHidden(True)
 
         # Remove tabbar click settings for the time being
         self.form.label_15.setHidden(True)
