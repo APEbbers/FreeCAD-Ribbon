@@ -31,8 +31,8 @@
   <property name="autoFillBackground">
    <bool>false</bool>
   </property>
-  <layout class="QGridLayout" name="gridLayout_41">
-   <item row="0" column="0">
+  <layout class="QGridLayout" name="gridLayout_40">
+   <item row="0" column="0" colspan="2">
     <layout class="QGridLayout" name="gridLayout_6">
      <item row="0" column="0" colspan="3">
       <widget class="QScrollArea" name="scrollArea">
@@ -57,7 +57,7 @@
           <x>0</x>
           <y>0</y>
           <width>702</width>
-          <height>1068</height>
+          <height>1066</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_28">
@@ -76,7 +76,7 @@
             <string notr="true"/>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>1</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideRight</enum>
@@ -1514,12 +1514,97 @@
                <layout class="QGridLayout" name="gridLayout_37">
                 <item row="0" column="0">
                  <layout class="QGridLayout" name="gridLayout_36">
-                  <item row="0" column="4">
-                   <widget class="QPushButton" name="ApplyShortcutApp">
+                  <item row="1" column="1">
+                   <widget class="QComboBox" name="ModifierKeyApp_2">
+                    <item>
+                     <property name="text">
+                      <string>Ctrl</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Shift</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Alt</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Space</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="label_37">
                     <property name="text">
-                     <string>Apply</string>
+                     <string>Set shortcut for preference menu menu:</string>
+                    </property>
+                    <property name="wordWrap">
+                     <bool>false</bool>
                     </property>
                    </widget>
+                  </item>
+                  <item row="1" column="5">
+                   <widget class="QLabel" name="ShortcutTaken_2">
+                    <property name="minimumSize">
+                     <size>
+                      <width>120</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <italic>true</italic>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#df2a06;&quot;&gt;Shortcut already taken&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                    <property name="wordWrap">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1" alignment="Qt::AlignmentFlag::AlignLeft">
+                   <widget class="QComboBox" name="ModifierKeyApp">
+                    <item>
+                     <property name="text">
+                      <string>Ctrl</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Shift</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Alt</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Space</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="0" column="6">
+                   <spacer name="horizontalSpacer_11">
+                    <property name="orientation">
+                     <enum>Qt::Orientation::Horizontal</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                     <size>
+                      <width>40</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
                   </item>
                   <item row="0" column="5">
                    <widget class="QLabel" name="ShortcutTaken_1">
@@ -1549,28 +1634,11 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="1" alignment="Qt::AlignmentFlag::AlignLeft">
-                   <widget class="QComboBox" name="ModifierKeyApp">
-                    <item>
-                     <property name="text">
-                      <string>Ctrl</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Shift</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Alt</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Space</string>
-                     </property>
-                    </item>
+                  <item row="1" column="2">
+                   <widget class="QLabel" name="label_38">
+                    <property name="text">
+                     <string>+</string>
+                    </property>
                    </widget>
                   </item>
                   <item row="0" column="0">
@@ -1580,6 +1648,41 @@
                     </property>
                     <property name="wordWrap">
                      <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="3">
+                   <widget class="QLineEdit" name="ModifierKeyPref">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>100</width>
+                      <height>16777215</height>
+                     </size>
+                    </property>
+                    <property name="inputMethodHints">
+                     <set>Qt::InputMethodHint::ImhNone</set>
+                    </property>
+                    <property name="maxLength">
+                     <number>1</number>
+                    </property>
+                    <property name="placeholderText">
+                     <string>Enter a key...</string>
+                    </property>
+                    <property name="clearButtonEnabled">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="4">
+                   <widget class="QPushButton" name="ApplyShortcutApp">
+                    <property name="text">
+                     <string>Apply</string>
                     </property>
                    </widget>
                   </item>
@@ -1611,18 +1714,102 @@
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="6">
-                   <spacer name="horizontalSpacer_11">
-                    <property name="orientation">
-                     <enum>Qt::Orientation::Horizontal</enum>
+                  <item row="1" column="4">
+                   <widget class="QPushButton" name="ApplyShortcutPref">
+                    <property name="text">
+                     <string>Apply</string>
                     </property>
-                    <property name="sizeHint" stdset="0">
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QLabel" name="label_39">
+                    <property name="text">
+                     <string>Set shortcut for the layout menu:</string>
+                    </property>
+                    <property name="wordWrap">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="1">
+                   <widget class="QComboBox" name="ModifierKeyApp_3">
+                    <item>
+                     <property name="text">
+                      <string>Ctrl</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Shift</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Alt</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Space</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="2" column="3">
+                   <widget class="QLineEdit" name="ModifierKeyLayout">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>0</horstretch>
+                      <verstretch>0</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="maximumSize">
                      <size>
-                      <width>40</width>
-                      <height>20</height>
+                      <width>100</width>
+                      <height>16777215</height>
                      </size>
                     </property>
-                   </spacer>
+                    <property name="inputMethodHints">
+                     <set>Qt::InputMethodHint::ImhNone</set>
+                    </property>
+                    <property name="maxLength">
+                     <number>1</number>
+                    </property>
+                    <property name="placeholderText">
+                     <string>Enter a key...</string>
+                    </property>
+                    <property name="clearButtonEnabled">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="4">
+                   <widget class="QPushButton" name="ApplyShortcutLayout">
+                    <property name="text">
+                     <string>Apply</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="5">
+                   <widget class="QLabel" name="ShortcutTaken_3">
+                    <property name="minimumSize">
+                     <size>
+                      <width>120</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <italic>true</italic>
+                     </font>
+                    </property>
+                    <property name="text">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#df2a06;&quot;&gt;Shortcut already taken&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                    <property name="wordWrap">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </item>
@@ -2264,7 +2451,14 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
+   <item row="1" column="1">
+    <widget class="QLabel" name="label_40">
+     <property name="text">
+      <string>+</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
     <layout class="QGridLayout" name="gridLayout_7">
      <item row="0" column="0">
       <widget class="QPushButton" name="Reset">
