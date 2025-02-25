@@ -20,6 +20,7 @@
 # *                                                                       *
 # *************************************************************************
 
+# Script for creating the command for FreeCAD
 
 # FreeCAD init script of the Work Features module
 import FreeCAD as App
