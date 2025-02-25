@@ -39,8 +39,8 @@ global pathIcons
 pathIcons = Parameters_Ribbon.ICON_LOCATION
 pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
 pathUI = Parameters_Ribbon.UI_LOCATION
-pathScripts = os.path.join(os.path.dirname(__file__), "Scripts")
-pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
+pathScripts = os.path.join(os.path.dirname(FCBinding.__file__), "Scripts")
+pathPackages = os.path.join(os.path.dirname(FCBinding.__file__), "Resources", "packages")
 sys.path.append(pathIcons)
 sys.path.append(pathStylSheets)
 sys.path.append(pathUI)
