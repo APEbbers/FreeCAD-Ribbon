@@ -1066,7 +1066,7 @@ class ModernMenu(RibbonBar):
         if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
             pinButton.setChecked(True)
         pinButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
-        ShortcutKey = ""
+        ShortcutKey = "Alt+T"
         try:
             CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/Shortcut")
             if "Ribbon_Pin" in CustomShortCuts.GetStrings():
@@ -1253,7 +1253,7 @@ class ModernMenu(RibbonBar):
         DesignButton = RibbonMenu.addAction(translate("FreeCAD Ribbon", "Ribbon layout"))
         DesignButton.setToolTip(translate("FreeCAD Ribbon", "Design the ribbon to your preference"))
         DesignButton.triggered.connect(self.loadDesignMenu)
-        ShortcutKey = ""
+        ShortcutKey = "Alt+L"
         try:
             CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/Shortcut")
             if "Ribbon_Layout" in CustomShortCuts.GetStrings():
@@ -1267,7 +1267,7 @@ class ModernMenu(RibbonBar):
         PreferenceButton.setToolTip(translate("FreeCAD Ribbon", "Set preferences for the Ribbon UI"))
         PreferenceButton.setMenuRole(QAction.MenuRole.NoRole)
         PreferenceButton.triggered.connect(self.loadSettingsMenu)
-        ShortcutKey = ""
+        ShortcutKey = "Alt+P"
         try:
             CustomShortCuts = App.ParamGet("User parameter:BaseApp/Preferences/Shortcut")
             if "Ribbon_Preferences" in CustomShortCuts.GetStrings():

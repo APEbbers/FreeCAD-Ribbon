@@ -33,7 +33,7 @@ translate = App.Qt.translate
 class RibbonApplicationMenu_Class:
     def GetResources(self):
         return {
-            "Pixmap": "FreecadNew.svg",  # the name of a svg file available in the resources
+            "Pixmap": "./Resources/icons/FreecadNew.svg",  # the name of a svg file available in the resources
             "Accel": "Alt+A",
             "MenuText": "Ribbon menu",
             "ToolTip": "Shows the ribbon menu",
@@ -55,7 +55,8 @@ class RibbonApplicationMenu_Class:
 class RibbonLayout_Class:
     def GetResources(self):
         return {
-            "Pixmap": "FreecadNew.svg",
+            "Pixmap": "./Resources/icons/FreecadNew.svg",
+            "Accel": "Alt+L",
             "MenuText": "Ribbon Layout",
             "ToolTip": "Design the ribbon to your preference",
         }
@@ -70,7 +71,8 @@ class RibbonLayout_Class:
 class RibbonPreferences_Class:
     def GetResources(self):
         return {
-            "Pixmap": "FreecadNew.svg",
+            "Pixmap": "./Resources/icons/FreecadNew.svg",
+            "Accel": "Alt+P",
             "MenuText": "Ribbon Preferences",
             "ToolTip": "Set preferences for the Ribbon UI",
         }
@@ -85,7 +87,8 @@ class RibbonPreferences_Class:
 class RibbonPin_Class:
     def GetResources(self):
         return {
-            "Pixmap": "pin-icon-default.svg",
+            "Pixmap": "./Resources/icons/pin-icon-default.svg",
+            "Accel": "Alt+T",
             "MenuText": "Pin button",
             "ToolTip": "Click to toggle the autohide function on or off",
         }
