@@ -100,6 +100,9 @@ import StyleMapping_Ribbon
 import platform
 import math
 
+# import Ribbon. This contains the ribbon commands for FreeCAD
+import Ribbon
+
 # from CustomWidgets import myMenu as QMenu
 
 # Get the resources

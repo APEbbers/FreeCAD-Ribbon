@@ -39,11 +39,15 @@ class RibbonApplicationMenu_Class:
         }
 
     def Activated(self):
+        from PySide.QtWidgets import QDockWidget
         from FCBinding import ModernMenu
-        from pyqtribbon_local.ribbonbar import RibbonApplicationButton
 
-        Command = ModernMenu.applicationOptionButton().animateClick()
+        # Get the main window of FreeCAD
+        mw = Gui.getMainWindow()
 
+        DockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+        Ribbon = DockWidget.findChildren(ModernMenu, "Ribbon")[0]
+        Ribbon.applicationOptionButton().animateClick()
         return
 
 
