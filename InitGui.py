@@ -26,6 +26,7 @@ import FCBinding
 import Parameters_Ribbon
 import shutil
 from PySide.QtCore import Signal, QObject
+from PySide.QtWidgets import QDockWidget
 import sys
 
 
@@ -87,6 +88,9 @@ try:
     print(translate("FreeCAD Ribbon", "Activating Ribbon Bar..."))
     mw = Gui.getMainWindow()
     mw.workbenchActivated.connect(FCBinding.run)
+    TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+    TB.show()
+
 except Exception as e:
     if Parameters_Ribbon.DEBUG_MODE is True:
         print(f"{e.with_traceback(e.__traceback__)}, 0")

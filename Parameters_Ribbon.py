@@ -195,6 +195,7 @@ DefaultSettings = {
     "UseToolsPanel": bool(True),
     "WrapText_Medium": bool(True),
     "WrapText_Large": bool(True),
+    "UseOverlay": bool(True),
     "UseFCOverlay": bool(False),
     "UseButtonBackGround": bool(False),
     "CustomColors": bool(False),
@@ -429,6 +430,11 @@ USE_TOOLSPANEL = Settings.GetBoolSetting("UseToolsPanel")
 if Settings.GetBoolSetting("UseToolsPanel") is None:
     USE_TOOLSPANEL = DefaultSettings["UseToolsPanel"]
     Settings.SetBoolSetting("UseToolsPanel", USE_TOOLSPANEL)
+
+USE_OVERLAY = Settings.GetBoolSetting("UseOverlay")
+if Settings.GetBoolSetting("UseOverlay") is None:
+    USE_FC_OVERLAY = DefaultSettings["UseOverlay"]
+    Settings.SetBoolSetting("UseOverlay", USE_OVERLAY)
 
 USE_FC_OVERLAY = Settings.GetBoolSetting("UseFCOverlay")
 if Settings.GetBoolSetting("UseFCOverlay") is None:

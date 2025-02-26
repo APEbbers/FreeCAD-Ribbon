@@ -76,7 +76,7 @@
             <string notr="true"/>
            </property>
            <property name="currentIndex">
-            <number>1</number>
+            <number>3</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideRight</enum>
@@ -2286,7 +2286,7 @@
             </attribute>
             <layout class="QGridLayout" name="gridLayout_34">
              <item row="1" column="0" rowspan="2" colspan="2">
-              <widget class="QGroupBox" name="groupBox_12">
+              <widget class="QGroupBox" name="EnableOverlay">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                  <horstretch>0</horstretch>
@@ -2294,7 +2294,10 @@
                 </sizepolicy>
                </property>
                <property name="title">
-                <string>Overlay preferences</string>
+                <string>Enable overlay</string>
+               </property>
+               <property name="checkable">
+                <bool>true</bool>
                </property>
                <layout class="QGridLayout" name="gridLayout_32">
                 <item row="0" column="0" rowspan="2" colspan="2">

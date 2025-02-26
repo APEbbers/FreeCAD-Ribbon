@@ -2672,3 +2672,8 @@ class run:
                 ribbonDock.setMaximumHeight(ribbon.RibbonMinimalHeight)
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
+
+            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            TB.show()
+
+            return

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsihvBUv.ui'
+## Form generated from reading UI file 'SettingslajZJn.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.8.1
 ##
@@ -617,68 +617,6 @@ class Ui_Settings(object):
         self.tab.setObjectName("tab")
         self.gridLayout_14 = QGridLayout(self.tab)
         self.gridLayout_14.setObjectName("gridLayout_14")
-        self.groupBox_6 = QGroupBox(self.tab)
-        self.groupBox_6.setObjectName("groupBox_6")
-        self.gridLayout_16 = QGridLayout(self.groupBox_6)
-        self.gridLayout_16.setObjectName("gridLayout_16")
-        self.gridLayout_15 = QGridLayout()
-        self.gridLayout_15.setObjectName("gridLayout_15")
-        self.EnableEnterEvent = QCheckBox(self.groupBox_6)
-        self.EnableEnterEvent.setObjectName("EnableEnterEvent")
-
-        self.gridLayout_15.addWidget(self.EnableEnterEvent, 0, 0, 1, 1)
-
-        self.ScrollSpeed_Ribbon = QSlider(self.groupBox_6)
-        self.ScrollSpeed_Ribbon.setObjectName("ScrollSpeed_Ribbon")
-        self.ScrollSpeed_Ribbon.setMaximum(10)
-        self.ScrollSpeed_Ribbon.setPageStep(1)
-        self.ScrollSpeed_Ribbon.setValue(5)
-        self.ScrollSpeed_Ribbon.setOrientation(Qt.Orientation.Horizontal)
-        self.ScrollSpeed_Ribbon.setTickPosition(QSlider.TickPosition.TicksBelow)
-        self.ScrollSpeed_Ribbon.setTickInterval(1)
-
-        self.gridLayout_15.addWidget(self.ScrollSpeed_Ribbon, 2, 1, 1, 1)
-
-        self.label_12 = QLabel(self.groupBox_6)
-        self.label_12.setObjectName("label_12")
-        sizePolicy8.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
-        self.label_12.setSizePolicy(sizePolicy8)
-        self.label_12.setMinimumSize(QSize(130, 0))
-        self.label_12.setFont(font1)
-
-        self.gridLayout_15.addWidget(self.label_12, 2, 0, 1, 1)
-
-        self.label_13 = QLabel(self.groupBox_6)
-        self.label_13.setObjectName("label_13")
-        sizePolicy8.setHeightForWidth(self.label_13.sizePolicy().hasHeightForWidth())
-        self.label_13.setSizePolicy(sizePolicy8)
-        self.label_13.setMinimumSize(QSize(130, 0))
-        self.label_13.setFont(font1)
-
-        self.gridLayout_15.addWidget(self.label_13, 1, 0, 1, 1)
-
-        self.ScrollSpeed_TabBar = QSlider(self.groupBox_6)
-        self.ScrollSpeed_TabBar.setObjectName("ScrollSpeed_TabBar")
-        sizePolicy10 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        sizePolicy10.setHorizontalStretch(0)
-        sizePolicy10.setVerticalStretch(0)
-        sizePolicy10.setHeightForWidth(self.ScrollSpeed_TabBar.sizePolicy().hasHeightForWidth())
-        self.ScrollSpeed_TabBar.setSizePolicy(sizePolicy10)
-        self.ScrollSpeed_TabBar.setMaximum(10)
-        self.ScrollSpeed_TabBar.setSingleStep(1)
-        self.ScrollSpeed_TabBar.setPageStep(1)
-        self.ScrollSpeed_TabBar.setValue(5)
-        self.ScrollSpeed_TabBar.setSliderPosition(5)
-        self.ScrollSpeed_TabBar.setOrientation(Qt.Orientation.Horizontal)
-        self.ScrollSpeed_TabBar.setTickPosition(QSlider.TickPosition.TicksBelow)
-        self.ScrollSpeed_TabBar.setTickInterval(1)
-
-        self.gridLayout_15.addWidget(self.ScrollSpeed_TabBar, 1, 1, 1, 1)
-
-        self.gridLayout_16.addLayout(self.gridLayout_15, 0, 0, 1, 1)
-
-        self.gridLayout_14.addWidget(self.groupBox_6, 0, 0, 1, 1)
-
         self.groupBox_7 = QGroupBox(self.tab)
         self.groupBox_7.setObjectName("groupBox_7")
         self.gridLayout_18 = QGridLayout(self.groupBox_7)
@@ -744,10 +682,6 @@ class Ui_Settings(object):
         self.gridLayout_18.addItem(self.horizontalSpacer_4, 0, 1, 1, 1)
 
         self.gridLayout_14.addWidget(self.groupBox_7, 1, 0, 1, 1)
-
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_14.addItem(self.verticalSpacer, 3, 0, 1, 1)
 
         self.groupBox_13 = QGroupBox(self.tab)
         self.groupBox_13.setObjectName("groupBox_13")
@@ -891,6 +825,78 @@ class Ui_Settings(object):
         self.gridLayout_37.addLayout(self.gridLayout_36, 0, 0, 1, 1)
 
         self.gridLayout_14.addWidget(self.groupBox_13, 2, 0, 1, 1)
+
+        self.groupBox_6 = QGroupBox(self.tab)
+        self.groupBox_6.setObjectName("groupBox_6")
+        self.gridLayout_16 = QGridLayout(self.groupBox_6)
+        self.gridLayout_16.setObjectName("gridLayout_16")
+        self.gridLayout_15 = QGridLayout()
+        self.gridLayout_15.setObjectName("gridLayout_15")
+        self.EnableEnterEvent = QCheckBox(self.groupBox_6)
+        self.EnableEnterEvent.setObjectName("EnableEnterEvent")
+
+        self.gridLayout_15.addWidget(self.EnableEnterEvent, 0, 0, 1, 1)
+
+        self.ScrollSpeed_Ribbon = QSlider(self.groupBox_6)
+        self.ScrollSpeed_Ribbon.setObjectName("ScrollSpeed_Ribbon")
+        self.ScrollSpeed_Ribbon.setMaximum(10)
+        self.ScrollSpeed_Ribbon.setPageStep(1)
+        self.ScrollSpeed_Ribbon.setValue(5)
+        self.ScrollSpeed_Ribbon.setOrientation(Qt.Orientation.Horizontal)
+        self.ScrollSpeed_Ribbon.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.ScrollSpeed_Ribbon.setTickInterval(1)
+
+        self.gridLayout_15.addWidget(self.ScrollSpeed_Ribbon, 2, 1, 1, 1)
+
+        self.label_12 = QLabel(self.groupBox_6)
+        self.label_12.setObjectName("label_12")
+        sizePolicy8.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
+        self.label_12.setSizePolicy(sizePolicy8)
+        self.label_12.setMinimumSize(QSize(130, 0))
+        self.label_12.setFont(font1)
+
+        self.gridLayout_15.addWidget(self.label_12, 2, 0, 1, 1)
+
+        self.label_13 = QLabel(self.groupBox_6)
+        self.label_13.setObjectName("label_13")
+        sizePolicy8.setHeightForWidth(self.label_13.sizePolicy().hasHeightForWidth())
+        self.label_13.setSizePolicy(sizePolicy8)
+        self.label_13.setMinimumSize(QSize(130, 0))
+        self.label_13.setFont(font1)
+
+        self.gridLayout_15.addWidget(self.label_13, 1, 0, 1, 1)
+
+        self.ScrollSpeed_TabBar = QSlider(self.groupBox_6)
+        self.ScrollSpeed_TabBar.setObjectName("ScrollSpeed_TabBar")
+        sizePolicy10 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy10.setHorizontalStretch(0)
+        sizePolicy10.setVerticalStretch(0)
+        sizePolicy10.setHeightForWidth(self.ScrollSpeed_TabBar.sizePolicy().hasHeightForWidth())
+        self.ScrollSpeed_TabBar.setSizePolicy(sizePolicy10)
+        self.ScrollSpeed_TabBar.setMaximum(10)
+        self.ScrollSpeed_TabBar.setSingleStep(1)
+        self.ScrollSpeed_TabBar.setPageStep(1)
+        self.ScrollSpeed_TabBar.setValue(5)
+        self.ScrollSpeed_TabBar.setSliderPosition(5)
+        self.ScrollSpeed_TabBar.setOrientation(Qt.Orientation.Horizontal)
+        self.ScrollSpeed_TabBar.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.ScrollSpeed_TabBar.setTickInterval(1)
+
+        self.gridLayout_15.addWidget(self.ScrollSpeed_TabBar, 1, 1, 1, 1)
+
+        self.gridLayout_16.addLayout(self.gridLayout_15, 0, 0, 1, 1)
+
+        self.gridLayout_14.addWidget(self.groupBox_6, 0, 0, 1, 1)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_14.addItem(self.verticalSpacer, 4, 0, 1, 1)
+
+        self.label_41 = QLabel(self.tab)
+        self.label_41.setObjectName("label_41")
+        self.label_41.setFont(font2)
+
+        self.gridLayout_14.addWidget(self.label_41, 3, 0, 1, 1)
 
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QWidget()
@@ -1109,27 +1115,28 @@ class Ui_Settings(object):
         self.tab_3.setObjectName("tab_3")
         self.gridLayout_34 = QGridLayout(self.tab_3)
         self.gridLayout_34.setObjectName("gridLayout_34")
-        self.groupBox_12 = QGroupBox(self.tab_3)
-        self.groupBox_12.setObjectName("groupBox_12")
-        sizePolicy4.setHeightForWidth(self.groupBox_12.sizePolicy().hasHeightForWidth())
-        self.groupBox_12.setSizePolicy(sizePolicy4)
-        self.gridLayout_32 = QGridLayout(self.groupBox_12)
+        self.EnableOverlay = QGroupBox(self.tab_3)
+        self.EnableOverlay.setObjectName("EnableOverlay")
+        sizePolicy4.setHeightForWidth(self.EnableOverlay.sizePolicy().hasHeightForWidth())
+        self.EnableOverlay.setSizePolicy(sizePolicy4)
+        self.EnableOverlay.setCheckable(True)
+        self.gridLayout_32 = QGridLayout(self.EnableOverlay)
         self.gridLayout_32.setObjectName("gridLayout_32")
         self.gridLayout_30 = QGridLayout()
         self.gridLayout_30.setObjectName("gridLayout_30")
-        self.FCOverlayEnabled = QCheckBox(self.groupBox_12)
+        self.FCOverlayEnabled = QCheckBox(self.EnableOverlay)
         self.FCOverlayEnabled.setObjectName("FCOverlayEnabled")
         self.FCOverlayEnabled.setChecked(False)
 
         self.gridLayout_30.addWidget(self.FCOverlayEnabled, 0, 0, 1, 1)
 
-        self.UseButtonBackGround = QCheckBox(self.groupBox_12)
+        self.UseButtonBackGround = QCheckBox(self.EnableOverlay)
         self.UseButtonBackGround.setObjectName("UseButtonBackGround")
         self.UseButtonBackGround.setEnabled(False)
 
         self.gridLayout_30.addWidget(self.UseButtonBackGround, 1, 0, 1, 1)
 
-        self.label_26 = QLabel(self.groupBox_12)
+        self.label_26 = QLabel(self.EnableOverlay)
         self.label_26.setObjectName("label_26")
         self.label_26.setEnabled(False)
         sizePolicy11 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
@@ -1147,7 +1154,7 @@ class Ui_Settings(object):
 
         self.gridLayout_32.addItem(self.horizontalSpacer_10, 0, 2, 1, 1)
 
-        self.gridLayout_34.addWidget(self.groupBox_12, 1, 0, 2, 2)
+        self.gridLayout_34.addWidget(self.EnableOverlay, 1, 0, 2, 2)
 
         self.groupBox_11 = QGroupBox(self.tab_3)
         self.groupBox_11.setObjectName("groupBox_11")
@@ -1239,7 +1246,7 @@ class Ui_Settings(object):
         self.FCOverlayEnabled.toggled.connect(self.UseButtonBackGround.setEnabled)
         self.FCOverlayEnabled.toggled.connect(self.label_26.setEnabled)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(3)
 
         QMetaObject.connectSlotsByName(Settings)
 
@@ -1319,18 +1326,6 @@ class Ui_Settings(object):
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.General), QCoreApplication.translate("Settings", "General", None)
         )
-        self.groupBox_6.setTitle(QCoreApplication.translate("Settings", "Mouse settings", None))
-        self.EnableEnterEvent.setText(QCoreApplication.translate("Settings", "Show ribbon on hover. ", None))
-        self.label_12.setText(
-            QCoreApplication.translate(
-                "Settings", "<html><head/><body><p>Scroll speed for ribbon:</p></body></html>", None
-            )
-        )
-        self.label_13.setText(
-            QCoreApplication.translate(
-                "Settings", "<html><head/><body><p>Scroll speed for tab bar:</p></body></html>", None
-            )
-        )
         self.groupBox_7.setTitle(QCoreApplication.translate("Settings", "Scroll buttons", None))
         self.label_14.setText(
             QCoreApplication.translate(
@@ -1390,6 +1385,25 @@ class Ui_Settings(object):
                 None,
             )
         )
+        self.groupBox_6.setTitle(QCoreApplication.translate("Settings", "Mouse settings", None))
+        self.EnableEnterEvent.setText(QCoreApplication.translate("Settings", "Show ribbon on hover. ", None))
+        self.label_12.setText(
+            QCoreApplication.translate(
+                "Settings", "<html><head/><body><p>Scroll speed for ribbon:</p></body></html>", None
+            )
+        )
+        self.label_13.setText(
+            QCoreApplication.translate(
+                "Settings", "<html><head/><body><p>Scroll speed for tab bar:</p></body></html>", None
+            )
+        )
+        self.label_41.setText(
+            QCoreApplication.translate(
+                "Settings",
+                'Commands are now implemented in FreeCAD. Use the "Tools->Customize..." menu to set shortcuts.',
+                None,
+            )
+        )
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tab), QCoreApplication.translate("Settings", "Navigation", None)
         )
@@ -1436,7 +1450,7 @@ class Ui_Settings(object):
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("Settings", "Colors and icons", None)
         )
-        self.groupBox_12.setTitle(QCoreApplication.translate("Settings", "Overlay preferences", None))
+        self.EnableOverlay.setTitle(QCoreApplication.translate("Settings", "Enable overlay", None))
         # if QT_CONFIG(tooltip)
         self.FCOverlayEnabled.setToolTip(
             QCoreApplication.translate(
