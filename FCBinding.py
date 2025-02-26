@@ -586,6 +586,9 @@ class ModernMenu(RibbonBar):
             return True
 
     def enterEvent(self, QEvent):
+        # This makes sure that the ribbon is visible on startup
+        TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+        TB.show()
         # In FreeCAD 1.0, Overlays are introduced. These have also an enterEvent which results in strange behavior
         # Therefore this function is only activated on older versions of FreeCAD.
         if (
