@@ -1218,9 +1218,9 @@ class ModernMenu(RibbonBar):
         if Parameters_Ribbon.USE_FC_OVERLAY is False:
             OverlayMenu = QMenu(translate("FreeCAD Ribbon", "Overlay") + "...", self)
             OverlayMenu.setToolTipsVisible(True)
-            OverlayButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle overlay"))
-            OverlayButton.setToolTip(translate("FreeCAD Ribbon", "Click to toggle the overlay function"))
-            OverlayButton.triggered.connect(self.CustomOverlay)
+            OverlayButton_All = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle overlay"))
+            OverlayButton_All.setToolTip(translate("FreeCAD Ribbon", "Click to toggle the overlay function"))
+            OverlayButton_All.triggered.connect(self.CustomOverlay)
             # Get the shortcut from the original command
             ShortcutKey = "F4"
             try:
@@ -1231,16 +1231,16 @@ class ModernMenu(RibbonBar):
                 if Parameters_Ribbon.DEBUG_MODE is True:
                     print(e.with_traceback())
                 ShortcutKey = "F4"
-            OverlayButton.setShortcut(ShortcutKey)
+            OverlayButton_All.setShortcut(ShortcutKey)
 
-            TransparancyButton = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle transparancy"))
-            TransparancyButton.setToolTip(
+            TransparancyButton_All = OverlayMenu.addAction(translate("FreeCAD Ribbon", "Toggle transparancy"))
+            TransparancyButton_All.setToolTip(
                 translate(
                     "FreeCAD Ribbon",
                     "Toggle transparancy for panels when overlay is enabled",
                 )
             )
-            TransparancyButton.triggered.connect(self.CustomTransparancy)
+            TransparancyButton_All.triggered.connect(self.CustomTransparancy)
             # Get the shortcut from the original command
             ShortcutKey = "Shift+F4"
             try:
@@ -1251,7 +1251,7 @@ class ModernMenu(RibbonBar):
                 if Parameters_Ribbon.DEBUG_MODE is True:
                     print(e.with_traceback())
                 ShortcutKey = "Shift+F4"
-            TransparancyButton.setShortcut(ShortcutKey)
+            TransparancyButton_All.setShortcut(ShortcutKey)
 
             self.OverlayMenu = OverlayMenu
 
@@ -2504,9 +2504,6 @@ class ModernMenu(RibbonBar):
         Enable = True
         if self.OverlayToggled is True:
             Enable = False
-
-        # mw.findChildren(PySide.QtWidgets.QDockWidget)
-        # mw.dockWidgetArea(child)
 
         # Get the different overlay areas
         OverlayParam_Left = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft")
