@@ -673,6 +673,8 @@ class ModernMenu(RibbonBar):
     def enterEvent_Custom(self, QEvent):
         # # Hide any possible toolbar
         # self.hideClassicToolbars()
+        TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+        TB.show()
         # In FreeCAD 1.0, Overlays are introduced. These have also an enterEvent which results in strange behavior
         # Therefore this function is only activated when FreeCAD's overlay function is disabled.
         if Parameters_Ribbon.SHOW_ON_HOVER is True and Parameters_Ribbon.USE_FC_OVERLAY is False:
@@ -2672,8 +2674,4 @@ class run:
                 ribbonDock.setMaximumHeight(ribbon.RibbonMinimalHeight)
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
-
-            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-            TB.show()
-
             return
