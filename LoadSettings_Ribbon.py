@@ -720,6 +720,10 @@ class LoadDialog(Settings_ui.Ui_Settings):
         if self.form.FCOverlayEnabled.isChecked() is True:
             self.ValuesToUpdate["UseFCOverlay"] = True
 
+            # Enable FreeCAD's overlay
+            preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
+            preferences.SetBool("ActivateOverlay", True)
+
             # Disable the texts because they are not compatible with FreeCAD's overlay
             self.form.ShowText_Small.setDisabled(True)
             self.form.ShowText_Medium.setDisabled(True)
