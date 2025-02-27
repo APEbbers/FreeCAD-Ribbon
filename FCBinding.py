@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -42,7 +42,7 @@ from PySide.QtGui import (
     QShortcut,
     QCursor,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -68,7 +68,7 @@ from PySide.QtWidgets import (
     QToolTip,
     QWidgetItem,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1397,11 +1397,16 @@ class ModernMenu(RibbonBar):
         ):
             OverlayMenu = QMenu(translate("FreeCAD Ribbon", "Overlay") + "...", self)
             OverlayMenu.setToolTipsVisible(True)
+
+            # Toggle overlay for all -----------------------------------------------------
             OverlayButton_All = OverlayMenu.addAction(
-                translate("FreeCAD Ribbon", "Toggle overlay")
+                translate("FreeCAD Ribbon", "Toggle overlay for all")
             )
             OverlayButton_All.setToolTip(
-                translate("FreeCAD Ribbon", "Click to toggle the overlay function")
+                translate(
+                    "FreeCAD Ribbon",
+                    "Click to toggle the overlay function for all panels",
+                )
             )
             OverlayButton_All.triggered.connect(self.CustomOverlay)
             # Get the shortcut from the original command
@@ -1418,13 +1423,14 @@ class ModernMenu(RibbonBar):
                 ShortcutKey = "F4"
             OverlayButton_All.setShortcut(ShortcutKey)
 
+            # Toggle transparancy for all -----------------------------------------------------
             TransparancyButton_All = OverlayMenu.addAction(
                 translate("FreeCAD Ribbon", "Toggle transparancy")
             )
             TransparancyButton_All.setToolTip(
                 translate(
                     "FreeCAD Ribbon",
-                    "Toggle transparancy for panels when overlay is enabled",
+                    "Toggle transparancy for all panels when overlay is enabled",
                 )
             )
             TransparancyButton_All.triggered.connect(self.CustomTransparancy)
@@ -1444,6 +1450,177 @@ class ModernMenu(RibbonBar):
                 ShortcutKey = "Shift+F4"
             TransparancyButton_All.setShortcut(ShortcutKey)
 
+            OverlayMenu.addSeparator()
+            # Toggle overlay for active panel-----------------------------------------------------
+            OverlayButton_Active = OverlayMenu.addAction(
+                translate("FreeCAD Ribbon", "Toggle overlay")
+            )
+            OverlayButton_Active.setToolTip(
+                translate(
+                    "FreeCAD Ribbon",
+                    "Click to toggle the overlay function for the active panel",
+                )
+            )
+            OverlayButton_Active.triggered.connect(
+                Gui.runCommand("Std_DockOverlayToggle")
+            )
+            # Get the shortcut from the original command
+            ShortcutKey = "F3"
+            try:
+                CustomShortCuts = App.ParamGet(
+                    "User parameter:BaseApp/Preferences/Shortcut"
+                )
+                if "Std_DockOverlayToggle" in CustomShortCuts.GetStrings():
+                    ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayToggle")
+            except Exception as e:
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    print(e.with_traceback())
+                ShortcutKey = "F3"
+            OverlayButton_All.setShortcut(ShortcutKey)
+
+            # Toggle transparancy for active panel-----------------------------------------------------
+            OverlayButton_Active = OverlayMenu.addAction(
+                translate("FreeCAD Ribbon", "Toggle transparant mode")
+            )
+            OverlayButton_Active.setToolTip(
+                translate(
+                    "FreeCAD Ribbon",
+                    "Toggle transparancy for the active panel when overlay is enabled",
+                )
+            )
+            OverlayButton_Active.triggered.connect(
+                Gui.runCommand("Std_DockOverlayToggleTransparent")
+            )
+            # Get the shortcut from the original command
+            ShortcutKey = "Shift+F3"
+            try:
+                CustomShortCuts = App.ParamGet(
+                    "User parameter:BaseApp/Preferences/Shortcut"
+                )
+                if "Std_DockOverlayToggleTransparent" in CustomShortCuts.GetStrings():
+                    ShortcutKey = CustomShortCuts.GetString(
+                        "Std_DockOverlayToggleTransparent"
+                    )
+            except Exception as e:
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    print(e.with_traceback())
+                ShortcutKey = "Shift+F3"
+            OverlayButton_All.setShortcut(ShortcutKey)
+
+            OverlayMenu.addSeparator()
+            # Toggle mouse bypass-----------------------------------------------------
+            OverlayButton_Active = OverlayMenu.addAction(
+                translate("FreeCAD Ribbon", "Bypass mouse events")
+            )
+            OverlayButton_Active.setToolTip(
+                translate(
+                    "FreeCAD Ribbon", "Bypass mouse events in docked overlay windows"
+                )
+            )
+            OverlayButton_Active.triggered.connect(
+                Gui.runCommand("Std_DockOverlayMouseTransparent")
+            )
+            # Get the shortcut from the original command
+            ShortcutKey = "T,T"
+            try:
+                CustomShortCuts = App.ParamGet(
+                    "User parameter:BaseApp/Preferences/Shortcut"
+                )
+                if "Std_DockOverlayMouseTransparent" in CustomShortCuts.GetStrings():
+                    ShortcutKey = CustomShortCuts.GetString(
+                        "Std_DockOverlayMouseTransparent"
+                    )
+            except Exception as e:
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    print(e.with_traceback())
+                ShortcutKey = "T,T"
+            OverlayButton_All.setShortcut(ShortcutKey)
+
+            OverlayMenu.addSeparator()
+            # Toggle overlay for left panels-----------------------------------------------------
+            OverlayButton_Active = OverlayMenu.addAction(
+                translate("FreeCAD Ribbon", "Toggle overlay")
+            )
+            OverlayButton_Active.setToolTip(
+                translate(
+                    "FreeCAD Ribbon",
+                    "Click to toggle the overlay function for the active panel",
+                )
+            )
+            OverlayButton_Active.triggered.connect(
+                Gui.runCommand("Std_DockOverlayToggleLeft")
+            )
+            # Get the shortcut from the original command
+            ShortcutKey = "Ctrl+left"
+            try:
+                CustomShortCuts = App.ParamGet(
+                    "User parameter:BaseApp/Preferences/Shortcut"
+                )
+                if "Std_DockOverlayToggleLeft" in CustomShortCuts.GetStrings():
+                    ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayToggleLeft")
+            except Exception as e:
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    print(e.with_traceback())
+                ShortcutKey = "Ctrl+left"
+            OverlayButton_All.setShortcut(ShortcutKey)
+            # Toggle overlay for right panels-----------------------------------------------------
+            OverlayButton_Active = OverlayMenu.addAction(
+                translate("FreeCAD Ribbon", "Toggle overlay")
+            )
+            OverlayButton_Active.setToolTip(
+                translate(
+                    "FreeCAD Ribbon",
+                    "Click to toggle the overlay function for the active panel",
+                )
+            )
+            OverlayButton_Active.triggered.connect(
+                Gui.runCommand("Std_DockOverlayToggleRight")
+            )
+            # Get the shortcut from the original command
+            ShortcutKey = "Ctrl+right"
+            try:
+                CustomShortCuts = App.ParamGet(
+                    "User parameter:BaseApp/Preferences/Shortcut"
+                )
+                if "Std_DockOverlayToggleRight" in CustomShortCuts.GetStrings():
+                    ShortcutKey = CustomShortCuts.GetString(
+                        "Std_DockOverlayToggleRight"
+                    )
+            except Exception as e:
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    print(e.with_traceback())
+                ShortcutKey = "Ctrl+right"
+            OverlayButton_All.setShortcut(ShortcutKey)
+            # Toggle overlay for Bottom panels-----------------------------------------------------
+            OverlayButton_Active = OverlayMenu.addAction(
+                translate("FreeCAD Ribbon", "Toggle overlay")
+            )
+            OverlayButton_Active.setToolTip(
+                translate(
+                    "FreeCAD Ribbon",
+                    "Click to toggle the overlay function for the active panel",
+                )
+            )
+            OverlayButton_Active.triggered.connect(
+                Gui.runCommand("Std_DockOverlayToggleBottom")
+            )
+            # Get the shortcut from the original command
+            ShortcutKey = "Ctrl+down"
+            try:
+                CustomShortCuts = App.ParamGet(
+                    "User parameter:BaseApp/Preferences/Shortcut"
+                )
+                if "Std_DockOverlayToggleBottom" in CustomShortCuts.GetStrings():
+                    ShortcutKey = CustomShortCuts.GetString(
+                        "Std_DockOverlayToggleBottom"
+                    )
+            except Exception as e:
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    print(e.with_traceback())
+                ShortcutKey = "Ctrl+down"
+            OverlayButton_All.setShortcut(ShortcutKey)
+
+            # Store the overlay menu
             self.OverlayMenu = OverlayMenu
 
         # Create a ribbon menu
