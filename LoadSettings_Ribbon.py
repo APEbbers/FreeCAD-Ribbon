@@ -819,9 +819,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
         return
 
     def on_OverlayEnabled_clicked(self):
-        if self.form.OverlayEnabled.isChecked() is True:
+        if self.form.EnableOverlay.isChecked() is True:
             self.ValuesToUpdate["UseOverlay"] = True
-        if self.form.OverlayEnabled.isChecked() is False:
+        if self.form.EnableOverlay.isChecked() is False:
             self.ValuesToUpdate["UseOverlay"] = False
             # Disable FreeCAD's overlay as well
             preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
