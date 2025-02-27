@@ -1476,19 +1476,19 @@ class ModernMenu(RibbonBar):
                 if Parameters_Ribbon.DEBUG_MODE is True:
                     print(e.with_traceback())
                 ShortcutKey = "F3"
-            OverlayButton_All.setShortcut(ShortcutKey)
+            OverlayButton_Active.setShortcut(ShortcutKey)
 
             # Toggle transparancy for active panel-----------------------------------------------------
-            OverlayButton_Active = OverlayMenu.addAction(
+            TransparancyButton = OverlayMenu.addAction(
                 translate("FreeCAD Ribbon", "Toggle transparant mode")
             )
-            OverlayButton_Active.setToolTip(
+            TransparancyButton.setToolTip(
                 translate(
                     "FreeCAD Ribbon",
                     "Toggle transparancy for the active panel when overlay is enabled",
                 )
             )
-            OverlayButton_Active.triggered.connect(
+            TransparancyButton.triggered.connect(
                 Gui.runCommand("Std_DockOverlayToggleTransparent")
             )
             # Get the shortcut from the original command
@@ -1505,19 +1505,19 @@ class ModernMenu(RibbonBar):
                 if Parameters_Ribbon.DEBUG_MODE is True:
                     print(e.with_traceback())
                 ShortcutKey = "Shift+F3"
-            OverlayButton_All.setShortcut(ShortcutKey)
+            TransparancyButton.setShortcut(ShortcutKey)
 
             OverlayMenu.addSeparator()
             # Toggle mouse bypass-----------------------------------------------------
-            OverlayButton_Active = OverlayMenu.addAction(
+            ToggleMouseByPass = OverlayMenu.addAction(
                 translate("FreeCAD Ribbon", "Bypass mouse events")
             )
-            OverlayButton_Active.setToolTip(
+            ToggleMouseByPass.setToolTip(
                 translate(
                     "FreeCAD Ribbon", "Bypass mouse events in docked overlay windows"
                 )
             )
-            OverlayButton_Active.triggered.connect(
+            ToggleMouseByPass.triggered.connect(
                 Gui.runCommand("Std_DockOverlayMouseTransparent")
             )
             # Get the shortcut from the original command
@@ -1534,20 +1534,20 @@ class ModernMenu(RibbonBar):
                 if Parameters_Ribbon.DEBUG_MODE is True:
                     print(e.with_traceback())
                 ShortcutKey = "T,T"
-            OverlayButton_All.setShortcut(ShortcutKey)
+            ToggleMouseByPass.setShortcut(ShortcutKey)
 
             OverlayMenu.addSeparator()
             # Toggle overlay for left panels-----------------------------------------------------
-            OverlayButton_Active = OverlayMenu.addAction(
-                translate("FreeCAD Ribbon", "Toggle overlay")
+            OverlayButton_Left = OverlayMenu.addAction(
+                translate("FreeCAD Ribbon", "Toggle left")
             )
-            OverlayButton_Active.setToolTip(
+            OverlayButton_Left.setToolTip(
                 translate(
                     "FreeCAD Ribbon",
                     "Click to toggle the overlay function for the active panel",
                 )
             )
-            OverlayButton_Active.triggered.connect(
+            OverlayButton_Left.triggered.connect(
                 Gui.runCommand("Std_DockOverlayToggleLeft")
             )
             # Get the shortcut from the original command
@@ -1562,18 +1562,18 @@ class ModernMenu(RibbonBar):
                 if Parameters_Ribbon.DEBUG_MODE is True:
                     print(e.with_traceback())
                 ShortcutKey = "Ctrl+left"
-            OverlayButton_All.setShortcut(ShortcutKey)
+            OverlayButton_Left.setShortcut(ShortcutKey)
             # Toggle overlay for right panels-----------------------------------------------------
-            OverlayButton_Active = OverlayMenu.addAction(
-                translate("FreeCAD Ribbon", "Toggle overlay")
+            OverlayButton_Right = OverlayMenu.addAction(
+                translate("FreeCAD Ribbon", "Toggle right")
             )
-            OverlayButton_Active.setToolTip(
+            OverlayButton_Right.setToolTip(
                 translate(
                     "FreeCAD Ribbon",
                     "Click to toggle the overlay function for the active panel",
                 )
             )
-            OverlayButton_Active.triggered.connect(
+            OverlayButton_Right.triggered.connect(
                 Gui.runCommand("Std_DockOverlayToggleRight")
             )
             # Get the shortcut from the original command
@@ -1590,18 +1590,18 @@ class ModernMenu(RibbonBar):
                 if Parameters_Ribbon.DEBUG_MODE is True:
                     print(e.with_traceback())
                 ShortcutKey = "Ctrl+right"
-            OverlayButton_All.setShortcut(ShortcutKey)
+            OverlayButton_Right.setShortcut(ShortcutKey)
             # Toggle overlay for Bottom panels-----------------------------------------------------
-            OverlayButton_Active = OverlayMenu.addAction(
-                translate("FreeCAD Ribbon", "Toggle overlay")
+            OverlayButton_Bottom = OverlayMenu.addAction(
+                translate("FreeCAD Ribbon", "Toggle bottom")
             )
-            OverlayButton_Active.setToolTip(
+            OverlayButton_Bottom.setToolTip(
                 translate(
                     "FreeCAD Ribbon",
                     "Click to toggle the overlay function for the active panel",
                 )
             )
-            OverlayButton_Active.triggered.connect(
+            OverlayButton_Bottom.triggered.connect(
                 Gui.runCommand("Std_DockOverlayToggleBottom")
             )
             # Get the shortcut from the original command
@@ -1618,7 +1618,7 @@ class ModernMenu(RibbonBar):
                 if Parameters_Ribbon.DEBUG_MODE is True:
                     print(e.with_traceback())
                 ShortcutKey = "Ctrl+down"
-            OverlayButton_All.setShortcut(ShortcutKey)
+            OverlayButton_Bottom.setShortcut(ShortcutKey)
 
             # Store the overlay menu
             self.OverlayMenu = OverlayMenu
