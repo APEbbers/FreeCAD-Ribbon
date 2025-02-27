@@ -1462,7 +1462,7 @@ class ModernMenu(RibbonBar):
                 )
             )
             OverlayButton_Active.triggered.connect(
-                Gui.runCommand("Std_DockOverlayToggle")
+                self.RunCommand("Std_DockOverlayToggle")
             )
             # Get the shortcut from the original command
             ShortcutKey = "F3"
@@ -1489,7 +1489,7 @@ class ModernMenu(RibbonBar):
                 )
             )
             TransparancyButton.triggered.connect(
-                Gui.runCommand("Std_DockOverlayToggleTransparent")
+                self.RunCommand("Std_DockOverlayToggleTransparent")
             )
             # Get the shortcut from the original command
             ShortcutKey = "Shift+F3"
@@ -1518,7 +1518,7 @@ class ModernMenu(RibbonBar):
                 )
             )
             ToggleMouseByPass.triggered.connect(
-                Gui.runCommand("Std_DockOverlayMouseTransparent")
+                self.RunCommand("Std_DockOverlayMouseTransparent")
             )
             # Get the shortcut from the original command
             ShortcutKey = "T,T"
@@ -1548,7 +1548,7 @@ class ModernMenu(RibbonBar):
                 )
             )
             OverlayButton_Left.triggered.connect(
-                Gui.runCommand("Std_DockOverlayToggleLeft")
+                self.RunCommand("Std_DockOverlayToggleLeft")
             )
             # Get the shortcut from the original command
             ShortcutKey = "Ctrl+left"
@@ -1574,7 +1574,7 @@ class ModernMenu(RibbonBar):
                 )
             )
             OverlayButton_Right.triggered.connect(
-                Gui.runCommand("Std_DockOverlayToggleRight")
+                self.RunCommand("Std_DockOverlayToggleRight")
             )
             # Get the shortcut from the original command
             ShortcutKey = "Ctrl+right"
@@ -1602,7 +1602,7 @@ class ModernMenu(RibbonBar):
                 )
             )
             OverlayButton_Bottom.triggered.connect(
-                Gui.runCommand("Std_DockOverlayToggleBottom")
+                self.RunCommand("Std_DockOverlayToggleBottom")
             )
             # Get the shortcut from the original command
             ShortcutKey = "Ctrl+down"
@@ -3036,6 +3036,10 @@ class ModernMenu(RibbonBar):
                 icon = Gui.getIcon(pixmap)
                 return icon
         return icon
+
+    def RunCommand(self, Command: str):
+        Gui.runCommand(Command)
+        return
 
     def CustomOverlay(self):
         # Toggle the overlay
