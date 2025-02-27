@@ -319,7 +319,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         if Parameters_Ribbon.USE_OVERLAY is True:
             self.form.EnableOverlay.setCheckState(Qt.CheckState.Checked)
         else:
-            self.form.EnableToolsPanel.setCheckState(Qt.CheckState.Unchecked)
+            self.form.EnableOverlay.setCheckState(Qt.CheckState.Unchecked)
 
         if Parameters_Ribbon.USE_FC_OVERLAY is True:
             self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Checked)
