@@ -1508,33 +1508,33 @@ class ModernMenu(RibbonBar):
             TransparancyButton.setShortcut(ShortcutKey)
 
             OverlayMenu.addSeparator()
-            # Toggle mouse bypass-----------------------------------------------------
-            ToggleMouseByPass = OverlayMenu.addAction(
-                translate("FreeCAD Ribbon", "Bypass mouse events")
-            )
-            ToggleMouseByPass.setToolTip(
-                translate(
-                    "FreeCAD Ribbon", "Bypass mouse events in docked overlay windows"
-                )
-            )
-            ToggleMouseByPass.triggered.connect(
-                self.RunCommand("Std_DockOverlayMouseTransparent")
-            )
-            # Get the shortcut from the original command
-            ShortcutKey = "T,T"
-            try:
-                CustomShortCuts = App.ParamGet(
-                    "User parameter:BaseApp/Preferences/Shortcut"
-                )
-                if "Std_DockOverlayMouseTransparent" in CustomShortCuts.GetStrings():
-                    ShortcutKey = CustomShortCuts.GetString(
-                        "Std_DockOverlayMouseTransparent"
-                    )
-            except Exception as e:
-                if Parameters_Ribbon.DEBUG_MODE is True:
-                    print(e.with_traceback())
-                ShortcutKey = "T,T"
-            ToggleMouseByPass.setShortcut(ShortcutKey)
+            # # Toggle mouse bypass-----------------------------------------------------
+            # ToggleMouseByPass = OverlayMenu.addAction(
+            #     translate("FreeCAD Ribbon", "Bypass mouse events")
+            # )
+            # ToggleMouseByPass.setToolTip(
+            #     translate(
+            #         "FreeCAD Ribbon", "Bypass mouse events in docked overlay windows"
+            #     )
+            # )
+            # ToggleMouseByPass.triggered.connect(
+            #     self.RunCommand("Std_DockOverlayMouseTransparent")
+            # )
+            # # Get the shortcut from the original command
+            # ShortcutKey = "T,T"
+            # try:
+            #     CustomShortCuts = App.ParamGet(
+            #         "User parameter:BaseApp/Preferences/Shortcut"
+            #     )
+            #     if "Std_DockOverlayMouseTransparent" in CustomShortCuts.GetStrings():
+            #         ShortcutKey = CustomShortCuts.GetString(
+            #             "Std_DockOverlayMouseTransparent"
+            #         )
+            # except Exception as e:
+            #     if Parameters_Ribbon.DEBUG_MODE is True:
+            #         print(e.with_traceback())
+            #     ShortcutKey = "T,T"
+            # ToggleMouseByPass.setShortcut(ShortcutKey)
 
             OverlayMenu.addSeparator()
             # Toggle overlay for left panels-----------------------------------------------------
