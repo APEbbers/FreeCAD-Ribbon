@@ -10,10 +10,10 @@ repos:
     rev: 25.1.0
     hooks:
     -   id: black
--   repo: https://github.com/asottile/pyupgrade
-    rev: v3.17.0
-    hooks:
-    -   id: pyupgrade
+# -   repo: https://github.com/asottile/pyupgrade
+#     rev: v3.17.0
+#     hooks:
+#     -   id: pyupgrade
 # -   repo: https://github.com/mattlqx/pre-commit-search-and-replace
 #     rev: v1.1.2
 #     hooks:

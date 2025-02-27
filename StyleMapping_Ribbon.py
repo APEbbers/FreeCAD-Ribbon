@@ -252,21 +252,6 @@ def ReturnStyleSheet(
         return StyleSheet
 
 
-def ReturnColor(ColorType="Background_Color"):
-    mw: QMainWindow = Gui.getMainWindow()
-    palette = mw.style().standardPalette()
-    # Get the color
-    Color = palette.base().color().toTuple()  # RGBA tupple
-    if ColorType == "Border_Color":
-        Color = palette.buttonText().color().toTuple()
-    if ColorType == "Background_Color_Hover":
-        Color = palette.highlight().color().toTuple()
-
-    HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
-
-    return HexColor
-
-
 def GetIconBasedOnTag(ControlName=""):
     iconSet = {}
     iconName = ""
@@ -342,6 +327,10 @@ def DarkMode():
     # Get the current stylesheet for FreeCAD
     FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
     currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
+
+    # if no stylesheet is selected return
+    if currentStyleSheet is None or currentStyleSheet == "":
+        return
 
     path = os.path.dirname(__file__)
     # Get the folder with add-ons
@@ -421,7 +410,7 @@ StyleMapping_default = {
         "none": {
             "Background_Color": "none",
             "Background_Color_Hover": "#48a0f8",
-            "Border_Color": ReturnColor("Border_Color"),
+            "Border_Color": ReturnFontColor(),
             "ApplicationButton_Background": "#48a0f8",
             "FontColor": ReturnFontColor(),
             "UpdateColor": ReturnUpdateColor(),
