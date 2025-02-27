@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL, QSize
-from PySide.QtWidgets import (
+from PySide6.QtCore import Qt, SIGNAL, QSize
+from PySide6.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -36,8 +36,9 @@ from PySide.QtWidgets import (
     QPushButton,
     QLineEdit,
     QWidget,
+    QGroupBox,
 )
-from PySide.QtGui import QIcon, QPixmap, QColor
+from PySide6.QtGui import QIcon, QPixmap, QColor
 
 import sys
 import StyleMapping_Ribbon
@@ -317,9 +318,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.form.EnableToolsPanel.setCheckState(Qt.CheckState.Unchecked)
 
         if Parameters_Ribbon.USE_OVERLAY is True:
-            self.form.EnableOverlay.setCheckState(Qt.CheckState.Checked)
+            self.form.EnableOverlay.setChecked(True)
         else:
-            self.form.EnableOverlay.setCheckState(Qt.CheckState.Unchecked)
+            self.form.EnableOverlay.setChecked(False)
 
         if Parameters_Ribbon.USE_FC_OVERLAY is True:
             self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Checked)
