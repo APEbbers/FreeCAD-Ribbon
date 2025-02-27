@@ -827,6 +827,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
             # Disable FreeCAD's overlay as well
             preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
             preferences.SetBool("ActivateOverlay", False)
+        self.settingChanged = True
 
     def on_FCOverlayEnabled_clicked(self):
         if self.form.FCOverlayEnabled.isChecked() is True:
