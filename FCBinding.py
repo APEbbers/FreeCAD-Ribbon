@@ -67,6 +67,7 @@ from PySide.QtWidgets import (
     QVBoxLayout,
     QToolTip,
     QWidgetItem,
+    QTreeWidget,
 )
 from PySide.QtCore import (
     Qt,
@@ -192,6 +193,9 @@ class ModernMenu(RibbonBar):
 
     # Declare the custom overlay function states
     OverlayToggled = False
+    OverlayToggled_Left = False
+    OverlayToggled_Right = False
+    OverlayToggled_Bottom = False
     TransparancyToggled = False
 
     # Define the menus
@@ -1228,7 +1232,7 @@ class ModernMenu(RibbonBar):
                     "Click to toggle the overlay function for all panels",
                 )
             )
-            OverlayButton_All.triggered.connect(self.CustomOverlay)
+            OverlayButton_All.triggered.connect(self.ToggleOverlay_All)
             # Get the shortcut from the original command
             ShortcutKey = "F4"
             try:
@@ -1271,7 +1275,7 @@ class ModernMenu(RibbonBar):
                     "Click to toggle the overlay function for the active panel",
                 )
             )
-            OverlayButton_Active.triggered.connect(self.RunCommand("Std_DockOverlayToggle"))
+            OverlayButton_Active.triggered.connect(self.CustomOverlay_Focus)
             # Get the shortcut from the original command
             ShortcutKey = "F3"
             try:
@@ -1351,7 +1355,7 @@ class ModernMenu(RibbonBar):
                     "Click to toggle the overlay function for the active panel",
                 )
             )
-            OverlayButton_Right.triggered.connect(self.RunCommand("Std_DockOverlayToggleRight"))
+            OverlayButton_Right.triggered.connect(self.ToggleOverlay_Right)
             # Get the shortcut from the original command
             ShortcutKey = "Ctrl+right"
             try:
@@ -1371,7 +1375,7 @@ class ModernMenu(RibbonBar):
                     "Click to toggle the overlay function for the active panel",
                 )
             )
-            OverlayButton_Bottom.triggered.connect(self.RunCommand("Std_DockOverlayToggleBottom"))
+            OverlayButton_Bottom.triggered.connect(self.ToggleOverlay_Bottom)
             # Get the shortcut from the original command
             ShortcutKey = "Ctrl+down"
             try:
@@ -2639,10 +2643,30 @@ class ModernMenu(RibbonBar):
             pass
         return
 
-    def ToggleOverlay_Left(self):
-        print("Std_DockOverlayToggleLeft")
+    def ToggleOverlay_All(self):
         try:
-            Gui.runCommand("Std_DockOverlayToggleLeft")
+            self.CustomOverlay("")
+        except Exception:
+            pass
+        return
+
+    def ToggleOverlay_Left(self):
+        try:
+            self.CustomOverlay("left")
+        except Exception:
+            pass
+        return
+
+    def ToggleOverlay_Right(self):
+        try:
+            self.CustomOverlay("right")
+        except Exception:
+            pass
+        return
+
+    def ToggleOverlay_Bottom(self):
+        try:
+            self.CustomOverlay("bottom")
         except Exception:
             pass
         return
@@ -2655,10 +2679,20 @@ class ModernMenu(RibbonBar):
                 pass
             return
 
-    def CustomOverlay(self):
+    def CustomOverlay(self, side=""):
         # Toggle the overlay
+        State = None
+        if side == "left":
+            State = self.OverlayToggled_Left
+        if side == "right":
+            State = self.OverlayToggled_Left
+        if side == "bottom":
+            State = self.OverlayToggled_Left
+        if side == "":
+            State = self.OverlayToggled
+
         Enable = True
-        if self.OverlayToggled is True:
+        if State is True:
             Enable = False
 
         # Get the different overlay areas
@@ -2690,50 +2724,157 @@ class ModernMenu(RibbonBar):
                     if Area == Qt.DockWidgetArea.BottomDockWidgetArea:
                         PanelsBottom.append(DockWidget.objectName())
 
-            EntryLeft = ""
-            for panel in PanelsLeft:
-                EntryLeft = EntryLeft + "," + panel
-            # Set the parameter
-            OverlayParam_Left.SetString("Widgets", EntryLeft)
+            if side == "left" or side == "":
+                EntryLeft = ""
+                for panel in PanelsLeft:
+                    EntryLeft = EntryLeft + "," + panel
+                # Set the parameter
+                OverlayParam_Left.SetString("Widgets", EntryLeft)
+                # Set the overlay state to be toggled
+                self.OverlayToggled_Left = True
 
-            # Define the parameter value for the overlay on the right
-            EntryRight = ""
-            for panel in PanelsRight:
-                EntryRight = EntryRight + "," + panel
-            # Set the parameter
-            OverlayParam_Right.SetString("Widgets", EntryRight)
+            if side == "right" or side == "":
+                # Define the parameter value for the overlay on the right
+                EntryRight = ""
+                for panel in PanelsRight:
+                    EntryRight = EntryRight + "," + panel
+                # Set the parameter
+                OverlayParam_Right.SetString("Widgets", EntryRight)
+                # Set the overlay state to be toggled
+                self.OverlayToggled_Right = True
 
-            # Define the parameter value for the overlay on the right
-            EntryTop = ""
-            for panel in PanelsTop:
-                EntryTop = EntryTop + "," + panel
-            # Set the parameter
-            OverlayParam_Top.SetString("Widgets", EntryTop)
+            if side == "bottom" or side == "":
+                # Define the parameter value for the overlay on the right
+                EntryBottom = ""
+                for panel in PanelsBottom:
+                    EntryBottom = EntryBottom + "," + panel
+                # Set the parameter
+                OverlayParam_Bottom.SetString("Widgets", EntryBottom)
+                # Set the overlay state to be toggled
+                self.OverlayToggled_Bottom = True
 
-            # Define the parameter value for the overlay on the right
-            EntryBottom = ""
-            for panel in PanelsBottom:
-                EntryBottom = EntryBottom + "," + panel
-            # Set the parameter
-            OverlayParam_Bottom.SetString("Widgets", EntryBottom)
-
-            # Set the overlay stat to be toggled
-            self.OverlayToggled = True
+            if side == "":
+                # Define the parameter value for the overlay on the right
+                EntryTop = ""
+                for panel in PanelsTop:
+                    EntryTop = EntryTop + "," + panel
+                # Set the parameter
+                OverlayParam_Top.SetString("Widgets", EntryTop)
+                # Set the overlay state to be toggled
+                self.OverlayToggled = True
 
         if Enable is False:
             # Set the parameters to empty
-            OverlayParam_Left.SetString("Widgets", "")
-            OverlayParam_Right.SetString("Widgets", "")
+            if side == "left" or side == "":
+                OverlayParam_Left.SetString("Widgets", "")
+                self.OverlayToggled_Left = False
+            if side == "Right" or side == "":
+                OverlayParam_Right.SetString("Widgets", "")
+                self.OverlayToggled_Right = False
+            if side == "Bottom" or side == "":
+                OverlayParam_Bottom.SetString("Widgets", "")
+                self.OverlayToggled_Bottom = False
 
-            # Set the overlay stat to be untoggled
-            self.OverlayToggled = False
+        return Enable
 
-        return self.OverlayToggled
+    def CustomOverlay_Focus(self):
+        OverlayParam_Left = None
+        OverlayParam_Right = None
+        OverlayParam_Bottom = None
+        # Get the different overlay areas
+        OverlayParam_Left = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft")
+        OverlayParam_Right = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayRight")
+        # OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
+        OverlayParam_Bottom = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom")
+
+        # # If overlay is enabled, go here
+        # PanelsLeft = []
+        # PanelsRight = []
+        # PanelsBottom = []
+
+        # try:
+        #     for name in OverlayParam_Left.GetString("Widgets").split(","):
+        #         if name != "":
+        #             PanelsLeft.append(name)
+        # except Exception:
+        #     pass
+        # try:
+        #     for name in OverlayParam_Right.GetString("Widgets").split(","):
+        #         if name != "":
+        #             PanelsRight.append(name)
+        # except Exception as e:
+        #     raise e
+        #     pass
+        # try:
+        #     for name in OverlayParam_Bottom.GetString("Widgets").split(","):
+        #         if name != "":
+        #             PanelsBottom.append(name)
+        # except Exception:
+        #     pass
+
+        # Ge the focused dockwidget
+        FocusWidget = mw.focusWidget().parent().objectName()
+        if FocusWidget == "Ribbon":
+            return
+        if isinstance(mw.focusWidget(), QTreeWidget):
+            FocusWidget = "Tree view"
+            print(FocusWidget)
+        position = ""
+        try:
+            print(mw.focusWidget())
+            DockWidget_Focus = mw.findChild(QDockWidget, FocusWidget)
+            if DockWidget_Focus is not None:
+                Area = mw.dockWidgetArea(DockWidget_Focus)
+                if Area == Qt.DockWidgetArea.LeftDockWidgetArea:
+                    position = "left"
+                if Area == Qt.DockWidgetArea.RightDockWidgetArea:
+                    position = "right"
+                if Area == Qt.DockWidgetArea.TopDockWidgetArea:
+                    position = "top"
+                if Area == Qt.DockWidgetArea.BottomDockWidgetArea:
+                    position = "bottom"
+        except Exception as e:
+            raise e
+            pass
+
+        print(position)
+        if position == "left":
+            LeftPanels = OverlayParam_Left.GetString("Widgets")
+            OverlayParam_Left.SetString("Widgets", f"{LeftPanels},{FocusWidget}")
+            return
+        if position == "right":
+            RightPanels = OverlayParam_Right.GetString("Widgets")
+            OverlayParam_Right.SetString("Widgets", f"{RightPanels},{FocusWidget}")
+            return
+        if position == "bottom":
+            BottomPanels = OverlayParam_Bottom.GetString("Widgets")
+            OverlayParam_Bottom.SetString("Widgets", f"{BottomPanels},{FocusWidget}")
+            return
+        if position == "":
+            LeftPanels = OverlayParam_Left.GetString("Widgets")
+            if FocusWidget in LeftPanels:
+                LeftPanels = OverlayParam_Left.GetString("Widgets")
+                LeftPanels = LeftPanels.replace(f"{FocusWidget}", "").replace(",,", ",")
+                OverlayParam_Left.SetString("Widgets", f"{LeftPanels}")
+                return
+            RightPanels = OverlayParam_Right.GetString("Widgets")
+            if FocusWidget in RightPanels:
+                RightPanels = OverlayParam_Left.GetString("Widgets")
+                RightPanels = RightPanels.replace(f"{FocusWidget}", "").replace(",,", ",")
+                OverlayParam_Right.SetString("Widgets", f"{RightPanels}")
+                return
+            BottomPanels = OverlayParam_Bottom.GetString("Widgets")
+            if FocusWidget in BottomPanels:
+                BottomPanels = OverlayParam_Bottom.GetString("Widgets")
+                BottomPanels = BottomPanels.replace(f"{FocusWidget}", "").replace(",,", ",")
+                OverlayParam_Bottom.SetString("Widgets", f"{BottomPanels}")
+                return
+        return
 
     def CustomTransparancy(self):
         OverlayParam_Left = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft")
         OverlayParam_Right = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayRight")
-        OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
+        # OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
         OverlayParam_Bottom = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom")
 
         Enable = None
@@ -2744,7 +2885,7 @@ class ModernMenu(RibbonBar):
 
         OverlayParam_Left.SetBool("Transparent", Enable)
         OverlayParam_Right.SetBool("Transparent", Enable)
-        OverlayParam_Top.SetBool("Transparent", Enable)
+        # OverlayParam_Top.SetBool("Transparent", Enable)
         OverlayParam_Bottom.SetBool("Transparent", Enable)
 
         self.TransparancyToggled = True
