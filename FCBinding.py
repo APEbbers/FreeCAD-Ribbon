@@ -1117,17 +1117,17 @@ class ModernMenu(RibbonBar):
         MinimzeButton.clicked.connect(self.MinimizeFreeCAD)
         MinimzeButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
         self.rightToolBar().addWidget(MinimzeButton)
-        # Restore button
-        RestoreButton = QToolButton()
-        RestoreButton.setObjectName("RestoreButton")
-        RestoreButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
-        RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton)
-        if mw.windowState() != Qt.WindowState.WindowMaximized:
-            RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton)
-        RestoreButton.setIcon(RestoreIcon)
-        RestoreButton.clicked.connect(self.RestoreFreeCAD)
-        RestoreButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
-        self.rightToolBar().addWidget(RestoreButton)
+        # # Restore button
+        # RestoreButton = QToolButton()
+        # RestoreButton.setObjectName("RestoreButton")
+        # RestoreButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
+        # RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton)
+        # if QMainWindow(mw).isMaximized():
+        #     RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton)
+        # RestoreButton.setIcon(RestoreIcon)
+        # RestoreButton.clicked.connect(self.RestoreFreeCAD)
+        # RestoreButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+        # self.rightToolBar().addWidget(RestoreButton)
         # Close button
         CloseButton = QToolButton()
         CloseIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarCloseButton)
@@ -2977,38 +2977,16 @@ class ModernMenu(RibbonBar):
         if self.isLoaded:
             Style = mw.style()
             RestoreButton: QToolButton = self.rightToolBar().findChildren(QToolButton, "RestoreButton")[0]
-            if mw.windowState() == Qt.WindowState.WindowMaximized:
-                RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
-                mw.setMinimumSize(QSize(400, 400))
-                # mw.resize(QSize(400, 400))
-                mw.setWindowState(Qt.WindowState.WindowNoState)
-                # mw.move(100, 100)
+            if mw.isMaximized():
                 mw.showNormal()
+                mw.setMinimumSize(QSize(400, 400))
+                RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
                 return
-            else:
-                RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
-                mw.setWindowState(Qt.WindowState.WindowMaximized)
-                # screenGeometry = QApplication.screenAt(mw.pos()).geometry()
-                # mw.resize(QSize(screenGeometry.width(), screenGeometry.height()))
-                # mw.move(0, 0)
+            if mw.isMaximized() is False:
                 mw.showMaximized()
+                RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
                 return
         return
-
-
-class EventInspector(QObject):
-    def __init__(self, parent):
-        super(EventInspector, self).__init__(parent)
-
-    def eventFilter(self, obj, event):
-        if event.type() == QEvent.Type.HoverMove:
-            event.ignore()
-        if event.type() == QEvent.Type.Leave:
-            print("obj >>", obj)
-            print("event >>", event)
-            pos = QCursor.pos()
-            print(f"x: {pos.x()}, y: {pos.y()}")
-        return False
 
 
 class run:

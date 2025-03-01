@@ -26,7 +26,7 @@ import FCBinding
 import Parameters_Ribbon
 import shutil
 import sys
-from PySide.QtCore import Qt, QTimer
+from PySide.QtCore import Qt, QTimer, QSize
 from PySide.QtWidgets import QMainWindow, QLabel
 
 
@@ -92,11 +92,13 @@ try:
     # Hide the Titlebar of FreeCAD
     if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
         mw.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        mw.setMinimumSize(QSize(400, 400))
         # Define a timer
         timer = QTimer()
         # Use singleshot to show the mainwindow after the UI is loaded comppletly
         timer.singleShot(0)
-        mw.showMaximized()
+        mw.showN()
+        # mw.setWindowState(Qt.WindowState.WindowMaximized)
         print(translate("FreeCAD Ribbon", "FreeCAD loaded without titlebar"))
 
 
