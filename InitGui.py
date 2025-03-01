@@ -26,8 +26,9 @@ import FCBinding
 import Parameters_Ribbon
 import shutil
 import sys
-from PySide.QtCore import Qt, QTimer, QSize
-from PySide.QtWidgets import QMainWindow, QLabel, QSizePolicy
+from PySide6.QtCore import Qt, QTimer, QSize
+from PySide6.QtGui import QGuiApplication
+from PySide6.QtWidgets import QMainWindow, QLabel, QSizePolicy, QApplication
 
 
 def QT_TRANSLATE_NOOP(context, text):
@@ -87,6 +88,9 @@ if Parameters_Ribbon.USE_FC_OVERLAY is True:
 try:
     print(translate("FreeCAD Ribbon", "Activating Ribbon Bar..."))
     mw = Gui.getMainWindow()
+    # mw.move(0, 0)
+    # screen = QGuiApplication.screenAt(mw.pos())
+    # mw.resize(screen.availableGeometry().width(), screen.availableGeometry().height())
     mw.workbenchActivated.connect(FCBinding.run)
 
     # Hide the Titlebar of FreeCAD
@@ -96,16 +100,18 @@ try:
             | Qt.WindowType.X11BypassWindowManagerHint
             | Qt.WindowType.BypassWindowManagerHint
         )
-        # Define a timer
-        timer = QTimer()
-        # Use singleshot to show the mainwindow after the UI is loaded comppletly
-        timer.singleShot(0)
+        # # Define a timer
+        # timer = QTimer()
+        # # Use singleshot to show the mainwindow after the UI is loaded comppletly
+        # timer.singleShot(0, None)
+        mw.move(0, 0)
         mw.show()
-        # mw.adjustSize()
+        mw.adjustSize()
         print(translate("FreeCAD Ribbon", "FreeCAD loaded without titlebar"))
 
 
 except Exception as e:
+    raise e
     if Parameters_Ribbon.DEBUG_MODE is True:
         print(f"{e.with_traceback(e.__traceback__)}, 0")
 
