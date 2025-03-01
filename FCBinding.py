@@ -645,10 +645,11 @@ class ModernMenu(RibbonBar):
                 self._titleWidget._tabBarLayout.addWidget(_rightToolBar, 0, 2, 1, 2, Qt.AlignmentFlag.AlignVCenter)
                 self._titleWidget._tabBarLayout.addWidget(_tabBar, 1, 0, 1, 4, Qt.AlignmentFlag.AlignVCenter)
                 # Change the offsets
-                self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 16
+                self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
                 self.RibbonOffset = 50 + self.QuickAccessButtonSize * 2
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(0, self.QuickAccessButtonSize)
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(1, self.TabBar_Size)
+                # self.setTitle("FreeCAD")
             if Parameters_Ribbon.TOOLBAR_POSITION == 1:  # Toolbars inline with tabbar
                 # Add the widgets again in a different position
                 self._titleWidget._tabBarLayout.addWidget(
@@ -777,6 +778,11 @@ class ModernMenu(RibbonBar):
             self.QuickAccessButtonSize + FontMetrics.boundingRect(Text.text()).width() + 12,
             self.QuickAccessButtonSize,
         )
+        if Parameters_Ribbon.TOOLBAR_POSITION == 0 and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
+            self.applicationOptionButton().setFixedSize(
+                self.QuickAccessButtonSize + FontMetrics.boundingRect(Text.text()).width() + 12,
+                self.QuickAccessButtonSize + 4,
+            )
         # Set the icon
         self.setApplicationIcon(Gui.getIcon("freecad"))
         # Set the styling of the button including padding (Text widht + 2*maring)

@@ -91,7 +91,7 @@ try:
     # Hide the Titlebar of FreeCAD
     if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
         mw.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-        mw.show()
+        mw.showMaximized()
 
 except Exception as e:
     if Parameters_Ribbon.DEBUG_MODE is True:
