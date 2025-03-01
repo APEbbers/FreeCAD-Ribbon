@@ -1296,7 +1296,7 @@ class ModernMenu(RibbonBar):
                     "Toggle transparancy for the active panel when overlay is enabled",
                 )
             )
-            TransparancyButton.triggered.connect(self.RunCommand("Std_DockOverlayToggleTransparent"))
+            TransparancyButton.triggered.connect(self.CustomTransparancy_Focus)
             # Get the shortcut from the original command
             ShortcutKey = "Shift+F3"
             try:
@@ -2787,41 +2787,14 @@ class ModernMenu(RibbonBar):
         # OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
         OverlayParam_Bottom = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom")
 
-        # # If overlay is enabled, go here
-        # PanelsLeft = []
-        # PanelsRight = []
-        # PanelsBottom = []
-
-        # try:
-        #     for name in OverlayParam_Left.GetString("Widgets").split(","):
-        #         if name != "":
-        #             PanelsLeft.append(name)
-        # except Exception:
-        #     pass
-        # try:
-        #     for name in OverlayParam_Right.GetString("Widgets").split(","):
-        #         if name != "":
-        #             PanelsRight.append(name)
-        # except Exception as e:
-        #     raise e
-        #     pass
-        # try:
-        #     for name in OverlayParam_Bottom.GetString("Widgets").split(","):
-        #         if name != "":
-        #             PanelsBottom.append(name)
-        # except Exception:
-        #     pass
-
         # Ge the focused dockwidget
         FocusWidget = mw.focusWidget().parent().objectName()
         if FocusWidget == "Ribbon":
             return
         if isinstance(mw.focusWidget(), QTreeWidget):
             FocusWidget = "Tree view"
-            print(FocusWidget)
         position = ""
         try:
-            print(mw.focusWidget())
             DockWidget_Focus = mw.findChild(QDockWidget, FocusWidget)
             if DockWidget_Focus is not None:
                 Area = mw.dockWidgetArea(DockWidget_Focus)
@@ -2833,11 +2806,9 @@ class ModernMenu(RibbonBar):
                     position = "top"
                 if Area == Qt.DockWidgetArea.BottomDockWidgetArea:
                     position = "bottom"
-        except Exception as e:
-            raise e
+        except Exception:
             pass
 
-        print(position)
         if position == "left":
             LeftPanels = OverlayParam_Left.GetString("Widgets")
             OverlayParam_Left.SetString("Widgets", f"{LeftPanels},{FocusWidget}")
@@ -2891,6 +2862,52 @@ class ModernMenu(RibbonBar):
         self.TransparancyToggled = True
 
         return self.TransparancyToggled
+
+    def CustomTransparancy_Focus(self):
+        OverlayParam_Left = None
+        OverlayParam_Right = None
+        OverlayParam_Bottom = None
+        # Get the different overlay areas
+        OverlayParam_Left = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft")
+        OverlayParam_Right = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayRight")
+        # OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
+        OverlayParam_Bottom = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom")
+
+        # Ge the focused dockwidget
+        FocusWidget = mw.focusWidget().parent().objectName()
+        if FocusWidget == "Ribbon":
+            return
+        if isinstance(mw.focusWidget(), QTreeWidget):
+            FocusWidget = "Tree view"
+        position = ""
+        try:
+            DockWidget_Focus = mw.findChild(QDockWidget, FocusWidget)
+            if DockWidget_Focus is not None:
+                Area = mw.dockWidgetArea(DockWidget_Focus)
+                if (
+                    Area == Qt.DockWidgetArea.LeftDockWidgetArea
+                    or Area == Qt.DockWidgetArea.RightDockWidgetArea
+                    or Area == Qt.DockWidgetArea.TopDockWidgetArea
+                    or Area == Qt.DockWidgetArea.BottomDockWidgetArea
+                ):
+                    return
+        except Exception:
+            pass
+
+        if position == "":
+            LeftPanels = OverlayParam_Left.GetString("Widgets")
+            if FocusWidget in LeftPanels:
+                OverlayParam_Left.SetBool("Transparent", not OverlayParam_Left.GetBool("Transparent"))
+                return
+            RightPanels = OverlayParam_Right.GetString("Widgets")
+            if FocusWidget in RightPanels:
+                OverlayParam_Right.SetBool("Transparent", not OverlayParam_Right.GetBool("Transparent"))
+                return
+            BottomPanels = OverlayParam_Bottom.GetString("Widgets")
+            if FocusWidget in BottomPanels:
+                OverlayParam_Bottom.SetBool("Transparent", not OverlayParam_Bottom.GetBool("Transparent"))
+                return
+        return
 
     def returnCustomDropDown(self, CommandName):
         actionList = []
