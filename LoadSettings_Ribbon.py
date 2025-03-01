@@ -578,9 +578,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     def on_HideTitleBarFC_clicked(self):
         if self.form.HideTitleBarFC.isChecked() is True:
-            self.ValuesToUpdate["HideTitleBarFC"] = True
+            self.ValuesToUpdate["Hide_Titlebar_FC"] = True
         if self.form.HideTitleBarFC.isChecked() is False:
-            self.ValuesToUpdate["HideTitleBarFC"] = False
+            self.ValuesToUpdate["Hide_Titlebar_FC"] = False
         self.settingChanged = True
 
     def on_IconSize_Small_TextChanged(self):
@@ -1037,7 +1037,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Save tabBar style
         Parameters_Ribbon.Settings.SetIntSetting("TabBar_Style", self.OriginalValues["TabBar_Style"])
         Parameters_Ribbon.Settings.SetIntSetting("Toolbar_Position", self.OriginalValues["Toolbar_Position"])
-        Parameters_Ribbon.Settings.SetBoolSetting("HideTitleBarFC", self.OriginalValues["HideTitleBarFC"])
+        Parameters_Ribbon.Settings.SetBoolSetting("Hide_Titlebar_FC", self.OriginalValues["Hide_Titlebar_FC"])
         # Save icon sizes
         Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", int(self.OriginalValues["IconSize_Small"]))
         Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", int(self.OriginalValues["IconSize_Medium"]))
@@ -1108,7 +1108,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # Save tabBar style
         Parameters_Ribbon.Settings.SetIntSetting("TabBar_Style", self.ValuesToUpdate["TabBar_Style"])
         Parameters_Ribbon.Settings.SetIntSetting("Toolbar_Position", self.ValuesToUpdate["Toolbar_Position"])
-        Parameters_Ribbon.Settings.SetBoolSetting("HideTitleBarFC", self.ValuesToUpdate["HideTitleBarFC"])
+        Parameters_Ribbon.Settings.SetBoolSetting("Hide_Titlebar_FC", self.ValuesToUpdate["Hide_Titlebar_FC"])
         # Save icon sizes
         Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", int(self.ValuesToUpdate["IconSize_Small"]))
         Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", int(self.ValuesToUpdate["IconSize_Medium"]))
@@ -1186,7 +1186,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.label_4.setText(DefaultSettings["BackupFolder"])
         self.form.TabbarStyle.setCurrentIndex(DefaultSettings["TabBar_Style"])
         self.form.ToolbarPositions.setCurrentIndex(DefaultSettings["Toolbar_Position"])
-        if DefaultSettings["HideTitleBarFC"] is True:
+        if DefaultSettings["Hide_Titlebar_FC"] is True:
             self.form.HideTitleBarFC.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.HideTitleBarFC.setCheckState(Qt.CheckState.Unchecked)
