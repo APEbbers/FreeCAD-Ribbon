@@ -112,6 +112,7 @@ class Settings:
         Settings.SetIntSetting("QuickAccessButtonSize", QUICK_ICON_SIZE)
         Settings.SetIntSetting("TabBarSize", TABBAR_SIZE)
         Settings.SetIntSetting("Toolbar_Position", TOOLBAR_POSITION)
+        Settings.SetBoolSetting("Hide_Titlebar_FC", HIDE_TITLEBAR_FC)
         Settings.SetIntSetting("RightToolbarButtonSize", RIGHT_ICON_SIZE)
 
         Settings.SetBoolSetting("ShowIconText_Small", SHOW_ICON_TEXT_SMALL)
@@ -219,6 +220,7 @@ DefaultSettings = {
     "FontSize_Tabs": int(14),
     "FontSize_Panels": int(11),
     "Toolbar_Position": int(0),
+    "Hide_Titlebar_FC": False,
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
@@ -263,6 +265,11 @@ TOOLBAR_POSITION = Settings.GetIntSetting("Toolbar_Position")
 if Settings.GetIntSetting("Toolbar_Position") is None or Settings.GetIntSetting("Toolbar_Position") > 1:
     TOOLBAR_POSITION = DefaultSettings["Toolbar_Position"]
     Settings.SetIntSetting("Toolbar_Position", TOOLBAR_POSITION)
+
+HIDE_TITLEBAR_FC = Settings.GetBoolSetting("Hide_Titlebar_FC")
+if Settings.GetBoolSetting("Hide_Titlebar_FC") is None:
+    HIDE_TITLEBAR_FC = DefaultSettings["Hide_Titlebar_FC"]
+    Settings.SetBoolSetting("Hide_Titlebar_FC", HIDE_TITLEBAR_FC)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the icon sizes ---------------------------------------------------------------------------------------

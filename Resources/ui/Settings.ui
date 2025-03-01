@@ -76,7 +76,7 @@
             <string notr="true"/>
            </property>
            <property name="currentIndex">
-            <number>3</number>
+            <number>0</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideRight</enum>
@@ -374,19 +374,17 @@
                       <height>0</height>
                      </size>
                     </property>
+                    <property name="font">
+                     <font>
+                      <bold>false</bold>
+                     </font>
+                    </property>
                     <property name="title">
                      <string>Tab style</string>
                     </property>
                     <layout class="QGridLayout" name="gridLayout_25">
                      <item row="0" column="0">
                       <layout class="QGridLayout" name="gridLayout_24">
-                       <item row="0" column="0">
-                        <widget class="QLabel" name="label_24">
-                         <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the tab style: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                        </widget>
-                       </item>
                        <item row="0" column="1">
                         <widget class="QComboBox" name="TabbarStyle">
                          <property name="minimumSize">
@@ -394,6 +392,11 @@
                            <width>180</width>
                            <height>0</height>
                           </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <bold>false</bold>
+                          </font>
                          </property>
                          <property name="currentText">
                           <string>Icon + text</string>
@@ -415,13 +418,6 @@
                          </item>
                         </widget>
                        </item>
-                       <item row="1" column="0">
-                        <widget class="QLabel" name="label_36">
-                         <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the toolbar positions: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                         </property>
-                        </widget>
-                       </item>
                        <item row="1" column="1">
                         <widget class="QComboBox" name="ToolbarPositions">
                          <property name="minimumSize">
@@ -429,6 +425,11 @@
                            <width>180</width>
                            <height>0</height>
                           </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <bold>false</bold>
+                          </font>
                          </property>
                          <property name="currentText">
                           <string>Toolbars above tabbar</string>
@@ -443,6 +444,42 @@
                            <string>Toolbars inline with tabbar</string>
                           </property>
                          </item>
+                        </widget>
+                       </item>
+                       <item row="0" column="0">
+                        <widget class="QLabel" name="label_24">
+                         <property name="font">
+                          <font>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the tab style: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="1" column="0">
+                        <widget class="QLabel" name="label_36">
+                         <property name="font">
+                          <font>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the toolbar positions: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                         </property>
+                        </widget>
+                       </item>
+                       <item row="2" column="0" colspan="2">
+                        <widget class="QCheckBox" name="HideTitleBarFC">
+                         <property name="font">
+                          <font>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Hide the titlebar of FreeCAD</string>
+                         </property>
                         </widget>
                        </item>
                       </layout>
