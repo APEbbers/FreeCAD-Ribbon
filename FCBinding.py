@@ -1117,17 +1117,17 @@ class ModernMenu(RibbonBar):
         MinimzeButton.clicked.connect(self.MinimizeFreeCAD)
         MinimzeButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
         self.rightToolBar().addWidget(MinimzeButton)
-        # # Restore button
-        # RestoreButton = QToolButton()
-        # RestoreButton.setObjectName("RestoreButton")
-        # RestoreButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
-        # RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton)
-        # if QMainWindow(mw).isMaximized():
-        #     RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton)
-        # RestoreButton.setIcon(RestoreIcon)
-        # RestoreButton.clicked.connect(self.RestoreFreeCAD)
-        # RestoreButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
-        # self.rightToolBar().addWidget(RestoreButton)
+        # Restore button
+        RestoreButton = QToolButton()
+        RestoreButton.setObjectName("RestoreButton")
+        RestoreButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
+        RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton)
+        if QMainWindow(mw).isMaximized():
+            RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton)
+        RestoreButton.setIcon(RestoreIcon)
+        RestoreButton.clicked.connect(self.RestoreFreeCAD)
+        RestoreButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+        self.rightToolBar().addWidget(RestoreButton)
         # Close button
         CloseButton = QToolButton()
         CloseIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarCloseButton)
@@ -2978,11 +2978,18 @@ class ModernMenu(RibbonBar):
             Style = mw.style()
             RestoreButton: QToolButton = self.rightToolBar().findChildren(QToolButton, "RestoreButton")[0]
             if mw.isMaximized():
+                # mw.setMinimumSize(0, 0)
+                # mw.setMaximumSize(800, 400)
+                # mw.resize(800, 400)
+                # mw.adjustSize()
                 mw.showNormal()
-                mw.setMinimumSize(QSize(400, 400))
+                mw.setMaximumSize(800, 400)
                 RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
                 return
             if mw.isMaximized() is False:
+                # mw.setWindowState(Qt.WindowState.WindowNoState)
+                mw.setMaximumSize(40000, 40000)
+                mw.adjustSize()
                 mw.showMaximized()
                 RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
                 return
