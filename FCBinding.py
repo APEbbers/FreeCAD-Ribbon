@@ -68,6 +68,7 @@ from PySide.QtWidgets import (
     QToolTip,
     QWidgetItem,
     QTreeWidget,
+    QApplication,
 )
 from PySide.QtCore import (
     Qt,
@@ -458,7 +459,7 @@ class ModernMenu(RibbonBar):
         # Create the ribbon
         self.CreateMenus()  # Create the menus
         self.createModernMenu()  # Create the ribbon
-        self.onUserChangedWorkbench(False)  # Set the dockwidget and ribbonheight as done after changing from workbench
+        # self.onUserChangedWorkbench(False)  # Set the dockwidget and ribbonheight as done after changing from workbench
 
         # Set the custom stylesheet
         StyleSheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
@@ -645,7 +646,7 @@ class ModernMenu(RibbonBar):
                 self._titleWidget._tabBarLayout.addWidget(_rightToolBar, 0, 2, 1, 2, Qt.AlignmentFlag.AlignVCenter)
                 self._titleWidget._tabBarLayout.addWidget(_tabBar, 1, 0, 1, 4, Qt.AlignmentFlag.AlignVCenter)
                 # Change the offsets
-                self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
+                self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 16
                 self.RibbonOffset = 50 + self.QuickAccessButtonSize * 2
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(0, self.QuickAccessButtonSize)
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(1, self.TabBar_Size)
@@ -662,6 +663,7 @@ class ModernMenu(RibbonBar):
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize + 10
                 self.RibbonOffset = 46 + self.QuickAccessButtonSize
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(0, self.QuickAccessButtonSize)
+
         return
 
     def closeEvent(self, event):
@@ -778,11 +780,11 @@ class ModernMenu(RibbonBar):
             self.QuickAccessButtonSize + FontMetrics.boundingRect(Text.text()).width() + 12,
             self.QuickAccessButtonSize,
         )
-        if Parameters_Ribbon.TOOLBAR_POSITION == 0 and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
-            self.applicationOptionButton().setFixedSize(
-                self.QuickAccessButtonSize + FontMetrics.boundingRect(Text.text()).width() + 12,
-                self.QuickAccessButtonSize + 4,
-            )
+        # if Parameters_Ribbon.TOOLBAR_POSITION == 0 and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
+        #     self.applicationOptionButton().setFixedSize(
+        #         self.QuickAccessButtonSize + FontMetrics.boundingRect(Text.text()).width() + 12,
+        #         self.QuickAccessButtonSize + 4,
+        #     )
         # Set the icon
         self.setApplicationIcon(Gui.getIcon("freecad"))
         # Set the styling of the button including padding (Text widht + 2*maring)
@@ -1104,6 +1106,36 @@ class ModernMenu(RibbonBar):
         else:
             pinButton.clicked.connect(self.onPinClicked)
             self.rightToolBar().addWidget(pinButton)
+
+        # if the FreeCAD titlebar is hidden,add close, minimize and maximize buttons
+        Style = mw.style()
+        # Minimize button
+        MinimzeButton = QToolButton()
+        MinimizeIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMinButton)
+        MinimzeButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
+        MinimzeButton.setIcon(MinimizeIcon)
+        MinimzeButton.clicked.connect(self.MinimizeFreeCAD)
+        MinimzeButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+        self.rightToolBar().addWidget(MinimzeButton)
+        # Restore button
+        RestoreButton = QToolButton()
+        RestoreButton.setObjectName("RestoreButton")
+        RestoreButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
+        RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton)
+        if mw.windowState() != Qt.WindowState.WindowMaximized:
+            RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton)
+        RestoreButton.setIcon(RestoreIcon)
+        RestoreButton.clicked.connect(self.RestoreFreeCAD)
+        RestoreButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+        self.rightToolBar().addWidget(RestoreButton)
+        # Close button
+        CloseButton = QToolButton()
+        CloseIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarCloseButton)
+        CloseButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
+        CloseButton.setIcon(CloseIcon)
+        CloseButton.clicked.connect(self.CloseFreeCAD)
+        CloseButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+        self.rightToolBar().addWidget(CloseButton)
 
         # Set the width of the right toolbar
         RightToolbarWidth = SearchBarWidth + 3 * (self.RightToolBarButtonSize + 16) + self.RightToolBarButtonSize
@@ -2932,6 +2964,36 @@ class ModernMenu(RibbonBar):
             if Parameters_Ribbon.DEBUG_MODE is True:
                 StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
             return
+
+    def CloseFreeCAD(self):
+        mw.close()
+        return
+
+    def MinimizeFreeCAD(self):
+        mw.showMinimized()
+        return
+
+    def RestoreFreeCAD(self):
+        if self.isLoaded:
+            Style = mw.style()
+            RestoreButton: QToolButton = self.rightToolBar().findChildren(QToolButton, "RestoreButton")[0]
+            if mw.windowState() == Qt.WindowState.WindowMaximized:
+                RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
+                mw.setMinimumSize(QSize(400, 400))
+                # mw.resize(QSize(400, 400))
+                mw.setWindowState(Qt.WindowState.WindowNoState)
+                # mw.move(100, 100)
+                mw.showNormal()
+                return
+            else:
+                RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
+                mw.setWindowState(Qt.WindowState.WindowMaximized)
+                # screenGeometry = QApplication.screenAt(mw.pos()).geometry()
+                # mw.resize(QSize(screenGeometry.width(), screenGeometry.height()))
+                # mw.move(0, 0)
+                mw.showMaximized()
+                return
+        return
 
 
 class EventInspector(QObject):

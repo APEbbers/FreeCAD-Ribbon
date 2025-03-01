@@ -220,7 +220,7 @@ DefaultSettings = {
     "FontSize_Tabs": int(14),
     "FontSize_Panels": int(11),
     "Toolbar_Position": int(0),
-    "Hide_Titlebar_FC": False,
+    "Hide_Titlebar_FC": True,
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
