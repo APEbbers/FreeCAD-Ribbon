@@ -26,9 +26,10 @@ import FCBinding
 import Parameters_Ribbon
 import shutil
 import sys
-from PySide6.QtCore import Qt, QTimer, QSize
-from PySide6.QtGui import QGuiApplication
-from PySide6.QtWidgets import QMainWindow, QLabel, QSizePolicy, QApplication
+import platform
+from PySide.QtCore import Qt, QTimer, QSize, QSettings
+from PySide.QtGui import QGuiApplication
+from PySide.QtWidgets import QMainWindow, QLabel, QSizePolicy, QApplication
 
 
 def QT_TRANSLATE_NOOP(context, text):
@@ -88,30 +89,38 @@ if Parameters_Ribbon.USE_FC_OVERLAY is True:
 try:
     print(translate("FreeCAD Ribbon", "Activating Ribbon Bar..."))
     mw = Gui.getMainWindow()
-    # mw.move(0, 0)
-    # screen = QGuiApplication.screenAt(mw.pos())
-    # mw.resize(screen.availableGeometry().width(), screen.availableGeometry().height())
-    mw.workbenchActivated.connect(FCBinding.run)
+
+    if Parameters_Ribbon.HIDE_TITLEBAR_FC is False:
+        mw.workbenchActivated.connect(FCBinding.run)
 
     # Hide the Titlebar of FreeCAD
     if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
-        mw.setWindowFlags(
-            Qt.WindowType.FramelessWindowHint
-            | Qt.WindowType.X11BypassWindowManagerHint
-            | Qt.WindowType.BypassWindowManagerHint
-        )
-        # # Define a timer
-        # timer = QTimer()
-        # # Use singleshot to show the mainwindow after the UI is loaded comppletly
-        # timer.singleShot(0, None)
-        mw.move(0, 0)
+        # if platform.system() == "Windows":
+        mw.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint)
+        # if platform.system() != "Windows":
+        #     mw.setWindowState(Qt.WindowState.WindowFullScreen)
+        #     # mw.setWindowFlags(Qt.WindowType.Window | Qt.WindowState.WindowFullScreen)
+        # Define a timer
+        timer = QTimer()
+        # Use singleshot to show the mainwindow after the UI is loaded comppletly
+        timer.singleShot(0, mw.workbenchActivated.connect(FCBinding.run))
         mw.show()
-        mw.adjustSize()
         print(translate("FreeCAD Ribbon", "FreeCAD loaded without titlebar"))
 
+        # if mw.isMaximized() is False:
+        #     try:
+        #         # mw.showNormal()
+        #         # mw.resize(800, 400)
+        #         # mw.window().resize(800, 400)
+        #         # mw.adjustSize()
+        #         # mw.move(50, 50)
+        #         settings = QSettings("FreeCAD", "FreeCAD Ribbon")
+        #         settings.setValue("Window_Normal", mw.saveState())
+        #     except Exception:
+        #         pass
 
 except Exception as e:
-    raise e
+    # raise e
     if Parameters_Ribbon.DEBUG_MODE is True:
         print(f"{e.with_traceback(e.__traceback__)}, 0")
 

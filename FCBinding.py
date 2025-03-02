@@ -41,6 +41,7 @@ from PySide.QtGui import (
     QKeySequence,
     QShortcut,
     QCursor,
+    QGuiApplication,
 )
 from PySide.QtWidgets import (
     QToolButton,
@@ -84,6 +85,7 @@ from PySide.QtCore import (
     Slot,
     QRect,
     QPoint,
+    QSettings,
 )
 from CustomWidgets import CustomControls
 
@@ -1108,46 +1110,48 @@ class ModernMenu(RibbonBar):
             self.rightToolBar().addWidget(pinButton)
 
         # if the FreeCAD titlebar is hidden,add close, minimize and maximize buttons
-        Style = mw.style()
-        # Minimize button
-        MinimzeButton = QToolButton()
-        MinimizeIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMinButton)
-        MinimzeButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
-        MinimzeButton.setIcon(MinimizeIcon)
-        MinimzeButton.clicked.connect(self.MinimizeFreeCAD)
-        MinimzeButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
-        self.rightToolBar().addWidget(MinimzeButton)
-        # Restore button
-        RestoreButton = QToolButton()
-        RestoreButton.setObjectName("RestoreButton")
-        RestoreButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
-        RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton)
-        if QMainWindow(mw).isMaximized():
-            RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton)
-        RestoreButton.setIcon(RestoreIcon)
-        RestoreButton.clicked.connect(self.RestoreFreeCAD)
-        RestoreButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
-        self.rightToolBar().addWidget(RestoreButton)
-        # Close button
-        CloseButton = QToolButton()
-        CloseIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarCloseButton)
-        CloseButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
-        CloseButton.setIcon(CloseIcon)
-        CloseButton.clicked.connect(self.CloseFreeCAD)
-        CloseButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
-        self.rightToolBar().addWidget(CloseButton)
+        if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
+            Style = mw.style()
+            # Minimize button
+            MinimzeButton = QToolButton()
+            MinimizeIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMinButton)
+            MinimzeButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
+            MinimzeButton.setIcon(MinimizeIcon)
+            MinimzeButton.clicked.connect(self.MinimizeFreeCAD)
+            MinimzeButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+            self.rightToolBar().addWidget(MinimzeButton)
+            # Restore button (does not work on windows)
+            if platform.system() != "Windows":
+                RestoreButton = QToolButton()
+                RestoreButton.setObjectName("RestoreButton")
+                RestoreButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
+                RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton)
+                if QMainWindow(mw).isMaximized():
+                    RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton)
+                RestoreButton.setIcon(RestoreIcon)
+                RestoreButton.clicked.connect(self.RestoreFreeCAD)
+                RestoreButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+                self.rightToolBar().addWidget(RestoreButton)
+            # Close button
+            CloseButton = QToolButton()
+            CloseIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarCloseButton)
+            CloseButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
+            CloseButton.setIcon(CloseIcon)
+            CloseButton.clicked.connect(self.CloseFreeCAD)
+            CloseButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+            self.rightToolBar().addWidget(CloseButton)
 
-        # Set the width of the right toolbar
-        RightToolbarWidth = SearchBarWidth + 3 * (self.RightToolBarButtonSize + 16) + self.RightToolBarButtonSize
-        if Parameters_Ribbon.USE_FC_OVERLAY is True:
-            RightToolbarWidth = SearchBarWidth + 2 * (self.RightToolBarButtonSize + 16)
-        self.rightToolBar().setMinimumWidth(RightToolbarWidth)
-        self.setRightToolBarHeight(self.RibbonMinimalHeight)
-        # Set the size policy
-        self.rightToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
-        self.rightToolBar().setSizeIncrement(1, 1)
-        # Set the objectName for the right toolbar. needed for excluding from hiding.
-        self.rightToolBar().setObjectName("rightToolBar")
+            # Set the width of the right toolbar
+            RightToolbarWidth = SearchBarWidth + 3 * (self.RightToolBarButtonSize + 16) + self.RightToolBarButtonSize
+            if Parameters_Ribbon.USE_FC_OVERLAY is True:
+                RightToolbarWidth = SearchBarWidth + 2 * (self.RightToolBarButtonSize + 16)
+            self.rightToolBar().setMinimumWidth(RightToolbarWidth)
+            self.setRightToolBarHeight(self.RibbonMinimalHeight)
+            # Set the size policy
+            self.rightToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+            self.rightToolBar().setSizeIncrement(1, 1)
+            # Set the objectName for the right toolbar. needed for excluding from hiding.
+            self.rightToolBar().setObjectName("rightToolBar")
         return
 
     # Add the searchBar if it is present
@@ -2973,25 +2977,34 @@ class ModernMenu(RibbonBar):
         mw.showMinimized()
         return
 
-    def RestoreFreeCAD(self):
+    def RestoreFreeCAD(self, event):
         if self.isLoaded:
+            # _titleLabel = self._titleWidget._titleLabel
+            # _titleLabel.emit(QEvent.Type.MouseButtonDblClick)
+            mw.resizeEvent(event)
             Style = mw.style()
             RestoreButton: QToolButton = self.rightToolBar().findChildren(QToolButton, "RestoreButton")[0]
             if mw.isMaximized():
-                # mw.setMinimumSize(0, 0)
-                # mw.setMaximumSize(800, 400)
-                # mw.resize(800, 400)
-                # mw.adjustSize()
-                mw.showNormal()
-                mw.setMaximumSize(800, 400)
-                RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
+                try:
+                    mw.showNormal()
+                    # mw.resize(800, 400)
+                    # mw.window().resize(800, 400)
+                    # mw.adjustSize()
+                    # mw.move(50, 50)
+                    # settings = QSettings("FreeCAD", "FreeCAD Ribbon")
+                    # mw.restoreState(settings.value("Window_Normal"))
+                    RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
+                except Exception:
+                    pass
                 return
             if mw.isMaximized() is False:
-                # mw.setWindowState(Qt.WindowState.WindowNoState)
-                mw.setMaximumSize(40000, 40000)
-                mw.adjustSize()
-                mw.showMaximized()
-                RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
+                try:
+                    # settings = QSettings("FreeCAD", "FreeCAD Ribbon")
+                    # settings.setValue("Window_Normal", mw.saveState())
+                    mw.showMaximized()
+                    RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
+                except Exception:
+                    pass
                 return
         return
 
