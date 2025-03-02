@@ -95,29 +95,17 @@ try:
 
     # Hide the Titlebar of FreeCAD
     if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
-        # if platform.system() == "Windows":
-        mw.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint)
-        # if platform.system() != "Windows":
-        #     mw.setWindowState(Qt.WindowState.WindowFullScreen)
-        #     # mw.setWindowFlags(Qt.WindowType.Window | Qt.WindowState.WindowFullScreen)
+        mw.setWindowState(Qt.WindowState.WindowActive)
+        mw.setWindowFlags(
+            Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint | Qt.WindowType.BypassWindowManagerHint
+        )
+
         # Define a timer
         timer = QTimer()
         # Use singleshot to show the mainwindow after the UI is loaded comppletly
         timer.singleShot(0, mw.workbenchActivated.connect(FCBinding.run))
-        mw.show()
+        mw.showMaximized()
         print(translate("FreeCAD Ribbon", "FreeCAD loaded without titlebar"))
-
-        # if mw.isMaximized() is False:
-        #     try:
-        #         # mw.showNormal()
-        #         # mw.resize(800, 400)
-        #         # mw.window().resize(800, 400)
-        #         # mw.adjustSize()
-        #         # mw.move(50, 50)
-        #         settings = QSettings("FreeCAD", "FreeCAD Ribbon")
-        #         settings.setValue("Window_Normal", mw.saveState())
-        #     except Exception:
-        #         pass
 
 except Exception as e:
     # raise e

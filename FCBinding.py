@@ -635,6 +635,9 @@ class ModernMenu(RibbonBar):
             _titleLabel = self._titleWidget._titleLabel
             _rightToolBar = self.rightToolBar()
             _tabBar = self.tabBar()
+            # Set the label text to FreeCAD's version
+            text = f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
+            _titleLabel.setText(text)
             # Remove the widgets
             self._titleWidget._tabBarLayout.removeWidget(_quickAccessToolBarWidget)
             self._titleWidget._tabBarLayout.removeWidget(_titleLabel)
@@ -898,9 +901,7 @@ class ModernMenu(RibbonBar):
         # Set the width of the quickaccess toolbar.
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
         # Set the size policy
-        self.quickAccessToolBar().setSizePolicy(
-            QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding
-        )
+        self.quickAccessToolBar().setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.MinimumExpanding)
         # needed for excluding from hiding toolbars
         self.quickAccessToolBar().setObjectName("quickAccessToolBar")
         self.quickAccessToolBar().setWindowTitle("quickAccessToolBar")
@@ -1111,6 +1112,11 @@ class ModernMenu(RibbonBar):
 
         # if the FreeCAD titlebar is hidden,add close, minimize and maximize buttons
         if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
+            spacer = QWidget()
+            spacer.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
+            spacer.setFixedWidth(30)
+            self.rightToolBar().addWidget(spacer)
+
             Style = mw.style()
             # Minimize button
             MinimzeButton = QToolButton()
@@ -2977,11 +2983,8 @@ class ModernMenu(RibbonBar):
         mw.showMinimized()
         return
 
-    def RestoreFreeCAD(self):
+    def RestoreFreeCAD(self, event):
         if self.isLoaded:
-            # _titleLabel = self._titleWidget._titleLabel
-            # _titleLabel.emit(QEvent.Type.MouseButtonDblClick)
-            # mw.resizeEvent(event)
             Style = mw.style()
             RestoreButton: QToolButton = self.rightToolBar().findChildren(QToolButton, "RestoreButton")[0]
             if mw.isMaximized():
