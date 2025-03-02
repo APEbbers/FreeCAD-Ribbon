@@ -641,6 +641,11 @@ class ModernMenu(RibbonBar):
             self._titleWidget._tabBarLayout.removeWidget(_rightToolBar)
             self._titleWidget._tabBarLayout.removeWidget(_tabBar)
             if Parameters_Ribbon.TOOLBAR_POSITION == 0:  # Toolbars above tabbar
+                # Set the font size for the label
+                font: QFont = _titleLabel.font()
+                font.setPixelSize(Parameters_Ribbon.FONTSIZE_MENUS + 1)
+                _titleLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                _titleLabel.setFont(font)
                 # Set the label text to FreeCAD's version
                 text = f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
                 _titleLabel.setText(text)
