@@ -91,7 +91,9 @@ try:
     mw = Gui.getMainWindow()
 
     if Parameters_Ribbon.HIDE_TITLEBAR_FC is False:
+        mw.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.WindowFullscreenButtonHint)
         mw.workbenchActivated.connect(FCBinding.run)
+        mw.showMaximized()
 
     # Hide the Titlebar of FreeCAD
     if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:

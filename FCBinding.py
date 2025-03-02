@@ -3017,6 +3017,23 @@ class ModernMenu(RibbonBar):
                 return
         return
 
+    def ToggleFullScreen():
+        if mw.isFullScreen():
+            mw.showMaximized()
+            return
+        if mw.isFullScreen() is False:
+            mw.showFullScreen()
+            return
+
+    def ToggleMenuBar():
+        MenuBar = mw.menuBar()
+        if MenuBar.isVisible():
+            MenuBar.hide()
+            return
+        if MenuBar.isVisible() is False:
+            MenuBar.show()
+            return
+
 
 class run:
     """

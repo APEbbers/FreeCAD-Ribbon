@@ -120,6 +120,38 @@ class RibbonPin_Class:
         return
 
 
+class FullScreen_Class:
+    def GetResources(self):
+        return {
+            "Pixmap": "./Resources/icons/FreecadNew.svg",
+            "Accel": "F11",
+            "MenuText": "Toggle fullscreen",
+            "ToolTip": "Click to toggle fullscreen on or off",
+        }
+
+    def Activated(self):
+        from FCBinding import ModernMenu
+
+        ModernMenu.ToggleFullScreen()
+        return
+
+
+class MenuBar_Class:
+    def GetResources(self):
+        return {
+            "Pixmap": "./Resources/icons/FreecadNew.svg",
+            "Accel": "Alt+Space",
+            "MenuText": "Toggle menubar",
+            "ToolTip": "Click to show or hide the menubar",
+        }
+
+    def Activated(self):
+        from FCBinding import ModernMenu
+
+        ModernMenu.ToggleMenuBar()
+        return
+
+
 Gui.addCommand("Ribbon_Menu", RibbonApplicationMenu_Class())
 Gui.addCommand("Ribbon_Layout", RibbonLayout_Class())
 Gui.addCommand("Ribbon_Preferences", RibbonPreferences_Class())
