@@ -120,35 +120,33 @@ class RibbonPin_Class:
         return
 
 
-class FullScreen_Class:
-    def GetResources(self):
-        return {
-            "Pixmap": "./Resources/icons/FreecadNew.svg",
-            "Accel": "F11",
-            "MenuText": "Toggle fullscreen",
-            "ToolTip": "Click to toggle fullscreen on or off",
-        }
-
-    def Activated(self):
-        from FCBinding import ModernMenu
-
-        ModernMenu.ToggleFullScreen()
-        return
-
-
 class MenuBar_Class:
     def GetResources(self):
         return {
             "Pixmap": "./Resources/icons/FreecadNew.svg",
-            "Accel": "Alt+Space",
+            "Accel": "Alt+M",
             "MenuText": "Toggle menubar",
             "ToolTip": "Click to show or hide the menubar",
         }
 
     def Activated(self):
-        from FCBinding import ModernMenu
+        # from PySide.QtWidgets import QMenuBar, QToolButton
 
-        ModernMenu.ToggleMenuBar()
+        # Get the main window of FreeCAD
+        mw = Gui.getMainWindow()
+
+        MenuBar = mw.menuBar()
+        print(MenuBar.isVisible())
+        if MenuBar.isVisible() is True:
+            MenuBar.hide()
+            print("Menubar hidden")
+            return
+        if MenuBar.isVisible() is False:
+            MenuBar.show()
+            print("Menubar shown")
+            return
+        # ToggleButton = mw.findChildren(QToolButton, "ToggleMenuBar")[0]
+        # ToggleButton.animateClick()
         return
 
 
@@ -156,5 +154,4 @@ Gui.addCommand("Ribbon_Menu", RibbonApplicationMenu_Class())
 Gui.addCommand("Ribbon_Layout", RibbonLayout_Class())
 Gui.addCommand("Ribbon_Preferences", RibbonPreferences_Class())
 Gui.addCommand("Ribbon_Pin", RibbonPin_Class())
-Gui.addCommand("Ribbon_Fullscreen", FullScreen_Class())
-Gui.addCommand("Ribbon_Menubar", MenuBar_Class())
+# Gui.addCommand("Ribbon_Menubar", MenuBar_Class())

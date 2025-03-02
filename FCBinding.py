@@ -650,6 +650,7 @@ class ModernMenu(RibbonBar):
                 text = f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
                 _titleLabel.setText(text)
 
+                self._titleWidget._tabBarLayout.setContentsMargins(3, 3, 3, 0)
                 self._titleWidget._tabBarLayout.addWidget(
                     _quickAccessToolBarWidget, 0, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
@@ -657,8 +658,8 @@ class ModernMenu(RibbonBar):
                 self._titleWidget._tabBarLayout.addWidget(_rightToolBar, 0, 2, 1, 2, Qt.AlignmentFlag.AlignVCenter)
                 self._titleWidget._tabBarLayout.addWidget(_tabBar, 1, 0, 1, 4, Qt.AlignmentFlag.AlignVCenter)
                 # Change the offsets
-                self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 16
-                self.RibbonOffset = 50 + self.QuickAccessButtonSize * 2
+                self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
+                self.RibbonOffset = 54 + self.QuickAccessButtonSize * 2
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(0, self.QuickAccessButtonSize)
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(1, self.TabBar_Size)
                 # self.setTitle("FreeCAD")
@@ -791,11 +792,6 @@ class ModernMenu(RibbonBar):
             self.QuickAccessButtonSize + FontMetrics.boundingRect(Text.text()).width() + 12,
             self.QuickAccessButtonSize,
         )
-        # if Parameters_Ribbon.TOOLBAR_POSITION == 0 and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
-        #     self.applicationOptionButton().setFixedSize(
-        #         self.QuickAccessButtonSize + FontMetrics.boundingRect(Text.text()).width() + 12,
-        #         self.QuickAccessButtonSize + 4,
-        #     )
         # Set the icon
         self.setApplicationIcon(Gui.getIcon("freecad"))
         # Set the styling of the button including padding (Text widht + 2*maring)
@@ -1008,6 +1004,12 @@ class ModernMenu(RibbonBar):
 
         # add the searchbar if available
         SearchBarWidth = self.AddSearchBar()
+        if Parameters_Ribbon.TOOLBAR_POSITION == 0:
+            spacer = QWidget()
+            spacer.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
+            spacer.setFixedWidth(10)
+            BeforeAction = self.rightToolBar().actions()[2]
+            self.rightToolBar().insertWidget(BeforeAction, spacer)
 
         # add an overlay menu if Ribbon's overlay is enabled
         if self.OverlayMenu is not None:
@@ -1117,7 +1119,7 @@ class ModernMenu(RibbonBar):
             self.rightToolBar().addWidget(pinButton)
 
         # if the FreeCAD titlebar is hidden,add close, minimize and maximize buttons
-        if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
+        if Parameters_Ribbon.TOOLBAR_POSITION == 0:
             spacer = QWidget()
             spacer.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
             spacer.setFixedWidth(30)
@@ -1152,6 +1154,13 @@ class ModernMenu(RibbonBar):
             CloseButton.clicked.connect(self.CloseFreeCAD)
             CloseButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
             self.rightToolBar().addWidget(CloseButton)
+
+        # # add a hidden button for toggeling the menu
+        # ToggleMenuBar = QToolButton()
+        # ToggleMenuBar.setObjectName("ToggleMenuBar")
+        # ToggleMenuBar.clicked.connect(self.ToggleMenuBar)
+        # ToggleMenuBar.setHidden(True)
+        # QMainWindow(mw).addWidget(ToggleMenuBar)
 
         # Set the width of the right toolbar
         RightToolbarWidth = SearchBarWidth + 3 * (self.RightToolBarButtonSize + 16) + self.RightToolBarButtonSize
