@@ -676,6 +676,8 @@ class ModernMenu(RibbonBar):
                 self.RibbonOffset = 46 + self.QuickAccessButtonSize
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(0, self.QuickAccessButtonSize)
 
+        mw.installEventFilter(EventInspector(mw))
+
         return
 
     def closeEvent(self, event):
@@ -3042,6 +3044,29 @@ class ModernMenu(RibbonBar):
         if MenuBar.isVisible() is False:
             MenuBar.show()
             return
+
+
+class EventInspector(QObject):
+    def __init__(self, parent):
+        super(EventInspector, self).__init__(parent)
+
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.Type.Resize:
+            print("main window resized")
+        if event.type() == QEvent.Type.WindowStateChange:
+            print("main window state changed")
+        if event.type() == QEvent.Type.ModifiedChange:
+            mw = Gui.getMainWindow()
+            Ribbon = mw.findChild(ModernMenu, "Ribbon")
+            title = Ribbon.title()
+            if App.ActiveDocument is not None:
+                Prefix = f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
+                if title != Prefix + " - " + App.ActiveDocument.Label:
+                    Ribbon.setTitle(Prefix + " - " + App.ActiveDocument.Label)
+            if App.ActiveDocument is None:
+                Ribbon.setTitle(f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}")
+            return QObject.eventFilter(self, obj, event)
+        return False
 
 
 class run:
