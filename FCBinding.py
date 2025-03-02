@@ -635,15 +635,16 @@ class ModernMenu(RibbonBar):
             _titleLabel = self._titleWidget._titleLabel
             _rightToolBar = self.rightToolBar()
             _tabBar = self.tabBar()
-            # Set the label text to FreeCAD's version
-            text = f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
-            _titleLabel.setText(text)
             # Remove the widgets
             self._titleWidget._tabBarLayout.removeWidget(_quickAccessToolBarWidget)
             self._titleWidget._tabBarLayout.removeWidget(_titleLabel)
             self._titleWidget._tabBarLayout.removeWidget(_rightToolBar)
             self._titleWidget._tabBarLayout.removeWidget(_tabBar)
             if Parameters_Ribbon.TOOLBAR_POSITION == 0:  # Toolbars above tabbar
+                # Set the label text to FreeCAD's version
+                text = f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
+                _titleLabel.setText(text)
+
                 self._titleWidget._tabBarLayout.addWidget(
                     _quickAccessToolBarWidget, 0, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
