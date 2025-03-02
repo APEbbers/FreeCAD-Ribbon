@@ -1148,17 +1148,17 @@ class ModernMenu(RibbonBar):
             CloseButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
             self.rightToolBar().addWidget(CloseButton)
 
-            # Set the width of the right toolbar
-            RightToolbarWidth = SearchBarWidth + 3 * (self.RightToolBarButtonSize + 16) + self.RightToolBarButtonSize
-            if Parameters_Ribbon.USE_FC_OVERLAY is True:
-                RightToolbarWidth = SearchBarWidth + 2 * (self.RightToolBarButtonSize + 16)
-            self.rightToolBar().setMinimumWidth(RightToolbarWidth)
-            self.setRightToolBarHeight(self.RibbonMinimalHeight)
-            # Set the size policy
-            self.rightToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
-            self.rightToolBar().setSizeIncrement(1, 1)
-            # Set the objectName for the right toolbar. needed for excluding from hiding.
-            self.rightToolBar().setObjectName("rightToolBar")
+        # Set the width of the right toolbar
+        RightToolbarWidth = SearchBarWidth + 3 * (self.RightToolBarButtonSize + 16) + self.RightToolBarButtonSize
+        if Parameters_Ribbon.USE_FC_OVERLAY is True:
+            RightToolbarWidth = SearchBarWidth + 2 * (self.RightToolBarButtonSize + 16)
+        self.rightToolBar().setMinimumWidth(RightToolbarWidth)
+        self.setRightToolBarHeight(self.RibbonMinimalHeight)
+        # Set the size policy
+        self.rightToolBar().setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+        self.rightToolBar().setSizeIncrement(1, 1)
+        # Set the objectName for the right toolbar. needed for excluding from hiding.
+        self.rightToolBar().setObjectName("rightToolBar")
         return
 
     # Add the searchBar if it is present
