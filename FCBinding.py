@@ -2977,11 +2977,11 @@ class ModernMenu(RibbonBar):
         mw.showMinimized()
         return
 
-    def RestoreFreeCAD(self, event):
+    def RestoreFreeCAD(self):
         if self.isLoaded:
             # _titleLabel = self._titleWidget._titleLabel
             # _titleLabel.emit(QEvent.Type.MouseButtonDblClick)
-            mw.resizeEvent(event)
+            # mw.resizeEvent(event)
             Style = mw.style()
             RestoreButton: QToolButton = self.rightToolBar().findChildren(QToolButton, "RestoreButton")[0]
             if mw.isMaximized():
