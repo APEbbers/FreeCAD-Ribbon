@@ -95,10 +95,7 @@ try:
 
     # Hide the Titlebar of FreeCAD
     if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
-        mw.setWindowState(Qt.WindowState.WindowActive)
-        mw.setWindowFlags(
-            Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint | Qt.WindowType.BypassWindowManagerHint
-        )
+        mw.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint)
 
         # Define a timer
         timer = QTimer()
