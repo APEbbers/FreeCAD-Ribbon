@@ -3062,7 +3062,10 @@ class EventInspector(QObject):
             if App.ActiveDocument is not None:
                 Prefix = f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
                 if title != Prefix + " - " + App.ActiveDocument.Label:
-                    Ribbon.setTitle(Prefix + " - " + App.ActiveDocument.Label)
+                    CentralWidget = mw.centralWidget()
+                    TabBar: QTabBar = CentralWidget.findChild(QTabBar, "mdiAreaTabBar")
+                    CurrentText = TabBar.tabText(TabBar.currentIndex())
+                    Ribbon.setTitle(Prefix + " - " + CurrentText)
             if App.ActiveDocument is None:
                 Ribbon.setTitle(f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}")
             return QObject.eventFilter(self, obj, event)
