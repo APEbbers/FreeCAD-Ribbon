@@ -3005,13 +3005,11 @@ class ModernMenu(RibbonBar):
             # If the mainwindow is maximized, set the mainwindow to normal, set a size and icon
             if mw.isMaximized() is True:
                 try:
-                    # On windows, resizing a frameless windows, results in errors.
-                    # As a workaround, the mainwindow will show a titlebar with no button or text.
-                    # This way the user can still use the resize functionlity from MS Windows
-                    if platform.system().lower() == "windows":
-                        mw.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.CustomizeWindowHint)
-                        mw.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
-                        mw.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
+                    # To make the window resizable, the main window is set to a window
+                    # with a titlebar without buttons and title.
+                    mw.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.CustomizeWindowHint)
+                    mw.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
+                    mw.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
                     # Set the main window to normal and set the windows state accordingly
                     mw.showNormal()
                     mw.setWindowState(Qt.WindowState.WindowNoState)
