@@ -130,23 +130,16 @@ class MenuBar_Class:
         }
 
     def Activated(self):
-        # from PySide.QtWidgets import QMenuBar, QToolButton
+        from PySide.QtWidgets import QMenuBar, QToolButton
 
         # Get the main window of FreeCAD
         mw = Gui.getMainWindow()
 
-        MenuBar = mw.menuBar()
-        print(MenuBar.isVisible())
-        if MenuBar.isVisible() is True:
-            MenuBar.hide()
-            print("Menubar hidden")
-            return
-        if MenuBar.isVisible() is False:
-            MenuBar.show()
-            print("Menubar shown")
-            return
-        # ToggleButton = mw.findChildren(QToolButton, "ToggleMenuBar")[0]
-        # ToggleButton.animateClick()
+        DockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+        Ribbon = DockWidget.findChildren(ModernMenu, "Ribbon")[0]
+        RightToolbar = Ribbon.rightToolBar()
+        ToggleButton = RightToolbar.findChildren(QToolButton, "ToggleMenuBar")[0]
+        ToggleButton.animateClick()
         return
 
 

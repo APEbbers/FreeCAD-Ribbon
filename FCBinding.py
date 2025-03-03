@@ -677,7 +677,6 @@ class ModernMenu(RibbonBar):
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(0, self.QuickAccessButtonSize)
 
         mw.installEventFilter(EventInspector(mw))
-
         return
 
     def closeEvent(self, event):
@@ -1121,7 +1120,7 @@ class ModernMenu(RibbonBar):
             self.rightToolBar().addWidget(pinButton)
 
         # if the FreeCAD titlebar is hidden,add close, minimize and maximize buttons
-        if Parameters_Ribbon.TOOLBAR_POSITION == 0:
+        if Parameters_Ribbon.TOOLBAR_POSITION == 0 and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
             spacer = QWidget()
             spacer.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
             spacer.setFixedWidth(30)
@@ -1136,18 +1135,14 @@ class ModernMenu(RibbonBar):
             MinimzeButton.clicked.connect(self.MinimizeFreeCAD)
             MinimzeButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
             self.rightToolBar().addWidget(MinimzeButton)
-            # Restore button (does not work on windows)
-            if platform.system() != "Windows":
-                RestoreButton = QToolButton()
-                RestoreButton.setObjectName("RestoreButton")
-                RestoreButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
-                RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton)
-                if QMainWindow(mw).isMaximized():
-                    RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton)
-                RestoreButton.setIcon(RestoreIcon)
-                RestoreButton.clicked.connect(self.RestoreFreeCAD)
-                RestoreButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
-                self.rightToolBar().addWidget(RestoreButton)
+            # Restore button
+            RestoreButton = QToolButton()
+            RestoreButton.setObjectName("RestoreButton")
+            RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton)
+            RestoreButton.setIcon(RestoreIcon)
+            RestoreButton.clicked.connect(self.RestoreFreeCAD)
+            RestoreButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+            self.rightToolBar().addWidget(RestoreButton)
             # Close button
             CloseButton = QToolButton()
             CloseIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarCloseButton)
@@ -1161,8 +1156,9 @@ class ModernMenu(RibbonBar):
         # ToggleMenuBar = QToolButton()
         # ToggleMenuBar.setObjectName("ToggleMenuBar")
         # ToggleMenuBar.clicked.connect(self.ToggleMenuBar)
-        # ToggleMenuBar.setHidden(True)
-        # QMainWindow(mw).addWidget(ToggleMenuBar)
+        # # ToggleMenuBar.setHidden(True)
+        # ToggleMenuBar.setFixedSize(QSize(1, 1))
+        # self.rightToolBar().addWidget(ToggleMenuBar)
 
         # Set the width of the right toolbar
         RightToolbarWidth = SearchBarWidth + 3 * (self.RightToolBarButtonSize + 16) + self.RightToolBarButtonSize
@@ -3001,34 +2997,48 @@ class ModernMenu(RibbonBar):
         return
 
     def RestoreFreeCAD(self, event):
+        # This function only works when evertyhing is loaded.
         if self.isLoaded:
+            # Get the style and restore button
             Style = mw.style()
             RestoreButton: QToolButton = self.rightToolBar().findChildren(QToolButton, "RestoreButton")[0]
-            if mw.isMaximized():
+            # If the mainwindow is maximized, set the mainwindow to normal, set a size and icon
+            if mw.isMaximized() is True:
                 try:
+                    # On windows, resizing a frameless windows, results in errors.
+                    # As a workaround, the mainwindow will show a titlebar with no button or text.
+                    # This way the user can still use the resize functionlity from MS Windows
+                    if platform.system().lower() == "windows":
+                        mw.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.CustomizeWindowHint)
+                        mw.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
+                        mw.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
+                    # Set the main window to normal and set the windows state accordingly
                     mw.showNormal()
-                    # mw.resize(800, 400)
-                    # mw.window().resize(800, 400)
-                    # mw.adjustSize()
-                    # mw.move(50, 50)
-                    # settings = QSettings("FreeCAD", "FreeCAD Ribbon")
-                    # mw.restoreState(settings.value("Window_Normal"))
+                    mw.setWindowState(Qt.WindowState.WindowNoState)
+                    # Resize the mainwindow to be smaller than the screen
+                    mw.resize(mw.width() - 50, mw.height() - 50)
+                    mw.adjustSize()
+                    # Set the correct icon
                     RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
                 except Exception:
                     pass
                 return
+            # if the mainwindow is normal, maximize it
             if mw.isMaximized() is False:
                 try:
-                    # settings = QSettings("FreeCAD", "FreeCAD Ribbon")
-                    # settings.setValue("Window_Normal", mw.saveState())
+                    # make sure that the mainwindow is frameless and set to maximized
+                    mw.setWindowFlags(Qt.WindowType.FramelessWindowHint)
                     mw.showMaximized()
+                    mw.setWindowState(Qt.WindowState.WindowMaximized)
+                    # Set the correct icon
                     RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
                 except Exception:
                     pass
                 return
+            RestoreButton.clearFocus()
         return
 
-    def ToggleFullScreen():
+    def ToggleFullScreen(self):
         if mw.isFullScreen():
             mw.showMaximized()
             return
@@ -3036,7 +3046,7 @@ class ModernMenu(RibbonBar):
             mw.showFullScreen()
             return
 
-    def ToggleMenuBar():
+    def ToggleMenuBar(self):
         MenuBar = mw.menuBar()
         if MenuBar.isVisible():
             MenuBar.hide()
@@ -3051,23 +3061,56 @@ class EventInspector(QObject):
         super(EventInspector, self).__init__(parent)
 
     def eventFilter(self, obj, event):
-        if event.type() == QEvent.Type.Resize:
-            print("main window resized")
-        if event.type() == QEvent.Type.WindowStateChange:
-            print("main window state changed")
-        if event.type() == QEvent.Type.ModifiedChange:
+        # This is a workaround for windows
+        # If the window stat changes and the titlebar is hidden, catch the event
+        if (
+            event.type() == QEvent.Type.WindowStateChange
+            and Parameters_Ribbon.HIDE_TITLEBAR_FC is True
+            and platform.system().lower() == "windows"
+        ):
+            # Get the main window, its style, the ribbon and the restore button
             mw = Gui.getMainWindow()
-            Ribbon = mw.findChild(ModernMenu, "Ribbon")
-            title = Ribbon.title()
+            Style = mw.style()
+            RibbonBar = mw.findChild(ModernMenu, "Ribbon")
+            RestoreButton: QToolButton = RibbonBar.rightToolBar().findChildren(QToolButton, "RestoreButton")[0]
+            # If the mainwindow is maximized, set the window state to maximize and set the correct icon
+            if mw.isMaximized():
+                try:
+                    mw.setWindowState(Qt.WindowState.WindowMaximized)
+                    RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
+                except Exception:
+                    pass
+                return QObject.eventFilter(self, obj, event)
+            # If the mainwindow is not maximized, set the window state to no state and set the correct icon
+            if mw.isMaximized() is False:
+                try:
+                    mw.setWindowState(Qt.WindowState.WindowNoState)
+                    RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
+                except Exception:
+                    pass
+                return QObject.eventFilter(self, obj, event)
+        # If the event is a modfied event, update the title
+        # This is done when switching from one part to another
+        if event.type() == QEvent.Type.ModifiedChange:
+            # Get the mainwindow, the ribbon and the title
+            mw = Gui.getMainWindow()
+            RibbonBar = mw.findChild(ModernMenu, "Ribbon")
+            title = RibbonBar.title()
+            # If there is an active document, continue here
             if App.ActiveDocument is not None:
+                # Define the standard title as a prefix
                 Prefix = f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
+                # if the title is not equal to the prefix with the active document label,
+                # Get the text from the active tab from the viewport and combine it with the prefix
+                # Set it as the new title
                 if title != Prefix + " - " + App.ActiveDocument.Label:
                     CentralWidget = mw.centralWidget()
                     TabBar: QTabBar = CentralWidget.findChild(QTabBar, "mdiAreaTabBar")
                     CurrentText = TabBar.tabText(TabBar.currentIndex())
-                    Ribbon.setTitle(Prefix + " - " + CurrentText)
+                    RibbonBar.setTitle(Prefix + " - " + CurrentText)
+            # If there is no active document, set just the standard title
             if App.ActiveDocument is None:
-                Ribbon.setTitle(f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}")
+                RibbonBar.setTitle(f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}")
             return QObject.eventFilter(self, obj, event)
         return False
 
