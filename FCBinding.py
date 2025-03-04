@@ -3010,17 +3010,13 @@ class ModernMenu(RibbonBar):
             # If the mainwindow is maximized, set the mainwindow to normal, set a size and icon
             if mw.isMaximized() is True:
                 try:
-                    # # To make the window resizable, the main window is set to a window
-                    # # with a titlebar without buttons and title.
-                    # mw.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
-                    # mw.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
-                    # mw.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
                     # Set the main window to normal
                     mw.showNormal()
                     # Set the statusbar again if it was enabled
                     mw.statusBar().setVisible(StatusBarState)
                     # Resize the mainwindow to be smaller than the screen
                     mw.resize(mw.width() - 50, mw.height() - 50)
+                    mw.move(50, 50)
                     mw.adjustSize()
                     # Set the correct icon
                     RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
@@ -3031,8 +3027,7 @@ class ModernMenu(RibbonBar):
             # if the mainwindow is normal, maximize it
             if mw.isMaximized() is False:
                 try:
-                    # # make sure that the mainwindow is frameless and set to maximized
-                    # mw.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+                    # Set the main window maximized
                     mw.showMaximized()
                     # Set the statusbar again if it was enabled
                     mw.statusBar().setVisible(StatusBarState)

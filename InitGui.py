@@ -98,8 +98,8 @@ try:
 
     # Hide the Titlebar of FreeCAD
     if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
-        # Make the mainwindow frameless to hide the titlebar
-        # mw.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        # make a customized toolbar and hide all the buttons.
+        # This works better than a frameless window
         mw.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
         mw.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
         mw.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
