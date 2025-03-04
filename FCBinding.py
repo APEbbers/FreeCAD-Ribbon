@@ -3061,11 +3061,7 @@ class EventInspector(QObject):
     def eventFilter(self, obj, event):
         # This is a workaround for windows
         # If the window stat changes and the titlebar is hidden, catch the event
-        if (
-            event.type() == QEvent.Type.WindowStateChange
-            and Parameters_Ribbon.HIDE_TITLEBAR_FC is True
-            and platform.system().lower() == "windows"
-        ):
+        if event.type() == QEvent.Type.WindowStateChange and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
             # Get the main window, its style, the ribbon and the restore button
             mw = Gui.getMainWindow()
             Style = mw.style()
