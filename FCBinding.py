@@ -677,6 +677,8 @@ class ModernMenu(RibbonBar):
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(0, self.QuickAccessButtonSize)
 
         mw.installEventFilter(EventInspector(mw))
+        # Show the statusbar
+        App.ParamGet("User parameter:BaseApp/Preferences/MainWindow").SetBool("StatusBar", True)
         return
 
     def closeEvent(self, event):
@@ -3007,18 +3009,19 @@ class ModernMenu(RibbonBar):
                 try:
                     # To make the window resizable, the main window is set to a window
                     # with a titlebar without buttons and title.
-                    mw.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.CustomizeWindowHint)
+                    mw.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
                     mw.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
                     mw.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
-                    mw.statusBar().setSizeGripEnabled(True)
                     # Set the main window to normal and set the windows state accordingly
+                    StatusBarState = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow").GetBool("StatusBar")
+                    mw.statusBar().setVisible(StatusBarState)
                     mw.showNormal()
-                    mw.setWindowState(Qt.WindowState.WindowNoState)
                     # Resize the mainwindow to be smaller than the screen
                     mw.resize(mw.width() - 50, mw.height() - 50)
                     mw.adjustSize()
                     # Set the correct icon
                     RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
+                    RestoreButton.clearFocus()
                 except Exception:
                     pass
                 return
@@ -3027,14 +3030,15 @@ class ModernMenu(RibbonBar):
                 try:
                     # make sure that the mainwindow is frameless and set to maximized
                     mw.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+                    StatusBarState = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow").GetBool("StatusBar")
+                    mw.statusBar().setVisible(StatusBarState)
                     mw.showMaximized()
-                    mw.setWindowState(Qt.WindowState.WindowMaximized)
                     # Set the correct icon
                     RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
+                    RestoreButton.clearFocus()
                 except Exception:
                     pass
                 return
-            RestoreButton.clearFocus()
         return
 
     def ToggleFullScreen(self):
@@ -3060,6 +3064,10 @@ class EventInspector(QObject):
         super(EventInspector, self).__init__(parent)
 
     def eventFilter(self, obj, event):
+        # Show the mainwindow after the application is activated
+        if event.type() == QEvent.Type.ApplicationActivated:
+            mw = Gui.getMainWindow()
+            mw.show()
         # This is a workaround for windows
         # If the window stat changes and the titlebar is hidden, catch the event
         if event.type() == QEvent.Type.WindowStateChange and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
@@ -3071,7 +3079,6 @@ class EventInspector(QObject):
             # If the mainwindow is maximized, set the window state to maximize and set the correct icon
             if mw.isMaximized():
                 try:
-                    mw.setWindowState(Qt.WindowState.WindowMaximized)
                     RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
                 except Exception:
                     pass
@@ -3079,7 +3086,6 @@ class EventInspector(QObject):
             # If the mainwindow is not maximized, set the window state to no state and set the correct icon
             if mw.isMaximized() is False:
                 try:
-                    mw.setWindowState(Qt.WindowState.WindowNoState)
                     RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
                 except Exception:
                     pass
