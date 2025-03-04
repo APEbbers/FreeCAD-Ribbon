@@ -28,9 +28,9 @@ import Parameters_Ribbon
 import shutil
 import sys
 import platform
-from PySide6.QtCore import Qt, QTimer, QSize, QSettings
-from PySide6.QtGui import QGuiApplication
-from PySide6.QtWidgets import QMainWindow, QLabel, QSizePolicy, QApplication, QToolButton, QStyle
+from PySide.QtCore import Qt, QTimer, QSize, QSettings
+from PySide.QtGui import QGuiApplication
+from PySide.QtWidgets import QMainWindow, QLabel, QSizePolicy, QApplication, QToolButton, QStyle
 
 
 def QT_TRANSLATE_NOOP(context, text):
