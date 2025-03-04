@@ -3010,6 +3010,7 @@ class ModernMenu(RibbonBar):
                     mw.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.CustomizeWindowHint)
                     mw.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
                     mw.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
+                    mw.statusBar().setSizeGripEnabled(True)
                     # Set the main window to normal and set the windows state accordingly
                     mw.showNormal()
                     mw.setWindowState(Qt.WindowState.WindowNoState)
