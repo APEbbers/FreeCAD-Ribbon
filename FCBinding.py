@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -43,7 +43,7 @@ from PySide.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -70,8 +70,9 @@ from PySide.QtWidgets import (
     QWidgetItem,
     QTreeWidget,
     QApplication,
+    QStatusBar,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -676,9 +677,10 @@ class ModernMenu(RibbonBar):
                 self.RibbonOffset = 46 + self.QuickAccessButtonSize
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(0, self.QuickAccessButtonSize)
 
+        # Install an event filter to catch events from the main window and act on it.
         mw.installEventFilter(EventInspector(mw))
-        # Show the statusbar
-        App.ParamGet("User parameter:BaseApp/Preferences/MainWindow").SetBool("StatusBar", True)
+        # # Show the statusbar
+        # App.ParamGet("User parameter:BaseApp/Preferences/MainWindow").SetBool("StatusBar", True)
         return
 
     def closeEvent(self, event):
@@ -3001,21 +3003,22 @@ class ModernMenu(RibbonBar):
     def RestoreFreeCAD(self, event):
         # This function only works when evertyhing is loaded.
         if self.isLoaded:
+            StatusBarState = mw.findChild(QStatusBar, "statusBar").isVisible()
             # Get the style and restore button
             Style = mw.style()
             RestoreButton: QToolButton = self.rightToolBar().findChildren(QToolButton, "RestoreButton")[0]
             # If the mainwindow is maximized, set the mainwindow to normal, set a size and icon
             if mw.isMaximized() is True:
                 try:
-                    # To make the window resizable, the main window is set to a window
-                    # with a titlebar without buttons and title.
-                    mw.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
-                    mw.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
-                    mw.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
-                    # Set the main window to normal and set the windows state accordingly
-                    StatusBarState = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow").GetBool("StatusBar")
-                    mw.statusBar().setVisible(StatusBarState)
+                    # # To make the window resizable, the main window is set to a window
+                    # # with a titlebar without buttons and title.
+                    # mw.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
+                    # mw.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
+                    # mw.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
+                    # Set the main window to normal
                     mw.showNormal()
+                    # Set the statusbar again if it was enabled
+                    mw.statusBar().setVisible(StatusBarState)
                     # Resize the mainwindow to be smaller than the screen
                     mw.resize(mw.width() - 50, mw.height() - 50)
                     mw.adjustSize()
@@ -3028,11 +3031,11 @@ class ModernMenu(RibbonBar):
             # if the mainwindow is normal, maximize it
             if mw.isMaximized() is False:
                 try:
-                    # make sure that the mainwindow is frameless and set to maximized
-                    mw.setWindowFlags(Qt.WindowType.FramelessWindowHint)
-                    StatusBarState = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow").GetBool("StatusBar")
-                    mw.statusBar().setVisible(StatusBarState)
+                    # # make sure that the mainwindow is frameless and set to maximized
+                    # mw.setWindowFlags(Qt.WindowType.FramelessWindowHint)
                     mw.showMaximized()
+                    # Set the statusbar again if it was enabled
+                    mw.statusBar().setVisible(StatusBarState)
                     # Set the correct icon
                     RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
                     RestoreButton.clearFocus()

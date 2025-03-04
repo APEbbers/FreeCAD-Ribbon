@@ -28,9 +28,9 @@ import Parameters_Ribbon
 import shutil
 import sys
 import platform
-from PySide.QtCore import Qt, QTimer, QSize, QSettings
-from PySide.QtGui import QGuiApplication
-from PySide.QtWidgets import QMainWindow, QLabel, QSizePolicy, QApplication, QToolButton, QStyle
+from PySide6.QtCore import Qt, QTimer, QSize, QSettings
+from PySide6.QtGui import QGuiApplication
+from PySide6.QtWidgets import QMainWindow, QLabel, QSizePolicy, QApplication, QToolButton, QStyle
 
 
 def QT_TRANSLATE_NOOP(context, text):
@@ -99,7 +99,10 @@ try:
     # Hide the Titlebar of FreeCAD
     if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
         # Make the mainwindow frameless to hide the titlebar
-        mw.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        # mw.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        mw.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
+        mw.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
+        mw.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
         # Connect the ribbon when the workbench is activated
         mw.workbenchActivated.connect(FCBinding.run)
         # Normally after setting the window frameless you show the window with mw.show()
