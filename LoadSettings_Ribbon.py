@@ -1241,9 +1241,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
         else:
             self.form.EnableToolsPanel.setCheckState(Qt.CheckState.Unchecked)
         if DefaultSettings["UseOverlay"] is True:
-            self.form.EnableOverlay.setCheckState(Qt.CheckState.Checked)
+            self.form.EnableOverlay.setChecked(True)
         else:
-            self.form.EnableOverlay.setCheckState(Qt.CheckState.Unchecked)
+            self.form.EnableOverlay.setChecked(False)
         if DefaultSettings["UseFCOverlay"] is True:
             self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Checked)
         else:
