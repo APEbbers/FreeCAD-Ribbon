@@ -54,7 +54,7 @@ import os
 import sys
 import Parameters_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
-import StyleMapping_Ribbon
+from StyleMapping_Ribbon import StyleMapping_Ribbon
 
 # from CustomWidgets import myMenu as QMenu
 

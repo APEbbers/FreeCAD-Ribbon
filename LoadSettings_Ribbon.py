@@ -41,7 +41,7 @@ from PySide.QtWidgets import (
 from PySide.QtGui import QIcon, QPixmap, QColor
 
 import sys
-import StyleMapping_Ribbon
+from StyleMapping_Ribbon import StyleMapping_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
 import Parameters_Ribbon
 from Parameters_Ribbon import DefaultSettings

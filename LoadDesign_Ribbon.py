@@ -49,7 +49,7 @@ from Standard_Functions_RIbbon import CommandInfoCorrections
 import Parameters_Ribbon
 import Serialize_Ribbon
 import webbrowser
-import StyleMapping_Ribbon
+from StyleMapping_Ribbon import StyleMapping_Ribbon
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
