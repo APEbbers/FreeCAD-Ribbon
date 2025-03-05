@@ -1740,13 +1740,13 @@ class ModernMenu(RibbonBar):
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         if workbenchName is None:
             return
-        workbench = Gui.getWorkbench(workbenchName)
 
         # check if the panel is already loaded. If so exit this function
         tabName = workbenchTitle
         if tabName in self.isWbLoaded and (self.isWbLoaded[tabName] or tabName == ""):
             return
 
+        workbench = Gui.getWorkbench(workbenchName)
         # Get the list of toolbars from the active workbench
         ListToolbars: list = workbench.listToolbars()
         # Get custom toolbars that are created in the toolbar environment and add them to the list of toolbars

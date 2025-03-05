@@ -762,7 +762,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # Load the workbenches
         self.loadAllWorkbenches(
-            AutoHide=False, FinishMessage=translate("FreeCAD Ribbon", "Ribbon UI: Cache has been written.")
+            AutoHide=False, FinishMessage=translate("FreeCAD Ribbon", "Ribbon UI: Data file is created.")
         )
 
         # clear the lists first
@@ -4701,7 +4701,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
     def loadAllWorkbenches(self, AutoHide=True, HideOnly=False, FinishMessage=""):
         lbl = QLabel(translate("FreeCAD Ribbon", "Loading workbench … (…/…)"))
-        lbl.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+        lbl.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.WindowStaysOnTopHint)
+        lbl.setMinimumSize(200, 20)
+        lbl.setContentsMargins(3, 3, 3, 3)
 
         # Get the stylesheet from the main window and use it for this form
         lbl.setStyleSheet("background-color: " + StyleMapping_Ribbon.ReturnStyleItem("Background_Color") + ";")
