@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide6.QtGui import QIcon, QPixmap, QAction
-from PySide6.QtWidgets import (
+from PySide.QtGui import QIcon, QPixmap, QAction
+from PySide.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -72,6 +72,10 @@ def DarkMode():
     if currentStyleSheet is None or currentStyleSheet == "":
         return
 
+    # OpenLight and OpenDark are from one addon. Set the currentStyleSheet value to the addon folder
+    if "OpenLight.qss" in currentStyleSheet or "OpenDark.qss" in currentStyleSheet:
+        currentStyleSheet = "OpenTheme.qss"
+
     path = os.path.dirname(__file__)
     # Get the folder with add-ons
     for i in range(2):
@@ -100,10 +104,18 @@ def DarkMode():
                         if "dark" in element.text.lower():
                             IsDarkTheme = True
                             break
-                except Exception:
+                except Exception as e:
+                    raise e
                     continue
 
+    # FreeCAD Dark is part of FreeCAD, so set the result to True manually
+    if currentStyleSheet == "FreeCAD Dark.qss":
+        IsDarkTheme is True
+
     return IsDarkTheme
+
+
+darkMode = DarkMode()
 
 
 def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
@@ -301,7 +313,7 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
 def GetIconBasedOnTag(ControlName=""):
     iconSet = {}
     iconName = ""
-    IsDarkTheme = DarkMode()
+    IsDarkTheme = darkMode
 
     # if it is a dark theme, get the white icons, else get the black icons
     if IsDarkTheme is True:
@@ -335,7 +347,7 @@ def GetIconBasedOnTag(ControlName=""):
 
 def ReturnFontColor():
     fontColor = "#000000"
-    IsDarkTheme = DarkMode()
+    IsDarkTheme = darkMode
 
     if IsDarkTheme is True:
         fontColor = "#ffffff"
@@ -345,7 +357,7 @@ def ReturnFontColor():
 
 def ReturnUpdateColor():
     fontColor = "#CB7A00"
-    IsDarkTheme = DarkMode()
+    IsDarkTheme = darkMode
 
     if IsDarkTheme is True:
         fontColor = "#ffb340"
@@ -355,7 +367,7 @@ def ReturnUpdateColor():
 
 def ReturnDevelopColor():
     fontColor = "#1B5E20"
-    IsDarkTheme = DarkMode()
+    IsDarkTheme = darkMode
 
     if IsDarkTheme is True:
         fontColor = "#538E1F"
@@ -365,11 +377,10 @@ def ReturnDevelopColor():
 
 def ReturnTitleBarIcons():
     IconNames = ["close_k.svg", "maximize_k.svg", "restore_k.svg", "minimize_k.svg"]
-    IsDarkTheme = DarkMode()
+    IsDarkTheme = darkMode
 
     if IsDarkTheme is True:
         IconNames = ["close_w.svg", "maximize_w.svg", "restore_w.svg", "minimize_w.svg"]
-        print("Darkmode")
 
     Icons = []
     for name in IconNames:
