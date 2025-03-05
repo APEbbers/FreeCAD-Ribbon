@@ -72,6 +72,10 @@ def DarkMode():
     if currentStyleSheet is None or currentStyleSheet == "":
         return
 
+    # FreeCAD Dark is part of FreeCAD, so set the result to True manually
+    if currentStyleSheet == "FreeCAD Dark.qss":
+        return True
+
     # OpenLight and OpenDark are from one addon. Set the currentStyleSheet value to the addon folder
     if "OpenLight.qss" in currentStyleSheet or "OpenDark.qss" in currentStyleSheet:
         currentStyleSheet = "OpenTheme.qss"
@@ -104,13 +108,8 @@ def DarkMode():
                         if "dark" in element.text.lower():
                             IsDarkTheme = True
                             break
-                except Exception as e:
-                    raise e
+                except Exception:
                     continue
-
-    # FreeCAD Dark is part of FreeCAD, so set the result to True manually
-    if currentStyleSheet == "FreeCAD Dark.qss":
-        IsDarkTheme is True
 
     return IsDarkTheme
 
@@ -211,7 +210,16 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
         return None
 
 
-def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom="0px", width="16px"):
+def ReturnStyleSheet(
+    control,
+    radius="2px",
+    padding_left="0px",
+    padding_top="0px",
+    padding_right="0px",
+    padding_bottom="0px",
+    width="16px",
+    HoverColor="",
+):
     """
     Enter one of the names below:
 
@@ -225,7 +233,8 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
         BorderColor = ReturnStyleItem("Border_Color")
         BackgroundColor = ReturnStyleItem("Background_Color")
         ApplicationButton = ReturnStyleItem("ApplicationButton_Background")
-        HoverColor = ReturnStyleItem("Background_Color_Hover")
+        if HoverColor == "":
+            HoverColor = ReturnStyleItem("Background_Color_Hover")
         FontColor = ReturnStyleItem("FontColor")
 
         AppColor_1 = ApplicationButton
@@ -246,12 +255,15 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
                     + FontColor
                     + """;background: """
                     + BackgroundColor
+                    + """;padding-left: """
+                    + padding_left
+                    + """;padding-top: """
+                    + padding_top
                     + """;padding-bottom: """
                     + padding_bottom
                     + """;padding-right: """
                     + padding_right
-                    + """;padding-left: 0px;
-                    spacing: 0px;}"""
+                    + """;spacing: 0px;}"""
                     + """QToolButton::menu-arrow {
                         subcontrol-origin: padding;
                         subcontrol-position: center right;
@@ -275,6 +287,10 @@ def ReturnStyleSheet(control, radius="2px", padding_right="0px", padding_bottom=
                         border: none;
                         background: """
                     + HoverColor
+                    + """;padding-left: """
+                    + padding_left
+                    + """;padding-top: """
+                    + padding_top
                     + """;padding-bottom: """
                     + padding_bottom
                     + """;padding-right: """

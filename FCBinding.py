@@ -1133,7 +1133,16 @@ class ModernMenu(RibbonBar):
 
             # Minimize button
             MinimzeButton = QToolButton()
-            MinimzeButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
+            MinimzeButton.setStyleSheet(
+                StyleMapping_Ribbon.ReturnStyleSheet(
+                    control="toolbutton",
+                    radius="2px",
+                    padding_left="3px",
+                    padding_top="3px",
+                    padding_bottom="3px",
+                    padding_right="3px",
+                )
+            )
             MinimzeButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[3])
             MinimzeButton.clicked.connect(self.MinimizeFreeCAD)
             MinimzeButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
@@ -1141,14 +1150,33 @@ class ModernMenu(RibbonBar):
             # Restore button
             RestoreButton = QToolButton()
             RestoreButton.setObjectName("RestoreButton")
-            RestoreButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
+            RestoreButton.setStyleSheet(
+                StyleMapping_Ribbon.ReturnStyleSheet(
+                    control="toolbutton",
+                    radius="2px",
+                    padding_left="3px",
+                    padding_top="3px",
+                    padding_bottom="3px",
+                    padding_right="3px",
+                )
+            )
             RestoreButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2])
             RestoreButton.clicked.connect(self.RestoreFreeCAD)
             RestoreButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
             self.rightToolBar().addWidget(RestoreButton)
             # Close button
             CloseButton = QToolButton()
-            CloseButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
+            CloseButton.setStyleSheet(
+                StyleMapping_Ribbon.ReturnStyleSheet(
+                    control="toolbutton",
+                    radius="2px",
+                    padding_left="3px",
+                    padding_top="3px",
+                    padding_bottom="3px",
+                    padding_right="3px",
+                    HoverColor="#e62424",
+                )
+            )
             CloseButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[0])
             CloseButton.clicked.connect(self.CloseFreeCAD)
             CloseButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
