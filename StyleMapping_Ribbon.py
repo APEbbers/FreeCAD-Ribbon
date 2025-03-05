@@ -376,11 +376,16 @@ def ReturnDevelopColor():
 
 
 def ReturnTitleBarIcons():
-    IconNames = ["close_k.svg", "maximize_k.svg", "restore_k.svg", "minimize_k.svg"]
+    IconNames = ["close_default.svg", "maximize_default.svg", "restore_default.svg", "minimize_default.svg"]
     IsDarkTheme = darkMode
 
     if IsDarkTheme is True:
-        IconNames = ["close_w.svg", "maximize_w.svg", "restore_w.svg", "minimize_w.svg"]
+        IconNames = [
+            "close_default_white.svg",
+            "maximize_default_white.svg",
+            "restore_default_white.svg",
+            "minimize_default_white.svg",
+        ]
 
     Icons = []
     for name in IconNames:
