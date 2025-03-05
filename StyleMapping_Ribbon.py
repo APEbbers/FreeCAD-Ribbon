@@ -57,6 +57,55 @@ sys.path.append(pathUI)
 sys.path.append(pathBackup)
 
 
+def DarkMode():
+    import xml.etree.ElementTree as ET
+    import os
+
+    # Define the standard result
+    IsDarkTheme = False
+
+    # Get the current stylesheet for FreeCAD
+    FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
+    currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
+
+    # if no stylesheet is selected return
+    if currentStyleSheet is None or currentStyleSheet == "":
+        return
+
+    path = os.path.dirname(__file__)
+    # Get the folder with add-ons
+    for i in range(2):
+        # Starting point
+        path = os.path.dirname(path)
+
+    # Go through the sub-folders
+    for root, dirs, files in os.walk(path):
+        for name in dirs:
+            # if the current stylesheet matches a sub directory, try to geth the pacakgexml
+            if currentStyleSheet.replace(".qss", "").lower() in name.lower():
+                try:
+                    packageXML = os.path.join(path, name, "package.xml")
+
+                    # Get the tree and root of the xml file
+                    tree = ET.parse(packageXML)
+                    treeRoot = tree.getroot()
+
+                    # Get all the tag elements
+                    elements = []
+                    namespaces = {"i": "https://wiki.freecad.org/Package_Metadata"}
+                    elements = treeRoot.findall(".//i:content/i:preferencepack/i:tag", namespaces)
+
+                    # go throug all tags. If 'dark' in the element text, this is a dark theme
+                    for element in elements:
+                        if "dark" in element.text.lower():
+                            IsDarkTheme = True
+                            break
+                except Exception:
+                    continue
+
+    return IsDarkTheme
+
+
 def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
     """
     Enter one of the names below:
@@ -329,55 +378,6 @@ def ReturnTitleBarIcons():
         Icon.addPixmap(pixMap)
         Icons.append(Icon)
     return Icons
-
-
-def DarkMode():
-    import xml.etree.ElementTree as ET
-    import os
-
-    # Define the standard result
-    IsDarkTheme = False
-
-    # Get the current stylesheet for FreeCAD
-    FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
-    currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
-
-    # if no stylesheet is selected return
-    if currentStyleSheet is None or currentStyleSheet == "":
-        return
-
-    path = os.path.dirname(__file__)
-    # Get the folder with add-ons
-    for i in range(2):
-        # Starting point
-        path = os.path.dirname(path)
-
-    # Go through the sub-folders
-    for root, dirs, files in os.walk(path):
-        for name in dirs:
-            # if the current stylesheet matches a sub directory, try to geth the pacakgexml
-            if currentStyleSheet.replace(".qss", "").lower() in name.lower():
-                try:
-                    packageXML = os.path.join(path, name, "package.xml")
-
-                    # Get the tree and root of the xml file
-                    tree = ET.parse(packageXML)
-                    treeRoot = tree.getroot()
-
-                    # Get all the tag elements
-                    elements = []
-                    namespaces = {"i": "https://wiki.freecad.org/Package_Metadata"}
-                    elements = treeRoot.findall(".//i:content/i:preferencepack/i:tag", namespaces)
-
-                    # go throug all tags. If 'dark' in the element text, this is a dark theme
-                    for element in elements:
-                        if "dark" in element.text.lower():
-                            IsDarkTheme = True
-                            break
-                except Exception:
-                    continue
-
-    return IsDarkTheme
 
 
 # Used when custom colors are enabled

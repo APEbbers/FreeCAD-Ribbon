@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -43,7 +43,7 @@ from PySide.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -73,7 +73,7 @@ from PySide.QtWidgets import (
     QStatusBar,
     QStyleOption,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1131,29 +1131,25 @@ class ModernMenu(RibbonBar):
             spacer.setFixedWidth(30)
             self.rightToolBar().addWidget(spacer)
 
-            Style = mw.style()
             # Minimize button
             MinimzeButton = QToolButton()
-            MinimizeIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMinButton)
             MinimzeButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
-            MinimzeButton.setIcon(MinimizeIcon)
+            MinimzeButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[3])
             MinimzeButton.clicked.connect(self.MinimizeFreeCAD)
             MinimzeButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
             self.rightToolBar().addWidget(MinimzeButton)
             # Restore button
             RestoreButton = QToolButton()
             RestoreButton.setObjectName("RestoreButton")
-            RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton)
             RestoreButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
-            RestoreButton.setIcon(RestoreIcon)
+            RestoreButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2])
             RestoreButton.clicked.connect(self.RestoreFreeCAD)
             RestoreButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
             self.rightToolBar().addWidget(RestoreButton)
             # Close button
             CloseButton = QToolButton()
-            CloseIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarCloseButton)
             CloseButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
-            CloseButton.setIcon(CloseIcon)
+            CloseButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[0])
             CloseButton.clicked.connect(self.CloseFreeCAD)
             CloseButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
             self.rightToolBar().addWidget(CloseButton)
@@ -3094,16 +3090,16 @@ class EventInspector(QObject):
             # If the mainwindow is maximized, set the window state to maximize and set the correct icon
             if mw.isMaximized():
                 try:
-                    RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
-                    # RestoreButton.setIcon(StyleMapping_Ribbon.ReturnTitleBarIcons()[1])
+                    # RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
+                    RestoreButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2])
                 except Exception:
                     pass
                 return QObject.eventFilter(self, obj, event)
             # If the mainwindow is not maximized, set the window state to no state and set the correct icon
             if mw.isMaximized() is False:
                 try:
-                    RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
-                    # RestoreButton.setIcon(StyleMapping_Ribbon.ReturnTitleBarIcons()[1])
+                    # RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
+                    RestoreButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1])
                 except Exception:
                     pass
                 return QObject.eventFilter(self, obj, event)
