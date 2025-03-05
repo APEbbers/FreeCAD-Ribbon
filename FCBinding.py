@@ -102,7 +102,7 @@ import LoadLicenseForm_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
 from Standard_Functions_RIbbon import CommandInfoCorrections
 import Serialize_Ribbon
-from StyleMapping_Ribbon from StyleMapping_Ribbon import StyleMapping_Ribbon
+import StyleMapping_Ribbon
 import platform
 import math
 
