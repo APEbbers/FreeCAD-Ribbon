@@ -71,6 +71,7 @@ from PySide.QtWidgets import (
     QTreeWidget,
     QApplication,
     QStatusBar,
+    QStyleOption,
 )
 from PySide.QtCore import (
     Qt,
@@ -1143,6 +1144,7 @@ class ModernMenu(RibbonBar):
             RestoreButton = QToolButton()
             RestoreButton.setObjectName("RestoreButton")
             RestoreIcon = Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton)
+            RestoreButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px"))
             RestoreButton.setIcon(RestoreIcon)
             RestoreButton.clicked.connect(self.RestoreFreeCAD)
             RestoreButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
@@ -3002,41 +3004,45 @@ class ModernMenu(RibbonBar):
 
     def RestoreFreeCAD(self, event):
         # This function only works when evertyhing is loaded.
-        if self.isLoaded:
-            StatusBarState = mw.findChild(QStatusBar, "statusBar").isVisible()
-            # Get the style and restore button
-            Style = mw.style()
-            RestoreButton: QToolButton = self.rightToolBar().findChildren(QToolButton, "RestoreButton")[0]
-            # If the mainwindow is maximized, set the mainwindow to normal, set a size and icon
-            if mw.isMaximized() is True:
-                try:
-                    # Set the main window to normal
-                    mw.showNormal()
-                    # Set the statusbar again if it was enabled
-                    mw.statusBar().setVisible(StatusBarState)
-                    # Resize the mainwindow to be smaller than the screen
-                    mw.resize(mw.width() - 50, mw.height() - 50)
-                    mw.move(50, 50)
-                    mw.adjustSize()
-                    # Set the correct icon
-                    RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
-                    RestoreButton.clearFocus()
-                except Exception:
-                    pass
-                return
-            # if the mainwindow is normal, maximize it
-            if mw.isMaximized() is False:
-                try:
-                    # Set the main window maximized
-                    mw.showMaximized()
-                    # Set the statusbar again if it was enabled
-                    mw.statusBar().setVisible(StatusBarState)
-                    # Set the correct icon
-                    RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
-                    RestoreButton.clearFocus()
-                except Exception:
-                    pass
-                return
+        # if self.isLoaded:
+        StatusBarState = mw.findChild(QStatusBar, "statusBar").isVisible()
+        # Get the style and restore button
+        Style: QStyle = mw.style()
+        RestoreButton: QToolButton = self.rightToolBar().findChildren(QToolButton, "RestoreButton")[0]
+        # If the mainwindow is maximized, set the mainwindow to normal, set a size and icon
+        if mw.isMaximized() is True:
+            try:
+                # Set the main window to normal
+                mw.setWindowState(Qt.WindowState.WindowNoState)
+                mw.showNormal()
+                # Set the statusbar again if it was enabled
+                mw.statusBar().setVisible(StatusBarState)
+                # Resize the mainwindow to be smaller than the screen
+                mw.resize(mw.width() - 50, mw.height() - 50)
+                mw.move(50, 50)
+                mw.adjustSize()
+                # Set the correct icon
+                # RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
+                # RestoreButton.setIcon(StyleMapping_Ribbon.ReturnTitleBarIcons()[2])
+                RestoreButton.clearFocus()
+            except Exception:
+                pass
+            return
+        # if the mainwindow is normal, maximize it
+        if mw.isMaximized() is False:
+            try:
+                # Set the main window maximized
+                mw.setWindowState(Qt.WindowState.WindowMaximized)
+                mw.showMaximized()
+                # Set the statusbar again if it was enabled
+                mw.statusBar().setVisible(StatusBarState)
+                # Set the correct icon
+                # RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
+                # RestoreButton.setIcon(StyleMapping_Ribbon.ReturnTitleBarIcons()[1])
+                RestoreButton.clearFocus()
+            except Exception:
+                pass
+            return
         return
 
     def ToggleFullScreen(self):
@@ -3065,10 +3071,21 @@ class EventInspector(QObject):
         # Show the mainwindow after the application is activated
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
-            mw.show()
+            mw.setWindowState(Qt.WindowState.WindowMaximized)
+            mw.showMaximal()
+            Style = mw.style()
+            RibbonBar = mw.findChild(ModernMenu, "Ribbon")
+            RestoreButton: QToolButton = RibbonBar.rightToolBar().findChildren(QToolButton, "RestoreButton")[0]
+            try:
+                RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
+            except Exception:
+                pass
+            return QObject.eventFilter(self, obj, event)
         # This is a workaround for windows
         # If the window stat changes and the titlebar is hidden, catch the event
-        if event.type() == QEvent.Type.WindowStateChange and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
+        if (
+            event.type() == QEvent.Type.WindowStateChange or event.type() == QEvent.Type.DragMove
+        ) and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
             # Get the main window, its style, the ribbon and the restore button
             mw = Gui.getMainWindow()
             Style = mw.style()
@@ -3077,14 +3094,16 @@ class EventInspector(QObject):
             # If the mainwindow is maximized, set the window state to maximize and set the correct icon
             if mw.isMaximized():
                 try:
-                    RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
+                    RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
+                    # RestoreButton.setIcon(StyleMapping_Ribbon.ReturnTitleBarIcons()[1])
                 except Exception:
                     pass
                 return QObject.eventFilter(self, obj, event)
             # If the mainwindow is not maximized, set the window state to no state and set the correct icon
             if mw.isMaximized() is False:
                 try:
-                    RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
+                    RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
+                    # RestoreButton.setIcon(StyleMapping_Ribbon.ReturnTitleBarIcons()[1])
                 except Exception:
                     pass
                 return QObject.eventFilter(self, obj, event)
