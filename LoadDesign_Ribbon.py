@@ -934,7 +934,17 @@ class LoadDialog(Design_ui.Ui_Form):
                 self.List_Commands.append([CustomCommand, IconName, MenuName, Toolbar[1], MenuNameTranslated])
         # Add general commands
         if int(App.Version()[0]) > 0:
-            ListCommands = ["Std_Measure", "Std_ViewZoomOut", "Std_ViewZoomIn", "Std_ViewBoxZoom", "Part_SelectFilter"]
+            ListCommands = [
+                "Std_Measure",
+                "Std_ViewZoomOut",
+                "Std_ViewZoomIn",
+                "Std_ViewBoxZoom",
+                "Part_SelectFilter",
+                "Std_UnitsCalculator",
+                "Std_Properties",
+                "Std_BoxElementSelection",
+                "Std_BoxSelection",
+            ]
             for CommandName in ListCommands:
                 command = Gui.Command.get(CommandName)
                 if CommandInfoCorrections(CommandName)["pixmap"] != "":
