@@ -934,14 +934,16 @@ class LoadDialog(Design_ui.Ui_Form):
                 self.List_Commands.append([CustomCommand, IconName, MenuName, Toolbar[1], MenuNameTranslated])
         # Add general commands
         if int(App.Version()[0]) > 0:
-            command = Gui.Command.get("Std_Measure")
-            if CommandInfoCorrections("Std_Measure")["pixmap"] != "":
-                IconName = CommandInfoCorrections("Std_Measure")["pixmap"]
-            else:
-                IconName = ""
-            MenuName = CommandInfoCorrections("Std_Measure")["menuText"].replace("&", "")
-            MenuNameTranslated = CommandInfoCorrections("Std_Measure")["ActionText"].replace("&", "")
-            self.List_Commands.append(["Std_Measure", IconName, MenuName, "General", MenuNameTranslated])
+            ListCommands = ["Std_Measure", "Std_ViewZoomOut", "Std_ViewZoomIn", "Std_ViewBoxZoom", "Part_SelectFilter"]
+            for CommandName in ListCommands:
+                command = Gui.Command.get(CommandName)
+                if CommandInfoCorrections(CommandName)["pixmap"] != "":
+                    IconName = CommandInfoCorrections(CommandName)["pixmap"]
+                else:
+                    IconName = ""
+                MenuName = CommandInfoCorrections(CommandName)["menuText"].replace("&", "")
+                MenuNameTranslated = CommandInfoCorrections(CommandName)["ActionText"].replace("&", "")
+                self.List_Commands.append([CommandName, IconName, MenuName, "Standard", MenuNameTranslated])
 
         # # re-activate the workbench that was stored.
         # Gui.activateWorkbench(ActiveWB)
