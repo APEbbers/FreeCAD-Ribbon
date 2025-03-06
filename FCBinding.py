@@ -301,14 +301,14 @@ class ModernMenu(RibbonBar):
                 ["newPanels", "Global", "Views - Ribbon_newPanel"],
             )
             self.ribbonStructure["newPanels"]["Global"]["Views - Ribbon_newPanel"] = [
-                ["Std_ViewGroup", "AssemblyWorkbench"],
-                ["Std_ViewFitAll", "AssemblyWorkbench"],
-                ["Std_ViewFitSelection", "AssemblyWorkbench"],
-                ["Std_ViewZoomOut", "Global"],
-                ["Std_ViewZoomIn", "Global"],
-                ["Std_ViewBoxZoom", "Global"],
-                ["Std_AlignToSelection", "AssemblyWorkbench"],
-                ["Part_SelectFilter", "Global"],
+                ["Std_ViewGroup", "Standard"],
+                ["Std_ViewFitAll", "Standard"],
+                ["Std_ViewFitSelection", "Standard"],
+                ["Std_ViewZoomOut", "Standard"],
+                ["Std_ViewZoomIn", "Standard"],
+                ["Std_ViewBoxZoom", "Standard"],
+                ["Std_AlignToSelection", "Standard"],
+                ["Part_SelectFilter", "Standard"],
             ]
         else:
             try:
@@ -321,7 +321,14 @@ class ModernMenu(RibbonBar):
         UseToolsPanel = Parameters_Ribbon.Settings.GetBoolSetting("UseToolsPanel")
         # Create a key if not present
         try:
-            if "Tools_newPanel" not in self.ribbonStructure["newPanels"]["Global"] and UseToolsPanel is True:
+            NeedsUpdating = False
+            if "Tools_newPanel" in self.ribbonStructure["newPanels"]["Global"]:
+                for item in self.ribbonStructure["newPanels"]["Global"]["Tools_newPanel"]:
+                    if item[1] != "Standard":
+                        NeedsUpdating = True
+            if (
+                "Tools_newPanel" not in self.ribbonStructure["newPanels"]["Global"] and UseToolsPanel is True
+            ) or NeedsUpdating is True:
                 StandardFunctions.add_keys_nested_dict(
                     self.ribbonStructure,
                     ["newPanels", "Global", "Tools_newPanel"],
@@ -697,10 +704,11 @@ class ModernMenu(RibbonBar):
                 "FreeCAD Ribbon",
                 "The current data file is based on an older format!\n"
                 "It is important to update the data!\n"
-                f"Go to the layout dialog under preferences or press '{self.LayoutMenuShortCut}'",
+                "Do you want to open the layout menu now?\n",
             )
-            StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 0, "Warning")
-
+            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+            if Answer == "yes":
+                LoadDesign_Ribbon.main()
         # get the system language
         FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
         try:
@@ -715,9 +723,11 @@ class ModernMenu(RibbonBar):
                     "FreeCAD Ribbon",
                     "The data was generated for a differernt language!\n"
                     "It is important to update the data!\n"
-                    f"Go to the layout dialog under preferences or press '{self.LayoutMenuShortCut}'",
+                    "Do you want to open the layout menu now?\n",
                 )
-            StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 0, "Warning")
+            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+            if Answer == "yes":
+                LoadDesign_Ribbon.main()
         except Exception:
             pass
         return
