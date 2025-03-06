@@ -153,6 +153,9 @@ class ModernMenu(RibbonBar):
     Create ModernMenu QWidget.
     """
 
+    # The datafile version is set in LoadDesign.py
+    DataFileVersion = LoadDesign_Ribbon.LoadDialog.DataFileVersion
+
     # Define a placeholder for the repro adress
     ReproAdress: str = ""
     # Placeholders for building the ribbonbar
@@ -220,6 +223,9 @@ class ModernMenu(RibbonBar):
     # Store a value when the ribbon is loaded
     # used to hide the ribbon on startup
     isLoaded = False
+
+    # Used for a message when a datafile update is needed.
+    LayoutMenuShortCut = ""
 
     def __init__(self):
         """
@@ -387,9 +393,6 @@ class ModernMenu(RibbonBar):
         if self.ReproAdress != "" or self.ReproAdress is not None:
             print(translate("FreeCAD Ribbon", "FreeCAD Ribbon: ") + self.ReproAdress)
 
-        # # Set the icon size if parameters has none
-        # Parameters_Ribbon.Settings.WriteSettings()
-
         # Activate the workbenches used in the new panels otherwise the panel stays empty
         try:
             if "newPanels" in self.ribbonStructure:
@@ -463,7 +466,6 @@ class ModernMenu(RibbonBar):
         # Create the ribbon
         self.CreateMenus()  # Create the menus
         self.createModernMenu()  # Create the ribbon
-        # self.onUserChangedWorkbench(False)  # Set the dockwidget and ribbonheight as done after changing from workbench
 
         # Set the custom stylesheet
         StyleSheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
@@ -680,8 +682,44 @@ class ModernMenu(RibbonBar):
 
         # Install an event filter to catch events from the main window and act on it.
         mw.installEventFilter(EventInspector(mw))
-        # # Show the statusbar
-        # App.ParamGet("User parameter:BaseApp/Preferences/MainWindow").SetBool("StatusBar", True)
+
+        # Add the most important checks on startup.
+        # Less important ones will be done when opening the Layout menu
+        DataUpdateNeeded = False
+        try:
+            FileVersion = Data["dataVersion"]
+            if FileVersion != self.DataFileVersion:
+                DataUpdateNeeded = True
+        except Exception:
+            DataUpdateNeeded = True
+        if DataUpdateNeeded is True:
+            Question = translate(
+                "FreeCAD Ribbon",
+                "The current data file is based on an older format!\n"
+                "It is important to update the data!\n"
+                f"Go to the layout dialog under preferences or press '{self.LayoutMenuShortCut}'",
+            )
+            StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 0, "Warning")
+
+        # get the system language
+        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
+        try:
+            FCLanguage = FreeCAD_preferences.GetString("Language")
+            # Check if the language in the data file machtes the system language
+            IsSystemLanguage = True
+            if FCLanguage != Data["Language"]:
+                IsSystemLanguage = False
+            # If the languguage doesn't match, ask the user to update the data
+            if IsSystemLanguage is False:
+                Question = translate(
+                    "FreeCAD Ribbon",
+                    "The data was generated for a differernt language!\n"
+                    "It is important to update the data!\n"
+                    f"Go to the layout dialog under preferences or press '{self.LayoutMenuShortCut}'",
+                )
+            StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 0, "Warning")
+        except Exception:
+            pass
         return
 
     def closeEvent(self, event):
@@ -1498,6 +1536,7 @@ class ModernMenu(RibbonBar):
             pass
         if ShortcutKey != "" and ShortcutKey is not None:
             DesignButton.setShortcut(ShortcutKey)
+            self.LayoutMenuShortCut = ShortcutKey
         # Add the preference button
         PreferenceButton = RibbonMenu.addAction(translate("FreeCAD Ribbon", "Preferences"))
         PreferenceButton.setToolTip(translate("FreeCAD Ribbon", "Set preferences for the Ribbon UI"))

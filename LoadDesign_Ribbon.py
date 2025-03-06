@@ -1000,8 +1000,10 @@ class LoadDialog(Design_ui.Ui_Form):
             json.dump(Data, outfile, indent=4)
         outfile.close()
 
-        # Write a second data file with the list of commands only
+        # Write a second data file with the list of commands, Language and data version only
         Data2 = {}
+        Data2["dataVersion"] = self.DataFileVersion
+        Data2["Language"] = FCLanguage
         Data2["List_Commands"] = self.List_Commands
         # Write to the data file
         DataFile2 = os.path.join(os.path.dirname(__file__), "RibbonDataFile2.dat")
