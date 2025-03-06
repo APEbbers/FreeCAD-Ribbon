@@ -78,7 +78,7 @@ class LoadDialog(Design_ui.Ui_Form):
     Restart = False
 
     # Set the data file version. Triggeres an question if an update is needed
-    DataFileVersion = "1.1"
+    DataFileVersion = "1.2"
 
     # Define list of the workbenches, toolbars and commands on class level
     List_Workbenches = []

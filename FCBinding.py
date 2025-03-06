@@ -321,6 +321,7 @@ class ModernMenu(RibbonBar):
         UseToolsPanel = Parameters_Ribbon.Settings.GetBoolSetting("UseToolsPanel")
         # Create a key if not present
         try:
+            # Check if there is an old version of the tools panel
             NeedsUpdating = False
             if "Tools_newPanel" in self.ribbonStructure["newPanels"]["Global"]:
                 for item in self.ribbonStructure["newPanels"]["Global"]["Tools_newPanel"]:
