@@ -75,10 +75,10 @@ class LoadDialog(Design_ui.Ui_Form):
 
     ReproAdress: str = ""
 
-    Restart = False
+    IsChanged = False
 
     # Set the data file version. Triggeres an question if an update is needed
-    DataFileVersion = "1.2"
+    DataFileVersion = "1.1"
 
     # Define list of the workbenches, toolbars and commands on class level
     List_Workbenches = []
@@ -3185,9 +3185,10 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.close()
 
         # show the restart dialog
-        result = StandardFunctions.RestartDialog(includeIcons=True)
-        if result == "yes":
-            StandardFunctions.restart_freecad()
+        if self.IsChanged is True:
+            result = StandardFunctions.RestartDialog(includeIcons=True)
+            if result == "yes":
+                StandardFunctions.restart_freecad()
         return
 
     @staticmethod
@@ -4207,13 +4208,14 @@ class LoadDialog(Design_ui.Ui_Form):
             if data["dropdownButtons"] != self.Dict_DropDownButtons:
                 IsChanged = True
         if "newPanels" in data:
-            if data["newPanels"] != self.Dict_DropDownButtons:
+            if data["newPanels"] != self.Dict_NewPanels:
                 IsChanged = True
         if "workbenches" in data:
             if data["workbenches"] != self.Dict_RibbonCommandPanel:
                 IsChanged = True
 
         JsonFile.close()
+        self.IsChanged = IsChanged
         return IsChanged
 
     def SortedPanelList(self, PanelList_RD: list, WorkBenchName):

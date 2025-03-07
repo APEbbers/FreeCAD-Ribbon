@@ -321,7 +321,6 @@ class ModernMenu(RibbonBar):
         UseToolsPanel = Parameters_Ribbon.Settings.GetBoolSetting("UseToolsPanel")
         # Create a key if not present
         try:
-            # Check if there is an old version of the tools panel
             NeedsUpdating = False
             if "Tools_newPanel" in self.ribbonStructure["newPanels"]["Global"]:
                 for item in self.ribbonStructure["newPanels"]["Global"]["Tools_newPanel"]:
@@ -411,7 +410,11 @@ class ModernMenu(RibbonBar):
 
                         # Get the command and its original toolbar
                         for CommandItem in Commands:
-                            if CommandItem[1] != "General" and CommandItem[1] != "Global":
+                            if (
+                                CommandItem[1] != "General"
+                                and CommandItem[1] != "Global"
+                                and CommandItem[1] != "Standard"
+                            ):
                                 # Activate the workbench if not loaded
                                 Gui.activateWorkbench(CommandItem[1])
         except Exception as e:
@@ -427,7 +430,7 @@ class ModernMenu(RibbonBar):
             if "dropdownButtons" in self.ribbonStructure:
                 for DropDownCommand, Commands in self.ribbonStructure["dropdownButtons"].items():
                     for CommandItem in Commands:
-                        if CommandItem[1] != "General" and CommandItem[1] != "Global":
+                        if CommandItem[1] != "General" and CommandItem[1] != "Global" and CommandItem[1] != "Standard":
                             # Activate the workbench if not loaded
                             Gui.activateWorkbench(CommandItem[1])
         except Exception as e:
@@ -920,7 +923,8 @@ class ModernMenu(RibbonBar):
                     # Get the actions and add them one by one
                     QuickAction = self.returnCustomDropDown(commandName)
                     for action in QuickAction:
-                        button.addAction(action[0])
+                        if len(action) > 0:
+                            button.addAction(action[0])
                     # Set the default action
                     button.setDefaultAction(button.actions()[0])
                     # Set the width and height
@@ -931,7 +935,9 @@ class ModernMenu(RibbonBar):
                     button.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
 
                     # Set the stylesheet
-                    button.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px", f"{padding}px"))
+                    button.setStyleSheet(
+                        StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px", padding_right=f"{padding}px")
+                    )
 
                 # Set the height
                 self.setQuickAccessButtonHeight(self.RibbonMinimalHeight)
@@ -2660,7 +2666,8 @@ class ModernMenu(RibbonBar):
                                 if len(CommandActionList) > 1:
                                     menu = QMenu()
                                     for action in CommandActionList:
-                                        menu.addAction(action[0])
+                                        if len(action) > 0:
+                                            menu.addAction(action[0])
                                     NewToolbutton.setMenu(menu)
                                     NewToolbutton.setDefaultAction(menu.actions()[0])
                                     # Add the commandname as the objectname to detect if it is a dropdownbutton
@@ -2676,7 +2683,7 @@ class ModernMenu(RibbonBar):
                                 ButtonList.append(NewToolbutton)
 
         except Exception as e:
-            # raise e
+            raise e
             if Parameters_Ribbon.DEBUG_MODE is True:
                 StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}, 4", "Warning")
             pass
