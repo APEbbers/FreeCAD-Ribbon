@@ -640,9 +640,6 @@ class ModernMenu(RibbonBar):
         # When hovering over the menu button, hide the ribbon
         self.applicationOptionButton().enterEvent = lambda enter: self.leaveEvent(enter)
 
-        self.isLoaded = True
-        self.FoldRibbon()
-
         # Rearrange the tabbar and toolbars
         if Parameters_Ribbon.TOOLBAR_POSITION == 0 or Parameters_Ribbon.TOOLBAR_POSITION == 1:
             # Get the widgets
@@ -694,46 +691,10 @@ class ModernMenu(RibbonBar):
         # Install an event filter to catch events from the main window and act on it.
         mw.installEventFilter(EventInspector(mw))
 
-        # Add the most important checks on startup.
-        # Less important ones will be done when opening the Layout menu
-        DataUpdateNeeded = False
-        try:
-            FileVersion = Data["dataVersion"]
-            if FileVersion != self.DataFileVersion:
-                DataUpdateNeeded = True
-        except Exception:
-            DataUpdateNeeded = True
-        if DataUpdateNeeded is True:
-            Question = translate(
-                "FreeCAD Ribbon",
-                "The current data file is based on an older format!\n"
-                "It is important to update the data!\n"
-                "Do you want to open the layout menu now?\n",
-            )
-            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
-            if Answer == "yes":
-                LoadDesign_Ribbon.main()
-        # get the system language
-        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
-        try:
-            FCLanguage = FreeCAD_preferences.GetString("Language")
-            # Check if the language in the data file machtes the system language
-            IsSystemLanguage = True
-            if FCLanguage != Data["Language"]:
-                IsSystemLanguage = False
-            # If the languguage doesn't match, ask the user to update the data
-            if IsSystemLanguage is False:
-                Question = translate(
-                    "FreeCAD Ribbon",
-                    "The data was generated for a differernt language!\n"
-                    "It is important to update the data!\n"
-                    "Do you want to open the layout menu now?\n",
-                )
-            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
-            if Answer == "yes":
-                LoadDesign_Ribbon.main()
-        except Exception:
-            pass
+        self.isLoaded = True
+        self.FoldRibbon()
+
+        self.CheckDataFile()
         return
 
     def closeEvent(self, event):
@@ -3088,7 +3049,6 @@ class ModernMenu(RibbonBar):
         # if self.isLoaded:
         StatusBarState = mw.findChild(QStatusBar, "statusBar").isVisible()
         # Get the style and restore button
-        Style: QStyle = mw.style()
         RestoreButton: QToolButton = self.rightToolBar().findChildren(QToolButton, "RestoreButton")[0]
         # If the mainwindow is maximized, set the mainwindow to normal, set a size and icon
         if mw.isMaximized() is True:
@@ -3102,9 +3062,6 @@ class ModernMenu(RibbonBar):
                 mw.resize(mw.width() - 50, mw.height() - 50)
                 mw.move(50, 50)
                 mw.adjustSize()
-                # Set the correct icon
-                # RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
-                # RestoreButton.setIcon(StyleMapping_Ribbon.ReturnTitleBarIcons()[2])
                 RestoreButton.clearFocus()
             except Exception:
                 pass
@@ -3117,9 +3074,6 @@ class ModernMenu(RibbonBar):
                 mw.showMaximized()
                 # Set the statusbar again if it was enabled
                 mw.statusBar().setVisible(StatusBarState)
-                # Set the correct icon
-                # RestoreButton.setIcon(Style.standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
-                # RestoreButton.setIcon(StyleMapping_Ribbon.ReturnTitleBarIcons()[1])
                 RestoreButton.clearFocus()
             except Exception:
                 pass
@@ -3142,6 +3096,35 @@ class ModernMenu(RibbonBar):
         if MenuBar.isVisible() is False:
             MenuBar.show()
             return
+
+    def CheckDataFile(self):
+        if self.isLoaded:
+            DataFile2 = os.path.join(os.path.dirname(__file__), "RibbonDataFile2.dat")
+            if os.path.exists(DataFile2) is True:
+                Data = {}
+                # read ribbon structure from JSON file
+                with open(DataFile2, "r") as file:
+                    Data.update(json.load(file))
+                file.close()
+
+            # Add the most important checks on startup.
+            # Less important ones will be done when opening the Layout menu
+            DataUpdateNeeded = False
+            try:
+                FileVersion = Data["dataVersion"]
+                if FileVersion != self.DataFileVersion:
+                    DataUpdateNeeded = True
+            except Exception:
+                DataUpdateNeeded = True
+            if DataUpdateNeeded is True:
+                Question = translate(
+                    "FreeCAD Ribbon",
+                    "The current data file is based on an older format!\n"
+                    "It is important to update the data file to avoid any issues.\n"
+                    f"Open the layout menu ({self.LayoutMenuShortCut}) and click on 'Reload workbenches'.",
+                )
+                StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 0)
+        return
 
 
 class EventInspector(QObject):

@@ -2577,13 +2577,15 @@ class LoadDialog(Design_ui.Ui_Form):
                                     "order"
                                 ][j].lower()
                             ):
-                                ToolbarCommands.insert(
-                                    j + index,
-                                    self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
-                                        "order"
-                                    ][j],
-                                )
-                                index = index + 1
+                                Separator = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][
+                                    Toolbar
+                                ]["order"][j]
+                                if Separator not in ToolbarCommands:
+                                    ToolbarCommands.insert(
+                                        j + index,
+                                        Separator,
+                                    )
+                                    index = index + 1
 
             # Sort the Toolbarcommands according the sorted list
             def SortCommands(item):
@@ -4722,7 +4724,15 @@ class LoadDialog(Design_ui.Ui_Form):
         lbl.setContentsMargins(3, 3, 3, 3)
 
         # Get the stylesheet from the main window and use it for this form
-        lbl.setStyleSheet("background-color: " + StyleMapping_Ribbon.ReturnStyleItem("Background_Color") + ";")
+        (
+            lbl.setStyleSheet(
+                "background-color: "
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                + ";color: "
+                + StyleMapping_Ribbon.ReturnStyleItem("FontColor")
+                + ";"
+            )
+        )
 
         if HideOnly is False:
             activeWorkbench = Gui.activeWorkbench().name()
