@@ -35,7 +35,6 @@ def Mbox(
     IconType="Information",
     default="",
     stringList="[,]",
-    OnTop: bool = False,
 ):
     """
     Message Styles:\n
@@ -181,7 +180,9 @@ def restart_freecad():
 
     args = QtWidgets.QApplication.arguments()[1:]
     if Gui.getMainWindow().close():
-        QtCore.QProcess.startDetached(QtWidgets.QApplication.applicationFilePath(), args)
+        QtCore.QProcess.startDetached(
+            QtWidgets.QApplication.applicationFilePath(), args
+        )
 
     return
 
@@ -336,9 +337,13 @@ def GetFileDialog(Filter="", parent=None, DefaultPath="", SaveAs: bool = True) -
 
     file = ""
     if SaveAs is False:
-        file = QFileDialog.getOpenFileName(parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter)[0]
+        file = QFileDialog.getOpenFileName(
+            parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter
+        )[0]
     if SaveAs is True:
-        file = QFileDialog.getSaveFileName(parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter)[0]
+        file = QFileDialog.getSaveFileName(
+            parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter
+        )[0]
     return file
 
 
@@ -346,7 +351,9 @@ def GetFolder(parent=None, DefaultPath="") -> str:
     from PySide.QtWidgets import QFileDialog
 
     Directory = ""
-    Directory = QFileDialog.getExistingDirectory(parent=parent, caption="Select Folder", dir=DefaultPath)
+    Directory = QFileDialog.getExistingDirectory(
+        parent=parent, caption="Select Folder", dir=DefaultPath
+    )
 
     return Directory
 
@@ -374,12 +381,18 @@ def CreateToolbar(Name: str, WorkBenchName: str = "Global", ButtonList: list = [
     # Define the name for the toolbar
     ToolBarName = Name
     # define the parameter path for the toolbar
-    WorkbenchToolBarsParamPath = "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
+    WorkbenchToolBarsParamPath = (
+        "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
+    )
 
     # check if there is already a toolbar with the same name
-    CustomToolbars: list = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar").GetGroups()
+    CustomToolbars: list = App.ParamGet(
+        "User parameter:BaseApp/Workbench/Global/Toolbar"
+    ).GetGroups()
     for Group in CustomToolbars:
-        Parameter = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar/" + Group)
+        Parameter = App.ParamGet(
+            "User parameter:BaseApp/Workbench/Global/Toolbar/" + Group
+        )
         ItemName = Parameter.GetString("Name")
         if ItemName == ToolBarName:
             return ToolBarName
@@ -408,14 +421,18 @@ def RemoveWorkBenchToolbars(Name: str, WorkBenchName: str = "Global") -> None:
     # Define the name for the toolbar
     ToolBarName = Name
     # define the parameter path for the toolbar
-    ToolBarsParamPath = "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
+    ToolBarsParamPath = (
+        "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
+    )
 
     custom_toolbars = App.ParamGet(ToolBarsParamPath)
     custom_toolbars.RemGroup(ToolBarName)
     return
 
 
-def ReturnXML_Value(path: str, ElementName: str, attribKey: str = "", attribValue: str = ""):
+def ReturnXML_Value(
+    path: str, ElementName: str, attribKey: str = "", attribValue: str = ""
+):
     import xml.etree.ElementTree as ET
     import os
 
@@ -528,7 +545,9 @@ def GetGitData(PrintErrors=False):
             Commits = str(line)[: len("  1418  ") - 1]
             Commits = int(Commits.strip())
             User = str(line)[len("  1418  ") - 1 :].split("<")[0].strip()
-            email = str(line)[len("  1418  ") - 1 :].split("<")[1].replace(">", "").strip()
+            email = (
+                str(line)[len("  1418  ") - 1 :].split("<")[1].replace(">", "").strip()
+            )
 
             UserList.append([Commits, User, email])
 
@@ -543,7 +562,10 @@ def GetGitData(PrintErrors=False):
                     tempUser = UserList[j]
                     if tempUser[2] == User[2] and tempUser[0] > User[0]:
                         Contributers.pop()
-                        if tempUser[1] not in Contributers and tempUser[1] != "pre-commit-ci[bot]":
+                        if (
+                            tempUser[1] not in Contributers
+                            and tempUser[1] != "pre-commit-ci[bot]"
+                        ):
                             Contributers.append(tempUser[1])
 
         # get the short commit id
