@@ -111,12 +111,12 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
             translate(
                 "FreeCAD Ribbon",
                 f"""
-        A customizable ribbon UI for FreeCAD. 
+        A customizable ribbon UI for FreeCAD.
 
         Developed by Paul Ebbers.
-        Current maintainer: {Maintainer} 
+        Current maintainer: {Maintainer}
 
-        Version information:       
+        Version information:
             Installed version: {version}
             Branch: {branch}
             CommitID: {CommitID}

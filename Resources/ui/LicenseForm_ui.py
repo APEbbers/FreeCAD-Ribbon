@@ -92,10 +92,14 @@ class Ui_Dialog(object):
         self.gridLayout_4.setObjectName("gridLayout_4")
         self.Introduction = QLabel(Dialog)
         self.Introduction.setObjectName("Introduction")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        sizePolicy1 = QSizePolicy(
+            QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum
+        )
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.Introduction.sizePolicy().hasHeightForWidth())
+        sizePolicy1.setHeightForWidth(
+            self.Introduction.sizePolicy().hasHeightForWidth()
+        )
         self.Introduction.setSizePolicy(sizePolicy1)
         self.Introduction.setWordWrap(True)
 
@@ -103,7 +107,9 @@ class Ui_Dialog(object):
 
         self.CopyVersionInfo = QPushButton(Dialog)
         self.CopyVersionInfo.setObjectName("CopyVersionInfo")
-        sizePolicy.setHeightForWidth(self.CopyVersionInfo.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.CopyVersionInfo.sizePolicy().hasHeightForWidth()
+        )
         self.CopyVersionInfo.setSizePolicy(sizePolicy)
 
         self.gridLayout_4.addWidget(self.CopyVersionInfo, 0, 1, 1, 1)
@@ -805,15 +811,23 @@ class Ui_Dialog(object):
     # setupUi
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", "about FreeCAD Ribbon", None))
+        Dialog.setWindowTitle(
+            QCoreApplication.translate("Dialog", "about FreeCAD Ribbon", None)
+        )
         self.LogoHolder.setText("")
-        self.TitleText.setText(QCoreApplication.translate("Dialog", "FreeCAD Ribbon", None))
+        self.TitleText.setText(
+            QCoreApplication.translate("Dialog", "FreeCAD Ribbon", None)
+        )
         self.Introduction.setText(
             QCoreApplication.translate(
-                "Dialog", "<html><head/><body><p>a Customizable Ribbon UI for FreeCAD</p></body></html>", None
+                "Dialog",
+                "<html><head/><body><p>a Customizable Ribbon UI for FreeCAD</p></body></html>",
+                None,
             )
         )
         self.CopyVersionInfo.setText(QCoreApplication.translate("Dialog", "Copy", None))
-        self.groupBox_2.setTitle(QCoreApplication.translate("Dialog", " License ", None))
+        self.groupBox_2.setTitle(
+            QCoreApplication.translate("Dialog", " License ", None)
+        )
 
     # retranslateUi
