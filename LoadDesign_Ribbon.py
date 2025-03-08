@@ -235,7 +235,7 @@ class LoadDialog(Design_ui.Ui_Form):
                     Question, "FreeCAD Ribbon", 1, "Question"
                 )
                 if Answer == "yes":
-                    self.on_ReloadWB_clicked()
+                    self.on_ReloadWB_clicked(resetTexts=True)
         except Exception:
             pass
 
@@ -824,7 +824,7 @@ class LoadDialog(Design_ui.Ui_Form):
 
         return
 
-    def on_ReloadWB_clicked(self):
+    def on_ReloadWB_clicked(self, resetTexts=False, RestartFreeCAD=False):
         # minimize the dialog
         self.form.hide()
 
@@ -1134,6 +1134,33 @@ class LoadDialog(Design_ui.Ui_Form):
         TimeStamp = datetime.now().strftime("%B %d, %Y, %H:%M:%S")
         Parameters_Ribbon.Settings.SetStringSetting("ReloadTimeStamp", TimeStamp)
 
+        if resetTexts is True:
+            if "workbenches" in self.Dict_RibbonCommandPanel:
+                for workbenchName in self.Dict_RibbonCommandPanel["workbenches"]:
+                    if (
+                        "toolbars"
+                        in self.Dict_RibbonCommandPanel["workbenches"][workbenchName]
+                    ):
+                        for ToolBar in self.Dict_RibbonCommandPanel["workbenches"][
+                            workbenchName
+                        ]["toolbars"]:
+                            if (
+                                "commands"
+                                in self.Dict_RibbonCommandPanel["workbenches"][
+                                    workbenchName
+                                ]["toolbars"][ToolBar]
+                            ):
+                                for Command in self.Dict_RibbonCommandPanel[
+                                    "workbenches"
+                                ][workbenchName]["toolbars"][ToolBar]["commands"]:
+                                    self.Dict_RibbonCommandPanel["workbenches"][
+                                        workbenchName
+                                    ]["toolbars"][ToolBar]["commands"][Command][
+                                        "text"
+                                    ] = ""
+
+            self.WriteJson()
+
         # run init again
         self.__init__()
 
@@ -1143,8 +1170,13 @@ class LoadDialog(Design_ui.Ui_Form):
         # Hide the progress message
         self.loadAllWorkbenches(HideOnly=True)
 
-        # Show the dialog again
-        self.form.show()
+        if RestartFreeCAD is False:
+            # Show the dialog again
+            self.form.show()
+        if RestartFreeCAD is True:
+            result = StandardFunctions.RestartDialog(includeIcons=True)
+            if result == "yes":
+                StandardFunctions.restart_freecad()
         return
 
     # region - Control functions----------------------------------------------------------------------
@@ -3561,13 +3593,15 @@ class LoadDialog(Design_ui.Ui_Form):
         JsonPath = os.path.dirname(__file__)
         JsonFile = os.path.join(JsonPath, "RibbonStructure.json")
 
-        BackupFiles = []
+        BackupFiles: list = []
         # returns a list of names (with extension, without full path) of all files
         # in backup path
         for name in os.listdir(pathBackup):
             if os.path.isfile(os.path.join(pathBackup, name)):
                 if name.lower().endswith("json"):
                     BackupFiles.append(name)
+        # Sort the backup files in reversed order
+        BackupFiles.sort(reverse=True)
 
         if len(BackupFiles) > 0:
             SelectedFile = StandardFunctions.Mbox(
