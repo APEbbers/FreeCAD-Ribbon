@@ -255,6 +255,9 @@ class ModernMenu(RibbonBar):
             except Exception:
                 pass
 
+        # check the language and remove texts from the ribbonstructure if the language does not match
+        self.CheckLanguage()
+
         # if FreeCAD is version 0.21 create a custom toolbar "Individual Views"
         if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
             StandardFunctions.CreateToolbar(
@@ -691,9 +694,11 @@ class ModernMenu(RibbonBar):
         # Install an event filter to catch events from the main window and act on it.
         mw.installEventFilter(EventInspector(mw))
 
+        # Set isLoaded to True, to show that the loading is finished
         self.isLoaded = True
+        # Fold the ribbon if unpinned
         self.FoldRibbon()
-
+        # Check if an reload of the datafile is needed an show an message
         self.CheckDataFile()
         return
 
@@ -1899,7 +1904,12 @@ class ModernMenu(RibbonBar):
 
                     # XXX check that positionsList consists of strings only
                     def sortButtons(button: QToolButton):
+                        # Use the text from the button as backup
                         Text = button.text()
+                        # Get the menu text
+                        if len(button.actions()) > 0:
+                            action = button.actions()[0]
+                            Text = StandardFunctions.CommandInfoCorrections(action.data())["menuText"]
 
                         if Text == "":
                             return -1
@@ -2644,7 +2654,6 @@ class ModernMenu(RibbonBar):
                                 ButtonList.append(NewToolbutton)
 
         except Exception as e:
-            raise e
             if Parameters_Ribbon.DEBUG_MODE is True:
                 StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}, 4", "Warning")
             pass
@@ -3124,6 +3133,24 @@ class ModernMenu(RibbonBar):
                     f"Open the layout menu ({self.LayoutMenuShortCut}) and click on 'Reload workbenches'.",
                 )
                 StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 0)
+        return
+
+    def CheckLanguage(self):
+        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
+        if self.ribbonStructure["language"] != FreeCAD_preferences.GetString("Language"):
+            if "workbenches" in self.ribbonStructure:
+                for workbenchName in self.ribbonStructure["workbenches"]:
+                    if "toolbars" in self.ribbonStructure["workbenches"][workbenchName]:
+                        for ToolBar in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]:
+                            if "commands" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][ToolBar]:
+                                for Command in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][ToolBar][
+                                    "commands"
+                                ]:
+                                    self.ribbonStructure["workbenches"][workbenchName]["toolbars"][ToolBar]["commands"][
+                                        Command
+                                    ]["text"] = ""
+
+            print("Ribbon UI: Custom text are reset because the language was changed")
         return
 
 
