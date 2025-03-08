@@ -1298,10 +1298,7 @@ class ModernMenu(RibbonBar):
             self.rightToolBar().addWidget(pinButton)
 
         # if the FreeCAD titlebar is hidden,add close, minimize and maximize buttons
-        if (
-            Parameters_Ribbon.TOOLBAR_POSITION == 0
-            and Parameters_Ribbon.HIDE_TITLEBAR_FC is True
-        ):
+        if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
             spacer = QWidget()
             spacer.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
             spacer.setFixedWidth(30)
@@ -3636,7 +3633,10 @@ class EventInspector(QObject):
                 return QObject.eventFilter(self, obj, event)
         # If the event is a modfied event, update the title
         # This is done when switching from one part to another
-        if event.type() == QEvent.Type.ModifiedChange:
+        if (
+            event.type() == QEvent.Type.ModifiedChange
+            and Parameters_Ribbon.TOOLBAR_POSITION == 0
+        ):
             # Get the mainwindow, the ribbon and the title
             mw = Gui.getMainWindow()
             RibbonBar = mw.findChild(ModernMenu, "Ribbon")
