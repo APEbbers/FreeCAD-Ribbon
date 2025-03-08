@@ -2205,7 +2205,9 @@ class ModernMenu(RibbonBar):
                         # Get the menu text
                         if len(button.actions()) > 0:
                             action = button.actions()[0]
-                            Text = StandardFunctions.CommandInfoCorrections(action.data())["menuText"]
+                            Text = StandardFunctions.CommandInfoCorrections(
+                                action.data()
+                            )["menuText"]
 
                         if Text == "":
                             return -1
@@ -3586,18 +3588,27 @@ class ModernMenu(RibbonBar):
 
     def CheckLanguage(self):
         FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
-        if self.ribbonStructure["language"] != FreeCAD_preferences.GetString("Language"):
+        if self.ribbonStructure["language"] != FreeCAD_preferences.GetString(
+            "Language"
+        ):
             if "workbenches" in self.ribbonStructure:
                 for workbenchName in self.ribbonStructure["workbenches"]:
                     if "toolbars" in self.ribbonStructure["workbenches"][workbenchName]:
-                        for ToolBar in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]:
-                            if "commands" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][ToolBar]:
-                                for Command in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][ToolBar][
-                                    "commands"
-                                ]:
-                                    self.ribbonStructure["workbenches"][workbenchName]["toolbars"][ToolBar]["commands"][
-                                        Command
-                                    ]["text"] = ""
+                        for ToolBar in self.ribbonStructure["workbenches"][
+                            workbenchName
+                        ]["toolbars"]:
+                            if (
+                                "commands"
+                                in self.ribbonStructure["workbenches"][workbenchName][
+                                    "toolbars"
+                                ][ToolBar]
+                            ):
+                                for Command in self.ribbonStructure["workbenches"][
+                                    workbenchName
+                                ]["toolbars"][ToolBar]["commands"]:
+                                    self.ribbonStructure["workbenches"][workbenchName][
+                                        "toolbars"
+                                    ][ToolBar]["commands"][Command]["text"] = ""
 
             print("Ribbon UI: Custom text are reset because the language was changed")
         return
