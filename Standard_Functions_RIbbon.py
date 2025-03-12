@@ -27,6 +27,8 @@ import math
 # Define the translation
 translate = App.Qt.translate
 
+mw = Gui.getMainWindow()
+
 
 def Mbox(
     text,
@@ -43,21 +45,22 @@ def Mbox(
     2 : Ok | Cancel                 (text, title, style)\n
     20 : Inputbox                   (text, title, style, default)\n
     21 : Inputbox with dropdown     (text, title, style, default, stringlist)\n
-    Icontype:                       string: NoIcon, Question, Warning, Critical. Default Information
+    Icontype:                       string: NoIcon, Question, Warning, Critical. Default Information\n
+    30 : OK (Non blocking)          (text, title, style)\n
     """
-    from PySide.QtWidgets import QMessageBox, QInputDialog
-    from PySide.QtCore import Qt
-    from PySide import QtWidgets
+    from PySide6.QtWidgets import QMessageBox, QInputDialog
+    from PySide6.QtCore import Qt
+    from PySide6 import QtWidgets
 
-    Icon = QMessageBox.Information
+    Icon = QMessageBox.Icon.Information
     if IconType == "NoIcon":
-        Icon = QMessageBox.NoIcon
+        Icon = QMessageBox.Icon.NoIcon
     if IconType == "Question":
-        Icon = QMessageBox.Question
+        Icon = QMessageBox.Icon.Question
     if IconType == "Warning":
-        Icon = QMessageBox.Warning
+        Icon = QMessageBox.Icon.Warning
     if IconType == "Critical":
-        Icon = QMessageBox.Critical
+        Icon = QMessageBox.Icon.Critical
 
     if style == 0:
         # Set the messagebox
@@ -66,8 +69,8 @@ def Mbox(
         msgBox.setText(text)
         msgBox.setWindowTitle(title)
 
-        reply = msgBox.exec_()
-        if reply == QMessageBox.Ok:
+        reply = msgBox.exec()
+        if reply == QMessageBox.StandardButton.Ok:
             return "ok"
     if style == 1:
         # Set the messagebox
@@ -76,13 +79,15 @@ def Mbox(
         msgBox.setText(text)
         msgBox.setWindowTitle(title)
         # Set the buttons and default button
-        msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        msgBox.setDefaultButton(QMessageBox.No)
+        msgBox.setStandardButtons(
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+        msgBox.setDefaultButton(QMessageBox.StandardButton.No)
 
         reply = msgBox.exec_()
-        if reply == QMessageBox.Yes:
+        if reply == QMessageBox.StandardButton.Yes:
             return "yes"
-        if reply == QMessageBox.No:
+        if reply == QMessageBox.StandardButton.No:
             return "no"
     if style == 2:
         # Set the messagebox
@@ -91,13 +96,15 @@ def Mbox(
         msgBox.setText(text)
         msgBox.setWindowTitle(title)
         # Set the buttons and default button
-        msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
-        msgBox.setDefaultButton(QMessageBox.Ok)
+        msgBox.setStandardButtons(
+            QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel
+        )
+        msgBox.setDefaultButton(QMessageBox.StandardButton.Ok)
 
         reply = msgBox.exec_()
-        if reply == QMessageBox.Ok:
+        if reply == QMessageBox.StandardButton.Ok:
             return "ok"
-        if reply == QMessageBox.Cancel:
+        if reply == QMessageBox.StandardButton.Cancel:
             return "cancel"
     if style == 20:
         Dialog = QInputDialog()
@@ -131,6 +138,17 @@ def Mbox(
             # user clicked Cancel
             replyText = reply[0]  # which will be "" if they clicked Cancel
         return str(replyText)
+    if style == 30:
+        # Set the messagebox
+        msgBox = QMessageBox(mw)
+        msgBox.setIcon(Icon)
+        msgBox.setText(text)
+        msgBox.setWindowTitle(title)
+        msgBox.setWindowModality(Qt.WindowModality.NonModal)
+        msgBox.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Dialog)
+
+        reply = msgBox.show()
+        return
 
 
 def RestartDialog(message="", includeIcons=False):
@@ -140,7 +158,7 @@ def RestartDialog(message="", includeIcons=False):
         string: returns 'yes' if restart now is clicked.
         otherwise returns 'no'
     """
-    from PySide.QtWidgets import QMessageBox
+    from PySide6.QtWidgets import QMessageBox
 
     # Save the preferences before restarting
     App.saveParameter()
@@ -154,22 +172,32 @@ def RestartDialog(message="", includeIcons=False):
 
     # Set the messagebox
     msgBox = QMessageBox()
-    msgBox.setIcon(QMessageBox.Warning)
+    msgBox.setIcon(QMessageBox.Icon.Warning)
     msgBox.setText(message)
     msgBox.setWindowTitle("FreeCAD Ribbon")
     # Set the buttons and default button
-    msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-    msgBox.setDefaultButton(QMessageBox.No)
-    msgBox.button(QMessageBox.Yes).setText(translate("FreeCAD Ribbon", "Restart now"))
-    msgBox.button(QMessageBox.No).setText(translate("FreeCAD Ribbon", "Restart later"))
+    msgBox.setStandardButtons(
+        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+    )
+    msgBox.setDefaultButton(QMessageBox.StandardButton.No)
+    msgBox.button(QMessageBox.StandardButton.Yes).setText(
+        translate("FreeCAD Ribbon", "Restart now")
+    )
+    msgBox.button(QMessageBox.StandardButton.No).setText(
+        translate("FreeCAD Ribbon", "Restart later")
+    )
     if includeIcons is True:
-        msgBox.button(QMessageBox.No).setIcon(Gui.getIcon("edit_Cancel.svg"))
-        msgBox.button(QMessageBox.Yes).setIcon(Gui.getIcon("edit_OK.svg"))
+        msgBox.button(QMessageBox.StandardButton.No).setIcon(
+            Gui.getIcon("edit_Cancel.svg")
+        )
+        msgBox.button(QMessageBox.StandardButton.Yes).setIcon(
+            Gui.getIcon("edit_OK.svg")
+        )
 
     reply = msgBox.exec_()
-    if reply == QMessageBox.Yes:
+    if reply == QMessageBox.StandardButton.Yes:
         return "yes"
-    if reply == QMessageBox.No:
+    if reply == QMessageBox.StandardButton.No:
         return "no"
 
 

@@ -3583,8 +3583,8 @@ class ModernMenu(RibbonBar):
                     "It is important to update the data file to avoid any issues.\n"
                     f"Open the layout menu ({self.LayoutMenuShortCut}) and click on 'Reload workbenches'.",
                 )
-                StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 0)
-        return
+                StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
+        return True
 
     def CheckLanguage(self):
         FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
