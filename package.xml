@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
 
   <name>FreeCAD Ribbon</name>
 
   <description>A Ribbon interface for FreeCAD</description>
 
-  <version>1.7.3.10</version>
+  <version>1.8.0</version>
 
   <date>2024-07-28</date>
 
@@ -28,6 +28,7 @@
       <subdirectory>./</subdirectory>
       <!-- Optional install of 3rd-party SearchBar to streamline ability to Search and find commands -->
       <depend type="addon" optional="true">SearchBar</depend>
+      <depend type="python" optional="true">git</depend>
     </workbench>
   </content>
 

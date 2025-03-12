@@ -23,15 +23,41 @@ import os
 import FreeCAD as App
 import FreeCADGui as Gui
 import FCBinding
+from FCBinding import ModernMenu
 import Parameters_Ribbon
 import shutil
-from PySide.QtCore import Signal, QObject
 import sys
+import platform
+from PySide.QtCore import Qt, QTimer, QSize, QSettings
+from PySide.QtGui import QGuiApplication
+from PySide.QtWidgets import (
+    QMainWindow,
+    QLabel,
+    QSizePolicy,
+    QApplication,
+    QToolButton,
+    QStyle,
+)
 
 
 def QT_TRANSLATE_NOOP(context, text):
     return text
 
+
+global pathIcons
+
+# Get the resources
+pathIcons = Parameters_Ribbon.ICON_LOCATION
+pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
+pathUI = Parameters_Ribbon.UI_LOCATION
+pathScripts = os.path.join(os.path.dirname(FCBinding.__file__), "Scripts")
+pathPackages = os.path.join(
+    os.path.dirname(FCBinding.__file__), "Resources", "packages"
+)
+sys.path.append(pathIcons)
+sys.path.append(pathStylSheets)
+sys.path.append(pathUI)
+sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
@@ -82,8 +108,27 @@ if Parameters_Ribbon.USE_FC_OVERLAY is True:
 try:
     print(translate("FreeCAD Ribbon", "Activating Ribbon Bar..."))
     mw = Gui.getMainWindow()
-    mw.workbenchActivated.connect(FCBinding.run)
+
+    if Parameters_Ribbon.HIDE_TITLEBAR_FC is False:
+        mw.setWindowFlags(Qt.WindowType.WindowFullscreenButtonHint)
+        mw.workbenchActivated.connect(FCBinding.run)
+        mw.showMaximized()
+
+    # Hide the Titlebar of FreeCAD
+    if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
+        # make a customized toolbar and hide all the buttons.
+        # This works better than a frameless window
+        mw.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
+        mw.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
+        mw.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
+        # Connect the ribbon when the workbench is activated
+        mw.workbenchActivated.connect(FCBinding.run)
+        # Normally after setting the window frameless you show the window with mw.show()
+        # This is now done in FCBinding with an eventfilter class
+        print(translate("FreeCAD Ribbon", "FreeCAD loaded without titlebar"))
+
 except Exception as e:
+    # raise e
     if Parameters_Ribbon.DEBUG_MODE is True:
         print(f"{e.with_traceback(e.__traceback__)}, 0")
 

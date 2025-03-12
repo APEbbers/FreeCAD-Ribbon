@@ -10,6 +10,7 @@ from PySide.QtWidgets import (
     QLabel,
     QToolBar,
     QTabBar,
+    QGridLayout,
 )
 from PySide.QtCore import (
     Qt,
@@ -84,7 +85,7 @@ class RibbonTitleWidget(QFrame):
         super().__init__(parent)
         # Tab bar layout
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)  # type: ignore
-        self._tabBarLayout = QHBoxLayout(self)
+        self._tabBarLayout = QGridLayout(self)
         self._tabBarLayout.setContentsMargins(0, 0, 0, 0)
         self._tabBarLayout.setSpacing(0)
 
@@ -157,12 +158,16 @@ class RibbonTitleWidget(QFrame):
         self._titleLabel.setFont(font)
 
         self._tabBarLayout.addWidget(
-            self._quickAccessToolBarWidget, 0, Qt.AlignmentFlag.AlignVCenter
+            self._quickAccessToolBarWidget, 0, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter
         )
-        self._tabBarLayout.addWidget(self._tabBar, 0, Qt.AlignmentFlag.AlignVCenter)
-        self._tabBarLayout.addWidget(self._titleLabel, 1, Qt.AlignmentFlag.AlignVCenter)
         self._tabBarLayout.addWidget(
-            self._rightToolBar, 0, Qt.AlignmentFlag.AlignVCenter
+            self._titleLabel, 0, 1, 1, 1, Qt.AlignmentFlag.AlignVCenter
+        )
+        self._tabBarLayout.addWidget(
+            self._rightToolBar, 0, 2, 1, 2, Qt.AlignmentFlag.AlignVCenter
+        )
+        self._tabBarLayout.addWidget(
+            self._tabBar, 1, 0, 1, 4, Qt.AlignmentFlag.AlignVCenter
         )
 
     def applicationButton(self) -> RibbonApplicationButton:

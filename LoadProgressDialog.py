@@ -53,22 +53,22 @@ sys.path.append(pathUI)
 sys.path.append(pathBackup)
 
 # import graphical created Ui. (With QtDesigner or QtCreator)
-import LicenseForm_ui as LicenseForm_ui
+import ui_ProgressDialog as ui_ProgressDialog
 
 # Define the translation
 translate = App.Qt.translate
 
 
-class LoadDialog(LicenseForm_ui.Ui_Dialog):
+class LoadDialog(ui_ProgressDialog.Ui_dialog):
 
-    FormLoaded = False
+    Text = ""
 
-    def __init__(self):
+    def __init__(self, Text):
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
         super(LoadDialog, self).__init__()
 
         # # this will create a Qt widget from our ui file
-        self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "LicenseForm.ui"))
+        self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "ProgressDialog.ui"))
 
         # Make sure that the dialog stays on top
         # self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
@@ -82,89 +82,22 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         Style = mw.style()
         self.form.setStyle(Style)
 
-        GitData = StandardFunctions.GetGitData()
+        # Set the text
+        self.form.label.setText(Text)
 
-        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
-        version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
-        Maintainer = StandardFunctions.ReturnXML_Value(PackageXML, "maintainer")
-        CommitID = GitData[0]
-        if CommitID is None:
-            CommitID = "-"
-        branch = GitData[1]
-        if branch is None:
-            branch = "-"
-
-        # Add a logo
-        pixmap = QPixmap(os.path.join(pathIcons, "FreecadNew.svg"))
-        self.form.LogoHolder.setFixedSize(pixmap.height(), pixmap.width())
-        self.form.LogoHolder.setPixmap(pixmap)
-
-        if QLabel(self.form.LogoHolder).pixmap() is None:
-            self.form.LogoHolder.setHidden(True)
-            self.form.LogoHolder.setDisabled(True)
-
-        # set the title text
-        self.form.TitleText.setText("Ribbon UI")
-
-        # Write here the introduction text and include the version
-        self.form.Introduction.setText(
-            translate(
-                "FreeCAD Ribbon",
-                f"""
-        A customizable ribbon UI for FreeCAD.
-
-        Developed by Paul Ebbers.
-        Current maintainer: {Maintainer}
-
-        Version information:
-            Installed version: {version}
-            Branch: {branch}
-            CommitID: {CommitID}
-        """,
-            )
-        )
-        # Add the copybutton
-        self.form.CopyVersionInfo.clicked.connect(
-            lambda: self.on_CopyVersionInfo_Clicked(
-                self,
-                f"Installed version: {version}\nBranch: {branch}\nCommit ID: {CommitID}",
-            ),
-        )
-
-        # Write the text for credits
-
-        Contributers = GitData[2]
-        if len(Contributers) > 0:
-            text = translate("FreeCAD Ribbon", "Contributors:\n")
-            for Contributor in Contributers:
-                text = text + " - " + Contributor + "\n"
-
-            self.form.ContributersText.setText(text)
-        else:
-            self.form.groupBox.setDisabled(True)
-            self.form.groupBox.setHidden(True)
-
-        # Read the license file from the add-on directory
-        file_path = os.path.join(os.path.dirname(__file__), "LICENSE")
-        with open(file_path, "r") as file:
-            LICENSE = file.read()
-
-        self.form.LicenseText.setText(LICENSE)
-
-        # set only the ok button
-        self.form.buttonBox.setStandardButtons(self.form.buttonBox.StandardButton.Ok)
         return
 
-    @staticmethod
-    def on_CopyVersionInfo_Clicked(self, Text):
-        StandardFunctions.AddToClipboard(Text)
-        print(Text)
+    @classmethod
+    def update(self, value):
+        self.Text += value
+
         return
 
 
-def main():
+def main(Text):
     # Get the form
-    Dialog = LoadDialog().form
+    Dialog = LoadDialog(Text).form
+
     # Show the form
     Dialog.show()
 

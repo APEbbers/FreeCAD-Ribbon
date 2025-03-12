@@ -58,7 +58,7 @@ class Settings:
     def GetBoolSetting(settingName: str) -> bool:
         result = preferences.GetBool(settingName)
         if str(result).lower() == "none":
-            result = False
+            result = None
         return result
 
     def GetColorSetting(settingName: str) -> object:
@@ -111,6 +111,8 @@ class Settings:
         Settings.SetIntSetting("ApplicationButtonSize", APP_ICON_SIZE)
         Settings.SetIntSetting("QuickAccessButtonSize", QUICK_ICON_SIZE)
         Settings.SetIntSetting("TabBarSize", TABBAR_SIZE)
+        Settings.SetIntSetting("Toolbar_Position", TOOLBAR_POSITION)
+        Settings.SetBoolSetting("Hide_Titlebar_FC", HIDE_TITLEBAR_FC)
         Settings.SetIntSetting("RightToolbarButtonSize", RIGHT_ICON_SIZE)
 
         Settings.SetBoolSetting("ShowIconText_Small", SHOW_ICON_TEXT_SMALL)
@@ -118,6 +120,11 @@ class Settings:
         Settings.SetBoolSetting("ShowIconText_Large", SHOW_ICON_TEXT_LARGE)
         Settings.SetBoolSetting("WrapText_Medium", WRAPTEXT_MEDIUM)
         Settings.SetBoolSetting("WrapText_Large", WRAPTEXT_LARGE)
+
+        Settings.SetIntSetting("FontSize_Menus", FONTSIZE_MENUS)
+        Settings.SetIntSetting("FontSize_Buttons", FONTSIZE_BUTTONS)
+        Settings.SetIntSetting("FontSize_Tabs", FONTSIZE_TABS)
+        Settings.SetIntSetting("FontSize_Panels", FONTSIZE_PANELS)
 
         Settings.SetBoolSetting("ShowOnHover", SHOW_ON_HOVER)
         Settings.SetIntSetting("TabBar_Scroll", TABBAR_SCROLLSPEED)
@@ -199,6 +206,7 @@ DefaultSettings = {
     "UseToolsPanel": bool(True),
     "WrapText_Medium": bool(True),
     "WrapText_Large": bool(True),
+    "UseOverlay": bool(True),
     "UseFCOverlay": bool(False),
     "UseButtonBackGround": bool(False),
     "CustomColors": bool(False),
@@ -217,6 +225,12 @@ DefaultSettings = {
     "PinButton_closed": "",
     "Shortcut_Application": "Alt+A",
     "CustomPanelPosition": "Right",
+    "FontSize_Menus": int(11),
+    "FontSize_Buttons": int(11),
+    "FontSize_Tabs": int(14),
+    "FontSize_Panels": int(11),
+    "Toolbar_Position": int(0),
+    "Hide_Titlebar_FC": True,
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
@@ -259,6 +273,19 @@ if (
 ):
     TABBAR_STYLE = DefaultSettings["TabBar_Style"]
     Settings.SetIntSetting("TabBar_Style", TABBAR_STYLE)
+
+TOOLBAR_POSITION = Settings.GetIntSetting("Toolbar_Position")
+if (
+    Settings.GetIntSetting("Toolbar_Position") is None
+    or Settings.GetIntSetting("Toolbar_Position") > 1
+):
+    TOOLBAR_POSITION = DefaultSettings["Toolbar_Position"]
+    Settings.SetIntSetting("Toolbar_Position", TOOLBAR_POSITION)
+
+HIDE_TITLEBAR_FC = Settings.GetBoolSetting("Hide_Titlebar_FC")
+if Settings.GetBoolSetting("Hide_Titlebar_FC") is None:
+    HIDE_TITLEBAR_FC = DefaultSettings["Hide_Titlebar_FC"]
+    Settings.SetBoolSetting("Hide_Titlebar_FC", HIDE_TITLEBAR_FC)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the icon sizes ---------------------------------------------------------------------------------------
@@ -346,7 +373,7 @@ if Settings.GetStringSetting("Stylesheet") == "":
     Settings.SetStringSetting("Stylesheet", STYLESHEET)
 
 SHOW_ICON_TEXT_SMALL = Settings.GetBoolSetting("ShowIconText_Small")
-if Settings.GetBoolSetting("ShowIconText_Small") is None:
+if Settings.GetBoolSetting("ShowIconText_Small") is FileExistsError:
     SHOW_ICON_TEXT_SMALL = DefaultSettings["ShowIconText_Small"]
     Settings.SetBoolSetting("ShowIconText_Small", SHOW_ICON_TEXT_SMALL)
 
@@ -374,6 +401,38 @@ WRAPTEXT_LARGE = Settings.GetBoolSetting("WrapText_Large")
 if Settings.GetBoolSetting("WrapText_Large") == "":
     WRAPTEXT_LARGE = DefaultSettings["WrapText_Large"]
     Settings.SetBoolSetting("WrapText_Large", WRAPTEXT_LARGE)
+
+FONTSIZE_MENUS = Settings.GetIntSetting("FontSize_Menus")
+if (
+    Settings.GetIntSetting("FontSize_Menus") is None
+    or Settings.GetIntSetting("FontSize_Menus") == 0
+):
+    FONTSIZE_MENUS = DefaultSettings["FontSize_Menus"]
+    Settings.SetIntSetting("FontSize_Menus", FONTSIZE_MENUS)
+
+FONTSIZE_BUTTONS = Settings.GetIntSetting("FontSize_Buttons")
+if (
+    Settings.GetIntSetting("FontSize_Buttons") is None
+    or Settings.GetIntSetting("FontSize_Buttons") == 0
+):
+    FONTSIZE_BUTTONS = DefaultSettings["FontSize_Buttons"]
+    Settings.SetIntSetting("FontSize_Buttons", FONTSIZE_BUTTONS)
+
+FONTSIZE_TABS = Settings.GetIntSetting("FontSize_Tabs")
+if (
+    Settings.GetIntSetting("FontSize_Tabs") is None
+    or Settings.GetIntSetting("FontSize_Tabs") == 0
+):
+    FONTSIZE_TABS = DefaultSettings["FontSize_Tabs"]
+    Settings.SetIntSetting("FontSize_Tabs", FONTSIZE_TABS)
+
+FONTSIZE_PANELS = Settings.GetIntSetting("FontSize_Panels")
+if (
+    Settings.GetIntSetting("FontSize_Panels") is None
+    or Settings.GetIntSetting("FontSize_Panels") == 0
+):
+    FONTSIZE_PANELS = DefaultSettings["FontSize_Panels"]
+    Settings.SetIntSetting("FontSize_Panels", FONTSIZE_PANELS)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Get the Debug Mode ------------------------------------------------------------------------------------------
@@ -442,6 +501,11 @@ USE_TOOLSPANEL = Settings.GetBoolSetting("UseToolsPanel")
 if Settings.GetBoolSetting("UseToolsPanel") is None:
     USE_TOOLSPANEL = DefaultSettings["UseToolsPanel"]
     Settings.SetBoolSetting("UseToolsPanel", USE_TOOLSPANEL)
+
+USE_OVERLAY = Settings.GetBoolSetting("UseOverlay")
+if Settings.GetBoolSetting("UseOverlay") is None:
+    USE_FC_OVERLAY = DefaultSettings["UseOverlay"]
+    Settings.SetBoolSetting("UseOverlay", USE_OVERLAY)
 
 USE_FC_OVERLAY = Settings.GetBoolSetting("UseFCOverlay")
 if Settings.GetBoolSetting("UseFCOverlay") is None:

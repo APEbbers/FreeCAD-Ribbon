@@ -1,0 +1,29 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Resources/Icons/backward_1.svg</file>
+        <file>Resources/Icons/backward_2.svg</file>
+        <file>Resources/Icons/backward_default.svg</file>
+        <file>Resources/Icons/backward_default_white.svg</file>
+        <file>Resources/Icons/backward_small_default.svg</file>
+        <file>Resources/Icons/backward_small_default_white.svg</file>
+        <file>Resources/Icons/down_1.svg</file>
+        <file>Resources/Icons/Draft_Layer.svg</file>
+        <file>Resources/Icons/forward_1.svg</file>
+        <file>Resources/Icons/forward_default.svg</file>
+        <file>Resources/Icons/forward_default_white.svg</file>
+        <file>Resources/Icons/forward_small_default.svg</file>
+        <file>Resources/Icons/forward_small_default_white.svg</file>
+        <file>Resources/Icons/FreecadNew.svg</file>
+        <file>Resources/Icons/more_1.svg</file>
+        <file>Resources/Icons/more_default.svg</file>
+        <file>Resources/Icons/more_default_white.svg</file>
+        <file>Resources/Icons/pin-icon-closed_1.svg</file>
+        <file>Resources/Icons/pin-icon-default.svg</file>
+        <file>Resources/Icons/pin-icon-default_white.svg</file>
+        <file>Resources/Icons/pin-icon-open.svg</file>
+        <file>Resources/Icons/pin-icon-open_1.svg</file>
+        <file>Resources/Icons/pin-icon-open_white.svg</file>
+        <file>Resources/Icons/pin-svgrepo-com.svg</file>
+        <file>Resources/Icons/up_1.svg</file>
+    </qresource>
+</RCC>

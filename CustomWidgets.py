@@ -48,13 +48,15 @@ from PySide.QtWidgets import (
     QFrame,
     QGraphicsEffect,
 )
-from PySide.QtCore import Qt, QSize, QRect, QMargins, QEvent
+from PySide.QtCore import Qt, QSize, QRect, QMargins, QEvent, QObject
 
 import os
 import sys
 import Parameters_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
-import StyleMapping
+import StyleMapping_Ribbon
+
+# from CustomWidgets import myMenu as QMenu
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -85,6 +87,7 @@ class CustomControls:
         MaxNumberOfLines=2,
         Menu: QMenu = None,
         MenuButtonSpace=10,
+        parent=None,
     ):
         # Define the controls
         btn = QToolButton()
@@ -96,7 +99,7 @@ class CustomControls:
         # Set the default stylesheet
         StyleSheet_Addition_Button = (
             "QToolButton, QToolButton:hover {background-color: "
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: none"
             + ";}"
         )
@@ -244,6 +247,13 @@ class CustomControls:
 
         if Menu is not None and len(Menu.actions()) > 1:
             # Define a menu
+            Menu.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+            StyleSheet_Menu = (
+                "QMenu::item, QMenu::menuAction, QMenuBar::item, QMenu>QLabel {font-size: "
+                + str(Parameters_Ribbon.FONTSIZE_MENUS)
+                + "px;}"
+            )
+            Menu.setStyleSheet(StyleSheet_Menu)
             ArrowButton.setMenu(Menu)
             ArrowButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
             # Set the height according the space for the menubutton
@@ -275,20 +285,20 @@ class CustomControls:
 
                 # Change the background color for commandbutton and label on hovering (CSS)
                 def enterEventCustom(event):
-                    BorderColor = StyleMapping.ReturnStyleItem("Border_Color")
+                    BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
                     if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
                     if Parameters_Ribbon.BORDER_TRANSPARANT:
-                        BorderColor = StyleMapping.ReturnStyleItem(
+                        BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                             "Background_Color_Hover"
                         )
                     StyleSheet_Addition_Arrow = (
                         "QToolButton, QTextEdit {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-top: 0px solid"
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
@@ -301,11 +311,11 @@ class CustomControls:
                     )
                     StyleSheet_Addition_Label = (
                         "QToolButton, QTextEdit {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-bottom: 0px solid"
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
                         + ";margin: 0px"
@@ -314,7 +324,7 @@ class CustomControls:
                     )
                     StyleSheet_Addition_Button = (
                         "QToolButton, QTextEdit {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                         + ";border: none"
                         + ";}"
                     )
@@ -326,22 +336,27 @@ class CustomControls:
                         Label_Text.setStyleSheet(StyleSheet_Addition_Label)
                         ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
 
+                    if parent is not None:
+                        # Set the value in the parent for detecting that the menu is entered.
+                        # Needed for keeping the ribbon open while showing a dropdown menu
+                        parent.MenuEntered = True
+
                 Label_Text.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
                 ArrowButton.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
 
             if showText is False:
                 # Change the background color for commandbutton and label on hovering (CSS)
                 def enterEventCustom_2(event):
-                    BorderColor = StyleMapping.ReturnStyleItem("Border_Color")
+                    BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
                     if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
                     if Parameters_Ribbon.BORDER_TRANSPARANT:
-                        BorderColor = StyleMapping.ReturnStyleItem(
+                        BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                             "Background_Color_Hover"
                         )
                     StyleSheet_Addition_Arrow = (
                         "QToolButton, QTextEdit {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-radius: 2px"
@@ -355,7 +370,7 @@ class CustomControls:
                     )
                     StyleSheet_Addition_Button = (
                         "QToolButton, QTextEdit {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                         + ";border: none"
                         + ";}"
                     )
@@ -364,6 +379,11 @@ class CustomControls:
                         ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
                     if Label_Text.underMouse():
                         ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
+
+                    if parent is not None:
+                        # Set the value in the parent for detecting that the menu is entered to True.
+                        # Needed for keeping the ribbon open while showing a dropdown menu
+                        parent.MenuEntered = True
 
                 Label_Text.enterEvent = lambda enterEvent: enterEventCustom_2(
                     enterEvent
@@ -374,7 +394,7 @@ class CustomControls:
 
             # restore the stylesheets on leaving
             def leaveEventCustom(event):
-                StyleSheet = StyleMapping.ReturnStyleSheet(
+                StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(
                     control="toolbutton",
                     radius="2px",
                 )
@@ -385,8 +405,24 @@ class CustomControls:
                 Label_Text.setStyleSheet(StyleSheet)
                 ArrowButton.setStyleSheet(StyleSheet_Addition + StyleSheet)
 
+                # If the menu is hidden, set the value in the parent for detecting that the menu is entered to False.
+                if Menu.isHidden():
+                    if parent is not None:
+                        parent.MenuEntered = False
+
             Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
             ArrowButton.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
+
+            # Set MenuEntered to False. This allows the ribbon to fold after leaving the menu and the ribbon.
+            def SetToFoldRibbon():
+                if parent is not None:
+                    # If the menu is hidden, set the value in the parent for detecting that the menu is entered to False.
+                    parent.MenuEntered = False
+                    pos = QCursor.pos()
+                    if parent.geometry().contains(pos) is False:
+                        parent.FoldRibbon()
+
+            Menu.aboutToHide.connect(SetToFoldRibbon)
 
             CommandButtonHeight = CommandButtonHeight - ArrowButton.height()
         else:
@@ -404,20 +440,20 @@ class CustomControls:
 
                 # Change the background color for commandbutton and label on hovering (CSS)
                 def enterEventCustom(event):
-                    BorderColor = StyleMapping.ReturnStyleItem("Border_Color")
+                    BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
                     if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
                     if Parameters_Ribbon.BORDER_TRANSPARANT:
-                        BorderColor = StyleMapping.ReturnStyleItem(
+                        BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                             "Background_Color_Hover"
                         )
                     StyleSheet_Addition_Label = (
                         "QToolButton, QTextEdit {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-top: 0px solid"
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
@@ -426,11 +462,11 @@ class CustomControls:
                     )
                     StyleSheet_Addition_Command = (
                         "QToolButton, QTextEdit {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-bottom: 0px solid"
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
                         + ";margin: 0px"
@@ -439,7 +475,7 @@ class CustomControls:
                     )
                     StyleSheet_Addition_Button = (
                         "QToolButton, QTextEdit {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                         + ";border: none"
                         + ";}"
                     )
@@ -459,16 +495,16 @@ class CustomControls:
             if showText is False:
                 # Change the background color for commandbutton and label on hovering (CSS)
                 def enterEventCustom_2(event):
-                    BorderColor = StyleMapping.ReturnStyleItem("Border_Color")
+                    BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
                     if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
                     if Parameters_Ribbon.BORDER_TRANSPARANT:
-                        BorderColor = StyleMapping.ReturnStyleItem(
+                        BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                             "Background_Color_Hover"
                         )
                     StyleSheet_Addition_Command = (
                         "QToolButton, QTextEdit {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-radius: 2px"
@@ -478,7 +514,7 @@ class CustomControls:
                     )
                     StyleSheet_Addition_Button = (
                         "QToolButton, QTextEdit {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                         + ";border: none"
                         + ";}"
                     )
@@ -497,15 +533,15 @@ class CustomControls:
 
             # restore the stylesheets on leaving
             def leaveEventCustom(event):
-                StyleSheet = StyleMapping.ReturnStyleSheet(
+                StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(
                     control="toolbutton",
                     radius="2px",
                 )
                 StyleSheet_Addition = (
                     "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
-                    + StyleMapping.ReturnStyleItem("Background_Color")
+                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";border: 0.5px solid"
-                    + StyleMapping.ReturnStyleItem("Background_Color")
+                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";}"
                 )
                 Label_Text.setStyleSheet(StyleSheet_Addition + StyleSheet)
@@ -513,7 +549,7 @@ class CustomControls:
 
             Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
             CommandButton.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
-
+            # Set the tooltip for the label equeal to that of the commandbutton
             Label_Text.setToolTip(CommandButton.toolTip())
 
         # Set the spacing to zero. If not, the CSS styling will show gaps
@@ -522,14 +558,16 @@ class CustomControls:
         btn.setLayout(Layout)
 
         # Set the stylesheet
-        StyleSheet = StyleMapping.ReturnStyleSheet(control="toolbutton", radius="2px")
+        StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(
+            control="toolbutton", radius="2px"
+        )
         StyleSheet_Addition_Label = (
             "QToolButton, QTextEdit {background-color: "
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: 0.5px solid"
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border-top: 0px solid"
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border-radius: 2px"
             + ";margin: 0px"
             + ";spacing: 0px"
@@ -537,11 +575,11 @@ class CustomControls:
         )
         StyleSheet_Addition_Command = (
             "QToolButton, QTextEdit {background-color: "
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: 0.5px solid"
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border-bottom: 0px solid"
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border-radius: 2px"
             + ";margin: 0px"
             + ";spacing: 0px"
@@ -549,17 +587,17 @@ class CustomControls:
         )
         StyleSheet_Addition_Button = (
             "QToolButton, QTextEdit {background-color: "
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: none"
             + ";}"
         )
         StyleSheet_Addition_Arrow = (
             "QToolButton, QTextEdit {background-color: "
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: 0.5px solid"
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border-top: 0px solid"
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border-radius: 2px"
             + ";margin: 0px"
             + ";spacing: 0px"
@@ -603,6 +641,7 @@ class CustomControls:
         MaxNumberOfLines=2,
         Menu: QMenu = None,
         MenuButtonSpace=16,
+        parent=None,
     ):
         # Define the controls
         btn = QToolButton()
@@ -613,7 +652,7 @@ class CustomControls:
         # Set the default stylesheet
         StyleSheet_Addition_Button = (
             "QToolButton, QToolButton:hover {background-color: "
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: none"
             + ";}"
         )
@@ -774,6 +813,13 @@ class CustomControls:
         if Menu is not None and len(Menu.actions()) > 1:
             # Define a menu
             ArrowButton.setMenu(Menu)
+            Menu.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+            StyleSheet_Menu = (
+                "QMenu::item, QMenu::menuAction, QMenuBar::item, QMenu>QLabel {font-size: "
+                + str(Parameters_Ribbon.FONTSIZE_MENUS)
+                + "px;}"
+            )
+            Menu.setStyleSheet(StyleSheet_Menu)
             ArrowButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
             # Set the height according the space for the menubutton
             ArrowButton.setFixedHeight(CommandButton.height())
@@ -804,21 +850,21 @@ class CustomControls:
 
                 # Change the background color for commandbutton and label on hovering (CSS)
                 def enterEventCustom(event):
-                    BorderColor = StyleMapping.ReturnStyleItem("Border_Color")
+                    BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
                     if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
                     if Parameters_Ribbon.BORDER_TRANSPARANT:
-                        BorderColor = StyleMapping.ReturnStyleItem(
+                        BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                             "Background_Color_Hover"
                         )
                     StyleSheet_Addition_Label = (
                         "QToolButton, QTextEdit { "
                         + "background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-right: 0px solid"
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
                         + ";margin: 0px"
@@ -828,11 +874,11 @@ class CustomControls:
                     StyleSheet_Addition_Arrow = (
                         "QToolButton, QTextEdit { "
                         + "background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-left: 0px solid"
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
@@ -841,7 +887,7 @@ class CustomControls:
                     )
                     StyleSheet_Addition_Button = (
                         "QToolButton:hover {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                         + ";border: none"
                         + ";}"
                     )
@@ -853,23 +899,28 @@ class CustomControls:
                         ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
                         Label_Text.setStyleSheet(StyleSheet_Addition_Label)
 
+                    if parent is not None:
+                        # Set the value in the parent for detecting that the menu is entered.
+                        # Needed for keeping the ribbon open while showing a dropdown menu
+                        parent.MenuEntered = True
+
                 Label_Text.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
                 ArrowButton.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
 
             if showText is False:
                 # Change the background color for commandbutton and label on hovering (CSS)
                 def enterEventCustom_2(event):
-                    BorderColor = StyleMapping.ReturnStyleItem("Border_Color")
+                    BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
                     if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
                     if Parameters_Ribbon.BORDER_TRANSPARANT:
-                        BorderColor = StyleMapping.ReturnStyleItem(
+                        BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                             "Background_Color_Hover"
                         )
                     StyleSheet_Addition_Arrow = (
                         "QToolButton, QTextEdit { "
                         + "background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-radius: 2px"
@@ -879,7 +930,7 @@ class CustomControls:
                     )
                     StyleSheet_Addition_Button = (
                         "QToolButton:hover {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                         + ";border: none"
                         + ";}"
                     )
@@ -888,6 +939,11 @@ class CustomControls:
                         ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
                     if Label_Text.underMouse():
                         ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
+
+                    if parent is not None:
+                        # Set the value in the parent for detecting that the menu is entered.
+                        # Needed for keeping the ribbon open while showing a dropdown menu
+                        parent.MenuEntered = True
 
                 Label_Text.enterEvent = lambda enterEvent: enterEventCustom_2(
                     enterEvent
@@ -898,21 +954,37 @@ class CustomControls:
 
             # restore the stylesheets on leaving
             def leaveEventCustom(event):
-                StyleSheet = StyleMapping.ReturnStyleSheet(
+                StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(
                     control="toolbutton",
                     radius="2px",
                 )
                 StyleSheet_Addition = (
                     "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
-                    + StyleMapping.ReturnStyleItem("Background_Color")
+                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";border: none"
                     + ";}"
                 )
                 Label_Text.setStyleSheet(StyleSheet + StyleSheet_Addition)
                 ArrowButton.setStyleSheet(StyleSheet + StyleSheet_Addition)
 
+                if parent is not None:
+                    # If the menu is hidden, set the value in the parent for detecting that the menu is entered to False.
+                    if Menu.isHidden():
+                        parent.MenuEntered = False
+
             Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
             ArrowButton.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
+
+            # Set MenuEntered to False. This allows the ribbon to fold after leaving the menu and the ribbon.
+            def SetToFoldRibbon():
+                if parent is not None:
+                    # If the menu is hidden, set the value in the parent for detecting that the menu is entered to False.
+                    parent.MenuEntered = False
+                    pos = QCursor.pos()
+                    if parent.geometry().contains(pos) is False:
+                        parent.FoldRibbon()
+
+            Menu.aboutToHide.connect(SetToFoldRibbon)
         else:
             # Add the label to the area where the user can invoke the menu
             if showText is True:
@@ -931,21 +1003,21 @@ class CustomControls:
 
                 # Change the background color for commandbutton and label on hovering (CSS)
                 def enterEventCustom(event):
-                    BorderColor = StyleMapping.ReturnStyleItem("Border_Color")
+                    BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
                     if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
                     if Parameters_Ribbon.BORDER_TRANSPARANT:
-                        BorderColor = StyleMapping.ReturnStyleItem(
+                        BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                             "Background_Color_Hover"
                         )
                     StyleSheet_Addition_Label = (
                         "QToolButton, QTextEdit { "
                         + "background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-left: 0px solid"
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
@@ -955,11 +1027,11 @@ class CustomControls:
                     StyleSheet_Addition_Command = (
                         "QToolButton, QTextEdit { "
                         + "background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-right: 0px solid"
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
                         + ";margin: 0px"
@@ -968,7 +1040,7 @@ class CustomControls:
                     )
                     StyleSheet_Addition_Button = (
                         "QToolButton, QToolButton:hover {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                         + ";border: none"
                         + ";}"
                     )
@@ -988,17 +1060,17 @@ class CustomControls:
             if showText is False:
                 # Change the background color for commandbutton and label on hovering (CSS)
                 def enterEventCustom_2(event):
-                    BorderColor = StyleMapping.ReturnStyleItem("Border_Color")
+                    BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
                     if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                         BorderColor = Parameters_Ribbon.COLOR_BORDERS
                     if Parameters_Ribbon.BORDER_TRANSPARANT:
-                        BorderColor = StyleMapping.ReturnStyleItem(
+                        BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                             "Background_Color_Hover"
                         )
                     StyleSheet_Addition_Command = (
                         "QToolButton, QTextEdit { "
                         + "background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color_Hover")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
                         + ";border-radius: 2px"
@@ -1008,7 +1080,7 @@ class CustomControls:
                     )
                     StyleSheet_Addition_Button = (
                         "QToolButton, QToolButton:hover {background-color: "
-                        + StyleMapping.ReturnStyleItem("Background_Color")
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                         + ";border: none"
                         + ";}"
                     )
@@ -1027,13 +1099,13 @@ class CustomControls:
 
             # restore the stylesheets on leaving
             def leaveEventCustom(event):
-                StyleSheet = StyleMapping.ReturnStyleSheet(
+                StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(
                     control="toolbutton",
                     radius="2px",
                 )
                 StyleSheet_Addition = (
                     "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
-                    + StyleMapping.ReturnStyleItem("Background_Color")
+                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";border: none"
                     + ";}"
                 )
@@ -1057,15 +1129,15 @@ class CustomControls:
         # Add the layout
         btn.setLayout(Layout)
         # Set the stylesheet for the controls
-        StyleSheet = StyleMapping.ReturnStyleSheet(control="toolbutton")
+        StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(control="toolbutton")
         StyleSheet_Addition_Label = (
             "QToolButton, QTextEdit { "
             + "background-color: "
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: 0.5px solid"
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border-left: 0px solid"
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border-radius: 2px"
             + ";margin: 0px"
             + ";spacing: 0px"
@@ -1074,11 +1146,11 @@ class CustomControls:
         StyleSheet_Addition_Command = (
             "QToolButton, QTextEdit { "
             + "background-color: "
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: 0.5px solid"
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border-right: 0px solid"
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border-radius: 2px"
             + ";margin: 0px"
             + ";spacing: 0px"
@@ -1087,11 +1159,11 @@ class CustomControls:
         StyleSheet_Addition_Arrow = (
             "QToolButton, QTextEdit { "
             + "background-color: "
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: 0.5px solid"
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border-left: 0px solid"
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border-radius: 2px"
             + ";margin: 0px"
             + ";spacing: 0px"
@@ -1099,9 +1171,9 @@ class CustomControls:
         )
         StyleSheet_Addition_button = (
             "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: 0px solid"
-            + StyleMapping.ReturnStyleItem("Background_Color")
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";}"
         )
         CommandButton.setStyleSheet(StyleSheet_Addition_Command + StyleSheet)
@@ -1115,3 +1187,59 @@ class CustomControls:
 
         # return the new button
         return btn
+
+    def CustomOptionMenu(Menu=None, actionList=None, parent=None):
+        # If menu is none, define a new one
+        if Menu is None:
+            Menu = QMenu()
+        # add all the actions from the action list
+        for i in range(len(actionList)):
+            action = actionList[i]
+            if isinstance(action, QAction):
+                Menu.addAction(action)
+            if isinstance(action, list):
+                # if it is a submenu, it is a list with two items
+                # The first, is the default action with text
+                # The second is the action with all the subactions, but without text or icon
+
+                # Get the first action
+                action_0 = action[0]
+                # Get the second action
+                action_1 = action[1]
+                # Set the text and icon for the second action with those from the first action
+                action_1.setText(action_0.text())
+                action_1.setIcon(action_0.icon())
+                # Add the second action
+                Menu.addAction(action_1)
+
+        # Set the stylesheet
+        hexColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        Menu.setStyleSheet("background-color: " + hexColor)
+
+        # Define an custom enter event, to set "MenuEntered" to True on the ribbon and unfold the ribbon
+        def enterEventCustom(event):
+            if parent is not None:
+                # Set the value in the parent for detecting that the menu is entered.
+                # Needed for keeping the ribbon open while showing a dropdown menu
+                parent.MenuEntered = True
+                parent.UnfoldRibbon()
+
+        Menu.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
+
+        # Set MenuEntered to True. This keeps the ribbon visible
+        def on_OptionButton_clicked():
+            parent.MenuEntered = True
+
+        Menu.aboutToShow.connect(on_OptionButton_clicked)
+
+        # Set MenuEntered to False. This allows the ribbon to fold after leaving the menu and the ribbon.
+        def SetToFoldRibbon():
+            if parent is not None:
+                # If the menu is hidden, set the value in the parent for detecting that the menu is entered to False.
+                parent.MenuEntered = False
+                pos = QCursor.pos()
+                if parent.geometry().contains(pos) is False:
+                    parent.FoldRibbon()
+
+        Menu.aboutToHide.connect(SetToFoldRibbon)
+        return Menu
