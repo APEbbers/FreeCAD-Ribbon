@@ -27,6 +27,8 @@ import math
 # Define the translation
 translate = App.Qt.translate
 
+mw = Gui.getMainWindow()
+
 
 def Mbox(
     text,
@@ -43,21 +45,22 @@ def Mbox(
     2 : Ok | Cancel                 (text, title, style)\n
     20 : Inputbox                   (text, title, style, default)\n
     21 : Inputbox with dropdown     (text, title, style, default, stringlist)\n
-    Icontype:                       string: NoIcon, Question, Warning, Critical. Default Information
+    Icontype:                       string: NoIcon, Question, Warning, Critical. Default Information\n
+    30 : OK (Non blocking)          (text, title, style)\n
     """
-    from PySide.QtWidgets import QMessageBox, QInputDialog
-    from PySide.QtCore import Qt
-    from PySide import QtWidgets
+    from PySide6.QtWidgets import QMessageBox, QInputDialog
+    from PySide6.QtCore import Qt
+    from PySide6 import QtWidgets
 
-    Icon = QMessageBox.Information
+    Icon = QMessageBox.Icon.Information
     if IconType == "NoIcon":
-        Icon = QMessageBox.NoIcon
+        Icon = QMessageBox.Icon.NoIcon
     if IconType == "Question":
-        Icon = QMessageBox.Question
+        Icon = QMessageBox.Icon.Question
     if IconType == "Warning":
-        Icon = QMessageBox.Warning
+        Icon = QMessageBox.Icon.Warning
     if IconType == "Critical":
-        Icon = QMessageBox.Critical
+        Icon = QMessageBox.Icon.Critical
 
     if style == 0:
         # Set the messagebox
@@ -66,8 +69,8 @@ def Mbox(
         msgBox.setText(text)
         msgBox.setWindowTitle(title)
 
-        reply = msgBox.exec_()
-        if reply == QMessageBox.Ok:
+        reply = msgBox.exec()
+        if reply == QMessageBox.StandardButton.Ok:
             return "ok"
     if style == 1:
         # Set the messagebox
@@ -76,13 +79,13 @@ def Mbox(
         msgBox.setText(text)
         msgBox.setWindowTitle(title)
         # Set the buttons and default button
-        msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-        msgBox.setDefaultButton(QMessageBox.No)
+        msgBox.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        msgBox.setDefaultButton(QMessageBox.StandardButton.No)
 
         reply = msgBox.exec_()
-        if reply == QMessageBox.Yes:
+        if reply == QMessageBox.StandardButton.Yes:
             return "yes"
-        if reply == QMessageBox.No:
+        if reply == QMessageBox.StandardButton.No:
             return "no"
     if style == 2:
         # Set the messagebox
@@ -91,13 +94,13 @@ def Mbox(
         msgBox.setText(text)
         msgBox.setWindowTitle(title)
         # Set the buttons and default button
-        msgBox.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
-        msgBox.setDefaultButton(QMessageBox.Ok)
+        msgBox.setStandardButtons(QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel)
+        msgBox.setDefaultButton(QMessageBox.StandardButton.Ok)
 
         reply = msgBox.exec_()
-        if reply == QMessageBox.Ok:
+        if reply == QMessageBox.StandardButton.Ok:
             return "ok"
-        if reply == QMessageBox.Cancel:
+        if reply == QMessageBox.StandardButton.Cancel:
             return "cancel"
     if style == 20:
         Dialog = QInputDialog()
@@ -131,6 +134,17 @@ def Mbox(
             # user clicked Cancel
             replyText = reply[0]  # which will be "" if they clicked Cancel
         return str(replyText)
+    if style == 30:
+        # Set the messagebox
+        msgBox = QMessageBox(mw)
+        msgBox.setIcon(Icon)
+        msgBox.setText(text)
+        msgBox.setWindowTitle(title)
+        msgBox.setWindowModality(Qt.WindowModality.NonModal)
+        msgBox.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Dialog)
+
+        reply = msgBox.show()
+        return
 
 
 def RestartDialog(message="", includeIcons=False):
@@ -140,7 +154,7 @@ def RestartDialog(message="", includeIcons=False):
         string: returns 'yes' if restart now is clicked.
         otherwise returns 'no'
     """
-    from PySide.QtWidgets import QMessageBox
+    from PySide6.QtWidgets import QMessageBox
 
     # Save the preferences before restarting
     App.saveParameter()
@@ -154,22 +168,22 @@ def RestartDialog(message="", includeIcons=False):
 
     # Set the messagebox
     msgBox = QMessageBox()
-    msgBox.setIcon(QMessageBox.Warning)
+    msgBox.setIcon(QMessageBox.Icon.Warning)
     msgBox.setText(message)
     msgBox.setWindowTitle("FreeCAD Ribbon")
     # Set the buttons and default button
-    msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-    msgBox.setDefaultButton(QMessageBox.No)
-    msgBox.button(QMessageBox.Yes).setText(translate("FreeCAD Ribbon", "Restart now"))
-    msgBox.button(QMessageBox.No).setText(translate("FreeCAD Ribbon", "Restart later"))
+    msgBox.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+    msgBox.setDefaultButton(QMessageBox.StandardButton.No)
+    msgBox.button(QMessageBox.StandardButton.Yes).setText(translate("FreeCAD Ribbon", "Restart now"))
+    msgBox.button(QMessageBox.StandardButton.No).setText(translate("FreeCAD Ribbon", "Restart later"))
     if includeIcons is True:
-        msgBox.button(QMessageBox.No).setIcon(Gui.getIcon("edit_Cancel.svg"))
-        msgBox.button(QMessageBox.Yes).setIcon(Gui.getIcon("edit_OK.svg"))
+        msgBox.button(QMessageBox.StandardButton.No).setIcon(Gui.getIcon("edit_Cancel.svg"))
+        msgBox.button(QMessageBox.StandardButton.Yes).setIcon(Gui.getIcon("edit_OK.svg"))
 
     reply = msgBox.exec_()
-    if reply == QMessageBox.Yes:
+    if reply == QMessageBox.StandardButton.Yes:
         return "yes"
-    if reply == QMessageBox.No:
+    if reply == QMessageBox.StandardButton.No:
         return "no"
 
 
@@ -180,9 +194,7 @@ def restart_freecad():
 
     args = QtWidgets.QApplication.arguments()[1:]
     if Gui.getMainWindow().close():
-        QtCore.QProcess.startDetached(
-            QtWidgets.QApplication.applicationFilePath(), args
-        )
+        QtCore.QProcess.startDetached(QtWidgets.QApplication.applicationFilePath(), args)
 
     return
 
@@ -337,13 +349,9 @@ def GetFileDialog(Filter="", parent=None, DefaultPath="", SaveAs: bool = True) -
 
     file = ""
     if SaveAs is False:
-        file = QFileDialog.getOpenFileName(
-            parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter
-        )[0]
+        file = QFileDialog.getOpenFileName(parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter)[0]
     if SaveAs is True:
-        file = QFileDialog.getSaveFileName(
-            parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter
-        )[0]
+        file = QFileDialog.getSaveFileName(parent=parent, caption="Select a file", dir=DefaultPath, filter=Filter)[0]
     return file
 
 
@@ -351,9 +359,7 @@ def GetFolder(parent=None, DefaultPath="") -> str:
     from PySide.QtWidgets import QFileDialog
 
     Directory = ""
-    Directory = QFileDialog.getExistingDirectory(
-        parent=parent, caption="Select Folder", dir=DefaultPath
-    )
+    Directory = QFileDialog.getExistingDirectory(parent=parent, caption="Select Folder", dir=DefaultPath)
 
     return Directory
 
@@ -381,18 +387,12 @@ def CreateToolbar(Name: str, WorkBenchName: str = "Global", ButtonList: list = [
     # Define the name for the toolbar
     ToolBarName = Name
     # define the parameter path for the toolbar
-    WorkbenchToolBarsParamPath = (
-        "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
-    )
+    WorkbenchToolBarsParamPath = "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
 
     # check if there is already a toolbar with the same name
-    CustomToolbars: list = App.ParamGet(
-        "User parameter:BaseApp/Workbench/Global/Toolbar"
-    ).GetGroups()
+    CustomToolbars: list = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar").GetGroups()
     for Group in CustomToolbars:
-        Parameter = App.ParamGet(
-            "User parameter:BaseApp/Workbench/Global/Toolbar/" + Group
-        )
+        Parameter = App.ParamGet("User parameter:BaseApp/Workbench/Global/Toolbar/" + Group)
         ItemName = Parameter.GetString("Name")
         if ItemName == ToolBarName:
             return ToolBarName
@@ -421,18 +421,14 @@ def RemoveWorkBenchToolbars(Name: str, WorkBenchName: str = "Global") -> None:
     # Define the name for the toolbar
     ToolBarName = Name
     # define the parameter path for the toolbar
-    ToolBarsParamPath = (
-        "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
-    )
+    ToolBarsParamPath = "User parameter:BaseApp/Workbench/" + ToolbarGroupName + "/Toolbar/"
 
     custom_toolbars = App.ParamGet(ToolBarsParamPath)
     custom_toolbars.RemGroup(ToolBarName)
     return
 
 
-def ReturnXML_Value(
-    path: str, ElementName: str, attribKey: str = "", attribValue: str = ""
-):
+def ReturnXML_Value(path: str, ElementName: str, attribKey: str = "", attribValue: str = ""):
     import xml.etree.ElementTree as ET
     import os
 
@@ -545,9 +541,7 @@ def GetGitData(PrintErrors=False):
             Commits = str(line)[: len("  1418  ") - 1]
             Commits = int(Commits.strip())
             User = str(line)[len("  1418  ") - 1 :].split("<")[0].strip()
-            email = (
-                str(line)[len("  1418  ") - 1 :].split("<")[1].replace(">", "").strip()
-            )
+            email = str(line)[len("  1418  ") - 1 :].split("<")[1].replace(">", "").strip()
 
             UserList.append([Commits, User, email])
 
@@ -562,10 +556,7 @@ def GetGitData(PrintErrors=False):
                     tempUser = UserList[j]
                     if tempUser[2] == User[2] and tempUser[0] > User[0]:
                         Contributers.pop()
-                        if (
-                            tempUser[1] not in Contributers
-                            and tempUser[1] != "pre-commit-ci[bot]"
-                        ):
+                        if tempUser[1] not in Contributers and tempUser[1] != "pre-commit-ci[bot]":
                             Contributers.append(tempUser[1])
 
         # get the short commit id
