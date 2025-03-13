@@ -23,7 +23,6 @@ import os
 import FreeCAD as App
 import FreeCADGui as Gui
 import FCBinding
-from FCBinding import ModernMenu
 import Parameters_Ribbon
 import shutil
 import sys
@@ -97,7 +96,6 @@ if Parameters_Ribbon.USE_FC_OVERLAY is True:
 try:
     print(translate("FreeCAD Ribbon", "Activating Ribbon Bar..."))
     mw = Gui.getMainWindow()
-    current_flags = mw.windowFlags()
 
     if Parameters_Ribbon.HIDE_TITLEBAR_FC is False:
         mw.setWindowFlags(Qt.WindowType.WindowFullscreenButtonHint)
