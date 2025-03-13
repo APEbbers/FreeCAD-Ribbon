@@ -100,7 +100,7 @@ try:
     current_flags = mw.windowFlags()
 
     if Parameters_Ribbon.HIDE_TITLEBAR_FC is False:
-        mw.setWindowFlags(current_flags | Qt.WindowType.WindowFullscreenButtonHint)
+        mw.setWindowFlags(Qt.WindowType.WindowFullscreenButtonHint)
         mw.workbenchActivated.connect(FCBinding.run)
         mw.showMaximized()
 
@@ -108,7 +108,7 @@ try:
     if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
         # make a customized toolbar and hide all the buttons.
         # This works better than a frameless window
-        mw.setWindowFlags(current_flags | Qt.WindowType.CustomizeWindowHint)
+        mw.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
         mw.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
         mw.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
         # Connect the ribbon when the workbench is activated
