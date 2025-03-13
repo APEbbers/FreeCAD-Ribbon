@@ -466,8 +466,6 @@ class ModernMenu(RibbonBar):
                     # Create arrays from the versions
                     LatestVersionArray = LatestVersion.split(".")
                     CurrentVersionArray = CurrentVersion.split(".")
-                    print(CurrentVersion)
-                    print(LatestVersion)
 
                     # Set the length to the shortest lenght
                     ArrayLenght = len(LatestVersionArray)
