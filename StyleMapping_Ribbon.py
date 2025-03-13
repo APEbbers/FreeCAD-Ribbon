@@ -77,8 +77,12 @@ def DarkMode():
         return True
 
     # OpenLight and OpenDark are from one addon. Set the currentStyleSheet value to the addon folder
-    if "OpenLight.qss" in currentStyleSheet or "OpenDark.qss" in currentStyleSheet:
-        currentStyleSheet = "OpenTheme.qss"
+    if "OpenLight.qss" in currentStyleSheet:
+        IsDarkTheme is False
+        return IsDarkTheme
+    if "OpenDark.qss" in currentStyleSheet:
+        IsDarkTheme is True
+        return IsDarkTheme
 
     path = os.path.dirname(__file__)
     # Get the folder with add-ons
