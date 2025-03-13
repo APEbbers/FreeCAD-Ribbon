@@ -465,23 +465,27 @@ def ReturnXML_Value_Git(
     import requests_local as requests
     import xml.etree.ElementTree as ET
 
-    # Passing the path of the
-    # xml document to enable the
-    # parsing process
-    url = f"https://raw.githubusercontent.com/{User}/{Repository}/{Branch}/{File}"
-    response = requests.get(url)
-    data = response.content
-    root = ET.fromstring(data)
-    result = ""
-    for child in root:
-        if str(child.tag).split("}")[1] == ElementName:
-            if attribKey != "" and attribValue != "":
-                for key, value in child.attrib.items():
-                    if key == attribKey and value == attribValue:
-                        result = child.text
-                        return result
-            else:
-                result = child.text
+    result = None
+    try:
+        # Passing the path of the
+        # xml document to enable the
+        # parsing process
+        url = f"https://raw.githubusercontent.com/{User}/{Repository}/{Branch}/{File}"
+        response = requests.get(url)
+        data = response.content
+        root = ET.fromstring(data)
+        result = ""
+        for child in root:
+            if str(child.tag).split("}")[1] == ElementName:
+                if attribKey != "" and attribValue != "":
+                    for key, value in child.attrib.items():
+                        if key == attribKey and value == attribValue:
+                            result = child.text
+                            return result
+                else:
+                    result = child.text
+    except Exception:
+        pass
     return result
 
 
