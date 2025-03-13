@@ -446,37 +446,42 @@ class ModernMenu(RibbonBar):
 
         # Check if there is a new version
         # Get the latest version
-        User = "APEbbers"
-        Repo = "FreeCAD-Ribbon"
-        Branch = "main"
-        File = "package.xml"
-        ElementName = "version"
-        LatestVersion = StandardFunctions.ReturnXML_Value_Git(User, Repo, Branch, File, ElementName)
-        if LatestVersion is not None:
-            # Get the current version
-            PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
-            CurrentVersion = StandardFunctions.ReturnXML_Value(PackageXML, "version")
-            # Check if you are on a developer version. If so set developer version
-            if CurrentVersion.lower().endswith("x"):
-                self.DeveloperVersion = CurrentVersion
-                self.UpdateVersion = ""
-            # If you are not on a developer version, check if you have the latest version
-            if CurrentVersion.lower().endswith("x") is False:
-                # Create arrays from the versions
-                LatestVersionArray = LatestVersion.split(".")
-                CurrentVersionArray = CurrentVersion.split(".")
+        try:
+            User = "APEbbers"
+            Repo = "FreeCAD-Ribbon"
+            Branch = "main"
+            File = "package.xml"
+            ElementName = "version"
+            LatestVersion = StandardFunctions.ReturnXML_Value_Git(User, Repo, Branch, File, ElementName)
+            if LatestVersion is not None:
+                # Get the current version
+                PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
+                CurrentVersion = StandardFunctions.ReturnXML_Value(PackageXML, "version")
+                # Check if you are on a developer version. If so set developer version
+                if CurrentVersion.lower().endswith("x"):
+                    self.DeveloperVersion = CurrentVersion
+                    self.UpdateVersion = ""
+                # If you are not on a developer version, check if you have the latest version
+                if CurrentVersion.lower().endswith("x") is False:
+                    # Create arrays from the versions
+                    LatestVersionArray = LatestVersion.split(".")
+                    CurrentVersionArray = CurrentVersion.split(".")
+                    print(CurrentVersion)
+                    print(LatestVersion)
 
-                # Set the length to the shortest lenght
-                ArrayLenght = len(LatestVersionArray)
-                if len(CurrentVersionArray) < ArrayLenght:
-                    ArrayLenght = len(CurrentVersionArray)
+                    # Set the length to the shortest lenght
+                    ArrayLenght = len(LatestVersionArray)
+                    if len(CurrentVersionArray) < ArrayLenght:
+                        ArrayLenght = len(CurrentVersionArray)
 
-                # Check per level if the latest version has the highest number
-                # if so set update version
-                for i in range(ArrayLenght - 1):
-                    if LatestVersionArray[i] > CurrentVersionArray[i]:
-                        print(f"{LatestVersionArray[i]}, {CurrentVersionArray[i]}")
-                        self.UpdateVersion = LatestVersion
+                    # Check per level if the latest version has the highest number
+                    # if so set update version
+                    for i in range(ArrayLenght):
+                        if LatestVersionArray[i] > CurrentVersionArray[i]:
+                            print(f"{LatestVersionArray[i]}, {CurrentVersionArray[i]}")
+                            self.UpdateVersion = LatestVersion
+        except Exception:
+            pass
 
         # Create the ribbon
         self.CreateMenus()  # Create the menus
