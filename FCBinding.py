@@ -1039,7 +1039,10 @@ class ModernMenu(RibbonBar):
             spacer = QWidget()
             spacer.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
             spacer.setFixedWidth(10)
-            BeforeAction = self.rightToolBar().actions()[2]
+            if SearchBarWidth > 10:
+                BeforeAction = self.rightToolBar().actions()[2]
+            else:
+                BeforeAction = self.rightToolBar().actions()[1]
             self.rightToolBar().insertWidget(BeforeAction, spacer)
 
         # add an overlay menu if Ribbon's overlay is enabled
