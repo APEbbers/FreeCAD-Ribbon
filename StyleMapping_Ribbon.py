@@ -76,11 +76,13 @@ def DarkMode():
     if currentStyleSheet == "FreeCAD Dark.qss":
         return True
 
-    # OpenLight and OpenDark are from one addon. Set the currentStyleSheet value to the addon folder
-    if "OpenLight.qss" in currentStyleSheet:
-        return True
-    if "OpenDark.qss" in currentStyleSheet:
-        return True
+    # # OpenLight and OpenDark are from one addon. Set the currentStyleSheet value to the addon folder
+    # if "OpenLight.qss" in currentStyleSheet:
+    #     IsDarkTheme is False
+    #     return IsDarkTheme
+    # if "OpenDark.qss" in currentStyleSheet:
+    #     IsDarkTheme is True
+    #     return IsDarkTheme
 
     path = os.path.dirname(__file__)
     # Get the folder with add-ons
@@ -91,7 +93,7 @@ def DarkMode():
     # Go through the sub-folders
     for root, dirs, files in os.walk(path):
         for name in dirs:
-            # if the current stylesheet matches a sub directory, try to geth the pacakgexml
+            # if the current stylesheet matches a sub directory, try to geth the packagexml
             if currentStyleSheet.replace(".qss", "").lower() in name.lower():
                 try:
                     packageXML = os.path.join(path, name, "package.xml")
@@ -110,8 +112,11 @@ def DarkMode():
                         if "dark" in element.text.lower():
                             IsDarkTheme = True
                             break
+
                 except Exception:
-                    continue
+                    if not os.path.isfile(packageXML):
+                        if "dark" in currentStyleSheet.lower():
+                            IsDarkTheme = True
 
     return IsDarkTheme
 
