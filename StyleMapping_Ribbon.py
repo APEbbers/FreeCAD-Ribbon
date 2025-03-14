@@ -72,18 +72,6 @@ def DarkMode():
     if currentStyleSheet is None or currentStyleSheet == "":
         return
 
-    # FreeCAD Dark is part of FreeCAD, so set the result to True manually
-    if currentStyleSheet == "FreeCAD Dark.qss":
-        return True
-
-    # # OpenLight and OpenDark are from one addon. Set the currentStyleSheet value to the addon folder
-    # if "OpenLight.qss" in currentStyleSheet:
-    #     IsDarkTheme is False
-    #     return IsDarkTheme
-    # if "OpenDark.qss" in currentStyleSheet:
-    #     IsDarkTheme is True
-    #     return IsDarkTheme
-
     path = os.path.dirname(__file__)
     # Get the folder with add-ons
     for i in range(2):
