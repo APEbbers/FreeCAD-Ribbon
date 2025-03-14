@@ -23,7 +23,6 @@ import os
 import FreeCAD as App
 import FreeCADGui as Gui
 import FCBinding
-from FCBinding import ModernMenu
 import Parameters_Ribbon
 import shutil
 import sys
