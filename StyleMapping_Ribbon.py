@@ -91,6 +91,7 @@ def DarkMode():
     # Go through the sub-folders
     for root, dirs, files in os.walk(path):
         for name in dirs:
+
             # if the current stylesheet matches a sub directory, try to get the package.xml
             if currentStyleSheet.replace(".qss", "").lower() in name.lower():
                 try:
