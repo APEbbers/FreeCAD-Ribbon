@@ -25,7 +25,7 @@ If applicable, add screenshots to help explain your problem.
 
 **Please complete the following information:**
  - OS: [e.g. iOS]
- - FreeCAD information: 
+ - FreeCAD information:
    Go to "Help->About ...-> About FreeCAD". Click on "Copy to clipboard" and past here.
 - Ribbon information (Develop version only):
   Go to "Help->About ...->About Ribbon UI". Click on "Copy to clipboard" and past here.
