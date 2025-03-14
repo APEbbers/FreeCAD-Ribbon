@@ -78,11 +78,9 @@ def DarkMode():
 
     # OpenLight and OpenDark are from one addon. Set the currentStyleSheet value to the addon folder
     if "OpenLight.qss" in currentStyleSheet:
-        IsDarkTheme is False
-        return IsDarkTheme
+        return False
     if "OpenDark.qss" in currentStyleSheet:
-        IsDarkTheme is True
-        return IsDarkTheme
+        return True
 
     path = os.path.dirname(__file__)
     # Get the folder with add-ons
@@ -93,7 +91,8 @@ def DarkMode():
     # Go through the sub-folders
     for root, dirs, files in os.walk(path):
         for name in dirs:
-            # if the current stylesheet matches a sub directory, try to geth the packagexml
+
+            # if the current stylesheet matches a sub directory, try to get the package.xml
             if currentStyleSheet.replace(".qss", "").lower() in name.lower():
                 try:
                     packageXML = os.path.join(path, name, "package.xml")
