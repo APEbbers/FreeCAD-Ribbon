@@ -83,12 +83,8 @@ class Settings:
         preferences.SetString(settingName, value)
         return
 
-    def SetBoolSetting(settingName: str, value):
-        if str(value).lower() == "true":
-            Bool = True
-        if str(value).lower() != "true":
-            Bool = False
-        if str(value).lower() == "none" or str(value).lower() == "":
+    def SetBoolSetting(settingName: str, value: bool):
+        if value == None:
             Bool = DefaultSettings[settingName]
         preferences.SetBool(settingName, Bool)
         return
@@ -227,7 +223,7 @@ DefaultSettings = {
     "FontSize_Tabs": int(14),
     "FontSize_Panels": int(11),
     "Toolbar_Position": int(0),
-    "Hide_Titlebar_FC": True,
+    "Hide_Titlebar_FC": bool(True),
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
