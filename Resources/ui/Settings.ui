@@ -524,6 +524,9 @@
                          <property name="text">
                           <string>Hide the titlebar of FreeCAD</string>
                          </property>
+                         <property name="checked">
+                          <bool>true</bool>
+                         </property>
                         </widget>
                        </item>
                       </layout>
