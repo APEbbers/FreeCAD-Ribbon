@@ -57,7 +57,7 @@ class Settings:
 
     def GetBoolSetting(settingName: str) -> bool:
         result = preferences.GetBool(settingName)
-        if str(result).lower() == "none" or str(result).lower() == "none":
+        if str(result).lower() == "none" or str(result).lower() == "":
             result = None
         return result
 
@@ -231,33 +231,29 @@ DefaultSettings = {
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
-if Settings.GetStringSetting("ImportLocation") != "":
-    IMPORT_LOCATION = Settings.GetStringSetting("ImportLocation")
-else:
+IMPORT_LOCATION = Settings.GetStringSetting("ImportLocation")
+if IMPORT_LOCATION == "":
     IMPORT_LOCATION = DefaultSettings["ImportLocation"]
     Settings.SetStringSetting("ImportLocation", IMPORT_LOCATION)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the export location ----------------------------------------------------------------------------------
-if Settings.GetStringSetting("ExportLocation") != "":
-    EXPORT_LOCATION = Settings.GetStringSetting("ExportLocation")
-else:
+EXPORT_LOCATION = Settings.GetStringSetting("ExportLocation")
+if EXPORT_LOCATION == "":
     EXPORT_LOCATION = DefaultSettings["ExportLocation"]
     Settings.SetStringSetting("exportLocation", EXPORT_LOCATION)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the Ribbon structure location ------------------------------------------------------------------------
-if Settings.GetStringSetting("RibbonStructure") != "":
-    RIBBON_STRUCTURE_JSON = Settings.GetStringSetting("RibbonStructure")
-else:
+RIBBON_STRUCTURE_JSON = Settings.GetStringSetting("RibbonStructure")
+if RIBBON_STRUCTURE_JSON == "":
     RIBBON_STRUCTURE_JSON = DefaultSettings["RibbonStructure"]
     Settings.SetStringSetting("RibbonStructure", RIBBON_STRUCTURE_JSON)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the default position for global panels ---------------------------------------------------------------
-if Settings.GetStringSetting("CustomPanelPosition") != "":
-    DEFAULT_PANEL_POSITION_CUSTOM = Settings.GetStringSetting("CustomPanelPosition")
-else:
+DEFAULT_PANEL_POSITION_CUSTOM = Settings.GetStringSetting("CustomPanelPosition")
+if DEFAULT_PANEL_POSITION_CUSTOM == "":
     DEFAULT_PANEL_POSITION_CUSTOM = DefaultSettings["CustomPanelPosition"]
     Settings.SetStringSetting("CustomPanelPosition", DEFAULT_PANEL_POSITION_CUSTOM)
 # endregion ------------------------------------------------------------------------------------------------------------
