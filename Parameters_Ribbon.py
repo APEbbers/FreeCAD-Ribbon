@@ -56,9 +56,15 @@ class Settings:
         return result
 
     def GetBoolSetting(settingName: str) -> bool:
-        result = preferences.GetBool(settingName)
-        if str(result).lower() == "none" or str(result).lower() == "":
-            result = None
+        result = None
+        settings = preferences.GetContents()
+        exists = False
+        for setting in settings:
+            if setting[0] == "Boolean" and setting[1] == settingName:
+                exists = True
+                break
+        if exists is True:
+            result = preferences.GetBool(settingName)
         return result
 
     def GetColorSetting(settingName: str) -> object:
