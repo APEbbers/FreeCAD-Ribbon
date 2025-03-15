@@ -57,7 +57,7 @@ class Settings:
 
     def GetBoolSetting(settingName: str) -> bool:
         result = preferences.GetBool(settingName)
-        if str(result).lower() == "none":
+        if str(result).lower() == "none" or str(result).lower() == "":
             result = None
         return result
 
@@ -113,7 +113,6 @@ class Settings:
         Settings.SetIntSetting("QuickAccessButtonSize", QUICK_ICON_SIZE)
         Settings.SetIntSetting("TabBarSize", TABBAR_SIZE)
         Settings.SetIntSetting("Toolbar_Position", TOOLBAR_POSITION)
-        Settings.SetBoolSetting("Hide_Titlebar_FC", HIDE_TITLEBAR_FC)
         Settings.SetIntSetting("RightToolbarButtonSize", RIGHT_ICON_SIZE)
 
         Settings.SetBoolSetting("ShowIconText_Small", SHOW_ICON_TEXT_SMALL)
