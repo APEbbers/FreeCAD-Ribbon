@@ -23,7 +23,6 @@ import os
 import FreeCAD as App
 import FreeCADGui as Gui
 import FCBinding
-from FCBinding import ModernMenu
 import Parameters_Ribbon
 import shutil
 import sys
@@ -79,11 +78,6 @@ if fileExists is False:
 
 # remove the test workbench
 Gui.removeWorkbench("TestWorkbench")
-
-# Write default settings if there are none
-preferences = App.ParamGet("User parameter:BaseApp/Preferences/Mod/FreeCAD-Ribbon")
-if preferences.GetContents() is None or preferences.GetContents() == "":
-    Parameters_Ribbon.Settings.WriteDefaultSettings()
 
 USECUSTOMOVERLAY = os.path.join(os.path.dirname(FCBinding.__file__), "OVERLAY_DISABLED")
 if Parameters_Ribbon.USE_FC_OVERLAY is False or os.path.exists(USECUSTOMOVERLAY) is True:
