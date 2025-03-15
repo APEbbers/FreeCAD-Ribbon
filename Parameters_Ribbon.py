@@ -84,9 +84,9 @@ class Settings:
         return
 
     def SetBoolSetting(settingName: str, value: bool):
-        if value == None:
-            Bool = DefaultSettings[settingName]
-        preferences.SetBool(settingName, Bool)
+        if value is None:
+            value = DefaultSettings[settingName]
+        preferences.SetBool(settingName, value)
         return
 
     def SetIntSetting(settingName: str, value: int):
