@@ -77,8 +77,10 @@ def DarkMode():
         return True
 
     # OpenLight and OpenDark are from one addon. Set the currentStyleSheet value to the addon folder
-    if "OpenLight.qss" in currentStyleSheet or "OpenDark.qss" in currentStyleSheet:
-        currentStyleSheet = "OpenTheme.qss"
+    if "OpenLight.qss" in currentStyleSheet:
+        return False
+    if "OpenDark.qss" in currentStyleSheet:
+        return True
 
     path = os.path.dirname(__file__)
     # Get the folder with add-ons
@@ -89,7 +91,8 @@ def DarkMode():
     # Go through the sub-folders
     for root, dirs, files in os.walk(path):
         for name in dirs:
-            # if the current stylesheet matches a sub directory, try to geth the pacakgexml
+
+            # if the current stylesheet matches a sub directory, try to get the package.xml
             if currentStyleSheet.replace(".qss", "").lower() in name.lower():
                 try:
                     packageXML = os.path.join(path, name, "package.xml")
@@ -101,17 +104,18 @@ def DarkMode():
                     # Get all the tag elements
                     elements = []
                     namespaces = {"i": "https://wiki.freecad.org/Package_Metadata"}
-                    elements = treeRoot.findall(
-                        ".//i:content/i:preferencepack/i:tag", namespaces
-                    )
+                    elements = treeRoot.findall(".//i:content/i:preferencepack/i:tag", namespaces)
 
                     # go throug all tags. If 'dark' in the element text, this is a dark theme
                     for element in elements:
                         if "dark" in element.text.lower():
                             IsDarkTheme = True
                             break
+
                 except Exception:
-                    continue
+                    if not os.path.isfile(packageXML):
+                        if "dark" in currentStyleSheet.lower():
+                            IsDarkTheme = True
 
     return IsDarkTheme
 
@@ -180,9 +184,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
             else:
                 PixmapName = ""
             if PixmapName == "" or PixmapName is None:
-                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][
-                    ControlName
-                ]
+                PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if PixmapName == "" or PixmapName is None:
                     PixmapName = StyleMapping_default["Stylesheets"][""][ControlName]
             if os.path.exists(PixmapName):
@@ -205,9 +207,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
             ):
                 result = "none"
             if result == "" or result is None:
-                result = StyleMapping_default["Stylesheets"][currentStyleSheet][
-                    ControlName
-                ]
+                result = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if result == "" or result is None:
                     result = StyleMapping_default["Stylesheets"][""][ControlName]
             return result
@@ -475,9 +475,7 @@ StyleMapping_default = {
             "ScrollLeftButton_Tab": GetIconBasedOnTag("ScrollLeftButton_Tab"),
             "ScrollRightButton_Tab": GetIconBasedOnTag("ScrollRightButton_Tab"),
             "ScrollLeftButton_Category": GetIconBasedOnTag("ScrollLeftButton_Category"),
-            "ScrollRightButton_Category": GetIconBasedOnTag(
-                "ScrollRightButton_Category"
-            ),
+            "ScrollRightButton_Category": GetIconBasedOnTag("ScrollRightButton_Category"),
             "OptionButton": GetIconBasedOnTag("OptionButton"),
             "PinButton_open": GetIconBasedOnTag("PinButton_open"),
             "PinButton_closed": GetIconBasedOnTag("PinButton_closed"),
