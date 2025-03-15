@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingscQugoj.ui'
+## Form generated from reading UI file 'SettingsnMsOlI.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.8.1
 ##
@@ -49,7 +49,6 @@ from PySide.QtWidgets import (
     QGridLayout,
     QGroupBox,
     QLabel,
-    QLineEdit,
     QPushButton,
     QScrollArea,
     QSizePolicy,
@@ -154,6 +153,7 @@ class Ui_Settings(object):
         font1 = QFont()
         font1.setBold(False)
         self.EnableBackup.setFont(font1)
+        self.EnableBackup.setChecked(True)
 
         self.gridLayout_8.addWidget(self.EnableBackup, 0, 0, 1, 1)
 
@@ -241,7 +241,7 @@ class Ui_Settings(object):
 
         self.EnableWrap_Large = QCheckBox(self.groupBox_3)
         self.EnableWrap_Large.setObjectName("EnableWrap_Large")
-        self.EnableWrap_Large.setEnabled(False)
+        self.EnableWrap_Large.setEnabled(True)
         self.EnableWrap_Large.setChecked(True)
 
         self.gridLayout_26.addWidget(self.EnableWrap_Large, 2, 2, 1, 1)
@@ -254,6 +254,7 @@ class Ui_Settings(object):
         self.ShowText_Large.setSizePolicy(sizePolicy6)
         self.ShowText_Large.setMinimumSize(QSize(100, 0))
         self.ShowText_Large.setFont(font1)
+        self.ShowText_Large.setChecked(True)
 
         self.gridLayout_26.addWidget(self.ShowText_Large, 2, 0, 1, 1)
 
@@ -714,6 +715,87 @@ class Ui_Settings(object):
         self.tab.setObjectName("tab")
         self.gridLayout_14 = QGridLayout(self.tab)
         self.gridLayout_14.setObjectName("gridLayout_14")
+        self.verticalSpacer = QSpacerItem(
+            20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
+        )
+
+        self.gridLayout_14.addItem(self.verticalSpacer, 3, 0, 1, 1)
+
+        self.groupBox_6 = QGroupBox(self.tab)
+        self.groupBox_6.setObjectName("groupBox_6")
+        self.gridLayout_16 = QGridLayout(self.groupBox_6)
+        self.gridLayout_16.setObjectName("gridLayout_16")
+        self.gridLayout_15 = QGridLayout()
+        self.gridLayout_15.setObjectName("gridLayout_15")
+        self.EnableEnterEvent = QCheckBox(self.groupBox_6)
+        self.EnableEnterEvent.setObjectName("EnableEnterEvent")
+        self.EnableEnterEvent.setChecked(True)
+
+        self.gridLayout_15.addWidget(self.EnableEnterEvent, 0, 0, 1, 1)
+
+        self.ScrollSpeed_Ribbon = QSlider(self.groupBox_6)
+        self.ScrollSpeed_Ribbon.setObjectName("ScrollSpeed_Ribbon")
+        self.ScrollSpeed_Ribbon.setMaximum(10)
+        self.ScrollSpeed_Ribbon.setPageStep(1)
+        self.ScrollSpeed_Ribbon.setValue(5)
+        self.ScrollSpeed_Ribbon.setOrientation(Qt.Orientation.Horizontal)
+        self.ScrollSpeed_Ribbon.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.ScrollSpeed_Ribbon.setTickInterval(1)
+
+        self.gridLayout_15.addWidget(self.ScrollSpeed_Ribbon, 2, 1, 1, 1)
+
+        self.label_12 = QLabel(self.groupBox_6)
+        self.label_12.setObjectName("label_12")
+        sizePolicy8.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
+        self.label_12.setSizePolicy(sizePolicy8)
+        self.label_12.setMinimumSize(QSize(130, 0))
+        self.label_12.setFont(font1)
+
+        self.gridLayout_15.addWidget(self.label_12, 2, 0, 1, 1)
+
+        self.label_13 = QLabel(self.groupBox_6)
+        self.label_13.setObjectName("label_13")
+        sizePolicy8.setHeightForWidth(self.label_13.sizePolicy().hasHeightForWidth())
+        self.label_13.setSizePolicy(sizePolicy8)
+        self.label_13.setMinimumSize(QSize(130, 0))
+        self.label_13.setFont(font1)
+
+        self.gridLayout_15.addWidget(self.label_13, 1, 0, 1, 1)
+
+        self.ScrollSpeed_TabBar = QSlider(self.groupBox_6)
+        self.ScrollSpeed_TabBar.setObjectName("ScrollSpeed_TabBar")
+        sizePolicy10 = QSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
+        )
+        sizePolicy10.setHorizontalStretch(0)
+        sizePolicy10.setVerticalStretch(0)
+        sizePolicy10.setHeightForWidth(
+            self.ScrollSpeed_TabBar.sizePolicy().hasHeightForWidth()
+        )
+        self.ScrollSpeed_TabBar.setSizePolicy(sizePolicy10)
+        self.ScrollSpeed_TabBar.setMaximum(10)
+        self.ScrollSpeed_TabBar.setSingleStep(1)
+        self.ScrollSpeed_TabBar.setPageStep(1)
+        self.ScrollSpeed_TabBar.setValue(5)
+        self.ScrollSpeed_TabBar.setSliderPosition(5)
+        self.ScrollSpeed_TabBar.setOrientation(Qt.Orientation.Horizontal)
+        self.ScrollSpeed_TabBar.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.ScrollSpeed_TabBar.setTickInterval(1)
+
+        self.gridLayout_15.addWidget(self.ScrollSpeed_TabBar, 1, 1, 1, 1)
+
+        self.gridLayout_16.addLayout(self.gridLayout_15, 0, 0, 1, 1)
+
+        self.gridLayout_14.addWidget(self.groupBox_6, 0, 0, 1, 1)
+
+        self.label_41 = QLabel(self.tab)
+        self.label_41.setObjectName("label_41")
+        font2 = QFont()
+        font2.setItalic(True)
+        self.label_41.setFont(font2)
+
+        self.gridLayout_14.addWidget(self.label_41, 2, 0, 1, 1)
+
         self.groupBox_7 = QGroupBox(self.tab)
         self.groupBox_7.setObjectName("groupBox_7")
         self.gridLayout_18 = QGridLayout(self.groupBox_7)
@@ -789,235 +871,6 @@ class Ui_Settings(object):
         self.gridLayout_18.addItem(self.horizontalSpacer_4, 0, 1, 1, 1)
 
         self.gridLayout_14.addWidget(self.groupBox_7, 1, 0, 1, 1)
-
-        self.groupBox_13 = QGroupBox(self.tab)
-        self.groupBox_13.setObjectName("groupBox_13")
-        self.gridLayout_37 = QGridLayout(self.groupBox_13)
-        self.gridLayout_37.setObjectName("gridLayout_37")
-        self.gridLayout_36 = QGridLayout()
-        self.gridLayout_36.setObjectName("gridLayout_36")
-        self.ModifierKeyApp_2 = QComboBox(self.groupBox_13)
-        self.ModifierKeyApp_2.addItem("")
-        self.ModifierKeyApp_2.addItem("")
-        self.ModifierKeyApp_2.addItem("")
-        self.ModifierKeyApp_2.addItem("")
-        self.ModifierKeyApp_2.setObjectName("ModifierKeyApp_2")
-
-        self.gridLayout_36.addWidget(self.ModifierKeyApp_2, 1, 1, 1, 1)
-
-        self.label_37 = QLabel(self.groupBox_13)
-        self.label_37.setObjectName("label_37")
-        self.label_37.setWordWrap(False)
-
-        self.gridLayout_36.addWidget(self.label_37, 1, 0, 1, 1)
-
-        self.ShortcutTaken_2 = QLabel(self.groupBox_13)
-        self.ShortcutTaken_2.setObjectName("ShortcutTaken_2")
-        self.ShortcutTaken_2.setMinimumSize(QSize(120, 0))
-        font2 = QFont()
-        font2.setItalic(True)
-        self.ShortcutTaken_2.setFont(font2)
-        self.ShortcutTaken_2.setWordWrap(True)
-
-        self.gridLayout_36.addWidget(self.ShortcutTaken_2, 1, 5, 1, 1)
-
-        self.ModifierKeyApp = QComboBox(self.groupBox_13)
-        self.ModifierKeyApp.addItem("")
-        self.ModifierKeyApp.addItem("")
-        self.ModifierKeyApp.addItem("")
-        self.ModifierKeyApp.addItem("")
-        self.ModifierKeyApp.setObjectName("ModifierKeyApp")
-
-        self.gridLayout_36.addWidget(
-            self.ModifierKeyApp, 0, 1, 1, 1, Qt.AlignmentFlag.AlignLeft
-        )
-
-        self.horizontalSpacer_11 = QSpacerItem(
-            40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
-        )
-
-        self.gridLayout_36.addItem(self.horizontalSpacer_11, 0, 6, 1, 1)
-
-        self.ShortcutTaken_1 = QLabel(self.groupBox_13)
-        self.ShortcutTaken_1.setObjectName("ShortcutTaken_1")
-        self.ShortcutTaken_1.setMinimumSize(QSize(120, 0))
-        self.ShortcutTaken_1.setFont(font2)
-        self.ShortcutTaken_1.setWordWrap(True)
-
-        self.gridLayout_36.addWidget(self.ShortcutTaken_1, 0, 5, 1, 1)
-
-        self.label_31 = QLabel(self.groupBox_13)
-        self.label_31.setObjectName("label_31")
-
-        self.gridLayout_36.addWidget(self.label_31, 0, 2, 1, 1)
-
-        self.label_38 = QLabel(self.groupBox_13)
-        self.label_38.setObjectName("label_38")
-
-        self.gridLayout_36.addWidget(self.label_38, 1, 2, 1, 1)
-
-        self.label_8 = QLabel(self.groupBox_13)
-        self.label_8.setObjectName("label_8")
-        self.label_8.setWordWrap(False)
-
-        self.gridLayout_36.addWidget(self.label_8, 0, 0, 1, 1)
-
-        self.ModifierKeyPref = QLineEdit(self.groupBox_13)
-        self.ModifierKeyPref.setObjectName("ModifierKeyPref")
-        sizePolicy6.setHeightForWidth(
-            self.ModifierKeyPref.sizePolicy().hasHeightForWidth()
-        )
-        self.ModifierKeyPref.setSizePolicy(sizePolicy6)
-        self.ModifierKeyPref.setMaximumSize(QSize(100, 16777215))
-        self.ModifierKeyPref.setInputMethodHints(Qt.InputMethodHint.ImhNone)
-        self.ModifierKeyPref.setMaxLength(1)
-        self.ModifierKeyPref.setClearButtonEnabled(False)
-
-        self.gridLayout_36.addWidget(self.ModifierKeyPref, 1, 3, 1, 1)
-
-        self.ApplyShortcutApp = QPushButton(self.groupBox_13)
-        self.ApplyShortcutApp.setObjectName("ApplyShortcutApp")
-
-        self.gridLayout_36.addWidget(self.ApplyShortcutApp, 0, 4, 1, 1)
-
-        self.AppShortCut = QLineEdit(self.groupBox_13)
-        self.AppShortCut.setObjectName("AppShortCut")
-        sizePolicy6.setHeightForWidth(self.AppShortCut.sizePolicy().hasHeightForWidth())
-        self.AppShortCut.setSizePolicy(sizePolicy6)
-        self.AppShortCut.setMaximumSize(QSize(100, 16777215))
-        self.AppShortCut.setInputMethodHints(Qt.InputMethodHint.ImhNone)
-        self.AppShortCut.setMaxLength(1)
-        self.AppShortCut.setClearButtonEnabled(False)
-
-        self.gridLayout_36.addWidget(self.AppShortCut, 0, 3, 1, 1)
-
-        self.ApplyShortcutPref = QPushButton(self.groupBox_13)
-        self.ApplyShortcutPref.setObjectName("ApplyShortcutPref")
-
-        self.gridLayout_36.addWidget(self.ApplyShortcutPref, 1, 4, 1, 1)
-
-        self.label_39 = QLabel(self.groupBox_13)
-        self.label_39.setObjectName("label_39")
-        self.label_39.setWordWrap(False)
-
-        self.gridLayout_36.addWidget(self.label_39, 2, 0, 1, 1)
-
-        self.ModifierKeyApp_3 = QComboBox(self.groupBox_13)
-        self.ModifierKeyApp_3.addItem("")
-        self.ModifierKeyApp_3.addItem("")
-        self.ModifierKeyApp_3.addItem("")
-        self.ModifierKeyApp_3.addItem("")
-        self.ModifierKeyApp_3.setObjectName("ModifierKeyApp_3")
-
-        self.gridLayout_36.addWidget(self.ModifierKeyApp_3, 2, 1, 1, 1)
-
-        self.ModifierKeyLayout = QLineEdit(self.groupBox_13)
-        self.ModifierKeyLayout.setObjectName("ModifierKeyLayout")
-        sizePolicy6.setHeightForWidth(
-            self.ModifierKeyLayout.sizePolicy().hasHeightForWidth()
-        )
-        self.ModifierKeyLayout.setSizePolicy(sizePolicy6)
-        self.ModifierKeyLayout.setMaximumSize(QSize(100, 16777215))
-        self.ModifierKeyLayout.setInputMethodHints(Qt.InputMethodHint.ImhNone)
-        self.ModifierKeyLayout.setMaxLength(1)
-        self.ModifierKeyLayout.setClearButtonEnabled(False)
-
-        self.gridLayout_36.addWidget(self.ModifierKeyLayout, 2, 3, 1, 1)
-
-        self.ApplyShortcutLayout = QPushButton(self.groupBox_13)
-        self.ApplyShortcutLayout.setObjectName("ApplyShortcutLayout")
-
-        self.gridLayout_36.addWidget(self.ApplyShortcutLayout, 2, 4, 1, 1)
-
-        self.ShortcutTaken_3 = QLabel(self.groupBox_13)
-        self.ShortcutTaken_3.setObjectName("ShortcutTaken_3")
-        self.ShortcutTaken_3.setMinimumSize(QSize(120, 0))
-        self.ShortcutTaken_3.setFont(font2)
-        self.ShortcutTaken_3.setWordWrap(True)
-
-        self.gridLayout_36.addWidget(self.ShortcutTaken_3, 2, 5, 1, 1)
-
-        self.gridLayout_37.addLayout(self.gridLayout_36, 0, 0, 1, 1)
-
-        self.gridLayout_14.addWidget(self.groupBox_13, 2, 0, 1, 1)
-
-        self.groupBox_6 = QGroupBox(self.tab)
-        self.groupBox_6.setObjectName("groupBox_6")
-        self.gridLayout_16 = QGridLayout(self.groupBox_6)
-        self.gridLayout_16.setObjectName("gridLayout_16")
-        self.gridLayout_15 = QGridLayout()
-        self.gridLayout_15.setObjectName("gridLayout_15")
-        self.EnableEnterEvent = QCheckBox(self.groupBox_6)
-        self.EnableEnterEvent.setObjectName("EnableEnterEvent")
-
-        self.gridLayout_15.addWidget(self.EnableEnterEvent, 0, 0, 1, 1)
-
-        self.ScrollSpeed_Ribbon = QSlider(self.groupBox_6)
-        self.ScrollSpeed_Ribbon.setObjectName("ScrollSpeed_Ribbon")
-        self.ScrollSpeed_Ribbon.setMaximum(10)
-        self.ScrollSpeed_Ribbon.setPageStep(1)
-        self.ScrollSpeed_Ribbon.setValue(5)
-        self.ScrollSpeed_Ribbon.setOrientation(Qt.Orientation.Horizontal)
-        self.ScrollSpeed_Ribbon.setTickPosition(QSlider.TickPosition.TicksBelow)
-        self.ScrollSpeed_Ribbon.setTickInterval(1)
-
-        self.gridLayout_15.addWidget(self.ScrollSpeed_Ribbon, 2, 1, 1, 1)
-
-        self.label_12 = QLabel(self.groupBox_6)
-        self.label_12.setObjectName("label_12")
-        sizePolicy8.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
-        self.label_12.setSizePolicy(sizePolicy8)
-        self.label_12.setMinimumSize(QSize(130, 0))
-        self.label_12.setFont(font1)
-
-        self.gridLayout_15.addWidget(self.label_12, 2, 0, 1, 1)
-
-        self.label_13 = QLabel(self.groupBox_6)
-        self.label_13.setObjectName("label_13")
-        sizePolicy8.setHeightForWidth(self.label_13.sizePolicy().hasHeightForWidth())
-        self.label_13.setSizePolicy(sizePolicy8)
-        self.label_13.setMinimumSize(QSize(130, 0))
-        self.label_13.setFont(font1)
-
-        self.gridLayout_15.addWidget(self.label_13, 1, 0, 1, 1)
-
-        self.ScrollSpeed_TabBar = QSlider(self.groupBox_6)
-        self.ScrollSpeed_TabBar.setObjectName("ScrollSpeed_TabBar")
-        sizePolicy10 = QSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed
-        )
-        sizePolicy10.setHorizontalStretch(0)
-        sizePolicy10.setVerticalStretch(0)
-        sizePolicy10.setHeightForWidth(
-            self.ScrollSpeed_TabBar.sizePolicy().hasHeightForWidth()
-        )
-        self.ScrollSpeed_TabBar.setSizePolicy(sizePolicy10)
-        self.ScrollSpeed_TabBar.setMaximum(10)
-        self.ScrollSpeed_TabBar.setSingleStep(1)
-        self.ScrollSpeed_TabBar.setPageStep(1)
-        self.ScrollSpeed_TabBar.setValue(5)
-        self.ScrollSpeed_TabBar.setSliderPosition(5)
-        self.ScrollSpeed_TabBar.setOrientation(Qt.Orientation.Horizontal)
-        self.ScrollSpeed_TabBar.setTickPosition(QSlider.TickPosition.TicksBelow)
-        self.ScrollSpeed_TabBar.setTickInterval(1)
-
-        self.gridLayout_15.addWidget(self.ScrollSpeed_TabBar, 1, 1, 1, 1)
-
-        self.gridLayout_16.addLayout(self.gridLayout_15, 0, 0, 1, 1)
-
-        self.gridLayout_14.addWidget(self.groupBox_6, 0, 0, 1, 1)
-
-        self.verticalSpacer = QSpacerItem(
-            20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
-        )
-
-        self.gridLayout_14.addItem(self.verticalSpacer, 4, 0, 1, 1)
-
-        self.label_41 = QLabel(self.tab)
-        self.label_41.setObjectName("label_41")
-        self.label_41.setFont(font2)
-
-        self.gridLayout_14.addWidget(self.label_41, 3, 0, 1, 1)
 
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QWidget()
@@ -1371,7 +1224,7 @@ class Ui_Settings(object):
         self.FCOverlayEnabled.toggled.connect(self.UseButtonBackGround.setEnabled)
         self.FCOverlayEnabled.toggled.connect(self.label_26.setEnabled)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(3)
 
         QMetaObject.connectSlotsByName(Settings)
 
@@ -1547,121 +1400,6 @@ class Ui_Settings(object):
             self.tabWidget.indexOf(self.General),
             QCoreApplication.translate("Settings", "General", None),
         )
-        self.groupBox_7.setTitle(
-            QCoreApplication.translate("Settings", "Scroll buttons", None)
-        )
-        self.label_14.setText(
-            QCoreApplication.translate(
-                "Settings",
-                "<html><head/><body><p>Scroll steps per click for ribbon:</p></body></html>",
-                None,
-            )
-        )
-        self.label_15.setText(
-            QCoreApplication.translate(
-                "Settings",
-                "<html><head/><body><p>Scroll steps per click for tab bar:</p></body></html>",
-                None,
-            )
-        )
-        self.groupBox_13.setTitle(
-            QCoreApplication.translate("Settings", "Shortcuts", None)
-        )
-        self.ModifierKeyApp_2.setItemText(
-            0, QCoreApplication.translate("Settings", "Ctrl", None)
-        )
-        self.ModifierKeyApp_2.setItemText(
-            1, QCoreApplication.translate("Settings", "Shift", None)
-        )
-        self.ModifierKeyApp_2.setItemText(
-            2, QCoreApplication.translate("Settings", "Alt", None)
-        )
-        self.ModifierKeyApp_2.setItemText(
-            3, QCoreApplication.translate("Settings", "Space", None)
-        )
-
-        self.label_37.setText(
-            QCoreApplication.translate(
-                "Settings", "Set shortcut for preference menu menu:", None
-            )
-        )
-        self.ShortcutTaken_2.setText(
-            QCoreApplication.translate(
-                "Settings",
-                '<html><head/><body><p><span style=" color:#df2a06;">Shortcut already taken</span></p></body></html>',
-                None,
-            )
-        )
-        self.ModifierKeyApp.setItemText(
-            0, QCoreApplication.translate("Settings", "Ctrl", None)
-        )
-        self.ModifierKeyApp.setItemText(
-            1, QCoreApplication.translate("Settings", "Shift", None)
-        )
-        self.ModifierKeyApp.setItemText(
-            2, QCoreApplication.translate("Settings", "Alt", None)
-        )
-        self.ModifierKeyApp.setItemText(
-            3, QCoreApplication.translate("Settings", "Space", None)
-        )
-
-        self.ShortcutTaken_1.setText(
-            QCoreApplication.translate(
-                "Settings",
-                '<html><head/><body><p><span style=" color:#df2a06;">Shortcut already taken</span></p></body></html>',
-                None,
-            )
-        )
-        self.label_31.setText(QCoreApplication.translate("Settings", "+", None))
-        self.label_38.setText(QCoreApplication.translate("Settings", "+", None))
-        self.label_8.setText(
-            QCoreApplication.translate(
-                "Settings", "Set shortcut for application menu:", None
-            )
-        )
-        self.ModifierKeyPref.setPlaceholderText(
-            QCoreApplication.translate("Settings", "Enter a key...", None)
-        )
-        self.ApplyShortcutApp.setText(
-            QCoreApplication.translate("Settings", "Apply", None)
-        )
-        self.AppShortCut.setPlaceholderText(
-            QCoreApplication.translate("Settings", "Enter a key...", None)
-        )
-        self.ApplyShortcutPref.setText(
-            QCoreApplication.translate("Settings", "Apply", None)
-        )
-        self.label_39.setText(
-            QCoreApplication.translate(
-                "Settings", "Set shortcut for the layout menu:", None
-            )
-        )
-        self.ModifierKeyApp_3.setItemText(
-            0, QCoreApplication.translate("Settings", "Ctrl", None)
-        )
-        self.ModifierKeyApp_3.setItemText(
-            1, QCoreApplication.translate("Settings", "Shift", None)
-        )
-        self.ModifierKeyApp_3.setItemText(
-            2, QCoreApplication.translate("Settings", "Alt", None)
-        )
-        self.ModifierKeyApp_3.setItemText(
-            3, QCoreApplication.translate("Settings", "Space", None)
-        )
-
-        self.ModifierKeyLayout.setPlaceholderText(
-            QCoreApplication.translate("Settings", "Enter a key...", None)
-        )
-        self.ApplyShortcutLayout.setText(
-            QCoreApplication.translate("Settings", "Apply", None)
-        )
-        self.ShortcutTaken_3.setText(
-            QCoreApplication.translate(
-                "Settings",
-                '<html><head/><body><p><span style=" color:#df2a06;">Shortcut already taken</span></p></body></html>',
-                None,
-            )
-        )
         self.groupBox_6.setTitle(
             QCoreApplication.translate("Settings", "Mouse settings", None)
         )
@@ -1686,6 +1424,23 @@ class Ui_Settings(object):
             QCoreApplication.translate(
                 "Settings",
                 'Commands are now implemented in FreeCAD. Use the "Tools->Customize..." menu to set shortcuts.',
+                None,
+            )
+        )
+        self.groupBox_7.setTitle(
+            QCoreApplication.translate("Settings", "Scroll buttons", None)
+        )
+        self.label_14.setText(
+            QCoreApplication.translate(
+                "Settings",
+                "<html><head/><body><p>Scroll steps per click for ribbon:</p></body></html>",
+                None,
+            )
+        )
+        self.label_15.setText(
+            QCoreApplication.translate(
+                "Settings",
+                "<html><head/><body><p>Scroll steps per click for tab bar:</p></body></html>",
                 None,
             )
         )

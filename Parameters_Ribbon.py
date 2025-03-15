@@ -56,9 +56,15 @@ class Settings:
         return result
 
     def GetBoolSetting(settingName: str) -> bool:
-        result = preferences.GetBool(settingName)
-        if str(result).lower() == "none":
-            result = None
+        result = None
+        settings = preferences.GetContents()
+        exists = False
+        for setting in settings:
+            if setting[0] == "Boolean" and setting[1] == settingName:
+                exists = True
+                break
+        if exists is True:
+            result = preferences.GetBool(settingName)
         return result
 
     def GetColorSetting(settingName: str) -> object:
@@ -78,18 +84,20 @@ class Settings:
     def SetStringSetting(settingName: str, value: str):
         if value.lower() == "none":
             value = ""
+        if value == "":
+            value = DefaultSettings[settingName]
         preferences.SetString(settingName, value)
         return
 
-    def SetBoolSetting(settingName: str, value):
-        if str(value).lower() == "true":
-            Bool = True
-        if str(value).lower() == "none" or str(value).lower() != "true":
-            Bool = False
-        preferences.SetBool(settingName, Bool)
+    def SetBoolSetting(settingName: str, value: bool):
+        if value is None:
+            value = DefaultSettings[settingName]
+        preferences.SetBool(settingName, value)
         return
 
     def SetIntSetting(settingName: str, value: int):
+        if str(value).lower() == "":
+            value = int(DefaultSettings[settingName])
         if str(value).lower() != "":
             preferences.SetInt(settingName, value)
         return
@@ -101,6 +109,7 @@ class Settings:
         Settings.SetStringSetting("RibbonStructure", RIBBON_STRUCTURE_JSON)
         Settings.SetStringSetting("TabOrder", TAB_ORDER)
         Settings.SetIntSetting("TabBar_Style", TABBAR_STYLE)
+        Settings.SetBoolSetting("Hide_Titlebar_FC", HIDE_TITLEBAR_FC)
         Settings.SetStringSetting("Stylesheet", STYLESHEET)
         Settings.SetBoolSetting("AutoHideRibbon", AUTOHIDE_RIBBON)
         Settings.SetIntSetting("MaxColumnsPerPanel", MAX_COLUMN_PANELS)
@@ -112,7 +121,6 @@ class Settings:
         Settings.SetIntSetting("QuickAccessButtonSize", QUICK_ICON_SIZE)
         Settings.SetIntSetting("TabBarSize", TABBAR_SIZE)
         Settings.SetIntSetting("Toolbar_Position", TOOLBAR_POSITION)
-        Settings.SetBoolSetting("Hide_Titlebar_FC", HIDE_TITLEBAR_FC)
         Settings.SetIntSetting("RightToolbarButtonSize", RIGHT_ICON_SIZE)
 
         Settings.SetBoolSetting("ShowIconText_Small", SHOW_ICON_TEXT_SMALL)
@@ -163,6 +171,7 @@ class Settings:
         )
 
         Settings.SetStringSetting("CustomPanelPosition", DEFAULT_PANEL_POSITION_CUSTOM)
+        return
 
 
 # region - Define the resources ----------------------------------------------------------------------------------------
@@ -230,37 +239,33 @@ DefaultSettings = {
     "FontSize_Tabs": int(14),
     "FontSize_Panels": int(11),
     "Toolbar_Position": int(0),
-    "Hide_Titlebar_FC": True,
+    "Hide_Titlebar_FC": bool(True),
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
-if Settings.GetStringSetting("ImportLocation") != "":
-    IMPORT_LOCATION = Settings.GetStringSetting("ImportLocation")
-else:
+IMPORT_LOCATION = Settings.GetStringSetting("ImportLocation")
+if IMPORT_LOCATION == "":
     IMPORT_LOCATION = DefaultSettings["ImportLocation"]
     Settings.SetStringSetting("ImportLocation", IMPORT_LOCATION)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the export location ----------------------------------------------------------------------------------
-if Settings.GetStringSetting("ExportLocation") != "":
-    EXPORT_LOCATION = Settings.GetStringSetting("ExportLocation")
-else:
+EXPORT_LOCATION = Settings.GetStringSetting("ExportLocation")
+if EXPORT_LOCATION == "":
     EXPORT_LOCATION = DefaultSettings["ExportLocation"]
     Settings.SetStringSetting("exportLocation", EXPORT_LOCATION)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the Ribbon structure location ------------------------------------------------------------------------
-if Settings.GetStringSetting("RibbonStructure") != "":
-    RIBBON_STRUCTURE_JSON = Settings.GetStringSetting("RibbonStructure")
-else:
+RIBBON_STRUCTURE_JSON = Settings.GetStringSetting("RibbonStructure")
+if RIBBON_STRUCTURE_JSON == "":
     RIBBON_STRUCTURE_JSON = DefaultSettings["RibbonStructure"]
     Settings.SetStringSetting("RibbonStructure", RIBBON_STRUCTURE_JSON)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the default position for global panels ---------------------------------------------------------------
-if Settings.GetStringSetting("CustomPanelPosition") != "":
-    DEFAULT_PANEL_POSITION_CUSTOM = Settings.GetStringSetting("CustomPanelPosition")
-else:
+DEFAULT_PANEL_POSITION_CUSTOM = Settings.GetStringSetting("CustomPanelPosition")
+if DEFAULT_PANEL_POSITION_CUSTOM == "":
     DEFAULT_PANEL_POSITION_CUSTOM = DefaultSettings["CustomPanelPosition"]
     Settings.SetStringSetting("CustomPanelPosition", DEFAULT_PANEL_POSITION_CUSTOM)
 # endregion ------------------------------------------------------------------------------------------------------------

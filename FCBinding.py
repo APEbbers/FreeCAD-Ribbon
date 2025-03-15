@@ -733,10 +733,15 @@ class ModernMenu(RibbonBar):
                     f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
                 )
                 _titleLabel.setText(text)
-
+                # Create a spacer to set the tab
+                spacer = QWidget()
+                spacer.setSizePolicy(
+                    QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding
+                )
+                spacer.setFixedWidth(3)
                 self._titleWidget._tabBarLayout.setContentsMargins(3, 3, 3, 0)
                 self._titleWidget._tabBarLayout.addWidget(
-                    _quickAccessToolBarWidget, 0, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                    _quickAccessToolBarWidget, 0, 0, 1, 2, Qt.AlignmentFlag.AlignVCenter
                 )
                 self._titleWidget._tabBarLayout.addWidget(
                     _titleLabel, 0, 1, 1, 1, Qt.AlignmentFlag.AlignVCenter
@@ -745,7 +750,10 @@ class ModernMenu(RibbonBar):
                     _rightToolBar, 0, 2, 1, 2, Qt.AlignmentFlag.AlignVCenter
                 )
                 self._titleWidget._tabBarLayout.addWidget(
-                    _tabBar, 1, 0, 1, 4, Qt.AlignmentFlag.AlignVCenter
+                    spacer, 1, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                )
+                self._titleWidget._tabBarLayout.addWidget(
+                    _tabBar, 1, 1, 1, 4, Qt.AlignmentFlag.AlignVCenter
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
@@ -1316,6 +1324,8 @@ class ModernMenu(RibbonBar):
             spacer = QWidget()
             spacer.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
             spacer.setFixedWidth(30)
+            if Parameters_Ribbon.TOOLBAR_POSITION == 1:
+                spacer.setFixedWidth(5)
             self.rightToolBar().addWidget(spacer)
 
             # Minimize button
@@ -1380,14 +1390,6 @@ class ModernMenu(RibbonBar):
                 self.RightToolBarButtonSize, self.RightToolBarButtonSize
             )
             self.rightToolBar().addWidget(CloseButton)
-
-        # # add a hidden button for toggeling the menu
-        # ToggleMenuBar = QToolButton()
-        # ToggleMenuBar.setObjectName("ToggleMenuBar")
-        # ToggleMenuBar.clicked.connect(self.ToggleMenuBar)
-        # # ToggleMenuBar.setHidden(True)
-        # ToggleMenuBar.setFixedSize(QSize(1, 1))
-        # self.rightToolBar().addWidget(ToggleMenuBar)
 
         # Set the width of the right toolbar
         RightToolbarWidth = (
@@ -3569,6 +3571,15 @@ class ModernMenu(RibbonBar):
     def CheckDataFile(self):
         if self.isLoaded:
             DataFile2 = os.path.join(os.path.dirname(__file__), "RibbonDataFile2.dat")
+            if os.path.exists(DataFile2) is False:
+                Question = translate(
+                    "FreeCAD Ribbon",
+                    "The first time, a data file must be generated!\n"
+                    "It is important to create a data file to avoid any issues.\n"
+                    f"Open the layout menu ({self.LayoutMenuShortCut}) and click on 'Reload workbenches'.",
+                )
+                StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
+                return
             if os.path.exists(DataFile2) is True:
                 Data = {}
                 # read ribbon structure from JSON file

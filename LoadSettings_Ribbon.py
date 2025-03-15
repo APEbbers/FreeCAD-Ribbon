@@ -230,9 +230,6 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.TextSize_Buttons.setRange(8, 24)
         self.form.TextSize_Tabs.setRange(8, 24)
         self.form.TextSize_Panels.setRange(8, 24)
-        # Disable and hide the shortcut controls
-        self.form.groupBox_13.setDisabled(True)
-        self.form.groupBox_13.setHidden(True)
 
         # Remove tabbar click settings for the time being
         self.form.label_15.setHidden(True)
@@ -247,7 +244,10 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.label_4.setText(Parameters_Ribbon.BACKUP_LOCATION)
         self.form.TabbarStyle.setCurrentIndex(Parameters_Ribbon.TABBAR_STYLE)
         self.form.ToolbarPositions.setCurrentIndex(Parameters_Ribbon.TOOLBAR_POSITION)
-        if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
+        if (
+            Parameters_Ribbon.HIDE_TITLEBAR_FC is True
+            or Parameters_Ribbon.HIDE_TITLEBAR_FC is None
+        ):
             self.form.HideTitleBarFC.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.HideTitleBarFC.setCheckState(Qt.CheckState.Unchecked)
@@ -309,13 +309,6 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.ScrollSpeed_Ribbon.setValue(Parameters_Ribbon.RIBBON_SCROLLSPEED)
         self.form.ScrollClicks_TabBar.setValue(Parameters_Ribbon.TABBAR_CLICKSPEED)
         self.form.ScrollClicks_Ribbon.setValue(Parameters_Ribbon.RIBBON_CLICKSPEED)
-        self.form.ModifierKeyApp.setCurrentText(
-            self.OriginalValues["Shortcut_Application"].split("+")[0]
-        )
-        self.form.AppShortCut.setText(
-            self.OriginalValues["Shortcut_Application"].split("+")[1]
-        )
-        self.form.ShortcutTaken_1.setHidden(True)
 
         # Miscellaneous
         self.form.PreferedViewPanel.setCurrentIndex(Parameters_Ribbon.PREFERRED_VIEW)
@@ -528,14 +521,6 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.on_ScrollClicks_Ribbon_valueCHanged
         )
 
-        def ApplyShortcutKey():
-            self.on_ApplyShortcutApp_clicked()
-
-        self.form.ApplyShortcutApp.connect(
-            self.form.ApplyShortcutApp, SIGNAL("clicked()"), ApplyShortcutKey
-        )
-
-        self.form.AppShortCut.textChanged.connect(self.on_AppShortCut_textChanged)
         # Connect the preferred panel settings
         self.form.PreferedViewPanel.currentIndexChanged.connect(
             self.on_PreferedViewPanel_currentIndexChanged
@@ -1090,13 +1075,6 @@ class LoadDialog(Settings_ui.Ui_Settings):
             self.ValuesToUpdate["BorderTransparant"] = False
         self.settingChanged = True
 
-    # def on_Color_Background_clicked(self):
-    #     Color = QColor(self.form.Color_Background.property("color")).toTuple()  # RGBA tupple
-    #     HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
-    #     self.ValuesToUpdate["Color_Background"] = HexColor
-    #     self.settingChanged = True
-    #     return
-
     def on_Color_Background_Hover_clicked(self):
         Color = QColor(
             self.form.Color_Background_Hover.property("color")
@@ -1113,24 +1091,6 @@ class LoadDialog(Settings_ui.Ui_Settings):
         HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
         self.ValuesToUpdate["Color_Background_App"] = HexColor
         self.settingChanged = True
-        return
-
-    def on_ApplyShortcutApp_clicked(self):
-        shortCut = (
-            f"{self.form.ModifierKeyApp.currentText()}+{self.form.AppShortCut.text()}"
-        )
-        if StandardFunctions.ShortCutTaken(shortCut) is True:
-            self.form.ShortcutTaken_1.setVisible(True)
-        else:
-            self.form.ShortcutTaken_1.setHidden(True)
-            self.ValuesToUpdate["Shortcut_Application"] = shortCut
-        self.settingChanged = True
-        return
-
-    def on_AppShortCut_textChanged(self):
-        test = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        if self.form.AppShortCut.text() not in test:
-            self.form.AppShortCut.clear()
         return
 
     # endregion
@@ -1262,7 +1222,6 @@ class LoadDialog(Settings_ui.Ui_Settings):
         Parameters_Ribbon.Settings.SetStringSetting(
             "Color_Borders", self.OriginalValues["Color_Borders"]
         )
-        # Parameters_Ribbon.Settings.SetStringSetting("Color_Background", self.OriginalValues["Color_Background"])
         Parameters_Ribbon.Settings.SetStringSetting(
             "Color_Background_Hover", self.OriginalValues["Color_Background_Hover"]
         )
@@ -1498,8 +1457,6 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.ScrollSpeed_Ribbon.setValue(DefaultSettings["Ribbon_Scroll"])
         self.form.ScrollClicks_TabBar.setValue(DefaultSettings["TabBar_Click"])
         self.form.ScrollClicks_Ribbon.setValue(DefaultSettings["Ribbon_Click"])
-        self.form.ModifierKeyApp.setCurrentText("Alt")
-        self.form.AppShortCut.clear()
 
         self.form.PreferedViewPanel.setCurrentIndex(DefaultSettings["Preferred_view"])
         if DefaultSettings["UseToolsPanel"] is True:
