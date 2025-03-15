@@ -664,14 +664,18 @@ class ModernMenu(RibbonBar):
                 # Set the label text to FreeCAD's version
                 text = f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
                 _titleLabel.setText(text)
-
+                # Create a spacer to set the tab
+                spacer = QWidget()
+                spacer.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
+                spacer.setFixedWidth(3)
                 self._titleWidget._tabBarLayout.setContentsMargins(3, 3, 3, 0)
                 self._titleWidget._tabBarLayout.addWidget(
-                    _quickAccessToolBarWidget, 0, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                    _quickAccessToolBarWidget, 0, 0, 1, 2, Qt.AlignmentFlag.AlignVCenter
                 )
                 self._titleWidget._tabBarLayout.addWidget(_titleLabel, 0, 1, 1, 1, Qt.AlignmentFlag.AlignVCenter)
                 self._titleWidget._tabBarLayout.addWidget(_rightToolBar, 0, 2, 1, 2, Qt.AlignmentFlag.AlignVCenter)
-                self._titleWidget._tabBarLayout.addWidget(_tabBar, 1, 0, 1, 4, Qt.AlignmentFlag.AlignVCenter)
+                self._titleWidget._tabBarLayout.addWidget(spacer, 1, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter)
+                self._titleWidget._tabBarLayout.addWidget(_tabBar, 1, 1, 1, 4, Qt.AlignmentFlag.AlignVCenter)
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
                 self.RibbonOffset = 54 + self.QuickAccessButtonSize * 2
