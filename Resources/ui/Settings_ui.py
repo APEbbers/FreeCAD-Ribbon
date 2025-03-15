@@ -1121,9 +1121,13 @@ class Ui_Settings(object):
     # setupUi
 
     def retranslateUi(self, Settings):
-        Settings.setWindowTitle(QCoreApplication.translate("Settings", "Preferences", None))
+        Settings.setWindowTitle(
+            QCoreApplication.translate("Settings", "Preferences", None)
+        )
         self.Reset.setText(QCoreApplication.translate("Settings", "Reset", None))
-        self.GenerateJsonExit.setText(QCoreApplication.translate("Settings", "Close", None))
+        self.GenerateJsonExit.setText(
+            QCoreApplication.translate("Settings", "Close", None)
+        )
         # if QT_CONFIG(shortcut)
         self.GenerateJsonExit.setShortcut("")
         # endif // QT_CONFIG(shortcut)
