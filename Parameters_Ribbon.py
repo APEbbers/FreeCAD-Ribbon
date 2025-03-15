@@ -57,7 +57,7 @@ class Settings:
 
     def GetBoolSetting(settingName: str) -> bool:
         result = preferences.GetBool(settingName)
-        if str(result).lower() == "none" or str(result).lower() == "":
+        if str(result).lower() == "none" or str(result).lower() == "none":
             result = None
         return result
 
@@ -95,6 +95,69 @@ class Settings:
         return
 
     # endregion
+
+    def WriteDefaultSettings():
+        Settings.SetStringSetting("BackupFolder", DefaultSettings("BackupFolder"))
+        Settings.SetStringSetting("RibbonStructure", DefaultSettings("RibbonStructure"))
+        Settings.SetStringSetting("TabOrder", DefaultSettings("TabOrder"))
+        Settings.SetIntSetting("TabBar_Style", DefaultSettings("TabBar_Style"))
+        Settings.SetBoolSetting("Hide_Titlebar_FC", DefaultSettings("Hide_Titlebar_FC"))
+        Settings.SetStringSetting("Stylesheet", DefaultSettings("Stylesheet"))
+        Settings.SetBoolSetting("AutoHideRibbon", DefaultSettings("AutoHideRibbon"))
+        Settings.SetIntSetting("MaxColumnsPerPanel", DefaultSettings("MaxColumnsPerPanel"))
+
+        Settings.SetIntSetting("IconSize_Small", DefaultSettings("IconSize_Small"))
+        Settings.SetIntSetting("IconSize_Medium", DefaultSettings("IconSize_Medium"))
+        Settings.SetIntSetting("IconSize_Large", DefaultSettings("IconSize_Large"))
+        Settings.SetIntSetting("ApplicationButtonSize", DefaultSettings("ApplicationButtonSize"))
+        Settings.SetIntSetting("QuickAccessButtonSize", DefaultSettings("QuickAccessButtonSize"))
+        Settings.SetIntSetting("TabBarSize", DefaultSettings("TabBarSize"))
+        Settings.SetIntSetting("Toolbar_Position", DefaultSettings("Toolbar_Position"))
+        Settings.SetIntSetting("RightToolbarButtonSize", DefaultSettings("RightToolbarButtonSize"))
+
+        Settings.SetBoolSetting("ShowIconText_Small", DefaultSettings("ShowIconText_Small"))
+        Settings.SetBoolSetting("ShowIconText_Medium", DefaultSettings("ShowIconText_Medium"))
+        Settings.SetBoolSetting("ShowIconText_Large", DefaultSettings("ShowIconText_Large"))
+        Settings.SetBoolSetting("WrapText_Medium", DefaultSettings("WrapText_Medium"))
+        Settings.SetBoolSetting("WrapText_Large", DefaultSettings("WrapText_Large"))
+
+        Settings.SetIntSetting("FontSize_Menus", DefaultSettings("FontSize_Menus"))
+        Settings.SetIntSetting("FontSize_Buttons", DefaultSettings("FontSize_Buttons"))
+        Settings.SetIntSetting("FontSize_Tabs", DefaultSettings("FontSize_Tabs"))
+        Settings.SetIntSetting("FontSize_Panels", DefaultSettings("FontSize_Panels"))
+
+        Settings.SetBoolSetting("ShowOnHover", DefaultSettings("ShowOnHover"))
+        Settings.SetIntSetting("TabBar_Scroll", DefaultSettings("TabBar_Scroll"))
+        Settings.SetIntSetting("Ribbon_Scroll", DefaultSettings("Ribbon_Scroll"))
+        Settings.SetIntSetting("TabBar_Click", DefaultSettings("TabBar_Click"))
+        Settings.SetIntSetting("Ribbon_Click", DefaultSettings("Ribbon_Click"))
+        Settings.SetStringSetting("Shortcut_Application", DefaultSettings("Shortcut_Application"))
+
+        Settings.SetIntSetting("Preferred_view", DefaultSettings("Preferred_view"))
+        Settings.SetBoolSetting("UseToolsPanel", DefaultSettings("UseToolsPanel"))
+        Settings.SetBoolSetting("UseFCOverlay", DefaultSettings("UseFCOverlay"))
+        Settings.SetBoolSetting("UseButtonBackGround", DefaultSettings("UseButtonBackGround"))
+
+        Settings.SetBoolSetting("DebugMode", DefaultSettings("DebugMode"))
+
+        Settings.SetBoolSetting("CustomIcons", DefaultSettings("CustomIcons"))
+        Settings.SetStringSetting("ScrollLeftButton_Tab", DefaultSettings("ScrollLeftButton_Tab"))
+        Settings.SetStringSetting("ScrollRightButton_Tab", DefaultSettings("ScrollRightButton_Tab"))
+        Settings.SetStringSetting("ScrollLeftButton_Category", DefaultSettings("ScrollLeftButton_Category"))
+        Settings.SetStringSetting("ScrollRightButton_Category", DefaultSettings("ScrollRightButton_Category"))
+        Settings.SetStringSetting("OptionButton", DefaultSettings("OptionButton"))
+        Settings.SetStringSetting("PinButton_open", DefaultSettings("PinButton_open"))
+        Settings.SetStringSetting("PinButton_closed", DefaultSettings("PinButton_closed"))
+
+        Settings.SetBoolSetting("CustomColors", DefaultSettings("CustomColors"))
+        Settings.SetStringSetting("Color_Borders", DefaultSettings("Color_Borders"))
+        Settings.SetBoolSetting("BorderTransparant", DefaultSettings("BorderTransparant"))
+        # Settings.SetStringSetting("Color_Background", DefaultSettings("Color_Background"))
+        Settings.SetStringSetting("Color_Background_Hover", DefaultSettings("Color_Background_Hover"))
+        Settings.SetStringSetting("Color_Background_App", DefaultSettings("Color_Background_App"))
+
+        Settings.SetStringSetting("CustomPanelPosition", DefaultSettings("CustomPanelPosition"))
+        return
 
     def WriteSettings():
         Settings.SetStringSetting("BackupFolder", BACKUP_LOCATION)
@@ -157,6 +220,7 @@ class Settings:
         Settings.SetStringSetting("Color_Background_App", COLOR_APPLICATION_BUTTON_BACKGROUND)
 
         Settings.SetStringSetting("CustomPanelPosition", DEFAULT_PANEL_POSITION_CUSTOM)
+        return
 
 
 # region - Define the resources ----------------------------------------------------------------------------------------
