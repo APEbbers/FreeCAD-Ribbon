@@ -26,22 +26,13 @@ from pathlib import Path
 from PySide.QtGui import (
     QIcon,
     QAction,
-    QPixmap,
-    QScrollEvent,
-    QKeyEvent,
-    QActionGroup,
-    QRegion,
     QFont,
-    QColor,
-    QStyleHints,
     QFontMetrics,
-    QTextOption,
-    QTextItem,
-    QPainter,
-    QKeySequence,
-    QShortcut,
+    QDrag,
     QCursor,
-    QGuiApplication,
+    QMouseEvent,
+    QDropEvent,
+    QPixmap,
 )
 from PySide.QtWidgets import (
     QToolButton,
@@ -49,45 +40,28 @@ from PySide.QtWidgets import (
     QSizePolicy,
     QDockWidget,
     QWidget,
-    QMenuBar,
     QMenu,
     QMainWindow,
-    QLayout,
-    QSpacerItem,
-    QLayoutItem,
-    QGridLayout,
-    QScrollArea,
     QTabBar,
-    QWidgetAction,
-    QStylePainter,
     QStyle,
-    QStyleOptionButton,
-    QPushButton,
     QHBoxLayout,
     QLabel,
-    QVBoxLayout,
-    QToolTip,
-    QWidgetItem,
     QTreeWidget,
-    QApplication,
     QStatusBar,
-    QStyleOption,
+    QApplication,
+    QGridLayout,
+    QLayoutItem,
+    QVBoxLayout,
 )
 from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
     QObject,
-    QMetaMethod,
     SIGNAL,
     QEvent,
-    QMetaObject,
-    QCoreApplication,
     QSize,
-    Slot,
-    QRect,
-    QPoint,
-    QSettings,
+    QMimeData,
 )
 from CustomWidgets import CustomControls
 
@@ -233,6 +207,9 @@ class ModernMenu(RibbonBar):
         """
         super().__init__(title="")
         self.setObjectName("Ribbon")
+
+        # Enable dragdrop
+        self.setAcceptDrops(True)
 
         # connect the signals
         self.connectSignals()
@@ -709,6 +686,81 @@ class ModernMenu(RibbonBar):
         # Check if an reload of the datafile is needed an show an message
         self.CheckDataFile()
         return
+
+    # region - drag drop event functions
+    dragObject = None
+
+    def dragEnterEvent(self, e):
+        widget = e.source()
+        parent = widget.parent().parent()
+        self.dragObject = widget
+        if isinstance(parent, RibbonPanel):
+            e.accept()
+
+    # def mouseMoveEvent(self, e):
+    #     if e.buttons() == Qt.MouseButton.LeftButton:
+    #         try:
+    #             drag = QDrag(self.dragObject)
+    #             mime = QMimeData()
+    #             drag.setMimeData(mime)
+    #             pixmap = QPixmap(self.dragObject.size())
+    #             self.dragObject.render(pixmap)
+    #             drag.setPixmap(pixmap)
+    #             if drag is not None:
+    #                 drag.exec(Qt.DropAction.MoveAction)
+    #         except Exception as e:
+    #             print(e)
+
+    def dropEvent(self, e):
+        pos = e.pos()
+        widget = e.source()
+        parent = widget.parent().parent()
+        if isinstance(parent, RibbonPanel):
+            for n in range(parent._actionsLayout.count()):
+                # Get the widget at each index in turn.
+                w = parent._actionsLayout.itemAt(n).widget()
+                # w = widget
+                if pos.x() < w.x() + w.size().width() // 2:
+                    # We didn't drag past this widget.
+                    # insert to the left of it.
+                    break
+                # else:
+                #     # We aren't on the left hand side of any widget,
+                #     # so we're at the end. Increment 1 to insert after.
+                #     n += 1
+
+            p1 = parent._actionsLayout.getItemPosition(n)
+            parent._actionsLayout.removeWidget(widget)
+            parent._actionsLayout.addWidget(widget, *p1)
+
+            e.accept()
+        return
+
+    # def dropEvent(self, e):
+    #     pos = e.pos()
+    #     widget = e.source()
+    #     parent: RibbonPanel = widget.parent().parent()
+    #     if isinstance(parent, RibbonPanel):
+    #         dropWidget = None
+    #         for n in range(parent._actionsLayout.count()):
+    #             # Get the widget at each index in turn.
+    #             # w = parent._actionsLayout.itemAt(n).widget()
+    #             dropWidget = parent._actionsLayout.itemAt(n)
+    #             # w = widget
+    #             # if pos.x() < w.x() + w.size().width() // 2:
+    #             #     # We didn't drag past this widget.
+    #             #     # insert to the left of it.
+    #             #     break
+    #             # else:
+    #             #     # We aren't on the left hand side of any widget,
+    #             #     # so we're at the end. Increment 1 to insert after.
+    #             #     n += 1
+
+    #         p1 = parent._actionsLayout.getItemPosition(n)
+    #         parent._actionsLayout.addItem(parent._actionsLayout.takeAt(n), *p1)
+
+    #         e.accept()
+    #     return
 
     def closeEvent(self, event):
         mw.menuBar().show()
@@ -1855,6 +1907,7 @@ class ModernMenu(RibbonBar):
                 showPanelOptionButton=True,
             )
             panel.panelOptionButton().hide()
+            panel.setAcceptDrops(True)
 
             # get list of all buttons in toolbar
             allButtons: list = []
