@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QFont,
@@ -34,7 +34,7 @@ from PySide.QtGui import (
     QDropEvent,
     QPixmap,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -53,7 +53,7 @@ from PySide.QtWidgets import (
     QLayoutItem,
     QVBoxLayout,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -711,56 +711,59 @@ class ModernMenu(RibbonBar):
     #         except Exception as e:
     #             print(e)
 
-    def dropEvent(self, e):
-        pos = e.pos()
-        widget = e.source()
-        parent = widget.parent().parent()
-        if isinstance(parent, RibbonPanel):
-            for n in range(parent._actionsLayout.count()):
-                # Get the widget at each index in turn.
-                w = parent._actionsLayout.itemAt(n).widget()
-                # w = widget
-                if pos.x() < w.x() + w.size().width() // 2:
-                    # We didn't drag past this widget.
-                    # insert to the left of it.
-                    break
-                # else:
-                #     # We aren't on the left hand side of any widget,
-                #     # so we're at the end. Increment 1 to insert after.
-                #     n += 1
-
-            p1 = parent._actionsLayout.getItemPosition(n)
-            parent._actionsLayout.removeWidget(widget)
-            parent._actionsLayout.addWidget(widget, *p1)
-
-            e.accept()
-        return
-
     # def dropEvent(self, e):
     #     pos = e.pos()
     #     widget = e.source()
-    #     parent: RibbonPanel = widget.parent().parent()
+    #     parent = widget.parent().parent()
     #     if isinstance(parent, RibbonPanel):
-    #         dropWidget = None
     #         for n in range(parent._actionsLayout.count()):
     #             # Get the widget at each index in turn.
-    #             # w = parent._actionsLayout.itemAt(n).widget()
-    #             dropWidget = parent._actionsLayout.itemAt(n)
+    #             w = parent._actionsLayout.itemAt(n).widget()
     #             # w = widget
-    #             # if pos.x() < w.x() + w.size().width() // 2:
-    #             #     # We didn't drag past this widget.
-    #             #     # insert to the left of it.
-    #             #     break
+    #             if pos.x() < w.x() + w.size().width() // 2:
+    #                 # We didn't drag past this widget.
+    #                 # insert to the left of it.
+    #                 break
     #             # else:
     #             #     # We aren't on the left hand side of any widget,
     #             #     # so we're at the end. Increment 1 to insert after.
     #             #     n += 1
 
     #         p1 = parent._actionsLayout.getItemPosition(n)
-    #         parent._actionsLayout.addItem(parent._actionsLayout.takeAt(n), *p1)
+    #         parent._actionsLayout.removeWidget(widget)
+    #         parent._actionsLayout.addWidget(widget, *p1)
 
     #         e.accept()
     #     return
+
+    def dropEvent(self, e):
+        pos = e.pos()
+        widget = e.source()
+        parent = widget.parent().parent()
+        if isinstance(parent, RibbonPanel):
+            for r in range(parent._actionsLayout.rowCount()):
+                for c in range(parent._actionsLayout.columnCount()):
+                    # Get the widget at each index in turn.
+                    w = parent._actionsLayout.itemAtPosition(r, c).widget()
+                    # w = widget
+                    if pos.x() < w.x() + w.size().width() // 2:
+                        if pos.y() < w.y() + w.size().height() // 2:
+                            # We didn't drag past this widget.
+                            # insert to the left of it.
+                            break
+                    # else:
+                    #     # We aren't on the left hand side of any widget,
+                    #     # so we're at the end. Increment 1 to insert after.
+                    #     n += 1
+
+            p1, p2 = parent._actionsLayout.getItemPosition(r), parent._actionsLayout.getItemPosition(c)
+            parent._actionsLayout.removeWidget(widget)
+            # parent._actionsLayout.addWidget(widget, *p1)
+            parent._actionsLayout.addItem(parent._actionsLayout.takeAt(r), *p2)
+            parent._actionsLayout.addItem(parent._actionsLayout.takeAt(c), *p1)
+
+            e.accept()
+        return
 
     def closeEvent(self, event):
         mw.menuBar().show()
