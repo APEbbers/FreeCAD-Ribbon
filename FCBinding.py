@@ -52,6 +52,7 @@ from PySide.QtWidgets import (
     QGridLayout,
     QLayoutItem,
     QVBoxLayout,
+    QWidgetItem,
 )
 from PySide.QtCore import (
     Qt,
@@ -83,8 +84,6 @@ import math
 # import Ribbon. This contains the ribbon commands for FreeCAD
 import Ribbon
 
-# from CustomWidgets import myMenu as QMenu
-
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
 pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
@@ -107,7 +106,7 @@ from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
 # import pyqtribbon as pyqtribbon
 # from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
-# from pyqtribbon.panel import RibbonPanel
+# from pyqtribbon.panel import RibbonPanel, RibbonPanelItemWidget
 # from pyqtribbon.toolbutton import RibbonToolButton
 # from pyqtribbon.separator import RibbonSeparator
 # from pyqtribbon.category import RibbonCategoryLayoutButton
@@ -624,6 +623,8 @@ class ModernMenu(RibbonBar):
         # When hovering over the menu button, hide the ribbon
         self.applicationOptionButton().enterEvent = lambda enter: self.leaveEvent(enter)
 
+        # self.mousePressEvent = lambda mousePress: self.mousePressEvent_custom(mousePress)
+
         # Rearrange the tabbar and toolbars
         if Parameters_Ribbon.TOOLBAR_POSITION == 0 or Parameters_Ribbon.TOOLBAR_POSITION == 1:
             # Get the widgets
@@ -687,12 +688,23 @@ class ModernMenu(RibbonBar):
         self.CheckDataFile()
         return
 
+    def eventFilter(self, obj, event):
+        # Disable the standard hover behavior
+        if event.type() == QEvent.Type.HoverMove:
+            event.ignore()
+            return False
+        return False
+
     # region - drag drop event functions
     dragObject = None
+    start_X = -1
+    start_Y = -1
+    start_index = -1
 
     def dragEnterEvent(self, e):
         widget = e.source()
         parent = widget.parent().parent()
+
         self.dragObject = widget
         if isinstance(parent, RibbonPanel):
             e.accept()
@@ -705,43 +717,44 @@ class ModernMenu(RibbonBar):
         yPos = 0
 
         if isinstance(parent, RibbonPanel):
+            # Get the row
             for Row in range(parent._actionsLayout.rowCount()):
                 w = parent._actionsLayout.itemAtPosition(Row, 0).widget()
                 Widget_y = w.mapTo(self, w.pos()).y()
 
-                if pos.y() < Widget_y - w.size().height() // 2:
+                if pos.y() < Widget_y - w.size().height():
                     xPos = Row
                     break
 
-            for Column in range(parent._actionsLayout.rowCount()):
+            # Get the column
+            for Column in range(parent._actionsLayout.columnCount()):
                 w = parent._actionsLayout.itemAtPosition(0, Column).widget()
                 Widget_X = w.mapTo(self, w.pos()).x()
 
-                if pos.x() < Widget_X + w.size().width() // 2:
+                if pos.x() < Widget_X + w.size().width():
                     yPos = Column
                     break
 
+            # Get the widget that has to be replaced
+            w_origin = parent._actionsLayout.itemAtPosition(Row, Column).widget()
+            # Get the old position of the dragged widget
             n = -1
+            OldPos = []
             for n in range(parent._actionsLayout.count()):
-                if parent._actionsLayout.itemAt(n) == widget:
+                if parent._actionsLayout.itemAt(n).widget().children()[1] == widget:
+                    OldPos = parent._actionsLayout.getItemPosition(n)
                     break
-            print(f"{xPos}, {yPos}")
-            if n > -1:
-                parent._actionsLayout.addItem(parent._actionsLayout.takeAt(n), xPos, yPos)
-
+            # counter and old position is not empty, Swap the widgets
+            if n > -1 and len(OldPos) > 0:
+                parent._actionsLayout.addWidget(parent._actionsLayout.takeAt(n).widget(), xPos, yPos)
+                parent._actionsLayout.addWidget(w_origin, OldPos[0], OldPos[1])
+                parent._actionsLayout.activate()
             e.accept()
         return
 
     def closeEvent(self, event):
         mw.menuBar().show()
         return True
-
-    def eventFilter(self, obj, event):
-        # Disable the standard hover behavior
-        if event.type() == QEvent.Type.HoverMove:
-            event.ignore()
-            return False
-        return False
 
     def enterEvent_Custom(self, QEvent):
         # # Hide any possible toolbar
