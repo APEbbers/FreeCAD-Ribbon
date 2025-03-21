@@ -49,6 +49,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QFrame,
     QGraphicsEffect,
+    QWidget,
 )
 from PySide.QtCore import Qt, QSize, QRect, QMargins, QEvent, QObject, QMimeData
 
@@ -84,6 +85,7 @@ class CustomControls(QToolButton):
                 pixmap = QPixmap(self.size())
                 self.render(pixmap)
                 drag.setPixmap(pixmap)
+
                 if drag is not None:
                     drag.exec(Qt.DropAction.MoveAction)
             except Exception as e:
@@ -1187,3 +1189,10 @@ class CustomControls(QToolButton):
 
         Menu.aboutToHide.connect(SetToFoldRibbon)
         return Menu
+
+
+class DragTargetIndicator(QLabel):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setContentsMargins(25, 5, 25, 5)
+        self.setStyleSheet("QLabel { background-color: #ccc; border: 1px solid black; }")

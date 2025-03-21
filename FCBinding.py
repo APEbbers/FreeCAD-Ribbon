@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QFont,
@@ -34,7 +34,7 @@ from PySide.QtGui import (
     QDropEvent,
     QPixmap,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -54,7 +54,7 @@ from PySide.QtWidgets import (
     QVBoxLayout,
     QWidgetItem,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -64,7 +64,7 @@ from PySide.QtCore import (
     QSize,
     QMimeData,
 )
-from CustomWidgets import CustomControls
+from CustomWidgets import CustomControls, DragTargetIndicator
 
 import json
 import os
@@ -696,49 +696,50 @@ class ModernMenu(RibbonBar):
         return False
 
     # region - drag drop event functions
-    dragObject = None
-    start_X = -1
-    start_Y = -1
-    start_index = -1
+    dragIndicator = DragTargetIndicator()
 
     def dragEnterEvent(self, e):
+        e.accept()
+
+    def dragLeaveEvent(self, e):
+        # Hide the drag indicator when you leave the drag area
+        self.dragIndicator.hide()
+        e.accept()
+
+    def dragMoveEvent(self, e):
         widget = e.source()
         parent = widget.parent().parent()
-
-        self.dragObject = widget
-        if isinstance(parent, RibbonPanel):
-            e.accept()
+        # Find the correct location of the drop target, so we can move it there.
+        position = self._find_drop_location(e)
+        if position is not None:
+            # Inserting moves the item if its alreaady in the layout.
+            parent._actionsLayout.addWidget(self.dragIndicator, position[0], position[1])
+            # Hide the item being dragged.
+            e.source().hide()
+            # Show the target.
+            self.dragIndicator.show()
+        e.accept()
 
     def dropEvent(self, e):
-        pos = e.position().toPoint()
+        # Get the widget
         widget = e.source()
+        # Get the grid layout
         parent = widget.parent().parent()
-        xPos = 0
-        yPos = 0
 
+        # if the grid layout is a Ribbon panel continue
         if isinstance(parent, RibbonPanel):
-            # Get the row
-            for Row in range(parent._actionsLayout.rowCount()):
-                w = parent._actionsLayout.itemAtPosition(Row, 0).widget()
-                Widget_y = w.mapTo(self, w.pos()).y()
+            # Get the drop position
+            position = self._find_drop_location(e)
+            xPos = position[0]
+            yPos = position[1]
 
-                if pos.y() < Widget_y - w.size().height():
-                    xPos = Row
-                    break
-
-            # Get the column
-            for Column in range(parent._actionsLayout.columnCount()):
-                w = parent._actionsLayout.itemAtPosition(0, Column).widget()
-                Widget_X = w.mapTo(self, w.pos()).x()
-
-                if pos.x() < Widget_X + w.size().width():
-                    yPos = Column
-                    break
+            # Hide the drag indicator
+            self.dragIndicator.hide()
 
             # Get the widget that has to be replaced
-            w_origin = parent._actionsLayout.itemAtPosition(Row, Column).widget()
+            w_origin = parent._actionsLayout.itemAtPosition(xPos, yPos).widget()
             # Get the old position of the dragged widget
-            n = -1
+            n = 0
             OldPos = []
             for n in range(parent._actionsLayout.count()):
                 if parent._actionsLayout.itemAt(n).widget().children()[1] == widget:
@@ -748,9 +749,51 @@ class ModernMenu(RibbonBar):
             if n > -1 and len(OldPos) > 0:
                 parent._actionsLayout.addWidget(parent._actionsLayout.takeAt(n).widget(), xPos, yPos)
                 parent._actionsLayout.addWidget(w_origin, OldPos[0], OldPos[1])
+                widget.show()
                 parent._actionsLayout.activate()
             e.accept()
         return
+
+    def _find_drop_location(self, e):
+        # Get the position as a point
+        pos = e.position().toPoint()
+        # Get the widget
+        widget = e.source()
+        # Get the grid layout
+        parent = widget.parent().parent()
+        # Define the placeholders for x- and y-coordinates as grid positions
+        xPos = 0
+        yPos = 0
+
+        # Get the row
+        Row = 0
+        for Row in range(parent._actionsLayout.rowCount()):
+            item = parent._actionsLayout.itemAtPosition(Row, 0)
+            if item is None:
+                return
+            w = item.widget()
+            Widget_y = w.mapTo(self, w.pos()).y()
+
+            if pos.y() < Widget_y - w.size().height() // 2:
+                xPos = Row
+                break
+
+        # Get the column
+        Column = 0
+        for Column in range(parent._actionsLayout.columnCount()):
+            item = parent._actionsLayout.itemAtPosition(0, Column)
+            if item is None:
+                return
+            w = item.widget()
+            Widget_X = w.mapTo(self, w.pos()).x()
+
+            if pos.x() < Widget_X + w.size().width() // 2:
+                yPos = Column
+                break
+
+        # Return then coordinates as grid positions
+        print(f"{xPos}, {yPos}")
+        return [xPos, yPos]
 
     def closeEvent(self, event):
         mw.menuBar().show()
@@ -2394,7 +2437,7 @@ class ModernMenu(RibbonBar):
             # panel._actionsLayout.setSpacing(0)
             # panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
             panel.layout().setSpacing(0)
-            panel.setContentsMargins(0, 0, 0, 0)
+            panel.setContentsMargins(3, 3, 3, 3)
             panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
             # panel._actionsLayout.setContentsMargins(0, 0, 0, 0)
             Font = QFont()
