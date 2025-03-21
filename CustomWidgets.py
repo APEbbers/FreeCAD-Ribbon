@@ -1194,9 +1194,7 @@ class CustomControls(QToolButton):
 class DragTargetIndicator(QLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setContentsMargins(25, 5, 25, 5)
+        self.setContentsMargins(3, 3, 3, 3)
         self.setStyleSheet(
-            "QLabel { background-color: "
-            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-            + "; border: 1px solid black; }"
+            "QLabel { background-color: " + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover") + ";}"
         )
