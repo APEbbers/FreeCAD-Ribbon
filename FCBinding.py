@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QFont,
@@ -34,7 +34,7 @@ from PySide6.QtGui import (
     QDropEvent,
     QPixmap,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -54,7 +54,7 @@ from PySide6.QtWidgets import (
     QVBoxLayout,
     QWidgetItem,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -711,13 +711,15 @@ class ModernMenu(RibbonBar):
         parent = widget.parent().parent()
         # Find the correct location of the drop target, so we can move it there.
         position = self._find_drop_location(e)
-        if position is not None:
-            # Inserting moves the item if its alreaady in the layout.
-            parent._actionsLayout.addWidget(self.dragIndicator, position[0], position[1])
-            # Hide the item being dragged.
-            e.source().hide()
-            # Show the target.
-            self.dragIndicator.show()
+        if position is None:
+            # print("position is none")
+            position = [0, 0]
+        # Inserting moves the item if its alreaady in the layout.
+        parent._actionsLayout.addWidget(self.dragIndicator, position[0], position[1])
+        # Hide the item being dragged.
+        e.source().hide()
+        # Show the target.
+        self.dragIndicator.show()
         e.accept()
 
     def dropEvent(self, e):
@@ -769,30 +771,27 @@ class ModernMenu(RibbonBar):
         Row = 0
         for Row in range(parent._actionsLayout.rowCount()):
             item = parent._actionsLayout.itemAtPosition(Row, 0)
-            if item is None:
-                return
-            w = item.widget()
-            Widget_y = w.mapTo(self, w.pos()).y()
+            if item is not None:
+                w = item.widget()
+                Widget_y = w.mapTo(self, w.pos()).y()
 
-            if pos.y() < Widget_y - w.size().height() // 2:
-                xPos = Row
-                break
+                if pos.y() < Widget_y - w.size().height() // 2:
+                    xPos = Row
+                    break
 
         # Get the column
         Column = 0
         for Column in range(parent._actionsLayout.columnCount()):
             item = parent._actionsLayout.itemAtPosition(0, Column)
-            if item is None:
-                return
-            w = item.widget()
-            Widget_X = w.mapTo(self, w.pos()).x()
+            if item is not None:
+                w = item.widget()
+                Widget_X = w.mapTo(self, w.pos()).x()
 
-            if pos.x() < Widget_X + w.size().width() // 2:
-                yPos = Column
-                break
+                if pos.x() < Widget_X + w.size().width() // 2:
+                    yPos = Column
+                    break
 
         # Return then coordinates as grid positions
-        print(f"{xPos}, {yPos}")
         return [xPos, yPos]
 
     def closeEvent(self, event):
