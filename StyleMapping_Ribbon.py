@@ -325,11 +325,7 @@ def ReturnStyleSheet(
                     + radius
                     + """;}"""
                 )
-            if control.lower() == "dragindicator":
-                """QLabel {
-                background-color:"""
-                +HoverColor
-                +""";}"""
+
             return StyleSheet
     except Exception as e:
         print(e)

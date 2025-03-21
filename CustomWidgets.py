@@ -1195,4 +1195,8 @@ class DragTargetIndicator(QLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setContentsMargins(25, 5, 25, 5)
-        self.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("dragindicator"))
+        self.setStyleSheet(
+            "QLabel { background-color: "
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+            + "; border: 1px solid black; }"
+        )
