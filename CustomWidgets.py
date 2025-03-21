@@ -1196,5 +1196,7 @@ class DragTargetIndicator(QLabel):
         super().__init__(parent)
         self.setContentsMargins(3, 3, 3, 3)
         self.setStyleSheet(
-            "QLabel { background-color: " + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover") + ";}"
+            StyleMapping_Ribbon.ReturnStyleSheet(
+                control="dragindicator", HoverColor=Parameters_Ribbon.COLOR_BACKGROUND_HOVER
+            )
         )

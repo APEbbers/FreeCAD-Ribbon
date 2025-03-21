@@ -749,8 +749,10 @@ class ModernMenu(RibbonBar):
                     break
             # counter and old position is not empty, Swap the widgets
             if n > -1 and len(OldPos) > 0:
-                parent._actionsLayout.addWidget(parent._actionsLayout.takeAt(n).widget(), xPos, yPos)
-                parent._actionsLayout.addWidget(w_origin, OldPos[0], OldPos[1])
+                parent._actionsLayout.addWidget(
+                    parent._actionsLayout.takeAt(n).widget(), xPos, yPos, Qt.AlignmentFlag.AlignTop
+                )
+                parent._actionsLayout.addWidget(w_origin, OldPos[0], OldPos[1], Qt.AlignmentFlag.AlignTop)
                 widget.show()
                 parent._actionsLayout.activate()
             e.accept()
