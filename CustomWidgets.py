@@ -1190,6 +1190,10 @@ class CustomControls(QToolButton):
         Menu.aboutToHide.connect(SetToFoldRibbon)
         return Menu
 
+    def EmptyButton():
+        btn = QToolButton()
+        btn.mouseMoveEvent = lambda mouseEvent: CustomControls.mouseMoveEvent(btn, mouseEvent)
+
 
 class DragTargetIndicator(QLabel):
     def __init__(self, parent=None):

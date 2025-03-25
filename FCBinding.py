@@ -710,7 +710,7 @@ class ModernMenu(RibbonBar):
         widget = e.source()
         parent = widget.parent().parent()
         # Find the correct location of the drop target, so we can move it there.
-        position = self._find_drop_location(e)
+        position = self.find_drop_location(e)
         if position is None:
             # print("position is none")
             position = [0, 0]
@@ -731,7 +731,7 @@ class ModernMenu(RibbonBar):
         # if the grid layout is a Ribbon panel continue
         if isinstance(parent, RibbonPanel):
             # Get the drop position
-            position = self._find_drop_location(e)
+            position = self.find_drop_location(e)
             xPos = position[0]
             yPos = position[1]
 
@@ -740,6 +740,8 @@ class ModernMenu(RibbonBar):
 
             # Get the widget that has to be replaced
             w_origin = parent._actionsLayout.itemAtPosition(xPos, yPos).widget()
+            # print(f"original button size: {w_origin.height()}")
+            original_size = w_origin.size()
             # Get the old position of the dragged widget
             n = 0
             OldPos = []
@@ -749,16 +751,29 @@ class ModernMenu(RibbonBar):
                     break
             # counter and old position is not empty, Swap the widgets
             if n > -1 and len(OldPos) > 0:
-                parent._actionsLayout.addWidget(
-                    parent._actionsLayout.takeAt(n).widget(), xPos, yPos, Qt.AlignmentFlag.AlignTop
-                )
-                parent._actionsLayout.addWidget(w_origin, OldPos[0], OldPos[1], Qt.AlignmentFlag.AlignTop)
+                dropWidget = parent._actionsLayout.takeAt(n).widget()
+                # print(f"drop button size: {widget.height()}")
+                new_size = dropWidget.size()
+                dropWidget.setFixedSize(new_size)
+                rowSpan = 2
+                if new_size == Parameters_Ribbon.ICON_SIZE_MEDIUM:
+                    rowSpan = 3
+                if new_size == Parameters_Ribbon.ICON_SIZE_LARGE:
+                    rowSpan = 6
+                parent._actionsLayout.addWidget(dropWidget, xPos, yPos, rowSpan, 1, Qt.AlignmentFlag.AlignTop)
+                w_origin.setFixedSize(original_size)
+                rowSpan = 2
+                if original_size == Parameters_Ribbon.ICON_SIZE_MEDIUM:
+                    rowSpan = 3
+                if original_size == Parameters_Ribbon.ICON_SIZE_LARGE:
+                    rowSpan = 6
+                parent._actionsLayout.addWidget(w_origin, OldPos[0], OldPos[1], rowSpan, 1, Qt.AlignmentFlag.AlignTop)
                 widget.show()
                 parent._actionsLayout.activate()
             e.accept()
         return
 
-    def _find_drop_location(self, e):
+    def find_drop_location(self, e):
         # Get the position as a point
         pos = e.position().toPoint()
         # Get the widget
@@ -769,32 +784,40 @@ class ModernMenu(RibbonBar):
         xPos = 0
         yPos = 0
 
-        # Get the row
-        Row = 0
-        for Row in range(parent._actionsLayout.rowCount()):
-            item = parent._actionsLayout.itemAtPosition(Row, 0)
-            if item is not None:
-                w = item.widget()
-                Widget_y = w.mapTo(self, w.pos()).y()
-
-                if pos.y() < Widget_y - w.size().height() // 2:
-                    xPos = Row
-                    break
-
         # Get the column
         Column = 0
         for Column in range(parent._actionsLayout.columnCount()):
             item = parent._actionsLayout.itemAtPosition(0, Column)
             if item is not None:
-                w = item.widget()
-                Widget_X = w.mapTo(self, w.pos()).x()
+                w: QWidget = item.widget()
+                Widget_X = w.parentWidget().mapToGlobal(w.pos()).x()
 
                 if pos.x() < Widget_X + w.size().width() // 2:
+                    # if pos.x() < Widget_X + w.size().width() and pos.x() > Widget_X:
                     yPos = Column
                     break
 
+        # Get the row
+        Row = 0
+        for Row in range(parent._actionsLayout.rowCount()):
+            item = parent._actionsLayout.itemAtPosition(Row, Column)
+            if item is not None:
+                w: QWidget = item.widget()
+                Widget_y = w.parentWidget().mapToGlobal(w.pos()).y()
+
+                if pos.y() < Widget_y:
+                    # if pos.y() > Widget_y - w.size().height() and pos.y() < Widget_y:
+                    xPos = Row
+                    break
+
+        w_origin = parent._actionsLayout.itemAtPosition(xPos, yPos).widget()
+        print(f"original button size: {w_origin.height()}")
+        print(f"drop button size: {widget.height()}")
+
         # Return then coordinates as grid positions
         return [xPos, yPos]
+
+    # endregion
 
     def closeEvent(self, event):
         mw.menuBar().show()
@@ -2103,16 +2126,16 @@ class ModernMenu(RibbonBar):
                         # To correct this, empty and disabled buttons are added for spacing.
                         # (adding spacers did not work)
                         if float((NoSmallButtons_spacer + 1) / 3).is_integer():
-                            spacer_1 = panel.addSmallButton()
+                            spacer_1 = panel.addSmallWidget(CustomControls.EmptyButton())
                             spacer_1.setFixedWidth(self.iconSize)
                             spacer_1.setEnabled(False)
                             spacer_1.setStyleSheet("background-color: none")
                         if float((NoSmallButtons_spacer + 2) / 3).is_integer():
-                            spacer_1 = panel.addSmallButton()
+                            spacer_1 = panel.addSmallWidget(CustomControls.EmptyButton())
                             spacer_1.setFixedWidth(self.iconSize)
                             spacer_1.setEnabled(False)
                             spacer_1.setStyleSheet("background-color: none")
-                            spacer_2 = panel.addSmallButton()
+                            spacer_2 = panel.addSmallWidget(CustomControls.EmptyButton())
                             spacer_2.setFixedWidth(self.iconSize)
                             spacer_2.setEnabled(False)
                             spacer_2.setStyleSheet("background-color: none")
@@ -2120,7 +2143,8 @@ class ModernMenu(RibbonBar):
                         NoSmallButtons_spacer = 0
                         # Same principle for medium buttons
                         if float((NoMediumButtons_spacer + 1) / 2).is_integer():
-                            spacer_1 = panel.addMediumButton()
+                            # spacer_1 = panel.addMediumButton()
+                            spacer_1 = panel.addMediumWidget(CustomControls.EmptyButton())
                             spacer_1.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
                             spacer_1.setEnabled(False)
                             spacer_1.setStyleSheet("background-color: none")
