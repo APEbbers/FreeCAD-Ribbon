@@ -713,9 +713,14 @@ class ModernMenu(RibbonBar):
         position = self.find_drop_location(e)
         if position is None:
             # print("position is none")
-            position = [0, 0]
+            position = [0, 0, 2, 1]
         # Inserting moves the item if its alreaady in the layout.
-        parent._actionsLayout.addWidget(self.dragIndicator, position[0], position[1])
+        rowSpan = 2
+        if position[1] == Parameters_Ribbon.ICON_SIZE_MEDIUM:
+            rowSpan = 3
+        if position[2] == Parameters_Ribbon.ICON_SIZE_LARGE:
+            rowSpan = 6
+        parent._actionsLayout.addWidget(self.dragIndicator, position[0], position[1], rowSpan, 1)
         # Hide the item being dragged.
         e.source().hide()
         # Show the target.
@@ -774,6 +779,22 @@ class ModernMenu(RibbonBar):
         return
 
     def find_drop_location(self, e):
+        """
+        Determines the drop location in a grid layout based on the position of a drag-and-drop event.
+        Args:
+            e (QEvent): The drag-and-drop event containing the position and source widget.
+        Returns:
+            list: A list containing the following elements:
+                - xPos (int): The row index in the grid layout where the drop occurred.
+                - yPos (int): The column index in the grid layout where the drop occurred.
+                - w_origin_height (int): The height of the original widget at the drop location.
+                - widget_height (int): The height of the widget being dropped.
+        Notes:
+            - The method calculates the grid position (row and column) by comparing the event's position
+              with the global positions of widgets in the grid layout.
+            - Assumes the parent widget has a `_actionsLayout` attribute that is a QGridLayout.
+        """
+
         # Get the position as a point
         pos = e.position().toPoint()
         # Get the widget
@@ -793,7 +814,6 @@ class ModernMenu(RibbonBar):
                 Widget_X = w.parentWidget().mapToGlobal(w.pos()).x()
 
                 if pos.x() < Widget_X + w.size().width() // 2:
-                    # if pos.x() < Widget_X + w.size().width() and pos.x() > Widget_X:
                     yPos = Column
                     break
 
@@ -806,7 +826,6 @@ class ModernMenu(RibbonBar):
                 Widget_y = w.parentWidget().mapToGlobal(w.pos()).y()
 
                 if pos.y() < Widget_y:
-                    # if pos.y() > Widget_y - w.size().height() and pos.y() < Widget_y:
                     xPos = Row
                     break
 
@@ -815,7 +834,7 @@ class ModernMenu(RibbonBar):
         print(f"drop button size: {widget.height()}")
 
         # Return then coordinates as grid positions
-        return [xPos, yPos]
+        return [xPos, yPos, w_origin.height(), widget.height()]
 
     # endregion
 
