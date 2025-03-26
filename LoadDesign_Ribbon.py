@@ -3605,7 +3605,6 @@ class LoadDialog(Design_ui.Ui_Form):
                 IconName = ""
                 # Get the menu name from the text value. This can be changed.
                 MenuName = self.form.CommandTable_RD.item(row, 0).data(Qt.ItemDataRole.UserRole)
-                print(MenuName)
                 MenuNameEntered = self.form.CommandTable_RD.item(row, 0).text()
 
                 # Go through the list with all available commands.
