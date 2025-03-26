@@ -78,7 +78,7 @@ class LoadDialog(Design_ui.Ui_Form):
     IsChanged = False
 
     # Set the data file version. Triggeres an question if an update is needed
-    DataFileVersion = "1.1"
+    DataFileVersion = "1.2"
 
     # Define list of the workbenches, toolbars and commands on class level
     List_Workbenches = []
@@ -958,9 +958,11 @@ class LoadDialog(Design_ui.Ui_Form):
                 MenuNameTranslated = CommandInfoCorrections(CommandName[0])[
                     "ActionText"
                 ].replace("&", "")
-                if len(ChildCommands) > 1:
-                    MenuName = MenuName + "..."
-                    MenuNameTranslated = MenuNameTranslated + "..."
+                # if len(ChildCommands) > 1:
+                #     if not MenuName.endswith("..."):
+                #         MenuName = MenuName + "..."
+                #     if not MenuNameTranslated.endswith("..."):
+                #         MenuNameTranslated = MenuNameTranslated + "..."
 
                 self.List_Commands.append(
                     [
@@ -4150,11 +4152,14 @@ class LoadDialog(Design_ui.Ui_Form):
                                 if (
                                     WorkBenchName == self.List_Commands[i3][3]
                                     or self.List_Commands[i3][3] == "Global"
+                                    or self.List_Commands[i3][3] == "Standard"
                                 ):
                                     CommandName = self.List_Commands[i3][0]
                                     IconName = self.List_Commands[i3][1]
                             if len(self.List_Commands[i3][0].split(", ")) > 1:
                                 CommandName = self.List_Commands[i3][0]
+                if CommandName == "" and "separator" not in MenuName:
+                    return
 
                 # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
                 for i6 in range(1, self.form.CommandTable_RD.columnCount()):
