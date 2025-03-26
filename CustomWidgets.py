@@ -1193,6 +1193,7 @@ class CustomControls(QToolButton):
     def EmptyButton():
         btn = QToolButton()
         btn.mouseMoveEvent = lambda mouseEvent: CustomControls.mouseMoveEvent(btn, mouseEvent)
+        return btn
 
 
 class DragTargetIndicator(QLabel):
