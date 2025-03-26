@@ -700,9 +700,6 @@ def CommandInfoCorrections(CommandName):
             if CommandName == "Sketcher_RenderingOrder":
                 CommandInfo["pixmap"] = "Sketcher_RenderingOrder_External.svg"
 
-            if CommandName == "Std_LinkActions" or CommandName == "Part_Datums":
-                CommandInfo["menuText"] = CommandInfo["menuText"] + "..."
-
             # add an extra entry for action text
             add_keys_nested_dict(CommandInfo, "ActionText")
             CommandActionList = Command.getAction()

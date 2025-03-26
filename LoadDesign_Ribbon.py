@@ -872,11 +872,11 @@ class LoadDialog(Design_ui.Ui_Form):
                     IconName = ""
                 MenuName = CommandInfoCorrections(CommandName[0])["menuText"].replace("&", "")
                 MenuNameTranslated = CommandInfoCorrections(CommandName[0])["ActionText"].replace("&", "")
-                if len(ChildCommands) > 1:
-                    if not MenuName.endswith("..."):
-                        MenuName = MenuName + "..."
-                    if not MenuNameTranslated.endswith("..."):
-                        MenuNameTranslated = MenuNameTranslated + "..."
+                # if len(ChildCommands) > 1:
+                #     if not MenuName.endswith("..."):
+                #         MenuName = MenuName + "..."
+                #     if not MenuNameTranslated.endswith("..."):
+                #         MenuNameTranslated = MenuNameTranslated + "..."
 
                 self.List_Commands.append(
                     [
@@ -3630,7 +3630,7 @@ class LoadDialog(Design_ui.Ui_Form):
                                     IconName = self.List_Commands[i3][1]
                             if len(self.List_Commands[i3][0].split(", ")) > 1:
                                 CommandName = self.List_Commands[i3][0]
-                if CommandName == "":
+                if CommandName == "" and "separator" not in MenuName:
                     return
 
                 # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
