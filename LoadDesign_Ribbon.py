@@ -78,7 +78,7 @@ class LoadDialog(Design_ui.Ui_Form):
     IsChanged = False
 
     # Set the data file version. Triggeres an question if an update is needed
-    DataFileVersion = "1.2"
+    DataFileVersion = "1.3"
 
     # Define list of the workbenches, toolbars and commands on class level
     List_Workbenches = []
@@ -3019,11 +3019,12 @@ class LoadDialog(Design_ui.Ui_Form):
                         else:
                             self.form.CommandTable_RD.item(0, i1).setCheckState(Qt.CheckState.Unchecked)
                     for i2 in range(1, self.form.CommandTable_RD.rowCount()):
-                        if i1 == column:
-                            self.form.CommandTable_RD.item(i2, i1).setCheckState(CheckState)
-                            self.form.CommandTable_RD.item(i2, 4).setCheckState(Qt.CheckState.Checked)
-                        if i1 != column:
-                            self.form.CommandTable_RD.item(i2, i1).setCheckState(Qt.CheckState.Unchecked)
+                        if self.form.CommandTable_RD.item(i2, 0).text().lower() != "separator":
+                            if i1 == column:
+                                self.form.CommandTable_RD.item(i2, i1).setCheckState(CheckState)
+                                self.form.CommandTable_RD.item(i2, 4).setCheckState(Qt.CheckState.Checked)
+                            if i1 != column:
+                                self.form.CommandTable_RD.item(i2, i1).setCheckState(Qt.CheckState.Unchecked)
                 if column == 4 and self.form.CommandTable_RD.item(0, column).checkState() == Qt.CheckState.Unchecked:
                     for i1 in range(1, self.form.CommandTable_RD.columnCount()):
                         for i2 in range(1, self.form.CommandTable_RD.rowCount()):
