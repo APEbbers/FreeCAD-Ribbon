@@ -718,6 +718,26 @@ def add_keys_nested_dict(dict, keys, default=1):
     return result
 
 
+def returnDropDownCommands(command):
+    Commands = []
+    if command is not None:
+        if len(command.getAction()) > 1:
+            for i in range(len(command.getAction()) - 1):
+                action = command.getAction()[i]
+                if action is not None and (
+                    action.icon() is not None and not action.icon().isNull()
+                ):
+                    Commands.append(
+                        [
+                            f"{command.getInfo()['name']}, {i}",
+                            "actionIcon",
+                            action.text(),
+                            action.text(),
+                        ]
+                    )
+    return Commands
+
+
 def CommandInfoCorrections(CommandName):
     try:
         Command = Gui.Command.get(CommandName)
@@ -747,6 +767,13 @@ def CommandInfoCorrections(CommandName):
                 CommandInfo["ActionText"] = CommandInfo["menuText"]
             if CommandInfo["ActionText"] == "":
                 CommandInfo["ActionText"] = CommandInfo["menuText"]
+
+            ChildCommands = returnDropDownCommands(Command)
+            if len(ChildCommands) > 1:
+                if not CommandInfo["menuText"].endswith("..."):
+                    CommandInfo["menuText"] = CommandInfo["menuText"] + "..."
+                if not CommandInfo["ActionText"].endswith("..."):
+                    CommandInfo["ActionText"] = CommandInfo["ActionText"] + "..."
 
             return CommandInfo
         else:

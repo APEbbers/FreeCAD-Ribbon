@@ -78,7 +78,7 @@ class LoadDialog(Design_ui.Ui_Form):
     IsChanged = False
 
     # Set the data file version. Triggeres an question if an update is needed
-    DataFileVersion = "1.2"
+    DataFileVersion = "1.3"
 
     # Define list of the workbenches, toolbars and commands on class level
     List_Workbenches = []
@@ -958,11 +958,11 @@ class LoadDialog(Design_ui.Ui_Form):
                 MenuNameTranslated = CommandInfoCorrections(CommandName[0])[
                     "ActionText"
                 ].replace("&", "")
-                # if len(ChildCommands) > 1:
-                #     if not MenuName.endswith("..."):
-                #         MenuName = MenuName + "..."
-                #     if not MenuNameTranslated.endswith("..."):
-                #         MenuNameTranslated = MenuNameTranslated + "..."
+                if len(ChildCommands) > 1:
+                    if not MenuName.endswith("..."):
+                        MenuName = MenuName + "..."
+                    if not MenuNameTranslated.endswith("..."):
+                        MenuNameTranslated = MenuNameTranslated + "..."
 
                 self.List_Commands.append(
                     [
@@ -3069,7 +3069,11 @@ class LoadDialog(Design_ui.Ui_Form):
                         "toolbars"
                     ][Toolbar]["order"] = Order
 
-                if "separator" not in ToolbarCommand and "All" not in ToolbarCommand:
+                if (
+                    "separator" not in ToolbarCommand
+                    and "All" not in ToolbarCommand
+                    and ToolbarCommand != ""
+                ):
                     # Get the command
                     CommandName = ToolbarCommand
 
@@ -3199,6 +3203,8 @@ class LoadDialog(Design_ui.Ui_Form):
                                     )
                         if MenuNameTabelWidgetItem == "":
                             MenuNameTabelWidgetItem = MenuName
+                        if MenuNameTabelWidgetItem == "":
+                            continue
 
                         # Create the row in the table
                         # add a row to the table widget
@@ -3263,11 +3269,17 @@ class LoadDialog(Design_ui.Ui_Form):
                         # Define the order based on the order in this table widget
                         Order = []
                         for j in range(self.form.CommandTable_RD.rowCount()):
-                            Order.append(
+                            if (
                                 QTableWidgetItem(
                                     self.form.CommandTable_RD.item(j, 0)
                                 ).data(Qt.ItemDataRole.UserRole)
-                            )
+                                != ""
+                            ):
+                                Order.append(
+                                    QTableWidgetItem(
+                                        self.form.CommandTable_RD.item(j, 0)
+                                    ).data(Qt.ItemDataRole.UserRole)
+                                )
 
                         # Add or update the dict for the Ribbon command panel
                         StandardFunctions.add_keys_nested_dict(
@@ -3452,17 +3464,21 @@ class LoadDialog(Design_ui.Ui_Form):
                                 Qt.CheckState.Unchecked
                             )
                     for i2 in range(1, self.form.CommandTable_RD.rowCount()):
-                        if i1 == column:
-                            self.form.CommandTable_RD.item(i2, i1).setCheckState(
-                                CheckState
-                            )
-                            self.form.CommandTable_RD.item(i2, 4).setCheckState(
-                                Qt.CheckState.Checked
-                            )
-                        if i1 != column:
-                            self.form.CommandTable_RD.item(i2, i1).setCheckState(
-                                Qt.CheckState.Unchecked
-                            )
+                        if (
+                            self.form.CommandTable_RD.item(i2, 0).text().lower()
+                            != "separator"
+                        ):
+                            if i1 == column:
+                                self.form.CommandTable_RD.item(i2, i1).setCheckState(
+                                    CheckState
+                                )
+                                self.form.CommandTable_RD.item(i2, 4).setCheckState(
+                                    Qt.CheckState.Checked
+                                )
+                            if i1 != column:
+                                self.form.CommandTable_RD.item(i2, i1).setCheckState(
+                                    Qt.CheckState.Unchecked
+                                )
                 if (
                     column == 4
                     and self.form.CommandTable_RD.item(0, column).checkState()
