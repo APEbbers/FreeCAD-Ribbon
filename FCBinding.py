@@ -623,8 +623,6 @@ class ModernMenu(RibbonBar):
         # When hovering over the menu button, hide the ribbon
         self.applicationOptionButton().enterEvent = lambda enter: self.leaveEvent(enter)
 
-        # self.mousePressEvent = lambda mousePress: self.mousePressEvent_custom(mousePress)
-
         # Rearrange the tabbar and toolbars
         if Parameters_Ribbon.TOOLBAR_POSITION == 0 or Parameters_Ribbon.TOOLBAR_POSITION == 1:
             # Get the widgets
@@ -697,6 +695,7 @@ class ModernMenu(RibbonBar):
 
     # region - drag drop event functions
     dragIndicator = DragTargetIndicator()
+    position = None
 
     def dragEnterEvent(self, e):
         e.accept()
@@ -709,11 +708,15 @@ class ModernMenu(RibbonBar):
     def dragMoveEvent(self, e):
         widget = e.source()
         parent = widget.parent().parent()
+
         # Find the correct location of the drop target, so we can move it there.
         position = self.find_drop_location(e)
         if position is None:
             # print("position is none")
-            position = [0, 0, 1, 1]
+            backup_size = QSize(Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL)
+            position = [0, 0, backup_size, backup_size]
+
+        self.position = position
         # Inserting moves the item if its alreaady in the layout.
         rowSpan = 2
         if position[2].height() == Parameters_Ribbon.ICON_SIZE_MEDIUM:
@@ -726,6 +729,65 @@ class ModernMenu(RibbonBar):
         # Show the target.
         self.dragIndicator.show()
         e.accept()
+        return
+
+    # def dropEvent(self, e):
+    #     # Get the widget
+    #     widget = e.source()
+    #     # Get the grid layout
+    #     parent = widget.parent().parent()
+
+    #     # if the grid layout is a Ribbon panel continue
+    #     if isinstance(parent, RibbonPanel):
+    #         # Get the drop position
+    #         position = self.find_drop_location(e)
+    #         xPos = position[0]
+    #         yPos = position[1]
+
+    #         # Hide the drag indicator
+    #         self.dragIndicator.hide()
+
+    #         # Get the widget that has to be replaced
+    #         W_origin = parent._actionsLayout.itemAtPosition(xPos, yPos).widget()
+    #         original_size = position[3]
+    #         T_origin: QToolButton = W_origin.findChildren(QToolButton)[0]
+    #         print(T_origin.findChildren(QToolButton)[0].actions())
+
+    #         # Get the old position of the dragged widget
+    #         n = 0
+    #         OldPos = []
+    #         for n in range(parent._actionsLayout.count()):
+    #             if parent._actionsLayout.itemAt(n).widget().children()[1] == widget:
+    #                 OldPos = parent._actionsLayout.getItemPosition(n)
+    #                 break
+    #         # counter and old position is not empty, Swap the widgets
+    #         if n > -1 and len(OldPos) > 0:
+    #             W_dropWidget = parent._actionsLayout.takeAt(n).widget()
+    #             T_dropWidget: QToolButton = W_dropWidget.findChildren(QToolButton)[0]
+    #             print(T_dropWidget.findChildren(QToolButton)[0].actions())
+    #             new_size = position[2]
+    #             W_dropWidget.setFixedSize(new_size)
+    #             T_dropWidget.setIconSize(T_origin.iconSize())
+    #             T_dropWidget.setFixedSize(T_origin.size())
+    #             rowSpan = 2
+    #             if new_size.height() == Parameters_Ribbon.ICON_SIZE_MEDIUM:
+    #                 rowSpan = 3
+    #             if new_size.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
+    #                 rowSpan = 6
+    #             parent._actionsLayout.addWidget(W_dropWidget, xPos, yPos, rowSpan, 1, Qt.AlignmentFlag.AlignTop)
+    #             W_origin.setFixedSize(original_size)
+    #             T_origin.setIconSize(T_dropWidget.iconSize())
+    #             T_origin.setFixedSize(T_dropWidget.size())
+    #             rowSpan = 2
+    #             if original_size.height() == Parameters_Ribbon.ICON_SIZE_MEDIUM:
+    #                 rowSpan = 3
+    #             if original_size.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
+    #                 rowSpan = 6
+    #             parent._actionsLayout.addWidget(W_origin, OldPos[0], OldPos[1], rowSpan, 1, Qt.AlignmentFlag.AlignTop)
+    #             widget.show()
+    #             parent._actionsLayout.activate()
+    #         e.accept()
+    #     return
 
     def dropEvent(self, e):
         # Get the widget
@@ -744,9 +806,16 @@ class ModernMenu(RibbonBar):
             self.dragIndicator.hide()
 
             # Get the widget that has to be replaced
-            w_origin = parent._actionsLayout.itemAtPosition(xPos, yPos).widget()
-            # print(f"original button size: {w_origin.height()}")
-            original_size = w_origin.size()
+            W_originalWidget = parent._actionsLayout.itemAtPosition(xPos, yPos).widget()
+            # Get the child with the actions
+            W_originalWidget_child: QToolButton = W_originalWidget.findChildren(QToolButton)[0].findChildren(
+                QToolButton
+            )[0]
+            # Get the original size
+            original_size = position[3]
+            # Create a new widget from the original
+            W_originalWidget_new = self.returnDropWidgets(W_originalWidget_child, original_size, parent)
+
             # Get the old position of the dragged widget
             n = 0
             OldPos = []
@@ -754,29 +823,152 @@ class ModernMenu(RibbonBar):
                 if parent._actionsLayout.itemAt(n).widget().children()[1] == widget:
                     OldPos = parent._actionsLayout.getItemPosition(n)
                     break
-            # counter and old position is not empty, Swap the widgets
+
+            # if counter and old position are not empty, Swap the widgets
             if n > -1 and len(OldPos) > 0:
-                dropWidget = parent._actionsLayout.takeAt(n).widget()
-                # print(f"drop button size: {widget.height()}")
-                new_size = dropWidget.size()
-                dropWidget.setFixedSize(new_size)
+                # Get the new size
+                new_size = position[2]
+                # Take the current widget
+                W_dropWidget_current = parent._actionsLayout.takeAt(n).widget()
+                # Get the child with the actions
+                W_dropWidget_child: QToolButton = W_dropWidget_current.findChildren(QToolButton)[0].findChildren(
+                    QToolButton
+                )[0]
+                # Remove the original widget under the mouse
+                parent._actionsLayout.removeWidget(W_dropWidget_current)
+                # Create a new widget to drop
+                W_dropWidget_new = self.returnDropWidgets(W_dropWidget_child, new_size, parent)
+
+                # Determenine if the button is a small, medium or large button and set the rowspan accordingly
                 rowSpan = 2
                 if new_size == Parameters_Ribbon.ICON_SIZE_MEDIUM:
                     rowSpan = 3
                 if new_size == Parameters_Ribbon.ICON_SIZE_LARGE:
                     rowSpan = 6
-                parent._actionsLayout.addWidget(dropWidget, xPos, yPos, rowSpan, 1, Qt.AlignmentFlag.AlignTop)
-                w_origin.setFixedSize(original_size)
+                # Add the new created dropwidget to the layout
+                parent._actionsLayout.addWidget(W_dropWidget_new, xPos, yPos, rowSpan, 1, Qt.AlignmentFlag.AlignTop)
+
+                # w_origin_2.setFixedSize(original_size)
                 rowSpan = 2
                 if original_size == Parameters_Ribbon.ICON_SIZE_MEDIUM:
                     rowSpan = 3
                 if original_size == Parameters_Ribbon.ICON_SIZE_LARGE:
                     rowSpan = 6
-                parent._actionsLayout.addWidget(w_origin, OldPos[0], OldPos[1], rowSpan, 1, Qt.AlignmentFlag.AlignTop)
-                widget.show()
-                parent._actionsLayout.activate()
+                parent._actionsLayout.addWidget(
+                    W_originalWidget_new, OldPos[0], OldPos[1], rowSpan, 1, Qt.AlignmentFlag.AlignTop
+                )
             e.accept()
+
+            W_originalWidget.deleteLater()
+            # W_dropWidget_current.deleteLater()
         return
+
+    def returnDropWidgets(self, widget, size, panel, useChild=False):
+        btn = widget
+        # get the actions
+        action = btn.actions()
+        # Define a menu
+        Menu = QMenu(self)
+        if len(action) > 1:
+            action = action[0]
+            Menu.addActions(action)
+        else:
+            action = btn.actions()[0]
+        # Check if this is an icon only toolbar
+        IconOnly = False
+        for iconToolbar in self.ribbonStructure["iconOnlyToolbars"]:
+            if iconToolbar == panel.title():
+                IconOnly = True
+
+        if (
+            size.height() < Parameters_Ribbon.ICON_SIZE_SMALL + 5
+            and size.height() > Parameters_Ribbon.ICON_SIZE_SMALL - 5
+        ):
+            showText = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
+            if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
+                showText = False
+
+            # Create a custom toolbutton
+            ButtonSize = QSize(
+                Parameters_Ribbon.ICON_SIZE_SMALL,
+                Parameters_Ribbon.ICON_SIZE_SMALL,
+            )
+            IconSize = QSize(
+                Parameters_Ribbon.ICON_SIZE_SMALL,
+                Parameters_Ribbon.ICON_SIZE_SMALL,
+            )
+            btn = CustomControls.CustomToolButton(
+                Text=action.text(),
+                Action=action,
+                Icon=action.icon(),
+                IconSize=IconSize,
+                ButtonSize=ButtonSize,
+                FontSize=Parameters_Ribbon.FONTSIZE_BUTTONS,
+                showText=showText,
+                setWordWrap=False,
+                ElideMode=False,
+                MaxNumberOfLines=2,
+                Menu=Menu,
+                MenuButtonSpace=16,
+                parent=self,
+            )
+        if size.height() == Parameters_Ribbon.ICON_SIZE_MEDIUM:
+            showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
+            if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
+                showText = False
+
+            # Create a custom toolbutton
+            ButtonSize = QSize(
+                Parameters_Ribbon.ICON_SIZE_MEDIUM,
+                Parameters_Ribbon.ICON_SIZE_MEDIUM,
+            )
+            IconSize = QSize(
+                Parameters_Ribbon.ICON_SIZE_MEDIUM,
+                Parameters_Ribbon.ICON_SIZE_MEDIUM,
+            )
+            btn = CustomControls.CustomToolButton(
+                Text=action.text(),
+                Action=action,
+                Icon=action.icon(),
+                IconSize=IconSize,
+                ButtonSize=ButtonSize,
+                FontSize=Parameters_Ribbon.FONTSIZE_BUTTONS,
+                showText=showText,
+                setWordWrap=Parameters_Ribbon.WRAPTEXT_MEDIUM,
+                MaxNumberOfLines=2,
+                Menu=Menu,
+                MenuButtonSpace=16,
+                parent=self,
+            )
+        if size.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
+            showText = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
+            if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
+                showText = False
+
+            # Create a custom toolbutton
+            ButtonSize = QSize(
+                Parameters_Ribbon.ICON_SIZE_LARGE,
+                Parameters_Ribbon.ICON_SIZE_LARGE,
+            )
+            IconSize = QSize(
+                Parameters_Ribbon.ICON_SIZE_LARGE,
+                Parameters_Ribbon.ICON_SIZE_LARGE,
+            )
+            btn: QToolButton = CustomControls.LargeCustomToolButton(
+                Text=action.text(),
+                Action=action,
+                Icon=action.icon(),
+                IconSize=IconSize,
+                ButtonSize=ButtonSize,
+                FontSize=Parameters_Ribbon.FONTSIZE_BUTTONS,
+                showText=showText,
+                setWordWrap=Parameters_Ribbon.WRAPTEXT_LARGE,
+                MaxNumberOfLines=2,
+                Menu=Menu,
+                MenuButtonSpace=16,
+                parent=self,
+            )
+        return btn
 
     def find_drop_location(self, e):
         """
@@ -830,8 +1022,8 @@ class ModernMenu(RibbonBar):
                     break
 
         w_origin = parent._actionsLayout.itemAtPosition(xPos, yPos).widget()
-        print(f"original button size: {w_origin.size().height()}")
-        print(f"drop button size: {widget.size().height()}")
+        # print(f"original button size: {w_origin.size().height()}")
+        # print(f"drop button size: {widget.size().height()}")
 
         # Return then coordinates as grid positions
         return [xPos, yPos, w_origin.size(), widget.size()]
