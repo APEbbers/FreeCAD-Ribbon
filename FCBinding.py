@@ -53,6 +53,7 @@ from PySide.QtWidgets import (
     QLayoutItem,
     QVBoxLayout,
     QWidgetItem,
+    QMenuBar,
 )
 from PySide.QtCore import (
     Qt,
@@ -99,7 +100,7 @@ translate = App.Qt.translate
 
 import pyqtribbon_local as pyqtribbon
 from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-from pyqtribbon_local.panel import RibbonPanel
+from pyqtribbon_local.panel import RibbonPanel, RibbonPanelItemWidget
 from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
@@ -199,6 +200,8 @@ class ModernMenu(RibbonBar):
 
     # Used for a message when a datafile update is needed.
     LayoutMenuShortCut = ""
+
+    MenuBar = mw.menuBar()
 
     def __init__(self):
         """
@@ -461,6 +464,17 @@ class ModernMenu(RibbonBar):
         self.CreateMenus()  # Create the menus
         self.createModernMenu()  # Create the ribbon
 
+        # Set the menuBar hidden as standard
+        self.MenuBar.hide()
+        if self.isEnabled() is False:
+            self.MenuBar.show()
+        # i = 0
+        # for action in self.MenuBar.children():
+        #     i = i + 1
+        #     if action.objectName() == "&Tools":
+        #         print(action.actions())
+        #         print(i)
+
         # Set the custom stylesheet
         StyleSheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
         # modify the stylesheet to set the border and background for a toolbar and menu
@@ -547,11 +561,6 @@ class ModernMenu(RibbonBar):
         self.setMinimumHeight(self.RibbonMinimalHeight)
 
         self.setSizeIncrement(1, 1)
-
-        # Set the menuBar hidden as standard
-        mw.menuBar().hide()
-        if self.isEnabled() is False:
-            mw.menuBar().show()
 
         # connect a tabbar click event to the tarbar click funtion
         # this used to replaced the native functions
@@ -794,6 +803,7 @@ class ModernMenu(RibbonBar):
         widget = e.source()
         # Get the grid layout
         parent = widget.parent().parent()
+        # print(widget.parent().children())
 
         # if the grid layout is a Ribbon panel continue
         if isinstance(parent, RibbonPanel):
@@ -807,14 +817,24 @@ class ModernMenu(RibbonBar):
 
             # Get the widget that has to be replaced
             W_originalWidget = parent._actionsLayout.itemAtPosition(xPos, yPos).widget()
+            print(W_originalWidget.children())
             # Get the child with the actions
-            W_originalWidget_child: QToolButton = W_originalWidget.findChildren(QToolButton)[0].findChildren(
-                QToolButton
-            )[0]
+            W_originalWidget_child: QToolButton = W_originalWidget.findChildren(QToolButton)[0]
+            if W_originalWidget_child.objectName() == "CustomWidget":
+                W_originalWidget_child: QToolButton = W_originalWidget.findChildren(QToolButton)[0].findChildren(
+                    QToolButton
+                )[0]
+            elif W_originalWidget.objectName() == "CustomWidget":
+                W_originalWidget_child: QToolButton = W_originalWidget.findChildren(QToolButton)[0]
+            else:
+                return
             # Get the original size
             original_size = position[3]
             # Create a new widget from the original
-            W_originalWidget_new = self.returnDropWidgets(W_originalWidget_child, original_size, parent)
+            W_originalWidget_new = RibbonPanelItemWidget()
+            W_originalWidget_new.addWidget(self.returnDropWidgets(W_originalWidget_child, original_size, parent))
+            # call deleteLater to actually remove the original widget
+            W_originalWidget.deleteLater()
 
             # Get the old position of the dragged widget
             n = 0
@@ -837,7 +857,8 @@ class ModernMenu(RibbonBar):
                 # Remove the original widget under the mouse
                 parent._actionsLayout.removeWidget(W_dropWidget_current)
                 # Create a new widget to drop
-                W_dropWidget_new = self.returnDropWidgets(W_dropWidget_child, new_size, parent)
+                W_dropWidget_new = RibbonPanelItemWidget()
+                W_dropWidget_new.addWidget(self.returnDropWidgets(W_dropWidget_child, new_size, parent))
 
                 # Determenine if the button is a small, medium or large button and set the rowspan accordingly
                 rowSpan = 2
@@ -857,10 +878,13 @@ class ModernMenu(RibbonBar):
                 parent._actionsLayout.addWidget(
                     W_originalWidget_new, OldPos[0], OldPos[1], rowSpan, 1, Qt.AlignmentFlag.AlignTop
                 )
-            e.accept()
 
-            W_originalWidget.deleteLater()
-            # W_dropWidget_current.deleteLater()
+                parent = None
+
+            # # call deleteLater to actually remove the original widget
+            # W_originalWidget.deleteLater()
+
+            e.accept()
         return
 
     def returnDropWidgets(self, widget, size, panel, useChild=False):
@@ -910,7 +934,6 @@ class ModernMenu(RibbonBar):
                 MaxNumberOfLines=2,
                 Menu=Menu,
                 MenuButtonSpace=16,
-                parent=self,
             )
         if size.height() == Parameters_Ribbon.ICON_SIZE_MEDIUM:
             showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
@@ -938,7 +961,6 @@ class ModernMenu(RibbonBar):
                 MaxNumberOfLines=2,
                 Menu=Menu,
                 MenuButtonSpace=16,
-                parent=self,
             )
         if size.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
             showText = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
@@ -966,7 +988,6 @@ class ModernMenu(RibbonBar):
                 MaxNumberOfLines=2,
                 Menu=Menu,
                 MenuButtonSpace=16,
-                parent=self,
             )
         return btn
 
@@ -1030,7 +1051,7 @@ class ModernMenu(RibbonBar):
 
     # endregion
     def closeEvent(self, event):
-        mw.menuBar().show()
+        self.MenuBar.show()
         return True
 
     def enterEvent_Custom(self, QEvent):
@@ -1149,8 +1170,8 @@ class ModernMenu(RibbonBar):
         # Add the default tooltip
         self.applicationOptionButton().setToolTip(translate("FreeCAD Ribbon", "FreeCAD Ribbon"))
 
-        # add the menus from the menubar to the application button
-        self.ApplicationMenus()
+        # # add the menus from the menubar to the application button
+        # self.ApplicationMenus()
 
         # add quick access buttons
         i = 1  # Start value for button count. Used for width of quickaccess toolbar
@@ -1307,47 +1328,67 @@ class ModernMenu(RibbonBar):
 
         # add category for each workbench
         for i in range(len(WorkbenchOrderedList)):
-            for workbenchName, workbench in list(Gui.listWorkbenches().items()):
-                if workbenchName == WorkbenchOrderedList[i]:
-                    name = workbench.MenuText.replace("&", "")
-                    if (
-                        name != ""
-                        and name not in self.ribbonStructure["ignoredWorkbenches"]
-                        and name != "<none>"
-                        and name is not None
-                    ):
-                        self.wbNameMapping[name] = workbenchName
-                        self.isWbLoaded[name] = False
+            workbenchName = WorkbenchOrderedList[i]
+            workbench = Gui.getWorkbench(workbenchName)
+            name = workbench.MenuText.replace("&", "")
+            if (
+                name != ""
+                and name not in self.ribbonStructure["ignoredWorkbenches"]
+                and name != "<none>"
+                and name is not None
+            ):
+                self.wbNameMapping[name] = workbenchName
+                self.isWbLoaded[name] = False
 
-                        # Set the title
-                        self.addCategory(name)
+                # Set the title
+                self.addCategory(name)
 
-                        # Set the tabbar according the style setting
-                        if Parameters_Ribbon.TABBAR_STYLE <= 1:
-                            # set tab icon
-                            icon: QIcon = self.ReturnWorkbenchIcon(workbenchName)
-                            self.tabBar().setTabIcon(len(self.categories()) - 1, icon)
-                        if Parameters_Ribbon.TABBAR_STYLE == 2:
-                            self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon())
+                # Set the tabbar according the style setting
+                if Parameters_Ribbon.TABBAR_STYLE <= 1:
+                    # set tab icon
+                    icon: QIcon = self.ReturnWorkbenchIcon(workbenchName)
+                    self.tabBar().setTabIcon(len(self.categories()) - 1, icon)
+                if Parameters_Ribbon.TABBAR_STYLE == 2:
+                    self.tabBar().setTabIcon(len(self.categories()) - 1, QIcon())
 
-                        # Set the tab data
-                        self.tabBar().setTabData(len(self.categories()) - 1, workbenchName)
+                # Set the tab data
+                self.tabBar().setTabData(len(self.categories()) - 1, workbenchName)
 
-                        # Set the tooltip
-                        MenuText = workbench.MenuText
-                        ToolTipText = workbench.ToolTip
-                        if (
-                            ToolTipText.lower() != MenuText.lower() + " workbench"
-                            and MenuText.lower() != ToolTipText.lower()
-                        ):
-                            MenuText = f"<b>{workbench.MenuText}</b><br>{workbench.ToolTip}"
-                        else:
-                            MenuText = f"<b>{MenuText}<b>"
+                # Set the tooltip
+                MenuText = workbench.MenuText
+                ToolTipText = workbench.ToolTip
+                if ToolTipText.lower() != MenuText.lower() + " workbench" and MenuText.lower() != ToolTipText.lower():
+                    MenuText = f"<b>{workbench.MenuText}</b><br>{workbench.ToolTip}"
+                else:
+                    MenuText = f"<b>{MenuText}<b>"
 
-                        self.tabBar().setTabToolTip(len(self.categories()) - 1, MenuText)
+                self.tabBar().setTabToolTip(len(self.categories()) - 1, MenuText)
 
-        # Set the size of the collapseRibbonButton
-        self.collapseRibbonButton().setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+        # # Set the size of the collapseRibbonButton
+        # self.collapseRibbonButton().setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
+
+        # # print(self.MenuBar.children())
+        # menuBar = QMenuBar()
+        # shadowList = []
+        # i = 0
+        # for action in self.MenuBar.children():
+        #     print(action.objectName())
+        #     if shadowList.__contains__(action.objectName()):
+        #         print(action.objectName())
+        #         continue
+        # #     else:
+        # #         menuBar.addAction(action)
+        # #         shadowList.append(action.text())
+        # # self.menuBar = menuBar
+
+        # i = 0
+        # for action in self.MenuBar.children():
+        #     i = i + 1
+        #     if action.objectName() == "&Tools":
+        #         print(action.actions())
+        #         print(i)
+
+        self.AddSaveAndRestore()
 
         # add the searchbar if available
         SearchBarWidth = self.AddSearchBar()
@@ -1379,7 +1420,7 @@ class ModernMenu(RibbonBar):
         # add a settings button with menu
         SettingsMenu = QToolButton()
         # Get the freecad preference button
-        editMenu = mw.findChildren(QMenu, "&Edit")[0]
+        editMenu = self.MenuBar.findChild(QMenu, "&Edit")
         for action in editMenu.actions():
             if action.objectName() == "Std_DlgPreferences":
                 preferenceButton_FreeCAD = action
@@ -1387,11 +1428,32 @@ class ModernMenu(RibbonBar):
         # add the preference button for FreeCAD
         SettingsMenu.addAction(preferenceButton_FreeCAD)
         # Get the customize button from FreeCAD
-        toolsMenu = mw.findChildren(QMenu, "&Tools")[0]
+        toolsMenu = self.MenuBar.findChild(QMenu, "&Tools")
         for action in toolsMenu.actions():
             if action.objectName() == "Std_DlgCustomize":
                 CustomizeButton_FreeCAD = action
                 SettingsMenu.addAction(CustomizeButton_FreeCAD)
+        # Add a save and restore button
+        try:
+            path = os.path.dirname(__file__)
+            # Get the folder with add-ons
+            for i in range(2):
+                # Starting point
+                path = os.path.dirname(path)
+
+            # Go through the sub-folders
+            for root, dirs, files in os.walk(path):
+                if "SaveAndRestore" in root:
+                    SaveAndRestore = os.path.join(path, "SaveAndRestore", "SaveAndRestore.py")
+                    import SaveAndRestore
+
+                    # Add a button for the Save and Restore dialog
+                    Button = SettingsMenu.addAction(translate("FreeCAD SaveAndRestore", "Save and restore..."))
+                    Button.setToolTip(translate("FreeCAD SaveAndRestore", "Save and restore FreeCAD's setting files"))
+                    Button.triggered.connect(SaveAndRestore.SaveAndRestore.LoadDialog)
+                    break
+        except Exception:
+            pass
         # add the ribbon settings menu
         SettingsMenu.addAction(self.RibbonMenu.menuAction())
         SettingsMenu.setIcon(Gui.getIcon("Std_DlgParameter.svg"))
@@ -1539,6 +1601,7 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setSizeIncrement(1, 1)
         # Set the objectName for the right toolbar. needed for excluding from hiding.
         self.rightToolBar().setObjectName("rightToolBar")
+
         return
 
     # Add the searchBar if it is present
@@ -1568,11 +1631,12 @@ class ModernMenu(RibbonBar):
             return width
 
     def ApplicationMenus(self):
+
         # Add a file menu
         ApplictionMenu = self.addFileMenu()
 
         # add the menus from the menubar to the application button
-        MenuBar = mw.menuBar()
+        MenuBar = self.MenuBar
 
         # Set a stylesheet specific for the menubar. Otherwise the fontsize of the menus will not be applied
         StyleSheet_MenuBar = "* {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
@@ -1634,8 +1698,28 @@ class ModernMenu(RibbonBar):
 
         return
 
+    def AddSaveAndRestore(self):
+        try:
+            # from SaveAndRestore import SaveAndRestore
+
+            path = os.path.dirname(__file__)
+            # Get the folder with add-ons
+            for i in range(2):
+                # Starting point
+                path = os.path.dirname(path)
+
+            # Go through the sub-folders
+            for root, dirs, files in os.walk(path):
+                if dirs == "SaveAndRestore":
+                    SaveAndRestore = os.path.join(path, dirs, SaveAndRestore.py)
+                    from SaveAndRestore import SaveAndRestore
+
+        except Exception:
+            pass
+        return
+
     def CreateMenus(self):
-        MenuBar = mw.menuBar()
+        MenuBar = self.MenuBar
 
         # Create a accessories menu
         AccessoriesMenu = None
@@ -1863,6 +1947,26 @@ class ModernMenu(RibbonBar):
                         ListScripts[i],
                         lambda i=i + 1: self.LoadMarcoFreeCAD(ListScripts[i - 1]),
                     )
+
+        # # Add a save and restore button
+        # # try:
+        # path = os.path.dirname(__file__)
+        # # Get the folder with add-ons
+        # for i in range(2):
+        #     # Starting point
+        #     path = os.path.dirname(path)
+
+        # # Go through the sub-folders
+        # for root, dirs, files in os.walk(path):
+        #     if "SaveAndRestore" in root:
+        #         SaveAndRestore = os.path.join(path, "SaveAndRestore", "SaveAndRestore.py")
+        #         import SaveAndRestore
+
+        #         # Add a button for the Save and Restore dialog
+        #         Button = RibbonMenu.addAction(translate("FreeCAD SaveAndRestore", "Save and restore..."))
+        #         Button.setToolTip(translate("FreeCAD SaveAndRestore", "Save and restore FreeCAD's setting files"))
+        #         Button.triggered.connect(SaveAndRestore.SaveAndRestore.LoadDialog)
+
         # Set the RibbonMenu
         self.RibbonMenu = RibbonMenu
 
@@ -2004,7 +2108,7 @@ class ModernMenu(RibbonBar):
 
             if tabActivated is True:
                 self.onWbActivated()
-                self.ApplicationMenus()
+                # self.ApplicationMenus()
 
             # hide normal toolbars
             self.hideClassicToolbars()
@@ -3416,14 +3520,14 @@ class ModernMenu(RibbonBar):
             mw.showFullScreen()
             return
 
-    def ToggleMenuBar(self):
-        MenuBar = mw.menuBar()
-        if MenuBar.isVisible():
-            MenuBar.hide()
-            return
-        if MenuBar.isVisible() is False:
-            MenuBar.show()
-            return
+    # def ToggleMenuBar(self):
+    #     MenuBar = self.MenuBar
+    #     if MenuBar.isVisible():
+    #         MenuBar.hide()
+    #         return
+    #     if MenuBar.isVisible() is False:
+    #         MenuBar.show()
+    #         return
 
     def CheckDataFile(self):
         if self.isLoaded:

@@ -611,6 +611,7 @@ class CustomControls(QToolButton):
         btn.setFixedSize(QSize(width, ButtonSize.height()))
 
         # Return the button
+        btn.setObjectName("CustomWidget")
         return btn
 
     def CustomToolButton(
@@ -1132,6 +1133,7 @@ class CustomControls(QToolButton):
         btn.setFixedHeight(CommandButton.height())
 
         # return the new button
+        btn.setObjectName("CustomWidget")
         return btn
 
     def CustomOptionMenu(Menu=None, actionList=None, parent=None):
