@@ -1097,7 +1097,7 @@ class ModernMenu(RibbonBar):
                     # Add a button for the Save and Restore dialog
                     Button = SettingsMenu.addAction(translate("FreeCAD SaveAndRestore", "Save and restore..."))
                     Button.setToolTip(translate("FreeCAD SaveAndRestore", "Save and restore FreeCAD's setting files"))
-                    Button.triggered.connect(SaveAndRestore.SaveAndRestore.LoadDialog)
+                    Button.triggered.connect(SaveAndRestore.SaveAndRestore.loadDialog)
                     break
         except Exception:
             pass
