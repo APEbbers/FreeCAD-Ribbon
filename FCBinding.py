@@ -1082,23 +1082,11 @@ class ModernMenu(RibbonBar):
                 SettingsMenu.addAction(CustomizeButton_FreeCAD)
         # Add a save and restore button
         try:
-            path = os.path.dirname(__file__)
-            # Get the folder with add-ons
-            for i in range(2):
-                # Starting point
-                path = os.path.dirname(path)
-
-            # Go through the sub-folders
-            for root, dirs, files in os.walk(path):
-                if "SaveAndRestore" in root:
-                    SaveAndRestore = os.path.join(path, "SaveAndRestore", "SaveAndRestore.py")
-                    import SaveAndRestore
-
-                    # Add a button for the Save and Restore dialog
-                    Button = SettingsMenu.addAction(translate("FreeCAD SaveAndRestore", "Save and restore..."))
-                    Button.setToolTip(translate("FreeCAD SaveAndRestore", "Save and restore FreeCAD's setting files"))
-                    Button.triggered.connect(SaveAndRestore.SaveAndRestore.loadDialog)
-                    break
+            toolsMenu = mw.findChildren(QMenu, "&Tools")[0]
+            for action in toolsMenu.actions():
+                if action.objectName() == "SaveAndRestore":
+                    SaveAndRestore = action
+                    SettingsMenu.addAction(SaveAndRestore)
         except Exception:
             pass
         # add the ribbon settings menu
