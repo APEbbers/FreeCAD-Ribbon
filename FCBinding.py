@@ -1087,6 +1087,7 @@ class ModernMenu(RibbonBar):
                 if action.objectName() == "SaveAndRestore":
                     SaveAndRestore = action
                     SettingsMenu.addAction(SaveAndRestore)
+                    break
         except Exception:
             pass
         # add the ribbon settings menu
