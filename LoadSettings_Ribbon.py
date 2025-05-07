@@ -185,7 +185,9 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
         # Get the address of the repository address
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
-        self.ReproAdress = StandardFunctions.ReturnXML_Value(PackageXML, "url", "type", "repository")
+        self.ReproAdress = StandardFunctions.ReturnXML_Value(
+            PackageXML, "url", "type", "repository"
+        )
 
         # Set the size of the window to the previous state
         #
