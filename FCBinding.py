@@ -784,6 +784,27 @@ class ModernMenu(RibbonBar):
                     0, self.QuickAccessButtonSize
                 )
 
+        # Get the main window, its style, the ribbon and the restore button
+        RestoreButton: QToolButton = self.rightToolBar().findChildren(
+            QToolButton, "RestoreButton"
+        )[0]
+        # If the mainwindow is maximized, set the window state to maximize and set the correct icon
+        if mw.isMaximized():
+            try:
+                RestoreButton.setIcon(
+                    StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2]
+                )
+            except Exception:
+                pass
+        # If the mainwindow is not maximized, set the window state to no state and set the correct icon
+        if mw.isMaximized() is False:
+            try:
+                RestoreButton.setIcon(
+                    StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1]
+                )
+            except Exception:
+                pass
+
         # Install an event filter to catch events from the main window and act on it.
         mw.installEventFilter(EventInspector(mw))
 
@@ -1220,6 +1241,16 @@ class ModernMenu(RibbonBar):
             if action.objectName() == "Std_DlgCustomize":
                 CustomizeButton_FreeCAD = action
                 SettingsMenu.addAction(CustomizeButton_FreeCAD)
+        # Add a save and restore button
+        try:
+            toolsMenu = mw.findChildren(QMenu, "&Tools")[0]
+            for action in toolsMenu.actions():
+                if action.objectName() == "SaveAndRestore":
+                    SaveAndRestore = action
+                    SettingsMenu.addAction(SaveAndRestore)
+                    break
+        except Exception:
+            pass
         # add the ribbon settings menu
         SettingsMenu.addAction(self.RibbonMenu.menuAction())
         SettingsMenu.setIcon(Gui.getIcon("Std_DlgParameter.svg"))
@@ -2839,6 +2870,14 @@ class ModernMenu(RibbonBar):
             if (
                 parentWidget.objectName() == "statusBar"
                 or parentWidget.objectName() == "StatusBarArea"
+            ):
+                toolbar.setEnabled(True)
+                toolbar.setVisible(True)
+            #
+            if (
+                mw.toolBarArea(toolbar) == Qt.ToolBarArea.LeftToolBarArea
+                or mw.toolBarArea(toolbar) == Qt.ToolBarArea.RightToolBarArea
+                or mw.toolBarArea(toolbar) == Qt.ToolBarArea.BottomToolBarArea
             ):
                 toolbar.setEnabled(True)
                 toolbar.setVisible(True)
