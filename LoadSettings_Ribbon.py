@@ -160,6 +160,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     settingChanged = False
 
+    ReproAdress: str = ""
+
     def __init__(self):
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
         super(LoadDialog, self).__init__()
@@ -180,6 +182,10 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.setPalette(palette)
         Style = mw.style()
         self.form.setStyle(Style)
+
+        # Get the address of the repository address
+        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
+        self.ReproAdress = StandardFunctions.ReturnXML_Value(PackageXML, "url", "type", "repository")
 
         # Set the size of the window to the previous state
         #
