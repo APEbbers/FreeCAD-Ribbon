@@ -262,7 +262,7 @@
             <enum>QTabWidget::TabShape::Rounded</enum>
            </property>
            <property name="currentIndex">
-            <number>5</number>
+            <number>7</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideNone</enum>
@@ -778,7 +778,7 @@
                 <item row="4" column="0">
                  <widget class="QListWidget" name="CommandsAvailable_QC">
                   <property name="selectionMode">
-                   <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+                   <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
                   </property>
                   <property name="sortingEnabled">
                    <bool>true</bool>
@@ -840,7 +840,7 @@
                 <item row="3" column="0">
                  <widget class="QListWidget" name="PanelsToExclude_EP">
                   <property name="selectionMode">
-                   <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+                   <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
                   </property>
                   <property name="sortingEnabled">
                    <bool>true</bool>
@@ -1013,7 +1013,7 @@
                 <item row="1" column="0">
                  <widget class="QListWidget" name="WorkbenchesAvailable_IW">
                   <property name="selectionMode">
-                   <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+                   <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
                   </property>
                   <property name="sortingEnabled">
                    <bool>true</bool>
@@ -1308,7 +1308,7 @@
                 <item row="1" column="0">
                  <widget class="QListWidget" name="PanelAvailable_CP">
                   <property name="selectionMode">
-                   <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+                   <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
                   </property>
                   <property name="sortingEnabled">
                    <bool>true</bool>
@@ -1502,7 +1502,7 @@
                   <item row="2" column="0">
                    <widget class="QListWidget" name="CommandsAvailable_DDB">
                     <property name="selectionMode">
-                     <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+                     <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
                     </property>
                     <property name="sortingEnabled">
                      <bool>true</bool>
@@ -1856,7 +1856,7 @@
                   <item row="2" column="0">
                    <widget class="QListWidget" name="CommandsAvailable_NP">
                     <property name="selectionMode">
-                     <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+                     <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
                     </property>
                     <property name="sortingEnabled">
                      <bool>true</bool>
