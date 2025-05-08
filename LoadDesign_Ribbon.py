@@ -1153,11 +1153,11 @@ class LoadDialog(Design_ui.Ui_Form):
 
             self.LoadControls()
 
-        JsonFile.close()
+            JsonFile.close()
 
-        # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+            # Enable the apply button
+            if self.CheckChanges() is True:
+                self.form.UpdateJson.setEnabled(True)
         return
 
     def on_GenerateSetup_IS_WorkBenches_clicked(self):
