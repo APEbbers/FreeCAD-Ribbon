@@ -1257,8 +1257,8 @@ class LoadDialog(Design_ui.Ui_Form):
             DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
             SaveAs=False,
         )
-        JsonFile = open(JsonFile)
         if JsonFile != "":
+            JsonFile = open(JsonFile)
             data = json.load(JsonFile)
             WorkbenchName = self.form.ImportWorkbenchSelector_IS.currentData(
                 Qt.ItemDataRole.UserRole
@@ -1274,11 +1274,11 @@ class LoadDialog(Design_ui.Ui_Form):
 
             self.LoadControls()
 
-        JsonFile.close()
+            JsonFile.close()
 
-        # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+            # Enable the apply button
+            if self.CheckChanges() is True:
+                self.form.UpdateJson.setEnabled(True)
         return
 
     def on_GenerateSetup_IS_WorkBenches_clicked(self):
