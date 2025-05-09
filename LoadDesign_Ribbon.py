@@ -3238,6 +3238,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Set the size of the window to the previous state
         Parameters_Ribbon.Settings.SetIntSetting("LayoutDialog_Height", self.form.height())
         Parameters_Ribbon.Settings.SetIntSetting("LayoutDialog_Width", self.form.width())
+        # Emit a close signal
+        self.closeSignal.emit()
         # Close the form
         self.form.close()
         return
