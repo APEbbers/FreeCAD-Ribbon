@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL, QSize, Signal
+from PySide.QtCore import Qt, SIGNAL, QSize, Signal, QObject
 from PySide.QtWidgets import (
     QTabWidget,
     QSlider,
@@ -38,7 +38,6 @@ from PySide.QtWidgets import (
     QWidget,
     QGroupBox,
     QMenu,
-    QObject,
 )
 from PySide.QtGui import QIcon, QPixmap, QColor
 
