@@ -39,7 +39,7 @@ from PySide.QtWidgets import (
     QRadioButton,
     QLabel,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
+from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
 import sys
 import json
 from datetime import datetime
@@ -71,7 +71,7 @@ translate = App.Qt.translate
 mw = Gui.getMainWindow()
 
 
-class LoadDialog(Design_ui.Ui_Form):
+class LoadDialog(Design_ui.Ui_Form, QObject):
 
     ReproAdress: str = ""
 
@@ -109,7 +109,11 @@ class LoadDialog(Design_ui.Ui_Form):
     # Create a tomporary list for newly added dropdown buttons
     newDDBList = []
 
+    # Create a signal to emit the closeEvent to FCBinding
+    closeSignal = Signal()
+
     def __init__(self):
+
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
         super(LoadDialog, self).__init__()
 
@@ -684,10 +688,7 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.UpdateJson.connect(self.form.UpdateJson, SIGNAL("clicked()"), UpdateJson)
 
         # Connect the button Close with the function on_Close_clicked
-        def Close():
-            self.on_Close_clicked(self)
-
-        self.form.Close.connect(self.form.Close, SIGNAL("clicked()"), Close)
+        self.form.Close.clicked.connect(self.on_Close_clicked)
 
         self.form.RestoreJson.connect(self.form.RestoreJson, SIGNAL("clicked()"), self.on_RestoreJson_clicked)
         self.form.ResetJson.connect(self.form.ResetJson, SIGNAL("clicked()"), self.on_ResetJson_clicked)
@@ -3213,13 +3214,15 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.UpdateJson.setDisabled(True)
         return
 
-    @staticmethod
+    # @staticmethod
     def on_Close_clicked(self):
         self.WriteJson()
 
         # Set the size of the window to the previous state
         Parameters_Ribbon.Settings.SetIntSetting("LayoutDialog_Height", self.form.height())
         Parameters_Ribbon.Settings.SetIntSetting("LayoutDialog_Width", self.form.width())
+        # Emit a close signal
+        self.closeSignal.emit()
         # Close the form
         self.form.close()
 
@@ -4237,15 +4240,19 @@ class LoadDialog(Design_ui.Ui_Form):
         if "ignoredToolbars" in data:
             if data["ignoredToolbars"].sort() != self.List_IgnoredToolbars.sort():
                 IsChanged = True
+                print("ignoredToolbars")
         if "iconOnlyToolbars" in data:
             if data["iconOnlyToolbars"].sort() != self.List_IconOnly_Toolbars.sort():
                 IsChanged = True
+                print("iconOnlyToolbars")
         if "quickAccessCommands" in data:
             if data["quickAccessCommands"].sort() != self.List_QuickAccessCommands.sort():
                 IsChanged = True
+                print("quickAccessCommands")
         if "ignoredWorkbenches" in data:
             if data["ignoredWorkbenches"].sort() != self.List_IgnoredWorkbenches.sort():
                 IsChanged = True
+                print("ignoredWorkbenches")
         if "customToolbars" in data:
             if data["customToolbars"] != self.Dict_CustomToolbars["customToolbars"]:
                 IsChanged = True
