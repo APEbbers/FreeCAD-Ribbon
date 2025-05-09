@@ -1671,7 +1671,22 @@ class ModernMenu(RibbonBar):
         return
 
     def loadSettingsMenu(self):
-        LoadSettings_Ribbon.main()
+        # Get the form
+        Dialog = LoadSettings_Ribbon.LoadDialog()
+        # Show the form
+        Dialog.form.show()
+
+        # Disable the quick toolbar, righttoolbar and application menu
+        self.rightToolBar().setDisabled(True)
+        self.quickAccessToolBar().setDisabled(True)
+        self.applicationOptionButton().setDisabled(True)
+        Gui.updateGui()
+        # indicate that the design menu is loaded
+        self.DesignMenuLoaded = True
+
+        # Connect the close signal of the designmenu
+        Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
+
         return
 
     def on_AboutButton_clicked(self):
