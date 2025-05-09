@@ -38,6 +38,7 @@ from PySide.QtWidgets import (
     QWidget,
     QGroupBox,
     QMenu,
+    QObject,
 )
 from PySide.QtGui import QIcon, QPixmap, QColor
 
@@ -65,7 +66,7 @@ import Settings_ui as Settings_ui
 translate = App.Qt.translate
 
 
-class LoadDialog(Settings_ui.Ui_Settings):
+class LoadDialog(Settings_ui.Ui_Settings, QObject):
     # Store the current values before change
     OriginalValues = {
         "BackupEnabled": Parameters_Ribbon.ENABLE_BACKUP,
