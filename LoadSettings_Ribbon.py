@@ -1333,7 +1333,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
 
 
 class EventInspector(QObject):
-    closeSignal = LoadDialog.closeSignal
+    # closeSignal = LoadDialog.closeSignal
 
     def __init__(self, parent):
         super(EventInspector, self).__init__(parent)

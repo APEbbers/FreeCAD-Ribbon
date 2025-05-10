@@ -1655,8 +1655,8 @@ class ModernMenu(RibbonBar):
         # indicate that the design menu is loaded
         self.DesignMenuLoaded = True
 
-        # Connect the close signal of the designmenu
-        Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
+        # # Connect the close signal of the designmenu
+        # Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
 
         return
 
@@ -1684,8 +1684,8 @@ class ModernMenu(RibbonBar):
         # indicate that the design menu is loaded
         self.DesignMenuLoaded = True
 
-        # Connect the close signal of the designmenu
-        Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
+        # # Connect the close signal of the designmenu
+        # Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
 
         return
 
