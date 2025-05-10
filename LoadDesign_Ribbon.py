@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction, QGuiApplication
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction, QGuiApplication
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -39,7 +39,7 @@ from PySide.QtWidgets import (
     QRadioButton,
     QLabel,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
 import sys
 import json
 from datetime import datetime
@@ -122,6 +122,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
         # # this will create a Qt widget from our ui file
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "Design.ui"))
+
+        # Install an event filter to catch events from the main window and act on it.
+        self.form.installEventFilter(EventInspector(self.form))
 
         # Get the address of the repository address
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
@@ -3222,7 +3225,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         Parameters_Ribbon.Settings.SetIntSetting("LayoutDialog_Height", self.form.height())
         Parameters_Ribbon.Settings.SetIntSetting("LayoutDialog_Width", self.form.width())
         # Emit a close signal
-        self.closeSignal.emit()
+        # self.closeSignal.emit()
         # Close the form
         self.form.close()
 
@@ -3239,7 +3242,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         Parameters_Ribbon.Settings.SetIntSetting("LayoutDialog_Height", self.form.height())
         Parameters_Ribbon.Settings.SetIntSetting("LayoutDialog_Width", self.form.width())
         # Emit a close signal
-        self.closeSignal.emit()
+        # self.closeSignal.emit()
         # Close the form
         self.form.close()
         return
@@ -4827,6 +4830,33 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             lbl.hide()
 
     # endregion---------------------------------------------------------------------------------------
+
+
+class EventInspector(QObject):
+    closeSignal = LoadDialog.closeSignal
+
+    def __init__(self, parent):
+        super(EventInspector, self).__init__(parent)
+
+    def eventFilter(self, obj, event):
+        import FCBinding
+
+        # Show the mainwindow after the application is activated
+        if event.type() == QEvent.Type.Close:
+            # self.closeSignal.emit()
+            mw = Gui.getMainWindow()
+            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+            self.EnableRibbonToolbarsAndMenus(RibbonBar=RibbonBar)
+            return False
+
+        return False
+
+    def EnableRibbonToolbarsAndMenus(self, RibbonBar):
+        RibbonBar.rightToolBar().setEnabled(True)
+        RibbonBar.quickAccessToolBar().setEnabled(True)
+        RibbonBar.applicationOptionButton().setEnabled(True)
+        Gui.updateGui()
+        return
 
 
 def main():

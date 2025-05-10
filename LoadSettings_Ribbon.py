@@ -172,7 +172,11 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # # this will create a Qt widget from our ui file
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "Settings.ui"))
 
+        # Getthe main window
         mw = Gui.getMainWindow()
+
+        # Install an event filter to catch events from the main window and act on it.
+        self.form.installEventFilter(EventInspector(self.form))
 
         # Make sure that the dialog stays on top
         self.form.raise_()
@@ -1326,6 +1330,33 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         return
 
     # endregion---------------------------------------------------------------------------------------
+
+
+class EventInspector(QObject):
+    closeSignal = LoadDialog.closeSignal
+
+    def __init__(self, parent):
+        super(EventInspector, self).__init__(parent)
+
+    def eventFilter(self, obj, event):
+        import FCBinding
+
+        # Show the mainwindow after the application is activated
+        if event.type() == QEvent.Type.Close:
+            # self.closeSignal.emit()
+            mw = Gui.getMainWindow()
+            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+            self.EnableRibbonToolbarsAndMenus(RibbonBar=RibbonBar)
+            return False
+
+        return False
+
+    def EnableRibbonToolbarsAndMenus(self, RibbonBar):
+        RibbonBar.rightToolBar().setEnabled(True)
+        RibbonBar.quickAccessToolBar().setEnabled(True)
+        RibbonBar.applicationOptionButton().setEnabled(True)
+        Gui.updateGui()
+        return
 
 
 def main():
