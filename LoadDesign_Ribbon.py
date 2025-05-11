@@ -1167,22 +1167,29 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
             self.WriteJson()
 
-        # run init again
-        self.__init__()
+        # # # run init again
+        # # self.__init__()
+        # # load the RibbonStructure.json
+        # self.ReadJson()
 
-        # Set the first tab active
-        self.form.tabWidget.setCurrentIndex(0)
+        # # Set the first tab active
+        # self.form.tabWidget.setCurrentIndex(0)
 
-        # Hide the progress message
-        self.loadAllWorkbenches(HideOnly=True)
+        # # Hide the progress message
+        # self.loadAllWorkbenches(HideOnly=True)
 
-        if RestartFreeCAD is False:
-            # Show the dialog again
-            self.form.show()
-        if RestartFreeCAD is True:
-            result = StandardFunctions.RestartDialog(includeIcons=True)
-            if result == "yes":
-                StandardFunctions.restart_freecad()
+        # # laod all controls
+        # self.LoadControls()
+
+        # if RestartFreeCAD is False:
+        #     # Show the dialog again
+        #     self.form.show()
+        # if RestartFreeCAD is True:
+        #     result = StandardFunctions.RestartDialog(includeIcons=True)
+        #     if result == "yes":
+        #         StandardFunctions.restart_freecad()
+
+        self.closeSignal.emit()
         return
 
     # region - Control functions----------------------------------------------------------------------
