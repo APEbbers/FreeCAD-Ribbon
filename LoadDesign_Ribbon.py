@@ -353,7 +353,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # region - Load all controls------------------------------------------------------------------
         #
         # laod all controls
-        self.LoadControls()
+        self.LoadControls(False)
         # endregion-----------------------------------------------------------------------------------
 
         # region - connect controls with functions----------------------------------------------------
@@ -810,8 +810,6 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
         # --- Toolbars ----------------------------------------------------------------------------------------------
         #
-        # Store the current active workbench
-        ActiveWB = Gui.activeWorkbench().name()
         # Go through the list of workbenches
         i = 0
         for WorkBench in self.List_Workbenches:
@@ -4297,33 +4295,34 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
         return PanelList_RD
 
-    def LoadControls(self):
+    def LoadControls(self, ClearLists=True):
         # Clear all listWidgets
-        self.form.WorkbenchList_IS.clear()
-        self.form.Panels_IS.clear()
-        #
-        self.form.CommandsAvailable_QC.clear()
-        self.form.CommandsSelected_QC.clear()
-        #
-        self.form.PanelsToExclude_EP.clear()
-        self.form.PanelsExcluded_EP.clear()
-        #
-        self.form.WorkbenchesAvailable_IW.clear()
-        self.form.WorkbenchesSelected_IW.clear()
-        #
-        self.form.PanelAvailable_CP.clear()
-        self.form.PanelSelected_CP.clear()
-        #
-        self.form.WorkbenchList_NP.clear()
-        self.form.CommandsAvailable_NP.clear()
-        self.form.NewPanel_NP.clear()
-        #
-        self.form.CommandsAvailable_DDB.clear()
-        self.form.NewControl_DDB.clear()
-        self.form.ListCategory_DDB.clear()
-        #
-        self.form.PanelOrder_RD.clear()
-        self.form.WorkbenchList_RD.clear()
+        if ClearLists is True:
+            self.form.WorkbenchList_IS.clear()
+            self.form.Panels_IS.clear()
+            #
+            self.form.CommandsAvailable_QC.clear()
+            self.form.CommandsSelected_QC.clear()
+            #
+            self.form.PanelsToExclude_EP.clear()
+            self.form.PanelsExcluded_EP.clear()
+            #
+            self.form.WorkbenchesAvailable_IW.clear()
+            self.form.WorkbenchesSelected_IW.clear()
+            #
+            self.form.PanelAvailable_CP.clear()
+            self.form.PanelSelected_CP.clear()
+            #
+            self.form.WorkbenchList_NP.clear()
+            self.form.CommandsAvailable_NP.clear()
+            self.form.NewPanel_NP.clear()
+            #
+            self.form.CommandsAvailable_DDB.clear()
+            self.form.NewControl_DDB.clear()
+            self.form.ListCategory_DDB.clear()
+            #
+            self.form.PanelOrder_RD.clear()
+            self.form.WorkbenchList_RD.clear()
 
         # -- Ribbon design tab --
         # Add all workbenches to the ListItem Widget. In this case a dropdown list.
