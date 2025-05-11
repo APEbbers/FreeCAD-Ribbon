@@ -4843,12 +4843,30 @@ class EventInspector(QObject):
             self.EnableRibbonToolbarsAndMenus(RibbonBar=RibbonBar)
             return False
 
+        if event.type() == QEvent.Type.WindowStateChange:
+            # self.closeSignal.emit()
+            mw = Gui.getMainWindow()
+            if mw.windowState() == Qt.WindowState.WindowMinimized:
+                RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+                self.EnableRibbonToolbarsAndMenus(RibbonBar=RibbonBar)
+            else:
+                RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+                self.DisableRibbonToolbarsAndMenus(RibbonBar=RibbonBar)
+            return False
+
         return False
 
     def EnableRibbonToolbarsAndMenus(self, RibbonBar):
         RibbonBar.rightToolBar().setEnabled(True)
         RibbonBar.quickAccessToolBar().setEnabled(True)
         RibbonBar.applicationOptionButton().setEnabled(True)
+        Gui.updateGui()
+        return
+
+    def DisableRibbonToolbarsAndMenus(self, RibbonBar):
+        RibbonBar.rightToolBar().setDisabled(True)
+        RibbonBar.quickAccessToolBar().setDisabled(True)
+        RibbonBar.applicationOptionButton().setDisabled(True)
         Gui.updateGui()
         return
 
