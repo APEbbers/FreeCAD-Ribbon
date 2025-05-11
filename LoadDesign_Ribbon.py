@@ -4827,9 +4827,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
 
 class EventInspector(QObject):
-    # closeSignal = LoadDialog.closeSignal
+    form = None
 
     def __init__(self, parent):
+        self.form = parent
         super(EventInspector, self).__init__(parent)
 
     def eventFilter(self, obj, event):
@@ -4846,7 +4847,7 @@ class EventInspector(QObject):
         if event.type() == QEvent.Type.WindowStateChange:
             # self.closeSignal.emit()
             mw = Gui.getMainWindow()
-            if mw.windowState() == Qt.WindowState.WindowMinimized:
+            if self.form.windowState() == Qt.WindowState.WindowMinimized:
                 RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
                 self.EnableRibbonToolbarsAndMenus(RibbonBar=RibbonBar)
             else:
