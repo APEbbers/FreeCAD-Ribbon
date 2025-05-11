@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL, QSize
+from PySide.QtCore import Qt, SIGNAL, QSize, Signal, QObject, QEvent
 from PySide.QtWidgets import (
     QTabWidget,
     QSlider,
@@ -37,6 +37,7 @@ from PySide.QtWidgets import (
     QLineEdit,
     QWidget,
     QGroupBox,
+    QMenu,
 )
 from PySide.QtGui import QIcon, QPixmap, QColor
 
@@ -45,6 +46,7 @@ import StyleMapping_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
 import Parameters_Ribbon
 from Parameters_Ribbon import DefaultSettings
+import webbrowser
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -63,7 +65,7 @@ import Settings_ui as Settings_ui
 translate = App.Qt.translate
 
 
-class LoadDialog(Settings_ui.Ui_Settings):
+class LoadDialog(Settings_ui.Ui_Settings, QObject):
     # Store the current values before change
     OriginalValues = {
         "BackupEnabled": Parameters_Ribbon.ENABLE_BACKUP,
@@ -158,6 +160,11 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
     settingChanged = False
 
+    ReproAdress: str = ""
+
+    # Create a signal to emit the closeEvent to FCBinding
+    closeSignal = Signal()
+
     def __init__(self):
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
         super(LoadDialog, self).__init__()
@@ -165,7 +172,11 @@ class LoadDialog(Settings_ui.Ui_Settings):
         # # this will create a Qt widget from our ui file
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "Settings.ui"))
 
+        # Getthe main window
         mw = Gui.getMainWindow()
+
+        # Install an event filter to catch events from the main window and act on it.
+        self.form.installEventFilter(EventInspector(self.form))
 
         # Make sure that the dialog stays on top
         self.form.raise_()
@@ -178,6 +189,12 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.setPalette(palette)
         Style = mw.style()
         self.form.setStyle(Style)
+
+        # Get the address of the repository address
+        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
+        self.ReproAdress = StandardFunctions.ReturnXML_Value(
+            PackageXML, "url", "type", "repository"
+        )
 
         # Set the size of the window to the previous state
         #
@@ -434,6 +451,17 @@ class LoadDialog(Settings_ui.Ui_Settings):
             "color", QColor(Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND)
         )
 
+        # Get the icon from the FreeCAD help
+        helpMenu = mw.findChildren(QMenu, "&Help")[0]
+        helpAction = helpMenu.actions()[0]
+        helpIcon = helpAction.icon()
+
+        if helpIcon is not None:
+            self.form.HelpButton.setIcon(helpIcon)
+        self.form.HelpButton.setMinimumHeight(
+            self.form.GenerateJsonExit.minimumHeight()
+        )
+
         # region - connect controls with functions----------------------------------------------------
         #
         # Connect Backup
@@ -492,6 +520,12 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
         self.form.Cancel.connect(self.form.Cancel, SIGNAL("clicked()"), Cancel)
 
+        # Connect the help buttons
+        def Help():
+            self.on_Helpbutton_clicked(self)
+
+        self.form.HelpButton.connect(self.form.HelpButton, SIGNAL("clicked()"), Help)
+
         # Connect the button GenerateJsonExit with the function on_GenerateJsonExit_clicked
         def GenerateJsonExit():
             self.on_Close_clicked(self)
@@ -536,7 +570,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
 
         # endregion
 
-        # Connect the controls for custom icons and colors
+        # region - Connect the controls for custom icons and colors
         self.form.CustomIcons.clicked.connect(self.on_CustomIcons_clicked)
 
         #
@@ -604,6 +638,7 @@ class LoadDialog(Settings_ui.Ui_Settings):
         self.form.Color_Background_App.clicked.connect(
             self.on_Color_Background_App_clicked
         )
+        # endregion
 
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
@@ -1237,6 +1272,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
             "SettingsDialog_Width", self.form.width()
         )
 
+        # Emit a close signal
+        self.closeSignal.emit()
         # Close the form
         self.form.close()
         return
@@ -1387,6 +1424,8 @@ class LoadDialog(Settings_ui.Ui_Settings):
             "SettingsDialog_Width", self.form.width()
         )
 
+        # Emit a close signal
+        self.closeSignal.emit()
         # Close the form
         self.form.close()
         # show the restart dialog
@@ -1396,6 +1435,16 @@ class LoadDialog(Settings_ui.Ui_Settings):
                 StandardFunctions.restart_freecad()
             if result == "no":
                 App.saveParameter()
+        return
+
+    @staticmethod
+    def on_Helpbutton_clicked(self):
+        if self.ReproAdress != "" or self.ReproAdress is not None:
+            if not self.ReproAdress.endswith("/"):
+                self.ReproAdress = self.ReproAdress + "/"
+
+            Adress = self.ReproAdress + "wiki"
+            webbrowser.open(Adress, new=2, autoraise=True)
         return
 
     @staticmethod
@@ -1564,6 +1613,35 @@ class LoadDialog(Settings_ui.Ui_Settings):
         return
 
     # endregion---------------------------------------------------------------------------------------
+
+
+class EventInspector(QObject):
+    # closeSignal = LoadDialog.closeSignal
+
+    def __init__(self, parent):
+        super(EventInspector, self).__init__(parent)
+
+    def eventFilter(self, obj, event):
+        import FCBinding
+
+        # Show the mainwindow after the application is activated
+        if event.type() == QEvent.Type.Close:
+            # self.closeSignal.emit()
+            mw = Gui.getMainWindow()
+            RibbonBar: FCBinding.ModernMenu = mw.findChild(
+                FCBinding.ModernMenu, "Ribbon"
+            )
+            self.EnableRibbonToolbarsAndMenus(RibbonBar=RibbonBar)
+            return False
+
+        return False
+
+    def EnableRibbonToolbarsAndMenus(self, RibbonBar):
+        RibbonBar.rightToolBar().setEnabled(True)
+        RibbonBar.quickAccessToolBar().setEnabled(True)
+        RibbonBar.applicationOptionButton().setEnabled(True)
+        Gui.updateGui()
+        return
 
 
 def main():

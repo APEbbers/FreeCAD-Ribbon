@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsnMsOlI.ui'
+## Form generated from reading UI file 'SettingsAxImyX.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.1
+## Created by: Qt User Interface Compiler version 6.8.3
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -56,6 +56,7 @@ from PySide.QtWidgets import (
     QSpacerItem,
     QSpinBox,
     QTabWidget,
+    QToolButton,
     QVBoxLayout,
     QWidget,
 )
@@ -76,33 +77,8 @@ class Ui_Settings(object):
         Settings.setSizePolicy(sizePolicy)
         Settings.setMinimumSize(QSize(600, 600))
         Settings.setAutoFillBackground(False)
-        self.gridLayout_40 = QGridLayout(Settings)
-        self.gridLayout_40.setObjectName("gridLayout_40")
-        self.gridLayout_7 = QGridLayout()
-        self.gridLayout_7.setObjectName("gridLayout_7")
-        self.Reset = QPushButton(Settings)
-        self.Reset.setObjectName("Reset")
-
-        self.gridLayout_7.addWidget(self.Reset, 0, 0, 1, 1)
-
-        self.horizontalSpacer_2 = QSpacerItem(
-            40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
-        )
-
-        self.gridLayout_7.addItem(self.horizontalSpacer_2, 0, 1, 1, 1)
-
-        self.GenerateJsonExit = QPushButton(Settings)
-        self.GenerateJsonExit.setObjectName("GenerateJsonExit")
-
-        self.gridLayout_7.addWidget(self.GenerateJsonExit, 0, 2, 1, 1)
-
-        self.Cancel = QPushButton(Settings)
-        self.Cancel.setObjectName("Cancel")
-
-        self.gridLayout_7.addWidget(self.Cancel, 0, 3, 1, 1)
-
-        self.gridLayout_40.addLayout(self.gridLayout_7, 1, 0, 1, 1)
-
+        self.gridLayout_36 = QGridLayout(Settings)
+        self.gridLayout_36.setObjectName("gridLayout_36")
         self.gridLayout_6 = QGridLayout()
         self.gridLayout_6.setObjectName("gridLayout_6")
         self.scrollArea = QScrollArea(Settings)
@@ -1213,7 +1189,43 @@ class Ui_Settings(object):
 
         self.gridLayout_6.addWidget(self.scrollArea, 0, 0, 1, 3)
 
-        self.gridLayout_40.addLayout(self.gridLayout_6, 0, 0, 1, 2)
+        self.gridLayout_36.addLayout(self.gridLayout_6, 0, 0, 1, 1)
+
+        self.gridLayout_7 = QGridLayout()
+        self.gridLayout_7.setObjectName("gridLayout_7")
+        self.Cancel = QPushButton(Settings)
+        self.Cancel.setObjectName("Cancel")
+
+        self.gridLayout_7.addWidget(self.Cancel, 0, 3, 1, 1)
+
+        self.horizontalSpacer_2 = QSpacerItem(
+            40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
+        )
+
+        self.gridLayout_7.addItem(self.horizontalSpacer_2, 0, 1, 1, 1)
+
+        self.horizontalSpacer_11 = QSpacerItem(
+            10, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum
+        )
+
+        self.gridLayout_7.addItem(self.horizontalSpacer_11, 0, 4, 1, 1)
+
+        self.Reset = QPushButton(Settings)
+        self.Reset.setObjectName("Reset")
+
+        self.gridLayout_7.addWidget(self.Reset, 0, 0, 1, 1)
+
+        self.GenerateJsonExit = QPushButton(Settings)
+        self.GenerateJsonExit.setObjectName("GenerateJsonExit")
+
+        self.gridLayout_7.addWidget(self.GenerateJsonExit, 0, 2, 1, 1)
+
+        self.HelpButton = QToolButton(Settings)
+        self.HelpButton.setObjectName("HelpButton")
+
+        self.gridLayout_7.addWidget(self.HelpButton, 0, 5, 1, 1)
+
+        self.gridLayout_36.addLayout(self.gridLayout_7, 1, 0, 1, 1)
 
         self.retranslateUi(Settings)
         self.EnableBackup.toggled.connect(self.groupBox_Backup.setEnabled)
@@ -1234,17 +1246,6 @@ class Ui_Settings(object):
         Settings.setWindowTitle(
             QCoreApplication.translate("Settings", "Preferences", None)
         )
-        self.Reset.setText(QCoreApplication.translate("Settings", "Reset", None))
-        self.GenerateJsonExit.setText(
-            QCoreApplication.translate("Settings", "Close", None)
-        )
-        # if QT_CONFIG(shortcut)
-        self.GenerateJsonExit.setShortcut("")
-        # endif // QT_CONFIG(shortcut)
-        self.Cancel.setText(QCoreApplication.translate("Settings", "Cancel", None))
-        # if QT_CONFIG(shortcut)
-        self.Cancel.setShortcut(QCoreApplication.translate("Settings", "Esc", None))
-        # endif // QT_CONFIG(shortcut)
         self.groupBox.setTitle(
             QCoreApplication.translate("Settings", "Backup settings", None)
         )
@@ -1578,5 +1579,17 @@ class Ui_Settings(object):
             self.tabWidget.indexOf(self.tab_3),
             QCoreApplication.translate("Settings", "Miscellaneous", None),
         )
+        self.Cancel.setText(QCoreApplication.translate("Settings", "Cancel", None))
+        # if QT_CONFIG(shortcut)
+        self.Cancel.setShortcut(QCoreApplication.translate("Settings", "Esc", None))
+        # endif // QT_CONFIG(shortcut)
+        self.Reset.setText(QCoreApplication.translate("Settings", "Reset", None))
+        self.GenerateJsonExit.setText(
+            QCoreApplication.translate("Settings", "Close", None)
+        )
+        # if QT_CONFIG(shortcut)
+        self.GenerateJsonExit.setShortcut("")
+        # endif // QT_CONFIG(shortcut)
+        self.HelpButton.setText(QCoreApplication.translate("Settings", "...", None))
 
     # retranslateUi

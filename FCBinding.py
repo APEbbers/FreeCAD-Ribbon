@@ -48,6 +48,8 @@ from PySide.QtWidgets import (
     QLabel,
     QTreeWidget,
     QStatusBar,
+    QStyleOption,
+    QDialog,
     QApplication,
     QGridLayout,
     QLayoutItem,
@@ -202,6 +204,9 @@ class ModernMenu(RibbonBar):
 
     # Used for a message when a datafile update is needed.
     LayoutMenuShortCut = ""
+
+    # Define a indictor for wether the design menu is loaded or not.
+    DesignMenuLoaded = False
 
     MenuBar = mw.menuBar()
 
@@ -770,25 +775,28 @@ class ModernMenu(RibbonBar):
                 )
 
         # Get the main window, its style, the ribbon and the restore button
-        RestoreButton: QToolButton = self.rightToolBar().findChildren(
-            QToolButton, "RestoreButton"
-        )[0]
-        # If the mainwindow is maximized, set the window state to maximize and set the correct icon
-        if mw.isMaximized():
-            try:
-                RestoreButton.setIcon(
-                    StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2]
-                )
-            except Exception:
-                pass
-        # If the mainwindow is not maximized, set the window state to no state and set the correct icon
-        if mw.isMaximized() is False:
-            try:
-                RestoreButton.setIcon(
-                    StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1]
-                )
-            except Exception:
-                pass
+        try:
+            RestoreButton: QToolButton = self.rightToolBar().findChildren(
+                QToolButton, "RestoreButton"
+            )[0]
+            # If the mainwindow is maximized, set the window state to maximize and set the correct icon
+            if mw.isMaximized():
+                try:
+                    RestoreButton.setIcon(
+                        StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2]
+                    )
+                except Exception:
+                    pass
+            # If the mainwindow is not maximized, set the window state to no state and set the correct icon
+            if mw.isMaximized() is False:
+                try:
+                    RestoreButton.setIcon(
+                        StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1]
+                    )
+                except Exception:
+                    pass
+        except Exception:
+            pass
 
         # Install an event filter to catch events from the main window and act on it.
         mw.installEventFilter(EventInspector(mw))
@@ -2320,11 +2328,51 @@ class ModernMenu(RibbonBar):
         return
 
     def loadDesignMenu(self):
-        LoadDesign_Ribbon.main()
+        # Get the form
+        Dialog = LoadDesign_Ribbon.LoadDialog()
+        # Show the form
+        Dialog.form.show()
+
+        # Disable the quick toolbar, righttoolbar and application menu
+        self.rightToolBar().setDisabled(True)
+        self.quickAccessToolBar().setDisabled(True)
+        self.applicationOptionButton().setDisabled(True)
+        Gui.updateGui()
+        # indicate that the design menu is loaded
+        self.DesignMenuLoaded = True
+
+        # # Connect the close signal of the designmenu
+        # Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
+
+        return
+
+    def EnableRibbonToolbarsAndMenus(self):
+        self.rightToolBar().setEnabled(True)
+        self.quickAccessToolBar().setEnabled(True)
+        self.applicationOptionButton().setEnabled(True)
+        Gui.updateGui()
+
+        self.loadDesignMenu = False
+
         return
 
     def loadSettingsMenu(self):
-        LoadSettings_Ribbon.main()
+        # Get the form
+        Dialog = LoadSettings_Ribbon.LoadDialog()
+        # Show the form
+        Dialog.form.show()
+
+        # Disable the quick toolbar, righttoolbar and application menu
+        self.rightToolBar().setDisabled(True)
+        self.quickAccessToolBar().setDisabled(True)
+        self.applicationOptionButton().setDisabled(True)
+        Gui.updateGui()
+        # indicate that the design menu is loaded
+        self.DesignMenuLoaded = True
+
+        # # Connect the close signal of the designmenu
+        # Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
+
         return
 
     def on_AboutButton_clicked(self):
@@ -2407,6 +2455,13 @@ class ModernMenu(RibbonBar):
 
             # hide normal toolbars
             self.hideClassicToolbars()
+
+        if self.DesignMenuLoaded is True:
+            # Disable the quick toolbar, righttoolbar and application menu
+            self.rightToolBar().setDisabled(True)
+            self.quickAccessToolBar().setDisabled(True)
+            self.applicationOptionButton().setDisabled(True)
+            Gui.updateGui()
         return
 
     def onWbActivated(self):
@@ -2460,6 +2515,13 @@ class ModernMenu(RibbonBar):
         # create panels. Do this after updateCurrentTab.
         # Otherwise, the sketcher workbench won;t be loaded properly the first time
         self.buildPanels()
+
+        if self.DesignMenuLoaded is True:
+            # Disable the quick toolbar, righttoolbar and application menu
+            self.rightToolBar().setDisabled(True)
+            self.quickAccessToolBar().setDisabled(True)
+            self.applicationOptionButton().setDisabled(True)
+            Gui.updateGui()
         return
 
     def onTabBarClicked(self):
@@ -3259,6 +3321,13 @@ class ModernMenu(RibbonBar):
             self.RibbonHeight - self.RibbonMinimalHeight - 3
         )
         self.setRibbonHeight(self.RibbonHeight)
+
+        if self.DesignMenuLoaded is True:
+            # Disable the quick toolbar, righttoolbar and application menu
+            self.rightToolBar().setDisabled(True)
+            self.quickAccessToolBar().setDisabled(True)
+            self.applicationOptionButton().setDisabled(True)
+            Gui.updateGui()
         return
 
     def on_ScrollButton_Category_clicked(
@@ -3277,6 +3346,13 @@ class ModernMenu(RibbonBar):
             self.tabBar().setCurrentIndex(currentWbIndex)
             self.connectSignals()
         self.ApplicationMenus()
+
+        if self.DesignMenuLoaded is True:
+            # Disable the quick toolbar, righttoolbar and application menu
+            self.rightToolBar().setDisabled(True)
+            self.quickAccessToolBar().setDisabled(True)
+            self.applicationOptionButton().setDisabled(True)
+            Gui.updateGui()
         return
 
     def hideClassicToolbars(self):
@@ -3287,6 +3363,14 @@ class ModernMenu(RibbonBar):
             if (
                 parentWidget.objectName() == "statusBar"
                 or parentWidget.objectName() == "StatusBarArea"
+            ):
+                toolbar.setEnabled(True)
+                toolbar.setVisible(True)
+            #
+            if (
+                mw.toolBarArea(toolbar) == Qt.ToolBarArea.LeftToolBarArea
+                or mw.toolBarArea(toolbar) == Qt.ToolBarArea.RightToolBarArea
+                or mw.toolBarArea(toolbar) == Qt.ToolBarArea.BottomToolBarArea
             ):
                 toolbar.setEnabled(True)
                 toolbar.setVisible(True)
@@ -4167,6 +4251,9 @@ class EventInspector(QObject):
                     f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
                 )
             return QObject.eventFilter(self, obj, event)
+
+        # print(event)
+
         return False
 
 
