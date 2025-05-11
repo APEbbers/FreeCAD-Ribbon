@@ -785,25 +785,28 @@ class ModernMenu(RibbonBar):
                 )
 
         # Get the main window, its style, the ribbon and the restore button
-        RestoreButton: QToolButton = self.rightToolBar().findChildren(
-            QToolButton, "RestoreButton"
-        )[0]
-        # If the mainwindow is maximized, set the window state to maximize and set the correct icon
-        if mw.isMaximized():
-            try:
-                RestoreButton.setIcon(
-                    StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2]
-                )
-            except Exception:
-                pass
-        # If the mainwindow is not maximized, set the window state to no state and set the correct icon
-        if mw.isMaximized() is False:
-            try:
-                RestoreButton.setIcon(
-                    StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1]
-                )
-            except Exception:
-                pass
+        try:
+            RestoreButton: QToolButton = self.rightToolBar().findChildren(
+                QToolButton, "RestoreButton"
+            )[0]
+            # If the mainwindow is maximized, set the window state to maximize and set the correct icon
+            if mw.isMaximized():
+                try:
+                    RestoreButton.setIcon(
+                        StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2]
+                    )
+                except Exception:
+                    pass
+            # If the mainwindow is not maximized, set the window state to no state and set the correct icon
+            if mw.isMaximized() is False:
+                try:
+                    RestoreButton.setIcon(
+                        StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1]
+                    )
+                except Exception:
+                    pass
+        except Exception:
+            pass
 
         # Install an event filter to catch events from the main window and act on it.
         mw.installEventFilter(EventInspector(mw))
