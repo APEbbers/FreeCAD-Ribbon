@@ -238,6 +238,9 @@ class ModernMenu(RibbonBar):
         super().__init__(title="")
         self.setObjectName("Ribbon")
 
+        # Enable dragdrop
+        self.setAcceptDrops(True)
+
         # connect the signals
         self.connectSignals()
 
