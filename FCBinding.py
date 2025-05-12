@@ -2281,6 +2281,7 @@ class ModernMenu(RibbonBar):
                 showPanelOptionButton=True,
             )
             panel.panelOptionButton().hide()
+            panel.setAcceptDrops(True)
 
             # get list of all buttons in toolbar
             allButtons: list = []
