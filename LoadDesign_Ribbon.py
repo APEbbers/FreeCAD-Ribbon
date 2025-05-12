@@ -39,7 +39,7 @@ from PySide.QtWidgets import (
     QRadioButton,
     QLabel,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize
+from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
 import sys
 import json
 from datetime import datetime
@@ -71,7 +71,7 @@ translate = App.Qt.translate
 mw = Gui.getMainWindow()
 
 
-class LoadDialog(Design_ui.Ui_Form):
+class LoadDialog(Design_ui.Ui_Form, QObject):
 
     ReproAdress: str = ""
 
@@ -109,7 +109,11 @@ class LoadDialog(Design_ui.Ui_Form):
     # Create a tomporary list for newly added dropdown buttons
     newDDBList = []
 
+    # Create a signal to emit the closeEvent to FCBinding
+    closeSignal = Signal()
+
     def __init__(self):
+
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
         super(LoadDialog, self).__init__()
 
@@ -118,6 +122,9 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # # this will create a Qt widget from our ui file
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "Design.ui"))
+
+        # Install an event filter to catch events from the main window and act on it.
+        self.form.installEventFilter(EventInspector(self.form))
 
         # Get the address of the repository address
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
@@ -374,7 +381,7 @@ class LoadDialog(Design_ui.Ui_Form):
         # region - Load all controls------------------------------------------------------------------
         #
         # laod all controls
-        self.LoadControls()
+        self.LoadControls(False)
         # endregion-----------------------------------------------------------------------------------
 
         # region - connect controls with functions----------------------------------------------------
@@ -736,10 +743,7 @@ class LoadDialog(Design_ui.Ui_Form):
         )
 
         # Connect the button Close with the function on_Close_clicked
-        def Close():
-            self.on_Close_clicked(self)
-
-        self.form.Close.connect(self.form.Close, SIGNAL("clicked()"), Close)
+        self.form.Close.clicked.connect(self.on_Close_clicked)
 
         self.form.RestoreJson.connect(
             self.form.RestoreJson, SIGNAL("clicked()"), self.on_RestoreJson_clicked
@@ -880,8 +884,6 @@ class LoadDialog(Design_ui.Ui_Form):
 
         # --- Toolbars ----------------------------------------------------------------------------------------------
         #
-        # Store the current active workbench
-        ActiveWB = Gui.activeWorkbench().name()
         # Go through the list of workbenches
         i = 0
         for WorkBench in self.List_Workbenches:
@@ -1163,22 +1165,16 @@ class LoadDialog(Design_ui.Ui_Form):
 
             self.WriteJson()
 
-        # run init again
-        self.__init__()
-
-        # Set the first tab active
-        self.form.tabWidget.setCurrentIndex(0)
-
-        # Hide the progress message
-        self.loadAllWorkbenches(HideOnly=True)
-
         if RestartFreeCAD is False:
             # Show the dialog again
-            self.form.show()
+            self.closeSignal.emit()
         if RestartFreeCAD is True:
             result = StandardFunctions.RestartDialog(includeIcons=True)
             if result == "yes":
                 StandardFunctions.restart_freecad()
+            else:
+                self.closeSignal.emit()
+
         return
 
     # region - Control functions----------------------------------------------------------------------
@@ -3689,7 +3685,7 @@ class LoadDialog(Design_ui.Ui_Form):
         self.form.UpdateJson.setDisabled(True)
         return
 
-    @staticmethod
+    # @staticmethod
     def on_Close_clicked(self):
         self.WriteJson()
 
@@ -3700,6 +3696,8 @@ class LoadDialog(Design_ui.Ui_Form):
         Parameters_Ribbon.Settings.SetIntSetting(
             "LayoutDialog_Width", self.form.width()
         )
+        # Emit a close signal
+        # self.closeSignal.emit()
         # Close the form
         self.form.close()
 
@@ -3719,6 +3717,8 @@ class LoadDialog(Design_ui.Ui_Form):
         Parameters_Ribbon.Settings.SetIntSetting(
             "LayoutDialog_Width", self.form.width()
         )
+        # Emit a close signal
+        # self.closeSignal.emit()
         # Close the form
         self.form.close()
         return
@@ -4832,29 +4832,33 @@ class LoadDialog(Design_ui.Ui_Form):
         if "ignoredToolbars" in data:
             if data["ignoredToolbars"].sort() != self.List_IgnoredToolbars.sort():
                 IsChanged = True
+                print("ignoredToolbars")
         if "iconOnlyToolbars" in data:
             if data["iconOnlyToolbars"].sort() != self.List_IconOnly_Toolbars.sort():
                 IsChanged = True
+                print("iconOnlyToolbars")
         if "quickAccessCommands" in data:
             if (
                 data["quickAccessCommands"].sort()
                 != self.List_QuickAccessCommands.sort()
             ):
                 IsChanged = True
+                print("quickAccessCommands")
         if "ignoredWorkbenches" in data:
             if data["ignoredWorkbenches"].sort() != self.List_IgnoredWorkbenches.sort():
                 IsChanged = True
+                print("ignoredWorkbenches")
         if "customToolbars" in data:
-            if data["customToolbars"] != self.Dict_CustomToolbars:
+            if data["customToolbars"] != self.Dict_CustomToolbars["customToolbars"]:
                 IsChanged = True
         if "dropdownButtons" in data:
-            if data["dropdownButtons"] != self.Dict_DropDownButtons:
+            if data["dropdownButtons"] != self.Dict_DropDownButtons["dropdownButtons"]:
                 IsChanged = True
         if "newPanels" in data:
-            if data["newPanels"] != self.Dict_NewPanels:
+            if data["newPanels"] != self.Dict_NewPanels["newPanels"]:
                 IsChanged = True
         if "workbenches" in data:
-            if data["workbenches"] != self.Dict_RibbonCommandPanel:
+            if data["workbenches"] != self.Dict_RibbonCommandPanel["workbenches"]:
                 IsChanged = True
 
         JsonFile.close()
@@ -4898,33 +4902,34 @@ class LoadDialog(Design_ui.Ui_Form):
 
         return PanelList_RD
 
-    def LoadControls(self):
+    def LoadControls(self, ClearLists=True):
         # Clear all listWidgets
-        self.form.WorkbenchList_IS.clear()
-        self.form.Panels_IS.clear()
-        #
-        self.form.CommandsAvailable_QC.clear()
-        self.form.CommandsSelected_QC.clear()
-        #
-        self.form.PanelsToExclude_EP.clear()
-        self.form.PanelsExcluded_EP.clear()
-        #
-        self.form.WorkbenchesAvailable_IW.clear()
-        self.form.WorkbenchesSelected_IW.clear()
-        #
-        self.form.PanelAvailable_CP.clear()
-        self.form.PanelSelected_CP.clear()
-        #
-        self.form.WorkbenchList_NP.clear()
-        self.form.CommandsAvailable_NP.clear()
-        self.form.NewPanel_NP.clear()
-        #
-        self.form.CommandsAvailable_DDB.clear()
-        self.form.NewControl_DDB.clear()
-        self.form.ListCategory_DDB.clear()
-        #
-        self.form.PanelOrder_RD.clear()
-        self.form.WorkbenchList_RD.clear()
+        if ClearLists is True:
+            self.form.WorkbenchList_IS.clear()
+            self.form.Panels_IS.clear()
+            #
+            self.form.CommandsAvailable_QC.clear()
+            self.form.CommandsSelected_QC.clear()
+            #
+            self.form.PanelsToExclude_EP.clear()
+            self.form.PanelsExcluded_EP.clear()
+            #
+            self.form.WorkbenchesAvailable_IW.clear()
+            self.form.WorkbenchesSelected_IW.clear()
+            #
+            self.form.PanelAvailable_CP.clear()
+            self.form.PanelSelected_CP.clear()
+            #
+            self.form.WorkbenchList_NP.clear()
+            self.form.CommandsAvailable_NP.clear()
+            self.form.NewPanel_NP.clear()
+            #
+            self.form.CommandsAvailable_DDB.clear()
+            self.form.NewControl_DDB.clear()
+            self.form.ListCategory_DDB.clear()
+            #
+            self.form.PanelOrder_RD.clear()
+            self.form.WorkbenchList_RD.clear()
 
         # -- Ribbon design tab --
         # Add all workbenches to the ListItem Widget. In this case a dropdown list.
@@ -5513,6 +5518,58 @@ class LoadDialog(Design_ui.Ui_Form):
             lbl.hide()
 
     # endregion---------------------------------------------------------------------------------------
+
+
+class EventInspector(QObject):
+    form = None
+
+    def __init__(self, parent):
+        self.form = parent
+        super(EventInspector, self).__init__(parent)
+
+    def eventFilter(self, obj, event):
+        import FCBinding
+
+        # Show the mainwindow after the application is activated
+        if event.type() == QEvent.Type.Close:
+            # self.closeSignal.emit()
+            mw = Gui.getMainWindow()
+            RibbonBar: FCBinding.ModernMenu = mw.findChild(
+                FCBinding.ModernMenu, "Ribbon"
+            )
+            self.EnableRibbonToolbarsAndMenus(RibbonBar=RibbonBar)
+            return False
+
+        if event.type() == QEvent.Type.WindowStateChange:
+            # self.closeSignal.emit()
+            mw = Gui.getMainWindow()
+            if self.form.windowState() == Qt.WindowState.WindowMinimized:
+                RibbonBar: FCBinding.ModernMenu = mw.findChild(
+                    FCBinding.ModernMenu, "Ribbon"
+                )
+                self.EnableRibbonToolbarsAndMenus(RibbonBar=RibbonBar)
+            else:
+                RibbonBar: FCBinding.ModernMenu = mw.findChild(
+                    FCBinding.ModernMenu, "Ribbon"
+                )
+                self.DisableRibbonToolbarsAndMenus(RibbonBar=RibbonBar)
+            return False
+
+        return False
+
+    def EnableRibbonToolbarsAndMenus(self, RibbonBar):
+        RibbonBar.rightToolBar().setEnabled(True)
+        RibbonBar.quickAccessToolBar().setEnabled(True)
+        RibbonBar.applicationOptionButton().setEnabled(True)
+        Gui.updateGui()
+        return
+
+    def DisableRibbonToolbarsAndMenus(self, RibbonBar):
+        RibbonBar.rightToolBar().setDisabled(True)
+        RibbonBar.quickAccessToolBar().setDisabled(True)
+        RibbonBar.applicationOptionButton().setDisabled(True)
+        Gui.updateGui()
+        return
 
 
 def main():
