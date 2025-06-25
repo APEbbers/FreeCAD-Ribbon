@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignmdCQNa.ui'
+## Form generated from reading UI file 'DesignbOeZGm.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.8.1
 ##
@@ -501,7 +501,7 @@ class Ui_Form(object):
         __qlistwidgetitem1.setCheckState(Qt.Checked)
         self.CommandsAvailable_QC.setObjectName("CommandsAvailable_QC")
         self.CommandsAvailable_QC.setSelectionMode(
-            QAbstractItemView.SelectionMode.MultiSelection
+            QAbstractItemView.SelectionMode.ExtendedSelection
         )
         self.CommandsAvailable_QC.setSortingEnabled(True)
 
@@ -531,7 +531,7 @@ class Ui_Form(object):
         __qlistwidgetitem2.setCheckState(Qt.Checked)
         self.PanelsToExclude_EP.setObjectName("PanelsToExclude_EP")
         self.PanelsToExclude_EP.setSelectionMode(
-            QAbstractItemView.SelectionMode.MultiSelection
+            QAbstractItemView.SelectionMode.ExtendedSelection
         )
         self.PanelsToExclude_EP.setSortingEnabled(True)
 
@@ -624,7 +624,7 @@ class Ui_Form(object):
         __qlistwidgetitem4.setCheckState(Qt.Checked)
         self.WorkbenchesAvailable_IW.setObjectName("WorkbenchesAvailable_IW")
         self.WorkbenchesAvailable_IW.setSelectionMode(
-            QAbstractItemView.SelectionMode.MultiSelection
+            QAbstractItemView.SelectionMode.ExtendedSelection
         )
         self.WorkbenchesAvailable_IW.setSortingEnabled(True)
 
@@ -786,7 +786,7 @@ class Ui_Form(object):
         __qlistwidgetitem6.setCheckState(Qt.Checked)
         self.PanelAvailable_CP.setObjectName("PanelAvailable_CP")
         self.PanelAvailable_CP.setSelectionMode(
-            QAbstractItemView.SelectionMode.MultiSelection
+            QAbstractItemView.SelectionMode.ExtendedSelection
         )
         self.PanelAvailable_CP.setSortingEnabled(True)
 
@@ -891,7 +891,7 @@ class Ui_Form(object):
         __qlistwidgetitem8.setCheckState(Qt.Checked)
         self.CommandsAvailable_DDB.setObjectName("CommandsAvailable_DDB")
         self.CommandsAvailable_DDB.setSelectionMode(
-            QAbstractItemView.SelectionMode.MultiSelection
+            QAbstractItemView.SelectionMode.ExtendedSelection
         )
         self.CommandsAvailable_DDB.setSortingEnabled(True)
 
@@ -1083,7 +1083,7 @@ class Ui_Form(object):
         __qlistwidgetitem10.setCheckState(Qt.Checked)
         self.CommandsAvailable_NP.setObjectName("CommandsAvailable_NP")
         self.CommandsAvailable_NP.setSelectionMode(
-            QAbstractItemView.SelectionMode.MultiSelection
+            QAbstractItemView.SelectionMode.ExtendedSelection
         )
         self.CommandsAvailable_NP.setSortingEnabled(True)
 
@@ -1516,7 +1516,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(5)
+        self.tabWidget.setCurrentIndex(7)
 
         QMetaObject.connectSlotsByName(Form)
 
@@ -1527,7 +1527,7 @@ class Ui_Form(object):
         self.label_14.setText(
             QCoreApplication.translate(
                 "Form",
-                '<html><head/><body><p><span style=" font-style:italic;">Reload workbenches. Be aware that this may take a while!</span></p></body></html>',
+                '<html><head/><body><p><span style=" font-style:italic;">Reload workbenches. Be aware, this may take a while!</span></p></body></html>',
                 None,
             )
         )
