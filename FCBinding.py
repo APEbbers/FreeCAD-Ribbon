@@ -2303,18 +2303,8 @@ class ModernMenu(RibbonBar):
 
                     # XXX check that positionsList consists of strings only
                     def sortButtons(button: QToolButton):
-                        # Use the text from the button as backup
+                        # Use the text from the button
                         Text = button.text()
-                        # Get the menu text
-                        if len(button.actions()) > 0:
-                            action = button.actions()[0]
-                            Text = StandardFunctions.CommandInfoCorrections(
-                                action.data()
-                            )["menuText"]
-
-                        if Text == "":
-                            return -1
-
                         position = None
                         try:
                             position = OrderList.index(Text)
