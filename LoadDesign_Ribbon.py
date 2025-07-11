@@ -2985,16 +2985,17 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             def SortCommands(item):
                 try:
                     if "separator" not in item.lower():
-                        MenuName = CommandInfoCorrections(item)["menuText"].replace(
-                            "&", ""
-                        )
-                        if MenuName == "":
-                            for CommandItem in self.List_Commands:
-                                if CommandItem[0] == item:
-                                    MenuName = CommandItem[2]
-                                if MenuName == "":
-                                    continue
-                        item = MenuName
+                        if StandardFunctions.checkFreeCADVersion(1,1,0,42523) is False:                   
+                            MenuName = CommandInfoCorrections(item)["menuText"].replace(
+                                "&", ""
+                            )
+                            if MenuName == "":
+                                for CommandItem in self.List_Commands:
+                                    if CommandItem[0] == item:
+                                        MenuName = CommandItem[2]
+                                    if MenuName == "":
+                                        continue
+                            item = MenuName                      
 
                     OrderList: list = self.Dict_RibbonCommandPanel["workbenches"][
                         WorkBenchName

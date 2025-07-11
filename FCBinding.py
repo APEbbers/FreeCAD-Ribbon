@@ -242,6 +242,9 @@ class ModernMenu(RibbonBar):
 
         # connect the signals
         self.connectSignals()
+        
+        if StandardFunctions.checkFreeCADVersion(1,1,0,42523) is True:
+           self.ConvertRibbonStructure() 
 
         # read ribbon structure from JSON file
         with open(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, "r") as file:
@@ -2311,6 +2314,10 @@ class ModernMenu(RibbonBar):
                     def sortButtons(button: QToolButton):
                         # Use the text from the button
                         Text = button.text()
+                        if StandardFunctions.checkFreeCADVersion(1,1,0,42523) is True:
+                            if not "ddb" in Text and "newPanel" in Text:
+                                Text = button.actions()[0].data()
+
                         position = None
                         try:
                             position = OrderList.index(Text)
@@ -3741,6 +3748,31 @@ class ModernMenu(RibbonBar):
                                     ][ToolBar]["commands"][Command]["text"] = ""
 
             print("Ribbon UI: Custom text are reset because the language was changed")
+        return
+
+    def ConvertRibbonStructure(self):
+        if "workbenches" in self.ribbonStructure:
+            for workbenchName in self.ribbonStructure["workbenches"]:
+                if "toolbars" in self.ribbonStructure["workbenches"][workbenchName]:
+                    for ToolBar in self.ribbonStructure["workbenches"][
+                        workbenchName
+                    ]["toolbars"]:
+                        if (
+                            self.ribbonStructure["workbenches"][workbenchName][
+                                "toolbars"
+                            ][ToolBar] == "order"
+                        ):
+                            ConvertedList = []
+                            for MenuText in self.ribbonStructure["workbenches"][workbenchName][
+                                "toolbars"
+                            ][ToolBar]:
+                                for DataItem in self.List_Commands:
+                                    if DataItem[3] == workbenchName and MenuText == DataItem[4]:
+                                        ConvertedList.append(DataItem[0])
+                            
+                            self.ribbonStructure["workbenches"][workbenchName][
+                                "toolbars"
+                            ][ToolBar] = ConvertedList
         return
 
 
