@@ -2146,7 +2146,13 @@ class ModernMenu(RibbonBar):
         # Get custom toolbars that are created in the toolbar environment and add them to the list of toolbars
         CustomToolbars = self.List_ReturnCustomToolbars()
         for CustomToolbar in CustomToolbars:
-            if CustomToolbar[1] == workbenchName:
+            # Check if a toolbar with the same name already exists
+            isInList = False
+            for ToolBar in ListToolbars:
+                if ToolBar == CustomToolbar[0]:
+                    isInList = True
+            # if the toolbar doesn't exist yet and is part of this workbench, add it.
+            if CustomToolbar[1] == workbenchName and isInList is False:
                 ListToolbars.append(CustomToolbar[0])
         # Get the global custom toolbars that are created in the toolbar environment and add them to the list of toolbars
         CustomToolbars_Global = self.List_ReturnCustomToolbars_Global()
