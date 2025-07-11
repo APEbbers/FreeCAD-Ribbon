@@ -4174,6 +4174,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     Qt.ItemDataRole.UserRole
                     )
                     
+                    # Get the menuname from the command list
                     for i2 in range(len(self.List_Commands)):
                         if CommandName == self.List_Commands[i2][0]:
                             MenuName = self.List_Commands[i2][2]

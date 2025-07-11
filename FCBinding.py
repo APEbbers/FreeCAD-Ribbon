@@ -275,8 +275,6 @@ class ModernMenu(RibbonBar):
         ) is True:
             self.ConvertRibbonStructure()
 
-        #    text = "the data files will be converted to a newer version.\n To revert back, use the restore function in Ribbon design menu"
-        #    StandardFunctions.Mbox(text=text, title="FreeCAD Ribbon", style=0)
 
         # check the language and remove texts from the ribbonstructure if the language does not match
         self.CheckLanguage()
@@ -3846,21 +3844,48 @@ class ModernMenu(RibbonBar):
         return
 
     def ConvertRibbonStructure(self):
+        # Define a result parameter
         isConverted = False
+        # Get the FreeCAD Version
+        version = App.Version()
+        
+        # Check if version is stored in the ribbon structure.
+        # If so check if it is an older version. 
+        # If it is the same or newer version, return.
+        if "convertedWithVersion" in self.ribbonStructure:
+            main = self.ribbonStructure["convertedWithVersion"][0]
+            sub = self.ribbonStructure["convertedWithVersion"][1]
+            patch = self.ribbonStructure["convertedWithVersion"][2]
+            git_version = self.ribbonStructure["convertedWithVersion"][3]
+            if main >= int(version[0]):
+                if sub >= int(version[1]):
+                    if patch >= int(version[2]):
+                        if git_version >= int(version[3].split(" ")[0]):
+                            if Parameters_Ribbon.DEBUG_MODE is True:
+                                print("no conversion needed")
+                            return
 
+        # Check if there are workbenches and toolbars in the ribbon structure
         if "workbenches" in self.ribbonStructure:
             for workbenchName in self.ribbonStructure["workbenches"]:
                 if "toolbars" in self.ribbonStructure["workbenches"][workbenchName]:
                     for ToolBar in self.ribbonStructure["workbenches"][
                         workbenchName
                     ]["toolbars"]:
+                        # Skip the toolbar order
                         if ToolBar != "order":
+                            # If a toolbar has an order for its commands, continue
                             if "order" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][ToolBar]:
+                                # Get the current order list
                                 OrderList = self.ribbonStructure["workbenches"][
                                     workbenchName]["toolbars"][ToolBar]["order"]
+                                # Define a new list for the conversion
                                 ConvertedList = []
+                                # Go through the current order list
                                 for i in range(len(OrderList)):
                                     MenuText = OrderList[i]
+                                    # if it is an separator of custom dropdown button, just added ti the coverted list.
+                                    # For everything else, find the commandname in the datafile
                                     if "separator" in MenuText or "ddb" in MenuText:
                                         ConvertedList.append(MenuText)
                                     else:
@@ -3876,7 +3901,8 @@ class ModernMenu(RibbonBar):
                                                     ConvertedList.append(
                                                         DataItem[0])
                                                     break
-
+                                
+                                # Update the ordered list
                                 if len(ConvertedList) > 0:
                                     self.ribbonStructure["workbenches"][workbenchName][
                                         "toolbars"
@@ -3884,6 +3910,22 @@ class ModernMenu(RibbonBar):
                                     isConverted = True
 
         if isConverted is True:
+            # Add the version of FreeCAD on which this conversion is done, to the ribbonstructure
+            # Create a key if not present
+            StandardFunctions.add_keys_nested_dict(
+                self.ribbonStructure,
+                [
+                    "convertedWithVersion",
+                ],
+            )
+            self.ribbonStructure["convertedWithVersion"] = [
+                int(version[0]),
+                int(version[1]),
+                int(version[2]),
+                int(version[3].split(" ")[0])
+            ]
+            
+            # Update the json file but make also an backup
             # get the path for the Json file
             JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
 
