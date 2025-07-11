@@ -3870,10 +3870,12 @@ class ModernMenu(RibbonBar):
                                                 if MenuText == DataItem[0]:
                                                     ConvertedList.append(
                                                         DataItem[0])
+                                                    break
                                                 # If the data item is still a menutext, add the command instead.
                                                 if MenuText == DataItem[4]:
                                                     ConvertedList.append(
                                                         DataItem[0])
+                                                    break
 
                                 if len(ConvertedList) > 0:
                                     self.ribbonStructure["workbenches"][workbenchName][

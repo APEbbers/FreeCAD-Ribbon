@@ -4163,6 +4163,21 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 MenuName = self.form.CommandTable_RD.item(row, 0).data(
                     Qt.ItemDataRole.UserRole
                 )
+                # If it is a newer version of FreeCAD. use the commandname instead
+                if StandardFunctions.checkFreeCADVersion(
+                    Parameters_Ribbon.FreeCAD_Version["mainVersion"],
+                    Parameters_Ribbon.FreeCAD_Version["subVersion"],
+                    Parameters_Ribbon.FreeCAD_Version["patchVersion"],
+                    Parameters_Ribbon.FreeCAD_Version["gitVersion"],
+                    ) is True:
+                    CommandName = self.form.CommandTable_RD.item(row, 0).data(
+                    Qt.ItemDataRole.UserRole
+                    )
+                    
+                    for i2 in range(len(self.List_Commands)):
+                        if CommandName == self.List_Commands[i2][0]:
+                            MenuName = self.List_Commands[i2][2]
+                # Get the custom menu name                            
                 MenuNameEntered = self.form.CommandTable_RD.item(row, 0).text()
 
                 # Go through the list with all available commands.
@@ -4197,24 +4212,27 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
                 # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
                 for i6 in range(1, self.form.CommandTable_RD.columnCount()):
-                    CheckState = self.form.CommandTable_RD.item(row, i6).checkState()
-                    if CheckState == Qt.CheckState.Checked:
-                        if i6 == 1:
-                            Size = "small"
-                        if i6 == 2:
-                            Size = "medium"
-                        if i6 == 3:
-                            Size = "large"
-                    if i6 == 4 and CheckState == Qt.CheckState.Unchecked:
-                        Size = "none"
+                    try:
+                        CheckState = self.form.CommandTable_RD.item(row, i6).checkState()
+                        if CheckState == Qt.CheckState.Checked:
+                            if i6 == 1:
+                                Size = "small"
+                            if i6 == 2:
+                                Size = "medium"
+                            if i6 == 3:
+                                Size = "large"
+                        if i6 == 4 and CheckState == Qt.CheckState.Unchecked:
+                            Size = "none"
+                    except Exception:
+                        pass
 
                 Order = []
                 for i7 in range(1, self.form.CommandTable_RD.rowCount()):
                     Order.append(
-                        QTableWidgetItem(self.form.CommandTable_RD.item(i7, 0)).data(
-                            Qt.ItemDataRole.UserRole
+                            QTableWidgetItem(self.form.CommandTable_RD.item(i7, 0)).data(
+                                Qt.ItemDataRole.UserRole
+                            )
                         )
-                    )
 
                 StandardFunctions.add_keys_nested_dict(
                     self.Dict_RibbonCommandPanel,
