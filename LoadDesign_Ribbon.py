@@ -2985,7 +2985,12 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             def SortCommands(item):
                 try:
                     if "separator" not in item.lower():
-                        if StandardFunctions.checkFreeCADVersion(1,1,0,42523) is False:                   
+                        if StandardFunctions.checkFreeCADVersion(
+                            Parameters_Ribbon.FreeCAD_Version["mainVersion"],
+                            Parameters_Ribbon.FreeCAD_Version["subVersion"],
+                            Parameters_Ribbon.FreeCAD_Version["patchVersion"],
+                            Parameters_Ribbon.FreeCAD_Version["gitVersion"],
+                            ) is False:                   
                             MenuName = CommandInfoCorrections(item)["menuText"].replace(
                                 "&", ""
                             )

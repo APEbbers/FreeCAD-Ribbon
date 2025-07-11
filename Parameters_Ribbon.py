@@ -173,6 +173,13 @@ class Settings:
         Settings.SetStringSetting("CustomPanelPosition", DEFAULT_PANEL_POSITION_CUSTOM)
         return
 
+# region - The FreeCAD version to check
+FreeCAD_Version = {"mainVersion":1,
+                   "subVersion":1,
+                   "patchVersion":0,
+                   "gitVersion": 42523,
+                   }
+
 
 # region - Define the resources ----------------------------------------------------------------------------------------
 ICON_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "icons")
