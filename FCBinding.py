@@ -19,12 +19,6 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
-from pyqtribbon_local.category import RibbonCategoryLayoutButton
-from pyqtribbon_local.separator import RibbonSeparator
-from pyqtribbon_local.toolbutton import RibbonToolButton
-from pyqtribbon_local.panel import RibbonPanel
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
-import pyqtribbon_local as pyqtribbon
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
@@ -135,6 +129,12 @@ sys.path.append(pathBackup)
 
 translate = App.Qt.translate
 
+import pyqtribbon_local as pyqtribbon
+from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon_local.panel import RibbonPanel
+from pyqtribbon_local.toolbutton import RibbonToolButton
+from pyqtribbon_local.separator import RibbonSeparator
+from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
 # import pyqtribbon as pyqtribbon
 # from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
@@ -142,6 +142,7 @@ translate = App.Qt.translate
 # from pyqtribbon.toolbutton import RibbonToolButton
 # from pyqtribbon.separator import RibbonSeparator
 # from pyqtribbon.category import RibbonCategoryLayoutButton
+
 
 # Get the main window of FreeCAD
 mw = Gui.getMainWindow()
