@@ -3226,6 +3226,18 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             Qt.ItemDataRole.UserRole,
                             MenuName.replace("&", ""),
                         )
+                        # If it is a newer version of FreeCAD. use the commandname instead
+                        if StandardFunctions.checkFreeCADVersion(
+                            Parameters_Ribbon.FreeCAD_Version["mainVersion"],
+                            Parameters_Ribbon.FreeCAD_Version["subVersion"],
+                            Parameters_Ribbon.FreeCAD_Version["patchVersion"],
+                            Parameters_Ribbon.FreeCAD_Version["gitVersion"],
+                            ) is True:
+                            CommandWidgetItem.setData(
+                                Qt.ItemDataRole.UserRole,
+                                CommandName,
+                            )
+                        
                         CommandWidgetItem.setFlags(
                             CommandWidgetItem.flags() | Qt.ItemFlag.ItemIsEditable
                         )
