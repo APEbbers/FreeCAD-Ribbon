@@ -106,6 +106,8 @@ import Serialize_Ribbon
 import StyleMapping_Ribbon
 import platform
 import math
+from datetime import datetime
+import shutil
 
 # import Ribbon. This contains the ribbon commands for FreeCAD
 import Ribbon
@@ -118,10 +120,12 @@ pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
 pathUI = Parameters_Ribbon.UI_LOCATION
 pathScripts = os.path.join(os.path.dirname(__file__), "Scripts")
 pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
+pathBackup = Parameters_Ribbon.BACKUP_LOCATION
 sys.path.append(pathIcons)
 sys.path.append(pathStylSheets)
 sys.path.append(pathUI)
 sys.path.append(pathPackages)
+sys.path.append(pathBackup)
 
 translate = App.Qt.translate
 
@@ -243,14 +247,11 @@ class ModernMenu(RibbonBar):
         # connect the signals
         self.connectSignals()
         
-        if StandardFunctions.checkFreeCADVersion(1,1,0,42523) is True:
-           self.ConvertRibbonStructure() 
-
         # read ribbon structure from JSON file
         with open(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, "r") as file:
             self.ribbonStructure.update(json.load(file))
         file.close()
-
+           
         DataFile2 = os.path.join(os.path.dirname(__file__), "RibbonDataFile2.dat")
         if os.path.exists(DataFile2) is True:
             Data = {}
@@ -263,6 +264,13 @@ class ModernMenu(RibbonBar):
                 self.List_Commands = Data["List_Commands"]
             except Exception:
                 pass
+            
+                
+        if StandardFunctions.checkFreeCADVersion(1,1,0,42523) is True:
+           self.ConvertRibbonStructure()
+           
+        #    text = "the data files will be converted to a newer version.\n To revert back, use the restore function in Ribbon design menu"
+        #    StandardFunctions.Mbox(text=text, title="FreeCAD Ribbon", style=0)
 
         # check the language and remove texts from the ribbonstructure if the language does not match
         self.CheckLanguage()
@@ -2315,9 +2323,11 @@ class ModernMenu(RibbonBar):
                         # Use the text from the button
                         Text = button.text()
                         if StandardFunctions.checkFreeCADVersion(1,1,0,42523) is True:
-                            if not "ddb" in Text and "newPanel" in Text:
-                                Text = button.actions()[0].data()
-
+                            # if it is not a custom button or separator, update the Text
+                            if not "ddb" in Text and not "separator" in Text:
+                                if button.actions()[0].data() != "" and button.actions()[0].data() is not None:
+                                    Text = button.actions()[0].data()
+  
                         position = None
                         try:
                             position = OrderList.index(Text)
@@ -3751,29 +3761,59 @@ class ModernMenu(RibbonBar):
         return
 
     def ConvertRibbonStructure(self):
+        isConverted = False
+        
         if "workbenches" in self.ribbonStructure:
             for workbenchName in self.ribbonStructure["workbenches"]:
                 if "toolbars" in self.ribbonStructure["workbenches"][workbenchName]:
                     for ToolBar in self.ribbonStructure["workbenches"][
                         workbenchName
                     ]["toolbars"]:
-                        if (
-                            self.ribbonStructure["workbenches"][workbenchName][
-                                "toolbars"
-                            ][ToolBar] == "order"
-                        ):
-                            ConvertedList = []
-                            for MenuText in self.ribbonStructure["workbenches"][workbenchName][
-                                "toolbars"
-                            ][ToolBar]:
-                                for DataItem in self.List_Commands:
-                                    if DataItem[3] == workbenchName and MenuText == DataItem[4]:
-                                        ConvertedList.append(DataItem[0])
-                            
-                            self.ribbonStructure["workbenches"][workbenchName][
-                                "toolbars"
-                            ][ToolBar] = ConvertedList
-        return
+                        if ToolBar != "order":
+                            if "order" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][ToolBar]:
+                                OrderList = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][ToolBar]["order"]
+                                ConvertedList = []
+                                for i in range(len(OrderList)):
+                                    MenuText = OrderList[i]
+                                    if "separator" in MenuText or "ddb" in MenuText:
+                                        ConvertedList.append(MenuText)
+                                    else:
+                                        for DataItem in self.List_Commands:
+                                            if DataItem[3] == workbenchName:
+                                                # If the data item is already converted to a command. append that to the list
+                                                if MenuText == DataItem[0]:
+                                                    ConvertedList.append(DataItem[0])  
+                                                # If the data item is still a menutext, add the command instead.
+                                                if MenuText == DataItem[4]:
+                                                    ConvertedList.append(DataItem[0])                                    
+                                    
+                                
+                                if len(ConvertedList) > 0:
+                                    self.ribbonStructure["workbenches"][workbenchName][
+                                        "toolbars"
+                                    ][ToolBar]["order"] = ConvertedList
+                                    isConverted = True
+        
+        if isConverted is True:
+            # get the path for the Json file
+            JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+                                        
+            # create a copy and rename it as a backup if enabled
+            if Parameters_Ribbon.ENABLE_BACKUP is True:
+                Suffix = datetime.now().strftime("%Y%m%d_%H%M%S")
+                BackupName = f"RibbonStructure_{Suffix}.json"
+                if os.path.exists(pathBackup) is False:
+                    os.makedirs(pathBackup)
+                BackupFile = os.path.join(pathBackup, BackupName)
+                shutil.copy(JsonFile, BackupFile)
+
+            # Writing to sample.json
+            with open(JsonFile, "w") as outfile:
+                json.dump(self.ribbonStructure, outfile, indent=4)
+
+            outfile.close()
+        
+        return isConverted
 
 
 class EventInspector(QObject):

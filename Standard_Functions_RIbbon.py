@@ -936,6 +936,7 @@ def AddToClipboard(Text):
     cmd = "clip" if platform.system() == "Windows" else "pbcopy"
     subprocess.run(cmd, input=Text, text=True, shell=True)
 
+
 def checkFreeCADVersion(main: int, sub: int, patch: int, git: int):
     version = App.Version()
     
