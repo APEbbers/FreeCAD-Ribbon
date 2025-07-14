@@ -2289,100 +2289,101 @@
             "toolbars": {
                 "Spreadsheet": {
                     "order": [
-                        "Create spreadsheet",
-                        "Import spreadsheet",
-                        "Export spreadsheet",
-                        "3_separator_SpreadsheetWorkbench",
-                        "Merge cells",
-                        "Split cell",
-                        "6_separator_SpreadsheetWorkbench",
-                        "Align left",
-                        "Align center",
-                        "Align right",
-                        "Align top",
-                        "Vertically center-align",
-                        "Align bottom",
+                        "All",
+                        "New Spreadsheet",
+                        "Import Spreadsheet",
+                        "Export Spreadsheet",
+                        "4_separator_SpreadsheetWorkbench",
+                        "Merge Cells",
+                        "Split Cell",
+                        "7_separator_SpreadsheetWorkbench",
+                        "Align Left",
+                        "Align Horizontal Center",
+                        "Align Right",
+                        "Align Top",
+                        "Align Vertical Center",
+                        "Align Bottom",
                         "13_separator_SpreadsheetWorkbench",
-                        "Bold text",
-                        "Italic text",
-                        "Underline text",
+                        "Bold Text",
+                        "Italic Iext",
+                        "Underline Text",
                         "17_separator_SpreadsheetWorkbench",
-                        "Set alias"
+                        "Set Alias"
                     ],
                     "commands": {
                         "Spreadsheet_CreateSheet": {
                             "size": "large",
-                            "text": "Create spreadsheet",
+                            "text": "&New Spreadsheet",
                             "icon": "Spreadsheet"
                         },
                         "Spreadsheet_Import": {
                             "size": "small",
-                            "text": "Import spreadsheet",
+                            "text": "&Import Spreadsheet",
                             "icon": "SpreadsheetImport"
                         },
                         "Spreadsheet_Export": {
                             "size": "small",
-                            "text": "Export spreadsheet",
+                            "text": "&Export Spreadsheet",
                             "icon": "SpreadsheetExport"
                         },
                         "Spreadsheet_MergeCells": {
                             "size": "small",
-                            "text": "Merge cells",
+                            "text": "&Merge Cells",
                             "icon": "SpreadsheetMergeCells"
                         },
                         "Spreadsheet_SplitCell": {
                             "size": "small",
-                            "text": "Split cell",
+                            "text": "Sp&lit Cell",
                             "icon": "SpreadsheetSplitCell"
                         },
                         "Spreadsheet_AlignLeft": {
                             "size": "small",
-                            "text": "Align left",
+                            "text": "Align &Left",
                             "icon": "SpreadsheetAlignLeft"
                         },
                         "Spreadsheet_AlignCenter": {
                             "size": "small",
-                            "text": "Align center",
+                            "text": "Align Horizontal &Center",
                             "icon": "SpreadsheetAlignCenter"
                         },
                         "Spreadsheet_AlignRight": {
                             "size": "small",
-                            "text": "Align right",
+                            "text": "Align &Right",
                             "icon": "SpreadsheetAlignRight"
                         },
                         "Spreadsheet_AlignTop": {
                             "size": "small",
-                            "text": "Align top",
+                            "text": "Align &Top",
                             "icon": "SpreadsheetAlignTop"
                         },
                         "Spreadsheet_AlignVCenter": {
                             "size": "small",
-                            "text": "Vertically center-align",
+                            "text": "Align &Vertical Center",
                             "icon": "SpreadsheetAlignVCenter"
                         },
                         "Spreadsheet_AlignBottom": {
                             "size": "small",
-                            "text": "Align bottom",
+                            "text": "Align &Bottom",
                             "icon": "SpreadsheetAlignBottom"
                         },
                         "Spreadsheet_StyleBold": {
                             "size": "small",
-                            "text": "Bold text",
+                            "text": "&Bold Text",
                             "icon": "SpreadsheetStyleBold"
                         },
                         "Spreadsheet_StyleItalic": {
                             "size": "small",
-                            "text": "Italic text",
+                            "text": "&Italic Iext",
                             "icon": "SpreadsheetStyleItalic"
                         },
                         "Spreadsheet_StyleUnderline": {
                             "size": "small",
-                            "text": "Underline text",
+                            "text": "&Underline Text",
                             "icon": "SpreadsheetStyleUnderline"
                         },
                         "Spreadsheet_SetAlias": {
                             "size": "small",
-                            "text": "Set alias",
+                            "text": "Set Alias",
                             "icon": "SpreadsheetAlias"
                         }
                     }
@@ -2405,47 +2406,49 @@
                     "commands": {
                         "Std_ViewIsometric": {
                             "size": "small",
-                            "text": "Isometric",
+                            "text": "",
                             "icon": "view-axonometric"
                         },
                         "Std_ViewFront": {
                             "size": "small",
-                            "text": "Front",
+                            "text": "",
                             "icon": "view-front"
                         },
                         "Std_ViewTop": {
                             "size": "small",
-                            "text": "Top",
+                            "text": "",
                             "icon": "view-top"
                         },
                         "Std_ViewRight": {
                             "size": "small",
-                            "text": "Right",
+                            "text": "",
                             "icon": "view-right"
                         },
                         "Std_ViewRear": {
                             "size": "small",
-                            "text": "Rear",
+                            "text": "",
                             "icon": "view-rear"
                         },
                         "Std_ViewBottom": {
                             "size": "small",
-                            "text": "Bottom",
+                            "text": "",
                             "icon": "view-bottom"
                         },
                         "Std_ViewLeft": {
                             "size": "small",
-                            "text": "Left",
+                            "text": "",
                             "icon": "view-left"
                         }
                     }
                 },
                 "Structure": {
                     "order": [
+                        "All",
                         "Create part",
                         "Create group",
-                        "Link actions",
-                        "Create a variable set"
+                        "Create a variable set",
+                        "Create datum...",
+                        "Link actions..."
                     ],
                     "commands": {
                         "Std_Part": {
@@ -2460,13 +2463,18 @@
                         },
                         "Std_LinkActions": {
                             "size": "small",
-                            "text": "Link actions",
+                            "text": "Link actions...",
                             "icon": ""
                         },
                         "Std_VarSet": {
                             "size": "small",
                             "text": "Create a variable set",
                             "icon": "VarSet"
+                        },
+                        "Part_Datums": {
+                            "size": "small",
+                            "text": "Create datum...",
+                            "icon": ""
                         }
                     }
                 }
