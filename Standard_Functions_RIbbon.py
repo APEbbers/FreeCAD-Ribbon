@@ -939,12 +939,12 @@ def AddToClipboard(Text):
 
 def checkFreeCADVersion(main: int, sub: int, patch: int, git: int):
     version = App.Version()
-    
+
     if main >= int(version[0]):
         if sub >= int(version[1]):
             if patch >= int(version[2]):
                 git_version = int(version[3].split(" ")[0])
                 if git_version >= git:
                     return True
-    
+
     return False

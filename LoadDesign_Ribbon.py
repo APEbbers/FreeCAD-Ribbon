@@ -2985,12 +2985,15 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             def SortCommands(item):
                 try:
                     if "separator" not in item.lower():
-                        if StandardFunctions.checkFreeCADVersion(
-                            Parameters_Ribbon.FreeCAD_Version["mainVersion"],
-                            Parameters_Ribbon.FreeCAD_Version["subVersion"],
-                            Parameters_Ribbon.FreeCAD_Version["patchVersion"],
-                            Parameters_Ribbon.FreeCAD_Version["gitVersion"],
-                            ) is False:                   
+                        if (
+                            StandardFunctions.checkFreeCADVersion(
+                                Parameters_Ribbon.FreeCAD_Version["mainVersion"],
+                                Parameters_Ribbon.FreeCAD_Version["subVersion"],
+                                Parameters_Ribbon.FreeCAD_Version["patchVersion"],
+                                Parameters_Ribbon.FreeCAD_Version["gitVersion"],
+                            )
+                            is False
+                        ):
                             MenuName = CommandInfoCorrections(item)["menuText"].replace(
                                 "&", ""
                             )
@@ -3000,7 +3003,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                         MenuName = CommandItem[2]
                                     if MenuName == "":
                                         continue
-                            item = MenuName                      
+                            item = MenuName
 
                     OrderList: list = self.Dict_RibbonCommandPanel["workbenches"][
                         WorkBenchName
@@ -3227,17 +3230,20 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             MenuName.replace("&", ""),
                         )
                         # If it is a newer version of FreeCAD. use the commandname instead
-                        if StandardFunctions.checkFreeCADVersion(
-                            Parameters_Ribbon.FreeCAD_Version["mainVersion"],
-                            Parameters_Ribbon.FreeCAD_Version["subVersion"],
-                            Parameters_Ribbon.FreeCAD_Version["patchVersion"],
-                            Parameters_Ribbon.FreeCAD_Version["gitVersion"],
-                            ) is True:
+                        if (
+                            StandardFunctions.checkFreeCADVersion(
+                                Parameters_Ribbon.FreeCAD_Version["mainVersion"],
+                                Parameters_Ribbon.FreeCAD_Version["subVersion"],
+                                Parameters_Ribbon.FreeCAD_Version["patchVersion"],
+                                Parameters_Ribbon.FreeCAD_Version["gitVersion"],
+                            )
+                            is True
+                        ):
                             CommandWidgetItem.setData(
                                 Qt.ItemDataRole.UserRole,
                                 CommandName,
                             )
-                        
+
                         CommandWidgetItem.setFlags(
                             CommandWidgetItem.flags() | Qt.ItemFlag.ItemIsEditable
                         )
@@ -4164,21 +4170,24 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     Qt.ItemDataRole.UserRole
                 )
                 # If it is a newer version of FreeCAD. use the commandname instead
-                if StandardFunctions.checkFreeCADVersion(
-                    Parameters_Ribbon.FreeCAD_Version["mainVersion"],
-                    Parameters_Ribbon.FreeCAD_Version["subVersion"],
-                    Parameters_Ribbon.FreeCAD_Version["patchVersion"],
-                    Parameters_Ribbon.FreeCAD_Version["gitVersion"],
-                    ) is True:
-                    CommandName = self.form.CommandTable_RD.item(row, 0).data(
-                    Qt.ItemDataRole.UserRole
+                if (
+                    StandardFunctions.checkFreeCADVersion(
+                        Parameters_Ribbon.FreeCAD_Version["mainVersion"],
+                        Parameters_Ribbon.FreeCAD_Version["subVersion"],
+                        Parameters_Ribbon.FreeCAD_Version["patchVersion"],
+                        Parameters_Ribbon.FreeCAD_Version["gitVersion"],
                     )
-                    
+                    is True
+                ):
+                    CommandName = self.form.CommandTable_RD.item(row, 0).data(
+                        Qt.ItemDataRole.UserRole
+                    )
+
                     # Get the menuname from the command list
                     for i2 in range(len(self.List_Commands)):
                         if CommandName == self.List_Commands[i2][0]:
                             MenuName = self.List_Commands[i2][2]
-                # Get the custom menu name                            
+                # Get the custom menu name
                 MenuNameEntered = self.form.CommandTable_RD.item(row, 0).text()
 
                 # Go through the list with all available commands.
@@ -4214,7 +4223,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 # Go through the cells in the row. If checkstate is checked, uncheck the other cells in the row
                 for i6 in range(1, self.form.CommandTable_RD.columnCount()):
                     try:
-                        CheckState = self.form.CommandTable_RD.item(row, i6).checkState()
+                        CheckState = self.form.CommandTable_RD.item(
+                            row, i6
+                        ).checkState()
                         if CheckState == Qt.CheckState.Checked:
                             if i6 == 1:
                                 Size = "small"
@@ -4230,10 +4241,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 Order = []
                 for i7 in range(1, self.form.CommandTable_RD.rowCount()):
                     Order.append(
-                            QTableWidgetItem(self.form.CommandTable_RD.item(i7, 0)).data(
-                                Qt.ItemDataRole.UserRole
-                            )
+                        QTableWidgetItem(self.form.CommandTable_RD.item(i7, 0)).data(
+                            Qt.ItemDataRole.UserRole
                         )
+                    )
 
                 StandardFunctions.add_keys_nested_dict(
                     self.Dict_RibbonCommandPanel,
