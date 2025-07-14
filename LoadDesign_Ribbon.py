@@ -4807,7 +4807,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
                 for key, value in list(Commands.items()):
                     for i in range(len(self.List_Commands)):
-                        if self.List_Commands[i][2] == key:
+                        if self.List_Commands[i][2].lower() == key.lower():
                             if (
                                 self.List_Commands[i][3] == WorkBenchName
                                 or self.List_Commands[i][3] == "Global"
