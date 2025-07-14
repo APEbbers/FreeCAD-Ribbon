@@ -944,7 +944,7 @@ def checkFreeCADVersion(main: int, sub: int, patch: int, git: int):
         if sub >= int(version[1]):
             if patch >= int(version[2]):
                 git_version = int(version[3].split(" ")[0])
-                if git >= git_version:
+                if git_version >= git:
                     return True
     
     return False

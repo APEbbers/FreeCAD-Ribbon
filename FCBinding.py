@@ -108,6 +108,7 @@ import platform
 import math
 from datetime import datetime
 import shutil
+import re
 
 # import Ribbon. This contains the ribbon commands for FreeCAD
 import Ribbon
@@ -2232,6 +2233,12 @@ class ModernMenu(RibbonBar):
                             OriginalToolbar = self.ribbonStructure["customToolbars"][
                                 workbenchName
                             ][CustomPanel]["commands"][Command]
+                            
+                            # ignore cases to prevent issues with different versions of FreeCAD
+                            for item in ListToolbars:
+                                if OriginalToolbar.lower() == item.lower():
+                                    OriginalToolbar = item 
+                              
                             ListToolbars.remove(OriginalToolbar)
                         except Exception:
                             continue
@@ -2325,32 +2332,28 @@ class ModernMenu(RibbonBar):
                     and toolbar
                     in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]
                 ):
-                    if (
-                        "order"
-                        in self.ribbonStructure["workbenches"][workbenchName][
-                            "toolbars"
-                        ][toolbar]
-                    ):
-                        for j in range(
-                            len(
-                                self.ribbonStructure["workbenches"][workbenchName][
-                                    "toolbars"
-                                ][toolbar]["order"]
-                            )
-                        ):
-                            if (
-                                "separator"
-                                in self.ribbonStructure["workbenches"][workbenchName][
-                                    "toolbars"
-                                ][toolbar]["order"][j].lower()
-                            ):
-                                separator = QToolButton()
-                                separator.setText(
+                    for orderedToolbar in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]:
+                        if orderedToolbar.lower() == toolbar.lower():
+                            for j in range(
+                                len(
                                     self.ribbonStructure["workbenches"][workbenchName][
                                         "toolbars"
-                                    ][toolbar]["order"][j]
+                                    ][toolbar]["order"]
                                 )
-                                allButtons.insert(j, separator)
+                            ):
+                                if (
+                                    "separator"
+                                    in self.ribbonStructure["workbenches"][workbenchName][
+                                        "toolbars"
+                                    ][toolbar]["order"][j].lower()
+                                ):
+                                    separator = QToolButton()
+                                    separator.setText(
+                                        self.ribbonStructure["workbenches"][workbenchName][
+                                            "toolbars"
+                                        ][toolbar]["order"][j]
+                                    )
+                                    allButtons.insert(j, separator)
 
             if workbenchName in self.ribbonStructure["workbenches"]:
                 # order buttons like defined in ribbonStructure
@@ -3109,49 +3112,57 @@ class ModernMenu(RibbonBar):
     def List_AddCustomToolBarToWorkbench(self, WorkBenchName, CustomToolbar):
         ButtonList = []
 
-        try:
-            # Get the commands from the custom panel
-            Commands = self.ribbonStructure["customToolbars"][WorkBenchName][
-                CustomToolbar
-            ]["commands"]
+        # Get the commands from the custom panel
+        if WorkBenchName in self.ribbonStructure["customToolbars"]:
+            for toolbar in self.ribbonStructure["customToolbars"][WorkBenchName]:
+                if CustomToolbar.lower() == toolbar.lower():
+                    Commands = self.ribbonStructure["customToolbars"][WorkBenchName][
+                        toolbar
+                    ]["commands"]
 
-            # Get the command and its original toolbar
-            for key, value in list(Commands.items()):
-                # get the menu text from the command list
-                for CommandName in Gui.listCommands():
-                    # Get the english menutext
-                    MenuName = CommandInfoCorrections(CommandName)["menuText"]
-                    # Get the translated menutext
-                    MenuNameTtranslated = CommandInfoCorrections(CommandName)[
-                        "ActionText"
-                    ]
+                    # Get the command and its original toolbar
+                    for key, value in list(Commands.items()):
+                        # get the menu text from the command list
+                        for CommandName in Gui.listCommands():
+                            # Get the english menutext
+                            MenuName = CommandInfoCorrections(CommandName)["menuText"]
+                            # Get the translated menutext
+                            MenuNameTtranslated = CommandInfoCorrections(CommandName)[
+                                "ActionText"
+                            ]
 
-                    if MenuName == key:
-                        try:
-                            # Get the original toolbar as QToolbar
-                            OriginalToolBar = mw.findChild(QToolBar, value)
-                            # Go through all it's QtoolButtons
-                            for Child in OriginalToolBar.findChildren(QToolButton):
-                                # If the text of the QToolButton matches the menu text
-                                # Add it to the button list.
-                                IsInList = False
-                                for Toolbutton in ButtonList:
-                                    if Toolbutton.text() == Child.text():
-                                        IsInList = True
+                            if MenuName.lower() == key.lower():
+                                try:
+                                    toolbarToFind = value
+                                    # check the toolbar name with the latest FreeCAD Version and update the cases.
+                                    WorkBench = Gui.getWorkbench(WorkBenchName)
+                                    ListToolbars = WorkBench.listToolbars()
+                                    for ToolBar in ListToolbars:
+                                        if ToolBar.lower() == value.lower():
+                                            toolbarToFind = ToolBar
 
-                                if (
-                                    Child.text() == MenuNameTtranslated
-                                    and IsInList is False
-                                ):
-                                    ButtonList.append(Child)
-                        except Exception as e:
-                            if Parameters_Ribbon.DEBUG_MODE is True:
-                                StandardFunctions.Print(
-                                    f"{e.with_traceback(e.__traceback__)}, 3", "Warning"
-                                )
-                            continue
-        except Exception:
-            pass
+                                    # Get the original toolbar as QToolbar
+                                    OriginalToolBar = mw.findChild(QToolBar, toolbarToFind)
+                                    # Go through all it's QtoolButtons
+                                    for Child in OriginalToolBar.findChildren(QToolButton):
+                                        # If the text of the QToolButton matches the menu text
+                                        # Add it to the button list.
+                                        IsInList = False
+                                        for Toolbutton in ButtonList:
+                                            if Toolbutton.text() == Child.text():
+                                                IsInList = True
+
+                                        if (
+                                            Child.text() == MenuNameTtranslated
+                                            and IsInList is False
+                                        ):
+                                            ButtonList.append(Child)
+                                except Exception as e:
+                                    # if Parameters_Ribbon.DEBUG_MODE is True:
+                                    StandardFunctions.Print(
+                                        f"{e.with_traceback(e.__traceback__)}, 3", "Warning"
+                                        )
+                                    continue
 
         return ButtonList
 
@@ -3865,20 +3876,22 @@ class ModernMenu(RibbonBar):
                                 print("no conversion needed")
                             return
 
+        # Convert the commands from menuname to the commandames
+        #
         # Check if there are workbenches and toolbars in the ribbon structure
         if "workbenches" in self.ribbonStructure:
-            for workbenchName in self.ribbonStructure["workbenches"]:
-                if "toolbars" in self.ribbonStructure["workbenches"][workbenchName]:
+            for WorkBenchName in self.ribbonStructure["workbenches"]:
+                if "toolbars" in self.ribbonStructure["workbenches"][WorkBenchName]:
                     for ToolBar in self.ribbonStructure["workbenches"][
-                        workbenchName
+                        WorkBenchName
                     ]["toolbars"]:
                         # Skip the toolbar order
                         if ToolBar != "order":
                             # If a toolbar has an order for its commands, continue
-                            if "order" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][ToolBar]:
+                            if "order" in self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][ToolBar]:
                                 # Get the current order list
                                 OrderList = self.ribbonStructure["workbenches"][
-                                    workbenchName]["toolbars"][ToolBar]["order"]
+                                    WorkBenchName]["toolbars"][ToolBar]["order"]
                                 # Define a new list for the conversion
                                 ConvertedList = []
                                 # Go through the current order list
@@ -3890,24 +3903,24 @@ class ModernMenu(RibbonBar):
                                         ConvertedList.append(MenuText)
                                     else:
                                         for DataItem in self.List_Commands:
-                                            if DataItem[3] == workbenchName:
+                                            if DataItem[3] == WorkBenchName:
                                                 # If the data item is already converted to a command. append that to the list
-                                                if MenuText == DataItem[0]:
+                                                if MenuText.lower() == DataItem[0].lower():
                                                     ConvertedList.append(
                                                         DataItem[0])
                                                     break
                                                 # If the data item is still a menutext, add the command instead.
-                                                if MenuText == DataItem[4]:
+                                                if MenuText.lower() == DataItem[4].lower():
                                                     ConvertedList.append(
                                                         DataItem[0])
                                                     break
                                 
                                 # Update the ordered list
                                 if len(ConvertedList) > 0:
-                                    self.ribbonStructure["workbenches"][workbenchName][
+                                    self.ribbonStructure["workbenches"][WorkBenchName][
                                         "toolbars"
                                     ][ToolBar]["order"] = ConvertedList
-                                    isConverted = True
+                                    isConverted = True                       
 
         if isConverted is True:
             # Add the version of FreeCAD on which this conversion is done, to the ribbonstructure
