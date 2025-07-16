@@ -1950,7 +1950,7 @@ class ModernMenu(RibbonBar):
         # indicate that the design menu is loaded
         self.DesignMenuLoaded = True
 
-        # # Connect the close signal of the designmenu
+        # Connect the close signal of the designmenu
         Dialog.closeSignal.connect(self.loadDesignMenu)
 
         return
@@ -1979,8 +1979,8 @@ class ModernMenu(RibbonBar):
         # indicate that the design menu is loaded
         self.DesignMenuLoaded = True
 
-        # # Connect the close signal of the designmenu
-        # Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
+        # Connect the close signal of the designmenu
+        Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
 
         return
 
@@ -2065,12 +2065,12 @@ class ModernMenu(RibbonBar):
             # hide normal toolbars
             self.hideClassicToolbars()
 
-        if self.DesignMenuLoaded is True:
-            # Disable the quick toolbar, righttoolbar and application menu
-            self.rightToolBar().setDisabled(True)
-            self.quickAccessToolBar().setDisabled(True)
-            self.applicationOptionButton().setDisabled(True)
-            Gui.updateGui()
+        # if self.DesignMenuLoaded is True:
+        #     # Disable the quick toolbar, righttoolbar and application menu
+        #     self.rightToolBar().setDisabled(True)
+        #     self.quickAccessToolBar().setDisabled(True)
+        #     self.applicationOptionButton().setDisabled(True)
+        #     Gui.updateGui()
         return
 
     def onWbActivated(self):
@@ -2125,12 +2125,12 @@ class ModernMenu(RibbonBar):
         # Otherwise, the sketcher workbench won;t be loaded properly the first time
         self.buildPanels()
 
-        if self.DesignMenuLoaded is True:
-            # Disable the quick toolbar, righttoolbar and application menu
-            self.rightToolBar().setDisabled(True)
-            self.quickAccessToolBar().setDisabled(True)
-            self.applicationOptionButton().setDisabled(True)
-            Gui.updateGui()
+        # if self.DesignMenuLoaded is True:
+        #     # Disable the quick toolbar, righttoolbar and application menu
+        #     self.rightToolBar().setDisabled(True)
+        #     self.quickAccessToolBar().setDisabled(True)
+        #     self.applicationOptionButton().setDisabled(True)
+        #     Gui.updateGui()
         return
 
     def onTabBarClicked(self):
