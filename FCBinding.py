@@ -2293,14 +2293,17 @@ class ModernMenu(RibbonBar):
                         workbenchName
                     ]["toolbars"]:
                         if orderedToolbar.lower() == toolbar.lower():
-                            if "order" in self.ribbonStructure["workbenches"][workbenchName][
-                                        "toolbars"
-                                    ][toolbar]:
+                            if (
+                                "order"
+                                in self.ribbonStructure["workbenches"][workbenchName][
+                                    "toolbars"
+                                ][toolbar]
+                            ):
                                 for j in range(
                                     len(
-                                        self.ribbonStructure["workbenches"][workbenchName][
-                                            "toolbars"
-                                        ][toolbar]["order"]
+                                        self.ribbonStructure["workbenches"][
+                                            workbenchName
+                                        ]["toolbars"][toolbar]["order"]
                                     )
                                 ):
                                     if (
