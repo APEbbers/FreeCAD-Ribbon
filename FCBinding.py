@@ -2293,26 +2293,29 @@ class ModernMenu(RibbonBar):
                         workbenchName
                     ]["toolbars"]:
                         if orderedToolbar.lower() == toolbar.lower():
-                            for j in range(
-                                len(
-                                    self.ribbonStructure["workbenches"][workbenchName][
+                            if "order" in self.ribbonStructure["workbenches"][workbenchName][
                                         "toolbars"
-                                    ][toolbar]["order"]
-                                )
-                            ):
-                                if (
-                                    "separator"
-                                    in self.ribbonStructure["workbenches"][
-                                        workbenchName
-                                    ]["toolbars"][toolbar]["order"][j].lower()
-                                ):
-                                    separator = QToolButton()
-                                    separator.setText(
-                                        self.ribbonStructure["workbenches"][
-                                            workbenchName
-                                        ]["toolbars"][toolbar]["order"][j]
+                                    ][toolbar]:
+                                for j in range(
+                                    len(
+                                        self.ribbonStructure["workbenches"][workbenchName][
+                                            "toolbars"
+                                        ][toolbar]["order"]
                                     )
-                                    allButtons.insert(j, separator)
+                                ):
+                                    if (
+                                        "separator"
+                                        in self.ribbonStructure["workbenches"][
+                                            workbenchName
+                                        ]["toolbars"][toolbar]["order"][j].lower()
+                                    ):
+                                        separator = QToolButton()
+                                        separator.setText(
+                                            self.ribbonStructure["workbenches"][
+                                                workbenchName
+                                            ]["toolbars"][toolbar]["order"][j]
+                                        )
+                                        allButtons.insert(j, separator)
 
             if workbenchName in self.ribbonStructure["workbenches"]:
                 # order buttons like defined in ribbonStructure
