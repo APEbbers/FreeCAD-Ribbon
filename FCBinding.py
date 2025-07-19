@@ -2813,7 +2813,7 @@ class ModernMenu(RibbonBar):
                 panel.setTitle(" Views ")
             else:
                 # Remove possible workbench names from the titles
-                List = [workbenchName, workbenchTitle]
+                List = [workbenchName, workbenchTitle, workbenchTitle.replace(" ", "")]
                 for Name in List:
                     ListDelimiters = [" - ", "-", "_"]
                     for delimiter in ListDelimiters:
