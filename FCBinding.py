@@ -2813,16 +2813,18 @@ class ModernMenu(RibbonBar):
                 panel.setTitle(" Views ")
             else:
                 # Remove possible workbench names from the titles
-                ListDelimiters = [" - ", "-", "_"]
-                for delimiter in ListDelimiters:
-                    if len(title.split(delimiter, 1)) > 1:
-                        title = title.split(delimiter, 1)[1]
-                if title.startswith(workbenchTitle) is True and title != workbenchTitle:
-                    title = title.replace(workbenchTitle, "")
-                if title.startswith(" ") is True:
-                    title = title.replace(" ", "")
-                if title.endswith(f" {workbenchTitle}Workbench"):
-                    title = title.replace(f" {workbenchTitle}Workbench", "")
+                List = [workbenchName, workbenchTitle]
+                for Name in List:
+                    ListDelimiters = [" - ", "-", "_"]
+                    for delimiter in ListDelimiters:
+                        if len(title.split(delimiter, 1)) > 1:
+                            title = title.split(delimiter, 1)[1]
+                    if title.startswith(Name) is True and title != Name:
+                        title = title.replace(Name, "")
+                    if title.startswith(" ") is True:
+                        title = title.replace(" ", "")
+                    if title.endswith(f" {Name}Workbench"):
+                        title = title.replace(f" {Name}Workbench", "")
                 panel.setTitle(title)
 
             # remove any suffix from the panel title
