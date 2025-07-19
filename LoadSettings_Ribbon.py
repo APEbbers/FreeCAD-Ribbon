@@ -1095,37 +1095,49 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         return
 
     def on_Color_Borders_clicked(self):
-        Color = QColor(
-            self.form.Color_Borders.property("color")
-        ).toTuple()  # RGBA tupple
-        HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
-        self.ValuesToUpdate["Color_Borders"] = HexColor
-        self.settingChanged = True
+        try:
+            Color = QColor(
+                self.form.Color_Borders.property("color")
+            ).toTuple()  # RGBA tupple
+            HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
+            self.ValuesToUpdate["Color_Borders"] = HexColor
+            self.settingChanged = True
+        except Exception:
+            pass
         return
 
     def on_BorderTransparant_clicked(self):
-        if self.form.BorderTransparant.isChecked() is True:
-            self.ValuesToUpdate["BorderTransparant"] = True
-        if self.form.BorderTransparant.isChecked() is False:
-            self.ValuesToUpdate["BorderTransparant"] = False
+        try:
+            if self.form.BorderTransparant.isChecked() is True:
+                self.ValuesToUpdate["BorderTransparant"] = True
+            if self.form.BorderTransparant.isChecked() is False:
+                self.ValuesToUpdate["BorderTransparant"] = False
+        except Exception:
+            pass
         self.settingChanged = True
 
     def on_Color_Background_Hover_clicked(self):
-        Color = QColor(
-            self.form.Color_Background_Hover.property("color")
-        ).toTuple()  # RGBA tupple
-        HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
-        self.ValuesToUpdate["Color_Background_Hover"] = HexColor
-        self.settingChanged = True
+        try:
+            Color = QColor(
+                self.form.Color_Background_Hover.property("color")
+            ).toTuple()  # RGBA tupple
+            HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
+            self.ValuesToUpdate["Color_Background_Hover"] = HexColor
+            self.settingChanged = True
+        except Exception:
+            pass
         return
 
     def on_Color_Background_App_clicked(self):
-        Color = QColor(
-            self.form.Color_Background_App.property("color")
-        ).toTuple()  # RGBA tupple
-        HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
-        self.ValuesToUpdate["Color_Background_App"] = HexColor
-        self.settingChanged = True
+        try:
+            Color = QColor(
+                self.form.Color_Background_App.property("color")
+            ).toTuple()  # RGBA tupple
+            HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
+            self.ValuesToUpdate["Color_Background_App"] = HexColor
+            self.settingChanged = True
+        except Exception:
+            pass
         return
 
     # endregion
