@@ -113,8 +113,6 @@ import re
 # import Ribbon. This contains the ribbon commands for FreeCAD
 import Ribbon
 
-# from CustomWidgets import myMenu as QMenu
-
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
 pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
@@ -159,6 +157,7 @@ class ModernMenu(RibbonBar):
     """
     Create ModernMenu QWidget.
     """
+    WBtoLoadFirst = ["BillOfMaterialsWB"]
 
     # The datafile version is set in LoadDesign.py
     DataFileVersion = LoadDesign_Ribbon.LoadDialog.DataFileVersion
@@ -266,7 +265,7 @@ class ModernMenu(RibbonBar):
                 self.List_Commands = Data["List_Commands"]
             except Exception:
                 pass
-
+            
         if (
             StandardFunctions.checkFreeCADVersion(
                 Parameters_Ribbon.FreeCAD_Version["mainVersion"],
@@ -838,6 +837,10 @@ class ModernMenu(RibbonBar):
         self.FoldRibbon()
         # Check if an reload of the datafile is needed an show an message
         self.CheckDataFile()
+        
+        # Activate some WB's first to ensure proper loading of the panels       
+        for Wb in self.WBtoLoadFirst:
+            Gui.activateWorkbench(Wb)
         return
 
     def closeEvent(self, event):
