@@ -157,6 +157,7 @@ class ModernMenu(RibbonBar):
     """
     Create ModernMenu QWidget.
     """
+
     WBtoLoadFirst = ["BillOfMaterialsWB"]
 
     # The datafile version is set in LoadDesign.py
@@ -265,7 +266,7 @@ class ModernMenu(RibbonBar):
                 self.List_Commands = Data["List_Commands"]
             except Exception:
                 pass
-            
+
         if (
             StandardFunctions.checkFreeCADVersion(
                 Parameters_Ribbon.FreeCAD_Version["mainVersion"],
@@ -837,8 +838,8 @@ class ModernMenu(RibbonBar):
         self.FoldRibbon()
         # Check if an reload of the datafile is needed an show an message
         self.CheckDataFile()
-        
-        # Activate some WB's first to ensure proper loading of the panels       
+
+        # Activate some WB's first to ensure proper loading of the panels
         for Wb in self.WBtoLoadFirst:
             Gui.activateWorkbench(Wb)
         return

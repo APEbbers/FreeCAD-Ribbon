@@ -2836,7 +2836,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
             # If the are not to be ignored, add them to the listwidget
             if IsIgnored is False:
-                
+
                 if Toolbar != "" and not Toolbar in shadowList:
                     self.form.PanelList_RD.addItem(
                         ToolbarTransLated,
@@ -3447,11 +3447,11 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
     def on_TableCell_RD_changed(self, Item: QTableWidgetItem):
         if Item.isSelected():
-            text = Item.text()            
+            text = Item.text()
             if text == "":
-                MenuNameTranslated = CommandInfoCorrections(Item.data(Qt.ItemDataRole.UserRole))[
-                    "ActionText"
-                ]
+                MenuNameTranslated = CommandInfoCorrections(
+                    Item.data(Qt.ItemDataRole.UserRole)
+                )["ActionText"]
                 Item.setText(MenuNameTranslated)
 
             # Update the data with the (text)changed
