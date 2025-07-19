@@ -3447,9 +3447,12 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
     def on_TableCell_RD_changed(self, Item: QTableWidgetItem):
         if Item.isSelected():
-            text = Item.text()
+            text = Item.text()            
             if text == "":
-                Item.setText(Item.data(Qt.ItemDataRole.UserRole))
+                MenuNameTranslated = CommandInfoCorrections(Item.data(Qt.ItemDataRole.UserRole))[
+                    "ActionText"
+                ]
+                Item.setText(MenuNameTranslated)
 
             # Update the data with the (text)changed
             self.UpdateData()
