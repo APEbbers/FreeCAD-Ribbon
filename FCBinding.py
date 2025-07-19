@@ -157,7 +157,6 @@ class ModernMenu(RibbonBar):
     """
     Create ModernMenu QWidget.
     """
-
     WBtoLoadFirst = ["BillOfMaterialsWB"]
 
     # The datafile version is set in LoadDesign.py
@@ -266,7 +265,7 @@ class ModernMenu(RibbonBar):
                 self.List_Commands = Data["List_Commands"]
             except Exception:
                 pass
-
+            
         if (
             StandardFunctions.checkFreeCADVersion(
                 Parameters_Ribbon.FreeCAD_Version["mainVersion"],
@@ -838,8 +837,8 @@ class ModernMenu(RibbonBar):
         self.FoldRibbon()
         # Check if an reload of the datafile is needed an show an message
         self.CheckDataFile()
-
-        # Activate some WB's first to ensure proper loading of the panels
+        
+        # Activate some WB's first to ensure proper loading of the panels       
         for Wb in self.WBtoLoadFirst:
             Gui.activateWorkbench(Wb)
         return
@@ -2817,19 +2816,20 @@ class ModernMenu(RibbonBar):
                 panel.setTitle(" Views ")
             else:
                 # Remove possible workbench names from the titles
-                List = [workbenchName, workbenchTitle, workbenchTitle.replace(" ", "")]
-                for Name in List:
-                    ListDelimiters = [" - ", "-", "_"]
-                    for delimiter in ListDelimiters:
-                        if len(title.split(delimiter, 1)) > 1:
-                            title = title.split(delimiter, 1)[1]
-                    if title.startswith(Name) is True and title != Name:
-                        title = title.replace(Name, "")
-                    if title.startswith(" ") is True:
-                        title = title.replace(" ", "")
-                    if title.endswith(f" {Name}Workbench"):
-                        title = title.replace(f" {Name}Workbench", "")
-                panel.setTitle(title)
+                if not "_custom" in title and not "_global" in title and not "_newPanel" in title:
+                    List = [workbenchName, workbenchTitle, workbenchTitle.replace(" ", "")]
+                    for Name in List:
+                        ListDelimiters = [" - ", "-", "_"]
+                        for delimiter in ListDelimiters:
+                            if len(title.split(delimiter, 1)) > 1:                            
+                                title = title.split(delimiter, 1)[1]
+                        if title.startswith(Name) is True and title != Name:
+                            title = title.replace(Name, "")
+                        if title.startswith(" ") is True:
+                            title = title.replace(" ", "")
+                        if title.endswith(f" {Name}Workbench"):
+                            title = title.replace(f" {Name}Workbench", "")
+                    panel.setTitle(title)
 
             # remove any suffix from the panel title
             if panel.title().endswith("_custom"):
