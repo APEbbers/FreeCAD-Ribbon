@@ -75,7 +75,11 @@ def DarkMode():
         return
 
     # FreeCAD Dark is part of FreeCAD, so set the result to True manually
-    if currentStyleSheet.lower() == "freecad dark.qss" or currentTheme.lower() == "freecad dark" or "dark theme" in currentOverlay.lower():
+    if (
+        currentStyleSheet.lower() == "freecad dark.qss"
+        or currentTheme.lower() == "freecad dark"
+        or "dark theme" in currentOverlay.lower()
+    ):
         return True
 
     # OpenLight and OpenDark are from one addon. Set the currentStyleSheet value to the addon folder

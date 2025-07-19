@@ -1099,7 +1099,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             Color = QColor(
                 self.form.Color_Borders.property("color")
             ).toTuple()  # RGBA tupple
-            HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
+            HexColor = StandardFunctions.ColorConvertor(
+                Color, Color[3] / 255, True, False
+            )
             self.ValuesToUpdate["Color_Borders"] = HexColor
             self.settingChanged = True
         except Exception:
@@ -1121,7 +1123,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             Color = QColor(
                 self.form.Color_Background_Hover.property("color")
             ).toTuple()  # RGBA tupple
-            HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
+            HexColor = StandardFunctions.ColorConvertor(
+                Color, Color[3] / 255, True, False
+            )
             self.ValuesToUpdate["Color_Background_Hover"] = HexColor
             self.settingChanged = True
         except Exception:
@@ -1133,7 +1137,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             Color = QColor(
                 self.form.Color_Background_App.property("color")
             ).toTuple()  # RGBA tupple
-            HexColor = StandardFunctions.ColorConvertor(Color, Color[3] / 255, True, False)
+            HexColor = StandardFunctions.ColorConvertor(
+                Color, Color[3] / 255, True, False
+            )
             self.ValuesToUpdate["Color_Background_App"] = HexColor
             self.settingChanged = True
         except Exception:
