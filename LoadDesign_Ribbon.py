@@ -2817,6 +2817,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.form.PanelOrder_RD.clear()
 
         # Go through the toolbars and check if they must be ignored.
+        shadowList = []
         for Toolbar in wbToolbars:
             IsIgnored = False
             for IgnoredToolbar in self.List_IgnoredToolbars:
@@ -2835,7 +2836,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
             # If the are not to be ignored, add them to the listwidget
             if IsIgnored is False:
-                if Toolbar != "":
+
+                if Toolbar != "" and not Toolbar in shadowList:
                     self.form.PanelList_RD.addItem(
                         ToolbarTransLated,
                         Toolbar,
@@ -2845,6 +2847,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     ListWidgetItem.setText(ToolbarTransLated)
                     ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
                     self.form.PanelOrder_RD.addItem(ListWidgetItem)
+                    shadowList.append(Toolbar)
 
         # Update the combobox PanelList_RD
         self.on_PanelList_RD__TextChanged()
@@ -3446,7 +3449,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         if Item.isSelected():
             text = Item.text()
             if text == "":
-                Item.setText(Item.data(Qt.ItemDataRole.UserRole))
+                MenuNameTranslated = CommandInfoCorrections(
+                    Item.data(Qt.ItemDataRole.UserRole)
+                )["ActionText"]
+                Item.setText(MenuNameTranslated)
 
             # Update the data with the (text)changed
             self.UpdateData()
