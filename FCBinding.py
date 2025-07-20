@@ -4269,18 +4269,9 @@ class ModernMenu(RibbonBar):
                 )
             return
 
-    def CloseFreeCAD(self):
-        mw.close()
-        return
+
    
-    def ToggleMenuBar(self):
-        MenuBar = mw.menuBar()
-        if MenuBar.isVisible():
-            MenuBar.hide()
-            return
-        if MenuBar.isVisible() is False:
-            MenuBar.show()
-            return
+
 
     def CheckLanguage(self):
         FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
@@ -4312,6 +4303,10 @@ class ModernMenu(RibbonBar):
     # endregion
     
     # region - Titlebar functions
+    def CloseFreeCAD(self):
+        mw.close()
+        return
+    
     def MinimizeFreeCAD(self):
         mw.showMinimized()
         return
@@ -4361,7 +4356,15 @@ class ModernMenu(RibbonBar):
         if mw.isFullScreen() is False:
             mw.showFullScreen()
             return
-
+    
+    def ToggleMenuBar(self):
+        MenuBar = mw.menuBar()
+        if MenuBar.isVisible():
+            MenuBar.hide()
+            return
+        if MenuBar.isVisible() is False:
+            MenuBar.show()
+            return
     # endregion
 
     # region - Function for data files updates
