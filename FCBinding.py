@@ -157,7 +157,8 @@ class ModernMenu(RibbonBar):
     """
     Create ModernMenu QWidget.
     """
-
+    # region - class parameters
+    # Add workbenches that need to be loaded first or early here
     WBtoLoadFirst = ["BillOfMaterialsWB"]
 
     # The datafile version is set in LoadDesign.py
@@ -238,6 +239,8 @@ class ModernMenu(RibbonBar):
 
     # Define a indictor for wether the design menu is loaded or not.
     DesignMenuLoaded = False
+    
+    # endregion
 
     def __init__(self):
         """
@@ -1391,6 +1394,7 @@ class ModernMenu(RibbonBar):
 
     # endregion
 
+    # region - event functions
     def closeEvent(self, event):
         mw.menuBar().show()
         return True
@@ -1420,19 +1424,7 @@ class ModernMenu(RibbonBar):
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True and self.MenuEntered is False:
             self.FoldRibbon()
             # print("LeaveEvent")
-
-    # implementation to add actions to the Filemenu. Needed for the accessories menu
-    def addAction(self, action: QAction):
-        menu = self.findChild(RibbonMenu, "Ribbon")
-        StyleSheet_Menu = (
-            "* {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
-        )
-        menu.setStyleSheet(StyleSheet_Menu)
-        if menu is None:
-            menu = self.addFileMenu()
-        menu.addAction(action)
-        return
-
+            
     # used to scroll a ribbon horizontally, when it's wider than the screen
     def wheelEvent_CC(self, event):
         if self.currentCategory().underMouse():
@@ -1478,7 +1470,26 @@ class ModernMenu(RibbonBar):
                 for i in range(NoClicks):
                     ScrollRightButton_Tab.click()
         return
+    
+    # endregion
+    
+    # region - standard class functions
+    #
+    # implementation to add actions to the Filemenu. Needed for the accessories menu
+    def addAction(self, action: QAction):
+        menu = self.findChild(RibbonMenu, "Ribbon")
+        StyleSheet_Menu = (
+            "* {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
+        )
+        menu.setStyleSheet(StyleSheet_Menu)
+        if menu is None:
+            menu = self.addFileMenu()
+        menu.addAction(action)
+        return
+    
+    # endregion
 
+    # region - Standard ribbon functions
     def connectSignals(self):
         self.tabBar().currentChanged.connect(self.onUserChangedWorkbench)
         mw.workbenchActivated.connect(self.onWbActivated)
@@ -1488,7 +1499,130 @@ class ModernMenu(RibbonBar):
         self.tabBar().currentChanged.disconnect(self.onUserChangedWorkbench)
         mw.workbenchActivated.disconnect(self.onWbActivated)
         return
+        
+    def onUserChangedWorkbench(self, tabActivated=True):
+        """
+        Import selected workbench toolbars to ModernMenu section.
+        """
+        if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
+            if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
+                self.UnfoldRibbon()
+            # else:
+            #     self.FoldRibbon(True)
 
+        index = self.tabBar().currentIndex()
+        tabName = self.tabBar().tabText(index)
+
+        if tabName is not None and tabName != "" and tabName != "test":
+            # activate selected workbench
+            tabName = tabName.replace("&", "")
+            if self.wbNameMapping[tabName] is not None:
+                Gui.activateWorkbench(self.wbNameMapping[tabName])
+
+            if tabActivated is True:
+                self.onWbActivated()
+                self.ApplicationMenus()
+
+            # hide normal toolbars
+            self.hideClassicToolbars()
+
+        # if self.DesignMenuLoaded is True:
+        #     # Disable the quick toolbar, righttoolbar and application menu
+        #     self.rightToolBar().setDisabled(True)
+        #     self.quickAccessToolBar().setDisabled(True)
+        #     self.applicationOptionButton().setDisabled(True)
+        #     Gui.updateGui()
+        return
+
+    def onWbActivated(self):
+        if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
+            if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
+                self.UnfoldRibbon()
+            # else:
+            #     self.FoldRibbon(True)
+
+        # Set the text color depending in tabstyle
+        if Parameters_Ribbon.TABBAR_STYLE != 1:
+            self.tabBar().setStyleSheet(
+                "QTabBar::tab {color: "
+                + StyleMapping_Ribbon.ReturnStyleItem("FontColor")
+                + ";}"
+            )
+        if Parameters_Ribbon.TABBAR_STYLE == 1:
+            self.tabBar().setStyleSheet(
+                """QTabBar::tab {background: """
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
+                + """;color: """
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
+                + """;}"""
+                + """QTabBar::tab:selected, QTabBar::tab:hover {
+                background: """
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                + """;color: """
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                + """;}"""
+            )
+
+        # ensure that workbench is already loaded
+        workbench = Gui.activeWorkbench()
+        if not hasattr(workbench, "__Workbench__"):
+            # XXX for debugging purposes
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                StandardFunctions.Print(f"wb {workbench.MenuText} not loaded", "Log")
+
+            # wait for 0.1s hoping that after that time the workbench is loaded
+            timer.timeout.connect(self.onWbActivated)
+            timer.setSingleShot(True)
+            timer.start(1000)
+            return
+
+        # hide normal toolbars
+        self.hideClassicToolbars()
+
+        # switch tab if necessary
+        self.updateCurrentTab()
+
+        # create panels. Do this after updateCurrentTab.
+        # Otherwise, the sketcher workbench won;t be loaded properly the first time
+        self.buildPanels()
+
+        # if self.DesignMenuLoaded is True:
+        #     # Disable the quick toolbar, righttoolbar and application menu
+        #     self.rightToolBar().setDisabled(True)
+        #     self.quickAccessToolBar().setDisabled(True)
+        #     self.applicationOptionButton().setDisabled(True)
+        #     Gui.updateGui()
+        return
+
+    def onTabBarClicked(self):
+        self.UnfoldRibbon()
+        self.setRibbonVisible(True)
+
+        # hide normal toolbars
+        self.hideClassicToolbars()
+        return
+
+    def updateCurrentTab(self):
+        currentWbIndex = self.tabBar().indexOf(Gui.activeWorkbench().MenuText)
+        currentTabIndex = self.tabBar().currentIndex()
+
+        if currentWbIndex != currentTabIndex:
+            self.disconnectSignals()
+            self.tabBar().setCurrentIndex(currentWbIndex)
+            self.connectSignals()
+        self.ApplicationMenus()
+
+        if self.DesignMenuLoaded is True:
+            # Disable the quick toolbar, righttoolbar and application menu
+            self.rightToolBar().setDisabled(True)
+            self.quickAccessToolBar().setDisabled(True)
+            self.applicationOptionButton().setDisabled(True)
+            Gui.updateGui()
+        return
+
+    # endregion
+
+    # region - Functions for building the ribbon
     def createModernMenu(self):
         """
         Create menu tabs.
@@ -1922,7 +2056,7 @@ class ModernMenu(RibbonBar):
             pinButton.setChecked(True)
             pinButton.setDisabled(True)
         else:
-            pinButton.clicked.connect(self.onPinClicked)
+            pinButton.clicked.connect(self.on_Pin_clicked)
             self.rightToolBar().addWidget(pinButton)
 
         # if the FreeCAD titlebar is hidden,add close, minimize and maximize buttons
@@ -2048,6 +2182,7 @@ class ModernMenu(RibbonBar):
                 pass
             return width
 
+    # Function to create the application menu
     def ApplicationMenus(self):
         # Add a file menu
         ApplictionMenu = self.addFileMenu()
@@ -2122,6 +2257,7 @@ class ModernMenu(RibbonBar):
 
         return
 
+    # Function to create the extra menus on the right toolbar
     def CreateMenus(self):
         MenuBar = mw.menuBar()
 
@@ -2487,6 +2623,7 @@ class ModernMenu(RibbonBar):
         self.HelpMenu = HelpMenu
         return
 
+    # Function for loading the design menu
     def loadDesignMenu(self):
         # Get the form
         Dialog = LoadDesign_Ribbon.LoadDialog()
@@ -2502,20 +2639,11 @@ class ModernMenu(RibbonBar):
         self.DesignMenuLoaded = True
 
         # Connect the close signal of the designmenu
-        Dialog.closeSignal.connect(self.loadDesignMenu)
+        Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
 
         return
-
-    def EnableRibbonToolbarsAndMenus(self):
-        self.rightToolBar().setEnabled(True)
-        self.quickAccessToolBar().setEnabled(True)
-        self.applicationOptionButton().setEnabled(True)
-        Gui.updateGui()
-
-        self.loadDesignMenu = False
-
-        return
-
+    
+    # Function for loading the settings menu
     def loadSettingsMenu(self):
         # Get the form
         Dialog = LoadSettings_Ribbon.LoadDialog()
@@ -2535,165 +2663,18 @@ class ModernMenu(RibbonBar):
 
         return
 
-    def on_AboutButton_clicked(self):
-        LoadLicenseForm_Ribbon.main()
+    # Function to activate the toolbars and menus 
+    # after closing the design menu or settings menu
+    def EnableRibbonToolbarsAndMenus(self):
+        self.rightToolBar().setEnabled(True)
+        self.quickAccessToolBar().setEnabled(True)
+        self.applicationOptionButton().setEnabled(True)
+        Gui.updateGui()
+
+        self.loadDesignMenu = False
+
         return
 
-    def onHelpClicked(self):
-        self.helpRibbonButton().showMenu()
-
-    def on_RibbonHelpButton_clicked(self):
-        if self.ReproAdress != "" or self.ReproAdress is not None:
-            if not self.ReproAdress.endswith("/"):
-                self.ReproAdress = self.ReproAdress + "/"
-
-            Adress = self.ReproAdress + "wiki"
-            webbrowser.open(Adress, new=2, autoraise=True)
-        return
-
-    def on_WhatsNewButton_clicked(self):
-        if self.ReproAdress != "" or self.ReproAdress is not None:
-            if not self.ReproAdress.endswith("/"):
-                self.ReproAdress = self.ReproAdress + "/"
-
-            Adress = self.ReproAdress + """wiki/06-%E2%80%90-Change-log"""
-            webbrowser.open(Adress, new=2, autoraise=True)
-        return
-
-    def onPinClicked(self):
-        if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
-            self.FoldRibbon()
-            Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", True)
-            Parameters_Ribbon.AUTOHIDE_RIBBON = True
-
-            pinButton: QToolButton = self.rightToolBar().findChildren(
-                QToolButton, "Pin Ribbon"
-            )[0]
-            pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
-
-            # Make sure that the ribbon remains visible
-            self.setRibbonVisible(True)
-            return
-        if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
-            self.UnfoldRibbon()
-
-            Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
-            Parameters_Ribbon.AUTOHIDE_RIBBON = False
-
-            pinButton: QToolButton = self.rightToolBar().findChildren(
-                QToolButton, "Pin Ribbon"
-            )[0]
-            pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
-
-            # Make sure that the ribbon remains visible
-            self.setRibbonVisible(True)
-            return
-        return
-
-    def onUserChangedWorkbench(self, tabActivated=True):
-        """
-        Import selected workbench toolbars to ModernMenu section.
-        """
-        if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
-            if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
-                self.UnfoldRibbon()
-            # else:
-            #     self.FoldRibbon(True)
-
-        index = self.tabBar().currentIndex()
-        tabName = self.tabBar().tabText(index)
-
-        if tabName is not None and tabName != "" and tabName != "test":
-            # activate selected workbench
-            tabName = tabName.replace("&", "")
-            if self.wbNameMapping[tabName] is not None:
-                Gui.activateWorkbench(self.wbNameMapping[tabName])
-
-            if tabActivated is True:
-                self.onWbActivated()
-                self.ApplicationMenus()
-
-            # hide normal toolbars
-            self.hideClassicToolbars()
-
-        # if self.DesignMenuLoaded is True:
-        #     # Disable the quick toolbar, righttoolbar and application menu
-        #     self.rightToolBar().setDisabled(True)
-        #     self.quickAccessToolBar().setDisabled(True)
-        #     self.applicationOptionButton().setDisabled(True)
-        #     Gui.updateGui()
-        return
-
-    def onWbActivated(self):
-        if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
-            if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
-                self.UnfoldRibbon()
-            # else:
-            #     self.FoldRibbon(True)
-
-        # Set the text color depending in tabstyle
-        if Parameters_Ribbon.TABBAR_STYLE != 1:
-            self.tabBar().setStyleSheet(
-                "QTabBar::tab {color: "
-                + StyleMapping_Ribbon.ReturnStyleItem("FontColor")
-                + ";}"
-            )
-        if Parameters_Ribbon.TABBAR_STYLE == 1:
-            self.tabBar().setStyleSheet(
-                """QTabBar::tab {background: """
-                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
-                + """;color: """
-                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
-                + """;}"""
-                + """QTabBar::tab:selected, QTabBar::tab:hover {
-                background: """
-                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                + """;color: """
-                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                + """;}"""
-            )
-
-        # ensure that workbench is already loaded
-        workbench = Gui.activeWorkbench()
-        if not hasattr(workbench, "__Workbench__"):
-            # XXX for debugging purposes
-            if Parameters_Ribbon.DEBUG_MODE is True:
-                StandardFunctions.Print(f"wb {workbench.MenuText} not loaded", "Log")
-
-            # wait for 0.1s hoping that after that time the workbench is loaded
-            timer.timeout.connect(self.onWbActivated)
-            timer.setSingleShot(True)
-            timer.start(1000)
-            return
-
-        # hide normal toolbars
-        self.hideClassicToolbars()
-
-        # switch tab if necessary
-        self.updateCurrentTab()
-
-        # create panels. Do this after updateCurrentTab.
-        # Otherwise, the sketcher workbench won;t be loaded properly the first time
-        self.buildPanels()
-
-        # if self.DesignMenuLoaded is True:
-        #     # Disable the quick toolbar, righttoolbar and application menu
-        #     self.rightToolBar().setDisabled(True)
-        #     self.quickAccessToolBar().setDisabled(True)
-        #     self.applicationOptionButton().setDisabled(True)
-        #     Gui.updateGui()
-        return
-
-    def onTabBarClicked(self):
-        self.UnfoldRibbon()
-        self.setRibbonVisible(True)
-
-        # hide normal toolbars
-        self.hideClassicToolbars()
-        return
-
-    def ToggleApplicationButton(self):
-        self.applicationOptionButton().showMenu()
 
     def buildPanels(self):
         # Get the active workbench and get its name
@@ -3521,6 +3502,67 @@ class ModernMenu(RibbonBar):
             Gui.updateGui()
         return
 
+    # endregion
+
+    # region - Control functions
+    def on_AboutButton_clicked(self):
+        LoadLicenseForm_Ribbon.main()
+        return
+
+    def on_Help_clicked(self):
+        self.helpRibbonButton().showMenu()
+
+    def on_RibbonHelpButton_clicked(self):
+        if self.ReproAdress != "" or self.ReproAdress is not None:
+            if not self.ReproAdress.endswith("/"):
+                self.ReproAdress = self.ReproAdress + "/"
+
+            Adress = self.ReproAdress + "wiki"
+            webbrowser.open(Adress, new=2, autoraise=True)
+        return
+
+    def on_WhatsNewButton_clicked(self):
+        if self.ReproAdress != "" or self.ReproAdress is not None:
+            if not self.ReproAdress.endswith("/"):
+                self.ReproAdress = self.ReproAdress + "/"
+
+            Adress = self.ReproAdress + """wiki/06-%E2%80%90-Change-log"""
+            webbrowser.open(Adress, new=2, autoraise=True)
+        return
+
+    def on_Pin_clicked(self):
+        if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
+            self.FoldRibbon()
+            Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", True)
+            Parameters_Ribbon.AUTOHIDE_RIBBON = True
+
+            pinButton: QToolButton = self.rightToolBar().findChildren(
+                QToolButton, "Pin Ribbon"
+            )[0]
+            pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
+
+            # Make sure that the ribbon remains visible
+            self.setRibbonVisible(True)
+            return
+        if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
+            self.UnfoldRibbon()
+
+            Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
+            Parameters_Ribbon.AUTOHIDE_RIBBON = False
+
+            pinButton: QToolButton = self.rightToolBar().findChildren(
+                QToolButton, "Pin Ribbon"
+            )[0]
+            pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
+
+            # Make sure that the ribbon remains visible
+            self.setRibbonVisible(True)
+            return
+        return
+
+    def on_ApplicationButton_toggled(self):
+        self.applicationOptionButton().showMenu()
+
     def on_ScrollButton_Category_clicked(
         self, event, ScrollButton: RibbonCategoryLayoutButton
     ):
@@ -3528,23 +3570,9 @@ class ModernMenu(RibbonBar):
             ScrollButton.click()
         return
 
-    def updateCurrentTab(self):
-        currentWbIndex = self.tabBar().indexOf(Gui.activeWorkbench().MenuText)
-        currentTabIndex = self.tabBar().currentIndex()
-
-        if currentWbIndex != currentTabIndex:
-            self.disconnectSignals()
-            self.tabBar().setCurrentIndex(currentWbIndex)
-            self.connectSignals()
-        self.ApplicationMenus()
-
-        if self.DesignMenuLoaded is True:
-            # Disable the quick toolbar, righttoolbar and application menu
-            self.rightToolBar().setDisabled(True)
-            self.quickAccessToolBar().setDisabled(True)
-            self.applicationOptionButton().setDisabled(True)
-            Gui.updateGui()
-        return
+    # endregion
+    
+    # region - helper functions
 
     def hideClassicToolbars(self):
         for toolbar in mw.findChildren(QToolBar):
@@ -4244,7 +4272,46 @@ class ModernMenu(RibbonBar):
     def CloseFreeCAD(self):
         mw.close()
         return
+   
+    def ToggleMenuBar(self):
+        MenuBar = mw.menuBar()
+        if MenuBar.isVisible():
+            MenuBar.hide()
+            return
+        if MenuBar.isVisible() is False:
+            MenuBar.show()
+            return
 
+    def CheckLanguage(self):
+        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
+        if self.ribbonStructure["language"] != FreeCAD_preferences.GetString(
+            "Language"
+        ):
+            if "workbenches" in self.ribbonStructure:
+                for workbenchName in self.ribbonStructure["workbenches"]:
+                    if "toolbars" in self.ribbonStructure["workbenches"][workbenchName]:
+                        for ToolBar in self.ribbonStructure["workbenches"][
+                            workbenchName
+                        ]["toolbars"]:
+                            if (
+                                "commands"
+                                in self.ribbonStructure["workbenches"][workbenchName][
+                                    "toolbars"
+                                ][ToolBar]
+                            ):
+                                for Command in self.ribbonStructure["workbenches"][
+                                    workbenchName
+                                ]["toolbars"][ToolBar]["commands"]:
+                                    self.ribbonStructure["workbenches"][workbenchName][
+                                        "toolbars"
+                                    ][ToolBar]["commands"][Command]["text"] = ""
+
+            print("Ribbon UI: Custom text are reset because the language was changed")
+        return
+
+    # endregion
+    
+    # region - Titlebar functions
     def MinimizeFreeCAD(self):
         mw.showMinimized()
         return
@@ -4295,15 +4362,9 @@ class ModernMenu(RibbonBar):
             mw.showFullScreen()
             return
 
-    def ToggleMenuBar(self):
-        MenuBar = mw.menuBar()
-        if MenuBar.isVisible():
-            MenuBar.hide()
-            return
-        if MenuBar.isVisible() is False:
-            MenuBar.show()
-            return
+    # endregion
 
+    # region - Function for data files updates
     def CheckDataFile(self):
         if self.isLoaded:
             DataFile2 = os.path.join(os.path.dirname(__file__), "RibbonDataFile2.dat")
@@ -4341,33 +4402,6 @@ class ModernMenu(RibbonBar):
                 )
                 StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
         return True
-
-    def CheckLanguage(self):
-        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
-        if self.ribbonStructure["language"] != FreeCAD_preferences.GetString(
-            "Language"
-        ):
-            if "workbenches" in self.ribbonStructure:
-                for workbenchName in self.ribbonStructure["workbenches"]:
-                    if "toolbars" in self.ribbonStructure["workbenches"][workbenchName]:
-                        for ToolBar in self.ribbonStructure["workbenches"][
-                            workbenchName
-                        ]["toolbars"]:
-                            if (
-                                "commands"
-                                in self.ribbonStructure["workbenches"][workbenchName][
-                                    "toolbars"
-                                ][ToolBar]
-                            ):
-                                for Command in self.ribbonStructure["workbenches"][
-                                    workbenchName
-                                ]["toolbars"][ToolBar]["commands"]:
-                                    self.ribbonStructure["workbenches"][workbenchName][
-                                        "toolbars"
-                                    ][ToolBar]["commands"][Command]["text"] = ""
-
-            print("Ribbon UI: Custom text are reset because the language was changed")
-        return
 
     def ConvertRibbonStructure(self):
         # Define a result parameter
@@ -4483,6 +4517,8 @@ class ModernMenu(RibbonBar):
             outfile.close()
 
         return isConverted
+
+    # endregion
 
 
 class EventInspector(QObject):
