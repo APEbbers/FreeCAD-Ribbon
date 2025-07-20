@@ -67,13 +67,19 @@ def DarkMode():
     # Get the current stylesheet for FreeCAD
     FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
     currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
+    currentTheme = FreeCAD_preferences.GetString("Theme")
+    currentOverlay = FreeCAD_preferences.GetString("OverlayActiveStyleSheet")
 
     # if no stylesheet is selected return
     if currentStyleSheet is None or currentStyleSheet == "":
         return
 
     # FreeCAD Dark is part of FreeCAD, so set the result to True manually
-    if currentStyleSheet == "FreeCAD Dark.qss":
+    if (
+        currentStyleSheet.lower() == "freecad dark.qss"
+        or currentTheme.lower() == "freecad dark"
+        or "dark theme" in currentOverlay.lower()
+    ):
         return True
 
     # OpenLight and OpenDark are from one addon. Set the currentStyleSheet value to the addon folder
