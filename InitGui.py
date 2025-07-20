@@ -120,7 +120,6 @@ try:
         mw.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
         mw.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
         mw.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
-        mw.setWindowFlag(Qt.WindowType.BypassWindowManagerHint)
         # Connect the ribbon when the workbench is activated
         mw.workbenchActivated.connect(FCBinding.run)
         # Normally after setting the window frameless you show the window with mw.show()
