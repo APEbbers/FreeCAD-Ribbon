@@ -1242,7 +1242,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             DefaultPath=Parameters_Ribbon.EXPORT_LOCATION,
             SaveAs=True,
         )
-        shutil.copy(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, FileName)
+        if FileName != "":
+            shutil.copy(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, FileName)
 
         return
 
