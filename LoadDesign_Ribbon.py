@@ -5527,6 +5527,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
     def loadAllWorkbenches(self, AutoHide=True, HideOnly=False, FinishMessage=""):
         progressBar = QProgressBar(minimum=0, value=0)
         progressBar.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.WindowStaysOnTopHint)
+        progressBar.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
+        progressBar.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
+        progressBar.setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, False)
         progressBar.setMinimumSize(300, 20)
 
         # Get the stylesheet from the main window and use it for this form
