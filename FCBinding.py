@@ -1049,7 +1049,7 @@ class ModernMenu(RibbonBar):
 
         action = control.actions()[0]
         
-        btn = Any()
+        btn = QToolButton()
 
         if buttonSize == "small":
             showText = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
@@ -2488,7 +2488,7 @@ class ModernMenu(RibbonBar):
         HelpIcon = QIcon()
         AboutIcon = Gui.getIcon("freecad")
 
-        actions = Any()
+        actions = [QAction()]
 
         # Get the standard help menu from FreeCAD
         for action in MenuBar.children():
