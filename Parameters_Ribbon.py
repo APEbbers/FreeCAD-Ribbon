@@ -81,7 +81,7 @@ class Settings:
     # region - Functions to write settings to the FreeCAD Parameters
     #
     #
-    def SetStringSetting(self, settingName: str, value: str):
+    def SetStringSetting(settingName, value: str):
         if value.lower() == "none":
             value = ""
         if value == "":
@@ -89,11 +89,11 @@ class Settings:
         preferences.SetString(settingName, value)
         return
 
-    def SetBoolSetting(self, settingName: str, value: bool):
+    def SetBoolSetting(settingName, value: bool):
         preferences.SetBool(settingName, value)
         return
 
-    def SetIntSetting(self, settingName: str, value: int):
+    def SetIntSetting(settingName, value: int):
         if str(value).lower() == "":
             value = int(DefaultSettings[settingName])
         if str(value).lower() != "":
