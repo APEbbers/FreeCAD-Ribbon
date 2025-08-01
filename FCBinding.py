@@ -157,6 +157,7 @@ class ModernMenu(RibbonBar):
     """
     Create ModernMenu QWidget.
     """
+
     # region - class parameters
     # Add workbenches that need to be loaded first or early here
     WBtoLoadFirst = ["BillOfMaterialsWB"]
@@ -239,7 +240,7 @@ class ModernMenu(RibbonBar):
 
     # Define a indictor for wether the design menu is loaded or not.
     DesignMenuLoaded = False
-    
+
     # endregion
 
     def __init__(self):
@@ -1028,7 +1029,7 @@ class ModernMenu(RibbonBar):
 
                 gridLayout.removeWidget(W_origin)
                 gridLayout.removeWidget(W_dropWidget)
-                
+
                 W_origin.deleteLater()
                 W_dropWidget.deleteLater()
 
@@ -1349,7 +1350,7 @@ class ModernMenu(RibbonBar):
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True and self.MenuEntered is False:
             self.FoldRibbon()
             # print("LeaveEvent")
-            
+
     # used to scroll a ribbon horizontally, when it's wider than the screen
     def wheelEvent_CC(self, event):
         if self.currentCategory().underMouse():
@@ -1395,9 +1396,9 @@ class ModernMenu(RibbonBar):
                 for i in range(NoClicks):
                     ScrollRightButton_Tab.click()
         return
-    
+
     # endregion
-    
+
     # region - standard class functions
     #
     # implementation to add actions to the Filemenu. Needed for the accessories menu
@@ -1411,7 +1412,7 @@ class ModernMenu(RibbonBar):
             menu = self.addFileMenu()
         menu.addAction(action)
         return
-    
+
     # endregion
 
     # region - Standard ribbon functions
@@ -1424,7 +1425,7 @@ class ModernMenu(RibbonBar):
         self.tabBar().currentChanged.disconnect(self.onUserChangedWorkbench)
         mw.workbenchActivated.disconnect(self.onWbActivated)
         return
-        
+
     def onUserChangedWorkbench(self, tabActivated=True):
         """
         Import selected workbench toolbars to ModernMenu section.
@@ -2567,7 +2568,7 @@ class ModernMenu(RibbonBar):
         Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
 
         return
-    
+
     # Function for loading the settings menu
     def loadSettingsMenu(self):
         # Get the form
@@ -2588,7 +2589,7 @@ class ModernMenu(RibbonBar):
 
         return
 
-    # Function to activate the toolbars and menus 
+    # Function to activate the toolbars and menus
     # after closing the design menu or settings menu
     def EnableRibbonToolbarsAndMenus(self):
         self.rightToolBar().setEnabled(True)
@@ -2599,7 +2600,6 @@ class ModernMenu(RibbonBar):
         self.loadDesignMenu = False
 
         return
-
 
     def buildPanels(self):
         # Get the active workbench and get its name
@@ -3496,7 +3496,7 @@ class ModernMenu(RibbonBar):
         return
 
     # endregion
-    
+
     # region - helper functions
 
     def hideClassicToolbars(self):
@@ -4194,10 +4194,6 @@ class ModernMenu(RibbonBar):
                 )
             return
 
-
-   
-
-
     def CheckLanguage(self):
         FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
         if self.ribbonStructure["language"] != FreeCAD_preferences.GetString(
@@ -4226,12 +4222,12 @@ class ModernMenu(RibbonBar):
         return
 
     # endregion
-    
+
     # region - Titlebar functions
     def CloseFreeCAD(self):
         mw.close()
         return
-    
+
     def MinimizeFreeCAD(self):
         mw.showMinimized()
         return
@@ -4281,7 +4277,7 @@ class ModernMenu(RibbonBar):
         if mw.isFullScreen() is False:
             mw.showFullScreen()
             return
-    
+
     def ToggleMenuBar(self):
         MenuBar = mw.menuBar()
         if MenuBar.isVisible():
@@ -4290,6 +4286,7 @@ class ModernMenu(RibbonBar):
         if MenuBar.isVisible() is False:
             MenuBar.show()
             return
+
     # endregion
 
     # region - Function for data files updates

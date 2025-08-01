@@ -5526,7 +5526,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
     def loadAllWorkbenches(self, AutoHide=True, HideOnly=False, FinishMessage=""):
         progressBar = QProgressBar(minimum=0, value=0)
-        progressBar.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.WindowStaysOnTopHint)
+        progressBar.setWindowFlags(
+            Qt.WindowType.Dialog | Qt.WindowType.WindowStaysOnTopHint
+        )
         progressBar.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
         progressBar.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
         progressBar.setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, False)
@@ -5547,7 +5549,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             activeWorkbench = Gui.activeWorkbench().name()
             progressBar.show()
             lst = Gui.listWorkbenches()
-            progressBar.setMaximum(len(lst)-1)
+            progressBar.setMaximum(len(lst) - 1)
             for i, wb in enumerate(lst):
                 msg = (
                     translate("FreeCAD Ribbon", "Loading workbench ")
