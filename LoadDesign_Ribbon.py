@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction, QGuiApplication
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction, QGuiApplication
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -40,7 +40,7 @@ from PySide.QtWidgets import (
     QLabel,
     QProgressBar,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
 import sys
 import json
 from datetime import datetime
@@ -5530,6 +5530,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         progressBar.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
         progressBar.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
         progressBar.setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, False)
+        progressBar.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, True)
         progressBar.setMinimumSize(300, 20)
 
         # Get the stylesheet from the main window and use it for this form
