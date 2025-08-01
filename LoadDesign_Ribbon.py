@@ -38,6 +38,7 @@ from PySide.QtWidgets import (
     QSizePolicy,
     QRadioButton,
     QLabel,
+    QProgressBar,
 )
 from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
 import sys
@@ -1242,7 +1243,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             DefaultPath=Parameters_Ribbon.EXPORT_LOCATION,
             SaveAs=True,
         )
-        shutil.copy(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, FileName)
+        if FileName != "":
+            shutil.copy(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, FileName)
 
         return
 
@@ -5523,14 +5525,16 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         return
 
     def loadAllWorkbenches(self, AutoHide=True, HideOnly=False, FinishMessage=""):
-        lbl = QLabel(translate("FreeCAD Ribbon", "Loading workbench … (…/…)"))
-        lbl.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.WindowStaysOnTopHint)
-        lbl.setMinimumSize(300, 20)
-        lbl.setContentsMargins(3, 3, 3, 3)
+        progressBar = QProgressBar(minimum=0, value=0)
+        progressBar.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.WindowStaysOnTopHint)
+        progressBar.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
+        progressBar.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
+        progressBar.setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, False)
+        progressBar.setMinimumSize(300, 20)
 
         # Get the stylesheet from the main window and use it for this form
         (
-            lbl.setStyleSheet(
+            progressBar.setStyleSheet(
                 "background-color: "
                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                 + ";color: "
@@ -5541,8 +5545,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
         if HideOnly is False:
             activeWorkbench = Gui.activeWorkbench().name()
-            lbl.show()
+            progressBar.show()
             lst = Gui.listWorkbenches()
+            progressBar.setMaximum(len(lst)-1)
             for i, wb in enumerate(lst):
                 msg = (
                     translate("FreeCAD Ribbon", "Loading workbench ")
@@ -5554,22 +5559,16 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     + ")"
                 )
                 print(msg)
-                lbl.setText(msg)
-                geo = lbl.geometry()
-                geo.setSize(lbl.sizeHint())
-                lbl.setGeometry(geo)
-                lbl.repaint()
                 Gui.updateGui()  # Probably slower with this, because it redraws the entire GUI with all tool buttons changed etc. but allows the label to actually be updated, and it looks nice and gives a quick overview of all the workbenches…
                 try:
                     Gui.activateWorkbench(wb)
                 except Exception:
                     pass
             if FinishMessage != "":
-                lbl.setText(FinishMessage)
                 print(FinishMessage)
             Gui.activateWorkbench(activeWorkbench)
         if AutoHide is True or HideOnly is True:
-            lbl.hide()
+            progressBar.close()
 
     # endregion---------------------------------------------------------------------------------------
 

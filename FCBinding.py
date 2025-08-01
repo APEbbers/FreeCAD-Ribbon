@@ -846,7 +846,10 @@ class ModernMenu(RibbonBar):
 
         # Activate some WB's first to ensure proper loading of the panels
         for Wb in self.WBtoLoadFirst:
-            Gui.activateWorkbench(Wb)
+            try:
+                Gui.activateWorkbench(Wb)
+            except Exception:
+                pass
         return
 
     # region - drag drop event functions
