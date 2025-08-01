@@ -34,6 +34,8 @@ from PySide.QtGui import (
     QCursor,
     QPalette,
     QEnterEvent,
+    QDrag,
+    QPixmap,
 )
 from PySide.QtWidgets import (
     QToolButton,
@@ -47,8 +49,9 @@ from PySide.QtWidgets import (
     QStyleOption,
     QFrame,
     QGraphicsEffect,
+    QWidget,
 )
-from PySide.QtCore import Qt, QSize, QRect, QMargins, QEvent, QObject
+from PySide.QtCore import Qt, QSize, QRect, QMargins, QEvent, QObject, QMimeData
 
 import os
 import sys
@@ -72,7 +75,21 @@ sys.path.append(pathPackages)
 translate = App.Qt.translate
 
 
-class CustomControls:
+class CustomControls(QToolButton):
+    def mouseMoveEvent(self, e):
+        if e.buttons() == Qt.MouseButton.LeftButton:
+            try:
+                drag = QDrag(self)
+                mime = QMimeData()
+                drag.setMimeData(mime)
+                pixmap = QPixmap(self.size())
+                self.render(pixmap)
+                drag.setPixmap(pixmap)
+
+                if drag is not None:
+                    drag.exec(Qt.DropAction.MoveAction)
+            except Exception as e:
+                print(e)
 
     def LargeCustomToolButton(
         Text: str,
@@ -552,6 +569,10 @@ class CustomControls:
             # Set the tooltip for the label equeal to that of the commandbutton
             Label_Text.setToolTip(CommandButton.toolTip())
 
+        btn.mouseMoveEvent = lambda mouseEvent: CustomControls.mouseMoveEvent(
+            btn, mouseEvent
+        )
+
         # Set the spacing to zero. If not, the CSS styling will show gaps
         Layout.setSpacing(0)
         # Add the layout to the button
@@ -624,6 +645,7 @@ class CustomControls:
         btn.setFixedSize(QSize(width, ButtonSize.height()))
 
         # Return the button
+        btn.setObjectName("CustomWidget")
         return btn
 
     def CustomToolButton(
@@ -1121,6 +1143,10 @@ class CustomControls:
             # Set the menubutton space to zero because there is no menu
             MenuButtonSpace = 0
 
+        btn.mouseMoveEvent = lambda mouseEvent: CustomControls.mouseMoveEvent(
+            btn, mouseEvent
+        )
+
         # Set the minimum height for the button
         CommandButton.setMinimumHeight(ButtonSize.height())
         # Set spacing to zero (highlight background will have gaps otherwise)
@@ -1186,6 +1212,7 @@ class CustomControls:
         btn.setFixedHeight(CommandButton.height())
 
         # return the new button
+        btn.setObjectName("CustomWidget")
         return btn
 
     def CustomOptionMenu(Menu=None, actionList=None, parent=None):
@@ -1243,3 +1270,22 @@ class CustomControls:
 
         Menu.aboutToHide.connect(SetToFoldRibbon)
         return Menu
+
+    def EmptyButton():
+        btn = QToolButton()
+        btn.mouseMoveEvent = lambda mouseEvent: CustomControls.mouseMoveEvent(
+            btn, mouseEvent
+        )
+        return btn
+
+
+class DragTargetIndicator(QLabel):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setContentsMargins(3, 3, 3, 3)
+        self.setStyleSheet(
+            StyleMapping_Ribbon.ReturnStyleSheet(
+                control="dragindicator",
+                HoverColor=Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
+            )
+        )

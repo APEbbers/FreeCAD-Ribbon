@@ -243,8 +243,8 @@ def ReturnStyleSheet(
 
     control (string):
         toolbutton,
-        toolbuttonLarge,
         applicationbutton,
+        DragIndicator,
     """
     StyleSheet = ""
     try:
@@ -337,7 +337,16 @@ def ReturnStyleSheet(
                     + radius
                     + """;}"""
                 )
-
+            if control.lower() == "dragindicator":
+                StyleSheet = (
+                    """QLabel {
+                        background-color: """
+                    + HoverColor
+                    + """;border-radius: """
+                    + radius
+                    + """px;"""
+                    + """;}"""
+                )
             return StyleSheet
     except Exception as e:
         print(e)
