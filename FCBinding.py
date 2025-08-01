@@ -19,6 +19,7 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+from typing import Any
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
@@ -189,9 +190,7 @@ class ModernMenu(RibbonBar):
     # Create an offset for the panelheight
     PanelHeightOffset = 36
     # Create an offset for the whole ribbon height
-    RibbonOffset = (
-        50 + QuickAccessButtonSize * 2
-    )  # Set to zero to hide the panel titles
+    RibbonOffset = (50 + QuickAccessButtonSize * 2)  # Set to zero to hide the panel titles
 
     # Set the minimum height for the ribbon
     RibbonMinimalHeight = QuickAccessButtonSize * 2 + 16
@@ -1003,7 +1002,7 @@ class ModernMenu(RibbonBar):
 
                 draggedItem = RibbonPanelItemWidget(parent)
                 draggedItem.addWidget(draggedWidget)
-                gridLayout.addWidget(
+                gridLayout.addWidget(  # pyright: ignore[reportUnusedCallResult]
                     draggedItem,
                     xPos,
                     yPos,
@@ -1014,10 +1013,10 @@ class ModernMenu(RibbonBar):
 
                 originalItem = RibbonPanelItemWidget(parent)
                 originalItem.addWidget(originalWidget)
-                gridLayout.addWidget(
+                gridLayout.addWidget(  # pyright: ignore[reportUnusedCallResult]
                     originalItem,
-                    OldPos[0],
-                    OldPos[1],
+                    OldPos[0],  # pyright: ignore[reportIndexIssue]
+                    OldPos[1],  # pyright: ignore[reportIndexIssue]
                     rowSpan_origin,
                     1,
                     Qt.AlignmentFlag.AlignTop,
@@ -1046,6 +1045,8 @@ class ModernMenu(RibbonBar):
                 IconOnly = True
 
         action = control.actions()[0]
+        
+        btn = Any()
 
         if buttonSize == "small":
             showText = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
@@ -1166,9 +1167,8 @@ class ModernMenu(RibbonBar):
             if iconToolbar == panel.title():
                 IconOnly = True
 
-        if (
-            size.height() < Parameters_Ribbon.ICON_SIZE_SMALL + 5
-            and size.height() > Parameters_Ribbon.ICON_SIZE_SMALL - 5
+        if size.height() < (int(Parameters_Ribbon.ICON_SIZE_SMALL) + 5
+            and size.height() > int(Parameters_Ribbon.ICON_SIZE_SMALL) - 5
         ):
             showText = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
             if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
@@ -1864,8 +1864,6 @@ class ModernMenu(RibbonBar):
             if action.objectName() == "Std_DlgPreferences":
                 preferenceButton_FreeCAD = action
                 SettingsMenu.addAction(preferenceButton_FreeCAD)
-        # add the preference button for FreeCAD
-        SettingsMenu.addAction(preferenceButton_FreeCAD)
         # Get the customize button from FreeCAD
         toolsMenu = mw.findChildren(QMenu, "&Tools")[0]
         for action in toolsMenu.actions():
@@ -1929,6 +1927,7 @@ class ModernMenu(RibbonBar):
         )
         pinButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
         # Set the correct icon
+        pinButtonIcon = None
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
             pinButtonIcon = StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed")
         if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
@@ -2102,7 +2101,7 @@ class ModernMenu(RibbonBar):
                 # width = sea.width()
             except Exception:
                 pass
-            return width
+        return width
 
     # Function to create the application menu
     def ApplicationMenus(self):
@@ -2486,7 +2485,7 @@ class ModernMenu(RibbonBar):
         HelpIcon = QIcon()
         AboutIcon = Gui.getIcon("freecad")
 
-        actions = None
+        actions = Any()
 
         # Get the standard help menu from FreeCAD
         for action in MenuBar.children():
@@ -4189,7 +4188,7 @@ class ModernMenu(RibbonBar):
                 StandardFunctions.Print(
                     f"{e.with_traceback(e.__traceback__)}", "Warning"
                 )
-            return
+            return []
 
 
    
@@ -4291,19 +4290,19 @@ class ModernMenu(RibbonBar):
 
     # region - Function for data files updates
     def CheckDataFile(self):
+        Data = {}
         if self.isLoaded:
             DataFile2 = os.path.join(os.path.dirname(__file__), "RibbonDataFile2.dat")
             if os.path.exists(DataFile2) is False:
                 Question = translate(
                     "FreeCAD Ribbon",
                     "The first time, a data file must be generated!\n"
-                    "It is important to create a data file to avoid any issues.\n"
-                    f"Open the layout menu ({self.LayoutMenuShortCut}) and click on 'Reload workbenches'.",
+                    +"It is important to create a data file to avoid any issues.\n"
+                    +f"Open the layout menu ({self.LayoutMenuShortCut}) and click on 'Reload workbenches'.",
                 )
                 StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
                 return
             if os.path.exists(DataFile2) is True:
-                Data = {}
                 # read ribbon structure from JSON file
                 with open(DataFile2, "r") as file:
                     Data.update(json.load(file))
@@ -4322,8 +4321,8 @@ class ModernMenu(RibbonBar):
                 Question = translate(
                     "FreeCAD Ribbon",
                     "The current data file is based on an older format!\n"
-                    "It is important to update the data file to avoid any issues.\n"
-                    f"Open the layout menu ({self.LayoutMenuShortCut}) and click on 'Reload workbenches'.",
+                    +"It is important to update the data file to avoid any issues.\n"
+                    +f"Open the layout menu ({self.LayoutMenuShortCut}) and click on 'Reload workbenches'.",
                 )
                 StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
         return True
