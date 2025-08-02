@@ -45,6 +45,7 @@ from PySide6.QtGui import (
     QGuiApplication,
 )
 from PySide6.QtWidgets import (
+    QCheckBox,
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -241,6 +242,8 @@ class ModernMenu(RibbonBar):
 
     # Define a indictor for wether the design menu is loaded or not.
     DesignMenuLoaded = False
+    
+    BetaFunctionsEnabled = False
 
     # endregion
 
@@ -1608,6 +1611,12 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setSizeIncrement(1, 1)
         # Set the objectName for the right toolbar. needed for excluding from hiding.
         self.rightToolBar().setObjectName("rightToolBar")
+        
+        # Add a switch to enable beta functions
+        switch= CustomControls.toggle()
+        switch.setObjectName("betaSwitch")
+        switch.connect(lambda i: self.on_ToggleBetaFunctions_toggled(switch.isChecked()))
+        self.rightToolBar().addWidget(switch)
         return
 
     # Add the searchBar if it is present
@@ -3028,7 +3037,11 @@ class ModernMenu(RibbonBar):
         for i in range(Parameters_Ribbon.RIBBON_CLICKSPEED):
             ScrollButton.click()
         return
-
+    
+    def on_ToggleBetaFunctions_toggled(self, switchStatus):
+        self.BetaFunctionsEnabled = switchStatus
+        if switchStatus is True:
+            print("toggled on")
     # endregion
 
     # region - helper functions
