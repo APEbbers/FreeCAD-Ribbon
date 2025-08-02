@@ -92,7 +92,7 @@ from PySide6.QtCore import (
     QPoint,
     QSettings,
 )
-from CustomWidgets import CustomControls, DragTargetIndicator
+from CustomWidgets import CustomControls, DragTargetIndicator, Toggle
 
 import json
 import os
@@ -243,8 +243,11 @@ class ModernMenu(RibbonBar):
     # Define a indictor for wether the design menu is loaded or not.
     DesignMenuLoaded = False
     
+    # Define a indictor for wether beta functions are enabled
     BetaFunctionsEnabled = False
-
+    
+    # Define a indictor for wether the customize enviroment is enabled
+    CustomizeEnabled = False
     # endregion
 
     def __init__(self):
@@ -934,6 +937,37 @@ class ModernMenu(RibbonBar):
                 for i in range(NoClicks):
                     ScrollRightButton_Tab.click()
         return
+    
+    def contextMenuEvent(self, event):
+        for panel in self.currentCategory().panels().values():
+                if panel.underMouse() is True:
+                    return           
+        
+        if self.BetaFunctionsEnabled is True:
+            contextMenu = QMenu(self)
+            title = "Customize..."
+            if self.CustomizeEnabled is True:
+                title = "Exit customize..."
+            CustomizeStartAct = contextMenu.addAction(title)            
+            action = contextMenu.exec_(self.mapToGlobal(event.pos()))
+            
+            Stylesheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
+            if action == CustomizeStartAct:
+                if self.CustomizeEnabled is False:
+                    Addition = """RibbonCategory {
+                        border-top: 1px solid red;
+                        border-bottom: 1px solid red;
+                    }"""                    
+                    Stylesheet = Addition + Stylesheet
+                    self.setStyleSheet(Stylesheet)
+                    self.CustomizeEnabled = True
+                    return
+                if self.CustomizeEnabled is True:
+                    self.setStyleSheet(Stylesheet)
+                    self.CustomizeEnabled = False
+                    return
+        return        
+                
 
     # endregion
 
@@ -1594,6 +1628,18 @@ class ModernMenu(RibbonBar):
             )
             self.rightToolBar().addWidget(CloseButton)
 
+        # Add a switch to enable beta functions
+        BetaLabel = QLabel(translate("FreeCAD Ribbon", "Béta functions"))
+        BeforeAction = self.rightToolBar().actions()[1]
+        self.rightToolBar().insertWidget(BeforeAction, BetaLabel)
+        switch= Toggle()
+        switch.setObjectName("bétaSwitch")
+        switch.setMaximumHeight(self.RightToolBarButtonSize)
+        switch.setMaximumWidth(self.RightToolBarButtonSize*1.8)
+        switch.toggled.connect(lambda: self.on_ToggleBetaFunctions_toggled(switch.isChecked()))
+        BeforeAction = self.rightToolBar().actions()[2]
+        self.rightToolBar().insertWidget(BeforeAction, switch)
+
         # Set the width of the right toolbar
         RightToolbarWidth = (
             SearchBarWidth
@@ -1611,12 +1657,6 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setSizeIncrement(1, 1)
         # Set the objectName for the right toolbar. needed for excluding from hiding.
         self.rightToolBar().setObjectName("rightToolBar")
-        
-        # Add a switch to enable beta functions
-        switch= CustomControls.toggle(self)
-        switch.setObjectName("betaSwitch")
-        switch.connect(lambda i: self.on_ToggleBetaFunctions_toggled(switch.isChecked()))
-        self.rightToolBar().addWidget(switch)
         return
 
     # Add the searchBar if it is present
