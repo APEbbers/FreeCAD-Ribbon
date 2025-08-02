@@ -85,7 +85,9 @@ class Settings:
         if value.lower() == "none":
             value = ""
         if value == "":
-            value = DefaultSettings[settingName]  # pyright: ignore[reportAssignmentType]
+            value = DefaultSettings[
+                settingName
+            ]  # pyright: ignore[reportAssignmentType]
         preferences.SetString(settingName, value)
         return
 

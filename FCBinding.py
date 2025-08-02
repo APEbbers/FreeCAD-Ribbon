@@ -190,7 +190,9 @@ class ModernMenu(RibbonBar):
     # Create an offset for the panelheight
     PanelHeightOffset = 36
     # Create an offset for the whole ribbon height
-    RibbonOffset = (50 + QuickAccessButtonSize * 2)  # Set to zero to hide the panel titles
+    RibbonOffset = (
+        50 + QuickAccessButtonSize * 2
+    )  # Set to zero to hide the panel titles
 
     # Set the minimum height for the ribbon
     RibbonMinimalHeight = QuickAccessButtonSize * 2 + 16
@@ -1048,7 +1050,7 @@ class ModernMenu(RibbonBar):
                 IconOnly = True
 
         action = control.actions()[0]
-        
+
         btn = QToolButton()
 
         if buttonSize == "small":
@@ -1170,7 +1172,8 @@ class ModernMenu(RibbonBar):
             if iconToolbar == panel.title():
                 IconOnly = True
 
-        if size.height() < (int(Parameters_Ribbon.ICON_SIZE_SMALL) + 5
+        if size.height() < (
+            int(Parameters_Ribbon.ICON_SIZE_SMALL) + 5
             and size.height() > int(Parameters_Ribbon.ICON_SIZE_SMALL) - 5
         ):
             showText = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
@@ -4300,8 +4303,8 @@ class ModernMenu(RibbonBar):
                 Question = translate(
                     "FreeCAD Ribbon",
                     "The first time, a data file must be generated!\n"
-                    +"It is important to create a data file to avoid any issues.\n"
-                    +f"Open the layout menu ({self.LayoutMenuShortCut}) and click on 'Reload workbenches'.",
+                    + "It is important to create a data file to avoid any issues.\n"
+                    + f"Open the layout menu ({self.LayoutMenuShortCut}) and click on 'Reload workbenches'.",
                 )
                 StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
                 return
@@ -4324,8 +4327,8 @@ class ModernMenu(RibbonBar):
                 Question = translate(
                     "FreeCAD Ribbon",
                     "The current data file is based on an older format!\n"
-                    +"It is important to update the data file to avoid any issues.\n"
-                    +f"Open the layout menu ({self.LayoutMenuShortCut}) and click on 'Reload workbenches'.",
+                    + "It is important to update the data file to avoid any issues.\n"
+                    + f"Open the layout menu ({self.LayoutMenuShortCut}) and click on 'Reload workbenches'.",
                 )
                 StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
         return True
