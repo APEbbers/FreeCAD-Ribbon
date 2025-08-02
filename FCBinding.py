@@ -1613,7 +1613,7 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setObjectName("rightToolBar")
         
         # Add a switch to enable beta functions
-        switch= CustomControls.toggle()
+        switch= CustomControls.toggle(self)
         switch.setObjectName("betaSwitch")
         switch.connect(lambda i: self.on_ToggleBetaFunctions_toggled(switch.isChecked()))
         self.rightToolBar().addWidget(switch)
