@@ -50,6 +50,8 @@ from PySide6.QtWidgets import (
     QTextEdit,
     QFrame,
     QCheckBox,
+    QWidget,
+    QWidgetAction,
 )
 from PySide6.QtCore import (
     Qt,
