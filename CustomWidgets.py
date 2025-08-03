@@ -23,6 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 import textwrap
+import typing
 
 import sys
 
@@ -65,6 +66,7 @@ from PySide6.QtCore import (
     QSequentialAnimationGroup,
     Slot,
     Property,
+    Signal,
 )
 
 import os
@@ -659,7 +661,7 @@ class CustomControls(QToolButton):
         btn.setFixedSize(QSize(width, ButtonSize.height()))
 
         # Return the button
-        btn.setObjectName("CustomWidget")
+        btn.setObjectName("CustomWidget_Large")
         return btn
 
     def CustomToolButton(
@@ -709,6 +711,7 @@ class CustomControls(QToolButton):
         if len(Menu.actions()) == 0:
             CommandButton.addAction(Action)
         CommandButton.setDefaultAction(Action)
+        CommandButton.setObjectName("CommandButton")
 
         # Define a vertical layout
         Layout = QHBoxLayout()
@@ -724,7 +727,7 @@ class CustomControls(QToolButton):
             MenuButtonSpace = 12
 
         # If text must be shown wrapped, add a layout with label
-        if showText is True and Text != "":
+        if Text != "":
             # Create a label
             # Label_Text = QTextEdit()
             Label_Text.setReadOnly(True)
@@ -801,7 +804,7 @@ class CustomControls(QToolButton):
                     # reset the values
                     TextWidth = 0
                     Label_Text.setMaximumWidth(
-                        2000
+                        FontMetrics.tightBoundingRect(line1).width()
                     )  # set to a extra large value to avoid clipping
                     StandardFunctions.Print(
                         "Medium button is too small for text wrap!\n wrap setting is ignored",
@@ -838,6 +841,7 @@ class CustomControls(QToolButton):
                 Label_Text.setViewportMargins(0, marginCorrection, 0, 0)
                 # Update the width parameter
                 TextWidth = FontMetrics.boundingRect(Text).width() + space
+                Label_Text.setMaximumWidth(TextWidth)
             # Set the text alignment
             TextAlignment = Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft
             Label_Text.setAlignment(TextAlignment)
@@ -944,6 +948,8 @@ class CustomControls(QToolButton):
                 ArrowButton.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
 
             if showText is False:
+                Label_Text.hide()
+                TextWidth = 0
                 # Change the background color for commandbutton and label on hovering (CSS)
                 def enterEventCustom_2(event):
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
@@ -1094,6 +1100,8 @@ class CustomControls(QToolButton):
                 )
 
             if showText is False:
+                Label_Text.setHidden(True)
+                TextWidth = 0
                 # Change the background color for commandbutton and label on hovering (CSS)
                 def enterEventCustom_2(event):
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
@@ -1493,17 +1501,25 @@ class AnimatedToggle(Toggle):
 
 
 class CheckBoxAction(QWidgetAction):
+    
+    checkbox = QCheckBox()
+    checkbox.setObjectName("checkbox")
+    
     def __init__(self, parent, text):
         super(CheckBoxAction, self).__init__(parent)
         layout = QHBoxLayout()
         self.widget = QWidget()
         label = QLabel(text)
         label.setAlignment(Qt.AlignLeft)
-        layout.addWidget(QCheckBox())
+        layout.addWidget(self.checkbox)
         layout.addWidget(label)
         self.widget.setLayout(layout)
         
+        self.setCheckable(True)
         self.setDefaultWidget(self.widget)
+        return
 
-    # def createWidget(self,text):
-    #     return self.widget
+    
+    def setChecked(self, arg_1):
+        self.checkbox.setChecked(arg_1)
+        

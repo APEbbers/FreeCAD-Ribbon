@@ -19,6 +19,8 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+from pydoc import text
+from turtle import isvisible
 from typing import Any
 import CustomWidgets
 import FreeCAD as App
@@ -946,27 +948,49 @@ class ModernMenu(RibbonBar):
     
     def contextMenuEvent(self, event):
         for panel in self.currentCategory().panels().values():
-                if panel.underMouse() is True:
+                if panel.underMouse() is True:                    
                     for widget in panel.widgets():
-                        if widget.objectName().startswith("CustomWidget") and widget.underMouse() is True and self.CustomizeEnabled is True:
+                        # Check if the widget is a large widget or a normal widget. Also check if the customzice enviroment is enabled
+                        if widget.objectName() == ("CustomWidget") and widget.underMouse() is True and self.CustomizeEnabled is True:                                                       
+                            # Define the context menu for buttons
                             contextMenu = QMenu(self)
-                            CheckBoxAct = CheckBoxAction(self,"Enable text")                            
-                            CheckBoxAct.toggled.connect(lambda: self.on_ShowTextToggled(widget=widget, state=CheckBoxAct.isChecked()))
-                            CustomizeStartAct = contextMenu.addAction(CheckBoxAct)
+                            # Define a checbox as an action
+                            CheckBoxAct = CheckBoxAction(self, "Enable text")
+                            CheckBoxAct.setCheckable(True)
+                            # Check if the widget has text enabled
+                            textVisible = False
+                            for child in widget.children():
+                                if type(child) == QTextEdit:
+                                    textVisible = child.isVisible()
+                            # Set the checkbox action checked or unchecked
+                            CheckBoxAct.setChecked(textVisible)
+                            # Add the checkbox action to the contextmenu
+                            CheckBoxToggleAct = contextMenu.addAction(CheckBoxAct)
+                            # create the context menu action
                             action = contextMenu.exec_(self.mapToGlobal(event.pos()))
-                            
-                            # if action == CustomizeStartAct:
-                            #     print(CustomizeStartAct)
-                            #     self.on_ShowTextToggled(widget=widget, state=CheckBoxAct.isChecked())
-                                
-                            #         for child in widget.children():
-                            #             if type(child) == QTextEdit:
-                            #                 child.show()
-                            #     if CustomizeStartAct.isChecked() is False:
-                            #         for child in widget.children():
-                            #             if type(child) == QTextEdit:
-                            #                 child.hide()
-                    return           
+
+                            # if the context menu action is the checkbox action, continue here
+                            if action == CheckBoxToggleAct:
+                                # If the widget has not text, and show it with the correct width                              
+                                if textVisible is False:
+                                    for child in widget.children():
+                                        if type(child) == QTextEdit:
+                                            child.show()
+                                            widget.setFixedWidth(widget.width() + child.maximumWidth())
+                                    return
+                                # if the widget has text, find its QTextEdit and hide it. Update the width
+                                if textVisible is True:
+                                    baseWidth: int = Parameters_Ribbon.ICON_SIZE_SMALL
+                                    for child in widget.children():
+                                        if type(child) == QToolButton and child.objectName() == "CommandButton":
+                                            baseWidth = child.width()
+                                            if widget.menu() is not None:
+                                                baseWidth = baseWidth + 16
+                                        if type(child) == QTextEdit:
+                                            child.hide()
+                                            widget.setFixedWidth(baseWidth)                                    
+                                    return
+                            return           
         
         if self.BetaFunctionsEnabled is True:
             contextMenu = QMenu(self)
@@ -3118,13 +3142,17 @@ class ModernMenu(RibbonBar):
             print("Béta functions disabled")
         return
             
-    def on_ShowTextToggled(self, widget, state):
-        for child in widget.children():
-            if type(child) == QTextEdit:
-                if state is True:
-                    child.show()
-                if state is False:
-                    child.hide()
+    def on_ShowTextToggled(self, widget):
+        # state = checkbox
+        print("widget")
+        # for child in widget.children():
+        #     print(widget.children())
+        #     if type(child) == QTextEdit:
+        #         if state is True:
+        #             child.setMaximumWidth(200)
+        #             child.show()
+        #         if state is False:
+        #             child.hide()
         return
     # endregion
 
