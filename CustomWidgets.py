@@ -1488,3 +1488,20 @@ class AnimatedToggle(Toggle):
         p.drawEllipse(QPointF(xPos, barRect.center().y()), handleRadius, handleRadius)
 
         p.end()
+
+
+class CheckBoxAction(QWidgetAction):
+    def __init__(self, parent, text):
+        super(CheckBoxAction, self).__init__(parent)
+        layout = QHBoxLayout()
+        self.widget = QWidget()
+        label = QLabel(text)
+        label.setAlignment(Qt.AlignLeft)
+        layout.addWidget(QCheckBox())
+        layout.addWidget(label)
+        self.widget.setLayout(layout)
+        
+        self.setDefaultWidget(self.widget)
+
+    # def createWidget(self,text):
+    #     return self.widget

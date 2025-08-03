@@ -20,6 +20,7 @@
 # *                                                                       *
 # *************************************************************************
 from typing import Any
+import CustomWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
@@ -46,6 +47,7 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import (
     QCheckBox,
+    QTextEdit,
     QToolButton,
     QToolBar,
     QSizePolicy,
@@ -92,7 +94,7 @@ from PySide6.QtCore import (
     QPoint,
     QSettings,
 )
-from CustomWidgets import CustomControls, DragTargetIndicator, Toggle
+from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, CheckBoxAction
 
 import json
 import os
@@ -941,6 +943,25 @@ class ModernMenu(RibbonBar):
     def contextMenuEvent(self, event):
         for panel in self.currentCategory().panels().values():
                 if panel.underMouse() is True:
+                    for widget in panel.widgets():
+                        if widget.objectName().startswith("CustomWidget") and widget.underMouse() is True and self.CustomizeEnabled is True:
+                            contextMenu = QMenu(self)
+                            CheckBoxAct = CheckBoxAction(self,"Enable text")                            
+                            CheckBoxAct.toggled.connect(lambda: self.on_ShowTextToggled(widget=widget, state=CheckBoxAct.isChecked()))
+                            CustomizeStartAct = contextMenu.addAction(CheckBoxAct)
+                            action = contextMenu.exec_(self.mapToGlobal(event.pos()))
+                            
+                            # if action == CustomizeStartAct:
+                            #     print(CustomizeStartAct)
+                            #     self.on_ShowTextToggled(widget=widget, state=CheckBoxAct.isChecked())
+                                
+                            #         for child in widget.children():
+                            #             if type(child) == QTextEdit:
+                            #                 child.show()
+                            #     if CustomizeStartAct.isChecked() is False:
+                            #         for child in widget.children():
+                            #             if type(child) == QTextEdit:
+                            #                 child.hide()
                     return           
         
         if self.BetaFunctionsEnabled is True:
@@ -961,10 +982,12 @@ class ModernMenu(RibbonBar):
                     Stylesheet = Addition + Stylesheet
                     self.setStyleSheet(Stylesheet)
                     self.CustomizeEnabled = True
+                    self.setRibbonHeight(self.RibbonHeight + 3)
                     return
                 if self.CustomizeEnabled is True:
                     self.setStyleSheet(Stylesheet)
                     self.CustomizeEnabled = False
+                    self.setRibbonHeight(self.RibbonHeight)
                     return
         return        
                 
@@ -3082,6 +3105,16 @@ class ModernMenu(RibbonBar):
         self.BetaFunctionsEnabled = switchStatus
         if switchStatus is True:
             print("toggled on")
+            
+    def on_ShowTextToggled(self, widget, state):
+        print("got here")
+        for child in widget.children():
+            if type(child) == QTextEdit:
+                if state is True:
+                    child.show()
+                if state is False:
+                    child.hide()
+        return
     # endregion
 
     # region - helper functions
