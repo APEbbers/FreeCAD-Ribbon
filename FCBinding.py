@@ -3114,6 +3114,7 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", False)
             Stylesheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
             self.setStyleSheet(Stylesheet)
+            self.CustomizeEnabled = False
             print("Béta functions disabled")
         return
             
