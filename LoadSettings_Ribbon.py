@@ -98,7 +98,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "UseOverlay": Parameters_Ribbon.USE_OVERLAY,
         "UseFCOverlay": Parameters_Ribbon.USE_FC_OVERLAY,
         "UseButtonBackGround": Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED,
-        "CustomIcons": Parameters_Ribbon.CUSTOM_ICONS_ENABLED,
+        "CustomIcons": Parameters_Ribbon.BETA_FUNCTIONS_ENABLED,
         "CustomColors": Parameters_Ribbon.CUSTOM_COLORS_ENABLED,
         "BorderTransparant": Parameters_Ribbon.BORDER_TRANSPARANT,
         "Color_Borders": Parameters_Ribbon.COLOR_BORDERS,
@@ -144,7 +144,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "UseOverlay": Parameters_Ribbon.USE_OVERLAY,
         "UseFCOverlay": Parameters_Ribbon.USE_FC_OVERLAY,
         "UseButtonBackGround": Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED,
-        "CustomIcons": Parameters_Ribbon.CUSTOM_ICONS_ENABLED,
+        "CustomIcons": Parameters_Ribbon.BETA_FUNCTIONS_ENABLED,
         "CustomColors": Parameters_Ribbon.CUSTOM_COLORS_ENABLED,
         "BorderTransparant": Parameters_Ribbon.BORDER_TRANSPARANT,
         "Color_Borders": Parameters_Ribbon.COLOR_BORDERS,
@@ -356,7 +356,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Unchecked)
 
         # Set the color and icon buttons
-        if Parameters_Ribbon.CUSTOM_ICONS_ENABLED is True:
+        if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
             self.form.CustomIcons.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.CustomIcons.setCheckState(Qt.CheckState.Unchecked)

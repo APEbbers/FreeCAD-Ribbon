@@ -148,7 +148,7 @@ class Settings:
 
         Settings.SetBoolSetting("DebugMode", DEBUG_MODE)
 
-        Settings.SetBoolSetting("CustomIcons", CUSTOM_ICONS_ENABLED)
+        Settings.SetBoolSetting("CustomIcons", BETA_FUNCTIONS_ENABLED)
         Settings.SetStringSetting("ScrollLeftButton_Tab", SCROLL_LEFT_BUTTON_TAB)
         Settings.SetStringSetting("ScrollRightButton_Tab", SCROLL_RIGHT_BUTTON_TAB)
         Settings.SetStringSetting(
@@ -249,6 +249,7 @@ DefaultSettings = {
     "FontSize_Panels": int(11),
     "Toolbar_Position": int(0),
     "Hide_Titlebar_FC": bool(True),
+    "BetaFunctions": bool(False),
 }
 
 # region - Define the import location ----------------------------------------------------------------------------------
@@ -501,7 +502,6 @@ if Settings.GetStringSetting("Shortcut_Application") == "":
 
 # endregion ------------------------------------------------------------------------------------------------------------
 
-
 # region - Miscellaneous settings --------------------------------------------------------------------------------------
 PREFERRED_VIEW = Settings.GetIntSetting("Preferred_view")
 if (
@@ -533,10 +533,10 @@ if Settings.GetBoolSetting("UseButtonBackGround") is None:
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Color and icon settings -------------------------------------------------------------------------------------
-CUSTOM_ICONS_ENABLED = Settings.GetBoolSetting("CustomIcons")
+BETA_FUNCTIONS_ENABLED = Settings.GetBoolSetting("CustomIcons")
 if Settings.GetBoolSetting("CustomIcons") is None:
-    CUSTOM_ICONS_ENABLED = bool(DefaultSettings["CustomIcons"])
-    Settings.SetBoolSetting("CustomIcons", CUSTOM_ICONS_ENABLED)
+    BETA_FUNCTIONS_ENABLED = bool(DefaultSettings["CustomIcons"])
+    Settings.SetBoolSetting("CustomIcons", BETA_FUNCTIONS_ENABLED)
 
 SCROLL_LEFT_BUTTON_TAB = Settings.GetStringSetting("ScrollLeftButton_Tab")
 if Settings.GetStringSetting("ScrollLeftButton_Tab") == "":
@@ -608,3 +608,10 @@ if Settings.GetStringSetting("Color_Background_App") == "":
     )
 
 # endregion ------------------------------------------------------------------------------------------------------------
+
+# region - Context menu ------------------------------------------------------------------------------------------------
+BETA_FUNCTIONS_ENABLED = Settings.GetBoolSetting("BetaFunctions")
+if Settings.GetBoolSetting("BetaFunctions") is None:
+    BETA_FUNCTIONS_ENABLED = bool(DefaultSettings["BetaFunctions"])
+    Settings.SetBoolSetting("BetaFunctions", BETA_FUNCTIONS_ENABLED)
+# endregion

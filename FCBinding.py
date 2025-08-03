@@ -861,6 +861,10 @@ class ModernMenu(RibbonBar):
                 Gui.activateWorkbench(Wb)
             except Exception:
                 pass
+            
+        # Set the state of the Béta function switch
+        switch: Toggle = self.rightToolBar().findChild(Toggle, "bétaSwitch")
+        switch.setChecked(Parameters_Ribbon.BETA_FUNCTIONS_ENABLED)
         return
 
     # region - event functions
@@ -3104,10 +3108,14 @@ class ModernMenu(RibbonBar):
     def on_ToggleBetaFunctions_toggled(self, switchStatus):
         self.BetaFunctionsEnabled = switchStatus
         if switchStatus is True:
-            print("toggled on")
+            Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", True)
+            print("Béta functions enabled")
+        if switchStatus is False:
+            Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", False)
+            print("Béta functions disabled")
+        return
             
     def on_ShowTextToggled(self, widget, state):
-        print("got here")
         for child in widget.children():
             if type(child) == QTextEdit:
                 if state is True:
