@@ -951,7 +951,7 @@ class ModernMenu(RibbonBar):
                 if panel.underMouse() is True:                    
                     for widget in panel.widgets():
                         # Check if the widget is a large widget or a normal widget. Also check if the customzice enviroment is enabled
-                        if widget.objectName() == ("CustomWidget") and widget.underMouse() is True and self.CustomizeEnabled is True:                                                       
+                        if widget.objectName().startswith("CustomWidget") and widget.underMouse() is True and self.CustomizeEnabled is True:                                                       
                             # Define the context menu for buttons
                             contextMenu = QMenu(self)
                             # Define a checbox as an action
@@ -975,8 +975,12 @@ class ModernMenu(RibbonBar):
                                 if textVisible is False:
                                     for child in widget.children():
                                         if type(child) == QTextEdit:
+                                            # show the text
                                             child.show()
-                                            widget.setFixedWidth(widget.width() + child.maximumWidth())
+                                            # Because medium and small widgets have text on the right side,
+                                            # change the widht of the button
+                                            if widget.objectName() != "CustomWidget_Large":
+                                                widget.setFixedWidth(widget.width() + child.maximumWidth())
                                     return
                                 # if the widget has text, find its QTextEdit and hide it. Update the width
                                 if textVisible is True:
@@ -987,8 +991,12 @@ class ModernMenu(RibbonBar):
                                             if widget.menu() is not None:
                                                 baseWidth = baseWidth + 16
                                         if type(child) == QTextEdit:
+                                            # hide the text
                                             child.hide()
-                                            widget.setFixedWidth(baseWidth)                                    
+                                            # Because medium and small widgets have text on the right side,
+                                            # change the widht of the button
+                                            if widget.objectName() != "CustomWidget_Large":
+                                                widget.setFixedWidth(baseWidth)                                    
                                     return
                             return           
         
