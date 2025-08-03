@@ -986,7 +986,7 @@ class ModernMenu(RibbonBar):
                     Stylesheet = Addition + Stylesheet
                     self.setStyleSheet(Stylesheet)
                     self.CustomizeEnabled = True
-                    self.setRibbonHeight(self.RibbonHeight + 3)
+                    self.setRibbonHeight(self.RibbonHeight + 6)
                     return
                 if self.CustomizeEnabled is True:
                     self.setStyleSheet(Stylesheet)
@@ -3112,6 +3112,8 @@ class ModernMenu(RibbonBar):
             print("Béta functions enabled")
         if switchStatus is False:
             Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", False)
+            Stylesheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
+            self.setStyleSheet(Stylesheet)
             print("Béta functions disabled")
         return
             
