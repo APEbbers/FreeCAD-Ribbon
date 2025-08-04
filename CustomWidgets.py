@@ -43,6 +43,7 @@ from PySide6.QtGui import (
     QPainter,
 )
 from PySide6.QtWidgets import (
+    QComboBox,
     QSpinBox,
     QToolButton,
     QVBoxLayout,
@@ -689,7 +690,7 @@ class CustomControls(RibbonToolButton):
         parent=None,
     ):
         # Define the controls
-        btn = QToolButton()
+        btn = RibbonToolButton()
         CommandButton = QToolButton()
         ArrowButton = QToolButton()
         Layout = QHBoxLayout()
@@ -1565,3 +1566,38 @@ class SpinBoxAction(QWidgetAction):
     def setValue(self, val, /):
         self.spinbox.setValue(val)
         return
+    
+class ComboBoxAction(QWidgetAction):
+        
+    combobox = QComboBox()
+    combobox.setObjectName("combobox")
+    
+    def __init__(self, parent, text):
+        super(ComboBoxAction, self).__init__(parent)
+        layout = QHBoxLayout()
+        self.widget = QWidget()
+        label = QLabel(text)
+        label.setAlignment(Qt.AlignLeft)
+        layout.addWidget(self.combobox)
+        layout.addWidget(label)
+        self.widget.setLayout(layout)
+
+        self.setDefaultWidget(self.widget)
+        return
+    
+    def addItem(self, text: str, /, userData: typing.Any = ...) -> None:
+        self.combobox.addItem(text, userData)
+        return
+    
+    # @typing.overload
+    # def addItem(self, icon: QIcon | QPixmap, text: str, /, userData: typing.Any = ...) -> None:
+    #     self.combobox.addItem(icon, text, userData)
+    #     return
+    
+    def currentText(self, /):
+        return self.combobox.currentText()
+    
+    def setCurrentText(self, text: str, /):
+        self.combobox.setCurrentText(text)
+        return
+    

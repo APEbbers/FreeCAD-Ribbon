@@ -97,7 +97,7 @@ from PySide6.QtCore import (
     QPoint,
     QSettings,
 )
-from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, CheckBoxAction, SpinBoxAction
+from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, CheckBoxAction, SpinBoxAction, ComboBoxAction
 
 import json
 import os
@@ -980,7 +980,21 @@ class ModernMenu(RibbonBar):
                         SpinBoxAction_Size.setMaximum(120)
                         SpinBoxAction_Size.setValue(widget.height())
                         SpinBoxChangeAct = contextMenu.addAction(SpinBoxAction_Size)
-                                                
+                        
+                        # Set the dropdown for the button style
+                        DropDownAction_Style = ComboBoxAction(self, "set button type")
+                        DropDownAction_Style.addItem("Small")
+                        DropDownAction_Style.addItem("Medium")
+                        DropDownAction_Style.addItem("large")
+                        style = widget.buttonStyle()
+                        if style == pyqtribbon.RibbonButtonStyle.Small:
+                            DropDownAction_Style.setCurrentText("Small")
+                        elif style == pyqtribbon.RibbonButtonStyle.Medium:
+                            DropDownAction_Style.setCurrentText("Medium")
+                        else:
+                            DropDownAction_Style.setCurrentText("Large")                        
+                        DropDownSelectAct = contextMenu.addAction(DropDownAction_Style)
+                                                                        
                         # create the context menu action
                         action = contextMenu.exec_(self.mapToGlobal(event.pos()))
 
@@ -1018,7 +1032,7 @@ class ModernMenu(RibbonBar):
                                         if widget.objectName() != "CustomWidget_Large":
                                             widget.setFixedWidth(baseWidth)
                                 return
-                        
+                        # if hte context menu action is the button size action, continue here
                         if action == SpinBoxChangeAct:
                             baseWidth: int = SpinBoxAction_Size.value()
                             for child in widget.children():
@@ -1032,6 +1046,15 @@ class ModernMenu(RibbonBar):
                                     child.setIconSize(QSize(baseWidth, SpinBoxAction_Size.value()))
                             size = QSize(baseWidth, SpinBoxAction_Size.value())
                             widget.setFixedSize(size)
+                            return
+                        
+                        if action == DropDownSelectAct:
+                            if DropDownAction_Style.currentText() == "Small":
+                                widget.setButtonStyle(pyqtribbon.RibbonButtonStyle.Small)
+                            if DropDownAction_Style.currentText() == "Medium":
+                                widget.setButtonStyle(pyqtribbon.RibbonButtonStyle.Medium)
+                            if DropDownAction_Style.currentText() == "Large":
+                                widget.setButtonStyle(pyqtribbon.RibbonButtonStyle.Large)
                             return
 
         if self.BetaFunctionsEnabled is True:
