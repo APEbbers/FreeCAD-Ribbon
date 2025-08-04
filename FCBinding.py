@@ -27,7 +27,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -47,7 +47,7 @@ from PySide6.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QSpinBox,
     QTextEdit,
@@ -81,7 +81,7 @@ from PySide6.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -978,20 +978,25 @@ class ModernMenu(RibbonBar):
                         SpinBoxAction_Size = SpinBoxAction(self, "Set size")
                         SpinBoxAction_Size.setMinimum(16)
                         SpinBoxAction_Size.setMaximum(120)
-                        SpinBoxAction_Size.setValue(widget.height())
+                        for child in widget.children():
+                            if (
+                                    type(child) == QToolButton
+                                    and child.objectName() == "CommandButton"
+                                ):
+                                    SpinBoxAction_Size.setValue(child.width())
                         SpinBoxChangeAct = contextMenu.addAction(SpinBoxAction_Size)
                         
                         # Set the dropdown for the button style
                         DropDownAction_Style = ComboBoxAction(self, "set button type")
                         DropDownAction_Style.addItem("Small")
                         DropDownAction_Style.addItem("Medium")
-                        DropDownAction_Style.addItem("large")
+                        DropDownAction_Style.addItem("Large")
                         style = widget.buttonStyle()
                         if style == pyqtribbon.RibbonButtonStyle.Small:
                             DropDownAction_Style.setCurrentText("Small")
-                        elif style == pyqtribbon.RibbonButtonStyle.Medium:
+                        if style == pyqtribbon.RibbonButtonStyle.Medium:
                             DropDownAction_Style.setCurrentText("Medium")
-                        else:
+                        if style == pyqtribbon.RibbonButtonStyle.Large:
                             DropDownAction_Style.setCurrentText("Large")                        
                         DropDownSelectAct = contextMenu.addAction(DropDownAction_Style)
                                                                         
@@ -1055,6 +1060,12 @@ class ModernMenu(RibbonBar):
                                 widget.setButtonStyle(pyqtribbon.RibbonButtonStyle.Medium)
                             if DropDownAction_Style.currentText() == "Large":
                                 widget.setButtonStyle(pyqtribbon.RibbonButtonStyle.Large)
+                                # index = RibbonPanel._actionsLayout.indexOf(widget)
+                                # item = RibbonPanel._actionsLayout.getItemPosition(index)
+                                # print(item)
+
+                                # QGridLayout(RibbonPanel._actionsLayout).removeWidget(widget)
+                                # QGridLayout(RibbonPanel._actionsLayout).addWidget()
                             return
 
         if self.BetaFunctionsEnabled is True:

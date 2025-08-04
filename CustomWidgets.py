@@ -27,7 +27,7 @@ import typing
 
 import sys
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
@@ -42,7 +42,7 @@ from PySide6.QtGui import (
     QPen,
     QPainter,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QComboBox,
     QSpinBox,
     QToolButton,
@@ -56,7 +56,7 @@ from PySide6.QtWidgets import (
     QWidget,
     QWidgetAction,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QSize,
     QMimeData,
@@ -1586,7 +1586,13 @@ class ComboBoxAction(QWidgetAction):
         return
     
     def addItem(self, text: str, /, userData: typing.Any = ...) -> None:
-        self.combobox.addItem(text, userData)
+        exists = False
+        for i in range(self.combobox.count()):
+            if self.combobox.itemText(i) == text:
+                exists = True
+                break
+        if exists is False:
+            self.combobox.addItem(text, userData)
         return
     
     # @typing.overload
@@ -1600,4 +1606,10 @@ class ComboBoxAction(QWidgetAction):
     def setCurrentText(self, text: str, /):
         self.combobox.setCurrentText(text)
         return
+    
+    def itemText(self, index, /):
+        return self.combobox.itemText(index)
+    
+    def count(self, /):
+        return self.combobox.count()
     
