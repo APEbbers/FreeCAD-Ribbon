@@ -49,6 +49,7 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import (
     QCheckBox,
+    QSpinBox,
     QTextEdit,
     QToolButton,
     QToolBar,
@@ -96,7 +97,7 @@ from PySide6.QtCore import (
     QPoint,
     QSettings,
 )
-from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, CheckBoxAction
+from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, CheckBoxAction, SpinBoxAction
 
 import json
 import os
@@ -246,10 +247,10 @@ class ModernMenu(RibbonBar):
 
     # Define a indictor for wether the design menu is loaded or not.
     DesignMenuLoaded = False
-    
+
     # Define a indictor for wether beta functions are enabled
     BetaFunctionsEnabled = False
-    
+
     # Define a indictor for wether the customize enviroment is enabled
     CustomizeEnabled = False
     # endregion
@@ -863,7 +864,7 @@ class ModernMenu(RibbonBar):
                 Gui.activateWorkbench(Wb)
             except Exception:
                 pass
-            
+
         # Set the state of the Béta function switch
         switch: Toggle = self.rightToolBar().findChild(Toggle, "bétaSwitch")
         switch.setChecked(Parameters_Ribbon.BETA_FUNCTIONS_ENABLED)
@@ -945,76 +946,109 @@ class ModernMenu(RibbonBar):
                 for i in range(NoClicks):
                     ScrollRightButton_Tab.click()
         return
-    
+
     def contextMenuEvent(self, event):
         for panel in self.currentCategory().panels().values():
-                if panel.underMouse() is True:                    
-                    for widget in panel.widgets():
-                        # Check if the widget is a large widget or a normal widget. Also check if the customzice enviroment is enabled
-                        if widget.objectName().startswith("CustomWidget") and widget.underMouse() is True and self.CustomizeEnabled is True:                                                       
-                            # Define the context menu for buttons
-                            contextMenu = QMenu(self)
-                            # Define a checbox as an action
-                            CheckBoxAct = CheckBoxAction(self, "Enable text")
-                            CheckBoxAct.setCheckable(True)
-                            # Check if the widget has text enabled
-                            textVisible = False
-                            for child in widget.children():
-                                if type(child) == QTextEdit:
-                                    textVisible = child.isVisible()
-                            # Set the checkbox action checked or unchecked
-                            CheckBoxAct.setChecked(textVisible)
-                            # Add the checkbox action to the contextmenu
-                            CheckBoxToggleAct = contextMenu.addAction(CheckBoxAct)
-                            # create the context menu action
-                            action = contextMenu.exec_(self.mapToGlobal(event.pos()))
+            if panel.underMouse() is True:
+                for widget in panel.widgets():
+                    # Check if the widget is a large widget or a normal widget. Also check if the customzice enviroment is enabled
+                    if (
+                        widget.objectName().startswith("CustomWidget")
+                        and widget.underMouse() is True
+                        and self.CustomizeEnabled is True
+                    ):                        
+                        # Define the context menu for buttons
+                        #
+                        # set the checkbox for enabling text
+                        contextMenu = QMenu(self)
+                        # Define checkboxes as an action
+                        CheckBoxAction_Text = CheckBoxAction(self, "Enable text")
+                        CheckBoxAction_Text.setCheckable(True)
+                        # Check if the widget has text enabled
+                        textVisible = False
+                        for child in widget.children():
+                            if type(child) == QTextEdit:
+                                textVisible = child.isVisible()
+                        # Set the checkbox action checked or unchecked
+                        CheckBoxAction_Text.setChecked(textVisible)
+                        # Add the checkbox action to the contextmenu
+                        CheckBoxToggleAct = contextMenu.addAction(CheckBoxAction_Text)
+                        
+                        # Set the spinbox for the button size
+                        SpinBoxAction_Size = SpinBoxAction(self, "Set size")
+                        SpinBoxAction_Size.setMinimum(16)
+                        SpinBoxAction_Size.setMaximum(120)
+                        SpinBoxAction_Size.setValue(widget.height())
+                        SpinBoxChangeAct = contextMenu.addAction(SpinBoxAction_Size)
+                                                
+                        # create the context menu action
+                        action = contextMenu.exec_(self.mapToGlobal(event.pos()))
 
-                            # if the context menu action is the checkbox action, continue here
-                            if action == CheckBoxToggleAct:
-                                # If the widget has not text, and show it with the correct width                              
-                                if textVisible is False:
-                                    for child in widget.children():
-                                        if type(child) == QTextEdit:
-                                            # show the text
-                                            child.show()
-                                            # Because medium and small widgets have text on the right side,
-                                            # change the widht of the button
-                                            if widget.objectName() != "CustomWidget_Large":
-                                                widget.setFixedWidth(widget.width() + child.maximumWidth())
-                                    return
-                                # if the widget has text, find its QTextEdit and hide it. Update the width
-                                if textVisible is True:
-                                    baseWidth: int = Parameters_Ribbon.ICON_SIZE_SMALL
-                                    for child in widget.children():
-                                        if type(child) == QToolButton and child.objectName() == "CommandButton":
-                                            baseWidth = child.width()
-                                            if widget.menu() is not None:
-                                                baseWidth = baseWidth + 16
-                                        if type(child) == QTextEdit:
-                                            # hide the text
-                                            child.hide()
-                                            # Because medium and small widgets have text on the right side,
-                                            # change the widht of the button
-                                            if widget.objectName() != "CustomWidget_Large":
-                                                widget.setFixedWidth(baseWidth)                                    
-                                    return
-                            return           
-        
+                        # if the context menu action is the checkbox action, continue here
+                        if action == CheckBoxToggleAct:
+                            # If the widget has not text, and show it with the correct width
+                            if textVisible is False and CheckBoxAction_Text.isChecked() is True:
+                                for child in widget.children():
+                                    if type(child) == QTextEdit:
+                                        # show the text
+                                        child.show()
+                                        # Because medium and small widgets have text on the right side,
+                                        # change the widht of the button
+                                        if widget.objectName() != "CustomWidget_Large":
+                                            widget.setFixedWidth(
+                                                widget.width() + child.maximumWidth()
+                                            )
+                                return
+                            # if the widget has text, find its QTextEdit and hide it. Update the width
+                            if textVisible is True  and CheckBoxAction_Text.isChecked() is False:
+                                baseWidth: int = Parameters_Ribbon.ICON_SIZE_SMALL
+                                for child in widget.children():
+                                    if (
+                                        type(child) == QToolButton
+                                        and child.objectName() == "CommandButton"
+                                    ):
+                                        baseWidth = child.width()
+                                        if widget.menu() is not None:
+                                            baseWidth = baseWidth + 16
+                                    if type(child) == QTextEdit:
+                                        # hide the text
+                                        child.hide()
+                                        # Because medium and small widgets have text on the right side,
+                                        # change the widht of the button
+                                        if widget.objectName() != "CustomWidget_Large":
+                                            widget.setFixedWidth(baseWidth)
+                                return
+                        
+                        if action == SpinBoxChangeAct:
+                            baseWidth: int = SpinBoxAction_Size.value()
+                            for child in widget.children():
+                                if (
+                                    type(child) == QToolButton
+                                    and child.objectName() == "CommandButton"
+                                ):
+                                    if widget.menu() is not None:
+                                        baseWidth = baseWidth + 16
+                                    child.setFixedSize(QSize(baseWidth, SpinBoxAction_Size.value()))
+                                    child.setIconSize(QSize(baseWidth, SpinBoxAction_Size.value()))
+                            size = QSize(baseWidth, SpinBoxAction_Size.value())
+                            widget.setFixedSize(size)
+                            return
+
         if self.BetaFunctionsEnabled is True:
             contextMenu = QMenu(self)
             title = "Customize..."
             if self.CustomizeEnabled is True:
                 title = "Exit customize..."
-            CustomizeStartAct = contextMenu.addAction(title)            
+            CustomizeStartAct = contextMenu.addAction(title)
             action = contextMenu.exec_(self.mapToGlobal(event.pos()))
-            
+
             Stylesheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
             if action == CustomizeStartAct:
                 if self.CustomizeEnabled is False:
                     Addition = """RibbonCategory {
                         border-top: 1px solid red;
                         border-bottom: 1px solid red;
-                    }"""                    
+                    }"""
                     Stylesheet = Addition + Stylesheet
                     self.setStyleSheet(Stylesheet)
                     self.CustomizeEnabled = True
@@ -1025,8 +1059,7 @@ class ModernMenu(RibbonBar):
                     self.CustomizeEnabled = False
                     self.setRibbonHeight(self.RibbonHeight)
                     return
-        return        
-                
+        return
 
     # endregion
 
@@ -1691,11 +1724,13 @@ class ModernMenu(RibbonBar):
         BetaLabel = QLabel(translate("FreeCAD Ribbon", "Béta functions"))
         BeforeAction = self.rightToolBar().actions()[1]
         self.rightToolBar().insertWidget(BeforeAction, BetaLabel)
-        switch= Toggle()
+        switch = Toggle()
         switch.setObjectName("bétaSwitch")
         switch.setMaximumHeight(self.RightToolBarButtonSize)
-        switch.setMaximumWidth(self.RightToolBarButtonSize*1.8)
-        switch.toggled.connect(lambda: self.on_ToggleBetaFunctions_toggled(switch.isChecked()))
+        switch.setMaximumWidth(self.RightToolBarButtonSize * 1.8)
+        switch.toggled.connect(
+            lambda: self.on_ToggleBetaFunctions_toggled(switch.isChecked())
+        )
         BeforeAction = self.rightToolBar().actions()[2]
         self.rightToolBar().insertWidget(BeforeAction, switch)
 
@@ -2771,7 +2806,7 @@ class ModernMenu(RibbonBar):
                                 Menu = QMenu(self)
                                 if button.menu() is not None:
                                     Menu = button.menu()
-                                btn = CustomControls.CustomToolButton(
+                                btn: RibbonToolButton = CustomControls.CustomToolButton(
                                     Text=action.text(),
                                     Action=action,
                                     Icon=action.icon(),
@@ -2813,7 +2848,7 @@ class ModernMenu(RibbonBar):
                                 Menu = QMenu(self)
                                 if button.menu() is not None:
                                     Menu = button.menu()
-                                btn = CustomControls.CustomToolButton(
+                                btn: RibbonToolButton = CustomControls.CustomToolButton(
                                     Text=action.text(),
                                     Action=action,
                                     Icon=action.icon(),
@@ -2853,7 +2888,7 @@ class ModernMenu(RibbonBar):
                                 Menu = QMenu(self)
                                 if button.menu() is not None:
                                     Menu = button.menu()
-                                btn: QToolButton = CustomControls.LargeCustomToolButton(
+                                btn: RibbonToolButton = CustomControls.LargeCustomToolButton(
                                     Text=action.text(),
                                     Action=action,
                                     Icon=action.icon(),
@@ -2872,7 +2907,8 @@ class ModernMenu(RibbonBar):
                                     btn,
                                     fixedHeight=False,
                                     alignment=Qt.AlignmentFlag.AlignTop,
-                                )  # Set fixedheight to false. This is set in the custom widgets
+                                )
+                                # Set fixedheight to false. This is set in the custom widgets
                             else:
                                 if Parameters_Ribbon.DEBUG_MODE is True:
                                     if buttonSize != "none":
@@ -3136,7 +3172,7 @@ class ModernMenu(RibbonBar):
         for i in range(Parameters_Ribbon.RIBBON_CLICKSPEED):
             ScrollButton.click()
         return
-    
+
     def on_ToggleBetaFunctions_toggled(self, switchStatus):
         self.BetaFunctionsEnabled = switchStatus
         if switchStatus is True:
@@ -3149,7 +3185,7 @@ class ModernMenu(RibbonBar):
             self.CustomizeEnabled = False
             print("Béta functions disabled")
         return
-            
+
     def on_ShowTextToggled(self, widget):
         # state = checkbox
         print("widget")
@@ -3162,6 +3198,7 @@ class ModernMenu(RibbonBar):
         #         if state is False:
         #             child.hide()
         return
+
     # endregion
 
     # region - helper functions

@@ -43,6 +43,7 @@ from PySide6.QtGui import (
     QPainter,
 )
 from PySide6.QtWidgets import (
+    QSpinBox,
     QToolButton,
     QVBoxLayout,
     QHBoxLayout,
@@ -75,8 +76,6 @@ import Parameters_Ribbon
 import Standard_Functions_RIbbon as StandardFunctions
 import StyleMapping_Ribbon
 
-# from CustomWidgets import myMenu as QMenu
-
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
 pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
@@ -88,10 +87,18 @@ sys.path.append(pathStylSheets)
 sys.path.append(pathUI)
 sys.path.append(pathPackages)
 
+
+import pyqtribbon_local as pyqtribbon
+from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon_local.panel import RibbonPanel, RibbonPanelItemWidget
+from pyqtribbon_local.toolbutton import RibbonToolButton
+from pyqtribbon_local.separator import RibbonSeparator
+from pyqtribbon_local.category import RibbonCategoryLayoutButton
+
 translate = App.Qt.translate
 
 
-class CustomControls(QToolButton):
+class CustomControls(RibbonToolButton):
     def mouseMoveEvent(self, e):
         if e.buttons() == Qt.MouseButton.LeftButton:
             try:
@@ -123,7 +130,7 @@ class CustomControls(QToolButton):
         parent=None,
     ):
         # Define the controls
-        btn = QToolButton()
+        btn = RibbonToolButton()
         CommandButton = QToolButton()
         ArrowButton = QToolButton()
         Layout = QVBoxLayout()
@@ -1519,7 +1526,42 @@ class CheckBoxAction(QWidgetAction):
         self.setDefaultWidget(self.widget)
         return
 
-    
-    def setChecked(self, arg_1):
+    def setChecked(self, arg_1, /):
         self.checkbox.setChecked(arg_1)
+        return    
+
+    def isChecked(self, /) -> bool:
+        return self.checkbox.isChecked()
+
+class SpinBoxAction(QWidgetAction):
         
+    spinbox = QSpinBox()
+    spinbox.setObjectName("spinbox")
+    
+    def __init__(self, parent, text):
+        super(SpinBoxAction, self).__init__(parent)
+        layout = QHBoxLayout()
+        self.widget = QWidget()
+        label = QLabel(text)
+        label.setAlignment(Qt.AlignLeft)
+        layout.addWidget(self.spinbox)
+        layout.addWidget(label)
+        self.widget.setLayout(layout)
+
+        self.setDefaultWidget(self.widget)
+        return
+        
+    def value(self, /):
+        return self.spinbox.value()
+    
+    def setMaximum(self, max: int, /):
+        self.spinbox.setMaximum(max)
+        return
+    
+    def setMinimum(self, min: int, /):
+        self.spinbox.setMinimum(min)
+        return
+    
+    def setValue(self, val, /):
+        self.spinbox.setValue(val)
+        return
