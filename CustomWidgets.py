@@ -1513,6 +1513,8 @@ class CheckBoxAction(QWidgetAction):
     checkbox = QCheckBox()
     checkbox.setObjectName("checkbox")
     
+    checkStateChanged = checkbox.checkStateChanged
+    
     def __init__(self, parent, text):
         super(CheckBoxAction, self).__init__(parent)
         layout = QHBoxLayout()
@@ -1538,6 +1540,8 @@ class SpinBoxAction(QWidgetAction):
         
     spinbox = QSpinBox()
     spinbox.setObjectName("spinbox")
+    
+    valueChanged =  spinbox.valueChanged
     
     def __init__(self, parent, text):
         super(SpinBoxAction, self).__init__(parent)
@@ -1572,6 +1576,8 @@ class ComboBoxAction(QWidgetAction):
     combobox = QComboBox()
     combobox.setObjectName("combobox")
     
+    activated = combobox.activated
+    
     def __init__(self, parent, text):
         super(ComboBoxAction, self).__init__(parent)
         layout = QHBoxLayout()
@@ -1585,7 +1591,7 @@ class ComboBoxAction(QWidgetAction):
         self.setDefaultWidget(self.widget)
         return
     
-    def addItem(self, text: str, /, userData: typing.Any = ...) -> None:
+    def addItem(self, text: str, /, userData: typing.Any = None) -> None:
         exists = False
         for i in range(self.combobox.count()):
             if self.combobox.itemText(i) == text:
@@ -1594,11 +1600,6 @@ class ComboBoxAction(QWidgetAction):
         if exists is False:
             self.combobox.addItem(text, userData)
         return
-    
-    # @typing.overload
-    # def addItem(self, icon: QIcon | QPixmap, text: str, /, userData: typing.Any = ...) -> None:
-    #     self.combobox.addItem(icon, text, userData)
-    #     return
     
     def currentText(self, /):
         return self.combobox.currentText()
