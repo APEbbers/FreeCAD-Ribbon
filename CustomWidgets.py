@@ -27,7 +27,7 @@ import typing
 
 import sys
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
@@ -42,7 +42,7 @@ from PySide.QtGui import (
     QPen,
     QPainter,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QComboBox,
     QSpinBox,
     QToolButton,
@@ -56,7 +56,7 @@ from PySide.QtWidgets import (
     QWidget,
     QWidgetAction,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QSize,
     QMimeData,
@@ -1577,6 +1577,7 @@ class ComboBoxAction(QWidgetAction):
     combobox.setObjectName("combobox")
     
     activated = combobox.activated
+    currentTextChanged = combobox.currentTextChanged
     
     def __init__(self, parent, text):
         super(ComboBoxAction, self).__init__(parent)
@@ -1600,6 +1601,11 @@ class ComboBoxAction(QWidgetAction):
         if exists is False:
             self.combobox.addItem(text, userData)
         return
+    
+    # @typing.overload
+    # def addItem(self, icon: QIcon | QPixmap, text: str, /, userData: typing.Any = ...) -> None:
+    #     self.combobox.addItem(icon, text, userData)
+    #     return
     
     def currentText(self, /):
         return self.combobox.currentText()

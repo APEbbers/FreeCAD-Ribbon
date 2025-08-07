@@ -150,6 +150,13 @@ class RibbonCategoryLayoutWidget(QFrame):
         """
         self._categoryLayout.addWidget(widget)
 
+    def replaceWidget(self, from_:QWidget, to: QWidget, FindChildOption =...):
+        """Remove a widget from the category layout.
+
+        :param widget: The widget to remove.
+        """
+        self._categoryLayout.replaceWidget(from_, to, FindChildOption)
+
     def removeWidget(self, widget: QWidget):
         """Remove a widget from the category layout.
 
@@ -323,6 +330,14 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
         """
         # self._panelLayout.removeWidget(self._panels[title])
         self.removeWidget(self._panels[title])
+        self._panels.pop(title)
+        
+    def replacePanel(self, title: str, newPanel: RibbonPanel):
+        """Remove a panel from the category.
+
+        :param title: The title of the panel.
+        """
+        self.replaceWidget(self._panels[title], newPanel)
         self._panels.pop(title)
 
     def takePanel(self, title: str) -> RibbonPanel:
