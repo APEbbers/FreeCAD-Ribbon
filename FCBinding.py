@@ -949,62 +949,58 @@ class ModernMenu(RibbonBar):
 
     def contextMenuEvent(self, event):
         if self.BetaFunctionsEnabled is True:
-            panel = None
-            for currentPanel in self.currentCategory().panels().values():
-                if currentPanel.underMouse() is True:
-                    panel = currentPanel
-            if panel is not None:
-                for widget in panel.widgets():
-                    # Check if the widget is a large widget or a normal widget. Also check if the customzice enviroment is enabled
-                    if (
-                        (widget.objectName() == "SmallWidget" or widget.objectName() == "MediumWidget" or widget.objectName() == "LargeWidget")
-                        and widget.underMouse() is True
-                        and self.CustomizeEnabled is True
-                    ):                        
-                        # Define the context menu for buttons
-                        contextMenu = QMenu(self)
-                        
-                        # set the checkbox for enabling text
-                        RibbonButonAction_Text = CheckBoxAction(self, "Enable text")
-                        # Check if the widget has text enabled
-                        textVisible = False
-                        for child in widget.children():
-                            if type(child) == QTextEdit:
-                                textVisible = child.isVisible()
-                        # Set the checkbox action checked or unchecked
-                        RibbonButonAction_Text.setChecked(textVisible)
-                        RibbonButonAction_Text.checkStateChanged.connect(lambda: self.on_TextState_Changed(widget, RibbonButonAction_Text))
-                        # Add the checkbox action to the contextmenu
-                        contextMenu.addAction(RibbonButonAction_Text)
-                        
-                        # Set the spinbox for the button size
-                        RibbonButtonAction_Size = SpinBoxAction(self, "Set size")
-                        RibbonButtonAction_Size.setMinimum(16)
-                        RibbonButtonAction_Size.setMaximum(120)                        
-                        for child in widget.children():
-                            if (
-                                    type(child) == QToolButton
-                                    and child.objectName() == "CommandButton"
-                                ):
-                                    RibbonButtonAction_Size.setValue(child.width())
-                        RibbonButtonAction_Size.valueChanged.connect(lambda: self.on_ButtonSize_Changed(widget, RibbonButtonAction_Size))
-                        contextMenu.addAction(RibbonButtonAction_Size)
-                        
-                        # Set the dropdown for the button style
-                        RibbonButtonAction_Style = ComboBoxAction(self, "set button type")
-                        RibbonButtonAction_Style.addItem("Small")
-                        RibbonButtonAction_Style.addItem("Medium")
-                        RibbonButtonAction_Style.addItem("Large")
-                        RibbonButtonAction_Style.addItem("")
-                        RibbonButtonAction_Style.setCurrentText("")
-                        RibbonButtonAction_Style.currentTextChanged.connect(lambda: self.on_ButtonStyle_Clicked(panel, widget, RibbonButtonAction_Style, RibbonButtonAction_Size))                      
-                        contextMenu.addAction(RibbonButtonAction_Style)
-                                                                        
-                        # create the context menu action
-                        action = contextMenu.exec_(self.mapToGlobal(event.pos()))
-                        return
+            widget = self.childAt(event.pos()).parent()
+            panel = widget.parent().parent()
+            if panel is not None and type(panel) is RibbonPanel:
+                # Check if the widget is a large widget or a normal widget. Also check if the customzice enviroment is enabled
+                if (
+                    (widget.objectName() == "SmallWidget" or widget.objectName() == "MediumWidget" or widget.objectName() == "LargeWidget")
+                    and self.CustomizeEnabled is True
+                ):                        
+                    # Define the context menu for buttons
+                    contextMenu = QMenu(self)
+                    
+                    # set the checkbox for enabling text
+                    RibbonButonAction_Text = CheckBoxAction(self, "Enable text")
+                    # Check if the widget has text enabled
+                    textVisible = False
+                    for child in widget.children():
+                        if type(child) == QTextEdit:
+                            textVisible = child.isVisible()
+                    # Set the checkbox action checked or unchecked
+                    RibbonButonAction_Text.setChecked(textVisible)
+                    RibbonButonAction_Text.checkStateChanged.connect(lambda: self.on_TextState_Changed(widget, RibbonButonAction_Text))
+                    # Add the checkbox action to the contextmenu
+                    contextMenu.addAction(RibbonButonAction_Text)
+                    
+                    # Set the spinbox for the button size
+                    RibbonButtonAction_Size = SpinBoxAction(self, "Set size")
+                    RibbonButtonAction_Size.setMinimum(16)
+                    RibbonButtonAction_Size.setMaximum(120)                        
+                    for child in widget.children():
+                        if (
+                                type(child) == QToolButton
+                                and child.objectName() == "CommandButton"
+                            ):
+                                RibbonButtonAction_Size.setValue(child.width())
+                    RibbonButtonAction_Size.valueChanged.connect(lambda: self.on_ButtonSize_Changed(widget, RibbonButtonAction_Size))
+                    contextMenu.addAction(RibbonButtonAction_Size)
+                    
+                    # Set the dropdown for the button style
+                    RibbonButtonAction_Style = ComboBoxAction(self, "set button type")
+                    RibbonButtonAction_Style.addItem("Small")
+                    RibbonButtonAction_Style.addItem("Medium")
+                    RibbonButtonAction_Style.addItem("Large")
+                    RibbonButtonAction_Style.addItem("")
+                    RibbonButtonAction_Style.setCurrentText("")
+                    RibbonButtonAction_Style.currentTextChanged.connect(lambda: self.on_ButtonStyle_Clicked(panel, widget, RibbonButtonAction_Style, RibbonButtonAction_Size))                      
+                    contextMenu.addAction(RibbonButtonAction_Style)
+                                                                    
+                    # create the context menu action
+                    contextMenu.exec_(self.mapToGlobal(event.pos()))
+                    return
 
-            if panel is None:
+            if panel is not None and type(panel) is not RibbonPanel:
                 contextMenu = QMenu(self)
                 title = "Customize..."
                 if self.CustomizeEnabled is True:
@@ -1029,27 +1025,34 @@ class ModernMenu(RibbonBar):
                         self.CustomizeEnabled = False
                         self.setRibbonHeight(self.RibbonHeight)
                         return
+                    
+            
         return
         
-    def on_ButtonStyle_Clicked(self, panel, ButtonWidget, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                 
-        newPanel = self.currentCategory().addPanel(panel.title())
-        for oldWidget in panel.widgets():
-            Style = oldWidget.buttonStyle()
-            alignment = oldWidget.layout().alignment()
-            height = oldWidget.height()
-            if oldWidget != ButtonWidget:
-                if oldWidget.objectName() == "SmallWidget":
+    def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                 
+        # newPanel = self.currentCategory().addPanel(panel.title())
+        WidgetList = []
+        for currentWidget in panel.widgets():
+            WidgetList.append(currentWidget)
+            panel.removeWidget(currentWidget)
+        
+        for currentWidget in WidgetList:
+            Style = currentWidget.buttonStyle()
+            alignment = currentWidget.layout().alignment()
+            height = currentWidget.height()
+            if currentWidget != ButtonWidget:
+                if currentWidget.objectName() == "SmallWidget":
                     Style = pyqtribbon.RibbonButtonStyle.Small 
-                if oldWidget.objectName() == "MediumWidget":
+                if currentWidget.objectName() == "MediumWidget":
                     Style = pyqtribbon.RibbonButtonStyle.Medium
-                if oldWidget.objectName() == "LargeWidget":
+                if currentWidget.objectName() == "LargeWidget":
                     Style = pyqtribbon.RibbonButtonStyle.Large                           
-                newPanel.addWidget(widget=oldWidget, rowSpan=Style, alignment=alignment)
-            if oldWidget == ButtonWidget:
+                panel.addWidget(widget=currentWidget, rowSpan=Style, alignment=alignment)
+            if currentWidget == ButtonWidget:
                 if ButtonStyleWidget.currentText() == "Small":
                     alignment = Qt.AlignmentFlag.AlignLeft
                     height = Parameters_Ribbon.ICON_SIZE_SMALL
-                    CommandWidget = oldWidget
+                    CommandWidget = currentWidget
                     for child in ButtonWidget.children():
                         if (
                             type(child) == QToolButton
@@ -1057,12 +1060,12 @@ class ModernMenu(RibbonBar):
                         ):
                             CommandWidget = child
                     newControl = self.returnDropWidgets(CommandWidget, panel)
-                    newPanel.addSmallWidget(widget=ButtonWidget, alignment=alignment, fixedHeight=height)
-                    # self.currentCategory()._categoryLayout.replaceWidget(panel, newPanel)
+                    panel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=height)
+                    currentWidget.deleteLater()               
                 if ButtonStyleWidget.currentText() == "Medium":
                     alignment = Qt.AlignmentFlag.AlignLeft
                     height = Parameters_Ribbon.ICON_SIZE_MEDIUM
-                    CommandWidget = oldWidget
+                    CommandWidget = currentWidget
                     for child in ButtonWidget.children():
                         if (
                             type(child) == QToolButton
@@ -1070,11 +1073,12 @@ class ModernMenu(RibbonBar):
                         ):
                             CommandWidget = child
                     newControl = self.returnDropWidgets(CommandWidget, panel, "Medium")
-                    newPanel.addMediumWidget(widget=ButtonWidget, alignment=alignment, fixedHeight=height)
+                    panel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=height)
+                    currentWidget.deleteLater()
                 if ButtonStyleWidget.currentText() == "Large":
                     alignment = Qt.AlignmentFlag.AlignTop
                     height = Parameters_Ribbon.ICON_SIZE_LARGE
-                    CommandWidget = oldWidget
+                    CommandWidget = currentWidget
                     for child in ButtonWidget.children():
                         if (
                             type(child) == QToolButton
@@ -1082,118 +1086,9 @@ class ModernMenu(RibbonBar):
                         ):
                             CommandWidget = child
                     newControl = self.returnDropWidgets(CommandWidget, panel, "Large")
-                    newPanel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=height)
-            self.currentCategory()._categoryLayout.replaceWidget(panel, newPanel)
-                
-        return
-    
-    # Needs to be updated/optimalised
-    def returnDropWidgets(self, widget, panel, ButtonType = "small"):
-        btn = widget
-        # get the actions
-        action = btn.actions()
-        # Define a menu
-        Menu = QMenu(self)
-        if len(action) > 1:
-            action = action[0]
-            Menu.addActions(action)
-        else:
-            action = btn.actions()[0]
-        
-        # Check if this is an icon only toolbar
-        IconOnly = False
-        for iconToolbar in self.ribbonStructure["iconOnlyToolbars"]:
-            if iconToolbar == panel.title():
-                IconOnly = True
-
-        showText = False
-        for child in widget.children():
-            if type(child) == QTextEdit:
-                showText = child.isVisible()
-
-        if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
-            showText = False
-
-        if ButtonType == "Small":
-            # Create a custom toolbutton
-            ButtonSize = QSize(
-                Parameters_Ribbon.ICON_SIZE_SMALL,
-                Parameters_Ribbon.ICON_SIZE_SMALL,
-            )
-            IconSize = QSize(
-                Parameters_Ribbon.ICON_SIZE_SMALL,
-                Parameters_Ribbon.ICON_SIZE_SMALL,
-            )
-            btn = CustomControls.CustomToolButton(
-                Text=action.text(),
-                Action=action,
-                Icon=action.icon(),
-                IconSize=IconSize,
-                ButtonSize=ButtonSize,
-                FontSize=Parameters_Ribbon.FONTSIZE_BUTTONS,
-                showText=showText,
-                setWordWrap=False,
-                ElideMode=False,
-                MaxNumberOfLines=2,
-                Menu=Menu,
-                MenuButtonSpace=16,
-                parent=self,
-            )
-            showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
-            if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
-                showText = False
-        if ButtonType == "Medium":
-            # Create a custom toolbutton
-            ButtonSize = QSize(
-                Parameters_Ribbon.ICON_SIZE_MEDIUM,
-                Parameters_Ribbon.ICON_SIZE_MEDIUM,
-            )
-            IconSize = QSize(
-                Parameters_Ribbon.ICON_SIZE_MEDIUM,
-                Parameters_Ribbon.ICON_SIZE_MEDIUM,
-            )
-            btn = CustomControls.CustomToolButton(
-                Text=action.text(),
-                Action=action,
-                Icon=action.icon(),
-                IconSize=IconSize,
-                ButtonSize=ButtonSize,
-                FontSize=Parameters_Ribbon.FONTSIZE_BUTTONS,
-                showText=showText,
-                setWordWrap=Parameters_Ribbon.WRAPTEXT_MEDIUM,
-                MaxNumberOfLines=2,
-                Menu=Menu,
-                MenuButtonSpace=16,
-                parent=self,
-            )
-            showText = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
-            if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
-                showText = False
-        if ButtonType == "Large":
-            # Create a custom toolbutton
-            ButtonSize = QSize(
-                Parameters_Ribbon.ICON_SIZE_LARGE,
-                Parameters_Ribbon.ICON_SIZE_LARGE,
-            )
-            IconSize = QSize(
-                Parameters_Ribbon.ICON_SIZE_LARGE,
-                Parameters_Ribbon.ICON_SIZE_LARGE,
-            )
-            btn: QToolButton = CustomControls.LargeCustomToolButton(
-                Text=action.text(),
-                Action=action,
-                Icon=action.icon(),
-                IconSize=IconSize,
-                ButtonSize=ButtonSize,
-                FontSize=Parameters_Ribbon.FONTSIZE_BUTTONS,
-                showText=showText,
-                setWordWrap=Parameters_Ribbon.WRAPTEXT_LARGE,
-                MaxNumberOfLines=2,
-                Menu=Menu,
-                MenuButtonSpace=16,
-                parent=self,
-            )
-        return btn
+                    panel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=height)
+                    currentWidget.deleteLater()   
+        return 
     
     def on_ButtonSize_Changed(self, ButtonWidget, ButtonSizeWidget: SpinBoxAction):
         baseWidth: int = ButtonSizeWidget.value()
@@ -4114,6 +4009,115 @@ class ModernMenu(RibbonBar):
 
             print("Ribbon UI: Custom text are reset because the language was changed")
         return
+    
+        # Needs to be updated/optimalised
+    def returnDropWidgets(self, widget, panel, ButtonType = "small"):
+        btn = widget
+        # get the actions
+        action = btn.actions()
+        # Define a menu
+        Menu = QMenu(self)
+        if len(action) > 1:
+            action = action[0]
+            Menu.addActions(action)
+        else:
+            action = btn.actions()[0]
+        
+        # Check if this is an icon only toolbar
+        IconOnly = False
+        for iconToolbar in self.ribbonStructure["iconOnlyToolbars"]:
+            if iconToolbar == panel.title():
+                IconOnly = True
+
+        showText = False
+        for child in widget.children():
+            if type(child) == QTextEdit:
+                showText = child.isVisible()
+
+        if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
+            showText = False
+
+        if ButtonType == "Small":
+            # Create a custom toolbutton
+            ButtonSize = QSize(
+                Parameters_Ribbon.ICON_SIZE_SMALL,
+                Parameters_Ribbon.ICON_SIZE_SMALL,
+            )
+            IconSize = QSize(
+                Parameters_Ribbon.ICON_SIZE_SMALL,
+                Parameters_Ribbon.ICON_SIZE_SMALL,
+            )
+            btn = CustomControls.CustomToolButton(
+                Text=action.text(),
+                Action=action,
+                Icon=action.icon(),
+                IconSize=IconSize,
+                ButtonSize=ButtonSize,
+                FontSize=Parameters_Ribbon.FONTSIZE_BUTTONS,
+                showText=showText,
+                setWordWrap=False,
+                ElideMode=False,
+                MaxNumberOfLines=2,
+                Menu=Menu,
+                MenuButtonSpace=16,
+                parent=self,
+            )
+            showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
+            if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
+                showText = False
+        if ButtonType == "Medium":
+            # Create a custom toolbutton
+            ButtonSize = QSize(
+                Parameters_Ribbon.ICON_SIZE_MEDIUM,
+                Parameters_Ribbon.ICON_SIZE_MEDIUM,
+            )
+            IconSize = QSize(
+                Parameters_Ribbon.ICON_SIZE_MEDIUM,
+                Parameters_Ribbon.ICON_SIZE_MEDIUM,
+            )
+            btn = CustomControls.CustomToolButton(
+                Text=action.text(),
+                Action=action,
+                Icon=action.icon(),
+                IconSize=IconSize,
+                ButtonSize=ButtonSize,
+                FontSize=Parameters_Ribbon.FONTSIZE_BUTTONS,
+                showText=showText,
+                setWordWrap=Parameters_Ribbon.WRAPTEXT_MEDIUM,
+                MaxNumberOfLines=2,
+                Menu=Menu,
+                MenuButtonSpace=16,
+                parent=self,
+            )
+            showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
+            if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
+                showText = False
+        if ButtonType == "Large":
+            # Create a custom toolbutton
+            ButtonSize = QSize(
+                Parameters_Ribbon.ICON_SIZE_LARGE,
+                Parameters_Ribbon.ICON_SIZE_LARGE,
+            )
+            IconSize = QSize(
+                Parameters_Ribbon.ICON_SIZE_LARGE,
+                Parameters_Ribbon.ICON_SIZE_LARGE,
+            )
+            btn: QToolButton = CustomControls.LargeCustomToolButton(
+                Text=action.text(),
+                Action=action,
+                Icon=action.icon(),
+                IconSize=IconSize,
+                ButtonSize=ButtonSize,
+                FontSize=Parameters_Ribbon.FONTSIZE_BUTTONS,
+                showText=showText,
+                setWordWrap=Parameters_Ribbon.WRAPTEXT_LARGE,
+                MaxNumberOfLines=2,
+                Menu=Menu,
+                MenuButtonSpace=16,
+                parent=self,
+            )
+        return btn
+    
 
     # endregion
 
