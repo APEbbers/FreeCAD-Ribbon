@@ -948,6 +948,8 @@ class ModernMenu(RibbonBar):
         return
 
     def contextMenuEvent(self, event):
+        widget = None
+        panel = None
         if self.BetaFunctionsEnabled is True:
             widget = self.childAt(event.pos()).parent()
             panel = widget.parent().parent()
@@ -998,6 +1000,11 @@ class ModernMenu(RibbonBar):
                                                                     
                     # create the context menu action
                     contextMenu.exec_(self.mapToGlobal(event.pos()))
+                    
+                    # Disconnect the widgetActions
+                    RibbonButtonAction_Style.currentTextChanged.disconnect()
+                    RibbonButonAction_Text.checkStateChanged.disconnect()
+                    RibbonButtonAction_Size.valueChanged.disconnect()
                     return
 
             if panel is not None and type(panel) is not RibbonPanel:
@@ -1025,8 +1032,7 @@ class ModernMenu(RibbonBar):
                         self.CustomizeEnabled = False
                         self.setRibbonHeight(self.RibbonHeight)
                         return
-                    
-            
+
         return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                 
@@ -1036,7 +1042,7 @@ class ModernMenu(RibbonBar):
             WidgetList.append(currentWidget)
             panel.removeWidget(currentWidget)
         
-        for currentWidget in WidgetList:
+        for currentWidget in WidgetList:            
             Style = currentWidget.buttonStyle()
             alignment = currentWidget.layout().alignment()
             height = currentWidget.height()
@@ -1060,8 +1066,9 @@ class ModernMenu(RibbonBar):
                         ):
                             CommandWidget = child
                     newControl = self.returnDropWidgets(CommandWidget, panel)
-                    panel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=height)
-                    currentWidget.deleteLater()               
+                    panel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=height).setObjectName("SmallWidget")
+                    # currentWidget.deleteLater()
+                    currentWidget.close() 
                 if ButtonStyleWidget.currentText() == "Medium":
                     alignment = Qt.AlignmentFlag.AlignLeft
                     height = Parameters_Ribbon.ICON_SIZE_MEDIUM
@@ -1073,8 +1080,9 @@ class ModernMenu(RibbonBar):
                         ):
                             CommandWidget = child
                     newControl = self.returnDropWidgets(CommandWidget, panel, "Medium")
-                    panel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=height)
-                    currentWidget.deleteLater()
+                    panel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=height).setObjectName("MediumWidget")
+                    # currentWidget.deleteLater()
+                    currentWidget.close()
                 if ButtonStyleWidget.currentText() == "Large":
                     alignment = Qt.AlignmentFlag.AlignTop
                     height = Parameters_Ribbon.ICON_SIZE_LARGE
@@ -1086,8 +1094,8 @@ class ModernMenu(RibbonBar):
                         ):
                             CommandWidget = child
                     newControl = self.returnDropWidgets(CommandWidget, panel, "Large")
-                    panel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=height)
-                    currentWidget.deleteLater()   
+                    panel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=height).setObjectName("LargeWidget")
+                    currentWidget.close()
         return 
     
     def on_ButtonSize_Changed(self, ButtonWidget, ButtonSizeWidget: SpinBoxAction):
@@ -4012,7 +4020,7 @@ class ModernMenu(RibbonBar):
     
         # Needs to be updated/optimalised
     def returnDropWidgets(self, widget, panel, ButtonType = "small"):
-        btn = widget
+        btn= widget
         # get the actions
         action = btn.actions()
         # Define a menu
@@ -4021,7 +4029,7 @@ class ModernMenu(RibbonBar):
             action = action[0]
             Menu.addActions(action)
         else:
-            action = btn.actions()[0]
+            action = btn.defaultAction()
         
         # Check if this is an icon only toolbar
         IconOnly = False
