@@ -930,11 +930,10 @@ def ReturnWrappedText(text: str, max_length: int = 50, max_Lines=0, returnList=F
 
 
 def AddToClipboard(Text):
-    import subprocess
-    import platform
-
-    cmd = "clip" if platform.system() == "Windows" else "pbcopy"
-    subprocess.run(cmd, input=Text, text=True, shell=True)
+    from PySide import QtWidgets, QtCore
+    
+    clipboard = QtWidgets.QApplication.clipboard()
+    clipboard.setText(Text)
 
 
 def checkFreeCADVersion(main: int, sub: int, patch: int, git: int):
