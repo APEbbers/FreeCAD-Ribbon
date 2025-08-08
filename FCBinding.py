@@ -1968,7 +1968,7 @@ class ModernMenu(RibbonBar):
         self.applicationOptionButton().setEnabled(True)
         Gui.updateGui()
 
-        self.loadDesignMenu = False
+        self.DesignMenuLoaded = False
 
         return
 
