@@ -5617,6 +5617,7 @@ class EventInspector(QObject):
         RibbonBar.quickAccessToolBar().setEnabled(True)
         RibbonBar.applicationOptionButton().setEnabled(True)
         Gui.updateGui()
+        RibbonBar.DesignMenuLoaded = False
         return
 
     def DisableRibbonToolbarsAndMenus(self, RibbonBar):
@@ -5624,6 +5625,7 @@ class EventInspector(QObject):
         RibbonBar.quickAccessToolBar().setDisabled(True)
         RibbonBar.applicationOptionButton().setDisabled(True)
         Gui.updateGui()
+        RibbonBar.DesignMenuLoaded = True
         return
 
 
