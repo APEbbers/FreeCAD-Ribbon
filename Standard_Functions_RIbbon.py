@@ -931,7 +931,7 @@ def ReturnWrappedText(text: str, max_length: int = 50, max_Lines=0, returnList=F
 
 def AddToClipboard(Text):
     from PySide import QtWidgets, QtCore
-    
+
     clipboard = QtWidgets.QApplication.clipboard()
     clipboard.setText(Text)
 
