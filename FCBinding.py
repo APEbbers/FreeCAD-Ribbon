@@ -1823,7 +1823,7 @@ class ModernMenu(RibbonBar):
             self.rightToolBar().addWidget(CloseButton)
 
         # Add a switch to enable beta functions
-        BetaLabel = QLabel(translate("FreeCAD Ribbon", "Béta functions"))
+        BetaLabel = QLabel(translate("FreeCAD Ribbon", "Experimental functions"))
         BeforeAction = self.rightToolBar().actions()[1]
         self.rightToolBar().insertWidget(BeforeAction, BetaLabel)
         switch = Toggle()
