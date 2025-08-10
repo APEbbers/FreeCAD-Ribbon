@@ -3054,6 +3054,15 @@ class ModernMenu(RibbonBar):
             ):
                 panel.setTitle(" Views ")
             else:
+                ToolBar_Mapping_File = os.path.join(os.path.join(os.path.dirname(__file__), "Toolbar name mapping.json"))
+                if os.path.exists(ToolBar_Mapping_File) is True:
+                    with open(ToolBar_Mapping_File, "r") as file:
+                        if workbenchName in file:
+                            if panel.title() in file[workbenchName]:
+                                panel.setTitle(file[workbenchName][panel.title()])
+                    file.close()
+                
+                
                 # Remove possible workbench names from the titles
                 if (
                     not "_custom" in title
