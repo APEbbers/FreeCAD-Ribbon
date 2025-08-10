@@ -3076,10 +3076,6 @@ class ModernMenu(RibbonBar):
                                 title = title.replace(f"{Name}{delimiter}", "")
                         if title != Name:
                             title = title.replace(Name, "")
-<<<<<<< HEAD
-                              
-=======
->>>>>>> main
                     panel.setTitle(title)
             # remove any suffix from the panel title
             if panel.title().endswith("_custom"):
