@@ -2830,7 +2830,7 @@ class ModernMenu(RibbonBar):
                         workbenchTitle,
                         workbenchTitle.replace(" ", ""),
                     ]
-                    for Name in List:                            
+                    for Name in List:
                         ListDelimiters = [" - ", "-", "_"]
                         for delimiter in ListDelimiters:
                             if f"{delimiter}{Name}" in title:
@@ -2838,7 +2838,7 @@ class ModernMenu(RibbonBar):
                             elif f"{Name}{delimiter}" in title:
                                 title = title.replace(f"{Name}{delimiter}", "")
                         if title != Name:
-                            title = title.replace(Name, "")       
+                            title = title.replace(Name, "")
                     panel.setTitle(title)
 
             # remove any suffix from the panel title
