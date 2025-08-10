@@ -3053,16 +3053,7 @@ class ModernMenu(RibbonBar):
                 or panel.title() in "Individual views"
             ):
                 panel.setTitle(" Views ")
-            else:
-                ToolBar_Mapping_File = os.path.join(os.path.join(os.path.dirname(__file__), "Toolbar name mapping.json"))
-                if os.path.exists(ToolBar_Mapping_File) is True:
-                    with open(ToolBar_Mapping_File, "r") as file:
-                        if workbenchName in file:
-                            if panel.title() in file[workbenchName]:
-                                panel.setTitle(file[workbenchName][panel.title()])
-                    file.close()
-                
-                
+            else:                          
                 # Remove possible workbench names from the titles
                 if (
                     not "_custom" in title
@@ -3074,19 +3065,17 @@ class ModernMenu(RibbonBar):
                         workbenchTitle,
                         workbenchTitle.replace(" ", ""),
                     ]
-                    for Name in List:
+                    for Name in List:                            
                         ListDelimiters = [" - ", "-", "_"]
                         for delimiter in ListDelimiters:
-                            if len(title.split(delimiter, 1)) > 1:
-                                title = title.split(delimiter, 1)[1]
-                        if title.startswith(Name) is True and title != Name:
+                            if f"{delimiter}{Name}" in title:
+                                title = title.replace(f"{delimiter}{Name}", "")
+                            elif f"{Name}{delimiter}" in title:
+                                title = title.replace(f"{Name}{delimiter}", "")
+                        if title != Name:
                             title = title.replace(Name, "")
-                        if title.startswith(" ") is True:
-                            title = title.replace(" ", "")
-                        if title.endswith(f" {Name}Workbench"):
-                            title = title.replace(f" {Name}Workbench", "")
+                              
                     panel.setTitle(title)
-
             # remove any suffix from the panel title
             if panel.title().endswith("_custom"):
                 panel.setTitle(panel.title().replace("_custom", ""))
