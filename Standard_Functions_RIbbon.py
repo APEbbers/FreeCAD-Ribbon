@@ -502,7 +502,7 @@ def ReturnXML_Value_Git(
         # Passing the path of the
         # xml document to enable the
         # parsing process
-        url = f"https://raw.githubusercontent.com/{User}/{Repository}/{Branch}/{File}"
+        url = f"https://codeberg.org/{User}/{Repository}/{Branch}/{File}"
         response = requests.get(url)
         data = response.content
         root = ET.fromstring(data)
