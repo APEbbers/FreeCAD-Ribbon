@@ -279,7 +279,7 @@ class CustomControls(RibbonToolButton):
                     Label_Text.setFixedHeight((SingleHeight * MaxNumberOfLines) - Space)
                     # Update the text width if neccesary
                     if FontMetrics.horizontalAdvance(line2, -1) > TextWidth:
-                        TextWidth = TextWidth = FontMetrics.horizontalAdvance(line2, -1)
+                        TextWidth = FontMetrics.horizontalAdvance(line2, -1)
                 except Exception:
                     pass
 
