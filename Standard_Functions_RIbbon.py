@@ -493,16 +493,20 @@ def ReturnXML_Value_Git(
     ElementName: str = "",
     attribKey: str = "",
     attribValue: str = "",
+    host="https://codeberg.org/",
 ):
     import requests_local as requests
     import xml.etree.ElementTree as ET
 
     result = None
     try:
+        if host.endswith("/") is False:
+            host = host + "/"
+        
         # Passing the path of the
         # xml document to enable the
         # parsing process
-        url = f"https://codeberg.org/{User}/{Repository}/{Branch}/{File}"
+        url = f"{host}/{User}/{Repository}/{Branch}/{File}"
         response = requests.get(url)
         data = response.content
         root = ET.fromstring(data)
