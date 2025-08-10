@@ -2250,11 +2250,13 @@ class ModernMenu(RibbonBar):
         except Exception:
             pass
 
-        # If the toolbar must be ignored, skip it
+        # If the toolbar must be ignored, skip it        
         for toolbar in ListToolbars:
-            if toolbar in self.ribbonStructure["ignoredToolbars"]:
-                continue
-            if toolbar == "":
+            Skip = False
+            for ToolbarToIgnore in self.ribbonStructure["ignoredToolbars"]:
+                if toolbar.lower() == ToolbarToIgnore.lower():
+                    Skip = True
+            if toolbar == "" or Skip is True:
                 continue
 
             # Create the panel, use the toolbar name as title
@@ -2815,7 +2817,7 @@ class ModernMenu(RibbonBar):
             # Change the name of the view panels to "View"
             if (
                 panel.title() in "Views - Ribbon_newPanel"
-                or panel.title() in "Individual views"
+                or panel.title().lower() in str("Individual views").lower()
             ):
                 panel.setTitle(" Views ")
             else:
