@@ -5562,6 +5562,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     + ")"
                 )
                 print(msg)
+                progressBar.setFormat(msg)
+                progressBar.setValue(i)
                 Gui.updateGui()  # Probably slower with this, because it redraws the entire GUI with all tool buttons changed etc. but allows the label to actually be updated, and it looks nice and gives a quick overview of all the workbenches…
                 try:
                     Gui.activateWorkbench(wb)
