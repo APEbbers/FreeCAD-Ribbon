@@ -600,9 +600,7 @@ class ModernMenu(RibbonBar):
                 """QTabBar::tab:selected, QTabBar::tab:hover {
                 background: """
                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                + """;color: """
-                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                + """;}"""
+                + """;color: transparent;}"""
             )
         StyleSheet = StyleSheet_Addition_4 + StyleSheet
         self.setStyleSheet(StyleSheet)
@@ -2098,9 +2096,7 @@ class ModernMenu(RibbonBar):
             self.tabBar().setStyleSheet(
                 """QTabBar::tab {background: """
                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
-                + """;color: """
-                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
-                + """;}"""
+                + """;color: transparent;}"""
                 + """QTabBar::tab:selected, QTabBar::tab:hover {
                 background: """
                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
