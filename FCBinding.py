@@ -23,13 +23,13 @@ from pydoc import text
 from turtle import isvisible
 from typing import Any
 
-from PySide6 import QtWidgets
+from PySide import QtWidgets
 import CustomWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -49,7 +49,7 @@ from PySide6.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QSpinBox,
     QTextEdit,
@@ -83,7 +83,7 @@ from PySide6.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -2413,7 +2413,7 @@ class ModernMenu(RibbonBar):
         self.applicationOptionButton().setEnabled(True)
         Gui.updateGui()
 
-        self.loadDesignMenu = False
+        # self.loadDesignMenu = False
 
         return
 

@@ -833,12 +833,38 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # minimize the dialog
         self.form.hide()
 
+        # Create a progressbar
+        progressBar = QProgressBar(minimum=0, value=0)
+        progressBar.setWindowFlags(
+            Qt.WindowType.Dialog | Qt.WindowType.WindowStaysOnTopHint
+        )
+        progressBar.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
+        progressBar.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
+        progressBar.setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, False)
+        progressBar.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, True)
+        progressBar.setMinimumSize(300, 20)
+
+        # Get the stylesheet from the main window and use it for this form
+        (
+            progressBar.setStyleSheet(
+                "background-color: "
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                + ";color: "
+                + StyleMapping_Ribbon.ReturnStyleItem("FontColor")
+                + ";"
+            )
+        )
+        progressBar.setMaximum(5)
+        progressBar.setValue(0)
+
         # Load the workbenches
         self.loadAllWorkbenches(
             AutoHide=False,
             FinishMessage=translate(
                 "FreeCAD Ribbon", "Ribbon UI: Data file is created."
             ),
+            progressBar=progressBar,
+            maximum=progressBar.maximum(),
         )
 
         # clear the lists first
@@ -853,6 +879,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # --- Workbenches ----------------------------------------------------------------------------------------------
         #
         # Create a list of all workbenches with their icon
+        progressBar.setFormat(translate("FreeCAD Ribbon", "Create workbench list"))
+        progressBar.setValue(progressBar.value() + 1)
+        #
         self.List_Workbenches.clear()
         List_Workbenches = Gui.listWorkbenches().copy()
         for WorkBenchName in List_Workbenches:
@@ -886,6 +915,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # --- Toolbars ----------------------------------------------------------------------------------------------
         #
         # Go through the list of workbenches
+        progressBar.setFormat(translate("FreeCAD Ribbon", "Create toolbar list"))
+        progressBar.setValue(progressBar.value() + 1)
+        #
         i = 0
         for WorkBench in self.List_Workbenches:
             wbToolbars = []
@@ -916,6 +948,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # --- Commands ----------------------------------------------------------------------------------------------
         #
         # Create a list of all commands with their icon
+        progressBar.setFormat(translate("FreeCAD Ribbon", "Create command list"))
+        progressBar.setValue(progressBar.value() + 1)
+        #
         self.List_Commands.clear()
         # Create a list of command names
         CommandNames = []
@@ -1068,6 +1103,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
         # --- Serialize Icons ------------------------------------------------------------------------------------------
         #
+        progressBar.setFormat(translate("FreeCAD Ribbon", "Serialize icons"))
+        progressBar.setValue(progressBar.value() + 1)
+        #
         WorkbenchIcon = []
         for WorkBenchItem in self.List_Workbenches:
             WorkBenchName = WorkBenchItem[0]
@@ -1103,6 +1141,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         )
 
         # Write the lists to a data file
+        progressBar.setFormat(translate("FreeCAD Ribbon", "Write data files"))
+        progressBar.setValue(progressBar.value() + 1)
         #
         # clear the data file. If not exists, create it
         DataFile = os.path.join(os.path.dirname(__file__), "RibbonDataFile.dat")
@@ -1176,6 +1216,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             else:
                 self.closeSignal.emit()
         # show the dialog
+        progressBar.close()
         self.form.show()
         return
 
@@ -5525,33 +5566,12 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
         return
 
-    def loadAllWorkbenches(self, AutoHide=True, HideOnly=False, FinishMessage=""):
-        progressBar = QProgressBar(minimum=0, value=0)
-        progressBar.setWindowFlags(
-            Qt.WindowType.Dialog | Qt.WindowType.WindowStaysOnTopHint
-        )
-        progressBar.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
-        progressBar.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
-        progressBar.setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, False)
-        progressBar.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, True)
-        progressBar.setMinimumSize(300, 20)
-
-        # Get the stylesheet from the main window and use it for this form
-        (
-            progressBar.setStyleSheet(
-                "background-color: "
-                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                + ";color: "
-                + StyleMapping_Ribbon.ReturnStyleItem("FontColor")
-                + ";"
-            )
-        )
-
+    def loadAllWorkbenches(self, AutoHide=True, HideOnly=False, FinishMessage="", progressBar: QProgressBar = None, maximum = 0):        
         if HideOnly is False:
             activeWorkbench = Gui.activeWorkbench().name()
             progressBar.show()
             lst = Gui.listWorkbenches()
-            progressBar.setMaximum(len(lst) - 1)
+            progressBar.setMaximum(len(lst) - 1 + maximum)
             for i, wb in enumerate(lst):
                 msg = (
                     translate("FreeCAD Ribbon", "Loading workbench ")
