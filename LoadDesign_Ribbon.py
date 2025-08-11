@@ -1175,7 +1175,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 StandardFunctions.restart_freecad()
             else:
                 self.closeSignal.emit()
-
+        # show the dialog
+        self.form.show()
         return
 
     # region - Control functions----------------------------------------------------------------------
