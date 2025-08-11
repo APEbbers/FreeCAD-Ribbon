@@ -2382,6 +2382,7 @@ class ModernMenu(RibbonBar):
 
         # Connect the close signal of the designmenu
         Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
+        Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
 
         return
 
@@ -2517,6 +2518,7 @@ class ModernMenu(RibbonBar):
         except Exception:
             pass
 
+        # If the toolbar must be ignored, skip it        
         # If the toolbar must be ignored, skip it        
         for toolbar in ListToolbars:
             Skip = False

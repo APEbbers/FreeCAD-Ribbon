@@ -5617,6 +5617,7 @@ class EventInspector(QObject):
         RibbonBar.rightToolBar().setEnabled(True)
         RibbonBar.quickAccessToolBar().setEnabled(True)
         RibbonBar.applicationOptionButton().setEnabled(True)
+        RibbonBar.DesignMenuLoaded = False
         Gui.updateGui()
         return
 
@@ -5624,6 +5625,7 @@ class EventInspector(QObject):
         RibbonBar.rightToolBar().setDisabled(True)
         RibbonBar.quickAccessToolBar().setDisabled(True)
         RibbonBar.applicationOptionButton().setDisabled(True)
+        RibbonBar.DesignMenuLoaded = True
         Gui.updateGui()
         return
 
