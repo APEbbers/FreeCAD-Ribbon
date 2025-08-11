@@ -1175,6 +1175,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             else:
                 self.closeSignal.emit()
 
+        # show the dialog
+        self.form.show()
         return
 
     # region - Control functions----------------------------------------------------------------------
