@@ -56,9 +56,9 @@ from .toolbutton import RibbonToolButton
 from .utils import DataFile
 
 
-class RibbonPanelTitle(QLabel):
+class RibbonPanelTitle(QTextEdit):
     """Widget to display the title of a panel."""
-
+    
     pass
 
 
