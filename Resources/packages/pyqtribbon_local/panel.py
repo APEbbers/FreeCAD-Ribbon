@@ -239,7 +239,7 @@ class RibbonPanel(QFrame):
             width = width + fontmetrics.horizontalAdvance(c, -1)
         self._titleLabel.setMinimumWidth(width)
         self._titleLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self._titleLayout.addWidget(self._titleLabel, 1)
+        self._titleLayout.addWidget(self._titleLabel, 0)
 
         # Panel option button
         if showPanelOptionButton:
