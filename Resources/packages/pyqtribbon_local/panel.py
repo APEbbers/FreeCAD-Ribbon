@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, List, Union, overload
 
 import numpy as np
 
-from PySide6.QtGui import QIcon, QKeySequence
+from PySide6.QtGui import QIcon, QKeySequence, QFontMetrics
 from PySide6.QtWidgets import (
     QToolButton,
     QSizePolicy,
@@ -233,10 +233,10 @@ class RibbonPanel(QFrame):
         self._titleLayout.setSpacing(0)
         self._titleLabel = RibbonPanelTitle()  # type: ignore
         self._titleLabel.setText(title)
-        fontMetrix = self._titleLabel.fontMetrics()
+        fontmetrics = QFontMetrics(title)
         width = 0
-        for i in range(len(title)):
-            width = width + fontMetrix.boundingRectChar(title[i]).width()
+        for c in title:
+            width = width + fontmetrics.horizontalAdvance(c, -1)
         self._titleLabel.setMinimumWidth(width)
         self._titleLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._titleLayout.addWidget(self._titleLabel, 1)
