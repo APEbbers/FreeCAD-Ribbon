@@ -6,8 +6,8 @@ from typing import Any, Callable, Dict, List, Union, overload
 
 import numpy as np
 
-from PySide.QtGui import QIcon, QKeySequence
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QKeySequence
+from PySide6.QtWidgets import (
     QToolButton,
     QSizePolicy,
     QWidget,
@@ -35,7 +35,7 @@ from PySide.QtWidgets import (
     QTreeWidget,
     QCalendarWidget,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QSize,
     Signal,
@@ -56,7 +56,7 @@ from .toolbutton import RibbonToolButton
 from .utils import DataFile
 
 
-class RibbonPanelTitle(QTextEdit):
+class RibbonPanelTitle(QLineEdit):
     """Widget to display the title of a panel."""
     
     pass
