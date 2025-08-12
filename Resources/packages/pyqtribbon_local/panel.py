@@ -232,6 +232,8 @@ class RibbonPanel(QFrame):
         self._titleLayout.setSpacing(0)
         self._titleLabel = RibbonPanelTitle()  # type: ignore
         self._titleLabel.setText(title)
+        fontMetrix = title.fontMetrics()
+        self._titleLabel.setMinimumWidth(fontMetrix.lineWidth())
         self._titleLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._titleLayout.addWidget(self._titleLabel, 1)
 

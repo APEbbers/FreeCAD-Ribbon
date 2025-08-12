@@ -93,6 +93,8 @@ RibbonPanel {
 }
 
 RibbonPanelTitle {
+	background-color: transparent;
+	border: none;
 	padding-top: 0px;
 	padding-bottom: 0px;
 	margin-top: 0px;
