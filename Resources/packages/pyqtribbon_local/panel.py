@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import functools
+from pydoc import text
 import re
 from typing import Any, Callable, Dict, List, Union, overload
 
@@ -232,7 +233,7 @@ class RibbonPanel(QFrame):
         self._titleLayout.setSpacing(0)
         self._titleLabel = RibbonPanelTitle()  # type: ignore
         self._titleLabel.setText(title)
-        fontMetrix = title.fontMetrics()
+        fontMetrix = self._titleLabel.fontMetrics()
         self._titleLabel.setMinimumWidth(fontMetrix.lineWidth())
         self._titleLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._titleLayout.addWidget(self._titleLabel, 1)
