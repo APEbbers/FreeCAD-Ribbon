@@ -57,7 +57,7 @@ from .toolbutton import RibbonToolButton
 from .utils import DataFile
 
 
-class RibbonPanelTitle(QLineEdit):
+class RibbonPanelTitle(QLabel):
     """Widget to display the title of a panel."""
     
     pass
@@ -233,11 +233,6 @@ class RibbonPanel(QFrame):
         self._titleLayout.setSpacing(0)
         self._titleLabel = RibbonPanelTitle()  # type: ignore
         self._titleLabel.setText(title)
-        fontmetrics = QFontMetrics(title)
-        width = 0
-        for c in title:
-            width = width + fontmetrics.horizontalAdvance(c, -1)
-        self._titleLabel.setMinimumWidth(width)
         self._titleLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self._titleLayout.addWidget(self._titleLabel, 0)
 
