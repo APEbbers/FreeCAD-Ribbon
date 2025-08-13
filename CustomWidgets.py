@@ -135,7 +135,7 @@ class CustomControls(RibbonToolButton):
         CommandButton = QToolButton()
         ArrowButton = QToolButton()
         Layout = QVBoxLayout()
-        Label_Text = QTextEdit()
+        Label_Text = QLabel()
 
         # Set the default stylesheet
         StyleSheet_Addition_Button = (
@@ -184,16 +184,16 @@ class CustomControls(RibbonToolButton):
         if Text != "":
             # Create a label with the correct properties
             # Label_Text = QTextEdit()
-            Label_Text.setReadOnly(True)
+            # Label_Text.setReadOnly(True)
             Label_Text.setFrameShape(QFrame.Shape.NoFrame)
             Label_Text.setFrameShadow(QFrame.Shadow.Plain)
             Label_Text.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
-            Label_Text.setHorizontalScrollBarPolicy(
-                Qt.ScrollBarPolicy.ScrollBarAlwaysOff
-            )
-            Label_Text.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-            Label_Text.document().setDocumentMargin(0)
-            Label_Text.viewport().setCursor(Qt.CursorShape.ArrowCursor)
+            # Label_Text.setHorizontalScrollBarPolicy(
+            #     Qt.ScrollBarPolicy.ScrollBarAlwaysOff
+            # )
+            # Label_Text.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+            # Label_Text.document().setDocumentMargin(0)
+            # Label_Text.viewport().setCursor(Qt.CursorShape.ArrowCursor)
             Label_Text.setFocusPolicy(Qt.FocusPolicy.NoFocus)
             # Set the font
             Font = QFont()
@@ -223,7 +223,7 @@ class CustomControls(RibbonToolButton):
                         Text = Text[:limit].strip() + "..."
                         break
                 # Set the text with a placeholder
-                Label_Text.setWordWrapMode(QTextOption.WrapMode.NoWrap)
+                Label_Text.setWordWrap(False)
                 Label_Text.setText(Text)
                 # Set the maximum number of lines to 1
                 MaxNumberOfLines = 1
@@ -238,7 +238,7 @@ class CustomControls(RibbonToolButton):
             # If wordwrap is enabled, set the text and height accordingly
             if setWordWrap is True:
                 # Set the wrap mode
-                Label_Text.setWordWrapMode(QTextOption.WrapMode.WordWrap)
+                Label_Text.setWordWrap(True)
                 # Determine the maximum length per line
                 FontMetrics = QFontMetrics(Font)
                 maxWidth = 0
@@ -258,7 +258,7 @@ class CustomControls(RibbonToolButton):
                 # Set the alignment
                 Label_Text.setAlignment(TextAlignment)
                 # Add the line
-                Label_Text.append(line1)
+                Label_Text.setText(line1)
                 # get the text width
                 TextWidth = FontMetrics.horizontalAdvance(line1, -1)
                 # Set the correct height. Avoid a too big difference in icon sizes by only decreasing the height when there is a menu.
@@ -274,7 +274,7 @@ class CustomControls(RibbonToolButton):
                     # Set the alignment
                     Label_Text.setAlignment(TextAlignment)
                     # Add the line
-                    Label_Text.append(line2)
+                    Label_Text.setText(line1 + "\n" +line2)
                     # Set the correct height
                     Label_Text.setFixedHeight((SingleHeight * MaxNumberOfLines) - Space)
                     # Update the text width if neccesary
@@ -331,7 +331,7 @@ class CustomControls(RibbonToolButton):
                         "Background_Color_Hover"
                     )
                 StyleSheet_Addition_Arrow = (
-                    "QToolButton, QTextEdit {background-color: "
+                    "QToolButton, QLabel {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                     + ";border: 0.5px solid"
                     + BorderColor
@@ -348,7 +348,7 @@ class CustomControls(RibbonToolButton):
                         }"""
                 )
                 StyleSheet_Addition_Label = (
-                    "QToolButton, QTextEdit {background-color: "
+                    "QToolButton, QLabel {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                     + ";border: 0.5px solid"
                     + BorderColor
@@ -361,7 +361,7 @@ class CustomControls(RibbonToolButton):
                     + ";}"
                 )
                 StyleSheet_Addition_Button = (
-                    "QToolButton, QTextEdit {background-color: "
+                    "QToolButton, QLabel {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";border: none"
                     + ";}"
@@ -438,7 +438,7 @@ class CustomControls(RibbonToolButton):
                         "Background_Color_Hover"
                     )
                 StyleSheet_Addition_Label = (
-                    "QToolButton, QTextEdit {background-color: "
+                    "QToolButton, QLabel {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                     + ";border: 0.5px solid"
                     + BorderColor
@@ -451,7 +451,7 @@ class CustomControls(RibbonToolButton):
                     + ";}"
                 )
                 StyleSheet_Addition_Command = (
-                    "QToolButton, QTextEdit {background-color: "
+                    "QToolButton, QLabel {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                     + ";border: 0.5px solid"
                     + BorderColor
@@ -464,7 +464,7 @@ class CustomControls(RibbonToolButton):
                     + ";}"
                 )
                 StyleSheet_Addition_Button = (
-                    "QToolButton, QTextEdit {background-color: "
+                    "QToolButton, QLabel {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";border: none"
                     + ";}"
@@ -494,7 +494,7 @@ class CustomControls(RibbonToolButton):
                     radius="2px",
                 )
                 StyleSheet_Addition = (
-                    "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
+                    "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";border: 0.5px solid"
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
@@ -527,7 +527,7 @@ class CustomControls(RibbonToolButton):
             control="toolbutton", radius="2px"
         )
         StyleSheet_Addition_Label = (
-            "QToolButton, QTextEdit {background-color: "
+            "QToolButton, QLabel {background-color: "
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: 0.5px solid"
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
@@ -539,7 +539,7 @@ class CustomControls(RibbonToolButton):
             + ";}"
         )
         StyleSheet_Addition_Command = (
-            "QToolButton, QTextEdit {background-color: "
+            "QToolButton, QLabel {background-color: "
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: 0.5px solid"
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
@@ -551,13 +551,13 @@ class CustomControls(RibbonToolButton):
             + ";}"
         )
         StyleSheet_Addition_Button = (
-            "QToolButton, QTextEdit {background-color: "
+            "QToolButton, QLabel {background-color: "
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: none"
             + ";}"
         )
         StyleSheet_Addition_Arrow = (
-            "QToolButton, QTextEdit {background-color: "
+            "QToolButton, QLabel {background-color: "
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: 0.5px solid"
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
@@ -614,7 +614,7 @@ class CustomControls(RibbonToolButton):
         CommandButton = QToolButton()
         ArrowButton = QToolButton()
         Layout = QHBoxLayout()
-        Label_Text = QTextEdit()
+        Label_Text = QLabel()
         # Set the default stylesheet
         StyleSheet_Addition_Button = (
             "QToolButton, QToolButton:hover {background-color: "
@@ -657,19 +657,9 @@ class CustomControls(RibbonToolButton):
         # If text must be shown wrapped, add a layout with label
         if Text != "":
             # Create a label
-            # Label_Text = QTextEdit()
-            Label_Text.setReadOnly(True)
             Label_Text.setFrameShape(QFrame.Shape.NoFrame)
             Label_Text.setFrameShadow(QFrame.Shadow.Plain)
-            Label_Text.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
-            Label_Text.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-            Label_Text.setHorizontalScrollBarPolicy(
-                Qt.ScrollBarPolicy.ScrollBarAlwaysOff
-            )
-            Label_Text.document().setDocumentMargin(0)
-            Label_Text.viewport().setCursor(Qt.CursorShape.ArrowCursor)
             Label_Text.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-            Label_Text.setSizeAdjustPolicy(QTextEdit.SizeAdjustPolicy.AdjustToContents)
             Label_Text.setFixedHeight(CommandButton.height())
             # Set the font
             Font = QFont()
@@ -677,7 +667,7 @@ class CustomControls(RibbonToolButton):
             Label_Text.setFont(Font)
             FontMetrics = QFontMetrics(Font)
             if setWordWrap is True:
-                Label_Text.setWordWrapMode(QTextOption.WrapMode.WordWrap)
+                Label_Text.setWordWrap(True)
                 # Determine the maximum length per line
                 FontMetrics = QFontMetrics(Font)
                 maxWidth = 0
@@ -693,14 +683,14 @@ class CustomControls(RibbonToolButton):
                     Text, maxLength, MaxNumberOfLines, True
                 )[0]
                 # Add the line with a space to avoid te need to set spacing. (Spacing breaks the hover background)
-                Label_Text.append(" " + line1)
+                Label_Text.setText(" " + line1)
                 # Try to get the second line if there is one
                 try:
                     line2 = StandardFunctions.ReturnWrappedText(
                         Text, maxLength, MaxNumberOfLines, True
                     )[1]
                     # Add the line with a space to avoid te need to set spacing. (Spacing breaks the hover background)
-                    Label_Text.append(" " + line2)
+                    Label_Text.setText(Label_Text.text() + "\n" +" " + line2)
                     if (
                         FontMetrics.tightBoundingRect(line1).width()
                         > FontMetrics.tightBoundingRect(line2).width()
@@ -715,7 +705,6 @@ class CustomControls(RibbonToolButton):
                     marginCorrection = (
                         CommandButton.height() - FontMetrics.boundingRect(Text).height()
                     ) / 2
-                    Label_Text.setViewportMargins(0, marginCorrection, 0, 0)
                     # Update a parameter for the width
                     TextWidth = FontMetrics.tightBoundingRect(line1).width()
 
@@ -756,17 +745,17 @@ class CustomControls(RibbonToolButton):
                             break
                 # Set the number of lines to 1 and disable wrap
                 MaxNumberOfLines = 1
-                Label_Text.setWordWrapMode(QTextOption.WrapMode.NoWrap)
+                Label_Text.setWordWrap(False)
                 # Add the line with a space to avoid te need to set spacing. (Spacing breaks the hover background)
                 Label_Text.setText(" " + Text)
                 # Update the size
                 Label_Text.adjustSize()
                 Label_Text.setFixedHeight(CommandButton.height())
                 # Correct the margin to set the arrow vertical center (bug in Qt)
-                marginCorrection = (
-                    CommandButton.height() - FontMetrics.boundingRect(Text).height()
-                ) / 2
-                Label_Text.setViewportMargins(0, marginCorrection, 0, 0)
+                # marginCorrection = (
+                #     CommandButton.height() - FontMetrics.boundingRect(Text).height()
+                # ) / 2
+                # Label_Text.setViewportMargins(0, marginCorrection, 0, 0)
                 # Update the width parameter
                 TextWidth = FontMetrics.boundingRect(Text).width() + space
                 Label_Text.setMaximumWidth(TextWidth)
@@ -825,7 +814,7 @@ class CustomControls(RibbonToolButton):
                         "Background_Color_Hover"
                     )
                 StyleSheet_Addition_Label = (
-                    "QToolButton, QTextEdit { "
+                    "QToolButton, QLabel { "
                     + "background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                     + ";border: 0.5px solid"
@@ -839,7 +828,7 @@ class CustomControls(RibbonToolButton):
                     + ";}"
                 )
                 StyleSheet_Addition_Arrow = (
-                    "QToolButton, QTextEdit { "
+                    "QToolButton, QLabel { "
                     + "background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                     + ";border: 0.5px solid"
@@ -881,7 +870,7 @@ class CustomControls(RibbonToolButton):
                     radius="2px",
                 )
                 StyleSheet_Addition = (
-                    "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
+                    "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";border: none"
                     + ";}"
@@ -929,7 +918,7 @@ class CustomControls(RibbonToolButton):
                         "Background_Color_Hover"
                     )
                 StyleSheet_Addition_Label = (
-                    "QToolButton, QTextEdit { "
+                    "QToolButton, QLabel { "
                     + "background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                     + ";border: 0.5px solid"
@@ -943,7 +932,7 @@ class CustomControls(RibbonToolButton):
                     + ";}"
                 )
                 StyleSheet_Addition_Command = (
-                    "QToolButton, QTextEdit { "
+                    "QToolButton, QLabel { "
                     + "background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                     + ";border: 0.5px solid"
@@ -982,7 +971,7 @@ class CustomControls(RibbonToolButton):
                     radius="2px",
                 )
                 StyleSheet_Addition = (
-                    "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
+                    "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";border: none"
                     + ";}"
@@ -1017,7 +1006,7 @@ class CustomControls(RibbonToolButton):
         # Set the stylesheet for the controls
         StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(control="toolbutton")
         StyleSheet_Addition_Label = (
-            "QToolButton, QTextEdit { "
+            "QToolButton, QLabel { "
             + "background-color: "
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: 0.5px solid"
@@ -1030,7 +1019,7 @@ class CustomControls(RibbonToolButton):
             + ";}"
         )
         StyleSheet_Addition_Command = (
-            "QToolButton, QTextEdit { "
+            "QToolButton, QLabel { "
             + "background-color: "
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: 0.5px solid"
@@ -1043,7 +1032,7 @@ class CustomControls(RibbonToolButton):
             + ";}"
         )
         StyleSheet_Addition_Arrow = (
-            "QToolButton, QTextEdit { "
+            "QToolButton, QLabel { "
             + "background-color: "
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: 0.5px solid"
@@ -1056,7 +1045,7 @@ class CustomControls(RibbonToolButton):
             + ";}"
         )
         StyleSheet_Addition_button = (
-            "QToolButton, QToolButton:hover, QTextEdit, QTextEdit:hover {background-color: "
+            "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: 0px solid"
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")

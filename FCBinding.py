@@ -974,7 +974,7 @@ class ModernMenu(RibbonBar):
                     # Check if the widget has text enabled
                     textVisible = False
                     for child in widget.children():
-                        if type(child) == QTextEdit:
+                        if type(child) == QLabel:
                             textVisible = child.isVisible()
                     # Set the checkbox action checked or unchecked
                     RibbonButonAction_Text.setChecked(textVisible)
@@ -1136,7 +1136,7 @@ class ModernMenu(RibbonBar):
         for widget in newPanel.widgets():
             for child in widget.children():
                 if (
-                    type(child) == QTextEdit
+                    type(child) == QLabel
                 ):
                     print(child.toPlainText())
         return 
@@ -1166,12 +1166,12 @@ class ModernMenu(RibbonBar):
         # Check if the widget has text enabled
         textVisible = False
         for child in ButtonWidget.children():
-            if type(child) == QTextEdit:
+            if type(child) == QLabel:
                 textVisible = child.isVisible()
         # If the widget has not text, and show it with the correct width
         if textVisible is False and TextStateWidget.isChecked() is True:
             for child in ButtonWidget.children():
-                if type(child) == QTextEdit:
+                if type(child) == QLabel:
                     # show the text
                     child.show()
                     # Because medium and small widgets have text on the right side,
@@ -1192,7 +1192,7 @@ class ModernMenu(RibbonBar):
                     baseWidth = child.width()
                     if ButtonWidget.menu() is not None:
                         baseWidth = baseWidth + 16
-                if type(child) == QTextEdit:
+                if type(child) == QLabel:
                     # hide the text
                     child.hide()
                     # Because medium and small widgets have text on the right side,
