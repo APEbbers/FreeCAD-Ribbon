@@ -1071,13 +1071,15 @@ class ModernMenu(RibbonBar):
                 if currentWidget.objectName() == "SmallWidget":
                     Style = pyqtribbon.RibbonButtonStyle.Small
                     panel.addSmallWidget(widget=currentWidget, rowSpan=Style, alignment=alignment).setObjectName("SmallWidget")
+                    continue
                 if currentWidget.objectName() == "MediumWidget":
                     Style = pyqtribbon.RibbonButtonStyle.Medium
                     panel.addMediumWidget(widget=currentWidget, rowSpan=Style, alignment=alignment).setObjectName("MediumWidget")
+                    continue
                 if currentWidget.objectName() == "LargeWidget":
                     Style = pyqtribbon.RibbonButtonStyle.Large                  
                     panel.addLargeWidget(widget=currentWidget, rowSpan=Style, alignment=alignment).setObjectName("LargeWidget")
-                continue
+                    continue
             if currentWidget == ButtonWidget:
                 if ButtonStyleWidget.currentText() == "Small":
                     alignment = Qt.AlignmentFlag.AlignTop
@@ -1141,8 +1143,6 @@ class ModernMenu(RibbonBar):
                     return 
                 if ButtonWidget.menu() is not None:
                     baseWidth = baseWidth + 16
-                child.setFixedSize(QSize(baseWidth, ButtonSizeWidget.value()))
-                child.setIconSize(QSize(baseWidth, ButtonSizeWidget.value()))
         size = QSize(baseWidth, ButtonSizeWidget.value())
         ButtonWidget.setFixedSize(size)
         ButtonWidget.layout().setAlignment(Qt.AlignmentFlag.AlignLeft)
