@@ -955,13 +955,14 @@ class ModernMenu(RibbonBar):
         if self.BetaFunctionsEnabled is True:
             widget = self.childAt(event.pos()).parent()
             panel = widget.parent().parent()
+            print(type(widget))
             if panel is not None and type(panel) is RibbonPanel:
                 # Check if the widget is a large widget or a normal widget. Also check if the customzice enviroment is enabled
                 # if (
                 #     (widget.objectName() == "SmallWidget" or widget.objectName() == "MediumWidget" or widget.objectName() == "LargeWidget")
                 #     and self.CustomizeEnabled is True
                 # ):
-                print(type(widget))
+                # print(type(widget))
                 if (
                     (type(widget) is RibbonToolButton or type(widget) is RibbonPanelItemWidget)
                     and self.CustomizeEnabled is True
@@ -1042,7 +1043,7 @@ class ModernMenu(RibbonBar):
 
         return
         
-    def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                 
+    def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                         
         # Define a list to store widgets before removing them from the panel
         WidgetList = []
         layout: QGridLayout = panel._actionsLayout
@@ -1053,92 +1054,77 @@ class ModernMenu(RibbonBar):
             # Add the widget to the list
             WidgetList.append([currentWidget, pos, index])
             # Remove the widget from the panel
-            panel.removeWidget(currentWidget)
+            panel.removeWidget(currentWidget.parent())
         # clear the internal widget list of the panel
         panel.widgets().clear()
-        
-        index = 0
-        # layout = QGridLayout()
-        newPanel = RibbonPanel()
-        title = panel.title()
-        # self.currentCategory().removeWidget(panel)
-        # newPanel = self.currentCategory().addPanel(title)
-        layout = newPanel._actionsLayout
-        # for currentWidget in WidgetList:
+
         for i in range(len(WidgetList)):
             currentWidget = WidgetList[i][0]
+            
+            # For testing
             pos = WidgetList[i][1]
             index = WidgetList[i][2]
-            Style = currentWidget.buttonStyle()
-            alignment = currentWidget.layout().alignment()
-            height = currentWidget.height()
-            # index = layout.indexOf(currentWidget)
-            # # index = i
-            # pos = layout.getItemPosition(index)
             print(f"index: {index}, row: {pos[0]}, column: {pos[1]}")
+            
+            alignment = Qt.AlignmentFlag.AlignTop
             if currentWidget != ButtonWidget:
                 if currentWidget.objectName() == "SmallWidget":
-                    Style = pyqtribbon.RibbonButtonStyle.Small 
+                    Style = pyqtribbon.RibbonButtonStyle.Small
+                    panel.addSmallWidget(widget=currentWidget, rowSpan=Style, alignment=alignment).setObjectName("SmallWidget")
                 if currentWidget.objectName() == "MediumWidget":
                     Style = pyqtribbon.RibbonButtonStyle.Medium
+                    panel.addMediumWidget(widget=currentWidget, rowSpan=Style, alignment=alignment).setObjectName("MediumWidget")
                 if currentWidget.objectName() == "LargeWidget":
-                    Style = pyqtribbon.RibbonButtonStyle.Large                           
-                newPanel.addWidget(widget=currentWidget, rowSpan=Style, alignment=alignment)
-                # item = RibbonPanelItemWidget(self)
-                # item.addWidget(currentWidget)
-                # layout.addWidget(item, pos[0], pos[1], Style, 1)
+                    Style = pyqtribbon.RibbonButtonStyle.Large                  
+                    panel.addLargeWidget(widget=currentWidget, rowSpan=Style, alignment=alignment).setObjectName("LargeWidget")
                 continue
             if currentWidget == ButtonWidget:
                 if ButtonStyleWidget.currentText() == "Small":
                     alignment = Qt.AlignmentFlag.AlignTop
                     height = Parameters_Ribbon.ICON_SIZE_SMALL
                     CommandWidget = currentWidget
-                    newControl = self.returnDropWidgets(CommandWidget, newPanel)
-                    newPanel.addSmallWidget(widget=newControl, alignment=alignment).setObjectName("SmallWidget")
-                    # item = RibbonPanelItemWidget(currentWidget)
-                    # item.addWidget(newControl)
-                    # layout.addWidget(item, pos[0], pos[1], 2, 1, alignment)
+                    newControl = self.returnDropWidgets(CommandWidget, panel)
+                    panel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=height).setObjectName("SmallWidget")
                     # close the widget, don't use deletelater.
-                    # currentWidget.deleteLater()
+                    currentWidget.close()
                     continue
                 if ButtonStyleWidget.currentText() == "Medium":
                     alignment = Qt.AlignmentFlag.AlignTop
                     height = Parameters_Ribbon.ICON_SIZE_MEDIUM
                     CommandWidget = currentWidget
-                    newControl = self.returnDropWidgets(CommandWidget, newPanel, "Medium")
-                    newPanel.addMediumWidget(widget=newControl, alignment=alignment).setObjectName("MediumWidget")
-                    # item = RibbonPanelItemWidget(currentWidget)
-                    # item.addWidget(newControl)
-                    # layout.addWidget(item, pos[0], pos[1], 4, 1, alignment)
+                    newControl = self.returnDropWidgets(CommandWidget, panel, "Medium")
+                    panel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=height).setObjectName("MediumWidget")
                     # close the widget, don't use deletelater.
-                    # currentWidget.close()
+                    currentWidget.close()
                     continue
                 if ButtonStyleWidget.currentText() == "Large":
                     alignment = Qt.AlignmentFlag.AlignTop
                     height = Parameters_Ribbon.ICON_SIZE_LARGE
                     CommandWidget = currentWidget
-                    newControl = self.returnDropWidgets(CommandWidget, newPanel, "Large")
-                    newPanel.addLargeWidget(widget=newControl, alignment=alignment).setObjectName("LargeWidget")
-                    # item = RibbonPanelItemWidget(currentWidget)
-                    # item.addWidget(newControl)
-                    # layout.addWidget(item, pos[0], pos[1], 6, 1, alignment)
+                    newControl = self.returnDropWidgets(CommandWidget, panel, "Large")
+                    panel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=height).setObjectName("LargeWidget")
                     # close the widget, don't use deletelater.
-                    # currentWidget.close()
+                    currentWidget.close()
                     continue    
-                    
-        newPanel.setTitle(panel.title())
-        self.currentCategory().replacePanel(panel, newPanel)
-        self.setRibbonHeight(self.RibbonHeight)
-        
 
         # Clear the widget list
         WidgetList.clear()
-        for widget in newPanel.widgets():
+        
+        # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
+        # add an offset to make room for the panel titles and icons
+        panel._actionsLayout.setHorizontalSpacing(0)
+        panel._actionsLayout.setSpacing(0)
+        panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
+        panel.layout().setSpacing(0)
+        panel.setContentsMargins(0, 0, 0, 0)       
+        
+        # For testing
+        for widget in panel.widgets():
             for child in widget.children():
                 if (
                     type(child) == QLabel
                 ):
-                    print(child.toPlainText())
+                    print(child.text())
         return 
     
     def ReturnNewPosition(layout:QGridLayout, Widget):
@@ -4067,7 +4053,7 @@ class ModernMenu(RibbonBar):
         return
     
         # Needs to be updated/optimalised
-    def returnDropWidgets(self, widget, panel, ButtonType = "small"):
+    def returnDropWidgets(self, widget, panel, ButtonType = "Small"):
         btn= widget
         for child in widget.children():
             if (child.objectName() == "CommandButton"):
@@ -4099,7 +4085,7 @@ class ModernMenu(RibbonBar):
         if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
             showText = False
 
-        if ButtonType == "Small":
+        if ButtonType.lower() == "small":
             # Create a custom toolbutton
             ButtonSize = QSize(
                 Parameters_Ribbon.ICON_SIZE_SMALL,
@@ -4127,7 +4113,7 @@ class ModernMenu(RibbonBar):
             showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
             if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
                 showText = False
-        if ButtonType == "Medium":
+        if ButtonType.lower() == "medium":
             # Create a custom toolbutton
             ButtonSize = QSize(
                 Parameters_Ribbon.ICON_SIZE_MEDIUM,
@@ -4154,7 +4140,7 @@ class ModernMenu(RibbonBar):
             showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
             if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
                 showText = False
-        if ButtonType == "Large":
+        if ButtonType.lower() == "large":
             # Create a custom toolbutton
             ButtonSize = QSize(
                 Parameters_Ribbon.ICON_SIZE_LARGE,
