@@ -27,34 +27,22 @@
 import json
 import os
 
+# Fill the correction list -> {workbenchname [[new toolbar, old toolbar], [new toolbar, old toolbar]]}
+CorrectionList = {
+    "PartDesignWorkbench": [
+        ['Part Design Helper Features', "Part Design Helper"],
+        ['Part Design Modeling Features', "Part Design Modeling"],
+        ['Part Design Dress-Up Features', "Part Design Derssup"],
+        ['Part Design Transformation Features', "Part Design Patterns"],
+    ]
+}
+
 ParentPath = os.path.dirname(os.path.dirname(__file__))
 JsonName = "RibbonStructure.json"
 # get the path for the Json file
-JsonFile = os.path.join(ParentPath, JsonName)
+JsonFile = os.path.join(ParentPath, "Mod", "FreeCAD-Ribbon", JsonName)
 
-# Get the datafile
-DataFile = os.path.join(ParentPath, "RibbonDataFile.dat")
-
-# create a dict from the data file and close the data file
-Data = {}
-# read ribbon structure from JSON file
-with open(DataFile, "r") as file:
-    Data.update(json.load(file))
-
-# Create a list with workbench data
-ListWorkbenchesData = []
-for item in Data["List_Workbenches"]:
-    ListWorkbenchesData.append([item[0], item[3]])
-
-# Load the standard lists for Workbenches, toolbars and commands
-List_Workbenches = Data["List_Workbenches"]
-StringList_Toolbars = Data["StringList_Toolbars"]
-List_Commands = Data["List_Commands"]
-
-# Create two identical dicts from the json file
-RibbonData = {}
-with open(JsonFile, "r") as file:
-    RibbonData.update(json.load(file))
+# Create a dict from the json file
 RibbonStructure = {}
 with open(JsonFile, "r") as file:
     RibbonStructure.update(json.load(file))
@@ -63,32 +51,22 @@ with open(JsonFile, "r") as file:
 JsonNameBackUp = "RibbonStructure.json.bak"
 JsonFileBackUp = os.path.join(ParentPath, JsonNameBackUp)
 with open(JsonFileBackUp, "w") as outfile:
-    json.dump(RibbonData, outfile, indent=4)
+    json.dump(RibbonStructure, outfile, indent=4)
 
 # Go through the workbenches in the json file
 for WorkBench in RibbonStructure["workbenches"]:
-    # Go through the data file to find the same workbench
-    for data in ListWorkbenchesData:
-        if data[0] == WorkBench:
-            # Go through the list of toolbars
-            for toolbar in RibbonStructure["workbenches"][WorkBench]["toolbars"]:
-                # Define a boolan to state if a toolbar should be present in the json file
-                isCorrect = False
-                # Go through the data
-                for key, value in data[1].items():
-                    # if the toolbar is in the data, it is correct
-                    if (
-                        toolbar == key
-                        or toolbar == "order"
-                        or toolbar.endswith("_custom")
-                        or toolbar.endswith("_newPanel")
-                    ):
-                        isCorrect = True
-                # if the toolbar is wrong, remove it
-                if isCorrect is False:
-                    del RibbonData["workbenches"][WorkBench]["toolbars"][toolbar]
-# update the ribbonstructure dict
-RibbonStructure.update(RibbonData)
+    # if the workench is in the correction list, continue
+    if WorkBench in CorrectionList:
+        # Get the corresponding toolbar correction list
+        ToolBarCorrectionList = CorrectionList[WorkBench]
+        # Go through the toolbars of the workbench in the json file
+        for toolbar in RibbonStructure["workbenches"][WorkBench]["toolbars"]:
+            for ToolBarToCorrect in ToolBarCorrectionList:
+                # If the toolbars match, update the json file
+                Dict: dict = RibbonStructure["workbenches"][WorkBench]["toolbars"]
+                if ToolBarToCorrect[1] == toolbar:
+                    Dict.update({ToolBarToCorrect[0]: Dict.pop(toolbar)}) 
+                    
 
 # Write it to disk
 ParentPath = os.path.dirname(os.path.dirname(__file__))
@@ -96,4 +74,4 @@ ParentPath = os.path.dirname(os.path.dirname(__file__))
 JsonFile = os.path.join(ParentPath, JsonName)
 # Writing to sample.json
 with open(JsonFile, "w") as outfile:
-    json.dump(RibbonData, outfile, indent=4)
+    json.dump(RibbonStructure, outfile, indent=4)
