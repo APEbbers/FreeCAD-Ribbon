@@ -1048,6 +1048,11 @@ class ModernMenu(RibbonBar):
         layout: QGridLayout = panel._actionsLayout
         newControl = RibbonToolButton()
         
+        textVisible = False
+        for child in ButtonWidget.children():
+            if type(child) == QLabel:
+                textVisible = child.isVisible()
+        
         if ButtonStyleWidget.currentText() == "Small":
             alignment = Qt.AlignmentFlag.AlignTop
             height = Parameters_Ribbon.ICON_SIZE_SMALL
@@ -1063,16 +1068,25 @@ class ModernMenu(RibbonBar):
             # newControl.setFixedHeight(height)
             panel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("MediumWidget")
         if ButtonStyleWidget.currentText() == "Large":
-            alignment = Qt.AlignmentFlag.AlignTop
+            alignment = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter
             height = Parameters_Ribbon.ICON_SIZE_LARGE
             CommandWidget = ButtonWidget
             newControl = self.returnDropWidgets(CommandWidget, panel, "Large")
-            newControl.setFixedHeight(height)
+            newControl.setFixedSize(QSize(height, height))
             panel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("LargeWidget")
-              
+            
+            for child in ButtonWidget.children():
+                if type(child) == QLabel:
+                    # show the text
+                    if textVisible is True:
+                        child.show()
+                    else:
+                        child.hide()
+                        child.setMinimumWidth(0)
+                          
         panel.removeWidget(ButtonWidget)
         panel.removeWidget(ButtonWidget.parent())
-        ButtonWidget.deleteLater()
+        ButtonWidget.close()
 
         layout.update()
         return
@@ -1101,6 +1115,11 @@ class ModernMenu(RibbonBar):
                 textVisible = child.isVisible()
         # If the widget has not text, and show it with the correct width
         if textVisible is False and TextStateWidget.isChecked() is True:
+            baseWidth: int = Parameters_Ribbon.ICON_SIZE_SMALL
+            if ButtonWidget.objectName() == "CustomWidget_Medium":
+                baseWidth: int = Parameters_Ribbon.ICON_SIZE_MEDIUM
+            if ButtonWidget.objectName() == "CustomWidget_Large":
+                baseWidth: int = Parameters_Ribbon.ICON_SIZE_LARGE
             for child in ButtonWidget.children():
                 if type(child) == QLabel:
                     # show the text
@@ -1109,16 +1128,21 @@ class ModernMenu(RibbonBar):
                     # change the widht of the button
                     if ButtonWidget.objectName() != "CustomWidget_Large":
                         ButtonWidget.setFixedWidth(
-                            ButtonWidget.width() + child.maximumWidth()
+                            baseWidth + child.maximumWidth()
                         )
-                    if ButtonWidget.objectName() == "CustomWidget_Large":
-                        ButtonWidget.setFixedWidth(
-                            Parameters_Ribbon.ICON_SIZE_LARGE
-                        )
+                if ButtonWidget.objectName() == "CustomWidget_Large":
+                    height = Parameters_Ribbon.ICON_SIZE_LARGE
+                    ButtonWidget.setFixedSize(
+                        QSize(height, height)
+                    )
             return
         # if the widget has text, find its QTextEdit and hide it. Update the width
         if textVisible is True  and TextStateWidget.isChecked() is False:
             baseWidth: int = Parameters_Ribbon.ICON_SIZE_SMALL
+            if ButtonWidget.objectName() == "CustomWidget_Medium":
+                baseWidth: int = Parameters_Ribbon.ICON_SIZE_MEDIUM
+            if ButtonWidget.objectName() == "CustomWidget_Large":
+                baseWidth: int = Parameters_Ribbon.ICON_SIZE_LARGE
             for child in ButtonWidget.children():
                 if (
                     type(child) == QToolButton
@@ -1134,6 +1158,10 @@ class ModernMenu(RibbonBar):
                     # change the widht of the button
                     if ButtonWidget.objectName() != "CustomWidget_Large":
                         ButtonWidget.setFixedWidth(baseWidth)
+                    if ButtonWidget.objectName() == "CustomWidget_Large":
+                        ButtonWidget.setFixedWidth(
+                            Parameters_Ribbon.ICON_SIZE_LARGE
+                        )
             return
     # endregion
 
@@ -4002,7 +4030,7 @@ class ModernMenu(RibbonBar):
         return
     
         # Needs to be updated/optimalised
-    def returnDropWidgets(self, widget, panel, ButtonType = "Small"):
+    def returnDropWidgets(self, widget, panel, ButtonType = "Small", showText = True):
         btn= widget
         for child in widget.children():
             if (child.objectName() == "CommandButton"):
@@ -4026,10 +4054,10 @@ class ModernMenu(RibbonBar):
             if iconToolbar == panel.title():
                 IconOnly = True
 
-        showText = False
-        for child in widget.children():
-            if type(child) == QTextEdit:
-                showText = child.isVisible()
+        if showText is False:
+            for child in widget.children():
+                if type(child) == QTextEdit:
+                    showText = child.isVisible()
 
         if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
             showText = False
