@@ -69,9 +69,5 @@ for WorkBench in RibbonStructure["workbenches"]:
                     
 
 # Write it to disk
-ParentPath = os.path.dirname(os.path.dirname(__file__))
-# get the path for the Json file
-JsonFile = os.path.join(ParentPath, JsonName)
-# Writing to sample.json
 with open(JsonFile, "w") as outfile:
     json.dump(RibbonStructure, outfile, indent=4)
