@@ -32,14 +32,16 @@ JsonName = "RibbonStructure.json"
 # get the path for the Json file
 JsonFile = os.path.join(ParentPath, JsonName)
 
-# Check if there is a datafile. if not, ask the user to create one.
+# Get the datafile
 DataFile = os.path.join(ParentPath, "RibbonDataFile.dat")
 
+# create a dict from the data file and close the data file
 Data = {}
 # read ribbon structure from JSON file
 with open(DataFile, "r") as file:
     Data.update(json.load(file))
-file.close()
+
+# Create a list with workbench data
 ListWorkbenchesData = []
 for item in Data["List_Workbenches"]:
     ListWorkbenchesData.append([item[0], item[3]])
@@ -53,12 +55,9 @@ List_Commands = Data["List_Commands"]
 RibbonData = {}
 with open(JsonFile, "r") as file:
     RibbonData.update(json.load(file))
-file.close()
-
 RibbonStructure = {}
 with open(JsonFile, "r") as file:
     RibbonStructure.update(json.load(file))
-file.close()
 
 # Create a .bak file
 JsonNameBackUp = "RibbonStructure.json.bak"
