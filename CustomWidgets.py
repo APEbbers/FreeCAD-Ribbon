@@ -162,8 +162,9 @@ class CustomControls(RibbonToolButton):
         # Set the content margins to zero
         CommandButton.setContentsMargins(0, 0, 0, 0)
         # Add a actions if there is only one
-        if len(Menu.actions()) == 0:
-            CommandButton.addAction(Action)
+        if Menu is not None:
+            if len(Menu.actions()) == 0:
+                CommandButton.addAction(Action)
         CommandButton.setDefaultAction(Action)
         CommandButton.setObjectName("CommandButton")
 
@@ -629,8 +630,9 @@ class CustomControls(RibbonToolButton):
         # Set the content margins to zero
         CommandButton.setContentsMargins(0, 0, 0, 0)
         # Add a actions if there is only one
-        if len(Menu.actions()) == 0:
-            CommandButton.addAction(Action)
+        if Menu is not None:
+            if len(Menu.actions()) == 0:
+                CommandButton.addAction(Action)
         CommandButton.setDefaultAction(Action)
         CommandButton.setObjectName("CommandButton")
 
