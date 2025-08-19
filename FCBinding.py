@@ -1323,7 +1323,11 @@ class ModernMenu(RibbonBar):
                     W_dropWidget.deleteLater()
                     T_origin.deleteLater()
                     T_dropWidget.deleteLater()
+            e.accept()
 
+            # if the grid layout is a Ribbon panel continue
+            if isinstance(parent, RibbonPanel):
+                gridLayout: QGridLayout = parent._actionsLayout
                 for i in range(gridLayout.count()):
                     try:
                         Control = gridLayout.itemAt(i).widget().children()[1]
@@ -1336,7 +1340,6 @@ class ModernMenu(RibbonBar):
                                     print(child.defaultAction().data())
                     except Exception:
                         pass
-        e.accept()
         return
 
     def find_drop_location(self, e):
