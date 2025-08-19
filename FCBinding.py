@@ -952,17 +952,13 @@ class ModernMenu(RibbonBar):
     def contextMenuEvent(self, event):
         widget = None
         panel = None
+        # If betaFunctions is enabled, coninue
         if self.BetaFunctionsEnabled is True:
+            # Get the widget and the panel
             widget = self.childAt(event.pos()).parent()
             panel = widget.parent().parent()
-            print(type(widget))
+            # Check if the panel is not none and of type RibbonPanel
             if panel is not None and type(panel) is RibbonPanel:
-                # Check if the widget is a large widget or a normal widget. Also check if the customzice enviroment is enabled
-                # if (
-                #     (widget.objectName() == "SmallWidget" or widget.objectName() == "MediumWidget" or widget.objectName() == "LargeWidget")
-                #     and self.CustomizeEnabled is True
-                # ):
-                # print(type(widget))
                 if (
                     (type(widget) is RibbonToolButton or type(widget) is RibbonPanelItemWidget)
                     and self.CustomizeEnabled is True
@@ -1176,7 +1172,7 @@ class ModernMenu(RibbonBar):
     def dragLeaveEvent(self, e):
         if self.CustomizeEnabled is True:
             # Hide the drag indicator when you leave the drag area
-            self.dragIndicator.hide()
+            self.dragIndicator.close()
             e.accept()
 
     def dragMoveEvent(self, e):
@@ -1318,13 +1314,29 @@ class ModernMenu(RibbonBar):
                     )
 
                     # Remove the old redundant ribbonPanelItemWidgets
+                    gridLayout.removeWidget(W_origin)
+                    gridLayout.removeWidget(W_dropWidget)
                     gridLayout.removeWidget(W_origin.parent())
                     gridLayout.removeWidget(W_dropWidget.parent())
                     # delete the leftover old widgets
                     W_origin.deleteLater()
                     W_dropWidget.deleteLater()
+                    T_origin.deleteLater()
+                    T_dropWidget.deleteLater()
 
-                e.accept()
+                for i in range(gridLayout.count()):
+                    try:
+                        Control = gridLayout.itemAt(i).widget().children()[1]
+                        if type(Control) is RibbonToolButton:
+                            for child in Control.children():
+                                if (
+                                    type(child) == QToolButton
+                                    and child.objectName() == "CommandButton"
+                                ):
+                                    print(child.defaultAction().data())
+                    except Exception:
+                        pass
+        e.accept()
         return
 
     def find_drop_location(self, e):
