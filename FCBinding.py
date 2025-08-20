@@ -29,7 +29,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -49,8 +49,9 @@ from PySide6.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
+    QFrame,
     QSpinBox,
     QTextEdit,
     QToolButton,
@@ -83,7 +84,7 @@ from PySide6.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1220,7 +1221,8 @@ class ModernMenu(RibbonBar):
                     break
                 else:
                     parent = parent.parent()
-            workBench = parent.title()
+            # Get the workbench name                    
+            WorkBenchName = parent.objectName()
 
             # if the grid layout is a Ribbon panel continue
             if isinstance(panel, RibbonPanel):
@@ -1263,24 +1265,18 @@ class ModernMenu(RibbonBar):
                     new_size = position[2]
 
                     # Set the rowspan for the dragged widget
-                    rowSpan_dropWidget = 2
                     buttonSize_dropWidget = "small"
                     if new_size.height() == Parameters_Ribbon.ICON_SIZE_MEDIUM:
-                        rowSpan_dropWidget = 3
                         buttonSize_dropWidget = "medium"
                     if new_size.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
-                        rowSpan_dropWidget = 6
                         buttonSize_dropWidget = "large"
                     W_dropWidget.setFixedHeight(original_size.height())
 
                     # Set the rowspan for the original widget
-                    rowSpan_origin = 2
                     buttonSize_origin = "small"
                     if original_size.height() == Parameters_Ribbon.ICON_SIZE_MEDIUM:
-                        rowSpan_origin = 3
                         buttonSize_origin = "medium"
                     if original_size.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
-                        rowSpan_origin = 6
                         buttonSize_origin = "large"
                     W_origin.setFixedHeight(new_size.height())
 
@@ -1324,7 +1320,27 @@ class ModernMenu(RibbonBar):
                                     orderList.append(child.defaultAction().data())
                     except Exception:
                         pass
-                    
+                
+                # Update the order in the ribbon structure
+                StandardFunctions.add_keys_nested_dict(
+                    self.ribbonStructure,
+                    [
+                        "workbenches",
+                        WorkBenchName,
+                        "toolbars",
+                        panel.objectName(),
+                        "order",
+                    ],
+                )
+                self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][
+                    panel.objectName()
+                ]["order"] = orderList
+                
+                # Writing to ribbonStructure.json
+                JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+                with open(JsonFile, "w") as outfile:
+                    json.dump(self.ribbonStructure, outfile, indent=4)
+                outfile.close()
         return
 
     def find_drop_location(self, e):
@@ -1775,7 +1791,8 @@ class ModernMenu(RibbonBar):
                         self.isWbLoaded[name] = False
 
                         # Set the title
-                        self.addCategory(name)
+                        category = self.addCategory(name)
+                        category.setObjectName(workbenchName)
 
                         # Set the tabbar according the style setting
                         if Parameters_Ribbon.TABBAR_STYLE <= 1:
