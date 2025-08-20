@@ -29,7 +29,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -49,7 +49,7 @@ from PySide.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QSpinBox,
@@ -84,7 +84,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1303,6 +1303,11 @@ class ModernMenu(RibbonBar):
                     originalItem = RibbonPanelItemWidget(panel)
                     originalItem.addWidget(originalWidget)
                     gridLayout.replaceWidget(W_dropWidget, originalItem)
+                    
+                    W_origin.deleteLater()
+                    W_dropWidget.deleteLater()
+                    T_origin.deleteLater()
+                    T_dropWidget.deleteLater()
 
                 e.accept()
 
