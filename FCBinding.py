@@ -142,7 +142,7 @@ from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
 from pyqtribbon_local.panel import RibbonPanel, RibbonPanelItemWidget
 from pyqtribbon_local.toolbutton import RibbonToolButton
 from pyqtribbon_local.separator import RibbonSeparator
-from pyqtribbon_local.category import RibbonCategoryLayoutButton
+from pyqtribbon_local.category import RibbonCategoryLayoutButton, RibbonNormalCategory, RibbonContextCategory
 
 # import pyqtribbon as pyqtribbon
 # from pyqtribbon.ribbonbar import RibbonMenu, RibbonBar
@@ -1210,11 +1210,20 @@ class ModernMenu(RibbonBar):
         if self.CustomizeEnabled is True:
             # Get the widget
             widget = e.source()
-            # Get the grid layout
-            parent = widget.parent().parent()
+            # Get the panel
+            panel = widget.parent().parent()
+            # Get tabBar
+            parent = widget.parent()
+            count = 0
+            while (count < 10):
+                if type(parent) == RibbonNormalCategory or type(parent) == RibbonContextCategory:
+                    break
+                else:
+                    parent = parent.parent()
+            workBench = parent.title()
 
             # if the grid layout is a Ribbon panel continue
-            if isinstance(parent, RibbonPanel):
+            if isinstance(panel, RibbonPanel):
                 # Get the drop position
                 position = self.find_drop_location(e)
                 xPos = position[0]
@@ -1222,8 +1231,8 @@ class ModernMenu(RibbonBar):
 
                 # Hide the drag indicator
                 self.dragIndicator.hide()
-
-                gridLayout: QGridLayout = parent._actionsLayout
+                # Get the grid layout
+                gridLayout: QGridLayout = panel._actionsLayout
 
                 # Get the widget that has to be replaced
                 W_origin = gridLayout.itemAtPosition(xPos, yPos).widget()
@@ -1278,68 +1287,44 @@ class ModernMenu(RibbonBar):
                     # Create a new dragged widget, to add in the new place
                     draggedWidget = self.returnDropWidgets(                    
                         widget=T_dropWidget,
-                        panel=parent,
+                        panel=panel,
                         ButtonType=buttonSize_dropWidget,
                         showText=False,
                     )
                     # Create a ribbonpanel item widget from the new dragged widget
-                    draggedItem = RibbonPanelItemWidget(parent)
+                    draggedItem = RibbonPanelItemWidget(panel)
                     draggedItem.addWidget(draggedWidget)
-                    gridLayout.addWidget(
-                        draggedItem,
-                        xPos,
-                        yPos,
-                        rowSpan_dropWidget,
-                        1,
-                        Qt.AlignmentFlag.AlignTop,
-                    )
+                    gridLayout.replaceWidget(W_origin, draggedItem)
                     
                     # Create a new origina widget, to add in the old place          
                     originalWidget = self.returnDropWidgets(
                         widget=T_origin,
-                        panel=parent,                    
+                        panel=panel,                    
                         ButtonType=buttonSize_origin,
                         showText=False,
                     )                    
                     # Create a ribbonpanel item widget from the new orignal widget
-                    originalItem = RibbonPanelItemWidget(parent)
+                    originalItem = RibbonPanelItemWidget(panel)
                     originalItem.addWidget(originalWidget)
-                    gridLayout.addWidget(
-                        originalItem,
-                        OldPos[0],
-                        OldPos[1],
-                        rowSpan_origin,
-                        1,
-                        Qt.AlignmentFlag.AlignTop,
-                    )
+                    gridLayout.replaceWidget(W_dropWidget, originalItem)
 
-                    # Remove the old redundant ribbonPanelItemWidgets
-                    gridLayout.removeWidget(W_origin)
-                    gridLayout.removeWidget(W_dropWidget)
-                    gridLayout.removeWidget(W_origin.parent())
-                    gridLayout.removeWidget(W_dropWidget.parent())
-                    # delete the leftover old widgets
-                    W_origin.deleteLater()
-                    W_dropWidget.deleteLater()
-                    T_origin.deleteLater()
-                    T_dropWidget.deleteLater()
-            e.accept()
+                e.accept()
 
-            # if the grid layout is a Ribbon panel continue
-            if isinstance(parent, RibbonPanel):
-                gridLayout: QGridLayout = parent._actionsLayout
-                for i in range(gridLayout.count()):
+                # Get the order of the widgets
+                orderList = []
+                for k in range(gridLayout.count()):
                     try:
-                        Control = gridLayout.itemAt(i).widget().children()[1]
+                        Control = gridLayout.itemAt(k).widget().children()[1]
                         if type(Control) is RibbonToolButton:
                             for child in Control.children():
                                 if (
                                     type(child) == QToolButton
                                     and child.objectName() == "CommandButton"
                                 ):
-                                    print(child.defaultAction().data())
+                                    orderList.append(child.defaultAction().data())
                     except Exception:
                         pass
+                    
         return
 
     def find_drop_location(self, e):
