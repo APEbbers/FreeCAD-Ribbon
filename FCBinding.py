@@ -2250,7 +2250,7 @@ class ModernMenu(RibbonBar):
         except Exception:
             pass
 
-        # If the toolbar must be ignored, skip it        
+        # If the toolbar must be ignored, skip it
         for toolbar in ListToolbars:
             Skip = False
             for ToolbarToIgnore in self.ribbonStructure["ignoredToolbars"]:
