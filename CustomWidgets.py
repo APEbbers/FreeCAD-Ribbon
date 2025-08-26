@@ -74,7 +74,7 @@ from PySide.QtCore import (
 import os
 import sys
 import Parameters_Ribbon
-import Standard_Functions_RIbbon as StandardFunctions
+import Standard_Functions_Ribbon as StandardFunctions
 import StyleMapping_Ribbon
 
 # Get the resources

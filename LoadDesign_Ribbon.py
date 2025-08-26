@@ -45,8 +45,8 @@ import sys
 import json
 from datetime import datetime
 import shutil
-import Standard_Functions_RIbbon as StandardFunctions
-from Standard_Functions_RIbbon import CommandInfoCorrections
+import Standard_Functions_Ribbon as StandardFunctions
+from Standard_Functions_Ribbon import CommandInfoCorrections
 import Parameters_Ribbon
 import Serialize_Ribbon
 import webbrowser
