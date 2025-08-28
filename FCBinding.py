@@ -29,7 +29,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -49,7 +49,7 @@ from PySide.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QSpinBox,
@@ -84,7 +84,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     QAbstractAnimation,
     Qt,
     QTimer,
@@ -2168,6 +2168,20 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().insertWidget(BeforeAction, BetaLabel)
         switch = Toggle()
         switch.setObjectName("bétaSwitch")
+        switch.setToolTip(translate("FreeCAD Ribbon",
+    """
+    Right click on the ribbon (outside the buttons) and click customize.
+    The customization enviroment is enabled.
+    Now right click on any button to change its properties.
+    Current functions are:
+    - Enable text
+    - Set the icon size
+    - Set the button type to:
+        - Small  -> three rows of buttons, text on the right side.
+        - Medium -> two rows of buttons, text on the right side.
+        - Large -> One button row, text below the button.
+    """
+    ))
         switch.setMaximumHeight(self.RightToolBarButtonSize)
         switch.setMaximumWidth(self.RightToolBarButtonSize * 1.8)
         switch.toggled.connect(
