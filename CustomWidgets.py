@@ -166,7 +166,9 @@ class CustomControls(RibbonToolButton):
             if len(Menu.actions()) == 0:
                 CommandButton.addAction(Action)
         CommandButton.setDefaultAction(Action)
+        
         CommandButton.setObjectName("CommandButton")
+        ArrowButton.setObjectName("MenuButton")
 
         # Define a vertical layout
         Layout = QVBoxLayout()
@@ -634,7 +636,9 @@ class CustomControls(RibbonToolButton):
             if len(Menu.actions()) == 0:
                 CommandButton.addAction(Action)
         CommandButton.setDefaultAction(Action)
+        
         CommandButton.setObjectName("CommandButton")
+        ArrowButton.setObjectName("MenuButton")
 
         # Define a vertical layout
         Layout = QHBoxLayout()
