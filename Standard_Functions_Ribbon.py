@@ -929,7 +929,7 @@ def ReturnWrappedText(text: str, max_length: int = 50, max_Lines=0, returnList=F
         result = "\n".join(wrapped_text)
     else:
         result = wrapped_text
-
+    print(result)
     return result
 
 

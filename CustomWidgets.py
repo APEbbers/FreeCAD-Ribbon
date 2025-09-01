@@ -19,6 +19,8 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+from inspect import Traceback
+from types import TracebackType
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
@@ -252,7 +254,8 @@ class CustomControls(RibbonToolButton):
                         maxLength = maxLength + 1
                     if maxWidth >= ButtonSize.width():
                         break
-                maxLength = maxLength + 3
+                # maxLength = maxLength + 3 
+                maxLength = maxLength
 
                 # Get the first text line
                 line1 = StandardFunctions.ReturnWrappedText(
@@ -263,7 +266,7 @@ class CustomControls(RibbonToolButton):
                 # Add the line
                 Label_Text.setText(line1)
                 # get the text width
-                TextWidth = FontMetrics.horizontalAdvance(line1, -1)
+                TextWidth = FontMetrics.tightBoundingRect(line1).width()
                 # Try to get the second line if there is one
                 try:
                     line2 = StandardFunctions.ReturnWrappedText(
@@ -274,9 +277,10 @@ class CustomControls(RibbonToolButton):
                     # Add the line
                     Label_Text.setText(line1 + "\n" +line2)
                     # Update the text width if neccesary
-                    if FontMetrics.horizontalAdvance(line2, -1) > TextWidth:
-                        TextWidth = FontMetrics.horizontalAdvance(line2, -1)
-                except Exception:
+                    if FontMetrics.tightBoundingRect(line2).width() > TextWidth:
+                        TextWidth = FontMetrics.tightBoundingRect(line2).width()
+                except Exception as e:
+                    print(e.with_traceback(None))
                     pass
 
             # Add the label with alignment
@@ -575,7 +579,7 @@ class CustomControls(RibbonToolButton):
 
         # Set the final sizes
         width = ButtonSize.width()
-        if TextWidth == 0 and TextWidth < CommandButtonHeight + Space:
+        if TextWidth == 0 or TextWidth < CommandButtonHeight + Space:
             width = CommandButtonHeight + Space
         if TextWidth > 0 and TextWidth > CommandButtonHeight + Space:
             width = TextWidth + Space
