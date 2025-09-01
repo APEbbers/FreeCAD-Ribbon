@@ -1154,6 +1154,14 @@ class ModernMenu(RibbonBar):
         return
     
     def on_TextState_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget, TextStateWidget: CheckBoxAction):
+        # Get the menubutton height for large buttons
+        menuButtonWidth = 0
+        if ButtonWidget.objectName() != "LargeWidget":
+            try:
+                menuButtonWidth = ButtonWidget.findChild(QToolButton, "MenuButton").width()
+            except Exception:
+                pass
+        
         # Check if the widget has text enabled
         textVisible = False
         for child in ButtonWidget.children():
@@ -1164,10 +1172,9 @@ class ModernMenu(RibbonBar):
         if textVisible is False and TextStateWidget.isChecked() is True:
             # Determine the button size
             baseWidth: int = Parameters_Ribbon.ICON_SIZE_SMALL
-            if ButtonWidget.objectName() == "MediumWidget":
-                baseWidth: int = Parameters_Ribbon.ICON_SIZE_MEDIUM
-            if ButtonWidget.objectName() == "LargeWidget":
-                baseWidth: int = Parameters_Ribbon.ICON_SIZE_LARGE
+            for child in ButtonWidget.children():
+                if type(child) == QToolButton and child.objectName() == "CommandButton":
+                    baseWidth = child.width()
             # Go through the children of the button.   
             for child in ButtonWidget.children():
                 # If you find the QLabel, show it and update the baseWidth             
@@ -1175,21 +1182,19 @@ class ModernMenu(RibbonBar):
                     # show the text
                     child.show()
                     
-                    width = child.width()
-                    print(ButtonWidget.objectName())
+                    labelWidth = child.maximumWidth()
                     if ButtonWidget.objectName() == "SmallWidget":
-                        width = self.ReturnTextWidth(Label_Text=child, Width=baseWidth, Menu=ButtonWidget.menu(), setWordWrap=False)
+                        labelWidth = self.ReturnTextWidth(Label_Text=child, Width=baseWidth, Menu=ButtonWidget.menu(), setWordWrap=False)
                     if ButtonWidget.objectName() == "MediumWidget":
-                        width = self.ReturnTextWidth(Label_Text=child, Width=baseWidth, Menu=ButtonWidget.menu(), setWordWrap=Parameters_Ribbon.WRAPTEXT_MEDIUM)
+                        labelWidth = self.ReturnTextWidth(Label_Text=child, Width=baseWidth, Menu=ButtonWidget.menu(), setWordWrap=Parameters_Ribbon.WRAPTEXT_MEDIUM)
                     if ButtonWidget.objectName() == "LargeWidget":
-                        width = self.ReturnTextWidth(Label_Text=child, Width=baseWidth, Menu=ButtonWidget.menu(), setWordWrap=Parameters_Ribbon.WRAPTEXT_LARGE, TextAlignment=Qt.AlignmentFlag.AlignCenter)
-                    print(width)
+                        labelWidth = self.ReturnTextWidth(Label_Text=child, Width=baseWidth, Menu=ButtonWidget.menu(), setWordWrap=Parameters_Ribbon.WRAPTEXT_LARGE, TextAlignment=Qt.AlignmentFlag.AlignCenter)
 
                     # Because medium and small widgets have text on the right side,
                     # change the widht of the button
                     if ButtonWidget.objectName() != "LargeWidget":
                         ButtonWidget.setFixedWidth(
-                            baseWidth + width
+                            baseWidth + labelWidth + menuButtonWidth
                         )             
                         
                 # # If the child is a QToolButton, set the width of the child and the button to the basewidth
@@ -4579,8 +4584,10 @@ class ModernMenu(RibbonBar):
         TextWidth = 0
         Space = 6
 
-        Font = Label_Text.font()
+        Font = QFont()
+        Font.setPixelSize(Parameters_Ribbon.FONTSIZE_BUTTONS)
         Text = Label_Text.text()
+        Label_Text.setFont(Font)
         FontMetrics = QFontMetrics(Font)
         # Determine the height of a single row
         SingleHeight = QFontMetrics(Font).boundingRect(Text).height() + 3
@@ -4640,7 +4647,7 @@ class ModernMenu(RibbonBar):
             # Add the line
             Label_Text.setText(line1)
             # get the text width
-            TextWidth = FontMetrics.horizontalAdvance(line1, -1)
+            TextWidth = FontMetrics.tightBoundingRect(line1).width()
             # Try to get the second line if there is one
             try:
                 line2 = StandardFunctions.ReturnWrappedText(
@@ -4651,11 +4658,11 @@ class ModernMenu(RibbonBar):
                 # Add the line
                 Label_Text.setText(line1 + "\n" +line2)
                 # Update the text width if neccesary
-                if FontMetrics.horizontalAdvance(line2, -1) > TextWidth:
-                    TextWidth = FontMetrics.horizontalAdvance(line2, -1)
+                if FontMetrics.tightBoundingRect(line2).width() > TextWidth:
+                    TextWidth = FontMetrics.tightBoundingRect(line2).width()
             except Exception:
                 pass
-            Label_Text.setMaximumWidth(TextWidth)
+            Label_Text.setMaximumWidth(TextWidth + Space)
 
         return Label_Text.maximumWidth()
     
