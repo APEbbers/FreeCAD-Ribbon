@@ -963,7 +963,7 @@ class ModernMenu(RibbonBar):
             # Check if the panel is not none and of type RibbonPanel
             if panel is not None and type(panel) is RibbonPanel:
                 if (
-                    (type(widget) is RibbonToolButton or type(widget) is RibbonPanelItemWidget or type(widget) is QLabel)
+                    (type(widget) is RibbonToolButton or type(widget) is RibbonPanelItemWidget or type(widget) is QLabel or type(widget) is QToolButton)
                     and self.CustomizeEnabled is True
                 ):                        
                     # Define the context menu for buttons
@@ -1002,7 +1002,7 @@ class ModernMenu(RibbonBar):
                                                      
                     # create the context menu action
                     contextMenu.exec_(self.mapToGlobal(event.pos()))
-                    
+
                     # Disconnect the widgetActions
                     RibbonButtonAction_Style.currentTextChanged.disconnect()
                     RibbonButonAction_Text.checkStateChanged.disconnect()
@@ -1111,37 +1111,39 @@ class ModernMenu(RibbonBar):
     
     def on_ButtonSize_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget, ButtonSizeWidget: SpinBoxAction):
         # Get the menubutton height for large buttons
-        menuButtonHeight = 0
         menuButtonWidth = 0
-        if ButtonWidget.objectName() == "LargeWidget":
-            try:
-                menuButtonHeight = ButtonWidget.findChild(QToolButton, "MenuButton").height()
-            except Exception:
-                pass
         if ButtonWidget.objectName() != "LargeWidget":
             try:
                 menuButtonWidth = ButtonWidget.findChild(QToolButton, "MenuButton").width()
             except Exception:
                 pass
+        
         # Get the label height for small and medium buttons
         labelWidth = 0
         for child in ButtonWidget.children():
-            if type(child) == QLabel and ButtonWidget.objectName() != "LargeWidget":
+            if type(child) == QLabel:
                 if child.isVisible() is True:
-                    labelWidth = child.width()
+                    labelWidth = child.maximumWidth()
  
         # Adjust the icon to the new heights
         delta = ButtonSizeWidget.value() - ButtonWidget.height()
         for child in ButtonWidget.children():
             if type(child) == QToolButton and child.objectName() == "CommandButton":
                 height = child.height() + delta
-                print(height)
-                child.setFixedSize(QSize(height, height))
-                child.setIconSize(QSize(height, height))
-        ButtonWidget.setFixedWidth(ButtonSizeWidget.value() + labelWidth + menuButtonWidth)
+                width = height
+                if ButtonWidget.objectName() == "LargeWidget":
+                    width = ButtonSizeWidget.value() + 6
+                    if labelWidth > width:
+                        width = labelWidth
+                        labelWidth = 0
+                child.setFixedSize(QSize(width, height))
+                child.setIconSize(QSize(width, height))                
         ButtonWidget.setFixedHeight(ButtonSizeWidget.value())
-        ButtonWidget.layout().setAlignment(Qt.AlignmentFlag.AlignCenter)
-        
+        if ButtonWidget.objectName() != "LargeWidget":
+            ButtonWidget.setFixedWidth(ButtonSizeWidget.value() + labelWidth + menuButtonWidth)
+        if ButtonWidget.objectName() == "LargeWidget":
+            ButtonWidget.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+
         # write the changes to the ribbonstruture file 
         property = {"ButtonSize_small": ButtonSizeWidget.value()}
         if ButtonWidget.objectName() == "MediumWidget":
