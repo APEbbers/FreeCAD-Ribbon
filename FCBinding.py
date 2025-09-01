@@ -29,7 +29,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -49,7 +49,7 @@ from PySide.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QSpinBox,
@@ -84,7 +84,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     QAbstractAnimation,
     Qt,
     QTimer,
@@ -1168,39 +1168,57 @@ class ModernMenu(RibbonBar):
             if type(child) == QLabel:
                 textVisible = child.isVisible()
                 
+        # Determine the button size
+        baseWidth: int = Parameters_Ribbon.ICON_SIZE_SMALL
+        for child in ButtonWidget.children():
+            if type(child) == QToolButton and child.objectName() == "CommandButton":
+                baseWidth = child.width()
+        
+        # Get the label height for small and medium buttons
+        labelWidth = 0
+        for child in ButtonWidget.children():
+            if type(child) == QLabel:
+                # if child.isVisible() is True:
+                #     labelWidth = child.maximumWidth()
+                if ButtonWidget.objectName() == "SmallWidget":
+                    labelWidth = self.ReturnTextWidth(Label_Text=child, Width=baseWidth, Menu=ButtonWidget.menu(), setWordWrap=False)
+                if ButtonWidget.objectName() == "MediumWidget":
+                    labelWidth = self.ReturnTextWidth(Label_Text=child, Width=baseWidth, Menu=ButtonWidget.menu(), setWordWrap=Parameters_Ribbon.WRAPTEXT_MEDIUM)
+                if ButtonWidget.objectName() == "LargeWidget":
+                    labelWidth = self.ReturnTextWidth(Label_Text=child, Width=baseWidth, Menu=ButtonWidget.menu(), setWordWrap=Parameters_Ribbon.WRAPTEXT_LARGE, TextAlignment=Qt.AlignmentFlag.AlignCenter)
+                
         # If the widget has not text, show it with the correct width
-        if textVisible is False and TextStateWidget.isChecked() is True:
-            # Determine the button size
-            baseWidth: int = Parameters_Ribbon.ICON_SIZE_SMALL
-            for child in ButtonWidget.children():
-                if type(child) == QToolButton and child.objectName() == "CommandButton":
-                    baseWidth = child.width()
+        if textVisible is False and TextStateWidget.isChecked() is True:            
             # Go through the children of the button.   
             for child in ButtonWidget.children():
                 # If you find the QLabel, show it and update the baseWidth             
                 if type(child) == QLabel:
                     # show the text
-                    child.show()
-                    
-                    labelWidth = child.maximumWidth()
-                    if ButtonWidget.objectName() == "SmallWidget":
-                        labelWidth = self.ReturnTextWidth(Label_Text=child, Width=baseWidth, Menu=ButtonWidget.menu(), setWordWrap=False)
-                    if ButtonWidget.objectName() == "MediumWidget":
-                        labelWidth = self.ReturnTextWidth(Label_Text=child, Width=baseWidth, Menu=ButtonWidget.menu(), setWordWrap=Parameters_Ribbon.WRAPTEXT_MEDIUM)
-                    if ButtonWidget.objectName() == "LargeWidget":
-                        labelWidth = self.ReturnTextWidth(Label_Text=child, Width=baseWidth, Menu=ButtonWidget.menu(), setWordWrap=Parameters_Ribbon.WRAPTEXT_LARGE, TextAlignment=Qt.AlignmentFlag.AlignCenter)
-
+                    child.show()                                        
+                    print(labelWidth)
                     # Because medium and small widgets have text on the right side,
                     # change the widht of the button
                     if ButtonWidget.objectName() != "LargeWidget":
                         ButtonWidget.setFixedWidth(
                             baseWidth + labelWidth + menuButtonWidth
-                        )             
+                        )
+                    if ButtonWidget.objectName() == "LargeWidget":
+                        if labelWidth > baseWidth:
+                            ButtonWidget.setFixedWidth(labelWidth)
+                        else:
+                            ButtonWidget.setFixedWidth(baseWidth)
+                        # ButtonWidget.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)   
                         
-                # # If the child is a QToolButton, set the width of the child and the button to the basewidth
-                if type(child) == QToolButton:
+                # If the child is a QToolButton, set the width of the child and the button to the basewidth
+                if type(child) == QToolButton and child.objectName() == "CommandButton":
                     child.setFixedWidth(baseWidth)
-                    ButtonWidget.setFixedWidth(baseWidth)
+                    if ButtonWidget.objectName() == "LargeWidget":
+                        if labelWidth > baseWidth:
+                            child.setFixedWidth(labelWidth)
+                        else:
+                            child.setFixedWidth(baseWidth)
+                    child.setIconSize(QSize(baseWidth, baseWidth))
+                #     ButtonWidget.setFixedWidth(baseWidth)
             self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()})
             contextMenu.close()
             return
