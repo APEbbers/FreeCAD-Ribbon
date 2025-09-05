@@ -1474,10 +1474,20 @@ class ModernMenu(RibbonBar):
 
     # Add the searchBar if it is present
     def AddSearchBar(self):
+        modDir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        SearchBarDir = os.path.join(modDir, "SearchBar")
+        file = os.path.join(SearchBarDir, "SearchBoxLight.py")
+        if os.path.exists(file) is False:
+            file = os.path.join(SearchBarDir, "freecad", "SearchBar", "SearchBoxLight.py")
+        if os.path.exists(file) is False:
+            print("SearchBar directoy doesn't exist")
+            return
+        
         TB: QToolBar = mw.findChildren(QToolBar, "SearchBar")
-        width = 10
+        width = 0
         if TB is not None:
             try:
+                sys.path.append(os.path.dirname(file))
                 import SearchBoxLight
 
                 width = 10 * self.RightToolBarButtonSize
@@ -1500,9 +1510,10 @@ class ModernMenu(RibbonBar):
                 BeforeAction = self.rightToolBar().actions()[1]
                 self.rightToolBar().insertWidget(BeforeAction, sea)
                 # width = sea.width()
-            except Exception:
+            except Exception as e:
+                # raise e
                 pass
-            return width
+        return width
 
     def ApplicationMenus(self):
         # Add a file menu
