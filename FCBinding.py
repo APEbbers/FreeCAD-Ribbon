@@ -1513,7 +1513,8 @@ class ModernMenu(RibbonBar):
             except Exception as e:
                 # raise e
                 pass
-        return width
+            return width
+        return
 
     def ApplicationMenus(self):
         # Add a file menu
