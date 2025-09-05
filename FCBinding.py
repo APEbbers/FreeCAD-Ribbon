@@ -1484,7 +1484,7 @@ class ModernMenu(RibbonBar):
             return
         
         TB: QToolBar = mw.findChildren(QToolBar, "SearchBar")
-        width = 10
+        width = 0
         if TB is not None:
             try:
                 sys.path.append(os.path.dirname(file))
@@ -1513,8 +1513,7 @@ class ModernMenu(RibbonBar):
             except Exception as e:
                 # raise e
                 pass
-            return width
-        return
+        return width
 
     def ApplicationMenus(self):
         # Add a file menu
