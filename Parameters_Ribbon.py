@@ -89,10 +89,12 @@ class Settings:
                 settingName
             ]  # pyright: ignore[reportAssignmentType]
         preferences.SetString(settingName, value)
+        App.saveParameter()
         return
 
     def SetBoolSetting(settingName, value: bool):
         preferences.SetBool(settingName, value)
+        App.saveParameter()
         return
 
     def SetIntSetting(settingName, value: int):
@@ -100,6 +102,7 @@ class Settings:
             value = int(DefaultSettings[settingName])
         if str(value).lower() != "":
             preferences.SetInt(settingName, value)
+        App.saveParameter()
         return
 
     # endregion
