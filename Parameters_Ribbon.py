@@ -179,7 +179,7 @@ FreeCAD_Version = {
     "mainVersion": 1,
     "subVersion": 1,
     "patchVersion": 0,
-    "gitVersion": 42523,
+    "gitVersion": 14554,
 }
 
 
