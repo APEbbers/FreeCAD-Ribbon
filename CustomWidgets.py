@@ -53,7 +53,7 @@ from PySide.QtCore import Qt, QSize, QRect, QMargins, QEvent, QObject
 import os
 import sys
 import Parameters_Ribbon
-import Standard_Functions_RIbbon as StandardFunctions
+import Standard_Functions_Ribbon as StandardFunctions
 import StyleMapping_Ribbon
 
 # from CustomWidgets import myMenu as QMenu

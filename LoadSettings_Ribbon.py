@@ -43,7 +43,7 @@ from PySide.QtGui import QIcon, QPixmap, QColor
 
 import sys
 import StyleMapping_Ribbon
-import Standard_Functions_RIbbon as StandardFunctions
+import Standard_Functions_Ribbon as StandardFunctions
 import Parameters_Ribbon
 from Parameters_Ribbon import DefaultSettings
 import webbrowser

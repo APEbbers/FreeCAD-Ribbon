@@ -89,8 +89,8 @@ import LoadDesign_Ribbon
 import Parameters_Ribbon
 import LoadSettings_Ribbon
 import LoadLicenseForm_Ribbon
-import Standard_Functions_RIbbon as StandardFunctions
-from Standard_Functions_RIbbon import CommandInfoCorrections
+import Standard_Functions_Ribbon as StandardFunctions
+from Standard_Functions_Ribbon import CommandInfoCorrections
 import Serialize_Ribbon
 import StyleMapping_Ribbon
 import platform

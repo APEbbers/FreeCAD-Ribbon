@@ -41,7 +41,7 @@ import sys
 import json
 from datetime import datetime
 import shutil
-import Standard_Functions_RIbbon as StandardFunctions
+import Standard_Functions_Ribbon as StandardFunctions
 import Parameters_Ribbon
 import webbrowser
 import time

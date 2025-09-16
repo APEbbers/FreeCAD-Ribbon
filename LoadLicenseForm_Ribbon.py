@@ -39,7 +39,7 @@ from PySide.QtWidgets import (
 from PySide.QtGui import QIcon, QPixmap
 import sys
 
-import Standard_Functions_RIbbon as StandardFunctions
+import Standard_Functions_Ribbon as StandardFunctions
 import Parameters_Ribbon
 
 # Get the resources
