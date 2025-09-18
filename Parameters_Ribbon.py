@@ -25,6 +25,7 @@ import FreeCADGui as Gui
 from PySide.QtGui import QColor
 import os
 import sys
+import Standard_Functions_Ribbon as StandardFunctions
 
 # Define the translation
 translate = App.Qt.translate
@@ -251,25 +252,45 @@ DefaultSettings = {
     "Hide_Titlebar_FC": bool(True),
 }
 
+# From this version, the location of the mods is changed
+ModLocationChanged = False
+if (
+    StandardFunctions.checkFreeCADVersion(
+        FreeCAD_Version["mainVersion"],
+    FreeCAD_Version["subVersion"],
+        FreeCAD_Version["patchVersion"],
+        FreeCAD_Version["gitVersion"],
+        )
+        is True
+    ):
+    ModLocationChanged = True
+
+# Try to get the installation folder of the Ribbon
+AddonDir = Settings.GetStringSetting("AddonDir")
+
 # region - Define the import location ----------------------------------------------------------------------------------
 IMPORT_LOCATION = Settings.GetStringSetting("ImportLocation")
-if IMPORT_LOCATION == "" or os.path.exists(IMPORT_LOCATION) is False:
+if IMPORT_LOCATION == "" or (ModLocationChanged is True and  AddonDir == ""):
     IMPORT_LOCATION = DefaultSettings["ImportLocation"]
     Settings.SetStringSetting("ImportLocation", IMPORT_LOCATION)
+    Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
+    
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the export location ----------------------------------------------------------------------------------
 EXPORT_LOCATION = Settings.GetStringSetting("ExportLocation")
-if EXPORT_LOCATION == "" or os.path.exists(EXPORT_LOCATION):
+if EXPORT_LOCATION == "" or (ModLocationChanged is True and  AddonDir == ""):
     EXPORT_LOCATION = DefaultSettings["ExportLocation"]
     Settings.SetStringSetting("exportLocation", EXPORT_LOCATION)
+    Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the Ribbon structure location ------------------------------------------------------------------------
 RIBBON_STRUCTURE_JSON = Settings.GetStringSetting("RibbonStructure")
-if RIBBON_STRUCTURE_JSON == "" or os.path.exists(RIBBON_STRUCTURE_JSON):
+if RIBBON_STRUCTURE_JSON == "" or (ModLocationChanged is True and  AddonDir == ""):
     RIBBON_STRUCTURE_JSON = DefaultSettings["RibbonStructure"]
     Settings.SetStringSetting("RibbonStructure", RIBBON_STRUCTURE_JSON)
+    Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the default position for global panels ---------------------------------------------------------------
@@ -367,9 +388,10 @@ if Settings.GetBoolSetting("BackupEnabled") is None:
     Settings.SetBoolSetting("BackupEnabled", ENABLE_BACKUP)
 
 BACKUP_LOCATION = Settings.GetStringSetting("BackupFolder")
-if Settings.GetStringSetting("BackupFolder") == "" or os.path.join(os.path.dirname(__file__)) not in BACKUP_LOCATION:
+if Settings.GetStringSetting("BackupFolder") == "" or (ModLocationChanged is True and  AddonDir == ""):
     BACKUP_LOCATION = DefaultSettings["BackupFolder"]
     Settings.SetStringSetting("BackupFolder", BACKUP_LOCATION)
+    Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Ribbon settings ---------------------------------------------------------------------------------------------
@@ -382,9 +404,10 @@ if Settings.GetBoolSetting("AutoHideRibbon") is None:
     AUTOHIDE_RIBBON = bool(False)
 
 STYLESHEET = Settings.GetStringSetting("Stylesheet")
-if Settings.GetStringSetting("Stylesheet") == "" or os.path.join(os.path.dirname(__file__)) not in STYLESHEET:
+if Settings.GetStringSetting("Stylesheet") == "" or (ModLocationChanged is True and  AddonDir == ""):
     STYLESHEET = DefaultSettings["Stylesheet"]
     Settings.SetStringSetting("Stylesheet", STYLESHEET)
+    Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
 
 SHOW_ICON_TEXT_SMALL = Settings.GetBoolSetting("ShowIconText_Small")
 if Settings.GetBoolSetting("ShowIconText_Small") is FileExistsError:
