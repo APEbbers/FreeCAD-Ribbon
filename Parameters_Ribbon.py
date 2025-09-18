@@ -382,7 +382,7 @@ if Settings.GetBoolSetting("AutoHideRibbon") is None:
     AUTOHIDE_RIBBON = bool(False)
 
 STYLESHEET = Settings.GetStringSetting("Stylesheet")
-if Settings.GetStringSetting("Stylesheet") == "":
+if Settings.GetStringSetting("Stylesheet") == "" or os.path.join(os.path.dirname(__file__)) not in STYLESHEET:
     STYLESHEET = DefaultSettings["Stylesheet"]
     Settings.SetStringSetting("Stylesheet", STYLESHEET)
 
