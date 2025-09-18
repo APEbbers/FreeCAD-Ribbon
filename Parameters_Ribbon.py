@@ -253,21 +253,21 @@ DefaultSettings = {
 
 # region - Define the import location ----------------------------------------------------------------------------------
 IMPORT_LOCATION = Settings.GetStringSetting("ImportLocation")
-if IMPORT_LOCATION == "":
+if IMPORT_LOCATION == "" or os.path.exists(IMPORT_LOCATION) is False:
     IMPORT_LOCATION = DefaultSettings["ImportLocation"]
     Settings.SetStringSetting("ImportLocation", IMPORT_LOCATION)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the export location ----------------------------------------------------------------------------------
 EXPORT_LOCATION = Settings.GetStringSetting("ExportLocation")
-if EXPORT_LOCATION == "":
+if EXPORT_LOCATION == "" or os.path.exists(EXPORT_LOCATION):
     EXPORT_LOCATION = DefaultSettings["ExportLocation"]
     Settings.SetStringSetting("exportLocation", EXPORT_LOCATION)
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the Ribbon structure location ------------------------------------------------------------------------
 RIBBON_STRUCTURE_JSON = Settings.GetStringSetting("RibbonStructure")
-if RIBBON_STRUCTURE_JSON == "":
+if RIBBON_STRUCTURE_JSON == "" or os.path.exists(RIBBON_STRUCTURE_JSON):
     RIBBON_STRUCTURE_JSON = DefaultSettings["RibbonStructure"]
     Settings.SetStringSetting("RibbonStructure", RIBBON_STRUCTURE_JSON)
 # endregion ------------------------------------------------------------------------------------------------------------
@@ -367,7 +367,7 @@ if Settings.GetBoolSetting("BackupEnabled") is None:
     Settings.SetBoolSetting("BackupEnabled", ENABLE_BACKUP)
 
 BACKUP_LOCATION = Settings.GetStringSetting("BackupFolder")
-if Settings.GetStringSetting("BackupFolder") == "":
+if Settings.GetStringSetting("BackupFolder") == "" or os.path.join(os.path.dirname(__file__)) not in BACKUP_LOCATION:
     BACKUP_LOCATION = DefaultSettings["BackupFolder"]
     Settings.SetStringSetting("BackupFolder", BACKUP_LOCATION)
 # endregion ------------------------------------------------------------------------------------------------------------
