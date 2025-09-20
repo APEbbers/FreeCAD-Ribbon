@@ -264,13 +264,14 @@ if (
         is True
     ):
     ModLocationChanged = True
-
-# Try to get the installation folder of the Ribbon
-AddonDir = Settings.GetStringSetting("AddonDir")
+# Get the install location of FreeCAD
+AppDir = os.path.join(App.getUserAppDataDir().split('FreeCAD')[0], "FreeCAD")
+OldModDir = os.path.join(AppDir, "Mod")
+CurrentModDir = os.path.join(App.getUserAppDataDir(), "Mod")
 
 # region - Define the import location ----------------------------------------------------------------------------------
 IMPORT_LOCATION = Settings.GetStringSetting("ImportLocation")
-if IMPORT_LOCATION == "" or (ModLocationChanged is True and  AddonDir == ""):
+if IMPORT_LOCATION == "":
     IMPORT_LOCATION = DefaultSettings["ImportLocation"]
     Settings.SetStringSetting("ImportLocation", IMPORT_LOCATION)
     Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
@@ -279,18 +280,18 @@ if IMPORT_LOCATION == "" or (ModLocationChanged is True and  AddonDir == ""):
 
 # region - Define the export location ----------------------------------------------------------------------------------
 EXPORT_LOCATION = Settings.GetStringSetting("ExportLocation")
-if EXPORT_LOCATION == "" or (ModLocationChanged is True and  AddonDir == ""):
+if EXPORT_LOCATION == "":
     EXPORT_LOCATION = DefaultSettings["ExportLocation"]
     Settings.SetStringSetting("exportLocation", EXPORT_LOCATION)
     Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the Ribbon structure location ------------------------------------------------------------------------
+# The location for the ribbon structure is retrieved from parameters as standard.
 RIBBON_STRUCTURE_JSON = Settings.GetStringSetting("RibbonStructure")
-if RIBBON_STRUCTURE_JSON == "" or (ModLocationChanged is True and  AddonDir == ""):
+if AppDir in RIBBON_STRUCTURE_JSON or os.path.exists(RIBBON_STRUCTURE_JSON) is False or RIBBON_STRUCTURE_JSON == "":
     RIBBON_STRUCTURE_JSON = DefaultSettings["RibbonStructure"]
     Settings.SetStringSetting("RibbonStructure", RIBBON_STRUCTURE_JSON)
-    Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the default position for global panels ---------------------------------------------------------------
@@ -388,10 +389,9 @@ if Settings.GetBoolSetting("BackupEnabled") is None:
     Settings.SetBoolSetting("BackupEnabled", ENABLE_BACKUP)
 
 BACKUP_LOCATION = Settings.GetStringSetting("BackupFolder")
-if Settings.GetStringSetting("BackupFolder") == "" or (ModLocationChanged is True and  AddonDir == ""):
+if AppDir in BACKUP_LOCATION or os.path.exists(BACKUP_LOCATION) is False or BACKUP_LOCATION == "":
     BACKUP_LOCATION = DefaultSettings["BackupFolder"]
     Settings.SetStringSetting("BackupFolder", BACKUP_LOCATION)
-    Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Ribbon settings ---------------------------------------------------------------------------------------------
@@ -404,10 +404,9 @@ if Settings.GetBoolSetting("AutoHideRibbon") is None:
     AUTOHIDE_RIBBON = bool(False)
 
 STYLESHEET = Settings.GetStringSetting("Stylesheet")
-if Settings.GetStringSetting("Stylesheet") == "" or (ModLocationChanged is True and  AddonDir == ""):
+if AppDir in STYLESHEET or os.path.exists(STYLESHEET) is False or STYLESHEET == "":
     STYLESHEET = DefaultSettings["Stylesheet"]
     Settings.SetStringSetting("Stylesheet", STYLESHEET)
-    Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
 
 SHOW_ICON_TEXT_SMALL = Settings.GetBoolSetting("ShowIconText_Small")
 if Settings.GetBoolSetting("ShowIconText_Small") is FileExistsError:
