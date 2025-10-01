@@ -1012,13 +1012,12 @@ class CustomControls(RibbonToolButton):
         btn.mouseMoveEvent = lambda mouseEvent: CustomControls.mouseMoveEvent(
             btn, mouseEvent
         )
-                
+        
+        # Hide the text if set in preferences
         if showText is False:
             Label_Text.setHidden(True)
             TextWidth = 0
 
-        # Set the minimum height for the button
-        # CommandButton.setFixedHeight(ButtonSize.height())
         # Set spacing to zero (highlight background will have gaps otherwise)
         Layout.setSpacing(0)
 
@@ -1026,54 +1025,6 @@ class CustomControls(RibbonToolButton):
         btn.setLayout(Layout)
         # Set the stylesheet for the controls
         StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(control="toolbutton")
-        # StyleSheet_Addition_Label = (
-        #     "QToolButton, QLabel {background-color: "
-        #     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border: 0.5px solid"
-        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border-left: 0px solid"
-        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border-radius: 2px"
-        #     + ";margin: 0px"
-        #     + ";spacing: 0px"
-        #     + ";}"
-        # )
-        # StyleSheet_Addition_Command = (
-        #     "QToolButton, QLabel {background-color: "
-        #     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border: 0.5px solid"
-        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border-right: 0px solid"
-        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border-radius: 2px"
-        #     + ";margin: 0px"
-        #     + ";spacing: 0px"
-        #     + ";}"
-        # )
-        # StyleSheet_Addition_button = (
-        #     "QToolButton, QLabel, RibbonToolButton {background-color: "
-        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border: 0px solid"
-        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     + ";border: red"
-        #     + ";}"
-        # )
-        # StyleSheet_Addition_Arrow = (
-        #     "QToolButton, QLabel {background-color: "
-        #     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border: 0.5px solid"
-        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border-left: 0px solid"
-        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border-radius: 2px"
-        #     + ";margin: 0px"
-        #     + ";spacing: 0px"
-        #     + ";}"
-        # )
-        # CommandButton.setStyleSheet(StyleSheet_Addition_Command + StyleSheet)
-        # ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow + StyleSheet)
-        # Label_Text.setStyleSheet(StyleSheet_Addition_Label + StyleSheet)
-        # btn.setStyleSheet(StyleSheet_Addition_button + StyleSheet)
         CommandButton.setStyleSheet(StyleSheet)
         ArrowButton.setStyleSheet(StyleSheet)
         Label_Text.setStyleSheet(StyleSheet)
@@ -1082,15 +1033,10 @@ class CustomControls(RibbonToolButton):
         # Set the correct dimensions
         btn.setFixedWidth(CommandButton.width() + MenuButtonSpace + TextWidth)
         btn.setFixedHeight(ButtonSize.height())
-        # btn.setFixedHeight(CommandButton.height())
         CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         Label_Text.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         ArrowButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        # CommandButton.setFixedHeight(ButtonSize.height())
-        # Label_Text.setFixedHeight(ButtonSize.height())
-        # ArrowButton.setFixedHeight(ButtonSize.height())
         
-
         # return the new button
         btn.setObjectName("CustomWidget")
         return btn
@@ -1120,8 +1066,15 @@ class CustomControls(RibbonToolButton):
                 Menu.addAction(action_1)
 
         # Set the stylesheet
-        hexColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        Menu.setStyleSheet("background-color: " + hexColor)
+        BackGroundColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
+        if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
+            BorderColor = Parameters_Ribbon.COLOR_BORDERS
+        if Parameters_Ribbon.BORDER_TRANSPARANT:
+            BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
+                "Background_Color_Hover"
+            )
+        Menu.setStyleSheet("background-color: " + BackGroundColor + ";border: " + BorderColor + ";")
 
         # Define an custom enter event, to set "MenuEntered" to True on the ribbon and unfold the ribbon
         def enterEventCustom(event):
