@@ -344,9 +344,9 @@ class CustomControls(RibbonToolButton):
                 StyleSheet_Addition_Arrow = (
                     "QToolButton, QLabel {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border: 0.5px solid"
+                    + ";border: 0.5px solid "
                     + BorderColor
-                    + ";border-top: 0px solid"
+                    + ";border-top: 0px solid "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                     + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
                     + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
@@ -361,9 +361,9 @@ class CustomControls(RibbonToolButton):
                 StyleSheet_Addition_Label = (
                     "QToolButton, QLabel {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border: 0.5px solid"
+                    + ";border: 0.5px solid "
                     + BorderColor
-                    + ";border-bottom: 0px solid"
+                    + ";border-bottom: 0px solid "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                     + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
                     + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
@@ -372,9 +372,10 @@ class CustomControls(RibbonToolButton):
                     + ";}"
                 )
                 StyleSheet_Addition_Button = (
-                    "QToolButton, QLabel {background-color: "
+                    "QToolButton, QLabel, RibbonToolButton {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                    + ";border: none"
+                    + ";border: 0.5px solid "
+                    + BorderColor
                     + ";}"
                 )
                 btn.setStyleSheet(StyleSheet_Addition_Button)
@@ -681,7 +682,7 @@ class CustomControls(RibbonToolButton):
             Label_Text.setFrameShape(QFrame.Shape.NoFrame)
             Label_Text.setFrameShadow(QFrame.Shadow.Plain)
             Label_Text.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-            Label_Text.setFixedHeight(CommandButton.height())
+            # Label_Text.setFixedHeight(ButtonSize.height())
             # Set the font
             Font = QFont()
             Font.setPixelSize(FontSize)
@@ -770,8 +771,8 @@ class CustomControls(RibbonToolButton):
                 # Add the line with a space to avoid te need to set spacing. (Spacing breaks the hover background)
                 Label_Text.setText(" " + Text)
                 # Update the size
-                Label_Text.adjustSize()
-                Label_Text.setFixedHeight(CommandButton.height())
+                # Label_Text.setFixedHeight(ButtonSize.height())
+                # Label_Text.adjustSize()
                 # Correct the margin to set the arrow vertical center (bug in Qt)
                 # marginCorrection = (
                 #     CommandButton.height() - FontMetrics.boundingRect(Text).height()
@@ -839,7 +840,7 @@ class CustomControls(RibbonToolButton):
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                     + ";border: 0.5px solid"
                     + BorderColor
-                    + ";border-left: 0px solid"
+                    + ";border-left: 0.5 px solid"
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                     + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
                     + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
@@ -970,13 +971,13 @@ class CustomControls(RibbonToolButton):
                     + ";spacing: 0px"
                     + ";}"
                 )
-                # btn.setStyleSheet(StyleSheet_Addition_Button)
-                # if CommandButton.underMouse():
-                #     Label_Text.setStyleSheet(StyleSheet_Addition_Label)
-                #     CommandButton.setStyleSheet(StyleSheet_Addition_Command)
-                # if Label_Text.underMouse():
-                #     Label_Text.setStyleSheet(StyleSheet_Addition_Label)
-                #     CommandButton.setStyleSheet(StyleSheet_Addition_Command)
+                btn.setStyleSheet(StyleSheet_Addition_Button)
+                if CommandButton.underMouse():
+                    Label_Text.setStyleSheet(StyleSheet_Addition_Label)
+                    CommandButton.setStyleSheet(StyleSheet_Addition_Command)
+                if Label_Text.underMouse():
+                    Label_Text.setStyleSheet(StyleSheet_Addition_Label)
+                    CommandButton.setStyleSheet(StyleSheet_Addition_Command)
 
             Label_Text.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
             CommandButton.enterEvent = lambda enterEvent: enterEventCustom(
@@ -996,8 +997,8 @@ class CustomControls(RibbonToolButton):
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";}"
                 )
-                # Label_Text.setStyleSheet(StyleSheet + StyleSheet_Addition)
-                # CommandButton.setStyleSheet(StyleSheet + StyleSheet_Addition)
+                Label_Text.setStyleSheet(StyleSheet + StyleSheet_Addition)
+                CommandButton.setStyleSheet(StyleSheet + StyleSheet_Addition)
 
             Label_Text.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
             CommandButton.leaveEvent = lambda leaveEvent: leaveEventCustom(leaveEvent)
@@ -1080,9 +1081,15 @@ class CustomControls(RibbonToolButton):
 
         # Set the correct dimensions
         btn.setFixedWidth(CommandButton.width() + MenuButtonSpace + TextWidth)
-        # btn.setFixedHeight(CommandButton.height())
-        CommandButton.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
         btn.setFixedHeight(ButtonSize.height())
+        # btn.setFixedHeight(CommandButton.height())
+        CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        Label_Text.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        ArrowButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        # CommandButton.setFixedHeight(ButtonSize.height())
+        # Label_Text.setFixedHeight(ButtonSize.height())
+        # ArrowButton.setFixedHeight(ButtonSize.height())
+        
 
         # return the new button
         btn.setObjectName("CustomWidget")
