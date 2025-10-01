@@ -187,6 +187,16 @@ class CustomControls(RibbonToolButton):
 
         # If text must not be show, set the text to an empty string
         # Still create a label to set up the button properly
+        # Determine the height of a single row
+        # Set the font
+        Font = QFont()
+        Font.setPixelSize(FontSize)
+        Label_Text.setFont(Font)
+        SingleHeight = QFontMetrics(Font).boundingRect("Text").height() + 3
+        Label_Text.setMinimumHeight(SingleHeight * 1)
+        Label_Text.setMaximumHeight(SingleHeight * MaxNumberOfLines)
+        # Set the width of the label based on the size of the button
+        Label_Text.setFixedWidth(ButtonSize.width())
         if Text != "":
             # Create a label with the correct properties
             # Label_Text = QTextEdit()
@@ -201,18 +211,18 @@ class CustomControls(RibbonToolButton):
             # Label_Text.document().setDocumentMargin(0)
             # Label_Text.viewport().setCursor(Qt.CursorShape.ArrowCursor)
             Label_Text.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-            # Set the font
-            Font = QFont()
-            Font.setPixelSize(FontSize)
-            Label_Text.setFont(Font)
+            # # Set the font
+            # Font = QFont()
+            # Font.setPixelSize(FontSize)
+            # Label_Text.setFont(Font)
             # change the menubutton space because text is included in the click area
             MenuButtonSpace = 10
-            # Determine the height of a single row
-            SingleHeight = QFontMetrics(Font).boundingRect(Text).height() + 3
-            Label_Text.setMinimumHeight(SingleHeight * 1)
-            Label_Text.setMaximumHeight(SingleHeight * MaxNumberOfLines)
-            # Set the width of the label based on the size of the button
-            Label_Text.setFixedWidth(ButtonSize.width())
+            # # Determine the height of a single row
+            # SingleHeight = QFontMetrics(Font).boundingRect(Text).height() + 3
+            # Label_Text.setMinimumHeight(SingleHeight * 1)
+            # Label_Text.setMaximumHeight(SingleHeight * MaxNumberOfLines)
+            # # Set the width of the label based on the size of the button
+            # Label_Text.setFixedWidth(ButtonSize.width())
 
             # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
             if setWordWrap is False:
@@ -235,11 +245,11 @@ class CustomControls(RibbonToolButton):
                 MaxNumberOfLines = 1
                 # Set the proper alignment
                 Label_Text.setAlignment(TextAlignment)
-                # Lower the height when there is a menu
-                if Menu is not None and len(Menu.actions()) > 1:
-                    Label_Text.setFixedHeight(SingleHeight)
-                else:
-                    Label_Text.setFixedHeight(SingleHeight + Space)
+                # # Lower the height when there is a menu
+                # if Menu is not None and len(Menu.actions()) > 1:
+                #     Label_Text.setFixedHeight(SingleHeight)
+                # else:
+                #     Label_Text.setFixedHeight(SingleHeight + Space)
 
             # If wordwrap is enabled, set the text and height accordingly
             if setWordWrap is True:
@@ -589,6 +599,8 @@ class CustomControls(RibbonToolButton):
         # if TextWidth > 0 and TextWidth > CommandButtonHeight + Space:
         #     width = TextWidth + Space
         Label_Text.setFixedWidth(width)
+        if len(Menu.actions()) <= 1:
+            Label_Text.setFixedHeight(Label_Text.height()+ MenuButtonSpace)
         ArrowButton.setFixedWidth(width)
         # CommandButton.setFixedSize(QSize(width, CommandButtonHeight))
         CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
