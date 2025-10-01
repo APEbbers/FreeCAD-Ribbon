@@ -156,9 +156,9 @@ class CustomControls(RibbonToolButton):
             Space = 0
         # Remove any trailing spaces
         Text = Text.strip()
-        # Set the buttonSize
-        CommandButton.setFixedSize(ButtonSize)
-        CommandButtonHeight = ButtonSize.height()
+        # # Set the buttonSize
+        # CommandButton.setFixedSize(ButtonSize)
+        # CommandButtonHeight = ButtonSize.height()
         # Set the icon and its size
         CommandButton.setIcon(Icon)
         CommandButton.setIconSize(IconSize.expandedTo(CommandButton.size()))
@@ -527,66 +527,71 @@ class CustomControls(RibbonToolButton):
         StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(
             control="toolbutton", radius="2px"
         )
-        StyleSheet_Addition_Label = (
-            "QToolButton, QLabel {background-color: "
-            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            # + ";border: 0.5px solid"
-            # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            # + ";border-top: 0px solid"
-            # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            # + ";border-radius: 2px"
-            + ";margin: 0px"
-            + ";spacing: 0px"
-            + ";}"
-        )
-        StyleSheet_Addition_Command = (
-            "QToolButton, QLabel {background-color: "
-            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            # + ";border: 0.5px solid"
-            # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            # + ";border-bottom: 0px solid"
-            # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            # + ";border-radius: 2px"
-            + ";margin: 0px"
-            + ";spacing: 0px"
-            + ";}"
-        )
-        StyleSheet_Addition_Button = (
-            "QToolButton, QLabel {background-color: "
-            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            + ";border: none"
-            + ";}"
-        )
-        StyleSheet_Addition_Arrow = (
-            "QToolButton, QLabel {background-color: "
-            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            # + ";border: 0.5px solid"
-            # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            # + ";border-top: 0px solid"
-            # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            # + ";border-radius: 2px"
-            + ";margin: 0px"
-            + ";spacing: 0px"
-            + ";}"
-            + """QToolButton::menu-indicator {
-                    subcontrol-origin: padding;
-                    subcontrol-position: center top;
-                }"""
-        )
-        CommandButton.setStyleSheet(StyleSheet_Addition_Command + StyleSheet)
-        ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow + StyleSheet)
-        Label_Text.setStyleSheet(StyleSheet_Addition_Label + StyleSheet)
-        btn.setStyleSheet(StyleSheet_Addition_Button + StyleSheet)
+        # StyleSheet_Addition_Label = (
+        #     "QToolButton, QLabel {background-color: "
+        #     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        #     # + ";border: 0.5px solid"
+        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        #     # + ";border-top: 0px solid"
+        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        #     # + ";border-radius: 2px"
+        #     + ";margin: 0px"
+        #     + ";spacing: 0px"
+        #     + ";}"
+        # )
+        # StyleSheet_Addition_Command = (
+        #     "QToolButton, QLabel {background-color: "
+        #     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        #     # + ";border: 0.5px solid"
+        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        #     # + ";border-bottom: 0px solid"
+        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        #     # + ";border-radius: 2px"
+        #     + ";margin: 0px"
+        #     + ";spacing: 0px"
+        #     + ";}"
+        # )
+        # StyleSheet_Addition_Button = (
+        #     "QToolButton, QLabel {background-color: "
+        #     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        #     + ";border: none"
+        #     + ";}"
+        # )
+        # StyleSheet_Addition_Arrow = (
+        #     "QToolButton, QLabel {background-color: "
+        #     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        #     # + ";border: 0.5px solid"
+        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        #     # + ";border-top: 0px solid"
+        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        #     # + ";border-radius: 2px"
+        #     + ";margin: 0px"
+        #     + ";spacing: 0px"
+        #     + ";}"
+        #     + """QToolButton::menu-indicator {
+        #             subcontrol-origin: padding;
+        #             subcontrol-position: center top;
+        #         }"""
+        # )
+        # CommandButton.setStyleSheet(StyleSheet_Addition_Command + StyleSheet)
+        # ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow + StyleSheet)
+        # Label_Text.setStyleSheet(StyleSheet_Addition_Label + StyleSheet)
+        # btn.setStyleSheet(StyleSheet_Addition_Button + StyleSheet)
+        CommandButton.setStyleSheet(StyleSheet)
+        ArrowButton.setStyleSheet(StyleSheet)
+        Label_Text.setStyleSheet(StyleSheet)
+        btn.setStyleSheet(StyleSheet)
 
         # Set the final sizes
         width = ButtonSize.width()
-        if TextWidth == 0 or TextWidth < CommandButtonHeight + Space:
-            width = CommandButtonHeight + Space
-        if TextWidth > 0 and TextWidth > CommandButtonHeight + Space:
-            width = TextWidth + Space
+        # if TextWidth == 0 or TextWidth < CommandButtonHeight + Space:
+        #     width = CommandButtonHeight + Space
+        # if TextWidth > 0 and TextWidth > CommandButtonHeight + Space:
+        #     width = TextWidth + Space
         Label_Text.setFixedWidth(width)
         ArrowButton.setFixedWidth(width)
-        CommandButton.setFixedSize(QSize(width, CommandButtonHeight))
+        # CommandButton.setFixedSize(QSize(width, CommandButtonHeight))
+        CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         btn.setFixedSize(QSize(width, ButtonSize.height()))
 
         # Return the button
