@@ -291,7 +291,7 @@ class CustomControls(RibbonToolButton):
                     if FontMetrics.tightBoundingRect(line2).width() > TextWidth:
                         TextWidth = FontMetrics.tightBoundingRect(line2).width()
                 except Exception as e:
-                    print(e.with_traceback(None))
+                    # print(e.with_traceback(None))
                     pass
 
             # Add the label with alignment
@@ -341,41 +341,75 @@ class CustomControls(RibbonToolButton):
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                         "Background_Color_Hover"
                     )
-                StyleSheet_Addition_Arrow = (
-                    "QToolButton, QLabel {background-color: "
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border: 0.5px solid "
-                    + BorderColor
-                    + ";border-top: 0px solid "
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
-                    + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
-                    + ";margin: 0px"
-                    + ";spacing: 0px"
-                    + ";}"
-                    + """QToolButton::menu-indicator {
-                            subcontrol-origin: padding;
-                            subcontrol-position: center top;
-                        }"""
-                )
-                StyleSheet_Addition_Label = (
-                    "QToolButton, QLabel {background-color: "
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border: 0.5px solid "
-                    + BorderColor
-                    + ";border-bottom: 0px solid "
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
-                    + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
-                    + ";margin: 0px"
-                    + ";spacing: 0px"
-                    + ";}"
-                )
+                if showText is False:
+                    StyleSheet_Addition_Arrow = (
+                        "QToolButton, QLabel {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid "
+                        + BorderColor
+                        # + ";border-top: 0.5px solid "
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
+                        + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                        + """QToolButton::menu-indicator {
+                                subcontrol-origin: padding;
+                                subcontrol-position: center top;
+                            }"""
+                    )
+                    StyleSheet_Addition_Label = (
+                        "QToolButton, QLabel {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid "
+                        + BorderColor
+                        # + ";border-bottom: 0.5px solid "
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
+                        + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
+                if showText is True:
+                    StyleSheet_Addition_Arrow = (
+                        "QToolButton, QLabel {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid "
+                        + BorderColor
+                        + ";border-top: 0.5px solid "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
+                        + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                        + """QToolButton::menu-indicator {
+                                subcontrol-origin: padding;
+                                subcontrol-position: center top;
+                            }"""
+                    )
+                    StyleSheet_Addition_Label = (
+                        "QToolButton, QLabel {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid "
+                        + BorderColor
+                        + ";border-bottom: 0.5px solid "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
+                        + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
                 StyleSheet_Addition_Button = (
                     "QToolButton, QLabel, RibbonToolButton {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                    + ";border: 0.5px solid "
+                    + ";border: "
                     + BorderColor
+                    + ";margin: 0px"
+                    + ";spacing: 0px"
                     + ";}"
                 )
                 btn.setStyleSheet(StyleSheet_Addition_Button)
@@ -449,36 +483,67 @@ class CustomControls(RibbonToolButton):
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                         "Background_Color_Hover"
                     )
-                StyleSheet_Addition_Label = (
-                    "QToolButton, QLabel {background-color: "
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border: 0.5px solid"
-                    + BorderColor
-                    + ";border-top: 0px solid"
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
-                    + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
-                    + ";margin: 0px"
-                    + ";spacing: 0px"
-                    + ";}"
-                )
-                StyleSheet_Addition_Command = (
-                    "QToolButton, QLabel {background-color: "
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border: 0.5px solid"
-                    + BorderColor
-                    + ";border-bottom: 0px solid"
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
-                    + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
-                    + ";margin: 0px"
-                    + ";spacing: 0px"
-                    + ";}"
-                )
+                if showText is False:
+                    StyleSheet_Addition_Label = (
+                        "QToolButton, QLabel {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        # + ";border-top: 0px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
+                        + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
+                    StyleSheet_Addition_Command = (
+                        "QToolButton, QLabel {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        # + ";border-bottom: 0px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
+                        + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
+                if showText is True:
+                    StyleSheet_Addition_Label = (
+                        "QToolButton, QLabel {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        + ";border-top: 0px solid"
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
+                        + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
+                    StyleSheet_Addition_Command = (
+                        "QToolButton, QLabel {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        + ";border-bottom: 0px solid"
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
+                        + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
                 StyleSheet_Addition_Button = (
                     "QToolButton, QLabel {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                    + ";border: none"
+                    + ";border: "
+                    + BorderColor
+                    + ";margin: 0px"
+                    + ";spacing: 0px"
                     + ";}"
                 )
                 btn.setStyleSheet(StyleSheet_Addition_Button)
@@ -568,28 +633,28 @@ class CustomControls(RibbonToolButton):
         #     + ";border: none"
         #     + ";}"
         # )
-        # StyleSheet_Addition_Arrow = (
-        #     "QToolButton, QLabel {background-color: "
-        #     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border: 0.5px solid"
-        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border-top: 0px solid"
-        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border-radius: 2px"
-        #     + ";margin: 0px"
-        #     + ";spacing: 0px"
-        #     + ";}"
-        #     + """QToolButton::menu-indicator {
-        #             subcontrol-origin: padding;
-        #             subcontrol-position: center top;
-        #         }"""
-        # )
+        StyleSheet_Addition_Arrow = (
+            "QToolButton, QLabel {background-color: "
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+            # + ";border: 0.5px solid"
+            # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+            # + ";border-top: 0px solid"
+            # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+            # + ";border-radius: 2px"
+            + ";margin: 0px"
+            + ";spacing: 0px"
+            + ";}"
+            + """QToolButton::menu-indicator {
+                    subcontrol-origin: padding;
+                    subcontrol-position: center top;
+                }"""
+        )
         # CommandButton.setStyleSheet(StyleSheet_Addition_Command + StyleSheet)
-        # ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow + StyleSheet)
+        ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow + StyleSheet)
         # Label_Text.setStyleSheet(StyleSheet_Addition_Label + StyleSheet)
         # btn.setStyleSheet(StyleSheet_Addition_Button + StyleSheet)
         CommandButton.setStyleSheet(StyleSheet)
-        ArrowButton.setStyleSheet(StyleSheet)
+        # ArrowButton.setStyleSheet(StyleSheet)
         Label_Text.setStyleSheet(StyleSheet)
         btn.setStyleSheet(StyleSheet)
 
@@ -834,37 +899,71 @@ class CustomControls(RibbonToolButton):
                 if Parameters_Ribbon.BORDER_TRANSPARANT:
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                         "Background_Color_Hover"
-                    )                
-                StyleSheet_Addition_Arrow = (
-                    "QToolButton, QLabel {background-color: "
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border: 0.5px solid"
-                    + BorderColor
-                    + ";border-left: 0.5 px solid"
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
-                    + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
-                    + ";margin: 0px"
-                    + ";spacing: 0px"
-                    + ";}"
-                )
-                StyleSheet_Addition_Label = (
-                    "QToolButton, QLabel {background-color: "
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border: 0.5px solid"
-                    + BorderColor
-                    + ";border-right: 0px solid"
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
-                    + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
-                    + ";margin: 0px"
-                    + ";spacing: 0px"
-                    + ";}"
-                )
+                    )     
+                StyleSheet_Addition_Arrow = ""
+                StyleSheet_Addition_Label = ""   
+                if showText is False:        
+                    StyleSheet_Addition_Arrow = (
+                        "QToolButton, QLabel {"
+                        + "background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        # + ";border-left: 0.5 px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
+                        + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
+                    StyleSheet_Addition_Label = (
+                        "QToolButton, QLabel {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        # + ";border-right: 0.5px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
+                        + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
+                if showText is True:        
+                    StyleSheet_Addition_Arrow = (
+                        "QToolButton, QLabel {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        + ";border-left: 0.5 px solid"
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
+                        + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
+                    StyleSheet_Addition_Label = (
+                        "QToolButton, QLabel {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        + ";border-right: 0.5px solid"
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
+                        + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
                 StyleSheet_Addition_Button = (
                     "QToolButton, QLabel {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                    + ";border: none"
+                    + ";border: "
+                    + BorderColor
+                    + ";margin: 0px"
+                    + ";spacing: 0px"
                     + ";}"
                 )
                 btn.setStyleSheet(StyleSheet_Addition_Button)
@@ -916,7 +1015,7 @@ class CustomControls(RibbonToolButton):
 
             Menu.aboutToHide.connect(SetToFoldRibbon)
         else:
-            # Add the label to the area where the user can invoke the menu
+            # Add the label to the area where the user can invoke the command
             def mouseClickevent(event):
                 CommandButton.animateClick()
 
@@ -936,32 +1035,60 @@ class CustomControls(RibbonToolButton):
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                         "Background_Color_Hover"
                     )
-                StyleSheet_Addition_Label = (
-                    "QToolButton, QLabel, RibbonToolButton {background-color: "
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border: 0.5px solid"
-                    + BorderColor
-                    + ";border-left: 0px solid"
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
-                    + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
-                    + ";margin: 0px"
-                    + ";spacing: 0px"
-                    + ";}"
-                )
-                StyleSheet_Addition_Command = (
-                    "QToolButton, QLabel, RibbonToolButton {background-color: "
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border: 0.5px solid"
-                    + BorderColor
-                    + ";border-right: 0px solid"
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
-                    + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
-                    + ";margin: 0px"
-                    + ";spacing: 0px"
-                    + ";}"
-                )
+                if showText is False:
+                    StyleSheet_Addition_Label = (
+                        "QToolButton, QLabel, RibbonToolButton {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        # + ";border-left: 0.5px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
+                        + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
+                    StyleSheet_Addition_Command = (
+                        "QToolButton, QLabel, RibbonToolButton {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        # + ";border-right: 0.5px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
+                        + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
+                if showText is True:
+                    StyleSheet_Addition_Label = (
+                        "QToolButton, QLabel, RibbonToolButton {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        + ";border-left: 0.5px solid"
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
+                        + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
+                    StyleSheet_Addition_Command = (
+                        "QToolButton, QLabel, RibbonToolButton {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        + ";border-right: 0.5px solid"
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
+                        + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
+                        + ";margin: 0px"
+                        + ";spacing: 0px"
+                        + ";}"
+                    )
                 StyleSheet_Addition_Button = (
                     "QToolButton, QLabel, RibbonToolButton {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
