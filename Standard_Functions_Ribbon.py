@@ -936,7 +936,7 @@ def AddToClipboard(Text):
 
     # cmd = "clip" if platform.system() == "Windows" else "pbcopy"
     # subprocess.run(cmd, input=Text, text=True, shell=True)
-    
+
     clipboard = QtWidgets.QApplication.clipboard()
     clipboard.setText(Text)
 
