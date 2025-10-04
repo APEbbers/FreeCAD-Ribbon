@@ -29,7 +29,7 @@ import typing
 
 import sys
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
@@ -44,7 +44,7 @@ from PySide6.QtGui import (
     QPen,
     QPainter,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QComboBox,
     QSizePolicy,
     QSpinBox,
@@ -59,7 +59,7 @@ from PySide6.QtWidgets import (
     QWidget,
     QWidgetAction,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QSize,
     QMimeData,
