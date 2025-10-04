@@ -19,11 +19,12 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+from turtle import color
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction, QColor
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -36,7 +37,7 @@ from PySide.QtWidgets import (
     QWidget,
     QMainWindow,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread
 import sys
 import json
 from datetime import datetime
@@ -56,8 +57,29 @@ sys.path.append(pathStylSheets)
 sys.path.append(pathUI)
 sys.path.append(pathBackup)
 
-mw = Gui.getMainWindow()
+mw: QMainWindow = Gui.getMainWindow()
 
+preferences = App.ParamGet("User parameter:BaseApp/Preferences/Themes/UserTokens")
+BackGroundColor = preferences.GetString(preferences.GetString("GeneralBackgroundColor"))
+HoverColor = preferences.GetString(preferences.GetString("GeneralBackgroundHoverColor"))
+BorderColor = preferences.GetString(preferences.GetString("GeneralBorderColor"))
+BorderColorHover = preferences.GetString(preferences.GetString("GeneralBorderHoverColor"))
+TextColor = preferences.GetString(preferences.GetString("TextForegroundColor"))
+# BackGroundColor = "@GeneralBackgroundColor"
+# HoverColor = "@AccentColor"
+# BorderColor = "@GeneralBorderColor"
+# BorderColorHover = "@AccentColor"
+# TextColor = "@TextForegroundColor"
+
+
+def GetColorSetting(settingName: str) -> object:
+        # Create a tuple from the int value of the color
+        result = QColor.fromRgba(preferences.GetUnsigned(settingName)).toTuple()
+
+        # correct the order of the tuple
+        result = (result[3], result[0], result[1], result[2])
+
+        return result
 
 def DarkMode():
     import xml.etree.ElementTree as ET
@@ -268,7 +290,7 @@ def ReturnStyleSheet(
                     BorderColor = BackgroundColor
                 StyleSheet = (
                     """QLayout {spacing: 0px}"""
-                    + """QToolButton, QTextEdit {
+                    + """QToolButton, QLabel, RibbonToolButton, QLayout {
                         margin: 0px;
                         padding: 0px;
                         color: """
@@ -301,11 +323,10 @@ def ReturnStyleSheet(
                         subcontrol-origin: padding;
                         subcontrol-position: center right;
                     }"""
-                    + """QToolButton:hover, QTextEdit:hover {
+                    + """QToolButton:hover, QLabel:hover, RibbonToolButton:hover {
                         margin: 0px 0px 0px 0px;
-                        padding: 0px;
-                        border: none;
-                        background: """
+                        padding: 0px;"""
+                    + """;background: """
                     + HoverColor
                     + """;padding-left: """
                     + padding_left
@@ -436,6 +457,7 @@ def ReturnTitleBarIcons():
         Icons.append(Icon)
     return Icons
 
+print(StandardFunctions.LightOrDark(mw.style().proxy().standardPalette().window().color().toTuple()))
 
 # Used when custom colors are enabled
 StyleMapping = {
@@ -458,14 +480,15 @@ StyleMapping = {
     }
 }
 
+print(str(GetColorSetting("BackgroundColor")))
 
 StyleMapping_default = {
     "Stylesheets": {
         "": {
-            "Background_Color": StandardFunctions.ColorConvertor(mw.pallete().Window().color().getRgb(), 1, True, True),
-            "Background_Color_Hover": StandardFunctions.ColorConvertor(mw.pallete().Highlight().color().getRgb(), 1, True, True),
-            "Border_Color": StandardFunctions.ColorConvertor(mw.pallete().Text().color().getRgb(), 1, True, True),
-            "ApplicationButton_Background": StandardFunctions.ColorConvertor(mw.pallete().Highlight().color().getRgb(), 1, True, True),
+            "Background_Color": StandardFunctions.ColorConvertor(mw.palette().window().color().toTuple(), 1, True, False),
+            "Background_Color_Hover": StandardFunctions.ColorConvertor(mw.palette().highlight().color().toTuple(), 1, True, False),
+            "Border_Color": StandardFunctions.ColorConvertor(mw.palette().text().color().toTuple(), 1, True, False),
+            "ApplicationButton_Background": StandardFunctions.ColorConvertor(mw.palette().highlight().color().toTuple(), 1, True, False),
             "FontColor": ReturnFontColor(),
             "UpdateColor": ReturnUpdateColor(),
             "DevelopColor": ReturnDevelopColor(),
@@ -478,191 +501,226 @@ StyleMapping_default = {
             "PinButton_closed": "pin-icon-default.svg",
             "TitleBarButtons": ReturnTitleBarIcons(),
         },
-        # "none": {
-        #     "Background_Color": "none",
-        #     "Background_Color_Hover": "#48a0f8",
-        #     "Border_Color": ReturnFontColor(),
-        #     "ApplicationButton_Background": "#48a0f8",
-        #     "FontColor": ReturnFontColor(),
-        #     "UpdateColor": ReturnUpdateColor(),
-        #     "DevelopColor": ReturnDevelopColor(),
-        #     "ScrollLeftButton_Tab": GetIconBasedOnTag("ScrollLeftButton_Tab"),
-        #     "ScrollRightButton_Tab": GetIconBasedOnTag("ScrollRightButton_Tab"),
-        #     "ScrollLeftButton_Category": GetIconBasedOnTag("ScrollLeftButton_Category"),
-        #     "ScrollRightButton_Category": GetIconBasedOnTag(
-        #         "ScrollRightButton_Category"
-        #     ),
-        #     "OptionButton": GetIconBasedOnTag("OptionButton"),
-        #     "PinButton_open": GetIconBasedOnTag("PinButton_open"),
-        #     "PinButton_closed": GetIconBasedOnTag("PinButton_closed"),
-        #     "TitleBarButtons": ReturnTitleBarIcons(),
-        # },
-        # "FreeCAD Dark.qss": {
-        #     "Background_Color": "#333333",
-        #     "Background_Color_Hover": "#48a0f8",
-        #     "Border_Color": "#ffffff",
-        #     "ApplicationButton_Background": "#48a0f8",
-        #     "FontColor": "#ffffff",
-        #     "UpdateColor": ReturnUpdateColor(),
-        #     "DevelopColor": ReturnDevelopColor(),
-        #     "ScrollLeftButton_Tab": "backward_small_default_white.svg",
-        #     "ScrollRightButton_Tab": "forward_small_default_white.svg",
-        #     "ScrollLeftButton_Category": "backward_default_white.svg",
-        #     "ScrollRightButton_Category": "forward_default_white.svg",
-        #     "OptionButton": "more_default_white.svg",
-        #     "PinButton_open": "pin-icon-open_white.svg",
-        #     "PinButton_closed": "pin-icon-default_white.svg",
-        #     "TitleBarButtons": ReturnTitleBarIcons(),
-        # },
-        # "FreeCAD Light.qss": {
-        #     "Background_Color": "#f0f0f0",
-        #     "Background_Color_Hover": "#48a0f8",
-        #     "Border_Color": "#646464",
-        #     "ApplicationButton_Background": "#48a0f8",
-        #     "FontColor": "#000000",
-        #     "UpdateColor": ReturnUpdateColor(),
-        #     "DevelopColor": ReturnDevelopColor(),
-        #     "ScrollLeftButton_Tab": "backward_small_default.svg",
-        #     "ScrollRightButton_Tab": "forward_small_default.svg",
-        #     "ScrollLeftButton_Category": "backward_default.svg",
-        #     "ScrollRightButton_Category": "forward_default.svg",
-        #     "OptionButton": "more_default.svg",
-        #     "PinButton_open": "pin-icon-open.svg",
-        #     "PinButton_closed": "pin-icon-default.svg",
-        #     "TitleBarButtons": ReturnTitleBarIcons(),
-        # },
-        # "OpenLight.qss": {
-        #     "Background_Color": "#dee2e6",
-        #     "Background_Color_Hover": "#a5d8ff",
-        #     "Border_Color": "#1c7ed6",
-        #     "ApplicationButton_Background": "#a5d8ff",
-        #     "FontColor": "#000000",
-        #     "UpdateColor": ReturnUpdateColor(),
-        #     "DevelopColor": ReturnDevelopColor(),
-        #     "ScrollLeftButton_Tab": "backward_1.svg",
-        #     "ScrollRightButton_Tab": "forward_1.svg",
-        #     "ScrollLeftButton_Category": "backward_1.svg",
-        #     "ScrollRightButton_Category": "forward_1.svg",
-        #     "OptionButton": "more_1.svg",
-        #     "PinButton_open": "pin-icon-open_1.svg",
-        #     "PinButton_closed": "pin-icon-closed_1.svg",
-        #     "TitleBarButtons": ReturnTitleBarIcons(),
-        # },
-        # "OpenDark.qss": {
-        #     "Background_Color": "#212529",
-        #     "Background_Color_Hover": "#1f364d",
-        #     "Border_Color": "#264b69",
-        #     "ApplicationButton_Background": "#1f364d",
-        #     "FontColor": "#ffffff",
-        #     "UpdateColor": ReturnUpdateColor(),
-        #     "DevelopColor": ReturnDevelopColor(),
-        #     "ScrollLeftButton_Tab": "backward_small_default_white.svg",
-        #     "ScrollRightButton_Tab": "forward_small_default_white.svg",
-        #     "ScrollLeftButton_Category": "backward_default_white.svg",
-        #     "ScrollRightButton_Category": "forward_default_white.svg",
-        #     "OptionButton": "more_default_white.svg",
-        #     "PinButton_open": "pin-icon-open_white.svg",
-        #     "PinButton_closed": "pin-icon-default_white.svg",
-        #     "TitleBarButtons": ReturnTitleBarIcons(),
-        # },
-        # "Behave-dark.qss": {
-        #     "Background_Color": "#232932",
-        #     "Background_Color_Hover": "#557bb6",
-        #     "Border_Color": "#3a7400",
-        #     "ApplicationButton_Background": "#557bb6",
-        #     "FontColor": ReturnFontColor(),
-        #     "UpdateColor": ReturnUpdateColor(),
-        #     "DevelopColor": ReturnDevelopColor(),
-        #     "ScrollLeftButton_Tab": "backward_small_default_white.svg",
-        #     "ScrollRightButton_Tab": "forward_small_default_white.svg",
-        #     "ScrollLeftButton_Category": "backward_default_white.svg",
-        #     "ScrollRightButton_Category": "forward_default_white.svg",
-        #     "OptionButton": "more_default_white.svg",
-        #     "PinButton_open": "pin-icon-open_white.svg",
-        #     "PinButton_closed": "pin-icon-default_white.svg",
-        #     "TitleBarButtons": ReturnTitleBarIcons(),
-        # },
-        # "ProDark.qss": {
-        #     "Background_Color": "#333333",
-        #     "Background_Color_Hover": "#557bb6",
-        #     "Border_Color": "#adc5ed",
-        #     "ApplicationButton_Background": "#557bb6",
-        #     "FontColor": ReturnFontColor(),
-        #     "UpdateColor": ReturnUpdateColor(),
-        #     "DevelopColor": ReturnDevelopColor(),
-        #     "ScrollLeftButton_Tab": "backward_small_default_white.svg",
-        #     "ScrollRightButton_Tab": "forward_small_default_white.svg",
-        #     "ScrollLeftButton_Category": "backward_default_white.svg",
-        #     "ScrollRightButton_Category": "forward_default_white.svg",
-        #     "OptionButton": "more_default_white.svg",
-        #     "PinButton_open": "pin-icon-open_white.svg",
-        #     "PinButton_closed": "pin-icon-default_white.svg",
-        #     "TitleBarButtons": ReturnTitleBarIcons(),
-        # },
-        # "Darker.qss": {
-        #     "Background_Color": "#444444",
-        #     "Background_Color_Hover": "#4aa5ff",
-        #     "Border_Color": "#696968",
-        #     "ApplicationButton_Background": "#4aa5ff",
-        #     "FontColor": ReturnFontColor(),
-        #     "ScrollLeftButton_Tab": "backward_small_default_white.svg",
-        #     "ScrollRightButton_Tab": "forward_small_default_white.svg",
-        #     "ScrollLeftButton_Category": "backward_default_white.svg",
-        #     "ScrollRightButton_Category": "forward_default_white.svg",
-        #     "OptionButton": "more_default_white.svg",
-        #     "PinButton_open": "pin-icon-open_white.svg",
-        #     "PinButton_closed": "pin-icon-default_white.svg",
-        #     "TitleBarButtons": ReturnTitleBarIcons(),
-        # },
-        # "Light-modern.qss": {
-        #     "Background_Color": "#f0f0f0",
-        #     "Background_Color_Hover": "#4aa5ff",
-        #     "Border_Color": "#646464",
-        #     "ApplicationButton_Background": "#4aa5ff",
-        #     "FontColor": ReturnFontColor(),
-        #     "UpdateColor": ReturnUpdateColor(),
-        #     "DevelopColor": ReturnDevelopColor(),
-        #     "ScrollLeftButton_Tab": "backward_small_default.svg",
-        #     "ScrollRightButton_Tab": "forward_small_default.svg",
-        #     "ScrollLeftButton_Category": "backward_default.svg",
-        #     "ScrollRightButton_Category": "forward_default.svg",
-        #     "OptionButton": "more_default.svg",
-        #     "PinButton_open": "pin-icon-open.svg",
-        #     "PinButton_closed": "pin-icon-default.svg",
-        # },
-        # "Dark-modern.qss": {
-        #     "Background_Color": "#2b2b2b",
-        #     "Background_Color_Hover": "#4aa5ff",
-        #     "Border_Color": "#ffffff",
-        #     "ApplicationButton_Background": "#4aa5ff",
-        #     "FontColor": ReturnFontColor(),
-        #     "UpdateColor": ReturnUpdateColor(),
-        #     "DevelopColor": ReturnDevelopColor(),
-        #     "ScrollLeftButton_Tab": "backward_small_default_white.svg",
-        #     "ScrollRightButton_Tab": "forward_small_default_white.svg",
-        #     "ScrollLeftButton_Category": "backward_default_white.svg",
-        #     "ScrollRightButton_Category": "forward_default_white.svg",
-        #     "OptionButton": "more_default_white.svg",
-        #     "PinButton_open": "pin-icon-open_white.svg",
-        #     "PinButton_closed": "pin-icon-default_white.svg",
-        #     "TitleBarButtons": ReturnTitleBarIcons(),
-        # },
-        # "Dark-contrast.qss": {
-        #     "Background_Color": "#444444",
-        #     "Background_Color_Hover": "#4aa5ff",
-        #     "Border_Color": "#787878",
-        #     "ApplicationButton_Background": "#4aa5ff",
-        #     "FontColor": ReturnFontColor(),
-        #     "UpdateColor": ReturnUpdateColor(),
-        #     "DevelopColor": ReturnDevelopColor(),
-        #     "ScrollLeftButton_Tab": "backward_small_default_white.svg",
-        #     "ScrollRightButton_Tab": "forward_small_default_white.svg",
-        #     "ScrollLeftButton_Category": "backward_default_white.svg",
-        #     "ScrollRightButton_Category": "forward_default_white.svg",
-        #     "OptionButton": "more_default_white.svg",
-        #     "PinButton_open": "pin-icon-open_white.svg",
-        #     "PinButton_closed": "pin-icon-default_white.svg",
-        #     "TitleBarButtons": ReturnTitleBarIcons(),
-        # },
+    # "Stylesheets": {
+    #     "": {
+    #         "Background_Color": "transparent",
+    #         "Background_Color_Hover": StandardFunctions.ColorConvertor(mw.style().proxy().standardPalette().highlight().color().toTuple(), 1, True, False),
+    #         "Border_Color": StandardFunctions.ColorConvertor(mw.style().proxy().standardPalette().button().color().toTuple(), 1, True, False),
+    #         "ApplicationButton_Background": StandardFunctions.ColorConvertor(mw.style().proxy().standardPalette().highlight().color().toTuple(), 1, True, False),
+    #         "FontColor": ReturnFontColor(),
+    #         "UpdateColor": ReturnUpdateColor(),
+    #         "DevelopColor": ReturnDevelopColor(),
+    #         "ScrollLeftButton_Tab": "backward_small_default.svg",
+    #         "ScrollRightButton_Tab": "forward_small_default.svg",
+    #         "ScrollLeftButton_Category": "backward_default.svg",
+    #         "ScrollRightButton_Category": "forward_default.svg",
+    #         "OptionButton": "more_default.svg",
+    #         "PinButton_open": "pin-icon-open.svg",
+    #         "PinButton_closed": "pin-icon-default.svg",
+    #         "TitleBarButtons": ReturnTitleBarIcons(),
+    #     },
+        "none": {
+            "Background_Color": "none",
+            "Background_Color_Hover": "#48a0f8",
+            "Border_Color": ReturnFontColor(),
+            "ApplicationButton_Background": "#48a0f8",
+            "FontColor": ReturnFontColor(),
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
+            "ScrollLeftButton_Tab": GetIconBasedOnTag("ScrollLeftButton_Tab"),
+            "ScrollRightButton_Tab": GetIconBasedOnTag("ScrollRightButton_Tab"),
+            "ScrollLeftButton_Category": GetIconBasedOnTag("ScrollLeftButton_Category"),
+            "ScrollRightButton_Category": GetIconBasedOnTag(
+                "ScrollRightButton_Category"
+            ),
+            "OptionButton": GetIconBasedOnTag("OptionButton"),
+            "PinButton_open": GetIconBasedOnTag("PinButton_open"),
+            "PinButton_closed": GetIconBasedOnTag("PinButton_closed"),
+            "TitleBarButtons": ReturnTitleBarIcons(),
+        },
+        "FreeCAD.qss": {
+            "Background_Color": BackGroundColor,
+            "Background_Color_Hover": HoverColor,
+            "Border_Color": BorderColor,
+            "ApplicationButton_Background": HoverColor,
+            "FontColor": TextColor,
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
+            "ScrollLeftButton_Tab": "backward_small_default_white.svg",
+            "ScrollRightButton_Tab": "forward_small_default_white.svg",
+            "ScrollLeftButton_Category": "backward_default_white.svg",
+            "ScrollRightButton_Category": "forward_default_white.svg",
+            "OptionButton": "more_default_white.svg",
+            "PinButton_open": "pin-icon-open_white.svg",
+            "PinButton_closed": "pin-icon-default_white.svg",
+            "TitleBarButtons": ReturnTitleBarIcons(),
+        },
+        "FreeCAD Dark.qss": {
+            "Background_Color": StandardFunctions.ColorConvertor(mw.style().standardPalette().window().color().getRgb(), 1, True, False),
+            "Background_Color_Hover": StandardFunctions.ColorConvertor(mw.style().standardPalette().highlight().color().getRgb(), 1, True, False),
+            "Border_Color": StandardFunctions.ColorConvertor(mw.style().standardPalette().text().color().getRgb(), 1, True, False),
+            "ApplicationButton_Background": StandardFunctions.ColorConvertor(mw.style().standardPalette().highlight().color().getRgb(), 1, True, False),
+            "FontColor": "#ffffff",
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
+            "ScrollLeftButton_Tab": "backward_small_default_white.svg",
+            "ScrollRightButton_Tab": "forward_small_default_white.svg",
+            "ScrollLeftButton_Category": "backward_default_white.svg",
+            "ScrollRightButton_Category": "forward_default_white.svg",
+            "OptionButton": "more_default_white.svg",
+            "PinButton_open": "pin-icon-open_white.svg",
+            "PinButton_closed": "pin-icon-default_white.svg",
+            "TitleBarButtons": ReturnTitleBarIcons(),
+        },
+        "FreeCAD Light.qss": {
+            "Background_Color": "#f0f0f0",
+            "Background_Color_Hover": "#48a0f8",
+            "Border_Color": "#646464",
+            "ApplicationButton_Background": "#48a0f8",
+            "FontColor": "#000000",
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
+            "ScrollLeftButton_Tab": "backward_small_default.svg",
+            "ScrollRightButton_Tab": "forward_small_default.svg",
+            "ScrollLeftButton_Category": "backward_default.svg",
+            "ScrollRightButton_Category": "forward_default.svg",
+            "OptionButton": "more_default.svg",
+            "PinButton_open": "pin-icon-open.svg",
+            "PinButton_closed": "pin-icon-default.svg",
+            "TitleBarButtons": ReturnTitleBarIcons(),
+        },
+        "OpenLight.qss": {
+            "Background_Color": "#dee2e6",
+            "Background_Color_Hover": "#a5d8ff",
+            "Border_Color": "#1c7ed6",
+            "ApplicationButton_Background": "#a5d8ff",
+            "FontColor": "#000000",
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
+            "ScrollLeftButton_Tab": "backward_1.svg",
+            "ScrollRightButton_Tab": "forward_1.svg",
+            "ScrollLeftButton_Category": "backward_1.svg",
+            "ScrollRightButton_Category": "forward_1.svg",
+            "OptionButton": "more_1.svg",
+            "PinButton_open": "pin-icon-open_1.svg",
+            "PinButton_closed": "pin-icon-closed_1.svg",
+            "TitleBarButtons": ReturnTitleBarIcons(),
+        },
+        "OpenDark.qss": {
+            "Background_Color": "#212529",
+            "Background_Color_Hover": "#1f364d",
+            "Border_Color": "#264b69",
+            "ApplicationButton_Background": "#1f364d",
+            "FontColor": "#ffffff",
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
+            "ScrollLeftButton_Tab": "backward_small_default_white.svg",
+            "ScrollRightButton_Tab": "forward_small_default_white.svg",
+            "ScrollLeftButton_Category": "backward_default_white.svg",
+            "ScrollRightButton_Category": "forward_default_white.svg",
+            "OptionButton": "more_default_white.svg",
+            "PinButton_open": "pin-icon-open_white.svg",
+            "PinButton_closed": "pin-icon-default_white.svg",
+            "TitleBarButtons": ReturnTitleBarIcons(),
+        },
+        "Behave-dark.qss": {
+            "Background_Color": "#232932",
+            "Background_Color_Hover": "#557bb6",
+            "Border_Color": "#3a7400",
+            "ApplicationButton_Background": "#557bb6",
+            "FontColor": ReturnFontColor(),
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
+            "ScrollLeftButton_Tab": "backward_small_default_white.svg",
+            "ScrollRightButton_Tab": "forward_small_default_white.svg",
+            "ScrollLeftButton_Category": "backward_default_white.svg",
+            "ScrollRightButton_Category": "forward_default_white.svg",
+            "OptionButton": "more_default_white.svg",
+            "PinButton_open": "pin-icon-open_white.svg",
+            "PinButton_closed": "pin-icon-default_white.svg",
+            "TitleBarButtons": ReturnTitleBarIcons(),
+        },
+        "ProDark.qss": {
+            "Background_Color": "#333333",
+            "Background_Color_Hover": "#557bb6",
+            "Border_Color": "#adc5ed",
+            "ApplicationButton_Background": "#557bb6",
+            "FontColor": ReturnFontColor(),
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
+            "ScrollLeftButton_Tab": "backward_small_default_white.svg",
+            "ScrollRightButton_Tab": "forward_small_default_white.svg",
+            "ScrollLeftButton_Category": "backward_default_white.svg",
+            "ScrollRightButton_Category": "forward_default_white.svg",
+            "OptionButton": "more_default_white.svg",
+            "PinButton_open": "pin-icon-open_white.svg",
+            "PinButton_closed": "pin-icon-default_white.svg",
+            "TitleBarButtons": ReturnTitleBarIcons(),
+        },
+        "Darker.qss": {
+            "Background_Color": "#444444",
+            "Background_Color_Hover": "#4aa5ff",
+            "Border_Color": "#696968",
+            "ApplicationButton_Background": "#4aa5ff",
+            "FontColor": ReturnFontColor(),
+            "ScrollLeftButton_Tab": "backward_small_default_white.svg",
+            "ScrollRightButton_Tab": "forward_small_default_white.svg",
+            "ScrollLeftButton_Category": "backward_default_white.svg",
+            "ScrollRightButton_Category": "forward_default_white.svg",
+            "OptionButton": "more_default_white.svg",
+            "PinButton_open": "pin-icon-open_white.svg",
+            "PinButton_closed": "pin-icon-default_white.svg",
+            "TitleBarButtons": ReturnTitleBarIcons(),
+        },
+        "Light-modern.qss": {
+            "Background_Color": "#f0f0f0",
+            "Background_Color_Hover": "#4aa5ff",
+            "Border_Color": "#646464",
+            "ApplicationButton_Background": "#4aa5ff",
+            "FontColor": ReturnFontColor(),
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
+            "ScrollLeftButton_Tab": "backward_small_default.svg",
+            "ScrollRightButton_Tab": "forward_small_default.svg",
+            "ScrollLeftButton_Category": "backward_default.svg",
+            "ScrollRightButton_Category": "forward_default.svg",
+            "OptionButton": "more_default.svg",
+            "PinButton_open": "pin-icon-open.svg",
+            "PinButton_closed": "pin-icon-default.svg",
+        },
+        "Dark-modern.qss": {
+            "Background_Color": "#2b2b2b",
+            "Background_Color_Hover": "#4aa5ff",
+            "Border_Color": "#ffffff",
+            "ApplicationButton_Background": "#4aa5ff",
+            "FontColor": ReturnFontColor(),
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
+            "ScrollLeftButton_Tab": "backward_small_default_white.svg",
+            "ScrollRightButton_Tab": "forward_small_default_white.svg",
+            "ScrollLeftButton_Category": "backward_default_white.svg",
+            "ScrollRightButton_Category": "forward_default_white.svg",
+            "OptionButton": "more_default_white.svg",
+            "PinButton_open": "pin-icon-open_white.svg",
+            "PinButton_closed": "pin-icon-default_white.svg",
+            "TitleBarButtons": ReturnTitleBarIcons(),
+        },
+        "Dark-contrast.qss": {
+            "Background_Color": "#444444",
+            "Background_Color_Hover": "#4aa5ff",
+            "Border_Color": "#787878",
+            "ApplicationButton_Background": "#4aa5ff",
+            "FontColor": ReturnFontColor(),
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
+            "ScrollLeftButton_Tab": "backward_small_default_white.svg",
+            "ScrollRightButton_Tab": "forward_small_default_white.svg",
+            "ScrollLeftButton_Category": "backward_default_white.svg",
+            "ScrollRightButton_Category": "forward_default_white.svg",
+            "OptionButton": "more_default_white.svg",
+            "PinButton_open": "pin-icon-open_white.svg",
+            "PinButton_closed": "pin-icon-default_white.svg",
+            "TitleBarButtons": ReturnTitleBarIcons(),
+        },
     }
 }
