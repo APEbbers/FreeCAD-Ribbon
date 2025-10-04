@@ -341,6 +341,9 @@ class CustomControls(RibbonToolButton):
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                         "Background_Color_Hover"
                     )
+
+                StyleSheet_Addition_Arrow= ""
+                StyleSheet_Addition_Label= ""
                 if showText is False:
                     StyleSheet_Addition_Arrow = (
                         "QToolButton, QLabel {background-color: "
@@ -483,6 +486,12 @@ class CustomControls(RibbonToolButton):
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                         "Background_Color_Hover"
                     )
+                    
+                if btn.isEnabled() is False:
+                    return
+                          
+                StyleSheet_Addition_Command = ""
+                StyleSheet_Addition_Label = ""               
                 if showText is False:
                     StyleSheet_Addition_Label = (
                         "QToolButton, QLabel {background-color: "
@@ -603,58 +612,8 @@ class CustomControls(RibbonToolButton):
         StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(
             control="toolbutton", radius="2px"
         )
-        # StyleSheet_Addition_Label = (
-        #     "QToolButton, QLabel {background-color: "
-        #     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border: 0.5px solid"
-        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border-top: 0px solid"
-        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border-radius: 2px"
-        #     + ";margin: 0px"
-        #     + ";spacing: 0px"
-        #     + ";}"
-        # )
-        # StyleSheet_Addition_Command = (
-        #     "QToolButton, QLabel {background-color: "
-        #     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border: 0.5px solid"
-        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border-bottom: 0px solid"
-        #     # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     # + ";border-radius: 2px"
-        #     + ";margin: 0px"
-        #     + ";spacing: 0px"
-        #     + ";}"
-        # )
-        # StyleSheet_Addition_Button = (
-        #     "QToolButton, QLabel {background-color: "
-        #     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #     + ";border: none"
-        #     + ";}"
-        # )
-        StyleSheet_Addition_Arrow = (
-            "QToolButton, QLabel {background-color: "
-            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            # + ";border: 0.5px solid"
-            # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            # + ";border-top: 0px solid"
-            # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            # + ";border-radius: 2px"
-            + ";margin: 0px"
-            + ";spacing: 0px"
-            + ";}"
-            + """QToolButton::menu-indicator {
-                    subcontrol-origin: padding;
-                    subcontrol-position: center top;
-                }"""
-        )
-        # CommandButton.setStyleSheet(StyleSheet_Addition_Command + StyleSheet)
-        ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow + StyleSheet)
-        # Label_Text.setStyleSheet(StyleSheet_Addition_Label + StyleSheet)
-        # btn.setStyleSheet(StyleSheet_Addition_Button + StyleSheet)
         CommandButton.setStyleSheet(StyleSheet)
-        # ArrowButton.setStyleSheet(StyleSheet)
+        ArrowButton.setStyleSheet(StyleSheet)
         Label_Text.setStyleSheet(StyleSheet)
         btn.setStyleSheet(StyleSheet)
 
@@ -1035,10 +994,10 @@ class CustomControls(RibbonToolButton):
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                         "Background_Color_Hover"
                     )
-                if showText is False:
-                    StyleSheet_Addition_Command= ""
-                    StyleSheet_Addition_Label= ""
-                    
+                
+                StyleSheet_Addition_Command= ""
+                StyleSheet_Addition_Label= ""
+                if showText is False:                    
                     StyleSheet_Addition_Label = (
                         "QToolButton, QLabel, RibbonToolButton {background-color: "
                         + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
