@@ -182,6 +182,13 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
     # Get the current stylesheet for FreeCAD
     FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
     currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
+    if currentStyleSheet == "FreeCAD.qss":
+        Theme = FreeCAD_preferences.GetString("Theme")
+        if str("FreeCAD Light").lower() in Theme.lower():
+            currentStyleSheet = "FreeCAD Light.qss"
+        if str("FreeCAD Dark").lower() in Theme.lower():
+            currentStyleSheet = "FreeCAD Dark.qss"
+    
     IsInList = False
     for key, value in StyleMapping_default["Stylesheets"].items():
         if key == currentStyleSheet:
@@ -457,8 +464,6 @@ def ReturnTitleBarIcons():
         Icons.append(Icon)
     return Icons
 
-print(StandardFunctions.LightOrDark(mw.style().proxy().standardPalette().window().color().toTuple()))
-
 # Used when custom colors are enabled
 StyleMapping = {
     "Stylesheets": {
@@ -479,8 +484,6 @@ StyleMapping = {
         "TitleBarButtons": ReturnTitleBarIcons(),
     }
 }
-
-print(str(GetColorSetting("BackgroundColor")))
 
 StyleMapping_default = {
     "Stylesheets": {
@@ -724,3 +727,4 @@ StyleMapping_default = {
         },
     }
 }
+
