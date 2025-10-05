@@ -37,6 +37,10 @@ from PySide.QtWidgets import (
     QToolButton,
     QStyle,
 )
+import logging
+
+# Set the logger levels to avoid extra output in the report panel
+logging.getLogger("urllib3").setLevel(logging.INFO)
 
 
 def QT_TRANSLATE_NOOP(context, text):

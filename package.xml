@@ -19,7 +19,7 @@
 
   <url branch="main" type="repository">https://codeberg.org/apebbers/FreeCAD-Ribbon</url>
 
-  <url type="readme">https://codeberg.org/apebbers/FreeCAD-Ribbon/blob/main/README.md</url>
+  <url type="readme">https://codeberg.org/apebbers/FreeCAD-Ribbon/main/README.md</url>
 
   <content>
     <workbench>

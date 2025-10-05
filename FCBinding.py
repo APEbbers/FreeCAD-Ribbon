@@ -997,7 +997,7 @@ class ModernMenu(RibbonBar):
                     RibbonButtonAction_Style.addItem("Large")
                     RibbonButtonAction_Style.addItem("")
                     RibbonButtonAction_Style.setCurrentText("")
-                    RibbonButtonAction_Style.currentTextChanged.connect(lambda: self.on_ButtonStyle_Clicked(contextMenu, panel, widget, RibbonButtonAction_Style, RibbonButtonAction_Size))                      
+                    RibbonButtonAction_Style.currentTextChanged.connect(lambda: self.on_ButtonStyle_Clicked(panel, widget, RibbonButtonAction_Style, RibbonButtonAction_Size))                      
                     contextMenu.addAction(RibbonButtonAction_Style)
                                                      
                     # create the context menu action
