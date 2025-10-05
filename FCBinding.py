@@ -2110,8 +2110,17 @@ class ModernMenu(RibbonBar):
                 """QTabBar::tab {background: """
                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
                 + """;color: """
-                # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
-                + "none"
+                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
+                + """;min-width: """
+                + str(self.TabBar_Size-3)
+                + """px;
+                            max-width: """
+                + str(self.TabBar_Size-3)
+                + """px;
+                            padding-left: 6px;
+                            padding-right: 6px;
+                            margin: 3px
+                        }"""
                 + """;}"""
                 + """QTabBar::tab:selected, QTabBar::tab:hover {
                 background: """
