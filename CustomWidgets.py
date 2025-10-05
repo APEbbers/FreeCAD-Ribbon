@@ -648,7 +648,7 @@ class CustomControls(RibbonToolButton):
         # if TextWidth > 0 and TextWidth > CommandButtonHeight + Space:
         #     width = TextWidth + Space
         Label_Text.setFixedWidth(width)
-        if len(Menu.actions()) <= 1:
+        if Menu is not None and len(Menu.actions()) <= 1:
             Label_Text.setFixedHeight(Label_Text.height()+ MenuButtonSpace)
         ArrowButton.setFixedWidth(width)
         # CommandButton.setFixedSize(QSize(width, CommandButtonHeight))
