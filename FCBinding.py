@@ -2110,7 +2110,8 @@ class ModernMenu(RibbonBar):
                 """QTabBar::tab {background: """
                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
                 + """;color: """
-                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
+                # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
+                + "none"
                 + """;}"""
                 + """QTabBar::tab:selected, QTabBar::tab:hover {
                 background: """

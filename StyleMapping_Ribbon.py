@@ -19,7 +19,7 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
-from turtle import color
+import matplotlib.colors
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
@@ -39,13 +39,8 @@ from PySide.QtWidgets import (
 )
 from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread
 import sys
-import json
-from datetime import datetime
-import shutil
 import Standard_Functions_Ribbon as StandardFunctions
 import Parameters_Ribbon
-import webbrowser
-import time
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -59,18 +54,18 @@ sys.path.append(pathBackup)
 
 mw: QMainWindow = Gui.getMainWindow()
 
-preferences = App.ParamGet("User parameter:BaseApp/Preferences/Themes/UserTokens")
-BackGroundColor = preferences.GetString(preferences.GetString("GeneralBackgroundColor"))
-HoverColor = preferences.GetString(preferences.GetString("GeneralBackgroundHoverColor"))
-BorderColor = preferences.GetString(preferences.GetString("GeneralBorderColor"))
-BorderColorHover = preferences.GetString(preferences.GetString("GeneralBorderHoverColor"))
-TextColor = preferences.GetString(preferences.GetString("TextForegroundColor"))
-# BackGroundColor = "@GeneralBackgroundColor"
-# HoverColor = "@AccentColor"
-# BorderColor = "@GeneralBorderColor"
-# BorderColorHover = "@AccentColor"
-# TextColor = "@TextForegroundColor"
-
+preferences = App.ParamGet('User parameter:BaseApp/Preferences/Themes/UserTokens/')
+BackGroundColor = preferences.GetString('GeneralBackgroundColor')
+HoverColor = preferences.GetString('GeneralBackgroundHoverColor')
+BorderColor = preferences.GetString('GeneralBorderColor')
+BorderColorHover = preferences.GetString('GeneralBorderHoverColor')
+TextColor = preferences.GetString('TextForegroundColor')
+# BackGroundColor = '@GeneralBackgroundColor'
+# HoverColor = '@AccentColor'
+# BorderColor = '@GeneralBorderColor'
+# BorderColorHover = '@AccentColor'
+# TextColor = '@TextForegroundColor'
+color = matplotlib.colors.to_rgba(TextColor)
 
 def GetColorSetting(settingName: str) -> object:
         # Create a tuple from the int value of the color
@@ -182,12 +177,14 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
     # Get the current stylesheet for FreeCAD
     FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
     currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
-    if currentStyleSheet == "FreeCAD.qss":
-        Theme = FreeCAD_preferences.GetString("Theme")
-        if str("FreeCAD Light").lower() in Theme.lower():
-            currentStyleSheet = "FreeCAD Light.qss"
-        if str("FreeCAD Dark").lower() in Theme.lower():
-            currentStyleSheet = "FreeCAD Dark.qss"
+    # if currentStyleSheet == "FreeCAD.qss":
+    #     Theme = FreeCAD_preferences.GetString("Theme")
+    #     if str("FreeCAD Light").lower() in Theme.lower():
+    #         currentStyleSheet = "FreeCAD Light.qss"
+    #     if str("FreeCAD Dark").lower() in Theme.lower():
+    #         currentStyleSheet = "FreeCAD Dark.qss"
+    
+    currentStyleSheet = "FreeCAD.qss"
     
     IsInList = False
     for key, value in StyleMapping_default["Stylesheets"].items():
@@ -346,6 +343,11 @@ def ReturnStyleSheet(
                     + """;border: 0.5px solid"""
                     + BorderColor
                     + """;}"""
+                    + "QToolButton:disabled, QLabel:disabled {background-color: "
+                        + ReturnStyleItem("Background_Color")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        + ";}"
                 )
                 return StyleSheet
             if control.lower() == "applicationbutton":
@@ -464,6 +466,36 @@ def ReturnTitleBarIcons():
         Icons.append(Icon)
     return Icons
 
+def ReturnIcons_ThemeEditor():
+    lightIcons = {
+        "ScrollLeftButton_Tab": "backward_small_default.svg",
+        "ScrollRightButton_Tab": "forward_small_default.svg",
+        "ScrollLeftButton_Category": "backward_default.svg",
+        "ScrollRightButton_Category": "forward_default.svg",
+        "OptionButton": "more_default.svg",
+        "PinButton_open": "pin-icon-open.svg",
+        "PinButton_closed": "pin-icon-default.svg",
+        "TitleBarButtons": ["maximize_default.svg", "restore_default.svg", "minimize_default.svg"]
+    }
+    
+    darkIcons = {
+        "ScrollLeftButton_Tab": "backward_small_default_white.svg",
+        "ScrollRightButton_Tab": "forward_small_default_white.svg",
+        "ScrollLeftButton_Category": "backward_default_white.svg",
+        "ScrollRightButton_Category": "forward_default_white.svg",
+        "OptionButton": "more_default_white.svg",
+        "PinButton_open": "pin-icon-open_white.svg",
+        "PinButton_closed": "pin-icon-default_white.svg",
+        "TitleBarButtons": ["maximize_default_white.svg", "restore_default_white.svg", "minimize_default_white.svg"]
+    }
+    color = GetColorSetting('TextForegroundColor')
+    print(color)
+    print(StandardFunctions.LightOrDark(color))
+    if StandardFunctions.LightOrDark(color) == "dark":
+        return lightIcons
+    else:
+        return darkIcons
+
 # Used when custom colors are enabled
 StyleMapping = {
     "Stylesheets": {
@@ -542,21 +574,21 @@ StyleMapping_default = {
             "TitleBarButtons": ReturnTitleBarIcons(),
         },
         "FreeCAD.qss": {
-            "Background_Color": BackGroundColor,
-            "Background_Color_Hover": HoverColor,
-            "Border_Color": BorderColor,
-            "ApplicationButton_Background": HoverColor,
-            "FontColor": TextColor,
+            "Background_Color": "none",
+            "Background_Color_Hover": "",
+            "Border_Color": "",
+            "ApplicationButton_Background": "",
+            "FontColor": "",
             "UpdateColor": ReturnUpdateColor(),
             "DevelopColor": ReturnDevelopColor(),
-            "ScrollLeftButton_Tab": "backward_small_default_white.svg",
-            "ScrollRightButton_Tab": "forward_small_default_white.svg",
-            "ScrollLeftButton_Category": "backward_default_white.svg",
-            "ScrollRightButton_Category": "forward_default_white.svg",
-            "OptionButton": "more_default_white.svg",
-            "PinButton_open": "pin-icon-open_white.svg",
-            "PinButton_closed": "pin-icon-default_white.svg",
-            "TitleBarButtons": ReturnTitleBarIcons(),
+            "ScrollLeftButton_Tab": ReturnIcons_ThemeEditor()["ScrollLeftButton_Tab"],
+            "ScrollRightButton_Tab": ReturnIcons_ThemeEditor()["ScrollRightButton_Tab"],
+            "ScrollLeftButton_Category": ReturnIcons_ThemeEditor()["ScrollLeftButton_Category"],
+            "ScrollRightButton_Category": ReturnIcons_ThemeEditor()["ScrollRightButton_Category"],
+            "OptionButton": ReturnIcons_ThemeEditor()["OptionButton"],
+            "PinButton_open":  ReturnIcons_ThemeEditor()["PinButton_open"],
+            "PinButton_closed": ReturnIcons_ThemeEditor()["PinButton_closed"],
+            "TitleBarButtons": ReturnIcons_ThemeEditor()["TitleBarButtons"],
         },
         "FreeCAD Dark.qss": {
             "Background_Color": "#333333",

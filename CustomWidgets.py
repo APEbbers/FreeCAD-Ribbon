@@ -44,7 +44,7 @@ from PySide.QtGui import (
     QPen,
     QPainter,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QComboBox,
     QSizePolicy,
     QSpinBox,
@@ -334,6 +334,9 @@ class CustomControls(RibbonToolButton):
 
             # Change the background color for commandbutton and label on hovering (CSS)
             def enterEventCustom(event):
+                # if CommandButton.isEnabled() is False:
+                #     return
+                
                 BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
                 if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                     BorderColor = Parameters_Ribbon.COLOR_BORDERS
@@ -478,7 +481,7 @@ class CustomControls(RibbonToolButton):
             )
 
             # Change the background color for commandbutton and label on hovering (CSS)
-            def enterEventCustom(event):
+            def enterEventCustom(event):                
                 BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
                 if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                     BorderColor = Parameters_Ribbon.COLOR_BORDERS
@@ -487,9 +490,6 @@ class CustomControls(RibbonToolButton):
                         "Background_Color_Hover"
                     )
                     
-                if btn.isEnabled() is False:
-                    return
-                          
                 StyleSheet_Addition_Command = ""
                 StyleSheet_Addition_Label = ""               
                 if showText is False:
@@ -504,6 +504,11 @@ class CustomControls(RibbonToolButton):
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
                         + ";spacing: 0px"
+                        + ";}"
+                        + "QToolButton:disabled, QLabel:disabled {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                        + ";border: 0.5px solid"
+                        + BorderColor
                         + ";}"
                     )
                     StyleSheet_Addition_Command = (
@@ -531,6 +536,11 @@ class CustomControls(RibbonToolButton):
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
                         + ";spacing: 0px"
+                        + ";}"
+                        + "QToolButton:disabled, QLabel:disabled {background-color: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                        + ";border: 0.5px solid"
+                        + BorderColor
                         + ";}"
                     )
                     StyleSheet_Addition_Command = (
@@ -612,8 +622,20 @@ class CustomControls(RibbonToolButton):
         StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(
             control="toolbutton", radius="2px"
         )
+        StyleSheet_Addition_Arrow = (
+            "QToolButton, QLabel {background-color: "
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+            + ";margin: 0px"
+            + ";spacing: 0px"
+            + ";}"
+            + """QToolButton::menu-indicator {
+                    subcontrol-origin: padding;
+                    subcontrol-position: center top;
+                }"""
+        )
+        # CommandButton.setStyleSheet(StyleSheet_Addition_Command + StyleSheet)
+        ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow + StyleSheet)
         CommandButton.setStyleSheet(StyleSheet)
-        ArrowButton.setStyleSheet(StyleSheet)
         Label_Text.setStyleSheet(StyleSheet)
         btn.setStyleSheet(StyleSheet)
 
@@ -852,6 +874,9 @@ class CustomControls(RibbonToolButton):
 
             # Change the background color for commandbutton and label on hovering (CSS)
             def enterEventCustom(event):
+                # if CommandButton.isEnabled() is False:
+                #     return
+                
                 BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
                 if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                     BorderColor = Parameters_Ribbon.COLOR_BORDERS
@@ -987,6 +1012,9 @@ class CustomControls(RibbonToolButton):
 
             # Change the background color for commandbutton and label on hovering (CSS)
             def enterEventCustom(event):
+                # if CommandButton.isEnabled() is False:
+                #     return
+                
                 BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
                 if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
                     BorderColor = Parameters_Ribbon.COLOR_BORDERS
