@@ -978,7 +978,7 @@ class ModernMenu(RibbonBar):
                             textVisible = child.isVisible()
                     # Set the checkbox action checked or unchecked
                     RibbonButonAction_Text.setChecked(textVisible)
-                    RibbonButonAction_Text.checkStateChanged.connect(lambda: self.on_TextState_Changed(widget, RibbonButonAction_Text))
+                    RibbonButonAction_Text.checkStateChanged.connect(lambda: self.on_TextState_Changed(contextMenu, panel, widget, RibbonButonAction_Text))
                     # Add the checkbox action to the contextmenu
                     contextMenu.addAction(RibbonButonAction_Text)
                     
@@ -986,13 +986,8 @@ class ModernMenu(RibbonBar):
                     RibbonButtonAction_Size = SpinBoxAction(self, "Set size")
                     RibbonButtonAction_Size.setMinimum(16)
                     RibbonButtonAction_Size.setMaximum(120)                        
-                    for child in widget.children():
-                        if (
-                                type(child) == QToolButton
-                                and child.objectName() == "CommandButton"
-                            ):
-                                RibbonButtonAction_Size.setValue(child.width())
-                    RibbonButtonAction_Size.valueChanged.connect(lambda: self.on_ButtonSize_Changed(widget, RibbonButtonAction_Size))
+                    RibbonButtonAction_Size.setValue(widget.height())
+                    RibbonButtonAction_Size.valueChanged.connect(lambda: self.on_ButtonSize_Changed(contextMenu, panel, widget, RibbonButtonAction_Size))
                     contextMenu.addAction(RibbonButtonAction_Size)
                     
                     # Set the dropdown for the button style
@@ -1002,12 +997,12 @@ class ModernMenu(RibbonBar):
                     RibbonButtonAction_Style.addItem("Large")
                     RibbonButtonAction_Style.addItem("")
                     RibbonButtonAction_Style.setCurrentText("")
-                    RibbonButtonAction_Style.currentTextChanged.connect(lambda: self.on_ButtonStyle_Clicked(panel, widget, RibbonButtonAction_Style, RibbonButtonAction_Size))                      
+                    RibbonButtonAction_Style.currentTextChanged.connect(lambda: self.on_ButtonStyle_Clicked(contextMenu, panel, widget, RibbonButtonAction_Style, RibbonButtonAction_Size))                      
                     contextMenu.addAction(RibbonButtonAction_Style)
-                                                                    
+                                                     
                     # create the context menu action
                     contextMenu.exec_(self.mapToGlobal(event.pos()))
-                    
+
                     # Disconnect the widgetActions
                     RibbonButtonAction_Style.currentTextChanged.disconnect()
                     RibbonButonAction_Text.checkStateChanged.disconnect()
@@ -1041,54 +1036,6 @@ class ModernMenu(RibbonBar):
                         return
 
         return
-    
-    # def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                         
-    #     # Define a list to store widgets before removing them from the panel
-    #     layout: QGridLayout = panel._actionsLayout
-    #     newControl = RibbonToolButton()
-        
-    #     textVisible = False
-    #     for child in ButtonWidget.children():
-    #         if type(child) == QLabel:
-    #             textVisible = child.isVisible()
-        
-    #     if ButtonStyleWidget.currentText() == "Small":
-    #         alignment = Qt.AlignmentFlag.AlignTop
-    #         height = Parameters_Ribbon.ICON_SIZE_SMALL
-    #         CommandWidget = ButtonWidget
-    #         newControl = self.returnDropWidgets(CommandWidget, panel, showText=False,)
-    #         # newControl.setFixedHeight(height)
-    #         panel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("SmallWidget")
-    #     if ButtonStyleWidget.currentText() == "Medium":
-    #         alignment = Qt.AlignmentFlag.AlignTop
-    #         height = Parameters_Ribbon.ICON_SIZE_MEDIUM
-    #         CommandWidget = ButtonWidget
-    #         newControl = self.returnDropWidgets(CommandWidget, panel, "Medium", showText=False,)           
-    #         # newControl.setFixedHeight(height)
-    #         panel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("MediumWidget")
-    #     if ButtonStyleWidget.currentText() == "Large":
-    #         alignment = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter
-    #         height = Parameters_Ribbon.ICON_SIZE_LARGE
-    #         CommandWidget = ButtonWidget
-    #         newControl = self.returnDropWidgets(CommandWidget, panel, "Large", showText=False,)
-    #         newControl.setFixedSize(QSize(height, height))
-    #         panel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("LargeWidget")
-            
-    #         for child in ButtonWidget.children():
-    #             if type(child) == QLabel:
-    #                 # show the text
-    #                 if textVisible is True:
-    #                     child.show()
-    #                 else:
-    #                     child.hide()
-    #                     child.setMinimumWidth(0)
-                          
-    #     panel.removeWidget(ButtonWidget)
-    #     panel.removeWidget(ButtonWidget.parent())
-    #     ButtonWidget.close()
-
-    #     layout.update()
-    #     return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                         
         # layout: QGridLayout = panel._actionsLayout
@@ -1176,77 +1123,135 @@ class ModernMenu(RibbonBar):
         layout.update()
         return
     
-    def on_ButtonSize_Changed(self, ButtonWidget, ButtonSizeWidget: SpinBoxAction):
-        baseWidth: int = ButtonSizeWidget.value()
+    def on_ButtonSize_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget, ButtonSizeWidget: SpinBoxAction):
+        # Get the menubutton height for large buttons
+        menuButtonWidth = 0
+        if ButtonWidget.objectName() != "LargeWidget":
+            try:
+                menuButtonWidth = ButtonWidget.findChild(QToolButton, "MenuButton").width()
+            except Exception:
+                pass
+        
+        # Get the label height for small and medium buttons
+        labelWidth = 0
         for child in ButtonWidget.children():
-            if (
-                type(child) == QToolButton
-                and child.objectName() == "CommandButton"
-            ):
-                if child.width() == baseWidth:
-                    return 
-                if ButtonWidget.menu() is not None:
-                    baseWidth = baseWidth + 16
-        size = QSize(baseWidth, ButtonSizeWidget.value())
-        ButtonWidget.setFixedSize(size)
-        ButtonWidget.layout().setAlignment(Qt.AlignmentFlag.AlignLeft)
+            if type(child) == QLabel:
+                if child.isVisible() is True:
+                    labelWidth = child.maximumWidth()
+ 
+        # Adjust the icon to the new heights
+        delta = ButtonSizeWidget.value() - ButtonWidget.height()
+        for child in ButtonWidget.children():
+            if type(child) == QToolButton and child.objectName() == "CommandButton":
+                height = child.height() + delta
+                width = height
+                if ButtonWidget.objectName() == "LargeWidget":
+                    width = ButtonSizeWidget.value() + 6
+                    if labelWidth > width:
+                        width = labelWidth
+                        labelWidth = 0
+                child.setFixedSize(QSize(width, height))
+                child.setIconSize(QSize(width, height))                
+        ButtonWidget.setFixedHeight(ButtonSizeWidget.value())
+        if ButtonWidget.objectName() != "LargeWidget":
+            ButtonWidget.setFixedWidth(ButtonSizeWidget.value() + labelWidth + menuButtonWidth)
+        if ButtonWidget.objectName() == "LargeWidget":
+            ButtonWidget.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+
+        # write the changes to the ribbonstruture file 
+        property = {"ButtonSize_small": ButtonSizeWidget.value()}
+        if ButtonWidget.objectName() == "MediumWidget":
+            property = {"ButtonSize_medium": ButtonSizeWidget.value()}
+        if ButtonWidget.objectName() == "LargeWidget":
+            property = {"ButtonSize_large": ButtonSizeWidget.value()}
+        self.WriteButtonSettings(ButtonWidget, panel, property)
         return
     
-    def on_TextState_Changed(self, ButtonWidget, TextStateWidget: CheckBoxAction):
+    def on_TextState_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget, TextStateWidget: CheckBoxAction):
+        # Get the menubutton height for large buttons
+        menuButtonWidth = 0
+        if ButtonWidget.objectName() != "LargeWidget":
+            try:
+                menuButtonWidth = ButtonWidget.findChild(QToolButton, "MenuButton").width()
+            except Exception:
+                pass
+        
         # Check if the widget has text enabled
         textVisible = False
         for child in ButtonWidget.children():
             if type(child) == QLabel:
                 textVisible = child.isVisible()
-        # If the widget has not text, and show it with the correct width
-        if textVisible is False and TextStateWidget.isChecked() is True:
-            baseWidth: int = Parameters_Ribbon.ICON_SIZE_SMALL
-            if ButtonWidget.objectName() == "CustomWidget_Medium":
-                baseWidth: int = Parameters_Ribbon.ICON_SIZE_MEDIUM
-            if ButtonWidget.objectName() == "CustomWidget_Large":
-                baseWidth: int = Parameters_Ribbon.ICON_SIZE_LARGE
+                
+        # Determine the button size
+        baseWidth: int = Parameters_Ribbon.ICON_SIZE_SMALL
+        for child in ButtonWidget.children():
+            if type(child) == QToolButton and child.objectName() == "CommandButton":
+                baseWidth = child.width()
+        
+        # Get the label height for small and medium buttons
+        labelWidth = 0
+        for child in ButtonWidget.children():
+            if type(child) == QLabel:
+                # if child.isVisible() is True:
+                #     labelWidth = child.maximumWidth()
+                if ButtonWidget.objectName() == "SmallWidget":
+                    labelWidth = self.ReturnTextWidth(Label_Text=child, Width=baseWidth, Menu=ButtonWidget.menu(), setWordWrap=False)
+                if ButtonWidget.objectName() == "MediumWidget":
+                    labelWidth = self.ReturnTextWidth(Label_Text=child, Width=baseWidth, Menu=ButtonWidget.menu(), setWordWrap=Parameters_Ribbon.WRAPTEXT_MEDIUM)
+                if ButtonWidget.objectName() == "LargeWidget":
+                    labelWidth = self.ReturnTextWidth(Label_Text=child, Width=baseWidth, Menu=ButtonWidget.menu(), setWordWrap=Parameters_Ribbon.WRAPTEXT_LARGE, TextAlignment=Qt.AlignmentFlag.AlignCenter)
+                
+        # If the widget has not text, show it with the correct width
+        if textVisible is False and TextStateWidget.isChecked() is True:            
+            # Go through the children of the button.   
             for child in ButtonWidget.children():
+                # If you find the QLabel, show it and update the baseWidth             
                 if type(child) == QLabel:
                     # show the text
-                    child.show()
+                    child.show()                                        
+                    print(labelWidth)
                     # Because medium and small widgets have text on the right side,
                     # change the widht of the button
-                    if ButtonWidget.objectName() != "CustomWidget_Large":
+                    if ButtonWidget.objectName() != "LargeWidget":
                         ButtonWidget.setFixedWidth(
-                            baseWidth + child.maximumWidth()
+                            baseWidth + labelWidth + menuButtonWidth
                         )
-                if ButtonWidget.objectName() == "CustomWidget_Large":
-                    height = Parameters_Ribbon.ICON_SIZE_LARGE
-                    ButtonWidget.setFixedSize(
-                        QSize(height, height)
-                    )
+                    if ButtonWidget.objectName() == "LargeWidget":
+                        if labelWidth > baseWidth:
+                            ButtonWidget.setFixedWidth(labelWidth)
+                        else:
+                            ButtonWidget.setFixedWidth(baseWidth)
+                        # ButtonWidget.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)   
+                        
+                # If the child is a QToolButton, set the width of the child and the button to the basewidth
+                if type(child) == QToolButton and child.objectName() == "CommandButton":
+                    child.setFixedWidth(baseWidth)
+                    if ButtonWidget.objectName() == "LargeWidget":
+                        if labelWidth > baseWidth:
+                            child.setFixedWidth(labelWidth)
+                        else:
+                            child.setFixedWidth(baseWidth)
+                    child.setIconSize(QSize(baseWidth, baseWidth))
+                #     ButtonWidget.setFixedWidth(baseWidth)
+            self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()})
+            contextMenu.close()
             return
         # if the widget has text, find its QTextEdit and hide it. Update the width
         if textVisible is True  and TextStateWidget.isChecked() is False:
-            baseWidth: int = Parameters_Ribbon.ICON_SIZE_SMALL
-            if ButtonWidget.objectName() == "CustomWidget_Medium":
-                baseWidth: int = Parameters_Ribbon.ICON_SIZE_MEDIUM
-            if ButtonWidget.objectName() == "CustomWidget_Large":
-                baseWidth: int = Parameters_Ribbon.ICON_SIZE_LARGE
+            # Go through the children of the button.  
             for child in ButtonWidget.children():
-                if (
-                    type(child) == QToolButton
-                    and child.objectName() == "CommandButton"
-                ):
-                    baseWidth = child.width()
-                    if ButtonWidget.menu() is not None:
-                        baseWidth = baseWidth + 16
+                # If you find the QLabel, hide it and change its widht.
                 if type(child) == QLabel:
+                    # Set the width to zero to ensure that the button is not too wide
+                    child.setFixedWidth(0)
                     # hide the text
                     child.hide()
-                    # Because medium and small widgets have text on the right side,
-                    # change the widht of the button
-                    if ButtonWidget.objectName() != "CustomWidget_Large":
-                        ButtonWidget.setFixedWidth(baseWidth)
-                    if ButtonWidget.objectName() == "CustomWidget_Large":
-                        ButtonWidget.setFixedWidth(
-                            Parameters_Ribbon.ICON_SIZE_LARGE
-                        )
+                # If the child is a QToolButton, set the width of the child and the button to its height 
+                if type(child) == QToolButton and child.objectName() == "CommandButton":
+                    child.setFixedWidth(child.height())
+                    ButtonWidget.setFixedWidth(child.height())                 
+            self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()})
+            contextMenu.close()   
             return
     # endregion
 
@@ -1493,6 +1498,58 @@ class ModernMenu(RibbonBar):
 
         # Return then coordinates as grid positions
         return [xPos, yPos, w_origin.size(), widget.size()]
+    
+    # def UpdateRibbonStructure(self, WorkBenchName, panel: RibbonPanel, widget, text = "", size = "", ):
+    #     gridLayout: QGridLayout = panel._actionsLayout
+        
+    #     # Get the order of the widgets
+    #     orderList = []
+    #     for k in range(gridLayout.count()):
+    #         try:
+    #             Control = gridLayout.itemAt(k).widget().children()[1]
+    #             if type(Control) is RibbonToolButton:
+    #                 for child in Control.children():
+    #                     if (
+    #                         type(child) == QToolButton
+    #                         and child.objectName() == "CommandButton"
+    #                     ):
+    #                         orderList.append(child.defaultAction().data())
+    #         except Exception:
+    #             pass
+            
+    #     # Update the order in the ribbon structure
+    #     StandardFunctions.add_keys_nested_dict(
+    #         self.ribbonStructure,
+    #         [
+    #             "workbenches",
+    #             WorkBenchName,
+    #             "toolbars",
+    #             panel.objectName(),
+    #             "order",
+    #         ],
+    #     )
+    #     self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][
+    #         panel.objectName()
+    #     ]["order"] = orderList
+        
+    #     # Update the command properties
+    #     for widget in panel.widgets():
+    #         action = None
+    #         WidgetType = widget.objectName()
+    #         size = "small"
+    #         if WidgetType == "MediumWidget":
+    #             size = "medium"
+    #         if WidgetType == "LargeWidget":
+    #             size = "large"
+            
+        
+    #     # Writing to ribbonStructure.json
+    #     JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+    #     with open(JsonFile, "w") as outfile:
+    #         json.dump(self.ribbonStructure, outfile, indent=4)
+    #     outfile.close()
+        
+    #     return
 
     # endregion
 
@@ -3241,6 +3298,11 @@ class ModernMenu(RibbonBar):
                                     or Parameters_Ribbon.USE_FC_OVERLAY is True
                                 ):
                                     showText = False
+                                try:
+                                    if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
+                                        showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][CommandName]["textEnabled"]
+                                except Exception:
+                                    pass
 
                                 # Create a custom toolbutton
                                 ButtonSize = QSize(
@@ -3251,6 +3313,14 @@ class ModernMenu(RibbonBar):
                                     Parameters_Ribbon.ICON_SIZE_SMALL,
                                     Parameters_Ribbon.ICON_SIZE_SMALL,
                                 )
+                                if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
+                                    try:
+                                        size = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][CommandName]["ButtonSize_large"]
+                                        IconSize = QSize(size, size)
+                                        ButtonSize = IconSize
+                                    except Exception:
+                                        pass
+                                    
                                 Menu = QMenu(self)
                                 if button.menu() is not None:
                                     Menu = button.menu()
@@ -3283,6 +3353,11 @@ class ModernMenu(RibbonBar):
                                     or Parameters_Ribbon.USE_FC_OVERLAY is True
                                 ):
                                     showText = False
+                                try:
+                                    if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
+                                        showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][CommandName]["textEnabled"]
+                                except Exception:
+                                    pass
 
                                 # Create a custom toolbutton
                                 ButtonSize = QSize(
@@ -3293,6 +3368,14 @@ class ModernMenu(RibbonBar):
                                     Parameters_Ribbon.ICON_SIZE_MEDIUM,
                                     Parameters_Ribbon.ICON_SIZE_MEDIUM,
                                 )
+                                if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
+                                    try:
+                                        size = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][CommandName]["ButtonSize_medium"]
+                                        IconSize = QSize(size, size)
+                                        ButtonSize = IconSize
+                                    except Exception:
+                                        pass
+                                    
                                 Menu = QMenu(self)
                                 if button.menu() is not None:
                                     Menu = button.menu()
@@ -3323,6 +3406,13 @@ class ModernMenu(RibbonBar):
                                     or Parameters_Ribbon.USE_FC_OVERLAY is True
                                 ):
                                     showText = False
+                                try:
+                                    if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
+                                        if "textEnabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][CommandName]:
+                                            showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][CommandName]["textEnabled"]
+                                except Exception as e:
+                                    print(e)
+                                    pass
 
                                 # Create a custom toolbutton
                                 ButtonSize = QSize(
@@ -3333,6 +3423,16 @@ class ModernMenu(RibbonBar):
                                     Parameters_Ribbon.ICON_SIZE_LARGE,
                                     Parameters_Ribbon.ICON_SIZE_LARGE,
                                 )
+                                if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
+                                    try:
+                                        if "ButtonSize_large" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][CommandName]:
+                                            size = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][CommandName]["ButtonSize_large"]
+                                            IconSize = QSize(size, size)
+                                            ButtonSize = IconSize
+                                    except Exception as e:
+                                        print(e)
+                                        pass
+                                    
                                 Menu = QMenu(self)
                                 if button.menu() is not None:
                                     Menu = button.menu()
@@ -4370,7 +4470,7 @@ class ModernMenu(RibbonBar):
             print("Ribbon UI: Custom text are reset because the language was changed")
         return
     
-        # Needs to be updated/optimalised
+    # Needs to be updated/optimalised
     def returnDropWidgets(self, widget, panel, ButtonType = "Small", showText = True):
         btn= widget
         for child in widget.children():
@@ -4492,7 +4592,165 @@ class ModernMenu(RibbonBar):
             )
         return btn
     
+    def ReturnTextWidth(self, Label_Text: QLabel, Width, Menu: QMenu = None, setWordWrap = False, ElideMode= False, TextAlignment=Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter,MaxNumberOfLines=2,):
+        # Define the parameters
+        TextWidth = 0
+        Space = 6
 
+        Font = QFont()
+        Font.setPixelSize(Parameters_Ribbon.FONTSIZE_BUTTONS)
+        Text = Label_Text.text()
+        Label_Text.setFont(Font)
+        FontMetrics = QFontMetrics(Font)
+        # Determine the height of a single row
+        SingleHeight = QFontMetrics(Font).boundingRect(Text).height() + 3
+        # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
+        if setWordWrap is False:
+            if ElideMode is True:
+                # Determine the maximum length per line
+                FontMetrics = QFontMetrics(Text)
+                maxWidth = 0
+                maxLength = 0
+                for c in Text:
+                    maxWidth = maxWidth + FontMetrics.horizontalAdvance(c, -1)
+                    if maxWidth < Width:
+                        maxLength = maxLength + 1
+                    if maxWidth >= Width:
+                        limit = maxLength - 3
+                        Text = Text[:limit].strip() + "..."
+                        break
+            # Set the text with a placeholder
+            Label_Text.setWordWrap(False)
+            Label_Text.setText(Text)
+            # Set the maximum number of lines to 1
+            MaxNumberOfLines = 1
+            # Set the proper alignment
+            Label_Text.setAlignment(TextAlignment)
+            # Lower the height when there is a menu
+            if Menu is not None and len(Menu.actions()) > 1:
+                Label_Text.setFixedHeight(SingleHeight)
+            else:
+                Label_Text.setFixedHeight(SingleHeight + Space)
+                
+            # Update the width parameter
+            TextWidth = FontMetrics.boundingRect(Text).width() + Space
+            Label_Text.setMaximumWidth(TextWidth)
+
+        # If wordwrap is enabled, set the text and height accordingly
+        if setWordWrap is True:
+            # Set the wrap mode
+            Label_Text.setWordWrap(True)
+            # Determine the maximum length per line
+            maxWidth = 0
+            maxLength = 0
+            for c in Text:
+                maxWidth = maxWidth + FontMetrics.horizontalAdvance(c, -1)
+                if maxWidth < Width:
+                    maxLength = maxLength + 1
+                if maxWidth >= Width:
+                    break
+            maxLength = maxLength + 3
+
+            # Get the first text line
+            line1 = StandardFunctions.ReturnWrappedText(
+                Text, maxLength, MaxNumberOfLines, True
+            )[0]
+            # Set the alignment
+            Label_Text.setAlignment(TextAlignment)
+            # Add the line
+            Label_Text.setText(line1)
+            # get the text width
+            TextWidth = FontMetrics.tightBoundingRect(line1).width()
+            # Try to get the second line if there is one
+            try:
+                line2 = StandardFunctions.ReturnWrappedText(
+                    Text, maxLength, MaxNumberOfLines, True
+                )[1]
+                # Set the alignment
+                Label_Text.setAlignment(TextAlignment)
+                # Add the line
+                Label_Text.setText(line1 + "\n" +line2)
+                # Update the text width if neccesary
+                if FontMetrics.tightBoundingRect(line2).width() > TextWidth:
+                    TextWidth = FontMetrics.tightBoundingRect(line2).width()
+            except Exception:
+                pass
+            Label_Text.setMaximumWidth(TextWidth + Space)
+
+        return Label_Text.maximumWidth()
+    
+    def WriteButtonSettings(self, ButtonWidget, panel, property: dict = {"size": "small",}):
+        # Get tabBar
+        parent = panel.parent()
+        count = 0
+        while (count < 10):
+            if type(parent) == RibbonNormalCategory or type(parent) == RibbonContextCategory:
+                break
+            else:
+                parent = parent.parent()
+        # Get the workbench name                    
+        WorkBenchName = parent.objectName()
+        # Get the grid layout
+        gridLayout: QGridLayout = panel._actionsLayout
+
+        # Get the current data from the ribbonstructure
+        CommandName = ""
+        for child in ButtonWidget.children():
+            if (
+                type(child) == QToolButton
+                and child.objectName() == "CommandButton"
+            ):
+                CommandName = child.defaultAction().data()
+        if CommandName != "":
+            StandardFunctions.add_keys_nested_dict(
+                self.ribbonStructure,
+                [
+                    "workbenches",
+                    WorkBenchName,
+                    "toolbars",
+                    panel.objectName(),
+                    "order",
+                ],
+            )
+                        
+            # Get the order of the widgets
+            orderList = []
+            for k in range(gridLayout.count()):
+                try:
+                    Control = gridLayout.itemAt(k).widget().children()[1]
+                    if type(Control) is RibbonToolButton:
+                        for child in Control.children():
+                            if (
+                                type(child) == QToolButton
+                                and child.objectName() == "CommandButton"
+                            ):
+                                orderList.append(child.defaultAction().data())
+                except Exception:
+                    pass
+            self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][
+                panel.objectName()
+            ]["order"] = orderList
+                               
+            for key, value in property.items():
+                StandardFunctions.add_keys_nested_dict(
+                    self.ribbonStructure,
+                    [
+                        "workbenches",
+                        WorkBenchName,
+                        "toolbars",
+                        panel.objectName(),
+                        "commands",
+                        CommandName,
+                        key,
+                    ],
+                )
+                self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]["commands"][CommandName][key] = value       
+
+            # Writing to ribbonStructure.json
+            JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+            with open(JsonFile, "w") as outfile:
+                json.dump(self.ribbonStructure, outfile, indent=4)
+            outfile.close()
     # endregion
 
     # region - Titlebar functions
