@@ -25,6 +25,7 @@ import FreeCADGui as Gui
 from PySide.QtGui import QColor
 import os
 import sys
+import Standard_Functions_Ribbon as StandardFunctions
 
 # Define the translation
 translate = App.Qt.translate
@@ -255,11 +256,18 @@ DefaultSettings = {
     "BetaFunctions": bool(False),
 }
 
+# Get the install location of FreeCAD
+AppDir = os.path.join(App.getUserAppDataDir().split('FreeCAD')[0], "FreeCAD")
+OldModDir = os.path.join(AppDir, "Mod")
+CurrentModDir = os.path.join(App.getUserAppDataDir(), "Mod")
+
 # region - Define the import location ----------------------------------------------------------------------------------
 IMPORT_LOCATION = Settings.GetStringSetting("ImportLocation")
 if IMPORT_LOCATION == "":
     IMPORT_LOCATION = str(DefaultSettings["ImportLocation"])
     Settings.SetStringSetting("ImportLocation", IMPORT_LOCATION)
+    Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
+    
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the export location ----------------------------------------------------------------------------------
@@ -267,9 +275,11 @@ EXPORT_LOCATION = Settings.GetStringSetting("ExportLocation")
 if EXPORT_LOCATION == "":
     EXPORT_LOCATION = str(DefaultSettings["ExportLocation"])
     Settings.SetStringSetting("exportLocation", EXPORT_LOCATION)
+    Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the Ribbon structure location ------------------------------------------------------------------------
+# The location for the ribbon structure is retrieved from parameters as standard.
 RIBBON_STRUCTURE_JSON = Settings.GetStringSetting("RibbonStructure")
 if RIBBON_STRUCTURE_JSON == "":
     RIBBON_STRUCTURE_JSON = str(DefaultSettings["RibbonStructure"])

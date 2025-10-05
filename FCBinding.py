@@ -576,13 +576,13 @@ class ModernMenu(RibbonBar):
                     "Background_Color_Hover", True, True
                 )
                 + """;min-width: """
-                + str(self.TabBar_Size)
+                + str(self.TabBar_Size-3)
                 + """px;
                             max-width: """
-                + str(self.TabBar_Size)
+                + str(self.TabBar_Size-3)
                 + """px;
                             padding-left: 6px;
-                            padding-right: 0px;
+                            padding-right: 3px;
                             margin: 3px
                         }"""
             )
@@ -2109,17 +2109,25 @@ class ModernMenu(RibbonBar):
             )
         if Parameters_Ribbon.TABBAR_STYLE == 1:
             self.tabBar().setStyleSheet(
-                """QTabBar::tab {background: """
+                "QTabBar::tab {background: "
                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
-                + """;color: """
+                + ";color: "
                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
-                + """;}"""
-                + """QTabBar::tab:selected, QTabBar::tab:hover {
-                background: """
+                + ";min-width: "
+                + str(self.TabBar_Size-3)
+                + "px;max-width: "
+                + str(self.TabBar_Size-3)
+                + "px;"
+                + "padding-left: 6px;"
+                + "padding-right: 3px;"
+                + "margin: 3px"
+                + ";}"
+                + "QTabBar::tab:selected, QTabBar::tab:hover { "
+                + "background: "
                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                + """;color: """
+                + ";color: "
                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                + """;}"""
+                + ";}"
             )
 
         # ensure that workbench is already loaded
