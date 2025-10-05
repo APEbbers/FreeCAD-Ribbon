@@ -19,12 +19,13 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+from PySide6 import QtGui
 import matplotlib.colors
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction, QColor
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction, QColor
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -37,7 +38,7 @@ from PySide.QtWidgets import (
     QWidget,
     QMainWindow,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread
 import sys
 import Standard_Functions_Ribbon as StandardFunctions
 import Parameters_Ribbon
@@ -498,7 +499,9 @@ def ReturnIcons_ThemeEditor():
         "TitleBarButtons": ["maximize_default_white.svg", "restore_default_white.svg", "minimize_default_white.svg"]
     }
     color = GetColorSetting('TextForegroundColor')
-    if StandardFunctions.LightOrDark(color) == "dark":
+    # if StandardFunctions.LightOrDark(color) == "dark":
+    IsDarkTheme = darkMode
+    if IsDarkTheme is False:
         return lightIcons
     else:
         return darkIcons
