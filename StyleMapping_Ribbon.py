@@ -184,7 +184,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
     #     if str("FreeCAD Dark").lower() in Theme.lower():
     #         currentStyleSheet = "FreeCAD Dark.qss"
     
-    currentStyleSheet = "FreeCAD.qss"
+    # currentStyleSheet = "FreeCAD.qss"
     
     IsInList = False
     for key, value in StyleMapping_default["Stylesheets"].items():
@@ -489,8 +489,6 @@ def ReturnIcons_ThemeEditor():
         "TitleBarButtons": ["maximize_default_white.svg", "restore_default_white.svg", "minimize_default_white.svg"]
     }
     color = GetColorSetting('TextForegroundColor')
-    print(color)
-    print(StandardFunctions.LightOrDark(color))
     if StandardFunctions.LightOrDark(color) == "dark":
         return lightIcons
     else:
@@ -520,7 +518,7 @@ StyleMapping = {
 StyleMapping_default = {
     "Stylesheets": {
         "": {
-            "Background_Color": StandardFunctions.ColorConvertor(mw.palette().window().color().toTuple(), 1, True, False),
+            "Background_Color": "none",
             "Background_Color_Hover": StandardFunctions.ColorConvertor(mw.palette().highlight().color().toTuple(), 1, True, False),
             "Border_Color": StandardFunctions.ColorConvertor(mw.palette().text().color().toTuple(), 1, True, False),
             "ApplicationButton_Background": StandardFunctions.ColorConvertor(mw.palette().highlight().color().toTuple(), 1, True, False),
@@ -536,24 +534,6 @@ StyleMapping_default = {
             "PinButton_closed": "pin-icon-default.svg",
             "TitleBarButtons": ReturnTitleBarIcons(),
         },
-    # "Stylesheets": {
-    #     "": {
-    #         "Background_Color": "transparent",
-    #         "Background_Color_Hover": StandardFunctions.ColorConvertor(mw.style().proxy().standardPalette().highlight().color().toTuple(), 1, True, False),
-    #         "Border_Color": StandardFunctions.ColorConvertor(mw.style().proxy().standardPalette().button().color().toTuple(), 1, True, False),
-    #         "ApplicationButton_Background": StandardFunctions.ColorConvertor(mw.style().proxy().standardPalette().highlight().color().toTuple(), 1, True, False),
-    #         "FontColor": ReturnFontColor(),
-    #         "UpdateColor": ReturnUpdateColor(),
-    #         "DevelopColor": ReturnDevelopColor(),
-    #         "ScrollLeftButton_Tab": "backward_small_default.svg",
-    #         "ScrollRightButton_Tab": "forward_small_default.svg",
-    #         "ScrollLeftButton_Category": "backward_default.svg",
-    #         "ScrollRightButton_Category": "forward_default.svg",
-    #         "OptionButton": "more_default.svg",
-    #         "PinButton_open": "pin-icon-open.svg",
-    #         "PinButton_closed": "pin-icon-default.svg",
-    #         "TitleBarButtons": ReturnTitleBarIcons(),
-    #     },
         "none": {
             "Background_Color": "none",
             "Background_Color_Hover": "#48a0f8",
@@ -591,7 +571,7 @@ StyleMapping_default = {
             "TitleBarButtons": ReturnIcons_ThemeEditor()["TitleBarButtons"],
         },
         "FreeCAD Dark.qss": {
-            "Background_Color": "#333333",
+            "Background_Color": "none",
             "Background_Color_Hover": "#48a0f8",
             "Border_Color": "#ffffff",
             "ApplicationButton_Background": "#48a0f8",
@@ -608,7 +588,7 @@ StyleMapping_default = {
             "TitleBarButtons": ReturnTitleBarIcons(),
         },
         "FreeCAD Light.qss": {
-            "Background_Color": "#f0f0f0",
+            "Background_Color": "none",
             "Background_Color_Hover": "#48a0f8",
             "Border_Color": "#646464",
             "ApplicationButton_Background": "#48a0f8",
@@ -625,7 +605,7 @@ StyleMapping_default = {
             "TitleBarButtons": ReturnTitleBarIcons(),
         },
         "OpenLight.qss": {
-            "Background_Color": "#dee2e6",
+            "Background_Color": "none",
             "Background_Color_Hover": "#a5d8ff",
             "Border_Color": "#1c7ed6",
             "ApplicationButton_Background": "#a5d8ff",
@@ -642,7 +622,7 @@ StyleMapping_default = {
             "TitleBarButtons": ReturnTitleBarIcons(),
         },
         "OpenDark.qss": {
-            "Background_Color": "#212529",
+            "Background_Color": "none",
             "Background_Color_Hover": "#1f364d",
             "Border_Color": "#264b69",
             "ApplicationButton_Background": "#1f364d",
