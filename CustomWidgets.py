@@ -46,7 +46,7 @@ from PySide.QtGui import (
     QPen,
     QPainter,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QComboBox,
     QSizePolicy,
     QSpinBox,
