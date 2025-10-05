@@ -29,7 +29,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -49,7 +49,7 @@ from PySide.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QSpinBox,
@@ -84,7 +84,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1041,47 +1041,133 @@ class ModernMenu(RibbonBar):
                         return
 
         return
+    
+    # def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                         
+    #     # Define a list to store widgets before removing them from the panel
+    #     layout: QGridLayout = panel._actionsLayout
+    #     newControl = RibbonToolButton()
+        
+    #     textVisible = False
+    #     for child in ButtonWidget.children():
+    #         if type(child) == QLabel:
+    #             textVisible = child.isVisible()
+        
+    #     if ButtonStyleWidget.currentText() == "Small":
+    #         alignment = Qt.AlignmentFlag.AlignTop
+    #         height = Parameters_Ribbon.ICON_SIZE_SMALL
+    #         CommandWidget = ButtonWidget
+    #         newControl = self.returnDropWidgets(CommandWidget, panel, showText=False,)
+    #         # newControl.setFixedHeight(height)
+    #         panel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("SmallWidget")
+    #     if ButtonStyleWidget.currentText() == "Medium":
+    #         alignment = Qt.AlignmentFlag.AlignTop
+    #         height = Parameters_Ribbon.ICON_SIZE_MEDIUM
+    #         CommandWidget = ButtonWidget
+    #         newControl = self.returnDropWidgets(CommandWidget, panel, "Medium", showText=False,)           
+    #         # newControl.setFixedHeight(height)
+    #         panel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("MediumWidget")
+    #     if ButtonStyleWidget.currentText() == "Large":
+    #         alignment = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter
+    #         height = Parameters_Ribbon.ICON_SIZE_LARGE
+    #         CommandWidget = ButtonWidget
+    #         newControl = self.returnDropWidgets(CommandWidget, panel, "Large", showText=False,)
+    #         newControl.setFixedSize(QSize(height, height))
+    #         panel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("LargeWidget")
+            
+    #         for child in ButtonWidget.children():
+    #             if type(child) == QLabel:
+    #                 # show the text
+    #                 if textVisible is True:
+    #                     child.show()
+    #                 else:
+    #                     child.hide()
+    #                     child.setMinimumWidth(0)
+                          
+    #     panel.removeWidget(ButtonWidget)
+    #     panel.removeWidget(ButtonWidget.parent())
+    #     ButtonWidget.close()
+
+    #     layout.update()
+    #     return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                         
-        # Define a list to store widgets before removing them from the panel
-        layout: QGridLayout = panel._actionsLayout
+        # layout: QGridLayout = panel._actionsLayout
+        layout = QGridLayout()
         newControl = RibbonToolButton()
+                      
+        WidgetTypeToSet = "SmallWidget"
+        if ButtonStyleWidget.currentText() == "Medium":
+            WidgetTypeToSet = "MediumWidget"
+        if ButtonStyleWidget.currentText() == "Large":
+            WidgetTypeToSet = "LargeWidget"
         
         textVisible = False
+        defaultAction = None
         for child in ButtonWidget.children():
             if type(child) == QLabel:
                 textVisible = child.isVisible()
-        
-        if ButtonStyleWidget.currentText() == "Small":
-            alignment = Qt.AlignmentFlag.AlignTop
-            height = Parameters_Ribbon.ICON_SIZE_SMALL
-            CommandWidget = ButtonWidget
-            newControl = self.returnDropWidgets(CommandWidget, panel, showText=False,)
-            # newControl.setFixedHeight(height)
-            panel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("SmallWidget")
-        if ButtonStyleWidget.currentText() == "Medium":
-            alignment = Qt.AlignmentFlag.AlignTop
-            height = Parameters_Ribbon.ICON_SIZE_MEDIUM
-            CommandWidget = ButtonWidget
-            newControl = self.returnDropWidgets(CommandWidget, panel, "Medium", showText=False,)           
-            # newControl.setFixedHeight(height)
-            panel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("MediumWidget")
-        if ButtonStyleWidget.currentText() == "Large":
-            alignment = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter
-            height = Parameters_Ribbon.ICON_SIZE_LARGE
-            CommandWidget = ButtonWidget
-            newControl = self.returnDropWidgets(CommandWidget, panel, "Large", showText=False,)
-            newControl.setFixedSize(QSize(height, height))
-            panel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("LargeWidget")
+            if child.objectName() == "CommandButton":
+                defaultAction = child.defaultAction()
             
-            for child in ButtonWidget.children():
-                if type(child) == QLabel:
-                    # show the text
-                    if textVisible is True:
-                        child.show()
-                    else:
-                        child.hide()
-                        child.setMinimumWidth(0)
+        orderList = []    
+        for widget in panel.widgets():
+            action = None
+            WidgetType = widget.objectName()
+            for child in widget.children():                
+                if child.objectName() == "CommandButton":
+                    action = child.defaultAction()
+                    if action.data() == defaultAction.data():
+                        WidgetType = WidgetTypeToSet
+                    orderList.append([action.data(), WidgetType, child])
+            
+        panel.widgets().clear()
+
+        for item in orderList:
+            currentWidget = item[2]
+            WidgetType = item[1]
+            
+            if WidgetType == "SmallWidget":
+                alignment = Qt.AlignmentFlag.AlignTop
+                height = Parameters_Ribbon.ICON_SIZE_SMALL
+                CommandWidget = currentWidget
+                newControl = self.returnDropWidgets(CommandWidget, panel, showText=False,)
+                # newControl.setFixedHeight(height)
+                panel.removeWidget(currentWidget)
+                panel.removeWidget(currentWidget.parent())
+                panel.removeWidget(currentWidget.parent().parent())
+                currentWidget.close()
+                panel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("SmallWidget")
+            if WidgetType == "MediumWidget":
+                alignment = Qt.AlignmentFlag.AlignTop
+                height = Parameters_Ribbon.ICON_SIZE_MEDIUM
+                CommandWidget = currentWidget
+                newControl = self.returnDropWidgets(CommandWidget, panel, "Medium", showText=False,)           
+                # newControl.setFixedHeight(height)
+                panel.removeWidget(currentWidget)
+                panel.removeWidget(currentWidget.parent())
+                panel.removeWidget(currentWidget.parent().parent())
+                currentWidget.close()
+                panel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("MediumWidget")
+            if WidgetType == "LargeWidget":
+                alignment = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter
+                height = Parameters_Ribbon.ICON_SIZE_LARGE
+                CommandWidget = currentWidget
+                newControl = self.returnDropWidgets(CommandWidget, panel, "Large", showText=False,)
+                newControl.setFixedSize(QSize(height, height))
+                panel.removeWidget(currentWidget)
+                panel.removeWidget(currentWidget.parent())
+                panel.removeWidget(currentWidget.parent().parent())
+                currentWidget.close()
+                panel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("LargeWidget")
+                
+                for child in ButtonWidget.children():
+                    if type(child) == QLabel:
+                        # show the text
+                        if textVisible is True:
+                            child.show()
+                        else:
+                            child.hide()
+                            child.setMinimumWidth(0)
                           
         panel.removeWidget(ButtonWidget)
         panel.removeWidget(ButtonWidget.parent())
