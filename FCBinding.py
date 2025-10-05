@@ -543,7 +543,7 @@ class ModernMenu(RibbonBar):
                     # if so set update version
                     for i in range(ArrayLenght):
                         if LatestVersionArray[i] > CurrentVersionArray[i]:
-                            print(f"{LatestVersionArray[i]}, {CurrentVersionArray[i]}")
+                            # print(f"{LatestVersionArray[i]}, {CurrentVersionArray[i]}")
                             self.UpdateVersion = LatestVersion
         except Exception:
             pass
@@ -3926,7 +3926,7 @@ class ModernMenu(RibbonBar):
         return icon
 
     def RunCommand(self, Command: str):
-        print(Command)
+        # print(Command)
         try:
             Gui.doCommand(Command)
         except Exception:

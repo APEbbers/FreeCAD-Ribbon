@@ -929,7 +929,7 @@ def ReturnWrappedText(text: str, max_length: int = 50, max_Lines=0, returnList=F
         result = "\n".join(wrapped_text)
     else:
         result = wrapped_text
-    print(result)
+    # print(result)
     return result
 
 
@@ -947,7 +947,7 @@ def AddToClipboard(Text):
 
 def checkFreeCADVersion(main: int, sub: int, patch: int, git: int):
     version = App.Version()
-    print(version)
+    # print(version)
 
     if main >= int(version[0]):
         if sub >= int(version[1]):
