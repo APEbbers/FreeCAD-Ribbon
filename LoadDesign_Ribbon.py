@@ -840,19 +840,19 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         progressBar.setWindowFlags(
             Qt.WindowType.Dialog | Qt.WindowType.WindowStaysOnTopHint
         )
-        progressBar.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
+        progressBar.setWindowFlag(Qt.WindowType.CustomizeWindowHint, True)
         progressBar.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
-        progressBar.setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, False)
-        progressBar.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, True)
+        progressBar.setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, True)
+        progressBar.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
         progressBar.setMinimumSize(300, 20)
 
         # Get the stylesheet from the main window and use it for this form
         (
             progressBar.setStyleSheet(
                 "background-color: "
-                + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                + "none"
                 + ";color: "
-                + StyleMapping_Ribbon.ReturnStyleItem("FontColor")
+                + "none"
                 + ";"
             )
         )

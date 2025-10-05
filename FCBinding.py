@@ -29,7 +29,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -49,7 +49,7 @@ from PySide6.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QSpinBox,
@@ -84,7 +84,7 @@ from PySide6.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
