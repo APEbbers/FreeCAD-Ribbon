@@ -1111,9 +1111,9 @@ class ModernMenu(RibbonBar):
                 Delete(currentWidget)
                 panel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("SmallWidget")
                 
-                # write the changes to the ribbonstruture file 
-                property = {"size": 'small'}
-                self.WriteButtonSettings(ButtonWidget, panel, property)
+                # # write the changes to the ribbonstruture file 
+                # property = {"size": 'small'}
+                # self.WriteButtonSettings(ButtonWidget, panel, property)
             if WidgetType == "MediumWidget":
                 alignment = Qt.AlignmentFlag.AlignTop
                 height = Parameters_Ribbon.ICON_SIZE_MEDIUM
@@ -1123,9 +1123,9 @@ class ModernMenu(RibbonBar):
                 Delete(currentWidget)
                 panel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("MediumWidget")
                 
-                # write the changes to the ribbonstruture file 
-                property = {"size": 'medium'}
-                self.WriteButtonSettings(ButtonWidget, panel, property)
+                # # write the changes to the ribbonstruture file 
+                # property = {"size": 'medium'}
+                # self.WriteButtonSettings(ButtonWidget, panel, property)
             if WidgetType == "LargeWidget":
                 alignment = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter
                 height = Parameters_Ribbon.ICON_SIZE_LARGE
@@ -1144,16 +1144,16 @@ class ModernMenu(RibbonBar):
                             child.hide()
                             child.setMinimumWidth(0)
                             
-                # write the changes to the ribbonstruture file 
-                property = {"size": 'large'}
-                self.WriteButtonSettings(ButtonWidget, panel, property)
+                # # write the changes to the ribbonstruture file 
+                # property = {"size": 'large'}
+                # self.WriteButtonSettings(ButtonWidget, panel, property)
                         
 
         layout.update()
         
-        # # write the changes to the ribbonstruture file 
-        # property = {"size": Size}
-        # self.WriteButtonSettings(ButtonWidget, panel, property)
+        # write the changes to the ribbonstruture file 
+        property = {"size": Size}
+        self.WriteButtonSettings(ButtonWidget, panel, property)
         return
     
     def on_ButtonSize_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget, ButtonSizeWidget: SpinBoxAction):
@@ -1441,21 +1441,20 @@ class ModernMenu(RibbonBar):
                         
                         # Delete the old widget and items
                         def Delete(widget):
-                            for i in range(20):
+                            for i in range(100):
                                 parent = widget.parent()
                                 if type(parent) is RibbonPanel:
                                     break
                                 else:
+                                    gridLayout.removeWidget(parent)
                                     parent.close()
+                            gridLayout.removeWidget(widget)
+                            widget.close()
                             return
                         Delete(W_origin_item)
                         Delete(W_dropWidget)
                         Delete(T_origin)
                         Delete(T_dropWidget)
-                        W_origin_item.close()
-                        W_dropWidget.close()
-                        T_origin.close()
-                        T_dropWidget.close()
 
                     # Get the order of the widgets
                     orderList = []
@@ -4786,7 +4785,6 @@ class ModernMenu(RibbonBar):
                 and child.objectName() == "CommandButton"
             ):
                 CommandName = child.defaultAction().data()
-        
         
         if CommandName != "":        
             for key, value in property.items():
