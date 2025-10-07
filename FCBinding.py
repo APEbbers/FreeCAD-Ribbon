@@ -1084,6 +1084,19 @@ class ModernMenu(RibbonBar):
                     orderList.append([action.data(), WidgetType, child])
             
         panel.widgets().clear()
+        
+        # Delete the old widget and items
+        def Delete(widget):
+            for i in range(20):
+                parent = widget.parent()
+                if type(parent) is RibbonPanel:
+                    break
+                else:
+                    panel.removeWidget(parent)
+                    parent.close()
+            panel.removeWidget(widget)
+            widget.close()
+            return
 
         for item in orderList:
             currentWidget = item[2]
@@ -1095,32 +1108,31 @@ class ModernMenu(RibbonBar):
                 CommandWidget = currentWidget
                 newControl = self.returnDropWidgets(CommandWidget, panel, showText=False,)
                 # newControl.setFixedHeight(height)
-                panel.removeWidget(currentWidget)
-                panel.removeWidget(currentWidget.parent())
-                panel.removeWidget(currentWidget.parent().parent())
-                currentWidget.close()
+                Delete(currentWidget)
                 panel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("SmallWidget")
+                
+                # write the changes to the ribbonstruture file 
+                property = {"size": 'small'}
+                self.WriteButtonSettings(ButtonWidget, panel, property)
             if WidgetType == "MediumWidget":
                 alignment = Qt.AlignmentFlag.AlignTop
                 height = Parameters_Ribbon.ICON_SIZE_MEDIUM
                 CommandWidget = currentWidget
                 newControl = self.returnDropWidgets(CommandWidget, panel, "Medium", showText=False,)           
                 # newControl.setFixedHeight(height)
-                panel.removeWidget(currentWidget)
-                panel.removeWidget(currentWidget.parent())
-                panel.removeWidget(currentWidget.parent().parent())
-                currentWidget.close()
+                Delete(currentWidget)
                 panel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("MediumWidget")
+                
+                # write the changes to the ribbonstruture file 
+                property = {"size": 'medium'}
+                self.WriteButtonSettings(ButtonWidget, panel, property)
             if WidgetType == "LargeWidget":
                 alignment = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter
                 height = Parameters_Ribbon.ICON_SIZE_LARGE
                 CommandWidget = currentWidget
                 newControl = self.returnDropWidgets(CommandWidget, panel, "Large", showText=False,)
                 newControl.setFixedSize(QSize(height, height))
-                panel.removeWidget(currentWidget)
-                panel.removeWidget(currentWidget.parent())
-                panel.removeWidget(currentWidget.parent().parent())
-                currentWidget.close()
+                Delete(currentWidget)
                 panel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("LargeWidget")
                 
                 for child in ButtonWidget.children():
@@ -1131,16 +1143,17 @@ class ModernMenu(RibbonBar):
                         else:
                             child.hide()
                             child.setMinimumWidth(0)
-                          
-        panel.removeWidget(ButtonWidget)
-        panel.removeWidget(ButtonWidget.parent())
-        ButtonWidget.close()
+                            
+                # write the changes to the ribbonstruture file 
+                property = {"size": 'large'}
+                self.WriteButtonSettings(ButtonWidget, panel, property)
+                        
 
         layout.update()
         
-        # write the changes to the ribbonstruture file 
-        property = {"size": Size}
-        self.WriteButtonSettings(ButtonWidget, panel, property)
+        # # write the changes to the ribbonstruture file 
+        # property = {"size": Size}
+        # self.WriteButtonSettings(ButtonWidget, panel, property)
         return
     
     def on_ButtonSize_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget, ButtonSizeWidget: SpinBoxAction):
@@ -1322,7 +1335,7 @@ class ModernMenu(RibbonBar):
                 self.dragIndicator, position[0], position[1], rowSpan, 1
             )
             # # Hide the item being dragged.
-            # e.source().hide()
+            e.source().hide()
             # Show the target.
             self.dragIndicator.show()
             e.accept()
@@ -1358,12 +1371,6 @@ class ModernMenu(RibbonBar):
                     # Get the grid layout
                     gridLayout: QGridLayout = panel._actionsLayout
 
-                    # Get the widget that has to be replaced
-                    W_origin = gridLayout.itemAtPosition(xPos, yPos).widget()
-                    W_drop_origin: QToolButton = W_origin.findChildren(QToolButton)[0]
-                    T_origin: QToolButton = W_drop_origin.findChildren(QToolButton)[0]
-                    original_size = position[3]
-
                     # Get the old position of the dragged widget
                     n = 0
                     OldPos = []
@@ -1373,6 +1380,12 @@ class ModernMenu(RibbonBar):
                             break
                     # counter and old position is not empty, Swap the widgets
                     if n > -1 and len(OldPos) > 0 :
+                        # Get the widget that has to be replaced
+                        W_origin_item = gridLayout.itemAtPosition(xPos, yPos).widget()
+                        W_drop_origin: QToolButton = W_origin_item.findChildren(QToolButton)[0]
+                        T_origin: QToolButton = W_drop_origin.findChildren(QToolButton)[0]
+                        original_size = position[3]
+                        
                         # Take the dragged widget
                         W_dropWidget = gridLayout.itemAt(n).widget()
                         W_drop_customControl: QToolButton = W_dropWidget.findChildren(
@@ -1399,7 +1412,7 @@ class ModernMenu(RibbonBar):
                             buttonSize_origin = "medium"
                         if original_size.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
                             buttonSize_origin = "large"
-                        W_origin.setFixedHeight(new_size.height())
+                        W_origin_item.setFixedHeight(new_size.height())
 
                         # Create a new dragged widget, to add in the new place
                         draggedWidget = self.returnDropWidgets(                    
@@ -1411,9 +1424,10 @@ class ModernMenu(RibbonBar):
                         # Create a ribbonpanel item widget from the new dragged widget
                         draggedItem = RibbonPanelItemWidget(panel)
                         draggedItem.addWidget(draggedWidget)
-                        gridLayout.replaceWidget(W_origin, draggedItem)
+                        # Replace the original widget with the new dragged item
+                        gridLayout.replaceWidget(W_origin_item, draggedItem)
                         
-                        # Create a new origina widget, to add in the old place          
+                        # Create a new original widget, to add in the old place          
                         originalWidget = self.returnDropWidgets(
                             widget=T_origin,
                             panel=panel,                    
@@ -1425,6 +1439,7 @@ class ModernMenu(RibbonBar):
                         originalItem.addWidget(originalWidget)
                         gridLayout.replaceWidget(W_dropWidget, originalItem)
                         
+                        # Delete the old widget and items
                         def Delete(widget):
                             for i in range(20):
                                 parent = widget.parent()
@@ -1433,17 +1448,14 @@ class ModernMenu(RibbonBar):
                                 else:
                                     parent.close()
                             return
-                        Delete(W_origin)
+                        Delete(W_origin_item)
                         Delete(W_dropWidget)
                         Delete(T_origin)
                         Delete(T_dropWidget)
-                        
-                        W_origin.close()
+                        W_origin_item.close()
                         W_dropWidget.close()
                         T_origin.close()
                         T_dropWidget.close()
-
-                    e.accept()
 
                     # Get the order of the widgets
                     orderList = []
@@ -1471,10 +1483,15 @@ class ModernMenu(RibbonBar):
                             "order",
                         ],
                     )
+                    # clear the list first
+                    self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][
+                        panel.objectName()
+                    ]["order"] = []
+                    # Write the new list
                     self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][
                         panel.objectName()
                     ]["order"] = orderList
-                    
+
                     # Writing to ribbonStructure.json
                     JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
                     with open(JsonFile, "w") as outfile:
@@ -1482,6 +1499,9 @@ class ModernMenu(RibbonBar):
                     outfile.close()
         except Exception:
             pass
+        
+        
+        e.accept()
         return
 
     def find_drop_location(self, e):
@@ -1542,61 +1562,6 @@ class ModernMenu(RibbonBar):
         # Return then coordinates as grid positions
         return [xPos, yPos, w_origin.size(), widget.size()]
     
-    # def UpdateRibbonStructure(self, WorkBenchName, panel: RibbonPanel, widget, text = "", size = "", ):
-    #     gridLayout: QGridLayout = panel._actionsLayout
-        
-    #     # Get the order of the widgets
-    #     orderList = []
-    #     for k in range(gridLayout.count()):
-    #         try:
-    #             Control = gridLayout.itemAt(k).widget().children()[1]
-    #             if type(Control) is RibbonToolButton:
-    #                 for child in Control.children():
-    #                     if (
-    #                         type(child) == QToolButton
-    #                         and child.objectName() == "CommandButton"
-    #                     ):
-    #                         orderList.append(child.defaultAction().data())
-    #         except Exception:
-    #             pass
-            
-    #     # Update the order in the ribbon structure
-    #     StandardFunctions.add_keys_nested_dict(
-    #         self.ribbonStructure,
-    #         [
-    #             "workbenches",
-    #             WorkBenchName,
-    #             "toolbars",
-    #             panel.objectName(),
-    #             "order",
-    #         ],
-    #     )
-    #     self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][
-    #         panel.objectName()
-    #     ]["order"] = orderList
-        
-    #     # Update the command properties
-    #     for widget in panel.widgets():
-    #         action = None
-    #         WidgetType = widget.objectName()
-    #         size = "small"
-    #         if WidgetType == "MediumWidget":
-    #             size = "medium"
-    #         if WidgetType == "LargeWidget":
-    #             size = "large"
-            
-        
-    #     # Writing to ribbonStructure.json
-    #     JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
-    #     with open(JsonFile, "w") as outfile:
-    #         json.dump(self.ribbonStructure, outfile, indent=4)
-    #     outfile.close()
-        
-    #     return
-
-    # endregion
-
-
     # region - standard class functions
     #
     # implementation to add actions to the Filemenu. Needed for the accessories menu
@@ -4582,8 +4547,10 @@ class ModernMenu(RibbonBar):
             ):
                 showText = False
             try:
-                showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.title()]["commands"][CommandName]["textEnabled"]
-            except Exception:
+                if "textEnabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]:
+                    showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]["textEnabled"]
+            except Exception as e:
+                print(e)
                 pass
 
             # Create a custom toolbutton
@@ -4596,7 +4563,7 @@ class ModernMenu(RibbonBar):
                 Parameters_Ribbon.ICON_SIZE_SMALL,
             )
             try:
-                size = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.title()]["commands"][CommandName]["ButtonSize_large"]
+                size = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]["ButtonSize_large"]
                 IconSize = QSize(size, size)
                 ButtonSize = IconSize
             except Exception:
@@ -4625,8 +4592,10 @@ class ModernMenu(RibbonBar):
             ):
                 showText = False
             try:
-                showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.title()]["commands"][CommandName]["textEnabled"]
-            except Exception:
+                if "textEnabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]:
+                    showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]["textEnabled"]
+            except Exception as e:
+                print(e)
                 pass
 
             # Create a custom toolbutton
@@ -4639,7 +4608,7 @@ class ModernMenu(RibbonBar):
                 Parameters_Ribbon.ICON_SIZE_MEDIUM,
             )
             try:
-                size = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.title()]["commands"][CommandName]["ButtonSize_medium"]
+                size = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]["ButtonSize_medium"]
                 IconSize = QSize(size, size)
                 ButtonSize = IconSize
             except Exception:
@@ -4668,8 +4637,8 @@ class ModernMenu(RibbonBar):
             ):
                 showText = False
             try:
-                if "textEnabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.title()]["commands"][CommandName]:
-                    showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.title()]["commands"][CommandName]["textEnabled"]
+                if "textEnabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]:
+                    showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]["textEnabled"]
             except Exception as e:
                 print(e)
                 pass
@@ -4684,8 +4653,8 @@ class ModernMenu(RibbonBar):
                 Parameters_Ribbon.ICON_SIZE_LARGE,
             )
             try:
-                if "ButtonSize_large" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][CommandName]:
-                    size = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][CommandName]["ButtonSize_large"]
+                if "ButtonSize_large" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]:
+                    size = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]["ButtonSize_large"]
                     IconSize = QSize(size, size)
                     ButtonSize = IconSize
             except Exception as e:
@@ -4817,36 +4786,9 @@ class ModernMenu(RibbonBar):
                 and child.objectName() == "CommandButton"
             ):
                 CommandName = child.defaultAction().data()
-        if CommandName != "":
-            StandardFunctions.add_keys_nested_dict(
-                self.ribbonStructure,
-                [
-                    "workbenches",
-                    WorkBenchName,
-                    "toolbars",
-                    panel.objectName(),
-                    "order",
-                ],
-            )
-                        
-            # Get the order of the widgets
-            orderList = []
-            for k in range(gridLayout.count()):
-                try:
-                    Control = gridLayout.itemAt(k).widget().children()[1]
-                    if type(Control) is RibbonToolButton:
-                        for child in Control.children():
-                            if (
-                                type(child) == QToolButton
-                                and child.objectName() == "CommandButton"
-                            ):
-                                orderList.append(child.defaultAction().data())
-                except Exception:
-                    pass
-            self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][
-                panel.objectName()
-            ]["order"] = orderList
-                               
+        
+        
+        if CommandName != "":        
             for key, value in property.items():
                 StandardFunctions.add_keys_nested_dict(
                     self.ribbonStructure,
