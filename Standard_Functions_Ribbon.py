@@ -20,6 +20,9 @@
 # *                                                                       *
 # *************************************************************************
 
+from xml.etree.ElementTree import Element, ElementTree
+
+from requests import Request
 import FreeCAD as App
 import FreeCADGui as Gui
 import math
@@ -486,30 +489,33 @@ def ReturnXML_Value(
 
 
 def ReturnXML_Value_Git(
-    User="APEbbers",
+    User="apebbers",
     Repository="FreeCAD-Ribbon",
     Branch="main",
     File="package.xml",
     ElementName: str = "",
     attribKey: str = "",
     attribValue: str = "",
-    host: str ="https://codeberg.org",
+    host="https://codeberg.org",
 ):
-    import requests_local as requests
+    # import requests_local as requests
     import xml.etree.ElementTree as ET
+    from urllib import request
 
     result = None
     try:
-        # if host.endswith("/") is False:
-        #     host = host + "/"
-        
         # Passing the path of the
         # xml document to enable the
         # parsing process
         url = f"{host}/{User}/{Repository}/{Branch}/{File}"
-        response = requests.get(url)
-        data = response.content
-        root = ET.fromstring(data)
+        if host == "https://codeberg.org":
+           url = f"{host}/{User}/{Repository}/src/branch/{Branch}/{File}" 
+        if host == "https://github.com":
+            url = f"{host}/{User}/{Repository}/blob/{Branch}/{File}" 
+        url = "https://raw.githubusercontent.com/APEbbers/FreeCAD-Ribbon/refs/heads/main/package.xml"
+        response = request.urlopen(url)
+        data = response.read()
+        root: Element[str] = ET.fromstring(data)
         result = ""
         for child in root:
             if str(child.tag).split("}")[1] == ElementName:
@@ -520,7 +526,8 @@ def ReturnXML_Value_Git(
                             return result
                 else:
                     result = child.text
-    except Exception:
+    except Exception as e:
+        # raise e
         pass
     return result
 
