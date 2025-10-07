@@ -110,7 +110,7 @@ if Parameters_Ribbon.USE_FC_OVERLAY is True:
     preferences.SetBool("ActivateOverlay", True)
 
 try:
-    print(translate("FreeCAD Ribbon", "Activating Ribbon Bar..."))
+    print(translate("FreeCAD Ribbon", "Activating Ribbon UI..."))
     mw = Gui.getMainWindow()
 
     if Parameters_Ribbon.HIDE_TITLEBAR_FC is False:
@@ -129,7 +129,7 @@ try:
         mw.workbenchActivated.connect(FCBinding.run)
         # Normally after setting the window frameless you show the window with mw.show()
         # This is now done in FCBinding with an eventfilter class
-        print(translate("FreeCAD Ribbon", "FreeCAD loaded without titlebar"))
+        print(translate("FreeCAD Ribbon", "Ribbon UI: FreeCAD loaded without titlebar"))
 
 except Exception as e:
     # raise e

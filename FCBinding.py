@@ -457,8 +457,12 @@ class ModernMenu(RibbonBar):
         self.ReproAdress = StandardFunctions.ReturnXML_Value(
             PackageXML, "url", "type", "repository"
         )
+        LocalVersion = StandardFunctions.ReturnXML_Value(
+            PackageXML, "version",
+        )
         if self.ReproAdress != "" or self.ReproAdress is not None:
-            print(translate("FreeCAD Ribbon", "FreeCAD Ribbon: ") + self.ReproAdress)
+            print(translate("FreeCAD Ribbon", "Ribbon UI: ") + self.ReproAdress)
+            print(translate("FreeCAD Ribbon", "Ribbon UI: Installed version: ") + LocalVersion)
 
         # Activate the workbenches used in the new panels otherwise the panel stays empty
         try:
@@ -512,26 +516,32 @@ class ModernMenu(RibbonBar):
         # Check if there is a new version
         # Get the latest version
         try:
+            # User = "apebbers"
             User = "APEbbers"
             Repo = "FreeCAD-Ribbon"
             Branch = "main"
             File = "package.xml"
             ElementName = "version"
+            attribKey = ""
+            attribValue = ""
+            # host: str ="https://codeberg.org"
+            host = "https://github.com"
             LatestVersion = StandardFunctions.ReturnXML_Value_Git(
-                User, Repo, Branch, File, ElementName
+                User=User, Repository=Repo, Branch=Branch, File=File, ElementName=ElementName, attribKey=attribKey, attribValue=attribValue, host=host
             )
-            if LatestVersion is not None:
-                # Get the current version
-                PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
-                CurrentVersion = StandardFunctions.ReturnXML_Value(
-                    PackageXML, "version"
-                )
-                # Check if you are on a developer version. If so set developer version
-                if CurrentVersion.lower().endswith("x"):
-                    self.DeveloperVersion = CurrentVersion
-                    self.UpdateVersion = ""
-                # If you are not on a developer version, check if you have the latest version
-                if CurrentVersion.lower().endswith("x") is False:
+            print(translate("FreeCAD Ribbon", "Ribbon UI: Latest released version: ") + LatestVersion)
+            # Get the current version
+            PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
+            CurrentVersion = StandardFunctions.ReturnXML_Value(
+                PackageXML, "version"
+            )
+            # Check if you are on a developer version. If so set developer version
+            if CurrentVersion.lower().endswith("x"):
+                self.DeveloperVersion = CurrentVersion
+                self.UpdateVersion = ""
+            # If you are not on a developer version, check if you have the latest version
+            if CurrentVersion.lower().endswith("x") is False:
+                if LatestVersion is not None:
                     # Create arrays from the versions
                     LatestVersionArray = LatestVersion.split(".")
                     CurrentVersionArray = CurrentVersion.split(".")
@@ -547,7 +557,8 @@ class ModernMenu(RibbonBar):
                         if LatestVersionArray[i] > CurrentVersionArray[i]:
                             # print(f"{LatestVersionArray[i]}, {CurrentVersionArray[i]}")
                             self.UpdateVersion = LatestVersion
-        except Exception:
+        except Exception as e:
+            raise e
             pass
 
         # Create the ribbon
@@ -1218,7 +1229,6 @@ class ModernMenu(RibbonBar):
                 if type(child) == QLabel:
                     # show the text
                     child.show()                                        
-                    print(labelWidth)
                     # Because medium and small widgets have text on the right side,
                     # change the widht of the button
                     if ButtonWidget.objectName() != "LargeWidget":
@@ -3769,13 +3779,13 @@ class ModernMenu(RibbonBar):
         self.BetaFunctionsEnabled = switchStatus
         if switchStatus is True:
             Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", True)
-            print("Béta functions enabled")
+            print(translate("FreeCAD Ribbon", "Ribbon UI: Béta functions enabled"))
         if switchStatus is False:
             Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", False)
             Stylesheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
             self.setStyleSheet(Stylesheet)
             self.CustomizeEnabled = False
-            print("Béta functions disabled")
+            print(translate("FreeCAD Ribbon", "Ribbon UI: Béta functions disabled"))
         return
 
     def on_ShowTextToggled(self, widget):
