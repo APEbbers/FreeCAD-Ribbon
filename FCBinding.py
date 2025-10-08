@@ -1051,9 +1051,11 @@ class ModernMenu(RibbonBar):
         return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                         
-        # layout: QGridLayout = panel._actionsLayout
-        layout = QGridLayout()
+        layout: QGridLayout = panel._actionsLayout
         newControl = RibbonToolButton()
+        # This is a hack, but after testing, the best way to update the panel is by replacing it.
+        # THe delete widgets is still neccesary otherwise they will be leftovers and remain directly in the ribbon.
+        newPanel = RibbonPanel()
                       
         WidgetTypeToSet = "SmallWidget"
         Size = "small"
@@ -1093,9 +1095,11 @@ class ModernMenu(RibbonBar):
                     break
                 else:
                     panel.removeWidget(parent)
-                    parent.close()
+                    # parent.close()
+                    # del parent
             panel.removeWidget(widget)
-            widget.close()
+            # widget.close()
+            # del widget
             return
 
         for item in orderList:
@@ -1107,33 +1111,23 @@ class ModernMenu(RibbonBar):
                 height = Parameters_Ribbon.ICON_SIZE_SMALL
                 CommandWidget = currentWidget
                 newControl = self.returnDropWidgets(CommandWidget, panel, showText=False,)
-                # newControl.setFixedHeight(height)
+                newPanel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("SmallWidget")
                 Delete(currentWidget)
-                panel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("SmallWidget")
-                
-                # # write the changes to the ribbonstruture file 
-                # property = {"size": 'small'}
-                # self.WriteButtonSettings(ButtonWidget, panel, property)
             if WidgetType == "MediumWidget":
                 alignment = Qt.AlignmentFlag.AlignTop
                 height = Parameters_Ribbon.ICON_SIZE_MEDIUM
                 CommandWidget = currentWidget
                 newControl = self.returnDropWidgets(CommandWidget, panel, "Medium", showText=False,)           
-                # newControl.setFixedHeight(height)
+                newPanel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("MediumWidget")
                 Delete(currentWidget)
-                panel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("MediumWidget")
-                
-                # # write the changes to the ribbonstruture file 
-                # property = {"size": 'medium'}
-                # self.WriteButtonSettings(ButtonWidget, panel, property)
             if WidgetType == "LargeWidget":
                 alignment = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter
                 height = Parameters_Ribbon.ICON_SIZE_LARGE
                 CommandWidget = currentWidget
                 newControl = self.returnDropWidgets(CommandWidget, panel, "Large", showText=False,)
                 newControl.setFixedSize(QSize(height, height))
+                newPanel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("LargeWidget")
                 Delete(currentWidget)
-                panel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("LargeWidget")
                 
                 for child in ButtonWidget.children():
                     if type(child) == QLabel:
@@ -1143,14 +1137,24 @@ class ModernMenu(RibbonBar):
                         else:
                             child.hide()
                             child.setMinimumWidth(0)
-                            
-                # # write the changes to the ribbonstruture file 
-                # property = {"size": 'large'}
-                # self.WriteButtonSettings(ButtonWidget, panel, property)
-                        
 
         layout.update()
-        
+
+        # Set the newPanel as like with the current panel
+        newPanel._actionsLayout.setHorizontalSpacing(panel._actionsLayout.horizontalSpacing())
+        newPanel.layout().setSpacing(panel.layout().spacing())
+        newPanel.setContentsMargins(panel.contentsMargins())
+        newPanel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
+        Font = QFont()
+        Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
+        newPanel._titleLabel.setFont(Font)
+
+        # Set the title from the panel to its object name. otherwise, the title will not match with custom panels
+        # These have a suffix which is hidden. The objectname is set in Buildpanels()
+        # TODO: update the pyqtribbon package to set the objectname self.
+        panel.setTitle(panel.objectName())
+        self.currentCategory().replacePanel(panel, newPanel)
+                
         # write the changes to the ribbonstruture file 
         property = {"size": Size}
         self.WriteButtonSettings(ButtonWidget, panel, property)
