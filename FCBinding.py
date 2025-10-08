@@ -19,19 +19,11 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
-from pydoc import text
-from turtle import isvisible
-from typing import Any
-
-from numpy import delete
-
-from PySide import QtWidgets
-import CustomWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -51,7 +43,7 @@ from PySide.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QSpinBox,
@@ -86,7 +78,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1170,6 +1162,38 @@ class ModernMenu(RibbonBar):
         newPanel._titleLabel.setFont(Font)
         newPanel.setObjectName(panel.objectName())
         newPanel.setTitle(panel.title())
+        
+        if panel.panelOptionButton().menu() is not None:
+            actionList = panel.panelOptionButton().menu().actions()
+            Menu = CustomControls.CustomOptionMenu(
+                    None, actionList, self
+                )
+            # Set the menu with the stylesheet
+            newPanel.panelOptionButton().setMenu(Menu)
+            StyleSheet_Menu = (
+                "* {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
+            )
+            Menu.setStyleSheet(StyleSheet_Menu)
+            # Set the behavior of the option button
+            newPanel.panelOptionButton().setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+            # Remove the image to avoid double arrows
+            newPanel.panelOptionButton().setStyleSheet(
+                "RibbonPanelOptionButton::menu-indicator {image: none;}"
+            )
+            Menu = newPanel.panelOptionButton().menu()
+
+            # Set the icon
+            OptionButton_Icon = StyleMapping_Ribbon.ReturnStyleItem("OptionButton")
+            if OptionButton_Icon is not None:
+                newPanel.panelOptionButton().setIcon(OptionButton_Icon)
+            else:
+                newPanel.panelOptionButton().setArrowType(Qt.ArrowType.DownArrow)
+                newPanel.panelOptionButton().setToolButtonStyle(
+                    Qt.ToolButtonStyle.ToolButtonTextBesideIcon
+                )
+                newPanel.panelOptionButton().setText("more...")
+        else:
+            newPanel.panelOptionButton().hide()
 
         self.currentCategory().replacePanel(panel, newPanel)
         # Cleanup by deleting the old panel. replacePanel, only replaces the widgets, it does not delete the old widget
