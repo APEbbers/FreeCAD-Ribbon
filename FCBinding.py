@@ -19,6 +19,7 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+from typing_extensions import ParamSpecArgs
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
@@ -148,7 +149,7 @@ from pyqtribbon_local.category import RibbonCategoryLayoutButton, RibbonNormalCa
 
 
 # Get the main window of FreeCAD
-mw = Gui.getMainWindow()
+mw: QMainWindow = Gui.getMainWindow()
 
 # Define a timer
 timer = QTimer()
@@ -250,6 +251,9 @@ class ModernMenu(RibbonBar):
 
     # Define a indictor for wether the customize enviroment is enabled
     CustomizeEnabled = False
+    # a action list for the right click event in the customize enviroment.
+    # Used to store the button states
+    actionList = []
     # endregion
 
     def __init__(self):
@@ -1033,17 +1037,43 @@ class ModernMenu(RibbonBar):
                         Stylesheet = Stylesheet + Addition
                         self.setStyleSheet(Stylesheet)
                         self.CustomizeEnabled = True
-                        self.setRibbonHeight(self.RibbonHeight + 12)                        
+                        self.setRibbonHeight(self.RibbonHeight + 12)
+                        
+                        # Enable all buttons, so you can access them with a right click
+                        # Disable also the signals to avoid triggering the action
+                        self.actionList = []
+                        for child in mw.findChildren(RibbonToolButton):
+                            for subchild in child.children():
+                                try:
+                                    for action in subchild.actions():
+                                        self.actionList.append([action.data(), action.isEnabled()])
+                                        action.setEnabled(True)
+                                        action.blockSignals(True)
+                                except Exception:
+                                    pass
                         return
                     if self.CustomizeEnabled is True:
                         self.setStyleSheet(Stylesheet)
                         self.CustomizeEnabled = False
                         self.setRibbonHeight(self.RibbonHeight)
+                        
+                        for child in mw.findChildren(RibbonToolButton):
+                            for subchild in child.children():
+                                try:
+                                    subchild.actions()
+                                except Exception as e:
+                                    continue
+                                for action in subchild.actions():
+                                    action.blockSignals(False)
+                                    for item in self.actionList:
+                                        if item[0] == action.data() and item[1] is False:
+                                            subchild.setDisabled(True)                                                 
                         return
 
         return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                         
+                
         layout: QGridLayout = panel._actionsLayout
         newControl = RibbonToolButton()
         # This is a hack, but after testing, the best way to update the panel is by replacing it.
@@ -1083,7 +1113,6 @@ class ModernMenu(RibbonBar):
         orderList = []    
         for widget in panel.widgets():
             action = None
-            print(type(widget))
             WidgetType = widget.objectName()
             if WidgetType != "separator":
                 for child in widget.children():                
