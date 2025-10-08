@@ -1148,13 +1148,18 @@ class ModernMenu(RibbonBar):
         Font = QFont()
         Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
         newPanel._titleLabel.setFont(Font)
+        newPanel.setObjectName(panel.objectName())
+        newPanel.setTitle(panel.title())
 
         # Set the title from the panel to its object name. otherwise, the title will not match with custom panels
         # These have a suffix which is hidden. The objectname is set in Buildpanels()
         # TODO: update the pyqtribbon package to set the objectname self.
         panel.setTitle(panel.objectName())
         self.currentCategory().replacePanel(panel, newPanel)
-                
+        # Cleanup by deleting the old panel. replacePanel, only replaces the widgets, it does not delete the old widget
+        # TODO: delete the old widget in the replacePanel method.
+        panel.deleteLater()
+        
         # write the changes to the ribbonstruture file 
         property = {"size": Size}
         self.WriteButtonSettings(ButtonWidget, panel, property)
@@ -3543,23 +3548,16 @@ class ModernMenu(RibbonBar):
                         if title != Name:
                             title = title.replace(Name, "")
                     panel.setTitle(title)
+                    
             # remove any suffix from the panel title
-            if panel.title().endswith("_custom"):
-                panel.setTitle(panel.title().replace("_custom", ""))
-            if panel.title().endswith("_global"):
-                panel.setTitle(panel.title().replace("_global", ""))
-            if panel.title().endswith("_newPanel"):
-                panel.setTitle(panel.title().replace("_newPanel", ""))
+            panel.setTitle(self.ReturnPanelTitle(panel))
 
             # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
             # add an offset to make room for the panel titles and icons
             panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
-            # panel._actionsLayout.setSpacing(0)
-            # panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
             panel.layout().setSpacing(0)
             panel.setContentsMargins(0, 0, 0, 0)
             panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
-            # panel._actionsLayout.setContentsMargins(0, 0, 0, 0)
             Font = QFont()
             Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
             panel._titleLabel.setFont(Font)
@@ -4811,6 +4809,19 @@ class ModernMenu(RibbonBar):
             with open(JsonFile, "w") as outfile:
                 json.dump(self.ribbonStructure, outfile, indent=4)
             outfile.close()
+            
+            
+    def ReturnPanelTitle(self, panel: RibbonPanel):
+        title = panel.title()
+        # remove any suffix from the panel title
+        if title.endswith("_custom"):
+            title = title.replace("_custom", "")
+        if title.endswith("_global"):
+            title = title.replace("_global", "")
+        if title.endswith("_newPanel"):
+            title = title.replace("_newPanel", "")
+        
+        return title
     # endregion
 
     # region - Titlebar functions
