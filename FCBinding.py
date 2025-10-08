@@ -1151,14 +1151,10 @@ class ModernMenu(RibbonBar):
         newPanel.setObjectName(panel.objectName())
         newPanel.setTitle(panel.title())
 
-        # Set the title from the panel to its object name. otherwise, the title will not match with custom panels
-        # These have a suffix which is hidden. The objectname is set in Buildpanels()
-        # TODO: update the pyqtribbon package to set the objectname self.
-        panel.setTitle(panel.objectName())
         self.currentCategory().replacePanel(panel, newPanel)
         # Cleanup by deleting the old panel. replacePanel, only replaces the widgets, it does not delete the old widget
         # TODO: delete the old widget in the replacePanel method.
-        panel.deleteLater()
+        panel.close()
         
         # write the changes to the ribbonstruture file 
         property = {"size": Size}
