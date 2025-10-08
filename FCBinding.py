@@ -1028,11 +1028,12 @@ class ModernMenu(RibbonBar):
                         Addition = """RibbonCategory {
                             border-top: 1px solid red;
                             border-bottom: 1px solid red;
+                            spacing: 3px;
                         }"""
-                        Stylesheet = Addition + Stylesheet
+                        Stylesheet = Stylesheet + Addition
                         self.setStyleSheet(Stylesheet)
                         self.CustomizeEnabled = True
-                        self.setRibbonHeight(self.RibbonHeight + 6)                        
+                        self.setRibbonHeight(self.RibbonHeight + 12)                        
                         return
                     if self.CustomizeEnabled is True:
                         self.setStyleSheet(Stylesheet)
@@ -1082,13 +1083,17 @@ class ModernMenu(RibbonBar):
         orderList = []    
         for widget in panel.widgets():
             action = None
+            print(type(widget))
             WidgetType = widget.objectName()
-            for child in widget.children():                
-                if child.objectName() == "CommandButton":
-                    action = child.defaultAction()
-                    if action.data() == defaultAction.data():
-                        WidgetType = WidgetTypeToSet
-                    orderList.append([action.data(), WidgetType, child])
+            if WidgetType != "separator":
+                for child in widget.children():                
+                    if child.objectName() == "CommandButton":
+                        action = child.defaultAction()
+                        if action.data() == defaultAction.data():
+                            WidgetType = WidgetTypeToSet
+                        orderList.append([action.data(), WidgetType, child])
+            if WidgetType == "separator":
+                orderList.append([None, WidgetType, None])
         
         # Clear the list with widgets in the panel
         panel.widgets().clear()
@@ -1112,6 +1117,13 @@ class ModernMenu(RibbonBar):
             currentWidget = item[2]
             WidgetType = item[1]
             
+            if WidgetType == "separator":
+                separator = newPanel.addLargeVerticalSeparator(
+                    width=6,
+                    alignment=Qt.AlignmentFlag.AlignCenter,
+                    fixedHeight=False,
+                )
+                separator.setObjectName("separator")
             if WidgetType == "SmallWidget":
                 alignment = Qt.AlignmentFlag.AlignTop
                 height = Parameters_Ribbon.ICON_SIZE_SMALL
