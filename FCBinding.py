@@ -1095,11 +1095,11 @@ class ModernMenu(RibbonBar):
                     break
                 else:
                     panel.removeWidget(parent)
-                    # parent.close()
-                    # del parent
+                    parent.close()
+                    del parent
             panel.removeWidget(widget)
-            # widget.close()
-            # del widget
+            widget.close()
+            del widget
             return
 
         for item in orderList:
