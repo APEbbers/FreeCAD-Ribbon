@@ -1056,7 +1056,18 @@ class ModernMenu(RibbonBar):
         # This is a hack, but after testing, the best way to update the panel is by replacing it.
         # THe delete widgets is still neccesary otherwise they will be leftovers and remain directly in the ribbon.
         newPanel = RibbonPanel()
-                      
+        
+        # SDefine the stylesheet for the buttons
+        StyleSheet_Addition_Button = (
+            "QToolButton, QToolButton:hover {background-color: "
+            + StyleMapping_Ribbon.ReturnStyleItem(
+                "Background_Color"
+            )
+            + ";border: none"
+            + ";}"
+        )
+        
+        # get the size to set
         WidgetTypeToSet = "SmallWidget"
         Size = "small"
         if ButtonStyleWidget.currentText() == "Medium":
@@ -1066,6 +1077,7 @@ class ModernMenu(RibbonBar):
             WidgetTypeToSet = "LargeWidget"
             Size = "large"
         
+        # Get the visibilty of the text and get the action
         textVisible = False
         defaultAction = None
         for child in ButtonWidget.children():
@@ -1073,7 +1085,8 @@ class ModernMenu(RibbonBar):
                 textVisible = child.isVisible()
             if child.objectName() == "CommandButton":
                 defaultAction = child.defaultAction()
-            
+        
+        # Get the order of the commands
         orderList = []    
         for widget in panel.widgets():
             action = None
@@ -1084,7 +1097,8 @@ class ModernMenu(RibbonBar):
                     if action.data() == defaultAction.data():
                         WidgetType = WidgetTypeToSet
                     orderList.append([action.data(), WidgetType, child])
-            
+        
+        # Clear the list with widgets in the panel
         panel.widgets().clear()
         
         # Delete the old widget and items
@@ -1111,14 +1125,18 @@ class ModernMenu(RibbonBar):
                 height = Parameters_Ribbon.ICON_SIZE_SMALL
                 CommandWidget = currentWidget
                 newControl = self.returnDropWidgets(CommandWidget, panel, showText=False,)
-                newPanel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("SmallWidget")
+                btn = newPanel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=False)
+                btn.setObjectName("SmallWidget")
+                btn.setStyleSheet(StyleSheet_Addition_Button)
                 Delete(currentWidget)
             if WidgetType == "MediumWidget":
                 alignment = Qt.AlignmentFlag.AlignTop
                 height = Parameters_Ribbon.ICON_SIZE_MEDIUM
                 CommandWidget = currentWidget
                 newControl = self.returnDropWidgets(CommandWidget, panel, "Medium", showText=False,)           
-                newPanel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("MediumWidget")
+                btn = newPanel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=False)
+                btn.setObjectName("MediumWidget")
+                btn.setStyleSheet(StyleSheet_Addition_Button)
                 Delete(currentWidget)
             if WidgetType == "LargeWidget":
                 alignment = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter
@@ -1126,7 +1144,9 @@ class ModernMenu(RibbonBar):
                 CommandWidget = currentWidget
                 newControl = self.returnDropWidgets(CommandWidget, panel, "Large", showText=False,)
                 newControl.setFixedSize(QSize(height, height))
-                newPanel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=False).setObjectName("LargeWidget")
+                btn = newPanel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=False)
+                btn.setObjectName("LargeWidget")
+                btn.setStyleSheet(StyleSheet_Addition_Button)
                 Delete(currentWidget)
                 
                 for child in ButtonWidget.children():
@@ -3128,16 +3148,16 @@ class ModernMenu(RibbonBar):
                             spacer_1 = panel.addSmallButton()
                             spacer_1.setFixedWidth(self.iconSize)
                             spacer_1.setEnabled(False)
-                            spacer_1.setStyleSheet("background-color: none")
+                            spacer_1.setStyleSheet("background-color: none;border: none")
                         if float((NoSmallButtons_spacer + 2) / 3).is_integer():
                             spacer_1 = panel.addSmallButton()
                             spacer_1.setFixedWidth(self.iconSize)
                             spacer_1.setEnabled(False)
-                            spacer_1.setStyleSheet("background-color: none")
+                            spacer_1.setStyleSheet("background-color: none;border: none")
                             spacer_2 = panel.addSmallButton()
                             spacer_2.setFixedWidth(self.iconSize)
                             spacer_2.setEnabled(False)
-                            spacer_2.setStyleSheet("background-color: none")
+                            spacer_2.setStyleSheet("background-color: none;border: none")
                         # reset the counter after a separator is added.
                         NoSmallButtons_spacer = 0
                         # Same principle for medium buttons
@@ -3145,7 +3165,7 @@ class ModernMenu(RibbonBar):
                             spacer_1 = panel.addMediumButton()
                             spacer_1.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
                             spacer_1.setEnabled(False)
-                            spacer_1.setStyleSheet("background-color: none")
+                            spacer_1.setStyleSheet("background-color: none;border: none")
                         NoMediumButtons_spacer = 0
                         continue
                     else:
