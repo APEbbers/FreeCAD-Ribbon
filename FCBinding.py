@@ -1483,7 +1483,7 @@ class ModernMenu(RibbonBar):
             )
         if os.path.exists(file) is False:
             print("SearchBar directoy doesn't exist")
-            return
+            return 0
 
         TB: QToolBar = mw.findChildren(QToolBar, "SearchBar")
         width = 0
