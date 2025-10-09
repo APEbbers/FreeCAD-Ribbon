@@ -1232,6 +1232,22 @@ class CustomControls(RibbonToolButton):
         return btn
 
 
+class CustomSeparator(RibbonSeparator):
+    def mouseMoveEvent(self, e):
+        if e.buttons() == Qt.MouseButton.LeftButton:
+            try:
+                drag = QDrag(self)
+                mime = QMimeData()
+                drag.setMimeData(mime)
+                pixmap = QPixmap(self.size())
+                self.render(pixmap)
+                drag.setPixmap(pixmap)
+
+                if drag is not None:
+                    drag.exec(Qt.DropAction.MoveAction)
+            except Exception as e:
+                print(e)
+
 class DragTargetIndicator(QLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
