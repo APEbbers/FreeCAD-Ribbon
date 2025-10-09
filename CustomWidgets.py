@@ -1182,8 +1182,11 @@ class CustomControls(RibbonToolButton):
                 # Set the text and icon for the second action with those from the first action
                 action_1.setText(action_0.text())
                 action_1.setIcon(action_0.icon())
+                # Set the objectName with the data from the first action to the second action. Needed for dragdrop
+                action_1.setObjectName(action_0.data())
                 # Add the second action
                 Menu.addAction(action_1)
+                
 
         # Set the stylesheet
         BackGroundColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")

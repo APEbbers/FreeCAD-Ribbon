@@ -19,12 +19,13 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+from turtle import isvisible
 import CustomWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -44,7 +45,7 @@ from PySide.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QSpinBox,
@@ -79,7 +80,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -95,7 +96,7 @@ from PySide.QtCore import (
     QPoint,
     QSettings,
 )
-from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, CheckBoxAction, SpinBoxAction, ComboBoxAction
+from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, CheckBoxAction, SpinBoxAction, ComboBoxAction, CustomSeparator
 
 import json
 import os
@@ -1460,7 +1461,7 @@ class ModernMenu(RibbonBar):
                     self.dragIndicator.hide()
                     # Get the grid layout
                     gridLayout: QGridLayout = panel._actionsLayout
-
+                    
                     # Get the old position of the dragged widget
                     n = 0
                     OldPos = []
@@ -1478,12 +1479,15 @@ class ModernMenu(RibbonBar):
                         
                         # Take the dragged widget
                         W_dropWidget = gridLayout.itemAt(n).widget()
-                        W_drop_customControl: QToolButton = W_dropWidget.findChildren(
-                            QToolButton
-                        )[0]
-                        T_dropWidget: QToolButton = W_drop_customControl.findChildren(
-                            QToolButton
-                        )[0]
+                        if len(W_dropWidget.findChildren(CustomSeparator)) == 0:
+                            W_drop_customControl: QToolButton = W_dropWidget.findChildren(
+                                QToolButton
+                            )[0]
+                            T_dropWidget: QToolButton = W_drop_customControl.findChildren(
+                                QToolButton
+                            )[0]
+                        else:
+                            T_dropWidget = W_dropWidget.findChildren(CustomSeparator)[0]
 
                         # Get the new size
                         new_size = position[2]
@@ -1492,7 +1496,7 @@ class ModernMenu(RibbonBar):
                         buttonSize_dropWidget = "small"
                         if new_size.height() == Parameters_Ribbon.ICON_SIZE_MEDIUM:
                             buttonSize_dropWidget = "medium"
-                        if new_size.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
+                        if new_size.height() == Parameters_Ribbon.ICON_SIZE_LARGE or W_dropWidget.objectName() == "separator":
                             buttonSize_dropWidget = "large"
                         W_dropWidget.setFixedHeight(original_size.height())
 
@@ -1550,16 +1554,26 @@ class ModernMenu(RibbonBar):
                     orderList = []
                     for k in range(gridLayout.count()):
                         try:
-                            Control = gridLayout.itemAt(k).widget().children()[1]
-                            if type(Control) is RibbonToolButton:
-                                for child in Control.children():
-                                    if (
-                                        type(child) == QToolButton
-                                        and child.objectName() == "CommandButton"
-                                    ):
-                                        orderList.append(child.defaultAction().data())
+                            if len(gridLayout.itemAt(k).widget().findChildren(CustomSeparator)) > 0:
+                                orderList.append(f"{k+1}_separator_{WorkBenchName}")                           
+                            else:
+                                Control = gridLayout.itemAt(k).widget().children()[1]
+                                if type(Control) is RibbonToolButton:
+                                    for child in Control.children():
+                                        if (
+                                            type(child) == QToolButton
+                                            and child.objectName() == "CommandButton"
+                                        ):
+                                            orderList.append(child.defaultAction().data())
                         except Exception:
+                            # raise e
                             pass
+                    if panel.panelOptionButton().menu() is not None:
+                        menu: QMenu = panel.panelOptionButton().menu()
+                        for action in menu.actions():
+                            print(action.objectName())
+                            # if action.data() is not None:
+                            orderList.append(action.objectName())
                     
                     # Update the order in the ribbon structure
                     StandardFunctions.add_keys_nested_dict(
@@ -1586,7 +1600,8 @@ class ModernMenu(RibbonBar):
                     with open(JsonFile, "w") as outfile:
                         json.dump(self.ribbonStructure, outfile, indent=4)
                     outfile.close()
-        except Exception:
+        except Exception as e:
+            raise e
             pass
         
         
@@ -3033,6 +3048,11 @@ class ModernMenu(RibbonBar):
             # Add new global Panels
             NewPanelList = self.List_AddNewPanelToWorkbench("Global", toolbar)
             allButtons.extend(NewPanelList)
+            
+            # Set the objectname to the default action of all buttons
+            for button in allButtons:
+                action = button.actions()[0]
+                action.setObjectName(action.data())
 
             # add separators to the command list.
             if workbenchName in self.ribbonStructure["workbenches"]:
@@ -3313,7 +3333,7 @@ class ModernMenu(RibbonBar):
                                 if Parameters_Ribbon.DEBUG_MODE is True:
                                     print(f"{workbenchName}, {action.data()}, {e}")
                                 text = action.text()
-
+                                                 
                             # Get the icon from cache. Use the pixmap as backup
                             pixmap = ""
                             CommandName = action.data()
@@ -4574,6 +4594,15 @@ class ModernMenu(RibbonBar):
     # Needs to be updated/optimalised
     def returnDropWidgets(self, widget, panel, ButtonType = "Small", showText = True):
         btn= widget
+        
+        print(btn.objectName())
+        if btn.objectName() == "separator":
+            separatorWidget = CustomWidgets.CustomSeparator()
+            separator = panel.addLargeWidget(separatorWidget)
+            separator.setObjectName("separator")
+            return separator
+        
+        
         for child in widget.children():
             if (child.objectName() == "CommandButton"):
                 btn = child        
