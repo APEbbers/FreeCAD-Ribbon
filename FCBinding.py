@@ -2336,20 +2336,24 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().insertWidget(BeforeAction, BetaLabel)
         switch = Toggle()
         switch.setObjectName("bétaSwitch")
-        switch.setToolTip(translate("FreeCAD Ribbon",
+        toolTipText = (translate("FreeCAD Ribbon",
     """
-    Right click on the ribbon (outside the buttons) and click customize.
-    The customization enviroment is enabled.
-    Now right click on any button to change its properties.
-    Current functions are:
-    - Enable text
-    - Set the icon size
-    - Set the button type to:
-        - Small  -> three rows of buttons, text on the right side.
-        - Medium -> two rows of buttons, text on the right side.
-        - Large -> One button row, text below the button.
+    Enables the following experimental functions:
+    - a new customisation enviroment. With this enviroment activated, the following customizations can be done per button:
+        - Enable or disable text
+        - Set the icon size
+        - Set the button type to:
+            - Small  -> three rows of buttons, text on the right side.
+            - Medium -> two rows of buttons, text on the right side.
+            - Large -> One button row, text below the button.
+        - Reorder the buttons by dragging. Currently only within their panels is supported.
+        
+        To start the customisation eviroment, right click on the ribbon (outside the buttons) and click customize.
+        The customization enviroment is enabled and with a right click on a button, its properties can be changed.
     """
     ))
+        switch.setToolTip(toolTipText)
+        BetaLabel.setToolTip(toolTipText)
         switch.setMaximumHeight(self.RightToolBarButtonSize)
         switch.setMaximumWidth(self.RightToolBarButtonSize * 1.8)
         switch.toggled.connect(
