@@ -61,12 +61,6 @@ HoverColor = preferences.GetString('GeneralBackgroundHoverColor')
 BorderColor = preferences.GetString('GeneralBorderColor')
 BorderColorHover = preferences.GetString('GeneralBorderHoverColor')
 TextColor = preferences.GetString('TextForegroundColor')
-# BackGroundColor = '@GeneralBackgroundColor'
-# HoverColor = '@AccentColor'
-# BorderColor = '@GeneralBorderColor'
-# BorderColorHover = '@AccentColor'
-# TextColor = '@TextForegroundColor'
-color = matplotlib.colors.to_rgba(TextColor)
 
 def GetColorSetting(settingName: str) -> object:
         # Create a tuple from the int value of the color

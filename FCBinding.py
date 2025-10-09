@@ -19,7 +19,6 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
-from typing_extensions import ParamSpecArgs
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
