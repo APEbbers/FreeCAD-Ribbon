@@ -45,6 +45,7 @@ from PySide.QtGui import (
     QPaintEvent,
     QPen,
     QPainter,
+    
 )
 from PySide.QtWidgets import (
     QComboBox,
@@ -1431,12 +1432,11 @@ class AnimatedToggle(Toggle):
 
 
 class CheckBoxAction(QWidgetAction):
-    
     checkbox = QCheckBox()
     checkbox.setObjectName("checkbox")
     
-    checkStateChanged = checkbox.checkStateChanged
-    
+    checkStateChanged = checkbox.stateChanged
+
     def __init__(self, parent, text):
         super(CheckBoxAction, self).__init__(parent)
         layout = QHBoxLayout()
