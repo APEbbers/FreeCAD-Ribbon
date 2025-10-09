@@ -19,6 +19,7 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+import CustomWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
@@ -3198,11 +3199,8 @@ class ModernMenu(RibbonBar):
                     # If the last item is not an separator, you can add an separator
                     # With an paneloptionbutton, use an offset of 2 instead of 1 for i.
                     if "separator" in button.text() and i < len(allButtons):
-                        separator = panel.addLargeVerticalSeparator(
-                            width=6,
-                            alignment=Qt.AlignmentFlag.AlignCenter,
-                            fixedHeight=False,
-                        )
+                        separatorWidget = CustomWidgets.CustomSeparator()
+                        separator = panel.addLargeWidget(separatorWidget)
                         separator.setObjectName("separator")
                         # there is a bug in pyqtribbon where the separator is placed in the wrong position
                         # despite the correct order of the button list.
