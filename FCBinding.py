@@ -25,7 +25,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -45,7 +45,7 @@ from PySide6.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QSpinBox,
@@ -80,7 +80,7 @@ from PySide6.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1469,6 +1469,7 @@ class ModernMenu(RibbonBar):
                         if gridLayout.itemAt(n).widget().children()[1] == widget:
                             OldPos = gridLayout.getItemPosition(n)
                             break
+                    
                     # counter and old position is not empty, Swap the widgets
                     if n > -1 and len(OldPos) > 0 :
                         # Get the widget that has to be replaced
@@ -1571,8 +1572,6 @@ class ModernMenu(RibbonBar):
                     if panel.panelOptionButton().menu() is not None:
                         menu: QMenu = panel.panelOptionButton().menu()
                         for action in menu.actions():
-                            print(action.objectName())
-                            # if action.data() is not None:
                             orderList.append(action.objectName())
                     
                     # Update the order in the ribbon structure
@@ -1600,8 +1599,7 @@ class ModernMenu(RibbonBar):
                     with open(JsonFile, "w") as outfile:
                         json.dump(self.ribbonStructure, outfile, indent=4)
                     outfile.close()
-        except Exception as e:
-            raise e
+        except Exception:
             pass
         
         
@@ -4595,7 +4593,6 @@ class ModernMenu(RibbonBar):
     def returnDropWidgets(self, widget, panel, ButtonType = "Small", showText = True):
         btn= widget
         
-        print(btn.objectName())
         if btn.objectName() == "separator":
             separatorWidget = CustomWidgets.CustomSeparator()
             separator = panel.addLargeWidget(separatorWidget)
