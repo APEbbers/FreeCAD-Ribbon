@@ -1180,54 +1180,9 @@ class ModernMenu(RibbonBar):
                         else:
                             child.hide()
                             child.setMinimumWidth(0)
-
-        # Set the newPanel as like with the current panel
-        newPanel._actionsLayout.setHorizontalSpacing(panel._actionsLayout.horizontalSpacing())
-        newPanel.layout().setSpacing(panel.layout().spacing())
-        newPanel.setContentsMargins(panel.contentsMargins())
-        newPanel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
-        Font = QFont()
-        Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
-        newPanel._titleLabel.setFont(Font)
-        newPanel.setObjectName(panel.objectName())
-        newPanel.setTitle(panel.title())
         
-        if panel.panelOptionButton().menu() is not None:
-            actionList = panel.panelOptionButton().menu().actions()
-            Menu = CustomControls.CustomOptionMenu(
-                    None, actionList, self
-                )
-            # Set the menu with the stylesheet
-            newPanel.panelOptionButton().setMenu(Menu)
-            StyleSheet_Menu = (
-                "* {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
-            )
-            Menu.setStyleSheet(StyleSheet_Menu)
-            # Set the behavior of the option button
-            newPanel.panelOptionButton().setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
-            # Remove the image to avoid double arrows
-            newPanel.panelOptionButton().setStyleSheet(
-                "RibbonPanelOptionButton::menu-indicator {image: none;}"
-            )
-            Menu = newPanel.panelOptionButton().menu()
-
-            # Set the icon
-            OptionButton_Icon = StyleMapping_Ribbon.ReturnStyleItem("OptionButton")
-            if OptionButton_Icon is not None:
-                newPanel.panelOptionButton().setIcon(OptionButton_Icon)
-            else:
-                newPanel.panelOptionButton().setArrowType(Qt.ArrowType.DownArrow)
-                newPanel.panelOptionButton().setToolButtonStyle(
-                    Qt.ToolButtonStyle.ToolButtonTextBesideIcon
-                )
-                newPanel.panelOptionButton().setText("more...")
-        else:
-            newPanel.panelOptionButton().hide()
-
-        self.currentCategory().replacePanel(panel, newPanel)
-        # Cleanup by deleting the old panel. replacePanel, only replaces the widgets, it does not delete the old widget
-        # TODO: delete the old widget in the replacePanel method.
-        panel.close()
+        # Replace the panel with the new panel
+        self.replacePanel(panel, newPanel)
         
         # write the changes to the ribbonstruture file 
         property = {"size": Size}
@@ -1406,8 +1361,9 @@ class ModernMenu(RibbonBar):
                 self.dragIndicator, position[0], position[1], rowSpan, 1
             )
 
-            # # Hide the item being dragged.
-            e.source().hide()
+            # When you hide the source, the dragged widget disapears from the panel.
+            # For now It is left in, to keep the panel at the same size.
+            # e.source().hide()
             # Show the target.
             self.dragIndicator.show()
             e.accept()
@@ -1455,10 +1411,14 @@ class ModernMenu(RibbonBar):
                     if n > -1 and len(OldPos) > 0 :
                         # Get the widget that has to be replaced
                         W_origin_item = gridLayout.itemAtPosition(xPos, yPos).widget()
-                        W_drop_origin: QToolButton = W_origin_item.findChildren(QToolButton)[0]
+                        W_drop_origin = QToolButton()
+                        if len(W_origin_item.findChildren(QToolButton)) > 0:
+                            W_drop_origin: QToolButton = W_origin_item.findChildren(QToolButton)[0]
+                        else:
+                            return
                         T_origin: QToolButton = W_drop_origin.findChildren(QToolButton)[0]
                         original_size = position[3]
-                        
+
                         # Take the dragged widget
                         W_dropWidget = gridLayout.itemAt(n).widget()
                         if len(W_dropWidget.findChildren(CustomSeparator)) == 0:
@@ -1517,6 +1477,9 @@ class ModernMenu(RibbonBar):
                         originalItem.addWidget(originalWidget)
                         gridLayout.replaceWidget(W_dropWidget, originalItem)
                         
+                        gridLayout.setAlignment(originalItem, Qt.AlignmentFlag.AlignCenter)
+                        gridLayout.setAlignment(draggedItem, Qt.AlignmentFlag.AlignCenter)
+                            
                         # Delete the old widget and items
                         def Delete(widget):
                             for i in range(100):
@@ -1582,7 +1545,8 @@ class ModernMenu(RibbonBar):
                     with open(JsonFile, "w") as outfile:
                         json.dump(self.ribbonStructure, outfile, indent=4)
                     outfile.close()
-        except Exception:
+        except Exception as e:
+            raise e
             pass
         
         
@@ -4549,7 +4513,7 @@ class ModernMenu(RibbonBar):
     
     # Needs to be updated/optimalised
     def returnDropWidgets(self, widget, panel, ButtonType = "Small", showText = True):
-        CommandButton = None
+        CommandButton = widget
         ArrowButton = None
         btn = RibbonToolButton()
         
@@ -4559,7 +4523,6 @@ class ModernMenu(RibbonBar):
             separator.setObjectName("separator")
             return separator
         
-        
         for child in widget.children():
             if (child.objectName() == "CommandButton"):
                 CommandButton = child
@@ -4567,9 +4530,11 @@ class ModernMenu(RibbonBar):
                 ArrowButton = child
                 
         # get the actions
-        action = CommandButton.actions()             
+        action = widget.actions()                     
         if CommandButton.defaultAction() is not None:
             action = CommandButton.defaultAction()
+        if type(action) is list and len(action) > 0:
+            action = action[0]   
             
         # Get the command name
         CommandName = action.data()
@@ -4886,6 +4851,57 @@ class ModernMenu(RibbonBar):
             title = title.replace("_newPanel", "")
         
         return title
+    
+    def replacePanel(self, panel: RibbonPanel, newPanel: RibbonPanel):
+        # Set the newPanel as like with the current panel
+        newPanel._actionsLayout.setHorizontalSpacing(panel._actionsLayout.horizontalSpacing())
+        newPanel.layout().setSpacing(panel.layout().spacing())
+        newPanel.setContentsMargins(panel.contentsMargins())
+        newPanel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
+        Font = QFont()
+        Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
+        newPanel._titleLabel.setFont(Font)
+        newPanel.setObjectName(panel.objectName())
+        newPanel.setTitle(panel.title())
+        
+        if panel.panelOptionButton().menu() is not None:
+            actionList = panel.panelOptionButton().menu().actions()
+            Menu = CustomControls.CustomOptionMenu(
+                    None, actionList, self
+                )
+            # Set the menu with the stylesheet
+            newPanel.panelOptionButton().setMenu(Menu)
+            StyleSheet_Menu = (
+                "* {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
+            )
+            Menu.setStyleSheet(StyleSheet_Menu)
+            # Set the behavior of the option button
+            newPanel.panelOptionButton().setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+            # Remove the image to avoid double arrows
+            newPanel.panelOptionButton().setStyleSheet(
+                "RibbonPanelOptionButton::menu-indicator {image: none;}"
+            )
+            Menu = newPanel.panelOptionButton().menu()
+
+            # Set the icon
+            OptionButton_Icon = StyleMapping_Ribbon.ReturnStyleItem("OptionButton")
+            if OptionButton_Icon is not None:
+                newPanel.panelOptionButton().setIcon(OptionButton_Icon)
+            else:
+                newPanel.panelOptionButton().setArrowType(Qt.ArrowType.DownArrow)
+                newPanel.panelOptionButton().setToolButtonStyle(
+                    Qt.ToolButtonStyle.ToolButtonTextBesideIcon
+                )
+                newPanel.panelOptionButton().setText("more...")
+        else:
+            newPanel.panelOptionButton().hide()
+
+        self.currentCategory().replacePanel(panel, newPanel)
+        # Cleanup by deleting the old panel. replacePanel, only replaces the widgets, it does not delete the old widget
+        # TODO: delete the old widget in the replacePanel method.
+        panel.close()
+        
+        return
     # endregion
 
     # region - Titlebar functions
