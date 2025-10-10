@@ -1030,8 +1030,8 @@ class ModernMenu(RibbonBar):
                 if action == CustomizeStartAct:
                     if self.CustomizeEnabled is False:
                         Addition = """RibbonCategory {
-                            border-top: 1px solid red;
-                            border-bottom: 1px solid red;
+                            border-top: 0.5px solid red;
+                            border-bottom: 0.5px solid red;
                         }"""
                         Stylesheet = Stylesheet + Addition
                         self.setStyleSheet(Stylesheet)
@@ -1114,7 +1114,7 @@ class ModernMenu(RibbonBar):
                         action = child.defaultAction()
                         if action.data() == defaultAction.data():
                             WidgetType = WidgetTypeToSet
-                        orderList.append([action.data(), WidgetType, child])
+                        orderList.append([action.data(), WidgetType, widget])
             if WidgetType == "separator":
                 orderList.append([None, WidgetType, None])
         
@@ -4549,9 +4549,11 @@ class ModernMenu(RibbonBar):
     
     # Needs to be updated/optimalised
     def returnDropWidgets(self, widget, panel, ButtonType = "Small", showText = True):
-        btn= widget
+        CommandButton = None
+        ArrowButton = None
+        btn = RibbonToolButton()
         
-        if btn.objectName() == "separator":
+        if widget.objectName() == "separator":
             separatorWidget = CustomWidgets.CustomSeparator()
             separator = panel.addLargeWidget(separatorWidget)
             separator.setObjectName("separator")
@@ -4560,12 +4562,14 @@ class ModernMenu(RibbonBar):
         
         for child in widget.children():
             if (child.objectName() == "CommandButton"):
-                btn = child        
+                CommandButton = child
+            if (child.objectName() == "MenuButton"):
+                ArrowButton = child
                 
         # get the actions
-        action = btn.actions()             
-        if btn.defaultAction() is not None:
-            action = btn.defaultAction()
+        action = CommandButton.actions()             
+        if CommandButton.defaultAction() is not None:
+            action = CommandButton.defaultAction()
             
         # Get the command name
         CommandName = action.data()
@@ -4619,8 +4623,8 @@ class ModernMenu(RibbonBar):
                 pass
             
             Menu = QMenu(self)
-            if widget.menu() is not None:
-                Menu = widget.menu()                                     
+            if ArrowButton is not None and ArrowButton.menu() is not None:
+                Menu = ArrowButton.menu()
             btn: RibbonToolButton = CustomControls.CustomToolButton(
                 Text=action.text(),
                 Action=action,
@@ -4668,8 +4672,8 @@ class ModernMenu(RibbonBar):
                 pass
             
             Menu = QMenu(self)
-            if widget.menu() is not None:
-                Menu = widget.menu()    
+            if ArrowButton is not None and ArrowButton.menu() is not None:
+                Menu = ArrowButton.menu()
             btn: RibbonToolButton = CustomControls.CustomToolButton(
                 Text=action.text(),
                 Action=action,
@@ -4720,8 +4724,8 @@ class ModernMenu(RibbonBar):
                 pass
             
             Menu = QMenu(self)
-            if widget.menu() is not None:
-                Menu = widget.menu()           
+            if ArrowButton is not None and ArrowButton.menu() is not None:
+                Menu = ArrowButton.menu()    
             btn: RibbonToolButton = CustomControls.LargeCustomToolButton(
                 Text=action.text(),
                 Action=action,
