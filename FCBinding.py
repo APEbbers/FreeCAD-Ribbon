@@ -25,7 +25,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -45,7 +45,7 @@ from PySide.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QSpinBox,
@@ -80,7 +80,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -95,6 +95,7 @@ from PySide.QtCore import (
     QRect,
     QPoint,
     QSettings,
+    QSignalBlocker,
 )
 from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, CheckBoxAction, SpinBoxAction, ComboBoxAction, CustomSeparator
 
@@ -552,7 +553,6 @@ class ModernMenu(RibbonBar):
                     # if so set update version
                     for i in range(ArrayLenght):
                         if LatestVersionArray[i] > CurrentVersionArray[i]:
-                            # print(f"{LatestVersionArray[i]}, {CurrentVersionArray[i]}")
                             self.UpdateVersion = LatestVersion
         except Exception as e:
             raise e
@@ -914,7 +914,6 @@ class ModernMenu(RibbonBar):
     def leaveEvent(self, QEvent):
         if Parameters_Ribbon.AUTOHIDE_RIBBON is True and self.MenuEntered is False:
             self.FoldRibbon()
-            # print("LeaveEvent")
 
     # used to scroll a ribbon horizontally, when it's wider than the screen
     def wheelEvent_CC(self, event):
@@ -1033,49 +1032,43 @@ class ModernMenu(RibbonBar):
                         Addition = """RibbonCategory {
                             border-top: 1px solid red;
                             border-bottom: 1px solid red;
-                            spacing: 3px;
                         }"""
                         Stylesheet = Stylesheet + Addition
                         self.setStyleSheet(Stylesheet)
                         self.CustomizeEnabled = True
-                        self.setRibbonHeight(self.RibbonHeight + 12)
+                        self.setRibbonHeight(self.RibbonHeight)
                         
                         # Enable all buttons, so you can access them with a right click
                         # Disable also the signals to avoid triggering the action
                         self.actionList = []
-                        for child in mw.findChildren(RibbonToolButton):
+                        for child in mw.findChildren(RibbonToolButton):                            
                             for subchild in child.children():
                                 try:
-                                    for action in subchild.actions():
-                                        self.actionList.append([action.data(), action.isEnabled()])
-                                        action.setEnabled(True)
-                                        action.blockSignals(True)
+                                    for subAction in subchild.actions():
+                                        subAction.setEnabled(True)
+                                        # self.actionList.append([subAction, subAction.isEnabled(), QSignalBlocker(subchild)])
+                                        self.actionList.append([subAction, subAction.isEnabled()])
                                 except Exception:
                                     pass
+                        Gui.updateGui() 
                         return
                     if self.CustomizeEnabled is True:
                         self.setStyleSheet(Stylesheet)
                         self.CustomizeEnabled = False
                         self.setRibbonHeight(self.RibbonHeight)
                         
-                        for child in mw.findChildren(RibbonToolButton):
-                            for subchild in child.children():
-                                try:
-                                    subchild.actions()
-                                except Exception as e:
-                                    continue
-                                for action in subchild.actions():
-                                    action.blockSignals(False)
-                                    for item in self.actionList:
-                                        if item[0] == action.data() and item[1] is False:
-                                            subchild.setDisabled(True)                                                 
+                        for item in self.actionList:
+                            # item[2].unblock()
+                            if item[1] is False:
+                                item[0].setDisabled(True)
+                            else:
+                                item[0].setEnabled(True)                                
+                        Gui.updateGui()                
                         return
 
         return
         
-    def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                         
-                
-        layout: QGridLayout = panel._actionsLayout
+    def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                           
         newControl = RibbonToolButton()
         # This is a hack, but after testing, the best way to update the panel is by replacing it.
         # THe delete widgets is still neccesary otherwise they will be leftovers and remain directly in the ribbon.
@@ -1156,28 +1149,24 @@ class ModernMenu(RibbonBar):
                 separator.setObjectName("separator")
             if WidgetType == "SmallWidget":
                 alignment = Qt.AlignmentFlag.AlignTop
-                height = Parameters_Ribbon.ICON_SIZE_SMALL
                 CommandWidget = currentWidget
-                newControl = self.returnDropWidgets(CommandWidget, panel, showText=False,)
+                newControl = self.returnDropWidgets(CommandWidget, panel)
                 btn = newPanel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=False)
                 btn.setObjectName("SmallWidget")
                 btn.setStyleSheet(StyleSheet_Addition_Button)
                 Delete(currentWidget)
             if WidgetType == "MediumWidget":
                 alignment = Qt.AlignmentFlag.AlignTop
-                height = Parameters_Ribbon.ICON_SIZE_MEDIUM
                 CommandWidget = currentWidget
-                newControl = self.returnDropWidgets(CommandWidget, panel, "Medium", showText=False,)           
+                newControl = self.returnDropWidgets(CommandWidget, panel, "Medium",)           
                 btn = newPanel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=False)
                 btn.setObjectName("MediumWidget")
                 btn.setStyleSheet(StyleSheet_Addition_Button)
                 Delete(currentWidget)
             if WidgetType == "LargeWidget":
                 alignment = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter
-                height = Parameters_Ribbon.ICON_SIZE_LARGE
                 CommandWidget = currentWidget
-                newControl = self.returnDropWidgets(CommandWidget, panel, "Large", showText=False,)
-                newControl.setFixedSize(QSize(height, height))
+                newControl = self.returnDropWidgets(CommandWidget, panel, "Large")
                 btn = newPanel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=False)
                 btn.setObjectName("LargeWidget")
                 btn.setStyleSheet(StyleSheet_Addition_Button)
@@ -1191,8 +1180,6 @@ class ModernMenu(RibbonBar):
                         else:
                             child.hide()
                             child.setMinimumWidth(0)
-
-        layout.update()
 
         # Set the newPanel as like with the current panel
         newPanel._actionsLayout.setHorizontalSpacing(panel._actionsLayout.horizontalSpacing())
@@ -1309,7 +1296,7 @@ class ModernMenu(RibbonBar):
         # Determine the button size
         baseWidth: int = Parameters_Ribbon.ICON_SIZE_SMALL
         for child in ButtonWidget.children():
-            if type(child) == QToolButton and child.objectName() == "CommandButton":
+            if child.objectName() == "CommandButton":
                 baseWidth = child.width()
         
         # Get the label height for small and medium buttons
@@ -1330,7 +1317,7 @@ class ModernMenu(RibbonBar):
             # Go through the children of the button.   
             for child in ButtonWidget.children():
                 # If you find the QLabel, show it and update the baseWidth             
-                if type(child) == QLabel:
+                if type(child) is QLabel:
                     # show the text
                     child.show()                                        
                     # Because medium and small widgets have text on the right side,
@@ -1340,22 +1327,16 @@ class ModernMenu(RibbonBar):
                             baseWidth + labelWidth + menuButtonWidth
                         )
                     if ButtonWidget.objectName() == "LargeWidget":
-                        if labelWidth > baseWidth:
-                            ButtonWidget.setFixedWidth(labelWidth)
-                        else:
-                            ButtonWidget.setFixedWidth(baseWidth)
-                        # ButtonWidget.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)   
-                        
+                            ButtonWidget.setFixedWidth(ButtonWidget.height())
+                            child.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+                            child.setFixedWidth(ButtonWidget.height())
+                            child.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignCenter)
+                                                
                 # If the child is a QToolButton, set the width of the child and the button to the basewidth
-                if type(child) == QToolButton and child.objectName() == "CommandButton":
-                    child.setFixedWidth(baseWidth)
-                    if ButtonWidget.objectName() == "LargeWidget":
-                        if labelWidth > baseWidth:
-                            child.setFixedWidth(labelWidth)
-                        else:
-                            child.setFixedWidth(baseWidth)
+                if child.objectName() == "CommandButton":
+                    child.setFixedWidth(baseWidth)              
                     child.setIconSize(QSize(baseWidth, baseWidth))
-                #     ButtonWidget.setFixedWidth(baseWidth)
+                    
             self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()})
             contextMenu.close()
             return
@@ -1364,15 +1345,18 @@ class ModernMenu(RibbonBar):
             # Go through the children of the button.  
             for child in ButtonWidget.children():
                 # If you find the QLabel, hide it and change its widht.
-                if type(child) == QLabel:
+                if type(child) is QLabel:
                     # Set the width to zero to ensure that the button is not too wide
                     child.setFixedWidth(0)
                     # hide the text
                     child.hide()
                 # If the child is a QToolButton, set the width of the child and the button to its height 
-                if type(child) == QToolButton and child.objectName() == "CommandButton":
-                    child.setFixedWidth(child.height())
-                    ButtonWidget.setFixedWidth(child.height())                 
+                if child.objectName() == "CommandButton":
+                    # child.setFixedWidth(ButtonWidget.height())
+                    child.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+                    ButtonWidget.setFixedWidth(child.height())
+            if ButtonWidget.objectName() == "LargeWidget":
+                ButtonWidget.setFixedWidth(ButtonWidget.height())              
             self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()})
             contextMenu.close()   
             return
@@ -1396,11 +1380,11 @@ class ModernMenu(RibbonBar):
         if self.CustomizeEnabled is True:
             widget = e.source()
             parent = widget.parent().parent()
+            layout: QGridLayout = parent._actionsLayout
 
             # Find the correct location of the drop target, so we can move it there.
             position = self.find_drop_location(e)
             if position is None:
-                # print("position is none")
                 backup_size = QSize(
                     Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL
                 )
@@ -1409,22 +1393,19 @@ class ModernMenu(RibbonBar):
             self.position = position
             # Inserting moves the item if its alreaady in the layout.
             rowSpan = 2
-            self.dragIndicator.setFixedSize(QSize(
-                    Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL
-                ))
-            if position[2].height() == Parameters_Ribbon.ICON_SIZE_MEDIUM:
+            if position[3].height() == Parameters_Ribbon.ICON_SIZE_MEDIUM:
                 rowSpan = 3
-                self.dragIndicator.setFixedSize(QSize(
-                    Parameters_Ribbon.ICON_SIZE_MEDIUM, Parameters_Ribbon.ICON_SIZE_MEDIUM
-                ))
-            if position[2].height() == Parameters_Ribbon.ICON_SIZE_LARGE:
+            if position[3].height() == Parameters_Ribbon.ICON_SIZE_LARGE:
                 rowSpan = 6
-                self.dragIndicator.setFixedSize(QSize(
-                    Parameters_Ribbon.ICON_SIZE_LARGE, Parameters_Ribbon.ICON_SIZE_LARGE
+            if type(widget) is CustomSeparator:
+                rowSpan = 6
+            self.dragIndicator.setFixedSize(QSize(
+                    widget.size()
                 ))
-            parent._actionsLayout.addWidget(
+            layout.addWidget(
                 self.dragIndicator, position[0], position[1], rowSpan, 1
             )
+
             # # Hide the item being dragged.
             e.source().hide()
             # Show the target.
@@ -1497,9 +1478,10 @@ class ModernMenu(RibbonBar):
                         buttonSize_dropWidget = "small"
                         if new_size.height() == Parameters_Ribbon.ICON_SIZE_MEDIUM:
                             buttonSize_dropWidget = "medium"
-                        if new_size.height() == Parameters_Ribbon.ICON_SIZE_LARGE or W_dropWidget.objectName() == "separator":
+                        if new_size.height() >= Parameters_Ribbon.ICON_SIZE_LARGE or W_dropWidget.objectName() == "separator":
                             buttonSize_dropWidget = "large"
-                        W_dropWidget.setFixedHeight(original_size.height())
+                        # W_dropWidget.setFixedHeight(original_size.height())
+                        W_dropWidget.setFixedHeight(new_size.height())
 
                         # Set the rowspan for the original widget
                         buttonSize_origin = "small"
@@ -1507,7 +1489,8 @@ class ModernMenu(RibbonBar):
                             buttonSize_origin = "medium"
                         if original_size.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
                             buttonSize_origin = "large"
-                        W_origin_item.setFixedHeight(new_size.height())
+                        # W_origin_item.setFixedHeight(new_size.height())
+                        W_origin_item.setFixedHeight(original_size.height())
 
                         # Create a new dragged widget, to add in the new place
                         draggedWidget = self.returnDropWidgets(                    
@@ -1515,7 +1498,7 @@ class ModernMenu(RibbonBar):
                             panel=panel,
                             ButtonType=buttonSize_dropWidget,
                             showText=False,
-                        )
+                        )                   
                         # Create a ribbonpanel item widget from the new dragged widget
                         draggedItem = RibbonPanelItemWidget(panel)
                         draggedItem.addWidget(draggedWidget)
@@ -2928,8 +2911,8 @@ class ModernMenu(RibbonBar):
         for CustomToolbar in CustomToolbars:
             # Check if a toolbar with the same name already exists
             isInList = False
-            for ToolBar in ListToolbars:
-                if ToolBar == CustomToolbar[0]:
+            for ListItem in ListToolbars:
+                if ListItem == CustomToolbar[0]:
                     isInList = True
             # if the toolbar doesn't exist yet and is part of this workbench, add it.
             if CustomToolbar[1] == workbenchName and isInList is False:
@@ -3157,6 +3140,9 @@ class ModernMenu(RibbonBar):
             # Define the rowCount and column count
             rowCount = 0
             columnCount = 0
+            smallButtons = []
+            mediumButtons = []
+            largeButtons = []
             # Set the maximum columns
             maxColumns = Parameters_Ribbon.MAX_COLUMN_PANELS
 
@@ -3166,7 +3152,7 @@ class ModernMenu(RibbonBar):
             # Go through the button list:
             for i in range(len(allButtons)):
                 button = allButtons[i]
-
+                
                 # count the number of buttons per type. Needed for proper sorting the buttons later.
                 buttonSize = "small"
                 try:
@@ -3185,20 +3171,26 @@ class ModernMenu(RibbonBar):
                 #
                 # get the number of rows in the panel
                 if buttonSize == "small":
-                    rowCount = rowCount + SmallButtonRows
+                    smallButtons.append(button)
+                    mediumButtons.clear()
+                    largeButtons.clear()
+                    if len(smallButtons) == 3:
+                        columnCount = columnCount + 1
+                        smallButtons.clear()
                 if buttonSize == "medium":
-                    rowCount = rowCount + MediumButtonRows
+                    mediumButtons.append(button)
+                    smallButtons.clear()
+                    largeButtons.clear()
+                    if len(mediumButtons) == 2:
+                        columnCount = columnCount + 1
+                        mediumButtons.clear()
                 if buttonSize == "large" or "separator" in button.text():
-                    rowCount = rowCount + LargeButtonRows
-
-                # If the number of rows divided by 3 is a whole number,
-                # the number of columns is the rowcount divided by 3.
-                columnCount = math.ceil(rowCount / 3)
-                # if buttonSize == "medium":
-                #     columnCount = rowCount / 2
-                # if buttonSize == "large":
-                #     columnCount = rowCount
-                # ----------------------------------------------------------------------------------------
+                    largeButtons.append(button)
+                    smallButtons.clear()
+                    mediumButtons.clear()
+                    if len(largeButtons) == 1:
+                        columnCount = columnCount + 1
+                        largeButtons.clear()
 
                 # if the button has not text, remove it, skip it and increase the counter.
                 if button.text() == "":
@@ -3213,7 +3205,7 @@ class ModernMenu(RibbonBar):
                         # if the last item before the optionpanel is an separator, skip it
                         if columnCount > maxColumns and "separator" in button.text():
                             continue
-                        if columnCount > maxColumns + 2:
+                        if columnCount > maxColumns:
                             ButtonList.append(button)
                             panel.panelOptionButton().show()
                             continue
@@ -3224,33 +3216,6 @@ class ModernMenu(RibbonBar):
                         separatorWidget = CustomWidgets.CustomSeparator()
                         separator = panel.addLargeWidget(separatorWidget)
                         separator.setObjectName("separator")
-                        # there is a bug in pyqtribbon where the separator is placed in the wrong position
-                        # despite the correct order of the button list.
-                        # To correct this, empty and disabled buttons are added for spacing.
-                        # (adding spacers did not work)
-                        if float((NoSmallButtons_spacer + 1) / 3).is_integer():
-                            spacer_1 = panel.addSmallButton()
-                            spacer_1.setFixedWidth(self.iconSize)
-                            spacer_1.setEnabled(False)
-                            spacer_1.setStyleSheet("background-color: none;border: none")
-                        if float((NoSmallButtons_spacer + 2) / 3).is_integer():
-                            spacer_1 = panel.addSmallButton()
-                            spacer_1.setFixedWidth(self.iconSize)
-                            spacer_1.setEnabled(False)
-                            spacer_1.setStyleSheet("background-color: none;border: none")
-                            spacer_2 = panel.addSmallButton()
-                            spacer_2.setFixedWidth(self.iconSize)
-                            spacer_2.setEnabled(False)
-                            spacer_2.setStyleSheet("background-color: none;border: none")
-                        # reset the counter after a separator is added.
-                        NoSmallButtons_spacer = 0
-                        # Same principle for medium buttons
-                        if float((NoMediumButtons_spacer + 1) / 2).is_integer():
-                            spacer_1 = panel.addMediumButton()
-                            spacer_1.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
-                            spacer_1.setEnabled(False)
-                            spacer_1.setStyleSheet("background-color: none;border: none")
-                        NoMediumButtons_spacer = 0
                         continue
                     else:
                         try:
@@ -3541,7 +3506,8 @@ class ModernMenu(RibbonBar):
                                         if "textEnabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][CommandName]:
                                             showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][toolbar]["commands"][CommandName]["textEnabled"]
                                 except Exception as e:
-                                    print(e)
+                                    if Parameters_Ribbon.DEBUG_MODE is True:
+                                        print(e)
                                     pass
 
                                 # Create a custom toolbutton
@@ -3560,7 +3526,8 @@ class ModernMenu(RibbonBar):
                                             IconSize = QSize(size, size)
                                             ButtonSize = IconSize
                                     except Exception as e:
-                                        print(e)
+                                        if Parameters_Ribbon.DEBUG_MODE is True:
+                                            print(e)
                                         pass
                                     
                                 Menu = QMenu(self)
@@ -3852,19 +3819,6 @@ class ModernMenu(RibbonBar):
             self.setStyleSheet(Stylesheet)
             self.CustomizeEnabled = False
             print(translate("FreeCAD Ribbon", "Ribbon UI: Béta functions disabled"))
-        return
-
-    def on_ShowTextToggled(self, widget):
-        # state = checkbox
-        print("widget")
-        # for child in widget.children():
-        #     print(widget.children())
-        #     if type(child) == QTextEdit:
-        #         if state is True:
-        #             child.setMaximumWidth(200)
-        #             child.show()
-        #         if state is False:
-        #             child.hide()
         return
 
     # endregion
@@ -4607,24 +4561,9 @@ class ModernMenu(RibbonBar):
         for child in widget.children():
             if (child.objectName() == "CommandButton"):
                 btn = child        
-        
-        # Define a menu
-        arrowButton = None
-        Menu = None
-        try:
-            arrowButton = widget.findChildren(QToolButton)[1]
-            Menu = arrowButton.menu()
-        except Exception:
-            pass
-        
+                
         # get the actions
-        action = btn.actions()
-        if type(action) is list:
-            if len(action) > 0:
-                for i in range(len(action)):
-                    if Menu is not None:
-                        Menu.addAction(action[i])
-                action = action[0]                        
+        action = btn.actions()             
         if btn.defaultAction() is not None:
             action = btn.defaultAction()
             
@@ -4659,7 +4598,8 @@ class ModernMenu(RibbonBar):
                 if "textEnabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]:
                     showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]["textEnabled"]
             except Exception as e:
-                print(e)
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    print(e)
                 pass
 
             # Create a custom toolbutton
@@ -4677,7 +4617,10 @@ class ModernMenu(RibbonBar):
                 ButtonSize = IconSize
             except Exception:
                 pass
-                                    
+            
+            Menu = QMenu(self)
+            if widget.menu() is not None:
+                Menu = widget.menu()                                     
             btn: RibbonToolButton = CustomControls.CustomToolButton(
                 Text=action.text(),
                 Action=action,
@@ -4704,7 +4647,8 @@ class ModernMenu(RibbonBar):
                 if "textEnabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]:
                     showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]["textEnabled"]
             except Exception as e:
-                print(e)
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    print(e)
                 pass
 
             # Create a custom toolbutton
@@ -4722,7 +4666,10 @@ class ModernMenu(RibbonBar):
                 ButtonSize = IconSize
             except Exception:
                 pass
-                
+            
+            Menu = QMenu(self)
+            if widget.menu() is not None:
+                Menu = widget.menu()    
             btn: RibbonToolButton = CustomControls.CustomToolButton(
                 Text=action.text(),
                 Action=action,
@@ -4749,7 +4696,8 @@ class ModernMenu(RibbonBar):
                 if "textEnabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]:
                     showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]["textEnabled"]
             except Exception as e:
-                print(e)
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    print(e)
                 pass
                                 
             # Create a custom toolbutton
@@ -4767,9 +4715,13 @@ class ModernMenu(RibbonBar):
                     IconSize = QSize(size, size)
                     ButtonSize = IconSize
             except Exception as e:
-                print(e)
+                if Parameters_Ribbon.DEBUG_MODE is True:
+                    print(e)
                 pass
-                                    
+            
+            Menu = QMenu(self)
+            if widget.menu() is not None:
+                Menu = widget.menu()           
             btn: RibbonToolButton = CustomControls.LargeCustomToolButton(
                 Text=action.text(),
                 Action=action,
@@ -5240,9 +5192,6 @@ class EventInspector(QObject):
                     f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
                 )
             return QObject.eventFilter(self, obj, event)
-
-        # print(event)
-
         return False
 
 

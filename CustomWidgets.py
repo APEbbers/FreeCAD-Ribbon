@@ -202,30 +202,12 @@ class CustomControls(RibbonToolButton):
         Label_Text.setFixedWidth(ButtonSize.width())
         if Text != "":
             # Create a label with the correct properties
-            # Label_Text = QTextEdit()
-            # Label_Text.setReadOnly(True)
             Label_Text.setFrameShape(QFrame.Shape.NoFrame)
             Label_Text.setFrameShadow(QFrame.Shadow.Plain)
             Label_Text.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
-            # Label_Text.setHorizontalScrollBarPolicy(
-            #     Qt.ScrollBarPolicy.ScrollBarAlwaysOff
-            # )
-            # Label_Text.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-            # Label_Text.document().setDocumentMargin(0)
-            # Label_Text.viewport().setCursor(Qt.CursorShape.ArrowCursor)
             Label_Text.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-            # # Set the font
-            # Font = QFont()
-            # Font.setPixelSize(FontSize)
-            # Label_Text.setFont(Font)
             # change the menubutton space because text is included in the click area
             MenuButtonSpace = 10
-            # # Determine the height of a single row
-            # SingleHeight = QFontMetrics(Font).boundingRect(Text).height() + 3
-            # Label_Text.setMinimumHeight(SingleHeight * 1)
-            # Label_Text.setMaximumHeight(SingleHeight * MaxNumberOfLines)
-            # # Set the width of the label based on the size of the button
-            # Label_Text.setFixedWidth(ButtonSize.width())
 
             # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
             if setWordWrap is False:

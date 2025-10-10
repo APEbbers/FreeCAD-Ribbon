@@ -40,7 +40,7 @@ CorrectionList = {
 ParentPath = os.path.dirname(os.path.dirname(__file__))
 JsonName = "RibbonStructure.json"
 # get the path for the Json file
-JsonFile = os.path.join(ParentPath, "Mod", "FreeCAD-Ribbon", JsonName)
+JsonFile = os.path.join(ParentPath, JsonName)
 
 # Create a dict from the json file
 RibbonStructure = {}
