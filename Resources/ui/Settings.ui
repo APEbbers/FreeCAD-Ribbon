@@ -56,8 +56,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>702</width>
-          <height>1092</height>
+          <width>697</width>
+          <height>1293</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_28">
@@ -76,7 +76,7 @@
             <string notr="true"/>
            </property>
            <property name="currentIndex">
-            <number>3</number>
+            <number>0</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideRight</enum>
@@ -391,6 +391,49 @@
                     <layout class="QGridLayout" name="gridLayout_25">
                      <item row="0" column="0">
                       <layout class="QGridLayout" name="gridLayout_24">
+                       <item row="1" column="1">
+                        <widget class="QComboBox" name="ToolbarPositions">
+                         <property name="minimumSize">
+                          <size>
+                           <width>180</width>
+                           <height>0</height>
+                          </size>
+                         </property>
+                         <property name="font">
+                          <font>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="currentText">
+                          <string>Toolbars above tabbar</string>
+                         </property>
+                         <item>
+                          <property name="text">
+                           <string>Toolbars above tabbar</string>
+                          </property>
+                         </item>
+                         <item>
+                          <property name="text">
+                           <string>Toolbars inline with tabbar</string>
+                          </property>
+                         </item>
+                        </widget>
+                       </item>
+                       <item row="2" column="0" colspan="2">
+                        <widget class="QCheckBox" name="HideTitleBarFC">
+                         <property name="font">
+                          <font>
+                           <bold>false</bold>
+                          </font>
+                         </property>
+                         <property name="text">
+                          <string>Hide the titlebar of FreeCAD</string>
+                         </property>
+                         <property name="checked">
+                          <bool>true</bool>
+                         </property>
+                        </widget>
+                       </item>
                        <item row="0" column="1">
                         <widget class="QComboBox" name="TabbarStyle">
                          <property name="minimumSize">
@@ -424,34 +467,6 @@
                          </item>
                         </widget>
                        </item>
-                       <item row="1" column="1">
-                        <widget class="QComboBox" name="ToolbarPositions">
-                         <property name="minimumSize">
-                          <size>
-                           <width>180</width>
-                           <height>0</height>
-                          </size>
-                         </property>
-                         <property name="font">
-                          <font>
-                           <bold>false</bold>
-                          </font>
-                         </property>
-                         <property name="currentText">
-                          <string>Toolbars above tabbar</string>
-                         </property>
-                         <item>
-                          <property name="text">
-                           <string>Toolbars above tabbar</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Toolbars inline with tabbar</string>
-                          </property>
-                         </item>
-                        </widget>
-                       </item>
                        <item row="0" column="0">
                         <widget class="QLabel" name="label_24">
                          <property name="font">
@@ -476,17 +491,12 @@
                          </property>
                         </widget>
                        </item>
-                       <item row="2" column="0" colspan="2">
-                        <widget class="QCheckBox" name="HideTitleBarFC">
-                         <property name="font">
-                          <font>
-                           <bold>false</bold>
-                          </font>
-                         </property>
+                       <item row="3" column="0" colspan="2">
+                        <widget class="QLabel" name="label_8">
                          <property name="text">
-                          <string>Hide the titlebar of FreeCAD</string>
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;For linux users: When running under Wayland, you have to set a window rule to hide the titlebar!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                          </property>
-                         <property name="checked">
+                         <property name="wordWrap">
                           <bool>true</bool>
                          </property>
                         </widget>
