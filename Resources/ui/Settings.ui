@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>736</width>
-    <height>801</height>
+    <height>848</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -57,7 +57,7 @@
           <x>0</x>
           <y>0</y>
           <width>697</width>
-          <height>1293</height>
+          <height>1329</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_28">
@@ -493,8 +493,14 @@
                        </item>
                        <item row="3" column="0" colspan="2">
                         <widget class="QLabel" name="label_8">
+                         <property name="minimumSize">
+                          <size>
+                           <width>0</width>
+                           <height>0</height>
+                          </size>
+                         </property>
                          <property name="text">
-                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;For linux users: When running under Wayland, you have to set a window rule to hide the titlebar!&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;For linux users: When running under Wayland, you have to set a window rule to hide the titlebar or change your theme! See &amp;quot; &lt;/span&gt;&lt;a href=&quot;https://codeberg.org/apebbers/FreeCAD-Ribbon/wiki/Workarounds#wayland&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#926ee4;&quot;&gt;Wayland workaround&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;&amp;quot; for an example. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                          </property>
                          <property name="wordWrap">
                           <bool>true</bool>

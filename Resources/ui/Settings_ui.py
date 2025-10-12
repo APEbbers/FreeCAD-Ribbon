@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsgkoaZa.ui'
+## Form generated from reading UI file 'SettingskmROgn.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.9.2
+## Created by: Qt User Interface Compiler version 6.10.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -26,7 +26,7 @@ class Ui_Settings(object):
         if not Settings.objectName():
             Settings.setObjectName(u"Settings")
         Settings.setWindowModality(Qt.WindowModality.WindowModal)
-        Settings.resize(736, 801)
+        Settings.resize(736, 848)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -49,7 +49,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 697, 1293))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 697, 1329))
         self.gridLayout_28 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_28.setObjectName(u"gridLayout_28")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -252,6 +252,7 @@ class Ui_Settings(object):
 
         self.label_8 = QLabel(self.groupBox_10)
         self.label_8.setObjectName(u"label_8")
+        self.label_8.setMinimumSize(QSize(0, 0))
         self.label_8.setWordWrap(True)
 
         self.gridLayout_24.addWidget(self.label_8, 3, 0, 1, 2)
@@ -1152,7 +1153,7 @@ class Ui_Settings(object):
         self.TabbarStyle.setCurrentText(QCoreApplication.translate("Settings", u"Icon + text", None))
         self.label_24.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the tab style: </p></body></html>", None))
         self.label_36.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the toolbar positions: </p></body></html>", None))
-        self.label_8.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">For linux users: When running under Wayland, you have to set a window rule to hide the titlebar!</span></p></body></html>", None))
+        self.label_8.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">For linux users: When running under Wayland, you have to set a window rule to hide the titlebar or change your theme! See &quot; </span><a href=\"https://codeberg.org/apebbers/FreeCAD-Ribbon/wiki/Workarounds#wayland\"><span style=\" text-decoration: underline; color:#926ee4;\">Wayland workaround</span></a><span style=\" font-size:8pt; font-style:italic;\">&quot; for an example. </span></p></body></html>", None))
         self.groupBox_4.setTitle(QCoreApplication.translate("Settings", u"Button size", None))
         self.label_23.setText(QCoreApplication.translate("Settings", u"Size of tabbar tabs:", None))
         self.label_22.setText(QCoreApplication.translate("Settings", u"Size of right toolbar buttons:", None))
