@@ -25,7 +25,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -45,7 +45,7 @@ from PySide.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QSpinBox,
@@ -80,7 +80,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -97,7 +97,7 @@ from PySide.QtCore import (
     QSettings,
     QSignalBlocker,
 )
-from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, CheckBoxAction, SpinBoxAction, ComboBoxAction, CustomSeparator, CustomPanel
+from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, CheckBoxAction, SpinBoxAction, ComboBoxAction, CustomSeparator, CustomGridLayout
 
 import json
 import os
@@ -2854,7 +2854,7 @@ class ModernMenu(RibbonBar):
         return
 
     def buildPanels(self):
-        processedPanels = []
+        # layout = CustomGridLayout()
         # Get the active workbench and get its name
         #
         workbenchTitle = self.tabBar().tabText(self.tabBar().currentIndex())
@@ -2966,11 +2966,10 @@ class ModernMenu(RibbonBar):
 
             # Create the panel, use the toolbar name as title
             title = StandardFunctions.TranslationsMapping(workbenchName, toolbar)
-            # panel: RibbonPanel = self.currentCategory().addPanel(
-            #     title=title,
-            #     showPanelOptionButton=True,
-            # )
-            panel = CustomPanel(title, showPanelOptionButton=True)
+            panel: RibbonPanel = self.currentCategory().addPanel(
+                title=title,
+                showPanelOptionButton=True,
+            )
             panel.setObjectName(toolbar)
             panel.panelOptionButton().hide()
             panel.setAcceptDrops(True)
@@ -3384,7 +3383,7 @@ class ModernMenu(RibbonBar):
                                 Menu = QMenu(self)
                                 if button.menu() is not None:
                                     Menu = button.menu()
-                                btn: RibbonToolButton = CustomControls.MediumCustomToolButton(
+                                btn: RibbonToolButton = CustomControls.CustomToolButton(
                                     Text=action.text(),
                                     Action=action,
                                     Icon=action.icon(),
@@ -3400,6 +3399,7 @@ class ModernMenu(RibbonBar):
                                     parent=self,
                                 )
                                 # add the button as a small button
+                                # layout.addWidgets(btn, "small")
                                 panel.addSmallWidget(
                                     btn,
                                     alignment=Qt.AlignmentFlag.AlignTop,
@@ -3439,7 +3439,7 @@ class ModernMenu(RibbonBar):
                                 Menu = QMenu(self)
                                 if button.menu() is not None:
                                     Menu = button.menu()
-                                btn: RibbonToolButton = CustomControls.MediumCustomToolButton(
+                                btn: RibbonToolButton = CustomControls.CustomToolButton(
                                     Text=action.text(),
                                     Action=action,
                                     Icon=action.icon(),
@@ -3452,8 +3452,10 @@ class ModernMenu(RibbonBar):
                                     Menu=Menu,
                                     MenuButtonSpace=16,
                                     parent=self,
+                                    ButtonStyle="medium"
                                 )
                                 # add the button as large button
+                                # layout.addWidgets(btn, "medium")
                                 panel.addMediumWidget(
                                     btn,
                                     alignment=Qt.AlignmentFlag.AlignTop,
@@ -3513,6 +3515,7 @@ class ModernMenu(RibbonBar):
                                     parent=self,
                                 )
                                 # add the button as large button
+                                # layout.addWidgets(btn, "large")
                                 panel.addLargeWidget(
                                     btn,
                                     fixedHeight=False,
@@ -3551,6 +3554,8 @@ class ModernMenu(RibbonBar):
                             if Parameters_Ribbon.DEBUG_MODE is True:
                                 raise e
                             continue
+                        
+            # panel._mainLayout.addLayout(layout)
 
             # Change the name of the view panels to "View"
             if (

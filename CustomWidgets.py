@@ -27,7 +27,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 import textwrap
-from typing import override, overload
+import typing
+# from typing import overload, override
 
 import sys
 
@@ -122,7 +123,9 @@ class CustomControls(RibbonToolButton):
             except Exception as e:
                 print(e)
 
+    @classmethod
     def LargeCustomToolButton(
+        self,
         Text: str,
         Action: QAction,
         Icon: QIcon,
@@ -643,7 +646,9 @@ class CustomControls(RibbonToolButton):
         btn.setObjectName("CustomWidget_Large")
         return btn
 
-    def MediumCustomToolButton(
+    @classmethod
+    def CustomToolButton(
+        self,
         Text: str,
         Action: QAction,
         Icon: QIcon,
@@ -659,6 +664,7 @@ class CustomControls(RibbonToolButton):
         Menu: QMenu = None,
         MenuButtonSpace=16,
         parent=None,
+        ButtonStyle = "small"
     ):
         # Define the controls
         btn = RibbonToolButton()
@@ -1141,31 +1147,9 @@ class CustomControls(RibbonToolButton):
         ArrowButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         
         # return the new button
-        btn.setObjectName("CustomWidget")
-        return btn
-
-    def SmallCustomToolButton(self, 
-        Text: str,
-        Action: QAction,
-        Icon: QIcon,
-        IconSize: QSize,
-        ButtonSize: QSize,
-        FontSize: int = 11,
-        showText=True,
-        TextAlignment=Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft,
-        TextPositionAlignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft,
-        setWordWrap=True,
-        ElideMode=False,
-        MaxNumberOfLines=2,
-        Menu: QMenu = None,
-        MenuButtonSpace=16,
-        parent=None,
-    ):
-        btn = self.MediumCustomToolButton(
-            Text, Action, Icon, ButtonSize, FontSize, showText, TextAlignment, TextPositionAlignment, setWordWrap, ElideMode, MaxNumberOfLines, Menu, MenuButtonSpace, parent,
-        )
         btn.setObjectName("CustomWidget_Small")
-        
+        if ButtonStyle == "medium":
+            btn.setObjectName("CustomWidget_Medium")
         return btn
 
     def CustomOptionMenu(Menu=None, actionList=None, parent=None):
@@ -1242,33 +1226,30 @@ class CustomControls(RibbonToolButton):
         return btn
 
 
-class CustomPanel(RibbonPanel):    
-    def __init__(self, title, showPanelOptionButton=True, parent=None):
-        super().__init__(title, showPanelOptionButton, parent)
-        
-        self._horizontalLayout = QHBoxLayout()
-        self._verticalLayout = QVBoxLayout()
-        self._horizontalLayout.addWidget(self._verticalLayout)        
-        self._actionsLayout.addWidget(self._horizontalLayout)
+class CustomGridLayout(QHBoxLayout):    
+    def __init__(self):
+        super(CustomGridLayout, self).__init__()
+        self.setAlignment(Qt.AlignmentFlag.AlignLeft)  # !!!
+        # self.setSpacing(20)
 
     def insertColumn(self, column: int, widget=None):
         layout = QVBoxLayout()
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)
         layout.addWidget(widget)
-        self._horizontalLayout.insertLayout(column, layout)
+        self.insertLayout(column, layout)
         
         return layout
     
     def removeColumn(self, column):
-        item = self._horizontalLayout.itemAt(column)
-        self._horizontalLayout.removeItem(item)
+        item = self.itemAt(column)
+        self.removeItem(item)
     
-    @override
-    def addWidget(self, widget: QWidget, size="small"):
-        currentLayout: QVBoxLayout = self._actionsLayout.itemAt(self._horizontalLayout.count()-1)        
+    # @override
+    def addWidgets(self, widget: QWidget, size="small"):
+        currentLayout: QVBoxLayout = self._actionsLayout.itemAt(self.count())        
         newLayoutNeeded = False
 
-        for i in range(currentLayout.count()-1):
+        for i in range(currentLayout.count()):
             item = currentLayout.itemAt(i).widget()
             if item.objectName() == "CustomWidget_Large":
                 newLayoutNeeded = True
@@ -1296,9 +1277,9 @@ class CustomPanel(RibbonPanel):
         return widget
     
     # @override
-    def removeWidget(self, widget: QWidget):
-        for i in range(self._horizontalLayout.count()-1):
-            verticalLayout:QHBoxLayout = self._horizontalLayout.itemAt(i).widget()
+    def removeWidgets(self, widget: QWidget):
+        for i in range(self.count()-1):
+            verticalLayout:QHBoxLayout = self.itemAt(i).widget()
             for j in range(verticalLayout.count()):
                 verticalLayout.itemAt(j).widget().setParent(None)
                 verticalLayout.itemAt(j).widget().close()
@@ -1306,20 +1287,20 @@ class CustomPanel(RibbonPanel):
         return
         
     
-    def mouseMoveEvent(self, e):
-        if e.buttons() == Qt.MouseButton.LeftButton:
-            try:
-                drag = QDrag(self)
-                mime = QMimeData()
-                drag.setMimeData(mime)
-                pixmap = QPixmap(self.size())
-                self.render(pixmap)
-                drag.setPixmap(pixmap)
+    # def mouseMoveEvent(self, e):
+    #     if e.buttons() == Qt.MouseButton.LeftButton:
+    #         try:
+    #             drag = QDrag(self)
+    #             mime = QMimeData()
+    #             drag.setMimeData(mime)
+    #             pixmap = QPixmap(self.size())
+    #             self.render(pixmap)
+    #             drag.setPixmap(pixmap)
 
-                if drag is not None:
-                    drag.exec(Qt.DropAction.MoveAction)
-            except Exception as e:
-                print(e)
+    #             if drag is not None:
+    #                 drag.exec(Qt.DropAction.MoveAction)
+    #         except Exception as e:
+    #             print(e)
 
 class CustomSeparator(RibbonSeparator):
     def mouseMoveEvent(self, e):
