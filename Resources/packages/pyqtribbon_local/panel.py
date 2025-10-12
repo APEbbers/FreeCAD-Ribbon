@@ -452,6 +452,7 @@ class RibbonPanel(QFrame):
         rowSpan = self.defaultRowSpan(rowSpan)
         self._widgets.append(widget)
         row, col = self._gridLayoutManager.request_cells(rowSpan, colSpan, mode)
+        col = col + 1 # This way you can add a widget before the first widget
         maximumHeight = (
             self.rowHeight() * rowSpan
             + self._actionsLayout.verticalSpacing() * (rowSpan - 2)

@@ -1320,6 +1320,9 @@ class ModernMenu(RibbonBar):
     # region - drag drop event functions
     dragIndicator = DragTargetIndicator()
     position = None
+    rightColumnAdded = False
+    spaceWidget_Left = QWidget()
+    spaceWidget_Right = QWidget()
 
     def dragEnterEvent(self, e):
         if self.CustomizeEnabled is True:    
@@ -1331,12 +1334,13 @@ class ModernMenu(RibbonBar):
             self.dragIndicator.close()
             e.accept()
 
+    
     def dragMoveEvent(self, e):
         if self.CustomizeEnabled is True:
             widget = e.source()
-            parent = widget.parent().parent()
-            layout: QGridLayout = parent._actionsLayout
-
+            panel: RibbonPanel = widget.parent().parent()
+            layout: QGridLayout = panel._actionsLayout
+            
             # Find the correct location of the drop target, so we can move it there.
             position = self.find_drop_location(e)
             if position is None:
@@ -1357,10 +1361,26 @@ class ModernMenu(RibbonBar):
             self.dragIndicator.setFixedSize(QSize(
                     widget.size()
                 ))
+            self.dragIndicator.show()
+            
+            # Add a widget at the beginning of the layout.
+            
+            self.spaceWidget_Left.setFixedSize(QSize(Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL))
+            layout.addWidget(self.spaceWidget_Left, 0,0,1,1)
+            self.spaceWidget_Left.show()
+            
+            # Add a widget at the end of the layout.            
+            if self.rightColumnAdded is False:                
+                self.spaceWidget_Right.setFixedSize(QSize(Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL))
+                c = layout.columnCount()
+                layout.addWidget(self.spaceWidget_Right, 0,c,1,1)
+                self.spaceWidget_Right.show()
+                self.rightColumnAdded = True
+            
+            # Add the drag indicator
             layout.addWidget(
                 self.dragIndicator, position[0], position[1], rowSpan, 1
             )
-
             # When you hide the source, the dragged widget disapears from the panel.
             # For now It is left in, to keep the panel at the same size.
             # e.source().hide()
@@ -1394,8 +1414,10 @@ class ModernMenu(RibbonBar):
                     xPos = position[0]
                     yPos = position[1]
 
-                    # Hide the drag indicator
+                    # Hide the drag indicator and spacer widgets
                     self.dragIndicator.hide()
+                    self.spaceWidget_Left.hide()
+                    self.spaceWidget_Right.hide()
                     # Get the grid layout
                     gridLayout: QGridLayout = panel._actionsLayout
                     
@@ -1412,11 +1434,14 @@ class ModernMenu(RibbonBar):
                         # Get the widget that has to be replaced
                         W_origin_item = gridLayout.itemAtPosition(xPos, yPos).widget()
                         W_drop_origin = QToolButton()
+                        T_origin = QToolButton()
+                        EmptyButton = True
                         if len(W_origin_item.findChildren(QToolButton)) > 0:
                             W_drop_origin: QToolButton = W_origin_item.findChildren(QToolButton)[0]
+                            T_origin: QToolButton = W_drop_origin.findChildren(QToolButton)[0]
+                            EmptyButton = False
                         else:
-                            return
-                        T_origin: QToolButton = W_drop_origin.findChildren(QToolButton)[0]
+                            pass                
                         original_size = position[3]
 
                         # Take the dragged widget
@@ -1441,16 +1466,16 @@ class ModernMenu(RibbonBar):
                         if new_size.height() >= Parameters_Ribbon.ICON_SIZE_LARGE or W_dropWidget.objectName() == "separator":
                             buttonSize_dropWidget = "large"
                         # W_dropWidget.setFixedHeight(original_size.height())
-                        W_dropWidget.setFixedHeight(new_size.height())
+                        # W_dropWidget.setFixedHeight(new_size.height())
 
                         # Set the rowspan for the original widget
                         buttonSize_origin = "small"
                         if original_size.height() == Parameters_Ribbon.ICON_SIZE_MEDIUM:
                             buttonSize_origin = "medium"
-                        if original_size.height() == Parameters_Ribbon.ICON_SIZE_LARGE:
+                        if original_size.height() >= Parameters_Ribbon.ICON_SIZE_LARGE or W_origin_item.objectName() == "separator":
                             buttonSize_origin = "large"
                         # W_origin_item.setFixedHeight(new_size.height())
-                        W_origin_item.setFixedHeight(original_size.height())
+                        # W_origin_item.setFixedHeight(original_size.height())
 
                         # Create a new dragged widget, to add in the new place
                         draggedWidget = self.returnDropWidgets(                    
@@ -1464,21 +1489,24 @@ class ModernMenu(RibbonBar):
                         draggedItem.addWidget(draggedWidget)
                         # Replace the original widget with the new dragged item
                         gridLayout.replaceWidget(W_origin_item, draggedItem)
+                        gridLayout.setAlignment(draggedItem, Qt.AlignmentFlag.AlignCenter)
                         
-                        # Create a new original widget, to add in the old place          
-                        originalWidget = self.returnDropWidgets(
-                            widget=T_origin,
-                            panel=panel,                    
-                            ButtonType=buttonSize_origin,
-                            showText=False,
-                        )                    
+                        # Create a new original widget, to add in the old place
+                        originalWidget = RibbonToolButton()
+                        if EmptyButton is False:       
+                            originalWidget = self.returnDropWidgets(
+                                widget=T_origin,
+                                panel=panel,                    
+                                ButtonType=buttonSize_origin,
+                                showText=False,
+                            )                    
                         # Create a ribbonpanel item widget from the new orignal widget
                         originalItem = RibbonPanelItemWidget(panel)
                         originalItem.addWidget(originalWidget)
-                        gridLayout.replaceWidget(W_dropWidget, originalItem)
-                        
+                        gridLayout.replaceWidget(W_dropWidget, originalItem)                        
                         gridLayout.setAlignment(originalItem, Qt.AlignmentFlag.AlignCenter)
-                        gridLayout.setAlignment(draggedItem, Qt.AlignmentFlag.AlignCenter)
+                        if EmptyButton is True:
+                            originalWidget.close()                        
                             
                         # Delete the old widget and items
                         def Delete(widget):
@@ -1487,10 +1515,16 @@ class ModernMenu(RibbonBar):
                                 if type(parent) is RibbonPanel:
                                     break
                                 else:
-                                    gridLayout.removeWidget(parent)
-                                    parent.close()
-                            gridLayout.removeWidget(widget)
-                            widget.close()
+                                    try:
+                                        # gridLayout.removeWidget(parent)
+                                        parent.close()
+                                    except Exception:
+                                        pass
+                            try:
+                                # gridLayout.removeWidget(widget)
+                                widget.close()
+                            except Exception:
+                                pass
                             return
                         Delete(W_origin_item)
                         Delete(W_dropWidget)
@@ -4596,7 +4630,7 @@ class ModernMenu(RibbonBar):
             Menu = QMenu(self)
             if ArrowButton is not None and ArrowButton.menu() is not None:
                 Menu = ArrowButton.menu()
-            btn: RibbonToolButton = CustomControls.MediumCustomToolButton(
+            btn: RibbonToolButton = CustomControls.CustomToolButton(
                 Text=action.text(),
                 Action=action,
                 Icon=action.icon(),
@@ -4645,7 +4679,7 @@ class ModernMenu(RibbonBar):
             Menu = QMenu(self)
             if ArrowButton is not None and ArrowButton.menu() is not None:
                 Menu = ArrowButton.menu()
-            btn: RibbonToolButton = CustomControls.MediumCustomToolButton(
+            btn: RibbonToolButton = CustomControls.CustomToolButton(
                 Text=action.text(),
                 Action=action,
                 Icon=action.icon(),
@@ -4658,6 +4692,7 @@ class ModernMenu(RibbonBar):
                 Menu=Menu,
                 MenuButtonSpace=16,
                 parent=self,
+                ButtonStyle="medium"
             )
             
         if ButtonType.lower() == "large":
