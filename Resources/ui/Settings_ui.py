@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingskmROgn.ui'
+## Form generated from reading UI file 'SettingsNZrlVz.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -254,6 +254,8 @@ class Ui_Settings(object):
         self.label_8.setObjectName(u"label_8")
         self.label_8.setMinimumSize(QSize(0, 0))
         self.label_8.setWordWrap(True)
+        self.label_8.setOpenExternalLinks(True)
+        self.label_8.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction)
 
         self.gridLayout_24.addWidget(self.label_8, 3, 0, 1, 2)
 
