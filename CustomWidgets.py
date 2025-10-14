@@ -19,7 +19,9 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+from argparse import Action
 from inspect import Traceback
+from turtle import width
 from types import TracebackType
 from inspect import Traceback
 from types import TracebackType
@@ -51,6 +53,7 @@ from PySide6.QtGui import (
 from PySide6.QtWidgets import (
     QComboBox,
     QGridLayout,
+    QLayout,
     QSizePolicy,
     QSpinBox,
     QToolButton,
@@ -100,7 +103,7 @@ sys.path.append(pathPackages)
 import pyqtribbon_local as pyqtribbon
 from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
 from pyqtribbon_local.panel import RibbonPanel, RibbonPanelItemWidget
-from pyqtribbon_local.toolbutton import RibbonToolButton
+from pyqtribbon_local.toolbutton import RibbonToolButton, RibbonButtonStyle
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
@@ -108,6 +111,94 @@ translate = App.Qt.translate
 
 
 class CustomControls(RibbonToolButton):
+    def __init__(
+        self,
+        Text: str,
+        Action: QAction,
+        Icon: QIcon,
+        IconSize: QSize,
+        ButtonSize: QSize,
+        FontSize: int = 11,
+        showText=True,
+        TextAlignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter,
+        TextPositionAlignment=Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft,
+        setWordWrap=True,
+        ElideMode=False,
+        MaxNumberOfLines=2,
+        Menu: QMenu = None,
+        MenuButtonSpace=10,
+        parent=None,
+        ButtonStyle = RibbonButtonStyle.Small
+                 ):
+        super().__init__()
+        self.layout = QHBoxLayout(self)
+        self.widget = RibbonToolButton()
+        self.action = Action
+        self.showText = showText
+        self.Menu = Menu
+        if ButtonStyle == RibbonButtonStyle.Small:
+            self.widget = self.CustomToolButton(
+                Text,
+                Action,
+                Icon,
+                IconSize,
+                ButtonSize,
+                FontSize,
+                showText,
+                TextAlignment,
+                TextPositionAlignment,
+                setWordWrap,
+                ElideMode,
+                MaxNumberOfLines,
+                Menu,
+                MenuButtonSpace,
+                parent,
+                "small",
+            )
+            self.layout.addWidget(self.widget, 0, Qt.AlignmentFlag.AlignLeft)
+        if ButtonStyle == RibbonButtonStyle.Medium:
+            self.widget = self.CustomToolButton(
+                Text,
+                Action,
+                Icon,
+                IconSize,
+                ButtonSize,
+                FontSize,
+                showText,
+                TextAlignment,
+                TextPositionAlignment,
+                setWordWrap,
+                ElideMode,
+                MaxNumberOfLines,
+                Menu,
+                MenuButtonSpace,
+                parent,
+                "medium",
+            )
+            self.layout.addWidget(self.widget, 1, Qt.AlignmentFlag.AlignLeft)
+        if ButtonStyle == RibbonButtonStyle.Large:
+            self.widget = self.LargeCustomToolButton(
+                Text,
+                Action,
+                Icon,
+                IconSize,
+                ButtonSize,
+                FontSize,
+                showText,
+                TextAlignment,
+                setWordWrap,
+                MaxNumberOfLines,
+                Menu,
+                MenuButtonSpace,
+                parent,                
+            )
+            self.layout.addWidget(self.widget, 1, Qt.AlignmentFlag.AlignLeft)
+        
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(0)
+        self.layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        self.setFixedSize(self.widget.size())
+            
     def mouseMoveEvent(self, e):
         if e.buttons() == Qt.MouseButton.LeftButton:
             try:
@@ -122,6 +213,16 @@ class CustomControls(RibbonToolButton):
                     drag.exec(Qt.DropAction.MoveAction)
             except Exception as e:
                 print(e)
+                
+    def actions(self):
+        return self.action
+    
+    def TextEnabled(self):
+        return self.showText
+    
+    def returnMenu(self):
+        return self.Menu
+
 
     @classmethod
     def LargeCustomToolButton(
@@ -1140,11 +1241,11 @@ class CustomControls(RibbonToolButton):
         btn.setStyleSheet(StyleSheet)
 
         # Set the correct dimensions
-        btn.setFixedWidth(CommandButton.width() + MenuButtonSpace + TextWidth)
+        btn.setFixedWidth(ButtonSize.width() + MenuButtonSpace + TextWidth)
         btn.setFixedHeight(ButtonSize.height())
-        CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        Label_Text.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        ArrowButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        # CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        # Label_Text.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        # ArrowButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         
         # return the new button
         btn.setObjectName("CustomWidget_Small")

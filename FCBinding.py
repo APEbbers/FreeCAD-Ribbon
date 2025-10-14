@@ -138,7 +138,7 @@ translate = App.Qt.translate
 import pyqtribbon_local as pyqtribbon
 from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
 from pyqtribbon_local.panel import RibbonPanel, RibbonPanelItemWidget
-from pyqtribbon_local.toolbutton import RibbonToolButton
+from pyqtribbon_local.toolbutton import RibbonToolButton, RibbonButtonStyle
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton, RibbonNormalCategory, RibbonContextCategory
 
@@ -968,7 +968,7 @@ class ModernMenu(RibbonBar):
         if self.BetaFunctionsEnabled is True:
             # Get the widget and the panel
             widget = self.childAt(event.pos()).parent()
-            panel = widget.parent().parent()
+            panel = widget.parent().parent().parent()
             # Check if the panel is not none and of type RibbonPanel
             if panel is not None and type(panel) is RibbonPanel:
                 if (
@@ -1321,25 +1321,48 @@ class ModernMenu(RibbonBar):
     dragIndicator = DragTargetIndicator()
     position = None
     rightColumnAdded = False
-    spaceWidget_Left = QWidget()
-    spaceWidget_Right = QWidget()
+    spaceWidget_Left = RibbonToolButton()
+    spaceWidget_Right = RibbonToolButton()
 
-    def dragEnterEvent(self, e):
-        if self.CustomizeEnabled is True:    
-            e.accept()
+
+    target = None
+    def dragEnterEvent(self, event):
+        if self.CustomizeEnabled is True:
+            widget = event.source()
+            panel: RibbonPanel = widget.parent().parent().parent()
+            gridLayout: QGridLayout = panel._actionsLayout
+            
+            # Add a widget at the beginning of the layout.   
+            self.spaceWidget_Left.setFixedSize(QSize(Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL))
+            spaceItem = RibbonPanelItemWidget(panel)
+            spaceItem.addWidget(self.spaceWidget_Left)  
+            gridLayout.addWidget(spaceItem, 0,0,1,1)
+            self.spaceWidget_Left.show()
+            
+            # Add a widget at the end of the layout.            
+            if self.rightColumnAdded is False:      
+                self.spaceWidget_Right.setFixedSize(QSize(Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL))
+                spaceItem = RibbonPanelItemWidget(panel)
+                spaceItem.addWidget(self.spaceWidget_Right)  
+                c = gridLayout.columnCount()
+                gridLayout.addWidget(spaceItem, 0,c,1,1)
+                self.spaceWidget_Right.show()
+                self.rightColumnAdded = True
+            event.accept()
 
     def dragLeaveEvent(self, e):
         if self.CustomizeEnabled is True:
             # Hide the drag indicator when you leave the drag area
             self.dragIndicator.close()
+            self.target = None
             e.accept()
 
     
     def dragMoveEvent(self, e):
         if self.CustomizeEnabled is True:
             widget = e.source()
-            panel: RibbonPanel = widget.parent().parent()
-            layout: QGridLayout = panel._actionsLayout
+            panel: RibbonPanel = widget.parent().parent().parent()
+            gridLayout: QGridLayout = panel._actionsLayout
             
             # Find the correct location of the drop target, so we can move it there.
             position = self.find_drop_location(e)
@@ -1361,26 +1384,12 @@ class ModernMenu(RibbonBar):
             self.dragIndicator.setFixedSize(QSize(
                     widget.size()
                 ))
-            self.dragIndicator.show()
-            
-            # Add a widget at the beginning of the layout.
-            
-            self.spaceWidget_Left.setFixedSize(QSize(Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL))
-            layout.addWidget(self.spaceWidget_Left, 0,0,1,1)
-            self.spaceWidget_Left.show()
-            
-            # Add a widget at the end of the layout.            
-            if self.rightColumnAdded is False:                
-                self.spaceWidget_Right.setFixedSize(QSize(Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL))
-                c = layout.columnCount()
-                layout.addWidget(self.spaceWidget_Right, 0,c,1,1)
-                self.spaceWidget_Right.show()
-                self.rightColumnAdded = True
-            
+                        
             # Add the drag indicator
-            layout.addWidget(
+            gridLayout.addWidget(
                 self.dragIndicator, position[0], position[1], rowSpan, 1
             )
+            self.target = position
             # When you hide the source, the dragged widget disapears from the panel.
             # For now It is left in, to keep the panel at the same size.
             # e.source().hide()
@@ -1388,204 +1397,152 @@ class ModernMenu(RibbonBar):
             self.dragIndicator.show()
             e.accept()
         return
-
-    def dropEvent(self, e):
-        try:
-            if self.CustomizeEnabled is True:
-                # Get the widget
-                widget = e.source()
-                # Get the panel
-                panel = widget.parent().parent()
-                # Get tabBar
-                parent = widget.parent()
-                count = 0
-                while (count < 10):
-                    if type(parent) == RibbonNormalCategory or type(parent) == RibbonContextCategory:
+    
+    def dropEvent(self, event):
+        # Get the widget
+        widget = event.source()
+        # Get the panel
+        panel = widget.parent().parent().parent()
+        # Get tabBar
+        parent = panel.parent()
+        count = 0
+        while (count < 10):
+            if type(parent) == RibbonNormalCategory or type(parent) == RibbonContextCategory:
+                break
+            else:
+                parent = parent.parent()
+        # Get the workbench name                    
+        WorkBenchName = parent.objectName()
+        # Get the gridlayout
+        gridLayout: QGridLayout = panel._actionsLayout
+        # Hide the dragIndicater and the spacer widgets
+        self.dragIndicator.hide()
+        self.spaceWidget_Left.hide()
+        self.spaceWidget_Right.hide()
+        
+        if isinstance(panel, RibbonPanel):
+            if not widget.geometry().contains(event.pos()):                
+                # Get the coordinates of the drag location
+                xPos_drag = self.target[0]
+                yPos_drag = self.target[1]
+                OriginalItem = gridLayout.itemAtPosition(xPos_drag, yPos_drag)
+                OriginalWidget = OriginalItem.widget().findChild(CustomControls)
+                newOriginalWidget = self.returnDropWidgets(OriginalWidget, panel, showText=False)
+                newOriginalItem = RibbonPanelItemWidget()
+                newOriginalItem.addWidget(newOriginalWidget)
+                
+                 # Get the old position of the dragged widget
+                n = 0
+                OldPos = []
+                for n in range(gridLayout.count()):
+                    if gridLayout.itemAt(n).widget().findChild(CustomControls) == widget.parent().parent().findChild(CustomControls):
+                        OldPos = gridLayout.getItemPosition(n)
                         break
-                    else:
-                        parent = parent.parent()
-                # Get the workbench name                    
-                WorkBenchName = parent.objectName()
+                
+                # counter and old position is not empty, Swap the widgets
+                if n > -1 and len(OldPos) > 0 :
+                    DraggedItem = gridLayout.itemAt(n)
+                    DraggedWidget = DraggedItem.widget().findChild(CustomControls)
+                    newDraggedWidget = self.returnDropWidgets(DraggedWidget, panel, showText=False)
+                    newDraggedItem = RibbonPanelItemWidget()
+                    newDraggedItem.addWidget(newDraggedWidget)
 
-                # if the grid layout is a Ribbon panel continue
-                if isinstance(panel, RibbonPanel):
-                    # Get the drop position
-                    position = self.find_drop_location(e)
-                    xPos = position[0]
-                    yPos = position[1]
+                    gridLayout.replaceWidget(OriginalItem.widget(), newDraggedItem)
+                    gridLayout.replaceWidget(DraggedItem.widget(), newOriginalItem)
 
-                    # Hide the drag indicator and spacer widgets
-                    self.dragIndicator.hide()
-                    self.spaceWidget_Left.hide()
-                    self.spaceWidget_Right.hide()
-                    # Get the grid layout
-                    gridLayout: QGridLayout = panel._actionsLayout
-                    
-                    # Get the old position of the dragged widget
-                    n = 0
-                    OldPos = []
-                    for n in range(gridLayout.count()):
-                        if gridLayout.itemAt(n).widget().children()[1] == widget:
-                            OldPos = gridLayout.getItemPosition(n)
-                            break
-                    
-                    # counter and old position is not empty, Swap the widgets
-                    if n > -1 and len(OldPos) > 0 :
-                        # Get the widget that has to be replaced
-                        W_origin_item = gridLayout.itemAtPosition(xPos, yPos).widget()
-                        W_drop_origin = QToolButton()
-                        T_origin = QToolButton()
-                        EmptyButton = True
-                        if len(W_origin_item.findChildren(QToolButton)) > 0:
-                            W_drop_origin: QToolButton = W_origin_item.findChildren(QToolButton)[0]
-                            T_origin: QToolButton = W_drop_origin.findChildren(QToolButton)[0]
-                            EmptyButton = False
-                        else:
-                            pass                
-                        original_size = position[3]
-
-                        # Take the dragged widget
-                        W_dropWidget = gridLayout.itemAt(n).widget()
-                        if len(W_dropWidget.findChildren(CustomSeparator)) == 0:
-                            W_drop_customControl: QToolButton = W_dropWidget.findChildren(
-                                QToolButton
-                            )[0]
-                            T_dropWidget: QToolButton = W_drop_customControl.findChildren(
-                                QToolButton
-                            )[0]
-                        else:
-                            T_dropWidget = W_dropWidget.findChildren(CustomSeparator)[0]
-
-                        # Get the new size
-                        new_size = position[2]
-
-                        # Set the rowspan for the dragged widget
-                        buttonSize_dropWidget = "small"
-                        if new_size.height() == Parameters_Ribbon.ICON_SIZE_MEDIUM:
-                            buttonSize_dropWidget = "medium"
-                        if new_size.height() >= Parameters_Ribbon.ICON_SIZE_LARGE or W_dropWidget.objectName() == "separator":
-                            buttonSize_dropWidget = "large"
-                        # W_dropWidget.setFixedHeight(original_size.height())
-                        # W_dropWidget.setFixedHeight(new_size.height())
-
-                        # Set the rowspan for the original widget
-                        buttonSize_origin = "small"
-                        if original_size.height() == Parameters_Ribbon.ICON_SIZE_MEDIUM:
-                            buttonSize_origin = "medium"
-                        if original_size.height() >= Parameters_Ribbon.ICON_SIZE_LARGE or W_origin_item.objectName() == "separator":
-                            buttonSize_origin = "large"
-                        # W_origin_item.setFixedHeight(new_size.height())
-                        # W_origin_item.setFixedHeight(original_size.height())
-
-                        # Create a new dragged widget, to add in the new place
-                        draggedWidget = self.returnDropWidgets(                    
-                            widget=T_dropWidget,
-                            panel=panel,
-                            ButtonType=buttonSize_dropWidget,
-                            showText=False,
-                        )                   
-                        # Create a ribbonpanel item widget from the new dragged widget
-                        draggedItem = RibbonPanelItemWidget(panel)
-                        draggedItem.addWidget(draggedWidget)
-                        # Replace the original widget with the new dragged item
-                        gridLayout.replaceWidget(W_origin_item, draggedItem)
-                        gridLayout.setAlignment(draggedItem, Qt.AlignmentFlag.AlignCenter)
-                        
-                        # Create a new original widget, to add in the old place
-                        originalWidget = RibbonToolButton()
-                        if EmptyButton is False:       
-                            originalWidget = self.returnDropWidgets(
-                                widget=T_origin,
-                                panel=panel,                    
-                                ButtonType=buttonSize_origin,
-                                showText=False,
-                            )                    
-                        # Create a ribbonpanel item widget from the new orignal widget
-                        originalItem = RibbonPanelItemWidget(panel)
-                        originalItem.addWidget(originalWidget)
-                        gridLayout.replaceWidget(W_dropWidget, originalItem)                        
-                        gridLayout.setAlignment(originalItem, Qt.AlignmentFlag.AlignCenter)
-                        if EmptyButton is True:
-                            originalWidget.close()                        
-                            
-                        # Delete the old widget and items
-                        def Delete(widget):
-                            for i in range(100):
+                    # Delete the old widget and items
+                    def Delete(widget):
+                        for i in range(100):
+                            try:
                                 parent = widget.parent()
                                 if type(parent) is RibbonPanel:
                                     break
                                 else:
                                     try:
-                                        # gridLayout.removeWidget(parent)
+                                        gridLayout.removeWidget(parent)
                                         parent.close()
                                     except Exception:
                                         pass
-                            try:
-                                # gridLayout.removeWidget(widget)
-                                widget.close()
                             except Exception:
-                                pass
-                            return
-                        Delete(W_origin_item)
-                        Delete(W_dropWidget)
-                        Delete(T_origin)
-                        Delete(T_dropWidget)
-
-                    # Get the order of the widgets
-                    orderList = []
-                    for k in range(gridLayout.count()):
+                                        pass
                         try:
-                            if len(gridLayout.itemAt(k).widget().findChildren(CustomSeparator)) > 0:
-                                orderList.append(f"{k+1}_separator_{WorkBenchName}")                           
-                            else:
-                                Control = gridLayout.itemAt(k).widget().children()[1]
-                                if type(Control) is RibbonToolButton:
-                                    for child in Control.children():
-                                        if (
-                                            type(child) == QToolButton
-                                            and child.objectName() == "CommandButton"
-                                        ):
-                                            orderList.append(child.defaultAction().data())
+                            gridLayout.removeWidget(widget)
+                            widget.close()
                         except Exception:
-                            # raise e
                             pass
-                    if panel.panelOptionButton().menu() is not None:
-                        menu: QMenu = panel.panelOptionButton().menu()
-                        for action in menu.actions():
-                            orderList.append(action.objectName())
-                    
-                    # Update the order in the ribbon structure
-                    StandardFunctions.add_keys_nested_dict(
-                        self.ribbonStructure,
-                        [
-                            "workbenches",
-                            WorkBenchName,
-                            "toolbars",
-                            panel.objectName(),
-                            "order",
-                        ],
-                    )
-                    # clear the list first
-                    self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][
-                        panel.objectName()
-                    ]["order"] = []
-                    # Write the new list
-                    self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][
-                        panel.objectName()
-                    ]["order"] = orderList
+                        return
+                    Delete(DraggedWidget)
+                    Delete(OriginalWidget)
+                    Delete(DraggedItem)
+                    Delete(OriginalItem)
 
-                    # Writing to ribbonStructure.json
-                    JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
-                    with open(JsonFile, "w") as outfile:
-                        json.dump(self.ribbonStructure, outfile, indent=4)
-                    outfile.close()
-        except Exception as e:
-            raise e
-            pass
+        # if EmptyButton is True:
+        #     originalWidget.close()                        
+                                    
+        # # Get the order of the widgets
+        # orderList = []
+        # Control = RibbonToolButton()
+        # for k in range(gridLayout.count()):
+        #     try:
+        #         if len(gridLayout.itemAt(k).widget().findChildren(CustomSeparator)) > 0:
+        #             orderList.append(f"{k+1}_separator_{WorkBenchName}")                           
+        #         else:
+        #             if type(gridLayout.itemAt(k).widget()) is RibbonPanelItemWidget:
+        #                 children = gridLayout.itemAt(k).widget().children()
+        #                 Control = gridLayout.itemAt(k).widget().children()[0]
+        #                 if len(children) > 1: 
+        #                     Control = gridLayout.itemAt(k).widget().children()[1]
+        #                 if type(Control) is RibbonToolButton:
+        #                     for child in Control.children():
+        #                         if (
+        #                             type(child) is QToolButton
+        #                             and child.objectName() == "CommandButton"
+        #                         ):
+        #                             orderList.append(child.defaultAction().data())
+        #     except Exception as e:
+        #         raise e
+        #         pass
+        # if panel.panelOptionButton().menu() is not None:
+        #     menu: QMenu = panel.panelOptionButton().menu()
+        #     for action in menu.actions():
+        #         orderList.append(action.objectName())
         
+        # print(orderList)
         
-        e.accept()
+        # # Update the order in the ribbon structure
+        # StandardFunctions.add_keys_nested_dict(
+        #     self.ribbonStructure,
+        #     [
+        #         "workbenches",
+        #         WorkBenchName,
+        #         "toolbars",
+        #         panel.objectName(),
+        #         "order",
+        #     ],
+        # )
+        # # clear the list first
+        # self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][
+        #     panel.objectName()
+        # ]["order"] = []
+        # # Write the new list
+        # self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][
+        #     panel.objectName()
+        # ]["order"] = orderList
+
+        # # Writing to ribbonStructure.json
+        # JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+        # with open(JsonFile, "w") as outfile:
+        #     json.dump(self.ribbonStructure, outfile, indent=4)
+        # outfile.close()
+
+        # # newPanel = self.ReturnNewPanel(panel)
+        # # self.replacePanel(panel, newPanel)
+        # # panel.close()
+
+
+        event.accept()
         return
+
 
     def find_drop_location(self, e):
         """
@@ -1605,19 +1562,19 @@ class ModernMenu(RibbonBar):
         """
 
         # Get the position as a point
-        pos = e.position().toPoint()
+        pos = e.position().toPoint()        
         # Get the widget
         widget = e.source()
         # Get the grid layout
-        parent = widget.parent().parent()
+        panel = widget.parent().parent().parent()
         # Define the placeholders for x- and y-coordinates as grid positions
         xPos = 0
         yPos = 0
 
         # Get the column
         Column = 0
-        for Column in range(parent._actionsLayout.columnCount()):
-            item = parent._actionsLayout.itemAtPosition(0, Column)
+        for Column in range(0, panel._actionsLayout.columnCount()):
+            item = panel._actionsLayout.itemAtPosition(0, Column)
             if item is not None:
                 w: QWidget = item.widget()
                 Widget_X = w.parentWidget().mapTo(self, w.pos()).x()
@@ -1628,8 +1585,8 @@ class ModernMenu(RibbonBar):
 
         # Get the row
         Row = 0
-        for Row in range(parent._actionsLayout.rowCount()):
-            item = parent._actionsLayout.itemAtPosition(Row, Column)
+        for Row in range(panel._actionsLayout.rowCount()):
+            item = panel._actionsLayout.itemAtPosition(Row, Column)
             if item is not None:
                 w: QWidget = item.widget()
                 Widget_y = w.parentWidget().mapTo(self, w.pos()).y()
@@ -1638,7 +1595,7 @@ class ModernMenu(RibbonBar):
                     xPos = Row
                     break
 
-        w_origin = parent._actionsLayout.itemAtPosition(xPos, yPos).widget()
+        w_origin = panel._actionsLayout.itemAtPosition(xPos, yPos).widget()
         # print(f"original button size: {w_origin.size().height()}")
         # print(f"drop button size: {widget.size().height()}")
 
@@ -3417,7 +3374,7 @@ class ModernMenu(RibbonBar):
                                 Menu = QMenu(self)
                                 if button.menu() is not None:
                                     Menu = button.menu()
-                                btn: RibbonToolButton = CustomControls.CustomToolButton(
+                                btn: RibbonToolButton = CustomControls(
                                     Text=action.text(),
                                     Action=action,
                                     Icon=action.icon(),
@@ -3431,7 +3388,8 @@ class ModernMenu(RibbonBar):
                                     Menu=Menu,
                                     MenuButtonSpace=16,
                                     parent=self,
-                                )
+                                    ButtonStyle=pyqtribbon.RibbonButtonStyle.Small
+                                )                              
                                 # add the button as a small button
                                 # layout.addWidgets(btn, "small")
                                 panel.addSmallWidget(
@@ -3473,7 +3431,7 @@ class ModernMenu(RibbonBar):
                                 Menu = QMenu(self)
                                 if button.menu() is not None:
                                     Menu = button.menu()
-                                btn: RibbonToolButton = CustomControls.CustomToolButton(
+                                btn: RibbonToolButton = CustomControls(
                                     Text=action.text(),
                                     Action=action,
                                     Icon=action.icon(),
@@ -3486,7 +3444,7 @@ class ModernMenu(RibbonBar):
                                     Menu=Menu,
                                     MenuButtonSpace=16,
                                     parent=self,
-                                    ButtonStyle="medium"
+                                    ButtonStyle=pyqtribbon.RibbonButtonStyle.Medium
                                 )
                                 # add the button as large button
                                 # layout.addWidgets(btn, "medium")
@@ -3534,7 +3492,7 @@ class ModernMenu(RibbonBar):
                                 Menu = QMenu(self)
                                 if button.menu() is not None:
                                     Menu = button.menu()
-                                btn: RibbonToolButton = CustomControls.LargeCustomToolButton(
+                                btn: RibbonToolButton = CustomControls(
                                     Text=action.text(),
                                     Action=action,
                                     Icon=action.icon(),
@@ -3547,6 +3505,7 @@ class ModernMenu(RibbonBar):
                                     Menu=Menu,
                                     MenuButtonSpace=16,
                                     parent=self,
+                                    ButtonStyle=pyqtribbon.RibbonButtonStyle.Large
                                 )
                                 # add the button as large button
                                 # layout.addWidgets(btn, "large")
@@ -3633,6 +3592,7 @@ class ModernMenu(RibbonBar):
             Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
             panel._titleLabel.setFont(Font)
             self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset) + 6
+            # panel.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
 
             # Setup the panelOptionButton
             actionList = []
@@ -4552,30 +4512,30 @@ class ModernMenu(RibbonBar):
         return
     
     # Needs to be updated/optimalised
-    def returnDropWidgets(self, widget, panel, ButtonType = "Small", showText = True):
-        CommandButton = widget
-        ArrowButton = None
-        btn = RibbonToolButton()
+    def returnDropWidgets(self, widget: CustomControls, panel, ButtonType = "Small", showText = True):
+        # CommandButton = widget
+        # ArrowButton = None
+        # btn = RibbonToolButton()
         
-        if widget.objectName() == "separator":
-            separatorWidget = CustomWidgets.CustomSeparator()
-            separator = panel.addLargeWidget(separatorWidget)
-            separator.setObjectName("separator")
-            return separator
+        # if widget.objectName() == "separator":
+        #     separatorWidget = CustomWidgets.CustomSeparator()
+        #     separator = panel.addLargeWidget(separatorWidget)
+        #     separator.setObjectName("separator")
+        #     return separator
         
-        for child in widget.children():
-            if (child.objectName() == "CommandButton"):
-                CommandButton = child
-            if (child.objectName() == "MenuButton"):
-                ArrowButton = child
+        # for child in widget.children():
+        #     if (child.objectName() == "CommandButton"):
+        #         CommandButton = child
+        #     if (child.objectName() == "MenuButton"):
+        #         ArrowButton = child
                 
         # get the actions
-        action = widget.actions()                     
-        if CommandButton.defaultAction() is not None:
-            action = CommandButton.defaultAction()
+        action = widget.actions()
+        if widget.defaultAction() is not None:
+            action = widget.defaultAction()               
         if type(action) is list and len(action) > 0:
-            action = action[0]   
-            
+            action = action[0]
+
         # Get the command name
         CommandName = action.data()
         
@@ -4589,9 +4549,7 @@ class ModernMenu(RibbonBar):
                 IconOnly = True
 
         if showText is False:
-            for child in widget.children():
-                if type(child) == QLabel:
-                    showText = child.isVisible()
+            showText = widget.TextEnabled()
 
         if IconOnly is True or Parameters_Ribbon.USE_FC_OVERLAY is True:
             showText = False
@@ -4626,11 +4584,9 @@ class ModernMenu(RibbonBar):
                 ButtonSize = IconSize
             except Exception:
                 pass
-            
-            Menu = QMenu(self)
-            if ArrowButton is not None and ArrowButton.menu() is not None:
-                Menu = ArrowButton.menu()
-            btn: RibbonToolButton = CustomControls.CustomToolButton(
+                        
+            Menu = widget.returnMenu()
+            btn: RibbonToolButton = CustomControls(
                 Text=action.text(),
                 Action=action,
                 Icon=action.icon(),
@@ -4644,6 +4600,7 @@ class ModernMenu(RibbonBar):
                 Menu=Menu,
                 MenuButtonSpace=16,
                 parent=self,
+                ButtonStyle=RibbonButtonStyle.Small
             )
         if ButtonType.lower() == "medium":
             showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
@@ -4676,10 +4633,8 @@ class ModernMenu(RibbonBar):
             except Exception:
                 pass
             
-            Menu = QMenu(self)
-            if ArrowButton is not None and ArrowButton.menu() is not None:
-                Menu = ArrowButton.menu()
-            btn: RibbonToolButton = CustomControls.CustomToolButton(
+            Menu = widget.returnMenu()
+            btn: RibbonToolButton = CustomControls(
                 Text=action.text(),
                 Action=action,
                 Icon=action.icon(),
@@ -4692,7 +4647,7 @@ class ModernMenu(RibbonBar):
                 Menu=Menu,
                 MenuButtonSpace=16,
                 parent=self,
-                ButtonStyle="medium"
+                ButtonStyle=RibbonButtonStyle.Medium
             )
             
         if ButtonType.lower() == "large":
@@ -4729,10 +4684,8 @@ class ModernMenu(RibbonBar):
                     print(e)
                 pass
             
-            Menu = QMenu(self)
-            if ArrowButton is not None and ArrowButton.menu() is not None:
-                Menu = ArrowButton.menu()    
-            btn: RibbonToolButton = CustomControls.LargeCustomToolButton(
+            Menu = widget.returnMenu()  
+            btn: RibbonToolButton = CustomControls(
                 Text=action.text(),
                 Action=action,
                 Icon=action.icon(),
@@ -4745,6 +4698,7 @@ class ModernMenu(RibbonBar):
                 Menu=Menu,
                 MenuButtonSpace=16,
                 parent=self,
+                ButtonStyle=RibbonButtonStyle.Large
             )
         return btn
     
@@ -4943,6 +4897,91 @@ class ModernMenu(RibbonBar):
         panel.close()
         
         return
+    
+    def ReturnNewPanel(self, panel: RibbonPanel):
+        newControl = RibbonToolButton()
+        # This is a hack, but after testing, the best way to update the panel is by replacing it.
+        # THe delete widgets is still neccesary otherwise they will be leftovers and remain directly in the ribbon.
+        newPanel = RibbonPanel()
+        
+        # SDefine the stylesheet for the buttons
+        StyleSheet_Addition_Button = (
+            "QToolButton, QToolButton:hover {background-color: "
+            + StyleMapping_Ribbon.ReturnStyleItem(
+                "Background_Color"
+            )
+            + ";border: none"
+            + ";}"
+        )
+        
+        # Get the order of the commands
+        orderList = []    
+        for widget in panel.widgets():
+            action = None
+            WidgetType = widget.objectName()
+            if WidgetType != "separator":
+                for child in widget.children():                
+                    if child.objectName() == "CommandButton":
+                        action = child.defaultAction()                        
+                        orderList.append([action.data(), WidgetType, widget])
+            if WidgetType == "separator":
+                orderList.append([None, WidgetType, None])
+        
+        # Clear the list with widgets in the panel
+        panel.widgets().clear()
+        
+        # Delete the old widget and items
+        def Delete(widget):
+            for i in range(20):
+                parent = widget.parent()
+                if type(parent) is RibbonPanel:
+                    break
+                else:
+                    panel.removeWidget(parent)
+                    parent.close()
+                    del parent
+            panel.removeWidget(widget)
+            widget.close()
+            del widget
+            return
+
+        for item in orderList:
+            currentWidget = item[2]
+            WidgetType = item[1]
+            
+            if WidgetType == "separator":
+                separator = newPanel.addLargeVerticalSeparator(
+                    width=6,
+                    alignment=Qt.AlignmentFlag.AlignCenter,
+                    fixedHeight=False,
+                )
+                separator.setObjectName("separator")
+            if WidgetType == "CustomWidget_Small":
+                alignment = Qt.AlignmentFlag.AlignTop
+                CommandWidget = currentWidget
+                newControl = self.returnDropWidgets(CommandWidget, panel)
+                btn = newPanel.addSmallWidget(widget=newControl, alignment=alignment, fixedHeight=False)
+                btn.setObjectName("CustomWidget_Small")
+                btn.setStyleSheet(StyleSheet_Addition_Button)
+                Delete(currentWidget)
+            if WidgetType == "CustomWidget_Medium":
+                alignment = Qt.AlignmentFlag.AlignTop
+                CommandWidget = currentWidget
+                newControl = self.returnDropWidgets(CommandWidget, panel, "Medium",)           
+                btn = newPanel.addMediumWidget(widget=newControl, alignment=alignment, fixedHeight=False)
+                btn.setObjectName("CustomWidget_Medium")
+                btn.setStyleSheet(StyleSheet_Addition_Button)
+                Delete(currentWidget)
+            if WidgetType == "CustomWidget_Large":
+                alignment = Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter
+                CommandWidget = currentWidget
+                newControl = self.returnDropWidgets(CommandWidget, panel, "Large")
+                btn = newPanel.addLargeWidget(widget=newControl, alignment=alignment, fixedHeight=False)
+                btn.setObjectName("CustomWidget_Large")
+                btn.setStyleSheet(StyleSheet_Addition_Button)
+                Delete(currentWidget)
+                        
+        return newPanel
     # endregion
 
     # region - Titlebar functions

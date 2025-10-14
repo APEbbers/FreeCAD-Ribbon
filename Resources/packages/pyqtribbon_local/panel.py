@@ -480,7 +480,14 @@ class RibbonPanel(QFrame):
     def removeWidget(self, widget: QWidget):
         """Remove a widget from the panel."""
         self._actionsLayout.removeWidget(widget)
-
+        
+    # def replaceWidget(self, widget: QWidget, newWidget: QWidget):
+    #     self._actionsLayout.replaceWidget(widget, newWidget)
+    #     index = self._widgets.index(widget)
+    #     self._widgets.pop(index)
+    #     self._widgets.insert(index, newWidget)
+        
+        
     def widget(self, index: int) -> QWidget:
         """Get the widget at the given index.
 
