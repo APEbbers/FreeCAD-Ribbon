@@ -24,8 +24,8 @@ import matplotlib.colors
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction, QColor
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction, QColor
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -38,7 +38,7 @@ from PySide.QtWidgets import (
     QWidget,
     QMainWindow,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread
 import sys
 import Standard_Functions_Ribbon as StandardFunctions
 import Parameters_Ribbon
@@ -61,6 +61,9 @@ HoverColor = preferences.GetString('GeneralBackgroundHoverColor')
 BorderColor = preferences.GetString('GeneralBorderColor')
 BorderColorHover = preferences.GetString('GeneralBorderHoverColor')
 TextColor = preferences.GetString('TextForegroundColor')
+
+btn = QToolButton()
+
 
 def GetColorSetting(settingName: str) -> object:
         # Create a tuple from the int value of the color

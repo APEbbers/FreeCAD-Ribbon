@@ -21,6 +21,7 @@
 # *************************************************************************
 from argparse import Action
 from inspect import Traceback
+import re
 from turtle import width
 from types import TracebackType
 from inspect import Traceback
@@ -88,6 +89,7 @@ import Parameters_Ribbon
 import Standard_Functions_Ribbon as StandardFunctions
 import StyleMapping_Ribbon
 
+
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
 pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
@@ -103,14 +105,26 @@ sys.path.append(pathPackages)
 import pyqtribbon_local as pyqtribbon
 from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
 from pyqtribbon_local.panel import RibbonPanel, RibbonPanelItemWidget
-from pyqtribbon_local.toolbutton import RibbonToolButton, RibbonButtonStyle
+from pyqtribbon_local.toolbutton import QToolButton, RibbonButtonStyle
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
 translate = App.Qt.translate
 
 
-class CustomControls(RibbonToolButton):
+
+from functools import wraps # This convenience func preserves name and docstring
+def add_method(cls):
+    def decorator(func):
+        @wraps(func) 
+        def wrapper(self, *args, **kwargs): 
+            return func(self, *args, **kwargs)
+        setattr(cls, func.__name__, wrapper)
+        # Note we are not binding func, but wrapper which accepts self but does exactly the same as func
+        return func # returning func means func can still be used normally
+    return decorator
+
+class CustomControls(QToolButton):    
     def __init__(
         self,
         Text: str,
@@ -128,14 +142,19 @@ class CustomControls(RibbonToolButton):
         Menu: QMenu = None,
         MenuButtonSpace=10,
         parent=None,
-        ButtonStyle = RibbonButtonStyle.Small
+        ButtonStyle = RibbonButtonStyle.Small,
+        *args,
+        **kwargs
                  ):
-        super().__init__()
+        # super(CustomControls, self).__init__(parent)
+        QToolButton.__init__(self, *args, **kwargs)
         self.layout = QHBoxLayout(self)
-        self.widget = RibbonToolButton()
+        self.widget = QToolButton(self)
         self.action = Action
         self.showText = showText
-        self.Menu = Menu
+        self.menu = Menu
+        self.labelWidth = 0
+        self.menuButtonWidth = 0
         if ButtonStyle == RibbonButtonStyle.Small:
             self.widget = self.CustomToolButton(
                 Text,
@@ -175,7 +194,7 @@ class CustomControls(RibbonToolButton):
                 parent,
                 "medium",
             )
-            self.layout.addWidget(self.widget, 1, Qt.AlignmentFlag.AlignLeft)
+            self.layout.addWidget(self.widget, 0, Qt.AlignmentFlag.AlignLeft)
         if ButtonStyle == RibbonButtonStyle.Large:
             self.widget = self.LargeCustomToolButton(
                 Text,
@@ -192,13 +211,13 @@ class CustomControls(RibbonToolButton):
                 MenuButtonSpace,
                 parent,                
             )
-            self.layout.addWidget(self.widget, 1, Qt.AlignmentFlag.AlignLeft)
+            self.layout.addWidget(self.widget, 0, Qt.AlignmentFlag.AlignLeft)
         
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
         self.layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.setFixedSize(self.widget.size())
-            
+                    
     def mouseMoveEvent(self, e):
         if e.buttons() == Qt.MouseButton.LeftButton:
             try:
@@ -216,13 +235,29 @@ class CustomControls(RibbonToolButton):
                 
     def actions(self):
         return self.action
-    
+
+    @classmethod
     def TextEnabled(self):
+        
         return self.showText
     
     def returnMenu(self):
-        return self.Menu
+        return self.menu
 
+    def LabelWidth(self):
+        return self.labelWidth
+    
+    def MenuButtonWidth(self):
+        return self.menuButtonWidth
+
+    def ShowText(self, Visible: bool):
+            if Visible is True:
+                for child in self.widget.children():
+                    if type(child) is QLabel:
+                        # show the text
+                        child.show()
+                        return True
+            return False
 
     @classmethod
     def LargeCustomToolButton(
@@ -242,7 +277,7 @@ class CustomControls(RibbonToolButton):
         parent=None,
     ):
         # Define the controls
-        btn = RibbonToolButton()
+        btn = QToolButton()
         CommandButton = QToolButton()
         ArrowButton = QToolButton()
         Layout = QVBoxLayout()
@@ -254,7 +289,7 @@ class CustomControls(RibbonToolButton):
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: none"
             + ";}"
-        )
+        )        
         btn.setStyleSheet(StyleSheet_Addition_Button)
         # Define the parameters
         CommandButtonHeight = 0
@@ -500,7 +535,7 @@ class CustomControls(RibbonToolButton):
                         + ";}"
                     )
                 StyleSheet_Addition_Button = (
-                    "QToolButton, QLabel, RibbonToolButton {background-color: "
+                    "QToolButton, QLabel, QToolButton {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";border: "
                     + BorderColor
@@ -743,6 +778,9 @@ class CustomControls(RibbonToolButton):
         CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         btn.setFixedSize(QSize(width, ButtonSize.height()))
 
+        self.labelWidth = TextWidth
+        self.menuButtonWidth = ArrowButton.width()
+        
         # Return the button
         btn.setObjectName("CustomWidget_Large")
         return btn
@@ -767,15 +805,19 @@ class CustomControls(RibbonToolButton):
         parent=None,
         ButtonStyle = "small"
     ):
+        # Small buttons have no wordwrap
+        if ButtonStyle == "small":
+            setWordWrap= False
+        
         # Define the controls
-        btn = RibbonToolButton()
+        btn = QToolButton()
         CommandButton = QToolButton()
         ArrowButton = QToolButton()
         Layout = QHBoxLayout()
         Label_Text = QLabel()
         # Set the default stylesheet
         StyleSheet_Addition_Button = (
-            "QToolButton, QToolButton:hover, RibbonToolButton, RibbonToolButton:hover {background-color: "
+            "QToolButton, QToolButton:hover, QToolButton, QToolButton:hover {background-color: "
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: none"
             + ";}"
@@ -909,14 +951,6 @@ class CustomControls(RibbonToolButton):
                 Label_Text.setWordWrap(False)
                 # Add the line with a space to avoid te need to set spacing. (Spacing breaks the hover background)
                 Label_Text.setText(" " + Text)
-                # Update the size
-                # Label_Text.setFixedHeight(ButtonSize.height())
-                # Label_Text.adjustSize()
-                # Correct the margin to set the arrow vertical center (bug in Qt)
-                # marginCorrection = (
-                #     CommandButton.height() - FontMetrics.boundingRect(Text).height()
-                # ) / 2
-                # Label_Text.setViewportMargins(0, marginCorrection, 0, 0)
                 # Update the width parameter
                 TextWidth = FontMetrics.boundingRect(Text).width() + space
                 Label_Text.setMaximumWidth(TextWidth)
@@ -1120,7 +1154,7 @@ class CustomControls(RibbonToolButton):
                 StyleSheet_Addition_Label= ""
                 if showText is False:                    
                     StyleSheet_Addition_Label = (
-                        "QToolButton, QLabel, RibbonToolButton {background-color: "
+                        "QToolButton, QLabel, QToolButton {background-color: "
                         + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
@@ -1133,7 +1167,7 @@ class CustomControls(RibbonToolButton):
                         + ";}"
                     )
                     StyleSheet_Addition_Command = (
-                        "QToolButton, QLabel, RibbonToolButton {background-color: "
+                        "QToolButton, QLabel, QToolButton {background-color: "
                         + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
@@ -1147,7 +1181,7 @@ class CustomControls(RibbonToolButton):
                     )
                 if showText is True:
                     StyleSheet_Addition_Label = (
-                        "QToolButton, QLabel, RibbonToolButton {background-color: "
+                        "QToolButton, QLabel, QToolButton {background-color: "
                         + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
@@ -1160,7 +1194,7 @@ class CustomControls(RibbonToolButton):
                         + ";}"
                     )
                     StyleSheet_Addition_Command = (
-                        "QToolButton, QLabel, RibbonToolButton {background-color: "
+                        "QToolButton, QLabel, QToolButton {background-color: "
                         + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border: 0.5px solid"
                         + BorderColor
@@ -1173,7 +1207,7 @@ class CustomControls(RibbonToolButton):
                         + ";}"
                     )
                 StyleSheet_Addition_Button = (
-                    "QToolButton, QLabel, RibbonToolButton {background-color: "
+                    "QToolButton, QLabel, QToolButton {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";border: "
                     + BorderColor
@@ -1201,7 +1235,7 @@ class CustomControls(RibbonToolButton):
                     radius="2px",
                 )
                 StyleSheet_Addition = (
-                    "QToolButton, QToolButton:hover, QLabel, QLabel:hover, RibbonToolButton, RibbonToolButton:hover {background-color: "
+                    "QToolButton, QToolButton:hover, QLabel, QLabel:hover, QToolButton, QToolButton:hover {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";border: 0.5px solid"
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
@@ -1243,9 +1277,12 @@ class CustomControls(RibbonToolButton):
         # Set the correct dimensions
         btn.setFixedWidth(ButtonSize.width() + MenuButtonSpace + TextWidth)
         btn.setFixedHeight(ButtonSize.height())
-        # CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        # Label_Text.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        # ArrowButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        Label_Text.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        ArrowButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        
+        self.labelWidth = TextWidth
+        self.menuButtonWidth = ArrowButton.width()
         
         # return the new button
         btn.setObjectName("CustomWidget_Small")
@@ -1325,7 +1362,6 @@ class CustomControls(RibbonToolButton):
             btn, mouseEvent
         )
         return btn
-
 
 class CustomGridLayout(QHBoxLayout):    
     def __init__(self):
