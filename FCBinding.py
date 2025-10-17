@@ -139,7 +139,7 @@ from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
 from pyqtribbon_local.panel import RibbonPanel, RibbonPanelItemWidget
 from pyqtribbon_local.toolbutton import RibbonToolButton, RibbonButtonStyle
 from pyqtribbon_local.separator import RibbonSeparator
-from pyqtribbon_local.category import RibbonCategoryLayoutButton, RibbonNormalCategory, RibbonContextCategory
+from pyqtribbon_local.category import RibbonCategory, RibbonCategoryLayoutButton, RibbonNormalCategory, RibbonContextCategory
 
 # Get the main window of FreeCAD
 mw: QMainWindow = Gui.getMainWindow()
@@ -189,7 +189,7 @@ class ModernMenu(RibbonBar):
     PanelHeightOffset = 36
     # Create an offset for the whole ribbon height
     RibbonOffset = (
-        50 + QuickAccessButtonSize * 2
+        44 + QuickAccessButtonSize * 2
     )  # Set to zero to hide the panel titles
 
     # Set the minimum height for the ribbon
@@ -200,6 +200,16 @@ class ModernMenu(RibbonBar):
 
     # Declare the right padding for dropdown menus
     PaddingRight = 10
+    
+    # Declare the spacing between buttons
+    ButtonSpacing = 6
+    
+    # Declare the alignment of the buttons
+    ButtonAlignment = Qt.AlignmentFlag.AlignLeft
+    
+    # Declare the top and bottom margin for the tabbar (category)
+    TopMargin = 3
+    BottomMargin = 3
 
     # Create the list for the commands
     List_Commands = []
@@ -2746,12 +2756,11 @@ class ModernMenu(RibbonBar):
             with open(JsonFile, "w") as outfile:
                 json.dump(self.ribbonStructure, outfile, indent=4)
             outfile.close()
-            return
 
         self.isWbLoaded[tabName] = True
 
         # Set the previous/next buttons
-        category = self.currentCategory()
+        category: RibbonCategory = self.currentCategory()
         ScrollLeftButton_Category: RibbonCategoryLayoutButton = category.findChildren(
             RibbonCategoryLayoutButton
         )[0]
@@ -2799,11 +2808,11 @@ class ModernMenu(RibbonBar):
         )
 
         # Set the maximum height to a high value to prevent from the ribbon to be clipped off
-        self.currentCategory().setMinimumHeight(
-            self.RibbonHeight - self.RibbonMinimalHeight - 20
+        category.setMinimumHeight(
+            self.RibbonHeight - self.RibbonMinimalHeight - 3
         )
-        self.currentCategory().setMaximumHeight(
-            self.RibbonHeight - self.RibbonMinimalHeight - 10
+        category.setMaximumHeight(
+            self.RibbonHeight - self.RibbonMinimalHeight - 3
         )
         self.setRibbonHeight(self.RibbonHeight)
 
@@ -3689,7 +3698,7 @@ class ModernMenu(RibbonBar):
 
         # Create the panel, use the toolbar name as title
         title = StandardFunctions.TranslationsMapping(workbenchName, panelName)
-        panel = RibbonPanel(title=title, showPanelOptionButton=True)
+        panel: RibbonPanel = RibbonPanel(title=title, showPanelOptionButton=True)
         if addPanel is True:
                     panel: RibbonPanel = self.currentCategory().addPanel(
             title=title,
@@ -4126,10 +4135,9 @@ class ModernMenu(RibbonBar):
                             # layout.addWidgets(btn, "small")
                             panel.addSmallWidget(
                                 btn,
-                                alignment=Qt.AlignmentFlag.AlignTop,
+                                alignment=self.ButtonAlignment,
                                 fixedHeight=False,
                             ).setObjectName("CustomWidget_Small")  # Set fixedheight to false. This is set in the custom widgets
-
                         elif buttonSize == "medium":
                             showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
                             if (
@@ -4182,7 +4190,7 @@ class ModernMenu(RibbonBar):
                             # layout.addWidgets(btn, "medium")
                             panel.addMediumWidget(
                                 btn,
-                                alignment=Qt.AlignmentFlag.AlignTop,
+                                alignment=self.ButtonAlignment,
                                 fixedHeight=False,
                             ).setObjectName("CustomWidget_Medium")  # Set fixedheight to false. This is set in the custom widgets
                         elif buttonSize == "large":
@@ -4243,7 +4251,7 @@ class ModernMenu(RibbonBar):
                             panel.addLargeWidget(
                                 btn,
                                 fixedHeight=False,
-                                alignment=Qt.AlignmentFlag.AlignTop,
+                                alignment=self.ButtonAlignment,
                             ).setObjectName("CustomWidget_Large")
                             # Set fixedheight to false. This is set in the custom widgets
                         else:
@@ -4299,7 +4307,6 @@ class ModernMenu(RibbonBar):
                 ]
                 for Name in List:                            
                     ListDelimiters = [" - ", "-", "_"]
-                    print(Name)
                     for delimiter in ListDelimiters:
                         if f"{delimiter}{Name}" in title:
                             title = title.replace(f"{delimiter}{Name}", "")
@@ -4315,12 +4322,15 @@ class ModernMenu(RibbonBar):
         # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
         # add an offset to make room for the panel titles and icons
         panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
-        panel.layout().setSpacing(0)
-        panel.setContentsMargins(0, 0, 0, 0)
+        panel._actionsLayout.setSpacing(self.ButtonSpacing)
+        panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        panel._mainLayout.setSpacing(0)
+        panel._actionsLayout.setContentsMargins(0, self.TopMargin, 0, self.BottomMargin) # Left, Top, Right, Bottom
         panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
         Font = QFont()
         Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
         panel._titleLabel.setFont(Font)
+        panel._titleLabel.setMaximumHeight(Parameters_Ribbon.FONTSIZE_PANELS+3)
         self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset) + 6
 
         # Setup the panelOptionButton
