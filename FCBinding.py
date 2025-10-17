@@ -19,12 +19,13 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+from matplotlib.colors import NoNorm
 import CustomWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -44,7 +45,7 @@ from PySide6.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QSpinBox,
@@ -79,7 +80,7 @@ from PySide6.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -3659,9 +3660,14 @@ class ModernMenu(RibbonBar):
     
     def CreatePanel(self, workbenchName: str, panelName: str, addPanel = True, dict = ribbonStructure):
         #Get the workbenchTitle
-        index = self.tabBar().indexOf(workbenchName)
+        index = None
+        for i in range(len(self.tabBar().tabTitles())):
+            name = self.tabBar().tabData(i)
+            if name == workbenchName:
+                index = i
+                break
         workbenchTitle = self.tabBar().tabText(index)
-        
+
         # Create the panel, use the toolbar name as title
         title = StandardFunctions.TranslationsMapping(workbenchName, panelName)
         panel = RibbonPanel(title=title, showPanelOptionButton=True)
@@ -4257,7 +4263,7 @@ class ModernMenu(RibbonBar):
             or panel.title().lower() in str("Individual views").lower()
         ):
             panel.setTitle(" Views ")
-        else:                          
+        else:           
             # Remove possible workbench names from the titles
             if (
                 not "_custom" in title
@@ -4271,12 +4277,13 @@ class ModernMenu(RibbonBar):
                 ]
                 for Name in List:                            
                     ListDelimiters = [" - ", "-", "_"]
+                    print(Name)
                     for delimiter in ListDelimiters:
                         if f"{delimiter}{Name}" in title:
                             title = title.replace(f"{delimiter}{Name}", "")
                         elif f"{Name}{delimiter}" in title:
                             title = title.replace(f"{Name}{delimiter}", "")
-                    if title != Name:
+                    if Name in title:
                         title = title.replace(Name, "")
                 panel.setTitle(title)
                 

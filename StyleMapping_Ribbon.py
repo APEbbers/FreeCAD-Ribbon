@@ -24,8 +24,8 @@ import matplotlib.colors
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide6.QtGui import QIcon, QPixmap, QAction, QColor
-from PySide6.QtWidgets import (
+from PySide.QtGui import QIcon, QPixmap, QAction, QColor
+from PySide.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -38,7 +38,7 @@ from PySide6.QtWidgets import (
     QWidget,
     QMainWindow,
 )
-from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread
+from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread
 import sys
 import Standard_Functions_Ribbon as StandardFunctions
 import Parameters_Ribbon
