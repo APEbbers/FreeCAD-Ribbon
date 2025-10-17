@@ -109,12 +109,11 @@ import LoadLicenseForm_Ribbon
 import Standard_Functions_Ribbon as StandardFunctions
 from Standard_Functions_Ribbon import CommandInfoCorrections
 import Serialize_Ribbon
+import Standard_Functions_Ribbon
 import StyleMapping_Ribbon
 import platform
-import math
 from datetime import datetime
 import shutil
-import re
 
 # import Ribbon. This contains the ribbon commands for FreeCAD
 import Ribbon
@@ -1042,12 +1041,24 @@ class ModernMenu(RibbonBar):
                                         self.actionList.append([subAction, subAction.isEnabled()])
                                 except Exception:
                                     pass
-                        Gui.updateGui() 
+                        Gui.updateGui()
+                        
+                        # create a dict for this panel only
+                        self.workBenchDict = {}
+                        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName])
+                        self.workBenchDict["workbenches"][workbenchName] = self.ribbonStructure["workbenches"][workbenchName]
                         return
                     if self.CustomizeEnabled is True:
                         self.setStyleSheet(Stylesheet)
                         self.CustomizeEnabled = False
                         self.setRibbonHeight(self.RibbonHeight)
+                        
+                        # Writing to ribbonStructure.json
+                        JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+                        with open(JsonFile, "w") as outfile:
+                            json.dump(self.ribbonStructure, outfile, indent=4)
+                        outfile.close()
                         
                         for item in self.actionList:
                             # item[2].unblock()
@@ -1055,7 +1066,15 @@ class ModernMenu(RibbonBar):
                                 item[0].setDisabled(True)
                             else:
                                 item[0].setEnabled(True)                                
-                        Gui.updateGui()                
+                        Gui.updateGui()       
+                        
+                        # update the ribbon structure with the changes
+                        self.ribbonStructure.update(self.workBenchDict)
+                        # Writing to ribbonStructure.json
+                        JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+                        with open(JsonFile, "w") as outfile:
+                            json.dump(self.ribbonStructure, outfile, indent=4)
+                        outfile.close()
                         return
 
         return
@@ -1070,7 +1089,7 @@ class ModernMenu(RibbonBar):
 
         # write the changes to the ribbonstruture file 
         property = {"size": Size}
-        self.WriteButtonSettings(ButtonWidget, panel, property)
+        self.WriteButtonSettings(ButtonWidget, panel, property, False)
         
         # Create a new panel
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
@@ -1089,11 +1108,11 @@ class ModernMenu(RibbonBar):
             property = {"ButtonSize_medium": ButtonSizeWidget.value()}
         if ButtonWidget.objectName() == "CustomWidget_Large":
             property = {"ButtonSize_large": ButtonSizeWidget.value()}
-        self.WriteButtonSettings(ButtonWidget, panel, property)
+        self.WriteButtonSettings(ButtonWidget, panel, property, False)
         
-        # Create a new panel
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False)
+         # Create a new panel
+        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())        
+        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
         
         # Replace the panel with the new panel
         self.currentCategory().replacePanel(panel, newPanel)
@@ -1103,14 +1122,14 @@ class ModernMenu(RibbonBar):
     def on_TextState_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget: CustomControls, TextStateWidget: CheckBoxAction):
         # If the widget has not text, show it with the correct width
         if TextStateWidget.isChecked() is True:
-            self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()})
+            self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()}, False)
         # if the widget has text, find its QTextEdit and hide it. Update the width
         if TextStateWidget.isChecked() is False:           
-            self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()})
+            self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()}, False)
         
          # Create a new panel
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False)
+        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())        
+        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
         
         # Replace the panel with the new panel
         self.currentCategory().replacePanel(panel, newPanel)
@@ -1277,7 +1296,7 @@ class ModernMenu(RibbonBar):
                     
                     #Write the order list to the json file
                     StandardFunctions.add_keys_nested_dict(
-                        self.ribbonStructure,
+                        self.workBenchDict,
                         [
                             "workbenches",
                             workbenchName,
@@ -1286,13 +1305,8 @@ class ModernMenu(RibbonBar):
                             "order"
                         ],
                     )
-                    self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = orderList     
-                    # Writing to ribbonStructure.json
-                    JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
-                    with open(JsonFile, "w") as outfile:
-                        json.dump(self.ribbonStructure, outfile, indent=4)
-                    outfile.close()
-                    
+                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = orderList     
+                                       
                      # Create a new panel
                     workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                     newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False)
@@ -3588,7 +3602,7 @@ class ModernMenu(RibbonBar):
             print("Ribbon UI: Custom text are reset because the language was changed")
         return
     
-    def WriteButtonSettings(self, ButtonWidget, panel, property: dict = {"size": "small",}):
+    def WriteButtonSettings(self, ButtonWidget, panel, property: dict = {"size": "small",}, saveToDisk = True):
         # Get tabBar
         parent = panel.parent()
         count = 0
@@ -3599,8 +3613,6 @@ class ModernMenu(RibbonBar):
                 parent = parent.parent()
         # Get the workbench name                    
         WorkBenchName = parent.objectName()
-        # Get the grid layout
-        gridLayout: QGridLayout = panel._actionsLayout
 
         # Get the current data from the ribbonstructure
         CommandName = ""
@@ -3645,11 +3657,10 @@ class ModernMenu(RibbonBar):
         
         return title
     
-    def CreatePanel(self, workbenchName: str, panelName: str, addPanel = True):
+    def CreatePanel(self, workbenchName: str, panelName: str, addPanel = True, dict = ribbonStructure):
         #Get the workbenchTitle
         index = self.tabBar().indexOf(workbenchName)
         workbenchTitle = self.tabBar().tabText(index)
-                
         
         # Create the panel, use the toolbar name as title
         title = StandardFunctions.TranslationsMapping(workbenchName, panelName)
@@ -3693,54 +3704,54 @@ class ModernMenu(RibbonBar):
             action.setObjectName(action.data())
 
         # add separators to the command list.
-        if workbenchName in self.ribbonStructure["workbenches"]:
+        if workbenchName in dict["workbenches"]:
             if (
                 panelName != ""
                 and panelName
-                in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]
+                in dict["workbenches"][workbenchName]["toolbars"]
             ):
-                for orderedToolbar in self.ribbonStructure["workbenches"][
+                for orderedToolbar in dict["workbenches"][
                     workbenchName
                 ]["toolbars"]:
                     if orderedToolbar.lower() == panelName.lower():
                         if (
                             "order"
-                            in self.ribbonStructure["workbenches"][workbenchName][
+                            in dict["workbenches"][workbenchName][
                                 "toolbars"
                             ][panelName]
                         ):
                             for j in range(
                                 len(
-                                    self.ribbonStructure["workbenches"][
+                                    dict["workbenches"][
                                         workbenchName
                                     ]["toolbars"][panelName]["order"]
                                 )
                             ):
                                 if (
                                     "separator"
-                                    in self.ribbonStructure["workbenches"][
+                                    in dict["workbenches"][
                                         workbenchName
                                     ]["toolbars"][panelName]["order"][j].lower()
                                 ):
                                     separator = QToolButton()
                                     separator.setText(
-                                        self.ribbonStructure["workbenches"][
+                                        dict["workbenches"][
                                             workbenchName
                                         ]["toolbars"][panelName]["order"][j]
                                     )
                                     allButtons.insert(j, separator)
 
-        if workbenchName in self.ribbonStructure["workbenches"]:
+        if workbenchName in dict["workbenches"]:
             # order buttons like defined in ribbonStructure
             if (
                 panelName
-                in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]
+                in dict["workbenches"][workbenchName]["toolbars"]
                 and "order"
-                in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][
+                in dict["workbenches"][workbenchName]["toolbars"][
                     panelName
                 ]
             ):
-                OrderList: list = self.ribbonStructure["workbenches"][
+                OrderList: list = dict["workbenches"][
                     workbenchName
                 ]["toolbars"][panelName]["order"]
 
@@ -3805,7 +3816,7 @@ class ModernMenu(RibbonBar):
             buttonSize = "small"
             try:
                 action = button.defaultAction()
-                buttonSize = self.ribbonStructure["workbenches"][workbenchName][
+                buttonSize = dict["workbenches"][workbenchName][
                     "toolbars"
                 ][panelName]["commands"][action.data()]["size"]
                 if buttonSize == "small":
@@ -3882,7 +3893,7 @@ class ModernMenu(RibbonBar):
 
                         # try to get alternative text from ribbonStructure
                         try:
-                            textJSON = self.ribbonStructure["workbenches"][
+                            textJSON = dict["workbenches"][
                                 workbenchName
                             ]["toolbars"][panelName]["commands"][action.data()][
                                 "text"
@@ -3891,7 +3902,7 @@ class ModernMenu(RibbonBar):
                             # There is a bug in freecad with the comp-sketch menu hase the wrong text
                             if (
                                 action.data() == "PartDesign_CompSketches"
-                                and self.ribbonStructure["workbenches"][
+                                and dict["workbenches"][
                                     workbenchName
                                 ]["toolbars"][panelName]["commands"][action.data()][
                                     "text"
@@ -3912,7 +3923,7 @@ class ModernMenu(RibbonBar):
                                     if CommandName == action.data():
                                         if (
                                             MenuName
-                                            != self.ribbonStructure["workbenches"][
+                                            != dict["workbenches"][
                                                 workbenchName
                                             ]["toolbars"][panelName]["commands"][
                                                 action.data()
@@ -3928,7 +3939,7 @@ class ModernMenu(RibbonBar):
                                     MenuName = action.text()
                                     if (
                                         MenuName
-                                        != self.ribbonStructure["workbenches"][
+                                        != dict["workbenches"][
                                             workbenchName
                                         ]["toolbars"][panelName]["commands"][
                                             action.data()
@@ -3959,7 +3970,7 @@ class ModernMenu(RibbonBar):
                             CommandName = button.text()
 
                         try:
-                            pixmap = self.ribbonStructure["workbenches"][
+                            pixmap = dict["workbenches"][
                                 workbenchName
                             ]["toolbars"][panelName]["commands"][CommandName]["icon"]
                         except Exception:
@@ -3970,7 +3981,7 @@ class ModernMenu(RibbonBar):
 
                         # try to get alternative icon from ribbonStructure
                         try:
-                            icon_Json = self.ribbonStructure["workbenches"][
+                            icon_Json = dict["workbenches"][
                                 workbenchName
                             ]["toolbars"][panelName]["commands"][CommandName]["icon"]
                             if icon_Json != "":
@@ -4017,7 +4028,7 @@ class ModernMenu(RibbonBar):
 
                         # get button size from ribbonStructure
                         try:
-                            buttonSize = self.ribbonStructure["workbenches"][
+                            buttonSize = dict["workbenches"][
                                 workbenchName
                             ]["toolbars"][panelName]["commands"][CommandName]["size"]
                             if buttonSize == "":
@@ -4043,7 +4054,7 @@ class ModernMenu(RibbonBar):
                                 showText = False
                             try:
                                 if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
-                                    showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["textEnabled"]
+                                    showText = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["textEnabled"]
                             except Exception:
                                 pass
 
@@ -4058,7 +4069,7 @@ class ModernMenu(RibbonBar):
                             )
                             if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
                                 try:
-                                    size = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_small"]
+                                    size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_small"]
                                     IconSize = QSize(size, size)
                                     ButtonSize = IconSize
                                 except Exception:
@@ -4100,7 +4111,7 @@ class ModernMenu(RibbonBar):
                                 showText = False
                             try:
                                 if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
-                                    showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["textEnabled"]
+                                    showText = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["textEnabled"]
                             except Exception:
                                 pass
 
@@ -4115,7 +4126,7 @@ class ModernMenu(RibbonBar):
                             )
                             if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
                                 try:
-                                    size = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_medium"]
+                                    size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_medium"]
                                     IconSize = QSize(size, size)
                                     ButtonSize = IconSize
                                 except Exception:
@@ -4155,8 +4166,8 @@ class ModernMenu(RibbonBar):
                                 showText = False
                             try:
                                 if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
-                                    if "textEnabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]:
-                                        showText = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["textEnabled"]
+                                    if "textEnabled" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]:
+                                        showText = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["textEnabled"]
                             except Exception as e:
                                 if Parameters_Ribbon.DEBUG_MODE is True:
                                     print(e)
@@ -4173,8 +4184,8 @@ class ModernMenu(RibbonBar):
                             )
                             if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
                                 try:
-                                    if "ButtonSize_large" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]:
-                                        size = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_large"]
+                                    if "ButtonSize_large" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]:
+                                        size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_large"]
                                         IconSize = QSize(size, size)
                                         ButtonSize = IconSize
                                 except Exception as e:
