@@ -24,6 +24,8 @@ import CustomWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
+from collections import defaultdict
+
 
 from PySide.QtGui import (
     QIcon,
@@ -1091,7 +1093,8 @@ class ModernMenu(RibbonBar):
                                 item[0].setEnabled(True)                                
                         Gui.updateGui()       
                         
-                        self.ribbonStructure["workbenches"][workbenchName] = self.workBenchDict["workbenches"][workbenchName]
+                        # Creating a nested defaultdict
+                        self.ribbonStructure.update(self.workBenchDict)
                         # Writing to ribbonStructure.json
                         JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
                         with open(JsonFile, "w") as outfile:
@@ -1123,7 +1126,7 @@ class ModernMenu(RibbonBar):
         
         return
     
-    def on_ButtonSize_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget, ButtonSizeWidget: SpinBoxAction):
+    def on_ButtonSize_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonSizeWidget: SpinBoxAction):       
         # write the changes to the ribbonstruture file 
         property = {"ButtonSize_small": ButtonSizeWidget.value()}
         if ButtonWidget.objectName() == "CustomWidget_Medium":
@@ -1132,13 +1135,15 @@ class ModernMenu(RibbonBar):
             property = {"ButtonSize_large": ButtonSizeWidget.value()}
         self.WriteButtonSettings(ButtonWidget, panel, property)
         
-         # Create a new panel
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())        
-        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
+        ButtonWidget.setMaximumHeight(ButtonSizeWidget.value())
         
-        # Replace the panel with the new panel
-        self.currentCategory().replacePanel(panel, newPanel)
-        panel.close()
+        #  # Create a new panel
+        # workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())        
+        # newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
+        
+        # # Replace the panel with the new panel
+        # self.currentCategory().replacePanel(panel, newPanel)
+        # panel.close()
         return
     
     def on_TextState_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget: CustomControls, TextStateWidget: CheckBoxAction):
@@ -3606,27 +3611,28 @@ class ModernMenu(RibbonBar):
 
     def CheckLanguage(self):
         FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
-        if self.ribbonStructure["language"] != FreeCAD_preferences.GetString(
-            "Language"
-        ):
-            if "workbenches" in self.ribbonStructure:
-                for workbenchName in self.ribbonStructure["workbenches"]:
-                    if "toolbars" in self.ribbonStructure["workbenches"][workbenchName]:
-                        for ToolBar in self.ribbonStructure["workbenches"][
-                            workbenchName
-                        ]["toolbars"]:
-                            if (
-                                "commands"
-                                in self.ribbonStructure["workbenches"][workbenchName][
-                                    "toolbars"
-                                ][ToolBar]
-                            ):
-                                for Command in self.ribbonStructure["workbenches"][
-                                    workbenchName
-                                ]["toolbars"][ToolBar]["commands"]:
-                                    self.ribbonStructure["workbenches"][workbenchName][
+        if "language" in self.ribbonStructure:
+            if self.ribbonStructure["language"] != FreeCAD_preferences.GetString(
+                "Language"
+            ):
+                if "workbenches" in self.ribbonStructure:
+                    for workbenchName in self.ribbonStructure["workbenches"]:
+                        if "toolbars" in self.ribbonStructure["workbenches"][workbenchName]:
+                            for ToolBar in self.ribbonStructure["workbenches"][
+                                workbenchName
+                            ]["toolbars"]:
+                                if (
+                                    "commands"
+                                    in self.ribbonStructure["workbenches"][workbenchName][
                                         "toolbars"
-                                    ][ToolBar]["commands"][Command]["text"] = ""
+                                    ][ToolBar]
+                                ):
+                                    for Command in self.ribbonStructure["workbenches"][
+                                        workbenchName
+                                    ]["toolbars"][ToolBar]["commands"]:
+                                        self.ribbonStructure["workbenches"][workbenchName][
+                                            "toolbars"
+                                        ][ToolBar]["commands"][Command]["text"] = ""
 
             print("Ribbon UI: Custom text are reset because the language was changed")
         return
