@@ -1043,10 +1043,6 @@ class ModernMenu(RibbonBar):
                                     pass
                         Gui.updateGui()
                         
-                        # create a dict for this panel only
-                        self.workBenchDict = {}                        
-                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName])
-                        self.workBenchDict["workbenches"][workbenchName] = self.ribbonStructure["workbenches"][workbenchName]
                         # Create all order lists and commands, incase they are not all present
                         for title, panel in self.currentCategory().panels().items():
                             panelName = panel.objectName()
@@ -1054,14 +1050,14 @@ class ModernMenu(RibbonBar):
                             orderList = []
                             for n in range(gridLayout.count()):
                                 control = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                                if type(control) is CustomControls:
+                                if type(control) is CustomControls:                                    
                                     # Update the orderlist
                                     orderList.append(control.actions().data())
                                     
+                                    # Create a dict for the active workbench only
+                                    self.workBenchDict = self.ribbonStructure["workbenches"][workbenchName]
                                     # Add the command if they don't exist
                                     Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", control.actions().data(), "size"], "small")
-                                    # Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", control.actions().data(), "text"], "")
-                                    # Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", control.actions().data(), "icon"], "")
                                     # Set the sizes
                                     if control.objectName() == "CustomWidget_Small":
                                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "small"
@@ -1071,22 +1067,13 @@ class ModernMenu(RibbonBar):
                                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "large"
                                     
                             Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], [])
-                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList
-                            
-                            
-                            
+                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                            
                         return
                     if self.CustomizeEnabled is True:
                         self.setStyleSheet(Stylesheet)
                         self.CustomizeEnabled = False
                         self.setRibbonHeight(self.RibbonHeight)
-                        
-                        # Writing to ribbonStructure.json
-                        JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
-                        with open(JsonFile, "w") as outfile:
-                            json.dump(self.ribbonStructure, outfile, indent=4)
-                        outfile.close()
-                        
+
                         for item in self.actionList:
                             if item[1] is False:
                                 item[0].setDisabled(True)
@@ -1094,8 +1081,7 @@ class ModernMenu(RibbonBar):
                                 item[0].setEnabled(True)                                
                         Gui.updateGui()       
                         
-                        # update the ribbon structure with the changes
-                        self.ribbonStructure.update(self.workBenchDict)
+                        self.ribbonStructure["workbenches"][workbenchName] = self.workBenchDict["workbenches"][workbenchName]
                         # Writing to ribbonStructure.json
                         JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
                         with open(JsonFile, "w") as outfile:
@@ -1115,11 +1101,11 @@ class ModernMenu(RibbonBar):
 
         # write the changes to the ribbonstruture file 
         property = {"size": Size}
-        self.WriteButtonSettings(ButtonWidget, panel, property, False)
+        self.WriteButtonSettings(ButtonWidget, panel, property)
         
         # Create a new panel
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False)
+        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
         
         # Replace the panel with the new panel
         self.currentCategory().replacePanel(panel, newPanel)
@@ -1134,7 +1120,7 @@ class ModernMenu(RibbonBar):
             property = {"ButtonSize_medium": ButtonSizeWidget.value()}
         if ButtonWidget.objectName() == "CustomWidget_Large":
             property = {"ButtonSize_large": ButtonSizeWidget.value()}
-        self.WriteButtonSettings(ButtonWidget, panel, property, False)
+        self.WriteButtonSettings(ButtonWidget, panel, property)
         
          # Create a new panel
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())        
@@ -1148,10 +1134,10 @@ class ModernMenu(RibbonBar):
     def on_TextState_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget: CustomControls, TextStateWidget: CheckBoxAction):
         # If the widget has not text, show it with the correct width
         if TextStateWidget.isChecked() is True:
-            self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()}, False)
+            self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()})
         # if the widget has text, find its QTextEdit and hide it. Update the width
         if TextStateWidget.isChecked() is False:           
-            self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()}, False)
+            self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()})
         
          # Create a new panel
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())        
@@ -1302,7 +1288,7 @@ class ModernMenu(RibbonBar):
                     
                     # Get the order list, if there isn't one, create it
                     StandardFunctions.add_keys_nested_dict(
-                        self.workBenchDict,
+                        self.ribbonStructure,
                         [
                             "workbenches",
                             workbenchName,
@@ -1311,7 +1297,7 @@ class ModernMenu(RibbonBar):
                             "order"
                         ],
                     )
-                    orderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
+                    orderList = dict=self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
                     if orderList is None or len(orderList) == 0:
                         orderList = []
                         for n in range(gridLayout.count()):
@@ -1332,11 +1318,11 @@ class ModernMenu(RibbonBar):
                     orderList.insert(index_newWidget, OriginalWidget.actions().data())
                     
                     #
-                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = orderList     
+                    self.dict=self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = orderList     
                                        
                      # Create a new panel
                     workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                    newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False)
+                    newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
                     
                     # Replace the panel with the new panel
                     self.currentCategory().replacePanel(panel, newPanel)
@@ -2753,7 +2739,14 @@ class ModernMenu(RibbonBar):
                 continue
             
             # Create the panel based on the toolbars
-            self.CreatePanel(workbenchName, toolbar)
+            self.CreatePanel(workbenchName, toolbar, True, self.ribbonStructure, True)
+            
+            # Writing to ribbonStructure.json
+            JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+            with open(JsonFile, "w") as outfile:
+                json.dump(self.ribbonStructure, outfile, indent=4)
+            outfile.close()
+            return
 
         self.isWbLoaded[tabName] = True
 
@@ -2807,10 +2800,10 @@ class ModernMenu(RibbonBar):
 
         # Set the maximum height to a high value to prevent from the ribbon to be clipped off
         self.currentCategory().setMinimumHeight(
-            self.RibbonHeight - self.RibbonMinimalHeight - 3
+            self.RibbonHeight - self.RibbonMinimalHeight - 20
         )
         self.currentCategory().setMaximumHeight(
-            self.RibbonHeight - self.RibbonMinimalHeight - 3
+            self.RibbonHeight - self.RibbonMinimalHeight - 10
         )
         self.setRibbonHeight(self.RibbonHeight)
 
@@ -3629,7 +3622,7 @@ class ModernMenu(RibbonBar):
             print("Ribbon UI: Custom text are reset because the language was changed")
         return
     
-    def WriteButtonSettings(self, ButtonWidget, panel, property: dict = {"size": "small",}, saveToDisk = True):
+    def WriteButtonSettings(self, ButtonWidget, panel, property: dict = {"size": "small",}):
         # Get tabBar
         parent = panel.parent()
         count = 0
@@ -3653,7 +3646,7 @@ class ModernMenu(RibbonBar):
         if CommandName != "":        
             for key, value in property.items():
                 StandardFunctions.add_keys_nested_dict(
-                    self.ribbonStructure,
+                    self.workBenchDict,
                     [
                         "workbenches",
                         WorkBenchName,
@@ -3664,14 +3657,9 @@ class ModernMenu(RibbonBar):
                         key,
                     ],
                 )
-                self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]["commands"][CommandName][key] = value       
+                self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]["commands"][CommandName][key] = value       
             
-            if saveToDisk is True:
-                # Writing to ribbonStructure.json
-                JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
-                with open(JsonFile, "w") as outfile:
-                    json.dump(self.ribbonStructure, outfile, indent=4)
-                outfile.close()
+        return
                       
     def ReturnPanelTitle(self, panel: RibbonPanel):
         title = panel.title()
@@ -3685,7 +3673,11 @@ class ModernMenu(RibbonBar):
         
         return title
     
-    def CreatePanel(self, workbenchName: str, panelName: str, addPanel = True, dict = ribbonStructure):
+    def CreatePanel(self, workbenchName: str, panelName: str, addPanel = True, dict = ribbonStructure, SetToUpdate = False):
+        if SetToUpdate is True:
+            dict = self.ribbonStructure
+            Standard_Functions_Ribbon.add_keys_nested_dict(dict, ["workbenches", workbenchName, "toolbars"], 1, True)
+               
         #Get the workbenchTitle
         index = None
         for i in range(len(self.tabBar().tabTitles())):
@@ -3735,11 +3727,12 @@ class ModernMenu(RibbonBar):
         for button in allButtons:
             action = button.actions()[0]
             action.setObjectName(action.data())
-
+            
         # add separators to the command list.
         if workbenchName in dict["workbenches"]:
             if (
                 panelName != ""
+                and "toolbars" in dict["workbenches"][workbenchName]
                 and panelName
                 in dict["workbenches"][workbenchName]["toolbars"]
             ):

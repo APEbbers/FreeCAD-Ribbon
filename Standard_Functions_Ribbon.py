@@ -706,7 +706,7 @@ def TranslationsMapping(WorkBenchName: str, string: str):
 #             self.Dict_RibbonCommandPanel,
 #             ["workbenches", WorkBenchName, "toolbars", Toolbar, "order"],
 #         )
-def add_keys_nested_dict(dict, keys, default=1):
+def add_keys_nested_dict(dict, keys, default=1, endEmpty = False):
     """_summary_
 
     Args:
@@ -723,7 +723,8 @@ def add_keys_nested_dict(dict, keys, default=1):
             result = True
         dict = dict[key]
     try:
-        dict.setdefault(keys[-1], default)
+        if endEmpty is False:
+            dict.setdefault(keys[-1], default)
     except Exception:
         pass
     return result
