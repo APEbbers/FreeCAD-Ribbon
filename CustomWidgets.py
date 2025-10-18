@@ -1375,7 +1375,6 @@ class CustomSeparator(RibbonSeparator):
             except Exception as e:
                 print(e)
 
-
 class DragTargetIndicator(QLabel):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -1386,7 +1385,6 @@ class DragTargetIndicator(QLabel):
                 HoverColor=Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
             )
         )
-
 
 class Toggle(QCheckBox):
 
@@ -1484,7 +1482,6 @@ class Toggle(QCheckBox):
         self._pulse_radius = pos
         self.update()
 
-
 class AnimatedToggle(Toggle):
 
     _transparent_pen = QPen(Qt.transparent)
@@ -1573,7 +1570,6 @@ class AnimatedToggle(Toggle):
         p.drawEllipse(QPointF(xPos, barRect.center().y()), handleRadius, handleRadius)
 
         p.end()
-
 
 class CheckBoxAction(QWidgetAction):
     checkbox = QCheckBox()
