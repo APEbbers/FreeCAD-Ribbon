@@ -27,7 +27,7 @@ from pathlib import Path
 from collections import defaultdict
 
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QPixmap,
@@ -47,7 +47,7 @@ from PySide.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QSpinBox,
@@ -82,7 +82,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1093,7 +1093,7 @@ class ModernMenu(RibbonBar):
                                 item[0].setEnabled(True)                                
                         Gui.updateGui()       
                         
-                        # Creating a nested defaultdict
+                        # update the ribbonstructure before writing it to disk
                         self.ribbonStructure.update(self.workBenchDict)
                         # Writing to ribbonStructure.json
                         JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
@@ -1126,24 +1126,45 @@ class ModernMenu(RibbonBar):
         
         return
     
-    def on_ButtonSize_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonSizeWidget: SpinBoxAction):       
+    def on_ButtonSize_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget: QToolButton, ButtonSizeWidget: SpinBoxAction):              
+        # Get the menubutton height for large buttons
+        menuButtonWidth = 0
+        if ButtonWidget.objectName() != "LargeWidget":
+            try:
+                menuButtonWidth = ButtonWidget.findChild(QToolButton, "MenuButton").width()
+            except Exception:
+                pass
+        
+        # Get the label height for small and medium buttons
+        labelWidth = 0
+        for child in ButtonWidget.children():
+            if type(child) == QLabel:
+                if child.isVisible() is True:
+                    labelWidth = child.maximumWidth()
+        
+        # Set the height to the value of the spinbox
+        ButtonWidget.setFixedHeight(ButtonSizeWidget.value())
+        # Adjust the with including menubutton and label
+        if ButtonWidget.objectName() != "CustomWidget_Large":
+            ButtonWidget.setFixedWidth(ButtonSizeWidget.value() + labelWidth + menuButtonWidth)
+        if ButtonWidget.objectName() == "CustomWidget_Large":
+            ButtonWidget.setFixedWidth(ButtonSizeWidget.value())
+            ButtonWidget.layout().setAlignment(Qt.AlignmentFlag.AlignLeft)
+            ButtonWidget.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+            for child in ButtonWidget.children():
+                if type(child) == QLabel:
+                        child.setFixedWidth(ButtonSizeWidget.value())
+
+        # Set the Button width size to that of its parent
+        ButtonWidget.parent().setFixedSize(ButtonWidget.size())
+        
         # write the changes to the ribbonstruture file 
         property = {"ButtonSize_small": ButtonSizeWidget.value()}
-        if ButtonWidget.objectName() == "CustomWidget_Medium":
+        if ButtonWidget.objectName() == "MediumWidget":
             property = {"ButtonSize_medium": ButtonSizeWidget.value()}
-        if ButtonWidget.objectName() == "CustomWidget_Large":
+        if ButtonWidget.objectName() == "LargeWidget":
             property = {"ButtonSize_large": ButtonSizeWidget.value()}
         self.WriteButtonSettings(ButtonWidget, panel, property)
-        
-        ButtonWidget.setMaximumHeight(ButtonSizeWidget.value())
-        
-        #  # Create a new panel
-        # workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())        
-        # newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
-        
-        # # Replace the panel with the new panel
-        # self.currentCategory().replacePanel(panel, newPanel)
-        # panel.close()
         return
     
     def on_TextState_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget: CustomControls, TextStateWidget: CheckBoxAction):

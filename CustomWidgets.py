@@ -771,7 +771,7 @@ class CustomControls(QToolButton):
         CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         btn.setFixedSize(QSize(width, ButtonSize.height()))
 
-        self.labelWidth = TextWidth
+        self.labelWidth = width
         self.menuButtonWidth = ArrowButton.width()
         
         # Return the button
@@ -849,6 +849,9 @@ class CustomControls(QToolButton):
         # if showText is False:
         if MenuButtonSpace < 12:
             MenuButtonSpace = 12
+            
+        # Set the width according the commandbutton
+        ArrowButton.setFixedWidth(MenuButtonSpace)
 
         # If text must be shown wrapped, add a layout with label
         if Text != "":
@@ -968,8 +971,6 @@ class CustomControls(QToolButton):
             ArrowButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
             # Set the height according the space for the menubutton
             ArrowButton.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
-            # Set the width according the commandbutton
-            ArrowButton.setFixedWidth(MenuButtonSpace)
             ArrowButton.adjustSize()
             # Set the arrow to none. It will be defined via CSS
             ArrowButton.setArrowType(Qt.ArrowType.NoArrow)
@@ -1253,7 +1254,7 @@ class CustomControls(QToolButton):
         # Hide the text if set in preferences
         if showText is False:
             Label_Text.setHidden(True)
-            TextWidth = 0
+            # TextWidth = 0
 
         # Set spacing to zero (highlight background will have gaps otherwise)
         Layout.setSpacing(0)
@@ -1269,6 +1270,9 @@ class CustomControls(QToolButton):
 
         # Set the correct dimensions
         btn.setFixedWidth(ButtonSize.width() + MenuButtonSpace + TextWidth)
+        if showText is False:
+            Label_Text.setHidden(True)
+            btn.setFixedWidth(ButtonSize.width() + MenuButtonSpace)
         btn.setFixedHeight(ButtonSize.height())
         CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         Label_Text.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
