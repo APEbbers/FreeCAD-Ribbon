@@ -2919,15 +2919,32 @@ class ModernMenu(RibbonBar):
         return
 
     def on_ToggleBetaFunctions_toggled(self, switchStatus):
+        # Store the status
         self.BetaFunctionsEnabled = switchStatus
         if switchStatus is True:
+            # Write the parameter
             Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", True)
+            # print a message
             print(translate("FreeCAD Ribbon", "Ribbon UI: Béta functions enabled"))
+            
+            # Create a backup
+            #
+            # get the path for the Json file
+            JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+            # Create a suffix with the date
+            Suffix = datetime.now().strftime("%Y%m%d_%H%M%S")
+            # Create a backup name
+            BackupName = f"RibbonStructure_{Suffix}.json"
+            # If the backup folder doesn't exists, create it
+            if os.path.exists(pathBackup) is False:
+                os.makedirs(pathBackup)
+            BackupFile = os.path.join(pathBackup, BackupName)
+            # Copy the file
+            shutil.copy(JsonFile, BackupFile)
         if switchStatus is False:
+            # Write the parameter
             Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", False)
-            Stylesheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
-            self.setStyleSheet(Stylesheet)
-            self.CustomizeEnabled = False
+            # print a message
             print(translate("FreeCAD Ribbon", "Ribbon UI: Béta functions disabled"))
         return
 
