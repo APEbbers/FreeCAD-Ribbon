@@ -146,7 +146,6 @@ class CustomControls(QToolButton):
         *args,
         **kwargs
                  ):
-        # super(CustomControls, self).__init__(parent)
         QToolButton.__init__(self, *args, **kwargs)
         self.layout = QHBoxLayout(self)
         self.widget = QToolButton(self)
@@ -1359,82 +1358,6 @@ class CustomControls(QToolButton):
             btn, mouseEvent
         )
         return btn
-
-class CustomGridLayout(QHBoxLayout):    
-    def __init__(self):
-        super(CustomGridLayout, self).__init__()
-        self.setAlignment(Qt.AlignmentFlag.AlignLeft)  # !!!
-        # self.setSpacing(20)
-
-    def insertColumn(self, column: int, widget=None):
-        layout = QVBoxLayout()
-        layout.setAlignment(Qt.AlignmentFlag.AlignTop)
-        layout.addWidget(widget)
-        self.insertLayout(column, layout)
-        
-        return layout
-    
-    def removeColumn(self, column):
-        item = self.itemAt(column)
-        self.removeItem(item)
-    
-    # @override
-    def addWidgets(self, widget: QWidget, size="small"):
-        currentLayout: QVBoxLayout = self._actionsLayout.itemAt(self.count())        
-        newLayoutNeeded = False
-
-        for i in range(currentLayout.count()):
-            item = currentLayout.itemAt(i).widget()
-            if item.objectName() == "CustomWidget_Large":
-                newLayoutNeeded = True
-                break
-            if item.objectName() == "CustomWidget_Medium" and i == 1:
-                newLayoutNeeded = True
-                break
-            if item.objectName() == "CustomWidget_Small" and i == 2:
-                newLayoutNeeded = True
-                break
-            
-            if newLayoutNeeded is True:
-                newLayout = QVBoxLayout()
-                newLayout.setAlignment(Qt.AlignmentFlag.AlignTop)
-                if size.lower() == "small":
-                    widget.setObjectName("CustomWidget_Small")
-                if size.lower() == "medium":
-                    widget.setObjectName("CustomWidget_Medium")
-                if size.lower() == "large":
-                    widget.setObjectName("CustomWidget_Large")                
-                newLayout.addWidget(widget)
-            if newLayoutNeeded is False:
-                currentLayout.addItem(widget)
-                
-        return widget
-    
-    # @override
-    def removeWidgets(self, widget: QWidget):
-        for i in range(self.count()-1):
-            verticalLayout:QHBoxLayout = self.itemAt(i).widget()
-            for j in range(verticalLayout.count()):
-                verticalLayout.itemAt(j).widget().setParent(None)
-                verticalLayout.itemAt(j).widget().close()
-        
-        return
-        
-    
-    # def mouseMoveEvent(self, e):
-    #     if e.buttons() == Qt.MouseButton.LeftButton:
-    #         try:
-    #             drag = QDrag(self)
-    #             mime = QMimeData()
-    #             drag.setMimeData(mime)
-    #             pixmap = QPixmap(self.size())
-    #             self.render(pixmap)
-    #             drag.setPixmap(pixmap)
-
-    #             if drag is not None:
-    #                 drag.exec(Qt.DropAction.MoveAction)
-    #         except Exception as e:
-    #             print(e)
 
 class CustomSeparator(RibbonSeparator):
     def mouseMoveEvent(self, e):
