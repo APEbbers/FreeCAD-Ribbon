@@ -248,6 +248,9 @@ class RibbonPanel(QFrame):
 
         self._mainLayout.addWidget(self._titleWidget, 0)
 
+    def setAcceptDrops(self, bool):
+        self.setAcceptDrops(bool)
+            
     def maximumRows(self) -> int:
         """Return the maximal number of rows in the panel.
 

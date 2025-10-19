@@ -19,23 +19,12 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
-from argparse import Action
-from inspect import Traceback
-import re
-from turtle import width
-from types import TracebackType
-from inspect import Traceback
-from types import TracebackType
 import FreeCAD as App
 import FreeCADGui as Gui
-from pathlib import Path
-import textwrap
 import typing
-# from typing import overload, override
-
 import sys
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
@@ -51,7 +40,8 @@ from PySide.QtGui import (
     QPainter,
     
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
+    QApplication,
     QComboBox,
     QGridLayout,
     QLayout,
@@ -68,7 +58,7 @@ from PySide.QtWidgets import (
     QWidget,
     QWidgetAction,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QSize,
     QMimeData,
@@ -84,7 +74,6 @@ from PySide.QtCore import (
 )
 
 import os
-import sys
 import Parameters_Ribbon
 import Standard_Functions_Ribbon as StandardFunctions
 import StyleMapping_Ribbon
@@ -105,7 +94,7 @@ sys.path.append(pathPackages)
 import pyqtribbon_local as pyqtribbon
 from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
 from pyqtribbon_local.panel import RibbonPanel, RibbonPanelItemWidget
-from pyqtribbon_local.toolbutton import QToolButton, RibbonButtonStyle
+from pyqtribbon_local.toolbutton import RibbonToolButton, RibbonButtonStyle
 from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
@@ -1385,6 +1374,7 @@ class DragTargetIndicator(QLabel):
                 HoverColor=Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
             )
         )
+        self.setAcceptDrops(True)
 
 class Toggle(QCheckBox):
 

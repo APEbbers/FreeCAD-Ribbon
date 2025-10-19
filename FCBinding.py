@@ -28,7 +28,10 @@ from pathlib import Path
 from collections import defaultdict
 
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
+    QDragEnterEvent,
+    QDragLeaveEvent,
+    QDragMoveEvent,
     QIcon,
     QAction,
     QPixmap,
@@ -48,7 +51,7 @@ from PySide.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QSpinBox,
@@ -83,7 +86,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -272,8 +275,9 @@ class ModernMenu(RibbonBar):
         super().__init__(title="")
         self.setObjectName("Ribbon")
 
-        # Enable dragdrop
+        # # Enable dragdrop
         self.setAcceptDrops(True)
+        mw.setAcceptDrops(True)
 
         # connect the signals
         self.connectSignals()
@@ -1325,46 +1329,25 @@ class ModernMenu(RibbonBar):
 
 
     target = None
-    def dragEnterEvent(self, event):
+    def dragEnterEvent(self, event: QDragEnterEvent):
+        if self.CustomizeEnabled is True:
+            event.accept()
+
+    def dragLeaveEvent(self, event: QDragLeaveEvent):
+        if self.CustomizeEnabled is True:
+            # Hide the drag indicator when you leave the drag area
+            self.dragIndicator.close()
+            self.target = None
+            event.accept()
+    
+    def dragMoveEvent(self, event: QDragMoveEvent):
         if self.CustomizeEnabled is True:
             widget = event.source()
             panel: RibbonPanel = widget.parent().parent().parent()
             gridLayout: QGridLayout = panel._actionsLayout
             
-            # # Add a widget at the beginning of the layout.   
-            # self.spaceWidget_Left.setFixedSize(QSize(Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL))
-            # spaceItem = RibbonPanelItemWidget(panel)
-            # spaceItem.addWidget(self.spaceWidget_Left)  
-            # gridLayout.addWidget(spaceItem, 0,0,1,1)
-            # self.spaceWidget_Left.show()
-            
-            # # Add a widget at the end of the layout.            
-            # if self.rightColumnAdded is False:      
-            #     self.spaceWidget_Right.setFixedSize(QSize(Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL))
-            #     spaceItem = RibbonPanelItemWidget(panel)
-            #     spaceItem.addWidget(self.spaceWidget_Right)  
-            #     c = gridLayout.columnCount()
-            #     gridLayout.addWidget(spaceItem, 0,c,1,1)
-            #     self.spaceWidget_Right.show()
-            #     self.rightColumnAdded = True
-            event.accept()
-
-    def dragLeaveEvent(self, e):
-        if self.CustomizeEnabled is True:
-            # Hide the drag indicator when you leave the drag area
-            self.dragIndicator.close()
-            self.target = None
-            e.accept()
-
-    
-    def dragMoveEvent(self, e):
-        if self.CustomizeEnabled is True:
-            widget = e.source()
-            panel: RibbonPanel = widget.parent().parent().parent()
-            gridLayout: QGridLayout = panel._actionsLayout
-            
             # Find the correct location of the drop target, so we can move it there.
-            position = self.find_drop_location(e)
+            position = self.find_drop_location(event)
             if position is None:
                 backup_size = QSize(
                     Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL
@@ -1401,9 +1384,10 @@ class ModernMenu(RibbonBar):
                 # e.source().hide()
                 # Show the target.
                 self.dragIndicator.show()
-                e.accept()
             except Exception:
                 pass
+            event.setAccepted(True)
+            event.accept()
         return
     
     def dropEvent(self, event):
@@ -3806,7 +3790,7 @@ class ModernMenu(RibbonBar):
             print("Ribbon UI: Custom text are reset because the language was changed")
         return
     
-    def WriteButtonSettings(self, workBenchDict, ButtonWidget, panel, property: dict = {"size": "small",}):
+    def WriteButtonSettings(self, ButtonWidget, panel, property: dict = {"size": "small",}):
         # Get tabBar
         parent = panel.parent()
         count = 0
@@ -3875,14 +3859,14 @@ class ModernMenu(RibbonBar):
         title = StandardFunctions.TranslationsMapping(workbenchName, panelName)
         panel: RibbonPanel = RibbonPanel(title=title, showPanelOptionButton=True)
         if addPanel is True:
-                    panel: RibbonPanel = self.currentCategory().addPanel(
-            title=title,
-            showPanelOptionButton=True,
-        )
+            panel: RibbonPanel = self.currentCategory().addPanel(
+                title=title,
+                showPanelOptionButton=True,
+            )
         panel.setObjectName(panelName)
         panel.panelOptionButton().hide()
         panel.setAcceptDrops(True)
-
+        
         # get list of all buttons in toolbar
         allButtons: list = []
         try:
@@ -4579,6 +4563,12 @@ class ModernMenu(RibbonBar):
                 OptionButton.setText("more...")
         if len(actionList) == 0:
             panel.panelOptionButton().hide()
+            
+        # panel.dragEnterEvent = lambda enter: self.DragEnterEvent(enter)
+        # panel.dragMoveEvent = lambda move: self.DragMoveEvent(move)
+        # panel.dragLeaveEvent = lambda leave: self.DragLeaveEvent(leave)
+        # panel.dropEvent = lambda drop: self.DropEvent(drop)
+        
         return panel
     # endregion
 
