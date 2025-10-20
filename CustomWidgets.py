@@ -38,6 +38,10 @@ from PySide6.QtGui import (
     QPaintEvent,
     QPen,
     QPainter,
+    QDragEnterEvent,
+    QDragLeaveEvent,
+    QDragMoveEvent,
+    QDropEvent
     
 )
 from PySide6.QtWidgets import (
@@ -208,6 +212,7 @@ class CustomControls(QToolButton):
                     
     def mouseMoveEvent(self, e):
         if e.buttons() == Qt.MouseButton.LeftButton:
+            print(e.source())
             try:
                 drag = QDrag(self)
                 mime = QMimeData()
@@ -1347,6 +1352,10 @@ class CustomControls(QToolButton):
             btn, mouseEvent
         )
         return btn
+    
+class CustomPanel(RibbonPanel):
+    def dragEnterEvent(self, event):          
+        event.accept()
 
 class CustomSeparator(RibbonSeparator):
     def mouseMoveEvent(self, e):

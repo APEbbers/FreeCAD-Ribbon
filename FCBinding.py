@@ -275,10 +275,9 @@ class ModernMenu(RibbonBar):
         super().__init__(title="")
         self.setObjectName("Ribbon")
 
-        # # Enable dragdrop
+        # Enable dragdrop
         self.setAcceptDrops(True)
-        mw.setAcceptDrops(True)
-
+        
         # connect the signals
         self.connectSignals()
 
@@ -876,7 +875,8 @@ class ModernMenu(RibbonBar):
 
         # Install an event filter to catch events from the main window and act on it.
         mw.installEventFilter(EventInspector(mw))
-
+        # self.installEventFilter(RibbonEventInspector(self))
+                
         # Set isLoaded to True, to show that the loading is finished
         self.isLoaded = True
         # Fold the ribbon if unpinned
@@ -901,12 +901,12 @@ class ModernMenu(RibbonBar):
         mw.menuBar().show()
         return True
 
-    def eventFilter(self, obj, event):
-        # Disable the standard hover behavior
-        if event.type() == QEvent.Type.HoverMove:
-            event.ignore()
-            return False
-        return False
+    # def eventFilter(self, obj, event):
+    #     # Disable the standard hover behavior
+    #     if event.type() == QEvent.Type.HoverMove:
+    #         event.ignore()
+    #         return False
+    #     return False
 
     def enterEvent_Custom(self, QEvent):
         # # Hide any possible toolbar
@@ -1331,6 +1331,19 @@ class ModernMenu(RibbonBar):
     target = None
     def dragEnterEvent(self, event: QDragEnterEvent):
         if self.CustomizeEnabled is True:
+            widget = event.source()
+            count = 0
+            parent = widget.parent()
+            while (count < 20):
+                try:
+                    try:
+                        parent.setAcceptDrop(True)
+                    except Exception:
+                        pass
+                    parent = parent.parent()
+                    count = count + 1
+                except Exception:
+                    break
             event.accept()
 
     def dragLeaveEvent(self, event: QDragLeaveEvent):
@@ -1343,7 +1356,17 @@ class ModernMenu(RibbonBar):
     def dragMoveEvent(self, event: QDragMoveEvent):
         if self.CustomizeEnabled is True:
             widget = event.source()
-            panel: RibbonPanel = widget.parent().parent().parent()
+            panel = RibbonPanel()
+            count = 0
+            parent = widget.parent()
+            while (count < 10):
+                if type(parent) is RibbonPanel:
+                    panel = parent
+                    break
+                else:
+                    parent = parent.parent()
+                count = count + 1
+            # panel: RibbonPanel = widget.parent().parent().parent()
             gridLayout: QGridLayout = panel._actionsLayout
             
             # Find the correct location of the drop target, so we can move it there.
@@ -1394,7 +1417,17 @@ class ModernMenu(RibbonBar):
         # Get the widget
         widget = event.source()
         # Get the panel
-        panel = widget.parent().parent().parent()
+        # panel = widget.parent().parent().parent()
+        panel = RibbonPanel()
+        count = 0
+        parent = widget.parent()
+        while (count < 10):
+            if type(parent) is RibbonPanel:
+                panel = parent
+                break
+            else:
+                parent = parent.parent()
+            count = count + 1
         # Get tabBar
         parent = panel.parent()
         count = 0
@@ -1403,6 +1436,7 @@ class ModernMenu(RibbonBar):
                 break
             else:
                 parent = parent.parent()
+            count = count + 1
         # Get the gridlayout
         gridLayout: QGridLayout = panel._actionsLayout
         # Hide the dragIndicater and the spacer widgets
@@ -1516,7 +1550,7 @@ class ModernMenu(RibbonBar):
             item = panel._actionsLayout.itemAtPosition(0, Column)
             if item is not None:
                 w: QWidget = item.widget()
-                Widget_X = w.parentWidget().mapTo(self, w.pos()).x()
+                Widget_X = w.mapTo(self, w.pos()).x()
 
                 if pos.x() < Widget_X + w.size().width() // 2:
                     yPos = Column
@@ -1528,9 +1562,9 @@ class ModernMenu(RibbonBar):
             item = panel._actionsLayout.itemAtPosition(Row, Column)
             if item is not None:
                 w: QWidget = item.widget()
-                Widget_y = w.parentWidget().mapTo(self, w.pos()).y()
+                Widget_y = w.mapTo(self, w.pos()).y()
 
-                if pos.y() < Widget_y:
+                if pos.y() < Widget_y :
                     xPos = Row
                     break
 
@@ -4794,6 +4828,16 @@ class ModernMenu(RibbonBar):
 
     # endregion
 
+
+# class RibbonEventInspector(QObject):
+#     def __init__(self, parent):
+#         super(RibbonEventInspector, self).__init__(parent)
+        
+#     def eventFilter(self, obj, event):
+#         if event.type() == QEvent.Type.DragEnter or event.type() == QEvent.Type.DragMove:
+#             event.setAccepted(True)
+#             return False
+#         return False
 
 class EventInspector(QObject):
     def __init__(self, parent):
