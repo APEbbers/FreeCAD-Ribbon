@@ -1478,11 +1478,13 @@ class ModernMenu(RibbonBar):
         SearchBarDir = os.path.join(modDir, "SearchBar")
         file = os.path.join(SearchBarDir, "SearchBoxLight.py")
         if os.path.exists(file) is False:
-            file = os.path.join(SearchBarDir, "freecad", "SearchBar", "SearchBoxLight.py")
+            file = os.path.join(
+                SearchBarDir, "freecad", "SearchBar", "SearchBoxLight.py"
+            )
         if os.path.exists(file) is False:
             print("SearchBar directoy doesn't exist")
             return 0
-        
+
         TB: QToolBar = mw.findChildren(QToolBar, "SearchBar")
         width = 0
         if TB is not None:
@@ -2261,7 +2263,7 @@ class ModernMenu(RibbonBar):
         except Exception:
             pass
 
-        # If the toolbar must be ignored, skip it        
+        # If the toolbar must be ignored, skip it
         for toolbar in ListToolbars:
             Skip = False
             for ToolbarToIgnore in self.ribbonStructure["ignoredToolbars"]:

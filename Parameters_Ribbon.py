@@ -257,15 +257,15 @@ ModLocationChanged = False
 if (
     StandardFunctions.checkFreeCADVersion(
         FreeCAD_Version["mainVersion"],
-    FreeCAD_Version["subVersion"],
+        FreeCAD_Version["subVersion"],
         FreeCAD_Version["patchVersion"],
         FreeCAD_Version["gitVersion"],
-        )
-        is True
-    ):
+    )
+    is True
+):
     ModLocationChanged = True
 # Get the install location of FreeCAD
-AppDir = os.path.join(App.getUserAppDataDir().split('FreeCAD')[0], "FreeCAD")
+AppDir = os.path.join(App.getUserAppDataDir().split("FreeCAD")[0], "FreeCAD")
 OldModDir = os.path.join(AppDir, "Mod")
 CurrentModDir = os.path.join(App.getUserAppDataDir(), "Mod")
 
@@ -275,7 +275,7 @@ if IMPORT_LOCATION == "":
     IMPORT_LOCATION = DefaultSettings["ImportLocation"]
     Settings.SetStringSetting("ImportLocation", IMPORT_LOCATION)
     Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
-    
+
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the export location ----------------------------------------------------------------------------------
@@ -289,7 +289,11 @@ if EXPORT_LOCATION == "":
 # region - Define the Ribbon structure location ------------------------------------------------------------------------
 # The location for the ribbon structure is retrieved from parameters as standard.
 RIBBON_STRUCTURE_JSON = Settings.GetStringSetting("RibbonStructure")
-if AppDir in RIBBON_STRUCTURE_JSON or os.path.exists(RIBBON_STRUCTURE_JSON) is False or RIBBON_STRUCTURE_JSON == "":
+if (
+    AppDir in RIBBON_STRUCTURE_JSON
+    or os.path.exists(RIBBON_STRUCTURE_JSON) is False
+    or RIBBON_STRUCTURE_JSON == ""
+):
     RIBBON_STRUCTURE_JSON = DefaultSettings["RibbonStructure"]
     Settings.SetStringSetting("RibbonStructure", RIBBON_STRUCTURE_JSON)
 # endregion ------------------------------------------------------------------------------------------------------------
@@ -389,7 +393,11 @@ if Settings.GetBoolSetting("BackupEnabled") is None:
     Settings.SetBoolSetting("BackupEnabled", ENABLE_BACKUP)
 
 BACKUP_LOCATION = Settings.GetStringSetting("BackupFolder")
-if AppDir in BACKUP_LOCATION or os.path.exists(BACKUP_LOCATION) is False or BACKUP_LOCATION == "":
+if (
+    AppDir in BACKUP_LOCATION
+    or os.path.exists(BACKUP_LOCATION) is False
+    or BACKUP_LOCATION == ""
+):
     BACKUP_LOCATION = DefaultSettings["BackupFolder"]
     Settings.SetStringSetting("BackupFolder", BACKUP_LOCATION)
 # endregion ------------------------------------------------------------------------------------------------------------
