@@ -277,7 +277,8 @@ class ModernMenu(RibbonBar):
 
         # Enable dragdrop
         self.setAcceptDrops(True)
-        
+        self.tabBar().setAcceptDrops(True)
+                
         # connect the signals
         self.connectSignals()
 
@@ -980,6 +981,7 @@ class ModernMenu(RibbonBar):
         # Declare a dict for this workbench only
         self.workBenchDict = {}
         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName], endEmpty=True)
+        Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName], endEmpty=True)
         self.workBenchDict["workbenches"][workbenchName] = self.ribbonStructure["workbenches"][workbenchName]
         
         # If betaFunctions is enabled, coninue
@@ -1145,11 +1147,9 @@ class ModernMenu(RibbonBar):
                             else:
                                 item[0].setEnabled(True)                                
                         Gui.updateGui()       
-                        
-                        # Save the workbenchDict for the dragdrop function
-                        self.workBenchDict = self.workBenchDict
+
                         # update the ribbonstructure before writing it to disk
-                        self.ribbonStructure.update(self.workBenchDict)
+                        self.ribbonStructure["workbenches"][workbenchName] = self.workBenchDict["workbenches"][workbenchName]
                         # Writing to ribbonStructure.json
                         JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
                         with open(JsonFile, "w") as outfile:
