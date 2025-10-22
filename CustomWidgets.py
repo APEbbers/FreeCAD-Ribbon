@@ -30,6 +30,8 @@ from PySide6.QtGui import (
     QAction,
     QFontMetrics,
     QFont,
+    QKeyEvent,
+    QKeySequence,
     QOverrideCursorGuard,
     QTextOption,
     QCursor,
@@ -60,6 +62,7 @@ from PySide6.QtWidgets import (
     QCheckBox,
     QWidget,
     QWidgetAction,
+    QLineEdit,
 )
 from PySide6.QtCore import (
     Qt,
@@ -1466,8 +1469,8 @@ class Toggle(QCheckBox):
 
 class AnimatedToggle(Toggle):
 
-    _transparent_pen = QPen(Qt.transparent)
-    _light_grey_pen = QPen(Qt.lightGray)
+    _transparent_pen = QPen(Qt.GlobalColor.transparent)
+    _light_grey_pen = QPen(Qt.GlobalColor.lightGray)
 
     def __init__(
         self,
@@ -1482,7 +1485,7 @@ class AnimatedToggle(Toggle):
         super().__init__(*args, **kwargs)
 
         self.animation = QPropertyAnimation(self, b"handle_position", self)
-        self.animation.setEasingCurve(QEasingCurve.InOutCubic)
+        self.animation.setEasingCurve(QEasingCurve.Type.InOutCubic)
         self.animation.setDuration(200)  # time in ms
 
         self.pulse_anim = QPropertyAnimation(self, b"pulse_radius", self)
@@ -1512,7 +1515,7 @@ class AnimatedToggle(Toggle):
         handleRadius = round(0.24 * contRect.height())
 
         p = QPainter(self)
-        p.setRenderHint(QPainter.Antialiasing)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
 
         p.setPen(self._transparent_pen)
         barRect = QRectF(
@@ -1526,7 +1529,7 @@ class AnimatedToggle(Toggle):
 
         xPos = contRect.x() + handleRadius + trailLength * self._handle_position
 
-        if self.pulse_anim.state() == QPropertyAnimation.Running:
+        if self.pulse_anim.state() == QPropertyAnimation.State.Running:
             p.setBrush(
                 self._pulse_checked_animation
                 if self.isChecked()
@@ -1564,7 +1567,7 @@ class CheckBoxAction(QWidgetAction):
         layout = QHBoxLayout()
         self.widget = QWidget()
         label = QLabel(text)
-        label.setAlignment(Qt.AlignLeft)
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         layout.addWidget(self.checkbox)
         layout.addWidget(label)
         self.widget.setLayout(layout)
@@ -1592,7 +1595,7 @@ class SpinBoxAction(QWidgetAction):
         layout = QHBoxLayout()
         self.widget = QWidget()
         label = QLabel(text)
-        label.setAlignment(Qt.AlignLeft)
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         layout.addWidget(self.spinbox)
         layout.addWidget(label)
         self.widget.setLayout(layout)
@@ -1628,7 +1631,7 @@ class ComboBoxAction(QWidgetAction):
         layout = QHBoxLayout()
         self.widget = QWidget()
         label = QLabel(text)
-        label.setAlignment(Qt.AlignLeft)
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft)
         layout.addWidget(self.combobox)
         layout.addWidget(label)
         self.widget.setLayout(layout)
@@ -1663,4 +1666,25 @@ class ComboBoxAction(QWidgetAction):
     
     def count(self, /):
         return self.combobox.count()
+
+class LineEditAction(QWidgetAction):
+        
+    lineEdit = QLineEdit()
+    lineEdit.setObjectName("lineEdit")
+    lineEdit.setFixedSize(300, 21)
     
+    editingFinished  = lineEdit.editingFinished    
+    textChanged =  lineEdit.textChanged
+    
+    def __init__(self, parent, text):
+        super(LineEditAction, self).__init__(parent)
+        layout = QVBoxLayout()
+        self.widget = QWidget()
+        label = QLabel(text)
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        layout.addWidget(label)
+        layout.addWidget(self.lineEdit)
+        self.widget.setLayout(layout)
+
+        self.setDefaultWidget(self.widget)
+        return
