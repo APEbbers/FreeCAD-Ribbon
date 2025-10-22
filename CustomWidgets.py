@@ -25,10 +25,12 @@ import typing
 import sys
 
 from PySide6.QtGui import (
+    QDragMoveEvent,
     QIcon,
     QAction,
     QFontMetrics,
     QFont,
+    QOverrideCursorGuard,
     QTextOption,
     QCursor,
     QDrag,
@@ -38,10 +40,6 @@ from PySide6.QtGui import (
     QPaintEvent,
     QPen,
     QPainter,
-    QDragEnterEvent,
-    QDragLeaveEvent,
-    QDragMoveEvent,
-    QDropEvent
     
 )
 from PySide6.QtWidgets import (
@@ -49,6 +47,7 @@ from PySide6.QtWidgets import (
     QComboBox,
     QGridLayout,
     QLayout,
+    QMainWindow,
     QSizePolicy,
     QSpinBox,
     QToolButton,
@@ -104,18 +103,7 @@ from pyqtribbon_local.category import RibbonCategoryLayoutButton
 
 translate = App.Qt.translate
 
-
-
-from functools import wraps # This convenience func preserves name and docstring
-def add_method(cls):
-    def decorator(func):
-        @wraps(func) 
-        def wrapper(self, *args, **kwargs): 
-            return func(self, *args, **kwargs)
-        setattr(cls, func.__name__, wrapper)
-        # Note we are not binding func, but wrapper which accepts self but does exactly the same as func
-        return func # returning func means func can still be used normally
-    return decorator
+mw: QMainWindow = Gui.getMainWindow()
 
 class CustomControls(QToolButton):    
     def __init__(
@@ -209,10 +197,9 @@ class CustomControls(QToolButton):
         self.layout.setSpacing(0)
         self.layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         self.setFixedSize(self.widget.size())
-                    
+          
     def mouseMoveEvent(self, e):
         if e.buttons() == Qt.MouseButton.LeftButton:
-            print(e.source())
             try:
                 drag = QDrag(self)
                 mime = QMimeData()
@@ -221,10 +208,10 @@ class CustomControls(QToolButton):
                 self.render(pixmap)
                 drag.setPixmap(pixmap)
 
-                if drag is not None:
-                    drag.exec(Qt.DropAction.MoveAction)
+                drag.exec(Qt.DropAction.MoveAction)
             except Exception as e:
                 print(e)
+    
                 
     def actions(self):
         return self.action
@@ -1352,10 +1339,6 @@ class CustomControls(QToolButton):
             btn, mouseEvent
         )
         return btn
-    
-class CustomPanel(RibbonPanel):
-    def dragEnterEvent(self, event):          
-        event.accept()
 
 class CustomSeparator(RibbonSeparator):
     def mouseMoveEvent(self, e):

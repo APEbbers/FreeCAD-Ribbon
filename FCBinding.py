@@ -1336,7 +1336,7 @@ class ModernMenu(RibbonBar):
             parent = widget.parent()
             while (count < 20):
                 try:
-                    try:
+                    try:    
                         parent.setAcceptDrop(True)
                     except Exception:
                         pass
@@ -1345,7 +1345,7 @@ class ModernMenu(RibbonBar):
                 except Exception:
                     break
             event.accept()
-
+            
     def dragLeaveEvent(self, event: QDragLeaveEvent):
         if self.CustomizeEnabled is True:
             # Hide the drag indicator when you leave the drag area
