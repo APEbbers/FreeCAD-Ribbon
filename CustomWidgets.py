@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 import typing
 import sys
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragMoveEvent,
     QIcon,
     QAction,
@@ -44,7 +44,7 @@ from PySide.QtGui import (
     QPainter,
     
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
     QGridLayout,
@@ -64,7 +64,7 @@ from PySide.QtWidgets import (
     QWidgetAction,
     QLineEdit,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QSize,
     QMimeData,
@@ -1687,4 +1687,12 @@ class LineEditAction(QWidgetAction):
         self.widget.setLayout(layout)
 
         self.setDefaultWidget(self.widget)
+        return
+
+    def setText(self, val):
+        self.lineEdit.setText(val)
+        return
+    
+    def setPlaceholderText(self, val):
+        self.lineEdit.setPlaceholderText(val)
         return

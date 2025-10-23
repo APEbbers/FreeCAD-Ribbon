@@ -19,13 +19,12 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
-from mimetypes import init
 import CustomWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -48,7 +47,7 @@ from PySide.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -84,7 +83,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -874,6 +873,7 @@ class ModernMenu(RibbonBar):
 
         # Install an event filter to catch events from the main window and act on it.
         mw.installEventFilter(EventInspector(mw))
+        # self.installEventFilter(RibbonEventInspector(self))
                 
         # Set isLoaded to True, to show that the loading is finished
         self.isLoaded = True
@@ -892,26 +892,9 @@ class ModernMenu(RibbonBar):
         # Set the state of the Béta function switch
         switch: Toggle = self.rightToolBar().findChild(Toggle, "bétaSwitch")
         switch.setChecked(Parameters_Ribbon.BETA_FUNCTIONS_ENABLED)
-        
-        # This is needed to be able to drag the main window properly when the titlebar is hidden
-        self._titleWidget.mousePressEvent = lambda e: self.mousePress_Titlebar(e)
-        mw.moveEvent = lambda e: self.mouseMove_Titlebar(e)
         return
 
     # region - event functions
-    initialPos = None
-    def mousePress_Titlebar(self, event):
-        self.initialPos = event.position().toPoint()
-    
-    def mouseMove_Titlebar(self, event):
-        if self.initialPos is not None:
-            delta = event.position().toPoint() - self.initialPos
-            mw.move(
-                mw.window().x() + delta.x(),
-                mw.window().y() + delta.y(),
-            )
-   
-    
     def closeEvent(self, event):
         mw.menuBar().show()
         return True
@@ -1046,19 +1029,22 @@ class ModernMenu(RibbonBar):
                         RibbonButtonAction_Style.addItem("Large")
                         RibbonButtonAction_Style.addItem("")
                         RibbonButtonAction_Style.setCurrentText("")
-                        RibbonButtonAction_Style.currentTextChanged.connect(lambda: self.on_ButtonStyle_Clicked(panel, widget, RibbonButtonAction_Style, RibbonButtonAction_Size))                      
+                        RibbonButtonAction_Style.currentTextChanged.connect(lambda: self.on_ButtonStyle_Clicked(contextMenu,panel, widget, RibbonButtonAction_Style, RibbonButtonAction_Size))                      
                         contextMenu.addAction(RibbonButtonAction_Style)
                         
                         # Create the buttons for adding a separator
                         AddSeparator_Left = contextMenu.addAction(translate("FreeCAD Ribbon", "Add separator left"))
-                        AddSeparator_Left.triggered.connect(lambda: self.on_AddSeparator_Clicked(panel, widget,"left"))
+                        AddSeparator_Left.triggered.connect(lambda: self.on_AddSeparator_Clicked(contextMenu,panel, widget,"left"))
                         AddSeparator_Right = contextMenu.addAction(translate("FreeCAD Ribbon", "Add separator right"))
-                        AddSeparator_Right.triggered.connect(lambda: self.on_AddSeparator_Clicked(panel, widget,"right"))
+                        AddSeparator_Right.triggered.connect(lambda: self.on_AddSeparator_Clicked(contextMenu,panel, widget,"right"))
                         
-                        # Add a line edit for chaning the text
+                        # Add a line edit for changing the text
                         ChangeButtonText = CustomWidgets.LineEditAction(self, "Change button text")
+                        text = widget.parent().findChild(QLabel).text()
+                        ChangeButtonText.setText("")
+                        ChangeButtonText.setPlaceholderText(text)
                         ChangeButtonText.textChanged.connect(lambda e: self.on_ButtonLabel_Changing(e, panel, widget))
-                        ChangeButtonText.editingFinished.connect(lambda: self.on_ButtonLabel_Changed(panel, widget))
+                        ChangeButtonText.editingFinished.connect(lambda: lambda: contextMenu.close())
                         contextMenu.addAction(ChangeButtonText)
                         
                         # create the context menu action
@@ -1067,13 +1053,19 @@ class ModernMenu(RibbonBar):
                         # Disconnect the widgetActions
                         RibbonButtonAction_Style.currentTextChanged.disconnect()
                         RibbonButonAction_Text.checkStateChanged.disconnect()
-                        RibbonButtonAction_Size.valueChanged.disconnect()                                    
+                        RibbonButtonAction_Size.valueChanged.disconnect()
+                        AddSeparator_Left.triggered.disconnect()                                
+                        AddSeparator_Right.triggered.disconnect()
+                        ChangeButtonText.textChanged.disconnect()                            
+                        ChangeButtonText.editingFinished.disconnect()                            
                         return
 
             if titleWidget is not None and self.CustomizeEnabled is True and titleWidget.underMouse():
                 panel = titleWidget.parent().parent()
-                contextMenu: QMenu = QMenu(self)
+                contextMenu = QMenu(self)
                 ChangePanelTitle = CustomWidgets.LineEditAction(self, "Change panel title")
+                ChangePanelTitle.setText("")
+                ChangePanelTitle.setPlaceholderText(panel.title())
                 ChangePanelTitle.textChanged.connect(lambda e: self.on_PanelTitle_Changing(e, panel))
                 ChangePanelTitle.editingFinished.connect(lambda: contextMenu.close())
                 contextMenu.addAction(ChangePanelTitle)
@@ -1083,6 +1075,7 @@ class ModernMenu(RibbonBar):
                 
                 # Disconnect the widgetActions
                 ChangePanelTitle.textChanged.disconnect()
+                ChangePanelTitle.editingFinished.disconnect()
                     
             # if the separator is not none, its class is correct and it is under the mouse cursor,
             # Create a menu with an remove button
@@ -1176,12 +1169,13 @@ class ModernMenu(RibbonBar):
                         self.CustomizeEnabled = False
                         self.setRibbonHeight(self.RibbonHeight)
 
-                        for item in self.actionList:
-                            if item[1] is False:
-                                item[0].setDisabled(True)
-                            else:
-                                item[0].setEnabled(True)                                
-                        Gui.updateGui()       
+                        # for item in self.actionList:
+                        #     print(item)
+                        #     if item[1] is False:
+                        #         item[0].setDisabled(True)
+                        #     else:
+                        #         item[0].setEnabled(True)                                
+                        # Gui.updateGui()       
 
                         # update the ribbonstructure before writing it to disk
                         self.ribbonStructure["workbenches"][workbenchName] = self.workBenchDict["workbenches"][workbenchName]
@@ -1193,7 +1187,7 @@ class ModernMenu(RibbonBar):
 
         return
         
-    def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                                 
+    def on_ButtonStyle_Clicked(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                                 
         # get the size to set
         Size = "small"
         if ButtonStyleWidget.currentText() == "Medium":
@@ -1213,6 +1207,7 @@ class ModernMenu(RibbonBar):
         self.currentCategory().replacePanel(panel, newPanel)
         panel.close()
         
+        contextMenu.close()
         return
     
     def on_ButtonSize_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget: QToolButton, ButtonSizeWidget: SpinBoxAction):              
@@ -1275,7 +1270,7 @@ class ModernMenu(RibbonBar):
         contextMenu.close()   
         return
     
-    def on_AddSeparator_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, Side = "left"):
+    def on_AddSeparator_Clicked(self, contextMenu:QMenu, panel: RibbonPanel, ButtonWidget: CustomControls, Side = "left"):
         # Get the workbench hame and the panel name
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         panelName = panel.objectName()
@@ -1316,6 +1311,7 @@ class ModernMenu(RibbonBar):
             # Replace the panel with the new panel
             self.currentCategory().replacePanel(panel, newPanel)
             panel.close()
+            contextMenu.close()
         return
             
     def on_RemoveSeparator_Clicked(self, panel: RibbonPanel, separator: CustomSeparator):
@@ -1355,19 +1351,13 @@ class ModernMenu(RibbonBar):
 
     def on_ButtonLabel_Changing(self, event, panel: RibbonPanel, ButtonWidget: CustomControls):
         Text = event
-        # write the changes to the ribbonstruture file
+        # write the changes to the ribbonstructure file
         property = {"text": Text}
         self.WriteButtonSettings(ButtonWidget, panel, property)
+        
+        LabelWidget: QLabel = ButtonWidget.findChild(QLabel)
+        LabelWidget.setText(Text)
         return
-    
-    def on_ButtonLabel_Changed(self, panel: RibbonPanel, ButtonWidget: CustomControls):
-        # Create a new panel
-            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
-            
-            # Replace the panel with the new panel
-            self.currentCategory().replacePanel(panel, newPanel)
-            panel.close()
 
     def on_PanelTitle_Changing(self, event, panel: RibbonPanel):
         Text = event
@@ -3867,8 +3857,8 @@ class ModernMenu(RibbonBar):
         FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
         if "language" in self.ribbonStructure:
             if self.ribbonStructure["language"] != FreeCAD_preferences.GetString(
-                "Language"
-            ):
+                "Language") and FreeCAD_preferences.GetString(
+                "Language") != "":
                 if "workbenches" in self.ribbonStructure:
                     for workbenchName in self.ribbonStructure["workbenches"]:
                         if "toolbars" in self.ribbonStructure["workbenches"][workbenchName]:
@@ -3888,7 +3878,7 @@ class ModernMenu(RibbonBar):
                                             "toolbars"
                                         ][ToolBar]["commands"][Command]["text"] = ""
 
-            print("Ribbon UI: Custom text are reset because the language was changed")
+                print("Ribbon UI: Custom text are reset because the language was changed")
         return
     
     def WriteButtonSettings(self, ButtonWidget, panel, property: dict = {"size": "small",}):
@@ -4682,11 +4672,6 @@ class ModernMenu(RibbonBar):
                 OptionButton.setText("more...")
         if len(actionList) == 0:
             panel.panelOptionButton().hide()
-            
-        # panel.dragEnterEvent = lambda enter: self.DragEnterEvent(enter)
-        # panel.dragMoveEvent = lambda move: self.DragMoveEvent(move)
-        # panel.dragLeaveEvent = lambda leave: self.DragLeaveEvent(leave)
-        # panel.dropEvent = lambda drop: self.DropEvent(drop)
         
         return panel
     # endregion
@@ -4929,7 +4914,6 @@ class EventInspector(QObject):
         super(EventInspector, self).__init__(parent)
 
     def eventFilter(self, obj, event):
-        mw: QMainWindow = Gui.getMainWindow()
         # Show the mainwindow after the application is activated
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
@@ -4951,8 +4935,10 @@ class EventInspector(QObject):
         # If the window stat changes and the titlebar is hidden, catch the event
         if (
             event.type() == QEvent.Type.WindowStateChange
+            or event.type() == QEvent.Type.DragMove
         ) and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
             # Get the main window, its style, the ribbon and the restore button
+            mw = Gui.getMainWindow()
             Style = mw.style()
             RibbonBar = mw.findChild(ModernMenu, "Ribbon")
             RestoreButton: QToolButton = RibbonBar.rightToolBar().findChildren(
@@ -4978,25 +4964,6 @@ class EventInspector(QObject):
                 except Exception:
                     pass
                 return QObject.eventFilter(self, obj, event)
-        
-        initial_pos = None
-        if (event.type() == QEvent.Type.MouseButtonPress
-        ) and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
-            # if event.button() == Qt.MouseButton.LeftButton:
-            initial_pos = event.position().toPoint()
-            print(initial_pos)
-            # event.accept()
-            return True
-        if (event.type() == QEvent.Type.MouseMove
-        ) and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
-            if initial_pos is not None:
-                delta = event.position().toPoint() - initial_pos
-                mw.move(
-                    mw.window().x() + delta.x(),
-                    mw.window().y() + delta.y(),
-                )
-                # event.accept() 
-            return True
         # If the event is a modfied event, update the title
         # This is done when switching from one part to another
         if (
@@ -5004,6 +4971,7 @@ class EventInspector(QObject):
             and Parameters_Ribbon.TOOLBAR_POSITION == 0
         ):
             # Get the mainwindow, the ribbon and the title
+            mw = Gui.getMainWindow()
             RibbonBar = mw.findChild(ModernMenu, "Ribbon")
             title = RibbonBar.title()
             # If there is an active document, continue here
