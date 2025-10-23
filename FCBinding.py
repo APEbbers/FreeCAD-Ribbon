@@ -19,12 +19,13 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+from mimetypes import init
 import CustomWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -47,7 +48,7 @@ from PySide6.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -83,7 +84,7 @@ from PySide6.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -873,7 +874,6 @@ class ModernMenu(RibbonBar):
 
         # Install an event filter to catch events from the main window and act on it.
         mw.installEventFilter(EventInspector(mw))
-        # self.installEventFilter(RibbonEventInspector(self))
                 
         # Set isLoaded to True, to show that the loading is finished
         self.isLoaded = True
@@ -892,9 +892,26 @@ class ModernMenu(RibbonBar):
         # Set the state of the Béta function switch
         switch: Toggle = self.rightToolBar().findChild(Toggle, "bétaSwitch")
         switch.setChecked(Parameters_Ribbon.BETA_FUNCTIONS_ENABLED)
+        
+        # This is needed to be able to drag the main window properly when the titlebar is hidden
+        self._titleWidget.mousePressEvent = lambda e: self.mousePress_Titlebar(e)
+        mw.moveEvent = lambda e: self.mouseMove_Titlebar(e)
         return
 
     # region - event functions
+    initialPos = None
+    def mousePress_Titlebar(self, event):
+        self.initialPos = event.position().toPoint()
+    
+    def mouseMove_Titlebar(self, event):
+        if self.initialPos is not None:
+            delta = event.position().toPoint() - self.initialPos
+            mw.move(
+                mw.window().x() + delta.x(),
+                mw.window().y() + delta.y(),
+            )
+   
+    
     def closeEvent(self, event):
         mw.menuBar().show()
         return True
@@ -4912,6 +4929,7 @@ class EventInspector(QObject):
         super(EventInspector, self).__init__(parent)
 
     def eventFilter(self, obj, event):
+        mw: QMainWindow = Gui.getMainWindow()
         # Show the mainwindow after the application is activated
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
@@ -4933,10 +4951,8 @@ class EventInspector(QObject):
         # If the window stat changes and the titlebar is hidden, catch the event
         if (
             event.type() == QEvent.Type.WindowStateChange
-            or event.type() == QEvent.Type.DragMove
         ) and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
             # Get the main window, its style, the ribbon and the restore button
-            mw = Gui.getMainWindow()
             Style = mw.style()
             RibbonBar = mw.findChild(ModernMenu, "Ribbon")
             RestoreButton: QToolButton = RibbonBar.rightToolBar().findChildren(
@@ -4962,6 +4978,25 @@ class EventInspector(QObject):
                 except Exception:
                     pass
                 return QObject.eventFilter(self, obj, event)
+        
+        initial_pos = None
+        if (event.type() == QEvent.Type.MouseButtonPress
+        ) and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
+            # if event.button() == Qt.MouseButton.LeftButton:
+            initial_pos = event.position().toPoint()
+            print(initial_pos)
+            # event.accept()
+            return True
+        if (event.type() == QEvent.Type.MouseMove
+        ) and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
+            if initial_pos is not None:
+                delta = event.position().toPoint() - initial_pos
+                mw.move(
+                    mw.window().x() + delta.x(),
+                    mw.window().y() + delta.y(),
+                )
+                # event.accept() 
+            return True
         # If the event is a modfied event, update the title
         # This is done when switching from one part to another
         if (
@@ -4969,7 +5004,6 @@ class EventInspector(QObject):
             and Parameters_Ribbon.TOOLBAR_POSITION == 0
         ):
             # Get the mainwindow, the ribbon and the title
-            mw = Gui.getMainWindow()
             RibbonBar = mw.findChild(ModernMenu, "Ribbon")
             title = RibbonBar.title()
             # If there is an active document, continue here
