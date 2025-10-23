@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 import typing
 import sys
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragMoveEvent,
     QIcon,
     QAction,
@@ -44,7 +44,7 @@ from PySide6.QtGui import (
     QPainter,
     
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QApplication,
     QComboBox,
     QGridLayout,
@@ -64,7 +64,7 @@ from PySide6.QtWidgets import (
     QWidgetAction,
     QLineEdit,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QSize,
     QMimeData,
