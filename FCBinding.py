@@ -19,6 +19,7 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+from turtle import isvisible
 import CustomWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -266,6 +267,9 @@ class ModernMenu(RibbonBar):
     
     # Create a empty context menu
     contextMenu = None
+    
+    # Create a list for panels that have a option button which have to be restored when exitiing the customisation enviroment
+    longPanels = []
     # endregion
 
     def __init__(self):
@@ -1133,8 +1137,8 @@ class ModernMenu(RibbonBar):
                             except Exception:
                                 pass
                         Gui.updateGui()
-                        
-                        # Create all order lists and commands, incase they are not all present
+
+                        # Create all order lists and commands, incase they are not all present                        
                         for title, panel in self.currentCategory().panels().items():
                             # Get the panel name and the gridlayout
                             panelName = panel.objectName()
@@ -1166,6 +1170,13 @@ class ModernMenu(RibbonBar):
                                 # Write the order list
                                 Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], [])                         
                                 self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                            
+                        
+                            if panel.panelOptionButton().isVisible():
+                                newPanel = self.CreatePanel(workbenchName, panel.objectName(), False, ignoreColumnLimit=True)
+                                self.longPanels.append(panel)
+                                
+                                self.currentCategory().replacePanel(panel, newPanel)
+                                panel.hide()
                         return
                     if self.CustomizeEnabled is True:
                         self.setStyleSheet(Stylesheet)
@@ -1179,14 +1190,24 @@ class ModernMenu(RibbonBar):
                                 item[0].setEnabled(True)                                
                         Gui.updateGui()       
 
-                        # update the ribbonstructure before writing it to disk
-                        self.ribbonStructure["workbenches"][workbenchName] = self.workBenchDict["workbenches"][workbenchName]
-                        # Writing to ribbonStructure.json
-                        JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
-                        with open(JsonFile, "w") as outfile:
-                            json.dump(self.ribbonStructure, outfile, indent=4)
-                        return
+        # update the ribbonstructure before writing it to disk
+        self.ribbonStructure["workbenches"][workbenchName] = self.workBenchDict["workbenches"][workbenchName]
+        # Writing to ribbonStructure.json
+        JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+        with open(JsonFile, "w") as outfile:
+            json.dump(self.ribbonStructure, outfile, indent=4)
 
+        for title, panel in self.currentCategory().panels().items():
+            for longPanel in self.longPanels:
+                if longPanel.objectName() == panel.objectName():
+                    print(1)
+                    newPanel = self.CreatePanel(workbenchName, panel.objectName(), False)
+                    print(2)
+                    self.currentCategory().replacePanel(panel, newPanel)
+                    panel.close()
+                    print(3)
+                                 
+        # self.longPanels.clear()
         return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                                 
@@ -3990,7 +4011,7 @@ class ModernMenu(RibbonBar):
         
         return title
     
-    def CreatePanel(self, workbenchName: str, panelName: str, addPanel = True, dict = ribbonStructure, SetToUpdate = False):
+    def CreatePanel(self, workbenchName: str, panelName: str, addPanel = True, dict = ribbonStructure, SetToUpdate = False, ignoreColumnLimit = False):
         if SetToUpdate is True:
             dict = self.ribbonStructure
             Standard_Functions_Ribbon.add_keys_nested_dict(dict, ["workbenches", workbenchName, "toolbars"], 1, True)
@@ -4206,7 +4227,7 @@ class ModernMenu(RibbonBar):
             else:
                 # If the number of columns is more than allowed,
                 # Add the actions to the OptionPanel instead.
-                if maxColumns > 0:
+                if maxColumns > 0 and ignoreColumnLimit is False:
                     # if the last item before the optionpanel is an separator, skip it
                     if columnCount > maxColumns and "separator" in button.text():
                         continue
