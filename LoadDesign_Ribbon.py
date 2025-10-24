@@ -4823,13 +4823,13 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             for key, value in list(Commands.items()):
                                 for i in range(len(self.List_Commands)):
                                     if (
-                                        self.List_Commands[i][2] == key
+                                        self.List_Commands[i][0] == key
                                         and self.List_Commands[i][3] == WorkBenchName
                                     ):
                                         Command = self.List_Commands[i][0]
                                         ListCommands.append(Command)
                                     if (
-                                        self.List_Commands[i][2] == key
+                                        self.List_Commands[i][0] == key
                                         and self.List_Commands[i][3] == "Global"
                                     ):
                                         Command = self.List_Commands[i][0]
@@ -4867,7 +4867,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
                 for key, value in list(Commands.items()):
                     for i in range(len(self.List_Commands)):
-                        if self.List_Commands[i][2].lower() == key.lower():
+                        if self.List_Commands[i][0].lower() == key.lower():
                             if (
                                 self.List_Commands[i][3] == WorkBenchName
                                 or self.List_Commands[i][3] == "Global"
