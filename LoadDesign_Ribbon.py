@@ -1917,6 +1917,14 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             for CommandItem in self.List_Commands:
                 if CommandItem[0] == ListWidgetItem.data(Qt.ItemDataRole.UserRole)[1]:
                     MenuName = CommandItem[2].replace("&", "")
+                    # For FC 1.1.0, use commandnames instead of menu names
+                    if StandardFunctions.checkFreeCADVersion(
+                            Parameters_Ribbon.FreeCAD_Version["mainVersion"],
+                            Parameters_Ribbon.FreeCAD_Version["subVersion"],
+                            Parameters_Ribbon.FreeCAD_Version["patchVersion"],
+                            Parameters_Ribbon.FreeCAD_Version["gitVersion"],
+                        ) is True:
+                        MenuName = CommandItem[0]
 
                     # Get the original toolbar
                     OriginalToolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
