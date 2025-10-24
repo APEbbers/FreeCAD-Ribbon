@@ -980,6 +980,7 @@ class ModernMenu(RibbonBar):
         
         # Create the menu
         self.contextMenu = QMenu(self)
+        self.contextMenu.setStyleSheet("spacing: 0px;margin: 0px;padding: 0px;")
         
         # Declare a dict for this workbench only
         self.workBenchDict = {}
@@ -1007,20 +1008,21 @@ class ModernMenu(RibbonBar):
                         # self.contextMenu.setStyleSheet("spacing: 0px; margin: 0px; padding: 0px;")
     
                         # set the checkbox for enabling text
-                        RibbonButonAction_Text = CheckBoxAction(self, "Enable text")
+                        RibbonButtonAction_Text = CheckBoxAction(self, translate("FreeCAD Ribbon", "Show button text"))
                         # Check if the widget has text enabled
                         textVisible = False
                         for child in widget.children():
                             if type(child) == QLabel:
                                 textVisible = child.isVisible()
                         # Set the checkbox action checked or unchecked
-                        RibbonButonAction_Text.setChecked(textVisible)  
-                        RibbonButonAction_Text.checkStateChanged.connect(lambda: self.on_TextState_Changed(panel, widget, RibbonButonAction_Text))
+                        RibbonButtonAction_Text.setChecked(textVisible)  
+                        RibbonButtonAction_Text.setFixedHeight(21)
+                        RibbonButtonAction_Text.checkStateChanged.connect(lambda: self.on_TextState_Changed(panel, widget, RibbonButtonAction_Text))
                         # Add the checkbox action to the contextmenu
-                        self.contextMenu.addAction(RibbonButonAction_Text)
+                        self.contextMenu.addAction(RibbonButtonAction_Text)
                         
                         # Set the spinbox for the button size
-                        RibbonButtonAction_Size = SpinBoxAction(self, "Set size")
+                        RibbonButtonAction_Size = SpinBoxAction(self, translate("FreeCAD Ribbon", "Set button size"))
                         RibbonButtonAction_Size.setMinimum(16)
                         RibbonButtonAction_Size.setMaximum(120)                        
                         RibbonButtonAction_Size.setValue(widget.height())
@@ -1028,7 +1030,7 @@ class ModernMenu(RibbonBar):
                         self.contextMenu.addAction(RibbonButtonAction_Size)
                         
                         # Set the dropdown for the button style
-                        RibbonButtonAction_Style = ComboBoxAction(self, "Set button type")
+                        RibbonButtonAction_Style = ComboBoxAction(self, translate("FreeCAD Ribbon", "Set button type"))
                         RibbonButtonAction_Style.addItem("Small")
                         RibbonButtonAction_Style.addItem("Medium")
                         RibbonButtonAction_Style.addItem("Large")
@@ -1038,7 +1040,7 @@ class ModernMenu(RibbonBar):
                         self.contextMenu.addAction(RibbonButtonAction_Style)
                         
                         # Add a line edit for changing the text
-                        ChangeButtonText = CustomWidgets.LineEditAction(self, "Change button text")
+                        ChangeButtonText = CustomWidgets.LineEditAction(self, translate("FreeCAD Ribbon", "Set button text"))
                         text = widget.parent().findChild(QLabel).text()
                         ChangeButtonText.setText("")
                         ChangeButtonText.setPlaceholderText(text)
@@ -1058,7 +1060,7 @@ class ModernMenu(RibbonBar):
 
                         # Disconnect the widgetActions
                         RibbonButtonAction_Style.currentTextChanged.disconnect()
-                        RibbonButonAction_Text.checkStateChanged.disconnect()
+                        RibbonButtonAction_Text.checkStateChanged.disconnect()
                         RibbonButtonAction_Size.valueChanged.disconnect()
                         AddSeparator_Left.triggered.disconnect()                                
                         AddSeparator_Right.triggered.disconnect()
@@ -1068,7 +1070,7 @@ class ModernMenu(RibbonBar):
 
             if titleWidget is not None and self.CustomizeEnabled is True and titleWidget.underMouse():
                 panel = titleWidget.parent().parent()
-                ChangePanelTitle = CustomWidgets.LineEditAction(self, "Change panel title")
+                ChangePanelTitle = CustomWidgets.LineEditAction(self, translate("FreeCAD Ribbon", "Change panel title"))
                 ChangePanelTitle.setText("")
                 ChangePanelTitle.setPlaceholderText(panel.title())
                 ChangePanelTitle.textChanged.connect(lambda e: self.on_PanelTitle_Changing(e, panel))
@@ -1088,7 +1090,7 @@ class ModernMenu(RibbonBar):
                 if self.CustomizeEnabled is True:
                     panel = separator.parent().parent()
                     # Create the menu
-                    RemoveSeparator = self.contextMenu.addAction("Remove separator")
+                    RemoveSeparator = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Remove separator"))
                     # create the context menu action
                     RemoveSeparator.triggered.connect(lambda: self.on_RemoveSeparator_Clicked(panel, separator))
                     
@@ -1099,9 +1101,9 @@ class ModernMenu(RibbonBar):
             # If you are not yet in the customize enviroment, create a menu for entering it.
             if panel is not None and type(panel) is not RibbonPanel:
                 # Add the buttons
-                title = "Customize..."
+                title = translate("FreeCAD Ribbon", "Customize...")
                 if self.CustomizeEnabled is True:
-                    title = "Save and exit customize..."
+                    title = translate("FreeCAD Ribbon", "Save and exit customize...")
                 CustomizeStartAct = self.contextMenu.addAction(title)
                 action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
 

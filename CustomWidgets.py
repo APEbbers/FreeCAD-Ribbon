@@ -1582,6 +1582,10 @@ class CheckBoxAction(QWidgetAction):
 
     def isChecked(self, /) -> bool:
         return self.checkbox.isChecked()
+    
+    def setFixedHeight(self, h):
+        self.checkbox.setFixedHeight(h)
+        return
 
 class SpinBoxAction(QWidgetAction):
         
@@ -1617,6 +1621,9 @@ class SpinBoxAction(QWidgetAction):
     def setValue(self, val, /):
         self.spinbox.setValue(val)
         return
+    
+    def setFixedHeight(self, h):
+        self.spinbox.setFixedHeight(h)
     
 class ComboBoxAction(QWidgetAction):
         
@@ -1666,6 +1673,9 @@ class ComboBoxAction(QWidgetAction):
     
     def count(self, /):
         return self.combobox.count()
+    
+    def setFixedHeight(self, h):
+        self.combobox.setFixedHeight(h)
 
 class LineEditAction(QWidgetAction):
         
