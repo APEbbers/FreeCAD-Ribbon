@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -47,7 +47,7 @@ from PySide.QtGui import (
     QCursor,
     QGuiApplication,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -83,7 +83,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -208,7 +208,7 @@ class ModernMenu(RibbonBar):
     ButtonSpacing = 6
     
     # Declare the alignment of the buttons
-    ButtonAlignment = Qt.AlignmentFlag.AlignLeft
+    ButtonAlignment = Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
     
     # Declare the top and bottom margin for the tabbar (category)
     TopMargin = 3
@@ -263,6 +263,9 @@ class ModernMenu(RibbonBar):
     
     # Create a dict for the active workbench only
     workBenchDict = {}
+    
+    # Create a empty context menu
+    contextMenu = None
     # endregion
 
     def __init__(self):
@@ -975,6 +978,9 @@ class ModernMenu(RibbonBar):
         panel = None
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         
+        # Create the menu
+        self.contextMenu = QMenu(self)
+        
         # Declare a dict for this workbench only
         self.workBenchDict = {}
         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName], endEmpty=True)
@@ -996,10 +1002,9 @@ class ModernMenu(RibbonBar):
                 ):
                     if separator is None:
                         # Define the context menu for buttons
-                        contextMenu: QMenu = QMenu(self)
-                        contextMenu.setContentsMargins(3,3,3,3)
-                        contextMenu.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
-                        # contextMenu.setStyleSheet("spacing: 0px; margin: 0px; padding: 0px;")
+                        self.contextMenu.setContentsMargins(3,3,3,3)
+                        self.contextMenu.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
+                        # self.contextMenu.setStyleSheet("spacing: 0px; margin: 0px; padding: 0px;")
     
                         # set the checkbox for enabling text
                         RibbonButonAction_Text = CheckBoxAction(self, "Enable text")
@@ -1010,17 +1015,17 @@ class ModernMenu(RibbonBar):
                                 textVisible = child.isVisible()
                         # Set the checkbox action checked or unchecked
                         RibbonButonAction_Text.setChecked(textVisible)  
-                        RibbonButonAction_Text.checkStateChanged.connect(lambda: self.on_TextState_Changed(contextMenu, panel, widget, RibbonButonAction_Text))
+                        RibbonButonAction_Text.checkStateChanged.connect(lambda: self.on_TextState_Changed(panel, widget, RibbonButonAction_Text))
                         # Add the checkbox action to the contextmenu
-                        contextMenu.addAction(RibbonButonAction_Text)
+                        self.contextMenu.addAction(RibbonButonAction_Text)
                         
                         # Set the spinbox for the button size
                         RibbonButtonAction_Size = SpinBoxAction(self, "Set size")
                         RibbonButtonAction_Size.setMinimum(16)
                         RibbonButtonAction_Size.setMaximum(120)                        
                         RibbonButtonAction_Size.setValue(widget.height())
-                        RibbonButtonAction_Size.valueChanged.connect(lambda: self.on_ButtonSize_Changed(contextMenu, panel, widget, RibbonButtonAction_Size))
-                        contextMenu.addAction(RibbonButtonAction_Size)
+                        RibbonButtonAction_Size.valueChanged.connect(lambda: self.on_ButtonSize_Changed(panel, widget, RibbonButtonAction_Size))
+                        self.contextMenu.addAction(RibbonButtonAction_Size)
                         
                         # Set the dropdown for the button style
                         RibbonButtonAction_Style = ComboBoxAction(self, "Set button type")
@@ -1029,26 +1034,27 @@ class ModernMenu(RibbonBar):
                         RibbonButtonAction_Style.addItem("Large")
                         RibbonButtonAction_Style.addItem("")
                         RibbonButtonAction_Style.setCurrentText("")
-                        RibbonButtonAction_Style.currentTextChanged.connect(lambda: self.on_ButtonStyle_Clicked(contextMenu,panel, widget, RibbonButtonAction_Style, RibbonButtonAction_Size))                      
-                        contextMenu.addAction(RibbonButtonAction_Style)
-                        
-                        # Create the buttons for adding a separator
-                        AddSeparator_Left = contextMenu.addAction(translate("FreeCAD Ribbon", "Add separator left"))
-                        AddSeparator_Left.triggered.connect(lambda: self.on_AddSeparator_Clicked(contextMenu,panel, widget,"left"))
-                        AddSeparator_Right = contextMenu.addAction(translate("FreeCAD Ribbon", "Add separator right"))
-                        AddSeparator_Right.triggered.connect(lambda: self.on_AddSeparator_Clicked(contextMenu,panel, widget,"right"))
+                        RibbonButtonAction_Style.currentTextChanged.connect(lambda: self.on_ButtonStyle_Clicked(panel, widget, RibbonButtonAction_Style, RibbonButtonAction_Size))                      
+                        self.contextMenu.addAction(RibbonButtonAction_Style)
                         
                         # Add a line edit for changing the text
                         ChangeButtonText = CustomWidgets.LineEditAction(self, "Change button text")
                         text = widget.parent().findChild(QLabel).text()
                         ChangeButtonText.setText("")
                         ChangeButtonText.setPlaceholderText(text)
+                        ChangeButtonText.setFixedSize(200,21)
                         ChangeButtonText.textChanged.connect(lambda e: self.on_ButtonLabel_Changing(e, panel, widget))
-                        ChangeButtonText.editingFinished.connect(lambda: lambda: contextMenu.close())
-                        contextMenu.addAction(ChangeButtonText)
+                        ChangeButtonText.editingFinished.connect(lambda: lambda: self.contextMenu.close())
+                        self.contextMenu.addAction(ChangeButtonText)
+                        
+                        # Create the buttons for adding a separator
+                        AddSeparator_Left = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Add separator left"))
+                        AddSeparator_Left.triggered.connect(lambda: self.on_AddSeparator_Clicked(panel, widget,"left"))
+                        AddSeparator_Right = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Add separator right"))
+                        AddSeparator_Right.triggered.connect(lambda: self.on_AddSeparator_Clicked(panel, widget,"right"))                        
                         
                         # create the context menu action
-                        contextMenu.exec_(self.mapToGlobal(event.pos()))
+                        self.contextMenu.exec_(self.mapToGlobal(event.pos()))
 
                         # Disconnect the widgetActions
                         RibbonButtonAction_Style.currentTextChanged.disconnect()
@@ -1062,16 +1068,15 @@ class ModernMenu(RibbonBar):
 
             if titleWidget is not None and self.CustomizeEnabled is True and titleWidget.underMouse():
                 panel = titleWidget.parent().parent()
-                contextMenu = QMenu(self)
                 ChangePanelTitle = CustomWidgets.LineEditAction(self, "Change panel title")
                 ChangePanelTitle.setText("")
                 ChangePanelTitle.setPlaceholderText(panel.title())
                 ChangePanelTitle.textChanged.connect(lambda e: self.on_PanelTitle_Changing(e, panel))
-                ChangePanelTitle.editingFinished.connect(lambda: contextMenu.close())
-                contextMenu.addAction(ChangePanelTitle)
+                ChangePanelTitle.editingFinished.connect(lambda: self.contextMenu.close())
+                self.contextMenu.addAction(ChangePanelTitle)
                 
                 # create the context menu action
-                contextMenu.exec_(self.mapToGlobal(event.pos()))
+                self.contextMenu.exec_(self.mapToGlobal(event.pos()))
                 
                 # Disconnect the widgetActions
                 ChangePanelTitle.textChanged.disconnect()
@@ -1083,25 +1088,22 @@ class ModernMenu(RibbonBar):
                 if self.CustomizeEnabled is True:
                     panel = separator.parent().parent()
                     # Create the menu
-                    contextMenu: QMenu = QMenu(self)
-                    RemoveSeparator = contextMenu.addAction("Remove separator")
+                    RemoveSeparator = self.contextMenu.addAction("Remove separator")
                     # create the context menu action
                     RemoveSeparator.triggered.connect(lambda: self.on_RemoveSeparator_Clicked(panel, separator))
                     
                     # create the context menu action
-                    contextMenu.exec_(self.mapToGlobal(event.pos()))
+                    self.contextMenu.exec_(self.mapToGlobal(event.pos()))
                     return
             
             # If you are not yet in the customize enviroment, create a menu for entering it.
             if panel is not None and type(panel) is not RibbonPanel:
-                # Create the menu
-                contextMenu = QMenu(self)
                 # Add the buttons
                 title = "Customize..."
                 if self.CustomizeEnabled is True:
                     title = "Save and exit customize..."
-                CustomizeStartAct = contextMenu.addAction(title)
-                action = contextMenu.exec_(self.mapToGlobal(event.pos()))
+                CustomizeStartAct = self.contextMenu.addAction(title)
+                action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
 
                 
                 Stylesheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
@@ -1121,14 +1123,13 @@ class ModernMenu(RibbonBar):
                         # Enable all buttons, so you can access them with a right click
                         # Disable also the signals to avoid triggering the action
                         self.actionList = []
-                        for child in mw.findChildren(QToolButton):                            
-                            for subchild in child.children():
-                                try:
-                                    for subAction in subchild.actions():
-                                        subAction.setEnabled(True)
-                                        self.actionList.append([subAction, subAction.isEnabled()])
-                                except Exception:
-                                    pass
+                        for child in mw.findChildren(QToolButton):
+                            try:
+                                for subAction in child.actions():
+                                    subAction.setEnabled(True)
+                                    self.actionList.append([subAction, subAction.isEnabled()])
+                            except Exception:
+                                pass
                         Gui.updateGui()
                         
                         # Create all order lists and commands, incase they are not all present
@@ -1169,13 +1170,12 @@ class ModernMenu(RibbonBar):
                         self.CustomizeEnabled = False
                         self.setRibbonHeight(self.RibbonHeight)
 
-                        # for item in self.actionList:
-                        #     print(item)
-                        #     if item[1] is False:
-                        #         item[0].setDisabled(True)
-                        #     else:
-                        #         item[0].setEnabled(True)                                
-                        # Gui.updateGui()       
+                        for item in self.actionList:
+                            if item[1] is False:
+                                item[0].setDisabled(True)
+                            else:
+                                item[0].setEnabled(True)                                
+                        Gui.updateGui()       
 
                         # update the ribbonstructure before writing it to disk
                         self.ribbonStructure["workbenches"][workbenchName] = self.workBenchDict["workbenches"][workbenchName]
@@ -1187,7 +1187,7 @@ class ModernMenu(RibbonBar):
 
         return
         
-    def on_ButtonStyle_Clicked(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                                 
+    def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                                 
         # get the size to set
         Size = "small"
         if ButtonStyleWidget.currentText() == "Medium":
@@ -1207,10 +1207,10 @@ class ModernMenu(RibbonBar):
         self.currentCategory().replacePanel(panel, newPanel)
         panel.close()
         
-        contextMenu.close()
+        self.contextMenu.close()
         return
     
-    def on_ButtonSize_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget: QToolButton, ButtonSizeWidget: SpinBoxAction):              
+    def on_ButtonSize_Changed(self, panel: RibbonPanel, ButtonWidget: QToolButton, ButtonSizeWidget: SpinBoxAction):              
         # Get the menubutton height for large buttons
         menuButtonWidth = 0
         if ButtonWidget.objectName() != "CustomWidget_Large":
@@ -1251,7 +1251,7 @@ class ModernMenu(RibbonBar):
         self.WriteButtonSettings(ButtonWidget, panel, property)
         return
     
-    def on_TextState_Changed(self, contextMenu: QMenu, panel: RibbonPanel, ButtonWidget: CustomControls, TextStateWidget: CheckBoxAction):
+    def on_TextState_Changed(self, panel: RibbonPanel, ButtonWidget: CustomControls, TextStateWidget: CheckBoxAction):
         # If the widget has not text, show it with the correct width
         if TextStateWidget.isChecked() is True:
             self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()})
@@ -1267,10 +1267,10 @@ class ModernMenu(RibbonBar):
         self.currentCategory().replacePanel(panel, newPanel)
         panel.close()
         
-        contextMenu.close()   
+        self.contextMenu.close()   
         return
     
-    def on_AddSeparator_Clicked(self, contextMenu:QMenu, panel: RibbonPanel, ButtonWidget: CustomControls, Side = "left"):
+    def on_AddSeparator_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, Side = "left"):
         # Get the workbench hame and the panel name
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         panelName = panel.objectName()
@@ -1311,7 +1311,7 @@ class ModernMenu(RibbonBar):
             # Replace the panel with the new panel
             self.currentCategory().replacePanel(panel, newPanel)
             panel.close()
-            contextMenu.close()
+            self.contextMenu.close()
         return
             
     def on_RemoveSeparator_Clicked(self, panel: RibbonPanel, separator: CustomSeparator):
@@ -1681,14 +1681,23 @@ class ModernMenu(RibbonBar):
 
             # hide normal toolbars
             self.hideClassicToolbars()
-
-        # if self.DesignMenuLoaded is True:
-        #     # Disable the quick toolbar, righttoolbar and application menu
-        #     self.rightToolBar().setDisabled(True)
-        #     self.quickAccessToolBar().setDisabled(True)
-        #     self.applicationOptionButton().setDisabled(True)
-        #     Gui.updateGui()
-        return
+        
+            if self.contextMenu is not None:
+                self.contextMenu.hide()
+                Stylesheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
+                self.setStyleSheet(Stylesheet)
+                self.CustomizeEnabled = False
+                
+                try:
+                    # update the ribbonstructure before writing it to disk
+                    self.ribbonStructure["workbenches"][self.wbNameMapping[tabName]] = self.workBenchDict["workbenches"][self.wbNameMapping[tabName]]
+                    # Writing to ribbonStructure.json
+                    JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+                    with open(JsonFile, "w") as outfile:
+                        json.dump(self.ribbonStructure, outfile, indent=4)
+                except Exception:
+                    pass
+            return
 
     def onWbActivated(self):
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
@@ -4208,7 +4217,8 @@ class ModernMenu(RibbonBar):
                 # With an paneloptionbutton, use an offset of 2 instead of 1 for i.
                 if "separator" in button.text() and i < len(allButtons):
                     separatorWidget = CustomWidgets.CustomSeparator()
-                    separator = panel.addLargeWidget(separatorWidget)
+                    separatorWidget.setMinimumHeight(panel.height() - panel._titleWidget.height())
+                    separator = panel.addLargeWidget(separatorWidget, fixedHeight=False)
                     separator.setObjectName(button.text())
 
                     # there is a bug in pyqtribbon where the separator is placed in the wrong position
@@ -4578,8 +4588,7 @@ class ModernMenu(RibbonBar):
                                 btn,
                                 fixedHeight=False,
                                 alignment=self.ButtonAlignment,
-                            ).setObjectName("CustomWidget_Large")
-                            # Set fixedheight to false. This is set in the custom widgets
+                            ).setObjectName("CustomWidget_Large") # Set fixedheight to false. This is set in the custom widgets                            
                         else:
                             if Parameters_Ribbon.DEBUG_MODE is True:
                                 if buttonSize != "none":
@@ -4612,6 +4621,11 @@ class ModernMenu(RibbonBar):
                         if Parameters_Ribbon.DEBUG_MODE is True:
                             raise e
                         continue
+                    
+        # Add a spacer. Otherwise alignment of a panel with one button will always be to the top
+        spacer = QWidget()
+        spacer.setMinimumSize(0, panel.height() - panel._titleWidget.height())
+        panel.addWidget(spacer, rowSpan=6)
 
         # Set the panel title
         panel.setTitle(self.ReturnPanelTitle(panel))
@@ -4897,17 +4911,6 @@ class ModernMenu(RibbonBar):
         return isConverted
 
     # endregion
-
-
-# class RibbonEventInspector(QObject):
-#     def __init__(self, parent):
-#         super(RibbonEventInspector, self).__init__(parent)
-        
-#     def eventFilter(self, obj, event):
-#         if event.type() == QEvent.Type.DragEnter or event.type() == QEvent.Type.DragMove:
-#             event.setAccepted(True)
-#             return False
-#         return False
 
 class EventInspector(QObject):
     def __init__(self, parent):
