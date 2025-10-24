@@ -270,6 +270,7 @@ class ModernMenu(RibbonBar):
     
     # Create a list for panels that have a option button which have to be restored when exitiing the customisation enviroment
     longPanels = []
+    replacedPanel = None
     # endregion
 
     def __init__(self):
@@ -1172,11 +1173,11 @@ class ModernMenu(RibbonBar):
                                 self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                            
                         
                             if panel.panelOptionButton().isVisible():
-                                newPanel = self.CreatePanel(workbenchName, panel.objectName(), False, ignoreColumnLimit=True)
-                                self.longPanels.append(panel)
+                                newPanel = self.CreatePanel(workbenchName, panel.objectName(), False, self.workBenchDict, ignoreColumnLimit=True)
                                 
-                                self.currentCategory().replacePanel(panel, newPanel)
-                                panel.hide()
+                                replacedPanel = self.currentCategory().replacePanel(panel, newPanel)
+                                self.longPanels.append(replacedPanel)
+                                panel.close()
                         return
                     if self.CustomizeEnabled is True:
                         self.setStyleSheet(Stylesheet)
@@ -1200,14 +1201,11 @@ class ModernMenu(RibbonBar):
         for title, panel in self.currentCategory().panels().items():
             for longPanel in self.longPanels:
                 if longPanel.objectName() == panel.objectName():
-                    print(1)
-                    newPanel = self.CreatePanel(workbenchName, panel.objectName(), False)
-                    print(2)
-                    self.currentCategory().replacePanel(panel, newPanel)
-                    panel.close()
-                    print(3)
+                    newPanel = self.CreatePanel(workbenchName, panel.objectName(), False, self.workBenchDict)
+                    self.currentCategory().replacePanel(longPanel, newPanel)
+                    longPanel.close()
                                  
-        # self.longPanels.clear()
+        self.longPanels.clear()
         return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                                 
@@ -1563,12 +1561,14 @@ class ModernMenu(RibbonBar):
                         ],
                     )
                     OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
-                    if OrderList is None or len(OrderList) == 0:
-                        OrderList = []
-                        for n in range(gridLayout.count()):
-                            control = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                            if type(control) is CustomControls:
-                                OrderList.append(control.actions().data())
+                    # if OrderList is None or len(OrderList) == 0:
+                    OrderList_Compare = []
+                    for n in range(gridLayout.count()):
+                        control = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                        if type(control) is CustomControls:
+                            OrderList_Compare.append(control.actions().data())
+                    if OrderList != OrderList_Compare:
+                        OrderList = OrderList_Compare
                     
                     # Get the indexes of the widgets
                     index_originalWidget = OrderList.index(OriginalWidget.actions().data())
