@@ -1821,7 +1821,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     for j in range(len(value)):
                         CommandName = value[j]
                         for ToolbarCommand in self.List_Commands:
-                            if ToolbarCommand[0] == CommandName:
+                            if ToolbarCommand[0] == CommandName or ToolbarCommand[2] == CommandName:
                                 # Get the command
                                 MenuName = ToolbarCommand[4].replace("&", "")
 
@@ -2033,7 +2033,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 # Check if the items is already there
                                 # if not, continue
                                 if not CommandItem[0] in ShadowList:
-                                    MenuName_Command = CommandItem[2]
+                                    MenuName_Command = CommandItem[0]
                                     if (
                                         MenuName_Command == key
                                         and CommandItem[3] == WorkBenchName

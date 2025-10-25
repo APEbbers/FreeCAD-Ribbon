@@ -21,6 +21,8 @@
 # *************************************************************************
 from signal import pause
 from turtle import isvisible
+
+from numpy.char import lower
 import CustomWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -48,6 +50,7 @@ from PySide6.QtGui import (
     QShortcut,
     QCursor,
     QGuiApplication,
+    QDrag,
 )
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -101,6 +104,7 @@ from PySide6.QtCore import (
     QPoint,
     QSettings,
     QSignalBlocker,
+    QMimeData,
 )
 from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, CheckBoxAction, SpinBoxAction, ComboBoxAction, CustomSeparator
 
@@ -1195,13 +1199,13 @@ class ModernMenu(RibbonBar):
                                 Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], [])                         
                                 self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                            
                         
-                            if panel.panelOptionButton().isVisible():
-                                newPanel = self.CreatePanel(workbenchName, panel.objectName(), False, self.workBenchDict, ignoreColumnLimit=True)
+                            # if panel.panelOptionButton().isVisible():
+                            #     newPanel = self.CreatePanel(workbenchName, panel.objectName(), False, self.workBenchDict, ignoreColumnLimit=True)
                                 
-                                replacedPanel = self.currentCategory().replacePanel(panel, newPanel)
-                                if replacedPanel not in self.longPanels:
-                                    self.longPanels.append(replacedPanel)
-                                panel.close()
+                            #     replacedPanel = self.currentCategory().replacePanel(panel, newPanel)
+                            #     if replacedPanel not in self.longPanels:
+                            #         self.longPanels.append(replacedPanel)
+                            #     panel.close()
                         return
                     if self.CustomizeEnabled is True:
                         self.setStyleSheet(Stylesheet)
@@ -1222,20 +1226,20 @@ class ModernMenu(RibbonBar):
         with open(JsonFile, "w") as outfile:
             json.dump(self.ribbonStructure, outfile, indent=4)
 
-        # Restore the original panel with the overflow menu
-        for title, panel in self.currentCategory().panels().items():
-            # Store the current width of the panel. 
-            width = panel.width()
-            for longPanel in self.longPanels:
-                if longPanel.objectName() == panel.objectName():
-                    newPanel = self.CreatePanel(workbenchName, panel.objectName(), False, self.workBenchDict)
-                    self.currentCategory().replacePanel(longPanel, newPanel)
-                    longPanel.close()
-            # Set the width again with the stored value. This insures that the panels don´t resize. 
-            # They will otherwise for some reason
-            panel.setFixedWidth(width)
+        # # Restore the original panel with the overflow menu
+        # for title, panel in self.currentCategory().panels().items():
+        #     # Store the current width of the panel. 
+        #     width = panel.width()
+        #     for longPanel in self.longPanels:
+        #         if longPanel.objectName() == panel.objectName():
+        #             newPanel = self.CreatePanel(workbenchName, panel.objectName(), False, self.workBenchDict)
+        #             self.currentCategory().replacePanel(longPanel, newPanel)
+        #             longPanel.close()
+        #     # Set the width again with the stored value. This insures that the panels don´t resize. 
+        #     # They will otherwise for some reason
+        #     panel.setFixedWidth(width)
                                  
-        self.longPanels.clear()
+        # self.longPanels.clear()
         return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                                 
@@ -1464,60 +1468,55 @@ class ModernMenu(RibbonBar):
     def dragMoveEvent(self, event: QDragMoveEvent):
         if self.CustomizeEnabled is True:
             widget = event.source()
-            panel = RibbonPanel()
-            count = 0
-            parent = widget.parent()
-            while (count < 10):
-                if type(parent) is RibbonPanel:
-                    panel = parent
-                    break
-                else:
-                    parent = parent.parent()
-                count = count + 1
-            # panel: RibbonPanel = widget.parent().parent().parent()
-            gridLayout: QGridLayout = panel._actionsLayout
-            
-            # Find the correct location of the drop target, so we can move it there.
-            position = self.find_drop_location(event)
-            if position is None:
-                backup_size = QSize(
-                    Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL
-                )
-                position = [0, 0, backup_size, backup_size]
+            if type(widget) is not RibbonNormalCategory:
+                panel = RibbonPanel()
+                count = 0
+                parent = widget.parent()
+                while (count < 10):
+                    if type(parent) is RibbonPanel:
+                        panel = parent
+                        break
+                    else:
+                        try:
+                            parent = parent.parent()
+                        except Exception:
+                            pass
+                    count = count + 1
+                # panel: RibbonPanel = widget.parent().parent().parent()
+                gridLayout: QGridLayout = panel._actionsLayout
+                
+                # Find the correct location of the drop target, so we can move it there.
+                position = self.find_drop_location(event)
+                if position is None:
+                    backup_size = QSize(
+                        Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL
+                    )
+                    position = [0, 0, backup_size, backup_size]
 
-            # # Inserting moves the item if its alreaady in the layout.
-            rowSpan = 2
-            # if position[3].height() == Parameters_Ribbon.ICON_SIZE_MEDIUM:
-            #     rowSpan = 3
-            # if position[3].height() == Parameters_Ribbon.ICON_SIZE_LARGE:
-            #     rowSpan = 6
-            # if type(widget) is CustomSeparator:
-            #     rowSpan = 6
-            # self.dragIndicator.setFixedSize(QSize(
-            #         widget.size()
-            #     ))
-            try:
-                widgetHoveredOver = gridLayout.itemAtPosition(position[0], position[1]).widget().findChild(CustomControls)
-                self.target = position
+                # Inserting moves the item if its alreaady in the layout.
+                rowSpan = 2
+                self.dragIndicator.setFixedSize(QSize(widget.size()))
                 try:
-                    action = widgetHoveredOver.actions()[0]
-                    self.target = [position[0], position[1], action.data()]
+                    widgetHoveredOver = gridLayout.itemAtPosition(position[0], position[1]).widget().findChild(CustomControls)
+                    self.target = position
+                    try:
+                        action = widgetHoveredOver.actions()[0]
+                        self.target = [position[0], position[1], action.data()]
+                    except Exception:
+                        pass
+                                
+                    # Add the drag indicator
+                    gridLayout.addWidget(
+                        self.dragIndicator, position[0], position[1], rowSpan, 1
+                    )
+                                
+                    # When you hide the source, the dragged widget disapears from the panel.
+                    # For now It is left in, to keep the panel at the same size.
+                    # e.source().hide()
+                    # Show the target.
+                    self.dragIndicator.show()
                 except Exception:
                     pass
-                            
-                # Add the drag indicator
-                gridLayout.addWidget(
-                    self.dragIndicator, position[0], position[1], rowSpan, 1
-                )
-                            
-                # When you hide the source, the dragged widget disapears from the panel.
-                # For now It is left in, to keep the panel at the same size.
-                # e.source().hide()
-                # Show the target.
-                self.dragIndicator.show()
-            except Exception:
-                pass
-            event.setAccepted(True)
             event.accept()
         return
     
@@ -1679,7 +1678,8 @@ class ModernMenu(RibbonBar):
                     break
 
         # Return then coordinates as grid positions
-        return [xPos, yPos]
+        w_origin = panel._actionsLayout.itemAtPosition(xPos, yPos).widget()
+        return [xPos, yPos, w_origin.size(), widget.size()]
     # endregion
     
     # region - standard class functions
@@ -2022,7 +2022,7 @@ class ModernMenu(RibbonBar):
         self.tabBar().setStyleSheet(
             "margin: 0px;padding: 0px;height: " + str(self.TabBar_Size) + ";"
         )
-
+        
         # Correct colors when no stylesheet is selected for FreeCAD.
         self.quickAccessToolBar().setStyleSheet("")
         if Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED is True:
@@ -2088,6 +2088,22 @@ class ModernMenu(RibbonBar):
                         # Set the title
                         category = self.addCategory(name)
                         category.setObjectName(workbenchName)
+                        
+                        def mouseMoveEvent(self, e, customizeEnabled: bool):
+                            if e.buttons() == Qt.MouseButton.LeftButton and customizeEnabled is True:
+                                try:
+                                    drag = QDrag(self)
+                                    mime = QMimeData()
+                                    drag.setMimeData(mime)
+                                    pixmap = QPixmap(self.size())
+                                    self.render(pixmap)
+                                    drag.setPixmap(pixmap)
+
+                                    drag.exec(Qt.DropAction.MoveAction)
+                                except Exception as e:
+                                    print(e)
+                        
+                        category.mouseMoveEvent = lambda e: mouseMoveEvent(category, e, self.CustomizeEnabled)
 
                         # Set the tabbar according the style setting
                         if Parameters_Ribbon.TABBAR_STYLE <= 1:
@@ -4850,17 +4866,18 @@ class ModernMenu(RibbonBar):
                                 # Get the translated menutext
                                 MenuNameTtranslated = CommandItem[4]
 
-                                if MenuName.lower() == key.lower() and WorkBenchName == CommandItem[3]:
+                                if (MenuName.lower() == key.lower() or MenuNameTtranslated.lower() == key)  and WorkBenchName == CommandItem[3]:
                                     try:
-                                            Standard_Functions_Ribbon.add_keys_nested_dict(newDict, [CommandItem[0]], 1, True)
-                                            newDict[CommandItem[0]] = value
+                                        Standard_Functions_Ribbon.add_keys_nested_dict(newDict, [CommandItem[0]], 1, True)
+                                        newDict[CommandItem[0]] = value
                                     except Exception as e:
                                         if Parameters_Ribbon.DEBUG_MODE is True:
                                             StandardFunctions.Print(
                                                 f"{e.with_traceback(e.__traceback__)}, 3",
                                                 "Warning",
                                             )
-                        self.ribbonStructure["customToolbars"][WorkBenchName][ToolbarName]["commands"] = newDict
+                                        continue
+                        currentDict.update(newDict)
                                     
         # Check if there are workbenches and toolbars in the ribbon structure
         if "workbenches" in self.ribbonStructure:
@@ -4914,42 +4931,40 @@ class ModernMenu(RibbonBar):
                                     self.ribbonStructure["workbenches"][WorkBenchName][
                                         "toolbars"
                                     ][ToolBar]["order"] = ConvertedList
-                                    isConverted = True
 
-        if isConverted is True:
-            # Add the version of FreeCAD on which this conversion is done, to the ribbonstructure
-            # Create a key if not present
-            StandardFunctions.add_keys_nested_dict(
-                self.ribbonStructure,
-                [
-                    "convertedWithVersion",
-                ],
-            )
-            self.ribbonStructure["convertedWithVersion"] = [
-                int(version[0]),
-                int(version[1]),
-                int(version[2]),
-                int(version[3].split(" ")[0]),
-            ]
+        # Add the version of FreeCAD on which this conversion is done, to the ribbonstructure
+        # Create a key if not present
+        StandardFunctions.add_keys_nested_dict(
+            self.ribbonStructure,
+            [
+                "convertedWithVersion",
+            ],
+        )
+        self.ribbonStructure["convertedWithVersion"] = [
+            int(version[0]),
+            int(version[1]),
+            int(version[2]),
+            int(version[3].split(" ")[0]),
+        ]
 
-            # Update the json file but make also an backup
-            # get the path for the Json file
-            JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+        # Update the json file but make also an backup
+        # get the path for the Json file
+        JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
 
-            # create a copy and rename it as a backup if enabled
-            if Parameters_Ribbon.ENABLE_BACKUP is True:
-                Suffix = datetime.now().strftime("%Y%m%d_%H%M%S")
-                BackupName = f"RibbonStructure_{Suffix}.json"
-                if os.path.exists(pathBackup) is False:
-                    os.makedirs(pathBackup)
-                BackupFile = os.path.join(pathBackup, BackupName)
-                shutil.copy(JsonFile, BackupFile)
+        # create a copy and rename it as a backup if enabled
+        if Parameters_Ribbon.ENABLE_BACKUP is True:
+            Suffix = datetime.now().strftime("%Y%m%d_%H%M%S")
+            BackupName = f"RibbonStructure_{Suffix}.json"
+            if os.path.exists(pathBackup) is False:
+                os.makedirs(pathBackup)
+            BackupFile = os.path.join(pathBackup, BackupName)
+            shutil.copy(JsonFile, BackupFile)
 
-            # Writing to sample.json
-            with open(JsonFile, "w") as outfile:
-                json.dump(self.ribbonStructure, outfile, indent=4)
+        # Writing to sample.json
+        with open(JsonFile, "w") as outfile:
+            json.dump(self.ribbonStructure, outfile, indent=4)
 
-            outfile.close()
+        outfile.close()
 
         return isConverted
 
