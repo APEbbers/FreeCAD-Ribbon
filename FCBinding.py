@@ -845,7 +845,23 @@ class ModernMenu(RibbonBar):
                 Gui.activateWorkbench(Wb)
             except Exception:
                 pass
+
+        # This is needed to be able to drag the main window properly when the titlebar is hidden
+        self._titleWidget.mousePressEvent = lambda e: self.mousePress_Titlebar(e)
+        mw.moveEvent = lambda e: self.mouseMove_Titlebar(e)
         return
+
+    initialPos = None
+    def mousePress_Titlebar(self, event):
+        self.initialPos = event.position().toPoint()
+    
+    def mouseMove_Titlebar(self, event):
+        if self.initialPos is not None:
+            delta = event.position().toPoint() - self.initialPos
+            mw.move(
+                mw.window().x() + delta.x(),
+                mw.window().y() + delta.y(),
+            )
 
     def closeEvent(self, event):
         mw.menuBar().show()
