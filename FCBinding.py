@@ -19,6 +19,7 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+from cmath import polar
 from signal import pause
 from turtle import isvisible
 
@@ -1468,61 +1469,121 @@ class ModernMenu(RibbonBar):
     def dragMoveEvent(self, event: QDragMoveEvent):
         if self.CustomizeEnabled is True:
             widget = event.source()
-            if type(widget) is not RibbonNormalCategory:
-                panel = RibbonPanel()
-                count = 0
-                parent = widget.parent()
-                while (count < 10):
-                    if type(parent) is RibbonPanel:
-                        panel = parent
-                        break
-                    else:
-                        try:
-                            parent = parent.parent()
-                        except Exception:
-                            pass
-                    count = count + 1
-                # panel: RibbonPanel = widget.parent().parent().parent()
-                gridLayout: QGridLayout = panel._actionsLayout
+            count = 0
+            while (count < 10):
+                if type(widget) is CustomControls:
+                    break
+                else:
+                    widget = widget.parent()
+                count = count + 1
                 
-                # Find the correct location of the drop target, so we can move it there.
-                position = self.find_drop_location(event)
-                if position is None:
-                    backup_size = QSize(
-                        Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL
-                    )
-                    position = [0, 0, backup_size, backup_size]
+            panel = RibbonPanel()
+            count = 0
+            parent = widget.parent()
+            while (count < 10):
+                if type(parent) is RibbonPanel:
+                    panel = parent
+                    break
+                else:
+                    parent = parent.parent()
+                count = count + 1
+            # panel: RibbonPanel = widget.parent().parent().parent()
+            gridLayout: QGridLayout = panel._actionsLayout
+            position = None
+            # Find the correct location of the drop target, so we can move it there.
+            position = self.find_drop_location(event)
+            # for i in range(gridLayout.count()):
+            #     item = gridLayout.itemAt(i)
+            #     w: QWidget = item.widget()
+            #     if w.geometry().contains(w.mapFromGlobal(event.pos())):
+            #         position = gridLayout.getItemPosition(i)
+            #         break
+            # position = self.get_index(panel, event.position().toPoint())
+            # print(position)
+            # return
+            if position is None:
+                backup_size = QSize(
+                    Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.ICON_SIZE_SMALL
+                )
+                position = [0, 0, backup_size, backup_size]
 
-                # Inserting moves the item if its alreaady in the layout.
-                rowSpan = 2
-                self.dragIndicator.setFixedSize(QSize(widget.size()))
+            # Inserting moves the item if its already in the layout.
+            rowSpan = 2
+            try:
+                widgetHoveredOver = gridLayout.itemAtPosition(position[0], position[1]).widget().findChild(CustomControls)
+                self.target = position
                 try:
-                    widgetHoveredOver = gridLayout.itemAtPosition(position[0], position[1]).widget().findChild(CustomControls)
-                    self.target = position
-                    try:
-                        action = widgetHoveredOver.actions()[0]
-                        self.target = [position[0], position[1], action.data()]
-                    except Exception:
-                        pass
-                                
-                    # Add the drag indicator
-                    gridLayout.addWidget(
-                        self.dragIndicator, position[0], position[1], rowSpan, 1
-                    )
-                                
-                    # When you hide the source, the dragged widget disapears from the panel.
-                    # For now It is left in, to keep the panel at the same size.
-                    # e.source().hide()
-                    # Show the target.
-                    self.dragIndicator.show()
+                    action = widgetHoveredOver.actions()[0]
+                    self.target = [position[0], position[1], action.data()]
                 except Exception:
                     pass
+                            
+                # Add the drag indicator
+                gridLayout.addWidget(
+                    self.dragIndicator, position[0], position[1], rowSpan, 1
+                )
+                            
+                # When you hide the source, the dragged widget disapears from the panel.
+                # For now It is left in, to keep the panel at the same size.
+                # e.source().hide()
+                # Show the target.
+                self.dragIndicator.show()
+            except Exception:
+                pass
+            event.setAccepted(True)
             event.accept()
         return
     
-    def dropEvent(self, event):
+    def get_index(self, panel: RibbonPanel, pos) -> int:
+        gridLayout: QGridLayout = panel._actionsLayout
+        """Helper Function = get widget index that we click into/drop into"""
+        # for i in range(gridLayout.count()):
+        #     contains = gridLayout.itemAt(i).geometry().contains(pos)
+        #     x1 = gridLayout.itemAt(i).widget().mapTo(mw, gridLayout.itemAt(i).widget().pos()).x()
+        #     x2 = x1 + gridLayout.itemAt(i).widget().width()
+            
+        #     y1 = gridLayout.itemAt(i).widget().mapTo(mw, gridLayout.itemAt(i).widget().pos()).y()
+        #     y2 = y1 - gridLayout.itemAt(i).widget().height()
+            
+        #     print(f"{gridLayout.itemAt(i).widget().mapTo(mw ,gridLayout.itemAt(i).widget().pos())}, {pos}")
+        #     # if pos.x() > x1 and pos.x() < x2:
+        #     #     if pos.y() < y1 and pos.y() > y2:
+        #     #         print(i)
+        #     #         return i
+        #     # if pos.x() > x1:
+        #     #     if pos.y() < y1:
+        #     #         print(i)
+        #     #         return i
+        xPos = 0
+        yPos = 0
+        for Row in range(gridLayout.rowCount()):
+            for Column in range(gridLayout.columnCount()):
+                item = gridLayout.itemAtPosition(Row, Column)
+                if item is not None:
+                    x1 = item.widget().mapTo(mw, item.widget().pos()).x()
+                    x2 = x1 + item.widget().width()
+                    
+                    y1 = item.widget().mapTo(mw, item.widget().pos()).y()
+                    y2 = y1 - item.widget().height()
+                                        
+                    if pos.x() < x1:                                                
+                        if pos.y() < y1:
+                            xPos = Row
+                            yPos = Column
+                    
+        print([xPos, yPos])
+        return [xPos, yPos]
+                    
+            # print(f"{gridLayout.itemAt(i).widget().mapToGlobal(gridLayout.itemAt(i).widget().pos())}, {pos}")
+
+            # if contains:
+            #     return i
+    
+    def dropEvent(self, event, widget = None):
+        return
         # Get the widget
-        widget = event.source()
+        if widget is None:
+            widget = event.source()
         # Get the panel
         # panel = widget.parent().parent().parent()
         panel = RibbonPanel()
@@ -1655,31 +1716,34 @@ class ModernMenu(RibbonBar):
 
         # Get the column
         Column = 0
-        for Column in range(0, panel._actionsLayout.columnCount()):
-            item = panel._actionsLayout.itemAtPosition(0, Column)
+        for Column in range(panel._actionsLayout.columnCount()):
+            item = panel._actionsLayout.itemAtPosition(1, Column)
             if item is not None:
-                w: QWidget = item.widget()
-                Widget_X = w.mapTo(self, w.pos()).x()
+                w = item.widget()
+                if w is not None:
+                    Widget_X = w.mapTo(mw,w.pos()).x()
 
-                if pos.x() < Widget_X + w.size().width() // 2:
-                    yPos = Column
-                    break
+                    print(f"{pos.x() - w.size().width()}, {Widget_X}")
+                    if pos.x() - w.size().width() < Widget_X:
+                        yPos = Column
+                        break
 
         # Get the row
         Row = 0
         for Row in range(panel._actionsLayout.rowCount()):
             item = panel._actionsLayout.itemAtPosition(Row, Column)
             if item is not None:
-                w: QWidget = item.widget()
-                Widget_y = w.mapTo(self, w.pos()).y()
+                w = item.widget()
+                if w is not None:
+                    Widget_y = w.mapTo(mw ,w.pos()).y()
 
-                if pos.y() < Widget_y :
-                    xPos = Row
-                    break
+                    if pos.y() < Widget_y:
+                        xPos = Row
+                        break
 
         # Return then coordinates as grid positions
-        w_origin = panel._actionsLayout.itemAtPosition(xPos, yPos).widget()
-        return [xPos, yPos, w_origin.size(), widget.size()]
+        # w_origin = panel._actionsLayout.itemAtPosition(xPos, yPos).widget()
+        return [xPos, yPos]
     # endregion
     
     # region - standard class functions
