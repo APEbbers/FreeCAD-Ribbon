@@ -1542,9 +1542,6 @@ class ModernMenu(RibbonBar):
                         pass
                     event.setAccepted(True)
                     event.accept()
-        
-            if type(widget) is RibbonPanel:
-                return
         return
 
     
@@ -1553,109 +1550,130 @@ class ModernMenu(RibbonBar):
         # Get the widget
         if widget is None:
             widget = event.source()
-        # Get the panel
-        panel = RibbonPanel()
-        count = 0
-        parent = widget.parent()
-        while (count < 10):
-            if type(parent) is RibbonPanel:
-                panel = parent
-                break
-            else:
-                parent = parent.parent()
-            count = count + 1
-        # Get tabBar
-        parent = panel.parent()
-        count = 0
-        while (count < 10):
-            if type(parent) == RibbonNormalCategory or type(parent) == RibbonContextCategory:
-                break
-            else:
-                parent = parent.parent()
-            count = count + 1
-        # Get the gridlayout
-        gridLayout: QGridLayout = panel._actionsLayout
-        # Hide the dragIndicater and the spacer widgets
-        self.dragIndicator.hide()
-        self.spaceWidget_Left.hide()
-        self.spaceWidget_Right.hide()
         
-        if isinstance(panel, RibbonPanel):
-            if not widget.geometry().contains(event.pos()):                
-                # Get the coordinates of the drag location
-                xPos_drag = self.target[0]
-                yPos_drag = self.target[1]
-                # Define the original widget
-                OriginalItem = gridLayout.itemAtPosition(xPos_drag, yPos_drag)
-                OriginalWidget = OriginalItem.widget().findChild(CustomControls)
-                
-                 # Get the old position of the dragged widget
-                n = 0
-                OldPos = []
-                for n in range(gridLayout.count()):
-                    if gridLayout.itemAt(n).widget().findChild(CustomControls) == widget.parent().parent().findChild(CustomControls):
-                        OldPos = gridLayout.getItemPosition(n)
-                        break
-                
-                # counter and old position is not empty, Swap the widgets
-                if n > -1 and len(OldPos) > 0 :
-                    # Define the dragged widgets
-                    DraggedItem = gridLayout.itemAt(n)
-                    DraggedWidget = DraggedItem.widget().findChild(CustomControls)
-
-                    # Get the workbench name and the panel name                  
-                    panelName = panel.objectName()
-                    workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        if type(widget) is not RibbonPanel:
+            # Get the panel
+            newPanel = RibbonPanel()
+            count = 0
+            parent = widget.parent()
+            while (count < 10):
+                if type(parent) is RibbonPanel:
+                    newPanel = parent
+                    break
+                else:
+                    parent = parent.parent()
+                count = count + 1
+            # Get tabBar
+            parent = newPanel.parent()
+            count = 0
+            while (count < 10):
+                if type(parent) == RibbonNormalCategory or type(parent) == RibbonContextCategory:
+                    break
+                else:
+                    parent = parent.parent()
+                count = count + 1
+            # Get the gridlayout
+            gridLayout: QGridLayout = newPanel._actionsLayout
+            # Hide the dragIndicater and the spacer widgets
+            self.dragIndicator.hide()
+            self.spaceWidget_Left.hide()
+            self.spaceWidget_Right.hide()
+            
+            if isinstance(newPanel, RibbonPanel):
+                if not widget.geometry().contains(event.pos()):                
+                    # Get the coordinates of the drag location
+                    xPos_drag = self.target[0]
+                    yPos_drag = self.target[1]
+                    # Define the original widget
+                    OriginalItem = gridLayout.itemAtPosition(xPos_drag, yPos_drag)
+                    OriginalWidget = OriginalItem.widget().findChild(CustomControls)
                     
-                    # Get the order list, if there isn't one, create it
-                    StandardFunctions.add_keys_nested_dict(
-                        self.ribbonStructure,
-                        [
-                            "workbenches",
-                            workbenchName,
-                            "toolbars",
-                            panel.objectName(),
-                            "order"
-                        ],
-                    )
-                    OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
-                    # if OrderList is None or len(OrderList) == 0:
-                    OrderList_Compare = []
+                    # Get the old position of the dragged widget
+                    n = 0
+                    OldPos = []
                     for n in range(gridLayout.count()):
-                        control = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                        if type(control) is CustomControls:
-                            OrderList_Compare.append(control.actions().data())
-                    if OrderList != OrderList_Compare:
-                        OrderList = OrderList_Compare
+                        if gridLayout.itemAt(n).widget().findChild(CustomControls) == widget.parent().parent().findChild(CustomControls):
+                            OldPos = gridLayout.getItemPosition(n)
+                            break
                     
-                    # Get the indexes of the widgets
-                    index_originalWidget = OrderList.index(OriginalWidget.actions().data())
-                    index_newWidget = OrderList.index(DraggedWidget.actions().data())
-                    # Remove the command name of the original widget from the order list and
-                    # Add the command of the dragged widget in its place
-                    OrderList.pop(index_originalWidget)
-                    OrderList.insert(index_originalWidget, DraggedWidget.actions().data())
-                    # Remove the command name of the dragged widget from the order list and
-                    # Add the command of the original widget in its place
-                    OrderList.pop(index_newWidget)
-                    OrderList.insert(index_newWidget, OriginalWidget.actions().data())
-                    
-                    #
-                    self.dict=self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList     
-                                       
-                     # Create a new panel
-                    workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                    newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
-                    
-                    # Replace the panel with the new panel
-                    self.currentCategory().replacePanel(panel, newPanel)
-                    panel.close()
+                    # counter and old position is not empty, Swap the widgets
+                    if n > -1 and len(OldPos) > 0 :
+                        # Define the dragged widgets
+                        DraggedItem = gridLayout.itemAt(n)
+                        DraggedWidget = DraggedItem.widget().findChild(CustomControls)
+
+                        # Get the workbench name and the panel name                  
+                        panelName = newPanel.objectName()
+                        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                        
+                        # Get the order list, if there isn't one, create it
+                        StandardFunctions.add_keys_nested_dict(
+                            self.ribbonStructure,
+                            [
+                                "workbenches",
+                                workbenchName,
+                                "toolbars",
+                                newPanel.objectName(),
+                                "order"
+                            ],
+                        )
+                        OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
+                        # if OrderList is None or len(OrderList) == 0:
+                        OrderList_Compare = []
+                        for n in range(gridLayout.count()):
+                            control = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                            if type(control) is CustomControls:
+                                OrderList_Compare.append(control.actions().data())
+                        if OrderList != OrderList_Compare:
+                            OrderList = OrderList_Compare
+                        
+                        # Get the indexes of the widgets
+                        index_originalWidget = OrderList.index(OriginalWidget.actions().data())
+                        index_newWidget = OrderList.index(DraggedWidget.actions().data())
+                        # Remove the command name of the original widget from the order list and
+                        # Add the command of the dragged widget in its place
+                        OrderList.pop(index_originalWidget)
+                        OrderList.insert(index_originalWidget, DraggedWidget.actions().data())
+                        # Remove the command name of the dragged widget from the order list and
+                        # Add the command of the original widget in its place
+                        OrderList.pop(index_newWidget)
+                        OrderList.insert(index_newWidget, OriginalWidget.actions().data())
+                        
+                        #
+                        self.dict=self.workBenchDict["workbenches"][workbenchName]["toolbars"][newPanel.objectName()]["order"] = OrderList     
+                                        
+                        # Create a new panel
+                        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                        newPanel = self.CreatePanel(workbenchName, newPanel.objectName(), addPanel=False, dict=self.workBenchDict)
+                        
+                        # Replace the panel with the new panel
+                        self.currentCategory().replacePanel(newPanel, newPanel)
+                        newPanel.close()
+
+        if type(widget) is RibbonPanel:
+            # Get the position (index, position)
+            position = self.find_drop_location(event)
+            # Create a new panel
+            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+            newPanel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict)
+            # Add the new panel
+            self.currentCategory().insertWidget(RibbonSeparator(),position[0])
+            self.currentCategory().insertWidget(newPanel,position[0])
+            
+            currentIndex = self.currentCategory()._categoryLayout.indexOf(widget)
+            separator = self.currentCategory()._categoryLayout.itemAt(currentIndex+1)
+            self.currentCategory()._categoryLayout.removeItem(separator)
+            # Close the current panel and the right separator
+            widget.close()
+
+            
+            return
 
         event.accept()
         return
 
 
-    def find_drop_location(self, event: QDragMoveEvent):
+    def find_drop_location(self, event):
         """
         Determines the drop location in a grid layout based on the position of a drag-and-drop event.
         Args:
@@ -1680,57 +1698,69 @@ class ModernMenu(RibbonBar):
         pos.setX(pos.x() - (widget.width()/2))
         pos.setY(pos.y() - (widget.height()/2))
         
-        # Get the panel
-        panel = RibbonPanel()
-        count = 0
-        parent = widget.parent()
-        while (count < 10):
-            if type(parent) is RibbonPanel:
-                panel = parent
-                break
-            else:
-                parent = parent.parent()
-            count = count + 1
-        gridLayout: QGridLayout = panel._actionsLayout
-        # Define the placeholders for x- and y-coordinates as grid positions
-        xPos = 0
-        yPos = 0
+        if type(widget) is not RibbonPanel:
+            # Get the panel
+            panel = RibbonPanel()
+            count = 0
+            parent = widget.parent()
+            while (count < 10):
+                if type(parent) is RibbonPanel:
+                    panel = parent
+                    break
+                else:
+                    parent = parent.parent()
+                count = count + 1
+            gridLayout: QGridLayout = panel._actionsLayout
+            # Define the placeholders for x- and y-coordinates as grid positions
+            xPos = 0
+            yPos = 0
 
-        # Get the column
-        Column = 0
-        for Column in range(gridLayout.columnCount()):
-            item = gridLayout.itemAtPosition(0, Column)
-            if item is not None:
-                w = item.widget()
-                if w is not None:
-                    Widget_X = w.mapTo(self,w.pos()).x()
+            # Get the column
+            Column = 0
+            for Column in range(gridLayout.columnCount()):
+                item = gridLayout.itemAtPosition(0, Column)
+                if item is not None:
+                    w = item.widget()
+                    if w is not None:
+                        Widget_X = w.mapTo(self,w.pos()).x()
 
-                    if w.mapTo(panel, pos).x() < Widget_X:
-                        yPos = Column
-                        break
+                        if w.mapTo(panel, pos).x() < Widget_X:
+                            yPos = Column
+                            break
 
-        # Get the row
-        Row = 0
-        for Row in range(gridLayout.rowCount()):
-            item = gridLayout.itemAtPosition(Row, Column)
-            if item is not None:
-                w = item.widget()
-                if w is not None:
-                    Widget_y = w.mapTo(self,w.pos()).y()
+            # Get the row
+            Row = 0
+            for Row in range(gridLayout.rowCount()):
+                item = gridLayout.itemAtPosition(Row, Column)
+                if item is not None:
+                    w = item.widget()
+                    if w is not None:
+                        Widget_y = w.mapTo(self,w.pos()).y()
 
-                    if w.mapTo(panel, pos).y() < Widget_y:
-                        xPos = Row
-                        break
+                        if w.mapTo(panel, pos).y() < Widget_y:
+                            xPos = Row
+                            break
 
-        # Return then coordinates as grid positions
-        w_origin = None
-        try:
-            w_origin = gridLayout.itemAtPosition(xPos, yPos).widget()
-            index = gridLayout.indexOf(w_origin)
-            position: object = gridLayout.getItemPosition(index)
-            return [position[0], position[1], position[2], w_origin]
-        except Exception:
-            return None
+            # Return then coordinates as grid positions
+            w_origin = None
+            try:
+                w_origin = gridLayout.itemAtPosition(xPos, yPos).widget()
+                index = gridLayout.indexOf(w_origin)
+                position: object = gridLayout.getItemPosition(index)
+                return [position[0], position[1], position[2], w_origin]
+            except Exception:
+                return None
+        
+        if type(widget) is RibbonPanel:
+            index = 0
+            for title, panel in self.currentCategory().panels().items():
+                Widget_X = panel.mapTo(self, panel.pos()).x()
+                index = index + 1
+                
+                if panel.mapTo(self, pos).x() < Widget_X:
+                    return [index, Widget_X]
+        
+        return None
     # endregion
     
     # region - standard class functions

@@ -1,7 +1,7 @@
 import typing
 
-from PySide.QtGui import QIcon, QPaintEvent, QResizeEvent, QColor
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPaintEvent, QResizeEvent, QColor
+from PySide6.QtWidgets import (
     QToolButton,
     QSizePolicy,
     QWidget,
@@ -11,7 +11,7 @@ from PySide.QtWidgets import (
     QScrollArea,
     QFrame,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     Signal,
     QSize,
@@ -149,6 +149,13 @@ class RibbonCategoryLayoutWidget(QFrame):
         :param widget: The widget to add.
         """
         self._categoryLayout.addWidget(widget)
+        
+    def insertWidget(self, widget: QWidget, index: int):
+        """Add a widget to the category layout.
+
+        :param widget: The widget to add.
+        """
+        self._categoryLayout.insertWidget(index, widget)
 
     def replaceWidget(self, from_:QWidget, to: QWidget, FindChildOption = Qt.FindChildOption.FindChildrenRecursively):
         """Remove a widget from the category layout.
@@ -322,6 +329,30 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
         self._panels[title] = panel
         self.addWidget(panel)  # type: ignore
         self.addWidget(RibbonSeparator(width=10))  # type: ignore
+        return panel
+    
+    def insertPanel(self, index: int, title: str, showPanelOptionButton=True) -> RibbonPanel:
+        """Add a new panel to the category.
+
+        :param title: The title of the panel.
+        :param showPanelOptionButton: Whether to show the panel option button.
+        :return: The newly created panel.
+        """
+        panel = RibbonPanel(
+            title,
+            maxRows=self._maxRows,
+            showPanelOptionButton=showPanelOptionButton,
+            parent=self,
+        )
+        panel.setFixedHeight(
+            self.height()
+            - self._mainLayout.spacing()
+            - self._mainLayout.contentsMargins().top()
+            - self._mainLayout.contentsMargins().bottom()
+        )
+        self._panels[title] = panel
+        self.insertWidget(panel, index)  # type: ignore
+        self.insertWidget(RibbonSeparator(width=10), index + 1)  # type: ignore
         return panel
 
     def removePanel(self, title: str):
