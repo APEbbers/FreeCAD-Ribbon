@@ -1485,69 +1485,66 @@ class ModernMenu(RibbonBar):
     def dragMoveEvent(self, event: QDragMoveEvent):
         if self.CustomizeEnabled is True:
             widget = event.source()
-            count = 0
-            Applicable = True
-            while (count < 10):                
-                if type(widget) is CustomControls:
-                    break
-                else:
-                    widget = widget.parent()
-                if type(widget) is CustomSeparator:
-                    Applicable = False
-                    event.ignore()
-                    print("separator")
-                if widget.objectName() == "ExtraSpacer":
-                    Applicable = False
-                    event.ignore()
-                    print("Extra spacer")                
-                count = count + 1
-            
-            if Applicable is True:
-                panel = RibbonPanel()
+            # If the widget is not a panel, continue here
+            if type(widget) is not RibbonPanel:
                 count = 0
-                parent = widget.parent()
-                while (count < 10):
-                    if type(parent) is RibbonPanel:
-                        panel = parent
+                Applicable = True
+                while (count < 10):                
+                    if type(widget) is CustomControls:
                         break
                     else:
-                        parent = parent.parent()
+                        widget = widget.parent()               
                     count = count + 1
-                gridLayout: QGridLayout = panel._actionsLayout
-                position = None
-                # Find the correct location of the drop target, so we can move it there.
-                position: object= self.find_drop_location(event)
-                if position is None:
-                    return
-                # If the widget is a separator or the extra widget for large buttons, skip it
-                if type(position[3].children()[1]) is CustomSeparator or position[3].children()[1].objectName() == "ExtraSpacer":
-                    return
+                
+                if Applicable is True:
+                    panel = RibbonPanel()
+                    count = 0
+                    parent = widget.parent()
+                    while (count < 10):
+                        if type(parent) is RibbonPanel:
+                            panel = parent
+                            break
+                        else:
+                            parent = parent.parent()
+                        count = count + 1
+                    gridLayout: QGridLayout = panel._actionsLayout
+                    position = None
+                    # Find the correct location of the drop target, so we can move it there.
+                    position: object= self.find_drop_location(event)
+                    if position is None:
+                        return
+                    # If the widget is a separator or the extra widget for large buttons, skip it
+                    if type(position[3].children()[1]) is CustomSeparator or position[3].children()[1].objectName() == "ExtraSpacer":
+                        return
 
-                # Inserting moves the item if its already in the layout.
-                rowSpan = position[2]
-                try:
-                    widgetHoveredOver = gridLayout.itemAtPosition(position[0], position[1]).widget().findChild(CustomControls)
-                    self.target = position
+                    # Inserting moves the item if its already in the layout.
+                    rowSpan = position[2]
                     try:
-                        action = widgetHoveredOver.actions()[0]
-                        self.target = [position[0], position[1], action.data()]
+                        widgetHoveredOver = gridLayout.itemAtPosition(position[0], position[1]).widget().findChild(CustomControls)
+                        self.target = position
+                        try:
+                            action = widgetHoveredOver.actions()[0]
+                            self.target = [position[0], position[1], action.data()]
+                        except Exception:
+                            pass
+                                    
+                        # Add the drag indicator
+                        gridLayout.addWidget(
+                            self.dragIndicator, position[0], position[1], rowSpan, 1
+                        )
+                                    
+                        # When you hide the source, the dragged widget disapears from the panel.
+                        # For now It is left in, to keep the panel at the same size.
+                        # e.source().hide()
+                        # Show the target.
+                        self.dragIndicator.show()
                     except Exception:
                         pass
-                                
-                    # Add the drag indicator
-                    gridLayout.addWidget(
-                        self.dragIndicator, position[0], position[1], rowSpan, 1
-                    )
-                                
-                    # When you hide the source, the dragged widget disapears from the panel.
-                    # For now It is left in, to keep the panel at the same size.
-                    # e.source().hide()
-                    # Show the target.
-                    self.dragIndicator.show()
-                except Exception:
-                    pass
-                event.setAccepted(True)
-                event.accept()
+                    event.setAccepted(True)
+                    event.accept()
+        
+            if type(widget) is RibbonPanel:
+                return
         return
 
     
@@ -2143,21 +2140,21 @@ class ModernMenu(RibbonBar):
                         category = self.addCategory(name)
                         category.setObjectName(workbenchName)
                         
-                        def mouseMoveEvent(self, e, customizeEnabled: bool):
-                            if e.buttons() == Qt.MouseButton.LeftButton and customizeEnabled is True:
-                                try:
-                                    drag = QDrag(self)
-                                    mime = QMimeData()
-                                    drag.setMimeData(mime)
-                                    pixmap = QPixmap(self.size())
-                                    self.render(pixmap)
-                                    drag.setPixmap(pixmap)
+                        # def mouseMoveEvent(self, e, customizeEnabled: bool):
+                        #     if e.buttons() == Qt.MouseButton.LeftButton and customizeEnabled is True:
+                        #         try:
+                        #             drag = QDrag(self)
+                        #             mime = QMimeData()
+                        #             drag.setMimeData(mime)
+                        #             pixmap = QPixmap(self.size())
+                        #             self.render(pixmap)
+                        #             drag.setPixmap(pixmap)
 
-                                    drag.exec(Qt.DropAction.MoveAction)
-                                except Exception as e:
-                                    print(e)
+                        #             drag.exec(Qt.DropAction.MoveAction)
+                        #         except Exception as e:
+                        #             print(e)
                         
-                        category.mouseMoveEvent = lambda e: mouseMoveEvent(category, e, self.CustomizeEnabled)
+                        # category.mouseMoveEvent = lambda e: mouseMoveEvent(category, e, self.CustomizeEnabled)
 
                         # Set the tabbar according the style setting
                         if Parameters_Ribbon.TABBAR_STYLE <= 1:
@@ -4104,6 +4101,23 @@ class ModernMenu(RibbonBar):
         panel.setObjectName(panelName)
         panel.panelOptionButton().hide()
         panel.setAcceptDrops(True)
+        
+        # Add a drag function to the panel
+        def mouseMoveEvent(self, e, customizeEnabled: bool):
+            if e.buttons() == Qt.MouseButton.LeftButton and customizeEnabled is True:
+                try:
+                    drag = QDrag(self)
+                    mime = QMimeData()
+                    drag.setMimeData(mime)
+                    pixmap = QPixmap(self.size())
+                    self.render(pixmap)
+                    drag.setPixmap(pixmap)
+
+                    drag.exec(Qt.DropAction.MoveAction)
+                except Exception as e:
+                    print(e)
+        
+        panel.mouseMoveEvent = lambda e: mouseMoveEvent(panel, e, self.CustomizeEnabled)
         
         # get list of all buttons in toolbar
         allButtons: list = []
