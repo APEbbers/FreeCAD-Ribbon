@@ -1658,7 +1658,7 @@ class ModernMenu(RibbonBar):
         return
 
 
-    def find_drop_location(self, event):
+    def find_drop_location(self, event: QDragMoveEvent):
         """
         Determines the drop location in a grid layout based on the position of a drag-and-drop event.
         Args:
@@ -1679,6 +1679,10 @@ class ModernMenu(RibbonBar):
         pos = event.pos()       
         # Get the widget
         widget = event.source()
+        # Give the position an offset for a more natural drag
+        pos.setX(pos.x() - (widget.width()/2))
+        pos.setY(pos.y() - (widget.height()/2))
+        
         # Get the panel
         panel = RibbonPanel()
         count = 0
