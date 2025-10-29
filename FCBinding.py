@@ -1665,8 +1665,19 @@ class ModernMenu(RibbonBar):
             self.currentCategory()._categoryLayout.removeItem(separator)
             # Close the current panel and the right separator
             widget.close()
-
             
+            OrderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
+            OrderIndex = position[0]/2
+            OrderList.remove(widget.objectName())
+            OrderList.insert(OrderIndex, widget.objectName())
+            
+            print(position[0]/2) 
+            print(OrderList)
+
+            # for title, panel in self.currentCategory().panels().items():
+            #     self.currentCategory().removePanel(title)
+            
+            # self.buildPanels()
             return
 
         event.accept()
@@ -5030,6 +5041,61 @@ class ModernMenu(RibbonBar):
                                     self.ribbonStructure["workbenches"][WorkBenchName][
                                         "toolbars"
                                     ][ToolBar]["order"] = ConvertedList
+        
+        # Convert toolbar names to new names for certain WB's
+        #
+        # Fill the correction list -> {workbenchname [[new toolbar, old toolbar], [new toolbar, old toolbar]]}
+        CorrectionList = {
+            "PartDesignWorkbench": [
+                ['Part Design Helper Features', "Part Design Helper"],
+                ['Part Design Modeling Features', "Part Design Modeling"],
+                ['Part Design Dress-Up Features', "Part Design Dressup"],
+                ['Part Design Transformation Features', "Part Design Patterns"],
+            ]
+        }
+
+        # Go through the workbenches in the json file to correct toolbar names
+        for WorkBench in self.ribbonStructure["workbenches"]:
+            Dict = {}
+            OrderList = []
+            # if the workench is in the correction list, continue
+            if WorkBench in CorrectionList:
+                # Get the corresponding toolbar correction list
+                ToolBarCorrectionList = CorrectionList[WorkBench]
+                # Go through the toolbars of the workbench in the json file                
+                for toolbar in self.ribbonStructure["workbenches"][WorkBench]["toolbars"]:
+                    for ToolBarToCorrect in ToolBarCorrectionList:
+                        # If the toolbars match, update the json file
+                        if ToolBarToCorrect[1] == toolbar or ToolBarToCorrect[0] == toolbar:
+                            Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", WorkBench, "toolbars", ToolBarToCorrect[0]], endEmpty=True)
+                            Dict["workbenches"][WorkBench]["toolbars"][ToolBarToCorrect[0]] = self.ribbonStructure["workbenches"][WorkBench]["toolbars"][toolbar]
+                        # if the toolbar doesn't match and is not the order list, just add it
+                        if ToolBarToCorrect[1] != toolbar and ToolBarToCorrect[0] != toolbar and toolbar != "order":
+                            Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", WorkBench, "toolbars", toolbar], endEmpty=True)
+                            Dict["workbenches"][WorkBench]["toolbars"][toolbar] = self.ribbonStructure["workbenches"][WorkBench]["toolbars"][toolbar]
+                    # if the toolbar is the order list, update its contents
+                    if toolbar == "order":
+                        # Get the current orderlist
+                        OrderList: list = self.ribbonStructure["workbenches"][WorkBench]["toolbars"]["order"]
+                        # Go through the correction list. If the toolbar to correct is in the order list, replace it with the correction                       
+                        for ToolBarToCorrect in ToolBarCorrectionList:
+                            if ToolBarToCorrect[1] in OrderList:
+                                index = OrderList.index(ToolBarToCorrect[1])
+                                OrderList[index] = ToolBarToCorrect[0]
+                # If the orderlist is not empty, set the orderlist as the new order list in the ribbon structure
+                if len(OrderList) > 0:
+                    Dict["workbenches"][WorkBench]["toolbars"]["order"] = OrderList
+                self.ribbonStructure["workbenches"][WorkBench]["toolbars"] = Dict["workbenches"][WorkBench]["toolbars"]
+        
+        # Go through the workbenches in the json file to remove old toolbars                   
+        for WorkBench in self.ribbonStructure["workbenches"]:
+            # if the workench is in the correction list, continue
+            if WorkBench in CorrectionList:
+                # Get the corresponding toolbar correction list
+                ToolBarCorrectionList = CorrectionList[WorkBench]
+                for ToolBarToCorrect in ToolBarCorrectionList:
+                    if ToolBarToCorrect[1] in self.ribbonStructure["workbenches"][WorkBench]["toolbars"]:
+                        self.ribbonStructure["workbenches"][WorkBench]["toolbars"].pop(ToolBarToCorrect[1])
 
         # Add the version of FreeCAD on which this conversion is done, to the ribbonstructure
         # Create a key if not present
