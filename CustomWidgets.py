@@ -1360,16 +1360,57 @@ class CustomSeparator(RibbonSeparator):
                 print(e)
 
 class DragTargetIndicator(QLabel):
-    def __init__(self, parent=None):
+    _topMargins: int = 6
+    _bottomMargins: int = 6
+    _leftMargins: int = 6
+    _rightMargins: int = 6
+    _orientation: Qt.Orientation
+    
+    def __init__(self, parent=None, orientation = None, margins = 6):
+        """Create a new drag indicator
+
+        Args:
+            parent (optional): parent of the drag indicator. Defaults to None.
+            orientation (Qt.Orientation, optional): The orientation of the drag indicater. If set, a line is drawn otherwise a background color is set.  
+            Defaults to None.
+            margins (int, optional): the margins for the line if orientation is set. Defaults to 6.
+        """        
         super().__init__(parent)
-        self.setContentsMargins(3, 3, 3, 3)
-        self.setStyleSheet(
-            StyleMapping_Ribbon.ReturnStyleSheet(
-                control="dragindicator",
-                HoverColor=Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
+        self.setContentsMargins(0, 0, 0, 0)
+        if orientation is None:
+            self.setStyleSheet(
+                StyleMapping_Ribbon.ReturnStyleSheet(
+                    control="dragindicator",
+                    HoverColor=Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
+                )
             )
-        )
+        self._orientation = orientation
+        self._topMargins = margins
+        self._bottomMargins = margins
+        self._leftMargins = margins
+        self._rightMargins = margins
         self.setAcceptDrops(True)
+    
+    def paintEvent(self, event: QPaintEvent) -> None:
+        if self._orientation is None:
+            return
+        painter = QPainter(self)
+        pen = QPen()
+        pen.setColor(QColor(Qt.GlobalColor.red))
+        pen.setWidth(3)
+        painter.setPen(pen)
+        if self._orientation == Qt.Orientation.Vertical:
+            x1 = self.rect().center().x()
+            painter.drawLine(
+                QPoint(x1, self.rect().top() + self._topMargins),
+                QPoint(x1, self.rect().bottom() - self._bottomMargins),
+            )
+        if self._orientation == Qt.Orientation.Horizontal:
+            y1 = self.rect().center().y()
+            painter.drawLine(
+                QPoint(self.rect().left() + self._leftMargins, y1),
+                QPoint(self.rect().right() - self._rightMargins, y1),
+            )
 
 class Toggle(QCheckBox):
 

@@ -1445,7 +1445,8 @@ class ModernMenu(RibbonBar):
     # endregion
 
     # region - drag drop event functions
-    dragIndicator = DragTargetIndicator()
+    dragIndicator_Buttons = DragTargetIndicator(orientation=Qt.Orientation.Horizontal, margins=0)
+    dragIndicator_Panels = DragTargetIndicator(orientation=Qt.Orientation.Vertical)
     position = None
     rightColumnAdded = False
     spaceWidget_Left = RibbonToolButton()
@@ -1458,6 +1459,7 @@ class ModernMenu(RibbonBar):
             widget = event.source()
             count = 0
             parent = widget.parent()
+            panel = RibbonPanel()
             while (count < 20):
                 try:
                     try:    
@@ -1465,17 +1467,24 @@ class ModernMenu(RibbonBar):
                     except Exception:
                         pass
                     parent = parent.parent()
+                    if type(parent) is RibbonPanel:
+                        panel = parent
                     count = count + 1
                 except Exception:
                     break
-            event.accept()
+                            
+            # Check if there are more than one buttons. If notm there is no point to drag and exit
+            if len(panel.widgets()) <= 2 and type(widget) is not RibbonPanel:
+                event.ignore()
+            else:
+                event.accept()
             
     def dragLeaveEvent(self, event: QDragLeaveEvent):
         if self.CustomizeEnabled is True:
             # Hide the drag indicator when you leave the drag area
-            self.dragIndicator.close()
+            self.dragIndicator_Buttons.close()
+            self.dragIndicator_Panels.close()
             self.target = None
-            event.accept()
     
     def dragMoveEvent(self, event: QDragMoveEvent):
         if self.CustomizeEnabled is True:
@@ -1483,69 +1492,67 @@ class ModernMenu(RibbonBar):
             # If the widget is not a panel, continue here
             if type(widget) is not RibbonPanel:
                 count = 0
-                Applicable = True
                 while (count < 10):                
                     if type(widget) is CustomControls:
                         break
                     else:
                         widget = widget.parent()               
                     count = count + 1
-                
-                if Applicable is True:
-                    panel = RibbonPanel()
-                    count = 0
-                    parent = widget.parent()
-                    while (count < 10):
-                        if type(parent) is RibbonPanel:
-                            panel = parent
-                            break
-                        else:
-                            parent = parent.parent()
-                        count = count + 1
-                    gridLayout: QGridLayout = panel._actionsLayout
-                    position = None
-                    # Find the correct location of the drop target, so we can move it there.
-                    position: object= self.find_drop_location(event)
-                    if position is None:
-                        return
-                    # If the widget is a separator or the extra widget for large buttons, skip it
-                    if type(position[3].children()[1]) is CustomSeparator or position[3].children()[1].objectName() == "ExtraSpacer":
-                        return
 
-                    # Inserting moves the item if its already in the layout.
-                    rowSpan = position[2]
+                # Get the panel
+                panel = RibbonPanel()
+                count = 0
+                parent = widget.parent()
+                while (count < 10):
+                    if type(parent) is RibbonPanel:
+                        panel = parent
+                        break
+                    else:
+                        parent = parent.parent()
+                    count = count + 1
+                    
+                gridLayout: QGridLayout = panel._actionsLayout
+                position = None
+                # Find the correct location of the drop target, so we can move it there.
+                position: object= self.find_drop_location(event)
+                if position is None:
+                    return
+                # If the widget is a separator or the extra widget for large buttons, skip it
+                if type(position[3].children()[1]) is CustomSeparator or position[3].children()[1].objectName() == "ExtraSpacer":
+                    return
+
+                # Inserting moves the item if its already in the layout.
+                rowSpan = position[2]
+                try:
+                    widgetHoveredOver = gridLayout.itemAtPosition(position[0], position[1]).widget().findChild(CustomControls)
+                    self.target = position
                     try:
-                        widgetHoveredOver = gridLayout.itemAtPosition(position[0], position[1]).widget().findChild(CustomControls)
-                        self.target = position
-                        try:
-                            action = widgetHoveredOver.actions()[0]
-                            self.target = [position[0], position[1], action.data()]
-                        except Exception:
-                            pass
-                                    
-                        # Add the drag indicator
-                        gridLayout.addWidget(
-                            self.dragIndicator, position[0], position[1], rowSpan, 1
-                        )
-                                    
-                        # When you hide the source, the dragged widget disapears from the panel.
-                        # For now It is left in, to keep the panel at the same size.
-                        # e.source().hide()
-                        # Show the target.
-                        self.dragIndicator.show()
+                        action = widgetHoveredOver.actions()[0]
+                        self.target = [position[0], position[1], action.data()]
                     except Exception:
                         pass
-                    event.setAccepted(True)
-                    event.accept()
-            if type(widget) is RibbonPanel:
-                position: object= self.find_drop_location(event)
-                try:       
-                    self.currentCategory().insertWidget(self.dragIndicator, position[0])
-                    self.dragIndicator.show()
+                                
+                    # Add the drag indicator
+                    gridLayout.addWidget(
+                        self.dragIndicator_Buttons, position[0], position[1], rowSpan, 1
+                    )
+                                
+                    # When you hide the source, the dragged widget disapears from the panel.
+                    # For now It is left in, to keep the panel at the same size.
+                    # e.source().hide()
+                    # Show the target.
+                    self.dragIndicator_Buttons.show()
                 except Exception:
                     pass
-                event.setAccepted(True)
-                event.accept()
+            if type(widget) is RibbonPanel:
+                position: object= self.find_drop_location(event)
+                try:                     
+                    self.currentCategory().insertWidget(self.dragIndicator_Panels, position[0])
+                    self.dragIndicator_Panels.show()
+                except Exception:
+                    pass            
+            event.setAccepted(True)
+            event.accept()
         return
 
     
@@ -1579,11 +1586,12 @@ class ModernMenu(RibbonBar):
             # Get the gridlayout
             gridLayout: QGridLayout = panel._actionsLayout
             # Hide the dragIndicater and the spacer widgets
-            self.dragIndicator.hide()
+            self.dragIndicator_Buttons.hide()
             self.spaceWidget_Left.hide()
             self.spaceWidget_Right.hide()
             
             if isinstance(panel, RibbonPanel):
+                replace = False
                 if not widget.geometry().contains(event.pos()):       
                     # Get the coordinates of the drag location
                     xPos_drag = self.target[0]
@@ -1632,16 +1640,22 @@ class ModernMenu(RibbonBar):
                             OrderList = OrderList_Compare
                         
                         # Get the indexes of the widgets
-                        index_originalWidget = OrderList.index(OriginalWidget.actions().data())
-                        index_newWidget = OrderList.index(DraggedWidget.actions().data())
-                        # Remove the command name of the original widget from the order list and
-                        # Add the command of the dragged widget in its place
-                        OrderList.pop(index_originalWidget)
-                        OrderList.insert(index_originalWidget, DraggedWidget.actions().data())
-                        # Remove the command name of the dragged widget from the order list and
-                        # Add the command of the original widget in its place
-                        OrderList.pop(index_newWidget)
-                        OrderList.insert(index_newWidget, OriginalWidget.actions().data())
+                        index_originalWidget = OrderList.index(OriginalWidget.actions().data()) # This is the location were will be dropped
+                        index_newWidget = OrderList.index(DraggedWidget.actions().data()) # This is the original location of the dragged widget
+                        if replace is True:
+                            # Remove the command name of the original widget from the order list and
+                            # Add the command of the dragged widget in its place
+                            OrderList.pop(index_originalWidget)
+                            OrderList.insert(index_originalWidget, DraggedWidget.actions().data())
+                            # Remove the command name of the dragged widget from the order list and
+                            # Add the command of the original widget in its place
+                            OrderList.pop(index_newWidget)
+                            OrderList.insert(index_newWidget, OriginalWidget.actions().data())
+                        else:
+                            # Remove the dragged item from the list
+                            OrderList.pop(index_newWidget)
+                            # Inserted it at the new location
+                            OrderList.insert(index_originalWidget, DraggedWidget.actions().data())                            
                         
                         #
                         self.dict=self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList     
@@ -1653,6 +1667,7 @@ class ModernMenu(RibbonBar):
                         # Replace the panel with the new panel
                         self.currentCategory().replacePanel(panel, newPanel)
                         panel.close()
+                        self.dragIndicator_Buttons.close()
 
         if type(widget) is RibbonPanel:
             # Get the position (index, position)
@@ -1669,10 +1684,11 @@ class ModernMenu(RibbonBar):
             
             OrderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
             OrderIndex = int(float(position[0]))
-            OrderList.remove(widget.objectName())
+            if widget.objectName() in OrderList:
+                OrderList.remove(widget.objectName())
             OrderList.insert(OrderIndex+1, widget.objectName())
             self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"] = OrderList
-            self.dragIndicator.close()
+            self.dragIndicator_Panels.close()
 
         event.accept()
         return
@@ -1758,13 +1774,16 @@ class ModernMenu(RibbonBar):
         
         if type(widget) is RibbonPanel:
             index = 0
-            for title, panel in self.currentCategory().panels().items():
-                Widget_X = panel.mapTo(self, panel.pos()).x()
-                index = index + 1
-                
-                if panel.mapTo(self, pos).x() < Widget_X:
-                    return [index, Widget_X]
-        
+            layout = self.currentCategory()._categoryLayout
+            for i in range(layout.count()):
+                item = layout.itemAt(i)
+                if item is not None:
+                    w= item.widget()
+                    Widget_X = w.mapTo(self,w.pos()).x() 
+                    # Widget_X = Widget_X + w.width() * 0.5
+                    
+                    if w.mapTo(self.currentCategory(), pos).x() < Widget_X:
+                            return [i, Widget_X]
         return None
     # endregion
     
