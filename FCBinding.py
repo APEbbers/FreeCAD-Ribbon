@@ -1683,14 +1683,15 @@ class ModernMenu(RibbonBar):
             self.currentCategory().update()
 
             # Create the current orderlist from the panels
-            OrderList = []
+            OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
             for panelName, panel in self.currentCategory().panels().items():
-                OrderList.append(panel.objectName())
+                if panel.objectName() not in OrderList:
+                    OrderList.append(panel.objectName())
             # Get the index
             OrderIndex = position[0]
             if widget.objectName() in OrderList:
                 OrderList.remove(widget.objectName())
-            OrderList.insert(OrderIndex+1, widget.objectName())
+            OrderList.insert(OrderIndex, widget.objectName())
             self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"] = OrderList
             self.dragIndicator_Panels.close()
 
@@ -1777,7 +1778,6 @@ class ModernMenu(RibbonBar):
                 return None
         
         if type(widget) is RibbonPanel:
-            index = 0
             layout = self.currentCategory()._categoryLayout
             for i in range(layout.count()):
                 item = layout.itemAt(i)

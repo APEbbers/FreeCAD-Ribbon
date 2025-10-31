@@ -1400,7 +1400,7 @@ class DragTargetIndicator(QLabel):
         pen.setWidth(3)
         painter.setPen(pen)
         if self._orientation == Qt.Orientation.Vertical:
-            x1 = self.rect().center().x()
+            x1 = self.rect().x() + self.rect().width() -3
             painter.drawLine(
                 QPoint(x1, self.rect().top() + self._topMargins),
                 QPoint(x1, self.rect().bottom() - self._bottomMargins),
