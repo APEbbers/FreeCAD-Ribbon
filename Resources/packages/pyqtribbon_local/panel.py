@@ -7,8 +7,8 @@ from typing import Any, Callable, Dict, List, Union, overload
 
 import numpy as np
 
-from PySide6.QtGui import QIcon, QKeySequence, QFontMetrics
-from PySide6.QtWidgets import (
+from PySide.QtGui import QIcon, QKeySequence, QFontMetrics
+from PySide.QtWidgets import (
     QToolButton,
     QSizePolicy,
     QWidget,
@@ -36,7 +36,7 @@ from PySide6.QtWidgets import (
     QTreeWidget,
     QCalendarWidget,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QSize,
     Signal,

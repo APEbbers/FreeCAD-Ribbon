@@ -19,17 +19,12 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
-from cmath import polar
-from signal import pause
-from turtle import isvisible
-
-from numpy.char import lower
 import CustomWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -53,7 +48,7 @@ from PySide6.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -89,7 +84,7 @@ from PySide6.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1657,34 +1652,17 @@ class ModernMenu(RibbonBar):
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
             panel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict)
             # Add the new panel
-            self.currentCategory().insertWidget(RibbonSeparator(),position[0])
             self.currentCategory().insertWidget(panel,position[0])
-            
-            currentIndex = self.currentCategory()._categoryLayout.indexOf(widget)
-            separator = self.currentCategory()._categoryLayout.itemAt(currentIndex+1)
-            self.currentCategory()._categoryLayout.removeItem(separator)
+
             # Close the current panel and the right separator
             widget.close()
             self.currentCategory().update()
             
             OrderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
-            OrderIndex = int(float(position[0]/2))
+            OrderIndex = int(float(position[0]))
             OrderList.remove(widget.objectName())
             OrderList.insert(OrderIndex+1, widget.objectName())
             self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"] = OrderList
-            print(OrderList)
-            
-            # for panelName in OrderList:
-            #     try:
-            #         self.currentCategory().removePanel(panelName)
-            #         for child in self.currentCategory().children():
-            #             self.currentCategory().removeWidget(child)
-            #     except Exception:
-            #         pass
-
-            # for panelName in OrderList:
-            #     self.CreatePanel(workbenchName, panelName, True, self.workBenchDict)
-
             return
 
         event.accept()
@@ -4259,15 +4237,13 @@ class ModernMenu(RibbonBar):
                 def sortButtons(button: QToolButton):
                     # Use the text from the button
                     Text = button.text()
-                    if (
-                        StandardFunctions.checkFreeCADVersion(
+                    versionCheck = StandardFunctions.checkFreeCADVersion(
                             Parameters_Ribbon.FreeCAD_Version["mainVersion"],
                             Parameters_Ribbon.FreeCAD_Version["subVersion"],
                             Parameters_Ribbon.FreeCAD_Version["patchVersion"],
                             Parameters_Ribbon.FreeCAD_Version["gitVersion"],
                         )
-                        is True
-                    ):
+                    if (versionCheck is True):
                         # if it is not a custom button or separator, update the Text
                         if not "ddb" in Text and not "separator" in Text:
                             if (

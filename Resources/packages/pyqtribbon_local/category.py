@@ -1,7 +1,7 @@
 import typing
 
-from PySide6.QtGui import QIcon, QPaintEvent, QResizeEvent, QColor
-from PySide6.QtWidgets import (
+from PySide.QtGui import QIcon, QPaintEvent, QResizeEvent, QColor
+from PySide.QtWidgets import (
     QToolButton,
     QSizePolicy,
     QWidget,
@@ -11,7 +11,7 @@ from PySide6.QtWidgets import (
     QScrollArea,
     QFrame,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     Signal,
     QSize,
