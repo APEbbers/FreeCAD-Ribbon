@@ -7,8 +7,8 @@ from typing import Any, Callable, Dict, List, Union, overload
 
 import numpy as np
 
-from PySide.QtGui import QIcon, QKeySequence, QFontMetrics
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QKeySequence, QFontMetrics
+from PySide6.QtWidgets import (
     QToolButton,
     QSizePolicy,
     QWidget,
@@ -36,7 +36,7 @@ from PySide.QtWidgets import (
     QTreeWidget,
     QCalendarWidget,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QSize,
     Signal,
@@ -52,7 +52,7 @@ from .constants import (
     Small,
 )
 from .gallery import RibbonGallery
-from .separator import RibbonSeparator
+from .separator import RibbonSeparator, RibbonVerticalSeparator
 from .toolbutton import RibbonToolButton
 from .utils import DataFile
 
@@ -215,15 +215,15 @@ class RibbonPanel(QFrame):
         self._showPanelOptionButton = showPanelOptionButton
 
         # Main layout
-        self._mainLayout = QVBoxLayout(self)
+        self._mainLayout = QGridLayout(self)
         self._mainLayout.setContentsMargins(0, 0, 0, 0)
         self._mainLayout.setSpacing(0)
-
+                
         # Actions layout
         self._actionsLayout = QGridLayout()
         self._actionsLayout.setContentsMargins(5, 5, 5, 5)
         self._actionsLayout.setSpacing(0)
-        self._mainLayout.addLayout(self._actionsLayout, 1)
+        self._mainLayout.addLayout(self._actionsLayout, 0,0)
 
         # Title layout
         self._titleWidget = QWidget()
@@ -246,9 +246,12 @@ class RibbonPanel(QFrame):
             self._panelOption.clicked.connect(self.panelOptionClicked)  # type: ignore
             self._titleLayout.addWidget(self._panelOption, 0)
 
-        self._mainLayout.addWidget(self._titleWidget, 0)
-
-            
+        self._mainLayout.addWidget(self._titleWidget, 1,0,1,1)
+        
+        # Add a separator
+        self._separator = RibbonVerticalSeparator()
+        self._mainLayout.addWidget(self._separator, 0,1,2,1)  
+                 
     def maximumRows(self) -> int:
         """Return the maximal number of rows in the panel.
 

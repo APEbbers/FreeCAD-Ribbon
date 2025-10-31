@@ -1553,18 +1553,18 @@ class ModernMenu(RibbonBar):
         
         if type(widget) is not RibbonPanel:
             # Get the panel
-            newPanel = RibbonPanel()
+            panel = RibbonPanel()
             count = 0
             parent = widget.parent()
             while (count < 10):
                 if type(parent) is RibbonPanel:
-                    newPanel = parent
+                    panel = parent
                     break
                 else:
                     parent = parent.parent()
                 count = count + 1
             # Get tabBar
-            parent = newPanel.parent()
+            parent = panel.parent()
             count = 0
             while (count < 10):
                 if type(parent) == RibbonNormalCategory or type(parent) == RibbonContextCategory:
@@ -1573,14 +1573,14 @@ class ModernMenu(RibbonBar):
                     parent = parent.parent()
                 count = count + 1
             # Get the gridlayout
-            gridLayout: QGridLayout = newPanel._actionsLayout
+            gridLayout: QGridLayout = panel._actionsLayout
             # Hide the dragIndicater and the spacer widgets
             self.dragIndicator.hide()
             self.spaceWidget_Left.hide()
             self.spaceWidget_Right.hide()
             
-            if isinstance(newPanel, RibbonPanel):
-                if not widget.geometry().contains(event.pos()):                
+            if isinstance(panel, RibbonPanel):
+                if not widget.geometry().contains(event.pos()):       
                     # Get the coordinates of the drag location
                     xPos_drag = self.target[0]
                     yPos_drag = self.target[1]
@@ -1603,17 +1603,17 @@ class ModernMenu(RibbonBar):
                         DraggedWidget = DraggedItem.widget().findChild(CustomControls)
 
                         # Get the workbench name and the panel name                  
-                        panelName = newPanel.objectName()
+                        panelName = panel.objectName()
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                         
                         # Get the order list, if there isn't one, create it
                         StandardFunctions.add_keys_nested_dict(
-                            self.ribbonStructure,
+                            self.workBenchDict,
                             [
                                 "workbenches",
                                 workbenchName,
                                 "toolbars",
-                                newPanel.objectName(),
+                                panel.objectName(),
                                 "order"
                             ],
                         )
@@ -1640,44 +1640,51 @@ class ModernMenu(RibbonBar):
                         OrderList.insert(index_newWidget, OriginalWidget.actions().data())
                         
                         #
-                        self.dict=self.workBenchDict["workbenches"][workbenchName]["toolbars"][newPanel.objectName()]["order"] = OrderList     
+                        self.dict=self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList     
                                         
                         # Create a new panel
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                        newPanel = self.CreatePanel(workbenchName, newPanel.objectName(), addPanel=False, dict=self.workBenchDict)
+                        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
                         
                         # Replace the panel with the new panel
-                        self.currentCategory().replacePanel(newPanel, newPanel)
-                        newPanel.close()
+                        newPanel_2 = self.currentCategory().replacePanel(panel, newPanel)
+                        panel.close()
 
         if type(widget) is RibbonPanel:
             # Get the position (index, position)
             position = self.find_drop_location(event)
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            newPanel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict)
+            panel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict)
             # Add the new panel
             self.currentCategory().insertWidget(RibbonSeparator(),position[0])
-            self.currentCategory().insertWidget(newPanel,position[0])
+            self.currentCategory().insertWidget(panel,position[0])
             
             currentIndex = self.currentCategory()._categoryLayout.indexOf(widget)
             separator = self.currentCategory()._categoryLayout.itemAt(currentIndex+1)
             self.currentCategory()._categoryLayout.removeItem(separator)
             # Close the current panel and the right separator
             widget.close()
+            self.currentCategory().update()
             
             OrderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
-            OrderIndex = position[0]/2
+            OrderIndex = int(float(position[0]/2))
             OrderList.remove(widget.objectName())
-            OrderList.insert(OrderIndex, widget.objectName())
-            
-            print(position[0]/2) 
+            OrderList.insert(OrderIndex+1, widget.objectName())
+            self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"] = OrderList
             print(OrderList)
-
-            # for title, panel in self.currentCategory().panels().items():
-            #     self.currentCategory().removePanel(title)
             
-            # self.buildPanels()
+            # for panelName in OrderList:
+            #     try:
+            #         self.currentCategory().removePanel(panelName)
+            #         for child in self.currentCategory().children():
+            #             self.currentCategory().removeWidget(child)
+            #     except Exception:
+            #         pass
+
+            # for panelName in OrderList:
+            #     self.CreatePanel(workbenchName, panelName, True, self.workBenchDict)
+
             return
 
         event.accept()
@@ -4966,8 +4973,8 @@ class ModernMenu(RibbonBar):
         if "customToolbars" in self.ribbonStructure:
             for WorkBenchName in self.ribbonStructure["customToolbars"]:
                 for ToolbarName in self.ribbonStructure["customToolbars"][WorkBenchName]:
+                    newDict = {}
                     if "commands" in self.ribbonStructure["customToolbars"][WorkBenchName][ToolbarName]:
-                        newDict = {}
                         currentDict: dict = self.ribbonStructure["customToolbars"][WorkBenchName][ToolbarName]["commands"]
                         for key, value in currentDict.items():
                             for CommandItem in self.List_Commands:
@@ -4987,7 +4994,7 @@ class ModernMenu(RibbonBar):
                                                 "Warning",
                                             )
                                         continue
-                        currentDict.update(newDict)
+                        self.ribbonStructure["customToolbars"][WorkBenchName][ToolbarName]["commands"] = newDict
                                     
         # Check if there are workbenches and toolbars in the ribbon structure
         if "workbenches" in self.ribbonStructure:

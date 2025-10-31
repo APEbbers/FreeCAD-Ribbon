@@ -328,7 +328,7 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
         )
         self._panels[title] = panel
         self.addWidget(panel)  # type: ignore
-        self.addWidget(RibbonSeparator(width=10))  # type: ignore
+        # self.addWidget(RibbonSeparator(width=10))  # type: ignore
         return panel
     
     def insertPanel(self, index: int, title: str, showPanelOptionButton=True) -> RibbonPanel:
@@ -352,7 +352,7 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
         )
         self._panels[title] = panel
         self.insertWidget(panel, index)  # type: ignore
-        self.insertWidget(RibbonSeparator(width=10), index + 1)  # type: ignore
+        # self.insertWidget(RibbonSeparator(width=10), index + 1)  # type: ignore
         return panel
 
     def removePanel(self, title: str):
