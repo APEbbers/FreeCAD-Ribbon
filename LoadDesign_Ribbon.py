@@ -2048,7 +2048,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                         ListWidgetItem = QListWidgetItem()
                                         ListWidgetItem.setText(MenuName)
                                         ListWidgetItem.setData(
-                                            Qt.ItemDataRole.UserRole, CommandItem
+                                            Qt.ItemDataRole.UserRole, [value,CommandItem[0]]
                                         )
                                         Icon = QIcon()
                                         for item in self.List_CommandIcons:
