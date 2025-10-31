@@ -1088,7 +1088,7 @@ class ModernMenu(RibbonBar):
                         text = widget.parent().findChild(QLabel).text()
                         ChangeButtonText.setText("")
                         ChangeButtonText.setPlaceholderText(text)
-                        ChangeButtonText.setFixedSize(200,21)
+                        ChangeButtonText.setFixedSize(200,42)
                         ChangeButtonText.textChanged.connect(lambda e: self.on_ButtonLabel_Changing(e, panel, widget))
                         ChangeButtonText.editingFinished.connect(lambda: lambda: self.contextMenu.close())
                         self.contextMenu.addAction(ChangeButtonText)
@@ -1681,9 +1681,13 @@ class ModernMenu(RibbonBar):
             # Close the current panel and the right separator
             widget.close()
             self.currentCategory().update()
-            
-            OrderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
-            OrderIndex = int(float(position[0]))
+
+            # Create the current orderlist from the panels
+            OrderList = []
+            for panelName, panel in self.currentCategory().panels().items():
+                OrderList.append(panel.objectName())
+            # Get the index
+            OrderIndex = position[0]
             if widget.objectName() in OrderList:
                 OrderList.remove(widget.objectName())
             OrderList.insert(OrderIndex+1, widget.objectName())
@@ -3135,8 +3139,8 @@ class ModernMenu(RibbonBar):
 
                 position = None
                 try:
-                    position = ToolbarOrder.index(toolbar) + 1
-                except ValueError:
+                    position = ToolbarOrder.index(toolbar)
+                except ValueError as e:
                     position = 999999
                     if toolbar.endswith("_custom") or toolbar.endswith("_newPanel"):
                         if Parameters_Ribbon.DEFAULT_PANEL_POSITION_CUSTOM == "Right":
@@ -3144,10 +3148,11 @@ class ModernMenu(RibbonBar):
                         else:
                             position = 0
                 return position
-
+            
             ListToolbars.sort(key=SortToolbars)
         except Exception:
             pass
+
       
         # If the toolbar must be ignored, skip it        
         for toolbar in ListToolbars:
