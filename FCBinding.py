@@ -1537,6 +1537,15 @@ class ModernMenu(RibbonBar):
                         pass
                     event.setAccepted(True)
                     event.accept()
+            if type(widget) is RibbonPanel:
+                position: object= self.find_drop_location(event)
+                try:       
+                    self.currentCategory().insertWidget(self.dragIndicator, position[0])
+                    self.dragIndicator.show()
+                except Exception:
+                    pass
+                event.setAccepted(True)
+                event.accept()
         return
 
     
@@ -1642,7 +1651,7 @@ class ModernMenu(RibbonBar):
                         newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
                         
                         # Replace the panel with the new panel
-                        newPanel_2 = self.currentCategory().replacePanel(panel, newPanel)
+                        self.currentCategory().replacePanel(panel, newPanel)
                         panel.close()
 
         if type(widget) is RibbonPanel:
@@ -1663,7 +1672,7 @@ class ModernMenu(RibbonBar):
             OrderList.remove(widget.objectName())
             OrderList.insert(OrderIndex+1, widget.objectName())
             self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"] = OrderList
-            return
+            self.dragIndicator.close()
 
         event.accept()
         return
