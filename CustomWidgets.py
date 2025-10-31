@@ -1406,7 +1406,7 @@ class DragTargetIndicator(QLabel):
                 QPoint(x1, self.rect().bottom() - self._bottomMargins),
             )
         if self._orientation == Qt.Orientation.Horizontal:
-            y1 = self.rect().center().y()
+            y1 = self.rect().y()
             painter.drawLine(
                 QPoint(self.rect().left() + self._leftMargins, y1),
                 QPoint(self.rect().right() - self._rightMargins, y1),
