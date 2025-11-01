@@ -65,7 +65,7 @@ class RibbonCategoryLayoutWidget(QFrame):
             QSizePolicy.Policy.Expanding,
         )
         self._categoryLayout = QHBoxLayout(self._categoryScrollAreaContents)
-        self._categoryLayout.setContentsMargins(0, 0, 0, 0)
+        self._categoryLayout.setContentsMargins(3, 0, 0, 0)
         self._categoryLayout.setSpacing(3)
         self._categoryLayout.setSizeConstraint(QLayout.SizeConstraint.SetMinAndMaxSize)
 
