@@ -1693,10 +1693,17 @@ class ModernMenu(RibbonBar):
             widget.close()
 
             # Create the current orderlist from the panels
-            OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
+            OrderList:list = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
             for panelName, panel in self.currentCategory().panels().items():
                 if panel.objectName() not in OrderList:
                     OrderList.append(panel.objectName())
+            for panelItem in OrderList:
+                isInList = False
+                for panelName, panel in self.currentCategory().panels().items():
+                    if panelName == panelItem:
+                        isInList = True
+                if isInList is False:
+                    OrderList.remove(panelItem)
             # Get the index
             OrderIndex = position[0]
             if widget.objectName() in OrderList:
@@ -4247,20 +4254,23 @@ class ModernMenu(RibbonBar):
                                     ]["toolbars"][panelName]["order"]
                                 )
                             ):
-                                if (
-                                    "separator"
-                                    in dict["workbenches"][
-                                        workbenchName
-                                    ]["toolbars"][panelName]["order"][j].lower()
-                                ):
-                                    separator = QToolButton()
-                                    separator.setText(
-                                        dict["workbenches"][
+                                try:
+                                    if (
+                                        "separator"
+                                        in dict["workbenches"][
                                             workbenchName
-                                        ]["toolbars"][panelName]["order"][j]
-                                    )
-                                    separator.setObjectName(separator.text())
-                                    allButtons.insert(j, separator)
+                                        ]["toolbars"][panelName]["order"][j].lower()
+                                    ):
+                                        separator = QToolButton()
+                                        separator.setText(
+                                            dict["workbenches"][
+                                                workbenchName
+                                            ]["toolbars"][panelName]["order"][j]
+                                        )
+                                        separator.setObjectName(separator.text())
+                                        allButtons.insert(j, separator)
+                                except Exception:
+                                    pass
 
         if workbenchName in dict["workbenches"]:
             # order buttons like defined in ribbonStructure
@@ -5002,7 +5012,7 @@ class ModernMenu(RibbonBar):
                                 # Get the translated menutext
                                 MenuNameTtranslated = CommandItem[4]
 
-                                if (MenuName.lower() == key.lower() or MenuNameTtranslated.lower() == key)  and WorkBenchName == CommandItem[3]:
+                                if (MenuName.lower() == key.lower() or MenuNameTtranslated.lower() == key or CommandItem[0] == key)  and WorkBenchName == CommandItem[3]:
                                     try:
                                         Standard_Functions_Ribbon.add_keys_nested_dict(newDict, [CommandItem[0]], 1, True)
                                         newDict[CommandItem[0]] = value
