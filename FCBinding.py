@@ -1085,10 +1085,10 @@ class ModernMenu(RibbonBar):
                         
                         # Add a line edit for changing the text
                         ChangeButtonText = CustomWidgets.LineEditAction(self, translate("FreeCAD Ribbon", "Set button text"))
-                        text = widget.parent().findChild(QLabel).text()
+                        text = widget.parent().findChild(QLabel).text().replace("\n", " ")
                         ChangeButtonText.setText("")
                         ChangeButtonText.setPlaceholderText(text)
-                        ChangeButtonText.setFixedSize(200,42)
+                        ChangeButtonText.setFixedSize(200,21)
                         ChangeButtonText.textChanged.connect(lambda e: self.on_ButtonLabel_Changing(e, panel, widget))
                         ChangeButtonText.editingFinished.connect(lambda: lambda: self.contextMenu.close())
                         self.contextMenu.addAction(ChangeButtonText)
@@ -1634,8 +1634,11 @@ class ModernMenu(RibbonBar):
                         OrderList_Compare = []
                         for n in range(gridLayout.count()):
                             control = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                            if type(control) is CustomControls:
+                            separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
+                            if control is not None and type(control) is CustomControls:
                                 OrderList_Compare.append(control.actions().data())
+                            if separator is not None and type(separator) is CustomSeparator:
+                                OrderList_Compare.append(separator.objectName())
                         if OrderList != OrderList_Compare:
                             OrderList = OrderList_Compare
                         
@@ -1658,14 +1661,22 @@ class ModernMenu(RibbonBar):
                             OrderList.insert(index_originalWidget, DraggedWidget.actions().data())                            
                         
                         #
-                        self.dict=self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList     
+                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList     
                                         
                         # Create a new panel
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                         newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
                         
                         # Replace the panel with the new panel
-                        self.currentCategory().replacePanel(panel, newPanel)
+                        newPanel = self.currentCategory().replacePanel(panel, newPanel)
+                        # For some reason, the font of the panel title will be reset after replacing a panel.
+                        # Reapply the font
+                        Font = QFont()
+                        Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
+                        newPanel._titleLabel.setFont(Font)
+                        newPanel._titleLabel.setMaximumHeight(Parameters_Ribbon.FONTSIZE_PANELS+3)
+                        
+                        # Close the old panel and the dragindicator
                         panel.close()
                         self.dragIndicator_Buttons.close()
 
@@ -1680,7 +1691,6 @@ class ModernMenu(RibbonBar):
 
             # Close the current panel and the right separator
             widget.close()
-            self.currentCategory().update()
 
             # Create the current orderlist from the panels
             OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
