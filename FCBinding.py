@@ -954,7 +954,7 @@ class ModernMenu(RibbonBar):
 
     def enterEvent_Custom(self, QEvent):
         # # Hide any possible toolbar
-        # self.hideClassicToolbars()
+        self.hideClassicToolbars()
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
         TB.show()
         # In FreeCAD 1.0, Overlays are introduced. These have also an enterEvent which results in strange behavior
@@ -4863,13 +4863,7 @@ class ModernMenu(RibbonBar):
 
         # Setup the panelOptionButton
         panel = self.PopulateOverflowMenu(panel, ButtonList)
-        
-        # gridLayout: QGridLayout = panel._actionsLayout
-        # NoColumns = gridLayout.columnCount()-1
-        # if panel.panelOptionButton().isHidden() is False:
-        #     if gridLayout.itemAtPosition(6,NoColumns) is None:
-        #         btn = QToolButton()
-        
+                
         # Add a spacer. Otherwise alignment of a panel with one button will always be to the top
         if len(allButtons) == 1:
             spacer = QWidget()
