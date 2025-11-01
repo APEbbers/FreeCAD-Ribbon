@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -48,7 +48,7 @@ from PySide.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -84,7 +84,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1015,7 +1015,9 @@ class ModernMenu(RibbonBar):
                 for i in range(NoClicks):
                     ScrollRightButton_Tab.click()
         return
+    # endregion
 
+    # region - Customise functions
     def contextMenuEvent(self, event):
         widget = None
         panel = None
@@ -1178,11 +1180,12 @@ class ModernMenu(RibbonBar):
                                 pass
                         Gui.updateGui()
 
-                        # Create all order lists and commands, incase they are not all present                        
-                        for title, panel in self.currentCategory().panels().items():
+                        # Create all order lists and commands, incase they are not all present
+                  
+                        for title, objPanel in self.currentCategory().panels().items():
                             # Get the panel name and the gridlayout
-                            panelName = panel.objectName()
-                            gridLayout = panel._actionsLayout
+                            panelName = objPanel.objectName()
+                            gridLayout: QGridLayout = objPanel._actionsLayout
                             # Try to get the current order list
                             orderList = []
                             try:
@@ -1209,15 +1212,15 @@ class ModernMenu(RibbonBar):
                                 
                                 # Write the order list
                                 Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], [])                         
-                                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                            
-                        
-                            # if panel.panelOptionButton().isVisible():
-                            #     newPanel = self.CreatePanel(workbenchName, panel.objectName(), False, self.workBenchDict, ignoreColumnLimit=True)
-                                
-                            #     replacedPanel = self.currentCategory().replacePanel(panel, newPanel)
-                            #     if replacedPanel not in self.longPanels:
-                            #         self.longPanels.append(replacedPanel)
-                            #     panel.close()
+                                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                                                        
+                            # If the panel has an overflow menu, replace it with a complete (long) panel
+                            if objPanel.panelOptionButton().isVisible():
+                                newPanel = self.CreatePanel(workbenchName, objPanel.objectName(), False, self.workBenchDict, ignoreColumnLimit=True)
+                                self.currentCategory().replacePanel(objPanel, newPanel)
+                                # Add the newPanel to the list of longPanels
+                                self.longPanels.append(newPanel)
+                                # Close the old panel
+                                objPanel.close()
                         return
                     if self.CustomizeEnabled is True:
                         self.setStyleSheet(Stylesheet)
@@ -1231,27 +1234,44 @@ class ModernMenu(RibbonBar):
                                 item[0].setEnabled(True)                                
                         Gui.updateGui()       
 
-        # update the ribbonstructure before writing it to disk
-        self.ribbonStructure["workbenches"][workbenchName] = self.workBenchDict["workbenches"][workbenchName]
-        # Writing to ribbonStructure.json
-        JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
-        with open(JsonFile, "w") as outfile:
-            json.dump(self.ribbonStructure, outfile, indent=4)
+                        # update the ribbonstructure before writing it to disk
+                        self.ribbonStructure["workbenches"][workbenchName] = self.workBenchDict["workbenches"][workbenchName]
+                        # Writing to ribbonStructure.json
+                        JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+                        with open(JsonFile, "w") as outfile:
+                            json.dump(self.ribbonStructure, outfile, indent=4)
 
-        # # Restore the original panel with the overflow menu
-        # for title, panel in self.currentCategory().panels().items():
-        #     # Store the current width of the panel. 
-        #     width = panel.width()
-        #     for longPanel in self.longPanels:
-        #         if longPanel.objectName() == panel.objectName():
-        #             newPanel = self.CreatePanel(workbenchName, panel.objectName(), False, self.workBenchDict)
-        #             self.currentCategory().replacePanel(longPanel, newPanel)
-        #             longPanel.close()
-        #     # Set the width again with the stored value. This insures that the panels don´t resize. 
-        #     # They will otherwise for some reason
-        #     panel.setFixedWidth(width)
-                                 
-        # self.longPanels.clear()
+                        # Restore the original panel with the overflow menu
+                        panels = {} # Needed to update the panel dict of the currentCategory
+                        for title, panel in self.currentCategory().panels().items():
+                            StandardFunctions.add_keys_nested_dict(panels, [title])
+                            # Store the current width of the panel. 
+                            width = panel.width()
+                            # Create a bool to state if a panel is new or not
+                            IsNewPanel = False
+                            for longPanel in self.longPanels:
+                                if longPanel.objectName() == panel.objectName():
+                                    # Create a panel and replace the long panel with this one
+                                    newPanel = self.CreatePanel(workbenchName, panel.objectName(), False, self.workBenchDict)
+                                    replacedPanel = self.currentCategory().replacePanel(longPanel, newPanel)
+                                    # Close the old panel
+                                    longPanel.close()
+                                    # Update the panels dicts
+                                    panels[title] = replacedPanel
+                                    # Set the bool to True
+                                    IsNewPanel = True
+                                    break
+                            # If it is not a new panel, add the current panel to the dict.
+                            if IsNewPanel is False:
+                                panels[title] = panel
+                            # Set the width again with the stored value. This insures that the panels don´t resize. 
+                            # They will otherwise for some reason
+                            panel.setFixedWidth(width)
+                        # Update the panel dict of the current catergory with the new panels dict
+                        self.currentCategory()._panels = panels
+                        # Clear the list with the long panels, so that it can be filled again next time
+                        self.longPanels.clear()
+                        panel = None
         return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                                 
@@ -1268,7 +1288,8 @@ class ModernMenu(RibbonBar):
         
         # Create a new panel
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
+        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True)
+        self.longPanels.append(newPanel)
         
         # Replace the panel with the new panel
         self.currentCategory().replacePanel(panel, newPanel)
@@ -1328,7 +1349,8 @@ class ModernMenu(RibbonBar):
         
          # Create a new panel
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())        
-        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
+        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True)
+        self.longPanels.append(newPanel)
         
         # Replace the panel with the new panel
         self.currentCategory().replacePanel(panel, newPanel)
@@ -1373,7 +1395,8 @@ class ModernMenu(RibbonBar):
        
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
+            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict,  ignoreColumnLimit=True)
+            self.longPanels.append(newPanel)
             
             # Replace the panel with the new panel
             self.currentCategory().replacePanel(panel, newPanel)
@@ -1408,7 +1431,8 @@ class ModernMenu(RibbonBar):
             
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
+            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True)
+            self.longPanels.append(newPanel)
             
             # Replace the panel with the new panel
             self.currentCategory().replacePanel(panel, newPanel)
@@ -1665,7 +1689,7 @@ class ModernMenu(RibbonBar):
                                         
                         # Create a new panel
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict)
+                        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True)
                         
                         # Replace the panel with the new panel
                         newPanel = self.currentCategory().replacePanel(panel, newPanel)
@@ -1685,7 +1709,7 @@ class ModernMenu(RibbonBar):
             position = self.find_drop_location(event)
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            panel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict)
+            panel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict,  ignoreColumnLimit=True)
             # Add the new panel
             self.currentCategory().insertWidget(panel,position[0])
 
@@ -1694,9 +1718,11 @@ class ModernMenu(RibbonBar):
 
             # Create the current orderlist from the panels
             OrderList:list = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
+            # if a panel is not in the orderlist, add it
             for panelName, panel in self.currentCategory().panels().items():
                 if panel.objectName() not in OrderList:
                     OrderList.append(panel.objectName())
+            # if an item in the orderlist is not in the panel list, remove it from the order list
             for panelItem in OrderList:
                 isInList = False
                 for panelName, panel in self.currentCategory().panels().items():
@@ -1704,12 +1730,17 @@ class ModernMenu(RibbonBar):
                         isInList = True
                 if isInList is False:
                     OrderList.remove(panelItem)
-            # Get the index
+            
+            # Add the widget in the new place of the order list
             OrderIndex = position[0]
             if widget.objectName() in OrderList:
                 OrderList.remove(widget.objectName())
             OrderList.insert(OrderIndex, widget.objectName())
+            
+            # Update the dict
             self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"] = OrderList
+            
+            # Close the drag indicator
             self.dragIndicator_Panels.close()
 
         event.accept()
@@ -1856,10 +1887,7 @@ class ModernMenu(RibbonBar):
 
             if tabActivated is True:
                 self.onWbActivated()
-                self.ApplicationMenus()
-
-            # hide normal toolbars
-            self.hideClassicToolbars()
+                self.ApplicationMenus()           
         
             if self.contextMenu is not None:
                 self.contextMenu.hide()
@@ -1876,7 +1904,10 @@ class ModernMenu(RibbonBar):
                         json.dump(self.ribbonStructure, outfile, indent=4)
                 except Exception:
                     pass
-            return
+        
+        # hide normal toolbars
+        self.hideClassicToolbars()
+        return
 
     def onWbActivated(self):
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
@@ -1937,6 +1968,9 @@ class ModernMenu(RibbonBar):
         # create panels. Do this after updateCurrentTab.
         # Otherwise, the sketcher workbench won;t be loaded properly the first time
         self.buildPanels()
+        
+        # hide normal toolbars
+        self.hideClassicToolbars()
 
         # if self.DesignMenuLoaded is True:
         #     # Disable the quick toolbar, righttoolbar and application menu
@@ -1970,6 +2004,7 @@ class ModernMenu(RibbonBar):
             self.quickAccessToolBar().setDisabled(True)
             self.applicationOptionButton().setDisabled(True)
             Gui.updateGui()
+
         return
 
     # endregion
@@ -4365,17 +4400,17 @@ class ModernMenu(RibbonBar):
                 if len(smallButtons) == 3:
                     columnCount = columnCount + 1
                     smallButtons.clear()
-            if buttonSize == "medium":
-                mediumButtons.append(button)
+            if buttonSize == "medium":                
                 smallButtons.clear()
+                mediumButtons.append(button)
                 largeButtons.clear()
                 if len(mediumButtons) == 2:
                     columnCount = columnCount + 1
                     mediumButtons.clear()
-            if buttonSize == "large" or "separator" in button.text():
-                largeButtons.append(button)
+            if buttonSize == "large" or "separator" in button.text().lower():                
                 smallButtons.clear()
                 mediumButtons.clear()
+                largeButtons.append(button)
                 if len(largeButtons) == 1:
                     columnCount = columnCount + 1
                     largeButtons.clear()
@@ -4393,10 +4428,15 @@ class ModernMenu(RibbonBar):
                     # if the last item before the optionpanel is an separator, skip it
                     if columnCount > maxColumns and "separator" in button.text():
                         continue
-                    if columnCount > maxColumns:
-                        ButtonList.append(button)
-                        panel.panelOptionButton().show()
-                        continue
+                    if columnCount > maxColumns and "separator" not in button.text():
+                        if (
+                            (buttonSize == "small" and len(smallButtons) == 0) or 
+                            (buttonSize == "medium" and len(mediumButtons) == 0) or 
+                            (buttonSize == "large" and len(largeButtons) == 0)
+                        ):
+                            ButtonList.append(button)
+                            panel.panelOptionButton().show()
+                            continue
 
                 # If the last item is not an separator, you can add an separator
                 # With an paneloptionbutton, use an offset of 2 instead of 1 for i.
@@ -4415,15 +4455,18 @@ class ModernMenu(RibbonBar):
                         spacer_1.setFixedWidth(self.iconSize)
                         spacer_1.setEnabled(False)
                         spacer_1.setStyleSheet("background-color: none")
+                        spacer_1.setObjectName("spacer")
                     if float((NoSmallButtons_spacer + 2) / 3).is_integer():
                         spacer_1 = panel.addSmallButton()
                         spacer_1.setFixedWidth(self.iconSize)
                         spacer_1.setEnabled(False)
                         spacer_1.setStyleSheet("background-color: none")
+                        spacer_1.setObjectName("spacer")
                         spacer_2 = panel.addSmallButton()
                         spacer_2.setFixedWidth(self.iconSize)
                         spacer_2.setEnabled(False)
                         spacer_2.setStyleSheet("background-color: none")
+                        spacer_1.setObjectName("spacer")
                     # reset the counter after a separator is added.
                     NoSmallButtons_spacer = 0
                     # Same principle for medium buttons
@@ -4432,6 +4475,7 @@ class ModernMenu(RibbonBar):
                         spacer_1.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
                         spacer_1.setEnabled(False)
                         spacer_1.setStyleSheet("background-color: none")
+                        spacer_1.setObjectName("spacer")
                     NoMediumButtons_spacer = 0
                     continue
                 else:
@@ -4799,17 +4843,11 @@ class ModernMenu(RibbonBar):
                         if Parameters_Ribbon.DEBUG_MODE is True:
                             raise e
                         continue
-                    
-        # Add a spacer. Otherwise alignment of a panel with one button will always be to the top
-        spacer = QWidget()
-        spacer.setObjectName("ExtraSpacer")
-        spacer.setMinimumSize(0, panel.height() - panel._titleWidget.height())
-        panel.addWidget(spacer, rowSpan=6)
-
+        
         # Set the panel title
         panel.setTitle(self.ReturnPanelTitle(panel, dict))
 
-        # Set the panelheigth. setting the ribbonheigt, cause the first tab to be shown to large
+        # Set the panelheight. setting the ribbonheigt, cause the first tab to be shown to large
         # add an offset to make room for the panel titles and icons
         panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
         panel._actionsLayout.setSpacing(self.ButtonSpacing)
@@ -4824,6 +4862,25 @@ class ModernMenu(RibbonBar):
         self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset) + 6
 
         # Setup the panelOptionButton
+        panel = self.PopulateOverflowMenu(panel, ButtonList)
+        
+        # gridLayout: QGridLayout = panel._actionsLayout
+        # NoColumns = gridLayout.columnCount()-1
+        # if panel.panelOptionButton().isHidden() is False:
+        #     if gridLayout.itemAtPosition(6,NoColumns) is None:
+        #         btn = QToolButton()
+        
+        # Add a spacer. Otherwise alignment of a panel with one button will always be to the top
+        if len(allButtons) == 1:
+            spacer = QWidget()
+            spacer.setObjectName("ExtraSpacer")
+            spacer.setMinimumSize(0, panel.height() - panel._titleWidget.height())
+            panel.addWidget(spacer, rowSpan=6)
+        
+        return panel
+    
+    def PopulateOverflowMenu(self, panel: RibbonPanel, ButtonList: list):
+        # Setup the panelOptionButton
         actionList = []
         for i in range(len(ButtonList)):
             button = ButtonList[i]
@@ -4831,9 +4888,12 @@ class ModernMenu(RibbonBar):
                 "* {font-size: " + str(Parameters_Ribbon.FONTSIZE_MENUS) + "px;}"
             )
             button.setStyleSheet(StyleSheet_Menu)
-            if len(button.actions()) == 1:
-                actionList.append(button.actions()[0])
-            if len(button.actions()) > 1:
+            if type(button.actions()) is list:
+                if len(button.actions()) == 1:
+                    actionList.append(button.actions()[0])
+                if len(button.actions()) > 1:
+                    actionList.append(button.actions())
+            if type(button.actions()) is QAction:
                 actionList.append(button.actions())
         OptionButton = panel.panelOptionButton()
         if len(actionList) > 0:
@@ -4865,7 +4925,6 @@ class ModernMenu(RibbonBar):
                 OptionButton.setText("more...")
         if len(actionList) == 0:
             panel.panelOptionButton().hide()
-        
         return panel
     # endregion
 
