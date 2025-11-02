@@ -3351,7 +3351,7 @@ class ModernMenu(RibbonBar):
         btn.setCheckable(True)
         btn.setChecked(not Parameters_Ribbon.AUTOHIDE_RIBBON)
         btn.clicked.connect(lambda: self.on_Pin_clicked(btn))
-        layout.addWidget(btn, 2,2,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+        layout.addWidget(btn, 2,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
         return
 
     # endregion
