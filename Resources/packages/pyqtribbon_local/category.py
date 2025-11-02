@@ -100,13 +100,13 @@ class RibbonCategoryLayoutWidget(QFrame):
         self._mainLayout.setContentsMargins(0, 0, 0, 0)
         self._mainLayout.setSpacing(0)
         self._mainLayout.addWidget(
-            self._previousButton, 0,0,1,1, Qt.AlignmentFlag.AlignVCenter
+            self._previousButton, 1,0,1,1, Qt.AlignmentFlag.AlignVCenter
         )
         self._mainLayout.addWidget(self._categoryScrollArea, 0,1,3,1)
         spacer = QWidget()
         spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         self._mainLayout.addWidget(spacer, 2,0,1,2)  # fmt: skip
-        self._mainLayout.addWidget(self._nextButton, 0,2,1,1, Qt.AlignmentFlag.AlignVCenter)
+        self._mainLayout.addWidget(self._nextButton, 1,2,1,1, Qt.AlignmentFlag.AlignVCenter)
 
         # Auto set the visibility of the scroll buttons
         self.autoSetScrollButtonsVisible()
