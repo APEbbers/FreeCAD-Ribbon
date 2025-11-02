@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -48,7 +48,7 @@ from PySide6.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -84,7 +84,7 @@ from PySide6.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1183,6 +1183,7 @@ class ModernMenu(RibbonBar):
                         # Create all order lists and commands, incase they are not all present
                   
                         for title, objPanel in self.currentCategory().panels().items():
+                            objPanel.show()
                             # Get the panel name and the gridlayout
                             panelName = objPanel.objectName()
                             gridLayout: QGridLayout = objPanel._actionsLayout
@@ -1215,12 +1216,18 @@ class ModernMenu(RibbonBar):
                                 self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                                                        
                             # If the panel has an overflow menu, replace it with a complete (long) panel
                             if objPanel.panelOptionButton().isVisible():
-                                newPanel = self.CreatePanel(workbenchName, objPanel.objectName(), False, self.workBenchDict, ignoreColumnLimit=True)
+                                newPanel = self.CreatePanel(workbenchName, objPanel.objectName(), False, self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
                                 self.currentCategory().replacePanel(objPanel, newPanel)
                                 # Add the newPanel to the list of longPanels
                                 self.longPanels.append(newPanel)
                                 # Close the old panel
                                 objPanel.close()
+                            
+                            # show the enable checkboxes  
+                            titleLayout: QHBoxLayout = objPanel._titleLayout
+                            EnableControl = titleLayout.itemAt(0).widget()
+                            if EnableControl is not None:
+                                EnableControl.setVisible(True)
                         return
                     if self.CustomizeEnabled is True:
                         self.setStyleSheet(Stylesheet)
@@ -1236,11 +1243,7 @@ class ModernMenu(RibbonBar):
 
                         # update the ribbonstructure before writing it to disk
                         self.ribbonStructure["workbenches"][workbenchName] = self.workBenchDict["workbenches"][workbenchName]
-                        # Writing to ribbonStructure.json
-                        JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
-                        with open(JsonFile, "w") as outfile:
-                            json.dump(self.ribbonStructure, outfile, indent=4)
-
+                        
                         # Restore the original panel with the overflow menu
                         panels = {} # Needed to update the panel dict of the currentCategory
                         for title, panel in self.currentCategory().panels().items():
@@ -1267,11 +1270,33 @@ class ModernMenu(RibbonBar):
                             # Set the width again with the stored value. This insures that the panels don´t resize. 
                             # They will otherwise for some reason
                             panel.setFixedWidth(width)
+                                                                                
+                            # hide the enable checkboxes and hide the panel if it is unchecked
+                            titleLayout: QHBoxLayout = panel._titleLayout
+                            EnableControl: QCheckBox = titleLayout.itemAt(0).widget()
+                            if EnableControl is not None:
+                                if EnableControl.checkState() == Qt.CheckState.Unchecked:
+                                    # Hide the panel
+                                    panel.hide()
+                                    # Write the state to the structure
+                                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName, "toolbars", panel.objectName(), "Enabled"])
+                                    self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"] = False
+                                if EnableControl.checkState() == Qt.CheckState.Checked:
+                                    # Write the state to the structure
+                                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName, "toolbars", panel.objectName(), "Enabled"])
+                                    self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"] = True
+                                EnableControl.setVisible(False)
+                        
                         # Update the panel dict of the current catergory with the new panels dict
                         self.currentCategory()._panels = panels
                         # Clear the list with the long panels, so that it can be filled again next time
                         self.longPanels.clear()
                         panel = None
+                        
+                        # Writing to ribbonStructure.json
+                        JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+                        with open(JsonFile, "w") as outfile:
+                            json.dump(self.ribbonStructure, outfile, indent=4)
         return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                                 
@@ -1288,7 +1313,7 @@ class ModernMenu(RibbonBar):
         
         # Create a new panel
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True)
+        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
         self.longPanels.append(newPanel)
         
         # Replace the panel with the new panel
@@ -1349,7 +1374,7 @@ class ModernMenu(RibbonBar):
         
          # Create a new panel
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())        
-        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True)
+        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
         self.longPanels.append(newPanel)
         
         # Replace the panel with the new panel
@@ -1395,7 +1420,7 @@ class ModernMenu(RibbonBar):
        
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict,  ignoreColumnLimit=True)
+            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True)
             self.longPanels.append(newPanel)
             
             # Replace the panel with the new panel
@@ -1431,7 +1456,7 @@ class ModernMenu(RibbonBar):
             
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True)
+            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
             self.longPanels.append(newPanel)
             
             # Replace the panel with the new panel
@@ -1689,7 +1714,7 @@ class ModernMenu(RibbonBar):
                                         
                         # Create a new panel
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True)
+                        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
                         
                         # Replace the panel with the new panel
                         newPanel = self.currentCategory().replacePanel(panel, newPanel)
@@ -1709,7 +1734,7 @@ class ModernMenu(RibbonBar):
             position = self.find_drop_location(event)
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            panel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict,  ignoreColumnLimit=True)
+            panel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True)
             # Add the new panel
             self.currentCategory().insertWidget(panel,position[0])
 
@@ -3218,7 +3243,13 @@ class ModernMenu(RibbonBar):
                 continue
             
             # Create the panel based on the toolbars
-            self.CreatePanel(workbenchName, toolbar, True, self.ribbonStructure, True)
+            panel = self.CreatePanel(workbenchName, toolbar, True, self.ribbonStructure, True)
+            # Hide the panel if stated in the ribbon structure
+            if panel.objectName() in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]:
+                if "Enabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
+                    Enabled = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"]
+                    if Enabled is False:
+                        panel.hide()
             
             # Writing to ribbonStructure.json
             JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
@@ -4196,7 +4227,7 @@ class ModernMenu(RibbonBar):
         
         return title
     
-    def CreatePanel(self, workbenchName: str, panelName: str, addPanel = True, dict = ribbonStructure, SetToUpdate = False, ignoreColumnLimit = False):
+    def CreatePanel(self, workbenchName: str, panelName: str, addPanel = True, dict = ribbonStructure, SetToUpdate = False, ignoreColumnLimit = False, showEnableControl = False):
         if SetToUpdate is True:
             dict = self.ribbonStructure
             Standard_Functions_Ribbon.add_keys_nested_dict(dict, ["workbenches", workbenchName, "toolbars"], 1, True)
@@ -4860,6 +4891,20 @@ class ModernMenu(RibbonBar):
         panel._titleLabel.setFont(Font)
         panel._titleLabel.setMaximumHeight(Parameters_Ribbon.FONTSIZE_PANELS+3)
         self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset) + 6
+        
+        # Add a checkbox to the titlebar. Used for enabling or disabling panels. Default is hidden
+        titleLayout: QHBoxLayout = panel._titleLayout
+        EnableControl = QCheckBox()
+        EnableControl.setChecked(True)
+        if panel.objectName() in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]:
+            if "Enabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
+                Enabled = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"]
+                EnableControl.setChecked(bool(Enabled))
+        EnableControl.setFixedWidth(20)
+        EnableControl.setObjectName("EnablePanel")
+        titleLayout.insertWidget(0, EnableControl)
+        if showEnableControl is False:
+            EnableControl.setHidden(True)
 
         # Setup the panelOptionButton
         panel = self.PopulateOverflowMenu(panel, ButtonList)
