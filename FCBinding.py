@@ -1215,8 +1215,10 @@ class ModernMenu(RibbonBar):
                                 self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                                                        
                             # If the panel has an overflow menu, replace it with a complete (long) panel
                             if objPanel.panelOptionButton().isVisible():
-                                newPanel = self.CreatePanel(workbenchName, objPanel.objectName(), False, self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
-                                self.currentCategory().replacePanel(objPanel, newPanel)
+                                newPanel = self.CreatePanel(workbenchName, objPanel.objectName(), False, self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)                                
+                                replacedPanel = self.currentCategory().replacePanel(objPanel, newPanel)
+                                # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                                self.setPanelProperties(replacedPanel)
                                 # Add the newPanel to the list of longPanels
                                 self.longPanels.append(newPanel)
                                 # Close the old panel
@@ -1256,6 +1258,8 @@ class ModernMenu(RibbonBar):
                                     # Create a panel and replace the long panel with this one
                                     newPanel = self.CreatePanel(workbenchName, panel.objectName(), False, self.workBenchDict)
                                     replacedPanel = self.currentCategory().replacePanel(longPanel, newPanel)
+                                    # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                                    self.setPanelProperties(replacedPanel)
                                     # Close the old panel
                                     longPanel.close()
                                     # Update the panels dicts
@@ -1720,16 +1724,12 @@ class ModernMenu(RibbonBar):
                         # Create a new panel
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                         newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
-                        
-                        # Replace the panel with the new panel
-                        newPanel = self.currentCategory().replacePanel(panel, newPanel)
-                        # For some reason, the font of the panel title will be reset after replacing a panel.
-                        # Reapply the font
-                        Font = QFont()
-                        Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
-                        newPanel._titleLabel.setFont(Font)
-                        newPanel._titleLabel.setMaximumHeight(Parameters_Ribbon.FONTSIZE_PANELS+3)
+                        # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                        self.setPanelProperties(newPanel)
                                                 
+                        # Replace the panel with the new panel
+                        self.currentCategory().replacePanel(panel, newPanel)
+                        
                         # Close the old panel and the dragindicator
                         panel.close()
                         self.dragIndicator_Buttons.close()
@@ -1740,8 +1740,11 @@ class ModernMenu(RibbonBar):
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
             newPanel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True)
+
             # Add the new panel
             self.currentCategory().insertWidget(newPanel,position[0])
+            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+            self.setPanelProperties(newPanel)
             
             # Update the dict of the currentCategory with the new panel
             panels = {}
@@ -4894,18 +4897,7 @@ class ModernMenu(RibbonBar):
         panel.setTitle(self.ReturnPanelTitle(panel, dict))
 
         # Set the panelheight. setting the ribbonheigt, cause the first tab to be shown to large
-        # add an offset to make room for the panel titles and icons
-        panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
-        panel._actionsLayout.setSpacing(self.ButtonSpacing)
-        panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
-        panel._mainLayout.setSpacing(0)
-        panel._actionsLayout.setContentsMargins(0, self.TopMargin, 0, self.BottomMargin) # Left, Top, Right, Bottom
-        panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
-        Font = QFont()
-        Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
-        panel._titleLabel.setFont(Font)
-        panel._titleLabel.setMaximumHeight(Parameters_Ribbon.FONTSIZE_PANELS+3)
-        self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset) + 6
+        self.setPanelProperties(panel)
         
         # Add a checkbox to the titlebar. Used for enabling or disabling panels. Default is hidden
         titleLayout: QHBoxLayout = panel._titleLayout
@@ -4932,6 +4924,22 @@ class ModernMenu(RibbonBar):
             panel.addWidget(spacer, rowSpan=6)
         
         return panel
+    
+    def setPanelProperties(self, panel: RibbonPanel):
+        # Set the panelheight. setting the ribbonheigt, cause the first tab to be shown to large
+        # add an offset to make room for the panel titles and icons
+        panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
+        panel._actionsLayout.setSpacing(self.ButtonSpacing)
+        panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
+        panel._mainLayout.setSpacing(0)
+        panel._actionsLayout.setContentsMargins(0, self.TopMargin, 0, self.BottomMargin) # Left, Top, Right, Bottom
+        panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
+        Font = QFont()
+        Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
+        panel._titleLabel.setFont(Font)
+        panel._titleLabel.setMaximumHeight(Parameters_Ribbon.FONTSIZE_PANELS+3)
+        self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset) + 6
+        return
     
     def PopulateOverflowMenu(self, panel: RibbonPanel, ButtonList: list):
         # Setup the panelOptionButton
