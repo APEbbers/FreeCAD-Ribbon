@@ -1745,6 +1745,16 @@ class ModernMenu(RibbonBar):
                         # Replace the panel with the new panel
                         self.currentCategory().replacePanel(panel, newPanel)
                         
+                        # Update the dict of the currentCategory with the new panel
+                        panels = {}
+                        for title, panel in self.currentCategory().panels().items():
+                            StandardFunctions.add_keys_nested_dict(panels, [title])
+                            if panel.objectName() == newPanel.objectName():
+                                panels[title] = newPanel
+                            else:
+                                panels[title] = panel
+                        self.currentCategory()._panels = panels
+                        
                         # Close the old panel and the dragindicator
                         panel.close()
                         self.dragIndicator_Buttons.close()
