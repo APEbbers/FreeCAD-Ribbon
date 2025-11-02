@@ -10,6 +10,7 @@ from PySide.QtWidgets import (
     QHBoxLayout,
     QScrollArea,
     QFrame,
+    QGridLayout,
 )
 from PySide.QtCore import (
     Qt,
@@ -94,16 +95,18 @@ class RibbonCategoryLayoutWidget(QFrame):
         self._nextButton.clicked.connect(self.scrollNext)  # type: ignore
 
         # Add the widgets to the main layout
-        self._mainLayout = QHBoxLayout(self)
+        # self._mainLayout = QHBoxLayout(self)
+        self._mainLayout = QGridLayout(self)
         self._mainLayout.setContentsMargins(0, 0, 0, 0)
         self._mainLayout.setSpacing(0)
         self._mainLayout.addWidget(
-            self._previousButton, 0, Qt.AlignmentFlag.AlignVCenter
+            self._previousButton, 0,0,1,1, Qt.AlignmentFlag.AlignVCenter
         )
-        self._mainLayout.addWidget(self._categoryScrollArea, 1)
-        self._mainLayout.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Policy.Expanding,
-                                                             QSizePolicy.Policy.Minimum))  # fmt: skip
-        self._mainLayout.addWidget(self._nextButton, 0, Qt.AlignmentFlag.AlignVCenter)
+        self._mainLayout.addWidget(self._categoryScrollArea, 0,1,3,1)
+        spacer = QWidget()
+        spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self._mainLayout.addWidget(spacer, 2,0,1,2)  # fmt: skip
+        self._mainLayout.addWidget(self._nextButton, 0,2,1,1, Qt.AlignmentFlag.AlignVCenter)
 
         # Auto set the visibility of the scroll buttons
         self.autoSetScrollButtonsVisible()

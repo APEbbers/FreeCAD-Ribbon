@@ -1597,6 +1597,45 @@ class AnimatedToggle(Toggle):
 
         p.end()
 
+class ToggleAction(QWidgetAction):
+    Toggle = Toggle()
+    Toggle.setObjectName("toggle")
+    
+    checkStateChanged = Toggle.stateChanged
+
+    def __init__(self, parent, text):
+        super(ToggleAction, self).__init__(parent)
+        layout = QHBoxLayout()
+        self.widget = QWidget()
+        label = QLabel(text)
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        layout.addWidget(self.Toggle)
+        layout.addWidget(label)
+        self.widget.setLayout(layout)
+        
+        self.setCheckable(True)
+        self.setDefaultWidget(self.widget)
+        return
+
+    def setChecked(self, arg_1, /):
+        self.Toggle.setChecked(arg_1)
+        return    
+
+    def isChecked(self, /) -> bool:
+        return self.Toggle.isChecked()
+    
+    def setFixedWidth(self, w):
+        self.Toggle.setFixedWidth(w)
+        return
+    
+    def setFixedHeight(self, h):
+        self.Toggle.setFixedHeight(h)
+        return
+    
+    def setFixedSize(self, w, h):
+        self.Toggle.setFixedSize(w, h)
+        return
+
 class CheckBoxAction(QWidgetAction):
     checkbox = QCheckBox()
     checkbox.setObjectName("checkbox")
@@ -1608,7 +1647,7 @@ class CheckBoxAction(QWidgetAction):
         layout = QHBoxLayout()
         self.widget = QWidget()
         label = QLabel(text)
-        label.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         layout.addWidget(self.checkbox)
         layout.addWidget(label)
         self.widget.setLayout(layout)
@@ -1624,14 +1663,23 @@ class CheckBoxAction(QWidgetAction):
     def isChecked(self, /) -> bool:
         return self.checkbox.isChecked()
     
+    def setFixedWidth(self, w):
+        self.checkbox.setFixedWidth(w)
+        return
+    
     def setFixedHeight(self, h):
         self.checkbox.setFixedHeight(h)
+        return
+    
+    def setFixedSize(self, w, h):
+        self.checkbox.setFixedSize(w, h)
         return
 
 class SpinBoxAction(QWidgetAction):
         
     spinbox = QSpinBox()
     spinbox.setObjectName("spinbox")
+    spinbox.setAlignment(Qt.AlignmentFlag.AlignCenter)
     
     valueChanged =  spinbox.valueChanged
     
@@ -1640,7 +1688,7 @@ class SpinBoxAction(QWidgetAction):
         layout = QHBoxLayout()
         self.widget = QWidget()
         label = QLabel(text)
-        label.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         layout.addWidget(self.spinbox)
         layout.addWidget(label)
         self.widget.setLayout(layout)
@@ -1663,14 +1711,24 @@ class SpinBoxAction(QWidgetAction):
         self.spinbox.setValue(val)
         return
     
+    def setFixedWidth(self, w):
+        self.spinbox.setFixedWidth(w)
+        return
+    
     def setFixedHeight(self, h):
         self.spinbox.setFixedHeight(h)
+        return
+    
+    def setFixedSize(self, w, h):
+        self.spinbox.setFixedSize(w, h)
+        return
     
 class ComboBoxAction(QWidgetAction):
         
     combobox = QComboBox()
     combobox.setObjectName("combobox")
-    
+    combobox.setStyleSheet("""QComboBox {padding-left: 6px;}""")
+        
     activated = combobox.activated
     currentTextChanged = combobox.currentTextChanged
     
@@ -1679,7 +1737,7 @@ class ComboBoxAction(QWidgetAction):
         layout = QHBoxLayout()
         self.widget = QWidget()
         label = QLabel(text)
-        label.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         layout.addWidget(self.combobox)
         layout.addWidget(label)
         self.widget.setLayout(layout)
@@ -1697,11 +1755,6 @@ class ComboBoxAction(QWidgetAction):
             self.combobox.addItem(text, userData)
         return
     
-    # @typing.overload
-    # def addItem(self, icon: QIcon | QPixmap, text: str, /, userData: typing.Any = ...) -> None:
-    #     self.combobox.addItem(icon, text, userData)
-    #     return
-    
     def currentText(self, /):
         return self.combobox.currentText()
     
@@ -1715,9 +1768,18 @@ class ComboBoxAction(QWidgetAction):
     def count(self, /):
         return self.combobox.count()
     
+    def setFixedWidth(self, w):
+        self.combobox.setFixedWidth(w)
+        return
+    
     def setFixedHeight(self, h):
         self.combobox.setFixedHeight(h)
-
+        return
+    
+    def setFixedSize(self, w, h):
+        self.combobox.setFixedSize(w, h)
+        return
+    
 class LineEditAction(QWidgetAction):
         
     lineEdit = QLineEdit()
@@ -1732,7 +1794,7 @@ class LineEditAction(QWidgetAction):
         layout = QVBoxLayout()
         self.widget = QWidget()
         label = QLabel(text)
-        label.setAlignment(Qt.AlignmentFlag.AlignLeft)
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         layout.addWidget(label)
         layout.addWidget(self.lineEdit)
         self.widget.setLayout(layout)
@@ -1746,6 +1808,14 @@ class LineEditAction(QWidgetAction):
     
     def setPlaceholderText(self, val):
         self.lineEdit.setPlaceholderText(val)
+        return
+    
+    def setFixedWidth(self, w):
+        self.lineEdit.setFixedWidth(w)
+        return
+    
+    def setFixedHeight(self, h):
+        self.lineEdit.setFixedHeight(h)
         return
     
     def setFixedSize(self, w, h):

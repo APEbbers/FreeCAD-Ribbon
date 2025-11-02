@@ -102,7 +102,7 @@ from PySide.QtCore import (
     QSignalBlocker,
     QMimeData,
 )
-from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, CheckBoxAction, SpinBoxAction, ComboBoxAction, CustomSeparator
+from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, ToggleAction, CheckBoxAction, SpinBoxAction, ComboBoxAction, CustomSeparator
 
 import json
 import os
@@ -214,7 +214,7 @@ class ModernMenu(RibbonBar):
     
     # Declare the top and bottom margin for the tabbar (category)
     TopMargin = 3
-    BottomMargin = 3
+    BottomMargin = 0
 
     # Create the lists and ditcs for the lists in the ribbon structure, 
     ignoredToolbars = []
@@ -601,7 +601,7 @@ class ModernMenu(RibbonBar):
         self.createModernMenu()  # Create the ribbon
 
         # Set the custom stylesheet
-        StyleSheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
+        self.StyleSheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
         # modify the stylesheet to set the border and background for a toolbar and menu
         hexColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
         hexColorTab = StyleMapping_Ribbon.ReturnStyleItem(
@@ -628,8 +628,8 @@ class ModernMenu(RibbonBar):
                 + hexColor
                 + ";}"
             )
-            StyleSheet = StyleSheet_Addition_2 + StyleSheet + StyleSheet_Addition
-        self.setStyleSheet(StyleSheet)
+            self.StyleSheet = StyleSheet_Addition_2 + self.StyleSheet + StyleSheet_Addition
+        self.setStyleSheet(self.StyleSheet)
 
         # If the text for the tabs is set to be disabled, update the stylesheet
         if Parameters_Ribbon.TABBAR_STYLE == 1:
@@ -654,10 +654,10 @@ class ModernMenu(RibbonBar):
                             margin: 3px
                         }"""
             )
-            StyleSheet = StyleSheet_Addition_3 + StyleSheet
-            self.setStyleSheet(StyleSheet)
-            StyleSheet = StyleSheet_Addition_3 + StyleSheet
-            self.setStyleSheet(StyleSheet)
+            self.StyleSheet = StyleSheet_Addition_3 + self.StyleSheet
+            self.setStyleSheet(self.StyleSheet)
+            self.StyleSheet = StyleSheet_Addition_3 + self.StyleSheet
+            self.setStyleSheet(self.StyleSheet)
 
         # Add an addition for selected tabs
         StyleSheet_Addition_4 = (
@@ -676,8 +676,8 @@ class ModernMenu(RibbonBar):
                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                 + """;}"""
             )
-        StyleSheet = StyleSheet_Addition_4 + StyleSheet
-        self.setStyleSheet(StyleSheet)
+        self.StyleSheet = StyleSheet_Addition_4 + self.StyleSheet
+        self.setStyleSheet(self.StyleSheet)
 
         # add a stylesheet entry for the fontsize for menus
         StyleSheet_Addition_5 = (
@@ -685,9 +685,19 @@ class ModernMenu(RibbonBar):
             + str(Parameters_Ribbon.FONTSIZE_MENUS)
             + "px;}"
         )
-        StyleSheet = StyleSheet + StyleSheet_Addition_5
-        self.setStyleSheet(StyleSheet)
-
+        self.StyleSheet = self.StyleSheet + StyleSheet_Addition_5
+        self.setStyleSheet(self.StyleSheet)
+        
+        # # Add a line at the bottom of the ribbon
+        # StyleSheet_Addition_6 = (
+        # """RibbonCategory {
+        #     border-bottom: 0.5px solid"""
+        # + StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
+        # + """;}"""
+        # )
+        # self.StyleSheet = self.StyleSheet + StyleSheet_Addition_6
+        # self.setStyleSheet(self.StyleSheet)
+        
         # get the state of the mainwindow
         self.MainWindowLoaded = True
 
@@ -850,7 +860,7 @@ class ModernMenu(RibbonBar):
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
-                self.RibbonOffset = 54 + self.QuickAccessButtonSize * 2
+                self.RibbonOffset = 60 + self.QuickAccessButtonSize * 2
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(
                     0, self.QuickAccessButtonSize
                 )
@@ -872,7 +882,7 @@ class ModernMenu(RibbonBar):
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize + 10
-                self.RibbonOffset = 46 + self.QuickAccessButtonSize
+                self.RibbonOffset = 52 + self.QuickAccessButtonSize
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(
                     0, self.QuickAccessButtonSize
                 )
@@ -1054,7 +1064,8 @@ class ModernMenu(RibbonBar):
                         # self.contextMenu.setStyleSheet("spacing: 0px; margin: 0px; padding: 0px;")
     
                         # set the checkbox for enabling text
-                        RibbonButtonAction_Text = CheckBoxAction(self, translate("FreeCAD Ribbon", "Show button text"))
+                        RibbonButtonAction_Text = ToggleAction(self, translate("FreeCAD Ribbon", "Show button text"))
+                        RibbonButtonAction_Text.setText(translate("FreeCAD Ribbon", "Show button text"))
                         # Check if the widget has text enabled
                         textVisible = False
                         for child in widget.children():
@@ -1062,7 +1073,7 @@ class ModernMenu(RibbonBar):
                                 textVisible = child.isVisible()
                         # Set the checkbox action checked or unchecked
                         RibbonButtonAction_Text.setChecked(textVisible)  
-                        RibbonButtonAction_Text.setFixedHeight(21)
+                        RibbonButtonAction_Text.setFixedSize(82,41)
                         RibbonButtonAction_Text.checkStateChanged.connect(lambda: self.on_TextState_Changed(panel, widget, RibbonButtonAction_Text))
                         # Add the checkbox action to the contextmenu
                         self.contextMenu.addAction(RibbonButtonAction_Text)
@@ -1072,6 +1083,7 @@ class ModernMenu(RibbonBar):
                         RibbonButtonAction_Size.setMinimum(16)
                         RibbonButtonAction_Size.setMaximum(120)                        
                         RibbonButtonAction_Size.setValue(widget.height())
+                        RibbonButtonAction_Size.setFixedWidth(82)
                         RibbonButtonAction_Size.valueChanged.connect(lambda: self.on_ButtonSize_Changed(panel, widget, RibbonButtonAction_Size))
                         self.contextMenu.addAction(RibbonButtonAction_Size)
                         
@@ -1080,8 +1092,13 @@ class ModernMenu(RibbonBar):
                         RibbonButtonAction_Style.addItem("Small")
                         RibbonButtonAction_Style.addItem("Medium")
                         RibbonButtonAction_Style.addItem("Large")
-                        RibbonButtonAction_Style.addItem("")
-                        RibbonButtonAction_Style.setCurrentText("")
+                        if widget.objectName() == "CustomWidget_Small":
+                            RibbonButtonAction_Style.setCurrentText("Small")
+                        if widget.objectName() == "CustomWidget_Medium":
+                            RibbonButtonAction_Style.setCurrentText("Medium")
+                        if widget.objectName() == "CustomWidget_Large":
+                            RibbonButtonAction_Style.setCurrentText("Large")
+                        RibbonButtonAction_Style.setFixedWidth(82)
                         RibbonButtonAction_Style.currentTextChanged.connect(lambda: self.on_ButtonStyle_Clicked(panel, widget, RibbonButtonAction_Style, RibbonButtonAction_Size))                      
                         self.contextMenu.addAction(RibbonButtonAction_Style)
                         
@@ -1153,8 +1170,6 @@ class ModernMenu(RibbonBar):
                 CustomizeStartAct = self.contextMenu.addAction(title)
                 action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
 
-                
-                Stylesheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
                 if action == CustomizeStartAct:
                     if self.CustomizeEnabled is False:
                         # Set a stylesheet to indicate that you are in the customize enviroment
@@ -1162,11 +1177,11 @@ class ModernMenu(RibbonBar):
                             border-top: 0.5px solid red;
                             border-bottom: 0.5px solid red;
                         }"""
-                        Stylesheet = Stylesheet + Addition
-                        self.setStyleSheet(Stylesheet)                        
+                        StyleSheet = self.StyleSheet + Addition
+                        self.setStyleSheet(StyleSheet)                        
                         self.CustomizeEnabled = True
                         # Just incase
-                        self.setRibbonHeight(self.RibbonHeight)
+                        self.setRibbonHeight(self.RibbonHeight+6)
                         
                         # Enable all buttons, so you can access them with a right click
                         # Disable also the signals to avoid triggering the action
@@ -1231,7 +1246,7 @@ class ModernMenu(RibbonBar):
                                 EnableControl.setVisible(True)
                         return
                     if self.CustomizeEnabled is True:
-                        self.setStyleSheet(Stylesheet)
+                        self.setStyleSheet(self.StyleSheet)
                         self.CustomizeEnabled = False
                         self.setRibbonHeight(self.RibbonHeight)
 
@@ -1283,7 +1298,7 @@ class ModernMenu(RibbonBar):
                         for title, panel in self.currentCategory().panels().items():
                             # hide the enable checkboxes and hide the panel if it is unchecked
                             titleLayout: QHBoxLayout = panel._titleLayout
-                            EnableControl: QCheckBox = titleLayout.itemAt(0).widget()
+                            EnableControl = titleLayout.itemAt(0).widget()
                             if EnableControl is not None:
                                 if EnableControl.checkState() == Qt.CheckState.Unchecked:
                                     # Hide the panel
@@ -2292,22 +2307,6 @@ class ModernMenu(RibbonBar):
                         # Set the title
                         category = self.addCategory(name)
                         category.setObjectName(workbenchName)
-                        
-                        # def mouseMoveEvent(self, e, customizeEnabled: bool):
-                        #     if e.buttons() == Qt.MouseButton.LeftButton and customizeEnabled is True:
-                        #         try:
-                        #             drag = QDrag(self)
-                        #             mime = QMimeData()
-                        #             drag.setMimeData(mime)
-                        #             pixmap = QPixmap(self.size())
-                        #             self.render(pixmap)
-                        #             drag.setPixmap(pixmap)
-
-                        #             drag.exec(Qt.DropAction.MoveAction)
-                        #         except Exception as e:
-                        #             print(e)
-                        
-                        # category.mouseMoveEvent = lambda e: mouseMoveEvent(category, e, self.CustomizeEnabled)
 
                         # Set the tabbar according the style setting
                         if Parameters_Ribbon.TABBAR_STYLE <= 1:
@@ -2502,8 +2501,9 @@ class ModernMenu(RibbonBar):
             pinButton.setChecked(True)
             pinButton.setDisabled(True)
         else:
-            pinButton.clicked.connect(self.on_Pin_clicked)
-            self.rightToolBar().addWidget(pinButton)
+            pinButton.clicked.connect(lambda: self.on_Pin_clicked(pinButton))
+            # pinbutton is moved to the ribbon right bottom corner
+            # self.rightToolBar().addWidget(pinButton)
 
         # if the FreeCAD titlebar is hidden,add close, minimize and maximize buttons
         if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
@@ -2578,7 +2578,7 @@ class ModernMenu(RibbonBar):
             self.rightToolBar().addWidget(CloseButton)
 
         # Add a switch to enable beta functions
-        BetaLabel = QLabel(translate("FreeCAD Ribbon", "Experimental functions"))
+        BetaLabel = QLabel(translate("FreeCAD Ribbon", "Béta functions"))
         BeforeAction = self.rightToolBar().actions()[1]
         self.rightToolBar().insertWidget(BeforeAction, BetaLabel)
         switch = Toggle()
@@ -2613,7 +2613,7 @@ class ModernMenu(RibbonBar):
         RightToolbarWidth = (
             SearchBarWidth
             + 3 * (self.RightToolBarButtonSize + 16)
-            + self.RightToolBarButtonSize
+            # + self.RightToolBarButtonSize
         )
         if Parameters_Ribbon.USE_FC_OVERLAY is True:
             RightToolbarWidth = SearchBarWidth + 2 * (self.RightToolBarButtonSize + 16)
@@ -2626,6 +2626,9 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setSizeIncrement(1, 1)
         # Set the objectName for the right toolbar. needed for excluding from hiding.
         self.rightToolBar().setObjectName("rightToolBar")
+        
+        # Store the pinbutton globally
+        self.pinButton = pinButton
         return
 
     # Add the searchBar if it is present
@@ -3340,6 +3343,15 @@ class ModernMenu(RibbonBar):
             self.quickAccessToolBar().setDisabled(True)
             self.applicationOptionButton().setDisabled(True)
             Gui.updateGui()
+        
+        layout: QGridLayout = self.currentCategory()._mainLayout
+        btn = QToolButton()
+        btn.setIcon(self.pinButton.icon())
+        btn.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
+        btn.setCheckable(True)
+        btn.setChecked(not Parameters_Ribbon.AUTOHIDE_RIBBON)
+        btn.clicked.connect(lambda: self.on_Pin_clicked(btn))
+        layout.addWidget(btn, 2,2,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
         return
 
     # endregion
@@ -3370,15 +3382,12 @@ class ModernMenu(RibbonBar):
             webbrowser.open(Adress, new=2, autoraise=True)
         return
 
-    def on_Pin_clicked(self):
+    def on_Pin_clicked(self, pinButton):
         if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
             self.FoldRibbon()
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", True)
             Parameters_Ribbon.AUTOHIDE_RIBBON = True
 
-            pinButton: QToolButton = self.rightToolBar().findChildren(
-                QToolButton, "Pin Ribbon"
-            )[0]
             pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
 
             # Make sure that the ribbon remains visible
@@ -3390,9 +3399,6 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
             Parameters_Ribbon.AUTOHIDE_RIBBON = False
 
-            pinButton: QToolButton = self.rightToolBar().findChildren(
-                QToolButton, "Pin Ribbon"
-            )[0]
             pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
 
             # Make sure that the ribbon remains visible
@@ -4901,13 +4907,14 @@ class ModernMenu(RibbonBar):
         
         # Add a checkbox to the titlebar. Used for enabling or disabling panels. Default is hidden
         titleLayout: QHBoxLayout = panel._titleLayout
-        EnableControl = QCheckBox()
+        # EnableControl = QCheckBox()
+        EnableControl = Toggle()
         EnableControl.setChecked(True)
         if panel.objectName() in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]:
             if "Enabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
                 Enabled = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"]
                 EnableControl.setChecked(bool(Enabled))
-        EnableControl.setFixedWidth(20)
+        EnableControl.setFixedWidth(32)
         EnableControl.setObjectName("EnablePanel")
         titleLayout.insertWidget(0, EnableControl)
         if showEnableControl is False:
@@ -4932,13 +4939,13 @@ class ModernMenu(RibbonBar):
         panel._actionsLayout.setSpacing(self.ButtonSpacing)
         panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         panel._mainLayout.setSpacing(0)
-        panel._actionsLayout.setContentsMargins(0, self.TopMargin, 0, self.BottomMargin) # Left, Top, Right, Bottom
+        panel._actionsLayout.setContentsMargins(0, self.TopMargin, 3, self.BottomMargin) # Left, Top, Right, Bottom
         panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
         Font = QFont()
         Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
         panel._titleLabel.setFont(Font)
-        panel._titleLabel.setMaximumHeight(Parameters_Ribbon.FONTSIZE_PANELS+3)
-        self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset) + 6
+        panel._titleLabel.setFixedHeight(Parameters_Ribbon.FONTSIZE_PANELS+3)
+        self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset)
         return
     
     def PopulateOverflowMenu(self, panel: RibbonPanel, ButtonList: list):
