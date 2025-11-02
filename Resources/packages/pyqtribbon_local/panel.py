@@ -216,7 +216,7 @@ class RibbonPanel(QFrame):
 
         # Main layout
         self._mainLayout = QGridLayout(self)
-        self._mainLayout.setContentsMargins(0, 0, 0, 0)
+        self._mainLayout.setContentsMargins(0, 0, 3, 0)
         self._mainLayout.setSpacing(0)
                 
         # Actions layout
@@ -249,7 +249,7 @@ class RibbonPanel(QFrame):
         self._mainLayout.addWidget(self._titleWidget, 1,0,1,1)
         
         # Add a separator
-        self._separator = RibbonVerticalSeparator()
+        self._separator = RibbonVerticalSeparator(width=3)
         self._mainLayout.addWidget(self._separator, 0,1,2,1)  
                  
     def maximumRows(self) -> int:
