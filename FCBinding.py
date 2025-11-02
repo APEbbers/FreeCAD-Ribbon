@@ -1181,7 +1181,6 @@ class ModernMenu(RibbonBar):
                         Gui.updateGui()
 
                         # Create all order lists and commands, incase they are not all present
-                  
                         for title, objPanel in self.currentCategory().panels().items():
                             objPanel.show()
                             # Get the panel name and the gridlayout
@@ -1263,6 +1262,9 @@ class ModernMenu(RibbonBar):
                                     panels[title] = replacedPanel
                                     # Set the bool to True
                                     IsNewPanel = True
+                                    # Set the width again with the stored value. This insures that the panels don´t resize. 
+                                    # They will otherwise for some reason
+                                    newPanel.setFixedWidth(width)
                                     break
                             # If it is not a new panel, add the current panel to the dict.
                             if IsNewPanel is False:
@@ -1271,6 +1273,10 @@ class ModernMenu(RibbonBar):
                             # They will otherwise for some reason
                             panel.setFixedWidth(width)
                                                                                 
+                        # Update the panel dict of the current catergory with the new panels dict
+                        self.currentCategory()._panels = panels
+                        # Hide unchecked panels after the panel duct is updated
+                        for title, panel in self.currentCategory().panels().items():
                             # hide the enable checkboxes and hide the panel if it is unchecked
                             titleLayout: QHBoxLayout = panel._titleLayout
                             EnableControl: QCheckBox = titleLayout.itemAt(0).widget()
@@ -1285,10 +1291,9 @@ class ModernMenu(RibbonBar):
                                     # Write the state to the structure
                                     StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName, "toolbars", panel.objectName(), "Enabled"])
                                     self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"] = True
+                                    panel.show()
                                 EnableControl.setVisible(False)
                         
-                        # Update the panel dict of the current catergory with the new panels dict
-                        self.currentCategory()._panels = panels
                         # Clear the list with the long panels, so that it can be filled again next time
                         self.longPanels.clear()
                         panel = None
@@ -1664,7 +1669,7 @@ class ModernMenu(RibbonBar):
                         DraggedWidget = DraggedItem.widget().findChild(CustomControls)
 
                         # Get the workbench name and the panel name                  
-                        panelName = panel.objectName()
+                        title = panel.objectName()
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                         
                         # Get the order list, if there isn't one, create it
@@ -1678,7 +1683,7 @@ class ModernMenu(RibbonBar):
                                 "order"
                             ],
                         )
-                        OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
+                        OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][title]["order"]
                         # if OrderList is None or len(OrderList) == 0:
                         OrderList_Compare = []
                         for n in range(gridLayout.count()):
@@ -1724,7 +1729,7 @@ class ModernMenu(RibbonBar):
                         Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
                         newPanel._titleLabel.setFont(Font)
                         newPanel._titleLabel.setMaximumHeight(Parameters_Ribbon.FONTSIZE_PANELS+3)
-                        
+                                                
                         # Close the old panel and the dragindicator
                         panel.close()
                         self.dragIndicator_Buttons.close()
@@ -1734,24 +1739,34 @@ class ModernMenu(RibbonBar):
             position = self.find_drop_location(event)
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            panel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True)
+            newPanel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True)
             # Add the new panel
-            self.currentCategory().insertWidget(panel,position[0])
-
-            # Close the current panel and the right separator
+            self.currentCategory().insertWidget(newPanel,position[0])
+            
+            # Update the dict of the currentCategory with the new panel
+            panels = {}
+            for title, panel in self.currentCategory().panels().items():
+                StandardFunctions.add_keys_nested_dict(panels, [title])
+                if panel.objectName() == newPanel.objectName():
+                    panels[title] = newPanel
+                else:
+                    panels[title] = panel
+            self.currentCategory()._panels = panels
+            
+            # Close the current panel
             widget.close()
 
             # Create the current orderlist from the panels
             OrderList:list = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
             # if a panel is not in the orderlist, add it
-            for panelName, panel in self.currentCategory().panels().items():
+            for title, panel in self.currentCategory().panels().items():
                 if panel.objectName() not in OrderList:
                     OrderList.append(panel.objectName())
             # if an item in the orderlist is not in the panel list, remove it from the order list
             for panelItem in OrderList:
                 isInList = False
-                for panelName, panel in self.currentCategory().panels().items():
-                    if panelName == panelItem:
+                for title, panel in self.currentCategory().panels().items():
+                    if title == panelItem:
                         isInList = True
                 if isInList is False:
                     OrderList.remove(panelItem)
@@ -1762,7 +1777,7 @@ class ModernMenu(RibbonBar):
                 OrderList.remove(widget.objectName())
             OrderList.insert(OrderIndex, widget.objectName())
             
-            # Update the dict
+            # Update the workbench dict
             self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"] = OrderList
             
             # Close the drag indicator
