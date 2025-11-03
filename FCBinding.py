@@ -3371,11 +3371,15 @@ class ModernMenu(RibbonBar):
         # Add a pinbutton to the current tab in the right bottom corner
         layout: QGridLayout = self.currentCategory()._mainLayout
         btn = QToolButton()
-        btn.setIcon(self.pinButton.icon())
+        # btn.setIcon(self.pinButton.icon())
         btn.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
         btn.setObjectName("pinButton")
         btn.setCheckable(True)
         btn.setChecked(not Parameters_Ribbon.AUTOHIDE_RIBBON)
+        if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
+            btn.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
+        else:
+            btn.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
         btn.clicked.connect(lambda: self.on_Pin_clicked(btn))
         layout.addWidget(btn, 2,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
         # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
