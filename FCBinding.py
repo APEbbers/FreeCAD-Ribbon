@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -48,7 +48,7 @@ from PySide.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -84,7 +84,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -281,6 +281,9 @@ class ModernMenu(RibbonBar):
     # Create a list for panels that have a option button which have to be restored when exitiing the customisation enviroment
     longPanels = []
     replacedPanel = None
+    
+    # Create a list to store the pin buttons off each category
+    pinButtonList = []
     # endregion
 
     def __init__(self):
@@ -1975,6 +1978,17 @@ class ModernMenu(RibbonBar):
         
         # hide normal toolbars
         self.hideClassicToolbars()
+        
+        # # Set the state of the pinButton
+        # layout: QGridLayout = self.currentCategory()._mainLayout
+        # print(layout.children())
+        # pinButton = layout.findChild(QToolButton, "pinButton")
+        # if pinButton is not None:
+        #     pinButton.setChecked(not Parameters_Ribbon.AUTOHIDE_RIBBON)
+        #     if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
+        #         pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
+        #     if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
+        #         pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
         return
 
     def onWbActivated(self):
@@ -3354,14 +3368,18 @@ class ModernMenu(RibbonBar):
             self.applicationOptionButton().setDisabled(True)
             Gui.updateGui()
         
+        # Add a pinbutton to the current tab in the right bottom corner
         layout: QGridLayout = self.currentCategory()._mainLayout
         btn = QToolButton()
         btn.setIcon(self.pinButton.icon())
         btn.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
+        btn.setObjectName("pinButton")
         btn.setCheckable(True)
         btn.setChecked(not Parameters_Ribbon.AUTOHIDE_RIBBON)
         btn.clicked.connect(lambda: self.on_Pin_clicked(btn))
         layout.addWidget(btn, 2,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+        # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
+        self.pinButtonList.append(btn)
         return
 
     # endregion
@@ -3399,6 +3417,10 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.AUTOHIDE_RIBBON = True
 
             pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
+            # Set the pin button for all tabs
+            for btn in self.pinButtonList:
+                btn.setChecked(False)
+                btn.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
 
             # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
@@ -3410,6 +3432,10 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.AUTOHIDE_RIBBON = False
 
             pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
+            # Set the pin button for all tabs
+            for btn in self.pinButtonList:
+                btn.setChecked(True)
+                btn.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
 
             # Make sure that the ribbon remains visible
             self.setRibbonVisible(True)
