@@ -1435,7 +1435,6 @@ class Toggle(QCheckBox):
         self._handle_checked_brush = QBrush(QColor(checked_color))
 
         # Setup the rest of the widget.
-
         self.setContentsMargins(8, 0, 8, 0)
         self._handle_position = 0
 
