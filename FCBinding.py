@@ -4549,18 +4549,18 @@ class ModernMenu(RibbonBar):
                         spacer_1 = panel.addSmallButton()
                         spacer_1.setFixedWidth(self.iconSize)
                         spacer_1.setEnabled(False)
-                        spacer_1.setStyleSheet("background-color: none")
+                        spacer_1.setStyleSheet("background-color: none;border: none")
                         spacer_1.setObjectName("spacer")
                     if float((NoSmallButtons_spacer + 2) / 3).is_integer():
                         spacer_1 = panel.addSmallButton()
                         spacer_1.setFixedWidth(self.iconSize)
                         spacer_1.setEnabled(False)
-                        spacer_1.setStyleSheet("background-color: none")
+                        spacer_1.setStyleSheet("background-color: none;border: none")
                         spacer_1.setObjectName("spacer")
                         spacer_2 = panel.addSmallButton()
                         spacer_2.setFixedWidth(self.iconSize)
                         spacer_2.setEnabled(False)
-                        spacer_2.setStyleSheet("background-color: none")
+                        spacer_2.setStyleSheet("background-color: none;border: none")
                         spacer_1.setObjectName("spacer")
                     # reset the counter after a separator is added.
                     NoSmallButtons_spacer = 0
@@ -4569,7 +4569,7 @@ class ModernMenu(RibbonBar):
                         spacer_1 = panel.addMediumButton()
                         spacer_1.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
                         spacer_1.setEnabled(False)
-                        spacer_1.setStyleSheet("background-color: none")
+                        spacer_1.setStyleSheet("background-color: none;border: none")
                         spacer_1.setObjectName("spacer")
                     NoMediumButtons_spacer = 0
                     continue
