@@ -1031,6 +1031,7 @@ class ModernMenu(RibbonBar):
     # endregion
 
     # region - Customise functions
+    panelWidths = {}
     def contextMenuEvent(self, event):
         widget = None
         panel = None
@@ -1197,9 +1198,13 @@ class ModernMenu(RibbonBar):
                             except Exception:
                                 pass
                         Gui.updateGui()
+                        
+                        # Store the original sizes of each panel so that they can be restored when exiting the customization enviroment
+                        for title, panel in self.currentCategory().panels().items():                        
+                            self.panelWidths[panel.objectName()] = panel.width()
 
                         # Create all order lists and commands, incase they are not all present
-                        for title, objPanel in self.currentCategory().panels().items():
+                        for title, objPanel in self.currentCategory().panels().items():                            
                             objPanel.show()
                             # Get the panel name and the gridlayout
                             panelName = objPanel.objectName()
@@ -1231,6 +1236,7 @@ class ModernMenu(RibbonBar):
                                 # Write the order list
                                 Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], [])                         
                                 self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                                                        
+
                             # If the panel has an overflow menu, replace it with a complete (long) panel
                             if objPanel.panelOptionButton().isVisible():
                                 newPanel = self.CreatePanel(workbenchName, objPanel.objectName(), False, self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)                                
@@ -1266,9 +1272,12 @@ class ModernMenu(RibbonBar):
                         # Restore the original panel with the overflow menu
                         panels = {} # Needed to update the panel dict of the currentCategory
                         for title, panel in self.currentCategory().panels().items():
+                            # Get the original width of this panel
+                            width = self.panelWidths[panel.objectName()]
+                            
+                            # Create keys if there are not existing yet for the temporary panel dict
                             StandardFunctions.add_keys_nested_dict(panels, [title])
-                            # Store the current width of the panel. 
-                            width = panel.width()
+                            
                             # Create a bool to state if a panel is new or not
                             IsNewPanel = False
                             for longPanel in self.longPanels:
@@ -1280,7 +1289,7 @@ class ModernMenu(RibbonBar):
                                     self.setPanelProperties(replacedPanel)
                                     # Close the old panel
                                     longPanel.close()
-                                    # Update the panels dicts
+                                    # Update the temporary panel dict
                                     panels[title] = replacedPanel
                                     # Set the bool to True
                                     IsNewPanel = True
@@ -1288,15 +1297,16 @@ class ModernMenu(RibbonBar):
                                     # They will otherwise for some reason
                                     newPanel.setFixedWidth(width)
                                     break
-                            # If it is not a new panel, add the current panel to the dict.
+                            # If it is not a new panel, add the current panel to temporary panel dict
                             if IsNewPanel is False:
                                 panels[title] = panel
                             # Set the width again with the stored value. This insures that the panels don´t resize. 
                             # They will otherwise for some reason
-                            panel.setFixedWidth(width)
-                                                                                
-                        # Update the panel dict of the current catergory with the new panels dict
+                            panel.setFixedWidth(width)                   
+                                                                                                            
+                        # Update the panel dict of the current catergory with the temporary panel dict
                         self.currentCategory()._panels = panels
+                        
                         # Hide unchecked panels after the panel duct is updated
                         for title, panel in self.currentCategory().panels().items():
                             # hide the enable checkboxes and hide the panel if it is unchecked
@@ -1315,15 +1325,16 @@ class ModernMenu(RibbonBar):
                                     self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"] = True
                                     panel.show()
                                 EnableControl.setVisible(False)
-                        
+                                                                                        
                         # Clear the list with the long panels, so that it can be filled again next time
-                        self.longPanels.clear()
+                        self.longPanels.clear()                        
                         panel = None
                         
                         # Writing to ribbonStructure.json
                         JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
                         with open(JsonFile, "w") as outfile:
                             json.dump(self.ribbonStructure, outfile, indent=4)
+        
         return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                                 
@@ -4985,7 +4996,8 @@ class ModernMenu(RibbonBar):
         Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
         panel._titleLabel.setFont(Font)
         panel._titleLabel.setFixedHeight(Parameters_Ribbon.FONTSIZE_PANELS+3)
-        self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset)
+        # panel._titleLayout.setSizeConstraint(QGridLayout.SizeConstraint.SetFixedSize)
+        self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset)                
         return
     
     def PopulateOverflowMenu(self, panel: RibbonPanel, ButtonList: list):
@@ -5032,6 +5044,7 @@ class ModernMenu(RibbonBar):
                     Qt.ToolButtonStyle.ToolButtonTextBesideIcon
                 )
                 OptionButton.setText("more...")
+        OptionButton.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL)
         if len(actionList) == 0:
             panel.panelOptionButton().hide()
         return panel
