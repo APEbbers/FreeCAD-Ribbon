@@ -1200,8 +1200,8 @@ class ModernMenu(RibbonBar):
                         Gui.updateGui()
                         
                         # Store the original sizes of each panel so that they can be restored when exiting the customization enviroment
-                        for title, panel in self.currentCategory().panels().items():                        
-                            self.panelWidths[panel.objectName()] = panel.width()
+                        for title, objPanel in self.currentCategory().panels().items():                        
+                            self.panelWidths[objPanel.objectName()] = objPanel.width()
 
                         # Create all order lists and commands, incase they are not all present
                         for title, objPanel in self.currentCategory().panels().items():                            
@@ -1271,9 +1271,9 @@ class ModernMenu(RibbonBar):
                         
                         # Restore the original panel with the overflow menu
                         panels = {} # Needed to update the panel dict of the currentCategory
-                        for title, panel in self.currentCategory().panels().items():
+                        for title, objPanel in self.currentCategory().panels().items():
                             # Get the original width of this panel
-                            width = self.panelWidths[panel.objectName()]
+                            width = self.panelWidths[objPanel.objectName()]
                             
                             # Create keys if there are not existing yet for the temporary panel dict
                             StandardFunctions.add_keys_nested_dict(panels, [title])
@@ -1281,16 +1281,18 @@ class ModernMenu(RibbonBar):
                             # Create a bool to state if a panel is new or not
                             IsNewPanel = False
                             for longPanel in self.longPanels:
-                                if longPanel.objectName() == panel.objectName():
+                                if longPanel.objectName() == objPanel.objectName():
                                     # Create a panel and replace the long panel with this one
-                                    newPanel = self.CreatePanel(workbenchName, panel.objectName(), False, self.workBenchDict)
-                                    replacedPanel = self.currentCategory().replacePanel(longPanel, newPanel)
+                                    newPanel = self.CreatePanel(workbenchName, objPanel.objectName(), False, self.workBenchDict)
                                     # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-                                    self.setPanelProperties(replacedPanel)
+                                    self.setPanelProperties(newPanel)
+                                    self.currentCategory().replacePanel(longPanel, newPanel)
+                                    self.currentCategory().replacePanel(objPanel, newPanel)
                                     # Close the old panel
+                                    objPanel.close()
                                     longPanel.close()
                                     # Update the temporary panel dict
-                                    panels[title] = replacedPanel
+                                    panels[title] = newPanel
                                     # Set the bool to True
                                     IsNewPanel = True
                                     # Set the width again with the stored value. This insures that the panels don´t resize. 
@@ -1299,31 +1301,31 @@ class ModernMenu(RibbonBar):
                                     break
                             # If it is not a new panel, add the current panel to temporary panel dict
                             if IsNewPanel is False:
-                                panels[title] = panel
+                                panels[title] = objPanel
                             # Set the width again with the stored value. This insures that the panels don´t resize. 
                             # They will otherwise for some reason
-                            panel.setFixedWidth(width)                   
+                            objPanel.setFixedWidth(width)                   
                                                                                                             
                         # Update the panel dict of the current catergory with the temporary panel dict
                         self.currentCategory()._panels = panels
                         
                         # Hide unchecked panels after the panel duct is updated
-                        for title, panel in self.currentCategory().panels().items():
+                        for title, objPanel in self.currentCategory().panels().items():
                             # hide the enable checkboxes and hide the panel if it is unchecked
-                            titleLayout: QHBoxLayout = panel._titleLayout
+                            titleLayout: QHBoxLayout = objPanel._titleLayout
                             EnableControl = titleLayout.itemAt(0).widget()
                             if EnableControl is not None:
                                 if EnableControl.checkState() == Qt.CheckState.Unchecked:
                                     # Hide the panel
-                                    panel.hide()
+                                    objPanel.hide()
                                     # Write the state to the structure
-                                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName, "toolbars", panel.objectName(), "Enabled"])
-                                    self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"] = False
+                                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName, "toolbars", objPanel.objectName(), "Enabled"])
+                                    self.ribbonStructure["workbenches"][workbenchName]["toolbars"][objPanel.objectName()]["Enabled"] = False
                                 if EnableControl.checkState() == Qt.CheckState.Checked:
                                     # Write the state to the structure
-                                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName, "toolbars", panel.objectName(), "Enabled"])
-                                    self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"] = True
-                                    panel.show()
+                                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName, "toolbars", objPanel.objectName(), "Enabled"])
+                                    self.ribbonStructure["workbenches"][workbenchName]["toolbars"][objPanel.objectName()]["Enabled"] = True
+                                    objPanel.show()
                                 EnableControl.setVisible(False)
                                                                                         
                         # Clear the list with the long panels, so that it can be filled again next time
@@ -1760,14 +1762,7 @@ class ModernMenu(RibbonBar):
                         self.currentCategory().replacePanel(panel, newPanel)
                         
                         # Update the dict of the currentCategory with the new panel
-                        panels = {}
-                        for title, panel in self.currentCategory().panels().items():
-                            StandardFunctions.add_keys_nested_dict(panels, [title])
-                            if panel.objectName() == newPanel.objectName():
-                                panels[title] = newPanel
-                            else:
-                                panels[title] = panel
-                        self.currentCategory()._panels = panels
+                        self.currentCategory()._panels[newPanel.objectName()] = newPanel
                         
                         # Close the old panel and the dragindicator
                         panel.close()
