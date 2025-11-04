@@ -1288,6 +1288,8 @@ class ModernMenu(RibbonBar):
                                     self.setPanelProperties(newPanel)
                                     self.currentCategory().replacePanel(longPanel, newPanel)
                                     self.currentCategory().replacePanel(objPanel, newPanel)
+                                    # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                                    self.setPanelProperties(newPanel)
                                     # Close the old panel
                                     objPanel.close()
                                     longPanel.close()
@@ -1354,10 +1356,17 @@ class ModernMenu(RibbonBar):
         # Create a new panel
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
+        # Add the panel to the list with long panels
         self.longPanels.append(newPanel)
         
         # Replace the panel with the new panel
         self.currentCategory().replacePanel(panel, newPanel)
+        # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+        self.setPanelProperties(newPanel)
+        
+        # Update the dict of the currentCategory with the new panel
+        self.currentCategory()._panels[newPanel.objectName()] = newPanel
+        
         panel.close()
         
         self.contextMenu.close()
@@ -1415,10 +1424,17 @@ class ModernMenu(RibbonBar):
          # Create a new panel
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())        
         newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
+        # Add the panel to the list with long panels
         self.longPanels.append(newPanel)
         
         # Replace the panel with the new panel
         self.currentCategory().replacePanel(panel, newPanel)
+        # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+        self.setPanelProperties(newPanel)
+        
+        # Update the dict of the currentCategory with the new panel
+        self.currentCategory()._panels[newPanel.objectName()] = newPanel
+        
         panel.close()
         
         self.contextMenu.close()   
@@ -1461,10 +1477,17 @@ class ModernMenu(RibbonBar):
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
             newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True)
+            # Add the panel to the list with long panels
             self.longPanels.append(newPanel)
             
             # Replace the panel with the new panel
             self.currentCategory().replacePanel(panel, newPanel)
+            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+            self.setPanelProperties(newPanel)
+            
+            # Update the dict of the currentCategory with the new panel
+            self.currentCategory()._panels[newPanel.objectName()] = newPanel
+                        
             panel.close()
             self.contextMenu.close()
         return
@@ -1497,10 +1520,17 @@ class ModernMenu(RibbonBar):
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
             newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
+            # Add the panel to the list with long panels
             self.longPanels.append(newPanel)
             
             # Replace the panel with the new panel
             self.currentCategory().replacePanel(panel, newPanel)
+            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+            self.setPanelProperties(newPanel)
+            
+            # Update the dict of the currentCategory with the new panel
+            self.currentCategory()._panels[newPanel.objectName()] = newPanel
+            
             panel.close()
             # Close the old separator, just in case
             separator.close()
