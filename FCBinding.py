@@ -1032,8 +1032,6 @@ class ModernMenu(RibbonBar):
 
     # region - Customise functions
     def contextMenuEvent(self, event):
-        widget = None
-        panel = None
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         
         # Create the menu
@@ -1066,18 +1064,34 @@ class ModernMenu(RibbonBar):
                         self.contextMenu.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
                         # self.contextMenu.setStyleSheet("spacing: 0px; margin: 0px; padding: 0px;")
     
-                        # set the checkbox for enabling text
-                        RibbonButtonAction_Text = ToggleAction(self, translate("FreeCAD Ribbon", "Show button text"))
-                        RibbonButtonAction_Text.setText(translate("FreeCAD Ribbon", "Show button text"))
                         # Check if the widget has text enabled
-                        textVisible = False
-                        for child in widget.children():
-                            if type(child) == QLabel:
-                                textVisible = child.isVisible()
+                        textVisible = None
+                        try:
+                            CommandName = ""
+                            for child in widget.children():
+                                if (
+                                    type(child) is QToolButton
+                                    and child.objectName() == "CommandButton"
+                                ):
+                                    CommandName = child.defaultAction().data()
+                            textVisible = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]["textEnabled"]
+                        except Exception:
+                            pass
+                        if textVisible is None:
+                            for child in widget.children():
+                                if type(child) is QLabel:
+                                    textVisible = child.isVisible()
+                        # set the checkbox for enabling text
+                        RibbonButtonAction_Text = ToggleAction(self, translate("FreeCAD Ribbon", "Show button text"), textVisible)
+                        RibbonButtonAction_Text.setText(translate("FreeCAD Ribbon", "Show button text"))
                         # Set the checkbox action checked or unchecked
-                        RibbonButtonAction_Text.setChecked(textVisible)  
+                        RibbonButtonAction_Text.setChecked(textVisible)
+                        if textVisible is True:
+                            RibbonButtonAction_Text.setCheckState(Qt.CheckState.Checked)
+                        if textVisible is False:
+                            RibbonButtonAction_Text.setCheckState(Qt.CheckState.Unchecked)
                         RibbonButtonAction_Text.setFixedSize(82,41)
-                        RibbonButtonAction_Text.checkStateChanged.connect(lambda: self.on_TextState_Changed(panel, widget, RibbonButtonAction_Text))
+                        RibbonButtonAction_Text.checkStateChanged.connect(lambda: self.on_TextState_Changed(panel, widget, RibbonButtonAction_Text.isChecked()))
                         # Add the checkbox action to the contextmenu
                         self.contextMenu.addAction(RibbonButtonAction_Text)
                         
@@ -1131,7 +1145,8 @@ class ModernMenu(RibbonBar):
                         AddSeparator_Left.triggered.disconnect()                                
                         AddSeparator_Right.triggered.disconnect()
                         ChangeButtonText.textChanged.disconnect()                            
-                        ChangeButtonText.editingFinished.disconnect()                            
+                        ChangeButtonText.editingFinished.disconnect()
+                       
                         return
 
             if titleWidget is not None and self.CustomizeEnabled is True and titleWidget.underMouse():
@@ -1324,7 +1339,8 @@ class ModernMenu(RibbonBar):
                         JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
                         with open(JsonFile, "w") as outfile:
                             json.dump(self.ribbonStructure, outfile, indent=4)
-        
+        widget = None
+        panel = None
         return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                                 
@@ -1399,13 +1415,13 @@ class ModernMenu(RibbonBar):
         self.WriteButtonSettings(ButtonWidget, panel, property)
         return
     
-    def on_TextState_Changed(self, panel: RibbonPanel, ButtonWidget: CustomControls, TextStateWidget: CheckBoxAction):
-        # If the widget has not text, show it with the correct width
-        if TextStateWidget.isChecked() is True:
-            self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()})
+    def on_TextState_Changed(self, panel: RibbonPanel, ButtonWidget: CustomControls, TextEnabled: bool):
+        # If the widget has no text, show it with the correct width
+        if TextEnabled is True:
+            self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextEnabled})
         # if the widget has text, find its QTextEdit and hide it. Update the width
-        if TextStateWidget.isChecked() is False:           
-            self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextStateWidget.isChecked()})
+        if TextEnabled is False:           
+            self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextEnabled})
         
          # Create a new panel
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())        
@@ -1423,7 +1439,7 @@ class ModernMenu(RibbonBar):
         
         # Close the old panel
         panel.close()
-        
+        # Close the context menu
         self.contextMenu.close()   
         return
     

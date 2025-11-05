@@ -1599,10 +1599,10 @@ class AnimatedToggle(Toggle):
 class ToggleAction(QWidgetAction):
     Toggle = Toggle()
     Toggle.setObjectName("toggle")
-    
+        
     checkStateChanged = Toggle.stateChanged
 
-    def __init__(self, parent, text):
+    def __init__(self, parent, text, checked):
         super(ToggleAction, self).__init__(parent)
         layout = QHBoxLayout()
         self.widget = QWidget()
@@ -1611,14 +1611,27 @@ class ToggleAction(QWidgetAction):
         layout.addWidget(self.Toggle)
         layout.addWidget(label)
         self.widget.setLayout(layout)
+        if checked is None:
+            checked = False
+        self.Toggle.setChecked(checked)
         
         self.setCheckable(True)
         self.setDefaultWidget(self.widget)
         return
+        
+    def setCheckState(self, CheckState: Qt.CheckState):
+        self.Toggle.setCheckState(CheckState)
+        if CheckState == Qt.CheckState.Checked:
+            self.Toggle._handle_position = 1
+            self.Toggle.update()
+        else:
+            self.Toggle._handle_position = 0
+            self.Toggle.update()
+        return
 
     def setChecked(self, arg_1, /):
         self.Toggle.setChecked(arg_1)
-        return    
+        return
 
     def isChecked(self, /) -> bool:
         return self.Toggle.isChecked()
@@ -1638,7 +1651,7 @@ class ToggleAction(QWidgetAction):
 class CheckBoxAction(QWidgetAction):
     checkbox = QCheckBox()
     checkbox.setObjectName("checkbox")
-    
+        
     checkStateChanged = checkbox.stateChanged
 
     def __init__(self, parent, text):
@@ -1653,6 +1666,10 @@ class CheckBoxAction(QWidgetAction):
         
         self.setCheckable(True)
         self.setDefaultWidget(self.widget)
+        return
+
+    def setCheckState(self, CheckState: Qt.CheckState):
+        self.checkbox.setCheckState(CheckState)
         return
 
     def setChecked(self, arg_1, /):
