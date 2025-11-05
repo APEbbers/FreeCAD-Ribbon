@@ -1031,7 +1031,6 @@ class ModernMenu(RibbonBar):
     # endregion
 
     # region - Customise functions
-    panelWidths = {}
     def contextMenuEvent(self, event):
         widget = None
         panel = None
@@ -1198,10 +1197,6 @@ class ModernMenu(RibbonBar):
                             except Exception:
                                 pass
                         Gui.updateGui()
-                        
-                        # Store the original sizes of each panel so that they can be restored when exiting the customization enviroment
-                        for title, objPanel in self.currentCategory().panels().items():                        
-                            self.panelWidths[objPanel.objectName()] = objPanel.width()
 
                         # Create all order lists and commands, incase they are not all present
                         for title, objPanel in self.currentCategory().panels().items():                            
@@ -1272,9 +1267,6 @@ class ModernMenu(RibbonBar):
                         # Restore the original panel with the overflow menu
                         panels = {} # Needed to update the panel dict of the currentCategory
                         for title, objPanel in self.currentCategory().panels().items():
-                            # Get the original width of this panel
-                            width = self.panelWidths[objPanel.objectName()]
-                            
                             # Create keys if there are not existing yet for the temporary panel dict
                             StandardFunctions.add_keys_nested_dict(panels, [title])
                             
@@ -1297,16 +1289,10 @@ class ModernMenu(RibbonBar):
                                     panels[title] = newPanel
                                     # Set the bool to True
                                     IsNewPanel = True
-                                    # Set the width again with the stored value. This insures that the panels don´t resize. 
-                                    # They will otherwise for some reason
-                                    newPanel.setFixedWidth(width)
                                     break
                             # If it is not a new panel, add the current panel to temporary panel dict
                             if IsNewPanel is False:
-                                panels[title] = objPanel
-                            # Set the width again with the stored value. This insures that the panels don´t resize. 
-                            # They will otherwise for some reason
-                            objPanel.setFixedWidth(width)                   
+                                panels[title] = objPanel            
                                                                                                             
                         # Update the panel dict of the current catergory with the temporary panel dict
                         self.currentCategory()._panels = panels
@@ -1426,15 +1412,16 @@ class ModernMenu(RibbonBar):
         newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
         # Add the panel to the list with long panels
         self.longPanels.append(newPanel)
-        
+                
         # Replace the panel with the new panel
         self.currentCategory().replacePanel(panel, newPanel)
         # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
         self.setPanelProperties(newPanel)
-        
+
         # Update the dict of the currentCategory with the new panel
         self.currentCategory()._panels[newPanel.objectName()] = newPanel
         
+        # Close the old panel
         panel.close()
         
         self.contextMenu.close()   
@@ -1479,7 +1466,7 @@ class ModernMenu(RibbonBar):
             newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True)
             # Add the panel to the list with long panels
             self.longPanels.append(newPanel)
-            
+
             # Replace the panel with the new panel
             self.currentCategory().replacePanel(panel, newPanel)
             # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
@@ -1487,8 +1474,10 @@ class ModernMenu(RibbonBar):
             
             # Update the dict of the currentCategory with the new panel
             self.currentCategory()._panels[newPanel.objectName()] = newPanel
-                        
+        
+            # Close the old panel                        
             panel.close()
+            # Close the context menu
             self.contextMenu.close()
         return
             
@@ -1523,17 +1512,19 @@ class ModernMenu(RibbonBar):
             # Add the panel to the list with long panels
             self.longPanels.append(newPanel)
             
+            # Update the width in the panel width list
+            newPanel.adjustSize()
+            self.panelWidths[newPanel.objectName()] = newPanel.width()
+            
             # Replace the panel with the new panel
             self.currentCategory().replacePanel(panel, newPanel)
             # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
             self.setPanelProperties(newPanel)
             
-            # Update the dict of the currentCategory with the new panel
-            self.currentCategory()._panels[newPanel.objectName()] = newPanel
-            
+            # Close the old panel                        
             panel.close()
-            # Close the old separator, just in case
-            separator.close()
+            # Close the context menu
+            self.contextMenu.close()
 
     def on_ButtonLabel_Changing(self, event, panel: RibbonPanel, ButtonWidget: CustomControls):
         Text = event
@@ -1591,9 +1582,9 @@ class ModernMenu(RibbonBar):
                     count = count + 1
                 except Exception:
                     break
-                            
-            # Check if there are more than one buttons. If notm there is no point to drag and exit
-            if len(panel.widgets()) <= 2 and type(widget) is not RibbonPanel:
+            
+            # Check if there are more than one buttons. If not there is no point to drag and exit
+            if len(panel.widgets()) <= 2 and type(widget) is not RibbonPanel and panel.findChild(QWidget, "ExtraSpacer") is not None:
                 event.ignore()
             else:
                 event.accept()
@@ -1785,11 +1776,14 @@ class ModernMenu(RibbonBar):
                         # Create a new panel
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                         newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
-                        # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-                        self.setPanelProperties(newPanel)
+                                                
+                        # Add the panel to the list with long panels
+                        self.longPanels.append(newPanel)
                                                 
                         # Replace the panel with the new panel
                         self.currentCategory().replacePanel(panel, newPanel)
+                        # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                        self.setPanelProperties(newPanel)
                         
                         # Update the dict of the currentCategory with the new panel
                         self.currentCategory()._panels[newPanel.objectName()] = newPanel
@@ -5011,18 +5005,27 @@ class ModernMenu(RibbonBar):
     def setPanelProperties(self, panel: RibbonPanel):
         # Set the panelheight. setting the ribbonheigt, cause the first tab to be shown to large
         # add an offset to make room for the panel titles and icons
+        #
+        # Set the properties for the layouts
         panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
         panel._actionsLayout.setSpacing(self.ButtonSpacing)
         panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
-        panel._mainLayout.setSpacing(0)
         panel._actionsLayout.setContentsMargins(0, self.TopMargin, 3, self.BottomMargin) # Left, Top, Right, Bottom
+        panel._mainLayout.setSpacing(0)
+        # Set the horizontal size constraint, so that resizing of the panel works properly
+        panel._mainLayout.setHorizontalSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
         panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
+        # Set the font for the panel title
         Font = QFont()
         Font.setPixelSize(Parameters_Ribbon.FONTSIZE_PANELS)
         panel._titleLabel.setFont(Font)
         panel._titleLabel.setFixedHeight(Parameters_Ribbon.FONTSIZE_PANELS+3)
-        # panel._titleLayout.setSizeConstraint(QGridLayout.SizeConstraint.SetFixedSize)
-        self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset)                
+        # Set the ribbonheight
+        self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset)
+        # Correct the width of the (hidden) option button
+        OptionButton = panel.panelOptionButton()
+        OptionButton.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL)
+        panel.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Expanding)
         return
     
     def PopulateOverflowMenu(self, panel: RibbonPanel, ButtonList: list):
