@@ -1801,7 +1801,8 @@ class LineEditAction(QWidgetAction):
     lineEdit = QLineEdit()
     lineEdit.setObjectName("lineEdit")
     lineEdit.setFixedSize(300, 21)
-    
+    lineEdit.setClearButtonEnabled(True)
+        
     editingFinished  = lineEdit.editingFinished    
     textChanged =  lineEdit.textChanged
     
@@ -1836,4 +1837,7 @@ class LineEditAction(QWidgetAction):
     
     def setFixedSize(self, w, h):
         self.lineEdit.setFixedSize(w,h)
+        
+    def setClearButtonEnabled(self, enable: bool):
+        self.lineEdit.setClearButtonEnabled(enable)
         return

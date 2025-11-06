@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -48,7 +48,7 @@ from PySide6.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -84,7 +84,7 @@ from PySide6.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1062,7 +1062,6 @@ class ModernMenu(RibbonBar):
                         # Define the context menu for buttons
                         self.contextMenu.setContentsMargins(3,3,3,3)
                         self.contextMenu.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
-                        # self.contextMenu.setStyleSheet("spacing: 0px; margin: 0px; padding: 0px;")
     
                         # Check if the widget has text enabled
                         textVisible = None
@@ -1125,7 +1124,8 @@ class ModernMenu(RibbonBar):
                         ChangeButtonText.setText("")
                         ChangeButtonText.setPlaceholderText(text)
                         ChangeButtonText.setFixedSize(200,21)
-                        ChangeButtonText.textChanged.connect(lambda e: self.on_ButtonLabel_Changing(e, panel, widget))
+                        ChangeButtonText.setClearButtonEnabled(True)
+                        ChangeButtonText.textChanged.connect(lambda e: self.on_ButtonLabel_Changing(e, panel, widget, ChangeButtonText))
                         ChangeButtonText.editingFinished.connect(lambda: lambda: self.contextMenu.close())
                         self.contextMenu.addAction(ChangeButtonText)
                         
@@ -1154,7 +1154,8 @@ class ModernMenu(RibbonBar):
                 ChangePanelTitle = CustomWidgets.LineEditAction(self, translate("FreeCAD Ribbon", "Change panel title"))
                 ChangePanelTitle.setText("")
                 ChangePanelTitle.setPlaceholderText(panel.title())
-                ChangePanelTitle.textChanged.connect(lambda e: self.on_PanelTitle_Changing(e, panel))
+                ChangePanelTitle.setClearButtonEnabled(True)
+                ChangePanelTitle.textChanged.connect(lambda e: self.on_PanelTitle_Changing(e, panel, ChangePanelTitle))
                 ChangePanelTitle.editingFinished.connect(lambda: self.contextMenu.close())
                 self.contextMenu.addAction(ChangePanelTitle)
                 
@@ -1542,31 +1543,49 @@ class ModernMenu(RibbonBar):
             # Close the context menu
             self.contextMenu.close()
 
-    def on_ButtonLabel_Changing(self, event, panel: RibbonPanel, ButtonWidget: CustomControls):
+    def on_ButtonLabel_Changing(self, event, panel: RibbonPanel, ButtonWidget: CustomControls, widgetAction: CustomWidgets.LineEditAction):
         Text = event
+        # If the text is empty, restore the original name
+        if Text == "":
+            CommandName = ""
+            for child in ButtonWidget.children():
+                if (
+                    type(child) is QToolButton
+                    and child.objectName() == "CommandButton"
+                ):
+                    CommandName = child.defaultAction().data()
+                    Text = CommandInfoCorrections(CommandName)["menuText"].replace("&", "")
+                    widgetAction.setPlaceholderText(Text)
+        else:
+            widgetAction.setClearButtonEnabled(True)
+                
         # write the changes to the ribbonstructure file
         property = {"text": Text}
         self.WriteButtonSettings(ButtonWidget, panel, property)
         
+        # Set the text also in the label widget
         LabelWidget: QLabel = ButtonWidget.findChild(QLabel)
         LabelWidget.setText(Text)
         return
 
-    def on_PanelTitle_Changing(self, event, panel: RibbonPanel):
-        Text = event
+    def on_PanelTitle_Changing(self, event, panel: RibbonPanel, widgetAction: CustomWidgets.LineEditAction):
         # Get the workbench name and the panel name
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         panelName = panel.objectName()
+        
+        Text = event
+        # If the text is empty, restore the original name
+        if Text == "":
+            Text = self.ReturnPanelTitle(panel, self.workBenchDict, filterOnly=True)
+            widgetAction.setPlaceholderText(Text)
+        else:
+            widgetAction.setClearButtonEnabled(True)
         
         # Create an entry in the dict if there isn't one
         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "title"])
         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["title"] = Text
         # Set the panel title
         panel.setTitle(Text)
-        
-        if Text == "":
-            # Set the panel title
-            panel.setTitle(self.ReturnPanelTitle(panel))
         return
     # endregion
 
@@ -4278,10 +4297,10 @@ class ModernMenu(RibbonBar):
             
         return
                       
-    def ReturnPanelTitle(self, panel: RibbonPanel, dict = ribbonStructure):
+    def ReturnPanelTitle(self, panel: RibbonPanel, dict = ribbonStructure, filterOnly = False):
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         panelName = panel.objectName()
-        #Get the workbenchTitle
+        # Get the workbenchTitle
         index = None
         for i in range(len(self.tabBar().tabTitles())):
             name = self.tabBar().tabData(i)
@@ -4291,42 +4310,41 @@ class ModernMenu(RibbonBar):
         workbenchTitle = self.tabBar().tabText(index)
         title = StandardFunctions.TranslationsMapping(workbenchName, panelName)
         
-        if "workbenches" in dict:
-            if workbenchName in dict["workbenches"]:
-                if "toolbars" in dict["workbenches"][workbenchName]:
-                    if panelName in dict["workbenches"][workbenchName]["toolbars"]:
-                        if "title" in dict["workbenches"][workbenchName]["toolbars"][panelName]:
-                            if dict["workbenches"][workbenchName]["toolbars"][panelName]["title"] != "":
-                                return dict["workbenches"][workbenchName]["toolbars"][panelName]["title"]
-        
+        if filterOnly is False:
+            if "workbenches" in dict:
+                if workbenchName in dict["workbenches"]:
+                    if "toolbars" in dict["workbenches"][workbenchName]:
+                        if panelName in dict["workbenches"][workbenchName]["toolbars"]:
+                            if "title" in dict["workbenches"][workbenchName]["toolbars"][panelName]:
+                                if dict["workbenches"][workbenchName]["toolbars"][panelName]["title"] != "":
+                                    return dict["workbenches"][workbenchName]["toolbars"][panelName]["title"]
         # Change the name of the view panels to "View"
         if (
-            panel.title() in "Views - Ribbon_newPanel"
-            or panel.title().lower() in str("Individual views").lower()
+            title in "Views - Ribbon_newPanel"
+            or title.lower() in str("Individual views").lower()
         ):
             panel.setTitle(" Views ")
-        else:           
+        else:
             # Remove possible workbench names from the titles
             if (
-                not "_custom" in title
-                and not "_global" in title
-                and not "_newPanel" in title
+                "_custom" not in title
+                and "_global" not in title
+                and "_newPanel" not in title
             ):
                 List = [
                     workbenchName,
                     workbenchTitle,
                     workbenchTitle.replace(" ", ""),
                 ]
-                for Name in List:                            
+                for Name in List:                          
                     ListDelimiters = [" - ", "-", "_"]
                     for delimiter in ListDelimiters:
                         if f"{delimiter}{Name}" in title:
                             title = title.replace(f"{delimiter}{Name}", "")
                         elif f"{Name}{delimiter}" in title:
                             title = title.replace(f"{Name}{delimiter}", "")
-                    if Name in title:
+                    if Name in title:                        
                         title = title.replace(Name, "")
-        
         # remove any suffix from the panel title
         if title.endswith("_custom"):
             title = title.replace("_custom", "")
@@ -4335,6 +4353,8 @@ class ModernMenu(RibbonBar):
         if title.endswith("_newPanel"):
             title = title.replace("_newPanel", "")
         
+        # remove spaces from start and end
+        title = title.lstrip().rstrip()
         return title
     
     def CreatePanel(self, workbenchName: str, panelName: str, addPanel = True, dict = ribbonStructure, SetToUpdate = False, ignoreColumnLimit = False, showEnableControl = False):
