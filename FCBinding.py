@@ -5028,13 +5028,6 @@ class ModernMenu(RibbonBar):
         panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         panel._actionsLayout.setContentsMargins(0, self.TopMargin, 3, self.BottomMargin) # Left, Top, Right, Bottom
         panel._mainLayout.setSpacing(0)
-        # Set the horizontal size constraint, so that resizing of the panel works properly
-        try:
-            panel._mainLayout.setHorizontalSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
-        except Exception:
-            panel._mainLayout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
-            pass
-        
         panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
         # Set the font for the panel title
         Font = QFont()
@@ -5045,8 +5038,9 @@ class ModernMenu(RibbonBar):
         self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset)
         # Correct the width of the (hidden) option button
         OptionButton = panel.panelOptionButton()
-        OptionButton.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL)
-        panel.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Expanding)
+        OptionButton.setFixedSize(Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.FONTSIZE_PANELS+3)
+        # Set the size policy to fixed. Otherwise resizing is not working properly
+        panel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         return
     
     def PopulateOverflowMenu(self, panel: RibbonPanel, ButtonList: list):
