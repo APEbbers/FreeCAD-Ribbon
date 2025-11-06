@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -48,7 +48,7 @@ from PySide.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -84,7 +84,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -5029,7 +5029,12 @@ class ModernMenu(RibbonBar):
         panel._actionsLayout.setContentsMargins(0, self.TopMargin, 3, self.BottomMargin) # Left, Top, Right, Bottom
         panel._mainLayout.setSpacing(0)
         # Set the horizontal size constraint, so that resizing of the panel works properly
-        panel._mainLayout.setHorizontalSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
+        try:
+            panel._mainLayout.setHorizontalSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
+        except Exception:
+            panel._mainLayout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
+            pass
+        
         panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
         # Set the font for the panel title
         Font = QFont()
