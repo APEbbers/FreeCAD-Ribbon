@@ -1529,10 +1529,6 @@ class ModernMenu(RibbonBar):
             # Add the panel to the list with long panels
             self.longPanels.append(newPanel)
             
-            # Update the width in the panel width list
-            newPanel.adjustSize()
-            self.panelWidths[newPanel.objectName()] = newPanel.width()
-            
             # Replace the panel with the new panel
             self.currentCategory().replacePanel(panel, newPanel)
             # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
@@ -1544,6 +1540,7 @@ class ModernMenu(RibbonBar):
             self.contextMenu.close()
 
     def on_ButtonLabel_Changing(self, event, panel: RibbonPanel, ButtonWidget: CustomControls, widgetAction: CustomWidgets.LineEditAction):
+        widgetAction.setClearButtonEnabled(True)
         Text = event
         # If the text is empty, restore the original name
         if Text == "":
@@ -1556,8 +1553,6 @@ class ModernMenu(RibbonBar):
                     CommandName = child.defaultAction().data()
                     Text = CommandInfoCorrections(CommandName)["menuText"].replace("&", "")
                     widgetAction.setPlaceholderText(Text)
-        else:
-            widgetAction.setClearButtonEnabled(True)
                 
         # write the changes to the ribbonstructure file
         property = {"text": Text}
@@ -1572,15 +1567,14 @@ class ModernMenu(RibbonBar):
         # Get the workbench name and the panel name
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         panelName = panel.objectName()
+        widgetAction.setClearButtonEnabled(True)
         
         Text = event
         # If the text is empty, restore the original name
         if Text == "":
             Text = self.ReturnPanelTitle(panel, self.workBenchDict, filterOnly=True)
             widgetAction.setPlaceholderText(Text)
-        else:
-            widgetAction.setClearButtonEnabled(True)
-        
+
         # Create an entry in the dict if there isn't one
         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "title"])
         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["title"] = Text
