@@ -280,10 +280,12 @@ class ModernMenu(RibbonBar):
     
     # Create a list for panels that have a option button which have to be restored when exitiing the customisation enviroment
     longPanels = []
-    replacedPanel = None
     
     # Create a list to store the pin buttons off each category
     pinButtonList = []
+    
+    # Create a dict to store the button states when entering the customization enviroment
+    ButtonState = {}
     # endregion
 
     def __init__(self):
@@ -1202,18 +1204,26 @@ class ModernMenu(RibbonBar):
                         # Just incase
                         self.setRibbonHeight(self.RibbonHeight+6)
                         
+                        # Store the state of the buttons
+                        for title, objPanel in self.currentCategory().panels().items():
+                            panelName = objPanel.objectName()
+                            gridLayout = objPanel._actionsLayout
+                            for n in range(gridLayout.count()):
+                                    control: QToolButton = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                                    if control is not None:
+                                        StandardFunctions.add_keys_nested_dict(self.ButtonState, [panelName, control.actions().data()])
+                                        self.ButtonState[panelName][control.actions().data()] = control.actions().isEnabled()
+                                        
                         # Enable all buttons, so you can access them with a right click
-                        # Disable also the signals to avoid triggering the action
                         self.actionList = []
                         for child in mw.findChildren(QToolButton):
                             try:
                                 for subAction in child.actions():
-                                    subAction.setEnabled(True)
-                                    self.actionList.append([subAction, subAction.isEnabled()])
+                                    subAction.setEnabled(True)                                    
                             except Exception:
                                 pass
                         Gui.updateGui()
-
+                        
                         # Create all order lists and commands, incase they are not all present
                         for title, objPanel in self.currentCategory().panels().items():                            
                             objPanel.show()
@@ -1331,6 +1341,16 @@ class ModernMenu(RibbonBar):
                                     self.ribbonStructure["workbenches"][workbenchName]["toolbars"][objPanel.objectName()]["Enabled"] = True
                                     objPanel.show()
                                 EnableControl.setVisible(False)
+                            
+                        for title, objPanel in self.currentCategory().panels().items():
+                            # Get the panel name and the gridlayout
+                            panelName = objPanel.objectName()
+                            gridLayout: QGridLayout = objPanel._actionsLayout
+                            for n in range(gridLayout.count()):
+                                control = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                                if control is not None:
+                                    ButtonState = self.ButtonState[panelName][control.actions().data()]
+                                    control.actions().setEnabled(ButtonState)
                                                                                         
                         # Clear the list with the long panels, so that it can be filled again next time
                         self.longPanels.clear()                        
