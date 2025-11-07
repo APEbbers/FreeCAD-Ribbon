@@ -25,15 +25,10 @@ import typing
 import sys
 
 from PySide.QtGui import (
-    QDragMoveEvent,
     QIcon,
     QAction,
     QFontMetrics,
     QFont,
-    QKeyEvent,
-    QKeySequence,
-    QOverrideCursorGuard,
-    QTextOption,
     QCursor,
     QDrag,
     QPixmap,
@@ -45,10 +40,7 @@ from PySide.QtGui import (
     
 )
 from PySide.QtWidgets import (
-    QApplication,
     QComboBox,
-    QGridLayout,
-    QLayout,
     QMainWindow,
     QSizePolicy,
     QSpinBox,
@@ -57,7 +49,6 @@ from PySide.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QMenu,
-    QTextEdit,
     QFrame,
     QCheckBox,
     QWidget,
