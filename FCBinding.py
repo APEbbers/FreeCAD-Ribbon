@@ -4379,7 +4379,7 @@ class ModernMenu(RibbonBar):
                     self.render(pixmap)
                     drag.setPixmap(pixmap)
 
-                    drag.exec(Qt.DropAction.MoveAction)
+                    drag.exec_(Qt.DropAction.MoveAction)
                 except Exception as e:
                     print(e)
         
