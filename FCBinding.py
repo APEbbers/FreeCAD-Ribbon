@@ -1464,7 +1464,14 @@ class ModernMenu(RibbonBar):
         if len(OrderList) > 0:
             # Get the command name and its index in the list
             CommandName = ButtonWidget.findChild(QToolButton).defaultAction().data()
-            index = OrderList.index(CommandName)
+            if CommandName in OrderList:
+                index = OrderList.index(CommandName)
+            else:
+                StandardFunctions.Mbox(
+                    translate("FreeCAD Ribbon", "The command is not present in the Ribbon Layout.\n Close the customize enviroment to update the layout file and try again."),
+                "",
+                "Warning",
+                )
             
             # Add the separator either let or right
             if Side == "left":
