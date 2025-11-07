@@ -1300,12 +1300,16 @@ class ModernMenu(RibbonBar):
                             IsNewPanel = False
                             for longPanel in self.longPanels:
                                 if longPanel.objectName() == objPanel.objectName():
-                                    # Create a panel and replace the long panel with this one
+                                    # Create a panel and replace the long panel and objPanel with this one
                                     newPanel = self.CreatePanel(workbenchName, objPanel.objectName(), False, self.workBenchDict)
-                                    # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-                                    self.setPanelProperties(newPanel)
-                                    self.currentCategory().replacePanel(longPanel, newPanel)
-                                    self.currentCategory().replacePanel(objPanel, newPanel)
+                                    try:
+                                        self.currentCategory().replacePanel(longPanel, newPanel)
+                                    except Exception:
+                                        pass
+                                    try:
+                                        self.currentCategory().replacePanel(objPanel, newPanel)
+                                    except Exception:
+                                        pass
                                     # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
                                     self.setPanelProperties(newPanel)
                                     # Close the old panel
