@@ -1529,10 +1529,6 @@ class ModernMenu(RibbonBar):
             # Add the panel to the list with long panels
             self.longPanels.append(newPanel)
             
-            # Update the width in the panel width list
-            newPanel.adjustSize()
-            self.panelWidths[newPanel.objectName()] = newPanel.width()
-            
             # Replace the panel with the new panel
             self.currentCategory().replacePanel(panel, newPanel)
             # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
