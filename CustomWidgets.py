@@ -202,7 +202,7 @@ class CustomControls(QToolButton):
                 self.render(pixmap)
                 drag.setPixmap(pixmap)
 
-                drag.exec(Qt.DropAction.MoveAction)
+                drag.exec_(Qt.DropAction.MoveAction)
             except Exception as e:
                 print(e)
     
@@ -1346,7 +1346,7 @@ class CustomSeparator(RibbonSeparator):
                 drag.setPixmap(pixmap)
 
                 if drag is not None:
-                    drag.exec(Qt.DropAction.MoveAction)
+                    drag.exec_(Qt.DropAction.MoveAction)
             except Exception as e:
                 print(e)
 

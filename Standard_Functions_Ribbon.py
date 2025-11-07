@@ -72,7 +72,7 @@ def Mbox(
         msgBox.setText(text)
         msgBox.setWindowTitle(title)
 
-        reply = msgBox.exec()
+        reply = msgBox.exec_()
         if reply == QMessageBox.StandardButton.Ok:
             return "ok"
     if style == 1:
