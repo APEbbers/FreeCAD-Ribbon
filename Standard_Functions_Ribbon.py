@@ -72,7 +72,7 @@ def Mbox(
         msgBox.setText(text)
         msgBox.setWindowTitle(title)
 
-        reply = msgBox.exec_()
+        reply = msgBox.exec()
         if reply == QMessageBox.StandardButton.Ok:
             return "ok"
     if style == 1:
@@ -249,6 +249,29 @@ def SaveDialog(files, OverWrite: bool = True):
         if file is not None:
             return file
 
+def OpenDirectory(path):
+    import webbrowser
+    import platform
+    import subprocess
+    import os
+    
+    try:
+        if os.path.exists(path) is False:
+            return False
+        
+        if platform.system().lower() == "darwin":
+                subprocess.run(['open', path])
+        elif platform.system().lower() == "Windows":
+            os.startfile(path)
+        else:
+            # Linux: try xdg-open, then sensible-browser as fallback 
+            try: 
+                subprocess.run(['xdg-open', path], check=True) 
+            except Exception: 
+                subprocess.run(['gio', 'open', path], check=False)          
+        return True
+    except Exception:
+        return False
 
 def GetLetterFromNumber(number: int, UCase: bool = True):
     """Number to Excel-style column name, e.g., 1 = A, 26 = Z, 27 = AA, 703 = AAA."""

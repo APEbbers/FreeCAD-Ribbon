@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -48,7 +48,7 @@ from PySide.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -84,7 +84,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1528,6 +1528,10 @@ class ModernMenu(RibbonBar):
             newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
             # Add the panel to the list with long panels
             self.longPanels.append(newPanel)
+            
+            # Update the width in the panel width list
+            newPanel.adjustSize()
+            self.panelWidths[newPanel.objectName()] = newPanel.width()
             
             # Replace the panel with the new panel
             self.currentCategory().replacePanel(panel, newPanel)
@@ -3062,6 +3066,7 @@ class ModernMenu(RibbonBar):
             translate("FreeCAD Ribbon", "Ribbon UI preferences") + " ...", self
         )
         RibbonMenu.setToolTipsVisible(True)
+        
         # Add the ribbon design button
         DesignButton = RibbonMenu.addAction(
             translate("FreeCAD Ribbon", "Ribbon layout")
@@ -3082,6 +3087,7 @@ class ModernMenu(RibbonBar):
         if ShortcutKey != "" and ShortcutKey is not None:
             DesignButton.setShortcut(ShortcutKey)
             self.LayoutMenuShortCut = ShortcutKey
+        
         # Add the preference button
         PreferenceButton = RibbonMenu.addAction(
             translate("FreeCAD Ribbon", "Preferences")
@@ -3102,6 +3108,21 @@ class ModernMenu(RibbonBar):
             pass
         if ShortcutKey != "" and ShortcutKey is not None:
             PreferenceButton.setShortcut(ShortcutKey)
+        
+        # Add the repair menu
+        RepairMenu: QMenu = RibbonMenu.addMenu(
+            translate("FreeCAD Ribbon", "Repair functions...")
+        )
+        UpdateRibbonStructure = RepairMenu.addAction(translate("FreeCAD Ribbon", "Repair the Ribbon layout file"))
+        UpdateRibbonStructure.triggered.connect(lambda: self.ConvertRibbonStructure(False))
+        RestoreLayout = RepairMenu.addAction(translate("FreeCAD Ribbon", "Restore a Ribbon layout"))
+        RestoreLayout.triggered.connect(self.RestoreJson)
+        OpenBackupFolder = RepairMenu.addAction(translate("FreeCAD Ribbon", "Open the backup directory"))
+        # If the backup folder doesn't exists, create it
+        if os.path.exists(Parameters_Ribbon.BACKUP_LOCATION) is False:
+            os.makedirs(Parameters_Ribbon.BACKUP_LOCATION)
+        OpenBackupFolder.triggered.connect(lambda: StandardFunctions.OpenDirectory(Parameters_Ribbon.BACKUP_LOCATION))
+        
         # Add the script submenu with items
         ScriptDir = os.path.join(os.path.dirname(__file__), "Scripts")
         if os.path.exists(ScriptDir) is True:
@@ -4379,7 +4400,7 @@ class ModernMenu(RibbonBar):
                     self.render(pixmap)
                     drag.setPixmap(pixmap)
 
-                    drag.exec_(Qt.DropAction.MoveAction)
+                    drag.exec(Qt.DropAction.MoveAction)
                 except Exception as e:
                     print(e)
         
@@ -5105,6 +5126,52 @@ class ModernMenu(RibbonBar):
         if len(actionList) == 0:
             panel.panelOptionButton().hide()
         return panel
+    
+    def RestoreJson(self):
+        self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+        # get the path for the Json file
+        JsonPath = os.path.dirname(__file__)
+        JsonFile = os.path.join(JsonPath, "RibbonStructure.json")
+
+        BackupFiles: list = []
+        # returns a list of names (with extension, without full path) of all files
+        # in backup path
+        for name in os.listdir(pathBackup):
+            if os.path.isfile(os.path.join(pathBackup, name)):
+                if name.lower().endswith("json"):
+                    BackupFiles.append(name)
+        # Sort the backup files in reversed order
+        BackupFiles.sort(reverse=True)
+
+        if len(BackupFiles) > 0:
+            SelectedFile = StandardFunctions.Mbox(
+                translate("FreeCAD Ribbon", "Select a backup file"),
+                "",
+                21,
+                "NoIcon",
+                BackupFiles[0],
+                BackupFiles,
+            )
+            BackupFile = os.path.join(pathBackup, SelectedFile)
+            result = shutil.copy(BackupFile, JsonFile)
+            StandardFunctions.Print(
+                translate(
+                    "FreeCAD Ribbon", "Ribbon bar set back to settings from: {}"
+                ).format(result),
+                "Warning",
+            )
+
+            message = translate(
+                "FreeCAD Ribbon",
+                "Settings reset to {}!\nYou must restart FreeCAD for changes to take effect.",
+            ).format(SelectedFile)
+            answer = StandardFunctions.RestartDialog(message=message)
+            if answer == "yes":
+                StandardFunctions.restart_freecad()
+
+        self.form.close()
+        return
+    
     # endregion
 
     # region - Titlebar functions
@@ -5212,7 +5279,7 @@ class ModernMenu(RibbonBar):
                 StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
         return True
 
-    def ConvertRibbonStructure(self):
+    def ConvertRibbonStructure(self, checkFCVersion = True, RestartFreeCAD = False):
         # Define a result parameter
         isConverted = False
         # Get the FreeCAD Version
@@ -5221,18 +5288,19 @@ class ModernMenu(RibbonBar):
         # Check if version is stored in the ribbon structure.
         # If so check if it is an older version.
         # If it is the same or newer version, return.
-        if "convertedWithVersion" in self.ribbonStructure:
-            main = self.ribbonStructure["convertedWithVersion"][0]
-            sub = self.ribbonStructure["convertedWithVersion"][1]
-            patch = self.ribbonStructure["convertedWithVersion"][2]
-            git_version = self.ribbonStructure["convertedWithVersion"][3]
-            if main >= int(version[0]):
-                if sub >= int(version[1]):
-                    if patch >= int(version[2]):
-                        if git_version >= int(version[3].split(" ")[0]):
-                            if Parameters_Ribbon.DEBUG_MODE is True:
-                                print("no conversion needed")
-                            return
+        if checkFCVersion is True:
+            if "convertedWithVersion" in self.ribbonStructure:
+                main = self.ribbonStructure["convertedWithVersion"][0]
+                sub = self.ribbonStructure["convertedWithVersion"][1]
+                patch = self.ribbonStructure["convertedWithVersion"][2]
+                git_version = self.ribbonStructure["convertedWithVersion"][3]
+                if main >= int(version[0]):
+                    if sub >= int(version[1]):
+                        if patch >= int(version[2]):
+                            if git_version >= int(version[3].split(" ")[0]):
+                                if Parameters_Ribbon.DEBUG_MODE is True:
+                                    print("no conversion needed")
+                                return
 
         # Convert the commands from menuname to the commandames
         #
@@ -5405,6 +5473,15 @@ class ModernMenu(RibbonBar):
             json.dump(self.ribbonStructure, outfile, indent=4)
 
         outfile.close()
+        
+        if RestartFreeCAD is True:
+            message = translate(
+                "FreeCAD Ribbon",
+                "The file containing the Ribbon layout is updated.\nYou must restart FreeCAD for changes to take effect.",
+            )
+            answer = StandardFunctions.RestartDialog(message=message)
+            if answer == "yes":
+                StandardFunctions.restart_freecad()
 
         return isConverted
 
