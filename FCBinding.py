@@ -1611,8 +1611,8 @@ class ModernMenu(RibbonBar):
     # endregion
 
     # region - drag drop event functions
-    dragIndicator_Buttons = DragTargetIndicator(orientation=Qt.Orientation.Horizontal, margins=0)
-    dragIndicator_Panels = DragTargetIndicator(orientation=Qt.Orientation.Vertical)
+    dragIndicator_Buttons = DragTargetIndicator(orientation="top", margins=0)
+    dragIndicator_Panels = DragTargetIndicator(orientation="right")
     position = None
     rightColumnAdded = False
     spaceWidget_Left = RibbonToolButton()
@@ -1698,6 +1698,10 @@ class ModernMenu(RibbonBar):
                     except Exception:
                         pass
                                 
+                    if position[0] == 0:
+                        self.dragIndicator_Buttons._orientation = "left"
+                    else:
+                        self.dragIndicator_Buttons._orientation = "top"
                     # Add the drag indicator
                     gridLayout.addWidget(
                         self.dragIndicator_Buttons, position[0], position[1], rowSpan, 1

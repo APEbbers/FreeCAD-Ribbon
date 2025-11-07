@@ -1355,14 +1355,14 @@ class DragTargetIndicator(QLabel):
     _bottomMargins: int = 6
     _leftMargins: int = 6
     _rightMargins: int = 6
-    _orientation: Qt.Orientation
+    _orientation: str = "right"
     
     def __init__(self, parent=None, orientation = None, margins = 6):
         """Create a new drag indicator
 
         Args:
             parent (optional): parent of the drag indicator. Defaults to None.
-            orientation (Qt.Orientation, optional): The orientation of the drag indicater. If set, a line is drawn otherwise a background color is set.  
+            orientation ("left", "right, "top", "bottom", optional): The orientation of the drag indicater. If set, a line is drawn otherwise a background color is set.  
             Defaults to None.
             margins (int, optional): the margins for the line if orientation is set. Defaults to 6.
         """        
@@ -1390,14 +1390,26 @@ class DragTargetIndicator(QLabel):
         pen.setColor(QColor(Qt.GlobalColor.red))
         pen.setWidth(3)
         painter.setPen(pen)
-        if self._orientation == Qt.Orientation.Vertical:
+        if self._orientation == "right":
             x1 = self.rect().x() + self.rect().width() -3
             painter.drawLine(
                 QPoint(x1, self.rect().top() + self._topMargins),
                 QPoint(x1, self.rect().bottom() - self._bottomMargins),
             )
-        if self._orientation == Qt.Orientation.Horizontal:
+        if self._orientation == "left":
+            x1 = self.rect().x()
+            painter.drawLine(
+                QPoint(x1, self.rect().top() + self._topMargins),
+                QPoint(x1, self.rect().bottom() - self._bottomMargins),
+            )
+        if self._orientation == "top":
             y1 = self.rect().y()
+            painter.drawLine(
+                QPoint(self.rect().left() + self._leftMargins, y1),
+                QPoint(self.rect().right() - self._rightMargins, y1),
+            )
+        if self._orientation == "bottom":
+            y1 = self.rect().y() - self.rect().heigth() +3
             painter.drawLine(
                 QPoint(self.rect().left() + self._leftMargins, y1),
                 QPoint(self.rect().right() - self._rightMargins, y1),
