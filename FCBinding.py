@@ -2079,6 +2079,12 @@ class ModernMenu(RibbonBar):
         """
         Import selected workbench toolbars to ModernMenu section.
         """
+        category = self.categories()[self.LastCustomized[1]]
+        if self.CustomizeEnabled is True and self.currentCategory() != category:            
+            self.setCurrentCategory(category)
+            StandardFunctions.Mbox(translate("FreeCAD Ribbon", "Close customize enviroment first!"), "", 0, "Warning")
+            return
+        
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
                 self.UnfoldRibbon()
@@ -2097,80 +2103,6 @@ class ModernMenu(RibbonBar):
             if tabActivated is True:
                 self.onWbActivated()
                 self.ApplicationMenus()           
-        
-            if self.CustomizeEnabled is True:
-                self.contextMenu.hide()
-                Stylesheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
-                self.setStyleSheet(Stylesheet)
-                self.CustomizeEnabled = False
-
-                # Restore the original panel with the overflow menu
-                panels = {} # Needed to update the panel dict of the currentCategory
-                for title, objPanel in self.categories()[self.LastCustomized[1]].panels().items():
-                    # Create keys if there are not existing yet for the temporary panel dict
-                    StandardFunctions.add_keys_nested_dict(panels, [title])
-                    
-                    # Create a bool to state if a panel is new or not
-                    IsNewPanel = False
-                    for longPanel in self.longPanels:
-                        if longPanel.objectName() == objPanel.objectName():
-                            # Create a panel and replace the long panel with this one
-                            newPanel = self.CreatePanel(self.LastCustomized[0], objPanel.objectName(), False, self.workBenchDict)
-                            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-                            self.setPanelProperties(newPanel)
-                            try:
-                                self.currentCategory().replacePanel(longPanel, newPanel)
-                            except Exception:
-                                pass
-                            try:
-                                self.currentCategory().replacePanel(objPanel, newPanel)
-                            except Exception:
-                                pass
-                            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-                            self.setPanelProperties(newPanel)
-                            # Close the old panel
-                            objPanel.close()
-                            longPanel.close()
-                            # Update the temporary panel dict
-                            panels[title] = newPanel
-                            # Set the bool to True
-                            IsNewPanel = True
-                            break
-                    # If it is not a new panel, add the current panel to temporary panel dict
-                    if IsNewPanel is False:
-                        panels[title] = objPanel            
-                                                                                                    
-                # Update the panel dict of the current catergory with the temporary panel dict
-                self.currentCategory()._panels = panels
-                
-                # Hide unchecked panels after the panel duct is updated
-                for title, objPanel in self.categories()[self.LastCustomized[1]].panels().items():
-                    # hide the enable checkboxes and hide the panel if it is unchecked
-                    titleLayout: QHBoxLayout = objPanel._titleLayout
-                    EnableControl = titleLayout.itemAt(0).widget()
-                    if EnableControl is not None:
-                        if EnableControl.checkState() == Qt.CheckState.Unchecked:
-                            # Hide the panel
-                            objPanel.hide()
-                            # Write the state to the structure
-                            StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["workbenches", self.LastCustomized[0], "toolbars", objPanel.objectName(), "Enabled"])
-                            self.ribbonStructure["workbenches"][self.LastCustomized[0]]["toolbars"][objPanel.objectName()]["Enabled"] = False
-                        if EnableControl.checkState() == Qt.CheckState.Checked:
-                            # Write the state to the structure
-                            StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["workbenches", self.LastCustomized[0], "toolbars", objPanel.objectName(), "Enabled"])
-                            self.ribbonStructure["workbenches"][self.LastCustomized[0]]["toolbars"][objPanel.objectName()]["Enabled"] = True
-                            objPanel.show()
-                        EnableControl.setVisible(False)
-                
-                try:
-                    # update the ribbonstructure before writing it to disk
-                    self.ribbonStructure["workbenches"][self.wbNameMapping[tabName]] = self.workBenchDict["workbenches"][self.wbNameMapping[tabName]]
-                    # Writing to ribbonStructure.json
-                    JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
-                    with open(JsonFile, "w") as outfile:
-                        json.dump(self.ribbonStructure, outfile, indent=4)
-                except Exception:
-                    pass
         
         # hide normal toolbars
         self.hideClassicToolbars()
