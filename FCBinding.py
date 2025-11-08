@@ -170,6 +170,7 @@ class ModernMenu(RibbonBar):
 
     # Define a placeholder for the repro adress
     ReproAdress: str = ""
+    HelpAdress: str = ""
     # Placeholders for building the ribbonbar
     ribbonStructure = {}
     wbNameMapping = {}
@@ -508,7 +509,13 @@ class ModernMenu(RibbonBar):
         if self.ReproAdress != "" or self.ReproAdress is not None:
             print(translate("FreeCAD Ribbon", "Ribbon UI: ") + self.ReproAdress)
             print(translate("FreeCAD Ribbon", "Ribbon UI: Installed version: ") + LocalVersion)
-
+        
+        # Get the location of the help documentation
+        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
+        self.HelpAdress = StandardFunctions.ReturnXML_Value(
+            PackageXML, "url", "type", "website"
+        )
+        
         # Activate the workbenches used in the new panels otherwise the panel stays empty
         try:
             for WorkBenchName in self.newPanels:
@@ -960,12 +967,12 @@ class ModernMenu(RibbonBar):
         mw.menuBar().show()
         return True
 
-    # def eventFilter(self, obj, event):
-    #     # Disable the standard hover behavior
-    #     if event.type() == QEvent.Type.HoverMove:
-    #         event.ignore()
-    #         return False
-    #     return False
+    def eventFilter(self, obj, event):
+        # Disable the standard hover behavior
+        if event.type() == QEvent.Type.HoverMove:
+            event.ignore()
+            return False
+        return False
 
     def enterEvent_Custom(self, QEvent):
         # # Hide any possible toolbar
@@ -1300,16 +1307,12 @@ class ModernMenu(RibbonBar):
                             IsNewPanel = False
                             for longPanel in self.longPanels:
                                 if longPanel.objectName() == objPanel.objectName():
-                                    # Create a panel and replace the long panel and objPanel with this one
+                                    # Create a panel and replace the long panel with this one
                                     newPanel = self.CreatePanel(workbenchName, objPanel.objectName(), False, self.workBenchDict)
-                                    try:
-                                        self.currentCategory().replacePanel(longPanel, newPanel)
-                                    except Exception:
-                                        pass
-                                    try:
-                                        self.currentCategory().replacePanel(objPanel, newPanel)
-                                    except Exception:
-                                        pass
+                                    # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                                    self.setPanelProperties(newPanel)
+                                    self.currentCategory().replacePanel(longPanel, newPanel)
+                                    self.currentCategory().replacePanel(objPanel, newPanel)
                                     # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
                                     self.setPanelProperties(newPanel)
                                     # Close the old panel
@@ -2072,17 +2075,7 @@ class ModernMenu(RibbonBar):
         
         # hide normal toolbars
         self.hideClassicToolbars()
-        
-        # # Set the state of the pinButton
-        # layout: QGridLayout = self.currentCategory()._mainLayout
-        # print(layout.children())
-        # pinButton = layout.findChild(QToolButton, "pinButton")
-        # if pinButton is not None:
-        #     pinButton.setChecked(not Parameters_Ribbon.AUTOHIDE_RIBBON)
-        #     if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
-        #         pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
-        #     if Parameters_Ribbon.AUTOHIDE_RIBBON is True:
-        #         pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
+
         return
 
     def onWbActivated(self):
@@ -2409,6 +2402,7 @@ class ModernMenu(RibbonBar):
         Parameters_Ribbon.Settings.SetStringSetting("TabOrder", param_string)
 
         # add category for each workbench
+        self.tabBar().setAcceptDrops(True)
         for i in range(len(WorkbenchOrderedList)):
             for workbenchName, workbench in list(Gui.listWorkbenches().items()):
                 if workbenchName == WorkbenchOrderedList[i]:
@@ -2425,6 +2419,24 @@ class ModernMenu(RibbonBar):
                         # Set the title
                         category = self.addCategory(name)
                         category.setObjectName(workbenchName)
+                        # category.setAcceptDrops(True)
+                        
+                        # # Add a drag function to the category
+                        # def mouseMoveEvent(self, e):
+                        #     if e.buttons() == Qt.MouseButton.LeftButton:
+                        #         try:
+                        #             drag = QDrag(self)
+                        #             mime = QMimeData()
+                        #             drag.setMimeData(mime)
+                        #             pixmap = QPixmap(self.size())
+                        #             self.render(pixmap)
+                        #             drag.setPixmap(pixmap)
+
+                        #             drag.exec(Qt.DropAction.MoveAction)
+                        #         except Exception as e:
+                        #             print(e)
+                        
+                        # category.mouseMoveEvent = lambda e: mouseMoveEvent(category, e, self.CustomizeEnabled)
 
                         # Set the tabbar according the style setting
                         if Parameters_Ribbon.TABBAR_STYLE <= 1:
@@ -3507,21 +3519,20 @@ class ModernMenu(RibbonBar):
     def on_Help_clicked(self):
         self.helpRibbonButton().showMenu()
 
-    def on_RibbonHelpButton_clicked(self):
-        if self.ReproAdress != "" or self.ReproAdress is not None:
-            if not self.ReproAdress.endswith("/"):
-                self.ReproAdress = self.ReproAdress + "/"
+    def on_RibbonHelpButton_clicked(self):        
+        if self.HelpAdress != "" or self.HelpAdress is not None:
+            if not self.HelpAdress.endswith("/"):
+                self.HelpAdress = self.HelpAdress + "/"
 
-            Adress = self.ReproAdress + "wiki"
-            webbrowser.open(Adress, new=2, autoraise=True)
+            webbrowser.open(self.HelpAdress, new=2, autoraise=True)
         return
 
     def on_WhatsNewButton_clicked(self):
-        if self.ReproAdress != "" or self.ReproAdress is not None:
-            if not self.ReproAdress.endswith("/"):
-                self.ReproAdress = self.ReproAdress + "/"
+        if self.HelpAdress != "" or self.HelpAdress is not None:
+            if not self.HelpAdress.endswith("/"):
+                self.HelpAdress = self.HelpAdress + "/"
 
-            Adress = self.ReproAdress + """wiki/06-%E2%80%90-Change-log"""
+            Adress = self.HelpAdress + """06-%E2%80%90-Change-log"""
             webbrowser.open(Adress, new=2, autoraise=True)
         return
 
