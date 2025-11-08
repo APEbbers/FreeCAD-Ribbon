@@ -279,6 +279,9 @@ class ModernMenu(RibbonBar):
     # Create a empty context menu
     contextMenu = None
     
+    # Create a holder for the last customized workbench
+    LastCustomized = []
+    
     # Create a list for panels that have a option button which have to be restored when exitiing the customisation enviroment
     longPanels = []
     
@@ -1211,6 +1214,9 @@ class ModernMenu(RibbonBar):
                         # Just incase
                         self.setRibbonHeight(self.RibbonHeight+6)
                         
+                        # Store the workbench name as the last customized name
+                        self.LastCustomized = [workbenchName, self.currentCategory().title()]
+                        
                         # Store the state of the buttons
                         for title, objPanel in self.currentCategory().panels().items():
                             panelName = objPanel.objectName()
@@ -1380,7 +1386,8 @@ class ModernMenu(RibbonBar):
                                     self.ribbonStructure["workbenches"][workbenchName]["toolbars"][objPanel.objectName()]["Enabled"] = True
                                     objPanel.show()
                                 EnableControl.setVisible(False)
-                            
+                        
+                        # Set the buttonstate back as it was
                         for title, objPanel in self.currentCategory().panels().items():
                             # Get the panel name and the gridlayout
                             panelName = objPanel.objectName()
@@ -2091,11 +2098,69 @@ class ModernMenu(RibbonBar):
                 self.onWbActivated()
                 self.ApplicationMenus()           
         
-            if self.contextMenu is not None:
+            if self.CustomizeEnabled is True:
                 self.contextMenu.hide()
                 Stylesheet = Path(Parameters_Ribbon.STYLESHEET).read_text()
                 self.setStyleSheet(Stylesheet)
                 self.CustomizeEnabled = False
+
+                # Restore the original panel with the overflow menu
+                panels = {} # Needed to update the panel dict of the currentCategory
+                for title, objPanel in self.categories()[self.LastCustomized[1]].panels().items():
+                    # Create keys if there are not existing yet for the temporary panel dict
+                    StandardFunctions.add_keys_nested_dict(panels, [title])
+                    
+                    # Create a bool to state if a panel is new or not
+                    IsNewPanel = False
+                    for longPanel in self.longPanels:
+                        if longPanel.objectName() == objPanel.objectName():
+                            # Create a panel and replace the long panel with this one
+                            newPanel = self.CreatePanel(self.LastCustomized[0], objPanel.objectName(), False, self.workBenchDict)
+                            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                            self.setPanelProperties(newPanel)
+                            try:
+                                self.currentCategory().replacePanel(longPanel, newPanel)
+                            except Exception:
+                                pass
+                            try:
+                                self.currentCategory().replacePanel(objPanel, newPanel)
+                            except Exception:
+                                pass
+                            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                            self.setPanelProperties(newPanel)
+                            # Close the old panel
+                            objPanel.close()
+                            longPanel.close()
+                            # Update the temporary panel dict
+                            panels[title] = newPanel
+                            # Set the bool to True
+                            IsNewPanel = True
+                            break
+                    # If it is not a new panel, add the current panel to temporary panel dict
+                    if IsNewPanel is False:
+                        panels[title] = objPanel            
+                                                                                                    
+                # Update the panel dict of the current catergory with the temporary panel dict
+                self.currentCategory()._panels = panels
+                
+                # Hide unchecked panels after the panel duct is updated
+                for title, objPanel in self.categories()[self.LastCustomized[1]].panels().items():
+                    # hide the enable checkboxes and hide the panel if it is unchecked
+                    titleLayout: QHBoxLayout = objPanel._titleLayout
+                    EnableControl = titleLayout.itemAt(0).widget()
+                    if EnableControl is not None:
+                        if EnableControl.checkState() == Qt.CheckState.Unchecked:
+                            # Hide the panel
+                            objPanel.hide()
+                            # Write the state to the structure
+                            StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["workbenches", self.LastCustomized[0], "toolbars", objPanel.objectName(), "Enabled"])
+                            self.ribbonStructure["workbenches"][self.LastCustomized[0]]["toolbars"][objPanel.objectName()]["Enabled"] = False
+                        if EnableControl.checkState() == Qt.CheckState.Checked:
+                            # Write the state to the structure
+                            StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["workbenches", self.LastCustomized[0], "toolbars", objPanel.objectName(), "Enabled"])
+                            self.ribbonStructure["workbenches"][self.LastCustomized[0]]["toolbars"][objPanel.objectName()]["Enabled"] = True
+                            objPanel.show()
+                        EnableControl.setVisible(False)
                 
                 try:
                     # update the ribbonstructure before writing it to disk
