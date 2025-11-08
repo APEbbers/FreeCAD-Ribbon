@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -48,7 +48,7 @@ from PySide.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -84,7 +84,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1243,7 +1243,7 @@ class ModernMenu(RibbonBar):
                                 orderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
                             except Exception:
                                 pass
-                            # If there is no orderlist, create a new one.
+                            # # If there is no orderlist, create a new one.
                             if len(orderList) == 0:
                                 for n in range(gridLayout.count()):
                                     control = gridLayout.itemAt(n).widget().findChild(CustomControls)
@@ -1261,6 +1261,7 @@ class ModernMenu(RibbonBar):
                                         if control.objectName() == "CustomWidget_Large":
                                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "large"
                                 
+                                                                
                                 # Write the order list
                                 Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], [])                         
                                 self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                                                        
@@ -1275,7 +1276,32 @@ class ModernMenu(RibbonBar):
                                 self.longPanels.append(newPanel)
                                 # Close the old panel
                                 objPanel.close()
-                            
+                                
+                                # Recreate the order list for the new panel
+                                # Get the panel name and the gridlayout
+                                panelName = newPanel.objectName()
+                                gridLayout: QGridLayout = newPanel._actionsLayout
+                                for n in range(gridLayout.count()):
+                                    control = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                                    if control is not None:                                    
+                                        # Update the orderlist
+                                        orderList.append(control.actions().data())
+
+                                        # Add the command if they don't exist
+                                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", control.actions().data(), "size"], "small")
+                                        # Set the sizes
+                                        if control.objectName() == "CustomWidget_Small":
+                                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "small"
+                                        if control.objectName() == "CustomWidget_Medium":
+                                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "medium"
+                                        if control.objectName() == "CustomWidget_Large":
+                                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "large"
+                                
+                                                                
+                                # Write the order list
+                                Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], [])                         
+                                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList      
+                                                            
                             # show the enable checkboxes  
                             titleLayout: QHBoxLayout = objPanel._titleLayout
                             EnableControl = titleLayout.itemAt(0).widget()
@@ -1478,7 +1504,7 @@ class ModernMenu(RibbonBar):
         # Declare an order list
         OrderList = []
         # Copy the workbench dict
-        Dict = self.workBenchDict.copy()
+        Dict = self.workBenchDict
         # Get the order of toolbars
         if "workbenches" in Dict:
             if workbenchName in Dict["workbenches"]:
@@ -1489,6 +1515,7 @@ class ModernMenu(RibbonBar):
         # if the orderlist is not empty, you may add a separator.
         # An empty list, results in the separator at the start of the panel                        
         if len(OrderList) > 0:
+            index = None
             # Get the command name and its index in the list
             CommandName = ButtonWidget.findChild(QToolButton).defaultAction().data()
             if CommandName in OrderList:
@@ -1501,12 +1528,13 @@ class ModernMenu(RibbonBar):
                 )
             
             # Add the separator either let or right
-            if Side == "left":
-                if index > 0:
-                    OrderList.insert(index, f"{index}_separator_{workbenchName}")
-            else:
-                if index < len(OrderList)-1:
-                    OrderList.insert(index+1, f"{index+1}_separator_{workbenchName}")
+            if index is not None:
+                if Side == "left" :
+                    if index > 0:
+                        OrderList.insert(index, f"{index}_separator_{workbenchName}")
+                else:
+                    if index < len(OrderList)-1:
+                        OrderList.insert(index+1, f"{index+1}_separator_{workbenchName}")
             
             # Set the orderlist in the dict and update the workbench dict
             Dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList
