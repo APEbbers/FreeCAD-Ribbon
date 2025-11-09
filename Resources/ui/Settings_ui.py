@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsNZrlVz.ui'
+## Form generated from reading UI file 'SettingsVMEODA.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -49,7 +49,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 697, 1329))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 697, 1350))
         self.gridLayout_28 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_28.setObjectName(u"gridLayout_28")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -992,13 +992,17 @@ class Ui_Settings(object):
         self.FCOverlayEnabled.setObjectName(u"FCOverlayEnabled")
         self.FCOverlayEnabled.setChecked(False)
 
-        self.gridLayout_30.addWidget(self.FCOverlayEnabled, 0, 0, 1, 1)
+        self.gridLayout_30.addWidget(self.FCOverlayEnabled, 1, 0, 1, 1)
 
         self.UseButtonBackGround = QCheckBox(self.EnableOverlay)
         self.UseButtonBackGround.setObjectName(u"UseButtonBackGround")
         self.UseButtonBackGround.setEnabled(False)
 
-        self.gridLayout_30.addWidget(self.UseButtonBackGround, 1, 0, 1, 1)
+        self.gridLayout_30.addWidget(self.UseButtonBackGround, 2, 0, 1, 1)
+
+        self.verticalSpacer_6 = QSpacerItem(20, 1, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_30.addItem(self.verticalSpacer_6, 3, 0, 1, 1)
 
         self.label_26 = QLabel(self.EnableOverlay)
         self.label_26.setObjectName(u"label_26")
@@ -1008,9 +1012,10 @@ class Ui_Settings(object):
         sizePolicy11.setVerticalStretch(0)
         sizePolicy11.setHeightForWidth(self.label_26.sizePolicy().hasHeightForWidth())
         self.label_26.setSizePolicy(sizePolicy11)
+        self.label_26.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
         self.label_26.setWordWrap(True)
 
-        self.gridLayout_30.addWidget(self.label_26, 0, 1, 2, 2)
+        self.gridLayout_30.addWidget(self.label_26, 0, 1, 4, 2)
 
 
         self.gridLayout_32.addLayout(self.gridLayout_30, 0, 0, 2, 2)
@@ -1119,10 +1124,10 @@ class Ui_Settings(object):
         self.CustomIcons.toggled.connect(self.IconS.setEnabled)
         self.ShowText_Medium.toggled.connect(self.EnableWrap_Medium.setEnabled)
         self.ShowText_Large.toggled.connect(self.EnableWrap_Large.setEnabled)
-        self.FCOverlayEnabled.toggled.connect(self.UseButtonBackGround.setEnabled)
         self.FCOverlayEnabled.toggled.connect(self.label_26.setEnabled)
+        self.FCOverlayEnabled.toggled.connect(self.UseButtonBackGround.setEnabled)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(Settings)
