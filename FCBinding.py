@@ -1232,7 +1232,8 @@ class ModernMenu(RibbonBar):
                         for child in mw.findChildren(QToolButton):
                             try:
                                 for subAction in child.actions():
-                                    subAction.setEnabled(True)                                    
+                                    subAction.setEnabled(True)
+                                child.setEnabled(True)
                             except Exception:
                                 pass
                         Gui.updateGui()
@@ -1395,9 +1396,12 @@ class ModernMenu(RibbonBar):
                             for n in range(gridLayout.count()):
                                 control = gridLayout.itemAt(n).widget().findChild(CustomControls)
                                 if control is not None:
-                                    ButtonState = self.ButtonState[panelName][control.actions().data()]
-                                    control.actions().setEnabled(ButtonState)
-                                                                                        
+                                    try:
+                                        ButtonState = self.ButtonState[panelName][control.actions().data()]
+                                        control.actions().setEnabled(ButtonState)
+                                    except Exception:
+                                        pass
+                                                                                                                            
                         # Clear the list with the long panels, so that it can be filled again next time
                         self.longPanels.clear()                        
                         panel = None
@@ -1406,6 +1410,9 @@ class ModernMenu(RibbonBar):
                         JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
                         with open(JsonFile, "w") as outfile:
                             json.dump(self.ribbonStructure, outfile, indent=4)
+                        
+                        # Clear the workbench dict
+                        self.workBenchDict.clear()
         widget = None
         panel = None
         return
