@@ -1634,6 +1634,12 @@ class ToggleAction(QWidgetAction):
 
     def setChecked(self, arg_1, /):
         self.Toggle.setChecked(arg_1)
+        if arg_1 is True:
+            self.Toggle._handle_position = 1
+            self.Toggle.update()
+        else:
+            self.Toggle._handle_position = 0
+            self.Toggle.update()
         return
 
     def isChecked(self, /) -> bool:
