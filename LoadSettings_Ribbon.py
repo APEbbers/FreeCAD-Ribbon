@@ -247,12 +247,15 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.TextSize_Buttons.setRange(8, 24)
         self.form.TextSize_Tabs.setRange(8, 24)
         self.form.TextSize_Panels.setRange(8, 24)
-
         # Remove tabbar click settings for the time being
         self.form.label_15.setHidden(True)
         self.form.label_15.setDisabled(True)
         self.form.ScrollClicks_TabBar.setHidden(True)
         self.form.ScrollClicks_TabBar.setDisabled(True)
+        # Remove the 'Use backgound on buttons' from settings menu
+        self.form.UseButtonBackGround.setHidden(True)
+        self.form.UseButtonBackGround.setDisabled(True)
+        Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED = False
 
         # load all settings
         #
