@@ -2756,16 +2756,21 @@ class ModernMenu(RibbonBar):
     """
     Enables the following experimental functions:
     - a new customisation enviroment. With this enviroment activated, the following customizations can be done per button:
-        - Enable or disable text
-        - Set the icon size
+        - Enable or disable text.
+        - Set the button size.
         - Set the button type to:
             - Small  -> three rows of buttons, text on the right side.
             - Medium -> two rows of buttons, text on the right side.
             - Large -> One button row, text below the button.
-        - Reorder the buttons by dragging. Currently only within their panels is supported.
+        - Reorder the buttons by dragging. Currently only drag within their panels is supported.
+        - Change the text of a button.
+        - Add and remove separators.
+        - Reorder panels by dragging.
+        - Change the title of a panel.
         
-        To start the customisation eviroment, right click on the ribbon (outside the buttons) and click customize.
+        To start the customisation enviroment, right click on the ribbon (outside the buttons) and click customize.
         The customization enviroment is enabled and with a right click on a button, its properties can be changed.
+        Right click on the ribbon agian to save and exit the customisation enviroment.
     """
     ))
         switch.setToolTip(toolTipText)
