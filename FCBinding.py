@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -48,7 +48,7 @@ from PySide6.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -84,7 +84,7 @@ from PySide6.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -3524,8 +3524,8 @@ class ModernMenu(RibbonBar):
             Gui.updateGui()
         
         # Add a pinbutton to the current tab in the right bottom corner
-        if Parameters_Ribbon.USE_FC_OVERLAY is False:
-            layout: QGridLayout = self.currentCategory()._mainLayout
+        layout: QGridLayout = self.currentCategory()._mainLayout
+        if Parameters_Ribbon.USE_FC_OVERLAY is False:            
             btn = QToolButton()
             # btn.setIcon(self.pinButton.icon())
             btn.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
@@ -3540,6 +3540,12 @@ class ModernMenu(RibbonBar):
             layout.addWidget(btn, 2,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
             # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
             self.pinButtonList.append(btn)
+        # If freecads overlay functions are enabled, add a spacer instead. 
+        # This prevents the scroll buttons from beeing placed at the bottom
+        if Parameters_Ribbon.USE_FC_OVERLAY is True:   
+            spacer = QWidget()
+            spacer.setDisabled(True)
+            layout.addWidget(spacer, 2,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
         return
 
     # endregion
