@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -48,7 +48,7 @@ from PySide.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -84,7 +84,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -3524,21 +3524,22 @@ class ModernMenu(RibbonBar):
             Gui.updateGui()
         
         # Add a pinbutton to the current tab in the right bottom corner
-        layout: QGridLayout = self.currentCategory()._mainLayout
-        btn = QToolButton()
-        # btn.setIcon(self.pinButton.icon())
-        btn.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
-        btn.setObjectName("pinButton")
-        btn.setCheckable(True)
-        btn.setChecked(not Parameters_Ribbon.AUTOHIDE_RIBBON)
-        if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
-            btn.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
-        else:
-            btn.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
-        btn.clicked.connect(lambda: self.on_Pin_clicked(btn))
-        layout.addWidget(btn, 2,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
-        # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
-        self.pinButtonList.append(btn)
+        if Parameters_Ribbon.USE_FC_OVERLAY is False:
+            layout: QGridLayout = self.currentCategory()._mainLayout
+            btn = QToolButton()
+            # btn.setIcon(self.pinButton.icon())
+            btn.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
+            btn.setObjectName("pinButton")
+            btn.setCheckable(True)
+            btn.setChecked(not Parameters_Ribbon.AUTOHIDE_RIBBON)
+            if Parameters_Ribbon.AUTOHIDE_RIBBON is False:
+                btn.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
+            else:
+                btn.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
+            btn.clicked.connect(lambda: self.on_Pin_clicked(btn))
+            layout.addWidget(btn, 2,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+            # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
+            self.pinButtonList.append(btn)
         return
 
     # endregion
@@ -4899,7 +4900,7 @@ class ModernMenu(RibbonBar):
                             showText = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
                             if (
                                 IconOnly is True
-                                or Parameters_Ribbon.USE_FC_OVERLAY is True
+                                # or Parameters_Ribbon.USE_FC_OVERLAY is True
                             ):
                                 showText = False
                             try:
@@ -4955,7 +4956,7 @@ class ModernMenu(RibbonBar):
                             showText = Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM
                             if (
                                 IconOnly is True
-                                or Parameters_Ribbon.USE_FC_OVERLAY is True
+                                # or Parameters_Ribbon.USE_FC_OVERLAY is True
                             ):
                                 showText = False
                             try:
@@ -5010,7 +5011,7 @@ class ModernMenu(RibbonBar):
                             showText = Parameters_Ribbon.SHOW_ICON_TEXT_LARGE
                             if (
                                 IconOnly is True
-                                or Parameters_Ribbon.USE_FC_OVERLAY is True
+                                # or Parameters_Ribbon.USE_FC_OVERLAY is True
                             ):
                                 showText = False
                             try:
@@ -5153,7 +5154,7 @@ class ModernMenu(RibbonBar):
         return
     
     def PopulateOverflowMenu(self, panel: RibbonPanel, ButtonList: list):
-        # Setup the panelOptionButton
+        # Create a list of actions from the button list
         actionList = []
         for i in range(len(ButtonList)):
             button = ButtonList[i]
@@ -5168,7 +5169,11 @@ class ModernMenu(RibbonBar):
                     actionList.append(button.actions())
             if type(button.actions()) is QAction:
                 actionList.append(button.actions())
+                
+        # The option button
         OptionButton = panel.panelOptionButton()
+        
+        # If there are actions, create an overflow menu from the panel option button
         if len(actionList) > 0:
             Menu = CustomControls.CustomOptionMenu(
                 OptionButton.menu(), actionList, self
@@ -5197,6 +5202,19 @@ class ModernMenu(RibbonBar):
                 )
                 OptionButton.setText("more...")
         OptionButton.setFixedWidth(Parameters_Ribbon.ICON_SIZE_SMALL)
+        # Set the background color and remove the border
+        OptionButton.setStyleSheet("RibbonPanelOptionButton{ background: "
+                                   + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                                   + ";border: "
+                                   + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                                   + ";}RibbonPanelOptionButton::hover { background: "
+                                   + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                                   + ";}"
+        )
+        # Remove the tooltip
+        OptionButton.setToolTip("")
+        
+        # If there are no actions, hide the button
         if len(actionList) == 0:
             panel.panelOptionButton().hide()
         return panel
