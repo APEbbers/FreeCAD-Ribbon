@@ -1244,35 +1244,32 @@ class ModernMenu(RibbonBar):
                             # Get the panel name and the gridlayout
                             panelName = objPanel.objectName()
                             gridLayout: QGridLayout = objPanel._actionsLayout
-                            # Try to get the current order list
-                            orderList = []
-                            try:
-                                orderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
-                            except Exception:
-                                pass
-                            # # If there is no orderlist, create a new one.
-                            if len(orderList) == 0:
-                                for n in range(gridLayout.count()):
-                                    control = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                                    if control is not None:                                    
-                                        # Update the orderlist
-                                        orderList.append(control.actions().data())
 
-                                        # Add the command if they don't exist
-                                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", control.actions().data(), "size"], "small")
-                                        # Set the sizes
-                                        if control.objectName() == "CustomWidget_Small":
-                                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "small"
-                                        if control.objectName() == "CustomWidget_Medium":
-                                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "medium"
-                                        if control.objectName() == "CustomWidget_Large":
-                                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "large"
-                                
+                            # Recreate the order list for the new panel. 
+                            # This makes sure that all controls are added to the order list
+                            orderList = []
+                            for n in range(gridLayout.count()):
+                                control = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                                if control is not None:                                    
+                                    # Update the orderlist
+                                    orderList.append(control.actions().data())
+
+                                    # Add the command if they don't exist
+                                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", control.actions().data(), "size"], "small")
+                                    # Set the sizes
+                                    if control.objectName() == "CustomWidget_Small":
+                                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "small"
+                                    if control.objectName() == "CustomWidget_Medium":
+                                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "medium"
+                                    if control.objectName() == "CustomWidget_Large":
+                                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "large"
+                            
                                                                 
                                 # Write the order list
                                 Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], [])                         
                                 self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                                                        
-
+ 
+                                
                             # If the panel has an overflow menu, replace it with a complete (long) panel
                             if objPanel.panelOptionButton().isVisible():
                                 newPanel = self.CreatePanel(workbenchName, objPanel.objectName(), False, self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)                                
@@ -1284,7 +1281,7 @@ class ModernMenu(RibbonBar):
                                 # Close the old panel
                                 objPanel.close()
                                 
-                                # Recreate the order list for the new panel
+                                # Recreate the order list from the new panel
                                 # Get the panel name and the gridlayout
                                 panelName = newPanel.objectName()
                                 gridLayout: QGridLayout = newPanel._actionsLayout
@@ -1307,8 +1304,8 @@ class ModernMenu(RibbonBar):
                                                                 
                                 # Write the order list
                                 Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], [])                         
-                                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList      
-                                                            
+                                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                                      
+                                 
                             # show the enable checkboxes  
                             titleLayout: QHBoxLayout = objPanel._titleLayout
                             EnableControl = titleLayout.itemAt(0).widget()
