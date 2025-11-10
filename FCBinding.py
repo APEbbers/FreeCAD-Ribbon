@@ -1222,10 +1222,10 @@ class ModernMenu(RibbonBar):
                             panelName = objPanel.objectName()
                             gridLayout = objPanel._actionsLayout
                             for n in range(gridLayout.count()):
-                                    control: QToolButton = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                                    if control is not None:
-                                        StandardFunctions.add_keys_nested_dict(self.ButtonState, [panelName, control.actions().data()])
-                                        self.ButtonState[panelName][control.actions().data()] = control.actions().isEnabled()
+                                control: QToolButton = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                                if control is not None:
+                                    StandardFunctions.add_keys_nested_dict(self.ButtonState, [panelName, control.actions().data()])
+                                    self.ButtonState[panelName][control.actions().data()] = control.actions().isEnabled()
                                         
                         # Enable all buttons, so you can access them with a right click
                         self.actionList = []
@@ -1263,7 +1263,12 @@ class ModernMenu(RibbonBar):
                                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "medium"
                                     if control.objectName() == "CustomWidget_Large":
                                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "large"
-                            
+
+                                separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
+                                if separator is not None:
+                                    separator.setEnabled(True)
+                                    separator.setFixedWidth(12)
+                                    orderList.append(separator.objectName())
                                                                 
                                 # Write the order list
                                 Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], [])                         
@@ -1300,7 +1305,12 @@ class ModernMenu(RibbonBar):
                                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "medium"
                                         if control.objectName() == "CustomWidget_Large":
                                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "large"
-                                
+
+                                    separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
+                                    if separator is not None:
+                                        separator.setEnabled(True)
+                                        separator.setFixedWidth(12)
+                                        orderList.append(separator.objectName())
                                                                 
                                 # Write the order list
                                 Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], [])                         
@@ -1398,6 +1408,12 @@ class ModernMenu(RibbonBar):
                                         control.actions().setEnabled(ButtonState)
                                     except Exception:
                                         pass
+                                
+                                # Disable the separators to avoid highlighting when hovering
+                                separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
+                                if separator is not None:
+                                    separator.setEnabled(False)
+                                    separator.setFixedWidth(6)
                                                                                                                             
                         # Clear the list with the long panels, so that it can be filled again next time
                         self.longPanels.clear()                        
@@ -4711,6 +4727,12 @@ class ModernMenu(RibbonBar):
                     separatorWidget.setMinimumHeight(panel.height() - panel._titleWidget.height())
                     separator = panel.addLargeWidget(separatorWidget, fixedHeight=False)
                     separator.setObjectName(button.text())
+                    separator.setDisabled(True)
+                    separator.setStyleSheet(
+                        "RibbonSeparator:hover {background: "
+                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        + ";}"
+                                            )
 
                     # there is a bug in pyqtribbon where the separator is placed in the wrong position
                     # despite the correct order of the button list.
