@@ -1263,11 +1263,14 @@ class ModernMenu(RibbonBar):
                                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "medium"
                                     if control.objectName() == "CustomWidget_Large":
                                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "large"
-
+                                
                                 separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
                                 if separator is not None:
+                                    # Set the separator enabled, so that hovering works
                                     separator.setEnabled(True)
-                                    separator.setFixedWidth(12)
+                                    # Make the separator wider, for easier clicking
+                                    separator.setFixedWidth(16)
+                                    # Add the separator to the orderlist
                                     orderList.append(separator.objectName())
                                                                 
                                 # Write the order list
@@ -1277,7 +1280,7 @@ class ModernMenu(RibbonBar):
                                 
                             # If the panel has an overflow menu, replace it with a complete (long) panel
                             if objPanel.panelOptionButton().isVisible():
-                                newPanel = self.CreatePanel(workbenchName, objPanel.objectName(), False, self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)                                
+                                newPanel = self.CreatePanel(workbenchName, objPanel.objectName(), False, self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True)                                
                                 replacedPanel = self.currentCategory().replacePanel(objPanel, newPanel)
                                 # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
                                 self.setPanelProperties(replacedPanel)
@@ -1308,8 +1311,11 @@ class ModernMenu(RibbonBar):
 
                                     separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
                                     if separator is not None:
+                                        # Set the separator enabled, so that hovering works
                                         separator.setEnabled(True)
-                                        separator.setFixedWidth(12)
+                                        # Make the separator wider, for easier clicking
+                                        separator.setFixedWidth(16)
+                                        # Add the separator to the orderlist
                                         orderList.append(separator.objectName())
                                                                 
                                 # Write the order list
@@ -1409,10 +1415,11 @@ class ModernMenu(RibbonBar):
                                     except Exception:
                                         pass
                                 
-                                # Disable the separators to avoid highlighting when hovering
                                 separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
                                 if separator is not None:
+                                    # Disable the separators to avoid highlighting when hovering
                                     separator.setEnabled(False)
+                                    # Set the separator to its original width
                                     separator.setFixedWidth(6)
                                                                                                                             
                         # Clear the list with the long panels, so that it can be filled again next time
@@ -1444,7 +1451,7 @@ class ModernMenu(RibbonBar):
         
         # Create a new panel
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
+        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True)
         # Add the panel to the list with long panels
         self.longPanels.append(newPanel)
         
@@ -1512,7 +1519,7 @@ class ModernMenu(RibbonBar):
         
          # Create a new panel
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())        
-        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
+        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True)
         # Add the panel to the list with long panels
         self.longPanels.append(newPanel)
                 
@@ -1575,7 +1582,7 @@ class ModernMenu(RibbonBar):
        
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True)
+            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True)
             # Add the panel to the list with long panels
             self.longPanels.append(newPanel)
 
@@ -1620,7 +1627,7 @@ class ModernMenu(RibbonBar):
             
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
+            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True)
             # Add the panel to the list with long panels
             self.longPanels.append(newPanel)
             
@@ -4478,7 +4485,7 @@ class ModernMenu(RibbonBar):
         title = title.lstrip().rstrip()
         return title
     
-    def CreatePanel(self, workbenchName: str, panelName: str, addPanel = True, dict = ribbonStructure, SetToUpdate = False, ignoreColumnLimit = False, showEnableControl = False):
+    def CreatePanel(self, workbenchName: str, panelName: str, addPanel = True, dict = ribbonStructure, SetToUpdate = False, ignoreColumnLimit = False, showEnableControl = False, enableSeparator = False):
         if SetToUpdate is True:
             dict = self.ribbonStructure
             Standard_Functions_Ribbon.add_keys_nested_dict(dict, ["workbenches", workbenchName, "toolbars"], 1, True)
@@ -4724,10 +4731,14 @@ class ModernMenu(RibbonBar):
                 # With an paneloptionbutton, use an offset of 2 instead of 1 for i.
                 if "separator" in button.text() and i < len(allButtons):
                     separatorWidget = CustomWidgets.CustomSeparator()
-                    separatorWidget.setMinimumHeight(panel.height() - panel._titleWidget.height())
-                    separator = panel.addLargeWidget(separatorWidget, fixedHeight=False)
+                    # separatorWidget.setFixedHeight(panel.height() - panel._titleWidget.height()-panel._actionsLayout.spacing())
+                    # separatorWidget.setMinimumHeight(panel.height()+20)
+                    height = panel.height() - panel._titleLabel.height()-panel._actionsLayout.spacing()-20
+                    separator = panel.addWidget(separatorWidget, rowSpan=6, fixedHeight=height, alignment=Qt.AlignmentFlag.AlignTop)
                     separator.setObjectName(button.text())
-                    separator.setDisabled(True)
+                    separator.setDisabled(not enableSeparator)
+                    if enableSeparator is True:
+                        separator.setFixedWidth(16)
                     separator.setStyleSheet(
                         "RibbonSeparator:hover {background: "
                         + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
