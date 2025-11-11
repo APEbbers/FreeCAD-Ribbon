@@ -5528,14 +5528,11 @@ class ModernMenu(RibbonBar):
         # Convert toolbar names to new names for certain WB's
         #
         # Fill the correction list -> {workbenchname [[new toolbar, old toolbar], [new toolbar, old toolbar]]}
-        CorrectionList = {
-            "PartDesignWorkbench": [
-                ['Part Design Helper Features', "Part Design Helper"],
-                ['Part Design Modeling Features', "Part Design Modeling"],
-                ['Part Design Dress-Up Features', "Part Design Dressup"],
-                ['Part Design Transformation Features', "Part Design Patterns"],
-            ]
-        }
+        CorrectionList = {}
+        MappingFile = os.path.join(os.path.dirname(__file__), "Toolbar name mapping.json")
+        with open(MappingFile , "r") as File:
+            CorrectionList.update(json.load(File))
+        File.close()
 
         # Go through the workbenches in the json file to correct toolbar names
         for WorkBench in self.ribbonStructure["workbenches"]:

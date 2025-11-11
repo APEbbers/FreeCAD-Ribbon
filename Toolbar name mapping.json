@@ -1,8 +1,8 @@
 {
-    "PartDesignWorkbench": {
-        "Part Design Helper Features": "Part Design Helper",
-        "Part Design Modeling Features": "Part Design Modeling",
-        "Part Design Dress-Up Features": "Part Design Dressup",
-        "Part Design Transformation Features":"Part Design Patterns"
-    }
+    "PartDesignWorkbench": [
+        ["Part Design Helper Features", "Part Design Helper"],
+        ["Part Design Modeling Features", "Part Design Modeling"],
+        ["Part Design Dress-Up Features", "Part Design Dressup"],
+        ["Part Design Transformation Features", "Part Design Patterns"]
+    ]
 }
