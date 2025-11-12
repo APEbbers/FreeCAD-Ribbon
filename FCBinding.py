@@ -1252,7 +1252,12 @@ class ModernMenu(RibbonBar):
                                 control = gridLayout.itemAt(n).widget().findChild(CustomControls)
                                 if control is not None:                                    
                                     # Update the orderlist
-                                    orderList.append(control.actions().data())
+                                    command = control.actions().data()
+                                    if command is None:
+                                        toolButton = control.findChild(QToolButton, "CommandButton")
+                                        print(toolButton.actions()[0])
+                                        command = control.defaultAction()
+                                    orderList.append(command)
 
                                     # Add the command if they don't exist
                                     Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", control.actions().data(), "size"], "small")
@@ -1463,8 +1468,20 @@ class ModernMenu(RibbonBar):
         # Update the dict of the currentCategory with the new panel
         self.currentCategory()._panels[newPanel.objectName()] = newPanel
         
+        # Enable all buttons, so you can access them with a right click
+        for child in mw.findChildren(QToolButton):
+            try:
+                for subAction in child.actions():
+                    subAction.setEnabled(True)
+                child.setEnabled(True)
+            except Exception:
+                pass
+        Gui.updateGui()
+        
+        # Close the old panel
         panel.close()
         
+        # Close the context menu
         self.contextMenu.close()
         return
     
@@ -1531,10 +1548,21 @@ class ModernMenu(RibbonBar):
         # Update the dict of the currentCategory with the new panel
         self.currentCategory()._panels[newPanel.objectName()] = newPanel
         
+        # Enable all buttons, so you can access them with a right click
+        for child in mw.findChildren(QToolButton):
+            try:
+                for subAction in child.actions():
+                    subAction.setEnabled(True)
+                child.setEnabled(True)
+            except Exception:
+                pass
+        Gui.updateGui()
+        
         # Close the old panel
         panel.close()
+        
         # Close the context menu
-        self.contextMenu.close()   
+        self.contextMenu.close() 
         return
     
     def on_AddSeparator_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, Side = "left"):
@@ -1594,8 +1622,19 @@ class ModernMenu(RibbonBar):
             # Update the dict of the currentCategory with the new panel
             self.currentCategory()._panels[newPanel.objectName()] = newPanel
         
-            # Close the old panel                        
+            # Enable all buttons, so you can access them with a right click
+            for child in mw.findChildren(QToolButton):
+                try:
+                    for subAction in child.actions():
+                        subAction.setEnabled(True)
+                    child.setEnabled(True)
+                except Exception:
+                    pass
+            Gui.updateGui()
+            
+            # Close the old panel
             panel.close()
+            
             # Close the context menu
             self.contextMenu.close()
         return
@@ -1636,8 +1675,19 @@ class ModernMenu(RibbonBar):
             # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
             self.setPanelProperties(newPanel)
             
-            # Close the old panel                        
+            # Enable all buttons, so you can access them with a right click
+            for child in mw.findChildren(QToolButton):
+                try:
+                    for subAction in child.actions():
+                        subAction.setEnabled(True)
+                    child.setEnabled(True)
+                except Exception:
+                    pass
+            Gui.updateGui()
+            
+            # Close the old panel
             panel.close()
+            
             # Close the context menu
             self.contextMenu.close()
 
@@ -1910,7 +1960,7 @@ class ModernMenu(RibbonBar):
                                         
                         # Create a new panel
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True)
+                        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True)
                                                 
                         # Add the panel to the list with long panels
                         self.longPanels.append(newPanel)
@@ -1932,7 +1982,7 @@ class ModernMenu(RibbonBar):
             position = self.find_drop_location(event)
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            newPanel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True)
+            newPanel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True, ButtonsEnabled=True)
 
             # Add the new panel
             self.currentCategory().insertWidget(newPanel,position[0])
@@ -3783,7 +3833,29 @@ class ModernMenu(RibbonBar):
                     ]["commands"]
 
                     # Create a QToolButton from the key and add it to the button list
+                    allButtons: list = []
                     for key, value in list(Commands.items()):
+                        # Get the buttons with two ways, to be sure that all buttons are present
+                        #
+                        # 1. Get the buttons from the mainWindow. This way you will get dropdown like "electro magnetic boundarys from the FEM wob"
+                        # Get the toolbar from the mainwindow
+                        try:
+                            TB = mw.findChildren(QToolBar, value)
+                            allButtons = TB[0].findChildren(QToolButton)
+                            # remove empty buttons
+                            for i in range(len(allButtons)):
+                                button: QToolButton = allButtons[i]
+                                if allButtons[i].text() == "":
+                                    allButtons.pop(i)
+                        except Exception:
+                            pass
+                        # Find the matching button and add it the the button list
+                        for i in range(len(allButtons)):
+                            button: QToolButton = allButtons[i]
+                            if button.defaultAction().data() == key:
+                                ButtonList.append(button)
+
+                        # 2. Get the command and create a button from it
                         try:
                             # Get the command
                             Command = Gui.Command.get(key)
@@ -3794,18 +3866,21 @@ class ModernMenu(RibbonBar):
                                     ]
                                 )
                                 action = Command.getAction()
-                                try:
-                                    if len(action) > 1:
-                                        Icon = action[0].icon()
-                                except Exception:
-                                    pass
-                                Button = QToolButton()
+                                Button = QToolButton()                                
                                 Button.addActions(action)
                                 Button.setDefaultAction(action[0])
                                 Button.setIcon(Icon)
                                 Button.setText(CommandInfoCorrections(key)[
                                         "menuText"
                                     ])
+                                try:
+                                    if len(action) > 1:
+                                        Icon = action[0].icon()
+                                        # menu = QMenu(self)
+                                        # menu.addActions(action)
+                                        # Button.setMenu(menu)
+                                except Exception:
+                                    pass
                                 # Add the button to the button list
                                 ButtonList.append(Button)
                         except Exception as e:
@@ -4532,7 +4607,7 @@ class ModernMenu(RibbonBar):
                         allButtons.pop(i)
             except Exception:
                 pass
-
+            
         # Add custom panels
         if panelName.endswith("_custom"):
             customList = self.List_AddCustomToolBarToWorkbench(workbenchName, panelName)
@@ -4944,6 +5019,7 @@ class ModernMenu(RibbonBar):
                         btn = None
                         # Make sure that no strange "&" symbols are remainging
                         action.setText(action.text().replace("&", ""))
+                        # print(action.data())
                         if buttonSize == "small":
                             showText = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
                             if (
