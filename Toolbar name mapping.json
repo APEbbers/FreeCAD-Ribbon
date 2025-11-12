@@ -4,5 +4,35 @@
         ["Part Design Modeling Features", "Part Design Modeling"],
         ["Part Design Dress-Up Features", "Part Design Dressup"],
         ["Part Design Transformation Features", "Part Design Patterns"]
+    ],
+    "BIMWorkbench": [
+        ["Drafting tools", "Drafting Tools"],
+        ["Draft snap", "Draft Snap"],
+        ["3D/BIM tools", "3D/BIM Tools"],
+        ["Annotation tools", "Annotation Tools"],
+        ["General modification tools", "General Tools"],
+        ["2D modification tools", "2D Tools"],
+        ["Object modification tools", "Object Tools"],
+        ["3D modification tools", "3D Tools"],
+        ["Manage tools", "Manage Tools"]
+    ],
+    "PartWorkbench": [
+        ["Part tools", "Part Tools"],
+        ["Boolean", "Boolean Tools"]
+    ],
+    "SketcherWorkbench": [
+        ["Sketcher edit mode", "Edit Mode"],
+        ["Sketcher geometries", "Geometries"],
+        ["Sketcher constraints", "Constraints"],
+        ["Sketcher tools", "Sketcher Tools"],
+        ["Sketcher B-spline tools", "B-Spline Tools"],
+        ["Sketcher visual", "Visual Helpers"]
+    ],
+    "DraftWorkbench": [
+        ["Draft creation tools", "Draft Creation"],
+        ["Draft annotation tools", "Draft Annotation"],
+        ["Draft modification tools", "Draft Modification"],
+        ["Draft utility tools", "Draft Utility"],
+        ["Draft snap", "Draft Snap"]
     ]
 }
