@@ -316,21 +316,13 @@
                         }
                     }
                 },
-                "Create BOM_custom": {
-                    "order": [
-                        "Create overall BoM"
-                    ],
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "large",
-                            "text": "Create overall BoM",
-                            "icon": "BoM.svg"
-                        }
-                    }
-                },
                 "Structure": {
                     "order": [
-                        "Part_Datums"
+                        "Part_Datums",
+                        "Std_Part",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
                     ],
                     "commands": {
                         "Std_Part": {
@@ -423,17 +415,6 @@
                     "title": "Patterns",
                     "Enabled": true
                 },
-                "Create BOM PartDesignWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "small"
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": false
-                },
                 "Tools_newPanel": {
                     "commands": {
                         "Std_Measure": {
@@ -466,13 +447,12 @@
                     "Enabled": true
                 },
                 "order": [
-                    "Individual views",
                     "Structure",
                     "Part Design Helper Features",
                     "Part Design Modeling Features",
                     "Part Design Dress-Up Features",
                     "Part Design Transformation Features",
-                    "Create BOM_custom"
+                    "Tools_newPanel"
                 ]
             }
         },
@@ -755,7 +735,6 @@
                     "3D Tools",
                     "Object Tools",
                     "Manage Tools",
-                    "Create BOM BIMWorkbench",
                     "Tools_newPanel"
                 ],
                 "Individual views": {
@@ -1334,17 +1313,6 @@
                     ],
                     "Enabled": true
                 },
-                "Create BOM BIMWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "large"
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": true
-                },
                 "Tools_newPanel": {
                     "commands": {
                         "Std_Measure": {
@@ -1591,17 +1559,6 @@
                         "Part_Datums"
                     ],
                     "Enabled": true
-                },
-                "Create BOM CAMWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "small"
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": false
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -2019,7 +1976,6 @@
                     "Solve",
                     "Results",
                     "Utilities",
-                    "Create BOM FemWorkbench",
                     "Tools_newPanel"
                 ],
                 "Individual views": {
@@ -2241,17 +2197,6 @@
                     ],
                     "Enabled": true,
                     "title": "Geometrical Analyse"
-                },
-                "Create BOM FemWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "small"
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": false
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -2508,8 +2453,7 @@
                     "Structure",
                     "Solids",
                     "Part tools",
-                    "Boolean",
-                    "Create BOM_custom"
+                    "Boolean"
                 ],
                 "Individual views": {
                     "order": [
@@ -2556,18 +2500,6 @@
                             "size": "small",
                             "text": "Left",
                             "icon": "view-left"
-                        }
-                    }
-                },
-                "Create BOM_custom": {
-                    "order": [
-                        "Create overall BoM"
-                    ],
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "large",
-                            "text": "Create overall BoM",
-                            "icon": "BoM.svg"
                         }
                     }
                 },
@@ -2711,17 +2643,6 @@
                         "Part_Defeaturing"
                     ],
                     "Enabled": true
-                },
-                "Create BOM PartWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "small"
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": false
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -3456,17 +3377,6 @@
                     ],
                     "Enabled": true
                 },
-                "Create BOM SketcherWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "small"
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": true
-                },
                 "Tools_newPanel": {
                     "commands": {
                         "Std_Measure": {
@@ -3690,17 +3600,6 @@
                     "Enabled": true
                 },
                 "BoM Toolbar - SpreadsheetWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "small"
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": false
-                },
-                "Create BOM SpreadsheetWorkbench": {
                     "commands": {
                         "CreateBOM_Overall": {
                             "size": "small"
@@ -4088,7 +3987,6 @@
                     "TechDraw File Access",
                     "TechDraw Decoration",
                     "TechDraw Annotation",
-                    "Create BOM TechDrawWorkbench",
                     "Tools_newPanel"
                 ],
                 "Individual views": {
@@ -4162,17 +4060,6 @@
                     ],
                     "Enabled": true
                 },
-                "Create BOM TechDrawWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "large"
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": true
-                },
                 "Tools_newPanel": {
                     "commands": {
                         "Std_Measure": {
@@ -4240,7 +4127,6 @@
                 "TechDraw Decoration",
                 "TechDraw Attributes",
                 "TechDraw File Access",
-                "Create BOM TechDrawWorkbench",
                 "Tools_newPanel"
             ]
         },
@@ -4251,7 +4137,6 @@
                     "Structure",
                     "Assembly",
                     "Assembly Joints",
-                    "Create BOM AssemblyWorkbench",
                     "Tools_newPanel"
                 ],
                 "Assembly": {
@@ -4415,20 +4300,13 @@
                         }
                     },
                     "order": [
-                        "Part_Datums"
+                        "Part_Datums",
+                        "Std_Part",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
                     ],
                     "Enabled": true
-                },
-                "Create BOM AssemblyWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "large"
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": false
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -4906,17 +4784,6 @@
                     ],
                     "Enabled": true
                 },
-                "Create BOM DraftWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "small"
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": false
-                },
                 "Tools_newPanel": {
                     "commands": {
                         "Std_Measure": {
@@ -5098,6 +4965,237 @@
                             "icon": "Mesh_Evaluation"
                         }
                     }
+                },
+                "Structure": {
+                    "commands": {
+                        "Std_Part": {
+                            "size": "small"
+                        },
+                        "Part_Datums": {
+                            "size": "small"
+                        },
+                        "Std_Group": {
+                            "size": "small"
+                        },
+                        "Std_LinkActions": {
+                            "size": "small"
+                        },
+                        "Std_VarSet": {
+                            "size": "small"
+                        }
+                    },
+                    "order": [
+                        "Std_Part",
+                        "Part_Datums",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ],
+                    "Enabled": true
+                },
+                "Mesh Tools": {
+                    "commands": {
+                        "Mesh_Import": {
+                            "size": "large"
+                        },
+                        "Mesh_Export": {
+                            "size": "small"
+                        },
+                        "Mesh_FromPartShape": {
+                            "size": "small"
+                        },
+                        "Mesh_BuildRegularSolid": {
+                            "size": "small"
+                        }
+                    },
+                    "order": [
+                        "Mesh_Import",
+                        "Mesh_Export",
+                        "Mesh_FromPartShape",
+                        "Mesh_BuildRegularSolid"
+                    ],
+                    "Enabled": true
+                },
+                "Mesh Modify": {
+                    "commands": {
+                        "Mesh_HarmonizeNormals": {
+                            "size": "large"
+                        },
+                        "Mesh_FlipNormals": {
+                            "size": "small"
+                        },
+                        "Mesh_FillupHoles": {
+                            "size": "small"
+                        },
+                        "Mesh_FillInteractiveHole": {
+                            "size": "small"
+                        },
+                        "Mesh_AddFacet": {
+                            "size": "small"
+                        },
+                        "Mesh_RemoveComponents": {
+                            "size": "small"
+                        },
+                        "Mesh_Smoothing": {
+                            "size": "small"
+                        },
+                        "Mesh_RemeshGmsh": {
+                            "size": "small"
+                        },
+                        "Mesh_Decimating": {
+                            "size": "small"
+                        },
+                        "Mesh_Scale": {
+                            "size": "small"
+                        }
+                    },
+                    "order": [
+                        "Mesh_HarmonizeNormals",
+                        "Mesh_FlipNormals",
+                        "Mesh_FillupHoles",
+                        "Mesh_FillInteractiveHole",
+                        "Mesh_AddFacet",
+                        "Mesh_RemoveComponents",
+                        "Mesh_Smoothing",
+                        "Mesh_RemeshGmsh",
+                        "Mesh_Decimating",
+                        "Mesh_Scale"
+                    ],
+                    "Enabled": true
+                },
+                "Mesh Boolean": {
+                    "commands": {
+                        "Mesh_Union": {
+                            "size": "large"
+                        },
+                        "Mesh_Intersection": {
+                            "size": "small"
+                        },
+                        "Mesh_Difference": {
+                            "size": "small"
+                        }
+                    },
+                    "order": [
+                        "Mesh_Union",
+                        "Mesh_Intersection",
+                        "Mesh_Difference"
+                    ],
+                    "Enabled": true
+                },
+                "Mesh Cutting": {
+                    "commands": {
+                        "Mesh_PolyCut": {
+                            "size": "large"
+                        },
+                        "Mesh_PolyTrim": {
+                            "size": "small"
+                        },
+                        "Mesh_TrimByPlane": {
+                            "size": "small"
+                        },
+                        "Mesh_SectionByPlane": {
+                            "size": "small"
+                        },
+                        "Mesh_CrossSections": {
+                            "size": "small"
+                        }
+                    },
+                    "order": [
+                        "Mesh_PolyCut",
+                        "Mesh_PolyTrim",
+                        "Mesh_TrimByPlane",
+                        "Mesh_SectionByPlane",
+                        "Mesh_CrossSections"
+                    ],
+                    "Enabled": true
+                },
+                "Mesh Segmentation": {
+                    "commands": {
+                        "Mesh_Merge": {
+                            "size": "large"
+                        },
+                        "Mesh_SplitComponents": {
+                            "size": "small"
+                        },
+                        "Mesh_Segmentation": {
+                            "size": "small"
+                        },
+                        "Mesh_SegmentationBestFit": {
+                            "size": "small"
+                        }
+                    },
+                    "order": [
+                        "Mesh_Merge",
+                        "Mesh_SplitComponents",
+                        "Mesh_Segmentation",
+                        "Mesh_SegmentationBestFit"
+                    ],
+                    "Enabled": true
+                },
+                "Mesh Analyze": {
+                    "commands": {
+                        "Mesh_Evaluation": {
+                            "size": "large"
+                        },
+                        "Mesh_EvaluateFacet": {
+                            "size": "small"
+                        },
+                        "Mesh_VertexCurvature": {
+                            "size": "small"
+                        },
+                        "Mesh_CurvatureInfo": {
+                            "size": "small"
+                        },
+                        "Mesh_EvaluateSolid": {
+                            "size": "small"
+                        },
+                        "Mesh_BoundingBox": {
+                            "size": "small"
+                        }
+                    },
+                    "order": [
+                        "Mesh_Evaluation",
+                        "Mesh_EvaluateFacet",
+                        "Mesh_VertexCurvature",
+                        "Mesh_CurvatureInfo",
+                        "Mesh_EvaluateSolid",
+                        "Mesh_BoundingBox"
+                    ],
+                    "Enabled": true
+                },
+                "Tools_newPanel": {
+                    "commands": {
+                        "Std_Measure": {
+                            "size": "small"
+                        },
+                        "Std_UnitsCalculator": {
+                            "size": "small"
+                        },
+                        "Std_Properties": {
+                            "size": "small"
+                        },
+                        "Std_BoxElementSelection": {
+                            "size": "small"
+                        },
+                        "Std_BoxSelection": {
+                            "size": "small"
+                        },
+                        "Std_WhatsThis": {
+                            "size": "small"
+                        }
+                    },
+                    "order": [
+                        "Std_Measure",
+                        "Std_UnitsCalculator",
+                        "Std_Properties",
+                        "Std_BoxElementSelection",
+                        "Std_BoxSelection",
+                        "Std_WhatsThis"
+                    ],
+                    "Enabled": true
+                },
+                "Create BOM MeshWorkbench": {
+                    "Enabled": false
                 }
             }
         },
@@ -5239,17 +5337,6 @@
                     ],
                     "Enabled": true
                 },
-                "Create BOM PointsWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "small"
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": false
-                },
                 "Tools_newPanel": {
                     "commands": {
                         "Std_Measure": {
@@ -5337,17 +5424,6 @@
                         "Std_VarSet"
                     ],
                     "Enabled": true
-                },
-                "Create BOM ReverseEngineeringWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "small"
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": false
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -5465,17 +5541,6 @@
                     ],
                     "Enabled": true
                 },
-                "Create BOM RobotWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "small"
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": false
-                },
                 "Tools_newPanel": {
                     "commands": {
                         "Std_Measure": {
@@ -5579,17 +5644,6 @@
                         "Part_Datums"
                     ],
                     "Enabled": true
-                },
-                "Create BOM SurfaceWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "small"
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": false
                 },
                 "Tools_newPanel": {
                     "commands": {
