@@ -5193,9 +5193,6 @@
                         "Std_WhatsThis"
                     ],
                     "Enabled": true
-                },
-                "Create BOM MeshWorkbench": {
-                    "Enabled": false
                 }
             }
         },
