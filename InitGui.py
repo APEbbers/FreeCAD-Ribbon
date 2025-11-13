@@ -24,6 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import FCBinding
 import Parameters_Ribbon
+import Standard_Functions_Ribbon as StandardFunctions
 import shutil
 import sys
 import platform
@@ -74,6 +75,18 @@ source_default = os.path.join(
     os.path.dirname(FCBinding.__file__), "CreateStructure.txt"
 )
 
+NewDefaultNeeded = False
+if (
+    StandardFunctions.checkFreeCADVersion(
+        Parameters_Ribbon.FreeCAD_Version["mainVersion"],
+        Parameters_Ribbon.FreeCAD_Version["subVersion"],
+        Parameters_Ribbon.FreeCAD_Version["patchVersion"],
+        Parameters_Ribbon.FreeCAD_Version["gitVersion"],
+    )
+    is True
+):
+    NewDefaultNeeded = True
+    
 # check if file exits
 fileExists = os.path.isfile(file)
 
@@ -84,7 +97,7 @@ if fileExists is False:
 # check if file exits
 fileExists = os.path.isfile(file_default)
 # if not, copy and rename
-if fileExists is False:
+if fileExists is False or NewDefaultNeeded is True:
     shutil.copy(source_default, file_default)
 
 # remove the test workbench

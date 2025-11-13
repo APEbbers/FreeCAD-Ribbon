@@ -977,16 +977,16 @@ def AddToClipboard(Text):
 
 
 def checkFreeCADVersion(main: int, sub: int, patch: int, git: int):
-    """_summary_
+    """Checks if the FreeCAD version is equal or newer than the given version number.
 
     Args:
-        main (int): _description_
-        sub (int): _description_
-        patch (int): _description_
-        git (int): _description_
+        main (int): Main version number
+        sub (int): Secundair version number
+        patch (int): Patch number
+        git (int): gitnumber
 
     Returns:
-        True if equal or higher
+        True if the FreeCAD version is equal or higher than the given version number.
     """    
     version = App.Version()
     # print(version)
