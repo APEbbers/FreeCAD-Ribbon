@@ -2799,7 +2799,7 @@ class ModernMenu(RibbonBar):
         BetaLabel = QLabel(translate("FreeCAD Ribbon", "Béta functions"))
         BeforeAction = self.rightToolBar().actions()[1]
         self.rightToolBar().insertWidget(BeforeAction, BetaLabel)
-        switch = ToggleAction()
+        switch = Toggle(self)
         switch.setObjectName("bétaSwitch")
         toolTipText = (translate("FreeCAD Ribbon",
     """
