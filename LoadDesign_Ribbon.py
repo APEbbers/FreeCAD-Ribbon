@@ -1647,8 +1647,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         )
 
         # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+        self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -1659,8 +1658,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         )
 
         # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+        self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -1674,8 +1672,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         )
 
         # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+        self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -1686,8 +1683,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         )
 
         # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+        self.form.UpdateJson.setEnabled(True)
 
         return
 
