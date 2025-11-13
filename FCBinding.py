@@ -943,28 +943,7 @@ class ModernMenu(RibbonBar):
                 Gui.activateWorkbench(Wb)
             except Exception:
                 pass
-
-        # Set the state of the Béta function switch
-        switch: Toggle = self.rightToolBar().findChild(Toggle, "bétaSwitch")
-        switch.setChecked(Parameters_Ribbon.BETA_FUNCTIONS_ENABLED)
-        
-       # This is needed to be able to drag the main window properly when the titlebar is hidden
-        self._titleWidget.mousePressEvent = lambda e: self.mousePress_Titlebar(e)
-        mw.moveEvent = lambda e: self.mouseMove_Titlebar(e)
         return
-
-    # region - event functions
-    initialPos = None
-    def mousePress_Titlebar(self, event):
-        self.initialPos = event.pos()
-    
-    def mouseMove_Titlebar(self, event):
-        if self.initialPos is not None:
-            delta = event.pos() - self.initialPos
-            mw.move(
-                mw.window().x() + delta.x(),
-                mw.window().y() + delta.y(),
-            )
 
     def closeEvent(self, event):
         mw.menuBar().show()
@@ -2877,6 +2856,15 @@ class ModernMenu(RibbonBar):
 
     # Add the searchBar if it is present
     def AddSearchBar(self):
+        modDir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        SearchBarDir = os.path.join(modDir, "SearchBar")
+        file = os.path.join(SearchBarDir, "SearchBoxLight.py")
+        if os.path.exists(file) is False:
+            file = os.path.join(SearchBarDir, "freecad", "SearchBar", "SearchBoxLight.py")
+        if os.path.exists(file) is False:
+            print("SearchBar directoy doesn't exist")
+            return
+        
         TB: QToolBar = mw.findChildren(QToolBar, "SearchBar")
         width = 10
         if TB is not None:
