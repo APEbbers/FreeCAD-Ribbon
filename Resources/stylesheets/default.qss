@@ -1,9 +1,9 @@
-/* QToolTip {
+QToolTip {
    background-color: #FFFFE1;
    color: black;
    border: black solid 1px;
    border-radius: 2px;
-   } */
+   }
 
 QTabBar {
   margin: 0px;
@@ -93,6 +93,8 @@ RibbonPanel {
 }
 
 RibbonPanelTitle {
+	background-color: transparent;
+	border: none;
 	padding-top: 0px;
 	padding-bottom: 0px;
 	margin-top: 0px;

@@ -24,6 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import FCBinding
 import Parameters_Ribbon
+import Standard_Functions_Ribbon as StandardFunctions
 import shutil
 import sys
 import platform
@@ -37,7 +38,14 @@ from PySide.QtWidgets import (
     QToolButton,
     QStyle,
 )
+import logging
 
+# Set the logger levels to avoid extra output in the report panel
+logging.getLogger("urllib3").setLevel(logging.INFO)
+
+# Set a value for the current needed version of the Ribbon structure. 
+# Increasing this, results in a new created default structure file.
+CurrentStructureVersion = 2
 
 def QT_TRANSLATE_NOOP(context, text):
     return text
@@ -70,6 +78,11 @@ source_default = os.path.join(
     os.path.dirname(FCBinding.__file__), "CreateStructure.txt"
 )
 
+NewDefaultNeeded = True
+ribbonStructureVersion = Parameters_Ribbon.Settings.GetIntSetting("RibbonStructureVersion")
+if ribbonStructureVersion >= CurrentStructureVersion:
+    NewDefaultNeeded = False
+
 # check if file exits
 fileExists = os.path.isfile(file)
 
@@ -80,8 +93,9 @@ if fileExists is False:
 # check if file exits
 fileExists = os.path.isfile(file_default)
 # if not, copy and rename
-if fileExists is False:
+if fileExists is False or NewDefaultNeeded is True:
     shutil.copy(source_default, file_default)
+    Parameters_Ribbon.Settings.SetIntSetting("RibbonStructureVersion", CurrentStructureVersion)
 
 # remove the test workbench
 Gui.removeWorkbench("TestWorkbench")
@@ -106,7 +120,7 @@ if Parameters_Ribbon.USE_FC_OVERLAY is True:
     preferences.SetBool("ActivateOverlay", True)
 
 try:
-    print(translate("FreeCAD Ribbon", "Activating Ribbon Bar..."))
+    print(translate("FreeCAD Ribbon", "Activating Ribbon UI..."))
     mw = Gui.getMainWindow()
 
     if Parameters_Ribbon.HIDE_TITLEBAR_FC is False:
@@ -125,7 +139,7 @@ try:
         mw.workbenchActivated.connect(FCBinding.run)
         # Normally after setting the window frameless you show the window with mw.show()
         # This is now done in FCBinding with an eventfilter class
-        print(translate("FreeCAD Ribbon", "FreeCAD loaded without titlebar"))
+        print(translate("FreeCAD Ribbon", "Ribbon UI: FreeCAD loaded without titlebar"))
 
 except Exception as e:
     # raise e

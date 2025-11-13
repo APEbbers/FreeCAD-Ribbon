@@ -10,6 +10,7 @@ from PySide.QtWidgets import (
     QHBoxLayout,
     QScrollArea,
     QFrame,
+    QGridLayout,
 )
 from PySide.QtCore import (
     Qt,
@@ -65,7 +66,7 @@ class RibbonCategoryLayoutWidget(QFrame):
             QSizePolicy.Policy.Expanding,
         )
         self._categoryLayout = QHBoxLayout(self._categoryScrollAreaContents)
-        self._categoryLayout.setContentsMargins(0, 0, 0, 0)
+        self._categoryLayout.setContentsMargins(6, 0, 0, 0)
         self._categoryLayout.setSpacing(0)
         self._categoryLayout.setSizeConstraint(QLayout.SizeConstraint.SetMinAndMaxSize)
 
@@ -94,16 +95,19 @@ class RibbonCategoryLayoutWidget(QFrame):
         self._nextButton.clicked.connect(self.scrollNext)  # type: ignore
 
         # Add the widgets to the main layout
-        self._mainLayout = QHBoxLayout(self)
+        # self._mainLayout = QHBoxLayout(self)
+        self._mainLayout = QGridLayout(self)
         self._mainLayout.setContentsMargins(0, 0, 0, 0)
         self._mainLayout.setSpacing(0)
         self._mainLayout.addWidget(
-            self._previousButton, 0, Qt.AlignmentFlag.AlignVCenter
+            self._previousButton, 1,0,1,1, Qt.AlignmentFlag.AlignVCenter
         )
-        self._mainLayout.addWidget(self._categoryScrollArea, 1)
-        self._mainLayout.addSpacerItem(QSpacerItem(0, 0, QSizePolicy.Policy.Expanding,
-                                                             QSizePolicy.Policy.Minimum))  # fmt: skip
-        self._mainLayout.addWidget(self._nextButton, 0, Qt.AlignmentFlag.AlignVCenter)
+        self._mainLayout.addWidget(self._categoryScrollArea, 0,1,-1,1)
+        spacer = QWidget()
+        spacer.setBaseSize(0,0)
+        spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self._mainLayout.addWidget(spacer, 0,2,1,-1)  # fmt: skip
+        self._mainLayout.addWidget(self._nextButton, 1,3,1,1, Qt.AlignmentFlag.AlignVCenter)
 
         # Auto set the visibility of the scroll buttons
         self.autoSetScrollButtonsVisible()
@@ -149,6 +153,21 @@ class RibbonCategoryLayoutWidget(QFrame):
         :param widget: The widget to add.
         """
         self._categoryLayout.addWidget(widget)
+        
+    def insertWidget(self, widget: QWidget, index: int):
+        """Add a widget to the category layout.
+
+        :param widget: The widget to add.
+        """
+        self._categoryLayout.insertWidget(index, widget)
+
+    def replaceWidget(self, from_:QWidget, to: QWidget, FindChildOption = Qt.FindChildOption.FindChildrenRecursively):
+        """Remove a widget from the category layout.
+
+        :param from_: The widget to replace.
+        :param to: The widget to replace with.
+        """
+        self._categoryLayout.replaceWidget(from_, to, FindChildOption)
 
     def removeWidget(self, widget: QWidget):
         """Remove a widget from the category layout.
@@ -313,7 +332,31 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
         )
         self._panels[title] = panel
         self.addWidget(panel)  # type: ignore
-        self.addWidget(RibbonSeparator(width=10))  # type: ignore
+        # self.addWidget(RibbonSeparator(width=10))  # type: ignore
+        return panel
+    
+    def insertPanel(self, index: int, title: str, showPanelOptionButton=True) -> RibbonPanel:
+        """Add a new panel to the category.
+
+        :param title: The title of the panel.
+        :param showPanelOptionButton: Whether to show the panel option button.
+        :return: The newly created panel.
+        """
+        panel = RibbonPanel(
+            title,
+            maxRows=self._maxRows,
+            showPanelOptionButton=showPanelOptionButton,
+            parent=self,
+        )
+        panel.setFixedHeight(
+            self.height()
+            - self._mainLayout.spacing()
+            - self._mainLayout.contentsMargins().top()
+            - self._mainLayout.contentsMargins().bottom()
+        )
+        self._panels[title] = panel
+        self.insertWidget(panel, index)  # type: ignore
+        # self.insertWidget(RibbonSeparator(width=10), index + 1)  # type: ignore
         return panel
 
     def removePanel(self, title: str):
@@ -324,6 +367,19 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
         # self._panelLayout.removeWidget(self._panels[title])
         self.removeWidget(self._panels[title])
         self._panels.pop(title)
+        
+    def replacePanel(self, fromPanel: RibbonPanel, toPanel: RibbonPanel):
+        """Replace a panel from the category.
+
+        :param fromPanel: The panel to replace.
+        :param toPanel: The panel to replace with.
+        :return: The new panel.
+        """
+        self.replaceWidget(fromPanel, toPanel)
+        if toPanel.title() != fromPanel.title():
+            self._panels.pop(fromPanel.title())
+            self._panels[toPanel.title()] = toPanel
+        return toPanel
 
     def takePanel(self, title: str) -> RibbonPanel:
         """Remove and return a panel from the category.

@@ -19,10 +19,12 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+from PySide import QtGui
+import matplotlib.colors
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction
+from PySide.QtGui import QIcon, QPixmap, QAction, QColor
 from PySide.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
@@ -38,13 +40,8 @@ from PySide.QtWidgets import (
 )
 from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread
 import sys
-import json
-from datetime import datetime
-import shutil
 import Standard_Functions_Ribbon as StandardFunctions
 import Parameters_Ribbon
-import webbrowser
-import time
 
 # Get the resources
 pathIcons = Parameters_Ribbon.ICON_LOCATION
@@ -56,6 +53,26 @@ sys.path.append(pathStylSheets)
 sys.path.append(pathUI)
 sys.path.append(pathBackup)
 
+mw: QMainWindow = Gui.getMainWindow()
+
+preferences = App.ParamGet('User parameter:BaseApp/Preferences/Themes/UserTokens/')
+BackGroundColor = preferences.GetString('GeneralBackgroundColor')
+HoverColor = preferences.GetString('GeneralBackgroundHoverColor')
+BorderColor = preferences.GetString('GeneralBorderColor')
+BorderColorHover = preferences.GetString('GeneralBorderHoverColor')
+TextColor = preferences.GetString('TextForegroundColor')
+
+btn = QToolButton()
+
+
+def GetColorSetting(settingName: str) -> object:
+        # Create a tuple from the int value of the color
+        result = QColor.fromRgba(preferences.GetUnsigned(settingName)).toTuple()
+
+        # correct the order of the tuple
+        result = (result[3], result[0], result[1], result[2])
+
+        return result
 
 def DarkMode():
     import xml.etree.ElementTree as ET
@@ -158,6 +175,15 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
     # Get the current stylesheet for FreeCAD
     FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
     currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
+    # if currentStyleSheet == "FreeCAD.qss":
+    #     Theme = FreeCAD_preferences.GetString("Theme")
+    #     if str("FreeCAD Light").lower() in Theme.lower():
+    #         currentStyleSheet = "FreeCAD Light.qss"
+    #     if str("FreeCAD Dark").lower() in Theme.lower():
+    #         currentStyleSheet = "FreeCAD Dark.qss"
+    
+    # currentStyleSheet = "FreeCAD.qss"
+    
     IsInList = False
     for key, value in StyleMapping_default["Stylesheets"].items():
         if key == currentStyleSheet:
@@ -187,7 +213,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
         if isIcon is True:
             result = None
             PixmapName = ""
-            if Parameters_Ribbon.CUSTOM_ICONS_ENABLED is True or ShowCustomIcon is True:
+            if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True or ShowCustomIcon is True:
                 PixmapName = StyleMapping["Stylesheets"][ControlName]
             else:
                 PixmapName = ""
@@ -243,8 +269,8 @@ def ReturnStyleSheet(
 
     control (string):
         toolbutton,
-        toolbuttonLarge,
         applicationbutton,
+        DragIndicator,
     """
     StyleSheet = ""
     try:
@@ -266,7 +292,7 @@ def ReturnStyleSheet(
                     BorderColor = BackgroundColor
                 StyleSheet = (
                     """QLayout {spacing: 0px}"""
-                    + """QToolButton, QTextEdit {
+                    + """QToolButton, QLabel, RibbonToolButton, QLayout {
                         margin: 0px;
                         padding: 0px;
                         color: """
@@ -299,11 +325,10 @@ def ReturnStyleSheet(
                         subcontrol-origin: padding;
                         subcontrol-position: center right;
                     }"""
-                    + """QToolButton:hover, QTextEdit:hover {
+                    + """QToolButton:hover, QLabel:hover, RibbonToolButton:hover {
                         margin: 0px 0px 0px 0px;
-                        padding: 0px;
-                        border: none;
-                        background: """
+                        padding: 0px;"""
+                    + """;background: """
                     + HoverColor
                     + """;padding-left: """
                     + padding_left
@@ -316,6 +341,11 @@ def ReturnStyleSheet(
                     + """;border: 0.5px solid"""
                     + BorderColor
                     + """;}"""
+                    + "QToolButton:disabled, QLabel:disabled {background-color: "
+                        + ReturnStyleItem("Background_Color")
+                        + ";border: 0.5px solid"
+                        + BorderColor
+                        + ";}"
                 )
                 return StyleSheet
             if control.lower() == "applicationbutton":
@@ -337,7 +367,16 @@ def ReturnStyleSheet(
                     + radius
                     + """;}"""
                 )
-
+            if control.lower() == "dragindicator":
+                StyleSheet = (
+                    """QLabel {
+                        background-color: """
+                    + HoverColor
+                    + """;border-radius: """
+                    + radius
+                    + """px;"""
+                    + """;}"""
+                )
             return StyleSheet
     except Exception as e:
         print(e)
@@ -434,6 +473,35 @@ def ReturnTitleBarIcons():
         Icons.append(Icon)
     return Icons
 
+def ReturnIcons_ThemeEditor():
+    lightIcons = {
+        "ScrollLeftButton_Tab": "backward_small_default.svg",
+        "ScrollRightButton_Tab": "forward_small_default.svg",
+        "ScrollLeftButton_Category": "backward_default.svg",
+        "ScrollRightButton_Category": "forward_default.svg",
+        "OptionButton": "more_default.svg",
+        "PinButton_open": "pin-icon-open.svg",
+        "PinButton_closed": "pin-icon-default.svg",
+        "TitleBarButtons": ["maximize_default.svg", "restore_default.svg", "minimize_default.svg"]
+    }
+    
+    darkIcons = {
+        "ScrollLeftButton_Tab": "backward_small_default_white.svg",
+        "ScrollRightButton_Tab": "forward_small_default_white.svg",
+        "ScrollLeftButton_Category": "backward_default_white.svg",
+        "ScrollRightButton_Category": "forward_default_white.svg",
+        "OptionButton": "more_default_white.svg",
+        "PinButton_open": "pin-icon-open_white.svg",
+        "PinButton_closed": "pin-icon-default_white.svg",
+        "TitleBarButtons": ["maximize_default_white.svg", "restore_default_white.svg", "minimize_default_white.svg"]
+    }
+    color = GetColorSetting('TextForegroundColor')
+    # if StandardFunctions.LightOrDark(color) == "dark":
+    IsDarkTheme = darkMode
+    if IsDarkTheme is False:
+        return lightIcons
+    else:
+        return darkIcons
 
 # Used when custom colors are enabled
 StyleMapping = {
@@ -456,14 +524,13 @@ StyleMapping = {
     }
 }
 
-
 StyleMapping_default = {
     "Stylesheets": {
         "": {
-            "Background_Color": "#f0f0f0",
-            "Background_Color_Hover": "#ced4da",
-            "Border_Color": "#646464",
-            "ApplicationButton_Background": "#e0e0e0",
+            "Background_Color": "none",
+            "Background_Color_Hover": StandardFunctions.ColorConvertor(mw.palette().highlight().color().toTuple(), 1, True, False),
+            "Border_Color": StandardFunctions.ColorConvertor(mw.palette().text().color().toTuple(), 1, True, False),
+            "ApplicationButton_Background": StandardFunctions.ColorConvertor(mw.palette().highlight().color().toTuple(), 1, True, False),
             "FontColor": ReturnFontColor(),
             "UpdateColor": ReturnUpdateColor(),
             "DevelopColor": ReturnDevelopColor(),
@@ -495,8 +562,25 @@ StyleMapping_default = {
             "PinButton_closed": GetIconBasedOnTag("PinButton_closed"),
             "TitleBarButtons": ReturnTitleBarIcons(),
         },
+        "FreeCAD.qss": {
+            "Background_Color": "none",
+            "Background_Color_Hover": "",
+            "Border_Color": "",
+            "ApplicationButton_Background": "",
+            "FontColor": "",
+            "UpdateColor": ReturnUpdateColor(),
+            "DevelopColor": ReturnDevelopColor(),
+            "ScrollLeftButton_Tab": ReturnIcons_ThemeEditor()["ScrollLeftButton_Tab"],
+            "ScrollRightButton_Tab": ReturnIcons_ThemeEditor()["ScrollRightButton_Tab"],
+            "ScrollLeftButton_Category": ReturnIcons_ThemeEditor()["ScrollLeftButton_Category"],
+            "ScrollRightButton_Category": ReturnIcons_ThemeEditor()["ScrollRightButton_Category"],
+            "OptionButton": ReturnIcons_ThemeEditor()["OptionButton"],
+            "PinButton_open":  ReturnIcons_ThemeEditor()["PinButton_open"],
+            "PinButton_closed": ReturnIcons_ThemeEditor()["PinButton_closed"],
+            "TitleBarButtons": ReturnIcons_ThemeEditor()["TitleBarButtons"],
+        },
         "FreeCAD Dark.qss": {
-            "Background_Color": "#333333",
+            "Background_Color": "none",
             "Background_Color_Hover": "#48a0f8",
             "Border_Color": "#ffffff",
             "ApplicationButton_Background": "#48a0f8",
@@ -513,7 +597,7 @@ StyleMapping_default = {
             "TitleBarButtons": ReturnTitleBarIcons(),
         },
         "FreeCAD Light.qss": {
-            "Background_Color": "#f0f0f0",
+            "Background_Color": "none",
             "Background_Color_Hover": "#48a0f8",
             "Border_Color": "#646464",
             "ApplicationButton_Background": "#48a0f8",
@@ -530,7 +614,7 @@ StyleMapping_default = {
             "TitleBarButtons": ReturnTitleBarIcons(),
         },
         "OpenLight.qss": {
-            "Background_Color": "#dee2e6",
+            "Background_Color": "none",
             "Background_Color_Hover": "#a5d8ff",
             "Border_Color": "#1c7ed6",
             "ApplicationButton_Background": "#a5d8ff",
@@ -547,7 +631,7 @@ StyleMapping_default = {
             "TitleBarButtons": ReturnTitleBarIcons(),
         },
         "OpenDark.qss": {
-            "Background_Color": "#212529",
+            "Background_Color": "none",
             "Background_Color_Hover": "#1f364d",
             "Border_Color": "#264b69",
             "ApplicationButton_Background": "#1f364d",
@@ -664,3 +748,4 @@ StyleMapping_default = {
         },
     }
 }
+

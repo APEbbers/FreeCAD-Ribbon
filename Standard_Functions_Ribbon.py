@@ -20,6 +20,9 @@
 # *                                                                       *
 # *************************************************************************
 
+from xml.etree.ElementTree import Element, ElementTree
+
+from requests import Request
 import FreeCAD as App
 import FreeCADGui as Gui
 import math
@@ -246,6 +249,29 @@ def SaveDialog(files, OverWrite: bool = True):
         if file is not None:
             return file
 
+def OpenDirectory(path):
+    import webbrowser
+    import platform
+    import subprocess
+    import os
+    
+    try:
+        if os.path.exists(path) is False:
+            return False
+        
+        if platform.system().lower() == "darwin":
+                subprocess.run(['open', path])
+        elif platform.system().lower() == "Windows":
+            os.startfile(path)
+        else:
+            # Linux: try xdg-open, then sensible-browser as fallback 
+            try: 
+                subprocess.run(['xdg-open', path], check=True) 
+            except Exception: 
+                subprocess.run(['gio', 'open', path], check=False)          
+        return True
+    except Exception:
+        return False
 
 def GetLetterFromNumber(number: int, UCase: bool = True):
     """Number to Excel-style column name, e.g., 1 = A, 26 = Z, 27 = AA, 703 = AAA."""
@@ -486,26 +512,33 @@ def ReturnXML_Value(
 
 
 def ReturnXML_Value_Git(
-    User="APEbbers",
+    User="apebbers",
     Repository="FreeCAD-Ribbon",
     Branch="main",
     File="package.xml",
     ElementName: str = "",
     attribKey: str = "",
     attribValue: str = "",
+    host="https://codeberg.org",
 ):
-    import requests_local as requests
+    # import requests_local as requests
     import xml.etree.ElementTree as ET
+    from urllib import request
 
     result = None
     try:
         # Passing the path of the
         # xml document to enable the
         # parsing process
-        url = f"https://raw.githubusercontent.com/{User}/{Repository}/{Branch}/{File}"
-        response = requests.get(url)
-        data = response.content
-        root = ET.fromstring(data)
+        url = f"{host}/{User}/{Repository}/{Branch}/{File}"
+        if host == "https://codeberg.org":
+           url = f"{host}/{User}/{Repository}/src/branch/{Branch}/{File}" 
+        if host == "https://github.com":
+            url = f"{host}/{User}/{Repository}/blob/{Branch}/{File}" 
+        url = "https://raw.githubusercontent.com/APEbbers/FreeCAD-Ribbon/refs/heads/main/package.xml"
+        response = request.urlopen(url)
+        data = response.read()
+        root: Element[str] = ET.fromstring(data)
         result = ""
         for child in root:
             if str(child.tag).split("}")[1] == ElementName:
@@ -516,7 +549,8 @@ def ReturnXML_Value_Git(
                             return result
                 else:
                     result = child.text
-    except Exception:
+    except Exception as e:
+        # raise e
         pass
     return result
 
@@ -695,7 +729,7 @@ def TranslationsMapping(WorkBenchName: str, string: str):
 #             self.Dict_RibbonCommandPanel,
 #             ["workbenches", WorkBenchName, "toolbars", Toolbar, "order"],
 #         )
-def add_keys_nested_dict(dict, keys, default=1):
+def add_keys_nested_dict(dict, keys, default=1, endEmpty = False):
     """_summary_
 
     Args:
@@ -712,7 +746,8 @@ def add_keys_nested_dict(dict, keys, default=1):
             result = True
         dict = dict[key]
     try:
-        dict.setdefault(keys[-1], default)
+        if endEmpty is False:
+            dict.setdefault(keys[-1], default)
     except Exception:
         pass
     return result
@@ -925,7 +960,7 @@ def ReturnWrappedText(text: str, max_length: int = 50, max_Lines=0, returnList=F
         result = "\n".join(wrapped_text)
     else:
         result = wrapped_text
-
+    # print(result)
     return result
 
 
@@ -942,7 +977,19 @@ def AddToClipboard(Text):
 
 
 def checkFreeCADVersion(main: int, sub: int, patch: int, git: int):
+    """Checks if the FreeCAD version is equal or newer than the given version number.
+
+    Args:
+        main (int): Main version number
+        sub (int): Secundair version number
+        patch (int): Patch number
+        git (int): gitnumber
+
+    Returns:
+        True if the FreeCAD version is equal or higher than the given version number.
+    """    
     version = App.Version()
+    # print(version)
 
     if main >= int(version[0]):
         if sub >= int(version[1]):

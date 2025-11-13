@@ -98,7 +98,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "UseOverlay": Parameters_Ribbon.USE_OVERLAY,
         "UseFCOverlay": Parameters_Ribbon.USE_FC_OVERLAY,
         "UseButtonBackGround": Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED,
-        "CustomIcons": Parameters_Ribbon.CUSTOM_ICONS_ENABLED,
+        "CustomIcons": Parameters_Ribbon.BETA_FUNCTIONS_ENABLED,
         "CustomColors": Parameters_Ribbon.CUSTOM_COLORS_ENABLED,
         "BorderTransparant": Parameters_Ribbon.BORDER_TRANSPARANT,
         "Color_Borders": Parameters_Ribbon.COLOR_BORDERS,
@@ -144,7 +144,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "UseOverlay": Parameters_Ribbon.USE_OVERLAY,
         "UseFCOverlay": Parameters_Ribbon.USE_FC_OVERLAY,
         "UseButtonBackGround": Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED,
-        "CustomIcons": Parameters_Ribbon.CUSTOM_ICONS_ENABLED,
+        "CustomIcons": Parameters_Ribbon.BETA_FUNCTIONS_ENABLED,
         "CustomColors": Parameters_Ribbon.CUSTOM_COLORS_ENABLED,
         "BorderTransparant": Parameters_Ribbon.BORDER_TRANSPARANT,
         "Color_Borders": Parameters_Ribbon.COLOR_BORDERS,
@@ -247,12 +247,15 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.TextSize_Buttons.setRange(8, 24)
         self.form.TextSize_Tabs.setRange(8, 24)
         self.form.TextSize_Panels.setRange(8, 24)
-
         # Remove tabbar click settings for the time being
         self.form.label_15.setHidden(True)
         self.form.label_15.setDisabled(True)
         self.form.ScrollClicks_TabBar.setHidden(True)
         self.form.ScrollClicks_TabBar.setDisabled(True)
+        # Remove the 'Use backgound on buttons' from settings menu
+        self.form.UseButtonBackGround.setHidden(True)
+        self.form.UseButtonBackGround.setDisabled(True)
+        Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED = False
 
         # load all settings
         #
@@ -356,7 +359,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Unchecked)
 
         # Set the color and icon buttons
-        if Parameters_Ribbon.CUSTOM_ICONS_ENABLED is True:
+        if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
             self.form.CustomIcons.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.CustomIcons.setCheckState(Qt.CheckState.Unchecked)

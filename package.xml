@@ -5,7 +5,7 @@
 
   <description>A Ribbon interface for FreeCAD</description>
 
-  <version>1.9.1.18</version>
+  <version>1.10.x</version>
 
   <date>2024-07-28</date>
 
@@ -15,7 +15,7 @@
 
   <pythonmin>3.8.0</pythonmin>
 
-  <url type="website">https://github.com/APEbbers/FreeCAD-Ribbon/wiki</url>
+  <url type="website">https://codeberg.org/apebbers/FreeCAD-Ribbon/wiki</url>
 
   <url branch="main" type="repository">https://github.com/APEbbers/FreeCAD-Ribbon</url>
 
