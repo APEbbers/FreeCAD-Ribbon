@@ -185,6 +185,8 @@ FreeCAD_Version = {
     "patchVersion": 0,
     "gitVersion": 14555,
 }
+# endregion
+
 
 
 # region - Define the resources ----------------------------------------------------------------------------------------

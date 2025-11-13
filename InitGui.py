@@ -43,6 +43,9 @@ import logging
 # Set the logger levels to avoid extra output in the report panel
 logging.getLogger("urllib3").setLevel(logging.INFO)
 
+# Set a value for the current needed version of the Ribbon structure. 
+# Increasing this, results in a new created default structure file.
+CurrentStructureVersion = 2
 
 def QT_TRANSLATE_NOOP(context, text):
     return text
@@ -86,7 +89,10 @@ if (
     is True
 ):
     NewDefaultNeeded = True
-    
+ribbonStructureVersion = Parameters_Ribbon.Settings.GetIntSetting("RibbonStructureVersion")
+if ribbonStructureVersion <= CurrentStructureVersion:
+    NewDefaultNeeded = False
+
 # check if file exits
 fileExists = os.path.isfile(file)
 
@@ -99,6 +105,7 @@ fileExists = os.path.isfile(file_default)
 # if not, copy and rename
 if fileExists is False or NewDefaultNeeded is True:
     shutil.copy(source_default, file_default)
+    Parameters_Ribbon.Settings.SetIntSetting("RibbonStructureVersion", CurrentStructureVersion)
 
 # remove the test workbench
 Gui.removeWorkbench("TestWorkbench")
