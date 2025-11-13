@@ -2799,7 +2799,7 @@ class ModernMenu(RibbonBar):
         BetaLabel = QLabel(translate("FreeCAD Ribbon", "Béta functions"))
         BeforeAction = self.rightToolBar().actions()[1]
         self.rightToolBar().insertWidget(BeforeAction, BetaLabel)
-        switch = Toggle()
+        switch = ToggleAction()
         switch.setObjectName("bétaSwitch")
         toolTipText = (translate("FreeCAD Ribbon",
     """
@@ -2829,6 +2829,10 @@ class ModernMenu(RibbonBar):
         switch.toggled.connect(
             lambda: self.on_ToggleBetaFunctions_toggled(switch.isChecked())
         )
+        if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
+            switch.setChecked(True)
+        else:
+            switch.setChecked(False)
         BeforeAction = self.rightToolBar().actions()[2]
         self.rightToolBar().insertWidget(BeforeAction, switch)
 
