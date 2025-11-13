@@ -78,19 +78,9 @@ source_default = os.path.join(
     os.path.dirname(FCBinding.__file__), "CreateStructure.txt"
 )
 
-NewDefaultNeeded = False
-if (
-    StandardFunctions.checkFreeCADVersion(
-        Parameters_Ribbon.FreeCAD_Version["mainVersion"],
-        Parameters_Ribbon.FreeCAD_Version["subVersion"],
-        Parameters_Ribbon.FreeCAD_Version["patchVersion"],
-        Parameters_Ribbon.FreeCAD_Version["gitVersion"],
-    )
-    is True
-):
-    NewDefaultNeeded = True
+NewDefaultNeeded = True
 ribbonStructureVersion = Parameters_Ribbon.Settings.GetIntSetting("RibbonStructureVersion")
-if ribbonStructureVersion <= CurrentStructureVersion:
+if ribbonStructureVersion >= CurrentStructureVersion:
     NewDefaultNeeded = False
 
 # check if file exits
