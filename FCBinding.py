@@ -1498,9 +1498,9 @@ class ModernMenu(RibbonBar):
         
         # write the changes to the ribbonstruture file 
         property = {"ButtonSize_small": ButtonSizeWidget.value()}
-        if ButtonWidget.objectName() == "MediumWidget":
+        if ButtonWidget.objectName() == "CustomWidget_Medium":
             property = {"ButtonSize_medium": ButtonSizeWidget.value()}
-        if ButtonWidget.objectName() == "LargeWidget":
+        if ButtonWidget.objectName() == "CustomWidget_Large":
             property = {"ButtonSize_large": ButtonSizeWidget.value()}
         self.WriteButtonSettings(ButtonWidget, panel, property)
         return
@@ -1939,7 +1939,7 @@ class ModernMenu(RibbonBar):
                                         
                         # Create a new panel
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True)
+                        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True)
                                                 
                         # Add the panel to the list with long panels
                         self.longPanels.append(newPanel)
@@ -4473,7 +4473,7 @@ class ModernMenu(RibbonBar):
                 and child.objectName() == "CommandButton"
             ):
                 CommandName = child.defaultAction().data()
-        
+
         if CommandName != "":        
             for key, value in property.items():
                 StandardFunctions.add_keys_nested_dict(
@@ -5036,7 +5036,7 @@ class ModernMenu(RibbonBar):
                             )
                             if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
                                 try:
-                                    size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_small"]
+                                    size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_small"]                                    
                                     IconSize = QSize(size, size)
                                     ButtonSize = IconSize
                                 except Exception:
@@ -5149,11 +5149,10 @@ class ModernMenu(RibbonBar):
                                 Parameters_Ribbon.ICON_SIZE_LARGE,
                             )
                             if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
-                                try:
-                                    if "ButtonSize_large" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]:
-                                        size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_large"]
-                                        IconSize = QSize(size, size)
-                                        ButtonSize = IconSize
+                                try:                                    
+                                    size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_large"]
+                                    IconSize = QSize(size, size)
+                                    ButtonSize = IconSize
                                 except Exception as e:
                                     if Parameters_Ribbon.DEBUG_MODE is True:
                                         print(e)
