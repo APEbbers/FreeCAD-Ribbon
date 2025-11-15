@@ -5326,7 +5326,6 @@ class ModernMenu(RibbonBar):
         return panel
     
     def RestoreJson(self):
-        self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
         # get the path for the Json file
         JsonPath = os.path.dirname(__file__)
         JsonFile = os.path.join(JsonPath, "RibbonStructure.json")
