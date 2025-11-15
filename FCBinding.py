@@ -943,28 +943,7 @@ class ModernMenu(RibbonBar):
                 Gui.activateWorkbench(Wb)
             except Exception:
                 pass
-
-        # Set the state of the Béta function switch
-        switch: Toggle = self.rightToolBar().findChild(Toggle, "bétaSwitch")
-        switch.setChecked(Parameters_Ribbon.BETA_FUNCTIONS_ENABLED)
-        
-       # This is needed to be able to drag the main window properly when the titlebar is hidden
-        self._titleWidget.mousePressEvent = lambda e: self.mousePress_Titlebar(e)
-        mw.moveEvent = lambda e: self.mouseMove_Titlebar(e)
         return
-
-    # region - event functions
-    initialPos = None
-    def mousePress_Titlebar(self, event):
-        self.initialPos = event.pos()
-    
-    def mouseMove_Titlebar(self, event):
-        if self.initialPos is not None:
-            delta = event.pos() - self.initialPos
-            mw.move(
-                mw.window().x() + delta.x(),
-                mw.window().y() + delta.y(),
-            )
 
     def closeEvent(self, event):
         mw.menuBar().show()
@@ -1519,9 +1498,9 @@ class ModernMenu(RibbonBar):
         
         # write the changes to the ribbonstruture file 
         property = {"ButtonSize_small": ButtonSizeWidget.value()}
-        if ButtonWidget.objectName() == "MediumWidget":
+        if ButtonWidget.objectName() == "CustomWidget_Medium":
             property = {"ButtonSize_medium": ButtonSizeWidget.value()}
-        if ButtonWidget.objectName() == "LargeWidget":
+        if ButtonWidget.objectName() == "CustomWidget_Large":
             property = {"ButtonSize_large": ButtonSizeWidget.value()}
         self.WriteButtonSettings(ButtonWidget, panel, property)
         return
@@ -1960,7 +1939,7 @@ class ModernMenu(RibbonBar):
                                         
                         # Create a new panel
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True)
+                        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True)
                                                 
                         # Add the panel to the list with long panels
                         self.longPanels.append(newPanel)
@@ -2820,7 +2799,7 @@ class ModernMenu(RibbonBar):
         BetaLabel = QLabel(translate("FreeCAD Ribbon", "Béta functions"))
         BeforeAction = self.rightToolBar().actions()[1]
         self.rightToolBar().insertWidget(BeforeAction, BetaLabel)
-        switch = Toggle()
+        switch = Toggle(self)
         switch.setObjectName("bétaSwitch")
         toolTipText = (translate("FreeCAD Ribbon",
     """
@@ -2850,6 +2829,10 @@ class ModernMenu(RibbonBar):
         switch.toggled.connect(
             lambda: self.on_ToggleBetaFunctions_toggled(switch.isChecked())
         )
+        if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
+            switch.setChecked(True)
+        else:
+            switch.setChecked(False)
         BeforeAction = self.rightToolBar().actions()[2]
         self.rightToolBar().insertWidget(BeforeAction, switch)
 
@@ -2876,7 +2859,7 @@ class ModernMenu(RibbonBar):
         return
 
     # Add the searchBar if it is present
-    def AddSearchBar(self):
+    def AddSearchBar(self):        
         TB: QToolBar = mw.findChildren(QToolBar, "SearchBar")
         width = 10
         if TB is not None:
@@ -4481,7 +4464,7 @@ class ModernMenu(RibbonBar):
                 and child.objectName() == "CommandButton"
             ):
                 CommandName = child.defaultAction().data()
-        
+
         if CommandName != "":        
             for key, value in property.items():
                 StandardFunctions.add_keys_nested_dict(
@@ -5044,7 +5027,7 @@ class ModernMenu(RibbonBar):
                             )
                             if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
                                 try:
-                                    size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_small"]
+                                    size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_small"]                                    
                                     IconSize = QSize(size, size)
                                     ButtonSize = IconSize
                                 except Exception:
@@ -5157,11 +5140,10 @@ class ModernMenu(RibbonBar):
                                 Parameters_Ribbon.ICON_SIZE_LARGE,
                             )
                             if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
-                                try:
-                                    if "ButtonSize_large" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]:
-                                        size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_large"]
-                                        IconSize = QSize(size, size)
-                                        ButtonSize = IconSize
+                                try:                                    
+                                    size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_large"]
+                                    IconSize = QSize(size, size)
+                                    ButtonSize = IconSize
                                 except Exception as e:
                                     if Parameters_Ribbon.DEBUG_MODE is True:
                                         print(e)
