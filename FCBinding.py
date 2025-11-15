@@ -5365,8 +5365,6 @@ class ModernMenu(RibbonBar):
             answer = StandardFunctions.RestartDialog(message=message)
             if answer == "yes":
                 StandardFunctions.restart_freecad()
-
-        self.form.close()
         return
     
     # endregion
