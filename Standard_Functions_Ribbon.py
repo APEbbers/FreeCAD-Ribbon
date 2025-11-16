@@ -989,13 +989,12 @@ def checkFreeCADVersion(main: int, sub: int, patch: int, git: int):
         True if the FreeCAD version is equal or higher than the given version number.
     """    
     version = App.Version()
-    # print(version)
 
-    if main >= int(version[0]):
-        if sub >= int(version[1]):
-            if patch >= int(version[2]):
+    if main <= int(version[0]):
+        if sub <= int(version[1]):
+            if patch <= int(version[2]):
                 git_version = int(version[3].split(" ")[0])
-                if git_version >= git:
+                if git <= git_version:
                     return True
 
     return False
