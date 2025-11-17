@@ -188,7 +188,6 @@ FreeCAD_Version = {
 # endregion
 
 
-
 # region - Define the resources ----------------------------------------------------------------------------------------
 ICON_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "icons")
 STYLESHEET_LOCATION = os.path.join(
@@ -259,7 +258,7 @@ DefaultSettings = {
 }
 
 # Get the install location of FreeCAD
-AppDir = os.path.join(App.getUserAppDataDir().split('FreeCAD')[0], "FreeCAD")
+AppDir = os.path.join(App.getUserAppDataDir().split("FreeCAD")[0], "FreeCAD")
 OldModDir = os.path.join(AppDir, "Mod")
 CurrentModDir = os.path.join(App.getUserAppDataDir(), "Mod")
 
@@ -269,7 +268,7 @@ if IMPORT_LOCATION == "":
     IMPORT_LOCATION = str(DefaultSettings["ImportLocation"])
     Settings.SetStringSetting("ImportLocation", IMPORT_LOCATION)
     Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
-    
+
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the export location ----------------------------------------------------------------------------------

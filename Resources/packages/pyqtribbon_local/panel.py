@@ -59,7 +59,7 @@ from .utils import DataFile
 
 class RibbonPanelTitle(QLabel):
     """Widget to display the title of a panel."""
-    
+
     pass
 
 
@@ -218,12 +218,12 @@ class RibbonPanel(QFrame):
         self._mainLayout = QGridLayout(self)
         self._mainLayout.setContentsMargins(0, 0, 3, 0)
         self._mainLayout.setSpacing(0)
-                
+
         # Actions layout
         self._actionsLayout = QGridLayout()
         self._actionsLayout.setContentsMargins(5, 5, 5, 5)
         self._actionsLayout.setSpacing(0)
-        self._mainLayout.addLayout(self._actionsLayout, 0,0)
+        self._mainLayout.addLayout(self._actionsLayout, 0, 0)
 
         # Title layout
         self._titleWidget = QWidget()
@@ -246,12 +246,12 @@ class RibbonPanel(QFrame):
             self._panelOption.clicked.connect(self.panelOptionClicked)  # type: ignore
             self._titleLayout.addWidget(self._panelOption, 0)
 
-        self._mainLayout.addWidget(self._titleWidget, 1,0,1,1)
-        
+        self._mainLayout.addWidget(self._titleWidget, 1, 0, 1, 1)
+
         # Add a separator
         self._separator = RibbonVerticalSeparator(width=3)
-        self._mainLayout.addWidget(self._separator, 0,1,2,1)  
-                 
+        self._mainLayout.addWidget(self._separator, 0, 1, 2, 1)
+
     def maximumRows(self) -> int:
         """Return the maximal number of rows in the panel.
 
@@ -456,7 +456,7 @@ class RibbonPanel(QFrame):
         rowSpan = self.defaultRowSpan(rowSpan)
         self._widgets.append(widget)
         row, col = self._gridLayoutManager.request_cells(rowSpan, colSpan, mode)
-        col = col + 1 # This way you can add a widget before the first widget
+        col = col + 1  # This way you can add a widget before the first widget
         maximumHeight = (
             self.rowHeight() * rowSpan
             + self._actionsLayout.verticalSpacing() * (rowSpan - 2)
@@ -484,14 +484,13 @@ class RibbonPanel(QFrame):
     def removeWidget(self, widget: QWidget):
         """Remove a widget from the panel."""
         self._actionsLayout.removeWidget(widget)
-        
+
     # def replaceWidget(self, widget: QWidget, newWidget: QWidget):
     #     self._actionsLayout.replaceWidget(widget, newWidget)
     #     index = self._widgets.index(widget)
     #     self._widgets.pop(index)
     #     self._widgets.insert(index, newWidget)
-        
-        
+
     def widget(self, index: int) -> QWidget:
         """Get the widget at the given index.
 
