@@ -265,7 +265,7 @@ CurrentModDir = os.path.join(App.getUserAppDataDir(), "Mod")
 
 # region - Define the import location ----------------------------------------------------------------------------------
 IMPORT_LOCATION = Settings.GetStringSetting("ImportLocation")
-if IMPORT_LOCATION == "":
+if IMPORT_LOCATION == ""  or os.path.isfile(IMPORT_LOCATION) is False:
     IMPORT_LOCATION = str(DefaultSettings["ImportLocation"])
     Settings.SetStringSetting("ImportLocation", IMPORT_LOCATION)
     Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
@@ -274,7 +274,7 @@ if IMPORT_LOCATION == "":
 
 # region - Define the export location ----------------------------------------------------------------------------------
 EXPORT_LOCATION = Settings.GetStringSetting("ExportLocation")
-if EXPORT_LOCATION == "":
+if EXPORT_LOCATION == "" or os.path.isfile(EXPORT_LOCATION) is False:
     EXPORT_LOCATION = str(DefaultSettings["ExportLocation"])
     Settings.SetStringSetting("exportLocation", EXPORT_LOCATION)
     Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
@@ -383,7 +383,7 @@ if Settings.GetBoolSetting("BackupEnabled") is None:
     Settings.SetBoolSetting("BackupEnabled", ENABLE_BACKUP)
 
 BACKUP_LOCATION = Settings.GetStringSetting("BackupFolder")
-if Settings.GetStringSetting("BackupFolder") == "":
+if Settings.GetStringSetting("BackupFolder") == "" or os.path.isfile(BACKUP_LOCATION) is False:
     BACKUP_LOCATION = str(DefaultSettings["BackupFolder"])
     Settings.SetStringSetting("BackupFolder", BACKUP_LOCATION)
 # endregion ------------------------------------------------------------------------------------------------------------
@@ -398,7 +398,7 @@ if Settings.GetBoolSetting("AutoHideRibbon") is None:
     AUTOHIDE_RIBBON = bool(False)
 
 STYLESHEET = Settings.GetStringSetting("Stylesheet")
-if Settings.GetStringSetting("Stylesheet") == "":
+if Settings.GetStringSetting("Stylesheet") == "" or os.path.isfile(STYLESHEET) is False:
     STYLESHEET = str(DefaultSettings["Stylesheet"])
     Settings.SetStringSetting("Stylesheet", STYLESHEET)
 
