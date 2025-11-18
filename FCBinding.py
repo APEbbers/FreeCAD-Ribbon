@@ -24,10 +24,11 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
+    QDropEvent,
     QIcon,
     QAction,
     QPixmap,
@@ -48,7 +49,7 @@ from PySide.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -84,7 +85,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -140,7 +141,7 @@ sys.path.append(pathBackup)
 translate = App.Qt.translate
 
 import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar
+from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar, RibbonTitleWidget
 from pyqtribbon_local.panel import RibbonPanel, RibbonPanelItemWidget, RibbonPanelTitle
 from pyqtribbon_local.toolbutton import RibbonToolButton, RibbonButtonStyle
 from pyqtribbon_local.separator import RibbonSeparator
@@ -302,6 +303,7 @@ class ModernMenu(RibbonBar):
         # Enable dragdrop
         self.setAcceptDrops(True)
         self.tabBar().setAcceptDrops(True)
+        self._titleWidget.quickAccessToolBar().setAcceptDrops(True)
                 
         # connect the signals
         self.connectSignals()
@@ -945,6 +947,7 @@ class ModernMenu(RibbonBar):
                 pass
         return
 
+    # region - Ribbon event fuctions
     def closeEvent(self, event):
         mw.menuBar().show()
         return True
@@ -1717,6 +1720,7 @@ class ModernMenu(RibbonBar):
     # region - drag drop event functions
     dragIndicator_Buttons = DragTargetIndicator(orientation="top", margins=0)
     dragIndicator_Panels = DragTargetIndicator(orientation="right")
+    dragIndicator_QuickAccess = DragTargetIndicator(orientation="left")
     position = None
     rightColumnAdded = False
     spaceWidget_Left = RibbonToolButton()
@@ -1724,8 +1728,8 @@ class ModernMenu(RibbonBar):
     target = None
     
     
-    def dragEnterEvent(self, event: QDragEnterEvent):
-        if self.CustomizeEnabled is True:
+    def dragEnterEvent(self, event: QDragEnterEvent):        
+        if self.CustomizeEnabled is True:            
             widget = event.source()
             count = 0
             parent = widget.parent()
@@ -1747,77 +1751,101 @@ class ModernMenu(RibbonBar):
             if len(panel.widgets()) <= 2 and type(widget) is not RibbonPanel and panel.findChild(QWidget, "ExtraSpacer") is not None:
                 event.ignore()
             else:
+                event.acceptProposedAction()
+                event.setAccepted(True)
                 event.accept()
+        return
             
     def dragLeaveEvent(self, event: QDragLeaveEvent):
         if self.CustomizeEnabled is True:
             # Hide the drag indicator when you leave the drag area
             self.dragIndicator_Buttons.close()
             self.dragIndicator_Panels.close()
+            # self.dragIndicator_QuickAccess.close()
             self.target = None
     
     def dragMoveEvent(self, event: QDragMoveEvent):
         if self.CustomizeEnabled is True:
             widget = event.source()
             # If the widget is not a panel, continue here
-            if type(widget) is not RibbonPanel:
+            if type(widget) is not RibbonPanel and type(widget) is not QToolBar:
                 count = 0
-                while (count < 10):                
+                while (count < 10):                    
                     if type(widget) is CustomControls:
                         break
+                    if type(widget) is QToolButton:
+                        break
                     else:
-                        widget = widget.parent()               
+                        if widget is not None:
+                            widget = widget.parent()
                     count = count + 1
 
                 # Get the panel
                 panel = RibbonPanel()
+                QuickAccessToolBar = QToolBar()
                 count = 0
                 parent = widget.parent()
                 while (count < 10):
                     if type(parent) is RibbonPanel:
                         panel = parent
                         break
+                    if type(parent) is QToolBar:
+                        QuickAccessToolBar = parent
+                        break
                     else:
                         parent = parent.parent()
                     count = count + 1
-                    
-                gridLayout: QGridLayout = panel._actionsLayout
-                position = None
-                # Find the correct location of the drop target, so we can move it there.
-                position: object= self.find_drop_location(event)
-                if position is None:
-                    return
-                # If the widget is a separator or the extra widget for large buttons, skip it
-                if type(position[3].children()[1]) is CustomSeparator or position[3].children()[1].objectName() == "ExtraSpacer":
-                    return
 
-                # Inserting moves the item if its already in the layout.
-                rowSpan = position[2]
-                try:
-                    widgetHoveredOver = gridLayout.itemAtPosition(position[0], position[1]).widget().findChild(CustomControls)
-                    self.target = position
+                if type(parent) is RibbonPanel:
+                    gridLayout: QGridLayout = panel._actionsLayout
+                    position = None
+                    # Find the correct location of the drop target, so we can move it there.
+                    position: object= self.find_drop_location(event)
+                    if position is None:
+                        return
+                    # If the widget is a separator or the extra widget for large buttons, skip it
+                    if type(position[3].children()[1]) is CustomSeparator or position[3].children()[1].objectName() == "ExtraSpacer":
+                        return
+
+                    # Inserting moves the item if its already in the layout.
+                    rowSpan = position[2]
                     try:
-                        action = widgetHoveredOver.actions()[0]
-                        self.target = [position[0], position[1], action.data()]
+                        widgetHoveredOver = gridLayout.itemAtPosition(position[0], position[1]).widget().findChild(CustomControls)
+                        self.target = position
+                        try:
+                            button = widgetHoveredOver.actions()[0]
+                            self.target = [position[0], position[1], button.data()]
+                        except Exception:
+                            pass
+                                    
+                        if position[0] == 0:
+                            self.dragIndicator_Buttons._orientation = "left"
+                        else:
+                            self.dragIndicator_Buttons._orientation = "top"
+                        # Add the drag indicator
+                        gridLayout.addWidget(
+                            self.dragIndicator_Buttons, position[0], position[1], rowSpan, 1
+                        )
+                                    
+                        # When you hide the source, the dragged widget disapears from the panel.
+                        # For now It is left in, to keep the panel at the same size.
+                        # e.source().hide()
+                        # Show the target.
+                        self.dragIndicator_Buttons.show()
                     except Exception:
                         pass
-                                
-                    if position[0] == 0:
-                        self.dragIndicator_Buttons._orientation = "left"
-                    else:
-                        self.dragIndicator_Buttons._orientation = "top"
-                    # Add the drag indicator
-                    gridLayout.addWidget(
-                        self.dragIndicator_Buttons, position[0], position[1], rowSpan, 1
-                    )
-                                
-                    # When you hide the source, the dragged widget disapears from the panel.
-                    # For now It is left in, to keep the panel at the same size.
-                    # e.source().hide()
-                    # Show the target.
-                    self.dragIndicator_Buttons.show()
-                except Exception:
-                    pass
+            
+                if type(parent) is QToolBar and parent.objectName() == "quickAccessToolBar":
+                    # Get the relative position of the cursor
+                    buttonPos = QuickAccessToolBar.mapTo(QuickAccessToolBar ,event.pos())
+                    # Get the action
+                    button = QuickAccessToolBar.childAt(buttonPos)
+                    beforeAction = QuickAccessToolBar.actionAt(buttonPos)
+                    if button is not None and type(button) is QToolButton:
+                        dragIndicator = self.dragIndicator_QuickAccess
+                        QuickAccessToolBar.insertWidget(beforeAction, dragIndicator)
+                        dragIndicator.show()
+                                        
             if type(widget) is RibbonPanel:
                 position: object= self.find_drop_location(event)
                 try:                     
@@ -1825,17 +1853,18 @@ class ModernMenu(RibbonBar):
                     self.dragIndicator_Panels.show()
                 except Exception:
                     pass            
+            event.acceptProposedAction()
             event.setAccepted(True)
             event.accept()
         return
 
     
-    def dropEvent(self, event, widget = None):
+    def dropEvent(self, event:QDropEvent, widget = None):
         # return
         # Get the widget
         if widget is None:
             widget = event.source()
-        
+                
         if type(widget) is not RibbonPanel:
             # Get the panel
             panel = RibbonPanel()
@@ -2400,6 +2429,23 @@ class ModernMenu(RibbonBar):
                 self.setQuickAccessButtonHeight(self.RibbonMinimalHeight)
 
                 button.setContentsMargins(3, 3, 3, 3)
+                
+                # Add dragdrop functionality
+                def mouseMoveEvent(self, e):
+                    if e.buttons() == Qt.MouseButton.LeftButton:
+                        try:
+                            drag = QDrag(self)
+                            mime = QMimeData()
+                            drag.setMimeData(mime)
+                            pixmap = QPixmap(self.size())
+                            self.render(pixmap)
+                            drag.setPixmap(pixmap)
+
+                            drag.exec_(Qt.DropAction.MoveAction)
+                        except Exception as e:
+                            print(e)
+                
+                button.mouseMoveEvent = lambda e: mouseMoveEvent(button, e)
 
                 # Add the button to the quickaccess toolbar
                 if len(button.actions()) > 0:
@@ -2524,7 +2570,7 @@ class ModernMenu(RibbonBar):
                         #         except Exception as e:
                         #             print(e)
                         
-                        # category.mouseMoveEvent = lambda e: mouseMoveEvent(category, e, self.CustomizeEnabled)
+                        # category.mouseMoveEvent = lambda e: mouseMoveEvent(category, e)
 
                         # Set the tabbar according the style setting
                         if Parameters_Ribbon.TABBAR_STYLE <= 1:
@@ -5326,6 +5372,7 @@ class ModernMenu(RibbonBar):
         return panel
     
     def RestoreJson(self):
+        self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
         # get the path for the Json file
         JsonPath = os.path.dirname(__file__)
         JsonFile = os.path.join(JsonPath, "RibbonStructure.json")
@@ -5365,6 +5412,8 @@ class ModernMenu(RibbonBar):
             answer = StandardFunctions.RestartDialog(message=message)
             if answer == "yes":
                 StandardFunctions.restart_freecad()
+
+        self.form.close()
         return
     
     # endregion
