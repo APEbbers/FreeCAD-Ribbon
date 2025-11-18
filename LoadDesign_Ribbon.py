@@ -849,11 +849,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Get the stylesheet from the main window and use it for this form
         (
             progressBar.setStyleSheet(
-                "background-color: "
-                + "none"
-                + ";color: "
-                + "none"
-                + ";"
+                "background-color: " + "none" + ";color: " + "none" + ";"
             )
         )
         progressBar.setMaximum(5)
@@ -1817,7 +1813,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     for j in range(len(value)):
                         CommandName = value[j]
                         for ToolbarCommand in self.List_Commands:
-                            if ToolbarCommand[0] == CommandName or ToolbarCommand[2] == CommandName:
+                            if (
+                                ToolbarCommand[0] == CommandName
+                                or ToolbarCommand[2] == CommandName
+                            ):
                                 # Get the command
                                 MenuName = ToolbarCommand[4].replace("&", "")
 
@@ -1914,12 +1913,15 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 if CommandItem[0] == ListWidgetItem.data(Qt.ItemDataRole.UserRole)[1]:
                     MenuName = CommandItem[2].replace("&", "")
                     # For FC 1.1.0, use commandnames instead of menu names
-                    if StandardFunctions.checkFreeCADVersion(
+                    if (
+                        StandardFunctions.checkFreeCADVersion(
                             Parameters_Ribbon.FreeCAD_Version["mainVersion"],
                             Parameters_Ribbon.FreeCAD_Version["subVersion"],
                             Parameters_Ribbon.FreeCAD_Version["patchVersion"],
                             Parameters_Ribbon.FreeCAD_Version["gitVersion"],
-                        ) is True:
+                        )
+                        is True
+                    ):
                         MenuName = CommandItem[0]
 
                     # Get the original toolbar
@@ -2044,7 +2046,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                         ListWidgetItem = QListWidgetItem()
                                         ListWidgetItem.setText(MenuName)
                                         ListWidgetItem.setData(
-                                            Qt.ItemDataRole.UserRole, [value,CommandItem[0]]
+                                            Qt.ItemDataRole.UserRole,
+                                            [value, CommandItem[0]],
                                         )
                                         Icon = QIcon()
                                         for item in self.List_CommandIcons:
@@ -5572,7 +5575,14 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
         return
 
-    def loadAllWorkbenches(self, AutoHide=True, HideOnly=False, FinishMessage="", progressBar: QProgressBar = None, maximum = 0):        
+    def loadAllWorkbenches(
+        self,
+        AutoHide=True,
+        HideOnly=False,
+        FinishMessage="",
+        progressBar: QProgressBar = None,
+        maximum=0,
+    ):
         if HideOnly is False:
             activeWorkbench = Gui.activeWorkbench().name()
             progressBar.show()

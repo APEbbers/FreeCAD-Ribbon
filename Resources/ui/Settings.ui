@@ -180,7 +180,7 @@
                       <enum>QFrame::Shape::Box</enum>
                      </property>
                      <property name="text">
-                      <string>...\</string>
+                      <string notr="true">...\</string>
                      </property>
                      <property name="scaledContents">
                       <bool>true</bool>
@@ -1146,7 +1146,7 @@
                       <enum>QFrame::Shape::Box</enum>
                      </property>
                      <property name="text">
-                      <string>...\</string>
+                      <string notr="true">...\</string>
                      </property>
                      <property name="scaledContents">
                       <bool>true</bool>
@@ -2304,7 +2304,7 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
      <item row="0" column="5">
       <widget class="QToolButton" name="HelpButton">
        <property name="text">
-        <string>...</string>
+        <string notr="true">...</string>
        </property>
       </widget>
      </item>
