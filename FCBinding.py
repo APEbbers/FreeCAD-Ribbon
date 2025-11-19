@@ -879,7 +879,7 @@ class ModernMenu(RibbonBar):
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
-                self.RibbonOffset = 50 + self.QuickAccessButtonSize * 2
+                self.RibbonOffset = 45 + self.QuickAccessButtonSize * 2
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(
                     0, self.QuickAccessButtonSize
                 )
@@ -901,7 +901,7 @@ class ModernMenu(RibbonBar):
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize + 10
-                self.RibbonOffset = 42 + self.QuickAccessButtonSize
+                self.RibbonOffset = 37 + self.QuickAccessButtonSize
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(
                     0, self.QuickAccessButtonSize
                 )
