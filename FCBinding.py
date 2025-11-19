@@ -291,6 +291,8 @@ class ModernMenu(RibbonBar):
     
     # Create a dict to store the button states when entering the customization enviroment
     ButtonState = {}
+    
+    MaxRowsPerWB = {}
     # endregion
 
     def __init__(self):
@@ -4067,6 +4069,7 @@ class ModernMenu(RibbonBar):
         return
 
     def ReturnRibbonHeight(self, offset=0):
+        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         # Set the ribbon height.
         ribbonHeight = 0
         # If text is enabled for large button, the height is modified.
@@ -4077,15 +4080,21 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.ICON_SIZE_SMALL * 3
             >= Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
             and Parameters_Ribbon.ICON_SIZE_SMALL * 3 >= LargeButtonHeight
+            and self.MaxRowsPerWB[workbenchName] == 3
         ):
             ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_SMALL * 3 + 6
         elif (
             Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
             >= Parameters_Ribbon.ICON_SIZE_SMALL * 3
             and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 >= LargeButtonHeight
+            and self.MaxRowsPerWB[workbenchName] >= 2
         ):
             ribbonHeight = ribbonHeight + Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 + 4
-        else:
+        elif (
+            Parameters_Ribbon.ICON_SIZE_LARGE > Parameters_Ribbon.ICON_SIZE_SMALL * 3
+            and Parameters_Ribbon.ICON_SIZE_LARGE > Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
+            and self.MaxRowsPerWB[workbenchName] >= 1
+        ):
             ribbonHeight = ribbonHeight + LargeButtonHeight
         return ribbonHeight + offset
 
@@ -4602,6 +4611,7 @@ class ModernMenu(RibbonBar):
                 title=title,
                 showPanelOptionButton=True,
             )
+        print(f"{workbenchName}, {panelName}")
         panel.setObjectName(panelName)
         panel.panelOptionButton().hide()
         panel.setAcceptDrops(True)
@@ -4786,6 +4796,8 @@ class ModernMenu(RibbonBar):
             # Panel overflow behaviour ----------------------------------------------------------------
             #
             # get the number of rows in the panel
+            if workbenchName not in self.MaxRowsPerWB:
+                self.MaxRowsPerWB[workbenchName] = 0
             if buttonSize == "small":
                 smallButtons.append(button)
                 mediumButtons.clear()
@@ -4793,6 +4805,7 @@ class ModernMenu(RibbonBar):
                 if len(smallButtons) == 3:
                     columnCount = columnCount + 1
                     smallButtons.clear()
+                    self.MaxRowsPerWB[workbenchName] = 3
             if buttonSize == "medium":                
                 smallButtons.clear()
                 mediumButtons.append(button)
@@ -4800,6 +4813,8 @@ class ModernMenu(RibbonBar):
                 if len(mediumButtons) == 2:
                     columnCount = columnCount + 1
                     mediumButtons.clear()
+                    if self.MaxRowsPerWB[workbenchName] <= 2:
+                        self.MaxRowsPerWB[workbenchName] = 2
             if buttonSize == "large" or "separator" in button.text().lower():                
                 smallButtons.clear()
                 mediumButtons.clear()
@@ -4807,6 +4822,8 @@ class ModernMenu(RibbonBar):
                 if len(largeButtons) == 1:
                     columnCount = columnCount + 1
                     largeButtons.clear()
+                    if self.MaxRowsPerWB[workbenchName] <= 1:
+                        self.MaxRowsPerWB[workbenchName] = 1
 
             # if the button has not text, remove it, skip it and increase the counter.
             if button.text() == "":
@@ -5034,6 +5051,8 @@ class ModernMenu(RibbonBar):
                             buttonSize = dict["workbenches"][
                                 workbenchName
                             ]["toolbars"][panelName]["commands"][CommandName]["size"]
+                            # if "Part" in CommandName:
+                            #     print(f"{CommandName}, {buttonSize}")
                             if buttonSize == "":
                                 buttonSize = "small"
                         except KeyError:
@@ -5651,8 +5670,8 @@ class ModernMenu(RibbonBar):
                     for ToolBarToCorrect in ToolBarCorrectionList:
                         # If the toolbars match, update the json file
                         if ToolBarToCorrect[1] == toolbar or ToolBarToCorrect[0] == toolbar:
-                            Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", WorkBench, "toolbars", ToolBarToCorrect[0]], endEmpty=True)
-                            Dict["workbenches"][WorkBench]["toolbars"][ToolBarToCorrect[0]] = self.ribbonStructure["workbenches"][WorkBench]["toolbars"][toolbar]
+                            Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", WorkBench, "toolbars", ToolBarToCorrect[1]], endEmpty=True)
+                            Dict["workbenches"][WorkBench]["toolbars"][ToolBarToCorrect[1]] = self.ribbonStructure["workbenches"][WorkBench]["toolbars"][toolbar]
                         # if the toolbar doesn't match and is not the order list, just add it
                         if ToolBarToCorrect[1] != toolbar and ToolBarToCorrect[0] != toolbar and toolbar != "order":
                             Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", WorkBench, "toolbars", toolbar], endEmpty=True)
@@ -5663,9 +5682,9 @@ class ModernMenu(RibbonBar):
                         OrderList: list = self.ribbonStructure["workbenches"][WorkBench]["toolbars"]["order"]
                         # Go through the correction list. If the toolbar to correct is in the order list, replace it with the correction                       
                         for ToolBarToCorrect in ToolBarCorrectionList:
-                            if ToolBarToCorrect[1] in OrderList:
-                                index = OrderList.index(ToolBarToCorrect[1])
-                                OrderList[index] = ToolBarToCorrect[0]
+                            if ToolBarToCorrect[0] in OrderList:
+                                index = OrderList.index(ToolBarToCorrect[0])
+                                OrderList[index] = ToolBarToCorrect[1]
                 # If the orderlist is not empty, set the orderlist as the new order list in the ribbon structure
                 if len(OrderList) > 0:
                     Dict["workbenches"][WorkBench]["toolbars"]["order"] = OrderList
@@ -5678,8 +5697,8 @@ class ModernMenu(RibbonBar):
                 # Get the corresponding toolbar correction list
                 ToolBarCorrectionList = CorrectionList[WorkBench]
                 for ToolBarToCorrect in ToolBarCorrectionList:
-                    if ToolBarToCorrect[1] in self.ribbonStructure["workbenches"][WorkBench]["toolbars"]:
-                        self.ribbonStructure["workbenches"][WorkBench]["toolbars"].pop(ToolBarToCorrect[1])
+                    if ToolBarToCorrect[0] in self.ribbonStructure["workbenches"][WorkBench]["toolbars"]:
+                        self.ribbonStructure["workbenches"][WorkBench]["toolbars"].pop(ToolBarToCorrect[0])
 
         # Add the version of FreeCAD on which this conversion is done, to the ribbonstructure
         # Create a key if not present

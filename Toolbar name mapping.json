@@ -1,9 +1,9 @@
 {
     "PartDesignWorkbench": [
-        ["Part Design Helper Features", "Part Design Helper"],
-        ["Part Design Modeling Features", "Part Design Modeling"],
-        ["Part Design Dress-Up Features", "Part Design Dressup"],
-        ["Part Design Transformation Features", "Part Design Patterns"]
+        ["Part Design Helper", "Part Design Helper Features"],
+        ["Part Design Modeling", "Part Design Modeling Features"],
+        ["Part Design Dressup", "Part Design Dress-Up Features"],
+        ["Part Design Patterns", "Part Design Transformation Features"]
     ],
     "BIMWorkbench": [
         ["Drafting tools", "Drafting Tools"],
