@@ -5602,8 +5602,8 @@ class ModernMenu(RibbonBar):
                     for ToolBarToCorrect in ToolBarCorrectionList:
                         # If the toolbars match, update the json file
                         if ToolBarToCorrect[1] == toolbar or ToolBarToCorrect[0] == toolbar:
-                            Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", WorkBench, "toolbars", ToolBarToCorrect[0]], endEmpty=True)
-                            Dict["workbenches"][WorkBench]["toolbars"][ToolBarToCorrect[0]] = self.ribbonStructure["workbenches"][WorkBench]["toolbars"][toolbar]
+                            Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", WorkBench, "toolbars", ToolBarToCorrect[1]], endEmpty=True)
+                            Dict["workbenches"][WorkBench]["toolbars"][ToolBarToCorrect[1]] = self.ribbonStructure["workbenches"][WorkBench]["toolbars"][toolbar]
                         # if the toolbar doesn't match and is not the order list, just add it
                         if ToolBarToCorrect[1] != toolbar and ToolBarToCorrect[0] != toolbar and toolbar != "order":
                             Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", WorkBench, "toolbars", toolbar], endEmpty=True)
@@ -5614,9 +5614,9 @@ class ModernMenu(RibbonBar):
                         OrderList: list = self.ribbonStructure["workbenches"][WorkBench]["toolbars"]["order"]
                         # Go through the correction list. If the toolbar to correct is in the order list, replace it with the correction                       
                         for ToolBarToCorrect in ToolBarCorrectionList:
-                            if ToolBarToCorrect[1] in OrderList:
-                                index = OrderList.index(ToolBarToCorrect[1])
-                                OrderList[index] = ToolBarToCorrect[0]
+                            if ToolBarToCorrect[0] in OrderList:
+                                index = OrderList.index(ToolBarToCorrect[0])
+                                OrderList[index] = ToolBarToCorrect[1]
                 # If the orderlist is not empty, set the orderlist as the new order list in the ribbon structure
                 if len(OrderList) > 0:
                     Dict["workbenches"][WorkBench]["toolbars"]["order"] = OrderList
@@ -5629,8 +5629,8 @@ class ModernMenu(RibbonBar):
                 # Get the corresponding toolbar correction list
                 ToolBarCorrectionList = CorrectionList[WorkBench]
                 for ToolBarToCorrect in ToolBarCorrectionList:
-                    if ToolBarToCorrect[1] in self.ribbonStructure["workbenches"][WorkBench]["toolbars"]:
-                        self.ribbonStructure["workbenches"][WorkBench]["toolbars"].pop(ToolBarToCorrect[1])
+                    if ToolBarToCorrect[0] in self.ribbonStructure["workbenches"][WorkBench]["toolbars"]:
+                        self.ribbonStructure["workbenches"][WorkBench]["toolbars"].pop(ToolBarToCorrect[0])
 
         # Add the version of FreeCAD on which this conversion is done, to the ribbonstructure
         # Create a key if not present
