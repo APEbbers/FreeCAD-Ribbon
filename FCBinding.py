@@ -4842,8 +4842,8 @@ class ModernMenu(RibbonBar):
                     # Store the number of rows for this workbench
                     if self.MaxRowsPerWB[workbenchName]["Rows"]  <= 2:
                         self.MaxRowsPerWB[workbenchName]["Rows"]  = 2
-                        # Save that medium buttons are present
-                        self.MaxRowsPerWB[workbenchName]["MediumButtonsPresent"] = True
+                    # Save that medium buttons are present
+                    self.MaxRowsPerWB[workbenchName]["MediumButtonsPresent"] = True
             if buttonSize == "large" or "separator" in button.text().lower():                
                 smallButtons.clear()
                 mediumButtons.clear()
@@ -4854,8 +4854,8 @@ class ModernMenu(RibbonBar):
                     # Store the number of rows for this workbench
                     if self.MaxRowsPerWB[workbenchName]["Rows"]  <= 1:
                         self.MaxRowsPerWB[workbenchName]["Rows"]  = 1
-                        # Save that large buttons are present
-                        self.MaxRowsPerWB[workbenchName]["LargeButtonsPresent"] = True
+                    # Save that large buttons are present
+                    self.MaxRowsPerWB[workbenchName]["LargeButtonsPresent"] = True
 
             # if the button has not text, remove it, skip it and increase the counter.
             if button.text() == "":
@@ -4884,10 +4884,8 @@ class ModernMenu(RibbonBar):
                 # With an paneloptionbutton, use an offset of 2 instead of 1 for i.
                 if "separator" in button.text() and i < len(allButtons):
                     separatorWidget = CustomWidgets.CustomSeparator()
-                    # separatorWidget.setFixedHeight(panel.height() - panel._titleWidget.height()-panel._actionsLayout.spacing())
-                    # separatorWidget.setMinimumHeight(panel.height()+20)
-                    height = panel.height() - panel._titleLabel.height()-panel._actionsLayout.spacing()-20
-                    separator = panel.addWidget(separatorWidget, rowSpan=6, fixedHeight=height, alignment=Qt.AlignmentFlag.AlignTop)
+                    rowSpan = 6
+                    separator = panel.addWidget(separatorWidget, rowSpan=rowSpan, fixedHeight=False, alignment=Qt.AlignmentFlag.AlignCenter)
                     separator.setObjectName(button.text())
                     separator.setDisabled(not enableSeparator)
                     if enableSeparator is True:
@@ -4922,7 +4920,7 @@ class ModernMenu(RibbonBar):
                     # reset the counter after a separator is added.
                     NoSmallButtons_spacer = 0
                     # Same principle for medium buttons
-                    if float((NoMediumButtons_spacer + 1) / 2).is_integer():
+                    if float((NoMediumButtons_spacer-1) / 2).is_integer():
                         spacer_1 = panel.addMediumButton()
                         spacer_1.setFixedWidth(Parameters_Ribbon.ICON_SIZE_MEDIUM)
                         spacer_1.setEnabled(False)
@@ -5349,6 +5347,7 @@ class ModernMenu(RibbonBar):
         panel._titleLabel.setFixedHeight(Parameters_Ribbon.FONTSIZE_PANELS+3)
         # Set the ribbonheight
         self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset)
+        self.setRibbonHeight(self.RibbonHeight)
         # Correct the width of the (hidden) option button
         OptionButton = panel.panelOptionButton()
         OptionButton.setFixedSize(Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.FONTSIZE_PANELS+3)
