@@ -896,10 +896,11 @@ class CustomControls(QToolButton):
                     Label_Text.setMaximumWidth(
                         FontMetrics.tightBoundingRect(line1).width()
                     )  # set to a extra large value to avoid clipping
-                    StandardFunctions.Print(
-                        "Medium button is too small for text wrap!\n wrap setting is ignored",
-                        "Warning",
-                    )
+                    if Parameters_Ribbon.DEBUG_MODE is True:
+                        StandardFunctions.Print(
+                            "Medium button is too small for text wrap!\n wrap setting is ignored",
+                            "Warning",
+                        )
 
             if setWordWrap is False:
                 # if the text must be elided, return a updated text
