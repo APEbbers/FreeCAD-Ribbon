@@ -117,7 +117,7 @@
      <item row="2" column="8">
       <widget class="QToolButton" name="HelpButton">
        <property name="text">
-        <string>...</string>
+        <string notr="true">...</string>
        </property>
       </widget>
      </item>
@@ -222,8 +222,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>1009</width>
-          <height>699</height>
+          <width>1013</width>
+          <height>689</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_26">
@@ -262,7 +262,7 @@
             <enum>QTabWidget::TabShape::Rounded</enum>
            </property>
            <property name="currentIndex">
-            <number>7</number>
+            <number>5</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideNone</enum>
@@ -633,7 +633,7 @@
                      <string>Move up</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::UpArrow</enum>
@@ -646,7 +646,7 @@
                      <string>Move down</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::DownArrow</enum>
@@ -659,7 +659,7 @@
                      <string>Remove command</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::LeftArrow</enum>
@@ -672,7 +672,7 @@
                      <string>Add command</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::RightArrow</enum>
@@ -1057,7 +1057,7 @@
                      <string>Exclude workbench</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::LeftArrow</enum>
@@ -1070,7 +1070,7 @@
                      <string>Include workbench</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::RightArrow</enum>
@@ -1397,7 +1397,7 @@
                      <string>Move up</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::UpArrow</enum>
@@ -1410,7 +1410,7 @@
                      <string>Add panel buttons</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::RightArrow</enum>
@@ -1452,7 +1452,7 @@
                      <string>Move down</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::DownArrow</enum>
@@ -1567,7 +1567,7 @@
                      <string>Move up</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::UpArrow</enum>
@@ -1593,7 +1593,7 @@
                      <string>Remove command</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::LeftArrow</enum>
@@ -1606,7 +1606,7 @@
                      <string>Move down</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::DownArrow</enum>
@@ -1632,7 +1632,7 @@
                      <string>Add command</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::RightArrow</enum>
@@ -1757,7 +1757,7 @@
                      <string>Move down</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::DownArrow</enum>
@@ -1770,7 +1770,7 @@
                      <string>Move up</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::UpArrow</enum>
@@ -1809,7 +1809,7 @@
                      <string>Remove command</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::LeftArrow</enum>
@@ -1822,7 +1822,7 @@
                      <string>Add command</string>
                     </property>
                     <property name="text">
-                     <string>...</string>
+                     <string notr="true">...</string>
                     </property>
                     <property name="arrowType">
                      <enum>Qt::ArrowType::RightArrow</enum>
@@ -2190,7 +2190,7 @@
                        <string>Move up</string>
                       </property>
                       <property name="text">
-                       <string>...</string>
+                       <string notr="true">...</string>
                       </property>
                       <property name="arrowType">
                        <enum>Qt::ArrowType::UpArrow</enum>
@@ -2203,7 +2203,7 @@
                        <string>Move down</string>
                       </property>
                       <property name="text">
-                       <string>...</string>
+                       <string notr="true">...</string>
                       </property>
                       <property name="arrowType">
                        <enum>Qt::ArrowType::DownArrow</enum>
@@ -2575,7 +2575,7 @@
                        <string>Move up</string>
                       </property>
                       <property name="text">
-                       <string>...</string>
+                       <string notr="true">...</string>
                       </property>
                       <property name="arrowType">
                        <enum>Qt::ArrowType::UpArrow</enum>
@@ -2588,7 +2588,7 @@
                        <string>Move down</string>
                       </property>
                       <property name="text">
-                       <string>...</string>
+                       <string notr="true">...</string>
                       </property>
                       <property name="arrowType">
                        <enum>Qt::ArrowType::DownArrow</enum>
