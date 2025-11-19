@@ -180,7 +180,7 @@
                       <enum>QFrame::Shape::Box</enum>
                      </property>
                      <property name="text">
-                      <string>...\</string>
+                      <string notr="true">...\</string>
                      </property>
                      <property name="scaledContents">
                       <bool>true</bool>
@@ -1146,7 +1146,7 @@
                       <enum>QFrame::Shape::Box</enum>
                      </property>
                      <property name="text">
-                      <string>...\</string>
+                      <string notr="true">...\</string>
                      </property>
                      <property name="scaledContents">
                       <bool>true</bool>
@@ -1664,7 +1664,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string/>
+                        <string notr="true"/>
                        </property>
                       </widget>
                      </item>
@@ -1702,7 +1702,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string/>
+                        <string notr="true"/>
                        </property>
                       </widget>
                      </item>
@@ -1734,7 +1734,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string/>
+                        <string notr="true"/>
                        </property>
                       </widget>
                      </item>
@@ -1766,7 +1766,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string/>
+                        <string notr="true"/>
                        </property>
                       </widget>
                      </item>
@@ -1804,7 +1804,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string/>
+                        <string notr="true"/>
                        </property>
                       </widget>
                      </item>
@@ -1836,7 +1836,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string/>
+                        <string notr="true"/>
                        </property>
                       </widget>
                      </item>
@@ -1874,7 +1874,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string/>
+                        <string notr="true"/>
                        </property>
                       </widget>
                      </item>
@@ -1924,7 +1924,11 @@
                       <number>6</number>
                      </property>
                      <item row="2" column="1" colspan="2">
-                      <widget class="Gui::ColorButton" name="Color_Background_App"/>
+                      <widget class="Gui::ColorButton" name="Color_Background_App">
+                       <property name="text">
+                        <string notr="true"/>
+                       </property>
+                      </widget>
                      </item>
                      <item row="1" column="0">
                       <widget class="QLabel" name="label_30">
@@ -1949,7 +1953,11 @@
                       </widget>
                      </item>
                      <item row="0" column="1" colspan="2">
-                      <widget class="Gui::ColorButton" name="Color_Borders"/>
+                      <widget class="Gui::ColorButton" name="Color_Borders">
+                       <property name="text">
+                        <string notr="true"/>
+                       </property>
+                      </widget>
                      </item>
                      <item row="0" column="0">
                       <widget class="QLabel" name="label_6">
@@ -1996,7 +2004,11 @@
                       </widget>
                      </item>
                      <item row="1" column="1" colspan="2">
-                      <widget class="Gui::ColorButton" name="Color_Background_Hover"/>
+                      <widget class="Gui::ColorButton" name="Color_Background_Hover">
+                       <property name="text">
+                        <string notr="true"/>
+                       </property>
+                      </widget>
                      </item>
                     </layout>
                    </item>
@@ -2046,7 +2058,97 @@
              <string>Miscellaneous</string>
             </attribute>
             <layout class="QGridLayout" name="gridLayout_34">
-             <item row="1" column="0" rowspan="2" colspan="2">
+             <item row="0" column="0">
+              <widget class="QGroupBox" name="groupBox_11">
+               <property name="title">
+                <string>Standard panels preference</string>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_29">
+                <item row="0" column="1">
+                 <spacer name="horizontalSpacer_8">
+                  <property name="orientation">
+                   <enum>Qt::Orientation::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="0">
+                 <layout class="QGridLayout" name="gridLayout_27">
+                  <item row="0" column="0">
+                   <widget class="QLabel" name="label_27">
+                    <property name="text">
+                     <string>Select preferred standard view panel: </string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="1">
+                   <widget class="QComboBox" name="PreferedViewPanel">
+                    <property name="minimumSize">
+                     <size>
+                      <width>200</width>
+                      <height>0</height>
+                     </size>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>Individual views - Native</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Views - Native</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Views - Ribbon</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>None</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="0">
+                 <layout class="QGridLayout" name="gridLayout_31">
+                  <item row="0" column="0">
+                   <widget class="QCheckBox" name="EnableToolsPanel">
+                    <property name="text">
+                     <string>Use standard Tools panel</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <spacer name="verticalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Orientation::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="1" column="0">
               <widget class="QGroupBox" name="EnableOverlay">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -2143,96 +2245,6 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
                </layout>
               </widget>
              </item>
-             <item row="0" column="0">
-              <widget class="QGroupBox" name="groupBox_11">
-               <property name="title">
-                <string>Standard panels preference</string>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_29">
-                <item row="0" column="1">
-                 <spacer name="horizontalSpacer_8">
-                  <property name="orientation">
-                   <enum>Qt::Orientation::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="0" column="0">
-                 <layout class="QGridLayout" name="gridLayout_27">
-                  <item row="0" column="0">
-                   <widget class="QLabel" name="label_27">
-                    <property name="text">
-                     <string>Select preferred standard view panel: </string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1">
-                   <widget class="QComboBox" name="PreferedViewPanel">
-                    <property name="minimumSize">
-                     <size>
-                      <width>200</width>
-                      <height>0</height>
-                     </size>
-                    </property>
-                    <item>
-                     <property name="text">
-                      <string>Individual views - Native</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Views - Native</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>Views - Ribbon</string>
-                     </property>
-                    </item>
-                    <item>
-                     <property name="text">
-                      <string>None</string>
-                     </property>
-                    </item>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-                <item row="1" column="0">
-                 <layout class="QGridLayout" name="gridLayout_31">
-                  <item row="0" column="0">
-                   <widget class="QCheckBox" name="EnableToolsPanel">
-                    <property name="text">
-                     <string>Use standard Tools panel</string>
-                    </property>
-                    <property name="checked">
-                     <bool>true</bool>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <spacer name="verticalSpacer_3">
-               <property name="orientation">
-                <enum>Qt::Orientation::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
             </layout>
            </widget>
           </widget>
@@ -2304,7 +2316,7 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
      <item row="0" column="5">
       <widget class="QToolButton" name="HelpButton">
        <property name="text">
-        <string>...</string>
+        <string notr="true">...</string>
        </property>
       </widget>
      </item>
