@@ -292,7 +292,10 @@ class ModernMenu(RibbonBar):
     # Create a dict to store the button states when entering the customization enviroment
     ButtonState = {}
     
+    # Store the number of rows for each wb
     MaxRowsPerWB = {}
+    
+    CustomizeOffset = 0
     # endregion
 
     def __init__(self):
@@ -1196,8 +1199,9 @@ class ModernMenu(RibbonBar):
                         self.setStyleSheet(StyleSheet)                        
                         self.CustomizeEnabled = True
                         # Just incase
-                        self.setRibbonHeight(self.RibbonHeight+6)
-                        
+                        self.CustomizeOffset = 6
+                        self.setRibbonHeight(self.RibbonHeight+self.CustomizeOffset)
+                                                
                         # Store the workbench name as the last customized name
                         self.LastCustomized = [workbenchName, self.currentCategory().title()]
                         
@@ -1238,8 +1242,8 @@ class ModernMenu(RibbonBar):
                                     # Update the orderlist
                                     command = control.actions().data()
                                     if command is None:
-                                        toolButton = control.findChild(QToolButton, "CommandButton")
-                                        print(toolButton.actions()[0])
+                                        # toolButton = control.findChild(QToolButton, "CommandButton")
+                                        # print(toolButton.actions()[0])
                                         command = control.defaultAction()
                                     orderList.append(command)
 
@@ -3620,14 +3624,14 @@ class ModernMenu(RibbonBar):
             )
         )
 
-        # Set the maximum height to a high value to prevent from the ribbon to be clipped off
-        category.setMinimumHeight(
-            self.RibbonHeight - self.RibbonMinimalHeight - 3
-        )
-        category.setMaximumHeight(
-            self.RibbonHeight - self.RibbonMinimalHeight - 3
-        )
-        self.setRibbonHeight(self.RibbonHeight)
+        # # Set the maximum height to a high value to prevent from the ribbon to be clipped off
+        # category.setMinimumHeight(
+        #     self.RibbonHeight - self.RibbonMinimalHeight - 3
+        # )
+        # category.setMaximumHeight(
+        #     self.RibbonHeight - self.RibbonMinimalHeight - 3
+        # )
+        # self.setRibbonHeight(self.RibbonHeight)
 
         if self.DesignMenuLoaded is True:
             # Disable the quick toolbar, righttoolbar and application menu
@@ -5347,7 +5351,7 @@ class ModernMenu(RibbonBar):
         panel._titleLabel.setFixedHeight(Parameters_Ribbon.FONTSIZE_PANELS+3)
         # Set the ribbonheight
         self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset)
-        self.setRibbonHeight(self.RibbonHeight)
+        self.setRibbonHeight(self.RibbonHeight + self.CustomizeOffset)
         # Correct the width of the (hidden) option button
         OptionButton = panel.panelOptionButton()
         OptionButton.setFixedSize(Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.FONTSIZE_PANELS+3)
