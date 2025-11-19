@@ -196,7 +196,7 @@ class ModernMenu(RibbonBar):
     PanelHeightOffset = 26
     # Create an offset for the whole ribbon height
     RibbonOffset = (
-        44 + QuickAccessButtonSize * 2
+        20 + QuickAccessButtonSize * 2
     )  # Set to zero to hide the panel titles
 
     # Set the minimum height for the ribbon
@@ -879,7 +879,7 @@ class ModernMenu(RibbonBar):
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
-                self.RibbonOffset = 60 + self.QuickAccessButtonSize * 2
+                self.RibbonOffset = 50 + self.QuickAccessButtonSize * 2
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(
                     0, self.QuickAccessButtonSize
                 )
@@ -901,7 +901,7 @@ class ModernMenu(RibbonBar):
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize + 10
-                self.RibbonOffset = 52 + self.QuickAccessButtonSize
+                self.RibbonOffset = 42 + self.QuickAccessButtonSize
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(
                     0, self.QuickAccessButtonSize
                 )
