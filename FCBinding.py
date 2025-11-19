@@ -5321,11 +5321,11 @@ class ModernMenu(RibbonBar):
         panel = self.PopulateOverflowMenu(panel, ButtonList)
                 
         # Add a spacer. Otherwise alignment of a panel with one button will always be to the top
-        if len(allButtons) == 1:
-            spacer = QWidget()
-            spacer.setObjectName("ExtraSpacer")
-            spacer.setMinimumSize(0, panel.height() - panel._titleWidget.height())
-            panel.addWidget(spacer, rowSpan=6)
+        # if len(allButtons) == 1:
+        spacer = QWidget()
+        spacer.setObjectName("ExtraSpacer")
+        spacer.setMinimumSize(0, panel.height() - panel._titleWidget.height())
+        panel.addWidget(spacer, rowSpan=6)
         
         return panel
     
