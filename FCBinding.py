@@ -1200,7 +1200,13 @@ class ModernMenu(RibbonBar):
                         self.CustomizeEnabled = True
                         # Just incase
                         self.CustomizeOffset = 6
-                        self.setRibbonHeight(self.RibbonHeight+self.CustomizeOffset)
+                        self.setRibbonHeight(self.RibbonHeight + self.CustomizeOffset)
+                        self.currentCategory().setMinimumHeight(
+                            self.RibbonHeight - self.RibbonMinimalHeight - 3 + self.CustomizeOffset
+                        )
+                        self.currentCategory().setMaximumHeight(
+                            self.RibbonHeight - self.RibbonMinimalHeight - 3 + self.CustomizeOffset
+                        )
                                                 
                         # Store the workbench name as the last customized name
                         self.LastCustomized = [workbenchName, self.currentCategory().title()]
@@ -1325,6 +1331,12 @@ class ModernMenu(RibbonBar):
                         self.setStyleSheet(self.StyleSheet)
                         self.CustomizeEnabled = False
                         self.setRibbonHeight(self.RibbonHeight)
+                        self.currentCategory().setMinimumHeight(
+                            self.RibbonHeight - self.RibbonMinimalHeight - 3
+                        )
+                        self.currentCategory().setMaximumHeight(
+                            self.RibbonHeight - self.RibbonMinimalHeight - 3
+                        )
 
                         for item in self.actionList:
                             if item[1] is False:
@@ -5342,9 +5354,6 @@ class ModernMenu(RibbonBar):
         panel._actionsLayout.setSpacing(self.ButtonSpacing)
         panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         panel._actionsLayout.setContentsMargins(0, self.TopMargin, 3, self.BottomMargin) # Left, Top, Right, Bottom
-        # spacer = QWidget()
-        # spacer.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
-        # QGridLayout(panel._mainLayout).addWidget(spacer)
         panel._mainLayout.setSpacing(0)
         panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
         # Set the font for the panel title
@@ -5354,12 +5363,11 @@ class ModernMenu(RibbonBar):
         panel._titleLabel.setFixedHeight(Parameters_Ribbon.FONTSIZE_PANELS+3)
         # Set the ribbonheight
         self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset)
-        self.setRibbonHeight(self.RibbonHeight + self.CustomizeOffset)
         # Correct the width of the (hidden) option button
         OptionButton = panel.panelOptionButton()
         OptionButton.setFixedSize(Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.FONTSIZE_PANELS+3)
         # Set the size policy to fixed. Otherwise resizing is not working properly
-        panel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
+        panel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         return
     
     def PopulateOverflowMenu(self, panel: RibbonPanel, ButtonList: list):
