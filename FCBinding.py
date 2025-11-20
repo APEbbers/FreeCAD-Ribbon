@@ -2131,6 +2131,9 @@ class ModernMenu(RibbonBar):
             w_origin = None
             try:
                 w_origin = gridLayout.itemAtPosition(xPos, yPos).widget()
+                widget = w_origin.children()[1]
+                if widget.objectName() == "spacer":
+                    return None
                 index = gridLayout.indexOf(w_origin)
                 position: object = gridLayout.getItemPosition(index)
                 return [position[0], position[1], position[2], w_origin]
