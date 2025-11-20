@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -49,7 +49,7 @@ from PySide.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -85,7 +85,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -3624,14 +3624,14 @@ class ModernMenu(RibbonBar):
             )
         )
 
-        # # Set the maximum height to a high value to prevent from the ribbon to be clipped off
-        # category.setMinimumHeight(
-        #     self.RibbonHeight - self.RibbonMinimalHeight - 3
-        # )
-        # category.setMaximumHeight(
-        #     self.RibbonHeight - self.RibbonMinimalHeight - 3
-        # )
-        # self.setRibbonHeight(self.RibbonHeight)
+        # Set the maximum height to a high value to prevent from the ribbon to be clipped off
+        category.setMinimumHeight(
+            self.RibbonHeight - self.RibbonMinimalHeight - 3
+        )
+        category.setMaximumHeight(
+            self.RibbonHeight - self.RibbonMinimalHeight - 3
+        )
+        self.setRibbonHeight(self.RibbonHeight)
 
         if self.DesignMenuLoaded is True:
             # Disable the quick toolbar, righttoolbar and application menu
@@ -5342,6 +5342,9 @@ class ModernMenu(RibbonBar):
         panel._actionsLayout.setSpacing(self.ButtonSpacing)
         panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         panel._actionsLayout.setContentsMargins(0, self.TopMargin, 3, self.BottomMargin) # Left, Top, Right, Bottom
+        # spacer = QWidget()
+        # spacer.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
+        # QGridLayout(panel._mainLayout).addWidget(spacer)
         panel._mainLayout.setSpacing(0)
         panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
         # Set the font for the panel title
@@ -5356,7 +5359,7 @@ class ModernMenu(RibbonBar):
         OptionButton = panel.panelOptionButton()
         OptionButton.setFixedSize(Parameters_Ribbon.ICON_SIZE_SMALL, Parameters_Ribbon.FONTSIZE_PANELS+3)
         # Set the size policy to fixed. Otherwise resizing is not working properly
-        panel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        panel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
         return
     
     def PopulateOverflowMenu(self, panel: RibbonPanel, ButtonList: list):
