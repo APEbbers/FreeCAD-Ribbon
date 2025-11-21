@@ -81,6 +81,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "RightToolbarButtonSize": Parameters_Ribbon.RIGHT_ICON_SIZE,
         "TabBarSize": Parameters_Ribbon.TABBAR_SIZE,
         "Stylesheet": Parameters_Ribbon.STYLESHEET,
+        "Link_IconSizes": Parameters_Ribbon.LINK_ICON_SIZES,
         "ShowIconText_Small": Parameters_Ribbon.SHOW_ICON_TEXT_SMALL,
         "ShowIconText_Medium": Parameters_Ribbon.SHOW_ICON_TEXT_MEDIUM,
         "ShowIconText_Large": Parameters_Ribbon.SHOW_ICON_TEXT_LARGE,
@@ -119,6 +120,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "TabBar_Style": Parameters_Ribbon.TABBAR_STYLE,
         "Toolbar_Position": Parameters_Ribbon.TOOLBAR_POSITION,
         "Hide_Titlebar_FC": Parameters_Ribbon.HIDE_TITLEBAR_FC,
+        "Link_IconSizes": Parameters_Ribbon.LINK_ICON_SIZES,
         "IconSize_Small": Parameters_Ribbon.ICON_SIZE_SMALL,
         "IconSize_Medium": Parameters_Ribbon.ICON_SIZE_MEDIUM,
         "IconSize_Large": Parameters_Ribbon.ICON_SIZE_LARGE,
@@ -272,6 +274,10 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         else:
             self.form.HideTitleBarFC.setCheckState(Qt.CheckState.Unchecked)
 
+        if Parameters_Ribbon.LINK_ICON_SIZES is True:
+            self.form.LinkIconSizes.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.LinkIconSizes.setCheckState(Qt.CheckState.Unchecked)
         self.form.IconSize_Small.setValue(Parameters_Ribbon.ICON_SIZE_SMALL)
         self.form.IconSize_Medium.setValue(Parameters_Ribbon.ICON_SIZE_MEDIUM)
         self.form.IconSize_Large.setValue(Parameters_Ribbon.ICON_SIZE_LARGE)
@@ -479,6 +485,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         )
         self.form.HideTitleBarFC.clicked.connect(self.on_HideTitleBarFC_clicked)
         # Connect icon sizes
+        self.form.LinkIconSizes.clicked.connect(self.on_LinkIconSizes_clicked)
         self.form.IconSize_Small.textChanged.connect(self.on_IconSize_Small_TextChanged)
         self.form.IconSize_Medium.textChanged.connect(
             self.on_IconSize_Medium_TextChanged
@@ -691,9 +698,29 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         if self.form.HideTitleBarFC.isChecked() is False:
             self.ValuesToUpdate["Hide_Titlebar_FC"] = False
         self.settingChanged = True
+        
+    def on_LinkIconSizes_clicked(self):
+        if self.form.LinkIconSizes.isChecked() is True:
+            self.ValuesToUpdate["Link_IconSizes"] = True
+            # Set the values for medium and large buttons
+            self.form.IconSize_Medium.setValue(Parameters_Ribbon.ICON_SIZE_SMALL * 2)
+            self.form.IconSize_Large.setValue(Parameters_Ribbon.ICON_SIZE_SMALL * 3)
+            # Disable the controls
+            self.form.IconSize_Medium.setDisabled(True)
+            self.form.IconSize_Large.setDisabled(True)
+        if self.form.LinkIconSizes.isChecked() is False:
+            self.ValuesToUpdate["Link_IconSizes"] = False
+            # Disable the controls
+            self.form.IconSize_Medium.setEnabled(True)
+            self.form.IconSize_Large.setEnabled(True)
+        self.settingChanged = True
 
     def on_IconSize_Small_TextChanged(self):
         self.ValuesToUpdate["IconSize_Small"] = int(self.form.IconSize_Small.text())
+        if self.form.LinkIconSizes.isChecked() is True:
+            # Set the values for medium and large buttons
+            self.form.IconSize_Medium.setValue(Parameters_Ribbon.ICON_SIZE_SMALL * 2)
+            self.form.IconSize_Large.setValue(Parameters_Ribbon.ICON_SIZE_SMALL * 3)
         self.settingChanged = True
         return
 
@@ -1171,6 +1198,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             "Hide_Titlebar_FC", self.OriginalValues["Hide_Titlebar_FC"]
         )
         # Save icon sizes
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "Link_IconSizes", self.OriginalValues["Link_IconSizes"]
+        )
         Parameters_Ribbon.Settings.SetIntSetting(
             "IconSize_Small", int(self.OriginalValues["IconSize_Small"])
         )
@@ -1479,6 +1509,11 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.form.HideTitleBarFC.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.HideTitleBarFC.setCheckState(Qt.CheckState.Unchecked)
+        
+        if DefaultSettings["Link_IconSizes"] is True:
+            self.form.LinkIconSizes.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.LinkIconSizes.setCheckState(Qt.CheckState.Unchecked)
         self.form.IconSize_Small.setValue(DefaultSettings["IconSize_Small"])
         self.form.IconSize_Medium.setValue(DefaultSettings["IconSize_Medium"])
         self.form.IconSize_Large.setValue(DefaultSettings["IconSize_Large"])

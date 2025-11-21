@@ -118,6 +118,7 @@ class Settings:
         Settings.SetBoolSetting("AutoHideRibbon", AUTOHIDE_RIBBON)
         Settings.SetIntSetting("MaxColumnsPerPanel", MAX_COLUMN_PANELS)
 
+        Settings.SetBoolSetting("Link_IconSizes", LINK_ICON_SIZES)
         Settings.SetIntSetting("IconSize_Small", ICON_SIZE_SMALL)
         Settings.SetIntSetting("IconSize_Medium", ICON_SIZE_MEDIUM)
         Settings.SetIntSetting("IconSize_Large", ICON_SIZE_LARGE)
@@ -202,6 +203,7 @@ DefaultSettings = {
     "ExportLocation": os.path.join(os.path.dirname(__file__), ""),
     "RibbonStructure": os.path.join(os.path.dirname(__file__), "RibbonStructure.json"),
     "TabBar_Style": int(0),
+    "Link_IconSizes": bool(True),
     "IconSize_Small": int(24),
     "IconSize_Medium": int(36),
     "IconSize_Large": int(72),
@@ -319,6 +321,11 @@ if Settings.GetBoolSetting("Hide_Titlebar_FC") is None:
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the icon sizes ---------------------------------------------------------------------------------------
+LINK_ICON_SIZES = Settings.GetBoolSetting("Link_IconSizes")
+if Settings.GetBoolSetting("Link_IconSizes") is None:
+    LINK_ICON_SIZES = bool(DefaultSettings["Link_IconSizes"])
+    Settings.SetBoolSetting("Link_IconSizes", LINK_ICON_SIZES)
+
 ICON_SIZE_SMALL = Settings.GetIntSetting("IconSize_Small")
 if (
     Settings.GetIntSetting("IconSize_Small") is None

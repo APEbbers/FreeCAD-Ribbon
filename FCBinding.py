@@ -103,7 +103,7 @@ from PySide6.QtCore import (
     QSignalBlocker,
     QMimeData,
 )
-from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, ToggleAction, CheckBoxAction, SpinBoxAction, ComboBoxAction, CustomSeparator
+from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, ToggleAction, CheckBoxAction, SpinBoxAction, ComboBoxAction, CustomSeparator, QuickAccessToolButton
 
 import json
 import os
@@ -1200,7 +1200,7 @@ class ModernMenu(RibbonBar):
                         self.CustomizeEnabled = True
                         # Just incase
                         self.CustomizeOffset = 6
-                        self.setRibbonHeight(self.RibbonHeight + self.CustomizeOffset)
+                        # self.setRibbonHeight(self.RibbonHeight + self.CustomizeOffset)
                         self.currentCategory().setMinimumHeight(
                             self.RibbonHeight - self.RibbonMinimalHeight - 3 + self.CustomizeOffset
                         )
@@ -1326,11 +1326,12 @@ class ModernMenu(RibbonBar):
                             EnableControl = titleLayout.itemAt(0).widget()
                             if EnableControl is not None:
                                 EnableControl.setVisible(True)
+                        
                         return
                     if self.CustomizeEnabled is True:
                         self.setStyleSheet(self.StyleSheet)
                         self.CustomizeEnabled = False
-                        self.setRibbonHeight(self.RibbonHeight)
+                        # self.setRibbonHeight(self.RibbonHeight)
                         self.currentCategory().setMinimumHeight(
                             self.RibbonHeight - self.RibbonMinimalHeight - 3
                         )
@@ -1747,7 +1748,10 @@ class ModernMenu(RibbonBar):
     
     
     def dragEnterEvent(self, event: QDragEnterEvent):        
-        if self.CustomizeEnabled is True:            
+        if self.CustomizeEnabled is True:
+            if self.dragIndicator_QuickAccess is None:
+                self.dragIndicator_QuickAccess = DragTargetIndicator(orientation="left")
+                      
             widget = event.source()
             count = 0
             parent = widget.parent()
@@ -1786,12 +1790,12 @@ class ModernMenu(RibbonBar):
         if self.CustomizeEnabled is True:
             widget = event.source()
             # If the widget is not a panel, continue here
-            if type(widget) is not RibbonPanel and type(widget) is not QToolBar:
+            if type(widget) is not RibbonPanel:
                 count = 0
                 while (count < 10):                    
                     if type(widget) is CustomControls:
                         break
-                    if type(widget) is QToolButton:
+                    if type(widget) is QuickAccessToolButton:
                         break
                     else:
                         if widget is not None:
@@ -1802,17 +1806,19 @@ class ModernMenu(RibbonBar):
                 panel = RibbonPanel()
                 QuickAccessToolBar = QToolBar()
                 count = 0
-                parent = widget.parent()
-                while (count < 10):
-                    if type(parent) is RibbonPanel:
-                        panel = parent
-                        break
-                    if type(parent) is QToolBar:
-                        QuickAccessToolBar = parent
-                        break
-                    else:
-                        parent = parent.parent()
-                    count = count + 1
+                parent = None
+                if widget is not None:
+                    parent = widget.parent()
+                    while (count < 10):
+                        if type(parent) is RibbonPanel:
+                            panel = parent
+                            break
+                        if type(parent) is QToolBar:
+                            QuickAccessToolBar = parent
+                            break
+                        else:
+                            parent = parent.parent()
+                        count = count + 1
 
                 if type(parent) is RibbonPanel:
                     gridLayout: QGridLayout = panel._actionsLayout
@@ -1855,11 +1861,12 @@ class ModernMenu(RibbonBar):
             
                 if type(parent) is QToolBar and parent.objectName() == "quickAccessToolBar":
                     # Get the relative position of the cursor
-                    buttonPos = QuickAccessToolBar.mapTo(QuickAccessToolBar ,event.pos())
-                    # Get the action
+                    buttonPos = QuickAccessToolBar.mapTo(QuickAccessToolBar , event.pos())
+                    # Get the button
                     button = QuickAccessToolBar.childAt(buttonPos)
+                    # Get the action before which the drag indicator has to be placed
                     beforeAction = QuickAccessToolBar.actionAt(buttonPos)
-                    if button is not None and type(button) is QToolButton:
+                    if button is not None and type(button) is QuickAccessToolButton:
                         dragIndicator = self.dragIndicator_QuickAccess
                         QuickAccessToolBar.insertWidget(beforeAction, dragIndicator)
                         dragIndicator.show()
@@ -1883,14 +1890,18 @@ class ModernMenu(RibbonBar):
         if widget is None:
             widget = event.source()
                 
-        if type(widget) is not RibbonPanel:
+        if type(widget) is not RibbonPanel and type(widget) is not QToolBar:
             # Get the panel
             panel = RibbonPanel()
+            QuickAccessToolBar = QToolBar()
             count = 0
             parent = widget.parent()
             while (count < 10):
                 if type(parent) is RibbonPanel:
                     panel = parent
+                    break
+                if type(parent) is QToolBar:
+                    QuickAccessToolBar = parent
                     break
                 else:
                     parent = parent.parent()
@@ -1902,7 +1913,8 @@ class ModernMenu(RibbonBar):
                 if type(parent) == RibbonNormalCategory or type(parent) == RibbonContextCategory:
                     break
                 else:
-                    parent = parent.parent()
+                    if parent is not None:
+                        parent = parent.parent()
                 count = count + 1
             # Get the gridlayout
             gridLayout: QGridLayout = panel._actionsLayout
@@ -1911,7 +1923,7 @@ class ModernMenu(RibbonBar):
             self.spaceWidget_Left.hide()
             self.spaceWidget_Right.hide()
             
-            if isinstance(panel, RibbonPanel):
+            if type(parent) is RibbonPanel:
                 replace = False
                 if not widget.geometry().contains(event.pos()):       
                     # Get the coordinates of the drag location
@@ -2003,6 +2015,39 @@ class ModernMenu(RibbonBar):
                         panel.close()
                         self.dragIndicator_Buttons.close()
 
+            if QuickAccessToolBar.objectName() == "quickAccessToolBar":
+                # print(QuickAccessToolBar.children())
+                widget = event.source()
+
+                # Get the relative position of the cursor
+                buttonPos = QuickAccessToolBar.mapTo(QuickAccessToolBar ,event.pos())
+                # Get the commandname under the mouse
+                action = QuickAccessToolBar.actionAt(buttonPos)
+                # insert the dragged widget
+                QuickAccessToolBar.insertWidget(action, widget)                
+                
+                # Get the new order of quickaccess buttons
+                OrderList: list = []
+                for item in QuickAccessToolBar.children():
+                    if type(item) is QuickAccessToolButton:
+                        OrderList.append(item.defaultAction().data())
+                
+                # Get the index of the dragged widget and remove it from the list
+                index = OrderList.index(widget.defaultAction().data())
+                OrderList.pop(index)
+                
+                # Get the index from the original item and insert the dragged item
+                child = QuickAccessToolBar.childAt(buttonPos)
+                if child is None or type(child) is not QuickAccessToolButton:
+                    return
+                index = OrderList.index(child.defaultAction().data())
+                OrderList.insert(index, widget.defaultAction().data())
+                
+                # Delete the drag indicater
+                dragIndicator = QuickAccessToolBar.findChild(DragTargetIndicator)
+                dragIndicator.deleteLater()
+                self.dragIndicator_QuickAccess.close()
+            
         if type(widget) is RibbonPanel:
             # Get the position (index, position)
             position = self.find_drop_location(event)
@@ -2369,7 +2414,7 @@ class ModernMenu(RibbonBar):
             # Define a width
             width = 0
             # Define a button
-            button = QToolButton()
+            button = QuickAccessToolButton(self.quickAccessToolBar())
             # set the default padding to zero
             padding = 0
 
@@ -2451,22 +2496,22 @@ class ModernMenu(RibbonBar):
 
                 button.setContentsMargins(3, 3, 3, 3)
                 
-                # Add dragdrop functionality
-                def mouseMoveEvent(self, e):
-                    if e.buttons() == Qt.MouseButton.LeftButton:
-                        try:
-                            drag = QDrag(self)
-                            mime = QMimeData()
-                            drag.setMimeData(mime)
-                            pixmap = QPixmap(self.size())
-                            self.render(pixmap)
-                            drag.setPixmap(pixmap)
+                # # Add dragdrop functionality
+                # def mouseMoveEvent(self, e):
+                #     if e.buttons() == Qt.MouseButton.LeftButton:
+                #         try:
+                #             drag = QDrag(self)
+                #             mime = QMimeData()
+                #             drag.setMimeData(mime)
+                #             pixmap = QPixmap(self.size())
+                #             self.render(pixmap)
+                #             drag.setPixmap(pixmap)
 
-                            drag.exec_(Qt.DropAction.MoveAction)
-                        except Exception as e:
-                            print(e)
+                #             drag.exec_(Qt.DropAction.MoveAction)
+                #         except Exception as e:
+                #             print(e)
                 
-                button.mouseMoveEvent = lambda e: mouseMoveEvent(button, e)
+                # button.mouseMoveEvent = lambda e: mouseMoveEvent(button, e)
 
                 # Add the button to the quickaccess toolbar
                 if len(button.actions()) > 0:
@@ -3646,7 +3691,7 @@ class ModernMenu(RibbonBar):
         category.setMaximumHeight(
             self.RibbonHeight - self.RibbonMinimalHeight - 3
         )
-        self.setRibbonHeight(self.RibbonHeight)
+        # self.setRibbonHeight(self.RibbonHeight)
 
         if self.DesignMenuLoaded is True:
             # Disable the quick toolbar, righttoolbar and application menu
@@ -3818,7 +3863,7 @@ class ModernMenu(RibbonBar):
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             if self.RibbonHeight > 0:
                 TB.setFixedHeight(self.RibbonHeight)
-                self.setRibbonHeight(self.RibbonHeight)
+                # self.setRibbonHeight(self.RibbonHeight)
         return
 
     def FoldRibbon(self, Ignore=False):

@@ -1335,6 +1335,29 @@ class CustomControls(QToolButton):
         )
         return btn
 
+class QuickAccessToolButton(QToolButton):
+    def __init__(
+        self,
+        parent=None,
+    ):
+        super().__init__(parent)
+        
+    
+    # Add dragdrop functionality
+    def mouseMoveEvent(self, e):
+        if e.buttons() == Qt.MouseButton.LeftButton:
+            try:
+                drag = QDrag(self)
+                mime = QMimeData()
+                drag.setMimeData(mime)
+                pixmap = QPixmap(self.size())
+                self.render(pixmap)
+                drag.setPixmap(pixmap)
+
+                drag.exec_(Qt.DropAction.MoveAction)
+            except Exception as e:
+                print(e)
+
 class CustomSeparator(RibbonSeparator):
     def mouseMoveEvent(self, e):
         if e.buttons() == Qt.MouseButton.LeftButton:

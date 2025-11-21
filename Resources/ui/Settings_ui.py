@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsVMEODA.ui'
+## Form generated from reading UI file 'SettingsRAwuxS.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
+from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
     QFrame, QGridLayout, QGroupBox, QLabel,
     QPushButton, QScrollArea, QSizePolicy, QSlider,
     QSpacerItem, QSpinBox, QTabWidget, QToolButton,
@@ -107,6 +107,7 @@ class Ui_Settings(object):
         self.label_4.setSizePolicy(sizePolicy4)
         self.label_4.setMinimumSize(QSize(400, 0))
         self.label_4.setFrameShape(QFrame.Shape.Box)
+        self.label_4.setText(u"...\\")
         self.label_4.setScaledContents(True)
         self.label_4.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
@@ -276,39 +277,44 @@ class Ui_Settings(object):
         self.gridLayout_5.setObjectName(u"gridLayout_5")
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
-        self.label_23 = QLabel(self.groupBox_4)
-        self.label_23.setObjectName(u"label_23")
+        self.label_5 = QLabel(self.groupBox_4)
+        self.label_5.setObjectName(u"label_5")
 
-        self.gridLayout.addWidget(self.label_23, 5, 0, 1, 1)
+        self.gridLayout.addWidget(self.label_5, 3, 0, 1, 1)
 
-        self.IconSize_Medium = QSpinBox(self.groupBox_4)
-        self.IconSize_Medium.setObjectName(u"IconSize_Medium")
+        self.label_22 = QLabel(self.groupBox_4)
+        self.label_22.setObjectName(u"label_22")
+
+        self.gridLayout.addWidget(self.label_22, 7, 0, 1, 1)
+
+        self.label_11 = QLabel(self.groupBox_4)
+        self.label_11.setObjectName(u"label_11")
         sizePolicy8 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
         sizePolicy8.setHorizontalStretch(0)
         sizePolicy8.setVerticalStretch(0)
-        sizePolicy8.setHeightForWidth(self.IconSize_Medium.sizePolicy().hasHeightForWidth())
-        self.IconSize_Medium.setSizePolicy(sizePolicy8)
-        self.IconSize_Medium.setMinimumSize(QSize(50, 20))
-        self.IconSize_Medium.setBaseSize(QSize(0, 0))
-        self.IconSize_Medium.setFont(font1)
-        self.IconSize_Medium.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.IconSize_Medium.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
-        self.IconSize_Medium.setMinimum(16)
-        self.IconSize_Medium.setMaximum(48)
-        self.IconSize_Medium.setValue(44)
+        sizePolicy8.setHeightForWidth(self.label_11.sizePolicy().hasHeightForWidth())
+        self.label_11.setSizePolicy(sizePolicy8)
+        self.label_11.setMinimumSize(QSize(130, 0))
+        self.label_11.setFont(font1)
 
-        self.gridLayout.addWidget(self.IconSize_Medium, 1, 1, 1, 1)
+        self.gridLayout.addWidget(self.label_11, 1, 0, 1, 1)
 
-        self.TabbarHeight = QSpinBox(self.groupBox_4)
-        self.TabbarHeight.setObjectName(u"TabbarHeight")
-        self.TabbarHeight.setMinimumSize(QSize(50, 20))
-        self.TabbarHeight.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.LinkIconSizes = QCheckBox(self.groupBox_4)
+        self.LinkIconSizes.setObjectName(u"LinkIconSizes")
 
-        self.gridLayout.addWidget(self.TabbarHeight, 5, 1, 1, 1)
+        self.gridLayout.addWidget(self.LinkIconSizes, 0, 2, 3, 1)
 
         self.IconSize_ApplicationButton = QSpinBox(self.groupBox_4)
         self.IconSize_ApplicationButton.setObjectName(u"IconSize_ApplicationButton")
-        self.IconSize_ApplicationButton.setMinimumSize(QSize(50, 20))
+        sizePolicy8.setHeightForWidth(self.IconSize_ApplicationButton.sizePolicy().hasHeightForWidth())
+        self.IconSize_ApplicationButton.setSizePolicy(sizePolicy8)
+        self.IconSize_ApplicationButton.setMinimumSize(QSize(60, 20))
+        self.IconSize_ApplicationButton.setBaseSize(QSize(0, 0))
+        font2 = QFont()
+        font2.setBold(False)
+        font2.setKerning(True)
+        self.IconSize_ApplicationButton.setFont(font2)
+        self.IconSize_ApplicationButton.setFrame(True)
         self.IconSize_ApplicationButton.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.IconSize_ApplicationButton.setMinimum(30)
         self.IconSize_ApplicationButton.setMaximum(200)
@@ -316,15 +322,82 @@ class Ui_Settings(object):
 
         self.gridLayout.addWidget(self.IconSize_ApplicationButton, 3, 1, 1, 1)
 
-        self.label_22 = QLabel(self.groupBox_4)
-        self.label_22.setObjectName(u"label_22")
+        self.IconSize_rightToolbarButton = QSpinBox(self.groupBox_4)
+        self.IconSize_rightToolbarButton.setObjectName(u"IconSize_rightToolbarButton")
+        sizePolicy6.setHeightForWidth(self.IconSize_rightToolbarButton.sizePolicy().hasHeightForWidth())
+        self.IconSize_rightToolbarButton.setSizePolicy(sizePolicy6)
+        self.IconSize_rightToolbarButton.setMinimumSize(QSize(60, 20))
+        self.IconSize_rightToolbarButton.setBaseSize(QSize(0, 0))
+        self.IconSize_rightToolbarButton.setFont(font2)
+        self.IconSize_rightToolbarButton.setFrame(True)
+        self.IconSize_rightToolbarButton.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.gridLayout.addWidget(self.label_22, 6, 0, 1, 1)
+        self.gridLayout.addWidget(self.IconSize_rightToolbarButton, 7, 1, 1, 1)
 
-        self.label_5 = QLabel(self.groupBox_4)
-        self.label_5.setObjectName(u"label_5")
+        self.SizeButtonBox = QFrame(self.groupBox_4)
+        self.SizeButtonBox.setObjectName(u"SizeButtonBox")
+        self.SizeButtonBox.setAutoFillBackground(False)
+        self.SizeButtonBox.setStyleSheet(u"border-right-color: rgb(255, 0, 0);")
+        self.SizeButtonBox.setFrameShape(QFrame.Shape.StyledPanel)
+        self.SizeButtonBox.setFrameShadow(QFrame.Shadow.Plain)
+        self.SizeButtonBox.setMidLineWidth(0)
+        self.verticalLayout = QVBoxLayout(self.SizeButtonBox)
+        self.verticalLayout.setSpacing(6)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.IconSize_Small = QSpinBox(self.SizeButtonBox)
+        self.IconSize_Small.setObjectName(u"IconSize_Small")
+        sizePolicy6.setHeightForWidth(self.IconSize_Small.sizePolicy().hasHeightForWidth())
+        self.IconSize_Small.setSizePolicy(sizePolicy6)
+        self.IconSize_Small.setMinimumSize(QSize(60, 20))
+        self.IconSize_Small.setSizeIncrement(QSize(0, 0))
+        self.IconSize_Small.setBaseSize(QSize(0, 0))
+        self.IconSize_Small.setFont(font2)
+        self.IconSize_Small.setFocusPolicy(Qt.FocusPolicy.WheelFocus)
+        self.IconSize_Small.setFrame(True)
+        self.IconSize_Small.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.IconSize_Small.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
+        self.IconSize_Small.setProperty(u"showGroupSeparator", False)
+        self.IconSize_Small.setMinimum(16)
+        self.IconSize_Small.setMaximum(36)
+        self.IconSize_Small.setValue(24)
 
-        self.gridLayout.addWidget(self.label_5, 3, 0, 1, 1)
+        self.verticalLayout.addWidget(self.IconSize_Small)
+
+        self.IconSize_Medium = QSpinBox(self.SizeButtonBox)
+        self.IconSize_Medium.setObjectName(u"IconSize_Medium")
+        sizePolicy6.setHeightForWidth(self.IconSize_Medium.sizePolicy().hasHeightForWidth())
+        self.IconSize_Medium.setSizePolicy(sizePolicy6)
+        self.IconSize_Medium.setMinimumSize(QSize(60, 20))
+        self.IconSize_Medium.setBaseSize(QSize(0, 0))
+        self.IconSize_Medium.setFont(font2)
+        self.IconSize_Medium.setFrame(True)
+        self.IconSize_Medium.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.IconSize_Medium.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
+        self.IconSize_Medium.setMinimum(16)
+        self.IconSize_Medium.setMaximum(48)
+        self.IconSize_Medium.setValue(36)
+
+        self.verticalLayout.addWidget(self.IconSize_Medium)
+
+        self.IconSize_Large = QSpinBox(self.SizeButtonBox)
+        self.IconSize_Large.setObjectName(u"IconSize_Large")
+        sizePolicy6.setHeightForWidth(self.IconSize_Large.sizePolicy().hasHeightForWidth())
+        self.IconSize_Large.setSizePolicy(sizePolicy6)
+        self.IconSize_Large.setMinimumSize(QSize(60, 20))
+        self.IconSize_Large.setBaseSize(QSize(0, 0))
+        self.IconSize_Large.setFont(font2)
+        self.IconSize_Large.setFrame(True)
+        self.IconSize_Large.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.IconSize_Large.setMinimum(16)
+        self.IconSize_Large.setMaximum(120)
+        self.IconSize_Large.setValue(72)
+        self.IconSize_Large.setDisplayIntegerBase(10)
+
+        self.verticalLayout.addWidget(self.IconSize_Large)
+
+
+        self.gridLayout.addWidget(self.SizeButtonBox, 0, 1, 3, 1)
 
         self.label_10 = QLabel(self.groupBox_4)
         self.label_10.setObjectName(u"label_10")
@@ -335,75 +408,54 @@ class Ui_Settings(object):
 
         self.gridLayout.addWidget(self.label_10, 0, 0, 1, 1)
 
-        self.label_21 = QLabel(self.groupBox_4)
-        self.label_21.setObjectName(u"label_21")
+        self.label_23 = QLabel(self.groupBox_4)
+        self.label_23.setObjectName(u"label_23")
 
-        self.gridLayout.addWidget(self.label_21, 4, 0, 1, 1)
-
-        self.label_11 = QLabel(self.groupBox_4)
-        self.label_11.setObjectName(u"label_11")
-        sizePolicy8.setHeightForWidth(self.label_11.sizePolicy().hasHeightForWidth())
-        self.label_11.setSizePolicy(sizePolicy8)
-        self.label_11.setMinimumSize(QSize(130, 0))
-        self.label_11.setFont(font1)
-
-        self.gridLayout.addWidget(self.label_11, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.label_23, 6, 0, 1, 1)
 
         self.IconSize_QuickAccessButton = QSpinBox(self.groupBox_4)
         self.IconSize_QuickAccessButton.setObjectName(u"IconSize_QuickAccessButton")
-        self.IconSize_QuickAccessButton.setMinimumSize(QSize(50, 20))
+        sizePolicy6.setHeightForWidth(self.IconSize_QuickAccessButton.sizePolicy().hasHeightForWidth())
+        self.IconSize_QuickAccessButton.setSizePolicy(sizePolicy6)
+        self.IconSize_QuickAccessButton.setMinimumSize(QSize(60, 20))
+        self.IconSize_QuickAccessButton.setBaseSize(QSize(0, 0))
+        self.IconSize_QuickAccessButton.setFont(font2)
+        self.IconSize_QuickAccessButton.setFrame(True)
         self.IconSize_QuickAccessButton.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.IconSize_QuickAccessButton.setMinimum(16)
         self.IconSize_QuickAccessButton.setMaximum(36)
+        self.IconSize_QuickAccessButton.setValue(24)
 
-        self.gridLayout.addWidget(self.IconSize_QuickAccessButton, 4, 1, 1, 1)
+        self.gridLayout.addWidget(self.IconSize_QuickAccessButton, 5, 1, 1, 1)
 
-        self.IconSize_rightToolbarButton = QSpinBox(self.groupBox_4)
-        self.IconSize_rightToolbarButton.setObjectName(u"IconSize_rightToolbarButton")
-        self.IconSize_rightToolbarButton.setMinimumSize(QSize(50, 20))
-        self.IconSize_rightToolbarButton.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_21 = QLabel(self.groupBox_4)
+        self.label_21.setObjectName(u"label_21")
 
-        self.gridLayout.addWidget(self.IconSize_rightToolbarButton, 6, 1, 1, 1)
+        self.gridLayout.addWidget(self.label_21, 5, 0, 1, 1)
 
         self.label_25 = QLabel(self.groupBox_4)
         self.label_25.setObjectName(u"label_25")
 
         self.gridLayout.addWidget(self.label_25, 2, 0, 1, 1)
 
-        self.IconSize_Large = QSpinBox(self.groupBox_4)
-        self.IconSize_Large.setObjectName(u"IconSize_Large")
-        self.IconSize_Large.setMinimumSize(QSize(50, 0))
-        self.IconSize_Large.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.IconSize_Large.setMinimum(16)
-        self.IconSize_Large.setMaximum(120)
+        self.TabbarHeight = QSpinBox(self.groupBox_4)
+        self.TabbarHeight.setObjectName(u"TabbarHeight")
+        sizePolicy6.setHeightForWidth(self.TabbarHeight.sizePolicy().hasHeightForWidth())
+        self.TabbarHeight.setSizePolicy(sizePolicy6)
+        self.TabbarHeight.setMinimumSize(QSize(60, 20))
+        self.TabbarHeight.setBaseSize(QSize(0, 0))
+        self.TabbarHeight.setFont(font2)
+        self.TabbarHeight.setFrame(True)
+        self.TabbarHeight.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.gridLayout.addWidget(self.IconSize_Large, 2, 1, 1, 1)
-
-        self.IconSize_Small = QSpinBox(self.groupBox_4)
-        self.IconSize_Small.setObjectName(u"IconSize_Small")
-        sizePolicy8.setHeightForWidth(self.IconSize_Small.sizePolicy().hasHeightForWidth())
-        self.IconSize_Small.setSizePolicy(sizePolicy8)
-        self.IconSize_Small.setMinimumSize(QSize(50, 20))
-        self.IconSize_Small.setSizeIncrement(QSize(0, 0))
-        self.IconSize_Small.setBaseSize(QSize(0, 0))
-        self.IconSize_Small.setFont(font1)
-        self.IconSize_Small.setFocusPolicy(Qt.FocusPolicy.WheelFocus)
-        self.IconSize_Small.setFrame(True)
-        self.IconSize_Small.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.IconSize_Small.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
-        self.IconSize_Small.setProperty(u"showGroupSeparator", False)
-        self.IconSize_Small.setMinimum(16)
-        self.IconSize_Small.setMaximum(36)
-        self.IconSize_Small.setValue(24)
-
-        self.gridLayout.addWidget(self.IconSize_Small, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.TabbarHeight, 6, 1, 1, 1)
 
 
-        self.gridLayout_5.addLayout(self.gridLayout, 1, 0, 1, 1)
+        self.gridLayout_5.addLayout(self.gridLayout, 2, 0, 1, 1)
 
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout_5.addItem(self.horizontalSpacer_3, 1, 1, 1, 1)
+        self.gridLayout_5.addItem(self.horizontalSpacer_3, 2, 1, 1, 1)
 
 
         self.gridLayout_3.addWidget(self.groupBox_4, 1, 0, 1, 1)
@@ -558,6 +610,7 @@ class Ui_Settings(object):
         self.label_7 = QLabel(self.groupBox_2)
         self.label_7.setObjectName(u"label_7")
         self.label_7.setFrameShape(QFrame.Shape.Box)
+        self.label_7.setText(u"...\\")
         self.label_7.setScaledContents(True)
         self.label_7.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
@@ -682,9 +735,9 @@ class Ui_Settings(object):
 
         self.label_41 = QLabel(self.tab)
         self.label_41.setObjectName(u"label_41")
-        font2 = QFont()
-        font2.setItalic(True)
-        self.label_41.setFont(font2)
+        font3 = QFont()
+        font3.setItalic(True)
+        self.label_41.setFont(font3)
 
         self.gridLayout_14.addWidget(self.label_41, 2, 0, 1, 1)
 
@@ -793,6 +846,7 @@ class Ui_Settings(object):
         self.Tab_Scroll_Left.setMinimumSize(QSize(10, 20))
         self.Tab_Scroll_Left.setMaximumSize(QSize(20, 20))
         self.Tab_Scroll_Left.setBaseSize(QSize(10, 40))
+        self.Tab_Scroll_Left.setText(u"")
 
         self.gridLayout_22.addWidget(self.Tab_Scroll_Left, 0, 1, 1, 1)
 
@@ -808,6 +862,7 @@ class Ui_Settings(object):
         self.Tab_Scroll_Right.setMinimumSize(QSize(10, 20))
         self.Tab_Scroll_Right.setMaximumSize(QSize(20, 20))
         self.Tab_Scroll_Right.setBaseSize(QSize(10, 40))
+        self.Tab_Scroll_Right.setText(u"")
 
         self.gridLayout_22.addWidget(self.Tab_Scroll_Right, 1, 1, 1, 1)
 
@@ -822,6 +877,7 @@ class Ui_Settings(object):
         self.Ribbon_Scroll_Left.setSizePolicy(sizePolicy6)
         self.Ribbon_Scroll_Left.setMinimumSize(QSize(20, 60))
         self.Ribbon_Scroll_Left.setMaximumSize(QSize(20, 60))
+        self.Ribbon_Scroll_Left.setText(u"")
 
         self.gridLayout_22.addWidget(self.Ribbon_Scroll_Left, 2, 1, 1, 1)
 
@@ -836,6 +892,7 @@ class Ui_Settings(object):
         self.Ribbon_Scroll_Right.setSizePolicy(sizePolicy6)
         self.Ribbon_Scroll_Right.setMinimumSize(QSize(20, 60))
         self.Ribbon_Scroll_Right.setMaximumSize(QSize(20, 60))
+        self.Ribbon_Scroll_Right.setText(u"")
 
         self.gridLayout_22.addWidget(self.Ribbon_Scroll_Right, 3, 1, 1, 1)
 
@@ -851,6 +908,7 @@ class Ui_Settings(object):
         self.MoreCommands.setMinimumSize(QSize(30, 20))
         self.MoreCommands.setMaximumSize(QSize(30, 20))
         self.MoreCommands.setBaseSize(QSize(30, 30))
+        self.MoreCommands.setText(u"")
 
         self.gridLayout_22.addWidget(self.MoreCommands, 4, 1, 1, 1)
 
@@ -865,6 +923,7 @@ class Ui_Settings(object):
         self.pinButton_open.setSizePolicy(sizePolicy6)
         self.pinButton_open.setMinimumSize(QSize(30, 30))
         self.pinButton_open.setMaximumSize(QSize(30, 30))
+        self.pinButton_open.setText(u"")
 
         self.gridLayout_22.addWidget(self.pinButton_open, 5, 1, 1, 1)
 
@@ -880,6 +939,7 @@ class Ui_Settings(object):
         self.pinButton_closed.setMinimumSize(QSize(30, 30))
         self.pinButton_closed.setMaximumSize(QSize(30, 30))
         self.pinButton_closed.setBaseSize(QSize(30, 30))
+        self.pinButton_closed.setText(u"")
 
         self.gridLayout_22.addWidget(self.pinButton_closed, 6, 1, 1, 1)
 
@@ -915,6 +975,7 @@ class Ui_Settings(object):
         self.gridLayout_20.setVerticalSpacing(6)
         self.Color_Background_App = Gui_ColorButton(self.ColorS)
         self.Color_Background_App.setObjectName(u"Color_Background_App")
+        self.Color_Background_App.setText(u"")
 
         self.gridLayout_20.addWidget(self.Color_Background_App, 2, 1, 1, 2)
 
@@ -928,6 +989,7 @@ class Ui_Settings(object):
 
         self.Color_Borders = Gui_ColorButton(self.ColorS)
         self.Color_Borders.setObjectName(u"Color_Borders")
+        self.Color_Borders.setText(u"")
 
         self.gridLayout_20.addWidget(self.Color_Borders, 0, 1, 1, 2)
 
@@ -949,6 +1011,7 @@ class Ui_Settings(object):
 
         self.Color_Background_Hover = Gui_ColorButton(self.ColorS)
         self.Color_Background_Hover.setObjectName(u"Color_Background_Hover")
+        self.Color_Background_Hover.setText(u"")
 
         self.gridLayout_20.addWidget(self.Color_Background_Hover, 1, 1, 1, 2)
 
@@ -979,6 +1042,52 @@ class Ui_Settings(object):
         self.tab_3.setObjectName(u"tab_3")
         self.gridLayout_34 = QGridLayout(self.tab_3)
         self.gridLayout_34.setObjectName(u"gridLayout_34")
+        self.groupBox_11 = QGroupBox(self.tab_3)
+        self.groupBox_11.setObjectName(u"groupBox_11")
+        self.gridLayout_29 = QGridLayout(self.groupBox_11)
+        self.gridLayout_29.setObjectName(u"gridLayout_29")
+        self.horizontalSpacer_8 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_29.addItem(self.horizontalSpacer_8, 0, 1, 1, 1)
+
+        self.gridLayout_27 = QGridLayout()
+        self.gridLayout_27.setObjectName(u"gridLayout_27")
+        self.label_27 = QLabel(self.groupBox_11)
+        self.label_27.setObjectName(u"label_27")
+
+        self.gridLayout_27.addWidget(self.label_27, 0, 0, 1, 1)
+
+        self.PreferedViewPanel = QComboBox(self.groupBox_11)
+        self.PreferedViewPanel.addItem("")
+        self.PreferedViewPanel.addItem("")
+        self.PreferedViewPanel.addItem("")
+        self.PreferedViewPanel.addItem("")
+        self.PreferedViewPanel.setObjectName(u"PreferedViewPanel")
+        self.PreferedViewPanel.setMinimumSize(QSize(200, 0))
+
+        self.gridLayout_27.addWidget(self.PreferedViewPanel, 0, 1, 1, 1)
+
+
+        self.gridLayout_29.addLayout(self.gridLayout_27, 0, 0, 1, 1)
+
+        self.gridLayout_31 = QGridLayout()
+        self.gridLayout_31.setObjectName(u"gridLayout_31")
+        self.EnableToolsPanel = QCheckBox(self.groupBox_11)
+        self.EnableToolsPanel.setObjectName(u"EnableToolsPanel")
+        self.EnableToolsPanel.setChecked(True)
+
+        self.gridLayout_31.addWidget(self.EnableToolsPanel, 0, 0, 1, 1)
+
+
+        self.gridLayout_29.addLayout(self.gridLayout_31, 1, 0, 1, 1)
+
+
+        self.gridLayout_34.addWidget(self.groupBox_11, 0, 0, 1, 1)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_34.addItem(self.verticalSpacer_3, 4, 0, 1, 1)
+
         self.EnableOverlay = QGroupBox(self.tab_3)
         self.EnableOverlay.setObjectName(u"EnableOverlay")
         sizePolicy4.setHeightForWidth(self.EnableOverlay.sizePolicy().hasHeightForWidth())
@@ -1025,53 +1134,7 @@ class Ui_Settings(object):
         self.gridLayout_32.addItem(self.horizontalSpacer_10, 0, 2, 1, 1)
 
 
-        self.gridLayout_34.addWidget(self.EnableOverlay, 1, 0, 2, 2)
-
-        self.groupBox_11 = QGroupBox(self.tab_3)
-        self.groupBox_11.setObjectName(u"groupBox_11")
-        self.gridLayout_29 = QGridLayout(self.groupBox_11)
-        self.gridLayout_29.setObjectName(u"gridLayout_29")
-        self.horizontalSpacer_8 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_29.addItem(self.horizontalSpacer_8, 0, 1, 1, 1)
-
-        self.gridLayout_27 = QGridLayout()
-        self.gridLayout_27.setObjectName(u"gridLayout_27")
-        self.label_27 = QLabel(self.groupBox_11)
-        self.label_27.setObjectName(u"label_27")
-
-        self.gridLayout_27.addWidget(self.label_27, 0, 0, 1, 1)
-
-        self.PreferedViewPanel = QComboBox(self.groupBox_11)
-        self.PreferedViewPanel.addItem("")
-        self.PreferedViewPanel.addItem("")
-        self.PreferedViewPanel.addItem("")
-        self.PreferedViewPanel.addItem("")
-        self.PreferedViewPanel.setObjectName(u"PreferedViewPanel")
-        self.PreferedViewPanel.setMinimumSize(QSize(200, 0))
-
-        self.gridLayout_27.addWidget(self.PreferedViewPanel, 0, 1, 1, 1)
-
-
-        self.gridLayout_29.addLayout(self.gridLayout_27, 0, 0, 1, 1)
-
-        self.gridLayout_31 = QGridLayout()
-        self.gridLayout_31.setObjectName(u"gridLayout_31")
-        self.EnableToolsPanel = QCheckBox(self.groupBox_11)
-        self.EnableToolsPanel.setObjectName(u"EnableToolsPanel")
-        self.EnableToolsPanel.setChecked(True)
-
-        self.gridLayout_31.addWidget(self.EnableToolsPanel, 0, 0, 1, 1)
-
-
-        self.gridLayout_29.addLayout(self.gridLayout_31, 1, 0, 1, 1)
-
-
-        self.gridLayout_34.addWidget(self.groupBox_11, 0, 0, 1, 1)
-
-        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_34.addItem(self.verticalSpacer_3, 3, 0, 1, 1)
+        self.gridLayout_34.addWidget(self.EnableOverlay, 1, 0, 1, 1)
 
         self.tabWidget.addTab(self.tab_3, "")
 
@@ -1111,6 +1174,7 @@ class Ui_Settings(object):
 
         self.HelpButton = QToolButton(Settings)
         self.HelpButton.setObjectName(u"HelpButton")
+        self.HelpButton.setText(u"...")
 
         self.gridLayout_7.addWidget(self.HelpButton, 0, 5, 1, 1)
 
@@ -1127,7 +1191,7 @@ class Ui_Settings(object):
         self.FCOverlayEnabled.toggled.connect(self.label_26.setEnabled)
         self.FCOverlayEnabled.toggled.connect(self.UseButtonBackGround.setEnabled)
 
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Settings)
@@ -1138,7 +1202,6 @@ class Ui_Settings(object):
         self.groupBox.setTitle(QCoreApplication.translate("Settings", u"Backup settings", None))
         self.EnableBackup.setText(QCoreApplication.translate("Settings", u"Create backup", None))
         self.groupBox_Backup.setTitle(QCoreApplication.translate("Settings", u"Backup location", None))
-        self.label_4.setText(QCoreApplication.translate("Settings", u"...\\", None))
         self.BackUpLocation.setText(QCoreApplication.translate("Settings", u"Browse...", None))
         self.groupBox1.setTitle(QCoreApplication.translate("Settings", u"Ribbon settings", None))
         self.groupBox_3.setTitle(QCoreApplication.translate("Settings", u"Show text", None))
@@ -1162,12 +1225,13 @@ class Ui_Settings(object):
         self.label_36.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the toolbar positions: </p></body></html>", None))
         self.label_8.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">For linux users: When running under Wayland, you have to set a window rule to hide the titlebar or change your theme! See &quot; </span><a href=\"https://codeberg.org/apebbers/FreeCAD-Ribbon/wiki/Workarounds#wayland\"><span style=\" text-decoration: underline; color:#926ee4;\">Wayland workaround</span></a><span style=\" font-size:8pt; font-style:italic;\">&quot; for an example. </span></p></body></html>", None))
         self.groupBox_4.setTitle(QCoreApplication.translate("Settings", u"Button size", None))
-        self.label_23.setText(QCoreApplication.translate("Settings", u"Size of tabbar tabs:", None))
-        self.label_22.setText(QCoreApplication.translate("Settings", u"Size of right toolbar buttons:", None))
         self.label_5.setText(QCoreApplication.translate("Settings", u"Size of application button:", None))
-        self.label_10.setText(QCoreApplication.translate("Settings", u"Size of small buttons:", None))
-        self.label_21.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Size of quick access toolbar buttons:</p></body></html>", None))
+        self.label_22.setText(QCoreApplication.translate("Settings", u"Size of right toolbar buttons:", None))
         self.label_11.setText(QCoreApplication.translate("Settings", u"Size of medium buttons:", None))
+        self.LinkIconSizes.setText(QCoreApplication.translate("Settings", u"Link values", None))
+        self.label_10.setText(QCoreApplication.translate("Settings", u"Size of small buttons:", None))
+        self.label_23.setText(QCoreApplication.translate("Settings", u"Size of tabbar tabs:", None))
+        self.label_21.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Size of quick access toolbar buttons:</p></body></html>", None))
         self.label_25.setText(QCoreApplication.translate("Settings", u"Size of large buttons:", None))
         self.groupBox_5.setTitle(QCoreApplication.translate("Settings", u"Panels", None))
         self.label.setText(QCoreApplication.translate("Settings", u"No. of columns per panel:", None))
@@ -1178,7 +1242,6 @@ class Ui_Settings(object):
         self.label_35.setText(QCoreApplication.translate("Settings", u"Text size of panel titles", None))
         self.label_33.setText(QCoreApplication.translate("Settings", u"Text size of buttons", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("Settings", u"Select stylesheet", None))
-        self.label_7.setText(QCoreApplication.translate("Settings", u"...\\", None))
         self.StyleSheetLocation.setText(QCoreApplication.translate("Settings", u"Browse...", None))
         self.DebugMode.setText(QCoreApplication.translate("Settings", u"Debug mode", None))
         self.label_3.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-style:italic;\">Debug mode enables extra reports in the report view for debugging purposes.</span></p></body></html>", None))
@@ -1195,19 +1258,12 @@ class Ui_Settings(object):
         self.groupBox_9.setTitle(QCoreApplication.translate("Settings", u"Icons", None))
         self.CustomIcons.setText(QCoreApplication.translate("Settings", u"Enable custom icons", None))
         self.label_16.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Tab bar scroll left:</p></body></html>", None))
-        self.Tab_Scroll_Left.setText("")
         self.label_17.setText(QCoreApplication.translate("Settings", u"Tab bar scroll right:", None))
-        self.Tab_Scroll_Right.setText("")
         self.label_18.setText(QCoreApplication.translate("Settings", u"Ribbon bar scroll left:", None))
-        self.Ribbon_Scroll_Left.setText("")
         self.label_19.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Ribbon bar scroll right:</p></body></html>", None))
-        self.Ribbon_Scroll_Right.setText("")
         self.label_20.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>More commands button:</p></body></html>", None))
-        self.MoreCommands.setText("")
         self.label_28.setText(QCoreApplication.translate("Settings", u"Pin button - unpinned:", None))
-        self.pinButton_open.setText("")
         self.label_29.setText(QCoreApplication.translate("Settings", u"Pin button - pinned:", None))
-        self.pinButton_closed.setText("")
         self.groupBox_8.setTitle(QCoreApplication.translate("Settings", u"Colors", None))
         self.CustomColors.setText(QCoreApplication.translate("Settings", u"Enable custom colors", None))
         self.label_30.setText(QCoreApplication.translate("Settings", u"Set the color for buttons when hovering over them", None))
@@ -1215,14 +1271,6 @@ class Ui_Settings(object):
         self.label_9.setText(QCoreApplication.translate("Settings", u"Set the background color for the application button:", None))
         self.BorderTransparant.setText(QCoreApplication.translate("Settings", u"Set border invisible for ribbon buttons", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("Settings", u"Colors and icons", None))
-        self.EnableOverlay.setTitle(QCoreApplication.translate("Settings", u"Enable overlay", None))
-#if QT_CONFIG(tooltip)
-        self.FCOverlayEnabled.setToolTip(QCoreApplication.translate("Settings", u"Use the overlay function from FreeCAD.\n"
-"Uncheck this when there are issues with the overlay function and the FreeCAD Ribbon.", None))
-#endif // QT_CONFIG(tooltip)
-        self.FCOverlayEnabled.setText(QCoreApplication.translate("Settings", u"Use FreeCAD's overlay function.", None))
-        self.UseButtonBackGround.setText(QCoreApplication.translate("Settings", u"Use background on buttons", None))
-        self.label_26.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">The FreeCAD overlay function can give issues. Use at your own risk. Few functions are disabled when using the FreeCAD overlay function.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">When there are issues, place a file </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; \">&quot;OVERLAY_DISABLED&quot; </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; \">in the folder of the add-on. (No extension) This will restore the ribbon and its own overlay function.</span></p></body></html>", None))
         self.groupBox_11.setTitle(QCoreApplication.translate("Settings", u"Standard panels preference", None))
         self.label_27.setText(QCoreApplication.translate("Settings", u"Select preferred standard view panel: ", None))
         self.PreferedViewPanel.setItemText(0, QCoreApplication.translate("Settings", u"Individual views - Native", None))
@@ -1231,6 +1279,14 @@ class Ui_Settings(object):
         self.PreferedViewPanel.setItemText(3, QCoreApplication.translate("Settings", u"None", None))
 
         self.EnableToolsPanel.setText(QCoreApplication.translate("Settings", u"Use standard Tools panel", None))
+        self.EnableOverlay.setTitle(QCoreApplication.translate("Settings", u"Enable overlay", None))
+#if QT_CONFIG(tooltip)
+        self.FCOverlayEnabled.setToolTip(QCoreApplication.translate("Settings", u"Use the overlay function from FreeCAD.\n"
+"Uncheck this when there are issues with the overlay function and the FreeCAD Ribbon.", None))
+#endif // QT_CONFIG(tooltip)
+        self.FCOverlayEnabled.setText(QCoreApplication.translate("Settings", u"Use FreeCAD's overlay function.", None))
+        self.UseButtonBackGround.setText(QCoreApplication.translate("Settings", u"Use background on buttons", None))
+        self.label_26.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">The FreeCAD overlay function can give issues. Use at your own risk. Few functions are disabled when using the FreeCAD overlay function.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">When there are issues, place a file </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; \">&quot;OVERLAY_DISABLED&quot; </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; \">in the folder of the add-on. (No extension) This will restore the ribbon and its own overlay function.</span></p></body></html>", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("Settings", u"Miscellaneous", None))
         self.Cancel.setText(QCoreApplication.translate("Settings", u"Cancel", None))
 #if QT_CONFIG(shortcut)
@@ -1241,6 +1297,5 @@ class Ui_Settings(object):
 #if QT_CONFIG(shortcut)
         self.GenerateJsonExit.setShortcut("")
 #endif // QT_CONFIG(shortcut)
-        self.HelpButton.setText(QCoreApplication.translate("Settings", u"...", None))
     # retranslateUi
 
