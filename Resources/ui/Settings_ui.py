@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsUvaTGX.ui'
+## Form generated from reading UI file 'SettingscMUHMP.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -282,11 +282,6 @@ class Ui_Settings(object):
 
         self.gridLayout.addWidget(self.label_5, 3, 0, 1, 1)
 
-        self.label_22 = QLabel(self.groupBox_4)
-        self.label_22.setObjectName(u"label_22")
-
-        self.gridLayout.addWidget(self.label_22, 7, 0, 1, 1)
-
         self.label_11 = QLabel(self.groupBox_4)
         self.label_11.setObjectName(u"label_11")
         sizePolicy8 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
@@ -299,36 +294,15 @@ class Ui_Settings(object):
 
         self.gridLayout.addWidget(self.label_11, 1, 0, 1, 1)
 
-        self.LinkIconSizes = QCheckBox(self.groupBox_4)
-        self.LinkIconSizes.setObjectName(u"LinkIconSizes")
-        self.LinkIconSizes.setChecked(True)
-
-        self.gridLayout.addWidget(self.LinkIconSizes, 0, 2, 3, 1)
-
-        self.IconSize_ApplicationButton = QSpinBox(self.groupBox_4)
-        self.IconSize_ApplicationButton.setObjectName(u"IconSize_ApplicationButton")
-        sizePolicy8.setHeightForWidth(self.IconSize_ApplicationButton.sizePolicy().hasHeightForWidth())
-        self.IconSize_ApplicationButton.setSizePolicy(sizePolicy8)
-        self.IconSize_ApplicationButton.setMinimumSize(QSize(60, 20))
-        self.IconSize_ApplicationButton.setBaseSize(QSize(0, 0))
-        font2 = QFont()
-        font2.setBold(False)
-        font2.setKerning(True)
-        self.IconSize_ApplicationButton.setFont(font2)
-        self.IconSize_ApplicationButton.setFrame(True)
-        self.IconSize_ApplicationButton.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.IconSize_ApplicationButton.setMinimum(30)
-        self.IconSize_ApplicationButton.setMaximum(200)
-        self.IconSize_ApplicationButton.setValue(100)
-
-        self.gridLayout.addWidget(self.IconSize_ApplicationButton, 3, 1, 1, 1)
-
         self.IconSize_rightToolbarButton = QSpinBox(self.groupBox_4)
         self.IconSize_rightToolbarButton.setObjectName(u"IconSize_rightToolbarButton")
         sizePolicy6.setHeightForWidth(self.IconSize_rightToolbarButton.sizePolicy().hasHeightForWidth())
         self.IconSize_rightToolbarButton.setSizePolicy(sizePolicy6)
         self.IconSize_rightToolbarButton.setMinimumSize(QSize(60, 20))
         self.IconSize_rightToolbarButton.setBaseSize(QSize(0, 0))
+        font2 = QFont()
+        font2.setBold(False)
+        font2.setKerning(True)
         self.IconSize_rightToolbarButton.setFont(font2)
         self.IconSize_rightToolbarButton.setFrame(True)
         self.IconSize_rightToolbarButton.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -344,10 +318,43 @@ class Ui_Settings(object):
 
         self.gridLayout.addWidget(self.label_10, 0, 0, 1, 1)
 
-        self.label_23 = QLabel(self.groupBox_4)
-        self.label_23.setObjectName(u"label_23")
+        self.IconSize_ApplicationButton = QSpinBox(self.groupBox_4)
+        self.IconSize_ApplicationButton.setObjectName(u"IconSize_ApplicationButton")
+        sizePolicy8.setHeightForWidth(self.IconSize_ApplicationButton.sizePolicy().hasHeightForWidth())
+        self.IconSize_ApplicationButton.setSizePolicy(sizePolicy8)
+        self.IconSize_ApplicationButton.setMinimumSize(QSize(60, 20))
+        self.IconSize_ApplicationButton.setBaseSize(QSize(0, 0))
+        self.IconSize_ApplicationButton.setFont(font2)
+        self.IconSize_ApplicationButton.setFrame(True)
+        self.IconSize_ApplicationButton.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.IconSize_ApplicationButton.setMinimum(30)
+        self.IconSize_ApplicationButton.setMaximum(200)
+        self.IconSize_ApplicationButton.setValue(100)
 
-        self.gridLayout.addWidget(self.label_23, 6, 0, 1, 1)
+        self.gridLayout.addWidget(self.IconSize_ApplicationButton, 3, 1, 1, 1)
+
+        self.LinkIconSizes = QCheckBox(self.groupBox_4)
+        self.LinkIconSizes.setObjectName(u"LinkIconSizes")
+        self.LinkIconSizes.setChecked(True)
+
+        self.gridLayout.addWidget(self.LinkIconSizes, 0, 3, 3, 1)
+
+        self.TabbarHeight = QSpinBox(self.groupBox_4)
+        self.TabbarHeight.setObjectName(u"TabbarHeight")
+        sizePolicy6.setHeightForWidth(self.TabbarHeight.sizePolicy().hasHeightForWidth())
+        self.TabbarHeight.setSizePolicy(sizePolicy6)
+        self.TabbarHeight.setMinimumSize(QSize(60, 20))
+        self.TabbarHeight.setBaseSize(QSize(0, 0))
+        self.TabbarHeight.setFont(font2)
+        self.TabbarHeight.setFrame(True)
+        self.TabbarHeight.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout.addWidget(self.TabbarHeight, 6, 1, 1, 1)
+
+        self.label_22 = QLabel(self.groupBox_4)
+        self.label_22.setObjectName(u"label_22")
+
+        self.gridLayout.addWidget(self.label_22, 7, 0, 1, 1)
 
         self.IconSize_QuickAccessButton = QSpinBox(self.groupBox_4)
         self.IconSize_QuickAccessButton.setObjectName(u"IconSize_QuickAccessButton")
@@ -364,37 +371,22 @@ class Ui_Settings(object):
 
         self.gridLayout.addWidget(self.IconSize_QuickAccessButton, 5, 1, 1, 1)
 
-        self.label_21 = QLabel(self.groupBox_4)
-        self.label_21.setObjectName(u"label_21")
+        self.label_23 = QLabel(self.groupBox_4)
+        self.label_23.setObjectName(u"label_23")
 
-        self.gridLayout.addWidget(self.label_21, 5, 0, 1, 1)
+        self.gridLayout.addWidget(self.label_23, 6, 0, 1, 1)
 
         self.label_25 = QLabel(self.groupBox_4)
         self.label_25.setObjectName(u"label_25")
 
         self.gridLayout.addWidget(self.label_25, 2, 0, 1, 1)
 
-        self.TabbarHeight = QSpinBox(self.groupBox_4)
-        self.TabbarHeight.setObjectName(u"TabbarHeight")
-        sizePolicy6.setHeightForWidth(self.TabbarHeight.sizePolicy().hasHeightForWidth())
-        self.TabbarHeight.setSizePolicy(sizePolicy6)
-        self.TabbarHeight.setMinimumSize(QSize(60, 20))
-        self.TabbarHeight.setBaseSize(QSize(0, 0))
-        self.TabbarHeight.setFont(font2)
-        self.TabbarHeight.setFrame(True)
-        self.TabbarHeight.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_21 = QLabel(self.groupBox_4)
+        self.label_21.setObjectName(u"label_21")
 
-        self.gridLayout.addWidget(self.TabbarHeight, 6, 1, 1, 1)
+        self.gridLayout.addWidget(self.label_21, 5, 0, 1, 1)
 
-        self.SizeButtonBox = QGroupBox(self.groupBox_4)
-        self.SizeButtonBox.setObjectName(u"SizeButtonBox")
-        self.SizeButtonBox.setAutoFillBackground(False)
-        self.SizeButtonBox.setStyleSheet(u"QGroupBox: {border-right-color: rgb(255, 0, 0);}")
-        self.verticalLayout = QVBoxLayout(self.SizeButtonBox)
-        self.verticalLayout.setSpacing(6)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.IconSize_Small = QSpinBox(self.SizeButtonBox)
+        self.IconSize_Small = QSpinBox(self.groupBox_4)
         self.IconSize_Small.setObjectName(u"IconSize_Small")
         sizePolicy6.setHeightForWidth(self.IconSize_Small.sizePolicy().hasHeightForWidth())
         self.IconSize_Small.setSizePolicy(sizePolicy6)
@@ -411,9 +403,9 @@ class Ui_Settings(object):
         self.IconSize_Small.setMaximum(36)
         self.IconSize_Small.setValue(24)
 
-        self.verticalLayout.addWidget(self.IconSize_Small)
+        self.gridLayout.addWidget(self.IconSize_Small, 0, 1, 1, 1)
 
-        self.IconSize_Medium = QSpinBox(self.SizeButtonBox)
+        self.IconSize_Medium = QSpinBox(self.groupBox_4)
         self.IconSize_Medium.setObjectName(u"IconSize_Medium")
         sizePolicy6.setHeightForWidth(self.IconSize_Medium.sizePolicy().hasHeightForWidth())
         self.IconSize_Medium.setSizePolicy(sizePolicy6)
@@ -427,9 +419,9 @@ class Ui_Settings(object):
         self.IconSize_Medium.setMaximum(48)
         self.IconSize_Medium.setValue(36)
 
-        self.verticalLayout.addWidget(self.IconSize_Medium)
+        self.gridLayout.addWidget(self.IconSize_Medium, 1, 1, 1, 1)
 
-        self.IconSize_Large = QSpinBox(self.SizeButtonBox)
+        self.IconSize_Large = QSpinBox(self.groupBox_4)
         self.IconSize_Large.setObjectName(u"IconSize_Large")
         sizePolicy6.setHeightForWidth(self.IconSize_Large.sizePolicy().hasHeightForWidth())
         self.IconSize_Large.setSizePolicy(sizePolicy6)
@@ -443,10 +435,19 @@ class Ui_Settings(object):
         self.IconSize_Large.setValue(72)
         self.IconSize_Large.setDisplayIntegerBase(10)
 
-        self.verticalLayout.addWidget(self.IconSize_Large)
+        self.gridLayout.addWidget(self.IconSize_Large, 2, 1, 1, 1)
 
+        self.SizeButtonBox = QFrame(self.groupBox_4)
+        self.SizeButtonBox.setObjectName(u"SizeButtonBox")
+        self.SizeButtonBox.setMinimumSize(QSize(2, 0))
+        self.SizeButtonBox.setAutoFillBackground(False)
+        self.SizeButtonBox.setStyleSheet(u"")
+        self.verticalLayout = QVBoxLayout(self.SizeButtonBox)
+        self.verticalLayout.setSpacing(6)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
 
-        self.gridLayout.addWidget(self.SizeButtonBox, 0, 1, 3, 1)
+        self.gridLayout.addWidget(self.SizeButtonBox, 0, 2, 3, 1)
 
 
         self.gridLayout_5.addLayout(self.gridLayout, 2, 0, 1, 1)
@@ -1224,13 +1225,13 @@ class Ui_Settings(object):
         self.label_8.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">For linux users: When running under Wayland, you have to set a window rule to hide the titlebar or change your theme! See &quot; </span><a href=\"https://codeberg.org/apebbers/FreeCAD-Ribbon/wiki/Workarounds#wayland\"><span style=\" text-decoration: underline; color:#926ee4;\">Wayland workaround</span></a><span style=\" font-size:8pt; font-style:italic;\">&quot; for an example. </span></p></body></html>", None))
         self.groupBox_4.setTitle(QCoreApplication.translate("Settings", u"Button size", None))
         self.label_5.setText(QCoreApplication.translate("Settings", u"Size of application button:", None))
-        self.label_22.setText(QCoreApplication.translate("Settings", u"Size of right toolbar buttons:", None))
         self.label_11.setText(QCoreApplication.translate("Settings", u"Size of medium buttons:", None))
-        self.LinkIconSizes.setText(QCoreApplication.translate("Settings", u"Link values", None))
         self.label_10.setText(QCoreApplication.translate("Settings", u"Size of small buttons:", None))
+        self.LinkIconSizes.setText(QCoreApplication.translate("Settings", u"Link values", None))
+        self.label_22.setText(QCoreApplication.translate("Settings", u"Size of right toolbar buttons:", None))
         self.label_23.setText(QCoreApplication.translate("Settings", u"Size of tabbar tabs:", None))
-        self.label_21.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Size of quick access toolbar buttons:</p></body></html>", None))
         self.label_25.setText(QCoreApplication.translate("Settings", u"Size of large buttons:", None))
+        self.label_21.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Size of quick access toolbar buttons:</p></body></html>", None))
         self.groupBox_5.setTitle(QCoreApplication.translate("Settings", u"Panels", None))
         self.label.setText(QCoreApplication.translate("Settings", u"No. of columns per panel:", None))
         self.label_2.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-style:italic;\">Set to '0'  to disable the maximum of columns</span></p></body></html>", None))

@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL, QSize, Signal, QObject, QEvent
-from PySide.QtWidgets import (
+from PySide6.QtCore import Qt, SIGNAL, QSize, Signal, QObject, QEvent, QPoint
+from PySide6.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -38,8 +38,9 @@ from PySide.QtWidgets import (
     QWidget,
     QGroupBox,
     QMenu,
+    
 )
-from PySide.QtGui import QIcon, QPixmap, QColor
+from PySide6.QtGui import QIcon, QPixmap, QColor, QBrush, QPaintEvent, QPen, QPainter
 
 import sys
 import StyleMapping_Ribbon
@@ -259,7 +260,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.UseButtonBackGround.setDisabled(True)
         Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED = False
 
-        # load all settings
+        # region - load all settings
         #
         # General
         self.form.EnableBackup.setChecked(Parameters_Ribbon.ENABLE_BACKUP)
@@ -475,6 +476,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.HelpButton.setMinimumHeight(
             self.form.GenerateJsonExit.minimumHeight()
         )
+        # endregion
 
         # region - connect controls with functions----------------------------------------------------
         #
@@ -657,6 +659,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
 
+        self.form.SizeButtonBox.setStyleSheet("border-right: 2px solid red;")
         return
 
     # region - Control functions----------------------------------------------------------------------
