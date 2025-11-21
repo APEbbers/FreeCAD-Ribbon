@@ -4146,37 +4146,40 @@ class ModernMenu(RibbonBar):
         # and set the height accordingly
         #
         # If there are small, medium and large buttons
-        if self.MaxRowsPerWB[workbenchName]["Rows"]  == 3:
-            if (
-                Parameters_Ribbon.ICON_SIZE_SMALL * 3
-                >= Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
-                and Parameters_Ribbon.ICON_SIZE_SMALL * 3 >= LargeButtonHeight
-            ):
-                ribbonHeight = Parameters_Ribbon.ICON_SIZE_SMALL * 3 + 6
-            if (
-                (Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
-                > Parameters_Ribbon.ICON_SIZE_SMALL * 3
-                and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 > LargeButtonHeight)
-            ):
-                ribbonHeight = Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 + 4
-            if (
-                Parameters_Ribbon.ICON_SIZE_LARGE > Parameters_Ribbon.ICON_SIZE_SMALL * 3
-                and Parameters_Ribbon.ICON_SIZE_LARGE > Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
-            ):
+        if Parameters_Ribbon.LINK_ICON_SIZES is False:
+            if self.MaxRowsPerWB[workbenchName]["Rows"]  == 3:
+                if (
+                    Parameters_Ribbon.ICON_SIZE_SMALL * 3
+                    >= Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
+                    and Parameters_Ribbon.ICON_SIZE_SMALL * 3 >= LargeButtonHeight
+                ):
+                    ribbonHeight = Parameters_Ribbon.ICON_SIZE_SMALL * 3 + self.ButtonSpacing*2
+                if (
+                    (Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
+                    > Parameters_Ribbon.ICON_SIZE_SMALL * 3
+                    and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 > LargeButtonHeight)
+                ):
+                    ribbonHeight = Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 + self.ButtonSpacing
+                if (
+                    Parameters_Ribbon.ICON_SIZE_LARGE > Parameters_Ribbon.ICON_SIZE_SMALL * 3
+                    and Parameters_Ribbon.ICON_SIZE_LARGE > Parameters_Ribbon.ICON_SIZE_MEDIUM * 2
+                ):
+                    ribbonHeight = LargeButtonHeight
+            
+            # If there only medium or large buttons
+            if self.MaxRowsPerWB[workbenchName]["LargeButtonsPresent"] is True:
+                if self.MaxRowsPerWB[workbenchName]["Rows"]  == 2 and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 < LargeButtonHeight:
+                    ribbonHeight = LargeButtonHeight
+                if self.MaxRowsPerWB[workbenchName]["Rows"]  == 2 and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 >= LargeButtonHeight:
+                    ribbonHeight = Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 + self.ButtonSpacing
+            if self.MaxRowsPerWB[workbenchName]["LargeButtonsPresent"] is False and self.MaxRowsPerWB[workbenchName]["Rows"]  == 2:
+                ribbonHeight = Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 + self.ButtonSpacing
+            
+            # If there are only large buttons
+            if self.MaxRowsPerWB[workbenchName]["Rows"] == 1:
                 ribbonHeight = LargeButtonHeight
-        
-        # If there only medium or large buttons
-        if self.MaxRowsPerWB[workbenchName]["LargeButtonsPresent"] is True:
-            if self.MaxRowsPerWB[workbenchName]["Rows"]  == 2 and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 < LargeButtonHeight:
-                ribbonHeight = LargeButtonHeight
-            if self.MaxRowsPerWB[workbenchName]["Rows"]  == 2 and Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 >= LargeButtonHeight:
-                ribbonHeight = Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 + 4
-        if self.MaxRowsPerWB[workbenchName]["LargeButtonsPresent"] is False and self.MaxRowsPerWB[workbenchName]["Rows"]  == 2:
-            ribbonHeight = Parameters_Ribbon.ICON_SIZE_MEDIUM * 2 + 4
-        
-        # If there are only large buttons
-        if self.MaxRowsPerWB[workbenchName]["Rows"] == 1:
-            ribbonHeight = LargeButtonHeight
+        if Parameters_Ribbon.LINK_ICON_SIZES is True:
+            ribbonHeight = Parameters_Ribbon.ICON_SIZE_SMALL * 3 + self.ButtonSpacing*2
         return ribbonHeight + offset
 
     def ReturnCommandIcon(self, CommandName: str, pixmap: str = "") -> QIcon:
@@ -5247,6 +5250,10 @@ class ModernMenu(RibbonBar):
                                     ButtonSize = IconSize
                                 except Exception:
                                     pass
+                            if Parameters_Ribbon.LINK_ICON_SIZES is True:
+                                size = Parameters_Ribbon.ICON_SIZE_SMALL*1.5
+                                IconSize = QSize(size, size)
+                                ButtonSize = IconSize
                                 
                             Menu = None
                             if button.menu() is not None:
@@ -5307,6 +5314,10 @@ class ModernMenu(RibbonBar):
                                     if Parameters_Ribbon.DEBUG_MODE is True:
                                         print(e)
                                     pass
+                            if Parameters_Ribbon.LINK_ICON_SIZES is True:
+                                size = Parameters_Ribbon.ICON_SIZE_SMALL*3
+                                IconSize = QSize(size, size)
+                                ButtonSize = IconSize
                                 
                             Menu = None
                             if button.menu() is not None:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsRAwuxS.ui'
+## Form generated from reading UI file 'SettingsZvkgoT.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -301,6 +301,7 @@ class Ui_Settings(object):
 
         self.LinkIconSizes = QCheckBox(self.groupBox_4)
         self.LinkIconSizes.setObjectName(u"LinkIconSizes")
+        self.LinkIconSizes.setChecked(True)
 
         self.gridLayout.addWidget(self.LinkIconSizes, 0, 2, 3, 1)
 
@@ -337,7 +338,7 @@ class Ui_Settings(object):
         self.SizeButtonBox = QFrame(self.groupBox_4)
         self.SizeButtonBox.setObjectName(u"SizeButtonBox")
         self.SizeButtonBox.setAutoFillBackground(False)
-        self.SizeButtonBox.setStyleSheet(u"border-right-color: rgb(255, 0, 0);")
+        self.SizeButtonBox.setStyleSheet(u"QFrame: {border-right-color: rgb(255, 0, 0);}pr")
         self.SizeButtonBox.setFrameShape(QFrame.Shape.StyledPanel)
         self.SizeButtonBox.setFrameShadow(QFrame.Shadow.Plain)
         self.SizeButtonBox.setMidLineWidth(0)
