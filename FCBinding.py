@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -49,7 +49,7 @@ from PySide.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -85,7 +85,7 @@ from PySide.QtWidgets import (
     QStyleOption,
     QDialog,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1745,6 +1745,7 @@ class ModernMenu(RibbonBar):
     dragIndicator_Buttons = DragTargetIndicator(orientation="top", margins=0)
     dragIndicator_Panels = DragTargetIndicator(orientation="right")
     dragIndicator_QuickAccess = DragTargetIndicator(orientation="left")
+    dragAction_QuickAccess = None
     position = None
     rightColumnAdded = False
     spaceWidget_Left = RibbonToolButton()
@@ -1855,7 +1856,7 @@ class ModernMenu(RibbonBar):
                         gridLayout.addWidget(
                             self.dragIndicator_Buttons, position[0], position[1], rowSpan, 1
                         )
-                                    
+                                                            
                         # When you hide the source, the dragged widget disapears from the panel.
                         # For now It is left in, to keep the panel at the same size.
                         # e.source().hide()
@@ -1871,10 +1872,16 @@ class ModernMenu(RibbonBar):
                     button = QuickAccessToolBar.childAt(buttonPos)
                     # Get the action before which the drag indicator has to be placed
                     beforeAction = QuickAccessToolBar.actionAt(buttonPos)
+                    if type(button) is DragTargetIndicator or button is None:
+                        QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
                     if button is not None and type(button) is QuickAccessToolButton:
                         dragIndicator = self.dragIndicator_QuickAccess
-                        QuickAccessToolBar.insertWidget(beforeAction, dragIndicator)
-                        dragIndicator.show()
+                        if self.dragAction_QuickAccess is None:
+                            self.dragAction_QuickAccess = QuickAccessToolBar.insertWidget(beforeAction, dragIndicator)
+                            dragIndicator.show()
+                        else:
+                            QuickAccessToolBar.insertAction(beforeAction, self.dragAction_QuickAccess)
+                            self.dragAction_QuickAccess.setVisible(True)
                                         
             if type(widget) is RibbonPanel:
                 position: object= self.find_drop_location(event)
@@ -2050,11 +2057,9 @@ class ModernMenu(RibbonBar):
                 # Set the quickaccessCommands
                 self.quickAccessCommands = OrderList
                 
-                # Delete the drag indicater
-                dragIndicator = QuickAccessToolBar.findChild(DragTargetIndicator)
-                dragIndicator.setParent(None)
-                dragIndicator.close()
-                self.dragIndicator_QuickAccess.close()
+            # Delete the drag indicater
+            QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
+                
             
         if type(widget) is RibbonPanel:
             # Get the position (index, position)
