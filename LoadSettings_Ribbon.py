@@ -660,7 +660,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.tabWidget.setCurrentIndex(0)
         
         # Set a line (QFrame) right from the icon sizes for buttons
-        self.form.SizeButtonBox.setFixedWidth(5)
+        self.form.SizeButtonBox.setFixedWidth(8)
         self.form.SizeButtonBox.setStyleSheet("""border-right: 0.5px solid red;
                                               border-top: 0.5px solid red;
                                               border-bottom: 0.5px solid red;

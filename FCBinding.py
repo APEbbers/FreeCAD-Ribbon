@@ -1099,8 +1099,9 @@ class ModernMenu(RibbonBar):
                         RibbonButtonAction_Size.setMaximum(120)                        
                         RibbonButtonAction_Size.setValue(widget.height())
                         RibbonButtonAction_Size.setFixedWidth(82)
-                        RibbonButtonAction_Size.valueChanged.connect(lambda: self.on_ButtonSize_Changed(panel, widget, RibbonButtonAction_Size))
-                        self.contextMenu.addAction(RibbonButtonAction_Size)
+                        if Parameters_Ribbon.LINK_ICON_SIZES is False:    
+                            RibbonButtonAction_Size.valueChanged.connect(lambda: self.on_ButtonSize_Changed(panel, widget, RibbonButtonAction_Size))
+                            self.contextMenu.addAction(RibbonButtonAction_Size)
                         
                         # Set the dropdown for the button style
                         RibbonButtonAction_Style = ComboBoxAction(self, translate("FreeCAD Ribbon", "Set button type"))
@@ -1140,7 +1141,8 @@ class ModernMenu(RibbonBar):
                         # Disconnect the widgetActions
                         RibbonButtonAction_Style.currentTextChanged.disconnect()
                         RibbonButtonAction_Text.checkStateChanged.disconnect()
-                        RibbonButtonAction_Size.valueChanged.disconnect()
+                        if Parameters_Ribbon.LINK_ICON_SIZES is False:
+                            RibbonButtonAction_Size.valueChanged.disconnect()
                         AddSeparator_Left.triggered.disconnect()                                
                         AddSeparator_Right.triggered.disconnect()
                         ChangeButtonText.textChanged.disconnect()                            
