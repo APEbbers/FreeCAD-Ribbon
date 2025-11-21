@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide6.QtCore import Qt, SIGNAL, QSize, Signal, QObject, QEvent, QPoint
-from PySide6.QtWidgets import (
+from PySide.QtCore import Qt, SIGNAL, QSize, Signal, QObject, QEvent, QPoint
+from PySide.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -40,7 +40,7 @@ from PySide6.QtWidgets import (
     QMenu,
     
 )
-from PySide6.QtGui import QIcon, QPixmap, QColor, QBrush, QPaintEvent, QPen, QPainter
+from PySide.QtGui import QIcon, QPixmap, QColor, QBrush, QPaintEvent, QPen, QPainter
 
 import sys
 import StyleMapping_Ribbon
@@ -658,8 +658,14 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
 
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
-
-        self.form.SizeButtonBox.setStyleSheet("border-right: 2px solid red;")
+        
+        # Set a line (QFrame) right from the icon sizes for buttons
+        self.form.SizeButtonBox.setFixedWidth(5)
+        self.form.SizeButtonBox.setStyleSheet("""border-right: 0.5px solid red;
+                                              border-top: 0.5px solid red;
+                                              border-bottom: 0.5px solid red;
+                                              border-top-right-radius: 5px;
+                                              border-bottom-right-radius: 5px;""")
         return
 
     # region - Control functions----------------------------------------------------------------------

@@ -544,6 +544,9 @@
                     <layout class="QGridLayout" name="gridLayout_5">
                      <item row="2" column="0">
                       <layout class="QGridLayout" name="gridLayout">
+                       <property name="horizontalSpacing">
+                        <number>2</number>
+                       </property>
                        <item row="3" column="0">
                         <widget class="QLabel" name="label_5">
                          <property name="text">
@@ -945,7 +948,7 @@
                         <widget class="QFrame" name="SizeButtonBox">
                          <property name="minimumSize">
                           <size>
-                           <width>2</width>
+                           <width>5</width>
                            <height>0</height>
                           </size>
                          </property>
@@ -953,7 +956,11 @@
                           <bool>false</bool>
                          </property>
                          <property name="styleSheet">
-                          <string notr="true"/>
+                          <string notr="true">border-right: 2px solid red;
+                                              border-top: 2px solid red;
+                                              border-bottom: 2px solid red;
+                                              border-top-right-radius: 15px;
+                                              border-bottom-right-radius: 15px;</string>
                          </property>
                          <layout class="QVBoxLayout" name="verticalLayout">
                           <property name="spacing">
