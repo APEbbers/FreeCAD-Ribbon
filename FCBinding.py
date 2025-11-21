@@ -1434,6 +1434,9 @@ class ModernMenu(RibbonBar):
                         self.longPanels.clear()                        
                         panel = None
                         
+                        # Save the quickcommands order to the ribbon structure
+                        self.ribbonStructure["quickAccessCommands"] = self.quickAccessCommands
+                        
                         # Writing to ribbonStructure.json
                         JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
                         with open(JsonFile, "w") as outfile:
@@ -2044,10 +2047,13 @@ class ModernMenu(RibbonBar):
                     return
                 index = OrderList.index(child.defaultAction().data())
                 OrderList.insert(index, widget.defaultAction().data())
+                # Set the quickaccessCommands
+                self.quickAccessCommands = OrderList
                 
                 # Delete the drag indicater
                 dragIndicator = QuickAccessToolBar.findChild(DragTargetIndicator)
-                dragIndicator.deleteLater()
+                dragIndicator.setParent(None)
+                dragIndicator.close()
                 self.dragIndicator_QuickAccess.close()
             
         if type(widget) is RibbonPanel:
