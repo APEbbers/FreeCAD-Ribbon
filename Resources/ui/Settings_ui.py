@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsZvkgoT.ui'
+## Form generated from reading UI file 'SettingsUvaTGX.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -335,13 +335,61 @@ class Ui_Settings(object):
 
         self.gridLayout.addWidget(self.IconSize_rightToolbarButton, 7, 1, 1, 1)
 
-        self.SizeButtonBox = QFrame(self.groupBox_4)
+        self.label_10 = QLabel(self.groupBox_4)
+        self.label_10.setObjectName(u"label_10")
+        sizePolicy8.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
+        self.label_10.setSizePolicy(sizePolicy8)
+        self.label_10.setMinimumSize(QSize(130, 0))
+        self.label_10.setFont(font1)
+
+        self.gridLayout.addWidget(self.label_10, 0, 0, 1, 1)
+
+        self.label_23 = QLabel(self.groupBox_4)
+        self.label_23.setObjectName(u"label_23")
+
+        self.gridLayout.addWidget(self.label_23, 6, 0, 1, 1)
+
+        self.IconSize_QuickAccessButton = QSpinBox(self.groupBox_4)
+        self.IconSize_QuickAccessButton.setObjectName(u"IconSize_QuickAccessButton")
+        sizePolicy6.setHeightForWidth(self.IconSize_QuickAccessButton.sizePolicy().hasHeightForWidth())
+        self.IconSize_QuickAccessButton.setSizePolicy(sizePolicy6)
+        self.IconSize_QuickAccessButton.setMinimumSize(QSize(60, 20))
+        self.IconSize_QuickAccessButton.setBaseSize(QSize(0, 0))
+        self.IconSize_QuickAccessButton.setFont(font2)
+        self.IconSize_QuickAccessButton.setFrame(True)
+        self.IconSize_QuickAccessButton.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.IconSize_QuickAccessButton.setMinimum(16)
+        self.IconSize_QuickAccessButton.setMaximum(36)
+        self.IconSize_QuickAccessButton.setValue(24)
+
+        self.gridLayout.addWidget(self.IconSize_QuickAccessButton, 5, 1, 1, 1)
+
+        self.label_21 = QLabel(self.groupBox_4)
+        self.label_21.setObjectName(u"label_21")
+
+        self.gridLayout.addWidget(self.label_21, 5, 0, 1, 1)
+
+        self.label_25 = QLabel(self.groupBox_4)
+        self.label_25.setObjectName(u"label_25")
+
+        self.gridLayout.addWidget(self.label_25, 2, 0, 1, 1)
+
+        self.TabbarHeight = QSpinBox(self.groupBox_4)
+        self.TabbarHeight.setObjectName(u"TabbarHeight")
+        sizePolicy6.setHeightForWidth(self.TabbarHeight.sizePolicy().hasHeightForWidth())
+        self.TabbarHeight.setSizePolicy(sizePolicy6)
+        self.TabbarHeight.setMinimumSize(QSize(60, 20))
+        self.TabbarHeight.setBaseSize(QSize(0, 0))
+        self.TabbarHeight.setFont(font2)
+        self.TabbarHeight.setFrame(True)
+        self.TabbarHeight.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout.addWidget(self.TabbarHeight, 6, 1, 1, 1)
+
+        self.SizeButtonBox = QGroupBox(self.groupBox_4)
         self.SizeButtonBox.setObjectName(u"SizeButtonBox")
         self.SizeButtonBox.setAutoFillBackground(False)
-        self.SizeButtonBox.setStyleSheet(u"QFrame: {border-right-color: rgb(255, 0, 0);}pr")
-        self.SizeButtonBox.setFrameShape(QFrame.Shape.StyledPanel)
-        self.SizeButtonBox.setFrameShadow(QFrame.Shadow.Plain)
-        self.SizeButtonBox.setMidLineWidth(0)
+        self.SizeButtonBox.setStyleSheet(u"QGroupBox: {border-right-color: rgb(255, 0, 0);}")
         self.verticalLayout = QVBoxLayout(self.SizeButtonBox)
         self.verticalLayout.setSpacing(6)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -399,57 +447,6 @@ class Ui_Settings(object):
 
 
         self.gridLayout.addWidget(self.SizeButtonBox, 0, 1, 3, 1)
-
-        self.label_10 = QLabel(self.groupBox_4)
-        self.label_10.setObjectName(u"label_10")
-        sizePolicy8.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
-        self.label_10.setSizePolicy(sizePolicy8)
-        self.label_10.setMinimumSize(QSize(130, 0))
-        self.label_10.setFont(font1)
-
-        self.gridLayout.addWidget(self.label_10, 0, 0, 1, 1)
-
-        self.label_23 = QLabel(self.groupBox_4)
-        self.label_23.setObjectName(u"label_23")
-
-        self.gridLayout.addWidget(self.label_23, 6, 0, 1, 1)
-
-        self.IconSize_QuickAccessButton = QSpinBox(self.groupBox_4)
-        self.IconSize_QuickAccessButton.setObjectName(u"IconSize_QuickAccessButton")
-        sizePolicy6.setHeightForWidth(self.IconSize_QuickAccessButton.sizePolicy().hasHeightForWidth())
-        self.IconSize_QuickAccessButton.setSizePolicy(sizePolicy6)
-        self.IconSize_QuickAccessButton.setMinimumSize(QSize(60, 20))
-        self.IconSize_QuickAccessButton.setBaseSize(QSize(0, 0))
-        self.IconSize_QuickAccessButton.setFont(font2)
-        self.IconSize_QuickAccessButton.setFrame(True)
-        self.IconSize_QuickAccessButton.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.IconSize_QuickAccessButton.setMinimum(16)
-        self.IconSize_QuickAccessButton.setMaximum(36)
-        self.IconSize_QuickAccessButton.setValue(24)
-
-        self.gridLayout.addWidget(self.IconSize_QuickAccessButton, 5, 1, 1, 1)
-
-        self.label_21 = QLabel(self.groupBox_4)
-        self.label_21.setObjectName(u"label_21")
-
-        self.gridLayout.addWidget(self.label_21, 5, 0, 1, 1)
-
-        self.label_25 = QLabel(self.groupBox_4)
-        self.label_25.setObjectName(u"label_25")
-
-        self.gridLayout.addWidget(self.label_25, 2, 0, 1, 1)
-
-        self.TabbarHeight = QSpinBox(self.groupBox_4)
-        self.TabbarHeight.setObjectName(u"TabbarHeight")
-        sizePolicy6.setHeightForWidth(self.TabbarHeight.sizePolicy().hasHeightForWidth())
-        self.TabbarHeight.setSizePolicy(sizePolicy6)
-        self.TabbarHeight.setMinimumSize(QSize(60, 20))
-        self.TabbarHeight.setBaseSize(QSize(0, 0))
-        self.TabbarHeight.setFont(font2)
-        self.TabbarHeight.setFrame(True)
-        self.TabbarHeight.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout.addWidget(self.TabbarHeight, 6, 1, 1, 1)
 
 
         self.gridLayout_5.addLayout(self.gridLayout, 2, 0, 1, 1)
