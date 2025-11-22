@@ -1218,11 +1218,16 @@ class ModernMenu(RibbonBar):
                             panelName = objPanel.objectName()
                             gridLayout = objPanel._actionsLayout
                             for n in range(gridLayout.count()):
-                                control: QToolButton = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                                if control is not None:
-                                    StandardFunctions.add_keys_nested_dict(self.ButtonState, [panelName, control.actions().data()])
-                                    self.ButtonState[panelName][control.actions().data()] = control.actions().isEnabled()
-                                        
+                                try:
+                                    control: QToolButton = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                                    if control is not None:
+                                        StandardFunctions.add_keys_nested_dict(self.ButtonState, [panelName, control.actions().data()])
+                                        self.ButtonState[panelName][control.actions().data()] = control.actions().isEnabled()
+                                except Exception as e:
+                                    print(control)
+                                    print(e)
+                                    pass                    
+                                                            
                         # Enable all buttons, so you can access them with a right click
                         self.actionList = []
                         for child in mw.findChildren(QToolButton):
@@ -1248,22 +1253,24 @@ class ModernMenu(RibbonBar):
                                 control = gridLayout.itemAt(n).widget().findChild(CustomControls)
                                 if control is not None:                                    
                                     # Update the orderlist
-                                    command = control.actions().data()
+                                    command = None
+                                    try:
+                                        command = control.actions().data()
+                                    except Exception:
+                                        pass
                                     if command is None:
-                                        # toolButton = control.findChild(QToolButton, "CommandButton")
-                                        # print(toolButton.actions()[0])
                                         command = control.defaultAction()
                                     orderList.append(command)
 
                                     # Add the command if they don't exist
-                                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", control.actions().data(), "size"], "small")
+                                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", command, "size"], "small")
                                     # Set the sizes
                                     if control.objectName() == "CustomWidget_Small":
-                                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "small"
+                                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "small"
                                     if control.objectName() == "CustomWidget_Medium":
-                                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "medium"
+                                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "medium"
                                     if control.objectName() == "CustomWidget_Large":
-                                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "large"
+                                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "large"
                                 
                                 separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
                                 if separator is not None:
@@ -1296,19 +1303,26 @@ class ModernMenu(RibbonBar):
                                 gridLayout: QGridLayout = newPanel._actionsLayout
                                 for n in range(gridLayout.count()):
                                     control = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                                    if control is not None:                                    
+                                    if control is not None:                                                                       
                                         # Update the orderlist
-                                        orderList.append(control.actions().data())
+                                        command = None
+                                        try:
+                                            command = control.actions().data()
+                                        except Exception:
+                                            pass
+                                        if command is None:
+                                            command = control.defaultAction()
+                                        orderList.append(command)
 
                                         # Add the command if they don't exist
-                                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", control.actions().data(), "size"], "small")
+                                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", command, "size"], "small")
                                         # Set the sizes
                                         if control.objectName() == "CustomWidget_Small":
-                                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "small"
+                                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "small"
                                         if control.objectName() == "CustomWidget_Medium":
-                                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "medium"
+                                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "medium"
                                         if control.objectName() == "CustomWidget_Large":
-                                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][control.actions().data()]["size"] = "large"
+                                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "large"
 
                                     separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
                                     if separator is not None:
