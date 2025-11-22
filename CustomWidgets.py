@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 import typing
 import sys
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
@@ -39,7 +39,7 @@ from PySide.QtGui import (
     QPainter,
     
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QComboBox,
     QMainWindow,
     QSizePolicy,
@@ -55,7 +55,7 @@ from PySide.QtWidgets import (
     QWidgetAction,
     QLineEdit,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QSize,
     QMimeData,
@@ -311,6 +311,7 @@ class CustomControls(QToolButton):
         Label_Text.setMaximumHeight(SingleHeight * MaxNumberOfLines)
         # Set the width of the label based on the size of the button
         Label_Text.setFixedWidth(ButtonSize.width())
+        Label_Text.setScaledContents(True)
         if Text != "":
             # Create a label with the correct properties
             Label_Text.setFrameShape(QFrame.Shape.NoFrame)

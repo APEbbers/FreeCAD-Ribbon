@@ -5083,8 +5083,6 @@ class ModernMenu(RibbonBar):
                         # Get the icon from cache. Use the pixmap as backup
                         pixmap = ""
                         CommandName = action.data()
-                        if button.menu() is not None:
-                            CommandName = button.text()
                         # If the command is an dropdown, use the button text instead of action data
                         if button.text().endswith("_ddb"):
                             CommandName = button.text()
@@ -5295,6 +5293,7 @@ class ModernMenu(RibbonBar):
                                     if "textEnabled" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]:
                                         showText = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["textEnabled"]
                             except Exception as e:
+                                print(CommandName + ", " + str(e.with_traceback(e.__traceback__)))
                                 if Parameters_Ribbon.DEBUG_MODE is True:
                                     print(e)
                                 pass
