@@ -1918,23 +1918,14 @@ class ModernMenu(RibbonBar):
                 else:
                     parent = parent.parent()
                 count = count + 1
-            # Get tabBar
-            parent = panel.parent()
-            count = 0
-            while (count < 10):
-                if type(parent) == RibbonNormalCategory or type(parent) == RibbonContextCategory:
-                    break
-                else:
-                    if parent is not None:
-                        parent = parent.parent()
-                count = count + 1
+                
             # Get the gridlayout
             gridLayout: QGridLayout = panel._actionsLayout
             # Hide the dragIndicater and the spacer widgets
             self.dragIndicator_Buttons.hide()
             self.spaceWidget_Left.hide()
             self.spaceWidget_Right.hide()
-            
+
             if type(parent) is RibbonPanel:
                 replace = False
                 if not widget.geometry().contains(event.pos()):       
@@ -2028,7 +2019,6 @@ class ModernMenu(RibbonBar):
                         self.dragIndicator_Buttons.close()
 
             if QuickAccessToolBar.objectName() == "quickAccessToolBar":
-                # print(QuickAccessToolBar.children())
                 widget = event.source()
 
                 # Get the relative position of the cursor
