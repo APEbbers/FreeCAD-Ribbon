@@ -295,7 +295,7 @@ class CustomControls(QToolButton):
         # Set the content margins to zero
         Layout.setContentsMargins(0, 0, 0, 0)
 
-        # if showText is False:
+        # make sure that the arrowbutton has enough space
         if MenuButtonSpace < 10:
             MenuButtonSpace = 10
 
@@ -319,7 +319,8 @@ class CustomControls(QToolButton):
             Label_Text.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
             Label_Text.setFocusPolicy(Qt.FocusPolicy.NoFocus)
             # change the menubutton space because text is included in the click area
-            MenuButtonSpace = 10
+            if showText is True:
+                MenuButtonSpace = 6
 
             # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
             if setWordWrap is False:
@@ -412,7 +413,7 @@ class CustomControls(QToolButton):
             ArrowButton.setFixedWidth(ButtonSize.width() + Space)
             ArrowButton.adjustSize()
             # Set the arrow to none
-            ArrowButton.setArrowType(Qt.ArrowType.NoArrow)
+            ArrowButton.setArrowType(Qt.ArrowType.DownArrow)
             # Set the content margins
             ArrowButton.setContentsMargins(0, 0, 0, 0)
             # Add the Arrow button to the layout
@@ -458,6 +459,7 @@ class CustomControls(QToolButton):
                         + ";spacing: 0px"
                         + ";}"
                         + """QToolButton::menu-indicator {
+                                image: none;
                                 subcontrol-origin: padding;
                                 subcontrol-position: center top;
                             }"""
@@ -489,6 +491,7 @@ class CustomControls(QToolButton):
                         + ";spacing: 0px"
                         + ";}"
                         + """QToolButton::menu-indicator {
+                                image: none;
                                 subcontrol-origin: padding;
                                 subcontrol-position: center top;
                             }"""
@@ -538,6 +541,7 @@ class CustomControls(QToolButton):
                     radius="2px",
                 )
                 StyleSheet_Addition = """QToolButton::menu-indicator {
+                    image: none;
                     subcontrol-origin: padding;
                     subcontrol-position: center top;
                 }"""
@@ -726,6 +730,7 @@ class CustomControls(QToolButton):
             + ";spacing: 0px"
             + ";}"
             + """QToolButton::menu-indicator {
+                    image: none;
                     subcontrol-origin: padding;
                     subcontrol-position: center top;
                 }"""
@@ -740,15 +745,34 @@ class CustomControls(QToolButton):
         width = ButtonSize.width()
         Label_Text.setFixedWidth(width)
         if Menu is not None and len(Menu.actions()) <= 1:
-            Label_Text.setFixedHeight(Label_Text.height()+ MenuButtonSpace)
+            Label_Text.setFixedHeight(Label_Text.height() + MenuButtonSpace)
         ArrowButton.setFixedWidth(width)
-        # CommandButton.setFixedSize(QSize(width, CommandButtonHeight))
-        CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         btn.setFixedSize(QSize(width, ButtonSize.height()))
-
+        
+        # # Adjust the font for the label if the text doesn't fit
+        # CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        # textHeight = QFontMetrics(Font).boundingRect(Label_Text.text()).height() + 3
+        # if Label_Text.text().find("\n") != -1:
+        #     textHeight = textHeight*MaxNumberOfLines
+        # if textHeight >= Label_Text.height():
+        #     for i in range(FontSize):
+        #         Font.setPixelSize(FontSize - i)
+        #         textHeight = QFontMetrics(Font).boundingRect(Label_Text.text()).height() + 3
+        #         if Label_Text.text().find("\n") != -1:
+        #             textHeight = textHeight*MaxNumberOfLines
+        #         if textHeight >= Label_Text.height():
+        #             print(Font.pixelSize())
+        #             Label_Text.setFont(Font)
+        #             Label_Text.adjustSize()
+        #         if textHeight <= Label_Text.height():
+        #             print(Font.pixelSize())
+        #             break
+                    
+        # Store the widths
         self.labelWidth = width
         self.menuButtonWidth = ArrowButton.width()
-        
+
         # Return the button
         btn.setObjectName("CustomWidget_Large")
         return btn

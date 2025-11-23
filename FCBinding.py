@@ -1223,9 +1223,7 @@ class ModernMenu(RibbonBar):
                                     if control is not None:
                                         StandardFunctions.add_keys_nested_dict(self.ButtonState, [panelName, control.actions().data()])
                                         self.ButtonState[panelName][control.actions().data()] = control.actions().isEnabled()
-                                except Exception as e:
-                                    print(control)
-                                    print(e)
+                                except Exception:
                                     pass                    
                                                             
                         # Enable all buttons, so you can access them with a right click
