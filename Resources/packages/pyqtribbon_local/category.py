@@ -100,14 +100,16 @@ class RibbonCategoryLayoutWidget(QFrame):
         self._mainLayout.setContentsMargins(0, 0, 0, 0)
         self._mainLayout.setSpacing(0)
         self._mainLayout.addWidget(
-            self._previousButton, 1,0,1,1, Qt.AlignmentFlag.AlignVCenter
+            self._previousButton, 1, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter
         )
-        self._mainLayout.addWidget(self._categoryScrollArea, 0,1,-1,1)
+        self._mainLayout.addWidget(self._categoryScrollArea, 0, 1, -1, 1)
         spacer = QWidget()
-        spacer.setBaseSize(0,0)
+        spacer.setBaseSize(0, 0)
         spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
         self._mainLayout.addWidget(spacer, 0,2,1,-1)  # fmt: skip
-        self._mainLayout.addWidget(self._nextButton, 1,3,1,1, Qt.AlignmentFlag.AlignVCenter)
+        self._mainLayout.addWidget(
+            self._nextButton, 1, 3, 1, 1, Qt.AlignmentFlag.AlignVCenter
+        )
 
         # Auto set the visibility of the scroll buttons
         self.autoSetScrollButtonsVisible()
@@ -153,7 +155,7 @@ class RibbonCategoryLayoutWidget(QFrame):
         :param widget: The widget to add.
         """
         self._categoryLayout.addWidget(widget)
-        
+
     def insertWidget(self, widget: QWidget, index: int):
         """Add a widget to the category layout.
 
@@ -161,7 +163,12 @@ class RibbonCategoryLayoutWidget(QFrame):
         """
         self._categoryLayout.insertWidget(index, widget)
 
-    def replaceWidget(self, from_:QWidget, to: QWidget, FindChildOption = Qt.FindChildOption.FindChildrenRecursively):
+    def replaceWidget(
+        self,
+        from_: QWidget,
+        to: QWidget,
+        FindChildOption=Qt.FindChildOption.FindChildrenRecursively,
+    ):
         """Remove a widget from the category layout.
 
         :param from_: The widget to replace.
@@ -334,8 +341,10 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
         self.addWidget(panel)  # type: ignore
         # self.addWidget(RibbonSeparator(width=10))  # type: ignore
         return panel
-    
-    def insertPanel(self, index: int, title: str, showPanelOptionButton=True) -> RibbonPanel:
+
+    def insertPanel(
+        self, index: int, title: str, showPanelOptionButton=True
+    ) -> RibbonPanel:
         """Add a new panel to the category.
 
         :param title: The title of the panel.
@@ -367,7 +376,7 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
         # self._panelLayout.removeWidget(self._panels[title])
         self.removeWidget(self._panels[title])
         self._panels.pop(title)
-        
+
     def replacePanel(self, fromPanel: RibbonPanel, toPanel: RibbonPanel):
         """Replace a panel from the category.
 
