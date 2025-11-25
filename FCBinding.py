@@ -1193,12 +1193,12 @@ class ModernMenu(RibbonBar):
                 if action == CustomizeStartAct:
                     if self.CustomizeEnabled is False:
                         # Set a stylesheet to indicate that you are in the customize enviroment
-                        Addition = """RibbonCategory {
+                        Addition = """RibbonCategory, QToolBar {
                             border-top: 0.5px solid red;
-                            border-bottom: 0.5px solid red;
                         }"""
                         StyleSheet = self.StyleSheet + Addition
-                        self.setStyleSheet(StyleSheet)                        
+                        self.currentCategory().setStyleSheet(StyleSheet)
+                        self.quickAccessToolBar().setStyleSheet(StyleSheet)
                         self.CustomizeEnabled = True
                         # Just incase
                         self.CustomizeOffset = 6
@@ -1343,7 +1343,8 @@ class ModernMenu(RibbonBar):
                         
                         return
                     if self.CustomizeEnabled is True:
-                        self.setStyleSheet(self.StyleSheet)
+                        self.currentCategory().setStyleSheet(self.StyleSheet)
+                        self.quickAccessToolBar().setStyleSheet(self.StyleSheet)
                         self.CustomizeEnabled = False
                         # self.setRibbonHeight(self.RibbonHeight)
                         self.currentCategory().setMinimumHeight(
