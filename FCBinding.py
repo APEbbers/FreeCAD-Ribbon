@@ -141,7 +141,7 @@ sys.path.append(pathBackup)
 translate = App.Qt.translate
 
 import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar, RibbonTitleWidget
+from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar, RibbonTitleWidget, RibbonApplicationButton
 from pyqtribbon_local.panel import RibbonPanel, RibbonPanelItemWidget, RibbonPanelTitle
 from pyqtribbon_local.toolbutton import RibbonToolButton, RibbonButtonStyle
 from pyqtribbon_local.separator import RibbonSeparator
@@ -1849,7 +1849,7 @@ class ModernMenu(RibbonBar):
                     if position is None:
                         return
                     # If the widget is a separator or the extra widget for large buttons, skip it
-                    if type(position[3].children()[1]) is CustomSeparator or position[3].children()[1].objectName() == "ExtraSpacer":
+                    if type(position[3].children()[1]) is CustomSeparator or position[3].children()[1].objectName() == "ExtraSpacer" or type(position[3].children()[1]) is RibbonApplicationButton:
                         return
 
                     # Inserting moves the item if its already in the layout.
