@@ -1942,7 +1942,11 @@ class ModernMenu(RibbonBar):
 
             if type(parent) is RibbonPanel:
                 replace = False
-                if not widget.geometry().contains(event.pos()):       
+                if not widget.geometry().contains(event.pos()):   
+                    # Get the workbench name and the panel name                  
+                    title = panel.objectName()
+                    workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                        
                     # Get the coordinates of the drag location
                     xPos_drag = self.target[0]
                     yPos_drag = self.target[1]
@@ -1953,36 +1957,40 @@ class ModernMenu(RibbonBar):
                     # Get the old position of the dragged widget
                     n = 0
                     OldPos = []
-                    
+                    widgetType = None
+                    # Get the type of widget
                     widgetType = widget.parent().parent().findChild(CustomControls)
-                    for n in range(gridLayout.count()):
-                        if gridLayout.itemAt(n).widget().findChild(CustomControls) == widgetType:
-                            OldPos = gridLayout.getItemPosition(n)
+                    if type(widget) is CustomSeparator:
+                        widgetType = widget
+                    # If the widgetType is still None, exit
+                    if widgetType is None:
+                        return
                     
-                    if type(widgetType) is CustomWidgets:
+                    # Get the order list, if there isn't one, create it
+                    StandardFunctions.add_keys_nested_dict(
+                        self.workBenchDict,
+                        [
+                            "workbenches",
+                            workbenchName,
+                            "toolbars",
+                            panel.objectName(),
+                            "order"
+                        ],
+                    )
+                    OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][title]["order"]
+
+                    if type(widgetType) is CustomControls:
+                        for n in range(gridLayout.count()):
+                            if gridLayout.itemAt(n).widget().findChild(CustomControls) == widgetType:
+                                OldPos = gridLayout.getItemPosition(n)
+                                break
+                            
                         # if counter and old position is not empty, Swap the widgets
                         if n > -1 and len(OldPos) > 0 :
                             # Define the dragged widgets
                             DraggedItem = gridLayout.itemAt(n)
                             DraggedWidget = DraggedItem.widget().findChild(CustomControls)
 
-                            # Get the workbench name and the panel name                  
-                            title = panel.objectName()
-                            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                            
-                            # Get the order list, if there isn't one, create it
-                            StandardFunctions.add_keys_nested_dict(
-                                self.workBenchDict,
-                                [
-                                    "workbenches",
-                                    workbenchName,
-                                    "toolbars",
-                                    panel.objectName(),
-                                    "order"
-                                ],
-                            )
-                            OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][title]["order"]
-                            # if OrderList is None or len(OrderList) == 0:
                             OrderList_Compare = []
                             for n in range(gridLayout.count()):
                                 control = gridLayout.itemAt(n).widget().findChild(CustomControls)
@@ -2011,29 +2019,71 @@ class ModernMenu(RibbonBar):
                                     # Remove the dragged item from the list
                                     OrderList.pop(index_newWidget)
                                     # Inserted it at the new location
-                                    OrderList.insert(index_originalWidget, DraggedWidget.actions().data())                                            
+                                    OrderList.insert(index_originalWidget, DraggedWidget.actions().data())
+
+                    if type(widgetType) is CustomSeparator:
+                        for n in range(gridLayout.count()):
+                            if gridLayout.itemAt(n).widget().findChild(CustomSeparator) == widgetType:
+                                OldPos = gridLayout.getItemPosition(n)
+                                break
                             
-                            #
-                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList     
+                        # if counter and old position is not empty, Swap the widgets
+                        if n > -1 and len(OldPos) > 0 :
+                            # Define the dragged widgets
+                            DraggedItem = gridLayout.itemAt(n)
+                            DraggedWidget = DraggedItem.widget().findChild(CustomSeparator)
+
+                            OrderList_Compare = []
+                            for n in range(gridLayout.count()):
+                                control = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                                separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
+                                if control is not None and type(control) is CustomControls:
+                                    OrderList_Compare.append(control.actions().data())
+                                if separator is not None and type(separator) is CustomSeparator:
+                                    OrderList_Compare.append(separator.objectName())
+                            if OrderList != OrderList_Compare:
+                                OrderList = OrderList_Compare
+                            
+                            # Get the indexes of the widgets
+                            index_originalWidget = OrderList.index(OriginalWidget.actions().data()) # This is the location were will be dropped
+                            if DraggedWidget is not None:
+                                index_newWidget = OrderList.index(DraggedWidget.objectName()) # This is the original location of the dragged widget                        
+                                if replace is True:                                
+                                    # Remove the command name of the original widget from the order list and
+                                    # Add the command of the dragged widget in its place
+                                    OrderList.pop(index_originalWidget)
+                                    OrderList.insert(index_originalWidget, DraggedWidget.objectName())
+                                    # Remove the command name of the dragged widget from the order list and
+                                    # Add the command of the original widget in its place
+                                    OrderList.pop(index_newWidget)
+                                    OrderList.insert(index_newWidget, OriginalWidget.actions().data())
+                                else:
+                                    # Remove the dragged item from the list
+                                    OrderList.pop(index_newWidget)
+                                    # Inserted it at the new location
+                                    OrderList.insert(index_originalWidget, DraggedWidget.objectName())
+                            
+                    # Safe the order
+                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList     
+                                    
+                    # Create a new panel
+                    workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                    newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True)
                                             
-                            # Create a new panel
-                            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True)
-                                                    
-                            # Add the panel to the list with long panels
-                            self.longPanels.append(newPanel)
-                                                    
-                            # Replace the panel with the new panel
-                            self.currentCategory().replacePanel(panel, newPanel)
-                            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-                            self.setPanelProperties(newPanel)
-                            
-                            # Update the dict of the currentCategory with the new panel
-                            self.currentCategory()._panels[newPanel.objectName()] = newPanel
-                            
-                            # Close the old panel and the dragindicator
-                            panel.close()
-                            self.dragIndicator_Buttons.close()
+                    # Add the panel to the list with long panels
+                    self.longPanels.append(newPanel)
+                                            
+                    # Replace the panel with the new panel
+                    self.currentCategory().replacePanel(panel, newPanel)
+                    # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                    self.setPanelProperties(newPanel)
+                    
+                    # Update the dict of the currentCategory with the new panel
+                    self.currentCategory()._panels[newPanel.objectName()] = newPanel
+                    
+                    # Close the old panel and the dragindicator
+                    panel.close()
+                    self.dragIndicator_Buttons.close()
 
             if QuickAccessToolBar.objectName() == "quickAccessToolBar":
                 widget = event.source()
