@@ -249,29 +249,31 @@ def SaveDialog(files, OverWrite: bool = True):
         if file is not None:
             return file
 
+
 def OpenDirectory(path):
     import webbrowser
     import platform
     import subprocess
     import os
-    
+
     try:
         if os.path.exists(path) is False:
             return False
-        
+
         if platform.system().lower() == "darwin":
-                subprocess.run(['open', path])
+            subprocess.run(["open", path])
         elif platform.system().lower() == "Windows":
             os.startfile(path)
         else:
-            # Linux: try xdg-open, then sensible-browser as fallback 
-            try: 
-                subprocess.run(['xdg-open', path], check=True) 
-            except Exception: 
-                subprocess.run(['gio', 'open', path], check=False)          
+            # Linux: try xdg-open, then sensible-browser as fallback
+            try:
+                subprocess.run(["xdg-open", path], check=True)
+            except Exception:
+                subprocess.run(["gio", "open", path], check=False)
         return True
     except Exception:
         return False
+
 
 def GetLetterFromNumber(number: int, UCase: bool = True):
     """Number to Excel-style column name, e.g., 1 = A, 26 = Z, 27 = AA, 703 = AAA."""
@@ -532,9 +534,9 @@ def ReturnXML_Value_Git(
         # parsing process
         url = f"{host}/{User}/{Repository}/{Branch}/{File}"
         if host == "https://codeberg.org":
-           url = f"{host}/{User}/{Repository}/src/branch/{Branch}/{File}" 
+            url = f"{host}/{User}/{Repository}/src/branch/{Branch}/{File}"
         if host == "https://github.com":
-            url = f"{host}/{User}/{Repository}/blob/{Branch}/{File}" 
+            url = f"{host}/{User}/{Repository}/blob/{Branch}/{File}"
         url = "https://raw.githubusercontent.com/APEbbers/FreeCAD-Ribbon/refs/heads/main/package.xml"
         response = request.urlopen(url)
         data = response.read()
@@ -729,7 +731,7 @@ def TranslationsMapping(WorkBenchName: str, string: str):
 #             self.Dict_RibbonCommandPanel,
 #             ["workbenches", WorkBenchName, "toolbars", Toolbar, "order"],
 #         )
-def add_keys_nested_dict(dict, keys, default=1, endEmpty = False):
+def add_keys_nested_dict(dict, keys, default=1, endEmpty=False):
     """_summary_
 
     Args:
@@ -971,7 +973,7 @@ def AddToClipboard(Text):
 
     # cmd = "clip" if platform.system() == "Windows" else "pbcopy"
     # subprocess.run(cmd, input=Text, text=True, shell=True)
-    
+
     clipboard = QtWidgets.QApplication.clipboard()
     clipboard.setText(Text)
 
@@ -987,7 +989,7 @@ def checkFreeCADVersion(main: int, sub: int, patch: int, git: int):
 
     Returns:
         True if the FreeCAD version is equal or higher than the given version number.
-    """    
+    """
     version = App.Version()
 
     if main <= int(version[0]):
