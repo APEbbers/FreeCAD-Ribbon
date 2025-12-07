@@ -98,7 +98,10 @@ if fileExists is False or NewDefaultNeeded is True:
     Parameters_Ribbon.Settings.SetIntSetting("RibbonStructureVersion", CurrentStructureVersion)
 
 # remove the test workbench
-Gui.removeWorkbench("TestWorkbench")
+try:    
+    Gui.removeWorkbench("TestWorkbench")
+except Exception:
+    pass
 
 USECUSTOMOVERLAY = os.path.join(os.path.dirname(FCBinding.__file__), "OVERLAY_DISABLED")
 if (
