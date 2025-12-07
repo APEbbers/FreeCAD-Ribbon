@@ -1759,19 +1759,25 @@ class ModernMenu(RibbonBar):
     dragIndicator_Panels = DragTargetIndicator(orientation="right")
     dragIndicator_QuickAccess = DragTargetIndicator(orientation="right")
     dragAction_QuickAccess = None
+    DropIndex_QuickAccess = None
     position = None
     rightColumnAdded = False
     spaceWidget_Left = RibbonToolButton()
     spaceWidget_Right = RibbonToolButton()
     target = None
+    StartPositionDrag = None
     
     
     def dragEnterEvent(self, event: QDragEnterEvent):        
         if self.CustomizeEnabled is True:
             if self.dragIndicator_QuickAccess is None:
                 self.dragIndicator_QuickAccess = DragTargetIndicator(orientation="right")
-                      
+            
             widget = event.source()
+                
+            # Store the position were the drage is started
+            self.StartPositionDrag = [event.pos(), widget.rect()]
+            
             count = 0
             parent = widget.parent()
             panel = RibbonPanel()
@@ -1888,8 +1894,15 @@ class ModernMenu(RibbonBar):
                     button = QuickAccessToolBar.childAt(buttonPos)
                     # Get the action before which the drag indicator has to be placed
                     beforeAction = QuickAccessToolBar.actionAt(buttonPos)
+                    if beforeAction is not None:
+                        # Store the beforeAction globally
+                        self.dropWidget_QuickAccess = beforeAction
+                        #Store the index of the current beforeAction. This is needed for the drop function to save the order
+                        self.DropIndex_QuickAccess = QuickAccessToolBar.actions().index(beforeAction) - 1
+                    # If the button is an Target indicator or is None, remove it.
                     if type(button) is DragTargetIndicator or button is None:
                         QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
+                    # If the button is an quickaccessbutton, show a drag indicator in the quickaccess toolbar
                     if button is not None and type(button) is QuickAccessToolButton:
                         dragIndicator = self.dragIndicator_QuickAccess
                         if self.dragAction_QuickAccess is None:
@@ -1898,6 +1911,7 @@ class ModernMenu(RibbonBar):
                         else:
                             QuickAccessToolBar.insertAction(beforeAction, self.dragAction_QuickAccess)
                             self.dragAction_QuickAccess.setVisible(True)
+                    # If the beforeAction is None, you are at the end of the QuickAccess Toolbar
                     if beforeAction is None:
                             dragIndicator = self.dragIndicator_QuickAccess
                             self.dragIndicator_QuickAccess_Action =  QuickAccessToolBar.addWidget(dragIndicator)
@@ -2097,41 +2111,38 @@ class ModernMenu(RibbonBar):
                 # Get the relative position of the cursor
                 point = QPoint(event.pos().x() + widget.width(), event.pos().y())
                 buttonPos = QuickAccessToolBar.mapTo(QuickAccessToolBar ,point)
+                
                 # Get the commandname under the mouse
                 beforeAction = QuickAccessToolBar.actionAt(buttonPos)
                 # insert the dragged widget
                 QuickAccessToolBar.insertWidget(beforeAction, widget)
                 if beforeAction is None:
                     button = QuickAccessToolBar.addWidget(widget)
-                    button.setVisible(True)    
-                
-                # Get the new order of quickaccess buttons
-                OrderList: list = []
-                for item in QuickAccessToolBar.children():
-                    if type(item) is QuickAccessToolButton:
-                        OrderList.append(item.objectName())
+                    button.setVisible(True)
 
-                # Get the index of the dragged widget and remove it from the list
-                index = OrderList.index(widget.objectName())
-                OrderList.pop(index)
+                # Update the orderlist
+                #
+                # Define the orderlist as the current list of quickaccess commands
+                OrderList = self.quickAccessCommands
+                # Remove the current widget
+                OrderList.remove(widget.objectName())
+                # Get the current index stored in the dragmove function. Do minus 1, because the current widget is removed
+                if self.DropIndex_QuickAccess is not None:
+                    index = self.DropIndex_QuickAccess - 1
+                    # Insert the commandName in the orderlist
+                    OrderList.insert(index, widget.objectName())
 
-                # Get the index from the original item and insert the dragged item
-                child = QuickAccessToolBar.childAt(buttonPos)
-                if type(child) is not QuickAccessToolButton and child is not None:
-                    return
-                if child is None:
-                    index = len(OrderList)
-                else:
-                    index = OrderList.index(child.objectName())
-                # Insert the commandName in the orderlist
-                OrderList.insert(index, widget.objectName())
-                
                 # Set the quickaccessCommands
                 self.quickAccessCommands = OrderList
                 
             # Delete the drag indicater
-            QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
-            QuickAccessToolBar.removeAction(self.dragIndicator_QuickAccess_Action)
+            try:
+                QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
+                QuickAccessToolBar.removeAction(self.dragIndicator_QuickAccess_Action)
+            except Exception:
+                pass
+            
+            return
                 
             
         if type(widget) is RibbonPanel:
@@ -2586,7 +2597,9 @@ class ModernMenu(RibbonBar):
 
                 # Add the button to the quickaccess toolbar
                 if len(button.actions()) > 0:
+                    # widget = QWidgetAction.createWidget(button)
                     self.addQuickAccessButton(button)
+                    # self.addQuickAccessButton(widget)
                 else:
                     StandardFunctions.Print(
                         f"{commandName} did not contain any actions!", "Log"
@@ -5931,7 +5944,7 @@ class EventInspector(QObject):
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
             mw.setWindowState(Qt.WindowState.WindowMaximized)
-            mw.showMaximal()
+            # mw.showMaximal()
             Style = mw.style()
             RibbonBar = mw.findChild(ModernMenu, "Ribbon")
             RestoreButton: QToolButton = RibbonBar.rightToolBar().findChildren(
@@ -5949,7 +5962,7 @@ class EventInspector(QObject):
         if (
             event.type() == QEvent.Type.WindowStateChange
             or event.type() == QEvent.Type.DragMove
-        ) and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
+        ) and Parameters_Ribbon.HIDE_TITLEBAR_FC is True:            
             # Get the main window, its style, the ribbon and the restore button
             mw = Gui.getMainWindow()
             Style = mw.style()
@@ -5966,6 +5979,8 @@ class EventInspector(QObject):
                     )
                 except Exception:
                     pass
+                mw.setWindowState(Qt.WindowState.WindowMaximized)
+                # mw.showMaximal()
                 return QObject.eventFilter(self, obj, event)
             # If the mainwindow is not maximized, set the window state to no state and set the correct icon
             if mw.isMaximized() is False:
@@ -5976,6 +5991,7 @@ class EventInspector(QObject):
                     )
                 except Exception:
                     pass
+                # mw.setWindowState(Qt.WindowState.WindowNoState)
                 return QObject.eventFilter(self, obj, event)
         # If the event is a modfied event, update the title
         # This is done when switching from one part to another
