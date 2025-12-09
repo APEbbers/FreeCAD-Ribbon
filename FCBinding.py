@@ -2171,6 +2171,9 @@ class ModernMenu(RibbonBar):
             widget.close()
 
             # Create the current orderlist from the panels
+            if "order" not in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
+                StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", "order"], endEmpty=True)
+                self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"] = []
             OrderList:list = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
             # if a panel is not in the orderlist, add it
             for title, panel in self.currentCategory().panels().items():
