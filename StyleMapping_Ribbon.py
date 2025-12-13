@@ -19,8 +19,6 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
-from PySide import QtGui
-import matplotlib.colors
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
