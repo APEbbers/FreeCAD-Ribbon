@@ -114,6 +114,7 @@ import Parameters_Ribbon
 import LoadSettings_Ribbon
 import LoadLicenseForm_Ribbon
 import LoadCombinePanel_Ribbon
+import LoadAddCommands
 import Standard_Functions_Ribbon as StandardFunctions
 from Standard_Functions_Ribbon import CommandInfoCorrections
 import Serialize_Ribbon
@@ -1186,16 +1187,32 @@ class ModernMenu(RibbonBar):
             if panel is not None and type(panel) is not RibbonPanel:
                 # Add the buttons
                 #
+                # Add a button for adding commands to current panels
+                AddCommandAct = QAction()
+                if self.CustomizeEnabled is True:
+                    AddCommandAct  = self.contextMenu.addAction("Add commands")
+                              
+                # Add a button for creating new panels
+                CreatePanelsAct = QAction()
+                if self.CustomizeEnabled is True:
+                    CreatePanelsAct = self.contextMenu.addAction("Create a new panel")
+                    
+                # Add a button for combining panels
+                CombinePanelsAct = QAction()
+                if self.CustomizeEnabled is True:
+                    CombinePanelsAct = self.contextMenu.addAction("Combine panels")
+                
                 # Add Customize buttons for entering and exiting customize enviroment
+                self.contextMenu.addSeparator()
                 title = translate("FreeCAD Ribbon", "Customize...")
                 if self.CustomizeEnabled is True:
                     title = translate("FreeCAD Ribbon", "Save and exit customize...")
                 CustomizeStartAct = self.contextMenu.addAction(title)
+                                
+                # Create the action
                 action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
-
-                # Add a button for combining panels
-                CombinePanelsAct = self.contextMenu.addAction("Combine panels")
                 
+                # Perfom the action depending on which button is clicked
                 if action == CustomizeStartAct:
                     if self.CustomizeEnabled is False:
                         # Set a stylesheet to indicate that you are in the customize enviroment
@@ -1466,6 +1483,9 @@ class ModernMenu(RibbonBar):
 
                 if action == CombinePanelsAct:
                     LoadCombinePanel_Ribbon.main()
+                    
+                if action == AddCommandAct:
+                    LoadAddCommands.main()
         
         widget = None
         panel = None
