@@ -115,6 +115,7 @@ import LoadSettings_Ribbon
 import LoadLicenseForm_Ribbon
 import LoadCombinePanel_Ribbon
 import LoadAddCommands
+from CacheFunctions import WriteCache
 import Standard_Functions_Ribbon as StandardFunctions
 from Standard_Functions_Ribbon import CommandInfoCorrections
 import Serialize_Ribbon
@@ -1201,6 +1202,12 @@ class ModernMenu(RibbonBar):
                 CombinePanelsAct = QAction()
                 if self.CustomizeEnabled is True:
                     CombinePanelsAct = self.contextMenu.addAction("Combine panels")
+                    
+                # Add a button for creating the cache file
+                CreateDataAct = QAction()
+                if self.CustomizeEnabled is True:
+                    self.contextMenu.addSeparator()
+                    CreateDataAct = self.contextMenu.addAction("Create or update the data file")
                 
                 # Add Customize buttons for entering and exiting customize enviroment
                 self.contextMenu.addSeparator()
@@ -1486,6 +1493,15 @@ class ModernMenu(RibbonBar):
                     
                 if action == AddCommandAct:
                     LoadAddCommands.main()
+                    
+                if action == CreateDataAct:
+                    message = translate(
+                        "FreeCAD Ribbon",
+                        "Are you sure? This can take a while!",
+                    )
+                    answer = StandardFunctions.Mbox(message, "FreeCAD Ribbon", 1, "Question")
+                    if answer == "yes":
+                        WriteCache.CreateCache()
         
         widget = None
         panel = None
