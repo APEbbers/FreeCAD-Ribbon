@@ -115,7 +115,7 @@ import LoadSettings_Ribbon
 import LoadLicenseForm_Ribbon
 import LoadCombinePanel_Ribbon
 import LoadAddCommands
-from CacheFunctions import WriteCache
+import CacheFunctions
 import Standard_Functions_Ribbon as StandardFunctions
 from Standard_Functions_Ribbon import CommandInfoCorrections
 import Serialize_Ribbon
@@ -1501,7 +1501,7 @@ class ModernMenu(RibbonBar):
                     )
                     answer = StandardFunctions.Mbox(message, "FreeCAD Ribbon", 1, "Question")
                     if answer == "yes":
-                        WriteCache.CreateCache()
+                        CacheFunctions.CreateCache()
         
         widget = None
         panel = None
