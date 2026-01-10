@@ -4832,8 +4832,19 @@ class ModernMenu(RibbonBar):
         
         # Set the objectname to the default action of all buttons
         for button in allButtons:
-            action = button.actions()[0]
-            action.setObjectName(action.data())
+            try:
+                action = button.actions()[0]
+                action.setObjectName(action.data())
+            except Exception:
+                try:
+                    action = button.actions()
+                    action.setObjectName(action.data())
+                except Exception:
+                    try:
+                        action = button.defaultAction()
+                        action.setObjectName(action.data())
+                    except Exception:
+                        pass
             
         # add separators to the command list.
         if workbenchName in dict["workbenches"]:

@@ -887,32 +887,35 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.List_Workbenches.clear()
         List_Workbenches = Gui.listWorkbenches().copy()
         for WorkBenchName in List_Workbenches:
-            if str(WorkBenchName) != "" or WorkBenchName is not None:
-                if str(WorkBenchName) != "NoneWorkbench":
-                    # Gui.activateWorkbench(WorkBenchName)
-                    WorkBench = Gui.getWorkbench(WorkBenchName)
-                    # Get the toolbar items
-                    ToolbarItems: dict = WorkBench.getToolbarItems()
-                    # Update the toolbar items with corrections
-                    ToolbarItems: dict = StandardFunctions.CorrectGetToolbarItems(
-                        ToolbarItems
-                    )
+            try:
+                if str(WorkBenchName) != "" or WorkBenchName is not None:
+                    if str(WorkBenchName) != "NoneWorkbench":
+                        # Gui.activateWorkbench(WorkBenchName)
+                        WorkBench = Gui.getWorkbench(WorkBenchName)
+                        # Get the toolbar items
+                        ToolbarItems: dict = WorkBench.getToolbarItems()
+                        # Update the toolbar items with corrections
+                        ToolbarItems: dict = StandardFunctions.CorrectGetToolbarItems(
+                            ToolbarItems
+                        )
 
-                    IconName = ""
-                    IconName = str(Gui.getWorkbench(WorkBenchName).Icon)
-                    WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
-                    WorkbenchTitleTranslated = StandardFunctions.TranslationsMapping(
-                        WorkBenchName, WorkbenchTitle
-                    )
-                    self.List_Workbenches.append(
-                        [
-                            str(WorkBenchName),
-                            IconName,
-                            WorkbenchTitle,
-                            ToolbarItems,
-                            WorkbenchTitleTranslated,
-                        ]
-                    )
+                        IconName = ""
+                        IconName = str(Gui.getWorkbench(WorkBenchName).Icon)
+                        WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
+                        WorkbenchTitleTranslated = StandardFunctions.TranslationsMapping(
+                            WorkBenchName, WorkbenchTitle
+                        )
+                        self.List_Workbenches.append(
+                            [
+                                str(WorkBenchName),
+                                IconName,
+                                WorkbenchTitle,
+                                ToolbarItems,
+                                WorkbenchTitleTranslated,
+                            ]
+                        )
+            except Exception:
+                pass
 
         # --- Toolbars ----------------------------------------------------------------------------------------------
         #
