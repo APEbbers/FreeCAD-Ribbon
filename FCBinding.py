@@ -113,6 +113,7 @@ import LoadDesign_Ribbon
 import Parameters_Ribbon
 import LoadSettings_Ribbon
 import LoadLicenseForm_Ribbon
+import LoadCombinePanel_Ribbon
 import Standard_Functions_Ribbon as StandardFunctions
 from Standard_Functions_Ribbon import CommandInfoCorrections
 import Serialize_Ribbon
@@ -1184,12 +1185,17 @@ class ModernMenu(RibbonBar):
             # If you are not yet in the customize enviroment, create a menu for entering it.
             if panel is not None and type(panel) is not RibbonPanel:
                 # Add the buttons
+                #
+                # Add Customize buttons for entering and exiting customize enviroment
                 title = translate("FreeCAD Ribbon", "Customize...")
                 if self.CustomizeEnabled is True:
                     title = translate("FreeCAD Ribbon", "Save and exit customize...")
                 CustomizeStartAct = self.contextMenu.addAction(title)
                 action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
 
+                # Add a button for combining panels
+                CombinePanelsAct = self.contextMenu.addAction("Combine panels")
+                
                 if action == CustomizeStartAct:
                     if self.CustomizeEnabled is False:
                         # Set a stylesheet to indicate that you are in the customize enviroment
@@ -1457,6 +1463,10 @@ class ModernMenu(RibbonBar):
                         
                         # Clear the workbench dict
                         self.workBenchDict.clear()
+
+                if action == CombinePanelsAct:
+                    LoadCombinePanel_Ribbon.main()
+        
         widget = None
         panel = None
         return
