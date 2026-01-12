@@ -3861,6 +3861,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
         self.List_Workbenches.sort()
 
+        WorkbenchName =""
         for workbench in self.List_Workbenches:
             WorkbenchName = workbench[0]
             WorkbenchTitle = workbench[2]
@@ -5144,71 +5145,75 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 WorkbenchTitle = workbenchName
                         except Exception:
                             return
-                        if (
-                            WorkbenchTitle
-                            == ListWidget_WorkBenches.currentData(
-                                Qt.ItemDataRole.UserRole
-                            )[2]
-                            or ListWidget_WorkBenches.currentText() == "All"
-                        ):
-                            # Get an icon
-                            # Define a commandname for the icon
-                            CommandName_Icon = CommandName
-                            # If the command is a dropdown button, get the icon from the first command in the dropdown list
+                        try:
                             if (
-                                str(CommandName).endswith("_ddb")
-                                and "dropdownButtons" in self.Dict_DropDownButtons
+                                ListWidget_WorkBenches is not None and
+                                WorkbenchTitle
+                                == ListWidget_WorkBenches.currentData(
+                                    Qt.ItemDataRole.UserRole
+                                )[2]
+                                or ListWidget_WorkBenches.currentText() == "All"
                             ):
-                                for (
-                                    DropDownCommand,
-                                    Commands,
-                                ) in self.Dict_DropDownButtons[
-                                    "dropdownButtons"
-                                ].items():
-                                    if DropDownCommand == CommandName:
-                                        CommandName_Icon = Commands[0][0]
-                            # Get the icon name
-                            IconName = StandardFunctions.CommandInfoCorrections(
-                                CommandName_Icon
-                            )["pixmap"]
-                            # get the icon for this command if there isn't one, leave it None
-                            Icon = StandardFunctions.returnQiCons_Commands(
-                                CommandName_Icon, IconName
-                            )
-                            # If the icon is still None, get the icon from the iconlist
-                            if Icon is None or (Icon is not None and Icon.isNull()):
-                                for item in self.List_CommandIcons:
-                                    if item[0] == CommandName_Icon:
-                                        Icon = item[1]
-                                        break
+                                # Get an icon
+                                # Define a commandname for the icon
+                                CommandName_Icon = CommandName
+                                # If the command is a dropdown button, get the icon from the first command in the dropdown list
+                                if (
+                                    str(CommandName).endswith("_ddb")
+                                    and "dropdownButtons" in self.Dict_DropDownButtons
+                                ):
+                                    for (
+                                        DropDownCommand,
+                                        Commands,
+                                    ) in self.Dict_DropDownButtons[
+                                        "dropdownButtons"
+                                    ].items():
+                                        if DropDownCommand == CommandName:
+                                            CommandName_Icon = Commands[0][0]
+                                # Get the icon name
+                                IconName = StandardFunctions.CommandInfoCorrections(
+                                    CommandName_Icon
+                                )["pixmap"]
+                                # get the icon for this command if there isn't one, leave it None
+                                Icon = StandardFunctions.returnQiCons_Commands(
+                                    CommandName_Icon, IconName
+                                )
+                                # If the icon is still None, get the icon from the iconlist
+                                if Icon is None or (Icon is not None and Icon.isNull()):
+                                    for item in self.List_CommandIcons:
+                                        if item[0] == CommandName_Icon:
+                                            Icon = item[1]
+                                            break
 
-                            # Define a new ListWidgetItem.
-                            ListWidgetItem = QListWidgetItem()
-                            ListWidgetItem.setText(MenuNameTranslated)
-                            ListWidgetItem.setData(
-                                Qt.ItemDataRole.UserRole, CommandName
-                            )
-                            if Icon is not None:
-                                ListWidgetItem.setIcon(Icon)
-                                ListWidgetItem.setToolTip(
-                                    CommandName
-                                )  # Use the tooltip to store the actual command.
+                                # Define a new ListWidgetItem.
+                                ListWidgetItem = QListWidgetItem()
+                                ListWidgetItem.setText(MenuNameTranslated)
+                                ListWidgetItem.setData(
+                                    Qt.ItemDataRole.UserRole, CommandName
+                                )
+                                if Icon is not None:
+                                    ListWidgetItem.setIcon(Icon)
+                                    ListWidgetItem.setToolTip(
+                                        CommandName
+                                    )  # Use the tooltip to store the actual command.
 
-                                # Add the ListWidgetItem to the correct ListWidget
-                                IsInList = False
-                                for i in range(DestinationWidget.count()):
-                                    item = DestinationWidget.item(i)
-                                    if item.data(
-                                        Qt.ItemDataRole.UserRole
-                                    ) == ListWidgetItem.data(Qt.ItemDataRole.UserRole):
-                                        IsInList = True
-                                if IsInList is False:
-                                    ListWidget.addItem(ListWidgetItem)
-                            if Icon is None:
-                                if Parameters_Ribbon.DEBUG_MODE is True:
-                                    StandardFunctions.Print(
-                                        f"{CommandName} has no icon!", "Warning"
-                                    )
+                                    # Add the ListWidgetItem to the correct ListWidget
+                                    IsInList = False
+                                    for i in range(DestinationWidget.count()):
+                                        item = DestinationWidget.item(i)
+                                        if item.data(
+                                            Qt.ItemDataRole.UserRole
+                                        ) == ListWidgetItem.data(Qt.ItemDataRole.UserRole):
+                                            IsInList = True
+                                    if IsInList is False:
+                                        ListWidget.addItem(ListWidgetItem)
+                                if Icon is None:
+                                    if Parameters_Ribbon.DEBUG_MODE is True:
+                                        StandardFunctions.Print(
+                                            f"{CommandName} has no icon!", "Warning"
+                                        )
+                        except Exception:
+                            continue
             ShadowList.append(f"{MenuNameTranslated}")
 
         return
