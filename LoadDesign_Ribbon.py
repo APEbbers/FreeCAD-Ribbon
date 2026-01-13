@@ -5227,6 +5227,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         if (
             ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole) is None
             and ListWidget_WorkBenches.currentText() != "All"
+            and ListWidget_WorkBenches.currentText() != "Standard"
         ):
             return
 
@@ -5268,6 +5269,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             except Exception:
                                 return
                             if (
+                                ListWidget_WorkBenches.currentData(
+                                    Qt.ItemDataRole.UserRole
+                                ) is not None and
                                 WorkbenchTitle
                                 == ListWidget_WorkBenches.currentData(
                                     Qt.ItemDataRole.UserRole
