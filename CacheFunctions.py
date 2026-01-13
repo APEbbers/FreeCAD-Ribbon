@@ -109,7 +109,7 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
     progressBar.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
     progressBar.setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, True)
     progressBar.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
-    progressBar.setMinimumSize(300, 20)
+    progressBar.setMinimumSize(400, 20)
 
     # Get the stylesheet from the main window and use it for this form
     (
@@ -149,7 +149,7 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
     progressBar.setValue(progressBar.value() + 1)
     #
     List_Workbenches.clear()
-    for WorkBenchName in List_Workbenches:
+    for WorkBenchName in Gui.listWorkbenches():
         try:
             if str(WorkBenchName) != "" or WorkBenchName is not None:
                 if str(WorkBenchName) != "NoneWorkbench":
@@ -706,83 +706,12 @@ def loadAllWorkbenches(AutoHide=True, HideOnly=False, FinishMessage="", progress
             Gui.updateGui()  # Probably slower with this, because it redraws the entire GUI with all tool buttons changed etc. but allows the label to actually be updated, and it looks nice and gives a quick overview of all the workbenches…
             try:
                 Gui.activateWorkbench(wb)
+                List_Workbenches.append(wb)
             except Exception:
                 pass
         if FinishMessage != "":
             print(FinishMessage)
         Gui.activateWorkbench(activeWorkbench)
-    if AutoHide is True or HideOnly is True:
-        progressBar.close()
-
-        # get the system language
-        # Get the current stylesheet for FreeCAD
-        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
-        FCLanguage = FreeCAD_preferences.GetString("Language")
-
-        # Create the internal lists
-        List_IgnoredToolbars = []
-        List_IconOnly_Toolbars = []
-        List_QuickAccessCommands = []
-        List_IgnoredWorkbenches = []
-
-        # IgnoredToolbars
-        ExcludedToolbars = ListWidgetItems(form.PanelsExcluded_EP)
-        for i1 in range(len(ExcludedToolbars)):
-            ListWidgetItem: QListWidgetItem = ExcludedToolbars[i1]
-            IgnoredToolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
-            List_IgnoredToolbars.append(IgnoredToolbar)
-
-        # IconOnly_Toolbars
-        for IconOnly_Toolbar in List_IconOnly_Toolbars:
-            if IconOnly_Toolbar not in List_IconOnly_Toolbars:
-                List_IconOnly_Toolbars.append(IconOnly_Toolbar)
-
-        # QuickAccessCommands
-        SelectedCommands = ListWidgetItems(form.CommandsSelected_QC)
-        for i2 in range(len(SelectedCommands)):
-            ListWidgetItem: QListWidgetItem = SelectedCommands[i2]
-            QuickAccessCommand = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
-            List_QuickAccessCommands.append(QuickAccessCommand)
-
-        # IgnoredWorkbences
-        AvailableWorkbenches = ListWidgetItems(form.WorkbenchesAvailable_IW)
-        for i3 in range(len(AvailableWorkbenches)):
-            ListWidgetItem: QListWidgetItem = AvailableWorkbenches[i3]
-            IgnoredWorkbench = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
-            List_IgnoredWorkbenches.append(IgnoredWorkbench[2])
-
-        # Create a resulting dict
-        resultingDict = {}
-        # add the various lists to the resulting dict.
-        resultingDict["language"] = FCLanguage
-        resultingDict["ignoredToolbars"] = List_IgnoredToolbars
-        resultingDict["iconOnlyToolbars"] = List_IconOnly_Toolbars
-        resultingDict["quickAccessCommands"] = List_QuickAccessCommands
-        resultingDict["ignoredWorkbenches"] = List_IgnoredWorkbenches
-        resultingDict.update(Dict_CustomToolbars)
-        resultingDict.update(Dict_DropDownButtons)
-        resultingDict.update(Dict_NewPanels)
-
-        # RibbonTabs
-        # Get the Ribbon dictionary
-        resultingDict.update(Dict_RibbonCommandPanel)
-
-        # get the path for the Json file
-        JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
-
-        # create a copy and rename it as a backup if enabled
-        if Parameters_Ribbon.ENABLE_BACKUP is True:
-            Suffix = datetime.now().strftime("%Y%m%d_%H%M%S")
-            BackupName = f"RibbonStructure_{Suffix}.json"
-            if os.path.exists(pathBackup) is False:
-                os.makedirs(pathBackup)
-            BackupFile = os.path.join(pathBackup, BackupName)
-            shutil.copy(JsonFile, BackupFile)
-
-        # Writing to sample.json
-        with open(JsonFile, "w") as outfile:
-            json.dump(resultingDict, outfile, indent=4)
-
-        outfile.close()
+  
         return
 # endregion---------------------------------------------------------------------------------------
