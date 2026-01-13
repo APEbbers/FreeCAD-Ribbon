@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction, QGuiApplication
-from PySide.QtWidgets import (
+from .QtGui import QIcon, QPixmap, QAction, QGuiApplication
+from .QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -40,13 +40,11 @@ from PySide.QtWidgets import (
     QLabel,
     QProgressBar,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
+from .QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
 import sys
 import json
 from datetime import datetime
 import shutil
-import Standard_Functions_Ribbon as StandardFunctions
-from Standard_Functions_Ribbon import CommandInfoCorrections
 import Standard_Functions_Ribbon as StandardFunctions
 from Standard_Functions_Ribbon import CommandInfoCorrections
 import Parameters_Ribbon
