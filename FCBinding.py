@@ -5473,7 +5473,6 @@ class ModernMenu(RibbonBar):
             if answer == "yes":
                 StandardFunctions.restart_freecad()
 
-        self.form.close()
         return
     
     # endregion
