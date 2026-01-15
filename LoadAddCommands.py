@@ -108,6 +108,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         Rectangle.moveCenter(centerPoint)
         self.form.move(Rectangle.topLeft())
         
+        # Add drag event to listwidget
+        self.form.CommandsAvailable_NP.dragEnterEvent =  lambda e: self.dragEnterEvent_ListWidget(e, self.form.CommandsAvailable_NP)
+        self.form.CommandsAvailable_NP.dragMoveEvent =  lambda e: self.dragMoveEvent_ListWidget(e, self.form.CommandsAvailable_NP)
+        
         # Check if there is a datafile. if not, ask the user to create one.
         DataFile = os.path.join(os.path.dirname(__file__), "RibbonDataFile.dat")
         if os.path.exists(DataFile) is False:
@@ -321,6 +325,20 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.SearchBar_NP.textChanged.connect(
             self.on_SearchBar_NP_TextChanged
         )
+    
+    
+    def dragEnterEvent_ListWidget(self, event, ListWidget):
+        if event.mimeData().hasUrls():
+            event.accept()
+        else:
+            super(ListWidget, self).dragEnterEvent(event)
+
+    def dragMoveEvent_ListWidget(self, event, ListWidget):
+        if event.mimeData().hasUrls():
+            event.setDropAction(Qt.DropAction.CopyAction)
+            event.accept()
+        else:
+            super(ListWidget, self).dragMoveEvent(event)
         
         
     def addWorkbenches(self):

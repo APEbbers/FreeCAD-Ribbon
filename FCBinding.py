@@ -84,6 +84,8 @@ from PySide6.QtWidgets import (
     QStatusBar,
     QStyleOption,
     QDialog,
+    QListWidget,
+    QListWidgetItem,
 )
 from PySide6.QtCore import (
     Qt,
@@ -936,10 +938,13 @@ class ModernMenu(RibbonBar):
         except Exception:
             pass
 
+        # mw.setAcceptDrops(True)
+        # mw.dragEnterEvent = lambda e: self.dragEnterEvent(e)
+
         # Install an event filter to catch events from the main window and act on it.
         mw.installEventFilter(EventInspector(mw))
         # self.installEventFilter(RibbonEventInspector(self))
-                
+        
         # Set isLoaded to True, to show that the loading is finished
         self.isLoaded = True
         # Fold the ribbon if unpinned
@@ -1812,16 +1817,36 @@ class ModernMenu(RibbonBar):
     spaceWidget_Right = RibbonToolButton()
     target = None
     StartPositionDrag = None
+    dropPanel = None
     
     
-    def dragEnterEvent(self, event: QDragEnterEvent):        
+    def dragEnterEvent(self, event: QDragEnterEvent): 
+        # event.setAccepted(True)
+        # event.setDropAction(Qt.DropAction.MoveAction)
+        # event.acceptProposedAction()
+        # print(event.isAccepted(  ))
+        # print("drag entered")
+        
         if self.CustomizeEnabled is True:
             if self.dragIndicator_QuickAccess is None:
                 self.dragIndicator_QuickAccess = DragTargetIndicator(orientation="right")
             
             widget = event.source()
+            if type(widget) is QListWidget:
+                position = event.pos()
+                for panelName, panel in self.currentCategory().panels().items():
+                    panelPos = panel.pos()
+                    xMin = panelPos.x()
+                    xMax = xMin + panel.rect().width()
+                    yMin = panel.mapTo(mw, panelPos).y()
+                    yMax = yMin + panel.rect().height()
+                    
+                    if position.x() >= xMin and position.x() < xMax:
+                        if position.y() >= yMin and position.y() < yMax:
+                            print(panelName)
+                            self.dropPanel = panel
                 
-            # Store the position were the drage is started
+            # Store the position were the drag is started
             self.StartPositionDrag = [event.pos(), widget.rect()]
             
             count = 0
@@ -1844,6 +1869,7 @@ class ModernMenu(RibbonBar):
             if len(panel.widgets()) <= 2 and type(widget) is not RibbonPanel and panel.findChild(QWidget, "ExtraSpacer") is not None:
                 event.ignore()
             else:
+                self.dropPanel = panel
                 event.acceptProposedAction()
                 event.setAccepted(True)
                 event.accept()
@@ -1860,8 +1886,20 @@ class ModernMenu(RibbonBar):
     def dragMoveEvent(self, event: QDragMoveEvent):
         if self.CustomizeEnabled is True:
             widget = event.source()
+            
+            # print(type(widget))
+            if type(widget) == QListWidget:
+                commandName = widget.currentItem().data(Qt.ItemDataRole.UserRole)
+                panel: RibbonPanel = self.dropPanel
+                # print(commandName)
+                # widget.setParent(self.dropPanel)
+                # position: object= self.find_drop_location(event, panel)
+                # print(position)
+                parent = panel
+                # print(panel.title())
+            
             # If the widget is not a panel, continue here
-            if type(widget) is not RibbonPanel:
+            if type(widget) is not RibbonPanel  and type(widget) is not QListWidget:
                 count = 0
                 while (count < 10):                    
                     if type(widget) is CustomControls:
@@ -1892,7 +1930,7 @@ class ModernMenu(RibbonBar):
                         else:
                             parent = parent.parent()
                         count = count + 1
-
+                        
                 if type(parent) is RibbonPanel:
                     gridLayout: QGridLayout = panel._actionsLayout
                     position = None
@@ -1976,11 +2014,14 @@ class ModernMenu(RibbonBar):
         return
 
     
-    def dropEvent(self, event:QDropEvent, widget = None):
+    def dropEvent(self, event:QDropEvent, widget = None):        
         # return
         # Get the widget
         if widget is None:
             widget = event.source()
+            
+        if type(widget) is QListWidget:
+            return
                 
         if type(widget) is not RibbonPanel and type(widget) is not QToolBar:
             # Get the panel
@@ -2250,7 +2291,7 @@ class ModernMenu(RibbonBar):
         return
 
 
-    def find_drop_location(self, event):
+    def find_drop_location(self, event, panel=None):
         """
         Determines the drop location in a grid layout based on the position of a drag-and-drop event.
         Args:
@@ -2277,16 +2318,17 @@ class ModernMenu(RibbonBar):
         
         if type(widget) is not RibbonPanel:
             # Get the panel
-            panel = RibbonPanel()
-            count = 0
-            parent = widget.parent()
-            while (count < 10):
-                if type(parent) is RibbonPanel:
-                    panel = parent
-                    break
-                else:
-                    parent = parent.parent()
-                count = count + 1
+            if panel is None:
+                panel = RibbonPanel()
+                count = 0
+                parent = widget.parent()
+                while (count < 10):
+                    if type(parent) is RibbonPanel:
+                        panel = parent
+                        break
+                    else:
+                        parent = parent.parent()
+                    count = count + 1
             gridLayout: QGridLayout = panel._actionsLayout
             # Define the placeholders for x- and y-coordinates as grid positions
             xPos = 0
@@ -2328,7 +2370,8 @@ class ModernMenu(RibbonBar):
                 index = gridLayout.indexOf(w_origin)
                 position: object = gridLayout.getItemPosition(index)
                 return [position[0], position[1], position[2], w_origin]
-            except Exception:
+            except Exception as e:
+                # raise e
                 return None
         
         if type(widget) is RibbonPanel:
@@ -2341,7 +2384,7 @@ class ModernMenu(RibbonBar):
                     # Widget_X = Widget_X + w.width() * 0.5
                     
                     if w.mapTo(self.currentCategory(), pos).x() < Widget_X:
-                            return [i, Widget_X]
+                        return [i, Widget_X]
         return None
     # endregion
     
@@ -5997,8 +6040,16 @@ class EventInspector(QObject):
     def __init__(self, parent):
         super(EventInspector, self).__init__(parent)
 
-    def eventFilter(self, obj, event):
-        # Show the mainwindow after the application is activated
+    def eventFilter(self, obj, event: QEvent):
+        # # Show the mainwindow after the application is activated
+        # if event.type() == QEvent.Type.DragEnter:
+        #     print(event.isAccepted())
+        #     event.setAccepted(True)
+        # # if event.type() == QEvent.Type.DragMove:
+        # #     print(event.isAccepted())
+        # if event.type() == QEvent.Type.DragResponse:
+        #     print(event.isAccepted())
+                    
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
             mw.setWindowState(Qt.WindowState.WindowMaximized)
@@ -6082,6 +6133,24 @@ class EventInspector(QObject):
                 )
             return QObject.eventFilter(self, obj, event)
         return False
+    
+# class RibbonEventInspector(QObject):
+#     def __init__(self, parent):
+#         super(RibbonEventInspector, self).__init__(parent)
+
+#     def eventFilter(self, obj, event: QEvent):
+#         # Show the mainwindow after the application is activated
+#         if event.type() == QEvent.Type.DragEnter:
+#             # event.accept()
+#             print(event.isAccepted())
+#             print(event.proposedAction())
+#             drag = event.source().findChild(QDrag)
+#             drag.setDragCursor(QPixmap(), Qt.DropAction.IgnoreAction)
+#             drag.setDragCursor(QPixmap(), Qt.DropAction.MoveAction)
+#             drag.setDragCursor(QPixmap(), Qt.DropAction.TargetMoveAction)
+#             drag.setDragCursor(QPixmap(), Qt.DropAction.ActionMask)
+#             return QObject.eventFilter(self, obj, event)
+#         return False
 
 class run:
     """
