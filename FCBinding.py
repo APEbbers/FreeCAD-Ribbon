@@ -1806,19 +1806,28 @@ class ModernMenu(RibbonBar):
     # endregion
 
     # region - drag drop event functions
+    #
+    # Drag indicators
     dragIndicator_Buttons = DragTargetIndicator(orientation="top", margins=0)
     dragIndicator_Panels = DragTargetIndicator(orientation="right")
     dragIndicator_QuickAccess = DragTargetIndicator(orientation="right")
+    #
+    # QuickAccess
     dragAction_QuickAccess = None
     DropIndex_QuickAccess = None
+    #
+    # General
     position = None
-    rightColumnAdded = False
     spaceWidget_Left = RibbonToolButton()
     spaceWidget_Right = RibbonToolButton()
     target = None
     StartPositionDrag = None
+    #
+    # AddCommands
     dropPanel = None
-    
+    AddCommand_ActionData = ""
+    AddCommand_Icon = None
+    AddCommand_Text = ""
     
     def dragEnterEvent(self, event: QDragEnterEvent): 
         # event.setAccepted(True)
@@ -1874,6 +1883,7 @@ class ModernMenu(RibbonBar):
                 event.setAccepted(True)
                 event.accept()
         return
+           
             
     def dragLeaveEvent(self, event: QDragLeaveEvent):
         if self.CustomizeEnabled is True:
@@ -1882,6 +1892,7 @@ class ModernMenu(RibbonBar):
             self.dragIndicator_Panels.close()
             # self.dragIndicator_QuickAccess.close()
             self.target = None
+  
     
     def dragMoveEvent(self, event: QDragMoveEvent):
         if self.CustomizeEnabled is True:
@@ -2021,6 +2032,8 @@ class ModernMenu(RibbonBar):
             widget = event.source()
             
         if type(widget) is QListWidget:
+            # if self.dropPanel is not None:
+            #     self.dropPanel.addSmallWidget()
             return
                 
         if type(widget) is not RibbonPanel and type(widget) is not QToolBar:
