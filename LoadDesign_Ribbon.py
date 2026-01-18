@@ -5147,11 +5147,13 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         try:
                             if (
                                 ListWidget_WorkBenches is not None and
-                                WorkbenchTitle
-                                == ListWidget_WorkBenches.currentData(
+                                (ListWidget_WorkBenches.currentText() != "Standard" and
+                                 ListWidget_WorkBenches.currentText() != "All" and 
+                                 WorkbenchTitle== ListWidget_WorkBenches.currentData(
                                     Qt.ItemDataRole.UserRole
-                                )[2]
+                                )[2])
                                 or ListWidget_WorkBenches.currentText() == "All"
+                                or ListWidget_WorkBenches.currentText() == "Standard"
                             ):
                                 # Get an icon
                                 # Define a commandname for the icon
@@ -5205,14 +5207,15 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                         ) == ListWidgetItem.data(Qt.ItemDataRole.UserRole):
                                             IsInList = True
                                     if IsInList is False:
-                                        ListWidget.addItem(ListWidgetItem)
+                                        if (ListWidget_WorkBenches.currentText() == "Standard" and CommandName.lower().startswith("std")) or ListWidget_WorkBenches.currentText() != "Standard":
+                                            ListWidget.addItem(ListWidgetItem)
                                 if Icon is None:
                                     if Parameters_Ribbon.DEBUG_MODE is True:
                                         StandardFunctions.Print(
                                             f"{CommandName} has no icon!", "Warning"
                                         )
-                            # if ListWidget_WorkBenches.currentText() == "Standard":
-                        except Exception:
+                        except Exception as e:
+                            raise e
                             continue
             ShadowList.append(f"{MenuNameTranslated}")
 
