@@ -337,7 +337,7 @@ class ModernMenu(RibbonBar):
         if "newPanels" in self.ribbonStructure:
             self.newPanels = self.ribbonStructure["newPanels"]
 
-        DataFile2 = os.path.join(os.path.dirname(__file__), "RibbonDataFile2.dat")
+        DataFile2 = os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonDataFile2.dat")
         if os.path.exists(DataFile2) is True:
             Data = {}
             # read ribbon structure from JSON file
