@@ -40,6 +40,7 @@ from PySide.QtWidgets import (
     QStyle,
 )
 import logging
+import time
 
 # Set the logger levels to avoid extra output in the report panel
 logging.getLogger("urllib3").setLevel(logging.INFO)
@@ -79,14 +80,17 @@ if not os.path.exists(os.path.join(App.getUserAppDataDir(), "RibbonUI")):
 if Settings.GetStringSetting("RibbonStructure") == os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json"):
     try:
         # Update the paths for the ribbon structure and the backup folder
+        print(os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonStructure.json"))
         Settings.SetStringSetting("RibbonStructure", os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonStructure.json"))
+        
         if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json")): 
-            shutil.copy(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json"), os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonStructure.json"))
+            shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json"), os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonStructure.json"))
         if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile.dat")):
-            shutil.copy(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile.dat"), os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonDataFile.dat"))
+            shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile.dat"), os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonDataFile.dat"))
         if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile2.dat")):
-            shutil.copy(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile2.dat"), os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonDataFile2.dat"))
-    except Exception:
+            shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile2.dat"), os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonDataFile2.dat"))
+    except Exception as e:
+        print(e)
         pass
 
 if Settings.GetStringSetting("BackupFolder") == os.path.join(os.path.dirname(FCBinding.__file__), "BackupFolder"):
