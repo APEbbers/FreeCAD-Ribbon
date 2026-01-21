@@ -71,6 +71,11 @@ translate = App.Qt.translate
 
 # Move the data files to the new location for fixing issue with the new addon manager
 # Function to move the data files out the addon folder to fix issue with the new addon manager
+#
+#Create the new folder for the data
+if not os.path.exists(os.path.join(App.getUserAppDataDir(), "RibbonUI")):
+    os.makedirs(os.path.join(App.getUserAppDataDir(), "RibbonUI"))
+# Move the files if present
 if Settings.GetStringSetting("RibbonStructure") == os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json"):
     try:
         # Update the paths for the ribbon structure and the backup folder
