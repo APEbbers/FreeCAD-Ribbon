@@ -80,9 +80,8 @@ if not os.path.exists(os.path.join(App.getUserAppDataDir(), "RibbonUI_Data")):
 if Settings.GetStringSetting("RibbonStructure") == os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json"):
     try:
         # Update the paths for the ribbon structure and the backup folder
-        print(os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonStructure.json"))
         Settings.SetStringSetting("RibbonStructure", os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonStructure.json"))
-        
+        # Copy the data files if they exits
         if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json")): 
             shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json"), os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonStructure.json"))
         if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile.dat")):
