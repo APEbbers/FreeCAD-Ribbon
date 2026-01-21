@@ -24,6 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import FCBinding
 import Parameters_Ribbon
+from Parameters_Ribbon import Settings
 import Standard_Functions_Ribbon as StandardFunctions
 import shutil
 import sys
@@ -68,11 +69,32 @@ sys.path.append(pathPackages)
 
 translate = App.Qt.translate
 
+# Move the data files to the new location for fixing issue with the new addon manager
+# Function to move the data files out the addon folder to fix issue with the new addon manager
+if Settings.GetStringSetting("RibbonStructure") == os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json"):
+    try:
+        # Update the paths for the ribbon structure and the backup folder
+        Settings.SetStringSetting("RibbonStructure", os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonStructure.json"))
+        if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json")): 
+            shutil.copy(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json"), os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonStructure.json"))
+        if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile.dat")):
+            shutil.copy(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile.dat"), os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonDataFile.dat"))
+        if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile2.dat")):
+            shutil.copy(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile2.dat"), os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonDataFile2.dat"))
+    except Exception:
+        pass
+
+if Settings.GetStringSetting("BackupFolder") == os.path.join(os.path.dirname(FCBinding.__file__), "BackupFolder"):
+    try:
+        Settings.SetStringSetting("BackupFolder", os.path.join(App.getUserAppDataDir(), "RibbonUI", "Backups"))
+        if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "Backups")):
+            shutil.copy(os.path.join(os.path.dirname(FCBinding.__file__), "Backups"), os.path.join(App.getUserAppDataDir(), "RibbonUI", "Backups"))
+    except Exception:
+        pass
+
 # check if there is a "RibbonStructure.json". if not create one
-file = os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json")
-file_default = os.path.join(
-    os.path.dirname(FCBinding.__file__), "RibbonStructure_default.json"
-)
+file = os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonStructure.json")
+file_default = os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonStructure_default.json")
 source = os.path.join(os.path.dirname(FCBinding.__file__), "CreateStructure.txt")
 source_default = os.path.join(
     os.path.dirname(FCBinding.__file__), "CreateStructure.txt"
@@ -151,3 +173,5 @@ except Exception as e:
 
 Gui.addLanguagePath(os.path.join(os.path.dirname(FCBinding.__file__), "translations"))
 Gui.updateLocale()
+
+
