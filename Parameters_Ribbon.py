@@ -199,10 +199,10 @@ UI_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "ui")
 # endregion ------------------------------------------------------------------------------------------------------------
 
 DefaultSettings = {
-    "ConfigDir":os.path.join(App.getUserAppDataDir(), "RibbonUI"),
-    "ImportLocation": os.path.join(App.getUserAppDataDir(), "RibbonUI", ""),
-    "ExportLocation": os.path.join(App.getUserAppDataDir(), "RibbonUI", ""),
-    "RibbonStructure": os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonStructure.json"),
+    "ConfigDir":os.path.join(App.getUserAppDataDir(), "RibbonUI_Data"),
+    "ImportLocation": os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", ""),
+    "ExportLocation": os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", ""),
+    "RibbonStructure": os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonStructure.json"),
     "TabBar_Style": int(0),
     "Link_IconSizes": bool(True),
     "IconSize_Small": int(24),
@@ -213,7 +213,7 @@ DefaultSettings = {
     "TabBarSize": int(24),
     "RightToolbarButtonSize": int(24),
     "BackupEnabled": bool(True),
-    "BackupFolder": os.path.join(App.getUserAppDataDir(), "RibbonUI", "Backups"),
+    "BackupFolder": os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "Backups"),
     "TabOrder": App.ParamGet(
         "User parameter:BaseApp/Preferences/Workbenches/"
     ).GetString("Ordered"),

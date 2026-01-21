@@ -74,36 +74,36 @@ translate = App.Qt.translate
 # Function to move the data files out the addon folder to fix issue with the new addon manager
 #
 #Create the new folder for the data
-if not os.path.exists(os.path.join(App.getUserAppDataDir(), "RibbonUI")):
-    os.makedirs(os.path.join(App.getUserAppDataDir(), "RibbonUI"))
+if not os.path.exists(os.path.join(App.getUserAppDataDir(), "RibbonUI_Data")):
+    os.makedirs(os.path.join(App.getUserAppDataDir(), "RibbonUI_Data"))
 # Move the files if present
 if Settings.GetStringSetting("RibbonStructure") == os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json"):
     try:
         # Update the paths for the ribbon structure and the backup folder
-        print(os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonStructure.json"))
-        Settings.SetStringSetting("RibbonStructure", os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonStructure.json"))
+        print(os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonStructure.json"))
+        Settings.SetStringSetting("RibbonStructure", os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonStructure.json"))
         
         if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json")): 
-            shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json"), os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonStructure.json"))
+            shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json"), os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonStructure.json"))
         if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile.dat")):
-            shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile.dat"), os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonDataFile.dat"))
+            shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile.dat"), os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonDataFile.dat"))
         if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile2.dat")):
-            shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile2.dat"), os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonDataFile2.dat"))
+            shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile2.dat"), os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonDataFile2.dat"))
     except Exception as e:
         print(e)
         pass
 
 if Settings.GetStringSetting("BackupFolder") == os.path.join(os.path.dirname(FCBinding.__file__), "BackupFolder"):
     try:
-        Settings.SetStringSetting("BackupFolder", os.path.join(App.getUserAppDataDir(), "RibbonUI", "Backups"))
+        Settings.SetStringSetting("BackupFolder", os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "Backups"))
         if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "Backups")):
-            shutil.copy(os.path.join(os.path.dirname(FCBinding.__file__), "Backups"), os.path.join(App.getUserAppDataDir(), "RibbonUI", "Backups"))
+            shutil.copy(os.path.join(os.path.dirname(FCBinding.__file__), "Backups"), os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "Backups"))
     except Exception:
         pass
 
 # check if there is a "RibbonStructure.json". if not create one
-file = os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonStructure.json")
-file_default = os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonStructure_default.json")
+file = os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonStructure.json")
+file_default = os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonStructure_default.json")
 source = os.path.join(os.path.dirname(FCBinding.__file__), "CreateStructure.txt")
 source_default = os.path.join(
     os.path.dirname(FCBinding.__file__), "CreateStructure.txt"
