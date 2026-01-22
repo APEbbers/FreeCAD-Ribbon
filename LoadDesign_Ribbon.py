@@ -981,7 +981,16 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 break
                         if IsInList is False:
                             CommandNames.append(Item)
-        # Add 
+        # Add Standard commands that are not in any toolbars
+        for commandNamesItem in Gui.listCommands():
+            if commandNamesItem.lower().startswith("std_"):
+                inList = False
+                for CommandName in CommandNames:
+                    if CommandName[0] == commandNamesItem:
+                        inList = True
+                
+                if inList is False:
+                    CommandNames.append([commandNamesItem, "Standard"])
 
         # Go through the list
         for CommandName in CommandNames:
