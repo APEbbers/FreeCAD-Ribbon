@@ -183,7 +183,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.ReadJson()
 
         # Check if there is a datafile. if not, ask the user to create one.
-        DataFile = os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonDataFile.dat")
+        DataFile = os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonDataFile.dat")
         if os.path.exists(DataFile) is False:
             Question = translate(
                 "FreeCAD Ribbon",
@@ -981,6 +981,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 break
                         if IsInList is False:
                             CommandNames.append(Item)
+        # Add 
 
         # Go through the list
         for CommandName in CommandNames:
@@ -1149,7 +1150,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         progressBar.setValue(progressBar.value() + 1)
         #
         # clear the data file. If not exists, create it
-        DataFile = os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonDataFile.dat")
+        DataFile = os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonDataFile.dat")
         open(DataFile, "w").close()
 
         # Open de data file, load it as json and then close it again
@@ -1163,7 +1164,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         Data["WorkBench_Icons"] = WorkbenchIcon
         Data["Command_Icons"] = CommandIcons
         # Write to the data file
-        DataFile = os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonDataFile.dat")
+        DataFile = os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonDataFile.dat")
         with open(DataFile, "w") as outfile:
             json.dump(Data, outfile, indent=4)
         outfile.close()
@@ -1174,7 +1175,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         Data2["Language"] = FCLanguage
         Data2["List_Commands"] = self.List_Commands
         # Write to the data file
-        DataFile2 = os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonDataFile2.dat")
+        DataFile2 = os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonDataFile2.dat")
         with open(DataFile2, "w") as outfile:
             json.dump(Data2, outfile, indent=4)
         outfile.close()
