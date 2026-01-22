@@ -337,7 +337,7 @@ class ModernMenu(RibbonBar):
         if "newPanels" in self.ribbonStructure:
             self.newPanels = self.ribbonStructure["newPanels"]
 
-        DataFile2 = os.path.join(App.getUserAppDataDir(), "RibbonUI", "RibbonDataFile2.dat")
+        DataFile2 = os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonDataFile2.dat")
         if os.path.exists(DataFile2) is True:
             Data = {}
             # read ribbon structure from JSON file
@@ -1825,6 +1825,7 @@ class ModernMenu(RibbonBar):
     #
     # AddCommands
     dropPanel = None
+    dropPanelName = ""
     AddCommand_ActionData = ""
     AddCommand_Icon = None
     AddCommand_Text = ""
@@ -1842,7 +1843,9 @@ class ModernMenu(RibbonBar):
             
             widget = event.source()
             if type(widget) is QListWidget:
+                # print("got here 1")
                 position = event.pos()
+                # print(position)
                 for panelName, panel in self.currentCategory().panels().items():
                     panelPos = panel.pos()
                     xMin = panelPos.x()
@@ -1851,9 +1854,10 @@ class ModernMenu(RibbonBar):
                     yMax = yMin + panel.rect().height()
                     
                     if position.x() >= xMin and position.x() < xMax:
+                        # print("got here 2")
                         if position.y() >= yMin and position.y() < yMax:
-                            print(panelName)
-                            self.dropPanel = panel
+                            # print(panelName)
+                            self.dropPanelName = panelName                                                
                 
             # Store the position were the drag is started
             self.StartPositionDrag = [event.pos(), widget.rect()]
@@ -1897,17 +1901,6 @@ class ModernMenu(RibbonBar):
     def dragMoveEvent(self, event: QDragMoveEvent):
         if self.CustomizeEnabled is True:
             widget = event.source()
-            
-            # print(type(widget))
-            if type(widget) == QListWidget:
-                commandName = widget.currentItem().data(Qt.ItemDataRole.UserRole)
-                panel: RibbonPanel = self.dropPanel
-                # print(commandName)
-                # widget.setParent(self.dropPanel)
-                # position: object= self.find_drop_location(event, panel)
-                # print(position)
-                parent = panel
-                # print(panel.title())
             
             # If the widget is not a panel, continue here
             if type(widget) is not RibbonPanel  and type(widget) is not QListWidget:
@@ -2030,10 +2023,72 @@ class ModernMenu(RibbonBar):
         # Get the widget
         if widget is None:
             widget = event.source()
-            
+        
+        # Define a parent
+        parent = None
+        
+        # Get the current category
+        currentCategory = self.currentCategory()
+
         if type(widget) is QListWidget:
-            # if self.dropPanel is not None:
-            #     self.dropPanel.addSmallWidget()
+            for panelName, panel in currentCategory.panels().items():
+                if panelName == self.dropPanelName:
+                    print("got here 1")
+                    # Get the command to be added
+                    ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
+                    print(ExtraCommand)
+                    
+                    # Get the workbench name and the panel name                  
+                    title = panel.objectName()
+                    workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+
+                    # Activate the workbench, the command belongs to. Otherwise, the command wont be created later
+                    for CommandItem in self.List_Commands:
+
+                        if CommandItem[0] == ExtraCommand:
+                            if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard"):
+                                print("got here 2")
+                                # Activate the workbench if not loaded
+                                Gui.activateWorkbench(CommandItem[3])
+                    
+                    # Set the current  category after activating the workbench
+                    self.setCurrentCategory(currentCategory)
+                    
+                    # Get the order list, if there isn't one, create it
+                    StandardFunctions.add_keys_nested_dict(
+                        self.workBenchDict,
+                        [
+                            "workbenches",
+                            workbenchName,
+                            "toolbars",
+                            panel.objectName(),
+                            "order"
+                        ],
+                    )
+                    OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"]
+                    print(OrderList)
+                    # Add the extra command to the order list
+                    OrderList.append(ExtraCommand)
+                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][title]["order"] = OrderList
+                    
+                    # Create a new panel
+                    workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                    newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand)
+                                            
+                    # Add the panel to the list with long panels
+                    self.longPanels.append(newPanel)
+                                            
+                    # Replace the panel with the new panel
+                    self.currentCategory().replacePanel(panel, newPanel)
+                    # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                    self.setPanelProperties(newPanel)
+                    
+                    # Update the dict of the currentCategory with the new panel
+                    self.currentCategory()._panels[newPanel.objectName()] = newPanel
+                    
+                    # Close the old panel and the dragindicator
+                    panel.close()
+                                        
             return
                 
         if type(widget) is not RibbonPanel and type(widget) is not QToolBar:
@@ -4292,6 +4347,42 @@ class ModernMenu(RibbonBar):
             pass
         return ButtonList
 
+    def CreateButtonFromCommand(self, commandName: str):
+        try:
+            # Get the command
+            Command = Gui.Command.get(commandName)
+            if Command is not None:
+                Icon = Gui.getIcon(
+                    CommandInfoCorrections(commandName)[
+                        "pixmap"
+                    ]
+                )
+                action = Command.getAction()
+                Button = QToolButton()                                
+                Button.addActions(action)
+                Button.setDefaultAction(action[0])
+                Button.setIcon(Icon)
+                Button.setText(CommandInfoCorrections(commandName)[
+                        "menuText"
+                    ])
+                try:
+                    if len(action) > 1:
+                        Icon = action[0].icon()
+                        # menu = QMenu(self)
+                        # menu.addActions(action)
+                        # Button.setMenu(menu)
+                except Exception:
+                    pass
+                
+                return Button
+        except Exception as e:
+            # if Parameters_Ribbon.DEBUG_MODE is True:
+            StandardFunctions.Print(
+                f"{e.with_traceback(e.__traceback__)}, 3",
+                "Warning",
+            )
+            return None
+
     def LoadDropDownAction(self, CommandName):
         try:
             # If the commandname can be split into a name and number, it is part of a FreeCAD dropdown
@@ -4871,7 +4962,17 @@ class ModernMenu(RibbonBar):
         title = title.lstrip().rstrip()
         return title
     
-    def CreatePanel(self, workbenchName: str, panelName: str, addPanel = True, dict = ribbonStructure, SetToUpdate = False, ignoreColumnLimit = False, showEnableControl = False, enableSeparator = False):
+    def CreatePanel(self, 
+                    workbenchName: str, 
+                    panelName: str, 
+                    addPanel = True, 
+                    dict = ribbonStructure, 
+                    SetToUpdate = False, 
+                    ignoreColumnLimit = False, 
+                    showEnableControl = False, 
+                    enableSeparator = False, 
+                    ExtraCommand = "",
+                    ):
         if SetToUpdate is True:
             dict = self.ribbonStructure
             Standard_Functions_Ribbon.add_keys_nested_dict(dict, ["workbenches", workbenchName, "toolbars"], 1, True)
@@ -4931,6 +5032,12 @@ class ModernMenu(RibbonBar):
             # Add new global Panels
             NewPanelList = self.List_AddNewPanelToWorkbench("Global", panelName)
             allButtons.extend(NewPanelList)
+            
+        # If a new command needs to be added, create a button and add it to allButtons
+        if ExtraCommand != "":
+            ExtraButton = self.CreateButtonFromCommand(ExtraCommand)
+            if ExtraButton is not None:
+                allButtons.append(ExtraButton)
         
         # Set the objectname to the default action of all buttons
         for button in allButtons:

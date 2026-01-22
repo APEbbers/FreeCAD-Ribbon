@@ -96,7 +96,7 @@ if Settings.GetStringSetting("BackupFolder") == os.path.join(os.path.dirname(FCB
     try:
         Settings.SetStringSetting("BackupFolder", os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "Backups"))
         if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "Backups")):
-            shutil.copy(os.path.join(os.path.dirname(FCBinding.__file__), "Backups"), os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "Backups"))
+            shutil.copytree(os.path.join(os.path.dirname(FCBinding.__file__), "Backups"), os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "Backups"))
     except Exception:
         pass
 
