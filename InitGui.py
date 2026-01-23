@@ -61,7 +61,7 @@ pathIcons = Parameters_Ribbon.ICON_LOCATION
 pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
 pathUI = Parameters_Ribbon.UI_LOCATION
 pathScripts = os.path.join(ConfigDirectory, "Scripts")
-pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
+pathPackages = os.path.join(os.path.dirname(FCBinding.__file__), "Resources", "packages")
 pathBackup = Parameters_Ribbon.BACKUP_LOCATION
 sys.path.append(ConfigDirectory)
 sys.path.append(pathIcons)
