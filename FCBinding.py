@@ -1843,11 +1843,14 @@ class ModernMenu(RibbonBar):
             if self.dragIndicator_QuickAccess is None:
                 self.dragIndicator_QuickAccess = DragTargetIndicator(orientation="right")
             
+            # Get the widget from the source
             widget = event.source()
+            
+            # If you drag and drop a new command, you actually dragging the complete QListWidget
             if type(widget) is QListWidget:
-                # print("got here 1")
+                # get the position
                 position = event.pos()
-                # print(position)
+                # If the position is within a panel, store the panel name
                 for panelName, panel in self.currentCategory().panels().items():
                     panelPos = panel.pos()
                     xMin = panelPos.x()
@@ -1856,9 +1859,7 @@ class ModernMenu(RibbonBar):
                     yMax = yMin + panel.rect().height()
                     
                     if position.x() >= xMin and position.x() < xMax:
-                        # print("got here 2")
                         if position.y() >= yMin and position.y() < yMax:
-                            # print(panelName)
                             self.dropPanelName = panelName                                                
                 
             # Store the position were the drag is started
@@ -2021,7 +2022,6 @@ class ModernMenu(RibbonBar):
 
     
     def dropEvent(self, event:QDropEvent, widget = None):        
-        # return
         # Get the widget
         if widget is None:
             widget = event.source()
@@ -2032,13 +2032,16 @@ class ModernMenu(RibbonBar):
         # Get the current category
         currentCategory = self.currentCategory()
 
+        # If you drag and drop a new command, you actually dragging the complete QListWidget
         if type(widget) is QListWidget:
             for panelName, panel in currentCategory.panels().items():
+                # If the panelName is equal to the panel name on which the command is dropped, continue.
                 if panelName == self.dropPanelName:
                     # Get the command to be added
                     ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
+                    # Define a holder for the Menu Text
                     MenuText = ""
-                    
+                                        
                     # Get the workbench name and the panel name                  
                     title = panel.objectName()
                     workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
@@ -4362,6 +4365,12 @@ class ModernMenu(RibbonBar):
             
             # Get the command
             Command = Gui.Command.get(commandName)
+            # If the command is from a dropdown button, get it from the dropdown button actions
+            if len(commandName.split(", ")) > 1:
+                Command = Gui.Command.get(commandName.split(", ")[0])
+                i = int(commandName.split(", ")[1])
+                action = Command.getAction()[i]
+                Command = Gui.Command.get(action.objectName())
             if Command is not None:
                 Icon = Gui.getIcon(
                     CommandInfoCorrections(commandName)[
@@ -4370,30 +4379,36 @@ class ModernMenu(RibbonBar):
                 )
                 action = Command.getAction()
                 Button = QToolButton()                                
+                try:
+                    if len(action) > 1:
+                        Icon = action[0].icon()
+                        
+                except Exception:
+                    pass
+                if Icon is None or Icon.isNull() is True:
+                    Icon = self.ReturnCommandIcon(commandName)
+                
                 Button.addActions(action)
                 Button.setDefaultAction(action[0])
                 Button.setIcon(Icon)
                 Button.setText(CommandInfoCorrections(commandName)[
                         "menuText"
                     ])
-                try:
-                    if len(action) > 1:
-                        Icon = action[0].icon()
-                        if Icon is None or Icon.isNull() is True:
-                            self.ReturnCommandIcon(commandName)
-                        # menu = QMenu(self)
-                        # menu.addActions(action)
-                        # Button.setMenu(menu)
-                except Exception:
-                    pass
-                
+                if len(action) > 1:
+                    menu = QMenu()
+                    menu.addActions(action)
+                    Button.setMenu(menu)
+                    # For some reason, the line below, activates the menus.
+                    # Otherwise the button wont be an dropdown button.
+                    Button.menu()
                 return Button
         except Exception as e:
-            # if Parameters_Ribbon.DEBUG_MODE is True:
-            StandardFunctions.Print(
-                f"{e.with_traceback(e.__traceback__)}, 3",
-                "Warning",
-            )
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                StandardFunctions.Print(
+                    f"{e.with_traceback(e.__traceback__)}, 3",
+                    "Warning",
+                )
+            # raise e
             return None
 
     def LoadDropDownAction(self, CommandName):
@@ -5132,14 +5147,6 @@ class ModernMenu(RibbonBar):
                                             ExtraCommand = self.CreateButtonFromCommand(Command)
                                             if ExtraCommand is not None:
                                                 allButtons.append(ExtraCommand)
-                                                # # Activate the workbench, the command belongs to. Otherwise, the command wont be created later
-                                                # for CommandItem in self.List_Commands:
-                                                #     if CommandItem[0] == Command:
-                                                #         if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard"):                                
-                                                #             print("got here")
-                                                #             # Activate the workbench if not loaded
-                                                #             Gui.activateWorkbench(CommandItem[3])
-
 
         if workbenchName in dict["workbenches"]:
             # order buttons like defined in ribbonStructure
