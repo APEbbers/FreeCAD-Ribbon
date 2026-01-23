@@ -50,13 +50,18 @@ import Serialize_Ribbon
 import CacheFunctions
 
 # Get the resources
+ConfigDirectory = Parameters_Ribbon.CONFIG_DIR
 pathIcons = Parameters_Ribbon.ICON_LOCATION
 pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
 pathUI = Parameters_Ribbon.UI_LOCATION
+pathScripts = os.path.join(ConfigDirectory, "Scripts")
+pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
 pathBackup = Parameters_Ribbon.BACKUP_LOCATION
+sys.path.append(ConfigDirectory)
 sys.path.append(pathIcons)
 sys.path.append(pathStylSheets)
 sys.path.append(pathUI)
+sys.path.append(pathPackages)
 sys.path.append(pathBackup)
 
 # import graphical created Ui. (With QtDesigner or QtCreator)
@@ -113,7 +118,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.CommandsAvailable_NP.dragMoveEvent =  lambda e: self.dragMoveEvent_ListWidget(e, self.form.CommandsAvailable_NP)
         
         # Check if there is a datafile. if not, ask the user to create one.
-        DataFile = os.path.join(os.path.dirname(__file__), "RibbonDataFile.dat")
+        DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
         if os.path.exists(DataFile) is False:
             Question = translate(
                 "FreeCAD Ribbon",

@@ -131,12 +131,14 @@ import shutil
 import Ribbon
 
 # Get the resources
+ConfigDirectory = Parameters_Ribbon.CONFIG_DIR
 pathIcons = Parameters_Ribbon.ICON_LOCATION
 pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
 pathUI = Parameters_Ribbon.UI_LOCATION
-pathScripts = os.path.join(os.path.dirname(__file__), "Scripts")
+pathScripts = os.path.join(ConfigDirectory, "Scripts")
 pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
 pathBackup = Parameters_Ribbon.BACKUP_LOCATION
+sys.path.append(ConfigDirectory)
 sys.path.append(pathIcons)
 sys.path.append(pathStylSheets)
 sys.path.append(pathUI)
@@ -337,7 +339,7 @@ class ModernMenu(RibbonBar):
         if "newPanels" in self.ribbonStructure:
             self.newPanels = self.ribbonStructure["newPanels"]
 
-        DataFile2 = os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonDataFile2.dat")
+        DataFile2 = os.path.join(ConfigDirectory, "RibbonDataFile2.dat")
         if os.path.exists(DataFile2) is True:
             Data = {}
             # read ribbon structure from JSON file
@@ -3620,7 +3622,10 @@ class ModernMenu(RibbonBar):
         OpenBackupFolder.triggered.connect(lambda: StandardFunctions.OpenDirectory(Parameters_Ribbon.BACKUP_LOCATION))
         
         # Add the script submenu with items
-        ScriptDir = os.path.join(os.path.dirname(__file__), "Scripts")
+        ScriptDir = os.path.join(ConfigDirectory, "Scripts")
+        if os.path.exists(ScriptDir) is False:
+            if os.path.exists(os.path.join(os.path.dirname(__file__), "Scripts")):
+                shutil.copytree(os.path.join(os.path.dirname(__file__), "Scripts"), os.path.join(ConfigDirectory, "Scripts"))
         if os.path.exists(ScriptDir) is True:
             ListScripts = os.listdir(ScriptDir)
             if len(ListScripts) > 0:
@@ -5419,7 +5424,7 @@ class ModernMenu(RibbonBar):
                                 f"An icon retrieved from data file for '{CommandName}'"
                             )
                             DataFile = os.path.join(
-                                os.path.dirname(__file__), "RibbonDataFile.dat"
+                                ConfigDirectory, "RibbonDataFile.dat"
                             )
 
                             if os.path.exists(DataFile) is True:
@@ -5803,7 +5808,7 @@ class ModernMenu(RibbonBar):
     
     def RestoreJson(self):
         # get the path for the Json file
-        JsonPath = os.path.dirname(__file__)
+        JsonPath = ConfigDirectory
         JsonFile = os.path.join(JsonPath, "RibbonStructure.json")
 
         BackupFiles: list = []
@@ -5916,7 +5921,7 @@ class ModernMenu(RibbonBar):
     def CheckDataFile(self):
         Data = {}
         if self.isLoaded:
-            DataFile2 = os.path.join(os.path.dirname(__file__), "RibbonDataFile2.dat")
+            DataFile2 = os.path.join(ConfigDirectory, "RibbonDataFile2.dat")
             if os.path.exists(DataFile2) is False:
                 Question = translate(
                     "FreeCAD Ribbon",

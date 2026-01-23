@@ -55,14 +55,20 @@ import webbrowser
 import StyleMapping_Ribbon
 
 # Get the resources
+ConfigDirectory = Parameters_Ribbon.CONFIG_DIR
 pathIcons = Parameters_Ribbon.ICON_LOCATION
 pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
 pathUI = Parameters_Ribbon.UI_LOCATION
+pathScripts = os.path.join(ConfigDirectory, "Scripts")
+pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
 pathBackup = Parameters_Ribbon.BACKUP_LOCATION
+sys.path.append(ConfigDirectory)
 sys.path.append(pathIcons)
 sys.path.append(pathStylSheets)
 sys.path.append(pathUI)
+sys.path.append(pathPackages)
 sys.path.append(pathBackup)
+
 
 # Define the translation
 translate = App.Qt.translate
@@ -413,7 +419,7 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
     progressBar.setValue(progressBar.value() + 1)
     #
     # clear the data file. If not exists, create it
-    DataFile = os.path.join(os.path.dirname(__file__), "RibbonDataFile.dat")
+    DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
     open(DataFile, "w").close()
 
     # Open de data file, load it as json and then close it again
@@ -427,7 +433,7 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
     Data["WorkBench_Icons"] = WorkbenchIcon
     Data["Command_Icons"] = CommandIcons
     # Write to the data file
-    DataFile = os.path.join(os.path.dirname(__file__), "RibbonDataFile.dat")
+    DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
     with open(DataFile, "w") as outfile:
         json.dump(Data, outfile, indent=4)
     outfile.close()
@@ -438,7 +444,7 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
     Data2["Language"] = FCLanguage
     Data2["List_Commands"] = List_Commands
     # Write to the data file
-    DataFile2 = os.path.join(os.path.dirname(__file__), "RibbonDataFile2.dat")
+    DataFile2 = os.path.join(ConfigDirectory, "RibbonDataFile2.dat")
     with open(DataFile2, "w") as outfile:
         json.dump(Data2, outfile, indent=4)
     outfile.close()

@@ -267,6 +267,15 @@ OldModDir = os.path.join(AppDir, "Mod")
 CurrentModDir = os.path.join(App.getUserAppDataDir(), "Mod")
 
 # region - Define the import location ----------------------------------------------------------------------------------
+CONFIG_DIR = Settings.GetStringSetting("ConfigDir")
+if CONFIG_DIR == ""  or os.path.isfile(CONFIG_DIR) is False:
+    CONFIG_DIR = str(DefaultSettings["ConfigDir"])
+    Settings.SetStringSetting("ConfigDir", CONFIG_DIR)
+    
+# endregion ------------------------------------------------------------------------------------------------------------
+
+
+# region - Define the import location ----------------------------------------------------------------------------------
 IMPORT_LOCATION = Settings.GetStringSetting("ImportLocation")
 if IMPORT_LOCATION == ""  or os.path.isfile(IMPORT_LOCATION) is False:
     IMPORT_LOCATION = str(DefaultSettings["ImportLocation"])

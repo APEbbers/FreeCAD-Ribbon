@@ -53,13 +53,18 @@ import webbrowser
 import StyleMapping_Ribbon
 
 # Get the resources
+ConfigDirectory = Parameters_Ribbon.CONFIG_DIR
 pathIcons = Parameters_Ribbon.ICON_LOCATION
 pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
 pathUI = Parameters_Ribbon.UI_LOCATION
+pathScripts = os.path.join(ConfigDirectory, "Scripts")
+pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
 pathBackup = Parameters_Ribbon.BACKUP_LOCATION
+sys.path.append(ConfigDirectory)
 sys.path.append(pathIcons)
 sys.path.append(pathStylSheets)
 sys.path.append(pathUI)
+sys.path.append(pathPackages)
 sys.path.append(pathBackup)
 
 # import graphical created Ui. (With QtDesigner or QtCreator)
@@ -3696,7 +3701,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
     def on_RestoreJson_clicked(self):
         self.form.setWindowFlags(Qt.WindowType.WindowStaysOnBottomHint)
         # get the path for the Json file
-        JsonPath = os.path.dirname(__file__)
+        JsonPath = configdirectory
         JsonFile = os.path.join(JsonPath, "RibbonStructure.json")
 
         BackupFiles: list = []
@@ -3741,7 +3746,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
     def on_ResetJson_clicked(self):
         self.form.setWindowFlags(Qt.WindowType.WindowStaysOnBottomHint)
         # get the path for the Json file
-        JsonPath = os.path.dirname(__file__)
+        JsonPath = configdirectory
         JsonFile = os.path.join(JsonPath, "RibbonStructure.json")
 
         BackupFile = os.path.join(JsonPath, "RibbonStructure_default.json")
@@ -4942,7 +4947,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
     def CheckChanges(self):
         # Open the JsonFile and load the data
-        JsonFile = open(os.path.join(os.path.dirname(__file__), "RibbonStructure.json"))
+        JsonFile = open(os.path.join(configdirectory, "RibbonStructure.json"))
         data = json.load(JsonFile)
 
         IsChanged = False
