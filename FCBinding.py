@@ -2050,7 +2050,7 @@ class ModernMenu(RibbonBar):
                             "workbenches",
                             workbenchName,
                             "toolbars",
-                            panel.objectName(),
+                            self.dropPanelName,
                             "order"
                         ],
                     )
@@ -2063,14 +2063,14 @@ class ModernMenu(RibbonBar):
                     Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "text"], endEmpty=True)
                     Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "icon"], endEmpty=True)
                     Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "IsExtra"], endEmpty=True)
-                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["size"] = "small"
-                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["text"] = MenuText
-                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["icon"] = ""
-                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["IsExtra"] = True
+                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["size"] = "small"
+                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["text"] = MenuText
+                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["icon"] = ""
+                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["IsExtra"] = True
                     
                     # Create a new panel
                     workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                    newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand)
+                    newPanel = self.CreatePanel(workbenchName, self.dropPanelName, addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand)
                                             
                     # Add the panel to the list with long panels
                     self.longPanels.append(newPanel)
@@ -2081,7 +2081,7 @@ class ModernMenu(RibbonBar):
                     self.setPanelProperties(newPanel)
                     
                     # Update the dict of the currentCategory with the new panel
-                    self.currentCategory()._panels[newPanel.objectName()] = newPanel
+                    self.currentCategory()._panels[self.dropPanelName] = newPanel
                     
                     # Close the old panel and the dragindicator
                     panel.close()
