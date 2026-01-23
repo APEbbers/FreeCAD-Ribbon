@@ -2035,28 +2035,13 @@ class ModernMenu(RibbonBar):
         if type(widget) is QListWidget:
             for panelName, panel in currentCategory.panels().items():
                 if panelName == self.dropPanelName:
-                    print("got here 1")
                     # Get the command to be added
                     ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
                     MenuText = ""
-                    print(ExtraCommand)
                     
                     # Get the workbench name and the panel name                  
                     title = panel.objectName()
                     workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-
-                    # Activate the workbench, the command belongs to. Otherwise, the command wont be created later
-                    for CommandItem in self.List_Commands:
-
-                        if CommandItem[0] == ExtraCommand:
-                            MenuText = CommandItem[2]
-                            if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard"):                                
-                                print("got here 2")
-                                # Activate the workbench if not loaded
-                                Gui.activateWorkbench(CommandItem[3])
-                    
-                    # Set the current  category after activating the workbench
-                    self.setCurrentCategory(currentCategory)
                     
                     # Get the order list, if there isn't one, create it
                     StandardFunctions.add_keys_nested_dict(
@@ -4364,6 +4349,17 @@ class ModernMenu(RibbonBar):
 
     def CreateButtonFromCommand(self, commandName: str):
         try:
+            # Activate the workbench, the command belongs to. Otherwise, the command wont be created later
+            # Get the current category
+            currentCategory = self.currentCategory()
+            for CommandItem in self.List_Commands:
+                if CommandItem[0] == commandName:
+                    if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard"):                                
+                        # Activate the workbench if not loaded
+                        Gui.activateWorkbench(CommandItem[3])
+            # Set the current  category after activating the workbench
+            self.setCurrentCategory(currentCategory)
+            
             # Get the command
             Command = Gui.Command.get(commandName)
             if Command is not None:
@@ -5129,14 +5125,20 @@ class ModernMenu(RibbonBar):
                 for orderedToolbar in dict["workbenches"][workbenchName]["toolbars"]:
                     if orderedToolbar.lower() == panelName.lower():
                         if "commands" in dict["workbenches"][workbenchName]["toolbars"][panelName]:
-                            for CommandItem in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
-                                if CommandItem != "order":
-                                    if "IsExtra" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandItem]:
-                                        if dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandItem]["IsExtra"]:
-                                            print(CommandItem)
-                                            ExtraCommand = self.CreateButtonFromCommand(CommandItem)
+                            for Command in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
+                                if Command != "order":
+                                    if "IsExtra" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]:
+                                        if dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]["IsExtra"]:
+                                            ExtraCommand = self.CreateButtonFromCommand(Command)
                                             if ExtraCommand is not None:
                                                 allButtons.append(ExtraCommand)
+                                                # # Activate the workbench, the command belongs to. Otherwise, the command wont be created later
+                                                # for CommandItem in self.List_Commands:
+                                                #     if CommandItem[0] == Command:
+                                                #         if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard"):                                
+                                                #             print("got here")
+                                                #             # Activate the workbench if not loaded
+                                                #             Gui.activateWorkbench(CommandItem[3])
 
 
         if workbenchName in dict["workbenches"]:
