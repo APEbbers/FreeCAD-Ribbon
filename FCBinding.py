@@ -2039,8 +2039,19 @@ class ModernMenu(RibbonBar):
                 if panelName == self.dropPanelName:
                     # Get the command to be added
                     ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
+                    # If the commands is part of a dropdown, get the actual command name
+                    if len(ExtraCommand.split(", ")) > 1:
+                        print(ExtraCommand)
+                        Command = Gui.Command.get(ExtraCommand.split(", ")[0])
+                        if Command is not None:
+                            i = int(ExtraCommand.split(", ")[1])
+                            action = Command.getAction()[i]
+                            ExtraCommand = action.objectName()
                     # Define a holder for the Menu Text
                     MenuText = ""
+                    for CommandItem in self.List_Commands:
+                        if CommandItem[0] == ExtraCommand:
+                            MenuText = CommandItem[4]
                                         
                     # Get the workbench name and the panel name                  
                     title = panel.objectName()
@@ -2071,6 +2082,7 @@ class ModernMenu(RibbonBar):
                     self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["icon"] = ""
                     self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["IsExtra"] = True
                     
+                    print(f"command is: {ExtraCommand}")
                     # Create a new panel
                     workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                     newPanel = self.CreatePanel(workbenchName, self.dropPanelName, addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand)
@@ -2088,7 +2100,12 @@ class ModernMenu(RibbonBar):
                     
                     # Close the old panel and the dragindicator
                     panel.close()
-                                        
+                    
+                gridLayout: QGridLayout = panel._actionsLayout
+                for n in range(gridLayout.count()):
+                    control = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                    if control is not None:
+                        control.setEnabled(True)
             return
                 
         if type(widget) is not RibbonPanel and type(widget) is not QToolBar:
@@ -4371,6 +4388,7 @@ class ModernMenu(RibbonBar):
                 i = int(commandName.split(", ")[1])
                 action = Command.getAction()[i]
                 Command = Gui.Command.get(action.objectName())
+                commandName = action.objectName()
             if Command is not None:
                 Icon = Gui.getIcon(
                     CommandInfoCorrections(commandName)[
@@ -4381,28 +4399,39 @@ class ModernMenu(RibbonBar):
                 Button = QToolButton()                                
                 try:
                     if len(action) > 1:
-                        Icon = action[0].icon()
-                        
+                        Icon = action[0].icon()  
                 except Exception:
                     pass
                 if Icon is None or Icon.isNull() is True:
                     Icon = self.ReturnCommandIcon(commandName)
                 
-                Button.addActions(action)
-                Button.setDefaultAction(action[0])
-                Button.setIcon(Icon)
-                Button.setText(CommandInfoCorrections(commandName)[
-                        "menuText"
-                    ])
                 if len(action) > 1:
+                    Button.addActions(action)
+                    Button.setDefaultAction(action[0])
                     menu = QMenu()
                     menu.addActions(action)
                     Button.setMenu(menu)
                     # For some reason, the line below, activates the menus.
                     # Otherwise the button wont be an dropdown button.
                     Button.menu()
+                else:
+                    try:
+                        Button.addAction(action[0])
+                        Button.setDefaultAction(action[0])
+                    except Exception:
+                        try:
+                            Button.addAction(action)
+                            Button.setDefaultAction(action)
+                        except Exception:
+                            return
+                Button.setIcon(Icon)
+                Button.setText(CommandInfoCorrections(commandName)[
+                        "menuText"
+                    ])
+                print(f"button is: {Button}")
                 return Button
         except Exception as e:
+            raise e
             if Parameters_Ribbon.DEBUG_MODE is True:
                 StandardFunctions.Print(
                     f"{e.with_traceback(e.__traceback__)}, 3",
