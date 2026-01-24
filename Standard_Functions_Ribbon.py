@@ -779,6 +779,9 @@ def CommandInfoCorrections(CommandName):
         if Command is not None:
             CommandInfo = Command.getInfo()
 
+            if CommandName == "Std_RecentFiles":
+                CommandInfo["ActionText"] = CommandInfo["menuText"]
+
             if CommandName == "PartDesign_CompSketches":
                 CommandInfo["menuText"] = "Create sketch..."
                 CommandInfo["toolTip"] = "Create or edit a sketch"
@@ -910,6 +913,12 @@ def returnQiCons_Commands(CommandName, pixmap=""):
             Command = Gui.Command.get(CommandName)
             action = Command.getAction()[0]
             icon = action.icon()
+        except Exception:
+            pass
+    
+    if icon is None or (icon is not None and icon.isNull()):
+        try:
+            icon = Gui.getIcon(CommandName)
         except Exception:
             return None
     return icon

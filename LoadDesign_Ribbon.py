@@ -987,7 +987,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         if IsInList is False:
                             CommandNames.append(Item)
         # Add Standard commands that are not in any toolbars
-        for commandNamesItem in Gui.listCommands():
+        for commandNamesItem in Gui.listCommands():            
             if commandNamesItem.lower().startswith("std_"):
                 inList = False
                 for CommandName in CommandNames:
@@ -996,6 +996,21 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 
                 if inList is False:
                     CommandNames.append([commandNamesItem, "Standard"])
+            else:
+                inList = False
+                for CommandName in CommandNames:
+                    if CommandName[0] == commandNamesItem:
+                        inList = True
+                
+                if inList is False:
+                    WorkBench = ""
+                    for WorkBenchName in List_Workbenches:
+                        if commandNamesItem.startswith(WorkBenchName) or WorkBenchName.startswith(commandNamesItem.split("_")[0]):
+                            WorkBench = WorkBenchName
+                            break
+                    Icon = StandardFunctions.returnQiCons_Commands(commandNamesItem)
+                    if Icon is not None or Icon.isNull() is False:
+                        CommandNames.append([commandNamesItem, WorkBench])
 
         # Go through the list
         for CommandName in CommandNames:
@@ -5272,7 +5287,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         != "All"
                     ):
                         if (
-                            f"{MenuNameTranslated}" not in ShadowList
+                            f"{CommandName}" not in ShadowList
                             and workbenchName != "Global"
                             and workbenchName != "General"
                             and workbenchName != "Standard"
@@ -5339,7 +5354,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 if Icon is not None:
                                     ListWidget_Commands.addItem(ListWidgetItem)
 
-                        ShadowList.append(f"{MenuNameTranslated}")
+                        ShadowList.append(f"{CommandName}")
                     if (
                         workbenchName == "Standard" and
                         ListWidget_WorkBenches.currentText() == "Standard"
