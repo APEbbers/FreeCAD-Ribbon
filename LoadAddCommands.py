@@ -652,7 +652,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             and workbenchName != "Global"
                             and workbenchName != "General"
                             and workbenchName != "Standard"
-                            and workbenchName != "Standard"
+                            and workbenchName != ""
                         ):
                             try:
                                 WorkbenchTitle = Gui.getWorkbench(
