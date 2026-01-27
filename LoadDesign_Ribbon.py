@@ -188,7 +188,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.ReadJson()
 
         # Check if there is a datafile. if not, ask the user to create one.
-        DataFile = os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonDataFile.dat")
+        DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
         if os.path.exists(DataFile) is False:
             Question = translate(
                 "FreeCAD Ribbon",
@@ -1008,6 +1008,12 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         if commandNamesItem.startswith(WorkBenchName) or WorkBenchName.startswith(commandNamesItem.split("_")[0]):
                             WorkBench = WorkBenchName
                             break
+                    if len(commandNamesItem.split(", ")) > 1:
+                        Command = Gui.Command.get(commandNamesItem.split(", ")[0])
+                        i = int(commandNamesItem.split(", ")[1])
+                        action = Command.getAction()[i]
+                        Command = Gui.Command.get(action.objectName())
+                        commandNamesItem = action.objectName()
                     Icon = StandardFunctions.returnQiCons_Commands(commandNamesItem)
                     if Icon is not None or Icon.isNull() is False:
                         CommandNames.append([commandNamesItem, WorkBench])
@@ -5139,14 +5145,14 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         ListWidget_WorkBenches: QListWidget,
     ):
         # Get the text in the searchbar as lower case. (This makes it not sensitive for Upper or lower cases)
-        SearchbarText = SearchBar.text().lower()
+        SearchbarText = SearchBar.text().replace(" ", "").lower()
 
         # Clear the listwidget
         ListWidget.clear()
 
         ShadowList = []  # List to add the commands and prevent duplicates
         for ToolbarCommand in self.List_Commands:
-            CommandName = ToolbarCommand[0]
+            CommandName = ToolbarCommand[0]            
             workbenchName = ToolbarCommand[3]
             MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not translated
             if len(ToolbarCommand) == 5:
@@ -5154,10 +5160,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             if CommandName.endswith("_ddb"):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
 
-            if MenuNameTranslated != "":
+            if MenuNameTranslated != "":                
                 if (
                     SearchbarText != ""
-                    and MenuNameTranslated.lower().startswith(SearchbarText)
+                    and MenuNameTranslated.replace(" ", "").lower().startswith(SearchbarText)
                 ) or SearchbarText == "":
                     if f"{MenuNameTranslated}" not in ShadowList:
                         try:
@@ -5166,13 +5172,16 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 and workbenchName != "General"
                                 and workbenchName != "Standard"
                                 and workbenchName != "All"
+                                and workbenchName != ""
                             ):
                                 WorkbenchTitle = Gui.getWorkbench(
                                     workbenchName
                                 ).MenuText
                             else:
                                 WorkbenchTitle = workbenchName
-                        except Exception:
+                        except Exception as e:
+                            if Parameters_Ribbon.DEBUG_MODE is True:
+                                print(e)
                             return
                         try:
                             if (
@@ -5247,10 +5256,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                         StandardFunctions.Print(
                                             f"{CommandName} has no icon!", "Warning"
                                         )
-                            # if ListWidget_WorkBenches.currentText() == "Standard":
+                                ShadowList.append(f"{MenuNameTranslated}")
                         except Exception:
-                            continue
-            ShadowList.append(f"{MenuNameTranslated}")
+                            continue                        
 
         return
 
@@ -5268,14 +5276,14 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             return
 
         # Get the text in the searchbar as lower case. (This makes it not sensitive for Upper or lower cases)
-        SearchbarText = SearchBar.text().lower()
+        SearchbarText = SearchBar.text().replace(" ", "").lower()
 
         # Clear the listwidget
         ListWidget_Commands.clear()
 
         ShadowList = []  # List to add the commands and prevent duplicates
         for ToolbarCommand in self.List_Commands:
-            CommandName = ToolbarCommand[0]
+            CommandName = ToolbarCommand[0]            
             workbenchName = ToolbarCommand[3]
             MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not transleted!
             if len(ToolbarCommand) == 5:
@@ -5283,11 +5291,11 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             if CommandName.endswith("_ddb"):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
 
-            if MenuNameTranslated != "":
+            if MenuNameTranslated != "":            
                 if (
                     SearchbarText != ""
-                    and MenuNameTranslated.lower().startswith(SearchbarText)
-                ) or SearchbarText == "":
+                    and MenuNameTranslated.replace(" ", "").lower().startswith(SearchbarText)
+                ) or SearchbarText == "":       
                     if (
                         ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole)
                         != "All"
@@ -5297,12 +5305,15 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             and workbenchName != "Global"
                             and workbenchName != "General"
                             and workbenchName != "Standard"
+                            and workbenchName != ""
                         ):
                             try:
                                 WorkbenchTitle = Gui.getWorkbench(
                                     workbenchName
                                 ).MenuText
-                            except Exception:
+                            except Exception as e:
+                                if Parameters_Ribbon.DEBUG_MODE is True:
+                                    print(e)
                                 return
                             if (
                                 ListWidget_WorkBenches.currentData(
@@ -5355,7 +5366,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 ListWidgetItem.setText(Text)
                                 ListWidgetItem.setData(
                                     Qt.ItemDataRole.UserRole, CommandName
-                                )
+                                )                                
                                 if Icon is not None:
                                     ListWidgetItem.setIcon(Icon)
                                 ListWidgetItem.setToolTip(
@@ -5365,8 +5376,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 # Add the ListWidgetItem to the correct ListWidget
                                 if Icon is not None:
                                     ListWidget_Commands.addItem(ListWidgetItem)
-
-                        ShadowList.append(f"{MenuNameTranslated}")
+                                ShadowList.append(f"{MenuNameTranslated}")
+                        
                     if (
                         workbenchName == "Standard" and
                         ListWidget_WorkBenches.currentText() == "Standard"
@@ -5457,7 +5468,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 )  # Use the tooltip to store the actual command.
 
                                 # Add the ListWidgetItem to the correct ListWidget
-                                ListWidget_Commands.addItem(ListWidgetItem)
+                                ListWidget_Commands.addItem(ListWidgetItem)                    
         return
 
     def CreateRibbonStructure_WB(self, WorkBenchName="All", Size="small"):
