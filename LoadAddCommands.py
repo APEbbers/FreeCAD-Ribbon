@@ -535,6 +535,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 and workbenchName != "General"
                                 and workbenchName != "Standard"
                                 and workbenchName != "All"
+                                and workbenchName != ""
                             ):
                                 WorkbenchTitle = Gui.getWorkbench(
                                     workbenchName
@@ -593,18 +594,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     ListWidgetItem.setIcon(Icon)
                                     ListWidgetItem.setToolTip(
                                         CommandName
-                                    )  # Use the tooltip to store the actual command.
+                                    )
 
-                                    # # Add the ListWidgetItem to the correct ListWidget
-                                    # IsInList = False
-                                    # for i in range(DestinationWidget.count()):
-                                    #     item = DestinationWidget.item(i)
-                                    #     if item.data(
-                                    #         Qt.ItemDataRole.UserRole
-                                    #     ) == ListWidgetItem.data(Qt.ItemDataRole.UserRole):
-                                    #         IsInList = True
-                                    # if IsInList is False:
-                                    #     ListWidget.addItem(ListWidgetItem)
                                     ListWidget.addItem(ListWidgetItem)
                                 if Icon is None:
                                     if Parameters_Ribbon.DEBUG_MODE is True:
@@ -660,6 +651,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             f"{MenuNameTranslated}" not in ShadowList
                             and workbenchName != "Global"
                             and workbenchName != "General"
+                            and workbenchName != "Standard"
                             and workbenchName != "Standard"
                         ):
                             try:

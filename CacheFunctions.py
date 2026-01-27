@@ -251,6 +251,37 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
                             break
                     if IsInList is False:
                         CommandNames.append(Item)
+        # Add commands that are not in any toolbars
+        for commandNamesItem in Gui.listCommands():            
+            if commandNamesItem.lower().startswith("std_"):
+                inList = False
+                for CommandName in CommandNames:
+                    if CommandName[0] == commandNamesItem:
+                        inList = True
+                
+                if inList is False:
+                    CommandNames.append([commandNamesItem, "Standard"])
+            else:
+                inList = False
+                for CommandName in CommandNames:
+                    if CommandName[0] == commandNamesItem:
+                        inList = True
+                
+                if inList is False:
+                    WorkBench = ""
+                    for WorkBenchName in List_Workbenches:
+                        if commandNamesItem.startswith(WorkBenchName) or WorkBenchName.startswith(commandNamesItem.split("_")[0]):
+                            WorkBench = WorkBenchName
+                            break
+                    if len(commandNamesItem.split(", ")) > 1:
+                        Command = Gui.Command.get(commandNamesItem.split(", ")[0])
+                        i = int(commandNamesItem.split(", ")[1])
+                        action = Command.getAction()[i]
+                        Command = Gui.Command.get(action.objectName())
+                        commandNamesItem = action.objectName()
+                    Icon = StandardFunctions.returnQiCons_Commands(commandNamesItem)
+                    if Icon is not None or Icon.isNull() is False:
+                        CommandNames.append([commandNamesItem, WorkBench])
 
     # Go through the list
     for CommandName in CommandNames:
