@@ -779,9 +779,6 @@ def CommandInfoCorrections(CommandName):
         if Command is not None:
             CommandInfo = Command.getInfo()
 
-            if CommandName == "Std_RecentFiles":
-                CommandInfo["ActionText"] = CommandInfo["menuText"]
-
             if CommandName == "PartDesign_CompSketches":
                 CommandInfo["menuText"] = "Create sketch..."
                 CommandInfo["toolTip"] = "Create or edit a sketch"
@@ -804,6 +801,9 @@ def CommandInfoCorrections(CommandName):
             else:
                 CommandInfo["ActionText"] = CommandInfo["menuText"]
             if CommandInfo["ActionText"] == "":
+                CommandInfo["ActionText"] = CommandInfo["menuText"]
+            
+            if CommandName == "Std_RecentFiles":
                 CommandInfo["ActionText"] = CommandInfo["menuText"]
 
             ChildCommands = returnDropDownCommands(Command)

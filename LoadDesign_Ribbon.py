@@ -994,7 +994,11 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     if CommandName[0] == commandNamesItem:
                         inList = True
                 
-                if inList is False:
+                # Skip "Std_Workbench".
+                if commandNamesItem == "Std_Workbench":
+                    continue
+                
+                if inList is False:                    
                     CommandNames.append([commandNamesItem, "Standard"])
             else:
                 inList = False
