@@ -4968,7 +4968,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
     def CheckChanges(self):
         # Open the JsonFile and load the data
-        JsonFile = open(os.path.join(configdirectory, "RibbonStructure.json"))
+        JsonFile = open(os.path.join(ConfigDirectory, "RibbonStructure.json"))
         data = json.load(JsonFile)
 
         IsChanged = False
