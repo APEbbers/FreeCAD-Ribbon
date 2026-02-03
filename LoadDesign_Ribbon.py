@@ -1009,7 +1009,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 if inList is False:
                     WorkBench = ""
                     for WorkBenchName in List_Workbenches:
-                        if commandNamesItem.startswith(WorkBenchName) or WorkBenchName.startswith(commandNamesItem.split("_")[0]):
+                        if commandNamesItem.startswith(WorkBenchName[0]) or WorkBenchName[0].startswith(commandNamesItem.split("_")[0]):
                             WorkBench = WorkBenchName
                             break
                     if len(commandNamesItem.split(", ")) > 1:

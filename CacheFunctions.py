@@ -155,7 +155,7 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
     progressBar.setValue(progressBar.value() + 1)
     #
     List_Workbenches.clear()
-    for WorkBenchName in Gui.listWorkbenches():
+    for WorkBenchName in Gui.listWorkbenches().copy():
         try:
             if str(WorkBenchName) != "" or WorkBenchName is not None:
                 if str(WorkBenchName) != "NoneWorkbench":
@@ -274,7 +274,7 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
                 if inList is False:
                     WorkBench = ""
                     for WorkBenchName in List_Workbenches:
-                        if commandNamesItem.startswith(WorkBenchName) or WorkBenchName.startswith(commandNamesItem.split("_")[0]):
+                        if commandNamesItem.startswith(WorkBenchName[0]) or WorkBenchName[0].startswith(commandNamesItem.split("_")[0]):
                             WorkBench = WorkBenchName
                             break
                     if len(commandNamesItem.split(", ")) > 1:
