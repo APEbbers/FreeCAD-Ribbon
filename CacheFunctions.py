@@ -277,12 +277,12 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
                         if commandNamesItem.startswith(WorkBenchName[0]) or WorkBenchName[0].startswith(commandNamesItem.split("_")[0]):
                             WorkBench = WorkBenchName
                             break
-                    if len(commandNamesItem.split(", ")) > 1:
-                        Command = Gui.Command.get(commandNamesItem.split(", ")[0])
-                        i = int(commandNamesItem.split(", ")[1])
-                        action = Command.getAction()[i]
-                        Command = Gui.Command.get(action.objectName())
-                        commandNamesItem = action.objectName()
+                    # if len(commandNamesItem.split(", ")) > 1:
+                    #     Command = Gui.Command.get(commandNamesItem.split(", ")[0])
+                    #     i = int(commandNamesItem.split(", ")[1])
+                    #     action = Command.getAction()[i]
+                    #     Command = Gui.Command.get(action.objectName())
+                    #     commandNamesItem = action.objectName()
                     Icon = StandardFunctions.returnQiCons_Commands(commandNamesItem)
                     if Icon is not None or Icon.isNull() is False:
                         CommandNames.append([commandNamesItem, WorkBench])

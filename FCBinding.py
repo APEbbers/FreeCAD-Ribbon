@@ -2039,14 +2039,14 @@ class ModernMenu(RibbonBar):
                 if panelName == self.dropPanelName:
                     # Get the command to be added
                     ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
-                    # If the commands is part of a dropdown, get the actual command name
-                    if len(ExtraCommand.split(", ")) > 1:
-                        print(ExtraCommand)
-                        Command = Gui.Command.get(ExtraCommand.split(", ")[0])
-                        if Command is not None:
-                            i = int(ExtraCommand.split(", ")[1])
-                            action = Command.getAction()[i]
-                            ExtraCommand = action.objectName()
+                    # # If the commands is part of a dropdown, get the actual command name
+                    # if len(ExtraCommand.split(", ")) > 1:                        
+                    #     Command = Gui.Command.get(ExtraCommand.split(", ")[0])
+                    #     if Command is not None:
+                    #         i = int(ExtraCommand.split(", ")[1])
+                    #         action = Command.getAction()[i]
+                    #         ExtraCommand = action.objectName()
+                    #         print(ExtraCommand)
                     # Define a holder for the Menu Text
                     MenuText = ""
                     for CommandItem in self.List_Commands:
@@ -4382,54 +4382,60 @@ class ModernMenu(RibbonBar):
             
             # Get the command
             Command = Gui.Command.get(commandName)
+            action = None
+            Icon = None
             # If the command is from a dropdown button, get it from the dropdown button actions
             if len(commandName.split(", ")) > 1:
                 Command = Gui.Command.get(commandName.split(", ")[0])
                 i = int(commandName.split(", ")[1])
                 action = Command.getAction()[i]
-                Command = Gui.Command.get(action.objectName())
-                commandName = action.objectName()
-            if Command is not None:
+                # Command = Gui.Command.get(action.objectName())
+                # commandName = action.objectName()
+                Icon = action.icon()
+            if Command is not None and len(commandName.split(", ")) == 1:
                 Icon = Gui.getIcon(
                     CommandInfoCorrections(commandName)[
                         "pixmap"
                     ]
                 )
-                action = Command.getAction()
-                Button = QToolButton()                                
-                try:
-                    if len(action) > 1:
-                        Icon = action[0].icon()  
-                except Exception:
-                    pass
                 if Icon is None or Icon.isNull() is True:
                     Icon = self.ReturnCommandIcon(commandName)
-                
+                action = Command.getAction()
+            Button = QToolButton()                                
+            try:
                 if len(action) > 1:
-                    Button.addActions(action)
+                    Icon = action[0].icon()  
+            except Exception:
+                pass
+           
+            
+            if type(action) is list and len(action) > 1:
+                Button.addActions(action)
+                Button.setDefaultAction(action[0])
+                menu = QMenu()
+                menu.addActions(action)
+                Button.setMenu(menu)
+                # For some reason, the line below, activates the menus.
+                # Otherwise the button wont be an dropdown button.
+                Button.menu()
+            else:
+                try:
+                    Button.addAction(action[0])
                     Button.setDefaultAction(action[0])
-                    menu = QMenu()
-                    menu.addActions(action)
-                    Button.setMenu(menu)
-                    # For some reason, the line below, activates the menus.
-                    # Otherwise the button wont be an dropdown button.
-                    Button.menu()
-                else:
+                except Exception:
                     try:
-                        Button.addAction(action[0])
-                        Button.setDefaultAction(action[0])
+                        Button.addAction(action)
+                        Button.setDefaultAction(action)
                     except Exception:
-                        try:
-                            Button.addAction(action)
-                            Button.setDefaultAction(action)
-                        except Exception:
-                            return
-                Button.setIcon(Icon)
-                Button.setText(CommandInfoCorrections(commandName)[
-                        "menuText"
-                    ])
-                print(f"button is: {Button}")
-                return Button
+                        return
+            Button.setIcon(Icon)
+            Button.setText(CommandInfoCorrections(commandName)[
+                    "menuText"
+                ])
+            if Button.text() == "":
+                Button.setText(commandName)
+            Button.setToolTip(commandName)
+            return Button
         except Exception as e:
             raise e
             if Parameters_Ribbon.DEBUG_MODE is True:
@@ -5157,25 +5163,6 @@ class ModernMenu(RibbonBar):
                                         allButtons.insert(j, separator)
                                 except Exception:
                                     pass
-                                
-        # add the extra commands to the command list.
-        if workbenchName in dict["workbenches"]:
-            if (
-                panelName != ""
-                and "toolbars" in dict["workbenches"][workbenchName]
-                and panelName
-                in dict["workbenches"][workbenchName]["toolbars"]
-            ):
-                for orderedToolbar in dict["workbenches"][workbenchName]["toolbars"]:
-                    if orderedToolbar.lower() == panelName.lower():
-                        if "commands" in dict["workbenches"][workbenchName]["toolbars"][panelName]:
-                            for Command in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
-                                if Command != "order":
-                                    if "IsExtra" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]:
-                                        if dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]["IsExtra"]:
-                                            ExtraCommand = self.CreateButtonFromCommand(Command)
-                                            if ExtraCommand is not None:
-                                                allButtons.append(ExtraCommand)
 
         if workbenchName in dict["workbenches"]:
             # order buttons like defined in ribbonStructure
@@ -5310,9 +5297,11 @@ class ModernMenu(RibbonBar):
 
             # if the button has not text, remove it, skip it and increase the counter.
             if button.text() == "":
+                print("empty button")
+                print(button.toolTip())
                 continue
             # If the command is already there, remove it, skip it and increase the counter.
-            elif shadowList.__contains__(button.text()) is True:
+            elif shadowList.__contains__(button.text()) is True:                
                 continue
             else:
                 # If the number of columns is more than allowed,
@@ -5381,7 +5370,10 @@ class ModernMenu(RibbonBar):
                     continue
                 else:
                     try:
+                        CommandName = button.toolTip()
+                        print(CommandName)
                         action = button.defaultAction()
+                        Icon = button.icon()
 
                         # get the action text
                         text = action.text()
@@ -5463,7 +5455,8 @@ class ModernMenu(RibbonBar):
                                                 
                         # Get the icon from cache. Use the pixmap as backup
                         pixmap = ""
-                        CommandName = action.data()
+                        # CommandName = action.data()
+                        # CommandName = button.toolTip()
                         # If the command is an dropdown, use the button text instead of action data
                         if button.text().endswith("_ddb"):
                             CommandName = button.text()
