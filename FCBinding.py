@@ -1040,6 +1040,10 @@ class ModernMenu(RibbonBar):
     # endregion
 
     # region - Customise functions
+    #        
+    # Store the state of the workingDict
+    WorkingDictUpdated = False
+    
     def contextMenuEvent(self, event):
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         
@@ -1049,11 +1053,13 @@ class ModernMenu(RibbonBar):
         
         # Declare a dict for this workbench only
         self.workBenchDict = {}
+
         # add keys if they don´t exist
         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName], endEmpty=True)
         Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName], endEmpty=True)
+        # if not self.WorkingDictUpdated:
         self.workBenchDict["workbenches"][workbenchName] = self.ribbonStructure["workbenches"][workbenchName]
-        
+    
         # If betaFunctions is enabled, coninue
         if self.BetaFunctionsEnabled is True:
             # Get the widget and the panel
@@ -1494,6 +1500,8 @@ class ModernMenu(RibbonBar):
                         
                         # Clear the workbench dict
                         self.workBenchDict.clear()
+                        
+                        self.WorkingDictUpdated = False
 
                 if action == CombinePanelsAct:
                     LoadCombinePanel_Ribbon.main()
@@ -2039,14 +2047,7 @@ class ModernMenu(RibbonBar):
                 if panelName == self.dropPanelName:
                     # Get the command to be added
                     ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
-                    # # If the commands is part of a dropdown, get the actual command name
-                    # if len(ExtraCommand.split(", ")) > 1:                        
-                    #     Command = Gui.Command.get(ExtraCommand.split(", ")[0])
-                    #     if Command is not None:
-                    #         i = int(ExtraCommand.split(", ")[1])
-                    #         action = Command.getAction()[i]
-                    #         ExtraCommand = action.objectName()
-                    #         print(ExtraCommand)
+
                     # Define a holder for the Menu Text
                     MenuText = ""
                     for CommandItem in self.List_Commands:
@@ -2081,11 +2082,10 @@ class ModernMenu(RibbonBar):
                     self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["text"] = MenuText
                     self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["icon"] = ""
                     self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["IsExtra"] = True
-                    
-                    print(f"command is: {ExtraCommand}")
+
                     # Create a new panel
                     workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                    newPanel = self.CreatePanel(workbenchName, self.dropPanelName, addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand)
+                    newPanel = self.CreatePanel(workbenchName, self.dropPanelName, addPanel=False, dict=self.workBenchDict, SetToUpdate=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand)
                                             
                     # Add the panel to the list with long panels
                     self.longPanels.append(newPanel)
@@ -2100,6 +2100,8 @@ class ModernMenu(RibbonBar):
                     
                     # Close the old panel and the dragindicator
                     panel.close()
+                    
+                    self.WorkingDictUpdated = True
                     
                 gridLayout: QGridLayout = panel._actionsLayout
                 for n in range(gridLayout.count()):
@@ -4437,7 +4439,6 @@ class ModernMenu(RibbonBar):
             Button.setToolTip(commandName)
             return Button
         except Exception as e:
-            raise e
             if Parameters_Ribbon.DEBUG_MODE is True:
                 StandardFunctions.Print(
                     f"{e.with_traceback(e.__traceback__)}, 3",
@@ -5083,7 +5084,6 @@ class ModernMenu(RibbonBar):
             except Exception:
                 pass
             
-            
         # Add custom panels
         if panelName.endswith("_custom"):
             customList = self.List_AddCustomToolBarToWorkbench(workbenchName, panelName)
@@ -5163,6 +5163,25 @@ class ModernMenu(RibbonBar):
                                         allButtons.insert(j, separator)
                                 except Exception:
                                     pass
+                                
+        # add the extra commands to the command list that are present in the dict.
+        if workbenchName in dict["workbenches"]:
+            if (
+                panelName != ""
+                and "toolbars" in dict["workbenches"][workbenchName]
+                and panelName
+                in dict["workbenches"][workbenchName]["toolbars"]
+            ):
+                for orderedToolbar in dict["workbenches"][workbenchName]["toolbars"]:
+                    if orderedToolbar.lower() == panelName.lower():
+                        if "commands" in dict["workbenches"][workbenchName]["toolbars"][panelName]:
+                            for Command in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
+                                if Command != "order":
+                                    if "IsExtra" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]:
+                                        if dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]["IsExtra"]:
+                                            ExtraCommand = self.CreateButtonFromCommand(Command)
+                                            if ExtraCommand is not None:
+                                                allButtons.append(ExtraCommand)
 
         if workbenchName in dict["workbenches"]:
             # order buttons like defined in ribbonStructure
@@ -5297,8 +5316,6 @@ class ModernMenu(RibbonBar):
 
             # if the button has not text, remove it, skip it and increase the counter.
             if button.text() == "":
-                print("empty button")
-                print(button.toolTip())
                 continue
             # If the command is already there, remove it, skip it and increase the counter.
             elif shadowList.__contains__(button.text()) is True:                
@@ -5371,7 +5388,6 @@ class ModernMenu(RibbonBar):
                 else:
                     try:
                         CommandName = button.toolTip()
-                        print(CommandName)
                         action = button.defaultAction()
                         Icon = button.icon()
 
@@ -5455,8 +5471,6 @@ class ModernMenu(RibbonBar):
                                                 
                         # Get the icon from cache. Use the pixmap as backup
                         pixmap = ""
-                        # CommandName = action.data()
-                        # CommandName = button.toolTip()
                         # If the command is an dropdown, use the button text instead of action data
                         if button.text().endswith("_ddb"):
                             CommandName = button.text()
@@ -5523,8 +5537,6 @@ class ModernMenu(RibbonBar):
                             buttonSize = dict["workbenches"][
                                 workbenchName
                             ]["toolbars"][panelName]["commands"][CommandName]["size"]
-                            # if "Part" in CommandName:
-                            #     print(f"{CommandName}, {buttonSize}")
                             if buttonSize == "":
                                 buttonSize = "small"
                         except KeyError:
@@ -5539,7 +5551,6 @@ class ModernMenu(RibbonBar):
                         btn = None
                         # Make sure that no strange "&" symbols are remainging
                         action.setText(action.text().replace("&", ""))
-                        # print(action.data())
                         if buttonSize == "small":
                             showText = Parameters_Ribbon.SHOW_ICON_TEXT_SMALL
                             if (
@@ -5666,10 +5677,9 @@ class ModernMenu(RibbonBar):
                                 if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True:
                                     if "textEnabled" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]:
                                         showText = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["textEnabled"]
-                            except Exception as e:
-                                print(CommandName + ", " + str(e.with_traceback(e.__traceback__)))
+                            except Exception as e:                                
                                 if Parameters_Ribbon.DEBUG_MODE is True:
-                                    print(e)
+                                    print(CommandName + ", " + str(e.with_traceback(e.__traceback__)))
                                 pass
 
                             # Create a custom toolbutton
