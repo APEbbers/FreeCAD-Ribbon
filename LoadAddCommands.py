@@ -357,6 +357,11 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         All_KeyWord = translate("FreeCAD Ribbon", "All")
         self.form.ListCategory_NP.addItem(All_KeyWord, "All")
         # self.form.ListCategory_DDB.addItem(All_KeyWord, "All")
+        
+        # Add "Standard" to the list for the panels
+        Standard_KeyWord = translate("FreeCAD Ribbon", "Standard")
+        self.form.ListCategory_NP.addItem(Gui.getIcon("freecad"), Standard_KeyWord)
+        # self.form.ListCategory_DDB.addItem(Gui.getIcon("freecad"), Standard_KeyWord)
 
         self.List_Workbenches.sort()
 
@@ -412,6 +417,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             MenuNameTranslated = CommandItem[2].replace("&", "")  # Not translated
             if len(CommandItem) == 5:
                 MenuNameTranslated = CommandItem[4].replace("&", "")  # Translated
+            # Remove numbers from dropdown child commands
+            if MenuNameTranslated.split(" ")[0].isdigit() is True:
+                MenuNameTranslated = MenuNameTranslated.split(" ")[1]
+            # Remove any suffix frp, the menuname
             if CommandName.endswith("_ddb"):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
 
@@ -492,6 +501,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         )
         return
 
+
     def on_SearchBar_NP_TextChanged(self):
         self.FilterCommands_SearchBar(
             self.form.CommandsAvailable_NP,
@@ -520,6 +530,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not translated
             if len(ToolbarCommand) == 5:
                 MenuNameTranslated = ToolbarCommand[4].replace("&", "")  # Translated
+            # Remove numbers from dropdown child commands
+            if MenuNameTranslated.split(" ")[0].isdigit() is True:
+                MenuNameTranslated = MenuNameTranslated.split(" ")[1]
+            # Remove any suffix frp, the menuname
             if CommandName.endswith("_ddb"):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
 
@@ -641,6 +655,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not transleted!
             if len(ToolbarCommand) == 5:
                 MenuNameTranslated = ToolbarCommand[4].replace("&", "")  # Translated
+            # Remove numbers from dropdown child commands
+            if MenuNameTranslated.split(" ")[0].isdigit() is True:
+                MenuNameTranslated = MenuNameTranslated.split(" ")[1]
+            # Remove any suffix frp, the menuname
             if CommandName.endswith("_ddb"):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
 
@@ -730,46 +748,44 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
                         ShadowList.append(f"{MenuNameTranslated}")
                     if (
-                        f"{MenuNameTranslated}" not in ShadowList
-                        and workbenchName == "Standard"
+                        workbenchName == "Standard" and
+                        ListWidget_WorkBenches.currentText() == "Standard"
                     ):
-                        WorkbenchTitle = workbenchName
-                        if (
-                            WorkbenchTitle
-                            == ListWidget_WorkBenches.currentData(
-                                Qt.ItemDataRole.UserRole
-                            )[2]
-                        ):
-                            IsInlist = False
-                            for i in range(ListWidget_Commands.count()):
-                                CommandItem = ListWidget_Commands.item(i)
-                                if (
-                                    CommandItem.data(Qt.ItemDataRole.UserRole)
-                                    == CommandName
-                                ):
-                                    IsInlist = True
+                        # if (
+                        #     f"{MenuNameTranslated}" not in ShadowList
+                        # ):
+                        # WorkbenchTitle = workbenchName
+                        # IsInlist = False
+                        # for i in range(ListWidget_Commands.count()):
+                        #     CommandItem = ListWidget_Commands.item(i)
+                        #     if (
+                        #         CommandItem.data(Qt.ItemDataRole.UserRole)
+                        #         == CommandName
+                        #     ):
+                        #         IsInlist = True
 
-                                if IsInlist is False:
-                                    # Define a commandname for the icon
-                                    CommandName_Icon = CommandName
-                                    Icon = StandardFunctions.returnQiCons_Commands(
-                                        CommandName_Icon
-                                    )
-                                    Text = MenuNameTranslated
-                                    ListWidgetItem = QListWidgetItem()
-                                    ListWidgetItem.setText(Text)
-                                    ListWidgetItem.setData(
-                                        Qt.ItemDataRole.UserRole, CommandName
-                                    )
-                                    if Icon is not None:
-                                        ListWidgetItem.setIcon(Icon)
-                                    ListWidgetItem.setToolTip(
-                                        CommandName
-                                    )  # Use the tooltip to store the actual command.
+                        #     if IsInlist is False:
+                        # Define a commandname for the icon
+                        CommandName_Icon = CommandName
+                        Icon = StandardFunctions.returnQiCons_Commands(
+                            CommandName_Icon
+                        )
+                        Text = MenuNameTranslated
+                        ListWidgetItem = QListWidgetItem()
+                        ListWidgetItem.setText(Text)
+                        ListWidgetItem.setData(
+                            Qt.ItemDataRole.UserRole, CommandName
+                        )
+                        if Icon is not None:
+                            ListWidgetItem.setIcon(Icon)
+                        ListWidgetItem.setToolTip(
+                            CommandName
+                        )  # Use the tooltip to store the actual command.
 
-                                    # Add the ListWidgetItem to the correct ListWidget
-                                    if Icon is not None:
-                                        ListWidget_Commands.addItem(ListWidgetItem)
+                        # Add the ListWidgetItem to the correct ListWidget
+                        if Icon is not None:
+                            ListWidget_Commands.addItem(ListWidgetItem)
+                            # ShadowList.append(f"{MenuNameTranslated}")
 
                     if (
                         ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole)

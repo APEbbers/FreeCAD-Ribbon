@@ -51,6 +51,7 @@ import Parameters_Ribbon
 import Serialize_Ribbon
 import webbrowser
 import StyleMapping_Ribbon
+import CacheFunctions
 
 # Get the resources
 ConfigDirectory = Parameters_Ribbon.CONFIG_DIR
@@ -838,417 +839,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
     def on_ReloadWB_clicked(self, resetTexts=False, RestartFreeCAD=False):
         # minimize the dialog
         self.form.hide()
-
-        # Create a progressbar
-        progressBar = QProgressBar(minimum=0, value=0)
-        progressBar.setWindowFlags(
-            Qt.WindowType.Dialog | Qt.WindowType.WindowStaysOnTopHint
-        )
-        progressBar.setWindowFlag(Qt.WindowType.CustomizeWindowHint, True)
-        progressBar.setWindowFlag(Qt.WindowType.WindowMinMaxButtonsHint, False)
-        progressBar.setWindowFlag(Qt.WindowType.WindowMinimizeButtonHint, True)
-        progressBar.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
-        progressBar.setMinimumSize(300, 20)
-
-        # Get the stylesheet from the main window and use it for this form
-        (
-            progressBar.setStyleSheet(
-                "background-color: "
-                + "none"
-                + ";color: "
-                + "none"
-                + ";"
-            )
-        )
-        progressBar.setMaximum(5)
-        progressBar.setValue(0)
-
-        # Load the workbenches
-        self.loadAllWorkbenches(
-            AutoHide=False,
-            FinishMessage=translate(
-                "FreeCAD Ribbon", "Ribbon UI: Data file is created."
-            ),
-            progressBar=progressBar,
-            maximum=progressBar.maximum(),
-        )
-
-        # clear the lists first
-        self.List_Workbenches.clear()
-        self.StringList_Toolbars.clear()
-        self.List_Commands.clear()
-
-        # get the system language
-        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
-        FCLanguage = FreeCAD_preferences.GetString("Language")
-
-        # --- Workbenches ----------------------------------------------------------------------------------------------
-        #
-        # Create a list of all workbenches with their icon
-        progressBar.setFormat(translate("FreeCAD Ribbon", "Create workbench list"))
-        progressBar.setValue(progressBar.value() + 1)
-        #
-        self.List_Workbenches.clear()
-        List_Workbenches = Gui.listWorkbenches().copy()
-        for WorkBenchName in List_Workbenches:
-            try:
-                if str(WorkBenchName) != "" or WorkBenchName is not None:
-                    if str(WorkBenchName) != "NoneWorkbench":
-                        # Gui.activateWorkbench(WorkBenchName)
-                        WorkBench = Gui.getWorkbench(WorkBenchName)
-                        # Get the toolbar items
-                        ToolbarItems: dict = WorkBench.getToolbarItems()
-                        # Update the toolbar items with corrections
-                        ToolbarItems: dict = StandardFunctions.CorrectGetToolbarItems(
-                            ToolbarItems
-                        )
-
-                        IconName = ""
-                        IconName = str(Gui.getWorkbench(WorkBenchName).Icon)
-                        WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
-                        WorkbenchTitleTranslated = StandardFunctions.TranslationsMapping(
-                            WorkBenchName, WorkbenchTitle
-                        )
-                        self.List_Workbenches.append(
-                            [
-                                str(WorkBenchName),
-                                IconName,
-                                WorkbenchTitle,
-                                ToolbarItems,
-                                WorkbenchTitleTranslated,
-                            ]
-                        )
-            except Exception:
-                pass
-
-        # --- Toolbars ----------------------------------------------------------------------------------------------
-        #
-        # Go through the list of workbenches
-        progressBar.setFormat(translate("FreeCAD Ribbon", "Create toolbar list"))
-        progressBar.setValue(progressBar.value() + 1)
-        #
-        i = 0
-        for WorkBench in self.List_Workbenches:
-            wbToolbars = []
-            if (
-                WorkBench[0] != "General"
-                and WorkBench[0] != ""
-                and WorkBench[0] is not None
-            ):
-                # Gui.activateWorkbench(WorkBench[0])
-                wbToolbars = Gui.getWorkbench(WorkBench[0]).listToolbars()
-                # Go through the toolbars
-                for Toolbar in wbToolbars:
-                    ToolBarTtranslated = StandardFunctions.TranslationsMapping(
-                        WorkBench[0], Toolbar
-                    )
-                    self.StringList_Toolbars.append(
-                        [Toolbar, WorkBench[2], WorkBench[0], ToolBarTtranslated]
-                    )
-
-        # Add the custom toolbars
-        CustomToolbars = self.List_ReturnCustomToolbars()
-        for Customtoolbar in CustomToolbars:
-            self.StringList_Toolbars.append(Customtoolbar)
-        CustomToolbars = self.List_ReturnCustomToolbars_Global()
-        for Customtoolbar in CustomToolbars:
-            self.StringList_Toolbars.append(Customtoolbar)
-
-        # --- Commands ----------------------------------------------------------------------------------------------
-        #
-        # Create a list of all commands with their icon
-        progressBar.setFormat(translate("FreeCAD Ribbon", "Create command list"))
-        progressBar.setValue(progressBar.value() + 1)
-        #
-        self.List_Commands.clear()
-        # Create a list of command names
-        CommandNames = []
-        for i in range(len(self.List_Workbenches)):
-            # Gui.activateWorkbench(self.List_Workbenches[i][0])
-            WorkBench = Gui.getWorkbench(self.List_Workbenches[i][0])
-            WorkBenchName = self.List_Workbenches[i][0]
-            # Get the toolbar items
-            ToolbarItems: dict = WorkBench.getToolbarItems()
-            # Update the toolbar items with corrections
-            ToolbarItems: dict = StandardFunctions.CorrectGetToolbarItems(ToolbarItems)
-
-            for key, value in list(ToolbarItems.items()):
-                for j in range(len(value)):
-                    if value[j] != "Std_Workbench":
-                        if value[j].startswith("Std_"):
-                            Item = [value[j], "Standard"]
-                        else:
-                            Item = [value[j], WorkBenchName]
-                        IsInList = False
-                        for CommandNamesItem in CommandNames:
-                            if CommandNamesItem == Item:
-                                IsInList = True
-                                break
-                        if IsInList is False:
-                            CommandNames.append(Item)
-        # Add commands that are not in any toolbars
-        for commandNamesItem in Gui.listCommands():            
-            if commandNamesItem.lower().startswith("std_"):
-                inList = False
-                for CommandName in CommandNames:
-                    if CommandName[0] == commandNamesItem:
-                        inList = True
-                
-                # Skip "Std_Workbench".
-                if commandNamesItem == "Std_Workbench":
-                    continue
-                
-                if inList is False:                    
-                    CommandNames.append([commandNamesItem, "Standard"])
-            else:
-                inList = False
-                for CommandName in CommandNames:
-                    if CommandName[0] == commandNamesItem:
-                        inList = True
-                
-                if inList is False:
-                    WorkBench = ""
-                    for WorkBenchName in List_Workbenches:
-                        if commandNamesItem.startswith(WorkBenchName[0]) or WorkBenchName[0].startswith(commandNamesItem.split("_")[0]):
-                            WorkBench = WorkBenchName
-                            break
-                    if len(commandNamesItem.split(", ")) > 1:
-                        Command = Gui.Command.get(commandNamesItem.split(", ")[0])
-                        i = int(commandNamesItem.split(", ")[1])
-                        action = Command.getAction()[i]
-                        Command = Gui.Command.get(action.objectName())
-                        commandNamesItem = action.objectName()
-                    Icon = StandardFunctions.returnQiCons_Commands(commandNamesItem)
-                    if Icon is not None or Icon.isNull() is False:
-                        CommandNames.append([commandNamesItem, WorkBench])
-
-        # Go through the list
-        for CommandName in CommandNames:
-            # get the command with this name
-            command = Gui.Command.get(CommandName[0])
-            ChildCommands = self.returnDropDownCommands(command)
-            WorkBenchName = CommandName[1]
-            if command is not None:
-                # get the icon for this command
-                if CommandInfoCorrections(CommandName[0])["pixmap"] != "":
-                    IconName = CommandInfoCorrections(CommandName[0])["pixmap"]
-                else:
-                    IconName = ""
-                MenuName = CommandInfoCorrections(CommandName[0])["menuText"].replace(
-                    "&", ""
-                )
-                MenuNameTranslated = CommandInfoCorrections(CommandName[0])[
-                    "ActionText"
-                ].replace("&", "")
-                if len(ChildCommands) > 1:
-                    if not MenuName.endswith("..."):
-                        MenuName = MenuName + "..."
-                    if not MenuNameTranslated.endswith("..."):
-                        MenuNameTranslated = MenuNameTranslated + "..."
-
-                self.List_Commands.append(
-                    [
-                        CommandName[0],
-                        IconName,
-                        MenuName,
-                        WorkBenchName,
-                        MenuNameTranslated,
-                    ]
-                )
-                # Add children of the commands if there are any
-                if len(ChildCommands) > 0:
-                    for childCommand in ChildCommands:
-                        self.List_Commands.append(
-                            [
-                                childCommand[0],
-                                childCommand[1],
-                                childCommand[2],
-                                WorkBenchName,
-                                childCommand[3],
-                            ]
-                        )
-
-        # add also custom commands
-        Toolbars = self.List_ReturnCustomToolbars()
-        for Toolbar in Toolbars:
-            WorkbenchTitle = Toolbar[1]
-            for WorkBench in self.List_Workbenches:
-                if WorkbenchTitle == WorkBench[2]:
-                    WorkBenchName = WorkBench[0]
-                    for CustomCommand in Toolbar[2]:
-                        command = Gui.Command.get(CustomCommand)
-                        if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
-                            IconName = CommandInfoCorrections(CustomCommand)["pixmap"]
-                        else:
-                            IconName = ""
-                        MenuName = CommandInfoCorrections(CustomCommand)[
-                            "menuText"
-                        ].replace("&", "")
-                        MenuNameTranslated = CommandInfoCorrections(CustomCommand)[
-                            "ActionText"
-                        ].replace("&", "")
-                        self.List_Commands.append(
-                            [
-                                CustomCommand,
-                                IconName,
-                                MenuName,
-                                WorkBenchName,
-                                MenuNameTranslated,
-                            ]
-                        )
-        Toolbars = self.List_ReturnCustomToolbars_Global()
-        for Toolbar in Toolbars:
-            for CustomCommand in Toolbar[2]:
-                command = Gui.Command.get(CustomCommand)
-                if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
-                    IconName = CommandInfoCorrections(CustomCommand)["pixmap"]
-                else:
-                    IconName = None
-                MenuName = CommandInfoCorrections(CustomCommand)["menuText"].replace(
-                    "&", ""
-                )
-                MenuNameTranslated = CommandInfoCorrections(CustomCommand)[
-                    "ActionText"
-                ].replace("&", "")
-                self.List_Commands.append(
-                    [CustomCommand, IconName, MenuName, Toolbar[1], MenuNameTranslated]
-                )
-        # Add general commands
-        if int(App.Version()[0]) > 0:
-            ListCommands = [
-                "Std_Measure",
-                "Std_ViewZoomOut",
-                "Std_ViewZoomIn",
-                "Std_ViewBoxZoom",
-                "Part_SelectFilter",
-                "Std_UnitsCalculator",
-                "Std_Properties",
-                "Std_BoxElementSelection",
-                "Std_BoxSelection",
-            ]
-            for CommandName in ListCommands:
-                command = Gui.Command.get(CommandName)
-                if CommandInfoCorrections(CommandName)["pixmap"] != "":
-                    IconName = CommandInfoCorrections(CommandName)["pixmap"]
-                else:
-                    IconName = ""
-                MenuName = CommandInfoCorrections(CommandName)["menuText"].replace(
-                    "&", ""
-                )
-                MenuNameTranslated = CommandInfoCorrections(CommandName)[
-                    "ActionText"
-                ].replace("&", "")
-                self.List_Commands.append(
-                    [CommandName, IconName, MenuName, "Standard", MenuNameTranslated]
-                )
-
-        # # re-activate the workbench that was stored.
-        # Gui.activateWorkbench(ActiveWB)
-
-        # --- Serialize Icons ------------------------------------------------------------------------------------------
-        #
-        progressBar.setFormat(translate("FreeCAD Ribbon", "Serialize icons"))
-        progressBar.setValue(progressBar.value() + 1)
-        #
-        WorkbenchIcon = []
-        for WorkBenchItem in self.List_Workbenches:
-            WorkBenchName = WorkBenchItem[0]
-            Icon = Gui.getIcon(WorkBenchItem[1])
-            if Icon is not None and Icon.isNull() is False:
-                try:
-                    SerializedIcon = Serialize_Ribbon.serializeIcon(Icon)
-
-                    WorkbenchIcon.append([WorkBenchName, SerializedIcon])
-                    # add the icons also to the deserialized list
-                    self.List_WorkBenchIcons.append([WorkBenchName, Icon])
-                except Exception as e:
-                    if Parameters_Ribbon.DEBUG_MODE is True:
-                        StandardFunctions.Print(
-                            f"{e.with_traceback(e.__traceback__)}", "Warning"
-                        )
-
-        CommandIcons = []
-        for CommandItem in self.List_Commands:
-            CommandName = CommandItem[0]
-            Icon = StandardFunctions.returnQiCons_Commands(CommandName, CommandItem[1])
-            if Icon is not None and Icon.isNull() is False:
-                try:
-                    SerializedIcon = Serialize_Ribbon.serializeIcon(Icon)
-
-                    CommandIcons.append([CommandName, SerializedIcon])
-                    # add the icons also to the deserialized list
-                    self.List_CommandIcons.append([CommandName, Icon])
-                except Exception as e:
-                    if Parameters_Ribbon.DEBUG_MODE is True:
-                        StandardFunctions.Print(
-                            f"{e.with_traceback(e.__traceback__)}", "Warning"
-                        )
-
-        # Write the lists to a data file
-        progressBar.setFormat(translate("FreeCAD Ribbon", "Write data files"))
-        progressBar.setValue(progressBar.value() + 1)
-        #
-        # clear the data file. If not exists, create it
-        DataFile = os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonDataFile.dat")
-        open(DataFile, "w").close()
-
-        # Open de data file, load it as json and then close it again
-        Data = {}
-        # Update the data
-        Data["dataVersion"] = self.DataFileVersion
-        Data["Language"] = FCLanguage
-        Data["List_Workbenches"] = self.List_Workbenches
-        Data["StringList_Toolbars"] = self.StringList_Toolbars
-        Data["List_Commands"] = self.List_Commands
-        Data["WorkBench_Icons"] = WorkbenchIcon
-        Data["Command_Icons"] = CommandIcons
-        # Write to the data file
-        DataFile = os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonDataFile.dat")
-        with open(DataFile, "w") as outfile:
-            json.dump(Data, outfile, indent=4)
-        outfile.close()
-
-        # Write a second data file with the list of commands, Language and data version only
-        Data2 = {}
-        Data2["dataVersion"] = self.DataFileVersion
-        Data2["Language"] = FCLanguage
-        Data2["List_Commands"] = self.List_Commands
-        # Write to the data file
-        DataFile2 = os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonDataFile2.dat")
-        with open(DataFile2, "w") as outfile:
-            json.dump(Data2, outfile, indent=4)
-        outfile.close()
-
-        # Write a time stamp to preferences
-        TimeStamp = datetime.now().strftime("%B %d, %Y, %H:%M:%S")
-        Parameters_Ribbon.Settings.SetStringSetting("ReloadTimeStamp", TimeStamp)
-
-        if resetTexts is True:
-            if "workbenches" in self.Dict_RibbonCommandPanel:
-                for workbenchName in self.Dict_RibbonCommandPanel["workbenches"]:
-                    if (
-                        "toolbars"
-                        in self.Dict_RibbonCommandPanel["workbenches"][workbenchName]
-                    ):
-                        for ToolBar in self.Dict_RibbonCommandPanel["workbenches"][
-                            workbenchName
-                        ]["toolbars"]:
-                            if (
-                                "commands"
-                                in self.Dict_RibbonCommandPanel["workbenches"][
-                                    workbenchName
-                                ]["toolbars"][ToolBar]
-                            ):
-                                for Command in self.Dict_RibbonCommandPanel[
-                                    "workbenches"
-                                ][workbenchName]["toolbars"][ToolBar]["commands"]:
-                                    self.Dict_RibbonCommandPanel["workbenches"][
-                                        workbenchName
-                                    ]["toolbars"][ToolBar]["commands"][Command][
-                                        "text"
-                                    ] = ""
-
-            self.WriteJson()
+        
+        # Create the data file
+        CacheFunctions.CreateCache(resetTexts=resetTexts)
 
         if RestartFreeCAD is False:
             # Show the dialog again
@@ -1260,10 +853,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             else:
                 self.closeSignal.emit()
         # show the dialog
-        progressBar.close()
         self.form.show()
         return
-
+    
     # region - Control functions----------------------------------------------------------------------
     # Add all toolbars of the selected workbench to the toolbar list(QComboBox)
     #
@@ -3886,7 +3478,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         Global_KeyWord = translate("FreeCAD Ribbon", "Global")
         self.form.WorkbenchList_NP.addItem(Gui.getIcon("freecad"), Global_KeyWord)
 
-        # Add "Global" to the list for the panels
+        # Add "Standard" to the list for the panels
         Standard_KeyWord = translate("FreeCAD Ribbon", "Standard")
         self.form.ListCategory_QC.addItem(Gui.getIcon("freecad"), Standard_KeyWord)
         # self.form.ListCategory_EP.addItem(Gui.getIcon("freecad"), Standard_KeyWord)
@@ -4062,6 +3654,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             MenuNameTranslated = CommandItem[2].replace("&", "")  # Not translated
             if len(CommandItem) == 5:
                 MenuNameTranslated = CommandItem[4].replace("&", "")  # Translated
+            # Remove numbers from dropdown child commands
+            if MenuNameTranslated.split(" ")[0].isdigit() is True:
+                MenuNameTranslated = MenuNameTranslated.split(" ")[1]
+            # Remove any suffix frp, the menuname
             if CommandName.endswith("_ddb"):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
 
@@ -5161,6 +4757,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not translated
             if len(ToolbarCommand) == 5:
                 MenuNameTranslated = ToolbarCommand[4].replace("&", "")  # Translated
+            # Remove numbers from dropdown child commands
+            if MenuNameTranslated.split(" ")[0].isdigit() is True:
+                MenuNameTranslated = MenuNameTranslated.split(" ")[1]
+            # Remove any suffix frp, the menuname
             if CommandName.endswith("_ddb"):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
 
@@ -5292,6 +4892,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not transleted!
             if len(ToolbarCommand) == 5:
                 MenuNameTranslated = ToolbarCommand[4].replace("&", "")  # Translated
+            # Remove numbers from dropdown child commands
+            if MenuNameTranslated.split(" ")[0].isdigit() is True:
+                MenuNameTranslated = MenuNameTranslated.split(" ")[1]
+            # Remove any suffix frp, the menuname
             if CommandName.endswith("_ddb"):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
 
