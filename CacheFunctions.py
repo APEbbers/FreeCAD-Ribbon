@@ -275,7 +275,7 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
                     WorkBench = ""
                     for WorkBenchName in List_Workbenches:
                         if commandNamesItem.startswith(WorkBenchName[0]) or WorkBenchName[0].startswith(commandNamesItem.split("_")[0]):
-                            WorkBench = WorkBenchName
+                            WorkBench = WorkBenchName[0]
                             break
                     Icon = StandardFunctions.returnQiCons_Commands(commandNamesItem)
                     if Icon is not None or Icon.isNull() is False:
