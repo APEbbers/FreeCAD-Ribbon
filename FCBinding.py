@@ -3887,6 +3887,8 @@ class ModernMenu(RibbonBar):
             
             # Create the panel based on the toolbars
             panel = self.CreatePanel(workbenchName, toolbar, True, self.ribbonStructure, True)
+            if panel is None:
+                continue
             # Hide the panel if stated in the ribbon structure
             if panel.objectName() in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]:
                 if "Enabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
@@ -5788,7 +5790,15 @@ class ModernMenu(RibbonBar):
         spacer.setMinimumSize(0, panel.height() - panel._titleWidget.height())
         panel.addWidget(spacer, rowSpan=6)
         
-        return panel
+        # print(panel._actionsLayout.count())
+        if panel._actionsLayout.count() > 1:            
+            return panel
+        else: 
+            self.currentCategory().removePanel(panel.objectName())
+            panel.deleteLater()    
+            if Parameters_Ribbon.DEBUG_MODE is True:                  
+                print(f"The panel \"{panel.title()}\" did not have any buttons and is not loaded!")
+            return None
     
     def setPanelProperties(self, panel: RibbonPanel):
         # Set the panelheight. setting the ribbonheigt, cause the first tab to be shown to large
