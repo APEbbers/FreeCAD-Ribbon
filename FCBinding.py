@@ -960,6 +960,23 @@ class ModernMenu(RibbonBar):
                 Gui.activateWorkbench(Wb)
             except Exception:
                 pass
+        
+         # Activate the last used wb 
+         # This is needed when buttons from other workbenches are added to a panel
+        preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
+        result = preferences.GetString("LastModule")
+        try:
+            cmd = Gui.Command.get('Std_Workbench')
+            actions = cmd.getAction()
+            for action in actions:
+                if action.objectName() == result:
+                    index = action.data()
+                    Gui.runCommand('Std_Workbench',index)
+        except Exception as e:
+            if Parameters_Ribbon.DEBUG_MODE is True:
+                print(e.with_traceback(e.__traceback__))
+            pass
+        
         return
 
     # region - Ribbon event fuctions
@@ -4383,7 +4400,7 @@ class ModernMenu(RibbonBar):
                         Gui.activateWorkbench(CommandItem[3])
             # Set the current  category after activating the workbench
             self.setCurrentCategory(currentCategory)
-            
+   
             # Get the command
             Command = Gui.Command.get(commandName)
             action = None
