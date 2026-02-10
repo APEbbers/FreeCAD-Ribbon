@@ -1057,10 +1057,7 @@ class ModernMenu(RibbonBar):
     # endregion
 
     # region - Customise functions
-    #        
-    # Store the state of the workingDict
-    WorkingDictUpdated = False
-    
+    #            
     def contextMenuEvent(self, event):
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         
@@ -1517,8 +1514,6 @@ class ModernMenu(RibbonBar):
                         
                         # Clear the workbench dict
                         self.workBenchDict.clear()
-                        
-                        self.WorkingDictUpdated = False
 
                 if action == CombinePanelsAct:
                     LoadCombinePanel_Ribbon.main()
@@ -2118,13 +2113,18 @@ class ModernMenu(RibbonBar):
                     # Close the old panel and the dragindicator
                     panel.close()
                     
-                    self.WorkingDictUpdated = True
-                    
-                gridLayout: QGridLayout = panel._actionsLayout
-                for n in range(gridLayout.count()):
-                    control = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                    if control is not None:
-                        control.setEnabled(True)
+                # Enable all buttons, so you can access them with a right click
+                self.actionList = []
+                for child in mw.findChildren(QToolButton):
+                    try:
+                        if type(child.actions) is list:
+                            for subAction in child.actions():
+                                subAction.setEnabled(True)                        
+                    except Exception :
+                        pass
+                    child.setEnabled(True)
+                Gui.updateGui()
+
             return
                 
         if type(widget) is not RibbonPanel and type(widget) is not QToolBar:
