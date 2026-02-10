@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandshDkFJG.ui'
+## Form generated from reading UI file 'AddCommandsgzmHTA.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.10.1
+## Created by: Qt User Interface Compiler version 6.10.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -24,6 +24,7 @@ class Ui_Form(object):
         if not Form.objectName():
             Form.setObjectName(u"Form")
         Form.resize(471, 418)
+        Form.setAcceptDrops(True)
         self.gridLayout = QGridLayout(Form)
         self.gridLayout.setObjectName(u"gridLayout")
         self.groupBox = QGroupBox(Form)
@@ -41,6 +42,7 @@ class Ui_Form(object):
         __qlistwidgetitem = QListWidgetItem(self.CommandsAvailable_NP)
         __qlistwidgetitem.setCheckState(Qt.Checked);
         self.CommandsAvailable_NP.setObjectName(u"CommandsAvailable_NP")
+        self.CommandsAvailable_NP.setAcceptDrops(True)
         self.CommandsAvailable_NP.setDragDropMode(QAbstractItemView.DragDropMode.DragDrop)
         self.CommandsAvailable_NP.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.CommandsAvailable_NP.setItemAlignment(Qt.AlignmentFlag.AlignLeading)

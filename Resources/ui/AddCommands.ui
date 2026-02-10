@@ -10,6 +10,9 @@
     <height>418</height>
    </rect>
   </property>
+  <property name="acceptDrops">
+   <bool>true</bool>
+  </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
@@ -37,6 +40,9 @@
         </item>
         <item row="2" column="0">
          <widget class="QListWidget" name="CommandsAvailable_NP">
+          <property name="acceptDrops">
+           <bool>true</bool>
+          </property>
           <property name="dragDropMode">
            <enum>QAbstractItemView::DragDropMode::DragDrop</enum>
           </property>
