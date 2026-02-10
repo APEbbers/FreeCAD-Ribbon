@@ -601,11 +601,11 @@ class ModernMenu(RibbonBar):
                 PackageXML, "version"
             )
             # Check if you are on a developer version. If so set developer version
-            if CurrentVersion.lower().endswith("x"):
+            if CurrentVersion.lower().endswith("dev"):
                 self.DeveloperVersion = CurrentVersion
                 self.UpdateVersion = ""
             # If you are not on a developer version, check if you have the latest version
-            if CurrentVersion.lower().endswith("x") is False:
+            if CurrentVersion.lower().endswith("dev") is False:
                 if LatestVersion is not None:
                     # Create arrays from the versions
                     LatestVersionArray = LatestVersion.split(".")
