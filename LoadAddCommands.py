@@ -39,7 +39,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     QLineEdit,
 )
-from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent
+from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent
 import sys
 import json
 
@@ -48,6 +48,14 @@ from Standard_Functions_Ribbon import CommandInfoCorrections
 import Parameters_Ribbon
 import Serialize_Ribbon
 import CacheFunctions
+import FCBinding
+
+import pyqtribbon_local as pyqtribbon
+from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar, RibbonTitleWidget, RibbonApplicationButton
+from pyqtribbon_local.panel import RibbonPanel, RibbonPanelItemWidget, RibbonPanelTitle
+from pyqtribbon_local.toolbutton import RibbonToolButton, RibbonButtonStyle
+from pyqtribbon_local.separator import RibbonSeparator
+from pyqtribbon_local.category import RibbonCategory, RibbonCategoryLayoutButton, RibbonNormalCategory, RibbonContextCategory
 
 # Get the resources
 ConfigDirectory = Parameters_Ribbon.CONFIG_DIR
@@ -114,11 +122,11 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         Rectangle.moveCenter(centerPoint)
         self.form.move(Rectangle.topLeft())
         
-        # Add drag event to listwidget
-        self.form.CommandsAvailable_NP.dragEnterEvent =  lambda e: self.dragEnterEvent_ListWidget(e, self.form.CommandsAvailable_NP)
-        self.form.CommandsAvailable_NP.dragMoveEvent =  lambda e: self.dragMoveEvent_ListWidget(e, self.form.CommandsAvailable_NP)
+        # # Add drag event to listwidget
+        # self.form.CommandsAvailable_NP.dragEnterEvent =  lambda e: self.dragEnterEvent_ListWidget(e, self.form.CommandsAvailable_NP)
+        # self.form.CommandsAvailable_NP.dragMoveEvent =  lambda e: self.dragMoveEvent_ListWidget(e, self.form.CommandsAvailable_NP)
         
-        self.form.dragEnterEvent =  lambda e: self.dragEnterEvent(e)
+        # self.form.dragEnterEvent =  lambda e: self.dragEnterEvent(e)
         
         # Check if there is a datafile. if not, ask the user to create one.
         DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
@@ -876,20 +884,41 @@ def main():
 
 class EventInspector(QObject):
     dragEntered = False
+    widget = None
     
     def __init__(self, parent):
         super(EventInspector, self).__init__(parent)
 
     def eventFilter(self, obj, event: QEvent):
         if event.type() == QEvent.Type.DragLeave:
-            QApplication.mouseButtons().value
-            if self.dragEntered is True and QApplication.mouseButtons().value == 0:
-                print("dragleave")
-                # signal.emit()
+            if type(self.widget) is not QListWidget:
+                QApplication.mouseButtons().value
+                if self.dragEntered is True and QApplication.mouseButtons().value == 0:
+                    count = 0
+                    parent = None
+                    panel = None
+                    if self.widget is not None:
+                        parent = self.widget.parent()
+                        while (count < 10):
+                            if type(parent) is RibbonPanel:
+                                panel = parent
+                                break                        
+                            else:
+                                parent = parent.parent()
+                            count = count + 1
+                    
+                    
+                    print("dragleave")
+                    # Get the mainwindow, the ribbon and the title
+                    mw = Gui.getMainWindow()
+                    RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+                    RibbonBar.RemoveButtonFromPanel(panel)
+                    # signal.emit()
             return True
         # # Show the mainwindow after the application is activated
         if event.type() == QEvent.Type.DragEnter:
             self.dragEntered = True
+            self.widget = event.source()
             print(self.dragEntered)
             return True        
         return False

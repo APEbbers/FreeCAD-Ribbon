@@ -5955,8 +5955,8 @@ class ModernMenu(RibbonBar):
 
         return
     
-    def RemoveButtonFromPanel(self):
-        print("button will be removed")
+    def RemoveButtonFromPanel(self, panel: RibbonPanel = None):
+        print(f"button will be removed from {panel.title()}")
     
     # endregion
 
