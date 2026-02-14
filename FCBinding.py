@@ -5955,8 +5955,11 @@ class ModernMenu(RibbonBar):
 
         return
     
-    def RemoveButtonFromPanel(self, panel: RibbonPanel = None):
-        print(f"button will be removed from {panel.title()}")
+    def RemoveButtonFromPanel(self, panel: RibbonPanel = None, widget: CustomControls = None):
+        button = widget.findChild(QToolButton, "CommandButton")
+        # print(widget.defaultAction())
+        # print(f"{widget} will be removed from {panel.title()}")
+        print(f" \'{button.text()}\' ({button.actions()[0].data()}) will be removed from {panel.title()}")
     
     # endregion
 

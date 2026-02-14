@@ -912,7 +912,7 @@ class EventInspector(QObject):
                     # Get the mainwindow, the ribbon and the title
                     mw = Gui.getMainWindow()
                     RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-                    RibbonBar.RemoveButtonFromPanel(panel)
+                    RibbonBar.RemoveButtonFromPanel(panel, self.widget)
                     # signal.emit()
             return True
         # # Show the mainwindow after the application is activated
