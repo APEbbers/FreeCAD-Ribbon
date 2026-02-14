@@ -39,7 +39,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     QLineEdit,
 )
-from PySide6.QtGui import QIcon, QPixmap
+from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent
 import sys
 import json
 
@@ -70,7 +70,6 @@ import AddCommands_ui as AddCommands_ui
 # Define the translation
 translate = App.Qt.translate
 
-
 class LoadDialog(AddCommands_ui.Ui_Form):
     # Create a list for the commands
     List_Commands = []
@@ -80,6 +79,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     # Create the lists for the deserialized icons
     List_CommandIcons = []
     List_WorkBenchIcons = []
+    
+    buttonRemove = Signal()
             
     def __init__(self):
 
@@ -116,6 +117,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Add drag event to listwidget
         self.form.CommandsAvailable_NP.dragEnterEvent =  lambda e: self.dragEnterEvent_ListWidget(e, self.form.CommandsAvailable_NP)
         self.form.CommandsAvailable_NP.dragMoveEvent =  lambda e: self.dragMoveEvent_ListWidget(e, self.form.CommandsAvailable_NP)
+        
+        self.form.dragEnterEvent =  lambda e: self.dragEnterEvent(e)
         
         # Check if there is a datafile. if not, ask the user to create one.
         DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
@@ -330,7 +333,11 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.SearchBar_NP.textChanged.connect(
             self.on_SearchBar_NP_TextChanged
         )
+        return
     
+    # def mouseReleaseEvent(self, event):
+    #     super().mouseReleaseEvent(event)
+    #     print("released")
     
     def dragEnterEvent_ListWidget(self, event, ListWidget):
         if event.mimeData().hasUrls():
@@ -344,6 +351,11 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             event.accept()
         else:
             super(ListWidget, self).dragMoveEvent(event)
+            
+    # def dragEnterEvent(self, event):
+    #     event.accept()
+    #     print("entered")
+    #     return
         
         
     def addWorkbenches(self):
@@ -854,61 +866,31 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         return
 
 
-class EventInspector(QObject):
-    form = None
-
-    def __init__(self, parent):
-        self.form = parent
-        super(EventInspector, self).__init__(parent)
-
-    def eventFilter(self, obj, event):
-        import FCBinding
-
-        # Show the mainwindow after the application is activated
-        if event.type() == QEvent.Type.Close:
-            # self.closeSignal.emit()
-            mw = Gui.getMainWindow()
-            RibbonBar: FCBinding.ModernMenu = mw.findChild(
-                FCBinding.ModernMenu, "Ribbon"
-            )
-            self.EnableRibbonToolbarsAndMenus(RibbonBar=RibbonBar)
-            return False
-
-        if event.type() == QEvent.Type.WindowStateChange:
-            # self.closeSignal.emit()
-            mw = Gui.getMainWindow()
-            if self.form.windowState() == Qt.WindowState.WindowMinimized:
-                RibbonBar: FCBinding.ModernMenu = mw.findChild(
-                    FCBinding.ModernMenu, "Ribbon"
-                )
-                self.EnableRibbonToolbarsAndMenus(RibbonBar=RibbonBar)
-            else:
-                RibbonBar: FCBinding.ModernMenu = mw.findChild(
-                    FCBinding.ModernMenu, "Ribbon"
-                )
-                self.DisableRibbonToolbarsAndMenus(RibbonBar=RibbonBar)
-            return False
-
-        return False
-
-    def EnableRibbonToolbarsAndMenus(self, RibbonBar):
-        RibbonBar.rightToolBar().setEnabled(True)
-        RibbonBar.quickAccessToolBar().setEnabled(True)
-        RibbonBar.applicationOptionButton().setEnabled(True)
-        RibbonBar.DesignMenuLoaded = False
-        Gui.updateGui()
-        return
-
-    def DisableRibbonToolbarsAndMenus(self, RibbonBar):
-        RibbonBar.rightToolBar().setDisabled(True)
-        RibbonBar.quickAccessToolBar().setDisabled(True)
-        RibbonBar.applicationOptionButton().setDisabled(True)
-        RibbonBar.DesignMenuLoaded = True
-        Gui.updateGui()
-        return
-
 def main():
     # Get the form
     Dialog = LoadDialog().form
     # Show the form
     Dialog.show()
+
+
+
+class EventInspector(QObject):
+    dragEntered = False
+    
+    def __init__(self, parent):
+        super(EventInspector, self).__init__(parent)
+
+    def eventFilter(self, obj, event: QEvent):
+        if event.type() == QEvent.Type.DragLeave:
+            QApplication.mouseButtons().value
+            if self.dragEntered is True and QApplication.mouseButtons().value == 0:
+                print("dragleave")
+                # signal.emit()
+            return True
+        # # Show the mainwindow after the application is activated
+        if event.type() == QEvent.Type.DragEnter:
+            self.dragEntered = True
+            print(self.dragEntered)
+            return True        
+        return False
+  

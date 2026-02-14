@@ -1519,7 +1519,11 @@ class ModernMenu(RibbonBar):
                     LoadCombinePanel_Ribbon.main()
                     
                 if action == AddCommandAct:
-                    LoadAddCommands.main()
+                    # Get the form
+                    Dialog = LoadAddCommands.LoadDialog()
+                    # Show the form
+                    Dialog.form.show()
+                    # Dialog.buttonRemove.connect(self.RemoveButtonFromPanel())
                     
                 if action == CreateDataAct:
                     message = translate(
@@ -5951,6 +5955,9 @@ class ModernMenu(RibbonBar):
 
         return
     
+    def RemoveButtonFromPanel(self):
+        print("button will be removed")
+    
     # endregion
 
     # region - Titlebar functions
@@ -6360,24 +6367,7 @@ class EventInspector(QObject):
                 )
             return QObject.eventFilter(self, obj, event)
         return False
-    
-# class RibbonEventInspector(QObject):
-#     def __init__(self, parent):
-#         super(RibbonEventInspector, self).__init__(parent)
 
-#     def eventFilter(self, obj, event: QEvent):
-#         # Show the mainwindow after the application is activated
-#         if event.type() == QEvent.Type.DragEnter:
-#             # event.accept()
-#             print(event.isAccepted())
-#             print(event.proposedAction())
-#             drag = event.source().findChild(QDrag)
-#             drag.setDragCursor(QPixmap(), Qt.DropAction.IgnoreAction)
-#             drag.setDragCursor(QPixmap(), Qt.DropAction.MoveAction)
-#             drag.setDragCursor(QPixmap(), Qt.DropAction.TargetMoveAction)
-#             drag.setDragCursor(QPixmap(), Qt.DropAction.ActionMask)
-#             return QObject.eventFilter(self, obj, event)
-#         return False
 
 class run:
     """
