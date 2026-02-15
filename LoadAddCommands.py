@@ -103,7 +103,11 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
         # Install an event filter to catch events from the main window and act on it.
         self.form.installEventFilter(EventInspector(self.form))
-
+        
+        # set all widgets on the form to not accepting drops
+        self.form.CommandsAvailable_NP.setAcceptDrops(False)
+        self.form.SearchBar_NP.setAcceptDrops(False)
+                       
         # Get the address of the repository address
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         self.ReproAdress = StandardFunctions.ReturnXML_Value(
@@ -113,20 +117,12 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Make sure that the dialog stays on top
         self.form.raise_()
         self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
-        # self.form.setWindowFlags(Qt.WindowType.Tool)
-        # self.form.setWindowModality(Qt.WindowModality.WindowModal)
 
         # Position the dialog in front of FreeCAD
         centerPoint = mw.geometry().center()
         Rectangle = self.form.frameGeometry()
         Rectangle.moveCenter(centerPoint)
         self.form.move(Rectangle.topLeft())
-        
-        # # Add drag event to listwidget
-        # self.form.CommandsAvailable_NP.dragEnterEvent =  lambda e: self.dragEnterEvent_ListWidget(e, self.form.CommandsAvailable_NP)
-        # self.form.CommandsAvailable_NP.dragMoveEvent =  lambda e: self.dragMoveEvent_ListWidget(e, self.form.CommandsAvailable_NP)
-        
-        # self.form.dragEnterEvent =  lambda e: self.dragEnterEvent(e)
         
         # Check if there is a datafile. if not, ask the user to create one.
         DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
