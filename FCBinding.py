@@ -1218,7 +1218,7 @@ class ModernMenu(RibbonBar):
                 # Add a button for adding commands to current panels
                 AddCommandAct = QAction()
                 if self.CustomizeEnabled is True:
-                    AddCommandAct  = self.contextMenu.addAction("Add commands")
+                    AddCommandAct  = self.contextMenu.addAction("Add or remove commands")
                               
                 # Add a button for creating new panels
                 CreatePanelsAct = QAction()
@@ -5957,10 +5957,41 @@ class ModernMenu(RibbonBar):
     
     def RemoveButtonFromPanel(self, panel: RibbonPanel = None, widget: CustomControls = None):
         button = widget.findChild(QToolButton, "CommandButton")
-        # print(widget.defaultAction())
-        # print(f"{widget} will be removed from {panel.title()}")
         print(f" \'{button.text()}\' ({button.actions()[0].data()}) will be removed from {panel.title()}")
-    
+        
+        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        panelName = panel.objectName()
+        command = button.defaultAction().data()
+        
+        orderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
+        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = ""
+        
+        newPanel = self.CreatePanel(workbenchName, panelName, addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True)
+        # Add the panel to the list with long panels
+        self.longPanels.append(newPanel)
+                
+        # Replace the panel with the new panel
+        self.currentCategory().replacePanel(panel, newPanel)
+        # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+        self.setPanelProperties(newPanel)
+
+        # Update the dict of the currentCategory with the new panel
+        self.currentCategory()._panels[newPanel.objectName()] = newPanel
+        
+        # Enable all buttons, so you can access them with a right click
+        for child in mw.findChildren(QToolButton):
+            try:
+                for subAction in child.actions():
+                    subAction.setEnabled(True)                
+            except Exception:
+                pass
+            child.setEnabled(True)
+        Gui.updateGui()
+        
+        # Close the old panel
+        panel.close()
+        
+        return
     # endregion
 
     # region - Titlebar functions
