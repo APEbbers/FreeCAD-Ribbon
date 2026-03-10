@@ -192,6 +192,27 @@ class Settings:
         Settings.SetIntSetting("ButtonSpacing", BUTTON_SPACING)
         return
 
+    def WriteMissingSettings():
+        # Get the current settings
+        CurrentSettings: list = preferences.GetContents()
+        
+        for key, value in DefaultSettings.items():
+            IsPresent = False
+            for item in CurrentSettings:
+                if item(1) == key:
+                    IsPresent = True
+                    break
+            
+            if IsPresent is False:
+                if type(value) is str:
+                    Settings.SetStringSetting(key, value)
+                if type(value) is bool:
+                    Settings.SetBoolSetting(key, value)
+                if type(value) is int:
+                    Settings.SetIntSetting(key, value)
+                if type(value) is float:
+                    Settings.SetFloatSetting(key, value)
+        return
 
 # region - The FreeCAD version to check
 FreeCAD_Version = {

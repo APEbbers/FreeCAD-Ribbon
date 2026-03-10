@@ -316,6 +316,9 @@ class ModernMenu(RibbonBar):
         self.setAcceptDrops(True)
         self.tabBar().setAcceptDrops(True)
         self._titleWidget.quickAccessToolBar().setAcceptDrops(True)
+        
+        # Write any missing setting
+        Parameters_Ribbon.Settings.WriteMissingSettings()
                 
         # connect the signals
         self.connectSignals()
