@@ -1376,6 +1376,19 @@
                           </property>
                          </widget>
                         </item>
+                        <item row="1" column="4">
+                         <spacer name="horizontalSpacer_13">
+                          <property name="orientation">
+                           <enum>Qt::Orientation::Horizontal</enum>
+                          </property>
+                          <property name="sizeHint" stdset="0">
+                           <size>
+                            <width>40</width>
+                            <height>20</height>
+                           </size>
+                          </property>
+                         </spacer>
+                        </item>
                         <item row="2" column="1">
                          <widget class="QDoubleSpinBox" name="ButtonSizeFactor">
                           <property name="font">
@@ -1403,6 +1416,13 @@
                           </property>
                           <property name="value">
                            <double>1.300000000000000</double>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="0" column="2" colspan="2">
+                         <widget class="QLabel" name="label_43">
+                          <property name="text">
+                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;( Used formule: 2x small button size + &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;&gt;offset )&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                           </property>
                          </widget>
                         </item>
@@ -1466,23 +1486,10 @@
                           </property>
                          </widget>
                         </item>
-                        <item row="1" column="4">
-                         <spacer name="horizontalSpacer_13">
-                          <property name="orientation">
-                           <enum>Qt::Orientation::Horizontal</enum>
-                          </property>
-                          <property name="sizeHint" stdset="0">
-                           <size>
-                            <width>40</width>
-                            <height>20</height>
-                           </size>
-                          </property>
-                         </spacer>
-                        </item>
-                        <item row="0" column="2" colspan="2">
-                         <widget class="QLabel" name="label_43">
+                        <item row="5" column="0" colspan="2">
+                         <widget class="QPushButton" name="ResetAdvancedSettings">
                           <property name="text">
-                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;( Used formule: 2x small button size + &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;&gt;offset )&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                           <string>Reset to default values</string>
                           </property>
                          </widget>
                         </item>
