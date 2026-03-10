@@ -486,7 +486,7 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
 
     # Write a time stamp to preferences
     TimeStamp = datetime.now().strftime("%B %d, %Y, %H:%M:%S")
-    Parameters.Settings.SetStringSetting("ReloadTimeStamp", TimeStamp)
+    Parameters_Ribbon.Settings.SetStringSetting("ReloadTimeStamp", TimeStamp)
 
     if RestartFreeCAD is True:
         result = StandardFunctions.RestartDialog(includeIcons=True)

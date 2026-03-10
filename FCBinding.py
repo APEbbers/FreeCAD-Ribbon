@@ -388,23 +388,23 @@ class ModernMenu(RibbonBar):
             )
 
         # Check there is a custom toolbar "views - ribbon". If so, remove it
-        if Parameters.Settings.GetBoolSetting("RibbonViewRemoved") is False:
+        if Parameters_Ribbon.Settings.GetBoolSetting("RibbonViewRemoved") is False:
             StandardFunctions.RemoveWorkBenchToolbars(
                 Name="Views - Ribbon",
                 WorkBenchName="Global",
             )
-        Parameters.Settings.SetBoolSetting("RibbonViewRemoved", True)
+        Parameters_Ribbon.Settings.SetBoolSetting("RibbonViewRemoved", True)
         # Check there is a custom toolbar "Tools". If so, remove it
-        if Parameters.Settings.GetBoolSetting("ToolsRemoved") is False:
+        if Parameters_Ribbon.Settings.GetBoolSetting("ToolsRemoved") is False:
             StandardFunctions.RemoveWorkBenchToolbars(
                 Name="Tools",
                 WorkBenchName="Global",
             )
-        Parameters.Settings.SetBoolSetting("ToolsRemoved", True)
+        Parameters_Ribbon.Settings.SetBoolSetting("ToolsRemoved", True)
 
         # Add a toolbar "Views - Ribbon"
         #
-        PreferredToolbar = Parameters.Settings.GetIntSetting("Preferred_view")
+        PreferredToolbar = Parameters_Ribbon.Settings.GetIntSetting("Preferred_view")
         # Create a key if not present
         if PreferredToolbar == 2:
             StandardFunctions.add_keys_nested_dict(
@@ -434,7 +434,7 @@ class ModernMenu(RibbonBar):
                 pass
         # # Add a toolbar "tools"
         #
-        UseToolsPanel = Parameters.Settings.GetBoolSetting("UseToolsPanel")
+        UseToolsPanel = Parameters_Ribbon.Settings.GetBoolSetting("UseToolsPanel")
         # Create a key if not present
         try:
             NeedsUpdating = False
@@ -465,7 +465,7 @@ class ModernMenu(RibbonBar):
         self.newPanels = self.ribbonStructure["newPanels"]
 
         # Set the preferred toolbars
-        PreferredToolbar = Parameters.Settings.GetIntSetting("Preferred_view")
+        PreferredToolbar = Parameters_Ribbon.Settings.GetIntSetting("Preferred_view")
         ListIgnoredToolbars: list = self.ribbonStructure["ignoredToolbars"]
         # check if the toolbar is already ignored
         View_Inlist = False
@@ -1017,7 +1017,7 @@ class ModernMenu(RibbonBar):
             delta = event.angleDelta().y()
             x += delta and delta // abs(delta)
 
-            NoClicks = Parameters.Settings.GetIntSetting("Ribbon_Scroll")
+            NoClicks = Parameters_Ribbon.Settings.GetIntSetting("Ribbon_Scroll")
             if NoClicks == 0 or NoClicks is None:
                 NoClicks = 1
 
@@ -1042,7 +1042,7 @@ class ModernMenu(RibbonBar):
             ScrollLeftButton_Tab: QToolButton = ScrollButtons_Tab[0]
             ScrollRightButton_Tab: QToolButton = ScrollButtons_Tab[1]
 
-            NoClicks = Parameters.Settings.GetIntSetting("TabBar_Scroll")
+            NoClicks = Parameters_Ribbon.Settings.GetIntSetting("TabBar_Scroll")
             if NoClicks == 0 or NoClicks is None:
                 NoClicks = 1
 
@@ -2883,7 +2883,7 @@ class ModernMenu(RibbonBar):
         for i in range(len(WorkbenchOrderedList)):
             if WorkbenchOrderedList[i] != "":
                 param_string = param_string + "," + WorkbenchOrderedList[i]
-        Parameters.Settings.SetStringSetting("TabOrder", param_string)
+        Parameters_Ribbon.Settings.SetStringSetting("TabOrder", param_string)
 
         # add category for each workbench
         self.tabBar().setAcceptDrops(True)
@@ -4044,7 +4044,7 @@ class ModernMenu(RibbonBar):
     def on_Pin_clicked(self, pinButton):
         if Parameters.AUTOHIDE_RIBBON is False:
             self.FoldRibbon()
-            Parameters.Settings.SetBoolSetting("AutoHideRibbon", True)
+            Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", True)
             Parameters.AUTOHIDE_RIBBON = True
 
             pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
@@ -4059,7 +4059,7 @@ class ModernMenu(RibbonBar):
         if Parameters.AUTOHIDE_RIBBON is True:
             self.UnfoldRibbon()
 
-            Parameters.Settings.SetBoolSetting("AutoHideRibbon", False)
+            Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
             Parameters.AUTOHIDE_RIBBON = False
 
             pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
@@ -4088,7 +4088,7 @@ class ModernMenu(RibbonBar):
         self.BetaFunctionsEnabled = switchStatus
         if switchStatus is True:
             # Write the parameter
-            Parameters.Settings.SetBoolSetting("BetaFunctions", True)
+            Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", True)
             # print a message
             print(translate("FreeCAD Ribbon", "Ribbon UI: Béta functions enabled"))
             
@@ -4108,7 +4108,7 @@ class ModernMenu(RibbonBar):
             shutil.copy(JsonFile, BackupFile)
         if switchStatus is False:
             # Write the parameter
-            Parameters.Settings.SetBoolSetting("BetaFunctions", False)
+            Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", False)
             # print a message
             print(translate("FreeCAD Ribbon", "Ribbon UI: Béta functions disabled"))
         return

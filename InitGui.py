@@ -113,7 +113,7 @@ source_default = os.path.join(
 )
 
 NewDefaultNeeded = True
-ribbonStructureVersion = Parameters.Settings.GetIntSetting("RibbonStructureVersion")
+ribbonStructureVersion = Parameters_Ribbon.Settings.GetIntSetting("RibbonStructureVersion")
 if ribbonStructureVersion >= CurrentStructureVersion:
     NewDefaultNeeded = False
 
@@ -129,7 +129,7 @@ fileExists = os.path.isfile(file_default)
 # if not, copy and rename
 if fileExists is False or NewDefaultNeeded is True:
     shutil.copy(source_default, file_default)
-    Parameters.Settings.SetIntSetting("RibbonStructureVersion", CurrentStructureVersion)
+    Parameters_Ribbon.Settings.SetIntSetting("RibbonStructureVersion", CurrentStructureVersion)
 
 # remove the test workbench
 try:    

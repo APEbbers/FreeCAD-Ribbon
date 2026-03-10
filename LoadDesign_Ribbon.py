@@ -155,12 +155,12 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Set the size of the window to the previous state
         #
         # Get the previous values
-        LayoutDialog_Height = Parameters.Settings.GetIntSetting(
+        LayoutDialog_Height = Parameters_Ribbon.Settings.GetIntSetting(
             "LayoutDialog_Height"
         )
         if LayoutDialog_Height == 0 or LayoutDialog_Height is None:
             LayoutDialog_Height = 800
-        LayoutDialog_Width = Parameters.Settings.GetIntSetting(
+        LayoutDialog_Width = Parameters_Ribbon.Settings.GetIntSetting(
             "LayoutDialog_Width"
         )
         if LayoutDialog_Width == 0 or LayoutDialog_Height is None:
@@ -400,7 +400,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.form.LoadWB.connect(
             self.form.LoadWB, SIGNAL("clicked()"), self.on_ReloadWB_clicked
         )
-        TimeStamp = Parameters.Settings.GetStringSetting("ReloadTimeStamp")
+        TimeStamp = Parameters_Ribbon.Settings.GetStringSetting("ReloadTimeStamp")
         if TimeStamp == "" or TimeStamp is None:
             TimeStamp = "-"
         self.form.TimeStamp_Reloaded.setText(
@@ -1065,7 +1065,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
     def on_CustomPanelPositionLeft_IS_clicked(self):
         if self.form.CustomPanelPositionLeft.isChecked():
-            Parameters.Settings.SetStringSetting("CustomPanelPosition", "Left")
+            Parameters_Ribbon.Settings.SetStringSetting("CustomPanelPosition", "Left")
             self.form.CustomPanelPositionRight.setChecked(False)
 
         # Enable the apply button
@@ -1074,7 +1074,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
     def on_CustomPanelPositionRight_IS_clicked(self):
         if self.form.CustomPanelPositionRight.isChecked():
-            Parameters.Settings.SetStringSetting("CustomPanelPosition", "Right")
+            Parameters_Ribbon.Settings.SetStringSetting("CustomPanelPosition", "Right")
             self.form.CustomPanelPositionLeft.setChecked(False)
 
         # Enable the apply button
@@ -3405,10 +3405,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.WriteJson()
 
         # Set the size of the window to the previous state
-        Parameters.Settings.SetIntSetting(
+        Parameters_Ribbon.Settings.SetIntSetting(
             "LayoutDialog_Height", self.form.height()
         )
-        Parameters.Settings.SetIntSetting(
+        Parameters_Ribbon.Settings.SetIntSetting(
             "LayoutDialog_Width", self.form.width()
         )
         # Emit a close signal
@@ -3426,10 +3426,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
     @staticmethod
     def on_Cancel_clicked(self):
         # Set the size of the window to the previous state
-        Parameters.Settings.SetIntSetting(
+        Parameters_Ribbon.Settings.SetIntSetting(
             "LayoutDialog_Height", self.form.height()
         )
-        Parameters.Settings.SetIntSetting(
+        Parameters_Ribbon.Settings.SetIntSetting(
             "LayoutDialog_Width", self.form.width()
         )
         # Emit a close signal
