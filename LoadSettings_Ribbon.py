@@ -117,6 +117,11 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "FontSize_Buttons": Parameters_Ribbon.FONTSIZE_BUTTONS,
         "FontSize_Tabs": Parameters_Ribbon.FONTSIZE_TABS,
         "FontSize_Panels": Parameters_Ribbon.FONTSIZE_PANELS,
+        "SizeFactor": Parameters_Ribbon.SIZE_FACTOR,
+        "PanelHeightOffset": Parameters_Ribbon.PANEL_HEIGHT_OFFSET,
+        "RibbonHeightOffset": Parameters_Ribbon.RIBBON_HEIGHT_OFFSET,
+        "RibbonMinimumHeight": Parameters_Ribbon.RIBBON_MINIMUM_HEIGHT,
+        "ButtonSpacing": Parameters_Ribbon.BUTTON_SPACING,
     }
 
     # Store the current values before change
@@ -164,6 +169,11 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "FontSize_Buttons": Parameters_Ribbon.FONTSIZE_BUTTONS,
         "FontSize_Tabs": Parameters_Ribbon.FONTSIZE_TABS,
         "FontSize_Panels": Parameters_Ribbon.FONTSIZE_PANELS,
+        "SizeFactor": Parameters_Ribbon.SIZE_FACTOR,
+        "PanelHeightOffset": Parameters_Ribbon.PANEL_HEIGHT_OFFSET,
+        "RibbonHeightOffset": Parameters_Ribbon.RIBBON_HEIGHT_OFFSET,
+        "RibbonMinimumHeight": Parameters_Ribbon.RIBBON_MINIMUM_HEIGHT,
+        "ButtonSpacing": Parameters_Ribbon.BUTTON_SPACING,
     }
 
     settingChanged = False
@@ -264,6 +274,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.UseButtonBackGround.setHidden(True)
         self.form.UseButtonBackGround.setDisabled(True)
         Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED = False
+        
+        # Hide the advanced size settings by default
+        self.form.AdvancedGroup.setHidden(True)
 
         # region - load all settings
         #
@@ -303,6 +316,12 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.TextSize_Buttons.setValue(Parameters_Ribbon.FONTSIZE_BUTTONS)
         self.form.TextSize_Tabs.setValue(Parameters_Ribbon.FONTSIZE_TABS)
         self.form.TextSize_Panels.setValue(Parameters_Ribbon.FONTSIZE_PANELS)
+        
+        self.form.RibbonHeightOffset.setValue(Parameters_Ribbon.RIBBON_HEIGHT_OFFSET)
+        self.form.PanelHeightOffset.setValue(Parameters_Ribbon.PANEL_HEIGHT_OFFSET)
+        self.form.ButtonSizeFactor.setValue(Parameters_Ribbon.SIZE_FACTOR)
+        self.form.MinimumRibbonHeight.setValue(Parameters_Ribbon.RIBBON_MINIMUM_HEIGHT)
+        self.form.ButtonSpacing.setValue(Parameters_Ribbon.BUTTON_SPACING)
 
         self.form.label_7.setText(Parameters_Ribbon.STYLESHEET)
         if Parameters_Ribbon.SHOW_ICON_TEXT_SMALL is True:
@@ -1340,6 +1359,13 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         Parameters_Ribbon.Settings.SetIntSetting(
             "SettingsDialog_Width", self.form.width()
         )
+        
+        # Set the advanced size settings to the previous state
+        Parameters_Ribbon.Settings.SetFloatSetting("SizeFactor", self.OriginalValues["SizeFactor"])
+        Parameters_Ribbon.Settings.SetIntSetting("PanelHeightOffset", self.OriginalValues["PanelHeightOffset"])
+        Parameters_Ribbon.Settings.SetIntSetting("RibbonHeightOffset", self.OriginalValues["RibbonHeightOffset"])
+        Parameters_Ribbon.Settings.SetIntSetting("RibbonMinimumHeight", self.OriginalValues["RibbonMinimumHeight"])
+        Parameters_Ribbon.Settings.SetIntSetting("ButtonSpacing", self.OriginalValues["ButtonSpacing"])
 
         # Emit a close signal
         self.closeSignal.emit()
@@ -1495,6 +1521,13 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         Parameters_Ribbon.Settings.SetIntSetting(
             "SettingsDialog_Width", self.form.width()
         )
+        
+        # Set the advanced size settings to the previous state
+        Parameters_Ribbon.Settings.SetFloatSetting("SizeFactor", self.ValuesToUpdate["SizeFactor"])
+        Parameters_Ribbon.Settings.SetIntSetting("PanelHeightOffset", self.ValuesToUpdate["PanelHeightOffset"])
+        Parameters_Ribbon.Settings.SetIntSetting("RibbonHeightOffset", self.ValuesToUpdate["RibbonHeightOffset"])
+        Parameters_Ribbon.Settings.SetIntSetting("RibbonMinimumHeight", self.ValuesToUpdate["RibbonMinimumHeight"])
+        Parameters_Ribbon.Settings.SetIntSetting("ButtonSpacing", self.ValuesToUpdate["ButtonSpacing"])
 
         # Emit a close signal
         self.closeSignal.emit()
@@ -1687,6 +1720,12 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.Color_Background_App.setProperty(
             "color", QColor(StyleMapping_Ribbon.ReturnStyleItem("Color_Background_App"))
         )
+        
+        self.form.RibbonHeightOffset.setValue(DefaultSettings["RibbonHeightOffset"])
+        self.form.PanelHeightOffset.setValue(DefaultSettings["PanelHeightOffset"])
+        self.form.ButtonSizeFactor.setValue(DefaultSettings["SizeFactor"])
+        self.form.MinimumRibbonHeight.setValue(DefaultSettings["RibbonMinimumHeight"])
+        self.form.ButtonSpacing.setValue(DefaultSettings["ButtonSpacing"])
         return
 
     # endregion---------------------------------------------------------------------------------------

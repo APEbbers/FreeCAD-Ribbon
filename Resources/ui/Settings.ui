@@ -55,9 +55,9 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>-758</y>
+          <y>-781</y>
           <width>697</width>
-          <height>1546</height>
+          <height>1630</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_28">
@@ -1261,7 +1261,7 @@
                       <number>0</number>
                      </property>
                      <item row="1" column="0" rowspan="2">
-                      <widget class="QFrame" name="AdvacnedGroup">
+                      <widget class="QFrame" name="AdvancedGroup">
                        <layout class="QGridLayout" name="gridLayout_41">
                         <property name="topMargin">
                          <number>0</number>
@@ -1300,7 +1300,7 @@
                         <item row="3" column="0">
                          <widget class="QLabel" name="label_39">
                           <property name="text">
-                           <string>Minimum ribbon height offset</string>
+                           <string>Minimum ribbon height</string>
                           </property>
                          </widget>
                         </item>
@@ -1351,7 +1351,7 @@
                         <item row="3" column="2" colspan="2">
                          <widget class="QLabel" name="label_44">
                           <property name="text">
-                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;( Used formule: 2x small button size + &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;&gt;offset &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;( Used formule: 2x small button size + &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;&gt;value&lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;/&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                           </property>
                          </widget>
                         </item>
@@ -1422,7 +1422,7 @@
                         <item row="0" column="2" colspan="2">
                          <widget class="QLabel" name="label_43">
                           <property name="text">
-                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;( Used formule: 2x small button size + &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;&gt;offset )&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;( Used formule: 2x small button size + &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;&gt;value&lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;&gt; )&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                           </property>
                          </widget>
                         </item>
@@ -2964,7 +2964,7 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
   <connection>
    <sender>toolButton</sender>
    <signal>clicked(bool)</signal>
-   <receiver>AdvacnedGroup</receiver>
+   <receiver>AdvancedGroup</receiver>
    <slot>setHidden(bool)</slot>
    <hints>
     <hint type="sourcelabel">

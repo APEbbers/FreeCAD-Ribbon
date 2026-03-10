@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -49,7 +49,7 @@ from PySide6.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -87,7 +87,7 @@ from PySide6.QtWidgets import (
     QListWidget,
     QListWidgetItem,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -198,16 +198,16 @@ class ModernMenu(RibbonBar):
     RibbonHeight = 0
 
     # Set a size factor for the buttons
-    sizeFactor = 1.3
+    sizeFactor = Parameters_Ribbon.SIZE_FACTOR
     # Create an offset for the panelheight
-    PanelHeightOffset = 26
+    PanelHeightOffset = Parameters_Ribbon.PANEL_HEIGHT_OFFSET
     # Create an offset for the whole ribbon height
     RibbonOffset = (
-        20 + QuickAccessButtonSize * 2
+        Parameters_Ribbon.RIBBON_HEIGHT_OFFSET + QuickAccessButtonSize * 2
     )  # Set to zero to hide the panel titles
 
     # Set the minimum height for the ribbon
-    RibbonMinimalHeight = QuickAccessButtonSize * 2 + 16
+    RibbonMinimalHeight = QuickAccessButtonSize * 2 + Parameters_Ribbon.RIBBON_MINIMUM_HEIGHT
     # From v1.6.x, the size of tab bar and right toolbar are controlled by the size of the quickaccess toolbar
     TabBar_Size = QuickAccessButtonSize
     RightToolBarButtonSize = QuickAccessButtonSize
@@ -216,7 +216,7 @@ class ModernMenu(RibbonBar):
     PaddingRight = 10
     
     # Declare the spacing between buttons
-    ButtonSpacing = 6
+    ButtonSpacing = Parameters_Ribbon.BUTTON_SPACING
     
     # Declare the alignment of the buttons
     ButtonAlignment = Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter

@@ -105,6 +105,14 @@ class Settings:
             preferences.SetInt(settingName, value)
         App.saveParameter()
         return
+    
+    def SetFloatSetting(settingName, value: float):
+        if str(value).lower() == "":
+            value = float(DefaultSettings[settingName])
+        if str(value).lower() != "":
+            preferences.SetFloat(settingName, value)
+        App.saveParameter()
+        return
 
     # endregion
 
@@ -176,6 +184,12 @@ class Settings:
         )
 
         Settings.SetStringSetting("CustomPanelPosition", DEFAULT_PANEL_POSITION_CUSTOM)
+        
+        Settings.SetFloatSetting("SizeFactor", SIZE_FACTOR)
+        Settings.SetIntSetting("PanelHeightOffset", PANEL_HEIGHT_OFFSET)
+        Settings.SetIntSetting("RibbonHeightOffset", RIBBON_HEIGHT_OFFSET)
+        Settings.SetIntSetting("RibbonMinimumHeight", RIBBON_MINIMUM_HEIGHT)
+        Settings.SetIntSetting("ButtonSpacing", BUTTON_SPACING)
         return
 
 
@@ -259,6 +273,11 @@ DefaultSettings = {
     "Toolbar_Position": int(0),
     "Hide_Titlebar_FC": bool(True),
     "BetaFunctions": bool(False),
+    "SizeFactor": float(1.3),
+    "PanelHeightOffset": int(26),
+    "RibbonHeightOffset": int(20),
+    "RibbonMinimumHeight": int(16),
+    "ButtonSpacing": int(6),
 }
 
 # Get the install location of FreeCAD
@@ -646,4 +665,31 @@ BETA_FUNCTIONS_ENABLED = Settings.GetBoolSetting("BetaFunctions")
 if Settings.GetBoolSetting("BetaFunctions") is None:
     BETA_FUNCTIONS_ENABLED = bool(DefaultSettings["BetaFunctions"])
     Settings.SetBoolSetting("BetaFunctions", BETA_FUNCTIONS_ENABLED)
+# endregion
+
+# region - Advanced size settings ------------------------------------------------------------------------------------------------
+SIZE_FACTOR = Settings.GetBoolSetting("SizeFactor")
+if Settings.GetBoolSetting("BetaFunctions") is None:
+    SIZE_FACTOR = bool(DefaultSettings["SizeFactor"])
+    Settings.SetBoolSetting("SizeFactor", SIZE_FACTOR)
+    
+PANEL_HEIGHT_OFFSET = Settings.GetIntSetting("PanelHeightOffset")
+if Settings.GetIntSetting("PanelHeightOffset") is None:
+    PANEL_HEIGHT_OFFSET = bool(DefaultSettings["PanelHeightOffset"])
+    Settings.SetIntSetting("PanelHeightOffset", PANEL_HEIGHT_OFFSET)
+    
+RIBBON_HEIGHT_OFFSET = Settings.GetIntSetting("RibbonHeightOffset")
+if Settings.GetIntSetting("RibbonHeightOffset") is None:
+    RIBBON_HEIGHT_OFFSET = bool(DefaultSettings["RibbonHeightOffset"])
+    Settings.SetIntSetting("RibbonHeightOffset", RIBBON_HEIGHT_OFFSET)
+    
+RIBBON_MINIMUM_HEIGHT = Settings.GetIntSetting("RibbonMinimumHeight")
+if Settings.GetIntSetting("RibbonMinimumHeight") is None:
+    RIBBON_MINIMUM_HEIGHT = bool(DefaultSettings["RibbonMinimumHeight"])
+    Settings.SetIntSetting("RibbonMinimumHeight", RIBBON_MINIMUM_HEIGHT)
+    
+BUTTON_SPACING = Settings.GetIntSetting("ButtonSpacing")
+if Settings.GetIntSetting("ButtonSpacing") is None:
+    BUTTON_SPACING = bool(DefaultSettings["ButtonSpacing"])
+    Settings.SetIntSetting("ButtonSpacing", BUTTON_SPACING)
 # endregion
