@@ -41,12 +41,13 @@ import sys
 
 import Standard_Functions_Ribbon as StandardFunctions
 import Parameters_Ribbon
+from Parameters_Ribbon import Parameters
 
 # Get the resources
-pathIcons = Parameters_Ribbon.ICON_LOCATION
-pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
-pathUI = Parameters_Ribbon.UI_LOCATION
-pathBackup = Parameters_Ribbon.BACKUP_LOCATION
+pathIcons = Parameters.ICON_LOCATION
+pathStylSheets = Parameters.STYLESHEET_LOCATION
+pathUI = Parameters.UI_LOCATION
+pathBackup = Parameters.BACKUP_LOCATION
 sys.path.append(pathIcons)
 sys.path.append(pathStylSheets)
 sys.path.append(pathUI)

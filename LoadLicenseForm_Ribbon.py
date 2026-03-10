@@ -41,15 +41,16 @@ import sys
 
 import Standard_Functions_Ribbon as StandardFunctions
 import Parameters_Ribbon
+from Parameters_Ribbon import Parameters
 
 # Get the resources
-ConfigDirectory = Parameters_Ribbon.CONFIG_DIR
-pathIcons = Parameters_Ribbon.ICON_LOCATION
-pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
-pathUI = Parameters_Ribbon.UI_LOCATION
+ConfigDirectory = Parameters.CONFIG_DIR
+pathIcons = Parameters.ICON_LOCATION
+pathStylSheets = Parameters.STYLESHEET_LOCATION
+pathUI = Parameters.UI_LOCATION
 pathScripts = os.path.join(ConfigDirectory, "Scripts")
 pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
-pathBackup = Parameters_Ribbon.BACKUP_LOCATION
+pathBackup = Parameters.BACKUP_LOCATION
 sys.path.append(ConfigDirectory)
 sys.path.append(pathIcons)
 sys.path.append(pathStylSheets)

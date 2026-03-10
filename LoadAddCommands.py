@@ -46,6 +46,7 @@ import json
 import Standard_Functions_Ribbon as StandardFunctions
 from Standard_Functions_Ribbon import CommandInfoCorrections
 import Parameters_Ribbon
+from Parameters_Ribbon import Parameters
 import Serialize_Ribbon
 import CacheFunctions
 import FCBinding
@@ -58,13 +59,13 @@ from pyqtribbon_local.separator import RibbonSeparator
 from pyqtribbon_local.category import RibbonCategory, RibbonCategoryLayoutButton, RibbonNormalCategory, RibbonContextCategory
 
 # Get the resources
-ConfigDirectory = Parameters_Ribbon.CONFIG_DIR
-pathIcons = Parameters_Ribbon.ICON_LOCATION
-pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
-pathUI = Parameters_Ribbon.UI_LOCATION
+ConfigDirectory = Parameters.CONFIG_DIR
+pathIcons = Parameters.ICON_LOCATION
+pathStylSheets = Parameters.STYLESHEET_LOCATION
+pathUI = Parameters.UI_LOCATION
 pathScripts = os.path.join(ConfigDirectory, "Scripts")
 pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
-pathBackup = Parameters_Ribbon.BACKUP_LOCATION
+pathBackup = Parameters.BACKUP_LOCATION
 sys.path.append(ConfigDirectory)
 sys.path.append(pathIcons)
 sys.path.append(pathStylSheets)
@@ -282,7 +283,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         "Warning",
                     )
         except Exception as e:
-            if Parameters_Ribbon.DEBUG_MODE is True:
+            if Parameters.DEBUG_MODE is True:
                 StandardFunctions.Print(
                     f"{e.with_traceback(e.__traceback__)}", "Warning"
                 )
@@ -634,7 +635,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
                                     ListWidget.addItem(ListWidgetItem)
                                 if Icon is None:
-                                    if Parameters_Ribbon.DEBUG_MODE is True:
+                                    if Parameters.DEBUG_MODE is True:
                                         StandardFunctions.Print(
                                             f"{CommandName} has no icon!", "Warning"
                                         )

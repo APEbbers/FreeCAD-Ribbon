@@ -48,19 +48,20 @@ import shutil
 import Standard_Functions_Ribbon as StandardFunctions
 from Standard_Functions_Ribbon import CommandInfoCorrections
 import Parameters_Ribbon
+from Parameters_Ribbon import Parameters
 import Serialize_Ribbon
 import webbrowser
 import StyleMapping_Ribbon
 import CacheFunctions
 
 # Get the resources
-ConfigDirectory = Parameters_Ribbon.CONFIG_DIR
-pathIcons = Parameters_Ribbon.ICON_LOCATION
-pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
-pathUI = Parameters_Ribbon.UI_LOCATION
+ConfigDirectory = Parameters.CONFIG_DIR
+pathIcons = Parameters.ICON_LOCATION
+pathStylSheets = Parameters.STYLESHEET_LOCATION
+pathUI = Parameters.UI_LOCATION
 pathScripts = os.path.join(ConfigDirectory, "Scripts")
 pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
-pathBackup = Parameters_Ribbon.BACKUP_LOCATION
+pathBackup = Parameters.BACKUP_LOCATION
 sys.path.append(ConfigDirectory)
 sys.path.append(pathIcons)
 sys.path.append(pathStylSheets)
@@ -154,12 +155,12 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Set the size of the window to the previous state
         #
         # Get the previous values
-        LayoutDialog_Height = Parameters_Ribbon.Settings.GetIntSetting(
+        LayoutDialog_Height = Parameters.Settings.GetIntSetting(
             "LayoutDialog_Height"
         )
         if LayoutDialog_Height == 0 or LayoutDialog_Height is None:
             LayoutDialog_Height = 800
-        LayoutDialog_Width = Parameters_Ribbon.Settings.GetIntSetting(
+        LayoutDialog_Width = Parameters.Settings.GetIntSetting(
             "LayoutDialog_Width"
         )
         if LayoutDialog_Width == 0 or LayoutDialog_Height is None:
@@ -346,7 +347,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         "Warning",
                     )
         except Exception as e:
-            if Parameters_Ribbon.DEBUG_MODE is True:
+            if Parameters.DEBUG_MODE is True:
                 StandardFunctions.Print(
                     f"{e.with_traceback(e.__traceback__)}", "Warning"
                 )
@@ -399,7 +400,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.form.LoadWB.connect(
             self.form.LoadWB, SIGNAL("clicked()"), self.on_ReloadWB_clicked
         )
-        TimeStamp = Parameters_Ribbon.Settings.GetStringSetting("ReloadTimeStamp")
+        TimeStamp = Parameters.Settings.GetStringSetting("ReloadTimeStamp")
         if TimeStamp == "" or TimeStamp is None:
             TimeStamp = "-"
         self.form.TimeStamp_Reloaded.setText(
@@ -823,7 +824,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.form.HelpButton.setMinimumHeight(self.form.Close.minimumHeight())
 
         # Disable and hide the restore button if the backup function is disabled
-        if Parameters_Ribbon.ENABLE_BACKUP is False:
+        if Parameters.ENABLE_BACKUP is False:
             self.form.RestoreJson.setDisabled(True)
             self.form.RestoreJson.setHidden(True)
         else:
@@ -864,7 +865,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         JsonFile = StandardFunctions.GetFileDialog(
             Filter="RibbonStructure (*.json)",
             parent=self.form,
-            DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
+            DefaultPath=Parameters.IMPORT_LOCATION,
             SaveAs=False,
         )
         if JsonFile != "":
@@ -881,7 +882,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         JsonFile = StandardFunctions.GetFileDialog(
             Filter="RibbonStructure (*.json)",
             parent=self.form,
-            DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
+            DefaultPath=Parameters.IMPORT_LOCATION,
             SaveAs=False,
         )
         if JsonFile != "":
@@ -899,7 +900,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         JsonFile = StandardFunctions.GetFileDialog(
             Filter="RibbonStructure (*.json)",
             parent=self.form,
-            DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
+            DefaultPath=Parameters.IMPORT_LOCATION,
             SaveAs=False,
         )
         if JsonFile != "":
@@ -918,11 +919,11 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         FileName = StandardFunctions.GetFileDialog(
             Filter="RibbonStructure (*.json)",
             parent=self.form,
-            DefaultPath=Parameters_Ribbon.EXPORT_LOCATION,
+            DefaultPath=Parameters.EXPORT_LOCATION,
             SaveAs=True,
         )
         if FileName != "":
-            shutil.copy(Parameters_Ribbon.RIBBON_STRUCTURE_JSON, FileName)
+            shutil.copy(Parameters.RIBBON_STRUCTURE_JSON, FileName)
 
         return
 
@@ -930,7 +931,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         JsonFile = StandardFunctions.GetFileDialog(
             Filter="RibbonStructure (*.json)",
             parent=self.form,
-            DefaultPath=Parameters_Ribbon.IMPORT_LOCATION,
+            DefaultPath=Parameters.IMPORT_LOCATION,
             SaveAs=False,
         )
         if JsonFile != "":
@@ -985,7 +986,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     Size=Size,
                 )
             except Exception as e:
-                if Parameters_Ribbon.DEBUG_MODE is True:
+                if Parameters.DEBUG_MODE is True:
                     raise (e)
                 else:
                     continue
@@ -1038,7 +1039,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     Size=Size,
                 )
             except Exception as e:
-                if Parameters_Ribbon.DEBUG_MODE is True:
+                if Parameters.DEBUG_MODE is True:
                     raise (e)
                 else:
                     continue
@@ -1064,7 +1065,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
     def on_CustomPanelPositionLeft_IS_clicked(self):
         if self.form.CustomPanelPositionLeft.isChecked():
-            Parameters_Ribbon.Settings.SetStringSetting("CustomPanelPosition", "Left")
+            Parameters.Settings.SetStringSetting("CustomPanelPosition", "Left")
             self.form.CustomPanelPositionRight.setChecked(False)
 
         # Enable the apply button
@@ -1073,7 +1074,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
     def on_CustomPanelPositionRight_IS_clicked(self):
         if self.form.CustomPanelPositionRight.isChecked():
-            Parameters_Ribbon.Settings.SetStringSetting("CustomPanelPosition", "Right")
+            Parameters.Settings.SetStringSetting("CustomPanelPosition", "Right")
             self.form.CustomPanelPositionLeft.setChecked(False)
 
         # Enable the apply button
@@ -1549,10 +1550,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     MenuName = CommandItem[2].replace("&", "")
                     # For FC 1.1.0, use commandnames instead of menu names
                     if StandardFunctions.checkFreeCADVersion(
-                            Parameters_Ribbon.FreeCAD_Version["mainVersion"],
-                            Parameters_Ribbon.FreeCAD_Version["subVersion"],
-                            Parameters_Ribbon.FreeCAD_Version["patchVersion"],
-                            Parameters_Ribbon.FreeCAD_Version["gitVersion"],
+                            Parameters.FreeCAD_Version["mainVersion"],
+                            Parameters.FreeCAD_Version["subVersion"],
+                            Parameters.FreeCAD_Version["patchVersion"],
+                            Parameters.FreeCAD_Version["gitVersion"],
                         ) is True:
                         MenuName = CommandItem[0]
 
@@ -1802,7 +1803,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
                             return
                 except Exception as e:
-                    if Parameters_Ribbon.DEBUG_MODE is True:
+                    if Parameters.DEBUG_MODE is True:
                         raise (e)
         return
 
@@ -2002,7 +2003,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
                                 return
                 except Exception as e:
-                    if Parameters_Ribbon.DEBUG_MODE is True:
+                    if Parameters.DEBUG_MODE is True:
                         raise (e)
 
         return
@@ -2674,10 +2675,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     if "separator" not in item.lower():
                         if (
                             StandardFunctions.checkFreeCADVersion(
-                                Parameters_Ribbon.FreeCAD_Version["mainVersion"],
-                                Parameters_Ribbon.FreeCAD_Version["subVersion"],
-                                Parameters_Ribbon.FreeCAD_Version["patchVersion"],
-                                Parameters_Ribbon.FreeCAD_Version["gitVersion"],
+                                Parameters.FreeCAD_Version["mainVersion"],
+                                Parameters.FreeCAD_Version["subVersion"],
+                                Parameters.FreeCAD_Version["patchVersion"],
+                                Parameters.FreeCAD_Version["gitVersion"],
                             )
                             is False
                         ):
@@ -2919,10 +2920,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         # If it is a newer version of FreeCAD. use the commandname instead
                         if (
                             StandardFunctions.checkFreeCADVersion(
-                                Parameters_Ribbon.FreeCAD_Version["mainVersion"],
-                                Parameters_Ribbon.FreeCAD_Version["subVersion"],
-                                Parameters_Ribbon.FreeCAD_Version["patchVersion"],
-                                Parameters_Ribbon.FreeCAD_Version["gitVersion"],
+                                Parameters.FreeCAD_Version["mainVersion"],
+                                Parameters.FreeCAD_Version["subVersion"],
+                                Parameters.FreeCAD_Version["patchVersion"],
+                                Parameters.FreeCAD_Version["gitVersion"],
                             )
                             is True
                         ):
@@ -3242,7 +3243,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             if self.CheckChanges() is True:
                 self.form.UpdateJson.setEnabled(True)
         except Exception as e:
-            if Parameters_Ribbon.DEBUG_MODE is True:
+            if Parameters.DEBUG_MODE is True:
                 print(e)
             pass
 
@@ -3404,10 +3405,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.WriteJson()
 
         # Set the size of the window to the previous state
-        Parameters_Ribbon.Settings.SetIntSetting(
+        Parameters.Settings.SetIntSetting(
             "LayoutDialog_Height", self.form.height()
         )
-        Parameters_Ribbon.Settings.SetIntSetting(
+        Parameters.Settings.SetIntSetting(
             "LayoutDialog_Width", self.form.width()
         )
         # Emit a close signal
@@ -3425,10 +3426,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
     @staticmethod
     def on_Cancel_clicked(self):
         # Set the size of the window to the previous state
-        Parameters_Ribbon.Settings.SetIntSetting(
+        Parameters.Settings.SetIntSetting(
             "LayoutDialog_Height", self.form.height()
         )
-        Parameters_Ribbon.Settings.SetIntSetting(
+        Parameters.Settings.SetIntSetting(
             "LayoutDialog_Width", self.form.width()
         )
         # Emit a close signal
@@ -3800,7 +3801,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             f'{CustomPanelTitle.replace("_custom", "")}, {WorkBenchTitle}'
                         )
         except Exception as e:
-            if Parameters_Ribbon.DEBUG_MODE is True:
+            if Parameters.DEBUG_MODE is True:
                 StandardFunctions.Print(
                     f"{e.with_traceback(e.__traceback__)}", "Warning"
                 )
@@ -3828,7 +3829,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     )
             self.on_CustomToolbarSelector_NP_activated()
         except Exception as e:
-            if Parameters_Ribbon.DEBUG_MODE is True:
+            if Parameters.DEBUG_MODE is True:
                 StandardFunctions.Print(
                     f"{e.with_traceback(e.__traceback__)}", "Warning"
                 )
@@ -3867,10 +3868,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 # If it is a newer version of FreeCAD. use the commandname instead
                 if (
                     StandardFunctions.checkFreeCADVersion(
-                        Parameters_Ribbon.FreeCAD_Version["mainVersion"],
-                        Parameters_Ribbon.FreeCAD_Version["subVersion"],
-                        Parameters_Ribbon.FreeCAD_Version["patchVersion"],
-                        Parameters_Ribbon.FreeCAD_Version["gitVersion"],
+                        Parameters.FreeCAD_Version["mainVersion"],
+                        Parameters.FreeCAD_Version["subVersion"],
+                        Parameters.FreeCAD_Version["patchVersion"],
+                        Parameters.FreeCAD_Version["gitVersion"],
                     )
                     is True
                 ):
@@ -3974,7 +3975,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     "icon": IconName,
                 }
             except Exception as e:
-                if Parameters_Ribbon.DEBUG_MODE is True:
+                if Parameters.DEBUG_MODE is True:
                     StandardFunctions.Print(
                         f"{CommandName}, {WorkBenchName} {e}", "Warning"
                     )
@@ -3987,9 +3988,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             if JsonFile != "":
                 JsonFile = open(JsonFile)
             else:
-                JsonFile = open(Parameters_Ribbon.RIBBON_STRUCTURE_JSON)
+                JsonFile = open(Parameters.RIBBON_STRUCTURE_JSON)
         except Exception:
-            JsonFile = open(Parameters_Ribbon.RIBBON_STRUCTURE_JSON)
+            JsonFile = open(Parameters.RIBBON_STRUCTURE_JSON)
         data = json.load(JsonFile)
 
         # Get all the ignored toolbars
@@ -4098,10 +4099,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         resultingDict.update(self.Dict_RibbonCommandPanel)
 
         # get the path for the Json file
-        JsonFile = Parameters_Ribbon.RIBBON_STRUCTURE_JSON
+        JsonFile = Parameters.RIBBON_STRUCTURE_JSON
 
         # create a copy and rename it as a backup if enabled
-        if Parameters_Ribbon.ENABLE_BACKUP is True:
+        if Parameters.ENABLE_BACKUP is True:
             Suffix = datetime.now().strftime("%Y%m%d_%H%M%S")
             BackupName = f"RibbonStructure_{Suffix}.json"
             if os.path.exists(pathBackup) is False:
@@ -4635,7 +4636,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             except ValueError:
                 position = 999999
                 if toolbar.endswith("_custom") or toolbar.endswith("_newPanel"):
-                    if Parameters_Ribbon.DEFAULT_PANEL_POSITION_CUSTOM == "Right":
+                    if Parameters.DEFAULT_PANEL_POSITION_CUSTOM == "Right":
                         position = 999999
                     else:
                         position = 0
@@ -4784,7 +4785,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             else:
                                 WorkbenchTitle = workbenchName
                         except Exception as e:
-                            if Parameters_Ribbon.DEBUG_MODE is True:
+                            if Parameters.DEBUG_MODE is True:
                                 print(e)
                             return
                         try:
@@ -4856,7 +4857,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                     if IsInList is False:
                                         ListWidget.addItem(ListWidgetItem)
                                 if Icon is None:
-                                    if Parameters_Ribbon.DEBUG_MODE is True:
+                                    if Parameters.DEBUG_MODE is True:
                                         StandardFunctions.Print(
                                             f"{CommandName} has no icon!", "Warning"
                                         )
@@ -4920,7 +4921,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                     workbenchName
                                 ).MenuText
                             except Exception as e:
-                                if Parameters_Ribbon.DEBUG_MODE is True:
+                                if Parameters.DEBUG_MODE is True:
                                     print(e)
                                 return
                             if (

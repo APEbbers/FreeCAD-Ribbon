@@ -50,18 +50,19 @@ from Standard_Functions_Ribbon import CommandInfoCorrections
 import Standard_Functions_Ribbon as StandardFunctions
 from Standard_Functions_Ribbon import CommandInfoCorrections
 import Parameters_Ribbon
+from Parameters_Ribbon import Parameters
 import Serialize_Ribbon
 import webbrowser
 import StyleMapping_Ribbon
 
 # Get the resources
-ConfigDirectory = Parameters_Ribbon.CONFIG_DIR
-pathIcons = Parameters_Ribbon.ICON_LOCATION
-pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
-pathUI = Parameters_Ribbon.UI_LOCATION
+ConfigDirectory = Parameters.CONFIG_DIR
+pathIcons = Parameters.ICON_LOCATION
+pathStylSheets = Parameters.STYLESHEET_LOCATION
+pathUI = Parameters.UI_LOCATION
 pathScripts = os.path.join(ConfigDirectory, "Scripts")
 pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
-pathBackup = Parameters_Ribbon.BACKUP_LOCATION
+pathBackup = Parameters.BACKUP_LOCATION
 sys.path.append(ConfigDirectory)
 sys.path.append(pathIcons)
 sys.path.append(pathStylSheets)
@@ -426,7 +427,7 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
                 # add the icons also to the deserialized list
                 List_WorkBenchIcons.append([WorkBenchName, Icon])
             except Exception as e:
-                if Parameters_Ribbon.DEBUG_MODE is True:
+                if Parameters.DEBUG_MODE is True:
                     StandardFunctions.Print(
                         f"{e.with_traceback(e.__traceback__)}", "Warning"
                     )
@@ -443,7 +444,7 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
                 # add the icons also to the deserialized list
                 List_CommandIcons.append([CommandName, Icon])
             except Exception as e:
-                if Parameters_Ribbon.DEBUG_MODE is True:
+                if Parameters.DEBUG_MODE is True:
                     StandardFunctions.Print(
                         f"{e.with_traceback(e.__traceback__)}", "Warning"
                     )
@@ -485,7 +486,7 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
 
     # Write a time stamp to preferences
     TimeStamp = datetime.now().strftime("%B %d, %Y, %H:%M:%S")
-    Parameters_Ribbon.Settings.SetStringSetting("ReloadTimeStamp", TimeStamp)
+    Parameters.Settings.SetStringSetting("ReloadTimeStamp", TimeStamp)
 
     if RestartFreeCAD is True:
         result = StandardFunctions.RestartDialog(includeIcons=True)

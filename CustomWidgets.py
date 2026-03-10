@@ -72,18 +72,19 @@ from PySide.QtCore import (
 
 import os
 import Parameters_Ribbon
+from Parameters_Ribbon import Parameters
 import Standard_Functions_Ribbon as StandardFunctions
 import StyleMapping_Ribbon
 
 
 # Get the resources
-ConfigDirectory = Parameters_Ribbon.CONFIG_DIR
-pathIcons = Parameters_Ribbon.ICON_LOCATION
-pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
-pathUI = Parameters_Ribbon.UI_LOCATION
+ConfigDirectory = Parameters.CONFIG_DIR
+pathIcons = Parameters.ICON_LOCATION
+pathStylSheets = Parameters.STYLESHEET_LOCATION
+pathUI = Parameters.UI_LOCATION
 pathScripts = os.path.join(ConfigDirectory, "Scripts")
 pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
-pathBackup = Parameters_Ribbon.BACKUP_LOCATION
+pathBackup = Parameters.BACKUP_LOCATION
 sys.path.append(ConfigDirectory)
 sys.path.append(pathIcons)
 sys.path.append(pathStylSheets)
@@ -405,7 +406,7 @@ class CustomControls(QToolButton):
             Menu.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
             StyleSheet_Menu = (
                 "QMenu::item, QMenu::menuAction, QMenuBar::item, QMenu>QLabel {font-size: "
-                + str(Parameters_Ribbon.FONTSIZE_MENUS)
+                + str(Parameters.FONTSIZE_MENUS)
                 + "px;}"
             )
             Menu.setStyleSheet(StyleSheet_Menu)
@@ -440,9 +441,9 @@ class CustomControls(QToolButton):
                 #     return
                 
                 BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
-                if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
-                    BorderColor = Parameters_Ribbon.COLOR_BORDERS
-                if Parameters_Ribbon.BORDER_TRANSPARANT:
+                if Parameters.CUSTOM_COLORS_ENABLED:
+                    BorderColor = Parameters.COLOR_BORDERS
+                if Parameters.BORDER_TRANSPARANT:
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                         "Background_Color_Hover"
                     )
@@ -588,9 +589,9 @@ class CustomControls(QToolButton):
             # Change the background color for commandbutton and label on hovering (CSS)
             def enterEventCustom(event):                
                 BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
-                if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
-                    BorderColor = Parameters_Ribbon.COLOR_BORDERS
-                if Parameters_Ribbon.BORDER_TRANSPARANT:
+                if Parameters.CUSTOM_COLORS_ENABLED:
+                    BorderColor = Parameters.COLOR_BORDERS
+                if Parameters.BORDER_TRANSPARANT:
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                         "Background_Color_Hover"
                     )
@@ -925,7 +926,7 @@ class CustomControls(QToolButton):
                     Label_Text.setMaximumWidth(
                         FontMetrics.tightBoundingRect(line1).width()
                     )  # set to a extra large value to avoid clipping
-                    if Parameters_Ribbon.DEBUG_MODE is True:
+                    if Parameters.DEBUG_MODE is True:
                         StandardFunctions.Print(
                             "Medium button is too small for text wrap!\n wrap setting is ignored",
                             "Warning",
@@ -968,7 +969,7 @@ class CustomControls(QToolButton):
             Menu.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
             StyleSheet_Menu = (
                 "QMenu::item, QMenu::menuAction, QMenuBar::item, QMenu>QLabel {font-size: "
-                + str(Parameters_Ribbon.FONTSIZE_MENUS)
+                + str(Parameters.FONTSIZE_MENUS)
                 + "px;}"
             )
             Menu.setStyleSheet(StyleSheet_Menu)
@@ -1003,9 +1004,9 @@ class CustomControls(QToolButton):
                 #     return
                 
                 BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
-                if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
-                    BorderColor = Parameters_Ribbon.COLOR_BORDERS
-                if Parameters_Ribbon.BORDER_TRANSPARANT:
+                if Parameters.CUSTOM_COLORS_ENABLED:
+                    BorderColor = Parameters.COLOR_BORDERS
+                if Parameters.BORDER_TRANSPARANT:
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                         "Background_Color_Hover"
                     )     
@@ -1141,9 +1142,9 @@ class CustomControls(QToolButton):
                 #     return
                 
                 BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
-                if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
-                    BorderColor = Parameters_Ribbon.COLOR_BORDERS
-                if Parameters_Ribbon.BORDER_TRANSPARANT:
+                if Parameters.CUSTOM_COLORS_ENABLED:
+                    BorderColor = Parameters.COLOR_BORDERS
+                if Parameters.BORDER_TRANSPARANT:
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                         "Background_Color_Hover"
                     )
@@ -1321,9 +1322,9 @@ class CustomControls(QToolButton):
         # Set the stylesheet
         BackGroundColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
         BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
-        if Parameters_Ribbon.CUSTOM_COLORS_ENABLED:
-            BorderColor = Parameters_Ribbon.COLOR_BORDERS
-        if Parameters_Ribbon.BORDER_TRANSPARANT:
+        if Parameters.CUSTOM_COLORS_ENABLED:
+            BorderColor = Parameters.COLOR_BORDERS
+        if Parameters.BORDER_TRANSPARANT:
             BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
                 "Background_Color_Hover"
             )
@@ -1425,7 +1426,7 @@ class DragTargetIndicator(QLabel):
             self.setStyleSheet(
                 StyleMapping_Ribbon.ReturnStyleSheet(
                     control="dragindicator",
-                    HoverColor=Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
+                    HoverColor=Parameters.COLOR_BACKGROUND_HOVER,
                 )
             )
         self._orientation = orientation

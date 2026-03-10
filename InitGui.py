@@ -24,6 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import FCBinding
 import Parameters_Ribbon
+from Parameters_Ribbon import Parameters
 from Parameters_Ribbon import Settings
 import Standard_Functions_Ribbon as StandardFunctions
 import shutil
@@ -56,13 +57,13 @@ def QT_TRANSLATE_NOOP(context, text):
 global pathIcons
 
 # Get the resources
-ConfigDirectory = Parameters_Ribbon.CONFIG_DIR
-pathIcons = Parameters_Ribbon.ICON_LOCATION
-pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
-pathUI = Parameters_Ribbon.UI_LOCATION
+ConfigDirectory = Parameters.CONFIG_DIR
+pathIcons = Parameters.ICON_LOCATION
+pathStylSheets = Parameters.STYLESHEET_LOCATION
+pathUI = Parameters.UI_LOCATION
 pathScripts = os.path.join(ConfigDirectory, "Scripts")
 pathPackages = os.path.join(os.path.dirname(FCBinding.__file__), "Resources", "packages")
-pathBackup = Parameters_Ribbon.BACKUP_LOCATION
+pathBackup = Parameters.BACKUP_LOCATION
 sys.path.append(ConfigDirectory)
 sys.path.append(pathIcons)
 sys.path.append(pathStylSheets)
@@ -112,7 +113,7 @@ source_default = os.path.join(
 )
 
 NewDefaultNeeded = True
-ribbonStructureVersion = Parameters_Ribbon.Settings.GetIntSetting("RibbonStructureVersion")
+ribbonStructureVersion = Parameters.Settings.GetIntSetting("RibbonStructureVersion")
 if ribbonStructureVersion >= CurrentStructureVersion:
     NewDefaultNeeded = False
 
@@ -128,7 +129,7 @@ fileExists = os.path.isfile(file_default)
 # if not, copy and rename
 if fileExists is False or NewDefaultNeeded is True:
     shutil.copy(source_default, file_default)
-    Parameters_Ribbon.Settings.SetIntSetting("RibbonStructureVersion", CurrentStructureVersion)
+    Parameters.Settings.SetIntSetting("RibbonStructureVersion", CurrentStructureVersion)
 
 # remove the test workbench
 try:    
@@ -138,7 +139,7 @@ except Exception:
 
 USECUSTOMOVERLAY = os.path.join(os.path.dirname(FCBinding.__file__), "OVERLAY_DISABLED")
 if (
-    Parameters_Ribbon.USE_FC_OVERLAY is False
+    Parameters.USE_FC_OVERLAY is False
     or os.path.exists(USECUSTOMOVERLAY) is True
 ):
     # Disable the overlay function
@@ -150,7 +151,7 @@ if (
         "User parameter:BaseApp/MainWindow/DockWindows/OverlayTop"
     )
     preferences.SetString("Widgets", "")
-if Parameters_Ribbon.USE_FC_OVERLAY is True:
+if Parameters.USE_FC_OVERLAY is True:
     # Disable the overlay function
     preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
     preferences.SetBool("ActivateOverlay", True)
@@ -159,13 +160,13 @@ try:
     print(translate("FreeCAD Ribbon", "Activating Ribbon UI..."))
     mw = Gui.getMainWindow()
 
-    if Parameters_Ribbon.HIDE_TITLEBAR_FC is False:
+    if Parameters.HIDE_TITLEBAR_FC is False:
         mw.setWindowFlags(Qt.WindowType.WindowFullscreenButtonHint)
         mw.workbenchActivated.connect(FCBinding.run)
         mw.showMaximized()
 
     # Hide the Titlebar of FreeCAD
-    if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
+    if Parameters.HIDE_TITLEBAR_FC is True:
         # make a customized toolbar and hide all the buttons.
         # This works better than a frameless window
         mw.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
@@ -179,7 +180,7 @@ try:
 
 except Exception as e:
     # raise e
-    if Parameters_Ribbon.DEBUG_MODE is True:
+    if Parameters.DEBUG_MODE is True:
         print(f"{e.with_traceback(e.__traceback__)}, 0")
 
 Gui.addLanguagePath(os.path.join(os.path.dirname(FCBinding.__file__), "translations"))
