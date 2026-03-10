@@ -32,8 +32,79 @@ translate = App.Qt.translate
 
 preferences = App.ParamGet("User parameter:BaseApp/Preferences/Mod/FreeCAD-Ribbon")
 
-class Settings:
+STYLESHEET_LOCATION = os.path.join(
+        os.path.dirname(__file__), "Resources", "stylesheets"
+    )
 
+DefaultSettings = {
+    "ConfigDir":os.path.join(App.getUserAppDataDir(), "RibbonUI_Data"),
+    "ImportLocation": os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", ""),
+    "ExportLocation": os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", ""),
+    "RibbonStructure": os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonStructure.json"),
+    "TabBar_Style": int(0),
+    "Link_IconSizes": bool(True),
+    "IconSize_Small": int(24),
+    "IconSize_Medium": int(36),
+    "IconSize_Large": int(72),
+    "ApplicationButtonSize": int(40),
+    "QuickAccessButtonSize": int(24),
+    "TabBarSize": int(24),
+    "RightToolbarButtonSize": int(24),
+    "BackupEnabled": bool(True),
+    "BackupFolder": os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "Backups"),
+    "TabOrder": App.ParamGet(
+        "User parameter:BaseApp/Preferences/Workbenches/"
+    ).GetString("Ordered"),
+    "AutoHideRibbon": bool(False),
+    "Stylesheet": os.path.join(os.path.join(STYLESHEET_LOCATION, "default.qss")),
+    "ShowIconText_Small": bool(False),
+    "ShowIconText_Medium": bool(False),
+    "ShowIconText_Large": bool(True),
+    "MaxColumnsPerPanel": int(6),
+    "DebugMode": bool(False),
+    "ShowOnHover": bool(False),
+    "TabBar_Scroll": int(1),
+    "Ribbon_Scroll": int(1),
+    "TabBar_Click": int(1),
+    "Ribbon_Click": int(1),
+    "Preferred_view": int(2),
+    "UseToolsPanel": bool(True),
+    "WrapText_Medium": bool(True),
+    "WrapText_Large": bool(True),
+    "UseOverlay": bool(True),
+    "UseFCOverlay": bool(False),
+    "UseButtonBackGround": bool(False),
+    "CustomColors": bool(False),
+    "BorderTransparant": bool(True),
+    "Color_Borders": "",
+    # "Color_Background": "",
+    "Color_Background_Hover": "",
+    "Color_Background_App": "",
+    "CustomIcons": bool(False),
+    "ScrollLeftButton_Tab": "",
+    "ScrollRightButton_Tab": "",
+    "ScrollLeftButton_Category": "",
+    "ScrollRightButton_Category": "",
+    "OptionButton": "",
+    "PinButton_open": "",
+    "PinButton_closed": "",
+    "Shortcut_Application": "Alt+A",
+    "CustomPanelPosition": "Right",
+    "FontSize_Menus": int(11),
+    "FontSize_Buttons": int(11),
+    "FontSize_Tabs": int(14),
+    "FontSize_Panels": int(11),
+    "Toolbar_Position": int(0),
+    "Hide_Titlebar_FC": bool(True),
+    "BetaFunctions": bool(False),
+    "SizeFactor": float(1.3),
+    "PanelHeightOffset": int(26),
+    "RibbonHeightOffset": int(20),
+    "RibbonMinimumHeight": int(16),
+    "ButtonSpacing": int(6),
+}
+
+class Settings:
     # region -- Functions to read the settings from the FreeCAD Parameters
     # and make sure that a None type result is ""
     def GetStringSetting(settingName) -> str:
@@ -85,7 +156,7 @@ class Settings:
         if value.lower() == "none":
             value = ""
         if value == "":
-            value = Parameters.DefaultSettings[
+            value = DefaultSettings[
                 settingName
             ]  # pyright: ignore[reportAssignmentType]
         preferences.SetString(settingName, value)
@@ -99,7 +170,7 @@ class Settings:
 
     def SetIntSetting(settingName, value: int):
         if str(value).lower() == "":
-            value = int(Parameters.DefaultSettings[settingName])
+            value = int(DefaultSettings[settingName])
         if str(value).lower() != "":
             preferences.SetInt(settingName, value)
         App.saveParameter()
@@ -107,7 +178,7 @@ class Settings:
     
     def SetFloatSetting(settingName, value: float):
         if str(value).lower() == "":
-            value = float(Parameters.DefaultSettings[settingName])
+            value = float(DefaultSettings[settingName])
         if str(value).lower() != "":
             preferences.SetFloat(settingName, value)
         App.saveParameter()
@@ -119,7 +190,7 @@ class Settings:
         # Get the current settings
         CurrentSettings: list = preferences.GetContents()
         
-        for key, value in Parameters.DefaultSettings.items():
+        for key, value in DefaultSettings.items():
             IsPresent = False
             for item in CurrentSettings:
                 if item[1] == key:
@@ -139,7 +210,6 @@ class Settings:
                     if value == value2:
                         Parameters.__dict__[name] = value
         return
-
 
 class Parameters:
     # region - The FreeCAD version to check
@@ -161,73 +231,6 @@ class Parameters:
     UI_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "ui")
     # endregion ------------------------------------------------------------------------------------------------------------
 
-    DefaultSettings = {
-        "ConfigDir":os.path.join(App.getUserAppDataDir(), "RibbonUI_Data"),
-        "ImportLocation": os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", ""),
-        "ExportLocation": os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", ""),
-        "RibbonStructure": os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "RibbonStructure.json"),
-        "TabBar_Style": int(0),
-        "Link_IconSizes": bool(True),
-        "IconSize_Small": int(24),
-        "IconSize_Medium": int(36),
-        "IconSize_Large": int(72),
-        "ApplicationButtonSize": int(40),
-        "QuickAccessButtonSize": int(24),
-        "TabBarSize": int(24),
-        "RightToolbarButtonSize": int(24),
-        "BackupEnabled": bool(True),
-        "BackupFolder": os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", "Backups"),
-        "TabOrder": App.ParamGet(
-            "User parameter:BaseApp/Preferences/Workbenches/"
-        ).GetString("Ordered"),
-        "AutoHideRibbon": bool(False),
-        "Stylesheet": os.path.join(os.path.join(STYLESHEET_LOCATION, "default.qss")),
-        "ShowIconText_Small": bool(False),
-        "ShowIconText_Medium": bool(False),
-        "ShowIconText_Large": bool(True),
-        "MaxColumnsPerPanel": int(6),
-        "DebugMode": bool(False),
-        "ShowOnHover": bool(False),
-        "TabBar_Scroll": int(1),
-        "Ribbon_Scroll": int(1),
-        "TabBar_Click": int(1),
-        "Ribbon_Click": int(1),
-        "Preferred_view": int(2),
-        "UseToolsPanel": bool(True),
-        "WrapText_Medium": bool(True),
-        "WrapText_Large": bool(True),
-        "UseOverlay": bool(True),
-        "UseFCOverlay": bool(False),
-        "UseButtonBackGround": bool(False),
-        "CustomColors": bool(False),
-        "BorderTransparant": bool(True),
-        "Color_Borders": "",
-        # "Color_Background": "",
-        "Color_Background_Hover": "",
-        "Color_Background_App": "",
-        "CustomIcons": bool(False),
-        "ScrollLeftButton_Tab": "",
-        "ScrollRightButton_Tab": "",
-        "ScrollLeftButton_Category": "",
-        "ScrollRightButton_Category": "",
-        "OptionButton": "",
-        "PinButton_open": "",
-        "PinButton_closed": "",
-        "Shortcut_Application": "Alt+A",
-        "CustomPanelPosition": "Right",
-        "FontSize_Menus": int(11),
-        "FontSize_Buttons": int(11),
-        "FontSize_Tabs": int(14),
-        "FontSize_Panels": int(11),
-        "Toolbar_Position": int(0),
-        "Hide_Titlebar_FC": bool(True),
-        "BetaFunctions": bool(False),
-        "SizeFactor": float(1.3),
-        "PanelHeightOffset": int(26),
-        "RibbonHeightOffset": int(20),
-        "RibbonMinimumHeight": int(16),
-        "ButtonSpacing": int(6),
-    }
 
     # Get the install location of FreeCAD
     AppDir = os.path.join(App.getUserAppDataDir().split('FreeCAD')[0], "FreeCAD")

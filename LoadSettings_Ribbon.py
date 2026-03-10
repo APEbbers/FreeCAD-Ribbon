@@ -46,6 +46,7 @@ import sys
 import StyleMapping_Ribbon
 import Standard_Functions_Ribbon as StandardFunctions
 import Parameters_Ribbon
+from Parameters_Ribbon import DefaultSettings
 from Parameters_Ribbon import Parameters
 import webbrowser
 
@@ -977,7 +978,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
     def on_Tab_Scroll_Left_clicked(self):
         # Define th edefault path
         DefaultPath = os.path.dirname(Parameters.SCROLL_LEFT_BUTTON_TAB)
-        if Parameters.DefaultSettings != "":
+        if DefaultSettings != "":
             DefaultPath = Parameters.ICON_LOCATION
         # Get the file with a dialog
         File = StandardFunctions.GetFileDialog(
@@ -1002,7 +1003,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
     def on_Tab_Scroll_Right_clicked(self):
         # Define th edefault path
         DefaultPath = os.path.dirname(Parameters.SCROLL_RIGHT_BUTTON_TAB)
-        if Parameters.DefaultSettings != "":
+        if DefaultSettings != "":
             DefaultPath = Parameters.ICON_LOCATION
         # Get the file with a dialog
         File = StandardFunctions.GetFileDialog(
@@ -1027,7 +1028,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
     def on_Ribbon_Scroll_Left_clicked(self):
         # Define th edefault path
         DefaultPath = os.path.dirname(Parameters.SCROLL_LEFT_BUTTON_CATEGORY)
-        if Parameters.DefaultSettings != "":
+        if DefaultSettings != "":
             DefaultPath = Parameters.ICON_LOCATION
         # Get the file with a dialog
         File = StandardFunctions.GetFileDialog(
@@ -1054,7 +1055,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
     def on_Ribbon_Scroll_Right_clicked(self):
         # Define th edefault path
         DefaultPath = os.path.dirname(Parameters.SCROLL_RIGHT_BUTTON_CATEGORY)
-        if Parameters.DefaultSettings != "":
+        if DefaultSettings != "":
             DefaultPath = Parameters.ICON_LOCATION
         # Get the file with a dialog
         File = StandardFunctions.GetFileDialog(
@@ -1081,7 +1082,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
     def on_MoreCommands_clicked(self):
         # Define th edefault path
         DefaultPath = os.path.dirname(Parameters.OPTION_BUTTON)
-        if Parameters.DefaultSettings != "":
+        if DefaultSettings != "":
             DefaultPath = Parameters.ICON_LOCATION
         # Get the file with a dialog
         File = StandardFunctions.GetFileDialog(
@@ -1106,7 +1107,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
     def on_pinButton_open_clicked(self):
         # Define th edefault path
         DefaultPath = os.path.dirname(Parameters.PIN_BUTTON_OPEN)
-        if Parameters.DefaultSettings != "":
+        if DefaultSettings != "":
             DefaultPath = Parameters.ICON_LOCATION
         # Get the file with a dialog
         File = StandardFunctions.GetFileDialog(
@@ -1131,7 +1132,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
     def on_pinButton_closed_clicked(self):
         # Define th edefault path
         DefaultPath = os.path.dirname(Parameters.PIN_BUTTON_CLOSED)
-        if Parameters.DefaultSettings != "":
+        if DefaultSettings != "":
             DefaultPath = Parameters.ICON_LOCATION
         # Get the file with a dialog
         File = StandardFunctions.GetFileDialog(
@@ -1555,82 +1556,82 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
     @staticmethod
     def on_Reset_clicked(self):
         # load all settings
-        self.form.EnableBackup.setChecked(Parameters.DefaultSettings["BackupEnabled"])
-        self.form.label_4.setText(Parameters.DefaultSettings["BackupFolder"])
-        self.form.TabbarStyle.setCurrentIndex(Parameters.DefaultSettings["TabBar_Style"])
-        self.form.ToolbarPositions.setCurrentIndex(Parameters.DefaultSettings["Toolbar_Position"])
-        if Parameters.DefaultSettings["Hide_Titlebar_FC"] is True:
+        self.form.EnableBackup.setChecked(DefaultSettings["BackupEnabled"])
+        self.form.label_4.setText(DefaultSettings["BackupFolder"])
+        self.form.TabbarStyle.setCurrentIndex(DefaultSettings["TabBar_Style"])
+        self.form.ToolbarPositions.setCurrentIndex(DefaultSettings["Toolbar_Position"])
+        if DefaultSettings["Hide_Titlebar_FC"] is True:
             self.form.HideTitleBarFC.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.HideTitleBarFC.setCheckState(Qt.CheckState.Unchecked)
         
-        if Parameters.DefaultSettings["Link_IconSizes"] is True:
+        if DefaultSettings["Link_IconSizes"] is True:
             self.form.LinkIconSizes.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.LinkIconSizes.setCheckState(Qt.CheckState.Unchecked)
-        self.form.IconSize_Small.setValue(Parameters.DefaultSettings["IconSize_Small"])
-        self.form.IconSize_Medium.setValue(Parameters.DefaultSettings["IconSize_Medium"])
-        self.form.IconSize_Large.setValue(Parameters.DefaultSettings["IconSize_Large"])
+        self.form.IconSize_Small.setValue(DefaultSettings["IconSize_Small"])
+        self.form.IconSize_Medium.setValue(DefaultSettings["IconSize_Medium"])
+        self.form.IconSize_Large.setValue(DefaultSettings["IconSize_Large"])
         self.form.IconSize_ApplicationButton.setValue(
-            Parameters.DefaultSettings["ApplicationButtonSize"]
+            DefaultSettings["ApplicationButtonSize"]
         )
         self.form.IconSize_QuickAccessButton.setValue(
-            Parameters.DefaultSettings["QuickAccessButtonSize"]
+            DefaultSettings["QuickAccessButtonSize"]
         )
         self.form.IconSize_rightToolbarButton.setValue(
-            Parameters.DefaultSettings["RightToolbarButtonSize"]
+            DefaultSettings["RightToolbarButtonSize"]
         )
-        self.form.TabbarHeight.setValue(Parameters.DefaultSettings["TabBarSize"])
-        self.form.label_7.setText(Parameters.DefaultSettings["Stylesheet"])
-        if Parameters.DefaultSettings["ShowIconText_Small"] is True:
+        self.form.TabbarHeight.setValue(DefaultSettings["TabBarSize"])
+        self.form.label_7.setText(DefaultSettings["Stylesheet"])
+        if DefaultSettings["ShowIconText_Small"] is True:
             self.form.ShowText_Small.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.ShowText_Small.setCheckState(Qt.CheckState.Unchecked)
-        if Parameters.DefaultSettings["ShowIconText_Medium"] is True:
+        if DefaultSettings["ShowIconText_Medium"] is True:
             self.form.ShowText_Medium.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.ShowText_Medium.setCheckState(Qt.CheckState.Unchecked)
-        if Parameters.DefaultSettings["ShowIconText_Large"] is True:
+        if DefaultSettings["ShowIconText_Large"] is True:
             self.form.ShowText_Large.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.ShowText_Large.setCheckState(Qt.CheckState.Unchecked)
 
-        self.form.TextSize_Menus.setValue(Parameters.DefaultSettings["FontSize_Menus"])
-        self.form.TextSize_Buttons.setValue(Parameters.DefaultSettings["FontSize_Buttons"])
-        self.form.TextSize_Tabs.setValue(Parameters.DefaultSettings["FontSize_Tabs"])
-        self.form.TextSize_Panels.setValue(Parameters.DefaultSettings["FontSize_Panels"])
+        self.form.TextSize_Menus.setValue(DefaultSettings["FontSize_Menus"])
+        self.form.TextSize_Buttons.setValue(DefaultSettings["FontSize_Buttons"])
+        self.form.TextSize_Tabs.setValue(DefaultSettings["FontSize_Tabs"])
+        self.form.TextSize_Panels.setValue(DefaultSettings["FontSize_Panels"])
 
-        self.form.MaxPanelColumn.setValue(Parameters.DefaultSettings["MaxColumnsPerPanel"])
+        self.form.MaxPanelColumn.setValue(DefaultSettings["MaxColumnsPerPanel"])
 
-        if Parameters.DefaultSettings["DebugMode"] is True:
+        if DefaultSettings["DebugMode"] is True:
             self.form.DebugMode.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.DebugMode.setCheckState(Qt.CheckState.Unchecked)
 
-        if Parameters.DefaultSettings["ShowOnHover"] is True:
+        if DefaultSettings["ShowOnHover"] is True:
             self.form.EnableEnterEvent.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.EnableEnterEvent.setCheckState(Qt.CheckState.Unchecked)
 
-        self.form.ScrollSpeed_TabBar.setValue(Parameters.DefaultSettings["TabBar_Scroll"])
-        self.form.ScrollSpeed_Ribbon.setValue(Parameters.DefaultSettings["Ribbon_Scroll"])
-        self.form.ScrollClicks_TabBar.setValue(Parameters.DefaultSettings["TabBar_Click"])
-        self.form.ScrollClicks_Ribbon.setValue(Parameters.DefaultSettings["Ribbon_Click"])
+        self.form.ScrollSpeed_TabBar.setValue(DefaultSettings["TabBar_Scroll"])
+        self.form.ScrollSpeed_Ribbon.setValue(DefaultSettings["Ribbon_Scroll"])
+        self.form.ScrollClicks_TabBar.setValue(DefaultSettings["TabBar_Click"])
+        self.form.ScrollClicks_Ribbon.setValue(DefaultSettings["Ribbon_Click"])
 
-        self.form.PreferedViewPanel.setCurrentIndex(Parameters.DefaultSettings["Preferred_view"])
-        if Parameters.DefaultSettings["UseToolsPanel"] is True:
+        self.form.PreferedViewPanel.setCurrentIndex(DefaultSettings["Preferred_view"])
+        if DefaultSettings["UseToolsPanel"] is True:
             self.form.EnableToolsPanel.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.EnableToolsPanel.setCheckState(Qt.CheckState.Unchecked)
-        if Parameters.DefaultSettings["UseOverlay"] is True:
+        if DefaultSettings["UseOverlay"] is True:
             self.form.EnableOverlay.setChecked(True)
         else:
             self.form.EnableOverlay.setChecked(False)
-        if Parameters.DefaultSettings["UseFCOverlay"] is True:
+        if DefaultSettings["UseFCOverlay"] is True:
             self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Unchecked)
-        if Parameters.DefaultSettings["UseButtonBackGround"] is True:
+        if DefaultSettings["UseButtonBackGround"] is True:
             self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Unchecked)
@@ -1721,11 +1722,11 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             "color", QColor(StyleMapping_Ribbon.ReturnStyleItem("Color_Background_App"))
         )
         
-        self.form.RibbonHeightOffset.setValue(Parameters.DefaultSettings["RibbonHeightOffset"])
-        self.form.PanelHeightOffset.setValue(Parameters.DefaultSettings["PanelHeightOffset"])
-        self.form.ButtonSizeFactor.setValue(Parameters.DefaultSettings["SizeFactor"])
-        self.form.MinimumRibbonHeight.setValue(Parameters.DefaultSettings["RibbonMinimumHeight"])
-        self.form.ButtonSpacing.setValue(Parameters.DefaultSettings["ButtonSpacing"])
+        self.form.RibbonHeightOffset.setValue(DefaultSettings["RibbonHeightOffset"])
+        self.form.PanelHeightOffset.setValue(DefaultSettings["PanelHeightOffset"])
+        self.form.ButtonSizeFactor.setValue(DefaultSettings["SizeFactor"])
+        self.form.MinimumRibbonHeight.setValue(DefaultSettings["RibbonMinimumHeight"])
+        self.form.ButtonSpacing.setValue(DefaultSettings["ButtonSpacing"])
         return
 
     # endregion---------------------------------------------------------------------------------------
