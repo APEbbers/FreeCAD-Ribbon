@@ -55,7 +55,7 @@
         <property name="geometry">
          <rect>
           <x>0</x>
-          <y>-781</y>
+          <y>-766</y>
           <width>697</width>
           <height>1630</height>
          </rect>
@@ -1412,7 +1412,7 @@
                            <double>0.100000000000000</double>
                           </property>
                           <property name="stepType">
-                           <enum>QAbstractSpinBox::StepType::AdaptiveDecimalStepType</enum>
+                           <enum>QAbstractSpinBox::StepType::DefaultStepType</enum>
                           </property>
                           <property name="value">
                            <double>1.300000000000000</double>
@@ -2856,12 +2856,12 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>148</x>
-     <y>-492</y>
+     <x>166</x>
+     <y>-679</y>
     </hint>
     <hint type="destinationlabel">
-     <x>155</x>
-     <y>-410</y>
+     <x>173</x>
+     <y>-651</y>
     </hint>
    </hints>
   </connection>
@@ -2872,8 +2872,8 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>171</x>
-     <y>-492</y>
+     <x>189</x>
+     <y>-679</y>
     </hint>
     <hint type="destinationlabel">
      <x>473</x>
@@ -2888,8 +2888,8 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>220</x>
-     <y>70</y>
+     <x>237</x>
+     <y>-54</y>
     </hint>
     <hint type="destinationlabel">
      <x>210</x>
@@ -2905,11 +2905,11 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <hints>
     <hint type="sourcelabel">
      <x>167</x>
-     <y>239</y>
+     <y>73</y>
     </hint>
     <hint type="destinationlabel">
-     <x>433</x>
-     <y>239</y>
+     <x>593</x>
+     <y>73</y>
     </hint>
    </hints>
   </connection>
@@ -2921,11 +2921,11 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <hints>
     <hint type="sourcelabel">
      <x>151</x>
-     <y>267</y>
+     <y>101</y>
     </hint>
     <hint type="destinationlabel">
-     <x>433</x>
-     <y>267</y>
+     <x>593</x>
+     <y>101</y>
     </hint>
    </hints>
   </connection>
@@ -2936,12 +2936,12 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>160</x>
-     <y>-371</y>
+     <x>179</x>
+     <y>-558</y>
     </hint>
     <hint type="destinationlabel">
      <x>595</x>
-     <y>-282</y>
+     <y>-564</y>
     </hint>
    </hints>
   </connection>
@@ -2952,24 +2952,24 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>160</x>
-     <y>-371</y>
+     <x>179</x>
+     <y>-558</y>
     </hint>
     <hint type="destinationlabel">
-     <x>160</x>
-     <y>-343</y>
+     <x>179</x>
+     <y>-530</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>toolButton</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>AdvancedGroup</receiver>
    <slot>setHidden(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>652</x>
-     <y>500</y>
+     <x>672</x>
+     <y>347</y>
     </hint>
     <hint type="destinationlabel">
      <x>221</x>

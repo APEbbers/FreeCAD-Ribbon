@@ -549,6 +549,23 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.TextSize_Panels.textChanged.connect(
             self.on_TextSize_Panels_TextChanged
         )
+        
+        # Connect the advanced size settings
+        self.form.RibbonHeightOffset.textChanged.connect(
+            self.on_RibbonHeightOffset_TextChanged
+        )
+        self.form.PanelHeightOffset.textChanged.connect(
+            self.on_PanelHeightOffset_TextChanged
+        )
+        self.form.ButtonSizeFactor.textChanged.connect(
+            self.on_ButtonSizeFactor_TextChanged
+        )
+        self.form.MinimumRibbonHeight.textChanged.connect(
+            self.on_MinimumRibbonHeight_TextChanged
+        )
+        self.form.ButtonSpacing.textChanged.connect(
+            self.on_ButtonSpacing_TextChanged
+        )
 
         # Connect column width
         self.form.MaxPanelColumn.textChanged.connect(self.on_MaxPanelColumn_TextChanged)
@@ -815,6 +832,31 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
 
     def on_TextSize_Panels_TextChanged(self):
         self.ValuesToUpdate["FontSize_Panels"] = int(self.form.TextSize_Panels.text())
+        self.settingChanged = True
+        return
+    
+    def on_RibbonHeightOffset_TextChanged(self):
+        self.ValuesToUpdate["RibbonHeightOffset"] = int(self.form.RibbonHeightOffset.text())
+        self.settingChanged = True
+        return
+    
+    def on_PanelHeightOffset_TextChanged(self):
+        self.ValuesToUpdate["PanelHeightOffset"] = int(self.form.PanelHeightOffset.text())
+        self.settingChanged = True
+        return
+    
+    def on_ButtonSizeFactor_TextChanged(self):
+        self.ValuesToUpdate["SizeFactor"] = int(self.form.ButtonSizeFactor.text())
+        self.settingChanged = True
+        return
+    
+    def on_MinimumRibbonHeight_TextChanged(self):
+        self.ValuesToUpdate["RibbonMinimumHeight"] = int(self.form.MinimumRibbonHeight.text())
+        self.settingChanged = True
+        return
+    
+    def on_ButtonSpacing_TextChanged(self):
+        self.ValuesToUpdate["ButtonSpacing"] = int(self.form.ButtonSpacing.text())
         self.settingChanged = True
         return
 
