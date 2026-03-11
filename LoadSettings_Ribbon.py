@@ -769,14 +769,26 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             # Set the values for medium and large buttons
             self.form.IconSize_Medium.setValue(Parameters.ICON_SIZE_SMALL * 1.5)
             self.form.IconSize_Large.setValue(Parameters.ICON_SIZE_SMALL * 3)
+            # Set the value for the quickaccessbutttons
+            self.form.IconSize_QuickAccessButton.setValue(Parameters.ICON_SIZE_SMALL)
+            # Link the panel height offset
+            self.form.PanelHeightOffset.setValue(Parameters.ICON_SIZE_SMALL)
             # Disable the controls
             self.form.IconSize_Medium.setDisabled(True)
             self.form.IconSize_Large.setDisabled(True)
+            self.form.IconSize_QuickAccessButton.setDisabled(True)
+            self.form.PanelHeightOffset.setDisabled(True)
+            # Show a label that the panel height offset is linked
+            self.form.label_44.setVisible(True)
         if self.form.LinkIconSizes.isChecked() is False:
             self.ValuesToUpdate["Link_IconSizes"] = False
             # Disable the controls
             self.form.IconSize_Medium.setEnabled(True)
             self.form.IconSize_Large.setEnabled(True)
+            self.form.IconSize_QuickAccessButton.setEnabled(True)
+            self.form.PanelHeightOffset.setEnabled(True)
+            # Hide a label that the panel height offset is linked
+            self.form.label_44.setHidden(True)
         self.settingChanged = True
 
     def on_IconSize_Small_TextChanged(self):        
