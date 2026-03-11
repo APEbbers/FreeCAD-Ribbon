@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsbasTIJ.ui'
+## Form generated from reading UI file 'SettingspmHofF.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
+from PySide.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
     QDoubleSpinBox, QFrame, QGridLayout, QGroupBox,
     QLabel, QPushButton, QScrollArea, QSizePolicy,
     QSlider, QSpacerItem, QSpinBox, QTabWidget,
@@ -1090,8 +1090,8 @@ class Ui_Settings(object):
 
         self.EnableOverlay = QGroupBox(self.tab_3)
         self.EnableOverlay.setObjectName(u"EnableOverlay")
-        sizePolicy4.setHeightForWidth(self.EnableOverlay.sizePolicy().hasHeightForWidth())
-        self.EnableOverlay.setSizePolicy(sizePolicy4)
+        sizePolicy7.setHeightForWidth(self.EnableOverlay.sizePolicy().hasHeightForWidth())
+        self.EnableOverlay.setSizePolicy(sizePolicy7)
         self.EnableOverlay.setCheckable(True)
         self.gridLayout_32 = QGridLayout(self.EnableOverlay)
         self.gridLayout_32.setObjectName(u"gridLayout_32")
@@ -1116,11 +1116,10 @@ class Ui_Settings(object):
         self.label_26 = QLabel(self.EnableOverlay)
         self.label_26.setObjectName(u"label_26")
         self.label_26.setEnabled(False)
-        sizePolicy11 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
-        sizePolicy11.setHorizontalStretch(0)
-        sizePolicy11.setVerticalStretch(0)
-        sizePolicy11.setHeightForWidth(self.label_26.sizePolicy().hasHeightForWidth())
-        self.label_26.setSizePolicy(sizePolicy11)
+        sizePolicy7.setHeightForWidth(self.label_26.sizePolicy().hasHeightForWidth())
+        self.label_26.setSizePolicy(sizePolicy7)
+        self.label_26.setMinimumSize(QSize(0, 10))
+        self.label_26.setSizeIncrement(QSize(0, 1))
         self.label_26.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
         self.label_26.setWordWrap(True)
 
@@ -1154,10 +1153,16 @@ class Ui_Settings(object):
         self.label_43.setObjectName(u"label_43")
         sizePolicy7.setHeightForWidth(self.label_43.sizePolicy().hasHeightForWidth())
         self.label_43.setSizePolicy(sizePolicy7)
+        self.label_43.setMinimumSize(QSize(450, 0))
         self.label_43.setTextFormat(Qt.TextFormat.AutoText)
         self.label_43.setScaledContents(False)
+        self.label_43.setWordWrap(True)
 
         self.gridLayout_42.addWidget(self.label_43, 0, 0, 1, 1)
+
+        self.horizontalSpacer_14 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_42.addItem(self.horizontalSpacer_14, 0, 1, 1, 1)
 
 
         self.gridLayout_40.addWidget(self.frame_12, 0, 0, 1, 2)
@@ -1220,11 +1225,11 @@ class Ui_Settings(object):
 
         self.RibbonHeightOffset = QSpinBox(self.AdvancedGroup)
         self.RibbonHeightOffset.setObjectName(u"RibbonHeightOffset")
-        sizePolicy12 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-        sizePolicy12.setHorizontalStretch(0)
-        sizePolicy12.setVerticalStretch(0)
-        sizePolicy12.setHeightForWidth(self.RibbonHeightOffset.sizePolicy().hasHeightForWidth())
-        self.RibbonHeightOffset.setSizePolicy(sizePolicy12)
+        sizePolicy11 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        sizePolicy11.setHorizontalStretch(0)
+        sizePolicy11.setVerticalStretch(0)
+        sizePolicy11.setHeightForWidth(self.RibbonHeightOffset.sizePolicy().hasHeightForWidth())
+        self.RibbonHeightOffset.setSizePolicy(sizePolicy11)
         self.RibbonHeightOffset.setMinimumSize(QSize(50, 20))
         self.RibbonHeightOffset.setSizeIncrement(QSize(0, 0))
         self.RibbonHeightOffset.setBaseSize(QSize(0, 0))
@@ -1434,7 +1439,7 @@ class Ui_Settings(object):
         self.UseButtonBackGround.setText(QCoreApplication.translate("Settings", u"Use background on buttons", None))
         self.label_26.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">The FreeCAD overlay function can give issues. Use at your own risk. Few functions are disabled when using the FreeCAD overlay function.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">When there are issues, place a file </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; \">&quot;OVERLAY_DISABLED&quot; </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; \">in the folder of the add-on. (No extension) This will restore the ribbon and its own overlay function.</span></p></body></html>", None))
         self.groupBox_15.setTitle(QCoreApplication.translate("Settings", u"Advanced size settings", None))
-        self.label_43.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">Extra settings that might be usefull if there are issues with your display and FreeCAD.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">Normally, it should not be needed to change these.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">The settings might not work on all systems!</span></p><p><br/></p></body></html>", None))
+        self.label_43.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">Extra settings that might be usefull if there are issues with your display and FreeCAD. Normally, it should not be needed to change these. </span></p><p><span style=\" font-size:8pt; font-style:italic;\">The settings might not work on all systems!</span></p></body></html>", None))
         self.label_40.setText(QCoreApplication.translate("Settings", u"Extra offset for the panel height", None))
         self.label_39.setText(QCoreApplication.translate("Settings", u"Minimum ribbon height", None))
         self.ResetAdvancedSettings.setText(QCoreApplication.translate("Settings", u"Reset to default values", None))
