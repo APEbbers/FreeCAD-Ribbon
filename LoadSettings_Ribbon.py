@@ -278,8 +278,12 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         
         # Hide the advanced size settings by default
         self.form.AdvancedGroup.setHidden(True)
+        self.form.HideAdvancedSettings.setChecked(False)
         # Hide button size factor. It is not needed right now
         self.form.ButtonSizeFactor.setHidden(True)
+        self.form.ButtonSizeFactor.setDisabled(True)
+        self.form.label_38.setHidden(True)
+        self.form.label_38.setDisabled(True)
 
         # region - load all settings
         #

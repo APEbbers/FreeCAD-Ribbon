@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsOdPQOf.ui'
+## Form generated from reading UI file 'SettingsMMzwRi.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
+from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
     QDoubleSpinBox, QFrame, QGridLayout, QGroupBox,
     QLabel, QPushButton, QScrollArea, QSizePolicy,
     QSlider, QSpacerItem, QSpinBox, QTabWidget,
@@ -49,7 +49,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, -766, 697, 1630))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, -731, 697, 1630))
         self.gridLayout_28 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_28.setObjectName(u"gridLayout_28")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -720,13 +720,13 @@ class Ui_Settings(object):
 
         self.gridLayout_37.addWidget(self.label_31, 0, 1, 2, 2)
 
-        self.toolButton = QToolButton(self.frame_12)
-        self.toolButton.setObjectName(u"toolButton")
-        self.toolButton.setCheckable(True)
-        self.toolButton.setChecked(False)
-        self.toolButton.setArrowType(Qt.ArrowType.DownArrow)
+        self.HideAdvancedSettings = QToolButton(self.frame_12)
+        self.HideAdvancedSettings.setObjectName(u"HideAdvancedSettings")
+        self.HideAdvancedSettings.setCheckable(True)
+        self.HideAdvancedSettings.setChecked(True)
+        self.HideAdvancedSettings.setArrowType(Qt.ArrowType.DownArrow)
 
-        self.gridLayout_37.addWidget(self.toolButton, 0, 3, 2, 1)
+        self.gridLayout_37.addWidget(self.HideAdvancedSettings, 0, 3, 2, 1)
 
         self.horizontalSpacer_14 = QSpacerItem(32, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
@@ -1362,7 +1362,7 @@ class Ui_Settings(object):
         self.ShowText_Large.toggled.connect(self.EnableWrap_Large.setEnabled)
         self.FCOverlayEnabled.toggled.connect(self.label_26.setEnabled)
         self.FCOverlayEnabled.toggled.connect(self.UseButtonBackGround.setEnabled)
-        self.toolButton.toggled.connect(self.AdvancedGroup.setHidden)
+        self.HideAdvancedSettings.toggled.connect(self.AdvancedGroup.setVisible)
 
         self.tabWidget.setCurrentIndex(0)
 
@@ -1423,7 +1423,7 @@ class Ui_Settings(object):
         self.label_43.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">( Used formule: 2x small button size + </span><span style=\" font-size:8pt; font-weight:700; font-style:italic;\">value</span><span style=\" font-size:8pt; font-weight:700; font-style:italic;\"> )</span></p></body></html>", None))
         self.ResetAdvancedSettings.setText(QCoreApplication.translate("Settings", u"Reset to default values", None))
         self.label_31.setText(QCoreApplication.translate("Settings", u"Advanced size settings", None))
-        self.toolButton.setText(QCoreApplication.translate("Settings", u"...", None))
+        self.HideAdvancedSettings.setText(QCoreApplication.translate("Settings", u"...", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("Settings", u"Select stylesheet", None))
         self.StyleSheetLocation.setText(QCoreApplication.translate("Settings", u"Browse...", None))
         self.groupBox1.setTitle(QCoreApplication.translate("Settings", u"Backup settings", None))
