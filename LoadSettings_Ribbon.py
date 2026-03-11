@@ -312,6 +312,10 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             # Disable the controls
             self.form.IconSize_Medium.setDisabled(True)
             self.form.IconSize_Large.setDisabled(True)
+            self.form.IconSize_QuickAccessButton.setDisabled(True)
+            self.form.PanelHeightOffset.setDisabled(True)
+            self.form.IconSize_QuickAccessButton.setValue(Parameters.ICON_SIZE_SMALL)
+            self.form.PanelHeightOffset.setValue(Parameters.ICON_SIZE_SMALL)
         else:
             self.form.LinkIconSizes.setCheckState(Qt.CheckState.Unchecked)
         self.form.IconSize_ApplicationButton.setValue(Parameters.APP_ICON_SIZE)
@@ -796,6 +800,8 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             # Set the values for medium and large buttons
             self.form.IconSize_Medium.setValue(int(self.form.IconSize_Small.text()) * 1.5)
             self.form.IconSize_Large.setValue(int(self.form.IconSize_Small.text()) * 3)
+            self.form.IconSize_QuickAccessButton.setValue(int(self.form.IconSize_Small.text()))
+            self.form.PanelHeightOffset.setValue(int(self.form.IconSize_Small.text()))
         self.ValuesToUpdate["IconSize_Small"] = int(self.form.IconSize_Small.text())
         self.settingChanged = True
         return
