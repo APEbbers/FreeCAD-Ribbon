@@ -566,6 +566,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.ButtonSpacing.textChanged.connect(
             self.on_ButtonSpacing_TextChanged
         )
+        self.form.ResetAdvancedSettings.clicked.connect(self.on_ResetAdvancedSettings_clicked)
 
         # Connect column width
         self.form.MaxPanelColumn.textChanged.connect(self.on_MaxPanelColumn_TextChanged)
@@ -859,10 +860,20 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.ValuesToUpdate["ButtonSpacing"] = int(self.form.ButtonSpacing.text())
         self.settingChanged = True
         return
+    
+    def on_ResetAdvancedSettings_clicked(self):
+        self.form.RibbonHeightOffset.setValue(DefaultSettings["RibbonHeightOffset"])
+        self.form.PanelHeightOffset.setValue(DefaultSettings["PanelHeightOffset"])
+        self.form.ButtonSizeFactor.setValue(DefaultSettings["SizeFactor"])
+        self.form.MinimumRibbonHeight.setValue(DefaultSettings["RibbonMinimumHeight"])
+        self.form.ButtonSpacing.setValue(DefaultSettings["ButtonSpacing"])
+        self.settingChanged = True
+        return
 
     def on_MaxPanelColumn_TextChanged(self):
         self.ValuesToUpdate["MaxColumnsPerPanel"] = int(self.form.MaxPanelColumn.text())
         self.settingChanged = True
+        return
 
     def on_StyleSheetLocation_clicked(self):
         StyleSheet = ""
