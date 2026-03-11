@@ -276,9 +276,6 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.UseButtonBackGround.setDisabled(True)
         Parameters.BUTTON_BACKGROUND_ENABLED = False
         
-        # Hide the advanced size settings by default
-        self.form.AdvancedGroup.setHidden(True)
-        self.form.HideAdvancedSettings.setChecked(False)
         # Hide button size factor. It is not needed right now
         self.form.ButtonSizeFactor.setHidden(True)
         self.form.ButtonSizeFactor.setDisabled(True)
