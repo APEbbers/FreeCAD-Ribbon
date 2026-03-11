@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsMMzwRi.ui'
+## Form generated from reading UI file 'SettingsWliOSB.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
+from PySide.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
     QDoubleSpinBox, QFrame, QGridLayout, QGroupBox,
     QLabel, QPushButton, QScrollArea, QSizePolicy,
     QSlider, QSpacerItem, QSpinBox, QTabWidget,
@@ -585,59 +585,14 @@ class Ui_Settings(object):
         self.gridLayout_41 = QGridLayout(self.AdvancedGroup)
         self.gridLayout_41.setObjectName(u"gridLayout_41")
         self.gridLayout_41.setContentsMargins(-1, 0, -1, -1)
-        self.label_38 = QLabel(self.AdvancedGroup)
-        self.label_38.setObjectName(u"label_38")
+        self.horizontalSpacer_13 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout_41.addWidget(self.label_38, 2, 0, 1, 1)
-
-        self.PanelHeightOffset = QSpinBox(self.AdvancedGroup)
-        self.PanelHeightOffset.setObjectName(u"PanelHeightOffset")
-        self.PanelHeightOffset.setFont(font1)
-        self.PanelHeightOffset.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.PanelHeightOffset.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
-        self.PanelHeightOffset.setMinimum(8)
-        self.PanelHeightOffset.setMaximum(24)
-        self.PanelHeightOffset.setValue(11)
-
-        self.gridLayout_41.addWidget(self.PanelHeightOffset, 1, 1, 1, 1)
-
-        self.label_39 = QLabel(self.AdvancedGroup)
-        self.label_39.setObjectName(u"label_39")
-
-        self.gridLayout_41.addWidget(self.label_39, 3, 0, 1, 1)
-
-        self.label_45 = QLabel(self.AdvancedGroup)
-        self.label_45.setObjectName(u"label_45")
-
-        self.gridLayout_41.addWidget(self.label_45, 1, 2, 1, 2)
+        self.gridLayout_41.addItem(self.horizontalSpacer_13, 1, 2, 1, 1)
 
         self.label_40 = QLabel(self.AdvancedGroup)
         self.label_40.setObjectName(u"label_40")
 
         self.gridLayout_41.addWidget(self.label_40, 1, 0, 1, 1)
-
-        self.ButtonSpacing = QSpinBox(self.AdvancedGroup)
-        self.ButtonSpacing.setObjectName(u"ButtonSpacing")
-        self.ButtonSpacing.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.ButtonSpacing.setValue(6)
-
-        self.gridLayout_41.addWidget(self.ButtonSpacing, 4, 1, 1, 1)
-
-        self.label_37 = QLabel(self.AdvancedGroup)
-        self.label_37.setObjectName(u"label_37")
-        self.label_37.setMinimumSize(QSize(191, 0))
-
-        self.gridLayout_41.addWidget(self.label_37, 0, 0, 1, 1)
-
-        self.label_42 = QLabel(self.AdvancedGroup)
-        self.label_42.setObjectName(u"label_42")
-
-        self.gridLayout_41.addWidget(self.label_42, 4, 0, 1, 1)
-
-        self.label_44 = QLabel(self.AdvancedGroup)
-        self.label_44.setObjectName(u"label_44")
-
-        self.gridLayout_41.addWidget(self.label_44, 3, 2, 1, 2)
 
         self.MinimumRibbonHeight = QSpinBox(self.AdvancedGroup)
         self.MinimumRibbonHeight.setObjectName(u"MinimumRibbonHeight")
@@ -649,9 +604,16 @@ class Ui_Settings(object):
 
         self.gridLayout_41.addWidget(self.MinimumRibbonHeight, 3, 1, 1, 1)
 
-        self.horizontalSpacer_13 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.label_37 = QLabel(self.AdvancedGroup)
+        self.label_37.setObjectName(u"label_37")
+        self.label_37.setMinimumSize(QSize(191, 0))
 
-        self.gridLayout_41.addItem(self.horizontalSpacer_13, 1, 4, 1, 1)
+        self.gridLayout_41.addWidget(self.label_37, 0, 0, 1, 1)
+
+        self.label_38 = QLabel(self.AdvancedGroup)
+        self.label_38.setObjectName(u"label_38")
+
+        self.gridLayout_41.addWidget(self.label_38, 2, 0, 1, 1)
 
         self.ButtonSizeFactor = QDoubleSpinBox(self.AdvancedGroup)
         self.ButtonSizeFactor.setObjectName(u"ButtonSizeFactor")
@@ -666,10 +628,33 @@ class Ui_Settings(object):
 
         self.gridLayout_41.addWidget(self.ButtonSizeFactor, 2, 1, 1, 1)
 
-        self.label_43 = QLabel(self.AdvancedGroup)
-        self.label_43.setObjectName(u"label_43")
+        self.PanelHeightOffset = QSpinBox(self.AdvancedGroup)
+        self.PanelHeightOffset.setObjectName(u"PanelHeightOffset")
+        self.PanelHeightOffset.setFont(font1)
+        self.PanelHeightOffset.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.PanelHeightOffset.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
+        self.PanelHeightOffset.setMinimum(8)
+        self.PanelHeightOffset.setMaximum(24)
+        self.PanelHeightOffset.setValue(11)
 
-        self.gridLayout_41.addWidget(self.label_43, 0, 2, 1, 2)
+        self.gridLayout_41.addWidget(self.PanelHeightOffset, 1, 1, 1, 1)
+
+        self.ButtonSpacing = QSpinBox(self.AdvancedGroup)
+        self.ButtonSpacing.setObjectName(u"ButtonSpacing")
+        self.ButtonSpacing.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.ButtonSpacing.setValue(6)
+
+        self.gridLayout_41.addWidget(self.ButtonSpacing, 4, 1, 1, 1)
+
+        self.label_42 = QLabel(self.AdvancedGroup)
+        self.label_42.setObjectName(u"label_42")
+
+        self.gridLayout_41.addWidget(self.label_42, 4, 0, 1, 1)
+
+        self.ResetAdvancedSettings = QPushButton(self.AdvancedGroup)
+        self.ResetAdvancedSettings.setObjectName(u"ResetAdvancedSettings")
+
+        self.gridLayout_41.addWidget(self.ResetAdvancedSettings, 5, 0, 1, 2)
 
         self.RibbonHeightOffset = QSpinBox(self.AdvancedGroup)
         self.RibbonHeightOffset.setObjectName(u"RibbonHeightOffset")
@@ -694,10 +679,10 @@ class Ui_Settings(object):
 
         self.gridLayout_41.addWidget(self.RibbonHeightOffset, 0, 1, 1, 1)
 
-        self.ResetAdvancedSettings = QPushButton(self.AdvancedGroup)
-        self.ResetAdvancedSettings.setObjectName(u"ResetAdvancedSettings")
+        self.label_39 = QLabel(self.AdvancedGroup)
+        self.label_39.setObjectName(u"label_39")
 
-        self.gridLayout_41.addWidget(self.ResetAdvancedSettings, 5, 0, 1, 2)
+        self.gridLayout_41.addWidget(self.label_39, 3, 0, 1, 1)
 
 
         self.gridLayout_40.addWidget(self.AdvancedGroup, 1, 0, 2, 1)
@@ -1413,15 +1398,12 @@ class Ui_Settings(object):
         self.label.setText(QCoreApplication.translate("Settings", u"No. of columns per panel:", None))
         self.label_2.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-style:italic;\">Set to '0'  to disable the maximum of columns</span></p></body></html>", None))
         self.groupBox_15.setTitle("")
+        self.label_40.setText(QCoreApplication.translate("Settings", u"Extra offset for the panel height", None))
+        self.label_37.setText(QCoreApplication.translate("Settings", u"Extra offset for the ribbon height", None))
         self.label_38.setText(QCoreApplication.translate("Settings", u"Factor for the button size", None))
-        self.label_39.setText(QCoreApplication.translate("Settings", u"Minimum ribbon height", None))
-        self.label_45.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">( Extra offset for the panel height )</span></p></body></html>", None))
-        self.label_40.setText(QCoreApplication.translate("Settings", u"Offset for the panel height", None))
-        self.label_37.setText(QCoreApplication.translate("Settings", u"Offset for the ribbon height", None))
         self.label_42.setText(QCoreApplication.translate("Settings", u"Set the spacing between buttons", None))
-        self.label_44.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">( Used formule: 2x small button size + </span><span style=\" font-size:8pt; font-weight:700; font-style:italic;\">value</span><span style=\" font-size:8pt; font-weight:700; font-style:italic;\"/><span style=\" font-size:8pt; font-style:italic;\">)</span></p></body></html>", None))
-        self.label_43.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">( Used formule: 2x small button size + </span><span style=\" font-size:8pt; font-weight:700; font-style:italic;\">value</span><span style=\" font-size:8pt; font-weight:700; font-style:italic;\"> )</span></p></body></html>", None))
         self.ResetAdvancedSettings.setText(QCoreApplication.translate("Settings", u"Reset to default values", None))
+        self.label_39.setText(QCoreApplication.translate("Settings", u"Minimum ribbon height", None))
         self.label_31.setText(QCoreApplication.translate("Settings", u"Advanced size settings", None))
         self.HideAdvancedSettings.setText(QCoreApplication.translate("Settings", u"...", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("Settings", u"Select stylesheet", None))

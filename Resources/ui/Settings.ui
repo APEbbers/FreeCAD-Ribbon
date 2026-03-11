@@ -1266,92 +1266,23 @@
                         <property name="topMargin">
                          <number>0</number>
                         </property>
-                        <item row="2" column="0">
-                         <widget class="QLabel" name="label_38">
-                          <property name="text">
-                           <string>Factor for the button size</string>
+                        <item row="1" column="2">
+                         <spacer name="horizontalSpacer_13">
+                          <property name="orientation">
+                           <enum>Qt::Orientation::Horizontal</enum>
                           </property>
-                         </widget>
-                        </item>
-                        <item row="1" column="1">
-                         <widget class="QSpinBox" name="PanelHeightOffset">
-                          <property name="font">
-                           <font>
-                            <bold>false</bold>
-                           </font>
+                          <property name="sizeHint" stdset="0">
+                           <size>
+                            <width>40</width>
+                            <height>20</height>
+                           </size>
                           </property>
-                          <property name="alignment">
-                           <set>Qt::AlignmentFlag::AlignCenter</set>
-                          </property>
-                          <property name="correctionMode">
-                           <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
-                          </property>
-                          <property name="minimum">
-                           <number>8</number>
-                          </property>
-                          <property name="maximum">
-                           <number>24</number>
-                          </property>
-                          <property name="value">
-                           <number>11</number>
-                          </property>
-                         </widget>
-                        </item>
-                        <item row="3" column="0">
-                         <widget class="QLabel" name="label_39">
-                          <property name="text">
-                           <string>Minimum ribbon height</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item row="1" column="2" colspan="2">
-                         <widget class="QLabel" name="label_45">
-                          <property name="text">
-                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;( Extra offset for the panel height )&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                          </property>
-                         </widget>
+                         </spacer>
                         </item>
                         <item row="1" column="0">
                          <widget class="QLabel" name="label_40">
                           <property name="text">
-                           <string>Offset for the panel height</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item row="4" column="1">
-                         <widget class="QSpinBox" name="ButtonSpacing">
-                          <property name="alignment">
-                           <set>Qt::AlignmentFlag::AlignCenter</set>
-                          </property>
-                          <property name="value">
-                           <number>6</number>
-                          </property>
-                         </widget>
-                        </item>
-                        <item row="0" column="0">
-                         <widget class="QLabel" name="label_37">
-                          <property name="minimumSize">
-                           <size>
-                            <width>191</width>
-                            <height>0</height>
-                           </size>
-                          </property>
-                          <property name="text">
-                           <string>Offset for the ribbon height</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item row="4" column="0">
-                         <widget class="QLabel" name="label_42">
-                          <property name="text">
-                           <string>Set the spacing between buttons</string>
-                          </property>
-                         </widget>
-                        </item>
-                        <item row="3" column="2" colspan="2">
-                         <widget class="QLabel" name="label_44">
-                          <property name="text">
-                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;( Used formule: 2x small button size + &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;&gt;value&lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;/&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                           <string>Extra offset for the panel height</string>
                           </property>
                          </widget>
                         </item>
@@ -1376,18 +1307,25 @@
                           </property>
                          </widget>
                         </item>
-                        <item row="1" column="4">
-                         <spacer name="horizontalSpacer_13">
-                          <property name="orientation">
-                           <enum>Qt::Orientation::Horizontal</enum>
-                          </property>
-                          <property name="sizeHint" stdset="0">
+                        <item row="0" column="0">
+                         <widget class="QLabel" name="label_37">
+                          <property name="minimumSize">
                            <size>
-                            <width>40</width>
-                            <height>20</height>
+                            <width>191</width>
+                            <height>0</height>
                            </size>
                           </property>
-                         </spacer>
+                          <property name="text">
+                           <string>Extra offset for the ribbon height</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="2" column="0">
+                         <widget class="QLabel" name="label_38">
+                          <property name="text">
+                           <string>Factor for the button size</string>
+                          </property>
+                         </widget>
                         </item>
                         <item row="2" column="1">
                          <widget class="QDoubleSpinBox" name="ButtonSizeFactor">
@@ -1419,10 +1357,51 @@
                           </property>
                          </widget>
                         </item>
-                        <item row="0" column="2" colspan="2">
-                         <widget class="QLabel" name="label_43">
+                        <item row="1" column="1">
+                         <widget class="QSpinBox" name="PanelHeightOffset">
+                          <property name="font">
+                           <font>
+                            <bold>false</bold>
+                           </font>
+                          </property>
+                          <property name="alignment">
+                           <set>Qt::AlignmentFlag::AlignCenter</set>
+                          </property>
+                          <property name="correctionMode">
+                           <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+                          </property>
+                          <property name="minimum">
+                           <number>8</number>
+                          </property>
+                          <property name="maximum">
+                           <number>24</number>
+                          </property>
+                          <property name="value">
+                           <number>11</number>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="4" column="1">
+                         <widget class="QSpinBox" name="ButtonSpacing">
+                          <property name="alignment">
+                           <set>Qt::AlignmentFlag::AlignCenter</set>
+                          </property>
+                          <property name="value">
+                           <number>6</number>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="4" column="0">
+                         <widget class="QLabel" name="label_42">
                           <property name="text">
-                           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;( Used formule: 2x small button size + &lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;&gt;value&lt;/span&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;&gt; )&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                           <string>Set the spacing between buttons</string>
+                          </property>
+                         </widget>
+                        </item>
+                        <item row="5" column="0" colspan="2">
+                         <widget class="QPushButton" name="ResetAdvancedSettings">
+                          <property name="text">
+                           <string>Reset to default values</string>
                           </property>
                          </widget>
                         </item>
@@ -1486,10 +1465,10 @@
                           </property>
                          </widget>
                         </item>
-                        <item row="5" column="0" colspan="2">
-                         <widget class="QPushButton" name="ResetAdvancedSettings">
+                        <item row="3" column="0">
+                         <widget class="QLabel" name="label_39">
                           <property name="text">
-                           <string>Reset to default values</string>
+                           <string>Minimum ribbon height</string>
                           </property>
                          </widget>
                         </item>
