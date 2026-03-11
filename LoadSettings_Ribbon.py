@@ -284,6 +284,11 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.ButtonSizeFactor.setDisabled(True)
         self.form.label_38.setHidden(True)
         self.form.label_38.setDisabled(True)
+        # Hide the ribbon height offset.It is not needed right now
+        self.form.RibbonHeightOffset.setHidden(True)
+        self.form.RibbonHeightOffset.setDisabled(True)
+        self.form.label_37.setHidden(True)
+        self.form.label_37.setDisabled(True)
 
         # region - load all settings
         #
