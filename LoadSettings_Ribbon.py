@@ -847,7 +847,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         return
     
     def on_ButtonSizeFactor_TextChanged(self):
-        self.ValuesToUpdate["SizeFactor"] = int(self.form.ButtonSizeFactor.text())
+        self.ValuesToUpdate["SizeFactor"] = float(self.form.ButtonSizeFactor.text())
         self.settingChanged = True
         return
     

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsPrKsDf.ui'
+## Form generated from reading UI file 'SettingsOdPQOf.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
@@ -49,7 +49,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 697, 1630))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, -766, 697, 1630))
         self.gridLayout_28 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_28.setObjectName(u"gridLayout_28")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -661,7 +661,7 @@ class Ui_Settings(object):
         self.ButtonSizeFactor.setMinimum(0.500000000000000)
         self.ButtonSizeFactor.setMaximum(2.000000000000000)
         self.ButtonSizeFactor.setSingleStep(0.100000000000000)
-        self.ButtonSizeFactor.setStepType(QAbstractSpinBox.StepType.AdaptiveDecimalStepType)
+        self.ButtonSizeFactor.setStepType(QAbstractSpinBox.StepType.DefaultStepType)
         self.ButtonSizeFactor.setValue(1.300000000000000)
 
         self.gridLayout_41.addWidget(self.ButtonSizeFactor, 2, 1, 1, 1)
@@ -1362,7 +1362,7 @@ class Ui_Settings(object):
         self.ShowText_Large.toggled.connect(self.EnableWrap_Large.setEnabled)
         self.FCOverlayEnabled.toggled.connect(self.label_26.setEnabled)
         self.FCOverlayEnabled.toggled.connect(self.UseButtonBackGround.setEnabled)
-        self.toolButton.clicked["bool"].connect(self.AdvancedGroup.setHidden)
+        self.toolButton.toggled.connect(self.AdvancedGroup.setHidden)
 
         self.tabWidget.setCurrentIndex(0)
 
@@ -1414,13 +1414,13 @@ class Ui_Settings(object):
         self.label_2.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-style:italic;\">Set to '0'  to disable the maximum of columns</span></p></body></html>", None))
         self.groupBox_15.setTitle("")
         self.label_38.setText(QCoreApplication.translate("Settings", u"Factor for the button size", None))
-        self.label_39.setText(QCoreApplication.translate("Settings", u"Minimum ribbon height offset", None))
+        self.label_39.setText(QCoreApplication.translate("Settings", u"Minimum ribbon height", None))
         self.label_45.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">( Extra offset for the panel height )</span></p></body></html>", None))
         self.label_40.setText(QCoreApplication.translate("Settings", u"Offset for the panel height", None))
         self.label_37.setText(QCoreApplication.translate("Settings", u"Offset for the ribbon height", None))
         self.label_42.setText(QCoreApplication.translate("Settings", u"Set the spacing between buttons", None))
-        self.label_44.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">( Used formule: 2x small button size + </span><span style=\" font-size:8pt; font-weight:700; font-style:italic;\">offset </span><span style=\" font-size:8pt; font-style:italic;\">)</span></p></body></html>", None))
-        self.label_43.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">( Used formule: 2x small button size + </span><span style=\" font-size:8pt; font-weight:700; font-style:italic;\">offset )</span></p></body></html>", None))
+        self.label_44.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">( Used formule: 2x small button size + </span><span style=\" font-size:8pt; font-weight:700; font-style:italic;\">value</span><span style=\" font-size:8pt; font-weight:700; font-style:italic;\"/><span style=\" font-size:8pt; font-style:italic;\">)</span></p></body></html>", None))
+        self.label_43.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">( Used formule: 2x small button size + </span><span style=\" font-size:8pt; font-weight:700; font-style:italic;\">value</span><span style=\" font-size:8pt; font-weight:700; font-style:italic;\"> )</span></p></body></html>", None))
         self.ResetAdvancedSettings.setText(QCoreApplication.translate("Settings", u"Reset to default values", None))
         self.label_31.setText(QCoreApplication.translate("Settings", u"Advanced size settings", None))
         self.toolButton.setText(QCoreApplication.translate("Settings", u"...", None))
