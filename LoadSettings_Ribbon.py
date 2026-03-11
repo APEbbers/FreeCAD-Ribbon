@@ -872,7 +872,13 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
     def on_ResetAdvancedSettings_clicked(self):
         self.form.RibbonHeightOffset.setValue(DefaultSettings["RibbonHeightOffset"])
         self.form.PanelHeightOffset.setValue(DefaultSettings["PanelHeightOffset"])
-        self.form.ButtonSizeFactor.setValue(DefaultSettings["SizeFactor"])
+        try:
+            self.form.ButtonSizeFactor.setValue(DefaultSettings["SizeFactor"].replace(".", ","))
+        except Exception:
+            try:
+                self.form.ButtonSizeFactor.setValue(DefaultSettings["SizeFactor"].replace(",", "."))
+            except Exception:
+                pass
         self.form.MinimumRibbonHeight.setValue(DefaultSettings["RibbonMinimumHeight"])
         self.form.ButtonSpacing.setValue(DefaultSettings["ButtonSpacing"])
         self.settingChanged = True
