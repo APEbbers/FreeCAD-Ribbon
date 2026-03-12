@@ -51,26 +51,31 @@ Note: See [wiki page/installation](https://github.com/APEbbers/FreeCAD-Ribbon/wi
 
 ## Uninstallation
 
-1. Remove the folder of this in the `Mod` folder of your FreeCAD installation
+1. Remove the Ribbon UI via the addon manager.
 1. Restart FreeCAD.
-1. When you restarted you don't see any toolbar.
-1. Create a new macro (Macro menu -> macros...-> create macro)
-1. Paste this code in to the new macro.
-
-    ```python
-    from PySide import QtCore, QtGui, QtWidgets
-    mw = FreeCADGui.getMainWindow()
-    mw.menuBar().show()
-
-    WBList = FreeCADGui.listWorkbenches()
-    for WB in WBList:
-        FreeCADGui.activateWorkbench(WB)
-        for tb in mw.findChildren(QtWidgets.QToolBar):
-            tb.show()
-    ```
-
-1. Execute the macro
-1. Restart FreeCAD.
+1. When you restarted you don't see any toolbar. There are 2 options:
+   1. If have the "Save and Restore" addon installed, you can use it to restore all toolbars.
+      Go to "Tools" and click on "Save and restore". a Dialog will show.
+      Click on "Restore toolbars".  
+      ![SaveAndRestore](./Resources/Images/SaveAndRstore_1.png)  
+1. Use a macro to restore the toolbars:
+   1. Create a new macro (Macro menu -> macros...-> create macro)
+   1. Paste this code in to the new macro.
+   
+       ```python
+       from PySide import QtCore, QtGui, QtWidgets
+       mw = FreeCADGui.getMainWindow()
+       mw.menuBar().show()
+   
+       WBList = FreeCADGui.listWorkbenches()
+       for WB in WBList:
+           FreeCADGui.activateWorkbench(WB)
+           for tb in mw.findChildren(QtWidgets.QToolBar):
+               tb.show()
+       ```
+   
+   1. Execute the macro
+   1. Restart FreeCAD.
 
 ## Discussion
 
