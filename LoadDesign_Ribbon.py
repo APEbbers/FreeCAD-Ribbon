@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction, QGuiApplication
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction, QGuiApplication
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -40,7 +40,7 @@ from PySide.QtWidgets import (
     QLabel,
     QProgressBar,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
 import sys
 import json
 from datetime import datetime
@@ -3665,7 +3665,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.form.CommandList_DDB.clear()
 
         ShadowList = []  # List to add the commands and prevent duplicates
-
+        
+        # Add the commands
         for CommandItem in self.List_Commands:
             CommandName = CommandItem[0]
             MenuNameTranslated = CommandItem[2].replace("&", "")  # Not translated
@@ -3771,6 +3772,14 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
             ShadowList.append(f"{MenuNameTranslated}")
 
+        # Add separators to the CommandsSelected_QC listwidget
+        for i in range(len(self.List_QuickAccessCommands)):
+            if "seperator" in self.List_QuickAccessCommands[i]:
+                ListWidgetItem = QListWidgetItem()
+                ListWidgetItem.setText("Separator")
+                ListWidgetItem.setData(Qt.ItemDataRole.UserRole, "separator")                
+                self.form.CommandsSelected_QC.insertItem(i, ListWidgetItem)
+        
         # Add a "new" item to the dropdown list
         self.form.CommandList_DDB.addItem(translate("FreeCAD Ribbon", "New"), "new")
         self.form.CommandList_DDB.setCurrentText(translate("FreeCAD Ribbon", "New"))
