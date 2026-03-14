@@ -1160,7 +1160,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         CommandTable_QCItem.setData(
             Qt.ItemDataRole.UserRole, f"{RowNumber}_separator"
         )
-        self.form.CommandsSelected_QC.insertRow(RowNumber)
+        self.form.CommandsSelected_QC.insertItem(RowNumber, CommandTable_QCItem)
 
     def on_RemoveSeparator_QC_clicked(self):
         CommandTable_QCItem:QListWidgetItem = self.form.CommandsSelected_QC.selectedItems()[0]
