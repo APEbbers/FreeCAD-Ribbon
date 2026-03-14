@@ -262,7 +262,7 @@
             <enum>QTabWidget::TabShape::Rounded</enum>
            </property>
            <property name="currentIndex">
-            <number>5</number>
+            <number>1</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideNone</enum>
@@ -606,7 +606,7 @@
             <attribute name="title">
              <string>Quick access toolbar</string>
             </attribute>
-            <layout class="QGridLayout" name="gridLayout_7">
+            <layout class="QGridLayout" name="gridLayout_52">
              <item row="0" column="0">
               <widget class="QFrame" name="frame">
                <property name="frameShape">
@@ -747,32 +747,24 @@
                   </item>
                  </layout>
                 </item>
+                <item row="0" column="0" colspan="3">
+                 <widget class="QLineEdit" name="SearchBar_QC">
+                  <property name="inputMask">
+                   <string/>
+                  </property>
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="placeholderText">
+                   <string>Type to search...</string>
+                  </property>
+                 </widget>
+                </item>
                 <item row="3" column="0" colspan="3">
                  <widget class="QLabel" name="label_5">
                   <property name="text">
                    <string>Select commands to add to the quick access toolbar</string>
                   </property>
-                 </widget>
-                </item>
-                <item row="4" column="2">
-                 <widget class="QListWidget" name="CommandsSelected_QC">
-                  <property name="defaultDropAction">
-                   <enum>Qt::DropAction::MoveAction</enum>
-                  </property>
-                  <property name="movement">
-                   <enum>QListView::Movement::Free</enum>
-                  </property>
-                  <property name="sortingEnabled">
-                   <bool>false</bool>
-                  </property>
-                  <item>
-                   <property name="text">
-                    <string>New Item</string>
-                   </property>
-                   <property name="checkState">
-                    <enum>Checked</enum>
-                   </property>
-                  </item>
                  </widget>
                 </item>
                 <item row="4" column="0">
@@ -793,18 +785,98 @@
                   </item>
                  </widget>
                 </item>
-                <item row="0" column="0" colspan="3">
-                 <widget class="QLineEdit" name="SearchBar_QC">
-                  <property name="inputMask">
-                   <string/>
-                  </property>
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="placeholderText">
-                   <string>Type to search...</string>
-                  </property>
-                 </widget>
+                <item row="4" column="2">
+                 <layout class="QGridLayout" name="gridLayout_51">
+                  <item row="0" column="0">
+                   <widget class="QListWidget" name="CommandsSelected_QC">
+                    <property name="defaultDropAction">
+                     <enum>Qt::DropAction::MoveAction</enum>
+                    </property>
+                    <property name="movement">
+                     <enum>QListView::Movement::Free</enum>
+                    </property>
+                    <property name="sortingEnabled">
+                     <bool>false</bool>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>New Item</string>
+                     </property>
+                     <property name="checkState">
+                      <enum>Checked</enum>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <layout class="QGridLayout" name="gridLayout_7">
+                    <item row="0" column="3">
+                     <spacer name="horizontalSpacer_6">
+                      <property name="orientation">
+                       <enum>Qt::Orientation::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                    <item row="0" column="2">
+                     <widget class="QPushButton" name="RemoveSeparator_QC">
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <bold>false</bold>
+                        <stylestrategy>NoAntialias</stylestrategy>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>Remove separator</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QPushButton" name="AddSeparator_QC">
+                      <property name="minimumSize">
+                       <size>
+                        <width>100</width>
+                        <height>0</height>
+                       </size>
+                      </property>
+                      <property name="font">
+                       <font>
+                        <bold>false</bold>
+                        <stylestrategy>NoAntialias</stylestrategy>
+                       </font>
+                      </property>
+                      <property name="text">
+                       <string>Add separator</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <spacer name="horizontalSpacer_7">
+                      <property name="orientation">
+                       <enum>Qt::Orientation::Horizontal</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>40</width>
+                        <height>20</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
                 </item>
                </layout>
               </widget>

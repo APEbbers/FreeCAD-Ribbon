@@ -1142,6 +1142,22 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             self.form.UpdateJson.setEnabled(True)
 
         return
+    
+    def on_AddSeparator_QC_clicked(self):
+        # Define a table widget item
+        CommandTable_QCItem = QTableWidgetItem()
+        CommandTable_QCItem.setText("Separator")
+        CommandTable_QCItem.setData(Qt.ItemDataRole.UserRole, "separator")
+        
+        # Get the last rownumber and set this row with the CommandTable_RDItem
+        RowNumber = self.form.CommandsSelected_QC.rowCount()
+        if len(self.form.CommandsSelected_QC.selectedItems()) > 0:
+            RowNumber = self.form.CommandsSelected_QC.currentRow()
+        # # update the data
+        CommandTable_QCItem.setData(
+            Qt.ItemDataRole.UserRole, f"{RowNumber}_separator"
+        )
+        self.form.CommandsSelected_QC.insertRow(RowNumber)
 
     # endregion
 

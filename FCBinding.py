@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -49,7 +49,7 @@ from PySide.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -87,7 +87,7 @@ from PySide.QtWidgets import (
     QListWidget,
     QListWidgetItem,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -2063,6 +2063,19 @@ class ModernMenu(RibbonBar):
                 if panelName == self.dropPanelName:
                     # Get the command to be added
                     ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
+                    # If the commands is part of a dropdown, get the actual command name
+                    if len(ExtraCommand.split(", ")) > 1:
+                        print(ExtraCommand)
+                        Command = Gui.Command.get(ExtraCommand.split(", ")[0])
+                        if Command is not None:
+                            i = int(ExtraCommand.split(", ")[1])
+                            action = Command.getAction()[i]
+                            ExtraCommand = action.objectName()
+                    # Define a holder for the Menu Text
+                    MenuText = ""
+                    for CommandItem in self.List_Commands:
+                        if CommandItem[0] == ExtraCommand:
+                            MenuText = CommandItem[4]
 
                     # Define a holder for the Menu Text
                     MenuText = ""
@@ -2119,15 +2132,15 @@ class ModernMenu(RibbonBar):
                     
                 # Enable all buttons, so you can access them with a right click
                 self.actionList = []
-                for child in mw.findChildren(QToolButton):
-                    try:
-                        if type(child.actions) is list:
-                            for subAction in child.actions():
-                                subAction.setEnabled(True)                        
-                    except Exception :
-                        pass
-                    child.setEnabled(True)
-                Gui.updateGui()
+                # for child in mw.findChildren(QToolButton):
+                #     try:
+                #         if type(child.actions) is list:
+                #             for subAction in child.actions():
+                #                 subAction.setEnabled(True)                        
+                #     except Exception :
+                #         pass
+                #     child.setEnabled(True)
+                # Gui.updateGui()
 
             return
                 
@@ -2394,7 +2407,16 @@ class ModernMenu(RibbonBar):
             
             # Close the drag indicator
             self.dragIndicator_Panels.close()
-
+        
+        # for child in mw.findChildren(QToolButton):
+        #     try:
+        #         for subAction in child.actions():
+        #             subAction.setEnabled(True)
+        #         child.setEnabled(True)
+        #     except Exception:
+        #         pass
+        # Gui.updateGui()
+                        
         event.accept()
         return
 
@@ -2716,6 +2738,11 @@ class ModernMenu(RibbonBar):
             padding = 0
 
             try:
+                # If there is 'separator' in the commandname, add a separator
+                if "separator" in commandName:
+                    self._titleWidget.quickAccessToolBar().addSeparator()
+                    continue
+                
                 # If it is a standard freecad button, set the command accordingly
                 if commandName.endswith("_ddb") is False:
                     try:
