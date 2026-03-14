@@ -491,6 +491,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             self.on_SearchBar_QC_TextChanged
         )
         
+        self.form.AddSeparator_QC.connect(self.form.AddSeparator_QC, SIGNAL("clicked()"), self.on_AddSeparator_QC_clicked)
+        self.form.RemoveSeparator_QC.connect(self.form.RemoveSeparator_QC, SIGNAL("clicked()"), self.on_RemoveSeparator_QC_clicked)
+        
 
         #
         # --- ExcludePanelsTab ------------------
@@ -1158,6 +1161,17 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             Qt.ItemDataRole.UserRole, f"{RowNumber}_separator"
         )
         self.form.CommandsSelected_QC.insertRow(RowNumber)
+
+    def on_RemoveSeparator_QC_clicked(self):
+        CommandTable_QCItem:QListWidgetItem = self.form.CommandsSelected_QC.selectedItems()[0]
+        if CommandTable_QCItem.data(Qt.ItemDataRole.UserRole) == "separator":
+            self.form.CommandsSelected_QC.removeItemWidget(self.form.CommandsSelected_QC.selectedItems()[0])
+
+        # Enable the apply button
+        if self.CheckChanges() is True:
+            self.form.UpdateJson.setEnabled(True)
+
+        return
 
     # endregion
 
@@ -3774,7 +3788,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
         # Add separators to the CommandsSelected_QC listwidget
         for i in range(len(self.List_QuickAccessCommands)):
-            if "seperator" in self.List_QuickAccessCommands[i]:
+            if "separator" in self.List_QuickAccessCommands[i]:
                 ListWidgetItem = QListWidgetItem()
                 ListWidgetItem.setText("Separator")
                 ListWidgetItem.setData(Qt.ItemDataRole.UserRole, "separator")                
