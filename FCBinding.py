@@ -5860,7 +5860,7 @@ class ModernMenu(RibbonBar):
         Font = QFont()
         Font.setPixelSize(Parameters.FONTSIZE_PANELS)
         panel._titleLabel.setFont(Font)
-        panel._titleLayout.setSpacing(6)
+        panel._titleWidget.setFixedHeight(QFontMetrics(Font).boundingRect(panel.title()).height()+6)
         
         # Set the properties for the layouts
         panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
