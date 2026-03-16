@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -48,8 +48,9 @@ from PySide.QtGui import (
     QCursor,
     QGuiApplication,
     QDrag,
+    QScreen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -87,7 +88,7 @@ from PySide.QtWidgets import (
     QListWidget,
     QListWidgetItem,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -200,7 +201,8 @@ class ModernMenu(RibbonBar):
     # Set a size factor for the buttons
     sizeFactor = Parameters.SIZE_FACTOR
     # Create an offset for the panelheight
-    PanelHeightOffset = Parameters.PANEL_HEIGHT_OFFSET
+    # PanelHeightOffset = Parameters.PANEL_HEIGHT_OFFSET
+    PanelHeightOffset = 22
     # Create an offset for the whole ribbon height
     RibbonOffset = (
         20 + QuickAccessButtonSize * 2
@@ -5531,7 +5533,9 @@ class ModernMenu(RibbonBar):
                             ]["toolbars"][panelName]["commands"][CommandName]["icon"]
                         except Exception:
                             pass
-                        actionIcon = self.ReturnCommandIcon(action.data(), pixmap)
+                        actionIcon = action.icon()
+                        if actionIcon is None or (actionIcon is not None and actionIcon.isNull()):
+                            actionIcon = self.ReturnCommandIcon(action.data(), pixmap)
                         if actionIcon is not None:
                             action.setIcon(actionIcon)
 
@@ -5852,6 +5856,12 @@ class ModernMenu(RibbonBar):
         # Set the panelheight. setting the ribbonheigt, cause the first tab to be shown to large
         # add an offset to make room for the panel titles and icons
         #
+        # Set the font for the panel title
+        Font = QFont()
+        Font.setPixelSize(Parameters.FONTSIZE_PANELS)
+        panel._titleLabel.setFont(Font)
+        panel._titleLayout.setSpacing(6)
+        
         # Set the properties for the layouts
         panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
         panel._actionsLayout.setSpacing(self.ButtonSpacing)
@@ -5859,16 +5869,12 @@ class ModernMenu(RibbonBar):
         panel._actionsLayout.setContentsMargins(0, self.TopMargin, 3, self.BottomMargin) # Left, Top, Right, Bottom
         panel._mainLayout.setSpacing(0)
         panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
-        # Set the font for the panel title
-        Font = QFont()
-        Font.setPixelSize(Parameters.FONTSIZE_PANELS)
-        panel._titleLabel.setFont(Font)
-        panel._titleLabel.setFixedHeight(Parameters.FONTSIZE_PANELS+3)
+        #
         # Set the ribbonheight
-        self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset)
+        self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset+QFontMetrics(Font).tightBoundingRect(panel.title()).height() - 9 )
         # Correct the width of the (hidden) option button
         OptionButton = panel.panelOptionButton()
-        OptionButton.setFixedSize(Parameters.ICON_SIZE_SMALL, Parameters.FONTSIZE_PANELS+3)
+        OptionButton.setFixedSize(Parameters.ICON_SIZE_SMALL, self.RibbonOffset+QFontMetrics(Font).tightBoundingRect(panel.title()).height())
         # Set the size policy to fixed. Otherwise resizing is not working properly
         panel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         return
