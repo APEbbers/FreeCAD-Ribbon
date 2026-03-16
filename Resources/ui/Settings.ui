@@ -2660,10 +2660,10 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
                       <number>0</number>
                      </property>
                      <property name="maximum">
-                      <number>50</number>
+                      <number>500</number>
                      </property>
                      <property name="value">
-                      <number>20</number>
+                      <number>0</number>
                      </property>
                      <property name="displayIntegerBase">
                       <number>10</number>
@@ -2691,7 +2691,7 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
                       <number>1</number>
                      </property>
                      <property name="maximum">
-                      <number>10000</number>
+                      <number>500</number>
                      </property>
                      <property name="value">
                       <number>16</number>

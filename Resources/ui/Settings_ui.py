@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingspmHofF.ui'
+## Form generated from reading UI file 'SettingsiqIHpS.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
@@ -1240,8 +1240,8 @@ class Ui_Settings(object):
         self.RibbonHeightOffset.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
         self.RibbonHeightOffset.setProperty(u"showGroupSeparator", False)
         self.RibbonHeightOffset.setMinimum(0)
-        self.RibbonHeightOffset.setMaximum(50)
-        self.RibbonHeightOffset.setValue(20)
+        self.RibbonHeightOffset.setMaximum(500)
+        self.RibbonHeightOffset.setValue(0)
         self.RibbonHeightOffset.setDisplayIntegerBase(10)
 
         self.gridLayout_41.addWidget(self.RibbonHeightOffset, 1, 1, 1, 1)
@@ -1256,7 +1256,7 @@ class Ui_Settings(object):
         self.MinimumRibbonHeight.setFont(font1)
         self.MinimumRibbonHeight.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.MinimumRibbonHeight.setMinimum(1)
-        self.MinimumRibbonHeight.setMaximum(10000)
+        self.MinimumRibbonHeight.setMaximum(500)
         self.MinimumRibbonHeight.setValue(16)
 
         self.gridLayout_41.addWidget(self.MinimumRibbonHeight, 4, 1, 1, 1)

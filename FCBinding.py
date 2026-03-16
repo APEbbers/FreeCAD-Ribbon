@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -49,7 +49,7 @@ from PySide6.QtGui import (
     QGuiApplication,
     QDrag,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -87,7 +87,7 @@ from PySide6.QtWidgets import (
     QListWidget,
     QListWidgetItem,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -203,7 +203,7 @@ class ModernMenu(RibbonBar):
     PanelHeightOffset = Parameters.PANEL_HEIGHT_OFFSET
     # Create an offset for the whole ribbon height
     RibbonOffset = (
-        Parameters.RIBBON_HEIGHT_OFFSET + QuickAccessButtonSize * 2
+        20 + QuickAccessButtonSize * 2
     )  # Set to zero to hide the panel titles
 
     # Set the minimum height for the ribbon
@@ -4574,7 +4574,7 @@ class ModernMenu(RibbonBar):
                 ribbonHeight = LargeButtonHeight
         if Parameters.LINK_ICON_SIZES is True:
             ribbonHeight = Parameters.ICON_SIZE_SMALL * 3 + self.ButtonSpacing*2
-        return ribbonHeight + offset
+        return ribbonHeight + offset + Parameters.RIBBON_HEIGHT_OFFSET
 
     def ReturnCommandIcon(self, CommandName: str, pixmap: str = "") -> QIcon:
         """_summary_
