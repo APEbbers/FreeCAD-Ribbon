@@ -49,6 +49,7 @@ from PySide6.QtGui import (
     QGuiApplication,
     QDrag,
     QScreen,
+    QPen,
 )
 from PySide6.QtWidgets import (
     QCheckBox,
@@ -2745,8 +2746,8 @@ class ModernMenu(RibbonBar):
             i = i + 1
             # Define a width
             width = 0
-            # Define a button
-            button = QuickAccessToolButton(self.quickAccessToolBar())
+            # # Define a button
+            # button = QuickAccessToolButton(self.quickAccessToolBar())
             # set the default padding to zero
             padding = 0
 
@@ -2756,13 +2757,18 @@ class ModernMenu(RibbonBar):
                     width = 6
                     height = self.QuickAccessButtonSize
                     separator = QuickAccessSeparator(self.quickAccessToolBar())
+                    # separator = button
                     separator.setFixedSize(width, height)
+                    separator.setEnabled(True)
                     self._titleWidget.addQuickAccessButton(separator)                    
                     toolBarWidth = toolBarWidth + width
                     continue
-                
+                    
+                # Define a button
+                button = QuickAccessToolButton(self.quickAccessToolBar())
+
                 # If it is a standard freecad button, set the command accordingly
-                if commandName.endswith("_ddb") is False:
+                if commandName.endswith("_ddb") is False and "separator" not in commandName:
                     try:
                         # Check if the workbench is loaded. If not, actions will be an empty list
                         # Find the command its workbench and activate it
@@ -2809,7 +2815,7 @@ class ModernMenu(RibbonBar):
                         )
 
                 # If it is a custom dropdown, add the actions one by one.
-                if commandName.endswith("_ddb") is True:
+                if commandName.endswith("_ddb") is True and "separator" not in commandName:
                     # set the padding for a dropdown button
                     padding = self.PaddingRight
                     # Get the actions and add them one by one
@@ -2865,7 +2871,7 @@ class ModernMenu(RibbonBar):
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
         # Set the size policy
         self.quickAccessToolBar().setSizePolicy(
-            QSizePolicy.Policy.Minimum, QSizePolicy.Policy.MinimumExpanding
+            QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding
         )
         # needed for excluding from hiding toolbars
         self.quickAccessToolBar().setObjectName("quickAccessToolBar")

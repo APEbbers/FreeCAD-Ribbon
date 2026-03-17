@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 import typing
 import sys
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
@@ -39,7 +39,7 @@ from PySide.QtGui import (
     QPainter,
     
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QComboBox,
     QMainWindow,
     QSizePolicy,
@@ -55,7 +55,7 @@ from PySide.QtWidgets import (
     QWidgetAction,
     QLineEdit,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QSize,
     QMimeData,
@@ -1469,13 +1469,11 @@ class DragTargetIndicator(QLabel):
                 QPoint(self.rect().right() - self._rightMargins, y1),
             )
 
-class QuickAccessSeparator(QLabel):
-    _topMargins: int = 6
-    _bottomMargins: int = 6
-    _leftMargins: int = 6
-    _rightMargins: int = 6
+class QuickAccessSeparator(QToolButton):
+    _topMargins: int = 0
+    _bottomMargins: int = 0
     
-    def __init__(self, parent=None, margins = 6):
+    def __init__(self, parent=None, margins = 2):
         """Create a new drag indicator
 
         Args:
@@ -1489,12 +1487,28 @@ class QuickAccessSeparator(QLabel):
         self._topMargins = margins
         self._bottomMargins = margins
         self.setAcceptDrops(True)
-        
+
+    # Add dragdrop functionality
+    def mouseMoveEvent(self, e):
+        if e.buttons() == Qt.MouseButton.LeftButton:
+            try:
+                drag = QDrag(self)
+                mime = QMimeData()
+                drag.setMimeData(mime)
+                pixmap = QPixmap(self.size())
+                self.render(pixmap)
+                drag.setPixmap(pixmap)
+
+                drag.exec_(Qt.DropAction.MoveAction)
+            except Exception as e:
+                print(e)
+    
     def paintEvent(self, event: QPaintEvent) -> None:
         painter = QPainter(self)
         pen = QPen()
-        pen.setColor(QColor(Qt.GlobalColor.red))
-        pen.setWidth(2)
+        # pen.setColor(QColor(Qt.GlobalColor.red))
+        pen.setColor(QColor(StyleMapping_Ribbon.ReturnStyleItem("FontColor")))
+        pen.setWidth(0.5)
         painter.setPen(pen)
 
         x1 = (self.rect().x() + self.rect().width()) * 0.5
