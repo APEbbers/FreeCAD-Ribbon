@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -50,7 +50,7 @@ from PySide.QtGui import (
     QDrag,
     QScreen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -87,8 +87,9 @@ from PySide.QtWidgets import (
     QDialog,
     QListWidget,
     QListWidgetItem,
+    
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -106,8 +107,18 @@ from PySide.QtCore import (
     QSignalBlocker,
     QMimeData,
 )
-from CustomWidgets import CustomControls, DragTargetIndicator, Toggle, ToggleAction, CheckBoxAction, SpinBoxAction, ComboBoxAction, CustomSeparator, QuickAccessToolButton
-
+from CustomWidgets import (
+    CustomControls, 
+    DragTargetIndicator, 
+    Toggle, 
+    ToggleAction, 
+    CheckBoxAction, 
+    SpinBoxAction, 
+    ComboBoxAction, 
+    CustomSeparator, 
+    QuickAccessToolButton, 
+    QuickAccessSeparator,
+)
 import json
 import os
 import sys
@@ -2742,7 +2753,12 @@ class ModernMenu(RibbonBar):
             try:
                 # If there is 'separator' in the commandname, add a separator
                 if "separator" in commandName:
-                    self._titleWidget.quickAccessToolBar().addSeparator()
+                    width = 6
+                    height = self.QuickAccessButtonSize
+                    separator = QuickAccessSeparator(self.quickAccessToolBar())
+                    separator.setFixedSize(width, height)
+                    self._titleWidget.addQuickAccessButton(separator)                    
+                    toolBarWidth = toolBarWidth + width
                     continue
                 
                 # If it is a standard freecad button, set the command accordingly
@@ -6454,6 +6470,7 @@ class run:
                 return
 
             ribbon = ModernMenu()
+            ribbon.setContentsMargins(0, 0, 0, 0)
             # Get the layout
             layout = ribbon.layout()
             # Set spacing and content margins to zero
@@ -6472,7 +6489,7 @@ class run:
             ribbonDock.setWidget(ribbon)
             ribbonDock.setEnabled(True)
             ribbonDock.setVisible(True)
-
+            
             # # make sure that there are no negative valules
             if Parameters.AUTOHIDE_RIBBON is True:
                 ribbonDock.setMaximumHeight(ribbon.RibbonMinimalHeight)

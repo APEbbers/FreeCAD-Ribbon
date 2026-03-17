@@ -1469,6 +1469,40 @@ class DragTargetIndicator(QLabel):
                 QPoint(self.rect().right() - self._rightMargins, y1),
             )
 
+class QuickAccessSeparator(QLabel):
+    _topMargins: int = 6
+    _bottomMargins: int = 6
+    _leftMargins: int = 6
+    _rightMargins: int = 6
+    
+    def __init__(self, parent=None, margins = 6):
+        """Create a new drag indicator
+
+        Args:
+            parent (optional): parent of the drag indicator. Defaults to None.
+            orientation ("left", "right, "top", "bottom", optional): The orientation of the drag indicater. If set, a line is drawn otherwise a background color is set.  
+            Defaults to None.
+            margins (int, optional): the margins for the line if orientation is set. Defaults to 6.
+        """        
+        super().__init__(parent)
+        self.setContentsMargins(0, 0, 0, 0)
+        self._topMargins = margins
+        self._bottomMargins = margins
+        self.setAcceptDrops(True)
+        
+    def paintEvent(self, event: QPaintEvent) -> None:
+        painter = QPainter(self)
+        pen = QPen()
+        pen.setColor(QColor(Qt.GlobalColor.red))
+        pen.setWidth(2)
+        painter.setPen(pen)
+
+        x1 = (self.rect().x() + self.rect().width()) * 0.5
+        painter.drawLine(
+            QPoint(x1, self.rect().top() + self._topMargins),
+            QPoint(x1, self.rect().bottom() - self._bottomMargins),
+        )
+
 class Toggle(QCheckBox):
 
     _transparent_pen = QPen(Qt.transparent)
