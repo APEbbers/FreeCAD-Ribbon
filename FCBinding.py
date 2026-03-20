@@ -24,11 +24,12 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
     QDropEvent,
+    QContextMenuEvent,
     QIcon,
     QAction,
     QPixmap,
@@ -51,7 +52,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -90,7 +91,7 @@ from PySide.QtWidgets import (
     QListWidgetItem,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1095,6 +1096,8 @@ class ModernMenu(RibbonBar):
             panel = widget.parent().parent().parent()     
             separator = widget.findChild(CustomSeparator)
             titleWidget = widget.findChild(RibbonPanelTitle)
+            quickaccessbutton = widget.findChild(QuickAccessToolButton)
+            quickaccessseparator = widget.findChild(QuickAccessSeparator)
             # Check if the panel is not none and of type RibbonPanel. If so, continue
             if panel is not None and type(panel) is RibbonPanel:
                 if (
@@ -1226,7 +1229,7 @@ class ModernMenu(RibbonBar):
                     return
             
             # If you are not yet in the customize enviroment, create a menu for entering it.
-            if panel is not None and type(panel) is not RibbonPanel:
+            if panel is not None and type(panel) is not RibbonPanel and quickaccessbutton is None:                
                 # Add the buttons
                 #
                 # Add a button for adding commands to current panels
@@ -1295,7 +1298,7 @@ class ModernMenu(RibbonBar):
                                         StandardFunctions.add_keys_nested_dict(self.ButtonState, [panelName, control.actions().data()])
                                         self.ButtonState[panelName][control.actions().data()] = control.actions().isEnabled()
                                 except Exception:
-                                    pass                    
+                                    pass     
                                                             
                         # Enable all buttons, so you can access them with a right click
                         self.actionList = []
@@ -1547,7 +1550,27 @@ class ModernMenu(RibbonBar):
                     answer = StandardFunctions.Mbox(message, "FreeCAD Ribbon", 1, "Question")
                     if answer == "yes":
                         CacheFunctions.CreateCache()
-        
+            
+            # Add a context menu to the quickaccess button
+            if panel is not None and type(panel) is not RibbonPanel and quickaccessbutton is not None and self.CustomizeEnabled is True and quickaccessbutton.underMouse():
+                print(quickaccessbutton)
+                # Create the buttons for adding a separator
+                AddSeparator_Left = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Add separator left"))
+                AddSeparator_Left.triggered.connect(lambda: self.on_AddSeparator_QC_Clicked("left"))
+                AddSeparator_Right = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Add separator right"))
+                AddSeparator_Right.triggered.connect(lambda: self.on_AddSeparator_QC_Clicked("right"))         
+                
+                # create the context menu action
+                self.contextMenu.exec_(self.mapToGlobal(event.pos()))
+                
+                # Disconnect the widgetActions
+                AddSeparator_Left.triggered.disconnect()                                
+                AddSeparator_Right.triggered.disconnect()
+                
+            if panel is not None and type(panel) is not RibbonPanel and quickaccessseparator is not None and self.CustomizeEnabled is True and quickaccessseparator.underMouse():
+                removeSeparator = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Remove separator"))
+                removeSeparator.triggered.connect(lambda: self.on_RemoveSeparator_QC_Clicked(quickaccessseparator))
+                
         widget = None
         panel = None
         return
@@ -1674,6 +1697,12 @@ class ModernMenu(RibbonBar):
         # Close the context menu
         self.contextMenu.close() 
         return
+    
+    def on_AddSeparator_QC_Clicked(self, Side = "left"):
+        print(Side)
+    
+    def on_RemoveSeparator_QC_Clicked(self, separator: QuickAccessSeparator):
+        print("Side")
     
     def on_AddSeparator_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, Side = "left"):
         # Get the workbench hame and the panel name
@@ -2756,7 +2785,7 @@ class ModernMenu(RibbonBar):
             try:
                 # If there is 'separator' in the commandname, add a separator
                 if "separator" in commandName:
-                    width = 6
+                    width = 12
                     height = self.QuickAccessButtonSize
                     separator = QuickAccessSeparator(self.quickAccessToolBar())
                     separator.setObjectName(commandName)
@@ -5639,7 +5668,7 @@ class ModernMenu(RibbonBar):
                                 showText = False
                             try:
                                 if Parameters.BETA_FUNCTIONS_ENABLED is True:
-                                    showText = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["textEnabled"]
+                                    showText = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][action.data()]["textEnabled"]
                             except Exception:
                                 pass
 
@@ -5654,7 +5683,7 @@ class ModernMenu(RibbonBar):
                             )
                             if Parameters.BETA_FUNCTIONS_ENABLED is True:
                                 try:
-                                    size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_small"]                                    
+                                    size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][action.data()]["ButtonSize_small"]                                    
                                     IconSize = QSize(size, size)
                                     ButtonSize = IconSize
                                 except Exception:
@@ -5695,7 +5724,7 @@ class ModernMenu(RibbonBar):
                                 showText = False
                             try:
                                 if Parameters.BETA_FUNCTIONS_ENABLED is True:
-                                    showText = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["textEnabled"]
+                                    showText = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][action.data()]["textEnabled"]
                             except Exception:
                                 pass
 
@@ -5710,7 +5739,7 @@ class ModernMenu(RibbonBar):
                             )
                             if Parameters.BETA_FUNCTIONS_ENABLED is True:
                                 try:
-                                    size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_medium"]
+                                    size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][action.data()]["ButtonSize_medium"]
                                     IconSize = QSize(size, size)
                                     ButtonSize = IconSize
                                 except Exception:
@@ -5754,9 +5783,10 @@ class ModernMenu(RibbonBar):
                                 showText = False
                             try:
                                 if Parameters.BETA_FUNCTIONS_ENABLED is True:
-                                    if "textEnabled" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]:
-                                        showText = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["textEnabled"]
-                            except Exception as e:                                
+                                    print(f"{workbenchName}, {panelName}, {action.data()}")
+                                    if "textEnabled" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][action.data()]:
+                                        showText = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][action.data()]["textEnabled"]
+                            except Exception as e:                         
                                 if Parameters.DEBUG_MODE is True:
                                     print(CommandName + ", " + str(e.with_traceback(e.__traceback__)))
                                 pass
@@ -5772,7 +5802,7 @@ class ModernMenu(RibbonBar):
                             )
                             if Parameters.BETA_FUNCTIONS_ENABLED is True:
                                 try:                                    
-                                    size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_large"]
+                                    size = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][action.data()]["ButtonSize_large"]
                                     IconSize = QSize(size, size)
                                     ButtonSize = IconSize
                                 except Exception as e:
