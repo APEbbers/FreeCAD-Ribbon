@@ -1111,8 +1111,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         )
 
         # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+        self.on_PanelOrder_QC_changed()
 
         return
 
@@ -1123,8 +1122,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         )
 
         # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+        self.on_PanelOrder_QC_changed()
 
         return
 
@@ -1132,8 +1130,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.MoveItem(ListWidget=self.form.CommandsSelected_QC, Up=True)
 
         # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+        self.on_PanelOrder_QC_changed()
 
         return
 
@@ -1141,8 +1138,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.MoveItem(ListWidget=self.form.CommandsSelected_QC, Up=False)
 
         # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+        self.on_PanelOrder_QC_changed()
 
         return
     
@@ -1162,15 +1158,35 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         )
         self.form.CommandsSelected_QC.insertItem(RowNumber, CommandTable_QCItem)
 
-    def on_RemoveSeparator_QC_clicked(self):
-        CommandTable_QCItem:QListWidgetItem = self.form.CommandsSelected_QC.selectedItems()[0]
-        if CommandTable_QCItem.data(Qt.ItemDataRole.UserRole) == "separator":
-            self.form.CommandsSelected_QC.removeItemWidget(self.form.CommandsSelected_QC.selectedItems()[0])
+        # Enable the apply button
+        self.on_PanelOrder_QC_changed()
+            
+        return
 
+    def on_RemoveSeparator_QC_clicked(self):
+        CommandTable_QCItem: QListWidgetItem = self.form.CommandsSelected_QC.selectedItems()[0]        
+        if CommandTable_QCItem.data(Qt.ItemDataRole.UserRole) == "separator":
+            self.form.CommandsSelected_QC.takeItem(self.form.CommandsSelected_QC.row(CommandTable_QCItem))
+
+        # Enable the apply button
+        self.on_PanelOrder_QC_changed()
+
+        return
+    
+
+    def on_PanelOrder_QC_changed(self):
+        Order = []
+        for i in range(self.form.CommandsSelected_QC.count()):
+            item = self.form.CommandsSelected_QC.item(i)
+            Order.append(item.data(Qt.ItemDataRole.UserRole))
+
+        
+        if len(Order) > 0:
+            self.List_QuickAccessCommands = Order
+            
         # Enable the apply button
         if self.CheckChanges() is True:
             self.form.UpdateJson.setEnabled(True)
-
         return
 
     # endregion
@@ -4613,22 +4629,22 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
         IsChanged = False
         if "ignoredToolbars" in data:
-            if data["ignoredToolbars"].sort() != self.List_IgnoredToolbars.sort():
+            if data["ignoredToolbars"] != self.List_IgnoredToolbars:
                 IsChanged = True
                 print("ignoredToolbars")
         if "iconOnlyToolbars" in data:
-            if data["iconOnlyToolbars"].sort() != self.List_IconOnly_Toolbars.sort():
+            if data["iconOnlyToolbars"] != self.List_IconOnly_Toolbars:
                 IsChanged = True
                 print("iconOnlyToolbars")
         if "quickAccessCommands" in data:
             if (
-                data["quickAccessCommands"].sort()
-                != self.List_QuickAccessCommands.sort()
+                data["quickAccessCommands"]
+                != self.List_QuickAccessCommands
             ):
                 IsChanged = True
                 print("quickAccessCommands")
         if "ignoredWorkbenches" in data:
-            if data["ignoredWorkbenches"].sort() != self.List_IgnoredWorkbenches.sort():
+            if data["ignoredWorkbenches"] != self.List_IgnoredWorkbenches:
                 IsChanged = True
                 print("ignoredWorkbenches")
         if "customToolbars" in data:

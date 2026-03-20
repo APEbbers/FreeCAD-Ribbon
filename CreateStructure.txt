@@ -3418,8 +3418,7 @@
                         "Assembly_SolveAssembly",
                         "Assembly_Insert",
                         "Assembly_CreateView",
-                        "Assembly_CreateSimulation",
-                        "Assembly_CreateBom"
+                        "Assembly_CreateSimulation"
                     ],
                     "commands": {
                         "Assembly_CreateAssembly": {
@@ -3437,9 +3436,6 @@
                             "size": "small"
                         },
                         "Assembly_CreateSimulation": {
-                            "size": "small"
-                        },
-                        "Assembly_CreateBom": {
                             "size": "small"
                         }
                     },
