@@ -1953,6 +1953,8 @@ class ModernMenu(RibbonBar):
                         break
                     if type(widget) is CustomSeparator:
                         break
+                    if type(widget) is QuickAccessSeparator:
+                        break
                     else:
                         if widget is not None:
                             widget = widget.parent()
@@ -2014,7 +2016,7 @@ class ModernMenu(RibbonBar):
                         self.dragIndicator_Buttons.show()
                     except Exception:
                         pass
-            
+
                 if type(parent) is QToolBar and parent.objectName() == "quickAccessToolBar":
                     # Get the relative position of the cursor
                     point = QPoint(event.pos().x() + widget.width(), event.pos().y())
@@ -2026,7 +2028,7 @@ class ModernMenu(RibbonBar):
                     if beforeAction is not None:
                         # Store the beforeAction globally
                         self.dropWidget_QuickAccess = beforeAction
-                        #Store the index of the current beforeAction. This is needed for the drop function to save the order
+                        # Store the index of the current beforeAction. This is needed for the drop function to save the order
                         self.DropIndex_QuickAccess = QuickAccessToolBar.actions().index(beforeAction) - 1
                     # If the button is an Target indicator or is None, remove it.
                     if type(button) is DragTargetIndicator or button is None:
@@ -2043,7 +2045,7 @@ class ModernMenu(RibbonBar):
                     # If the beforeAction is None, you are at the end of the QuickAccess Toolbar
                     if beforeAction is None:
                             dragIndicator = self.dragIndicator_QuickAccess
-                            self.dragIndicator_QuickAccess_Action =  QuickAccessToolBar.addWidget(dragIndicator)
+                            self.dragIndicator_QuickAccess_Action = QuickAccessToolBar.addWidget(dragIndicator)
                             self.dragIndicator_QuickAccess_Action.setVisible(True)
                                         
             if type(widget) is RibbonPanel:
@@ -2757,6 +2759,7 @@ class ModernMenu(RibbonBar):
                     width = 6
                     height = self.QuickAccessButtonSize
                     separator = QuickAccessSeparator(self.quickAccessToolBar())
+                    separator.setObjectName(commandName)
                     # separator = button
                     separator.setFixedSize(width, height)
                     separator.setEnabled(True)

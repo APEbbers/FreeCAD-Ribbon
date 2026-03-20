@@ -1486,7 +1486,6 @@ class QuickAccessSeparator(QToolButton):
         self.setContentsMargins(0, 0, 0, 0)
         self._topMargins = margins
         self._bottomMargins = margins
-        self.setAcceptDrops(True)
 
     # Add dragdrop functionality
     def mouseMoveEvent(self, e):
