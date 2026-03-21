@@ -1591,7 +1591,7 @@ class ModernMenu(RibbonBar):
             if panel is not None and type(panel) is not RibbonPanel and quickaccessseparator is not None and self.CustomizeEnabled is True and quickaccessseparator.underMouse():
                 # Create the buttons for removing the separator
                 removeSeparator = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Remove separator"))
-                removeSeparator.triggered.connect(lambda: self.on_RemoveSeparator_QC_Clicked(quickaccessseparator))
+                removeSeparator.triggered.connect(lambda: self.on_RemoveSeparator_QC_Clicked(quickaccessseparator, event.pos()))
                 
                 # create the context menu action
                 self.contextMenu.exec_(self.mapToGlobal(event.pos()))
@@ -1761,13 +1761,33 @@ class ModernMenu(RibbonBar):
         return
         
     
-    def on_RemoveSeparator_QC_Clicked(self, separator: QuickAccessSeparator):
-        # Declare an order list
-        OrderList = []
-        # Copy the workbench dict
-        Dict = self.workBenchDict.copy()
-        if "quickAccessCommands" in Dict:
-            print("Side")
+    def on_RemoveSeparator_QC_Clicked(self, separator: QuickAccessSeparator, pos: QPoint):
+        # Get a list of all buttons
+        buttonList = self._titleWidget._quickAccessToolBar.findChildren(QToolButton)
+        # Start with the index at -1. This way, the index is zero based
+        index = -1
+        # Go through the button list. if the passed position is withing the edges of a button,
+        # You got the right one
+        for button in buttonList:
+            index = index + 1
+            # Map the for corners of the button to global
+            pos_tl = button.mapToGlobal(button.rect().topLeft())
+            pos_tr = button.mapToGlobal(button.rect().topRight())
+            pos_bl = button.mapToGlobal(button.rect().bottomLeft())
+            pos_br = button.mapToGlobal(button.rect().bottomRight())
+
+            # If the position of the context menu event is within the global corners
+            # delete the button if it is a separator
+            if pos.x() > pos_tl.x() and pos.x() < pos_tr.x():
+                if pos.y() > pos_tl.y() and pos.y() < pos_bl.y():
+                    if type(button) is QuickAccessSeparator:
+                        button.deleteLater()
+                        break
+        
+        # Update the quickAccessCommands list
+        self.quickAccessCommands.pop(index-2)
+
+        return
     
     def on_AddSeparator_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, Side = "left"):
         # Get the workbench hame and the panel name
