@@ -1073,7 +1073,7 @@ class ModernMenu(RibbonBar):
 
     # region - Customise functions
     #            
-    def contextMenuEvent(self, event):
+    def contextMenuEvent(self, event: QContextMenuEvent):
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         
         # Create the menu
@@ -1096,8 +1096,28 @@ class ModernMenu(RibbonBar):
             panel = widget.parent().parent().parent()     
             separator = widget.findChild(CustomSeparator)
             titleWidget = widget.findChild(RibbonPanelTitle)
-            quickaccessbutton = widget.findChild(QuickAccessToolButton)
-            quickaccessseparator = widget.findChild(QuickAccessSeparator)
+            # try to get a quickaccess button or separator if the mouse is over it
+            quickaccessbutton = None
+            quickaccessseparator = None
+            quickaccesstoolbar = None
+            if type(widget) is QToolBar:
+                quickaccesstoolbar = widget
+                for button in widget.findChildren(QToolButton):
+                    # Map the for corners of the button to global
+                    pos_tl = button.mapToGlobal(button.rect().topLeft())
+                    pos_tr = button.mapToGlobal(button.rect().topRight())
+                    pos_bl = button.mapToGlobal(button.rect().bottomLeft())
+                    pos_br = button.mapToGlobal(button.rect().bottomRight())
+
+                    # If the position of the context menu event is within the global corners
+                    # redefine the quickaccess button or control
+                    if event.globalPos().x() > pos_tl.x() and event.globalPos().x() < pos_tr.x():
+                        if event.globalPos().y() > pos_tl.y() and event.globalPos().y() < pos_bl.y():
+                            if type(button) is QuickAccessToolButton:
+                                quickaccessbutton = button
+                            if type(button) is QuickAccessSeparator:
+                                quickaccessseparator = button
+            
             # Check if the panel is not none and of type RibbonPanel. If so, continue
             if panel is not None and type(panel) is RibbonPanel:
                 if (
@@ -1197,6 +1217,7 @@ class ModernMenu(RibbonBar):
                        
                         return
 
+            # Create a context menu to change a panel title
             if titleWidget is not None and self.CustomizeEnabled is True and titleWidget.underMouse():
                 panel = titleWidget.parent().parent()
                 ChangePanelTitle = CustomWidgets.LineEditAction(self, translate("FreeCAD Ribbon", "Change panel title"))
@@ -1228,8 +1249,8 @@ class ModernMenu(RibbonBar):
                     self.contextMenu.exec_(self.mapToGlobal(event.pos()))
                     return
             
-            # If you are not yet in the customize enviroment, create a menu for entering it.
-            if panel is not None and type(panel) is not RibbonPanel and quickaccessbutton is None:                
+            # Add the context menu for the ribbon
+            if panel is not None and type(panel) is not RibbonPanel and quickaccessbutton is None and quickaccesstoolbar is None:                
                 # Add the buttons
                 #
                 # Add a button for adding commands to current panels
@@ -1553,7 +1574,6 @@ class ModernMenu(RibbonBar):
             
             # Add a context menu to the quickaccess button
             if panel is not None and type(panel) is not RibbonPanel and quickaccessbutton is not None and self.CustomizeEnabled is True and quickaccessbutton.underMouse():
-                print(quickaccessbutton)
                 # Create the buttons for adding a separator
                 AddSeparator_Left = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Add separator left"))
                 AddSeparator_Left.triggered.connect(lambda: self.on_AddSeparator_QC_Clicked("left"))
@@ -1568,8 +1588,15 @@ class ModernMenu(RibbonBar):
                 AddSeparator_Right.triggered.disconnect()
                 
             if panel is not None and type(panel) is not RibbonPanel and quickaccessseparator is not None and self.CustomizeEnabled is True and quickaccessseparator.underMouse():
+                # Create the buttons for removing the separator
                 removeSeparator = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Remove separator"))
                 removeSeparator.triggered.connect(lambda: self.on_RemoveSeparator_QC_Clicked(quickaccessseparator))
+                
+                # create the context menu action
+                self.contextMenu.exec_(self.mapToGlobal(event.pos()))
+                
+                # Disconnect the widgetActions
+                removeSeparator.triggered.disconnect()
                 
         widget = None
         panel = None
@@ -5783,7 +5810,6 @@ class ModernMenu(RibbonBar):
                                 showText = False
                             try:
                                 if Parameters.BETA_FUNCTIONS_ENABLED is True:
-                                    print(f"{workbenchName}, {panelName}, {action.data()}")
                                     if "textEnabled" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][action.data()]:
                                         showText = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][action.data()]["textEnabled"]
                             except Exception as e:                         
