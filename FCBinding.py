@@ -1088,6 +1088,7 @@ class ModernMenu(RibbonBar):
         Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName], endEmpty=True)
         # if not self.WorkingDictUpdated:
         self.workBenchDict["workbenches"][workbenchName] = self.ribbonStructure["workbenches"][workbenchName]
+        self.workBenchDict["quickAccessCommands"] = self.ribbonStructure["quickAccessCommands"]
     
         # If betaFunctions is enabled, coninue
         if self.BetaFunctionsEnabled is True:
@@ -1576,9 +1577,9 @@ class ModernMenu(RibbonBar):
             if panel is not None and type(panel) is not RibbonPanel and quickaccessbutton is not None and self.CustomizeEnabled is True and quickaccessbutton.underMouse():
                 # Create the buttons for adding a separator
                 AddSeparator_Left = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Add separator left"))
-                AddSeparator_Left.triggered.connect(lambda: self.on_AddSeparator_QC_Clicked("left"))
+                AddSeparator_Left.triggered.connect(lambda: self.on_AddSeparator_QC_Clicked(quickaccessbutton, event.pos(), "left"))
                 AddSeparator_Right = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Add separator right"))
-                AddSeparator_Right.triggered.connect(lambda: self.on_AddSeparator_QC_Clicked("right"))         
+                AddSeparator_Right.triggered.connect(lambda: self.on_AddSeparator_QC_Clicked(quickaccessbutton, event.pos(),"right"))         
                 
                 # create the context menu action
                 self.contextMenu.exec_(self.mapToGlobal(event.pos()))
@@ -1725,11 +1726,48 @@ class ModernMenu(RibbonBar):
         self.contextMenu.close() 
         return
     
-    def on_AddSeparator_QC_Clicked(self, Side = "left"):
-        print(Side)
+    def on_AddSeparator_QC_Clicked(self, ButtonWidget: QuickAccessToolButton, pos: QPoint, Side = "left"):
+        # Determine the index of the Button that is clicked on
+        buttonList = self._titleWidget._quickAccessToolBar.findChildren(QToolButton)
+        buttonAction = ButtonWidget.actions()[0]
+        index = -1
+        for i in range(len(buttonList)):
+            action = buttonList[i].defaultAction()
+            if action is not None:
+                if action.data() == buttonAction.data():
+                    index = i-2 # minus the application button and some hidden button
+                    break
+        
+        # Get the relative position of the cursor. Either left or right from the button that is clicked on
+        ExtraOffset = 0
+        if Side.lower() == "right":
+            ExtraOffset = ButtonWidget.width()
+        point = QPoint(pos.x() + ExtraOffset , pos.y())
+        buttonPos = self._titleWidget._quickAccessToolBar.mapTo(self._titleWidget._quickAccessToolBar ,point)
+        
+        # Get the before action
+        beforeAction = self._titleWidget._quickAccessToolBar.actionAt(buttonPos)
+
+        # Create the separator
+        separator = QuickAccessSeparator(self.quickAccessToolBar())
+        separator.setObjectName("separator")
+        separator.setFixedSize(12, ButtonWidget.height())
+        
+        # Add the separator to the quicktoolbar
+        self._titleWidget._quickAccessToolBar.insertWidget(beforeAction, separator)
+        
+        # Update the quickAccessCommands list
+        self.quickAccessCommands.insert(index, separator.objectName())
+        return
+        
     
     def on_RemoveSeparator_QC_Clicked(self, separator: QuickAccessSeparator):
-        print("Side")
+        # Declare an order list
+        OrderList = []
+        # Copy the workbench dict
+        Dict = self.workBenchDict.copy()
+        if "quickAccessCommands" in Dict:
+            print("Side")
     
     def on_AddSeparator_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, Side = "left"):
         # Get the workbench hame and the panel name
