@@ -1321,18 +1321,17 @@ class ModernMenu(RibbonBar):
                                         self.ButtonState[panelName][control.actions().data()] = control.actions().isEnabled()
                                 except Exception:
                                     pass     
-                                                            
+                             
                         # Enable all buttons, so you can access them with a right click
                         self.actionList = []
                         for child in mw.findChildren(QToolButton):
                             try:
                                 for subAction in child.actions():
-                                    subAction.setEnabled(True)
-                                child.setEnabled(True)
+                                    subAction.setEnabled(True)                                                                  
                             except Exception:
                                 pass
-                        Gui.updateGui()
-                        
+                            child.setEnabled(True)
+                                                
                         # Create all order lists and commands, incase they are not all present
                         for title, objPanel in self.currentCategory().panels().items():                            
                             objPanel.show()
@@ -1436,7 +1435,7 @@ class ModernMenu(RibbonBar):
                             EnableControl = titleLayout.itemAt(0).widget()
                             if EnableControl is not None:
                                 EnableControl.setVisible(True)
-                        
+                                
                         return
                     if self.CustomizeEnabled is True:
                         self.currentCategory().setStyleSheet(self.StyleSheet)
@@ -1553,6 +1552,12 @@ class ModernMenu(RibbonBar):
                         
                         # Clear the workbench dict
                         self.workBenchDict.clear()
+                        
+                        # Close the temporary document
+                        try:
+                            App.closeDocument("Temporary")
+                        except Exception:
+                            pass
 
                 if action == CombinePanelsAct:
                     LoadCombinePanel_Ribbon.main()
@@ -1637,7 +1642,6 @@ class ModernMenu(RibbonBar):
                 child.setEnabled(True)
             except Exception:
                 pass
-        Gui.updateGui()
         
         # Close the old panel
         panel.close()
@@ -1717,7 +1721,6 @@ class ModernMenu(RibbonBar):
                 child.setEnabled(True)
             except Exception:
                 pass
-        Gui.updateGui()
         
         # Close the old panel
         panel.close()
@@ -1907,7 +1910,6 @@ class ModernMenu(RibbonBar):
                     child.setEnabled(True)
                 except Exception:
                     pass
-            Gui.updateGui()
             
             # Close the old panel
             panel.close()
@@ -2051,6 +2053,19 @@ class ModernMenu(RibbonBar):
             self.dragIndicator_Panels.close()
             # self.dragIndicator_QuickAccess.close()
             self.target = None
+            
+            # # Enable all buttons, so you can access them with a right click
+            # self.actionList = []
+            # for child in mw.findChildren(QToolButton):
+            #     try:
+            #         if type(child.actions) is list:
+            #             for subAction in child.actions():
+            #                 subAction.setEnabled(True)                        
+            #     except Exception :
+            #         pass
+            #     child.setEnabled(True)
+        
+        return
   
     
     def dragMoveEvent(self, event: QDragMoveEvent):
@@ -2260,18 +2275,19 @@ class ModernMenu(RibbonBar):
                     # Close the old panel and the dragindicator
                     panel.close()
                     
-                # Enable all buttons, so you can access them with a right click
-                self.actionList = []
-                # for child in mw.findChildren(QToolButton):
-                #     try:
-                #         if type(child.actions) is list:
-                #             for subAction in child.actions():
-                #                 subAction.setEnabled(True)                        
-                #     except Exception :
-                #         pass
-                #     child.setEnabled(True)
-                # Gui.updateGui()
-
+                    # Enable all buttons, so you can access them with a right click
+                    self.actionList = []
+                    for child in mw.findChildren(QToolButton):
+                        try:
+                            if type(child.actions) is list:
+                                for subAction in child.actions():
+                                    subAction.setEnabled(True)                        
+                        except Exception :
+                            pass
+                        child.setEnabled(True)
+                    # Gui.updateGui()
+            
+            event.accept()
             return
                 
         if type(widget) is not RibbonPanel and type(widget) is not QToolBar:
@@ -2462,13 +2478,22 @@ class ModernMenu(RibbonBar):
                 #
                 # Define the orderlist as the current list of quickaccess commands
                 OrderList = self.quickAccessCommands
+                # Determine the index of the Button that is clicked on
+                buttonList = self._titleWidget._quickAccessToolBar.findChildren(QToolButton)
+                startIndex = -1
+                for i in range(len(buttonList)):
+                    buttonName = buttonList[i].objectName()
+                    if widget.objectName() == buttonName:
+                        startIndex = i + 1 # plus 1, to get the correct position in the list
+                        break
+                
                 # Remove the current widget
-                OrderList.remove(widget.objectName())
+                self.quickAccessCommands.pop(startIndex)
                 # Get the current index stored in the dragmove function. Do minus 1, because the current widget is removed
                 if self.DropIndex_QuickAccess is not None:
-                    index = self.DropIndex_QuickAccess - 1
+                    endIndex = self.DropIndex_QuickAccess - 1
                     # Insert the commandName in the orderlist
-                    OrderList.insert(index, widget.objectName())
+                    OrderList.insert(endIndex, widget.objectName())
 
                 # Set the quickaccessCommands
                 self.quickAccessCommands = OrderList
@@ -2480,9 +2505,17 @@ class ModernMenu(RibbonBar):
             except Exception:
                 pass
             
-            return
-                
+            for child in mw.findChildren(QToolButton):
+                try:
+                    for subAction in child.actions():
+                        subAction.setEnabled(True)
+                    child.setEnabled(True)
+                except Exception:
+                    pass
             
+            event.accept()
+            return
+                         
         if type(widget) is RibbonPanel:
             # Get the position (index, position)
             position = self.find_drop_location(event)
@@ -2538,13 +2571,13 @@ class ModernMenu(RibbonBar):
             # Close the drag indicator
             self.dragIndicator_Panels.close()
         
-        # for child in mw.findChildren(QToolButton):
-        #     try:
-        #         for subAction in child.actions():
-        #             subAction.setEnabled(True)
-        #         child.setEnabled(True)
-        #     except Exception:
-        #         pass
+            for child in mw.findChildren(QToolButton):
+                try:
+                    for subAction in child.actions():
+                        subAction.setEnabled(True)
+                    child.setEnabled(True)
+                except Exception:
+                    pass
         # Gui.updateGui()
                         
         event.accept()
@@ -4570,8 +4603,21 @@ class ModernMenu(RibbonBar):
                     if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard"):                                
                         # Activate the workbench if not loaded
                         Gui.activateWorkbench(CommandItem[3])
+                        break
             # Set the current  category after activating the workbench
             self.setCurrentCategory(currentCategory)
+            Gui.activateWorkbench(currentCategory.objectName())
+            
+            # Enable all buttons, so you can access them with a right click
+            self.actionList = []
+            for child in mw.findChildren(QToolButton):
+                try:
+                    if type(child.actions) is list:
+                        for subAction in child.actions():
+                            subAction.setEnabled(True)                        
+                except Exception :
+                    pass
+                child.setEnabled(True)
    
             # Get the command
             Command = Gui.Command.get(commandName)
@@ -4628,6 +4674,7 @@ class ModernMenu(RibbonBar):
             if Button.text() == "":
                 Button.setText(commandName)
             Button.setToolTip(commandName)
+            
             return Button
         except Exception as e:
             if Parameters.DEBUG_MODE is True:
@@ -5980,7 +6027,7 @@ class ModernMenu(RibbonBar):
         spacer.setObjectName("ExtraSpacer")
         spacer.setMinimumSize(0, panel.height() - panel._titleWidget.height())
         panel.addWidget(spacer, rowSpan=6)
-        
+
         # print(panel._actionsLayout.count())
         if panel._actionsLayout.count() > 1:            
             return panel
