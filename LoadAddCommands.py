@@ -110,8 +110,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.SearchBar_NP.setAcceptDrops(False)
 
         # Set the trash area
-        icon: QIcon = Gui.getIcon("Edit-delete")
-        pixmap = icon.pixmap(size=QSize(30,30),mode=QIcon.Mode.Normal,state=QIcon.State.On)
+        pixmap = QPixmap(os.path.join(pathIcons, "Edit-delete.svg"))
         self.form.TrashArea.setPixmap(pixmap)
         self.form.TrashArea.setObjectName("TrashArea")
         
