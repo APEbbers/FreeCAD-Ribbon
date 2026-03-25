@@ -917,9 +917,12 @@ class EventInspector(QObject):
             return True
         # # Show the mainwindow after the application is activated
         if event.type() == QEvent.Type.DragEnter:
-            self.dragEntered = True
-            self.widget = event.source()
-            event.accept()
+            if self.parent().TrashArea.underMouse() is True:
+                self.dragEntered = True
+                self.widget = event.source()
+                event.accept()
+            else:
+                event.ignore()
             return True        
         return False
   
