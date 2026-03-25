@@ -112,6 +112,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Set the trash area
         pixmap = QPixmap(os.path.join(pathIcons, "Edit-delete.svg"))
         self.form.TrashArea.setPixmap(pixmap)
+        self.form.TrashArea.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.form.TrashArea.setObjectName("TrashArea")
         
         # Get the address of the repository address
@@ -343,26 +344,28 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.SearchBar_NP.textChanged.connect(
             self.on_SearchBar_NP_TextChanged
         )
+        
+        # self.form.dragEnterEvent = lambda e: self.dragEnterEvent(e)
         return
     
     # def mouseReleaseEvent(self, event):
     #     super().mouseReleaseEvent(event)
     #     print("released")
     
-    def dragEnterEvent_ListWidget(self, event, ListWidget):
-        if event.mimeData().hasUrls():
-            event.accept()
-        else:
-            super(ListWidget, self).dragEnterEvent(event)
+    # def dragEnterEvent_ListWidget(self, event, ListWidget):
+    #     if event.mimeData().hasUrls():
+    #         event.accept()
+    #     else:
+    #         super(ListWidget, self).dragEnterEvent(event)
 
-    def dragMoveEvent_ListWidget(self, event, ListWidget):
-        if event.mimeData().hasUrls():
-            event.setDropAction(Qt.DropAction.CopyAction)
-            event.accept()
-        else:
-            super(ListWidget, self).dragMoveEvent(event)
+    # def dragMoveEvent_ListWidget(self, event, ListWidget):
+    #     if event.mimeData().hasUrls():
+    #         event.setDropAction(Qt.DropAction.CopyAction)
+    #         event.accept()
+    #     else:
+    #         super(ListWidget, self).dragMoveEvent(event)
             
-    # def dragEnterEvent(self, event):
+    # def dragEnterEvent(self, event: QDragEnterEvent):
     #     event.accept()
     #     print("entered")
     #     return
@@ -892,36 +895,31 @@ class EventInspector(QObject):
         super(EventInspector, self).__init__(parent)
 
     def eventFilter(self, obj, event: QEvent):
-        if event.type() == QEvent.Type.DragLeave:
-            if type(self.widget) is not QListWidget:
-                QApplication.mouseButtons().value
-                if self.dragEntered is True and QApplication.mouseButtons().value == 0:
-                    count = 0
-                    parent = None
-                    panel = None
-                    if self.widget is not None:
-                        parent = self.widget.parent()
-                        while (count < 10):
-                            if type(parent) is RibbonPanel:
-                                panel = parent
-                                break                        
-                            else:
-                                parent = parent.parent()
-                            count = count + 1
-                    
-                    
-                    print("dragleave")
-                    # Get the mainwindow, the ribbon and the title
-                    mw = Gui.getMainWindow()
-                    RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-                    RibbonBar.RemoveButtonFromPanel(panel, self.widget)
-                    # signal.emit()
+        if self.dragEntered is True and QApplication.mouseButtons().value == 0:
+            count = 0
+            parent = None
+            panel = None
+            if self.widget is not None:
+                parent = self.widget.parent()
+                while (count < 10):
+                    if type(parent) is RibbonPanel:
+                        panel = parent
+                        break                        
+                    else:
+                        parent = parent.parent()
+                    count = count + 1
+                        
+            # Get the mainwindow, the ribbon and the title
+            mw = Gui.getMainWindow()
+            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+            RibbonBar.RemoveButtonFromPanel(panel, self.widget)
+            self.dragEntered = False
             return True
         # # Show the mainwindow after the application is activated
         if event.type() == QEvent.Type.DragEnter:
             self.dragEntered = True
             self.widget = event.source()
-            print(self.dragEntered)
+            event.accept()
             return True        
         return False
   
