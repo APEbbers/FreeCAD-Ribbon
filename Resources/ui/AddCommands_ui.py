@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsgzmHTA.ui'
+## Form generated from reading UI file 'AddCommandsMWmnVE.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QGridLayout,
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QGridLayout,
     QGroupBox, QLabel, QLineEdit, QListWidget,
     QListWidgetItem, QSizePolicy, QWidget)
 
@@ -83,6 +83,11 @@ class Ui_Form(object):
 
         self.gridLayout.addWidget(self.groupBox, 0, 0, 1, 2)
 
+        self.TrashArea = QLabel(Form)
+        self.TrashArea.setObjectName(u"TrashArea")
+
+        self.gridLayout.addWidget(self.TrashArea, 0, 2, 1, 1)
+
 
         self.retranslateUi(Form)
 
@@ -104,5 +109,6 @@ class Ui_Form(object):
 
         self.label_21.setText(QCoreApplication.translate("Form", u"Category:", None))
         self.label_20.setText(QCoreApplication.translate("Form", u"Select commands to add to the new panel", None))
+        self.TrashArea.setText(QCoreApplication.translate("Form", u"Remove widget", None))
     # retranslateUi
 

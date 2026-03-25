@@ -104,6 +104,13 @@
      </layout>
     </widget>
    </item>
+   <item row="0" column="2">
+    <widget class="QLabel" name="TrashArea">
+     <property name="text">
+      <string>Remove widget</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>
