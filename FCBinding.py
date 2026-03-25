@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -52,7 +52,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -91,7 +91,7 @@ from PySide.QtWidgets import (
     QListWidgetItem,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -2203,78 +2203,82 @@ class ModernMenu(RibbonBar):
 
         # If you drag and drop a new command, you actually dragging the complete QListWidget
         if type(widget) is QListWidget:
-            for panelName, panel in currentCategory.panels().items():
-                # If the panelName is equal to the panel name on which the command is dropped, continue.
-                if panelName == self.dropPanelName:
-                    # Get the command to be added
-                    ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
-                    # If the commands is part of a dropdown, get the actual command name
-                    if len(ExtraCommand.split(", ")) > 1:
-                        print(ExtraCommand)
-                        Command = Gui.Command.get(ExtraCommand.split(", ")[0])
-                        if Command is not None:
-                            i = int(ExtraCommand.split(", ")[1])
-                            action = Command.getAction()[i]
-                            ExtraCommand = action.objectName()
-                    # Define a holder for the Menu Text
-                    MenuText = ""
-                    for CommandItem in self.List_Commands:
-                        if CommandItem[0] == ExtraCommand:
-                            MenuText = CommandItem[4]
+            # print(f"QC: {self.quickAccessToolBar().underMouse()}")
+            if self.quickAccessToolBar().underMouse() is False:
+                for panelName, panel in currentCategory.panels().items():
+                    # If the panelName is equal to the panel name on which the command is dropped, continue.
+                    if panelName == self.dropPanelName:
+                        # Get the command to be added
+                        ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
+                        # If the commands is part of a dropdown, get the actual command name
+                        if len(ExtraCommand.split(", ")) > 1:
+                            print(ExtraCommand)
+                            Command = Gui.Command.get(ExtraCommand.split(", ")[0])
+                            if Command is not None:
+                                i = int(ExtraCommand.split(", ")[1])
+                                action = Command.getAction()[i]
+                                ExtraCommand = action.objectName()
+                        # Define a holder for the Menu Text
+                        MenuText = ""
+                        for CommandItem in self.List_Commands:
+                            if CommandItem[0] == ExtraCommand:
+                                MenuText = CommandItem[4]
 
-                    # Define a holder for the Menu Text
-                    MenuText = ""
-                    for CommandItem in self.List_Commands:
-                        if CommandItem[0] == ExtraCommand:
-                            MenuText = CommandItem[4]
-                                        
-                    # Get the workbench name and the panel name                  
-                    title = panel.objectName()
-                    workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                    
-                    # Get the order list, if there isn't one, create it
-                    StandardFunctions.add_keys_nested_dict(
-                        self.workBenchDict,
-                        [
-                            "workbenches",
-                            workbenchName,
-                            "toolbars",
-                            self.dropPanelName,
-                            "order"
-                        ],
-                    )
-                    OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"]
-                    # Add the extra command to the order list
-                    OrderList.append(ExtraCommand)
-                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][title]["order"] = OrderList
-                    # Add the command to the panel in the dict
-                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "size"], endEmpty=True)
-                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "text"], endEmpty=True)
-                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "icon"], endEmpty=True)
-                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "IsExtra"], endEmpty=True)
-                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["size"] = "small"
-                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["text"] = MenuText
-                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["icon"] = ""
-                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["IsExtra"] = True
+                        # Define a holder for the Menu Text
+                        MenuText = ""
+                        for CommandItem in self.List_Commands:
+                            if CommandItem[0] == ExtraCommand:
+                                MenuText = CommandItem[4]
+                                            
+                        # Get the workbench name and the panel name                  
+                        title = panel.objectName()
+                        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                        
+                        # Get the order list, if there isn't one, create it
+                        StandardFunctions.add_keys_nested_dict(
+                            self.workBenchDict,
+                            [
+                                "workbenches",
+                                workbenchName,
+                                "toolbars",
+                                self.dropPanelName,
+                                "order"
+                            ],
+                        )
+                        OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"]
+                        # Add the extra command to the order list
+                        OrderList.append(ExtraCommand)
+                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][title]["order"] = OrderList
+                        # Add the command to the panel in the dict
+                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "size"], endEmpty=True)
+                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "text"], endEmpty=True)
+                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "icon"], endEmpty=True)
+                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "IsExtra"], endEmpty=True)
+                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["size"] = "small"
+                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["text"] = MenuText
+                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["icon"] = ""
+                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["IsExtra"] = True
 
-                    # Create a new panel
-                    workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                    newPanel = self.CreatePanel(workbenchName, self.dropPanelName, addPanel=False, dict=self.workBenchDict, SetToUpdate=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand)
-                                            
-                    # Add the panel to the list with long panels
-                    self.longPanels.append(newPanel)
-                                            
-                    # Replace the panel with the new panel
-                    self.currentCategory().replacePanel(panel, newPanel)
-                    # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-                    self.setPanelProperties(newPanel)
-                    
-                    # Update the dict of the currentCategory with the new panel
-                    self.currentCategory()._panels[self.dropPanelName] = newPanel
-                    
-                    # Close the old panel and the dragindicator
-                    panel.close()
-                    
+                        # Create a new panel
+                        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                        newPanel = self.CreatePanel(workbenchName, self.dropPanelName, addPanel=False, dict=self.workBenchDict, SetToUpdate=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand)
+                                                
+                        # Add the panel to the list with long panels
+                        self.longPanels.append(newPanel)
+                                                
+                        # Replace the panel with the new panel
+                        self.currentCategory().replacePanel(panel, newPanel)
+                        # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                        self.setPanelProperties(newPanel)
+                        
+                        # Update the dict of the currentCategory with the new panel
+                        self.currentCategory()._panels[self.dropPanelName] = newPanel
+                        
+                        # Close the old panel and the dragindicator
+                        panel.close()
+                        
+                        
+                        
                     # Enable all buttons, so you can access them with a right click
                     self.actionList = []
                     for child in mw.findChildren(QToolButton):
@@ -2286,6 +2290,102 @@ class ModernMenu(RibbonBar):
                             pass
                         child.setEnabled(True)
                     # Gui.updateGui()
+            
+            if self.quickAccessToolBar().underMouse() is True:
+                padding = 0
+                # Get the command to be added
+                commandName = widget.currentItem().data(Qt.ItemDataRole.UserRole)
+                # Define a button
+                button = QuickAccessToolButton(self.quickAccessToolBar())
+                # If it is a standard freecad button, set the command accordingly
+                if commandName.endswith("_ddb") is False and "separator" not in commandName:
+                    try:
+                        # Check if the workbench is loaded. If not, actions will be an empty list
+                        # Find the command its workbench and activate it
+                        QuickAction = Gui.Command.get(commandName).getAction()
+                        if len(QuickAction) == 0:
+                            for CommandItem in self.List_Commands:
+                                if CommandItem[0] == commandName:
+                                    Gui.activateWorkbench(CommandItem[3])
+                                    break
+                    except Exception:
+                        pass
+                    QuickAction = Gui.Command.get(commandName).getAction()
+
+                    if len(QuickAction) == 1:
+                        button.setDefaultAction(QuickAction[0])
+                        width = self.QuickAccessButtonSize
+                        height = self.QuickAccessButtonSize
+                        button.setFixedSize(width, height)
+                        # Set the stylesheet
+                        button.setStyleSheet(
+                            StyleMapping_Ribbon.ReturnStyleSheet(
+                                "toolbutton", "2px", f"{padding}px"
+                            )
+                        )
+                    elif len(QuickAction) > 1:
+                        # set the padding for a dropdown button
+                        padding = self.PaddingRight
+
+                        button.addActions(QuickAction)
+                        button.setDefaultAction(QuickAction[0])
+                        # Set the width and height
+                        width = self.QuickAccessButtonSize + padding
+                        height = self.QuickAccessButtonSize
+                        button.setFixedSize(width, height)
+                        # Set the PopupMode
+                        button.setPopupMode(
+                            QToolButton.ToolButtonPopupMode.MenuButtonPopup
+                        )
+                        # Set the stylesheet
+                        button.setStyleSheet(
+                            StyleMapping_Ribbon.ReturnStyleSheet(
+                                "toolbutton", "2px", f"{padding}px"
+                            )
+                        )
+
+                # If it is a custom dropdown, add the actions one by one.
+                if commandName.endswith("_ddb") is True and "separator" not in commandName:
+                    # set the padding for a dropdown button
+                    padding = self.PaddingRight
+                    # Get the actions and add them one by one
+                    QuickAction = self.returnCustomDropDown(commandName)
+                    for action in QuickAction:
+                        if len(action) > 0:
+                            button.addAction(action[0])
+                    # Set the default action
+                    button.setDefaultAction(button.actions()[0])
+                    # Set the width and height
+                    width = self.QuickAccessButtonSize + padding
+                    height = self.QuickAccessButtonSize
+                    button.setFixedSize(width, height)
+                    # Set the PopupMode
+                    button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+
+                    # Set the stylesheet
+                    button.setStyleSheet(
+                        StyleMapping_Ribbon.ReturnStyleSheet(
+                            "toolbutton", "2px", padding_right=f"{padding}px"
+                        )
+                    )
+                
+                button.setObjectName(commandName)
+
+                # Set the height
+                self.setQuickAccessButtonHeight(self.RibbonMinimalHeight)
+
+                button.setContentsMargins(3, 3, 3, 3)
+
+                # Add the button to the quickaccess toolbar
+                if len(button.actions()) > 0:
+                    self.addQuickAccessButton(button)
+                else:
+                    StandardFunctions.Print(
+                        f"{commandName} did not contain any actions!", "Log"
+                    )
+                
+                # Add the command to the quickaccess command list
+                self.quickAccessCommands.append(commandName)
             
             event.accept()
             return
@@ -2498,20 +2598,20 @@ class ModernMenu(RibbonBar):
                 # Set the quickaccessCommands
                 self.quickAccessCommands = OrderList
                 
-            # Delete the drag indicater
-            try:
-                QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
-                QuickAccessToolBar.removeAction(self.dragIndicator_QuickAccess_Action)
-            except Exception:
-                pass
-            
-            for child in mw.findChildren(QToolButton):
+                # Delete the drag indicater
                 try:
-                    for subAction in child.actions():
-                        subAction.setEnabled(True)
-                    child.setEnabled(True)
+                    QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
+                    QuickAccessToolBar.removeAction(self.dragIndicator_QuickAccess_Action)
                 except Exception:
                     pass
+                
+                for child in mw.findChildren(QToolButton):
+                    try:
+                        for subAction in child.actions():
+                            subAction.setEnabled(True)
+                        child.setEnabled(True)
+                    except Exception:
+                        pass
             
             event.accept()
             return
