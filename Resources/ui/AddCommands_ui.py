@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsMWmnVE.ui'
+## Form generated from reading UI file 'AddCommandsSRBZTP.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.2
 ##
@@ -85,6 +85,7 @@ class Ui_Form(object):
 
         self.TrashArea = QLabel(Form)
         self.TrashArea.setObjectName(u"TrashArea")
+        self.TrashArea.setAcceptDrops(True)
 
         self.gridLayout.addWidget(self.TrashArea, 0, 2, 1, 1)
 
