@@ -1381,7 +1381,7 @@ class ModernMenu(RibbonBar):
                                 
                             # If the panel has an overflow menu, replace it with a complete (long) panel
                             if objPanel.panelOptionButton().isVisible():
-                                newPanel = self.CreatePanel(workbenchName, objPanel.objectName(), False, self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True)                                
+                                newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)                                
                                 replacedPanel = self.currentCategory().replacePanel(objPanel, newPanel)
                                 # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
                                 self.setPanelProperties(replacedPanel)
@@ -1470,7 +1470,7 @@ class ModernMenu(RibbonBar):
                             for longPanel in self.longPanels:
                                 if longPanel.objectName() == objPanel.objectName():
                                     # Create a panel and replace the long panel with this one
-                                    newPanel = self.CreatePanel(workbenchName, objPanel.objectName(), False, self.workBenchDict)
+                                    newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=self.workBenchDict, ActivateButtons=True)
                                     # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
                                     self.setPanelProperties(newPanel)
                                     try:
@@ -1622,7 +1622,7 @@ class ModernMenu(RibbonBar):
         
         # Create a new panel
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True)
+        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
         # Add the panel to the list with long panels
         self.longPanels.append(newPanel)
         
@@ -1638,10 +1638,11 @@ class ModernMenu(RibbonBar):
         for child in mw.findChildren(QToolButton):
             try:
                 for subAction in child.actions():
-                    subAction.setEnabled(True)
-                child.setEnabled(True)
+                    subAction.setEnabled(True)                
             except Exception:
                 pass
+            child.setEnabled(True)
+        Gui.updateGui()
         
         # Close the old panel
         panel.close()
@@ -1701,7 +1702,7 @@ class ModernMenu(RibbonBar):
         
          # Create a new panel
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())        
-        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True)
+        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
         # Add the panel to the list with long panels
         self.longPanels.append(newPanel)
                 
@@ -1712,15 +1713,16 @@ class ModernMenu(RibbonBar):
 
         # Update the dict of the currentCategory with the new panel
         self.currentCategory()._panels[newPanel.objectName()] = newPanel
-        
+
         # Enable all buttons, so you can access them with a right click
         for child in mw.findChildren(QToolButton):
             try:
                 for subAction in child.actions():
-                    subAction.setEnabled(True)
-                child.setEnabled(True)
+                    subAction.setEnabled(True)                
             except Exception:
                 pass
+            child.setEnabled(True)
+        Gui.updateGui()
         
         # Close the old panel
         panel.close()
@@ -1837,7 +1839,7 @@ class ModernMenu(RibbonBar):
        
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True)
+            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
             # Add the panel to the list with long panels
             self.longPanels.append(newPanel)
 
@@ -1848,15 +1850,15 @@ class ModernMenu(RibbonBar):
             
             # Update the dict of the currentCategory with the new panel
             self.currentCategory()._panels[newPanel.objectName()] = newPanel
-        
+
             # Enable all buttons, so you can access them with a right click
             for child in mw.findChildren(QToolButton):
                 try:
                     for subAction in child.actions():
-                        subAction.setEnabled(True)
-                    child.setEnabled(True)
+                        subAction.setEnabled(True)                
                 except Exception:
                     pass
+                child.setEnabled(True)
             Gui.updateGui()
             
             # Close the old panel
@@ -1893,7 +1895,7 @@ class ModernMenu(RibbonBar):
             
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True)
+            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
             # Add the panel to the list with long panels
             self.longPanels.append(newPanel)
             
@@ -1906,10 +1908,11 @@ class ModernMenu(RibbonBar):
             for child in mw.findChildren(QToolButton):
                 try:
                     for subAction in child.actions():
-                        subAction.setEnabled(True)
-                    child.setEnabled(True)
+                        subAction.setEnabled(True)                
                 except Exception:
                     pass
+                child.setEnabled(True)
+            Gui.updateGui()
             
             # Close the old panel
             panel.close()
@@ -2048,16 +2051,16 @@ class ModernMenu(RibbonBar):
             # self.dragIndicator_QuickAccess.close()
             self.target = None
             
-            # # Enable all buttons, so you can access them with a right click
-            # self.actionList = []
-            # for child in mw.findChildren(QToolButton):
-            #     try:
-            #         if type(child.actions) is list:
-            #             for subAction in child.actions():
-            #                 subAction.setEnabled(True)                        
-            #     except Exception :
-            #         pass
-            #     child.setEnabled(True)
+            # Enable all buttons, so you can access them with a right click
+            self.actionList = []
+            for child in mw.findChildren(QToolButton):
+                try:
+                    if type(child.actions) is list:
+                        for subAction in child.actions():
+                            subAction.setEnabled(True)                        
+                except Exception :
+                    pass
+                child.setEnabled(True)
         
         return
   
@@ -2255,7 +2258,7 @@ class ModernMenu(RibbonBar):
 
                         # Create a new panel
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                        newPanel = self.CreatePanel(workbenchName, self.dropPanelName, addPanel=False, dict=self.workBenchDict, SetToUpdate=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand)
+                        newPanel = self.CreatePanel(workbenchName, self.dropPanelName, addPanel=False, dict=self.workBenchDict, SetToUpdate=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand, ActivateButtons=True)
                                                 
                         # Add the panel to the list with long panels
                         self.longPanels.append(newPanel)
@@ -2268,22 +2271,18 @@ class ModernMenu(RibbonBar):
                         # Update the dict of the currentCategory with the new panel
                         self.currentCategory()._panels[self.dropPanelName] = newPanel
                         
+                        # Enable all buttons, so you can access them with a right click
+                        for child in mw.findChildren(QToolButton):
+                            try:
+                                for subAction in child.actions():
+                                    subAction.setEnabled(True)                
+                            except Exception:
+                                pass
+                            child.setEnabled(True)
+                        Gui.updateGui()
+                        
                         # Close the old panel and the dragindicator
                         panel.close()
-                        
-                        
-                        
-                    # Enable all buttons, so you can access them with a right click
-                    self.actionList = []
-                    for child in mw.findChildren(QToolButton):
-                        try:
-                            if type(child.actions) is list:
-                                for subAction in child.actions():
-                                    subAction.setEnabled(True)                        
-                        except Exception :
-                            pass
-                        child.setEnabled(True)
-                    # Gui.updateGui()
             
             if self.quickAccessToolBar().underMouse() is True:
                 padding = 0
@@ -2536,7 +2535,7 @@ class ModernMenu(RibbonBar):
                                     
                     # Create a new panel
                     workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                    newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True)
+                    newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ActivateButtons=True)
                                             
                     # Add the panel to the list with long panels
                     self.longPanels.append(newPanel)
@@ -2600,15 +2599,7 @@ class ModernMenu(RibbonBar):
                     QuickAccessToolBar.removeAction(self.dragIndicator_QuickAccess_Action)
                 except Exception:
                     pass
-                
-                for child in mw.findChildren(QToolButton):
-                    try:
-                        for subAction in child.actions():
-                            subAction.setEnabled(True)
-                        child.setEnabled(True)
-                    except Exception:
-                        pass
-            
+
             event.accept()
             return
                          
@@ -2617,7 +2608,7 @@ class ModernMenu(RibbonBar):
             position = self.find_drop_location(event)
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            newPanel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True)
+            newPanel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True, ActivateButtons=True)
 
             # Add the new panel
             self.currentCategory().insertWidget(newPanel,position[0])
@@ -2666,15 +2657,6 @@ class ModernMenu(RibbonBar):
             
             # Close the drag indicator
             self.dragIndicator_Panels.close()
-        
-            for child in mw.findChildren(QToolButton):
-                try:
-                    for subAction in child.actions():
-                        subAction.setEnabled(True)
-                    child.setEnabled(True)
-                except Exception:
-                    pass
-        # Gui.updateGui()
                         
         event.accept()
         return
@@ -5370,6 +5352,7 @@ class ModernMenu(RibbonBar):
                     showEnableControl = False, 
                     enableSeparator = False, 
                     ExtraCommand = "",
+                    ActivateButtons = False,
                     ):
         if SetToUpdate is True:
             dict = self.ribbonStructure
@@ -6132,7 +6115,17 @@ class ModernMenu(RibbonBar):
         spacer.setMinimumSize(0, panel.height() - panel._titleWidget.height())
         panel.addWidget(spacer, rowSpan=6)
 
-        # print(panel._actionsLayout.count())
+        # Enable all buttons, so you can access them with a right click
+        if ActivateButtons is True:
+            for child in mw.findChildren(QToolButton):
+                child.setEnabled(True)
+                try:
+                    for subAction in child.actions():
+                        subAction.setEnabled(True)                
+                except Exception:
+                    pass            
+            Gui.updateGui()
+
         if panel._actionsLayout.count() > 1:            
             return panel
         else: 
@@ -6141,6 +6134,7 @@ class ModernMenu(RibbonBar):
             if Parameters.DEBUG_MODE is True:                  
                 print(f"The panel \"{panel.title()}\" did not have any buttons and is not loaded!")
             return None
+        return None
     
     def setPanelProperties(self, panel: RibbonPanel):
         # Set the panelheight. setting the ribbonheigt, cause the first tab to be shown to large
@@ -6298,7 +6292,7 @@ class ModernMenu(RibbonBar):
             except Exception:
                 pass
         
-        newPanel = self.CreatePanel(workbenchName, panelName, addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True)
+        newPanel = self.CreatePanel(workbenchName, panelName, addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
         # Add the panel to the list with long panels
         self.longPanels.append(newPanel)
                 
@@ -6310,15 +6304,15 @@ class ModernMenu(RibbonBar):
         # Update the dict of the currentCategory with the new panel
         self.currentCategory()._panels[newPanel.objectName()] = newPanel
         
-        # Enable all buttons, so you can access them with a right click
-        for child in mw.findChildren(QToolButton):
-            try:
-                for subAction in child.actions():
-                    subAction.setEnabled(True)                
-            except Exception:
-                pass
-            child.setEnabled(True)
-        Gui.updateGui()
+        # # Enable all buttons, so you can access them with a right click
+        # for child in mw.findChildren(QToolButton):
+        #     try:
+        #         for subAction in child.actions():
+        #             subAction.setEnabled(True)                
+        #     except Exception:
+        #         pass
+        #     child.setEnabled(True)
+        # Gui.updateGui()
         
         # Close the old panel
         panel.close()

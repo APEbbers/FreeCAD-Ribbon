@@ -124,6 +124,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Make sure that the dialog stays on top
         self.form.raise_()
         self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+        self.form.setFocus(Qt.FocusReason.PopupFocusReason)
 
         # Position the dialog in front of FreeCAD
         centerPoint = mw.geometry().center()
@@ -345,31 +346,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.on_SearchBar_NP_TextChanged
         )
         
-        # self.form.dragEnterEvent = lambda e: self.dragEnterEvent(e)
-        return
-    
-    # def mouseReleaseEvent(self, event):
-    #     super().mouseReleaseEvent(event)
-    #     print("released")
-    
-    # def dragEnterEvent_ListWidget(self, event, ListWidget):
-    #     if event.mimeData().hasUrls():
-    #         event.accept()
-    #     else:
-    #         super(ListWidget, self).dragEnterEvent(event)
-
-    # def dragMoveEvent_ListWidget(self, event, ListWidget):
-    #     if event.mimeData().hasUrls():
-    #         event.setDropAction(Qt.DropAction.CopyAction)
-    #         event.accept()
-    #     else:
-    #         super(ListWidget, self).dragMoveEvent(event)
-            
-    # def dragEnterEvent(self, event: QDragEnterEvent):
-    #     event.accept()
-    #     print("entered")
-    #     return
-        
+        return        
         
     def addWorkbenches(self):
         ShadowList = []  # List to add the commands and prevent duplicates
