@@ -1986,13 +1986,7 @@ class ModernMenu(RibbonBar):
     AddCommand_Icon = None
     AddCommand_Text = ""
     
-    def dragEnterEvent(self, event: QDragEnterEvent): 
-        # event.setAccepted(True)
-        # event.setDropAction(Qt.DropAction.MoveAction)
-        # event.acceptProposedAction()
-        # print(event.isAccepted(  ))
-        # print("drag entered")
-        
+    def dragEnterEvent(self, event: QDragEnterEvent):         
         if self.CustomizeEnabled is True:
             if self.dragIndicator_QuickAccess is None:
                 self.dragIndicator_QuickAccess = DragTargetIndicator(orientation="right")
@@ -2584,8 +2578,10 @@ class ModernMenu(RibbonBar):
                 for i in range(len(buttonList)):
                     buttonName = buttonList[i].objectName()
                     if widget.objectName() == buttonName:
-                        startIndex = i + 1 # plus 1, to get the correct position in the list
+                        startIndex = i -2 # plus 1, to get the correct position in the list
                         break
+                # if startIndex > len(self.quickAccessCommands):
+                #     startIndex = len(self.quickAccessCommands) - 1
                 
                 # Remove the current widget
                 self.quickAccessCommands.pop(startIndex)
@@ -6311,6 +6307,41 @@ class ModernMenu(RibbonBar):
         panel.close()
         
         return
+    
+    def RemoveButtonFromQuickAccess(self, widget: QuickAccessToolButton, pos: QPoint):
+        # Get a list of all buttons
+        buttonList = self._titleWidget._quickAccessToolBar.findChildren(QToolButton)
+        # Start with the index at -1. This way, the index is zero based
+        index = -1
+        # Go through the button list. if the passed position is withing the edges of a button,
+        # You got the right one
+        for button in buttonList:
+            index = index + 1
+            # Map the for corners of the button to global
+            pos_tl = mw.mapToGlobal(button.rect().topLeft())
+            pos_tr = button.mapToGlobal(button.rect().topRight())
+            pos_bl = button.mapToGlobal(button.rect().bottomLeft())
+            pos_br = mw.mapToGlobal(button.rect().bottomRight())
+
+            # If the position of the context menu event is within the global corners
+            # delete the button
+            if pos.x() > pos_tl.x() and pos.x() < pos_tr.x():
+                if pos.y() > pos_tl.y() and pos.y() < pos_bl.y():                    
+                    if button.objectName() == widget.objectName():
+                        button.deleteLater()
+                        break
+        
+        # Update the quickAccessCommands list
+        self.quickAccessCommands.pop(index-2)
+        
+        # Delete the drag indicater
+        try:
+            self._titleWidget._quickAccessToolBar.removeAction(self.dragAction_QuickAccess)
+            self._titleWidget._quickAccessToolBar.removeAction(self.dragIndicator_QuickAccess_Action)
+        except Exception:
+            pass
+        return
+        
     # endregion
 
     # region - Titlebar functions
@@ -6627,20 +6658,10 @@ class EventInspector(QObject):
     def __init__(self, parent):
         super(EventInspector, self).__init__(parent)
 
-    def eventFilter(self, obj, event: QEvent):
-        # # Show the mainwindow after the application is activated
-        # if event.type() == QEvent.Type.DragEnter:
-        #     print(event.isAccepted())
-        #     event.setAccepted(True)
-        # # if event.type() == QEvent.Type.DragMove:
-        # #     print(event.isAccepted())
-        # if event.type() == QEvent.Type.DragResponse:
-        #     print(event.isAccepted())
-                    
+    def eventFilter(self, obj, event: QEvent):                    
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
             mw.setWindowState(Qt.WindowState.WindowMaximized)
-            # mw.showMaximal()
             Style = mw.style()
             RibbonBar = mw.findChild(ModernMenu, "Ribbon")
             RestoreButton: QToolButton = RibbonBar.rightToolBar().findChildren(
