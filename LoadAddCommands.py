@@ -101,6 +101,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
         # # this will create a Qt widget from our ui file
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "AddCommands.ui"))
+        # Set its title
+        self.form.setWindowTitle(translate("FreeCAD Ribbon", "Add or remove buttons"))
         
         # Install an event filter to catch events from the main window and act on it.
         self.form.installEventFilter(EventInspector(self.form))
@@ -861,8 +863,6 @@ def main():
     Dialog = LoadDialog().form
     # Show the form
     Dialog.show()
-
-
 
 class EventInspector(QObject):
     dragEntered = False
