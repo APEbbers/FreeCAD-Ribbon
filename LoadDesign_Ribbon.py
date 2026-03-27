@@ -3911,7 +3911,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             try:
                 # get the name of the toolbar
                 Toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
-                # create a empty size string
+                  # create a empty size string
                 Size = ""
                 # Define empty strings for the command name and icon name
                 CommandName = ""
@@ -3932,7 +3932,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 ):
                     CommandName = self.form.CommandTable_RD.item(row, 0).data(
                         Qt.ItemDataRole.UserRole
-                    )
+                    )                    
 
                     # Get the menuname from the command list
                     for i2 in range(len(self.List_Commands)):
@@ -3941,6 +3941,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 # Get the custom menu name
                 MenuNameEntered = self.form.CommandTable_RD.item(row, 0).text()
 
+                print(CommandName)
                 # Go through the list with all available commands.
                 # If the commandText is in this list, get the command name.
                 if (
@@ -3955,19 +3956,19 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             for CommandItem in self.List_Commands:
                                 if CommandItem[0] == Commands[0][0]:
                                     IconName = CommandItem[1]
-                else:
-                    for i3 in range(len(self.List_Commands)):
-                        if MenuName == self.List_Commands[i3][2]:
-                            if len(self.List_Commands[i3][0].split(", ")) <= 1:
-                                if (
-                                    WorkBenchName == self.List_Commands[i3][3]
-                                    or self.List_Commands[i3][3] == "Global"
-                                    or self.List_Commands[i3][3] == "Standard"
-                                ):
-                                    CommandName = self.List_Commands[i3][0]
-                                    IconName = self.List_Commands[i3][1]
-                            if len(self.List_Commands[i3][0].split(", ")) > 1:
-                                CommandName = self.List_Commands[i3][0]
+                # else:
+                #     for i3 in range(len(self.List_Commands)):
+                #         # if MenuName == self.List_Commands[i3][2]:
+                #         # if len(self.List_Commands[i3][0].split(", ")) <= 1:
+                #         #     if (
+                #         #         WorkBenchName == self.List_Commands[i3][3]
+                #         #         or self.List_Commands[i3][3] == "Global"
+                #         #         or self.List_Commands[i3][3] == "Standard"
+                #         #     ):
+                #         #         CommandName = self.List_Commands[i3][0]
+                #         #         IconName = self.List_Commands[i3][1]
+                #         if len(self.List_Commands[i3][0].split(", ")) > 1:
+                #             CommandName = self.List_Commands[i3][0]
                 if CommandName == "" and "separator" not in MenuName:
                     return
 
@@ -4018,7 +4019,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         CommandName,
                     ],
                 )
-
+                
                 self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][
                     Toolbar
                 ]["order"] = Order
