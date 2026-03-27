@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -52,7 +52,7 @@ from PySide6.QtGui import (
     QScreen,
     QPen,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -91,7 +91,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -5873,8 +5873,16 @@ class ModernMenu(RibbonBar):
                             buttonSize = dict["workbenches"][
                                 workbenchName
                             ]["toolbars"][panelName]["commands"][CommandName]["size"]
+                            # If the size is empty. This button is removed from the panel
                             if buttonSize == "":
-                                buttonSize = "small"
+                                # Remove also from the ribbon structure if it is an extra (dragged) button
+                                if "IsExtra" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]:
+                                    try:
+                                        del dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]
+                                        dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]["order"].remove(CommandName)
+                                    except Exception:
+                                        pass
+                                continue
                         except KeyError:
                             pass
 
@@ -6272,14 +6280,23 @@ class ModernMenu(RibbonBar):
     
     def RemoveButtonFromPanel(self, panel: RibbonPanel = None, widget: CustomControls = None):
         button = widget.findChild(QToolButton, "CommandButton")
-        print(f" \'{button.text()}\' ({button.actions()[0].data()}) will be removed from {panel.title()}")
         
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         panelName = panel.objectName()
         command = button.defaultAction().data()
-        
+        if command is None:
+            command = button.actions()[0].objectName()
+
         orderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = ""
+        
+        # Remove also from the ribbon structure if it is an extra (dragged) button
+        if "IsExtra" in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]:
+            try:
+                del self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]
+                orderList.remove(command)
+            except Exception:
+                pass
         
         newPanel = self.CreatePanel(workbenchName, panelName, addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True)
         # Add the panel to the list with long panels

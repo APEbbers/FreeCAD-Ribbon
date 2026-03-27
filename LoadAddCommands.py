@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
-from PySide6.QtWidgets import (
+from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
+from PySide.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -39,7 +39,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     QLineEdit,
 )
-from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent
+from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent
 import sys
 import json
 
