@@ -1491,6 +1491,10 @@ class ModernMenu(RibbonBar):
                         # Restore the original panel with the overflow menu
                         panels = {} # Needed to update the panel dict of the currentCategory
                         for title, objPanel in self.currentCategory().panels().items():
+                            # If it is an new panel without a set title, remove it
+                            if objPanel.title() == "<New panel>":
+                                objPanel.close()
+                                continue
                             # Create keys if there are not existing yet for the temporary panel dict
                             StandardFunctions.add_keys_nested_dict(panels, [title])
                             
@@ -1593,7 +1597,6 @@ class ModernMenu(RibbonBar):
                             self.AddCommandsDialog.form.close()
                             self.AddCommandsDialog = None
 
-
                 if action == CustomizeCancelAct:
                     self.currentCategory().setStyleSheet(self.StyleSheet)
                     self.quickAccessToolBar().setStyleSheet(self.StyleSheet)
@@ -1614,6 +1617,11 @@ class ModernMenu(RibbonBar):
                      # Restore the original panel with the overflow menu
                     panels = {} # Needed to update the panel dict of the currentCategory
                     for title, objPanel in self.currentCategory().panels().items():
+                        # If it is an new panel without a set title, remove it
+                        if objPanel.title() == "<New panel>":
+                            objPanel.close()
+                            continue
+                        
                         # Create keys if there are not existing yet for the temporary panel dict
                         StandardFunctions.add_keys_nested_dict(panels, [title])
 
@@ -1672,7 +1680,24 @@ class ModernMenu(RibbonBar):
                     self.AddCommandsDialog = LoadAddCommands.LoadDialog()
                     # Show the form
                     self.AddCommandsDialog.form.show()
-                    
+                
+                if action == CreatePanelsAct: 
+                    panel = self.currentCategory().addPanel("<New panel>")
+                    panel.panelOptionButton().hide()
+                    self.setPanelProperties(panel)
+                    # Add a checkbox to the titlebar. Used for enabling or disabling panels. Default is hidden
+                    titleLayout: QHBoxLayout = panel._titleLayout
+                    # EnableControl = QCheckBox()
+                    EnableControl = Toggle()
+                    EnableControl.setChecked(True)                    
+                    EnableControl.setFixedWidth(32)
+                    EnableControl.setObjectName("EnablePanel")
+                    titleLayout.insertWidget(0, EnableControl)
+                    # Get the form
+                    self.AddCommandsDialog = LoadAddCommands.LoadDialog()
+                    # Show the form
+                    self.AddCommandsDialog.form.show()
+                                        
                 if action == CreateDataAct:
                     message = translate(
                         "FreeCAD Ribbon",
