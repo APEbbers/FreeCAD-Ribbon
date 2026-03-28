@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -52,7 +52,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -91,7 +91,7 @@ from PySide.QtWidgets import (
     QListWidgetItem,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -260,6 +260,7 @@ class ModernMenu(RibbonBar):
     OverlayToggled = False
     OverlayToggled_Left = False
     OverlayToggled_Right = False
+    OverlayToggled_Top = False
     OverlayToggled_Bottom = False
     TransparancyToggled = False
 
@@ -3249,29 +3250,19 @@ class ModernMenu(RibbonBar):
             else:
                 BeforeAction = self.rightToolBar().actions()[1]
             self.rightToolBar().insertWidget(BeforeAction, spacer)
-
-        # add an overlay menu if Ribbon's overlay is enabled
-        if self.OverlayMenu is not None:
-            OverlayMenu = QToolButton()
-            OverlayMenu.setIcon(QIcon(os.path.join(pathIcons, "Draft_Layer.svg")))
-            OverlayMenu.setToolTip(
+        
+        # Add an overlay toggle button if overlay is enabled
+        if Parameters.USE_OVERLAY is True:
+            OverlayButton = QToolButton()
+            OverlayButton.setIcon(QIcon(os.path.join(pathIcons, "Draft_Layer.svg")))
+            OverlayButton.setToolTip(
                 translate("FreeCAD Ribbon", "Overlay functions") + "..."
             )
-            OverlayMenu.setMenu(self.OverlayMenu)
-            OverlayMenu.setFixedSize(
-                self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize
+            OverlayButton.setFixedSize(
+                self.RightToolBarButtonSize, self.RightToolBarButtonSize
             )
-            OverlayMenu.setStyleSheet(
-                StyleMapping_Ribbon.ReturnStyleSheet(
-                    control="toolbutton", padding_right="12px"
-                )
-            )
-            OverlayMenu.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
-            Font = OverlayMenu.font()
-            Font.setPixelSize(Parameters.FONTSIZE_MENUS)
-            OverlayMenu.setFont(Font)
-            # add the settingsmenu to the right toolbar
-            self.rightToolBar().addWidget(OverlayMenu)
+            OverlayButton.clicked.connect(self.ToggleOverlay)
+            self.rightToolBar().addWidget(OverlayButton)
 
         # add a settings button with menu
         SettingsMenu = QToolButton()
@@ -3521,6 +3512,7 @@ class ModernMenu(RibbonBar):
             RightToolbarWidth = SearchBarWidth + 2 * (self.RightToolBarButtonSize + 16)
         self.rightToolBar().setMinimumWidth(RightToolbarWidth)
         self.setRightToolBarHeight(self.RibbonMinimalHeight)
+        
         # Set the size policy
         self.rightToolBar().setSizePolicy(
             QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding
@@ -3654,227 +3646,6 @@ class ModernMenu(RibbonBar):
                 for subAction in AccessoriesMenu.actions():
                     subMenus.append(subAction)
                 self.AccessoriesMenu.addActions(subMenus)
-
-        # Create the overlay menu when the native overlay function is not used
-        if (
-            Parameters.USE_FC_OVERLAY is False
-            and Parameters.USE_OVERLAY is True
-        ):
-            OverlayMenu = QMenu(translate("FreeCAD Ribbon", "Overlay") + "...", self)
-            OverlayMenu.setToolTipsVisible(True)
-
-            # Toggle overlay for all -----------------------------------------------------
-            OverlayButton_All = OverlayMenu.addAction(
-                translate("FreeCAD Ribbon", "Toggle overlay for all")
-            )
-            OverlayButton_All.setToolTip(
-                translate(
-                    "FreeCAD Ribbon",
-                    "Click to toggle the overlay function for all panels",
-                )
-            )
-            OverlayButton_All.triggered.connect(self.ToggleOverlay_All)
-            # Get the shortcut from the original command
-            ShortcutKey = "F4"
-            try:
-                CustomShortCuts = App.ParamGet(
-                    "User parameter:BaseApp/Preferences/Shortcut"
-                )
-                if "Std_DockOverlayAll" in CustomShortCuts.GetStrings():
-                    ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayAll")
-            except Exception as e:
-                if Parameters.DEBUG_MODE is True:
-                    print(e.with_traceback())
-                ShortcutKey = "F4"
-            OverlayButton_All.setShortcut(ShortcutKey)
-
-            # Toggle transparancy for all -----------------------------------------------------
-            TransparancyButton_All = OverlayMenu.addAction(
-                translate("FreeCAD Ribbon", "Toggle transparancy")
-            )
-            TransparancyButton_All.setToolTip(
-                translate(
-                    "FreeCAD Ribbon",
-                    "Toggle transparancy for all panels when overlay is enabled",
-                )
-            )
-            TransparancyButton_All.triggered.connect(self.CustomTransparancy)
-            # Get the shortcut from the original command
-            ShortcutKey = "Shift+F4"
-            try:
-                CustomShortCuts = App.ParamGet(
-                    "User parameter:BaseApp/Preferences/Shortcut"
-                )
-                if "Std_DockOverlayTransparentAll" in CustomShortCuts.GetStrings():
-                    ShortcutKey = CustomShortCuts.GetString(
-                        "Std_DockOverlayTransparentAll"
-                    )
-            except Exception as e:
-                if Parameters.DEBUG_MODE is True:
-                    print(e.with_traceback())
-                ShortcutKey = "Shift+F4"
-            TransparancyButton_All.setShortcut(ShortcutKey)
-
-            OverlayMenu.addSeparator()
-            # Toggle overlay for active panel-----------------------------------------------------
-            OverlayButton_Active = OverlayMenu.addAction(
-                translate("FreeCAD Ribbon", "Toggle overlay")
-            )
-            OverlayButton_Active.setToolTip(
-                translate(
-                    "FreeCAD Ribbon",
-                    "Click to toggle the overlay function for the active panel",
-                )
-            )
-            OverlayButton_Active.triggered.connect(self.CustomOverlay_Focus)
-            # Get the shortcut from the original command
-            ShortcutKey = "F3"
-            try:
-                CustomShortCuts = App.ParamGet(
-                    "User parameter:BaseApp/Preferences/Shortcut"
-                )
-                if "Std_DockOverlayToggle" in CustomShortCuts.GetStrings():
-                    ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayToggle")
-            except Exception as e:
-                if Parameters.DEBUG_MODE is True:
-                    print(e.with_traceback())
-                ShortcutKey = "F3"
-            OverlayButton_Active.setShortcut(ShortcutKey)
-
-            # Toggle transparancy for active panel-----------------------------------------------------
-            TransparancyButton = OverlayMenu.addAction(
-                translate("FreeCAD Ribbon", "Toggle transparant mode")
-            )
-            TransparancyButton.setToolTip(
-                translate(
-                    "FreeCAD Ribbon",
-                    "Toggle transparancy for the active panel when overlay is enabled",
-                )
-            )
-            TransparancyButton.triggered.connect(self.CustomTransparancy_Focus)
-            # Get the shortcut from the original command
-            ShortcutKey = "Shift+F3"
-            try:
-                CustomShortCuts = App.ParamGet(
-                    "User parameter:BaseApp/Preferences/Shortcut"
-                )
-                if "Std_DockOverlayToggleTransparent" in CustomShortCuts.GetStrings():
-                    ShortcutKey = CustomShortCuts.GetString(
-                        "Std_DockOverlayToggleTransparent"
-                    )
-            except Exception as e:
-                if Parameters.DEBUG_MODE is True:
-                    print(e.with_traceback())
-                ShortcutKey = "Shift+F3"
-            TransparancyButton.setShortcut(ShortcutKey)
-
-            OverlayMenu.addSeparator()
-            # Toggle mouse bypass-----------------------------------------------------
-            ToggleMouseByPass = OverlayMenu.addAction(
-                translate("FreeCAD Ribbon", "Bypass mouse events")
-            )
-            ToggleMouseByPass.setToolTip(
-                translate(
-                    "FreeCAD Ribbon", "Bypass mouse events in docked overlay windows"
-                )
-            )
-            ToggleMouseByPass.triggered.connect(self.ToggleMouseByPass)
-            # Get the shortcut from the original command
-            ShortcutKey = "T,T"
-            try:
-                CustomShortCuts = App.ParamGet(
-                    "User parameter:BaseApp/Preferences/Shortcut"
-                )
-                if "Std_DockOverlayMouseTransparent" in CustomShortCuts.GetStrings():
-                    ShortcutKey = CustomShortCuts.GetString(
-                        "Std_DockOverlayMouseTransparent"
-                    )
-            except Exception as e:
-                if Parameters.DEBUG_MODE is True:
-                    print(e.with_traceback())
-                ShortcutKey = "T,T"
-            ToggleMouseByPass.setShortcut(ShortcutKey)
-
-            OverlayMenu.addSeparator()
-            # Toggle overlay for left panels-----------------------------------------------------
-            OverlayButton_Left = OverlayMenu.addAction(
-                translate("FreeCAD Ribbon", "Toggle left")
-            )
-            OverlayButton_Left.setToolTip(
-                translate(
-                    "FreeCAD Ribbon",
-                    "Click to toggle the overlay function for the active panel",
-                )
-            )
-            OverlayButton_Left.triggered.connect(self.ToggleOverlay_Left)
-            # Get the shortcut from the original command
-            ShortcutKey = "Ctrl+left"
-            try:
-                CustomShortCuts = App.ParamGet(
-                    "User parameter:BaseApp/Preferences/Shortcut"
-                )
-                if "Std_DockOverlayToggleLeft" in CustomShortCuts.GetStrings():
-                    ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayToggleLeft")
-            except Exception as e:
-                if Parameters.DEBUG_MODE is True:
-                    print(e.with_traceback())
-                ShortcutKey = "Ctrl+left"
-            OverlayButton_Left.setShortcut(ShortcutKey)
-            # Toggle overlay for right panels-----------------------------------------------------
-            OverlayButton_Right = OverlayMenu.addAction(
-                translate("FreeCAD Ribbon", "Toggle right")
-            )
-            OverlayButton_Right.setToolTip(
-                translate(
-                    "FreeCAD Ribbon",
-                    "Click to toggle the overlay function for the active panel",
-                )
-            )
-            OverlayButton_Right.triggered.connect(self.ToggleOverlay_Right)
-            # Get the shortcut from the original command
-            ShortcutKey = "Ctrl+right"
-            try:
-                CustomShortCuts = App.ParamGet(
-                    "User parameter:BaseApp/Preferences/Shortcut"
-                )
-                if "Std_DockOverlayToggleRight" in CustomShortCuts.GetStrings():
-                    ShortcutKey = CustomShortCuts.GetString(
-                        "Std_DockOverlayToggleRight"
-                    )
-            except Exception as e:
-                if Parameters.DEBUG_MODE is True:
-                    print(e.with_traceback())
-                ShortcutKey = "Ctrl+right"
-            OverlayButton_Right.setShortcut(ShortcutKey)
-            # Toggle overlay for Bottom panels-----------------------------------------------------
-            OverlayButton_Bottom = OverlayMenu.addAction(
-                translate("FreeCAD Ribbon", "Toggle bottom")
-            )
-            OverlayButton_Bottom.setToolTip(
-                translate(
-                    "FreeCAD Ribbon",
-                    "Click to toggle the overlay function for the active panel",
-                )
-            )
-            OverlayButton_Bottom.triggered.connect(self.ToggleOverlay_Bottom)
-            # Get the shortcut from the original command
-            ShortcutKey = "Ctrl+down"
-            try:
-                CustomShortCuts = App.ParamGet(
-                    "User parameter:BaseApp/Preferences/Shortcut"
-                )
-                if "Std_DockOverlayToggleBottom" in CustomShortCuts.GetStrings():
-                    ShortcutKey = CustomShortCuts.GetString(
-                        "Std_DockOverlayToggleBottom"
-                    )
-            except Exception as e:
-                if Parameters.DEBUG_MODE is True:
-                    print(e.with_traceback())
-                ShortcutKey = "Ctrl+down"
-            OverlayButton_Bottom.setShortcut(ShortcutKey)
-
-            # Store the overlay menu
-            self.OverlayMenu = OverlayMenu
 
         # Create a ribbon menu
         RibbonMenu = QMenu(
@@ -4270,7 +4041,8 @@ class ModernMenu(RibbonBar):
         
         # Add a pinbutton to the current tab in the right bottom corner
         layout: QGridLayout = self.currentCategory()._mainLayout
-        if Parameters.USE_FC_OVERLAY is False:            
+        # if Parameters.USE_FC_OVERLAY is False:            
+        if Parameters.USE_OVERLAY is False:            
             btn = QToolButton()
             # btn.setIcon(self.pinButton.icon())
             btn.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
@@ -4286,8 +4058,9 @@ class ModernMenu(RibbonBar):
             # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
             self.pinButtonList.append(btn)
         # If freecads overlay functions are enabled, add a spacer instead. 
-        # This prevents the scroll buttons from beeing placed at the bottom
-        if Parameters.USE_FC_OVERLAY is True:   
+        # This prevents the scroll buttons from being placed at the bottom
+        # if Parameters.USE_FC_OVERLAY is True:   
+        if Parameters.USE_OVERLAY is True:   
             spacer = QWidget()
             spacer.setDisabled(True)
             layout.addWidget(spacer, 2,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
@@ -4893,307 +4666,44 @@ class ModernMenu(RibbonBar):
             pass
         return
 
-    def ToggleOverlay_All(self):
-        try:
-            self.CustomOverlay("")
-        except Exception:
-            pass
-        return
-
-    def ToggleOverlay_Left(self):
-        try:
-            self.CustomOverlay("left")
-        except Exception:
-            pass
-        return
-
-    def ToggleOverlay_Right(self):
-        try:
-            self.CustomOverlay("right")
-        except Exception:
-            pass
-        return
-
-    def ToggleOverlay_Bottom(self):
-        try:
-            self.CustomOverlay("bottom")
-        except Exception:
-            pass
-        return
-
-    def ToggleMouseByPass(self):
-        if self.isLoaded is True:
-            try:
-                Gui.runCommand("Std_DockOverlayMouseTransparent")
-            except Exception:
-                pass
-            return
-
-    def CustomOverlay(self, side=""):
+    def ToggleOverlay(self):
         # Toggle the overlay
-        State = None
-        if side == "left":
-            State = self.OverlayToggled_Left
-        if side == "right":
-            State = self.OverlayToggled_Left
-        if side == "bottom":
-            State = self.OverlayToggled_Left
-        if side == "":
-            State = self.OverlayToggled
-
-        Enable = True
-        if State is True:
-            Enable = False
-
-        # Get the different overlay areas
-        OverlayParam_Left = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft"
-        )
-        OverlayParam_Right = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayRight"
-        )
+        State = not self.OverlayToggled_Top
+                
+        # Get the parameter group
         OverlayParam_Top = App.ParamGet(
             "User parameter:BaseApp/MainWindow/DockWindows/OverlayTop"
         )
-        OverlayParam_Bottom = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom"
-        )
-
-        # If overlay is enabled, go here
-        PanelsLeft = []
-        PanelsRight = []
-        PanelsBottom = []
-        PanelsTop = []
-
-        if Enable is True:
-            # Get all the dockwidgets
-            DockWidgets = mw.findChildren(QDockWidget)
-            for DockWidget in DockWidgets:
-                # If the dockwidget is not the ribbon, continue
-                if DockWidget.objectName() != "Ribbon" and DockWidget.isVisible():
-                    # Get the location of the dockwidget
-                    Area = mw.dockWidgetArea(DockWidget)
-                    if Area == Qt.DockWidgetArea.LeftDockWidgetArea:
-                        PanelsLeft.append(DockWidget.objectName())
-                    if Area == Qt.DockWidgetArea.RightDockWidgetArea:
-                        PanelsRight.append(DockWidget.objectName())
-                    if Area == Qt.DockWidgetArea.TopDockWidgetArea:
-                        PanelsTop.append(DockWidget.objectName())
-                    if Area == Qt.DockWidgetArea.BottomDockWidgetArea:
-                        PanelsBottom.append(DockWidget.objectName())
-
-            if side == "left" or side == "":
-                EntryLeft = ""
-                for panel in PanelsLeft:
-                    EntryLeft = EntryLeft + "," + panel
-                # Set the parameter
-                OverlayParam_Left.SetString("Widgets", EntryLeft)
-                # Set the overlay state to be toggled
-                self.OverlayToggled_Left = True
-
-            if side == "right" or side == "":
-                # Define the parameter value for the overlay on the right
-                EntryRight = ""
-                for panel in PanelsRight:
-                    EntryRight = EntryRight + "," + panel
-                # Set the parameter
-                OverlayParam_Right.SetString("Widgets", EntryRight)
-                # Set the overlay state to be toggled
-                self.OverlayToggled_Right = True
-
-            if side == "bottom" or side == "":
-                # Define the parameter value for the overlay on the right
-                EntryBottom = ""
-                for panel in PanelsBottom:
-                    EntryBottom = EntryBottom + "," + panel
-                # Set the parameter
-                OverlayParam_Bottom.SetString("Widgets", EntryBottom)
-                # Set the overlay state to be toggled
-                self.OverlayToggled_Bottom = True
-
-            if side == "":
-                # Define the parameter value for the overlay on the right
-                EntryTop = ""
-                for panel in PanelsTop:
-                    EntryTop = EntryTop + "," + panel
-                # Set the parameter
-                OverlayParam_Top.SetString("Widgets", EntryTop)
-                # Set the overlay state to be toggled
-                self.OverlayToggled = True
-
-        if Enable is False:
-            # Set the parameters to empty
-            if side == "left" or side == "":
-                OverlayParam_Left.SetString("Widgets", "")
-                self.OverlayToggled_Left = False
-            if side == "Right" or side == "":
-                OverlayParam_Right.SetString("Widgets", "")
-                self.OverlayToggled_Right = False
-            if side == "Bottom" or side == "":
-                OverlayParam_Bottom.SetString("Widgets", "")
-                self.OverlayToggled_Bottom = False
-
-        return Enable
-
-    def CustomOverlay_Focus(self):
-        OverlayParam_Left = None
-        OverlayParam_Right = None
-        OverlayParam_Bottom = None
-        # Get the different overlay areas
-        OverlayParam_Left = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft"
-        )
-        OverlayParam_Right = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayRight"
-        )
-        # OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
-        OverlayParam_Bottom = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom"
-        )
-
-        # Ge the focused dockwidget
-        FocusWidget = mw.focusWidget().parent().objectName()
-        if FocusWidget == "Ribbon":
-            return
-        if isinstance(mw.focusWidget(), QTreeWidget):
-            FocusWidget = "Tree view"
-        position = ""
-        try:
-            DockWidget_Focus = mw.findChild(QDockWidget, FocusWidget)
-            if DockWidget_Focus is not None:
-                Area = mw.dockWidgetArea(DockWidget_Focus)
-                if Area == Qt.DockWidgetArea.LeftDockWidgetArea:
-                    position = "left"
-                if Area == Qt.DockWidgetArea.RightDockWidgetArea:
-                    position = "right"
-                if Area == Qt.DockWidgetArea.TopDockWidgetArea:
-                    position = "top"
-                if Area == Qt.DockWidgetArea.BottomDockWidgetArea:
-                    position = "bottom"
-        except Exception:
-            pass
-
-        if position == "left":
-            LeftPanels = OverlayParam_Left.GetString("Widgets")
-            OverlayParam_Left.SetString("Widgets", f"{LeftPanels},{FocusWidget}")
-            return
-        if position == "right":
-            RightPanels = OverlayParam_Right.GetString("Widgets")
-            OverlayParam_Right.SetString("Widgets", f"{RightPanels},{FocusWidget}")
-            return
-        if position == "bottom":
-            BottomPanels = OverlayParam_Bottom.GetString("Widgets")
-            OverlayParam_Bottom.SetString("Widgets", f"{BottomPanels},{FocusWidget}")
-            return
-        if position == "":
-            LeftPanels = OverlayParam_Left.GetString("Widgets")
-            if FocusWidget in LeftPanels:
-                LeftPanels = OverlayParam_Left.GetString("Widgets")
-                LeftPanels = LeftPanels.replace(f"{FocusWidget}", "").replace(",,", ",")
-                OverlayParam_Left.SetString("Widgets", f"{LeftPanels}")
-                return
-            RightPanels = OverlayParam_Right.GetString("Widgets")
-            if FocusWidget in RightPanels:
-                RightPanels = OverlayParam_Left.GetString("Widgets")
-                RightPanels = RightPanels.replace(f"{FocusWidget}", "").replace(
-                    ",,", ","
-                )
-                OverlayParam_Right.SetString("Widgets", f"{RightPanels}")
-                return
-            BottomPanels = OverlayParam_Bottom.GetString("Widgets")
-            if FocusWidget in BottomPanels:
-                BottomPanels = OverlayParam_Bottom.GetString("Widgets")
-                BottomPanels = BottomPanels.replace(f"{FocusWidget}", "").replace(
-                    ",,", ","
-                )
-                OverlayParam_Bottom.SetString("Widgets", f"{BottomPanels}")
-                return
-        return
-
-    def CustomTransparancy(self):
-        OverlayParam_Left = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft"
-        )
-        OverlayParam_Right = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayRight"
-        )
-        # OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
-        OverlayParam_Bottom = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom"
-        )
-
-        Enable = None
-        if OverlayParam_Left.GetBool("Transparent") is False:
-            Enable = True
-        if OverlayParam_Left.GetBool("Transparent") is True:
-            Enable = False
-
-        OverlayParam_Left.SetBool("Transparent", Enable)
-        OverlayParam_Right.SetBool("Transparent", Enable)
-        # OverlayParam_Top.SetBool("Transparent", Enable)
-        OverlayParam_Bottom.SetBool("Transparent", Enable)
-
-        self.TransparancyToggled = True
-
-        return self.TransparancyToggled
-
-    def CustomTransparancy_Focus(self):
-        OverlayParam_Left = None
-        OverlayParam_Right = None
-        OverlayParam_Bottom = None
-        # Get the different overlay areas
-        OverlayParam_Left = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft"
-        )
-        OverlayParam_Right = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayRight"
-        )
-        # OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
-        OverlayParam_Bottom = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom"
-        )
-
-        # Ge the focused dockwidget
-        FocusWidget = mw.focusWidget().parent().objectName()
-        if FocusWidget == "Ribbon":
-            return
-        if isinstance(mw.focusWidget(), QTreeWidget):
-            FocusWidget = "Tree view"
-        position = ""
-        try:
-            DockWidget_Focus = mw.findChild(QDockWidget, FocusWidget)
-            if DockWidget_Focus is not None:
-                Area = mw.dockWidgetArea(DockWidget_Focus)
-                if (
-                    Area == Qt.DockWidgetArea.LeftDockWidgetArea
-                    or Area == Qt.DockWidgetArea.RightDockWidgetArea
-                    or Area == Qt.DockWidgetArea.TopDockWidgetArea
-                    or Area == Qt.DockWidgetArea.BottomDockWidgetArea
-                ):
-                    return
-        except Exception:
-            pass
-
-        if position == "":
-            LeftPanels = OverlayParam_Left.GetString("Widgets")
-            if FocusWidget in LeftPanels:
-                OverlayParam_Left.SetBool(
-                    "Transparent", not OverlayParam_Left.GetBool("Transparent")
-                )
-                return
-            RightPanels = OverlayParam_Right.GetString("Widgets")
-            if FocusWidget in RightPanels:
-                OverlayParam_Right.SetBool(
-                    "Transparent", not OverlayParam_Right.GetBool("Transparent")
-                )
-                return
-            BottomPanels = OverlayParam_Bottom.GetString("Widgets")
-            if FocusWidget in BottomPanels:
-                OverlayParam_Bottom.SetBool(
-                    "Transparent", not OverlayParam_Bottom.GetBool("Transparent")
-                )
-                return
-        return
+        # Get the parameter string "Widgets"
+        WidgetsList: list = OverlayParam_Top.GetString("Widgets").split(",")
+        #
+        if State is False:            
+            if len(WidgetsList) <= 1:
+                OverlayParam_Top.SetString("Widgets", "Ribbon")
+                self.OverlayToggled_Top = State
+            if len(WidgetsList) > 1:
+                if "Ribbon" in WidgetsList:
+                    WidgetsList.remove("Ribbon")
+                    self.OverlayToggled_Top = State
+            return True
+            
+        if State is True: 
+            if len(WidgetsList) > 1:
+                if "Ribbon" not in WidgetsList:
+                    WidgetsList.append("Ribbon")
+                    return True
+                newString = ""
+                for item in WidgetsList:
+                    newString = newString + "," + item
+                if newString.startswith(","):
+                    newString = newString[1:]
+                if newString.endswith(","):
+                    newString = newString[:1]
+                OverlayParam_Top.SetString("Widgets",newString)
+                App.saveParameter()
+            self.OverlayToggled_Top = State
+            return True
+        return False
 
     def returnCustomDropDown(self, CommandName):
         actionList = []
