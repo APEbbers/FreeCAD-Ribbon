@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingspIpmoW.ui'
+## Form generated from reading UI file 'SettingsRLHnZv.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.10.2
+## Created by: Qt User Interface Compiler version 6.11.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
+from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
     QDoubleSpinBox, QFrame, QGridLayout, QGroupBox,
     QLabel, QPushButton, QScrollArea, QSizePolicy,
     QSlider, QSpacerItem, QSpinBox, QTabWidget,
@@ -1342,7 +1342,7 @@ class Ui_Settings(object):
         self.FCOverlayEnabled.toggled.connect(self.label_26.setEnabled)
         self.FCOverlayEnabled.toggled.connect(self.UseButtonBackGround.setEnabled)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(Settings)
@@ -1422,7 +1422,7 @@ class Ui_Settings(object):
         self.label_9.setText(QCoreApplication.translate("Settings", u"Set the background color for the application button:", None))
         self.BorderTransparant.setText(QCoreApplication.translate("Settings", u"Set border invisible for ribbon buttons", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("Settings", u"Colors and icons", None))
-        self.groupBox_11.setTitle(QCoreApplication.translate("Settings", u"Standard panels preference", None))
+        self.groupBox_11.setTitle(QCoreApplication.translate("Settings", u"Standard panels preferences", None))
         self.label_27.setText(QCoreApplication.translate("Settings", u"Select preferred standard view panel: ", None))
         self.PreferedViewPanel.setItemText(0, QCoreApplication.translate("Settings", u"Individual views - Native", None))
         self.PreferedViewPanel.setItemText(1, QCoreApplication.translate("Settings", u"Views - Native", None))
@@ -1430,14 +1430,14 @@ class Ui_Settings(object):
         self.PreferedViewPanel.setItemText(3, QCoreApplication.translate("Settings", u"None", None))
 
         self.EnableToolsPanel.setText(QCoreApplication.translate("Settings", u"Use standard Tools panel", None))
-        self.EnableOverlay.setTitle(QCoreApplication.translate("Settings", u"Enable overlay", None))
+        self.EnableOverlay.setTitle(QCoreApplication.translate("Settings", u"Enable overlay function", None))
 #if QT_CONFIG(tooltip)
         self.FCOverlayEnabled.setToolTip(QCoreApplication.translate("Settings", u"Use the overlay function from FreeCAD.\n"
 "Uncheck this when there are issues with the overlay function and the FreeCAD Ribbon.", None))
 #endif // QT_CONFIG(tooltip)
-        self.FCOverlayEnabled.setText(QCoreApplication.translate("Settings", u"Use FreeCAD's overlay function.", None))
+        self.FCOverlayEnabled.setText(QCoreApplication.translate("Settings", u"Set the overlay enabled by default", None))
         self.UseButtonBackGround.setText(QCoreApplication.translate("Settings", u"Use background on buttons", None))
-        self.label_26.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">The FreeCAD overlay function can give issues. Use at your own risk. Few functions are disabled when using the FreeCAD overlay function.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">When there are issues, place a file </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; \">&quot;OVERLAY_DISABLED&quot; </span><span style=\" font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; \">in the folder of the add-on. (No extension) This will restore the ribbon and its own overlay function.</span></p></body></html>", None))
+        self.label_26.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-weight:700; font-style:italic;\">Warning:</span></p><p><span style=\" font-size:8pt; font-style:italic;\">When overlay is enabled by default, the ribbon is hidden until you open or create a document. Use &quot;ctrl+N&quot; (Linux, Windows) or &quot;meta+N&quot; (macOs) to create a new document.</span></p><p><br/></p></body></html>", None))
         self.groupBox_15.setTitle(QCoreApplication.translate("Settings", u"Advanced size settings", None))
         self.label_43.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">Extra settings that might be usefull if there are issues with your display and FreeCAD. Normally, it should not be needed to change these. </span></p><p><span style=\" font-size:8pt; font-style:italic;\">The settings might not work on all systems!</span></p></body></html>", None))
         self.label_40.setText(QCoreApplication.translate("Settings", u"Extra offset for the panel height", None))
@@ -1447,7 +1447,7 @@ class Ui_Settings(object):
         self.label_37.setText(QCoreApplication.translate("Settings", u"Extra offset for the ribbon height", None))
         self.label_42.setText(QCoreApplication.translate("Settings", u"Set the spacing between buttons", None))
         self.label_44.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-style:italic;\">Linked to icon sizes</span></p></body></html>", None))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("Settings", u"Miscellaneous", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("Settings", u"Advanced", None))
         self.Cancel.setText(QCoreApplication.translate("Settings", u"Cancel", None))
 #if QT_CONFIG(shortcut)
         self.Cancel.setShortcut(QCoreApplication.translate("Settings", u"Esc", None))

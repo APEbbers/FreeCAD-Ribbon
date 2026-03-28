@@ -76,7 +76,7 @@
             <string notr="true"/>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>3</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideRight</enum>
@@ -2227,13 +2227,13 @@
            </widget>
            <widget class="QWidget" name="tab_3">
             <attribute name="title">
-             <string>Miscellaneous</string>
+             <string>Advanced</string>
             </attribute>
             <layout class="QGridLayout" name="gridLayout_34">
              <item row="0" column="0">
               <widget class="QGroupBox" name="groupBox_11">
                <property name="title">
-                <string>Standard panels preference</string>
+                <string>Standard panels preferences</string>
                </property>
                <layout class="QGridLayout" name="gridLayout_29">
                 <item row="0" column="1">
@@ -2316,7 +2316,7 @@
                 </sizepolicy>
                </property>
                <property name="title">
-                <string>Enable overlay</string>
+                <string>Enable overlay function</string>
                </property>
                <property name="checkable">
                 <bool>true</bool>
@@ -2331,7 +2331,7 @@
 Uncheck this when there are issues with the overlay function and the FreeCAD Ribbon.</string>
                     </property>
                     <property name="text">
-                     <string>Use FreeCAD's overlay function.</string>
+                     <string>Set the overlay enabled by default</string>
                     </property>
                     <property name="checked">
                      <bool>false</bool>
@@ -2385,7 +2385,7 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
                      </size>
                     </property>
                     <property name="text">
-                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;The FreeCAD overlay function can give issues. Use at your own risk. Few functions are disabled when using the FreeCAD overlay function.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;When there are issues, place a file &lt;/span&gt;&lt;span style=&quot; font-family:'Consolas','Courier New','monospace'; font-size:8pt; &quot;&gt;&amp;quot;OVERLAY_DISABLED&amp;quot; &lt;/span&gt;&lt;span style=&quot; font-family:'Consolas','Courier New','monospace'; font-size:8pt; font-style:italic; &quot;&gt;in the folder of the add-on. (No extension) This will restore the ribbon and its own overlay function.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;&gt;Warning:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;When overlay is enabled by default, the ribbon is hidden until you open or create a document. Use &amp;quot;ctrl+N&amp;quot; (Linux, Windows) or &amp;quot;meta+N&amp;quot; (macOs) to create a new document.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
