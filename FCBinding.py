@@ -275,6 +275,7 @@ class ModernMenu(RibbonBar):
     DeveloperVersion = ""
 
     # Define a boolan to detect if an menu is entered.
+    # Define a boolan to detect if an menu is entered.
     # used to keep the ribbon unfolded, when clicking on a dropdown menu
     MenuEntered = False
 
@@ -311,6 +312,9 @@ class ModernMenu(RibbonBar):
     
     # Create a list to store the pin buttons off each category
     pinButtonList = []
+    
+    # Create a list to store the overlay buttons off each category
+    overlayButtonList = []
     
     # Create a dict to store the button states when entering the customization enviroment
     ButtonState = {}
@@ -749,11 +753,24 @@ class ModernMenu(RibbonBar):
         # Set these settings and connections at init
         # Set the autohide behavior of the ribbon
         preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
-        if preferences.GetBool("ActivateOverlay") is True:
+        if preferences.GetBool("ActivateOverlay") is True or Parameters.USE_OVERLAY is True:
             Parameters.AUTOHIDE_RIBBON = False
         self.setAutoHideRibbon(Parameters.AUTOHIDE_RIBBON)
         
-        if Parameters.USE_FC_OVERLAY is True:
+        if Parameters.USE_OVERLAY is False:
+            Parameters.USE_FC_OVERLAY = False
+            self.OverlayToggled_Top = False
+            # self.ToggleOverlay()
+            # Get the parameter group
+            OverlayParam_Top = App.ParamGet(
+                "User parameter:BaseApp/MainWindow/DockWindows/OverlayTop"
+            )
+            # Create a new string without "Ribbon"       
+            newString = OverlayParam_Top.GetString("Widgets").replace("Ribbon,", "")
+            # Set the new string in parameters
+            OverlayParam_Top.SetString("Widgets",newString)
+        
+        if Parameters.USE_OVERLAY is True and Parameters.USE_FC_OVERLAY is True:
             self.OverlayToggled_Top = True
             self.ToggleOverlay()
 
@@ -996,7 +1013,6 @@ class ModernMenu(RibbonBar):
             if Parameters.DEBUG_MODE is True:
                 print(e.with_traceback(e.__traceback__))
             pass
-        
         return
 
     # region - Ribbon event fuctions
@@ -3254,42 +3270,21 @@ class ModernMenu(RibbonBar):
             else:
                 BeforeAction = self.rightToolBar().actions()[1]
             self.rightToolBar().insertWidget(BeforeAction, spacer)
-
-        # # add an overlay menu if Ribbon's overlay is enabled
-        # if self.OverlayMenu is not None:
-        #     OverlayMenu = QToolButton()
-        #     OverlayMenu.setIcon(QIcon(os.path.join(pathIcons, "Draft_Layer.svg")))
-        #     OverlayMenu.setToolTip(
-        #         translate("FreeCAD Ribbon", "Overlay functions") + "..."
-        #     )
-        #     OverlayMenu.setMenu(self.OverlayMenu)
-        #     OverlayMenu.setFixedSize(
-        #         self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize
-        #     )
-        #     OverlayMenu.setStyleSheet(
-        #         StyleMapping_Ribbon.ReturnStyleSheet(
-        #             control="toolbutton", padding_right="12px"
-        #         )
-        #     )
-        #     OverlayMenu.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
-        #     Font = OverlayMenu.font()
-        #     Font.setPixelSize(Parameters.FONTSIZE_MENUS)
-        #     OverlayMenu.setFont(Font)
-        #     # add the settingsmenu to the right toolbar
-        #     self.rightToolBar().addWidget(OverlayMenu)
         
         # Add an overlay toggle button if overlay is enabled
         if Parameters.USE_OVERLAY is True:
             OverlayButton = QToolButton()
-            OverlayButton.setIcon(QIcon(os.path.join(pathIcons, "Draft_Layer.svg")))
+            # OverlayButton.setIcon(QIcon(os.path.join(pathIcons, "Draft_Layer.svg")))
+            OverlayButton.setIcon(mw.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
             OverlayButton.setToolTip(
-                translate("FreeCAD Ribbon", "Overlay functions") + "..."
+                translate("FreeCAD Ribbon", "Toggle overlay ")
             )
             OverlayButton.setFixedSize(
                 self.RightToolBarButtonSize, self.RightToolBarButtonSize
             )
             OverlayButton.clicked.connect(self.ToggleOverlay)
-            self.rightToolBar().addWidget(OverlayButton)
+            # is now set to replace the pin button
+            # self.rightToolBar().addWidget(OverlayButton)
 
         # add a settings button with menu
         SettingsMenu = QToolButton()
@@ -3673,227 +3668,6 @@ class ModernMenu(RibbonBar):
                 for subAction in AccessoriesMenu.actions():
                     subMenus.append(subAction)
                 self.AccessoriesMenu.addActions(subMenus)
-
-        # # Create the overlay menu when the native overlay function is not used
-        # if (
-        #     Parameters.USE_FC_OVERLAY is False
-        #     and Parameters.USE_OVERLAY is True
-        # ):
-        #     OverlayMenu = QMenu(translate("FreeCAD Ribbon", "Overlay") + "...", self)
-        #     OverlayMenu.setToolTipsVisible(True)
-
-        #     # Toggle overlay for all -----------------------------------------------------
-        #     OverlayButton_All = OverlayMenu.addAction(
-        #         translate("FreeCAD Ribbon", "Toggle overlay for all")
-        #     )
-        #     OverlayButton_All.setToolTip(
-        #         translate(
-        #             "FreeCAD Ribbon",
-        #             "Click to toggle the overlay function for all panels",
-        #         )
-        #     )
-        #     OverlayButton_All.triggered.connect(self.ToggleOverlay_All)
-        #     # Get the shortcut from the original command
-        #     ShortcutKey = "F4"
-        #     try:
-        #         CustomShortCuts = App.ParamGet(
-        #             "User parameter:BaseApp/Preferences/Shortcut"
-        #         )
-        #         if "Std_DockOverlayAll" in CustomShortCuts.GetStrings():
-        #             ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayAll")
-        #     except Exception as e:
-        #         if Parameters.DEBUG_MODE is True:
-        #             print(e.with_traceback())
-        #         ShortcutKey = "F4"
-        #     OverlayButton_All.setShortcut(ShortcutKey)
-
-        #     # Toggle transparancy for all -----------------------------------------------------
-        #     TransparancyButton_All = OverlayMenu.addAction(
-        #         translate("FreeCAD Ribbon", "Toggle transparancy")
-        #     )
-        #     TransparancyButton_All.setToolTip(
-        #         translate(
-        #             "FreeCAD Ribbon",
-        #             "Toggle transparancy for all panels when overlay is enabled",
-        #         )
-        #     )
-        #     TransparancyButton_All.triggered.connect(self.CustomTransparancy)
-        #     # Get the shortcut from the original command
-        #     ShortcutKey = "Shift+F4"
-        #     try:
-        #         CustomShortCuts = App.ParamGet(
-        #             "User parameter:BaseApp/Preferences/Shortcut"
-        #         )
-        #         if "Std_DockOverlayTransparentAll" in CustomShortCuts.GetStrings():
-        #             ShortcutKey = CustomShortCuts.GetString(
-        #                 "Std_DockOverlayTransparentAll"
-        #             )
-        #     except Exception as e:
-        #         if Parameters.DEBUG_MODE is True:
-        #             print(e.with_traceback())
-        #         ShortcutKey = "Shift+F4"
-        #     TransparancyButton_All.setShortcut(ShortcutKey)
-
-        #     OverlayMenu.addSeparator()
-        #     # Toggle overlay for active panel-----------------------------------------------------
-        #     OverlayButton_Active = OverlayMenu.addAction(
-        #         translate("FreeCAD Ribbon", "Toggle overlay")
-        #     )
-        #     OverlayButton_Active.setToolTip(
-        #         translate(
-        #             "FreeCAD Ribbon",
-        #             "Click to toggle the overlay function for the active panel",
-        #         )
-        #     )
-        #     OverlayButton_Active.triggered.connect(self.CustomOverlay_Focus)
-        #     # Get the shortcut from the original command
-        #     ShortcutKey = "F3"
-        #     try:
-        #         CustomShortCuts = App.ParamGet(
-        #             "User parameter:BaseApp/Preferences/Shortcut"
-        #         )
-        #         if "Std_DockOverlayToggle" in CustomShortCuts.GetStrings():
-        #             ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayToggle")
-        #     except Exception as e:
-        #         if Parameters.DEBUG_MODE is True:
-        #             print(e.with_traceback())
-        #         ShortcutKey = "F3"
-        #     OverlayButton_Active.setShortcut(ShortcutKey)
-
-        #     # Toggle transparancy for active panel-----------------------------------------------------
-        #     TransparancyButton = OverlayMenu.addAction(
-        #         translate("FreeCAD Ribbon", "Toggle transparant mode")
-        #     )
-        #     TransparancyButton.setToolTip(
-        #         translate(
-        #             "FreeCAD Ribbon",
-        #             "Toggle transparancy for the active panel when overlay is enabled",
-        #         )
-        #     )
-        #     TransparancyButton.triggered.connect(self.CustomTransparancy_Focus)
-        #     # Get the shortcut from the original command
-        #     ShortcutKey = "Shift+F3"
-        #     try:
-        #         CustomShortCuts = App.ParamGet(
-        #             "User parameter:BaseApp/Preferences/Shortcut"
-        #         )
-        #         if "Std_DockOverlayToggleTransparent" in CustomShortCuts.GetStrings():
-        #             ShortcutKey = CustomShortCuts.GetString(
-        #                 "Std_DockOverlayToggleTransparent"
-        #             )
-        #     except Exception as e:
-        #         if Parameters.DEBUG_MODE is True:
-        #             print(e.with_traceback())
-        #         ShortcutKey = "Shift+F3"
-        #     TransparancyButton.setShortcut(ShortcutKey)
-
-        #     OverlayMenu.addSeparator()
-        #     # Toggle mouse bypass-----------------------------------------------------
-        #     ToggleMouseByPass = OverlayMenu.addAction(
-        #         translate("FreeCAD Ribbon", "Bypass mouse events")
-        #     )
-        #     ToggleMouseByPass.setToolTip(
-        #         translate(
-        #             "FreeCAD Ribbon", "Bypass mouse events in docked overlay windows"
-        #         )
-        #     )
-        #     ToggleMouseByPass.triggered.connect(self.ToggleMouseByPass)
-        #     # Get the shortcut from the original command
-        #     ShortcutKey = "T,T"
-        #     try:
-        #         CustomShortCuts = App.ParamGet(
-        #             "User parameter:BaseApp/Preferences/Shortcut"
-        #         )
-        #         if "Std_DockOverlayMouseTransparent" in CustomShortCuts.GetStrings():
-        #             ShortcutKey = CustomShortCuts.GetString(
-        #                 "Std_DockOverlayMouseTransparent"
-        #             )
-        #     except Exception as e:
-        #         if Parameters.DEBUG_MODE is True:
-        #             print(e.with_traceback())
-        #         ShortcutKey = "T,T"
-        #     ToggleMouseByPass.setShortcut(ShortcutKey)
-
-        #     OverlayMenu.addSeparator()
-        #     # Toggle overlay for left panels-----------------------------------------------------
-        #     OverlayButton_Left = OverlayMenu.addAction(
-        #         translate("FreeCAD Ribbon", "Toggle left")
-        #     )
-        #     OverlayButton_Left.setToolTip(
-        #         translate(
-        #             "FreeCAD Ribbon",
-        #             "Click to toggle the overlay function for the active panel",
-        #         )
-        #     )
-        #     OverlayButton_Left.triggered.connect(self.ToggleOverlay_Left)
-        #     # Get the shortcut from the original command
-        #     ShortcutKey = "Ctrl+left"
-        #     try:
-        #         CustomShortCuts = App.ParamGet(
-        #             "User parameter:BaseApp/Preferences/Shortcut"
-        #         )
-        #         if "Std_DockOverlayToggleLeft" in CustomShortCuts.GetStrings():
-        #             ShortcutKey = CustomShortCuts.GetString("Std_DockOverlayToggleLeft")
-        #     except Exception as e:
-        #         if Parameters.DEBUG_MODE is True:
-        #             print(e.with_traceback())
-        #         ShortcutKey = "Ctrl+left"
-        #     OverlayButton_Left.setShortcut(ShortcutKey)
-        #     # Toggle overlay for right panels-----------------------------------------------------
-        #     OverlayButton_Right = OverlayMenu.addAction(
-        #         translate("FreeCAD Ribbon", "Toggle right")
-        #     )
-        #     OverlayButton_Right.setToolTip(
-        #         translate(
-        #             "FreeCAD Ribbon",
-        #             "Click to toggle the overlay function for the active panel",
-        #         )
-        #     )
-        #     OverlayButton_Right.triggered.connect(self.ToggleOverlay_Right)
-        #     # Get the shortcut from the original command
-        #     ShortcutKey = "Ctrl+right"
-        #     try:
-        #         CustomShortCuts = App.ParamGet(
-        #             "User parameter:BaseApp/Preferences/Shortcut"
-        #         )
-        #         if "Std_DockOverlayToggleRight" in CustomShortCuts.GetStrings():
-        #             ShortcutKey = CustomShortCuts.GetString(
-        #                 "Std_DockOverlayToggleRight"
-        #             )
-        #     except Exception as e:
-        #         if Parameters.DEBUG_MODE is True:
-        #             print(e.with_traceback())
-        #         ShortcutKey = "Ctrl+right"
-        #     OverlayButton_Right.setShortcut(ShortcutKey)
-        #     # Toggle overlay for Bottom panels-----------------------------------------------------
-        #     OverlayButton_Bottom = OverlayMenu.addAction(
-        #         translate("FreeCAD Ribbon", "Toggle bottom")
-        #     )
-        #     OverlayButton_Bottom.setToolTip(
-        #         translate(
-        #             "FreeCAD Ribbon",
-        #             "Click to toggle the overlay function for the active panel",
-        #         )
-        #     )
-        #     OverlayButton_Bottom.triggered.connect(self.ToggleOverlay_Bottom)
-        #     # Get the shortcut from the original command
-        #     ShortcutKey = "Ctrl+down"
-        #     try:
-        #         CustomShortCuts = App.ParamGet(
-        #             "User parameter:BaseApp/Preferences/Shortcut"
-        #         )
-        #         if "Std_DockOverlayToggleBottom" in CustomShortCuts.GetStrings():
-        #             ShortcutKey = CustomShortCuts.GetString(
-        #                 "Std_DockOverlayToggleBottom"
-        #             )
-        #     except Exception as e:
-        #         if Parameters.DEBUG_MODE is True:
-        #             print(e.with_traceback())
-        #         ShortcutKey = "Ctrl+down"
-        #     OverlayButton_Bottom.setShortcut(ShortcutKey)
-
-        #     # Store the overlay menu
-        #     self.OverlayMenu = OverlayMenu
 
         # Create a ribbon menu
         RibbonMenu = QMenu(
@@ -4291,27 +4065,34 @@ class ModernMenu(RibbonBar):
         layout: QGridLayout = self.currentCategory()._mainLayout
         # if Parameters.USE_FC_OVERLAY is False:            
         if Parameters.USE_OVERLAY is False:            
-            btn = QToolButton()
+            pinButton = QToolButton()
             # btn.setIcon(self.pinButton.icon())
-            btn.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
-            btn.setObjectName("pinButton")
-            btn.setCheckable(True)
-            btn.setChecked(not Parameters.AUTOHIDE_RIBBON)
+            pinButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
+            pinButton.setObjectName("pinButton")
+            pinButton.setCheckable(True)
+            pinButton.setChecked(not Parameters.AUTOHIDE_RIBBON)
             if Parameters.AUTOHIDE_RIBBON is False:
-                btn.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
+                pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
             else:
-                btn.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
-            btn.clicked.connect(lambda: self.on_Pin_clicked(btn))
-            layout.addWidget(btn, 2,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+                pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
+            pinButton.clicked.connect(lambda: self.on_Pin_clicked(pinButton))
+            layout.addWidget(pinButton, 2,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
             # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
-            self.pinButtonList.append(btn)
+            self.pinButtonList.append(pinButton)
         # If freecads overlay functions are enabled, add a spacer instead. 
         # This prevents the scroll buttons from being placed at the bottom
-        # if Parameters.USE_FC_OVERLAY is True:   
         if Parameters.USE_OVERLAY is True:   
-            spacer = QWidget()
-            spacer.setDisabled(True)
-            layout.addWidget(spacer, 2,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+            overlayButton = QToolButton()
+            overlayButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
+            overlayButton.setIcon(mw.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
+            overlayButton.setToolTip(
+                translate("FreeCAD Ribbon", "Toggle overlay ")
+            )
+            overlayButton.setObjectName("overlayButton")
+            overlayButton.clicked.connect(self.ToggleOverlay)
+            layout.addWidget(overlayButton, 2,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+            # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
+            self.overlayButtonList.append(overlayButton)
         return
 
     # endregion
@@ -4957,42 +4738,32 @@ class ModernMenu(RibbonBar):
                 pass
             return
 
-    def ToggleOverlay(self):
-        # Toggle the overlay
-        State = not self.OverlayToggled_Top
-                
+    def ToggleOverlay(self,):                
         # Get the parameter group
         OverlayParam_Top = App.ParamGet(
             "User parameter:BaseApp/MainWindow/DockWindows/OverlayTop"
         )
-        # Get the parameter string "Widgets"
-        WidgetsList: list = OverlayParam_Top.GetString("Widgets").split(",")
-        #
-        if State is False:            
-            if len(WidgetsList) <= 1:
-                OverlayParam_Top.SetString("Widgets", "Ribbon")
-                self.OverlayToggled_Top = State
-            if len(WidgetsList) > 1:
-                if "Ribbon" in WidgetsList:
-                    WidgetsList.remove("Ribbon")
-                    self.OverlayToggled_Top = State
+
+        if self.OverlayToggled_Top is False:
+            # Create a new string without "Ribbon"       
+            newString = OverlayParam_Top.GetString("Widgets").replace("Ribbon,", "")
+            # Set the new string in parameters
+            OverlayParam_Top.SetString("Widgets",newString)
+            App.saveParameter()
+            self.OverlayToggled_Top = True
             return True
             
-        if State is True: 
-            if len(WidgetsList) > 1:
-                if "Ribbon" not in WidgetsList:
-                    WidgetsList.append("Ribbon")
-                    return True
-                newString = ""
-                for item in WidgetsList:
-                    newString = newString + "," + item
-                if newString.startswith(","):
-                    newString = newString[1:]
-                if newString.endswith(","):
-                    newString = newString[:1]
-                OverlayParam_Top.SetString("Widgets",newString)
-                App.saveParameter()
-            self.OverlayToggled_Top = State
+        if self.OverlayToggled_Top is True: 
+            # Get the parameter string "Widgets"
+            WidgetsList: list = OverlayParam_Top.GetString("Widgets").split(",")
+            if "Ribbon" not in WidgetsList:
+                WidgetsList.append("Ribbon")
+            newString = ""
+            for item in WidgetsList:
+                newString = newString + "," + item
+            OverlayParam_Top.SetString("Widgets",newString)
+            App.saveParameter()
+            self.OverlayToggled_Top = False
             return True
         return False
 
@@ -6751,7 +6522,15 @@ class EventInspector(QObject):
     def __init__(self, parent):
         super(EventInspector, self).__init__(parent)
 
-    def eventFilter(self, obj, event: QEvent):                    
+    def eventFilter(self, obj, event: QEvent):  
+        
+        # This makes sure that the ribbon is enabled, when overlay is switched of  
+        mw = Gui.getMainWindow()
+        if Parameters.USE_FC_OVERLAY is False:
+            DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
+            if DockWidget_Ribbon is not None and DockWidget_Ribbon.isVisible() is False:
+                DockWidget_Ribbon.show()
+                                    
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
             mw.setWindowState(Qt.WindowState.WindowMaximized)
@@ -6766,6 +6545,7 @@ class EventInspector(QObject):
                 )
             except Exception:
                 pass
+                                            
             return QObject.eventFilter(self, obj, event)
         # This is a workaround for windows
         # If the window stat changes and the titlebar is hidden, catch the event
@@ -6862,6 +6642,7 @@ class run:
             layout.setContentsMargins(0, 0, 0, 0)
             # update the layout
             ribbon.setLayout(layout)
+            ribbon.setObjectName("Ribbon")
             ribbonDock = QDockWidget()
             # set the name of the object and the window title
             ribbonDock.setObjectName("Ribbon")
@@ -6869,15 +6650,16 @@ class run:
             # Set the titlebar to an empty widget (effectively hide it)
             ribbonDock.setTitleBarWidget(QWidget())
             ribbonDock.setContentsMargins(0, 0, 0, 0)
-            # attach the ribbon to the dockwidget
             ribbonDock.setWidget(ribbon)
-            ribbonDock.setEnabled(True)
-            ribbonDock.setVisible(True)
-            ribbonDock.show()
-            
+                        
             # # make sure that there are no negative valules
             if Parameters.AUTOHIDE_RIBBON is True:
                 ribbonDock.setMaximumHeight(ribbon.RibbonMinimalHeight)
             # Add the dockwidget to the main window
             mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
+
+            # attach the ribbon to the dockwidget            
+            ribbonDock.setEnabled(True)
+            ribbonDock.setVisible(True)
+            ribbonDock.show()
             return
