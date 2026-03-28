@@ -2322,7 +2322,7 @@
                 </size>
                </property>
                <property name="title">
-                <string>Enable overlay function</string>
+                <string>Enable Ribbon overlay function</string>
                </property>
                <property name="checkable">
                 <bool>true</bool>
@@ -2376,7 +2376,7 @@ Uncheck this when there are issues with the overlay function and the FreeCAD Rib
                    </size>
                   </property>
                   <property name="text">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;&gt;Warning:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;When overlay is enabled by default, the ribbon is hidden until you open or create a document. Use &amp;quot;ctrl+N&amp;quot; (Linux, Windows) or &amp;quot;meta+N&amp;quot; (macOs) to create a new document.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;&gt;Warning:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;When overlay is enabled by default, the ribbon is hidden until you open or create a document. Use &amp;quot;ctrl+N&amp;quot; (Linux, Windows) or &amp;quot;meta+N&amp;quot; (macOs) to create a new document.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;&gt;Note:&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;This only allowes to trigger FreeCAD's overlay function for the RibbonUI. Other Overlay settings are set under FreeCAD preferences&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>

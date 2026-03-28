@@ -1008,23 +1008,27 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         return
 
     def on_OverlayEnabled_clicked(self):
-        preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
+        preferences_DockWindows = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
         if self.form.EnableOverlay.isChecked() is True:
             self.ValuesToUpdate["UseOverlay"] = True
-            preferences.SetBool("ActivateOverlay", True)
+            preferences_DockWindows.SetBool("ActivateOverlay", True)
+                                    
+            # Set a few overlay preferences. Users can change them afterwards
+            preferences_View = App.ParamGet("User parameter:BaseApp/Preferences/View")
+            preferences_View.SetBool("DockOverlayHideTabBar", False)
+            preferences_View.SetBool("DockOverlayAutoView", True)
+            preferences_View.SetBool("DockOverlayActivateOnHover", True)
+            preferences_View.SetBool("DockOverlayHintTabBar", True)
+            
         if self.form.EnableOverlay.isChecked() is False:
             self.ValuesToUpdate["UseOverlay"] = False
             # Disable FreeCAD's overlay as well
-            preferences.SetBool("ActivateOverlay", False)
+            preferences_DockWindows.SetBool("ActivateOverlay", False)
         self.settingChanged = True
 
     def on_FCOverlayEnabled_clicked(self):
         if self.form.FCOverlayEnabled.isChecked() is True:
             self.ValuesToUpdate["UseFCOverlay"] = True
-
-            # # Enable FreeCAD's overlay
-            # preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
-            # preferences.SetBool("ActivateOverlay", True)
 
             # Disable the texts because they are not compatible with FreeCAD's overlay
             self.form.ShowText_Small.setDisabled(True)
