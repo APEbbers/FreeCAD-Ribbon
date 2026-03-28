@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -52,7 +52,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -91,7 +91,7 @@ from PySide.QtWidgets import (
     QListWidgetItem,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -309,6 +309,9 @@ class ModernMenu(RibbonBar):
     
     # Create a list for panels that have a option button which have to be restored when exitiing the customisation enviroment
     longPanels = []
+    
+    # Define a placeholder for the AddButton Dialog
+    AddCommandsDialog = None
     
     # Create a list for new dragged buttons
     newButtons = []
@@ -1584,6 +1587,10 @@ class ModernMenu(RibbonBar):
                             App.closeDocument("Temporary")
                         except Exception:
                             pass
+                        
+                        # Close the AddCommands dialog
+                        self.AddCommandsDialog.close()
+                        self.AddCommandsDialog = None
 
                 if action == CustomizeCancelAct:
                     self.currentCategory().setStyleSheet(self.StyleSheet)
@@ -1649,16 +1656,19 @@ class ModernMenu(RibbonBar):
                                 separator.setEnabled(False)
                                 # Set the separator to its original width
                                 separator.setFixedWidth(6)
+                                
+                    # Close the AddCommands dialog
+                    self.AddCommandsDialog.form.close()
+                    self.AddCommandsDialog = None
 
                 if action == CombinePanelsAct:
                     LoadCombinePanel_Ribbon.main()
                     
                 if action == AddCommandAct:
                     # Get the form
-                    Dialog = LoadAddCommands.LoadDialog()
+                    self.AddCommandsDialog = LoadAddCommands.LoadDialog()
                     # Show the form
-                    Dialog.form.show()
-                    # Dialog.buttonRemove.connect(self.RemoveButtonFromPanel())
+                    self.AddCommandsDialog.form.show()
                     
                 if action == CreateDataAct:
                     message = translate(
@@ -2102,7 +2112,8 @@ class ModernMenu(RibbonBar):
                     
                     if position.x() >= xMin and position.x() < xMax:
                         if position.y() >= yMin and position.y() < yMax:
-                            self.dropPanelName = panelName                                                
+                            self.dropPanelName = panelName
+                            # print(position)                                                
                 
             # Store the position were the drag is started
             self.StartPositionDrag = [event.pos(), widget.rect()]
@@ -2300,7 +2311,6 @@ class ModernMenu(RibbonBar):
                         ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
                         # If the commands is part of a dropdown, get the actual command name
                         if len(ExtraCommand.split(", ")) > 1:
-                            print(ExtraCommand)
                             Command = Gui.Command.get(ExtraCommand.split(", ")[0])
                             if Command is not None:
                                 i = int(ExtraCommand.split(", ")[1])
@@ -6593,6 +6603,13 @@ class EventInspector(QObject):
         super(EventInspector, self).__init__(parent)
 
     def eventFilter(self, obj, event: QEvent):  
+        
+        # mw: QMainWindow = Gui.getMainWindow()
+        # RibbonBar = mw.findChild(ModernMenu, "Ribbon")
+        # if RibbonBar is not None:
+        #     if RibbonBar.AddCommandsDialog != None:
+        #         # RibbonBar.AddCommandsDialog.form.show()
+        #         RibbonBar.AddCommandsDialog.form.setFocus()
         
         # This makes sure that the ribbon is enabled, when overlay is switched of  
         mw = Gui.getMainWindow()
