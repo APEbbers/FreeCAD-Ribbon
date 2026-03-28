@@ -310,14 +310,14 @@ class ModernMenu(RibbonBar):
     # Create a list for panels that have a option button which have to be restored when exitiing the customisation enviroment
     longPanels = []
     
+    # Create a list for new dragged buttons
+    newButtons = []
+    
     # Create a list to store the pin buttons off each category
     pinButtonList = []
     
     # Create a list to store the overlay buttons off each category
     overlayButtonList = []
-    
-    # Create a dict to store the button states when entering the customization enviroment
-    ButtonState = {}
     
     # Store the number of rows for each wb
     MaxRowsPerWB = {}
@@ -1302,11 +1302,16 @@ class ModernMenu(RibbonBar):
                 if self.CustomizeEnabled is True:
                     title = translate("FreeCAD Ribbon", "Save and exit customize...")
                 CustomizeStartAct = self.contextMenu.addAction(title)
+                # Add a cancel button
+                CustomizeCancelAct = QAction()
+                if self.CustomizeEnabled is True:
+                    CustomizeCancelAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Cancel"))
                                 
                 # Create the action
                 action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
                 
                 # Perfom the action depending on which button is clicked
+                OriginalPanel = []
                 if action == CustomizeStartAct:
                     if self.CustomizeEnabled is False:
                         # Set a stylesheet to indicate that you are in the customize enviroment
@@ -1579,6 +1584,71 @@ class ModernMenu(RibbonBar):
                             App.closeDocument("Temporary")
                         except Exception:
                             pass
+
+                if action == CustomizeCancelAct:
+                    self.currentCategory().setStyleSheet(self.StyleSheet)
+                    self.quickAccessToolBar().setStyleSheet(self.StyleSheet)
+                    self.CustomizeEnabled = False
+                    # self.setRibbonHeight(self.RibbonHeight)
+                    self.currentCategory().setMinimumHeight(
+                        self.RibbonHeight - self.RibbonMinimalHeight - 3
+                    )
+                    self.currentCategory().setMaximumHeight(
+                        self.RibbonHeight - self.RibbonMinimalHeight - 3
+                    )
+                    
+                    # read ribbon structure from JSON file
+                    Dict = {}
+                    with open(Parameters.RIBBON_STRUCTURE_JSON, "r") as file:
+                        Dict.update(json.load(file))
+ 
+                     # Restore the original panel with the overflow menu
+                    panels = {} # Needed to update the panel dict of the currentCategory
+                    for title, objPanel in self.currentCategory().panels().items():
+                        # Create keys if there are not existing yet for the temporary panel dict
+                        StandardFunctions.add_keys_nested_dict(panels, [title])
+
+                        # Create a panel and replace the long panel with this one
+                        newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=Dict)
+                        # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                        self.setPanelProperties(newPanel)
+                        try:
+                            self.currentCategory().replacePanel(objPanel, newPanel)
+                        except Exception:
+                            pass
+                        # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                        self.setPanelProperties(newPanel)
+                        # Close the old panel
+                        objPanel.close()
+                        # Update the temporary panel dict
+                        panels[title] = newPanel   
+                                                                                                        
+                    # Update the panel dict of the current catergory with the temporary panel dict
+                    self.currentCategory()._panels = panels
+                    
+                    # Restore the ribbonstructure
+                    self.ribbonStructure = Dict
+                    
+                    # Set the buttonstate back as it was
+                    for title, objPanel in self.currentCategory().panels().items():
+                        # Get the panel name and the gridlayout
+                        panelName = objPanel.objectName()
+                        gridLayout: QGridLayout = objPanel._actionsLayout
+                        for n in range(gridLayout.count()):
+                            control = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                            if control is not None:
+                                try:
+                                    ButtonState = self.ButtonState[panelName][control.actions().data()]
+                                    control.actions().setEnabled(ButtonState)
+                                except Exception:
+                                    pass
+                            
+                            separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
+                            if separator is not None:
+                                # Disable the separators to avoid highlighting when hovering
+                                separator.setEnabled(False)
+                                # Set the separator to its original width
+                                separator.setFixedWidth(6)
 
                 if action == CombinePanelsAct:
                     LoadCombinePanel_Ribbon.main()
