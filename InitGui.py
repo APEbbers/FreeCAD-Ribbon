@@ -30,9 +30,9 @@ import Standard_Functions_Ribbon as StandardFunctions
 import shutil
 import sys
 import platform
-from PySide6.QtCore import Qt, QTimer, QSize, QSettings
-from PySide6.QtGui import QGuiApplication
-from PySide6.QtWidgets import (
+from PySide.QtCore import Qt, QTimer, QSize, QSettings
+from PySide.QtGui import QGuiApplication
+from PySide.QtWidgets import (
     QMainWindow,
     QLabel,
     QSizePolicy,

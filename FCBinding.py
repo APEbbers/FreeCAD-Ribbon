@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -52,7 +52,7 @@ from PySide6.QtGui import (
     QScreen,
     QPen,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -91,7 +91,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -774,7 +774,7 @@ class ModernMenu(RibbonBar):
             OverlayParam_Top.SetString("Widgets",newString)
         
         if Parameters.USE_OVERLAY is True and Parameters.USE_FC_OVERLAY is True:
-            self.OverlayToggled_Top = True
+            self.OverlayToggled_Top = False
             self.ToggleOverlay()
 
         # Remove the collapseble button
@@ -1589,8 +1589,10 @@ class ModernMenu(RibbonBar):
                             pass
                         
                         # Close the AddCommands dialog
-                        self.AddCommandsDialog.close()
-                        self.AddCommandsDialog = None
+                        if self.AddCommandsDialog is not None:
+                            self.AddCommandsDialog.form.close()
+                            self.AddCommandsDialog = None
+
 
                 if action == CustomizeCancelAct:
                     self.currentCategory().setStyleSheet(self.StyleSheet)
@@ -1658,8 +1660,9 @@ class ModernMenu(RibbonBar):
                                 separator.setFixedWidth(6)
                                 
                     # Close the AddCommands dialog
-                    self.AddCommandsDialog.form.close()
-                    self.AddCommandsDialog = None
+                    if self.AddCommandsDialog is not None:
+                        self.AddCommandsDialog.form.close()
+                        self.AddCommandsDialog = None
 
                 if action == CombinePanelsAct:
                     LoadCombinePanel_Ribbon.main()
@@ -6602,18 +6605,10 @@ class EventInspector(QObject):
     def __init__(self, parent):
         super(EventInspector, self).__init__(parent)
 
-    def eventFilter(self, obj, event: QEvent):  
-        
-        # mw: QMainWindow = Gui.getMainWindow()
-        # RibbonBar = mw.findChild(ModernMenu, "Ribbon")
-        # if RibbonBar is not None:
-        #     if RibbonBar.AddCommandsDialog != None:
-        #         # RibbonBar.AddCommandsDialog.form.show()
-        #         RibbonBar.AddCommandsDialog.form.setFocus()
-        
+    def eventFilter(self, obj, event: QEvent):
         # This makes sure that the ribbon is enabled, when overlay is switched of  
-        mw = Gui.getMainWindow()
         if Parameters.USE_FC_OVERLAY is False:
+            mw = Gui.getMainWindow()
             DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
             if DockWidget_Ribbon is not None and DockWidget_Ribbon.isVisible() is False:
                 DockWidget_Ribbon.show()
@@ -6622,7 +6617,7 @@ class EventInspector(QObject):
             mw = Gui.getMainWindow()
             mw.setWindowState(Qt.WindowState.WindowMaximized)
             Style = mw.style()
-            RibbonBar = mw.findChild(ModernMenu, "Ribbon")
+            RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
             RestoreButton: QToolButton = RibbonBar.rightToolBar().findChildren(
                 QToolButton, "RestoreButton"
             )[0]
@@ -6643,7 +6638,7 @@ class EventInspector(QObject):
             # Get the main window, its style, the ribbon and the restore button
             mw = Gui.getMainWindow()
             Style = mw.style()
-            RibbonBar = mw.findChild(ModernMenu, "Ribbon")
+            RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
             RestoreButton: QToolButton = RibbonBar.rightToolBar().findChildren(
                 QToolButton, "RestoreButton"
             )[0]
