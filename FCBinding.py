@@ -752,6 +752,10 @@ class ModernMenu(RibbonBar):
         if preferences.GetBool("ActivateOverlay") is True:
             Parameters.AUTOHIDE_RIBBON = False
         self.setAutoHideRibbon(Parameters.AUTOHIDE_RIBBON)
+        
+        if Parameters.USE_FC_OVERLAY is True:
+            self.OverlayToggled_Top = True
+            self.ToggleOverlay()
 
         # Remove the collapseble button
         RightToolbar = self.rightToolBar()
@@ -6869,6 +6873,7 @@ class run:
             ribbonDock.setWidget(ribbon)
             ribbonDock.setEnabled(True)
             ribbonDock.setVisible(True)
+            ribbonDock.show()
             
             # # make sure that there are no negative valules
             if Parameters.AUTOHIDE_RIBBON is True:
