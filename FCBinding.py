@@ -1492,11 +1492,26 @@ class ModernMenu(RibbonBar):
                         # Restore the original panel with the overflow menu
                         panels = {} # Needed to update the panel dict of the currentCategory
                         for title, objPanel in self.currentCategory().panels().items():
-                            # # If it is an new panel without a set title, remove it
-                            # if objPanel.title() == "<New panel>":
-                            #     objPanel.close()
-                            #     continue
-                                                               
+                            # If it is an new panel without a set title, remove it
+                            if objPanel.title() == "<New panel>" or objPanel.title() == "":
+                                objPanel.close()
+                                continue
+                            
+                            # Add any new panel to the dict. It will be loaded with the next start
+                            if objPanel.objectName().endswith("_newPanel"):
+                                if objPanel.objectName() in self.workBenchDict["newPanels"][workbenchName]:
+                                    commandList = []
+                                    for widget in objPanel.widgets():
+                                        if type(widget) is CustomControls:
+                                            command: str = widget.findChild(QToolButton, "CommandButton").defaultAction().data()
+                                            if command.startswith("Std_") is False:
+                                                for item in self.List_Commands:
+                                                    if item[0] == command and item[3] == workbenchName:
+                                                        commandList.append([command, workbenchName])
+                                            if command.startswith("Std_"):
+                                                commandList.append([command, "Standard"])
+                                    self.workBenchDict["newPanels"][workbenchName][objPanel.objectName()] = commandList
+                                                                                           
                             # Create keys if there are not existing yet for the temporary panel dict
                             StandardFunctions.add_keys_nested_dict(panels, [title])
                             
@@ -1580,6 +1595,7 @@ class ModernMenu(RibbonBar):
                         
                         # Save the quickcommands order to the ribbon structure
                         self.ribbonStructure["quickAccessCommands"] = self.quickAccessCommands
+                        self.ribbonStructure["newPanels"] = self.workBenchDict["newPanels"]
                         
                         # Writing to ribbonStructure.json
                         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
@@ -5782,8 +5798,10 @@ class ModernMenu(RibbonBar):
         if title == "":
             return
         else: 
-            panel = self.currentCategory().addPanel(title)
+            
+            panel = self.currentCategory().addPanel(f"{title}_newPanel")
             panel.panelOptionButton().hide()
+            panel.setTitle(title)
             panel.setObjectName(f"{title}_newPanel")
             self.setPanelProperties(panel)
             # Add a checkbox to the titlebar. Used for enabling or disabling panels. Default is hidden
@@ -5794,6 +5812,11 @@ class ModernMenu(RibbonBar):
             EnableControl.setFixedWidth(32)
             EnableControl.setObjectName("EnablePanel")
             titleLayout.insertWidget(0, EnableControl)
+            
+            # Add the new panel to the dict
+            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+            StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName, panel.objectName()])
+            self.workBenchDict["newPanels"][workbenchName][panel.objectName()] = []
         
         return
     
