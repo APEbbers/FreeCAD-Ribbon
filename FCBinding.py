@@ -1095,7 +1095,7 @@ class ModernMenu(RibbonBar):
         return
     # endregion
 
-    # region - Customise functions
+    # region - Context event functions
     #            
     def contextMenuEvent(self, event: QContextMenuEvent):
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
@@ -1113,6 +1113,7 @@ class ModernMenu(RibbonBar):
         # if not self.WorkingDictUpdated:
         self.workBenchDict["workbenches"][workbenchName] = self.ribbonStructure["workbenches"][workbenchName]
         self.workBenchDict["quickAccessCommands"] = self.ribbonStructure["quickAccessCommands"]
+        self.workBenchDict["newPanels"] = self.ribbonStructure["newPanels"]
     
         # If betaFunctions is enabled, coninue
         if self.BetaFunctionsEnabled is True:
@@ -1487,46 +1488,48 @@ class ModernMenu(RibbonBar):
 
                         # update the ribbonstructure before writing it to disk
                         self.ribbonStructure["workbenches"][workbenchName] = self.workBenchDict["workbenches"][workbenchName]
-                        
+
                         # Restore the original panel with the overflow menu
                         panels = {} # Needed to update the panel dict of the currentCategory
                         for title, objPanel in self.currentCategory().panels().items():
-                            # If it is an new panel without a set title, remove it
-                            if objPanel.title() == "<New panel>":
-                                objPanel.close()
-                                continue
+                            # # If it is an new panel without a set title, remove it
+                            # if objPanel.title() == "<New panel>":
+                            #     objPanel.close()
+                            #     continue
+                                                               
                             # Create keys if there are not existing yet for the temporary panel dict
                             StandardFunctions.add_keys_nested_dict(panels, [title])
                             
                             # Create a bool to state if a panel is new or not
-                            IsNewPanel = False
-                            for longPanel in self.longPanels:
-                                if longPanel.objectName() == objPanel.objectName():
+                            IsNewPanel = False                            
+                            for longPanel in self.longPanels:                                
+                                if longPanel.objectName() == objPanel.objectName() and longPanel.objectName() != "" and objPanel.objectName() != "":                                    
                                     # Create a panel and replace the long panel with this one
-                                    newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=self.workBenchDict, ActivateButtons=True)
-                                    # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-                                    self.setPanelProperties(newPanel)
-                                    try:
-                                        self.currentCategory().replacePanel(longPanel, newPanel)
-                                    except Exception:
-                                        pass
-                                    try:
-                                        self.currentCategory().replacePanel(objPanel, newPanel)
-                                    except Exception:
-                                        pass
-                                    # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-                                    self.setPanelProperties(newPanel)
-                                    # Close the old panel
-                                    objPanel.close()
-                                    longPanel.close()
-                                    # Update the temporary panel dict
-                                    panels[title] = newPanel
-                                    # Set the bool to True
-                                    IsNewPanel = True
-                                    break
+                                    newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=self.workBenchDict, ActivateButtons=True)  
+                                    if newPanel is not None:
+                                        # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                                        self.setPanelProperties(newPanel)
+                                        try:
+                                            self.currentCategory().replacePanel(longPanel, newPanel)
+                                        except Exception:
+                                            pass
+                                        try:
+                                            self.currentCategory().replacePanel(objPanel, newPanel)
+                                        except Exception:
+                                            pass
+                                        # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                                        self.setPanelProperties(newPanel)
+                                        # Close the old panel
+                                        objPanel.close()
+                                        longPanel.close()
+                                        # Update the temporary panel dict
+                                        panels[title] = newPanel
+                                        # Set the bool to True
+                                        IsNewPanel = True
+                                        break
                             # If it is not a new panel, add the current panel to temporary panel dict
                             if IsNewPanel is False:
-                                panels[title] = objPanel            
+                                panels[title] = objPanel
                                                                                                             
                         # Update the panel dict of the current catergory with the temporary panel dict
                         self.currentCategory()._panels = panels
@@ -1682,17 +1685,7 @@ class ModernMenu(RibbonBar):
                     self.AddCommandsDialog.form.show()
                 
                 if action == CreatePanelsAct: 
-                    panel = self.currentCategory().addPanel("<New panel>")
-                    panel.panelOptionButton().hide()
-                    self.setPanelProperties(panel)
-                    # Add a checkbox to the titlebar. Used for enabling or disabling panels. Default is hidden
-                    titleLayout: QHBoxLayout = panel._titleLayout
-                    # EnableControl = QCheckBox()
-                    EnableControl = Toggle()
-                    EnableControl.setChecked(True)                    
-                    EnableControl.setFixedWidth(32)
-                    EnableControl.setObjectName("EnablePanel")
-                    titleLayout.insertWidget(0, EnableControl)
+                    self.CreateNewPanel()
                     # Get the form
                     self.AddCommandsDialog = LoadAddCommands.LoadDialog()
                     # Show the form
@@ -1753,7 +1746,8 @@ class ModernMenu(RibbonBar):
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
         # Add the panel to the list with long panels
-        self.longPanels.append(newPanel)
+        if newPanel.panelOptionButton().isVisible():
+            self.longPanels.append(newPanel)
         
         # Replace the panel with the new panel
         self.currentCategory().replacePanel(panel, newPanel)
@@ -1833,7 +1827,8 @@ class ModernMenu(RibbonBar):
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())        
         newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
         # Add the panel to the list with long panels
-        self.longPanels.append(newPanel)
+        if newPanel.panelOptionButton().isVisible():
+            self.longPanels.append(newPanel)
                 
         # Replace the panel with the new panel
         self.currentCategory().replacePanel(panel, newPanel)
@@ -1970,7 +1965,8 @@ class ModernMenu(RibbonBar):
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
             newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
             # Add the panel to the list with long panels
-            self.longPanels.append(newPanel)
+            if newPanel.panelOptionButton().isVisible():
+                self.longPanels.append(newPanel)
 
             # Replace the panel with the new panel
             self.currentCategory().replacePanel(panel, newPanel)
@@ -2026,7 +2022,8 @@ class ModernMenu(RibbonBar):
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
             newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
             # Add the panel to the list with long panels
-            self.longPanels.append(newPanel)
+            if newPanel.panelOptionButton().isVisible():
+                self.longPanels.append(newPanel)
             
             # Replace the panel with the new panel
             self.currentCategory().replacePanel(panel, newPanel)
@@ -2367,11 +2364,16 @@ class ModernMenu(RibbonBar):
                                 "workbenches",
                                 workbenchName,
                                 "toolbars",
-                                self.dropPanelName,
-                                "order"
+                                panel.objectName(),
                             ],
                         )
-                        OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"]
+                        OrderList = []            
+                        if panel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
+                            if "order" in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
+                                OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"]
+                            else:
+                                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList
+
                         # Add the extra command to the order list
                         OrderList.append(ExtraCommand)
                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][title]["order"] = OrderList
@@ -2380,17 +2382,18 @@ class ModernMenu(RibbonBar):
                         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "text"], endEmpty=True)
                         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "icon"], endEmpty=True)
                         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "IsExtra"], endEmpty=True)
-                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["size"] = "small"
-                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["text"] = MenuText
-                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["icon"] = ""
-                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][self.dropPanelName]["commands"][ExtraCommand]["IsExtra"] = True
+                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["size"] = "small"
+                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["text"] = MenuText
+                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["icon"] = ""
+                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["IsExtra"] = True
 
                         # Create a new panel
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                         newPanel = self.CreatePanel(workbenchName, self.dropPanelName, addPanel=False, dict=self.workBenchDict, SetToUpdate=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand, ActivateButtons=True)
                                                 
                         # Add the panel to the list with long panels
-                        self.longPanels.append(newPanel)
+                        if newPanel.panelOptionButton().isVisible():
+                            self.longPanels.append(newPanel)
                                                 
                         # Replace the panel with the new panel
                         self.currentCategory().replacePanel(panel, newPanel)
@@ -2667,7 +2670,8 @@ class ModernMenu(RibbonBar):
                     newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ActivateButtons=True)
                                             
                     # Add the panel to the list with long panels
-                    self.longPanels.append(newPanel)
+                    if newPanel.panelOptionButton().isVisible():
+                        self.longPanels.append(newPanel)
                                             
                     # Replace the panel with the new panel
                     self.currentCategory().replacePanel(panel, newPanel)
@@ -4803,49 +4807,6 @@ class ModernMenu(RibbonBar):
             pass
         return
 
-    def ToggleOverlay_All(self):
-        try:
-            self.CustomOverlay("")
-        except Exception:
-            pass
-        return
-
-    def ToggleOverlay_Left(self):
-        try:
-            self.CustomOverlay("left")
-        except Exception:
-            pass
-        return
-
-    def ToggleOverlay_Right(self):
-        try:
-            self.CustomOverlay("right")
-        except Exception:
-            pass
-        return
-    
-    def ToggleOverlay_Top(self):
-        try:
-            self.CustomOverlay("top")
-        except Exception:
-            pass
-        return
-
-    def ToggleOverlay_Bottom(self):
-        try:
-            self.CustomOverlay("bottom")
-        except Exception:
-            pass
-        return
-
-    def ToggleMouseByPass(self):
-        if self.isLoaded is True:
-            try:
-                Gui.runCommand("Std_DockOverlayMouseTransparent")
-            except Exception:
-                pass
-            return
-
     def ToggleOverlay(self,):                
         # Get the parameter group
         OverlayParam_Top = App.ParamGet(
@@ -4874,287 +4835,6 @@ class ModernMenu(RibbonBar):
             self.OverlayToggled_Top = False
             return True
         return False
-
-    def CustomOverlay(self, side=""):
-        # Toggle the overlay
-        State = None
-        if side == "left":
-            State = self.OverlayToggled_Left
-        if side == "right":
-            State = self.OverlayToggled_Right
-        if side == "top":
-            State = self.OverlayToggled_Top
-        if side == "bottom":
-            State = self.OverlayToggled_Bottom
-        if side == "":
-            State = self.OverlayToggled
-
-        Enable = True
-        if State is True:
-            Enable = False
-
-        # Get the different overlay areas
-        OverlayParam_Left = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft"
-        )
-        OverlayParam_Right = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayRight"
-        )
-        OverlayParam_Top = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayTop"
-        )
-        OverlayParam_Bottom = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom"
-        )
-
-        # If overlay is enabled, go here
-        PanelsLeft = []
-        PanelsRight = []
-        PanelsBottom = []
-        PanelsTop = []
-
-        if Enable is True:
-            # Get all the dockwidgets
-            DockWidgets = mw.findChildren(QDockWidget)
-            for DockWidget in DockWidgets:
-                # If the dockwidget is not the ribbon, continue
-                if DockWidget.isVisible():
-                    # Get the location of the dockwidget
-                    Area = mw.dockWidgetArea(DockWidget)
-                    if Area == Qt.DockWidgetArea.LeftDockWidgetArea:
-                        PanelsLeft.append(DockWidget.objectName())
-                    if Area == Qt.DockWidgetArea.RightDockWidgetArea:
-                        PanelsRight.append(DockWidget.objectName())
-                    if Area == Qt.DockWidgetArea.TopDockWidgetArea:
-                        PanelsTop.append(DockWidget.objectName())
-                    if Area == Qt.DockWidgetArea.BottomDockWidgetArea:
-                        PanelsBottom.append(DockWidget.objectName())
-
-            if side == "left" or side == "":
-                EntryLeft = ""
-                for panel in PanelsLeft:
-                    EntryLeft = EntryLeft + "," + panel
-                # Set the parameter
-                OverlayParam_Left.SetString("Widgets", EntryLeft)
-                # Set the overlay state to be toggled
-                self.OverlayToggled_Left = True
-
-            if side == "right" or side == "":
-                # Define the parameter value for the overlay on the right
-                EntryRight = ""
-                for panel in PanelsRight:
-                    EntryRight = EntryRight + "," + panel
-                # Set the parameter
-                OverlayParam_Right.SetString("Widgets", EntryRight)
-                # Set the overlay state to be toggled
-                self.OverlayToggled_Right = True
-
-            if side == "top" or side == "":
-                # Define the parameter value for the overlay on the right
-                EntryTop = ""
-                for panel in PanelsTop:
-                    EntryTop = EntryTop + "," + panel
-                # Set the parameter
-                OverlayParam_Top.SetString("Widgets", EntryTop)
-                # Set the overlay state to be toggled
-                self.OverlayToggled_Top = True
-
-            if side == "bottom" or side == "":
-                # Define the parameter value for the overlay on the right
-                EntryBottom = ""
-                for panel in PanelsBottom:
-                    EntryBottom = EntryBottom + "," + panel
-                # Set the parameter
-                OverlayParam_Bottom.SetString("Widgets", EntryBottom)
-                # Set the overlay state to be toggled
-                self.OverlayToggled_Bottom = True
-
-            if side == "":
-                # Define the parameter value for the overlay on the right
-                EntryTop = ""
-                for panel in PanelsTop:
-                    EntryTop = EntryTop + "," + panel
-                # Set the parameter
-                OverlayParam_Top.SetString("Widgets", EntryTop)
-                # Set the overlay state to be toggled
-                self.OverlayToggled = True
-
-        if Enable is False:
-            # Set the parameters to empty
-            if side == "left" or side == "":
-                OverlayParam_Left.SetString("Widgets", "")
-                self.OverlayToggled_Left = False
-            if side == "Right" or side == "":
-                OverlayParam_Right.SetString("Widgets", "")
-                self.OverlayToggled_Right = False
-            if side == "Top" or side == "":
-                OverlayParam_Top.SetString("Widgets", "")
-                self.OverlayToggled_Top = False
-            if side == "Bottom" or side == "":
-                OverlayParam_Bottom.SetString("Widgets", "")
-                self.OverlayToggled_Bottom = False
-
-        return Enable
-
-    def CustomOverlay_Focus(self):
-        OverlayParam_Left = None
-        OverlayParam_Right = None
-        OverlayParam_Bottom = None
-        # Get the different overlay areas
-        OverlayParam_Left = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft"
-        )
-        OverlayParam_Right = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayRight"
-        )
-        # OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
-        OverlayParam_Bottom = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom"
-        )
-
-        # Ge the focused dockwidget
-        FocusWidget = mw.focusWidget().parent().objectName()
-        if FocusWidget == "Ribbon":
-            return
-        if isinstance(mw.focusWidget(), QTreeWidget):
-            FocusWidget = "Tree view"
-        position = ""
-        try:
-            DockWidget_Focus = mw.findChild(QDockWidget, FocusWidget)
-            if DockWidget_Focus is not None:
-                Area = mw.dockWidgetArea(DockWidget_Focus)
-                if Area == Qt.DockWidgetArea.LeftDockWidgetArea:
-                    position = "left"
-                if Area == Qt.DockWidgetArea.RightDockWidgetArea:
-                    position = "right"
-                if Area == Qt.DockWidgetArea.TopDockWidgetArea:
-                    position = "top"
-                if Area == Qt.DockWidgetArea.BottomDockWidgetArea:
-                    position = "bottom"
-        except Exception:
-            pass
-
-        if position == "left":
-            LeftPanels = OverlayParam_Left.GetString("Widgets")
-            OverlayParam_Left.SetString("Widgets", f"{LeftPanels},{FocusWidget}")
-            return
-        if position == "right":
-            RightPanels = OverlayParam_Right.GetString("Widgets")
-            OverlayParam_Right.SetString("Widgets", f"{RightPanels},{FocusWidget}")
-            return
-        if position == "bottom":
-            BottomPanels = OverlayParam_Bottom.GetString("Widgets")
-            OverlayParam_Bottom.SetString("Widgets", f"{BottomPanels},{FocusWidget}")
-            return
-        if position == "":
-            LeftPanels = OverlayParam_Left.GetString("Widgets")
-            if FocusWidget in LeftPanels:
-                LeftPanels = OverlayParam_Left.GetString("Widgets")
-                LeftPanels = LeftPanels.replace(f"{FocusWidget}", "").replace(",,", ",")
-                OverlayParam_Left.SetString("Widgets", f"{LeftPanels}")
-                return
-            RightPanels = OverlayParam_Right.GetString("Widgets")
-            if FocusWidget in RightPanels:
-                RightPanels = OverlayParam_Left.GetString("Widgets")
-                RightPanels = RightPanels.replace(f"{FocusWidget}", "").replace(
-                    ",,", ","
-                )
-                OverlayParam_Right.SetString("Widgets", f"{RightPanels}")
-                return
-            BottomPanels = OverlayParam_Bottom.GetString("Widgets")
-            if FocusWidget in BottomPanels:
-                BottomPanels = OverlayParam_Bottom.GetString("Widgets")
-                BottomPanels = BottomPanels.replace(f"{FocusWidget}", "").replace(
-                    ",,", ","
-                )
-                OverlayParam_Bottom.SetString("Widgets", f"{BottomPanels}")
-                return
-        return
-
-    def CustomTransparancy(self):
-        OverlayParam_Left = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft"
-        )
-        OverlayParam_Right = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayRight"
-        )
-        # OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
-        OverlayParam_Bottom = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom"
-        )
-
-        Enable = None
-        if OverlayParam_Left.GetBool("Transparent") is False:
-            Enable = True
-        if OverlayParam_Left.GetBool("Transparent") is True:
-            Enable = False
-
-        OverlayParam_Left.SetBool("Transparent", Enable)
-        OverlayParam_Right.SetBool("Transparent", Enable)
-        # OverlayParam_Top.SetBool("Transparent", Enable)
-        OverlayParam_Bottom.SetBool("Transparent", Enable)
-
-        self.TransparancyToggled = True
-
-        return self.TransparancyToggled
-
-    def CustomTransparancy_Focus(self):
-        OverlayParam_Left = None
-        OverlayParam_Right = None
-        OverlayParam_Bottom = None
-        # Get the different overlay areas
-        OverlayParam_Left = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayLeft"
-        )
-        OverlayParam_Right = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayRight"
-        )
-        # OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
-        OverlayParam_Bottom = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayBottom"
-        )
-
-        # Ge the focused dockwidget
-        FocusWidget = mw.focusWidget().parent().objectName()
-        if FocusWidget == "Ribbon":
-            return
-        if isinstance(mw.focusWidget(), QTreeWidget):
-            FocusWidget = "Tree view"
-        position = ""
-        try:
-            DockWidget_Focus = mw.findChild(QDockWidget, FocusWidget)
-            if DockWidget_Focus is not None:
-                Area = mw.dockWidgetArea(DockWidget_Focus)
-                if (
-                    Area == Qt.DockWidgetArea.LeftDockWidgetArea
-                    or Area == Qt.DockWidgetArea.RightDockWidgetArea
-                    or Area == Qt.DockWidgetArea.TopDockWidgetArea
-                    or Area == Qt.DockWidgetArea.BottomDockWidgetArea
-                ):
-                    return
-        except Exception:
-            pass
-
-        if position == "":
-            LeftPanels = OverlayParam_Left.GetString("Widgets")
-            if FocusWidget in LeftPanels:
-                OverlayParam_Left.SetBool(
-                    "Transparent", not OverlayParam_Left.GetBool("Transparent")
-                )
-                return
-            RightPanels = OverlayParam_Right.GetString("Widgets")
-            if FocusWidget in RightPanels:
-                OverlayParam_Right.SetBool(
-                    "Transparent", not OverlayParam_Right.GetBool("Transparent")
-                )
-                return
-            BottomPanels = OverlayParam_Bottom.GetString("Widgets")
-            if FocusWidget in BottomPanels:
-                OverlayParam_Bottom.SetBool(
-                    "Transparent", not OverlayParam_Bottom.GetBool("Transparent")
-                )
-                return
-        return
 
     def returnCustomDropDown(self, CommandName):
         actionList = []
@@ -6097,6 +5777,26 @@ class ModernMenu(RibbonBar):
             return None
         return None
     
+    def CreateNewPanel(self):
+        title = StandardFunctions.Mbox(translate("FreeCAD Ribbon", "Enter title for the new panel"), "", 20, "NoIcon", "")
+        if title == "":
+            return
+        else: 
+            panel = self.currentCategory().addPanel(title)
+            panel.panelOptionButton().hide()
+            panel.setObjectName(f"{title}_newPanel")
+            self.setPanelProperties(panel)
+            # Add a checkbox to the titlebar. Used for enabling or disabling panels. Default is hidden
+            titleLayout: QHBoxLayout = panel._titleLayout
+            # EnableControl = QCheckBox()
+            EnableControl = Toggle()
+            EnableControl.setChecked(True)                    
+            EnableControl.setFixedWidth(32)
+            EnableControl.setObjectName("EnablePanel")
+            titleLayout.insertWidget(0, EnableControl)
+        
+        return
+    
     def setPanelProperties(self, panel: RibbonPanel):
         # Set the panelheight. setting the ribbonheigt, cause the first tab to be shown to large
         # add an offset to make room for the panel titles and icons
@@ -6255,7 +5955,8 @@ class ModernMenu(RibbonBar):
         
         newPanel = self.CreatePanel(workbenchName, panelName, addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
         # Add the panel to the list with long panels
-        self.longPanels.append(newPanel)
+        if newPanel.panelOptionButton().isVisible():
+            self.longPanels.append(newPanel)
                 
         # Replace the panel with the new panel
         self.currentCategory().replacePanel(panel, newPanel)
