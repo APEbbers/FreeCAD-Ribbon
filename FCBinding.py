@@ -1506,8 +1506,8 @@ class ModernMenu(RibbonBar):
                                             command: str = widget.findChild(QToolButton, "CommandButton").defaultAction().data()
                                             if command.startswith("Std_") is False:
                                                 for item in self.List_Commands:
-                                                    if item[0] == command and item[3] == workbenchName:
-                                                        commandList.append([command, workbenchName])
+                                                    if item[0] == command:
+                                                        commandList.append([item[0], item[3]])
                                             if command.startswith("Std_"):
                                                 commandList.append([command, "Standard"])
                                     self.workBenchDict["newPanels"][workbenchName][objPanel.objectName()] = commandList
@@ -2611,30 +2611,30 @@ class ModernMenu(RibbonBar):
                                 control = gridLayout.itemAt(n).widget().findChild(CustomControls)
                                 separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
                                 if control is not None and type(control) is CustomControls:
-                                    OrderList_Compare.append(control.actions().data())
+                                    OrderList_Compare.append(control.findChild(QToolButton, "CommandButton").defaultAction().data())
                                 if separator is not None and type(separator) is CustomSeparator:
                                     OrderList_Compare.append(separator.objectName())
                             if OrderList != OrderList_Compare:
                                 OrderList = OrderList_Compare
                             
                             # Get the indexes of the widgets
-                            index_originalWidget = OrderList.index(OriginalWidget.actions().data()) # This is the location were will be dropped
+                            index_originalWidget = OrderList.index(OriginalWidget.findChild(QToolButton, "CommandButton").defaultAction().data()) # This is the location were will be dropped
                             if DraggedWidget is not None:
-                                index_newWidget = OrderList.index(DraggedWidget.actions().data()) # This is the original location of the dragged widget                        
+                                index_newWidget = OrderList.index(DraggedWidget.findChild(QToolButton, "CommandButton").defaultAction().data()) # This is the original location of the dragged widget                        
                                 if replace is True:                                
                                     # Remove the command name of the original widget from the order list and
                                     # Add the command of the dragged widget in its place
                                     OrderList.pop(index_originalWidget)
-                                    OrderList.insert(index_originalWidget, DraggedWidget.actions().data())
+                                    OrderList.insert(index_originalWidget, DraggedWidget.findChild(QToolButton, "CommandButton").defaultAction().data())
                                     # Remove the command name of the dragged widget from the order list and
                                     # Add the command of the original widget in its place
                                     OrderList.pop(index_newWidget)
-                                    OrderList.insert(index_newWidget, OriginalWidget.actions().data())
+                                    OrderList.insert(index_newWidget, OriginalWidget.findChild(QToolButton, "CommandButton").defaultAction().data())
                                 else:
                                     # Remove the dragged item from the list
                                     OrderList.pop(index_newWidget)
                                     # Inserted it at the new location
-                                    OrderList.insert(index_originalWidget, DraggedWidget.actions().data())
+                                    OrderList.insert(index_originalWidget, DraggedWidget.findChild(QToolButton, "CommandButton").defaultAction().data())
 
                     if type(widgetType) is CustomSeparator:
                         for n in range(gridLayout.count()):
@@ -2748,6 +2748,16 @@ class ModernMenu(RibbonBar):
                     QuickAccessToolBar.removeAction(self.dragIndicator_QuickAccess_Action)
                 except Exception:
                     pass
+                
+            # Enable all buttons, so you can access them with a right click
+            for child in mw.findChildren(QToolButton):
+                try:
+                    for subAction in child.actions():
+                        subAction.setEnabled(True)                
+                except Exception:
+                    pass
+                child.setEnabled(True)
+            Gui.updateGui()
 
             event.accept()
             return
@@ -5973,9 +5983,21 @@ class ModernMenu(RibbonBar):
             try:
                 del self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]
                 orderList.remove(command)
+                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList
             except Exception:
                 pass
         
+        # if it is a button from a newPanel, remove it from the newPanel list as well
+        if panelName.endswith("_newPanel"):
+            commandList: list = self.workBenchDict["newPanels"][workbenchName][panelName]
+            for item in commandList:
+                if item[0] == command:
+                    commandList.remove(item)
+                    self.workBenchDict["newPanels"][workbenchName][panelName] = commandList
+                    break           
+        
+        print(command)
+        print(commandList)
         newPanel = self.CreatePanel(workbenchName, panelName, addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
         # Add the panel to the list with long panels
         if newPanel.panelOptionButton().isVisible():
@@ -5989,15 +6011,15 @@ class ModernMenu(RibbonBar):
         # Update the dict of the currentCategory with the new panel
         self.currentCategory()._panels[newPanel.objectName()] = newPanel
         
-        # # Enable all buttons, so you can access them with a right click
-        # for child in mw.findChildren(QToolButton):
-        #     try:
-        #         for subAction in child.actions():
-        #             subAction.setEnabled(True)                
-        #     except Exception:
-        #         pass
-        #     child.setEnabled(True)
-        # Gui.updateGui()
+        # Enable all buttons, so you can access them with a right click
+        for child in mw.findChildren(QToolButton):
+            try:
+                for subAction in child.actions():
+                    subAction.setEnabled(True)                
+            except Exception:
+                pass
+            child.setEnabled(True)
+        Gui.updateGui()
         
         # Close the old panel
         panel.close()
