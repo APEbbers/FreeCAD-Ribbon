@@ -878,24 +878,25 @@ class EventInspector(QObject):
             count = 0
             parent = None
             panel = None
+            # RibbonBar = None
             if self.widget is not None:
                 parent = self.widget.parent()
                 while (count < 10):
                     if type(parent) is RibbonPanel:
                         panel = parent
-                        break   
-                    # if type(parent) is FCBinding.ModernMenu.:
-                    #     panel = parent
-                    #     break                              
+                        # break   
+                    # if type(parent) is FCBinding.ModernMenu:
+                    #     RibbonBar = parent
+                    #     # break                              
                     else:
                         if parent is not None:
                             parent = parent.parent()
                     count = count + 1
-                        
+            
+            # print(RibbonBar)           
             # Get the mainwindow, the ribbon and the title
             mw = Gui.getMainWindow()
             RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-            print(self.widget)
             if type(self.widget) is not QuickAccessToolButton:
                 if panel is not None:
                     RibbonBar.RemoveButtonFromPanel(panel, self.widget)

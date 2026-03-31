@@ -6011,25 +6011,29 @@ class ModernMenu(RibbonBar):
         index = -1
         # Go through the button list. if the passed position is withing the edges of a button,
         # You got the right one
+        IsDeleted = False
         for button in buttonList:
-            index = index + 1
-            # Map the for corners of the button to global
-            pos_tl = mw.mapToGlobal(button.rect().topLeft())
-            pos_tr = button.mapToGlobal(button.rect().topRight())
-            pos_bl = button.mapToGlobal(button.rect().bottomLeft())
-            pos_br = mw.mapToGlobal(button.rect().bottomRight())
+            if button.objectName() == widget.objectName():
+                index = index + 1
+                # Map the for corners of the button to global
+                pos_tl = mw.mapToGlobal(button.rect().topLeft())
+                pos_tr = button.mapToGlobal(button.rect().topRight())
+                pos_bl = button.mapToGlobal(button.rect().bottomLeft())
+                pos_br = mw.mapToGlobal(button.rect().bottomRight())
 
-            # If the position of the context menu event is within the global corners
-            # delete the button
-            if pos.x() > pos_tl.x() and pos.x() < pos_tr.x():
-                if pos.y() > pos_tl.y() and pos.y() < pos_bl.y():                    
-                    if button.objectName() == widget.objectName():
-                        button.deleteLater()
+                # If the position of the context menu event is within the global corners
+                # delete the button
+                if pos.x() > pos_tl.x() and pos.x() < pos_tr.x():
+                    if pos.y() > pos_tl.y() and pos.y() < pos_bl.y():                    
+                        # if button.objectName() == widget.objectName():
+                        button.deleteLater()                                                
+                        IsDeleted = True
                         break
         
-        # Update the quickAccessCommands list
-        self.quickAccessCommands.pop(index-2)
-        
+        if IsDeleted is True:
+            # Update the quickAccessCommands list
+            self.quickAccessCommands.remove(widget.objectName())
+
         # Delete the drag indicater
         try:
             self._titleWidget._quickAccessToolBar.removeAction(self.dragAction_QuickAccess)
