@@ -80,8 +80,8 @@ mw: QMainWindow = Gui.getMainWindow()
 # Function to move the data files out the addon folder to fix issue with the new addon manager
 #
 #Create the new folder for the data
-if not os.path.exists(os.path.join(ConfigDirectory)):
-    os.makedirs(os.path.join(ConfigDirectory))
+if not os.path.exists(ConfigDirectory):
+    os.makedirs(ConfigDirectory)
     
 # Move the files if present
 if Settings.GetStringSetting("RibbonStructure") == os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json"):

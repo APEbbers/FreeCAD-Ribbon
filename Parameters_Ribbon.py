@@ -112,19 +112,19 @@ class Settings:
 
         if result.lower() == "none":
             result = ""
-        return str(result)
+        return result
 
     def GetIntSetting(settingName) -> int:
         result = preferences.GetInt(settingName)
         if result == "":
             result = None
-        return int(result)
+        return result
 
     def GetFloatSetting(settingName) -> float:
         result = preferences.GetFloat(settingName)
         if result == "":
             result = None
-        return float(result)
+        return result
 
     def GetBoolSetting(settingName) -> bool:
         result = None
@@ -136,7 +136,7 @@ class Settings:
                 break
         if exists is True:
             result = preferences.GetBool(settingName)
-        return bool(result)
+        return result
 
     def GetColorSetting(self, settingName: str) -> object:
         # Create a tuple from the int value of the color
@@ -187,80 +187,19 @@ class Settings:
     # endregion
 
     def WriteMissingSettings():
-        # Get the current settings
-        CurrentSettings: list = preferences.GetContents()
-        
-        Mapping = {
-        "BackupEnabled": "ENABLE_BACKUP",
-        "BackupFolder": "BACKUP_LOCATION",
-        "TabBar_Style": "TABBAR_STYLE",
-        "Toolbar_Position": "TOOLBAR_POSITION",
-        "Hide_Titlebar_FC": "HIDE_TITLEBAR_FC",
-        "Link_IconSizes": "LINK_ICON_SIZES",
-        "IconSize_Small": "ICON_SIZE_SMALL",
-        "IconSize_Medium": "ICON_SIZE_MEDIUM",
-        "IconSize_Large": "ICON_SIZE_LARGE",
-        "ApplicationButtonSize": "APP_ICON_SIZE",
-        "QuickAccessButtonSize": "QUICK_ICON_SIZE",
-        "RightToolbarButtonSize": "RIGHT_ICON_SIZE",
-        "TabBarSize": "TABBAR_SIZE",
-        "Stylesheet": "STYLESHEET",
-        "ShowIconText_Small": "SHOW_ICON_TEXT_SMALL",
-        "ShowIconText_Medium": "SHOW_ICON_TEXT_MEDIUM",
-        "ShowIconText_Large": "SHOW_ICON_TEXT_LARGE",
-        "MaxColumnsPerPanel": "MAX_COLUMN_PANELS",
-        "DebugMode": "DEBUG_MODE",
-        "ShowOnHover": "SHOW_ON_HOVER",
-        "TabBar_Scroll": "TABBAR_SCROLLSPEED",
-        "Ribbon_Scroll": "RIBBON_SCROLLSPEED",
-        "TabBar_Click": "TABBAR_CLICKSPEED",
-        "Ribbon_Click": "RIBBON_CLICKSPEED",
-        "Preferred_view": "PREFERRED_VIEW",
-        "UseToolsPanel": "USE_TOOLSPANEL",
-        "WrapText_Medium": "WRAPTEXT_LARGE",
-        "WrapText_Large": "WRAPTEXT_LARGE",
-        "UseOverlay": "USE_OVERLAY",
-        "UseFCOverlay": "USE_FC_OVERLAY",
-        "UseButtonBackGround": "BUTTON_BACKGROUND_ENABLED",
-        "CustomIcons": "BETA_FUNCTIONS_ENABLED",
-        "CustomColors": "CUSTOM_COLORS_ENABLED",
-        "BorderTransparant": "BORDER_TRANSPARANT",
-        "Color_Borders": "COLOR_BORDERS",
-        # "Color_Background": "COLOR_BACKGROUND",
-        "Color_Background_Hover": "COLOR_BACKGROUND_HOVER",
-        "Color_Background_App": "COLOR_APPLICATION_BUTTON_BACKGROUND",
-        "Shortcut_Application": "SHORTCUT_APPLICATION",
-        "FontSize_Menus": "FONTSIZE_MENUS",
-        "FontSize_Buttons": "FONTSIZE_BUTTONS",
-        "FontSize_Tabs": "FONTSIZE_TABS",
-        "FontSize_Panels": "FONTSIZE_PANELS",
-        "SizeFactor": "SIZE_FACTOR",
-        "PanelHeightOffset": "PANEL_HEIGHT_OFFSET",
-        "RibbonHeightOffset": "RIBBON_HEIGHT_OFFSET",
-        "RibbonMinimumHeight": "RIBBON_MINIMUM_HEIGHT",
-        "ButtonSpacing": "BUTTON_SPACING",
-    }
-        
         for DefaultSetting_Name, DefaultSetting_Value in DefaultSettings.items():
-            IsPresent = False
-            for item in CurrentSettings:
-                if item[1] == DefaultSetting_Name:
-                    IsPresent = True
-
-            if IsPresent is False:
-                if type(DefaultSetting_Value) is str:
+            if type(DefaultSetting_Value) is str:
+                if Settings.GetStringSetting(DefaultSetting_Name) == "":
                     Settings.SetStringSetting(DefaultSetting_Name, DefaultSetting_Value)
-                if type(DefaultSetting_Value) is bool:
+            if type(DefaultSetting_Value) is bool:
+                if Settings.GetBoolSetting(DefaultSetting_Name) is None:
                     Settings.SetBoolSetting(DefaultSetting_Name, DefaultSetting_Value)
-                if type(DefaultSetting_Value) is int:
+            if type(DefaultSetting_Value) is int:
+                if Settings.GetIntSetting(DefaultSetting_Name) is None:
                     Settings.SetIntSetting(DefaultSetting_Name, DefaultSetting_Value)
-                if type(DefaultSetting_Value) is float:
+            if type(DefaultSetting_Value) is float:
+                if Settings.GetFloatSetting(DefaultSetting_Name) is None:
                     Settings.SetFloatSetting(DefaultSetting_Name, DefaultSetting_Value)
-                    
-                for Parameter, Value in vars(Parameters).items():
-                    for name_2, Parameter_2 in Mapping.items():                        
-                        if Parameter == Parameter_2 and name_2 == DefaultSetting_Name:
-                            Parameter = DefaultSetting_Value
         return
 
 class Parameters:
@@ -678,10 +617,10 @@ class Parameters:
     # endregion
 
     # region - Advanced size settings ------------------------------------------------------------------------------------------------
-    if Settings.GetBoolSetting("BetaFunctions") is None:
+    if Settings.GetFloatSetting("BetaFunctions") is None:
         SIZE_FACTOR = bool(DefaultSettings["SizeFactor"])
-        Settings.SetBoolSetting("SizeFactor", SIZE_FACTOR)
-    SIZE_FACTOR = Settings.GetBoolSetting("SizeFactor")
+        Settings.SetFloatSetting("SizeFactor", SIZE_FACTOR)
+    SIZE_FACTOR = Settings.GetFloatSetting("SizeFactor")
         
     if Settings.GetIntSetting("PanelHeightOffset") is None:
         PANEL_HEIGHT_OFFSET = bool(DefaultSettings["PanelHeightOffset"])
