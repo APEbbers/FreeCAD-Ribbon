@@ -50,6 +50,7 @@ from Parameters_Ribbon import Parameters
 import Serialize_Ribbon
 import CacheFunctions
 import FCBinding
+from CustomWidgets import QuickAccessToolButton
 
 import pyqtribbon_local as pyqtribbon
 from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar, RibbonTitleWidget, RibbonApplicationButton
@@ -867,6 +868,7 @@ def main():
 class EventInspector(QObject):
     dragEntered = False
     widget = None
+    pos = None
     
     def __init__(self, parent):
         super(EventInspector, self).__init__(parent)
@@ -881,15 +883,24 @@ class EventInspector(QObject):
                 while (count < 10):
                     if type(parent) is RibbonPanel:
                         panel = parent
-                        break                        
+                        break   
+                    # if type(parent) is FCBinding.ModernMenu.:
+                    #     panel = parent
+                    #     break                              
                     else:
-                        parent = parent.parent()
+                        if parent is not None:
+                            parent = parent.parent()
                     count = count + 1
                         
             # Get the mainwindow, the ribbon and the title
             mw = Gui.getMainWindow()
             RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-            RibbonBar.RemoveButtonFromPanel(panel, self.widget)
+            print(self.widget)
+            if type(self.widget) is not QuickAccessToolButton:
+                if panel is not None:
+                    RibbonBar.RemoveButtonFromPanel(panel, self.widget)
+            if type(self.widget) is QuickAccessToolButton:
+                RibbonBar.RemoveButtonFromQuickAccess(self.widget, self.pos)
             self.dragEntered = False
             return True
         # # Show the mainwindow after the application is activated
@@ -897,6 +908,7 @@ class EventInspector(QObject):
             if self.parent().TrashArea.underMouse() is True:
                 self.dragEntered = True
                 self.widget = event.source()
+                self.pos= event.source().pos()
                 event.accept()
             else:
                 event.ignore()
