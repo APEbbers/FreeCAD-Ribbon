@@ -121,7 +121,7 @@ if ribbonStructureVersion >= CurrentStructureVersion:
     NewDefaultNeeded = False
 
 # check if file exits
-fileExists = os.path.isfile(file)
+fileExists = os.path.exists(file)
 
 # if not, copy and rename
 if fileExists is False:
@@ -133,6 +133,14 @@ fileExists = os.path.isfile(file_default)
 if fileExists is False or NewDefaultNeeded is True:
     shutil.copy(source_default, file_default)
     Parameters_Ribbon.Settings.SetIntSetting("RibbonStructureVersion", CurrentStructureVersion)
+    
+# Make sure that the parameter for the ribbon structure is correct
+if os.path.exists(Settings.GetStringSetting("RibbonStructure")) is False:
+    Settings.SetStringSetting("RibbonStructure", os.path.join(ConfigDirectory, "RibbonStructure.json"))
+    
+# Make sure that the parameter for the backup folder is correct
+if os.path.exists(Settings.GetStringSetting("BackupFolder")) is False:
+    Settings.SetStringSetting("BackupFolder", os.path.join(ConfigDirectory, "Backups"))
 
 # remove the test workbench
 try:    
