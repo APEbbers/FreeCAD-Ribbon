@@ -5811,11 +5811,14 @@ class ModernMenu(RibbonBar):
             return None
         return None
     
-    def CreateNewPanel(self):
-        title = StandardFunctions.Mbox(translate("FreeCAD Ribbon", "Enter title for the new panel"), "", 20, "NoIcon", "")
+    def CreateNewPanel(self, title):
         if title == "":
             return
         else: 
+            for key in self.currentCategory().panels().keys():
+                if key == f"{title}_newPanel":
+                    StandardFunctions.Mbox(translate("FreeCAD Ribbon", "This panel already exists!"))
+                    return
             
             panel = self.currentCategory().addPanel(f"{title}_newPanel")
             panel.panelOptionButton().hide()

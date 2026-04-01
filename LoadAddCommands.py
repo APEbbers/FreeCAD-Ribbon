@@ -80,7 +80,10 @@ import AddCommands_ui as AddCommands_ui
 # Define the translation
 translate = App.Qt.translate
 
-class LoadDialog(AddCommands_ui.Ui_Form):
+ # Get the main window from FreeCAD
+mw = Gui.getMainWindow()
+
+class LoadDialog(AddCommands_ui.Ui_Form):    
     # Create a list for the commands
     List_Commands = []
     # Create a dict for the dropdownbuttons and newPanels
@@ -93,12 +96,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     buttonRemove = Signal()
             
     def __init__(self):
-
-        # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
         super(LoadDialog, self).__init__()
-
-        # Get the main window from FreeCAD
-        mw = Gui.getMainWindow()
 
         # # this will create a Qt widget from our ui file
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "AddCommands.ui"))
@@ -349,6 +347,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.on_SearchBar_NP_TextChanged
         )
         
+        # Connect the "CreateNewPanel" button
+        self.form.CreateNewPanel.clicked.connect(self.on_CreateNewPanel_clicked)
+        
         return        
         
     def addWorkbenches(self):
@@ -497,7 +498,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # self.form.CommandList_DDB.setCurrentText(translate("FreeCAD Ribbon", "New"))
         return
 
-
+    # region - Add commands
     def on_ListCategory_NP_TextChanged(self):
         self.FilterCommands_ListCategory(
             self.form.CommandsAvailable_NP,
@@ -858,6 +859,11 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 ListWidget_Commands.addItem(ListWidgetItem)
         return
 
+    def on_CreateNewPanel_clicked(self):
+        if self.form.PanelTitle.text() != "":
+            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+            RibbonBar.CreateNewPanel(self.form.PanelTitle.text())
+        return
 
 def main():
     # Get the form

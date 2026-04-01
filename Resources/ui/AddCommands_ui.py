@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsUVHDYQ.ui'
+## Form generated from reading UI file 'AddCommandsgJdlMc.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QGridLayout,
-    QGroupBox, QLabel, QLineEdit, QListWidget,
+from PySide.QtWidgets import (QAbstractButton, QAbstractItemView, QApplication, QComboBox,
+    QDialogButtonBox, QFrame, QGridLayout, QGroupBox,
+    QLabel, QLayout, QLineEdit, QListWidget,
     QListWidgetItem, QPushButton, QSizePolicy, QSpacerItem,
     QTabWidget, QVBoxLayout, QWidget)
 
@@ -24,10 +25,31 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(854, 539)
+        Form.resize(854, 556)
         Form.setAcceptDrops(True)
-        self.gridLayout = QGridLayout(Form)
+        self.gridLayout_4 = QGridLayout(Form)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.verticalSpacer = QSpacerItem(93, 19, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.gridLayout_4.addItem(self.verticalSpacer, 0, 1, 1, 1)
+
+        self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
+        self.gridLayout.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
+        self.gridLayout.setVerticalSpacing(0)
+        self.buttonBox = QDialogButtonBox(Form)
+        self.buttonBox.setObjectName(u"buttonBox")
+        self.buttonBox.setStandardButtons(QDialogButtonBox.StandardButton.Cancel|QDialogButtonBox.StandardButton.Ok)
+
+        self.gridLayout.addWidget(self.buttonBox, 0, 1, 1, 1)
+
+        self.horizontalSpacer = QSpacerItem(651, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout.addItem(self.horizontalSpacer, 0, 0, 1, 1)
+
+
+        self.gridLayout_4.addLayout(self.gridLayout, 2, 0, 1, 2)
+
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.pushButton = QPushButton(Form)
@@ -38,16 +60,20 @@ class Ui_Form(object):
 
         self.TrashArea = QLabel(Form)
         self.TrashArea.setObjectName(u"TrashArea")
+        self.TrashArea.setMinimumSize(QSize(0, 300))
         self.TrashArea.setAcceptDrops(True)
+        self.TrashArea.setStyleSheet(u"QLabel {border-color: rgb(85, 85, 255);}")
+        self.TrashArea.setFrameShape(QFrame.Shape.NoFrame)
+        self.TrashArea.setFrameShadow(QFrame.Shadow.Plain)
 
         self.verticalLayout.addWidget(self.TrashArea)
 
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.gridLayout.addLayout(self.verticalLayout, 1, 1, 1, 1)
+        self.verticalLayout.addItem(self.verticalSpacer_2)
 
-        self.verticalSpacer = QSpacerItem(20, 25, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
-        self.gridLayout.addItem(self.verticalSpacer, 0, 1, 1, 1)
+        self.gridLayout_4.addLayout(self.verticalLayout, 1, 1, 1, 1)
 
         self.tabWidget = QTabWidget(Form)
         self.tabWidget.setObjectName(u"tabWidget")
@@ -130,7 +156,7 @@ class Ui_Form(object):
         self.tab_2.setObjectName(u"tab_2")
         self.tabWidget.addTab(self.tab_2, "")
 
-        self.gridLayout.addWidget(self.tabWidget, 0, 0, 2, 1)
+        self.gridLayout_4.addWidget(self.tabWidget, 0, 0, 2, 1)
 
 
         self.retranslateUi(Form)
