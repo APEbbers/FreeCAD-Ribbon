@@ -752,6 +752,14 @@ def add_keys_nested_dict(dict, keys, default=1, endEmpty = False):
         pass
     return result
 
+def remove_keys_with_values(Dict: dict, keyName):
+    DictCopy = {}
+    for key in Dict.keys():
+        if key != keyName:
+           DictCopy[key] = Dict[key]
+    
+    return DictCopy
+
 
 def returnDropDownCommands(command):
     Commands = []

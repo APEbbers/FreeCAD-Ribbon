@@ -1383,17 +1383,18 @@ class ModernMenu(RibbonBar):
                                         pass
                                     if command is None:
                                         command = control.defaultAction()
-                                    orderList.append(command)
+                                    if command is not None:
+                                        orderList.append(command)
 
-                                    # Add the command if they don't exist
-                                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", command, "size"], "small")
-                                    # Set the sizes
-                                    if control.objectName() == "CustomWidget_Small":
-                                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "small"
-                                    if control.objectName() == "CustomWidget_Medium":
-                                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "medium"
-                                    if control.objectName() == "CustomWidget_Large":
-                                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "large"
+                                        # Add the command if they don't exist
+                                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", command, "size"], "small")
+                                        # Set the sizes
+                                        if control.objectName() == "CustomWidget_Small":
+                                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "small"
+                                        if control.objectName() == "CustomWidget_Medium":
+                                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "medium"
+                                        if control.objectName() == "CustomWidget_Large":
+                                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "large"
                                 
                                 separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
                                 if separator is not None:
@@ -1405,7 +1406,7 @@ class ModernMenu(RibbonBar):
                                     orderList.append(separator.objectName())
                                                                 
                                 # Write the order list
-                                Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], [])                         
+                                Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], endEmpty=True)                         
                                 self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                                                        
  
                                 
@@ -1465,7 +1466,6 @@ class ModernMenu(RibbonBar):
                             EnableControl = titleLayout.itemAt(0).widget()
                             if EnableControl is not None:
                                 EnableControl.setVisible(True)
-                                
                         return
                     if self.CustomizeEnabled is True:
                         self.currentCategory().setStyleSheet(self.StyleSheet)
@@ -2382,6 +2382,7 @@ class ModernMenu(RibbonBar):
                                 "toolbars",
                                 panel.objectName(),
                             ],
+                            endEmpty=True,
                         )
                         OrderList = []            
                         if panel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
@@ -5975,54 +5976,56 @@ class ModernMenu(RibbonBar):
         if command is None:
             command = button.actions()[0].objectName()
 
-        orderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
-        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = ""
-        
-        # Remove also from the ribbon structure if it is an extra (dragged) button
-        if "IsExtra" in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]:
-            try:
-                del self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]
-                orderList.remove(command)
-                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList
-            except Exception:
-                pass
-        
-        # if it is a button from a newPanel, remove it from the newPanel list as well
-        if panelName.endswith("_newPanel"):
-            commandList: list = self.workBenchDict["newPanels"][workbenchName][panelName]
-            for item in commandList:
-                if item[0] == command:
-                    commandList.remove(item)
-                    self.workBenchDict["newPanels"][workbenchName][panelName] = commandList
-                    break           
-        
-        print(command)
-        print(commandList)
-        newPanel = self.CreatePanel(workbenchName, panelName, addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
-        # Add the panel to the list with long panels
-        if newPanel.panelOptionButton().isVisible():
-            self.longPanels.append(newPanel)
-                
-        # Replace the panel with the new panel
-        self.currentCategory().replacePanel(panel, newPanel)
-        # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-        self.setPanelProperties(newPanel)
+        try:
+            orderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
+            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = ""
 
-        # Update the dict of the currentCategory with the new panel
-        self.currentCategory()._panels[newPanel.objectName()] = newPanel
-        
-        # Enable all buttons, so you can access them with a right click
-        for child in mw.findChildren(QToolButton):
-            try:
-                for subAction in child.actions():
-                    subAction.setEnabled(True)                
-            except Exception:
-                pass
-            child.setEnabled(True)
-        Gui.updateGui()
-        
-        # Close the old panel
-        panel.close()
+            # if it is a button from a newPanel, remove it from the newPanel list
+            if panelName.endswith("_newPanel"):
+                commandList = []
+                if panelName in self.workBenchDict["newPanels"][workbenchName]:
+                    commandList = self.workBenchDict["newPanels"][workbenchName][panelName]
+                elif panelName in self.workBenchDict["newPanels"]["Global"]:
+                    commandList = self.workBenchDict["newPanels"]["Global"][panelName]
+                elif panelName in self.workBenchDict["newPanels"]["Standard"]:
+                    commandList = self.workBenchDict["newPanels"]["Standard"][panelName]
+                for item in commandList:
+                    if item[0] == command:
+                        commandList.remove(item)
+                        self.workBenchDict["newPanels"][workbenchName][panelName] = commandList
+                        break     
+
+            # Remove also from the ribbon structure if it is an extra (dragged) button
+            if "IsExtra" in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]:
+                try:
+                    # Get the dict
+                    Dict: dict = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]
+                    # Remove the command and update the workbench dict
+                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"] = StandardFunctions.remove_keys_with_values(Dict, command)
+                    # Update the order list
+                    orderList.remove(command)
+                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList
+
+                except Exception:
+                    pass
+     
+            
+            # Close the widget
+            widget.close()
+            
+            # Enable all buttons, so you can access them with a right click
+            for child in mw.findChildren(QToolButton):
+                try:
+                    for subAction in child.actions():
+                        subAction.setEnabled(True)                
+                except Exception:
+                    pass
+                child.setEnabled(True)
+            Gui.updateGui()
+                        
+        except Exception as e:
+            raise(e)
+            pass
         
         return
     
