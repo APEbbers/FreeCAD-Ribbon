@@ -1467,12 +1467,12 @@ class ModernMenu(RibbonBar):
                             if EnableControl is not None:
                                 EnableControl.setVisible(True)
                                 
-                            # Load the dialog
-                            # self.CreateNewPanel()
-                            # Get the form
-                            self.AddCommandsDialog = LoadAddCommands.LoadDialog()
-                            # Show the form
-                            self.AddCommandsDialog.form.show()
+                        # Load the dialog
+                        # self.CreateNewPanel()
+                        # Get the form
+                        self.AddCommandsDialog = LoadAddCommands.LoadDialog()
+                        # Show the form
+                        self.AddCommandsDialog.form.show()
                         return
                     if self.CustomizeEnabled is True:
                         self.currentCategory().setStyleSheet(self.StyleSheet)
