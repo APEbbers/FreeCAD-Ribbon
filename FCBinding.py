@@ -1279,26 +1279,26 @@ class ModernMenu(RibbonBar):
             if panel is not None and type(panel) is not RibbonPanel and quickaccessbutton is None and quickaccesstoolbar is None:                
                 # Add the buttons
                 #
-                # Add a button for adding commands to current panels
-                AddCommandAct = QAction()
-                if self.CustomizeEnabled is True:
-                    AddCommandAct  = self.contextMenu.addAction("Add or remove commands")
+                # # Add a button for adding commands to current panels
+                # AddCommandAct = QAction()
+                # if self.CustomizeEnabled is True:
+                #     AddCommandAct  = self.contextMenu.addAction("Add or remove commands")
                               
-                # Add a button for creating new panels
-                CreatePanelsAct = QAction()
-                if self.CustomizeEnabled is True:
-                    CreatePanelsAct = self.contextMenu.addAction("Create a new panel")
+                # # Add a button for creating new panels
+                # CreatePanelsAct = QAction()
+                # if self.CustomizeEnabled is True:
+                #     CreatePanelsAct = self.contextMenu.addAction("Create a new panel")
                     
-                # Add a button for combining panels
-                CombinePanelsAct = QAction()
-                if self.CustomizeEnabled is True:
-                    CombinePanelsAct = self.contextMenu.addAction("Combine panels")
+                # # Add a button for combining panels
+                # CombinePanelsAct = QAction()
+                # if self.CustomizeEnabled is True:
+                #     CombinePanelsAct = self.contextMenu.addAction("Combine panels")
                     
-                # Add a button for creating the cache file
-                CreateDataAct = QAction()
-                if self.CustomizeEnabled is True:
-                    self.contextMenu.addSeparator()
-                    CreateDataAct = self.contextMenu.addAction("Create or update the data file")
+                # # Add a button for creating the cache file
+                # CreateDataAct = QAction()
+                # if self.CustomizeEnabled is True:
+                #     self.contextMenu.addSeparator()
+                #     CreateDataAct = self.contextMenu.addAction("Create or update the data file")
                 
                 # Add Customize buttons for entering and exiting customize enviroment
                 self.contextMenu.addSeparator()
@@ -1466,6 +1466,13 @@ class ModernMenu(RibbonBar):
                             EnableControl = titleLayout.itemAt(0).widget()
                             if EnableControl is not None:
                                 EnableControl.setVisible(True)
+                                
+                            # Load the dialog
+                            # self.CreateNewPanel()
+                            # Get the form
+                            self.AddCommandsDialog = LoadAddCommands.LoadDialog()
+                            # Show the form
+                            self.AddCommandsDialog.form.show()
                         return
                     if self.CustomizeEnabled is True:
                         self.currentCategory().setStyleSheet(self.StyleSheet)
@@ -1691,30 +1698,30 @@ class ModernMenu(RibbonBar):
                         self.AddCommandsDialog.form.close()
                         self.AddCommandsDialog = None
 
-                if action == CombinePanelsAct:
-                    LoadCombinePanel_Ribbon.main()
+                # if action == CombinePanelsAct:
+                #     LoadCombinePanel_Ribbon.main()
                     
-                if action == AddCommandAct:
-                    # Get the form
-                    self.AddCommandsDialog = LoadAddCommands.LoadDialog()
-                    # Show the form
-                    self.AddCommandsDialog.form.show()
+                # if action == AddCommandAct:
+                #     # Get the form
+                #     self.AddCommandsDialog = LoadAddCommands.LoadDialog()
+                #     # Show the form
+                #     self.AddCommandsDialog.form.show()
                 
-                if action == CreatePanelsAct: 
-                    self.CreateNewPanel()
-                    # Get the form
-                    self.AddCommandsDialog = LoadAddCommands.LoadDialog()
-                    # Show the form
-                    self.AddCommandsDialog.form.show()
+                # if action == CreatePanelsAct: 
+                #     self.CreateNewPanel()
+                #     # Get the form
+                #     self.AddCommandsDialog = LoadAddCommands.LoadDialog()
+                #     # Show the form
+                #     self.AddCommandsDialog.form.show()
                                         
-                if action == CreateDataAct:
-                    message = translate(
-                        "FreeCAD Ribbon",
-                        "Are you sure? This can take a while!",
-                    )
-                    answer = StandardFunctions.Mbox(message, "FreeCAD Ribbon", 1, "Question")
-                    if answer == "yes":
-                        CacheFunctions.CreateCache()
+                # if action == CreateDataAct:
+                #     message = translate(
+                #         "FreeCAD Ribbon",
+                #         "Are you sure? This can take a while!",
+                #     )
+                #     answer = StandardFunctions.Mbox(message, "FreeCAD Ribbon", 1, "Question")
+                #     if answer == "yes":
+                #         CacheFunctions.CreateCache()
             
             # Add a context menu to the quickaccess button
             if panel is not None and type(panel) is not RibbonPanel and quickaccessbutton is not None and self.CustomizeEnabled is True and quickaccessbutton.underMouse():
