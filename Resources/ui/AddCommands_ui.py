@@ -1,79 +1,64 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsgJdlMc.ui'
+## Form generated from reading UI file 'AddCommandsQbImIN.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide.QtWidgets import (QAbstractButton, QAbstractItemView, QApplication, QComboBox,
-    QDialogButtonBox, QFrame, QGridLayout, QGroupBox,
-    QLabel, QLayout, QLineEdit, QListWidget,
-    QListWidgetItem, QPushButton, QSizePolicy, QSpacerItem,
-    QTabWidget, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QGridLayout,
+    QGroupBox, QLabel, QLayout, QLineEdit,
+    QListWidget, QListWidgetItem, QPushButton, QSizePolicy,
+    QSpacerItem, QTabWidget, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(854, 556)
+        Form.resize(854, 760)
         Form.setAcceptDrops(True)
         self.gridLayout_4 = QGridLayout(Form)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
-        self.verticalSpacer = QSpacerItem(93, 19, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.gridLayout_4.addItem(self.verticalSpacer, 0, 1, 1, 1)
-
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         self.gridLayout.setVerticalSpacing(0)
-        self.buttonBox = QDialogButtonBox(Form)
-        self.buttonBox.setObjectName(u"buttonBox")
-        self.buttonBox.setStandardButtons(QDialogButtonBox.StandardButton.Cancel|QDialogButtonBox.StandardButton.Ok)
+        self.okButton = QPushButton(Form)
+        self.okButton.setObjectName(u"okButton")
 
-        self.gridLayout.addWidget(self.buttonBox, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.okButton, 0, 2, 1, 1)
 
         self.horizontalSpacer = QSpacerItem(651, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout.addItem(self.horizontalSpacer, 0, 0, 1, 1)
+        self.gridLayout.addItem(self.horizontalSpacer, 0, 1, 1, 1)
+
+        self.pushButton = QPushButton(Form)
+        self.pushButton.setObjectName(u"pushButton")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.pushButton.sizePolicy().hasHeightForWidth())
+        self.pushButton.setSizePolicy(sizePolicy)
+        self.pushButton.setMinimumSize(QSize(0, 0))
+
+        self.gridLayout.addWidget(self.pushButton, 0, 0, 1, 1)
+
+        self.cancelButton = QPushButton(Form)
+        self.cancelButton.setObjectName(u"cancelButton")
+
+        self.gridLayout.addWidget(self.cancelButton, 0, 3, 1, 1)
 
 
         self.gridLayout_4.addLayout(self.gridLayout, 2, 0, 1, 2)
-
-        self.verticalLayout = QVBoxLayout()
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.pushButton = QPushButton(Form)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setMinimumSize(QSize(0, 50))
-
-        self.verticalLayout.addWidget(self.pushButton)
-
-        self.TrashArea = QLabel(Form)
-        self.TrashArea.setObjectName(u"TrashArea")
-        self.TrashArea.setMinimumSize(QSize(0, 300))
-        self.TrashArea.setAcceptDrops(True)
-        self.TrashArea.setStyleSheet(u"QLabel {border-color: rgb(85, 85, 255);}")
-        self.TrashArea.setFrameShape(QFrame.Shape.NoFrame)
-        self.TrashArea.setFrameShadow(QFrame.Shadow.Plain)
-
-        self.verticalLayout.addWidget(self.TrashArea)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout.addItem(self.verticalSpacer_2)
-
-
-        self.gridLayout_4.addLayout(self.verticalLayout, 1, 1, 1, 1)
 
         self.tabWidget = QTabWidget(Form)
         self.tabWidget.setObjectName(u"tabWidget")
@@ -93,11 +78,11 @@ class Ui_Form(object):
 
         self.label_21 = QLabel(self.tab)
         self.label_21.setObjectName(u"label_21")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_21.sizePolicy().hasHeightForWidth())
-        self.label_21.setSizePolicy(sizePolicy)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.label_21.sizePolicy().hasHeightForWidth())
+        self.label_21.setSizePolicy(sizePolicy1)
 
         self.gridLayout_39.addWidget(self.label_21, 0, 0, 1, 1)
 
@@ -169,8 +154,12 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
+        self.okButton.setText(QCoreApplication.translate("Form", u"Ok", None))
         self.pushButton.setText(QCoreApplication.translate("Form", u"Reload", None))
-        self.TrashArea.setText(QCoreApplication.translate("Form", u"Remove widget", None))
+        self.cancelButton.setText(QCoreApplication.translate("Form", u"Cancel", None))
+#if QT_CONFIG(shortcut)
+        self.cancelButton.setShortcut(QCoreApplication.translate("Form", u"Esc", None))
+#endif // QT_CONFIG(shortcut)
         self.label_21.setText(QCoreApplication.translate("Form", u"Category:", None))
         self.SearchBar_NP.setInputMask("")
         self.SearchBar_NP.setText("")

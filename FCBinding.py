@@ -1511,12 +1511,13 @@ class ModernMenu(RibbonBar):
                                     for widget in objPanel.widgets():
                                         if type(widget) is CustomControls:
                                             command: str = widget.findChild(QToolButton, "CommandButton").defaultAction().data()
-                                            if command.startswith("Std_") is False:
-                                                for item in self.List_Commands:
-                                                    if item[0] == command:
-                                                        commandList.append([item[0], item[3]])
-                                            if command.startswith("Std_"):
-                                                commandList.append([command, "Standard"])
+                                            if command is not None and command != "":
+                                                if command.startswith("Std_") is False:
+                                                    for item in self.List_Commands:
+                                                        if item[0] == command:
+                                                            commandList.append([item[0], item[3]])
+                                                if command.startswith("Std_"):
+                                                    commandList.append([command, "Standard"])
                                     self.workBenchDict["newPanels"][workbenchName][objPanel.objectName()] = commandList
                                                                                            
                             # Create keys if there are not existing yet for the temporary panel dict
@@ -5983,41 +5984,43 @@ class ModernMenu(RibbonBar):
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         panelName = panel.objectName()
         command = button.defaultAction().data()
+        print(button.actions())
         if command is None:
             command = button.actions()[0].objectName()
 
         try:
             orderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
-            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = ""
+            if command != "":
+                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = ""
 
-            # if it is a button from a newPanel, remove it from the newPanel list
-            if panelName.endswith("_newPanel"):
-                commandList = []
-                if panelName in self.workBenchDict["newPanels"][workbenchName]:
-                    commandList = self.workBenchDict["newPanels"][workbenchName][panelName]
-                elif panelName in self.workBenchDict["newPanels"]["Global"]:
-                    commandList = self.workBenchDict["newPanels"]["Global"][panelName]
-                elif panelName in self.workBenchDict["newPanels"]["Standard"]:
-                    commandList = self.workBenchDict["newPanels"]["Standard"][panelName]
-                for item in commandList:
-                    if item[0] == command:
-                        commandList.remove(item)
-                        self.workBenchDict["newPanels"][workbenchName][panelName] = commandList
-                        break     
+                # if it is a button from a newPanel, remove it from the newPanel list
+                if panelName.endswith("_newPanel"):
+                    commandList = []
+                    if panelName in self.workBenchDict["newPanels"][workbenchName]:
+                        commandList = self.workBenchDict["newPanels"][workbenchName][panelName]
+                    elif panelName in self.workBenchDict["newPanels"]["Global"]:
+                        commandList = self.workBenchDict["newPanels"]["Global"][panelName]
+                    elif panelName in self.workBenchDict["newPanels"]["Standard"]:
+                        commandList = self.workBenchDict["newPanels"]["Standard"][panelName]
+                    for item in commandList:
+                        if item[0] == command:
+                            commandList.remove(item)
+                            self.workBenchDict["newPanels"][workbenchName][panelName] = commandList
+                            break     
 
-            # Remove also from the ribbon structure if it is an extra (dragged) button
-            if "IsExtra" in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]:
-                try:
-                    # Get the dict
-                    Dict: dict = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]
-                    # Remove the command and update the workbench dict
-                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"] = StandardFunctions.remove_keys_with_values(Dict, command)
-                    # Update the order list
-                    orderList.remove(command)
-                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList
+                # Remove also from the ribbon structure if it is an extra (dragged) button
+                if "IsExtra" in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]:
+                    try:
+                        # Get the dict
+                        Dict: dict = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]
+                        # Remove the command and update the workbench dict
+                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"] = StandardFunctions.remove_keys_with_values(Dict, command)
+                        # Update the order list
+                        orderList.remove(command)
+                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList
 
-                except Exception:
-                    pass
+                    except Exception:
+                        pass
      
             
             # Close the widget
@@ -6034,7 +6037,7 @@ class ModernMenu(RibbonBar):
             Gui.updateGui()
                         
         except Exception as e:
-            raise(e)
+            print(e)
             pass
         
         return

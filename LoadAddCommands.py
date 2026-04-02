@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
-from PySide.QtWidgets import (
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
+from PySide6.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -39,7 +39,7 @@ from PySide.QtWidgets import (
     QListWidgetItem,
     QLineEdit,
 )
-from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent
+from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent
 import sys
 import json
 
@@ -50,7 +50,8 @@ from Parameters_Ribbon import Parameters
 import Serialize_Ribbon
 import CacheFunctions
 import FCBinding
-from CustomWidgets import QuickAccessToolButton
+from CustomWidgets import QuickAccessToolButton, CustomControls
+import StyleMapping_Ribbon
 
 import pyqtribbon_local as pyqtribbon
 from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar, RibbonTitleWidget, RibbonApplicationButton
@@ -102,6 +103,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "AddCommands.ui"))
         # Set its title
         self.form.setWindowTitle(translate("FreeCAD Ribbon", "Add or remove buttons"))
+        self.form.setAcceptDrops(True)
         
         # Install an event filter to catch events from the main window and act on it.
         self.form.installEventFilter(EventInspector(self.form))
@@ -109,12 +111,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # set all widgets on the form to not accepting drops
         self.form.CommandsAvailable_NP.setAcceptDrops(False)
         self.form.SearchBar_NP.setAcceptDrops(False)
-
-        # Set the trash area
-        pixmap = QPixmap(os.path.join(pathIcons, "Edit-delete.svg"))
-        self.form.TrashArea.setPixmap(pixmap)
-        self.form.TrashArea.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.form.TrashArea.setObjectName("TrashArea")
         
         # Get the address of the repository address
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
@@ -349,7 +345,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
         # Connect the "CreateNewPanel" button
         self.form.CreateNewPanel.clicked.connect(self.on_CreateNewPanel_clicked)
-        
+
         return        
         
     def addWorkbenches(self):
@@ -864,7 +860,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
             RibbonBar.CreateNewPanel(self.form.PanelTitle.text())
         return
-
+    # endregion
+    
 def main():
     # Get the form
     Dialog = LoadDialog().form
@@ -904,16 +901,17 @@ class EventInspector(QObject):
             if type(self.widget) is QuickAccessToolButton:
                 RibbonBar.RemoveButtonFromQuickAccess(self.widget, self.pos)
             self.dragEntered = False
-            return True
+            # return True
         # # Show the mainwindow after the application is activated
         if event.type() == QEvent.Type.DragEnter:
-            if self.parent().TrashArea.underMouse() is True:
-                self.dragEntered = True
-                self.widget = event.source()
-                self.pos= event.source().pos()
-                event.accept()
-            else:
-                event.ignore()
-            return True        
+            self.dragEntered = True
+            self.widget = event.source()
+            self.pos= event.source().pos()
+            event.accept()
+        if event.type() == QEvent.Type.DragLeave:
+            if self.widget is not None:
+                self.widget = None
+                self.pos = None
+                self.dragEntered = False
         return False
   
