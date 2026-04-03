@@ -54,7 +54,7 @@ from CustomWidgets import QuickAccessToolButton, CustomControls
 import StyleMapping_Ribbon
 
 import pyqtribbon_local as pyqtribbon
-from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar, RibbonTitleWidget, RibbonApplicationButton
+from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonTitleWidget, RibbonApplicationButton
 from pyqtribbon_local.panel import RibbonPanel, RibbonPanelItemWidget, RibbonPanelTitle
 from pyqtribbon_local.toolbutton import RibbonToolButton, RibbonButtonStyle
 from pyqtribbon_local.separator import RibbonSeparator
@@ -345,6 +345,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
         # Connect the "CreateNewPanel" button
         self.form.CreateNewPanel.clicked.connect(self.on_CreateNewPanel_clicked)
+        
+        # Connect the OK and Cancel buttons
+        self.form.cancelButton.clicked.connect(self.on_Cancel_Clicked)
+        self.form.okButton.clicked.connect(self.on_Ok_Clicked)
 
         return        
         
@@ -860,6 +864,16 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
             RibbonBar.CreateNewPanel(self.form.PanelTitle.text())
         return
+    # endregion
+    
+    # region - Form controls
+    def on_Cancel_Clicked(self):
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")        
+        RibbonBar.on_Cancel_Clicked()
+        
+    def on_Ok_Clicked(self):
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")        
+        RibbonBar.on_Ok_Clicked()
     # endregion
     
 def main():
