@@ -1023,6 +1023,8 @@ class ModernMenu(RibbonBar):
         return
 
     # region - Ribbon event fuctions
+    
+    # Mouse event funtions are needed to allow properly drag the window.
     initialPos = None
     def mousePress_Titlebar(self, event):
         self.initialPos = event.position().toPoint()
@@ -1547,7 +1549,8 @@ class ModernMenu(RibbonBar):
                     commandList = []
                     for widget in objPanel.widgets():
                         if type(widget) is CustomControls:
-                            command: str = widget.findChild(QToolButton, "CommandButton").defaultAction().data()
+                            # command: str = widget.findChild(QToolButton, "CommandButton").defaultAction().data()
+                            command =self.ReturnCommand(panel=objPanel, widget=widget)
                             if command is not None and command != "":
                                 if command.startswith("Std_") is False:
                                     for item in self.List_Commands:
@@ -2355,6 +2358,7 @@ class ModernMenu(RibbonBar):
                                 i = int(ExtraCommand.split(", ")[1])
                                 action = Command.getAction()[i]
                                 ExtraCommand = action.objectName()
+
                         # Define a holder for the Menu Text
                         MenuText = ""
                         for CommandItem in self.List_Commands:
@@ -2401,7 +2405,7 @@ class ModernMenu(RibbonBar):
                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["text"] = MenuText
                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["icon"] = ""
                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["IsExtra"] = True
-
+                        
                         # Create a new panel
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                         newPanel = self.CreatePanel(workbenchName, self.dropPanelName, addPanel=False, dict=self.workBenchDict, SetToUpdate=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand, ActivateButtons=True)
@@ -5968,14 +5972,16 @@ class ModernMenu(RibbonBar):
 
         return
     
-    def RemoveButtonFromPanel(self, panel: RibbonPanel = None, widget: CustomControls = None):
+    def ReturnCommand(self, panel: RibbonPanel = None, widget: CustomControls = None):
         button = widget.findChild(QToolButton, "CommandButton")
-        ArrowButton = widget.findChild(QToolButton, "MenuButton")
-        if ArrowButton.menu() is not None:
-            print(ArrowButton.actions())
         
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-        panelName = panel.objectName()
+        IsDropDown = False
+        ArrowButton = widget.findChild(QToolButton, "MenuButton")
+        if ArrowButton is not None:
+            if ArrowButton.menu() is not None:
+                if len(ArrowButton.menu().actions()) > 0:
+                    IsDropDown = True
+        
         command = button.defaultAction().data()        
         if command is None or command == "":
             if isinstance(button.actions(), QAction):
@@ -5994,20 +6000,25 @@ class ModernMenu(RibbonBar):
                 if command is None or command == "":
                     for item in self.List_Commands:
                         if item[2] == button.actions()[0].text() or item[4] == button.actions()[0].text():
-                            if len(button.actions()) > 1:
+                            if IsDropDown is True:
                                 if "Comp" in item[0]:
-                                    command = item[0]
+                                    command = item[0].split(",")[0]
                             else:
                                 command = item[0]
-                        
-              
-        print(command)
-   
+        
+        return command
+    
+    def RemoveButtonFromPanel(self, panel: RibbonPanel = None, widget: CustomControls = None):
+        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        panelName = panel.objectName()
+        
+        command = self.ReturnCommand(panel=panel, widget=widget)
+           
         try:
             orderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
             if command != "" and command is not None and command in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
-                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = ""
-
+                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = ""              
+                
                 # if it is a button from a newPanel, remove it from the newPanel list
                 if panelName.endswith("_newPanel"):
                     commandList = []
