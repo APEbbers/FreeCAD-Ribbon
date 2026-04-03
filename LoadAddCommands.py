@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
-from PySide6.QtWidgets import (
+from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
+from PySide.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -39,7 +39,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     QLineEdit,
 )
-from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent
+from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent
 import sys
 import json
 
@@ -117,6 +117,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.ReproAdress = StandardFunctions.ReturnXML_Value(
             PackageXML, "url", "type", "repository"
         )
+        
+        # load the RibbonStructure.json
+        self.ReadJson()
 
         # Make sure that the dialog stays on top
         self.form.raise_()
@@ -479,19 +482,19 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     # Default a command is not selected
                     if Icon is not None:
                         # Add clones of the listWidgetItem to the other listwidgets
-                        self.form.CommandsAvailable_NP.addItem(ListWidgetItem.clone())
+                        self.form.CommandsAvailable_NP.addItem(ListWidgetItem)
                         # self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
 
-                    # # If there are any dropdown buttons in the json file, add them to the dropdown list
-                    # if (
-                    #     str(CommandName).endswith("_ddb")
-                    #     and "dropdownButtons" in self.Dict_DropDownButtons
-                    # ):
-                    #     self.form.CommandList_DDB.addItem(
-                    #         CommandName.replace("_ddb", "")
-                    #     )
+                        # # If there are any dropdown buttons in the json file, add them to the dropdown list
+                        # if (
+                        #     str(CommandName).endswith("_ddb")
+                        #     and "dropdownButtons" in self.Dict_DropDownButtons
+                        # ):
+                        #     self.form.CommandList_DDB.addItem(
+                        #         CommandName.replace("_ddb", "")
+                        #     )
 
-            ShadowList.append(f"{MenuNameTranslated}")
+                        ShadowList.append(f"{MenuNameTranslated}")
 
         # # Add a "new" item to the dropdown list
         # self.form.CommandList_DDB.addItem(translate("FreeCAD Ribbon", "New"), "new")
@@ -875,6 +878,68 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")        
         RibbonBar.on_Ok_Clicked()
     # endregion
+    
+    def ReadJson(self, Section="All", JsonFile=""):
+        # Open the JsonFile and load the data
+        try:
+            if JsonFile != "":
+                JsonFile = open(JsonFile)
+            else:
+                JsonFile = open(Parameters.RIBBON_STRUCTURE_JSON)
+        except Exception:
+            JsonFile = open(Parameters.RIBBON_STRUCTURE_JSON)
+        data = json.load(JsonFile)
+
+        # # Get all the ignored toolbars
+        # if Section == "ignoredToolbars" or Section == "All":
+        #     for IgnoredToolbar in data["ignoredToolbars"]:
+        #         self.List_IgnoredToolbars.append(IgnoredToolbar)
+
+        # # Get all the icon only toolbars
+        # if Section == "iconOnlyToolbars" or Section == "All":
+        #     for IconOnly_Toolbar in data["iconOnlyToolbars"]:
+        #         self.List_IconOnly_Toolbars.append(IconOnly_Toolbar)
+
+        # # Get all the quick access command
+        # if Section == "quickAccessCommands" or Section == "All":
+        #     for QuickAccessCommand in data["quickAccessCommands"]:
+        #         self.List_QuickAccessCommands.append(QuickAccessCommand)
+
+        # # Get all the ignored workbenches
+        # if Section == "ignoredWorkbenches" or Section == "All":
+        #     for IgnoredWorkbench in data["ignoredWorkbenches"]:
+        #         self.List_IgnoredWorkbenches.append(IgnoredWorkbench)
+
+        # # Get all the custom toolbars
+        # if Section == "customToolbars" or Section == "All":
+        #     try:
+        #         self.Dict_CustomToolbars["customToolbars"] = data["customToolbars"]
+        #     except Exception:
+        #         pass
+
+        # Get all the dropdown buttons
+        if Section == "dropdownButtons" or Section == "All":
+            try:
+                self.Dict_DropDownButtons["dropdownButtons"] = data["dropdownButtons"]
+            except Exception:
+                pass
+
+        # Get all the new toolbars
+        if Section == "newPanels" or Section == "All":
+            try:
+                self.Dict_NewPanels["newPanels"] = data["newPanels"]
+            except Exception:
+                pass
+
+        # # Get the dict with the customized date for the buttons
+        # if Section == "workbenches" or Section == "All":
+        #     try:
+        #         self.Dict_RibbonCommandPanel["workbenches"] = data["workbenches"]
+        #     except Exception:
+        #         pass
+
+        JsonFile.close()
+        return
     
 def main():
     # Get the form

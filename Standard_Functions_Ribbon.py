@@ -929,7 +929,14 @@ def returnQiCons_Commands(CommandName, pixmap=""):
         try:
             icon = Gui.getIcon(CommandName)
         except Exception:
-            return None
+            pass
+    
+    # If the icon still none, set a replacement Icon
+    if icon is None or (icon is not None and icon.isNull()):
+        try:
+            icon = Gui.getIcon("preferences-workbenches")
+        except Exception:
+            pass
     return icon
 
 
