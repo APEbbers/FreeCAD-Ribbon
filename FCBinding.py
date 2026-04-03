@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -52,7 +52,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -91,7 +91,7 @@ from PySide.QtWidgets import (
     QListWidgetItem,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1132,6 +1132,7 @@ class ModernMenu(RibbonBar):
         self.workBenchDict["workbenches"][workbenchName] = self.ribbonStructure["workbenches"][workbenchName]
         self.workBenchDict["quickAccessCommands"] = self.ribbonStructure["quickAccessCommands"]
         self.workBenchDict["newPanels"] = self.ribbonStructure["newPanels"]
+        self.workBenchDict["dropdownButtons"] = self.ribbonStructure["dropdownButtons"]
     
         # If betaFunctions is enabled, coninue
         if self.BetaFunctionsEnabled is True:
@@ -4513,7 +4514,8 @@ class ModernMenu(RibbonBar):
                     for CommandItem in Commands:
                         CommandName = CommandItem[0]
                         # Define a new toolbutton
-                        NewToolbutton = RibbonToolButton()
+                        # NewToolbutton = RibbonToolButton()
+                        NewToolbutton = QToolButton
                         if CommandName.endswith("_ddb") is False:
                             CommandActionList = None
                             # Get the translated menutext
@@ -4591,9 +4593,10 @@ class ModernMenu(RibbonBar):
                                     menu = QMenu()
                                     for action in CommandActionList:
                                         if len(action) > 0:
-                                            menu.addAction(action[0])
+                                            if action[0] is not None:
+                                                menu.addAction(action[0])
                                     NewToolbutton.setMenu(menu)
-                                    NewToolbutton.setDefaultAction(menu.actions()[0])
+                                    NewToolbutton.setDefaultAction(CommandActionList[0][0])
                                     # Add the commandname as the objectname to detect if it is a dropdownbutton
                                     NewToolbutton.setObjectName(CommandName)
 
@@ -5071,6 +5074,42 @@ class ModernMenu(RibbonBar):
             except Exception:
                 pass
             
+        # If it is a custom dropdown that is presen on the panel, create a button for.
+        if workbenchName in dict["workbenches"]:
+            if (
+                panelName != ""
+                and "toolbars" in dict["workbenches"][workbenchName]
+                and panelName
+                in dict["workbenches"][workbenchName]["toolbars"]
+            ):
+                # Add custom dropdown buttons to the list that are on default panels
+                button = QToolButton()
+                for key, value in dict["dropdownButtons"].items():
+                    if key in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
+                        currentCategory = self.currentCategory()
+                        for CommandItem in self.List_Commands:
+                            if CommandItem[0] == value[0]:
+                                if (value[1] != "General" and value[1] != "Global" and value[1] != "Standard"):                                
+                                    # Activate the workbench if not loaded
+                                    Gui.activateWorkbench(value[1])
+                                    break
+                        # Set the current  category after activating the workbench
+                        self.setCurrentCategory(currentCategory)
+                        Gui.activateWorkbench(currentCategory.objectName())
+
+                        # Get the actions and add them one by one
+                        QuickAction = self.returnCustomDropDown(key)
+                        menu = QMenu()
+                        for action in QuickAction:
+                            if len(action) > 0:
+                                menu.addAction(action[0])
+                        button.setMenu(menu)
+                        # # Set the default action
+                        button.setDefaultAction(QuickAction[0][0])
+
+                        button.setObjectName(key)
+                        allButtons.append(button)
+            
         # Add custom panels
         if panelName.endswith("_custom"):
             customList = self.List_AddCustomToolBarToWorkbench(workbenchName, panelName)
@@ -5083,7 +5122,7 @@ class ModernMenu(RibbonBar):
             # Add new global Panels
             NewPanelList = self.List_AddNewPanelToWorkbench("Global", panelName)
             allButtons.extend(NewPanelList)
-            
+                    
         # If a new command needs to be added, create a button and add it to allButtons
         if ExtraCommand != "":
             ExtraButton = self.CreateButtonFromCommand(ExtraCommand)
