@@ -49,12 +49,12 @@ Accept prompt and FreeCAD will restart with the Ribbon addon included.
 Note: See [wiki page/installation](https://github.com/APEbbers/FreeCAD-Ribbon/wiki/01-%E2%80%90-Installation) for other ways to install.
 
 
-## Uninstallation
+## Deinstallation
 
 1. Remove the Ribbon UI via the addon manager.
 1. Restart FreeCAD.
 1. When you restarted you don't see any toolbar. There are 2 options:
-   1. If have the "Save and Restore" addon installed, you can use it to restore all toolbars.
+   1. If the "Save and Restore" addon is installed, you can use it to restore all toolbars.
       Go to "Tools" and click on "Save and restore". a Dialog will show.
       Click on "Restore toolbars".  
       <img width="426" height="490" alt="image" src="https://github.com/user-attachments/assets/9c38175a-2089-40c4-8c66-24a09b0707cd" />
