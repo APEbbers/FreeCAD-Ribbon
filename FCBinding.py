@@ -1551,7 +1551,7 @@ class ModernMenu(RibbonBar):
                     for widget in objPanel.widgets():
                         if type(widget) is CustomControls:
                             # command: str = widget.findChild(QToolButton, "CommandButton").defaultAction().data()
-                            command =self.ReturnCommand(panel=objPanel, widget=widget)
+                            command =self.ReturnCommand_string(panel=objPanel, widget=widget)
                             if command is not None and command != "":
                                 if command.startswith("Std_") is False:
                                     for item in self.List_Commands:
@@ -2345,7 +2345,6 @@ class ModernMenu(RibbonBar):
 
         # If you drag and drop a new command, you actually dragging the complete QListWidget
         if type(widget) is QListWidget:
-            # print(f"QC: {self.quickAccessToolBar().underMouse()}")
             if self.quickAccessToolBar().underMouse() is False:
                 for panelName, panel in currentCategory.panels().items():
                     # If the panelName is equal to the panel name on which the command is dropped, continue.
@@ -2407,7 +2406,6 @@ class ModernMenu(RibbonBar):
                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["icon"] = ""
                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["IsExtra"] = True
                         
-                        # Create a new panel
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                         newPanel = self.CreatePanel(workbenchName, self.dropPanelName, addPanel=False, dict=self.workBenchDict, SetToUpdate=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand, ActivateButtons=True)
                                                 
@@ -2615,30 +2613,36 @@ class ModernMenu(RibbonBar):
                                 control = gridLayout.itemAt(n).widget().findChild(CustomControls)
                                 separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
                                 if control is not None and type(control) is CustomControls:
-                                    OrderList_Compare.append(control.findChild(QToolButton, "CommandButton").defaultAction().data())
+                                    # OrderList_Compare.append(control.findChild(QToolButton, "CommandButton").defaultAction().data())
+                                    OrderList_Compare.append(self.ReturnCommand_string(panel=panel, widget=control))
                                 if separator is not None and type(separator) is CustomSeparator:
                                     OrderList_Compare.append(separator.objectName())
                             if OrderList != OrderList_Compare:
                                 OrderList = OrderList_Compare
                             
                             # Get the indexes of the widgets
-                            index_originalWidget = OrderList.index(OriginalWidget.findChild(QToolButton, "CommandButton").defaultAction().data()) # This is the location were will be dropped
+                            # index_originalWidget = OrderList.index(OriginalWidget.findChild(QToolButton, "CommandButton").defaultAction().data()) # This is the location were will be dropped
+                            index_originalWidget = OrderList.index(self.ReturnCommand_string(panel=panel, widget=OriginalWidget)) # This is the location were will be dropped
                             if DraggedWidget is not None:
-                                index_newWidget = OrderList.index(DraggedWidget.findChild(QToolButton, "CommandButton").defaultAction().data()) # This is the original location of the dragged widget                        
+                                # index_newWidget = OrderList.index(DraggedWidget.findChild(QToolButton, "CommandButton").defaultAction().data()) # This is the original location of the dragged widget                        
+                                index_newWidget = OrderList.index(self.ReturnCommand_string(panel=panel, widget=DraggedWidget)) # This is the original location of the dragged widget                        
                                 if replace is True:                                
                                     # Remove the command name of the original widget from the order list and
                                     # Add the command of the dragged widget in its place
                                     OrderList.pop(index_originalWidget)
-                                    OrderList.insert(index_originalWidget, DraggedWidget.findChild(QToolButton, "CommandButton").defaultAction().data())
+                                    # OrderList.insert(index_originalWidget, DraggedWidget.findChild(QToolButton, "CommandButton").defaultAction().data())
+                                    OrderList.insert(index_originalWidget, self.ReturnCommand_string(panel=panel, widget=DraggedWidget))
                                     # Remove the command name of the dragged widget from the order list and
                                     # Add the command of the original widget in its place
                                     OrderList.pop(index_newWidget)
-                                    OrderList.insert(index_newWidget, OriginalWidget.findChild(QToolButton, "CommandButton").defaultAction().data())
+                                    # OrderList.insert(index_newWidget, OriginalWidget.findChild(QToolButton, "CommandButton").defaultAction().data())
+                                    OrderList.insert(index_newWidget, self.ReturnCommand_string(panel=panel, widget=OriginalWidget))
                                 else:
                                     # Remove the dragged item from the list
                                     OrderList.pop(index_newWidget)
                                     # Inserted it at the new location
-                                    OrderList.insert(index_originalWidget, DraggedWidget.findChild(QToolButton, "CommandButton").defaultAction().data())
+                                    # OrderList.insert(index_originalWidget, DraggedWidget.findChild(QToolButton, "CommandButton").defaultAction().data())
+                                    OrderList.insert(index_originalWidget, self.ReturnCommand_string(panel=panel, widget=DraggedWidget))
 
                     if type(widgetType) is CustomSeparator:
                         for n in range(gridLayout.count()):
@@ -2657,14 +2661,16 @@ class ModernMenu(RibbonBar):
                                 control = gridLayout.itemAt(n).widget().findChild(CustomControls)
                                 separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
                                 if control is not None and type(control) is CustomControls:
-                                    OrderList_Compare.append(control.actions().data())
+                                    # OrderList_Compare.append(control.actions().data())
+                                    OrderList_Compare.append(self.ReturnCommand_string(panel=panel, widget=control))
                                 if separator is not None and type(separator) is CustomSeparator:
                                     OrderList_Compare.append(separator.objectName())
                             if OrderList != OrderList_Compare:
                                 OrderList = OrderList_Compare
                             
                             # Get the indexes of the widgets
-                            index_originalWidget = OrderList.index(OriginalWidget.actions().data()) # This is the location were will be dropped
+                            # index_originalWidget = OrderList.index(OriginalWidget.actions().data()) # This is the location were will be dropped
+                            index_originalWidget = OrderList.index(self.ReturnCommand_string(panel=panel, widget=OriginalWidget)) # This is the location were will be dropped
                             if DraggedWidget is not None:
                                 index_newWidget = OrderList.index(DraggedWidget.objectName()) # This is the original location of the dragged widget                        
                                 if replace is True:                                
@@ -2675,7 +2681,8 @@ class ModernMenu(RibbonBar):
                                     # Remove the command name of the dragged widget from the order list and
                                     # Add the command of the original widget in its place
                                     OrderList.pop(index_newWidget)
-                                    OrderList.insert(index_newWidget, OriginalWidget.actions().data())
+                                    # OrderList.insert(index_newWidget, OriginalWidget.actions().data())
+                                    OrderList.insert(index_newWidget, self.ReturnCommand_string(panel=panel, widget=OriginalWidget))
                                 else:
                                     # Remove the dragged item from the list
                                     OrderList.pop(index_newWidget)
@@ -4499,6 +4506,7 @@ class ModernMenu(RibbonBar):
                             continue
         return ButtonList
 
+    # To be removed
     def List_AddNewPanelToWorkbench(self, WorkBenchName, NewPanel):
         ButtonList = []
 
@@ -4509,7 +4517,8 @@ class ModernMenu(RibbonBar):
                     Commands = self.newPanels[WorkBenchName][
                         NewPanel
                     ]
-
+                    print(NewPanel)
+                    
                     # Get the command and its original toolbar
                     for CommandItem in Commands:
                         CommandName = CommandItem[0]
@@ -4518,22 +4527,24 @@ class ModernMenu(RibbonBar):
                         NewToolbutton = QToolButton
                         if CommandName.endswith("_ddb") is False:
                             CommandActionList = None
-                            # Get the translated menutext
-                            # if the commandname cannot be split, it is a nromal command
-                            if len(CommandName.split(", ")) <= 1:
-                                # Get the command
-                                Command = Gui.Command.get(CommandName)
-                                if Command is not None:
-                                    # Get tis action
-                                    CommandActionList = Command.getAction()
-                                if Command is None:
-                                    if Parameters.DEBUG_MODE is True:
-                                        StandardFunctions.Print(
-                                            f"{CommandName} was None", "Warning"
-                                        )
-                            # If the commandname can be splitted, it is a FreeCAD dropdown
-                            if len(CommandName.split(", ")) > 1:
-                                CommandActionList = self.LoadDropDownAction(CommandName)
+                            # # Get the translated menutext
+                            # # if the commandname cannot be split, it is a nromal command
+                            # if len(CommandName.split(", ")) <= 1:
+                            #     # Get the command
+                            #     Command = Gui.Command.get(CommandName)
+                            #     if Command is not None:
+                            #         # Get tis action
+                            #         CommandActionList = Command.getAction()
+                            #     if Command is None:
+                            #         if Parameters.DEBUG_MODE is True:
+                            #             StandardFunctions.Print(
+                            #                 f"{CommandName} was None", "Warning"
+                            #             )
+                            # # If the commandname can be splitted, it is a FreeCAD dropdown
+                            # print(CommandName)
+                            # if len(CommandName.split(", ")) > 1:
+                            CommandActionList = self.LoadDropDownAction(CommandName)
+                            print(CommandActionList)
                             if CommandActionList is None:
                                 continue
                             # if there are actions, proceed
@@ -4577,6 +4588,7 @@ class ModernMenu(RibbonBar):
                                 ButtonList.append(NewToolbutton)
                         if CommandName.endswith("_ddb") is True:
                             CommandActionList = self.returnCustomDropDown(CommandName)
+                            print(CommandActionList)
                             if CommandActionList is None or len(CommandActionList) < 1:
                                 continue
 
@@ -4644,6 +4656,7 @@ class ModernMenu(RibbonBar):
                 child.setEnabled(True)
    
             # Get the command
+            print(commandName)
             Command = Gui.Command.get(commandName)
             action = None
             Icon = None
@@ -4673,14 +4686,17 @@ class ModernMenu(RibbonBar):
            
             
             if type(action) is list and len(action) > 1:
-                Button.addActions(action)
+                # Button.addActions(action)
                 Button.setDefaultAction(action[0])
                 menu = QMenu()
-                menu.addActions(action)
+                # menu.addActions(action)
+                for menuAction in action:
+                    menu.addAction(menuAction)
                 Button.setMenu(menu)
                 # For some reason, the line below, activates the menus.
                 # Otherwise the button wont be an dropdown button.
                 Button.menu()
+                print(action)
             else:
                 try:
                     Button.addAction(action[0])
@@ -4724,6 +4740,12 @@ class ModernMenu(RibbonBar):
                     # Set the commandname as data
                     action.setData(CommandName)
                     # return as a list
+                    return [action]
+            else:
+                action = Gui.Command.get(CommandName).getAction()
+                if isinstance(action, list):
+                    return action
+                if isinstance(action, QAction):
                     return [action]
         except Exception as e:
             if Parameters.DEBUG_MODE is True:
@@ -5071,6 +5093,9 @@ class ModernMenu(RibbonBar):
                     button: QToolButton = allButtons[i]
                     if allButtons[i].text() == "":
                         allButtons.pop(i)
+                    else:
+                        # button.setObjectName(button.defaultAction().data())
+                        button.setObjectName(self.ReturnCommand_string(panel, button))
             except Exception:
                 pass
             
@@ -5084,44 +5109,47 @@ class ModernMenu(RibbonBar):
             ):
                 # Add custom dropdown buttons to the list that are on default panels
                 button = QToolButton()
-                for key, value in dict["dropdownButtons"].items():
-                    if key in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
-                        currentCategory = self.currentCategory()
-                        for CommandItem in self.List_Commands:
-                            if CommandItem[0] == value[0]:
-                                if (value[1] != "General" and value[1] != "Global" and value[1] != "Standard"):                                
-                                    # Activate the workbench if not loaded
-                                    Gui.activateWorkbench(value[1])
-                                    break
-                        # Set the current  category after activating the workbench
-                        self.setCurrentCategory(currentCategory)
-                        Gui.activateWorkbench(currentCategory.objectName())
+                for command in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():
+                    if command.endswith("_ddb"):
+                        for key, value in dict["dropdownButtons"].items():
+                            if key == command:
+                                currentCategory = self.currentCategory()
+                                for CommandItem in self.List_Commands:
+                                    if CommandItem[0] == value[0]:
+                                        if (value[1] != "General" and value[1] != "Global" and value[1] != "Standard"):                                
+                                            # Activate the workbench if not loaded
+                                            Gui.activateWorkbench(value[1])
+                                            break
+                                # Set the current  category after activating the workbench
+                                self.setCurrentCategory(currentCategory)
+                                Gui.activateWorkbench(currentCategory.objectName())
 
-                        # Get the actions and add them one by one
-                        QuickAction = self.returnCustomDropDown(key)
-                        menu = QMenu()
-                        for action in QuickAction:
-                            if len(action) > 0:
-                                menu.addAction(action[0])
-                        button.setMenu(menu)
-                        # # Set the default action
-                        button.setDefaultAction(QuickAction[0][0])
+                                # Get the actions and add them one by one
+                                QuickAction = self.returnCustomDropDown(key)
+                                menu = QMenu()
+                                for action in QuickAction:
+                                    if len(action) > 0:
+                                        menu.addAction(action[0])
+                                button.setMenu(menu)
+                                # # Set the default action
+                                button.setDefaultAction(QuickAction[0][0])
 
-                        button.setObjectName(key)
-                        allButtons.append(button)
+                                button.setObjectName(key)
+                                allButtons.append(button)
             
         # Add custom panels
         if panelName.endswith("_custom"):
             customList = self.List_AddCustomToolBarToWorkbench(workbenchName, panelName)
             allButtons.extend(customList)
 
-        # Add new Panels
+        # # Add new Panels
         if panelName.endswith("_newPanel"):
-            NewPanelList = self.List_AddNewPanelToWorkbench(workbenchName, panelName)
-            allButtons.extend(NewPanelList)
-            # Add new global Panels
-            NewPanelList = self.List_AddNewPanelToWorkbench("Global", panelName)
-            allButtons.extend(NewPanelList)
+            if panelName in dict["workbenches"][workbenchName]["toolbars"]:
+                for key in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():
+                    if key != "order":
+                        button = self.CreateButtonFromCommand(key)
+                        if button is not None:
+                            allButtons.append(button)
                     
         # If a new command needs to be added, create a button and add it to allButtons
         if ExtraCommand != "":
@@ -5129,21 +5157,21 @@ class ModernMenu(RibbonBar):
             if ExtraButton is not None:
                 allButtons.append(ExtraButton)
         
-        # Set the objectname to the default action of all buttons
-        for button in allButtons:
-            try:
-                action = button.actions()[0]
-                action.setObjectName(action.data())
-            except Exception:
-                try:
-                    action = button.actions()
-                    action.setObjectName(action.data())
-                except Exception:
-                    try:
-                        action = button.defaultAction()
-                        action.setObjectName(action.data())
-                    except Exception:
-                        pass
+        # # Set the objectname to the default action of all buttons
+        # for button in allButtons:
+        #     try:
+        #         action = button.actions()[0]
+        #         action.setObjectName(action.data())
+        #     except Exception:
+        #         try:
+        #             action = button.actions()
+        #             action.setObjectName(action.data())
+        #         except Exception:
+        #             try:
+        #                 action = button.defaultAction()
+        #                 action.setObjectName(action.data())
+        #             except Exception:
+        #                 pass
             
         # add separators to the command list.
         if workbenchName in dict["workbenches"]:
@@ -5190,24 +5218,25 @@ class ModernMenu(RibbonBar):
                                 except Exception:
                                     pass
                                 
-        # add the extra commands to the command list that are present in the dict.
-        if workbenchName in dict["workbenches"]:
-            if (
-                panelName != ""
-                and "toolbars" in dict["workbenches"][workbenchName]
-                and panelName
-                in dict["workbenches"][workbenchName]["toolbars"]
-            ):
-                for orderedToolbar in dict["workbenches"][workbenchName]["toolbars"]:
-                    if orderedToolbar.lower() == panelName.lower():
-                        if "commands" in dict["workbenches"][workbenchName]["toolbars"][panelName]:
-                            for Command in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
-                                if Command != "order":
-                                    if "IsExtra" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]:
-                                        if dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]["IsExtra"]:
-                                            ExtraCommand = self.CreateButtonFromCommand(Command)
-                                            if ExtraCommand is not None:
-                                                allButtons.append(ExtraCommand)
+        # # add the extra commands to the command list that are present in the dict.
+        # if workbenchName in dict["workbenches"]:
+        #     if (
+        #         panelName != ""
+        #         and "toolbars" in dict["workbenches"][workbenchName]
+        #         and panelName
+        #         in dict["workbenches"][workbenchName]["toolbars"]
+        #     ):
+        #         for orderedToolbar in dict["workbenches"][workbenchName]["toolbars"]:
+        #             if orderedToolbar.lower() == panelName.lower():
+        #                 if "commands" in dict["workbenches"][workbenchName]["toolbars"][panelName]:
+        #                     for Command in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
+        #                         if Command != "order":
+        #                             if "IsExtra" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]:
+        #                                 if dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]["IsExtra"]:
+        #                                     ExtraCommand = self.CreateButtonFromCommand(Command)
+        #                                     if ExtraCommand is not None:
+        #                                         allButtons.append(ExtraCommand)
+
 
         if workbenchName in dict["workbenches"]:
             # order buttons like defined in ribbonStructure
@@ -5281,10 +5310,7 @@ class ModernMenu(RibbonBar):
             # count the number of buttons per type. Needed for proper sorting the buttons later.
             buttonSize = "small"
             try:
-                action = button.defaultAction()
-                buttonSize = dict["workbenches"][workbenchName][
-                    "toolbars"
-                ][panelName]["commands"][action.data()]["size"]
+                buttonSize = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][self.ReturnCommand_string(panel=panel, widget=button)]["size"]
                 if buttonSize == "small":
                     NoSmallButtons_spacer += 1
                 if buttonSize == "medium":
@@ -5413,10 +5439,15 @@ class ModernMenu(RibbonBar):
                     continue
                 else:
                     try:
-                        CommandName = button.toolTip()
+                        # CommandName = button.toolTip()
+                        CommandName = self.ReturnCommand_string(panel=panel, widget=button)
                         action = button.defaultAction()
                         Icon = button.icon()
 
+                        if CommandName == "":
+                            continue
+                        
+                        # print(CommandName)
                         # get the action text
                         text = action.text()
                         try:
@@ -5431,16 +5462,16 @@ class ModernMenu(RibbonBar):
                         # try to get alternative text from ribbonStructure
                         try:
                             if panelName in dict["workbenches"][workbenchName]["toolbars"]:
-                                if action.data() in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
-                                    if "text" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][action.data()]:
-                                        textJSON = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][action.data()]["text"]
+                                if CommandName in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
+                                    if "text" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]:
+                                        textJSON = dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["text"]
 
                                         # There is a bug in freecad with the comp-sketch menu hase the wrong text
                                         if (
-                                            action.data() == "PartDesign_CompSketches"
+                                            CommandName == "PartDesign_CompSketches"
                                             and dict["workbenches"][
                                                 workbenchName
-                                            ]["toolbars"][panelName]["commands"][action.data()][
+                                            ]["toolbars"][panelName]["commands"][CommandName][
                                                 "text"
                                             ]
                                             == "Create datum"
@@ -6011,15 +6042,23 @@ class ModernMenu(RibbonBar):
 
         return
     
-    def ReturnCommand(self, panel: RibbonPanel = None, widget: CustomControls = None):
-        button = widget.findChild(QToolButton, "CommandButton")
+    def ReturnCommand_string(self, panel: RibbonPanel = None, widget = None) -> str:
+        command = ""
+        button = None
         
         IsDropDown = False
-        ArrowButton = widget.findChild(QToolButton, "MenuButton")
-        if ArrowButton is not None:
-            if ArrowButton.menu() is not None:
-                if len(ArrowButton.menu().actions()) > 0:
-                    IsDropDown = True
+        if type(widget) is CustomControls:
+            button = widget.findChild(QToolButton, "CommandButton")
+        
+            ArrowButton = widget.findChild(QToolButton, "MenuButton")
+            if ArrowButton is not None:
+                if ArrowButton.menu() is not None:
+                    if len(ArrowButton.menu().actions()) > 0:
+                        IsDropDown = True
+        else:
+            button = widget
+            if isinstance(button.actions(), list):
+                IsDropDown = True
         
         command = button.defaultAction().data()        
         if command is None or command == "":
@@ -6044,14 +6083,15 @@ class ModernMenu(RibbonBar):
                                     command = item[0].split(",")[0]
                             else:
                                 command = item[0]
-        
+        if command is None:
+            command = ""
         return command
     
     def RemoveButtonFromPanel(self, panel: RibbonPanel = None, widget: CustomControls = None):
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         panelName = panel.objectName()
         
-        command = self.ReturnCommand(panel=panel, widget=widget)
+        command = self.ReturnCommand_string(panel=panel, widget=widget)
            
         try:
             orderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
