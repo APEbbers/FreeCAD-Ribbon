@@ -965,7 +965,10 @@ class EventInspector(QObject):
                 while (count < 10):
                     if type(parent) is RibbonPanel:
                         panel = parent
-                        break                              
+                        break
+                    # if type(parent) is CustomControls:
+                    #     self.widget = parent
+                        # break
                     else:
                         if parent is not None:
                             parent = parent.parent()
@@ -976,7 +979,7 @@ class EventInspector(QObject):
             RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
             if type(self.widget) is not QuickAccessToolButton:
                 if panel is not None:
-                    RibbonBar.RemoveButtonFromPanel(panel, self.widget)
+                    RibbonBar.RemoveButtonFromPanel(panel, self.widget)                    
             if type(self.widget) is QuickAccessToolButton:
                 RibbonBar.RemoveButtonFromQuickAccess(self.widget, self.pos)
             self.dragEntered = False
@@ -985,6 +988,7 @@ class EventInspector(QObject):
         if event.type() == QEvent.Type.DragEnter:
             self.dragEntered = True
             self.widget = event.source()
+            # self.widget = self.widget.parent()
             self.pos= event.source().pos()
             event.accept()
         if event.type() == QEvent.Type.DragLeave:

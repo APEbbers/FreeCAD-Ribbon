@@ -1374,16 +1374,17 @@ class ModernMenu(RibbonBar):
                                     command = self.ReturnCommand_string(self.workBenchDict, objPanel, control)
                                     if command != "":
                                         orderList.append(command)
-                                        print(command)
-
+  
                                         # Add the command if they don't exist
                                         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", command, "size"], "small")
                                         # Set the sizes
-                                        if control.objectName() == "CustomWidget_Small":
+                                        # print(control.ButtonStyle)
+                                        style = control.ButtonStyle
+                                        if style == RibbonButtonStyle.Small:
                                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "small"
-                                        if control.objectName() == "CustomWidget_Medium":
+                                        if style == RibbonButtonStyle.Medium:
                                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "medium"
-                                        if control.objectName() == "CustomWidget_Large":
+                                        if style == RibbonButtonStyle.Large:
                                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "large"
                                 
                                 separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
@@ -1426,11 +1427,12 @@ class ModernMenu(RibbonBar):
                                         # Add the command if they don't exist
                                         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", command, "size"], "small")
                                         # Set the sizes
-                                        if control.objectName() == "CustomWidget_Small":
+                                        style = control.ButtonStyle
+                                        if style == RibbonButtonStyle.Small:
                                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "small"
-                                        if control.objectName() == "CustomWidget_Medium":
+                                        if style == RibbonButtonStyle.Medium:
                                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "medium"
-                                        if control.objectName() == "CustomWidget_Large":
+                                        if style == RibbonButtonStyle.Large:
                                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "large"
 
                                     separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
@@ -1535,19 +1537,20 @@ class ModernMenu(RibbonBar):
             
             # Add any new panel to the dict. It will be loaded with the next start
             if objPanel.objectName().endswith("_newPanel"):
-                if objPanel.objectName() in self.workBenchDict["newPanels"][workbenchName]:
-                    commandList = []
-                    for widget in objPanel.widgets():
-                        if type(widget) is CustomControls:
-                            # command: str = widget.findChild(QToolButton, "CommandButton").defaultAction().data()
-                            command =self.ReturnCommand_string(Dict=self.workBenchDict, panel=objPanel, widget=widget)
-                            if command is not None and command != "":
-                                if command.startswith("Std_") is False:
-                                    for item in self.List_Commands:
-                                        if item[0] == command:
-                                            commandList.append([item[0], item[3]])
-                                if command.startswith("Std_"):
-                                    commandList.append([command, "Standard"])
+                if workbenchName in self.workBenchDict["newPanels"]:
+                    if objPanel.objectName() in self.workBenchDict["newPanels"][workbenchName]:
+                        commandList = []
+                        for widget in objPanel.widgets():
+                            if type(widget) is CustomControls:
+                                # command: str = widget.findChild(QToolButton, "CommandButton").defaultAction().data()
+                                command =self.ReturnCommand_string(Dict=self.workBenchDict, panel=objPanel, widget=widget)
+                                if command is not None and command != "":
+                                    if command.startswith("Std_") is False:
+                                        for item in self.List_Commands:
+                                            if item[0] == command:
+                                                commandList.append([item[0], item[3]])
+                                    if command.startswith("Std_"):
+                                        commandList.append([command, "Standard"])
                     self.workBenchDict["newPanels"][workbenchName][objPanel.objectName()] = commandList
                                                                             
             # Create keys if there are not existing yet for the temporary panel dict
@@ -1785,7 +1788,7 @@ class ModernMenu(RibbonBar):
     def on_ButtonSize_Changed(self, panel: RibbonPanel, ButtonWidget: QToolButton, ButtonSizeWidget: SpinBoxAction):              
         # Get the menubutton height for large buttons
         menuButtonWidth = 0
-        if ButtonWidget.objectName() != "CustomWidget_Large":
+        if "CustomWidget_Large" not in ButtonWidget.objectName():
             try:
                 menuButtonWidth = ButtonWidget.findChild(QToolButton, "MenuButton").width()
             except Exception:
@@ -1801,9 +1804,9 @@ class ModernMenu(RibbonBar):
         # Set the height to the value of the spinbox
         ButtonWidget.setFixedHeight(ButtonSizeWidget.value())
         # Adjust the with including menubutton and label
-        if ButtonWidget.objectName() != "CustomWidget_Large":
+        if "CustomWidget_Large" not in ButtonWidget.objectName():
             ButtonWidget.setFixedWidth(ButtonSizeWidget.value() + labelWidth + menuButtonWidth)
-        if ButtonWidget.objectName() == "CustomWidget_Large":
+        if "CustomWidget_Large" in ButtonWidget.objectName():
             ButtonWidget.setFixedWidth(ButtonSizeWidget.value())
             ButtonWidget.layout().setAlignment(Qt.AlignmentFlag.AlignLeft)
             ButtonWidget.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
@@ -1816,9 +1819,9 @@ class ModernMenu(RibbonBar):
         
         # write the changes to the ribbonstruture file 
         property = {"ButtonSize_small": ButtonSizeWidget.value()}
-        if ButtonWidget.objectName() == "CustomWidget_Medium":
+        if "CustomWidget_Medium" in ButtonWidget.objectName():
             property = {"ButtonSize_medium": ButtonSizeWidget.value()}
-        if ButtonWidget.objectName() == "CustomWidget_Large":
+        if "CustomWidget_Large" in ButtonWidget.objectName():
             property = {"ButtonSize_large": ButtonSizeWidget.value()}
         self.WriteButtonSettings(ButtonWidget, panel, property)
         return
@@ -2144,8 +2147,7 @@ class ModernMenu(RibbonBar):
                     
                     if position.x() >= xMin and position.x() < xMax:
                         if position.y() >= yMin and position.y() < yMax:
-                            self.dropPanelName = panelName
-                            # print(position)                                                
+                            self.dropPanelName = panelName                                             
                 
             # Store the position were the drag is started
             self.StartPositionDrag = [event.pos(), widget.rect()]
@@ -2584,7 +2586,6 @@ class ModernMenu(RibbonBar):
                         ],
                     )
                     OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][title]["order"]
-                    print(OrderList)
 
                     if type(widgetType) is CustomControls:
                         for n in range(gridLayout.count()):
@@ -2670,9 +2671,7 @@ class ModernMenu(RibbonBar):
                                     OrderList.pop(index_newWidget)
                                     # Inserted it at the new location
                                     OrderList.insert(index_originalWidget, DraggedWidget.objectName())
-                            
-                    print(OrderList)
-                    
+                                               
                     # Safe the order
                     self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList     
                                                         
@@ -4505,14 +4504,13 @@ class ModernMenu(RibbonBar):
                     Commands = self.newPanels[WorkBenchName][
                         NewPanel
                     ]
-                    print(NewPanel)
                     
                     # Get the command and its original toolbar
                     for CommandItem in Commands:
                         CommandName = CommandItem[0]
                         # Define a new toolbutton
                         # NewToolbutton = RibbonToolButton()
-                        NewToolbutton = QToolButton
+                        NewToolbutton = QToolButton()
                         if CommandName.endswith("_ddb") is False:
                             CommandActionList = None
                             # # Get the translated menutext
@@ -4532,7 +4530,6 @@ class ModernMenu(RibbonBar):
                             # print(CommandName)
                             # if len(CommandName.split(", ")) > 1:
                             CommandActionList = self.LoadDropDownAction(CommandName)
-                            print(CommandActionList)
                             if CommandActionList is None:
                                 continue
                             # if there are actions, proceed
@@ -4596,11 +4593,13 @@ class ModernMenu(RibbonBar):
                                                 menu.addAction(action[0])
                                     NewToolbutton.setMenu(menu)
                                     NewToolbutton.setDefaultAction(CommandActionList[0][0])
-                                    # Add the commandname as the objectname to detect if it is a dropdownbutton
-                                    NewToolbutton.setObjectName(CommandName)
 
                                     # Do something with the menu. For some reason it will not be loaded otherwise
                                     len(NewToolbutton.menu().actions())
+                                    
+                                # Add the commandname as the objectname to detect if it is a dropdownbutton
+                                NewToolbutton.setObjectName(CommandName)
+                                NewToolbutton.setToolTip(CommandName)
 
                                 # Set the text for the toolbutton
                                 NewToolbutton.setText(CommandName)
@@ -4686,8 +4685,8 @@ class ModernMenu(RibbonBar):
                 if Button.text() == "":
                     Button.setText(commandName)
                 Button.setToolTip(commandName)
-                # Store the commmandName as a property
-                Button.setProperty("CommandName", commandName)
+                # # Store the commmandName as a property
+                # Button.setProperty("CommandName", commandName)
                 # Set the commandName as objectName as backup
                 Button.setObjectName(commandName)
                 
@@ -5067,20 +5066,19 @@ class ModernMenu(RibbonBar):
                 # remove empty buttons
                 for i in range(len(allButtons)):
                     button: QToolButton = allButtons[i]
-                    if allButtons[i].text() == "":
-                        allButtons.pop(i)
-                    else:
-                        # button.setObjectName(button.defaultAction().data())
+                    try:
                         if button.defaultAction() is None:
                             if isinstance(button.actions(), list):
                                 button.setDefaultAction(button.actions()[0])
                             if isinstance(button.actions(), QAction):
                                 button.setDefaultAction(button.actions())
-                        button.setObjectName(self.ReturnCommand_string(dict, panel, button))
+                        button.setObjectName(button.defaultAction().data())
+                    except Exception:
+                        pass
             except Exception:
                 pass
             
-        # If it is a custom dropdown that is presen on the panel, create a button for.
+        # If it is a custom dropdown that is present on the panel, create a button for.
         if workbenchName in dict["workbenches"]:
             if (
                 panelName != ""
@@ -5114,10 +5112,11 @@ class ModernMenu(RibbonBar):
                                 button.setMenu(menu)
                                 # # Set the default action
                                 button.setDefaultAction(QuickAction[0][0])                                
-                                # Store the commmandName as a property
-                                button.setProperty("CommandName", key)
+                                # # Store the commmandName as a property
+                                # button.setProperty("CommandName", command)
                                 # Set the commandName as objectName as backup
-                                button.setObjectName(key)
+                                button.setObjectName(command)
+                                button.setToolTip(command)
                                 # Add the button
                                 allButtons.append(button)
             
@@ -5133,12 +5132,18 @@ class ModernMenu(RibbonBar):
                     if key != "order":
                         button = self.CreateButtonFromCommand(key)
                         if button is not None:
+                            # button.setProperty("CommandName", key)
+                            button.setObjectName(key)
+                            # print(button.objectName())
+                            # button.setToolTip(key)
                             allButtons.append(button)
                     
         # If a new command needs to be added, create a button and add it to allButtons
         if ExtraCommand != "":
             ExtraButton = self.CreateButtonFromCommand(ExtraCommand)
             if ExtraButton is not None:
+                ExtraButton.setObjectName(ExtraCommand)
+                # ExtraButton.setToolTip(ExtraCommand)
                 allButtons.append(ExtraButton)
             
         # add separators to the command list.
@@ -5204,8 +5209,8 @@ class ModernMenu(RibbonBar):
                 def sortButtons(button: QToolButton):
                     # Use the text from the button
                     Text = button.objectName()
-                    if "ddb" not in Text and "separator" not in Text:
-                        Text = self.ReturnCommand_string(dict, panel, button)
+                    # if "ddb" not in Text and "separator" not in Text:
+                    #     Text = self.ReturnCommand_string(dict, panel, button)
                     # versionCheck = StandardFunctions.checkFreeCADVersion(
                     #         Parameters.FreeCAD_Version["mainVersion"],
                     #         Parameters.FreeCAD_Version["subVersion"],
@@ -5227,8 +5232,6 @@ class ModernMenu(RibbonBar):
                     return position
 
                 allButtons.sort(key=sortButtons)
-                
-        # print(allButtons)
 
         # add buttons to panel
         shadowList = (
@@ -5388,8 +5391,9 @@ class ModernMenu(RibbonBar):
                     continue
                 else:
                     try:
+                        CommandName = button.objectName()
+                        # CommandName = self.ReturnCommand_string(dict, panel, button)
                         # CommandName = button.toolTip()
-                        CommandName = self.ReturnCommand_string(dict, panel, button)
                         action = button.defaultAction()
                         Icon = button.icon()
 
@@ -5578,15 +5582,15 @@ class ModernMenu(RibbonBar):
                                 parent=self,
                                 ButtonStyle=pyqtribbon.RibbonButtonStyle.Small
                             )
-                            # Store the commmandName as a property
-                            btn.setProperty("CommandName", CommandName)
+                            btn.setObjectName(CommandName)
                             # add the button as a small button
                             # layout.addWidgets(btn, "small")
                             panel.addSmallWidget(
                                 btn,
                                 alignment=self.ButtonAlignment,
                                 fixedHeight=False,
-                            ).setObjectName("CustomWidget_Small")  # Set fixedheight to false. This is set in the custom widgets
+                            ).setObjectName(CommandName)  # Set fixedheight to false. This is set in the custom widgets
+                            # print(f"CustomWidget_Small;{CommandName}")
                         elif buttonSize == "medium":
                             showText = Parameters.SHOW_ICON_TEXT_MEDIUM
                             if (
@@ -5639,15 +5643,14 @@ class ModernMenu(RibbonBar):
                                 parent=self,
                                 ButtonStyle=pyqtribbon.RibbonButtonStyle.Medium
                             )
-                            # Store the commmandName as a property
-                            btn.setProperty("CommandName", CommandName)
+                            btn.setObjectName(CommandName)
                             # add the button as large button
                             # layout.addWidgets(btn, "medium")
                             panel.addMediumWidget(
                                 btn,
                                 alignment=self.ButtonAlignment,
                                 fixedHeight=False,
-                            ).setObjectName("CustomWidget_Medium")  # Set fixedheight to false. This is set in the custom widgets
+                            ).setObjectName(CommandName)  # Set fixedheight to false. This is set in the custom widgets
                         elif buttonSize == "large":
                             showText = Parameters.SHOW_ICON_TEXT_LARGE
                             if (
@@ -5686,7 +5689,6 @@ class ModernMenu(RibbonBar):
                                 size = Parameters.ICON_SIZE_SMALL*3
                                 IconSize = QSize(size, size)
                                 ButtonSize = IconSize
-                                
                             Menu = None
                             if button.menu() is not None:
                                 Menu = button.menu()
@@ -5705,14 +5707,13 @@ class ModernMenu(RibbonBar):
                                 parent=self,
                                 ButtonStyle=pyqtribbon.RibbonButtonStyle.Large
                             )
-                            # Store the commmandName as a property
-                            btn.setProperty("CommandName", CommandName)
+                            btn.setObjectName(CommandName)
                             # add the button as large button
                             panel.addLargeWidget(
                                 btn,
                                 fixedHeight=False,
                                 alignment=self.ButtonAlignment,
-                            ).setObjectName("CustomWidget_Large") # Set fixedheight to false. This is set in the custom widgets                            
+                            ).setObjectName(CommandName) # Set fixedheight to false. This is set in the custom widgets                            
                         else:
                             if Parameters.DEBUG_MODE is True:
                                 if buttonSize != "none":
@@ -5959,39 +5960,46 @@ class ModernMenu(RibbonBar):
 
         return
     
-    def ReturnCommand_string(self, Dict: dict, panel: RibbonPanel, widget: QToolButton) -> str:
+    def ReturnCommand_string(self, Dict: dict, panel: RibbonPanel, widget) -> str:
         # Define a button and a command
         button = None
         command = None
         
-        # Try to get the command from the property of the widget
-        try:
-            command = widget.property("CommandName")
-            if command is not None:
+        # Try to get the command from the widget
+        if type(widget) is CustomControls:
+            command = widget.objectName()
+            if command is not None and command != "":
                 return command
-        except Exception:
-            pass
-        
+
+        # if command is None or command == "":
         # Try to get the command button. This means that the widget is a custom toolbutton
-        button = widget.findChild(QToolButton, "CommandButton")
+        # button = widget.findChild(QToolButton, "CommandButton")
         # if the button is None and the widget is a QToolButton, us it instead
-        if button is None and type(widget) is QToolButton:
-            button = widget
-        if button is not None:
+        # if button is None and type(widget) is QToolButton:
+        button = widget
+        if button is not None and command != "":
             command = button.defaultAction().data()
-            if command is None:
-                command = button.actions()[0].objectName()
-            if command is None:
-                command = button.actions().objectName()
-        
+            if isinstance(button.actions(), list):
+                if command is None and command != "":
+                    command = button.actions()[0].objectName()
+                    if command is None and command != "":
+                        command = button.actions()[0].data()
+            if isinstance(button.actions(), QAction):
+                if command is None and command != "":
+                    command = button.actions().objectName()
+                    if command is None and command != "":
+                        command = button.actions().data()
+        if command is None and command != "":
+            command = button.objectName()
+
         return command
     
-    def RemoveButtonFromPanel(self, panel: RibbonPanel = None, widget: CustomControls = None):
+    def RemoveButtonFromPanel(self, panel: RibbonPanel = None, widget = None):
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         panelName = panel.objectName()
         
         # Get the command
-        command = self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=widget)
+        command = self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=widget.parent())
            
         try:
             orderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]

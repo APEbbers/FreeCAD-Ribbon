@@ -104,7 +104,7 @@ translate = App.Qt.translate
 
 mw: QMainWindow = Gui.getMainWindow()
 
-class CustomControls(QToolButton):    
+class CustomControls(RibbonToolButton):    
     def __init__(
         self,
         Text: str,
@@ -134,6 +134,7 @@ class CustomControls(QToolButton):
         self.menu = Menu
         self.labelWidth = 0
         self.menuButtonWidth = 0
+        self.ButtonStyle = ButtonStyle
         if ButtonStyle == RibbonButtonStyle.Small:
             self.widget = self.CustomToolButton(
                 Text,
@@ -779,7 +780,7 @@ class CustomControls(QToolButton):
         self.menuButtonWidth = ArrowButton.width()
 
         # Return the button
-        btn.setObjectName("CustomWidget_Large")
+        # btn.setObjectName("CustomWidget_Large")
         return btn
 
     @classmethod
@@ -1287,9 +1288,9 @@ class CustomControls(QToolButton):
         self.menuButtonWidth = ArrowButton.width()
         
         # return the new button
-        btn.setObjectName("CustomWidget_Small")
-        if ButtonStyle == "medium":
-            btn.setObjectName("CustomWidget_Medium")
+        # btn.setObjectName("CustomWidget_Small")
+        # if ButtonStyle == "medium":
+        #     btn.setObjectName("CustomWidget_Medium")
         return btn
 
     def CustomOptionMenu(Menu=None, actionList=None, parent=None):
