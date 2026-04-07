@@ -5954,74 +5954,23 @@ class ModernMenu(RibbonBar):
 
         return
     
-    def ReturnCommand_string(self, Dict: dict, panel: RibbonPanel, widget, command = "") -> str:
+    def ReturnCommand_string(self, Dict: dict, panel: RibbonPanel, widget) -> str:
+        # Define a button and a command
         button = None
-        compareList_1 = []
+        command = None
         
-        IsDropDown = False
-        if type(widget) is CustomControls:
-            button = widget.findChild(QToolButton, "CommandButton")
-        
-            ArrowButton = widget.findChild(QToolButton, "MenuButton")
-            if ArrowButton is not None:
-                if ArrowButton.menu() is not None:
-                    if len(ArrowButton.menu().actions()) > 0:
-                        IsDropDown = True
-                        for action in ArrowButton.menu().actions():
-                            compareList_1.append(action.data())
-                        
-        else:
+        # Try to get the command button. This means that the widget is a custom toolbutton
+        button = widget.findChild(QToolButton, "CommandButton")
+        # if the button is None and the widget is a QToolButton, us it instead
+        if button is None and type(widget) is QToolButton:
             button = widget
-            if button.menu() is not None:
-            # if isinstance(button.actions(), list) and len(button.actions()) > 1:
-                print("got here")
-                IsDropDown = True
-
-        try:
+        if button is not None:
             command = button.defaultAction().data()
-        except Exception:
-            pass 
-        if command is None or command == "":
-            if isinstance(button.actions(), QAction):
-                command = button.actions().data()
-                if command is None or command == "":
-                    command = button.actions().objectName()
-                if command is None or command == "":
-                    for item in self.List_Commands:
-                        if item[2] == button.actions().text() or item[4] == button.actions().text():
-                            command = item[0]
-        if command is None or command == "":
-            if isinstance(button.actions(), list):
-                command = button.actions()[0].data()
-                if command is None or command == "":
-                    command = button.actions()[0].objectName()
-                if command is None or command == "":
-                    for item in self.List_Commands:
-                        if item[2] == button.actions()[0].text() or item[4] == button.actions()[0].text():
-                            if "Comp" not in item[0]:
-                                command = item[0]
-                            # if "Comp" in item[0]:
-                            #     command = item[0].split(",")[0]
-                            # print(f"{command}, {IsDropDown}") 
-                                
-        if IsDropDown is True:
-            command = None
-            if len(compareList_1) > 0:                               
-                for key, value in Dict["dropdownButtons"].items():  
-                    compareList_2 = []                      
-                    for item in value:
-                        compareList_2.append(item[0])
-                    if compareList_1 == compareList_2:                        
-                        command = key
             if command is None:
-                for item in self.List_Commands:
-                    if item[2] == button.actions()[0].text() or item[4] == button.actions()[0].text():
-                        if "Comp" in item[0]:
-                            command = item[0].split(",")[0]
-                            # print(command)   
-        print(f"{command}, {IsDropDown}") 
-        if command is None:
-            command = ""
+                command = button.actions()[0].objectName()
+            if command is None:
+                command = button.actions().objectName()
+        
         return command
     
     def RemoveButtonFromPanel(self, panel: RibbonPanel = None, widget: CustomControls = None):
@@ -6029,6 +5978,10 @@ class ModernMenu(RibbonBar):
         panelName = panel.objectName()
         
         command = self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=widget)
+        # button = widget.findChild(QToolButton, "CommandButton")
+        # command = button.defaultAction().data()
+        # if command is None:
+        #     command = button.actions()[0].objectName()
            
         try:
             orderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
