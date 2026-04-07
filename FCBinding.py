@@ -1538,11 +1538,10 @@ class ModernMenu(RibbonBar):
             # Add any new panel to the dict. It will be loaded with the next start
             if objPanel.objectName().endswith("_newPanel"):
                 if workbenchName in self.workBenchDict["newPanels"]:
-                    if objPanel.objectName() in self.workBenchDict["newPanels"][workbenchName]:
-                        commandList = []
+                    commandList = []
+                    if objPanel.objectName() in self.workBenchDict["newPanels"][workbenchName]:                        
                         for widget in objPanel.widgets():
                             if type(widget) is CustomControls:
-                                # command: str = widget.findChild(QToolButton, "CommandButton").defaultAction().data()
                                 command =self.ReturnCommand_string(Dict=self.workBenchDict, panel=objPanel, widget=widget)
                                 if command is not None and command != "":
                                     if command.startswith("Std_") is False:
