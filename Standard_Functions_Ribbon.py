@@ -26,6 +26,7 @@ from requests import Request
 import FreeCAD as App
 import FreeCADGui as Gui
 import math
+import datetime
 
 # Define the translation
 translate = App.Qt.translate
@@ -1023,3 +1024,21 @@ def checkFreeCADVersion(main: int, sub: int, patch: int, git: int):
                     return True
 
     return False
+
+def TimeDeltaToDict(timeDelta:datetime.timedelta) -> dict:
+    def __t(seconds, divider):
+        if seconds < divider: return (seconds, 0)
+        value = seconds//divider
+        return (seconds -  (value * divider), value)
+    (seconds, hours) = __t(timeDelta.seconds, 3600)
+    (seconds, minutes) = __t(seconds, 60)    
+    (microseconds, milliseconds) = __t(timeDelta.microseconds, 1000)
+
+    return {
+         'days': timeDelta.days
+        ,'hours': hours
+        ,'minutes': minutes
+        ,'seconds': seconds
+        ,'milliseconds': milliseconds
+        ,'microseconds': microseconds
+    }

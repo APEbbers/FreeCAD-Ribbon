@@ -45,7 +45,7 @@ from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, Q
 
 import sys
 import json
-from datetime import datetime
+from datetime import datetime, date, timedelta, time
 import shutil
 import Standard_Functions_Ribbon as StandardFunctions
 from Standard_Functions_Ribbon import CommandInfoCorrections
@@ -406,11 +406,22 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.form.LoadWB.connect(
             self.form.LoadWB, SIGNAL("clicked()"), self.on_ReloadWB_clicked
         )
+        
+        # Create the a message to indicate when the last time the data was (re)created.
         TimeStamp = Parameters_Ribbon.Settings.GetStringSetting("ReloadTimeStamp")
+        date_format = "%B %d, %Y, %H:%M:%S"
+        lastDate = datetime.strptime(TimeStamp, date_format)
+        deltaDate: timedelta = datetime.now()-lastDate
+        deltaDict = StandardFunctions.TimeDeltaToDict(deltaDate)
+        # Get the separate values
+        delta_days = deltaDict['days']
+        delta_hours = deltaDict['hours']
+        delta_minutes= deltaDict['minutes']
+        # Set the message        
         if TimeStamp == "" or TimeStamp is None:
             TimeStamp = "-"
         self.form.TimeStamp_Reloaded.setText(
-            translate("FreeCAD Ribbon", "Last reloaded on: ") + TimeStamp
+            translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}. This is {delta_days} days {delta_hours} hour(s) and {delta_minutes} ago.")
         )
 
         # --- Initial setup functions -----------

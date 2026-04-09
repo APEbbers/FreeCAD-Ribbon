@@ -42,6 +42,7 @@ from PySide.QtWidgets import (
 from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent
 import sys
 import json
+from datetime import datetime, timedelta
 
 import Standard_Functions_Ribbon as StandardFunctions
 from Standard_Functions_Ribbon import CommandInfoCorrections
@@ -95,6 +96,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     List_WorkBenchIcons = []
     
     buttonRemove = Signal()
+    
+    # Create a signal to emit the closeEvent to FCBinding
+    closeSignal = Signal()
             
     def __init__(self):
         super(LoadDialog, self).__init__()
@@ -352,6 +356,30 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
         # Connect the "CreateNewPanel" button
         self.form.CreateNewPanel.clicked.connect(self.on_CreateNewPanel_clicked)
+        
+        # Connect the reload button
+        self.form.LoadWB.connect(
+            self.form.LoadWB, SIGNAL("clicked()"), self.on_ReloadWB_clicked
+        )
+        # Set the icon and size for the refresh button
+        self.form.LoadWB.setIcon(Gui.getIcon("view-refresh"))
+        self.form.LoadWB.setIconSize(QSize(20, 20))
+        # Create the a message to indicate when the last time the data was (re)created.
+        TimeStamp = Parameters_Ribbon.Settings.GetStringSetting("ReloadTimeStamp")
+        date_format = "%B %d, %Y, %H:%M:%S"
+        lastDate = datetime.strptime(TimeStamp, date_format)
+        deltaDate: timedelta = datetime.now()-lastDate
+        deltaDict = StandardFunctions.TimeDeltaToDict(deltaDate)
+        # Get the separate values
+        delta_days = deltaDict['days']
+        delta_hours = deltaDict['hours']
+        delta_minutes= deltaDict['minutes']
+        # Set the message        
+        if TimeStamp == "" or TimeStamp is None:
+            TimeStamp = "-"
+        self.form.TimeStamp_Reloaded.setText(
+            translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}. This is {delta_days} days {delta_hours} hour(s) and {delta_minutes} ago.")
+        )
         
         # Connect the OK and Cancel buttons
         self.form.cancelButton.clicked.connect(self.on_Cancel_Clicked)
@@ -883,6 +911,26 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     def on_Ok_Clicked(self):
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")        
         RibbonBar.on_Ok_Clicked()
+        
+    def on_ReloadWB_clicked(self, resetTexts=False, RestartFreeCAD=False):
+        # minimize the dialog
+        self.form.hide()
+        
+        # Create the data file
+        CacheFunctions.CreateCache(resetTexts=resetTexts)
+
+        if RestartFreeCAD is False:
+            # Show the dialog again
+            self.closeSignal.emit()
+        if RestartFreeCAD is True:
+            result = StandardFunctions.RestartDialog(includeIcons=True)
+            if result == "yes":
+                StandardFunctions.restart_freecad()
+            else:
+                self.closeSignal.emit()
+        # show the dialog
+        self.form.show()
+        return
     # endregion
     
     def ReadJson(self, Section="All", JsonFile=""):
