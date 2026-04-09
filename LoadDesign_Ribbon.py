@@ -421,7 +421,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         if TimeStamp == "" or TimeStamp is None:
             TimeStamp = "-"
         self.form.TimeStamp_Reloaded.setText(
-            translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}. This is {delta_days} days, {delta_hours} hour(s) and {delta_minutes} ago.")
+            translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}. This is {delta_days} days, {delta_hours} hour(s) and {delta_minutes} minutes ago.")
         )
 
         # --- Initial setup functions -----------
