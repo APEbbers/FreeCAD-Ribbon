@@ -130,7 +130,6 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
-
         
         # Get the main window from FreeCAD
         mw = Gui.getMainWindow()

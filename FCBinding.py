@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -52,7 +52,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -91,7 +91,7 @@ from PySide.QtWidgets import (
     QListWidgetItem,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -108,6 +108,7 @@ from PySide.QtCore import (
     QSettings,
     QSignalBlocker,
     QMimeData,
+    QEventLoop,
 )
 from CustomWidgets import (
     CustomControls, 
@@ -3952,6 +3953,10 @@ class ModernMenu(RibbonBar):
 
     # Function for loading the design menu
     def loadDesignMenu(self):
+        # Set the wait cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+        
         # Get the form
         Dialog = LoadDesign_Ribbon.LoadDialog()
         # Show the form
@@ -3968,10 +3973,16 @@ class ModernMenu(RibbonBar):
         # Connect the close signal of the designmenu
         Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
 
+        # Restore the cursor
+        QApplication.restoreOverrideCursor()
         return
 
     # Function for loading the settings menu
     def loadSettingsMenu(self):
+        # Set the wait cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+        
         # Get the form
         Dialog = LoadSettings_Ribbon.LoadDialog()
         # Show the form
@@ -3988,6 +3999,8 @@ class ModernMenu(RibbonBar):
         # Connect the close signal of the designmenu
         Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
 
+        # Restore the cursor
+        QApplication.restoreOverrideCursor()
         return
 
     # Function to activate the toolbars and menus
