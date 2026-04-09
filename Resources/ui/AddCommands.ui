@@ -53,7 +53,10 @@
         </size>
        </property>
        <property name="text">
-        <string>Reload</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset theme="QIcon::ThemeIcon::ViewRefresh"/>
        </property>
       </widget>
      </item>
@@ -76,8 +79,14 @@
      </item>
      <item row="0" column="1">
       <widget class="QLabel" name="TimeStamp_Reloaded">
+       <property name="font">
+        <font>
+         <pointsize>7</pointsize>
+         <italic>true</italic>
+        </font>
+       </property>
        <property name="text">
-        <string>TextLabel</string>
+        <string>Last reloaded on: -</string>
        </property>
       </widget>
      </item>

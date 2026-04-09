@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandscPjGsA.ui'
+## Form generated from reading UI file 'AddCommandsUdKFip.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -44,6 +44,8 @@ class Ui_Form(object):
         sizePolicy.setHeightForWidth(self.LoadWB.sizePolicy().hasHeightForWidth())
         self.LoadWB.setSizePolicy(sizePolicy)
         self.LoadWB.setMinimumSize(QSize(0, 0))
+        icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ViewRefresh))
+        self.LoadWB.setIcon(icon)
 
         self.gridLayout.addWidget(self.LoadWB, 0, 0, 1, 1)
 
@@ -59,6 +61,10 @@ class Ui_Form(object):
 
         self.TimeStamp_Reloaded = QLabel(Form)
         self.TimeStamp_Reloaded.setObjectName(u"TimeStamp_Reloaded")
+        font = QFont()
+        font.setPointSize(7)
+        font.setItalic(True)
+        self.TimeStamp_Reloaded.setFont(font)
 
         self.gridLayout.addWidget(self.TimeStamp_Reloaded, 0, 1, 1, 1)
 
@@ -159,13 +165,13 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
-        self.LoadWB.setText(QCoreApplication.translate("Form", u"Reload", None))
+        self.LoadWB.setText("")
         self.okButton.setText(QCoreApplication.translate("Form", u"Ok", None))
         self.cancelButton.setText(QCoreApplication.translate("Form", u"Cancel", None))
 #if QT_CONFIG(shortcut)
         self.cancelButton.setShortcut(QCoreApplication.translate("Form", u"Esc", None))
 #endif // QT_CONFIG(shortcut)
-        self.TimeStamp_Reloaded.setText(QCoreApplication.translate("Form", u"TextLabel", None))
+        self.TimeStamp_Reloaded.setText(QCoreApplication.translate("Form", u"Last reloaded on: -", None))
         self.label_21.setText(QCoreApplication.translate("Form", u"Category:", None))
         self.SearchBar_NP.setInputMask("")
         self.SearchBar_NP.setText("")
