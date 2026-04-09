@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
-from PySide.QtWidgets import (
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
+from PySide6.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -39,7 +39,7 @@ from PySide.QtWidgets import (
     QListWidgetItem,
     QLineEdit,
 )
-from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent
+from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent
 import sys
 import json
 from datetime import datetime, timedelta
@@ -362,6 +362,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.LoadWB, SIGNAL("clicked()"), self.on_ReloadWB_clicked
         )
         # Set the icon and size for the refresh button
+        self.form.LoadWB.heightForWidth(1)
         self.form.LoadWB.setIcon(Gui.getIcon("view-refresh"))
         self.form.LoadWB.setIconSize(QSize(20, 20))
         # Create the a message to indicate when the last time the data was (re)created.

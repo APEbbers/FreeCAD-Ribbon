@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsUdKFip.ui'
+## Form generated from reading UI file 'AddCommandsbYLZVT.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -24,7 +24,7 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(854, 455)
+        Form.resize(854, 463)
         Form.setAcceptDrops(True)
         self.gridLayout_4 = QGridLayout(Form)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
@@ -32,33 +32,6 @@ class Ui_Form(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         self.gridLayout.setVerticalSpacing(0)
-        self.horizontalSpacer = QSpacerItem(651, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout.addItem(self.horizontalSpacer, 0, 2, 1, 1)
-
-        self.LoadWB = QPushButton(Form)
-        self.LoadWB.setObjectName(u"LoadWB")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.LoadWB.sizePolicy().hasHeightForWidth())
-        self.LoadWB.setSizePolicy(sizePolicy)
-        self.LoadWB.setMinimumSize(QSize(0, 0))
-        icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ViewRefresh))
-        self.LoadWB.setIcon(icon)
-
-        self.gridLayout.addWidget(self.LoadWB, 0, 0, 1, 1)
-
-        self.okButton = QPushButton(Form)
-        self.okButton.setObjectName(u"okButton")
-
-        self.gridLayout.addWidget(self.okButton, 0, 3, 1, 1)
-
-        self.cancelButton = QPushButton(Form)
-        self.cancelButton.setObjectName(u"cancelButton")
-
-        self.gridLayout.addWidget(self.cancelButton, 0, 4, 1, 1)
-
         self.TimeStamp_Reloaded = QLabel(Form)
         self.TimeStamp_Reloaded.setObjectName(u"TimeStamp_Reloaded")
         font = QFont()
@@ -66,7 +39,39 @@ class Ui_Form(object):
         font.setItalic(True)
         self.TimeStamp_Reloaded.setFont(font)
 
-        self.gridLayout.addWidget(self.TimeStamp_Reloaded, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.TimeStamp_Reloaded, 1, 1, 1, 1)
+
+        self.horizontalSpacer = QSpacerItem(651, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout.addItem(self.horizontalSpacer, 1, 2, 1, 1)
+
+        self.label = QLabel(Form)
+        self.label.setObjectName(u"label")
+
+        self.gridLayout.addWidget(self.label, 0, 1, 1, 1)
+
+        self.LoadWB = QPushButton(Form)
+        self.LoadWB.setObjectName(u"LoadWB")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.LoadWB.sizePolicy().hasHeightForWidth())
+        self.LoadWB.setSizePolicy(sizePolicy)
+        self.LoadWB.setMinimumSize(QSize(34, 34))
+        icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ViewRefresh))
+        self.LoadWB.setIcon(icon)
+
+        self.gridLayout.addWidget(self.LoadWB, 0, 0, 2, 1)
+
+        self.okButton = QPushButton(Form)
+        self.okButton.setObjectName(u"okButton")
+
+        self.gridLayout.addWidget(self.okButton, 0, 3, 2, 1)
+
+        self.cancelButton = QPushButton(Form)
+        self.cancelButton.setObjectName(u"cancelButton")
+
+        self.gridLayout.addWidget(self.cancelButton, 0, 4, 2, 1)
 
 
         self.gridLayout_4.addLayout(self.gridLayout, 2, 0, 1, 2)
@@ -165,13 +170,14 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
+        self.TimeStamp_Reloaded.setText(QCoreApplication.translate("Form", u"Last reloaded on: -", None))
+        self.label.setText(QCoreApplication.translate("Form", u"Refresh workbench data", None))
         self.LoadWB.setText("")
         self.okButton.setText(QCoreApplication.translate("Form", u"Ok", None))
         self.cancelButton.setText(QCoreApplication.translate("Form", u"Cancel", None))
 #if QT_CONFIG(shortcut)
         self.cancelButton.setShortcut(QCoreApplication.translate("Form", u"Esc", None))
 #endif // QT_CONFIG(shortcut)
-        self.TimeStamp_Reloaded.setText(QCoreApplication.translate("Form", u"Last reloaded on: -", None))
         self.label_21.setText(QCoreApplication.translate("Form", u"Category:", None))
         self.SearchBar_NP.setInputMask("")
         self.SearchBar_NP.setText("")
