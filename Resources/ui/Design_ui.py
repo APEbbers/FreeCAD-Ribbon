@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesigncMShLi.ui'
+## Form generated from reading UI file 'DesignSYwTdZ.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.10.2
+## Created by: Qt User Interface Compiler version 6.11.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QApplication, QCheckBox,
+from PySide6.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QApplication, QCheckBox,
     QComboBox, QFrame, QGridLayout, QGroupBox,
     QHeaderView, QLabel, QLayout, QLineEdit,
     QListView, QListWidget, QListWidgetItem, QPushButton,
@@ -202,7 +202,7 @@ class Ui_Form(object):
         QListWidgetItem(self.WorkbenchList_IS)
         self.WorkbenchList_IS.setObjectName(u"WorkbenchList_IS")
         self.WorkbenchList_IS.setMinimumSize(QSize(300, 0))
-        self.WorkbenchList_IS.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
+        self.WorkbenchList_IS.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.WorkbenchList_IS.setSortingEnabled(True)
 
         self.gridLayout_27.addWidget(self.WorkbenchList_IS, 1, 0, 1, 3)
@@ -251,7 +251,7 @@ class Ui_Form(object):
 
         self.Panels_IS = QListWidget(self.groupBox_2)
         self.Panels_IS.setObjectName(u"Panels_IS")
-        self.Panels_IS.setSelectionMode(QAbstractItemView.SelectionMode.MultiSelection)
+        self.Panels_IS.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.Panels_IS.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.Panels_IS.setSortingEnabled(True)
 
@@ -353,16 +353,6 @@ class Ui_Form(object):
         self.gridLayout_2 = QGridLayout(self.frame)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.gridLayout_2.setContentsMargins(6, 6, 6, 6)
-        self.CommandsSelected_QC = QListWidget(self.frame)
-        __qlistwidgetitem = QListWidgetItem(self.CommandsSelected_QC)
-        __qlistwidgetitem.setCheckState(Qt.Checked);
-        self.CommandsSelected_QC.setObjectName(u"CommandsSelected_QC")
-        self.CommandsSelected_QC.setDefaultDropAction(Qt.DropAction.MoveAction)
-        self.CommandsSelected_QC.setMovement(QListView.Movement.Free)
-        self.CommandsSelected_QC.setSortingEnabled(False)
-
-        self.gridLayout_2.addWidget(self.CommandsSelected_QC, 4, 2, 1, 1)
-
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
         self.MoveUp_Command_QC = QToolButton(self.frame)
@@ -436,16 +426,26 @@ class Ui_Form(object):
 
         self.gridLayout_2.addWidget(self.label_5, 3, 0, 1, 3)
 
-        self.gridLayout_51 = QGridLayout()
-        self.gridLayout_51.setObjectName(u"gridLayout_51")
         self.CommandsAvailable_QC = QListWidget(self.frame)
-        __qlistwidgetitem1 = QListWidgetItem(self.CommandsAvailable_QC)
-        __qlistwidgetitem1.setCheckState(Qt.Checked);
+        __qlistwidgetitem = QListWidgetItem(self.CommandsAvailable_QC)
+        __qlistwidgetitem.setCheckState(Qt.Checked)
         self.CommandsAvailable_QC.setObjectName(u"CommandsAvailable_QC")
         self.CommandsAvailable_QC.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.CommandsAvailable_QC.setSortingEnabled(True)
 
-        self.gridLayout_51.addWidget(self.CommandsAvailable_QC, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.CommandsAvailable_QC, 4, 0, 1, 1)
+
+        self.gridLayout_51 = QGridLayout()
+        self.gridLayout_51.setObjectName(u"gridLayout_51")
+        self.CommandsSelected_QC = QListWidget(self.frame)
+        __qlistwidgetitem1 = QListWidgetItem(self.CommandsSelected_QC)
+        __qlistwidgetitem1.setCheckState(Qt.Checked)
+        self.CommandsSelected_QC.setObjectName(u"CommandsSelected_QC")
+        self.CommandsSelected_QC.setDefaultDropAction(Qt.DropAction.MoveAction)
+        self.CommandsSelected_QC.setMovement(QListView.Movement.Free)
+        self.CommandsSelected_QC.setSortingEnabled(False)
+
+        self.gridLayout_51.addWidget(self.CommandsSelected_QC, 0, 0, 1, 1)
 
         self.gridLayout_7 = QGridLayout()
         self.gridLayout_7.setObjectName(u"gridLayout_7")
@@ -478,7 +478,7 @@ class Ui_Form(object):
         self.gridLayout_51.addLayout(self.gridLayout_7, 1, 0, 1, 1)
 
 
-        self.gridLayout_2.addLayout(self.gridLayout_51, 4, 0, 1, 1)
+        self.gridLayout_2.addLayout(self.gridLayout_51, 4, 2, 1, 1)
 
 
         self.gridLayout_52.addWidget(self.frame, 0, 0, 1, 1)
@@ -497,7 +497,7 @@ class Ui_Form(object):
         self.gridLayout_17.setContentsMargins(6, 6, 6, 6)
         self.PanelsToExclude_EP = QListWidget(self.frame_6)
         __qlistwidgetitem2 = QListWidgetItem(self.PanelsToExclude_EP)
-        __qlistwidgetitem2.setCheckState(Qt.Checked);
+        __qlistwidgetitem2.setCheckState(Qt.Checked)
         self.PanelsToExclude_EP.setObjectName(u"PanelsToExclude_EP")
         self.PanelsToExclude_EP.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.PanelsToExclude_EP.setSortingEnabled(True)
@@ -537,7 +537,7 @@ class Ui_Form(object):
 
         self.PanelsExcluded_EP = QListWidget(self.frame_6)
         __qlistwidgetitem3 = QListWidgetItem(self.PanelsExcluded_EP)
-        __qlistwidgetitem3.setCheckState(Qt.Checked);
+        __qlistwidgetitem3.setCheckState(Qt.Checked)
         self.PanelsExcluded_EP.setObjectName(u"PanelsExcluded_EP")
         self.PanelsExcluded_EP.setDefaultDropAction(Qt.DropAction.MoveAction)
         self.PanelsExcluded_EP.setMovement(QListView.Movement.Free)
@@ -585,7 +585,7 @@ class Ui_Form(object):
         self.gridLayout_3.setContentsMargins(6, 6, 6, 6)
         self.WorkbenchesAvailable_IW = QListWidget(self.frame1)
         __qlistwidgetitem4 = QListWidgetItem(self.WorkbenchesAvailable_IW)
-        __qlistwidgetitem4.setCheckState(Qt.Checked);
+        __qlistwidgetitem4.setCheckState(Qt.Checked)
         self.WorkbenchesAvailable_IW.setObjectName(u"WorkbenchesAvailable_IW")
         self.WorkbenchesAvailable_IW.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.WorkbenchesAvailable_IW.setSortingEnabled(True)
@@ -594,9 +594,10 @@ class Ui_Form(object):
 
         self.WorkbenchesSelected_IW = QListWidget(self.frame1)
         __qlistwidgetitem5 = QListWidgetItem(self.WorkbenchesSelected_IW)
-        __qlistwidgetitem5.setCheckState(Qt.Checked);
+        __qlistwidgetitem5.setCheckState(Qt.Checked)
         self.WorkbenchesSelected_IW.setObjectName(u"WorkbenchesSelected_IW")
         self.WorkbenchesSelected_IW.setDefaultDropAction(Qt.DropAction.MoveAction)
+        self.WorkbenchesSelected_IW.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.WorkbenchesSelected_IW.setMovement(QListView.Movement.Free)
         self.WorkbenchesSelected_IW.setSortingEnabled(True)
 
@@ -728,7 +729,7 @@ class Ui_Form(object):
 
         self.PanelAvailable_CP = QListWidget(self.groupBox_31)
         __qlistwidgetitem6 = QListWidgetItem(self.PanelAvailable_CP)
-        __qlistwidgetitem6.setCheckState(Qt.Checked);
+        __qlistwidgetitem6.setCheckState(Qt.Checked)
         self.PanelAvailable_CP.setObjectName(u"PanelAvailable_CP")
         self.PanelAvailable_CP.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.PanelAvailable_CP.setSortingEnabled(True)
@@ -739,7 +740,7 @@ class Ui_Form(object):
         self.gridLayout_48.setObjectName(u"gridLayout_48")
         self.PanelSelected_CP = QListWidget(self.groupBox_31)
         __qlistwidgetitem7 = QListWidgetItem(self.PanelSelected_CP)
-        __qlistwidgetitem7.setCheckState(Qt.Checked);
+        __qlistwidgetitem7.setCheckState(Qt.Checked)
         self.PanelSelected_CP.setObjectName(u"PanelSelected_CP")
         self.PanelSelected_CP.setDefaultDropAction(Qt.DropAction.CopyAction)
         self.PanelSelected_CP.setMovement(QListView.Movement.Free)
@@ -827,7 +828,7 @@ class Ui_Form(object):
 
         self.CommandsAvailable_DDB = QListWidget(self.groupBox_5)
         __qlistwidgetitem8 = QListWidgetItem(self.CommandsAvailable_DDB)
-        __qlistwidgetitem8.setCheckState(Qt.Checked);
+        __qlistwidgetitem8.setCheckState(Qt.Checked)
         self.CommandsAvailable_DDB.setObjectName(u"CommandsAvailable_DDB")
         self.CommandsAvailable_DDB.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.CommandsAvailable_DDB.setSortingEnabled(True)
@@ -904,7 +905,7 @@ class Ui_Form(object):
         self.gridLayout_36.setObjectName(u"gridLayout_36")
         self.NewControl_DDB = QListWidget(self.groupBox_5)
         __qlistwidgetitem9 = QListWidgetItem(self.NewControl_DDB)
-        __qlistwidgetitem9.setCheckState(Qt.Checked);
+        __qlistwidgetitem9.setCheckState(Qt.Checked)
         self.NewControl_DDB.setObjectName(u"NewControl_DDB")
         sizePolicy3.setHeightForWidth(self.NewControl_DDB.sizePolicy().hasHeightForWidth())
         self.NewControl_DDB.setSizePolicy(sizePolicy3)
@@ -1011,7 +1012,7 @@ class Ui_Form(object):
 
         self.CommandsAvailable_NP = QListWidget(self.groupBox)
         __qlistwidgetitem10 = QListWidgetItem(self.CommandsAvailable_NP)
-        __qlistwidgetitem10.setCheckState(Qt.Checked);
+        __qlistwidgetitem10.setCheckState(Qt.Checked)
         self.CommandsAvailable_NP.setObjectName(u"CommandsAvailable_NP")
         self.CommandsAvailable_NP.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.CommandsAvailable_NP.setSortingEnabled(True)
@@ -1043,9 +1044,9 @@ class Ui_Form(object):
         self.gridLayout_46.setObjectName(u"gridLayout_46")
         self.NewPanel_NP = QListWidget(self.groupBox)
         __qlistwidgetitem11 = QListWidgetItem(self.NewPanel_NP)
-        __qlistwidgetitem11.setCheckState(Qt.Checked);
+        __qlistwidgetitem11.setCheckState(Qt.Checked)
         self.NewPanel_NP.setObjectName(u"NewPanel_NP")
-        self.NewPanel_NP.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.NewPanel_NP.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.NewPanel_NP.setSortingEnabled(False)
 
         self.gridLayout_46.addWidget(self.NewPanel_NP, 0, 0, 1, 1)
@@ -1203,28 +1204,28 @@ class Ui_Form(object):
         if (self.CommandTable_RD.rowCount() < 1):
             self.CommandTable_RD.setRowCount(1)
         __qtablewidgetitem5 = QTableWidgetItem()
-        __qtablewidgetitem5.setFlags(Qt.ItemIsSelectable|Qt.ItemIsEnabled);
+        __qtablewidgetitem5.setFlags(Qt.ItemIsSelectable|Qt.ItemIsEnabled)
         self.CommandTable_RD.setItem(0, 0, __qtablewidgetitem5)
         brush = QBrush(QColor(0, 0, 0, 255))
         brush.setStyle(Qt.BrushStyle.NoBrush)
         __qtablewidgetitem6 = QTableWidgetItem()
-        __qtablewidgetitem6.setCheckState(Qt.Checked);
-        __qtablewidgetitem6.setTextAlignment(Qt.AlignCenter);
-        __qtablewidgetitem6.setBackground(brush);
-        __qtablewidgetitem6.setFlags(Qt.ItemIsSelectable|Qt.ItemIsUserCheckable|Qt.ItemIsEnabled);
+        __qtablewidgetitem6.setCheckState(Qt.Checked)
+        __qtablewidgetitem6.setTextAlignment(Qt.AlignCenter)
+        __qtablewidgetitem6.setBackground(brush)
+        __qtablewidgetitem6.setFlags(Qt.ItemIsSelectable|Qt.ItemIsUserCheckable|Qt.ItemIsEnabled)
         self.CommandTable_RD.setItem(0, 1, __qtablewidgetitem6)
         __qtablewidgetitem7 = QTableWidgetItem()
-        __qtablewidgetitem7.setCheckState(Qt.Checked);
-        __qtablewidgetitem7.setTextAlignment(Qt.AlignCenter);
-        __qtablewidgetitem7.setFlags(Qt.ItemIsSelectable|Qt.ItemIsUserCheckable|Qt.ItemIsEnabled);
+        __qtablewidgetitem7.setCheckState(Qt.Checked)
+        __qtablewidgetitem7.setTextAlignment(Qt.AlignCenter)
+        __qtablewidgetitem7.setFlags(Qt.ItemIsSelectable|Qt.ItemIsUserCheckable|Qt.ItemIsEnabled)
         self.CommandTable_RD.setItem(0, 2, __qtablewidgetitem7)
         __qtablewidgetitem8 = QTableWidgetItem()
-        __qtablewidgetitem8.setCheckState(Qt.Checked);
-        __qtablewidgetitem8.setTextAlignment(Qt.AlignCenter);
-        __qtablewidgetitem8.setFlags(Qt.ItemIsSelectable|Qt.ItemIsUserCheckable|Qt.ItemIsEnabled);
+        __qtablewidgetitem8.setCheckState(Qt.Checked)
+        __qtablewidgetitem8.setTextAlignment(Qt.AlignCenter)
+        __qtablewidgetitem8.setFlags(Qt.ItemIsSelectable|Qt.ItemIsUserCheckable|Qt.ItemIsEnabled)
         self.CommandTable_RD.setItem(0, 3, __qtablewidgetitem8)
         __qtablewidgetitem9 = QTableWidgetItem()
-        __qtablewidgetitem9.setCheckState(Qt.Checked);
+        __qtablewidgetitem9.setCheckState(Qt.Checked)
         self.CommandTable_RD.setItem(0, 4, __qtablewidgetitem9)
         self.CommandTable_RD.setObjectName(u"CommandTable_RD")
         sizePolicy1.setHeightForWidth(self.CommandTable_RD.sizePolicy().hasHeightForWidth())
@@ -1303,7 +1304,7 @@ class Ui_Form(object):
         self.gridLayout_13.setContentsMargins(6, 6, 6, 6)
         self.PanelOrder_RD = QListWidget(self.frame3)
         __qlistwidgetitem12 = QListWidgetItem(self.PanelOrder_RD)
-        __qlistwidgetitem12.setCheckState(Qt.Checked);
+        __qlistwidgetitem12.setCheckState(Qt.Checked)
         self.PanelOrder_RD.setObjectName(u"PanelOrder_RD")
         sizePolicy3.setHeightForWidth(self.PanelOrder_RD.sizePolicy().hasHeightForWidth())
         self.PanelOrder_RD.setSizePolicy(sizePolicy3)
@@ -1399,7 +1400,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(7)
 
 
         QMetaObject.connectSlotsByName(Form)
@@ -1429,7 +1430,7 @@ class Ui_Form(object):
         __sortingEnabled = self.WorkbenchList_IS.isSortingEnabled()
         self.WorkbenchList_IS.setSortingEnabled(False)
         ___qlistwidgetitem = self.WorkbenchList_IS.item(0)
-        ___qlistwidgetitem.setText(QCoreApplication.translate("Form", u"All", None));
+        ___qlistwidgetitem.setText(QCoreApplication.translate("Form", u"All", None))
         self.WorkbenchList_IS.setSortingEnabled(__sortingEnabled)
 
         self.GenerateSetup_IS_WorkBenches.setText(QCoreApplication.translate("Form", u"Generate", None))
@@ -1452,13 +1453,6 @@ class Ui_Form(object):
         self.CustomPanelPositionLeft.setText(QCoreApplication.translate("Form", u"Position custom panels left", None))
         self.CustomPanelPositionRight.setText(QCoreApplication.translate("Form", u"Position custom panels right", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.InItialSetup), QCoreApplication.translate("Form", u"Initial setup", None))
-
-        __sortingEnabled1 = self.CommandsSelected_QC.isSortingEnabled()
-        self.CommandsSelected_QC.setSortingEnabled(False)
-        ___qlistwidgetitem1 = self.CommandsSelected_QC.item(0)
-        ___qlistwidgetitem1.setText(QCoreApplication.translate("Form", u"New Item", None));
-        self.CommandsSelected_QC.setSortingEnabled(__sortingEnabled1)
-
 #if QT_CONFIG(tooltip)
         self.MoveUp_Command_QC.setToolTip(QCoreApplication.translate("Form", u"Move up", None))
 #endif // QT_CONFIG(tooltip)
@@ -1477,11 +1471,18 @@ class Ui_Form(object):
         self.SearchBar_QC.setPlaceholderText(QCoreApplication.translate("Form", u"Type to search...", None))
         self.label_5.setText(QCoreApplication.translate("Form", u"Select commands to add to the quick access toolbar", None))
 
-        __sortingEnabled2 = self.CommandsAvailable_QC.isSortingEnabled()
+        __sortingEnabled1 = self.CommandsAvailable_QC.isSortingEnabled()
         self.CommandsAvailable_QC.setSortingEnabled(False)
-        ___qlistwidgetitem2 = self.CommandsAvailable_QC.item(0)
-        ___qlistwidgetitem2.setText(QCoreApplication.translate("Form", u"New Item", None));
-        self.CommandsAvailable_QC.setSortingEnabled(__sortingEnabled2)
+        ___qlistwidgetitem1 = self.CommandsAvailable_QC.item(0)
+        ___qlistwidgetitem1.setText(QCoreApplication.translate("Form", u"New Item", None))
+        self.CommandsAvailable_QC.setSortingEnabled(__sortingEnabled1)
+
+
+        __sortingEnabled2 = self.CommandsSelected_QC.isSortingEnabled()
+        self.CommandsSelected_QC.setSortingEnabled(False)
+        ___qlistwidgetitem2 = self.CommandsSelected_QC.item(0)
+        ___qlistwidgetitem2.setText(QCoreApplication.translate("Form", u"New Item", None))
+        self.CommandsSelected_QC.setSortingEnabled(__sortingEnabled2)
 
         self.RemoveSeparator_QC.setText(QCoreApplication.translate("Form", u"Remove separator", None))
         self.AddSeparator_QC.setText(QCoreApplication.translate("Form", u"Add separator", None))
@@ -1490,7 +1491,7 @@ class Ui_Form(object):
         __sortingEnabled3 = self.PanelsToExclude_EP.isSortingEnabled()
         self.PanelsToExclude_EP.setSortingEnabled(False)
         ___qlistwidgetitem3 = self.PanelsToExclude_EP.item(0)
-        ___qlistwidgetitem3.setText(QCoreApplication.translate("Form", u"New Item", None));
+        ___qlistwidgetitem3.setText(QCoreApplication.translate("Form", u"New Item", None))
         self.PanelsToExclude_EP.setSortingEnabled(__sortingEnabled3)
 
 #if QT_CONFIG(tooltip)
@@ -1506,7 +1507,7 @@ class Ui_Form(object):
         __sortingEnabled4 = self.PanelsExcluded_EP.isSortingEnabled()
         self.PanelsExcluded_EP.setSortingEnabled(False)
         ___qlistwidgetitem4 = self.PanelsExcluded_EP.item(0)
-        ___qlistwidgetitem4.setText(QCoreApplication.translate("Form", u"New Item", None));
+        ___qlistwidgetitem4.setText(QCoreApplication.translate("Form", u"New Item", None))
         self.PanelsExcluded_EP.setSortingEnabled(__sortingEnabled4)
 
         self.label_8.setText(QCoreApplication.translate("Form", u"Category:", None))
@@ -1518,14 +1519,14 @@ class Ui_Form(object):
         __sortingEnabled5 = self.WorkbenchesAvailable_IW.isSortingEnabled()
         self.WorkbenchesAvailable_IW.setSortingEnabled(False)
         ___qlistwidgetitem5 = self.WorkbenchesAvailable_IW.item(0)
-        ___qlistwidgetitem5.setText(QCoreApplication.translate("Form", u"New Item", None));
+        ___qlistwidgetitem5.setText(QCoreApplication.translate("Form", u"New Item", None))
         self.WorkbenchesAvailable_IW.setSortingEnabled(__sortingEnabled5)
 
 
         __sortingEnabled6 = self.WorkbenchesSelected_IW.isSortingEnabled()
         self.WorkbenchesSelected_IW.setSortingEnabled(False)
         ___qlistwidgetitem6 = self.WorkbenchesSelected_IW.item(0)
-        ___qlistwidgetitem6.setText(QCoreApplication.translate("Form", u"New Item", None));
+        ___qlistwidgetitem6.setText(QCoreApplication.translate("Form", u"New Item", None))
         self.WorkbenchesSelected_IW.setSortingEnabled(__sortingEnabled6)
 
 #if QT_CONFIG(tooltip)
@@ -1546,14 +1547,14 @@ class Ui_Form(object):
         __sortingEnabled7 = self.PanelAvailable_CP.isSortingEnabled()
         self.PanelAvailable_CP.setSortingEnabled(False)
         ___qlistwidgetitem7 = self.PanelAvailable_CP.item(0)
-        ___qlistwidgetitem7.setText(QCoreApplication.translate("Form", u"New Item", None));
+        ___qlistwidgetitem7.setText(QCoreApplication.translate("Form", u"New Item", None))
         self.PanelAvailable_CP.setSortingEnabled(__sortingEnabled7)
 
 
         __sortingEnabled8 = self.PanelSelected_CP.isSortingEnabled()
         self.PanelSelected_CP.setSortingEnabled(False)
         ___qlistwidgetitem8 = self.PanelSelected_CP.item(0)
-        ___qlistwidgetitem8.setText(QCoreApplication.translate("Form", u"New Item", None));
+        ___qlistwidgetitem8.setText(QCoreApplication.translate("Form", u"New Item", None))
         self.PanelSelected_CP.setSortingEnabled(__sortingEnabled8)
 
         self.AddCustomPanel_CP.setText(QCoreApplication.translate("Form", u"Create/update panel", None))
@@ -1576,7 +1577,7 @@ class Ui_Form(object):
         __sortingEnabled9 = self.CommandsAvailable_DDB.isSortingEnabled()
         self.CommandsAvailable_DDB.setSortingEnabled(False)
         ___qlistwidgetitem9 = self.CommandsAvailable_DDB.item(0)
-        ___qlistwidgetitem9.setText(QCoreApplication.translate("Form", u"New Item", None));
+        ___qlistwidgetitem9.setText(QCoreApplication.translate("Form", u"New Item", None))
         self.CommandsAvailable_DDB.setSortingEnabled(__sortingEnabled9)
 
         self.label_22.setText(QCoreApplication.translate("Form", u"Category:", None))
@@ -1596,7 +1597,7 @@ class Ui_Form(object):
         __sortingEnabled10 = self.NewControl_DDB.isSortingEnabled()
         self.NewControl_DDB.setSortingEnabled(False)
         ___qlistwidgetitem10 = self.NewControl_DDB.item(0)
-        ___qlistwidgetitem10.setText(QCoreApplication.translate("Form", u"New Item", None));
+        ___qlistwidgetitem10.setText(QCoreApplication.translate("Form", u"New Item", None))
         self.NewControl_DDB.setSortingEnabled(__sortingEnabled10)
 
         self.CreateControl_DDB.setText(QCoreApplication.translate("Form", u"Create/update dropdown button", None))
@@ -1626,7 +1627,7 @@ class Ui_Form(object):
         __sortingEnabled11 = self.CommandsAvailable_NP.isSortingEnabled()
         self.CommandsAvailable_NP.setSortingEnabled(False)
         ___qlistwidgetitem11 = self.CommandsAvailable_NP.item(0)
-        ___qlistwidgetitem11.setText(QCoreApplication.translate("Form", u"New Item", None));
+        ___qlistwidgetitem11.setText(QCoreApplication.translate("Form", u"New Item", None))
         self.CommandsAvailable_NP.setSortingEnabled(__sortingEnabled11)
 
         self.label_21.setText(QCoreApplication.translate("Form", u"Category:", None))
@@ -1634,7 +1635,7 @@ class Ui_Form(object):
         __sortingEnabled12 = self.NewPanel_NP.isSortingEnabled()
         self.NewPanel_NP.setSortingEnabled(False)
         ___qlistwidgetitem12 = self.NewPanel_NP.item(0)
-        ___qlistwidgetitem12.setText(QCoreApplication.translate("Form", u"New Item", None));
+        ___qlistwidgetitem12.setText(QCoreApplication.translate("Form", u"New Item", None))
         self.NewPanel_NP.setSortingEnabled(__sortingEnabled12)
 
         self.AddCustomToolbar_NP.setText(QCoreApplication.translate("Form", u"Create/update panel", None))
@@ -1652,22 +1653,22 @@ class Ui_Form(object):
         self.MoveDown_RibbonCommand_RD.setToolTip(QCoreApplication.translate("Form", u"Move down", None))
 #endif // QT_CONFIG(tooltip)
         ___qtablewidgetitem = self.CommandTable_RD.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("Form", u"Command", None));
+        ___qtablewidgetitem.setText(QCoreApplication.translate("Form", u"Command", None))
         ___qtablewidgetitem1 = self.CommandTable_RD.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("Form", u"Small", None));
+        ___qtablewidgetitem1.setText(QCoreApplication.translate("Form", u"Small", None))
         ___qtablewidgetitem2 = self.CommandTable_RD.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("Form", u"Medium", None));
+        ___qtablewidgetitem2.setText(QCoreApplication.translate("Form", u"Medium", None))
         ___qtablewidgetitem3 = self.CommandTable_RD.horizontalHeaderItem(3)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("Form", u"Large", None));
+        ___qtablewidgetitem3.setText(QCoreApplication.translate("Form", u"Large", None))
         ___qtablewidgetitem4 = self.CommandTable_RD.horizontalHeaderItem(4)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("Form", u"Enabled", None));
+        ___qtablewidgetitem4.setText(QCoreApplication.translate("Form", u"Enabled", None))
 
         __sortingEnabled13 = self.CommandTable_RD.isSortingEnabled()
         self.CommandTable_RD.setSortingEnabled(False)
         ___qtablewidgetitem5 = self.CommandTable_RD.item(0, 0)
-        ___qtablewidgetitem5.setText(QCoreApplication.translate("Form", u"All", None));
+        ___qtablewidgetitem5.setText(QCoreApplication.translate("Form", u"All", None))
         ___qtablewidgetitem6 = self.CommandTable_RD.item(0, 4)
-        ___qtablewidgetitem6.setText(QCoreApplication.translate("Form", u"Enabled", None));
+        ___qtablewidgetitem6.setText(QCoreApplication.translate("Form", u"Enabled", None))
         self.CommandTable_RD.setSortingEnabled(__sortingEnabled13)
 
         self.AddSeparator_RD.setText(QCoreApplication.translate("Form", u"Add separator", None))
@@ -1677,7 +1678,7 @@ class Ui_Form(object):
         __sortingEnabled14 = self.PanelOrder_RD.isSortingEnabled()
         self.PanelOrder_RD.setSortingEnabled(False)
         ___qlistwidgetitem13 = self.PanelOrder_RD.item(0)
-        ___qlistwidgetitem13.setText(QCoreApplication.translate("Form", u"New Item", None));
+        ___qlistwidgetitem13.setText(QCoreApplication.translate("Form", u"New Item", None))
         self.PanelOrder_RD.setSortingEnabled(__sortingEnabled14)
 
 #if QT_CONFIG(tooltip)

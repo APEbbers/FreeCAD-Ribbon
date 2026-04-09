@@ -262,7 +262,7 @@
             <enum>QTabWidget::TabShape::Rounded</enum>
            </property>
            <property name="currentIndex">
-            <number>6</number>
+            <number>7</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideNone</enum>
@@ -354,7 +354,7 @@
                      </size>
                     </property>
                     <property name="selectionMode">
-                     <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+                     <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
                     </property>
                     <property name="sortingEnabled">
                      <bool>true</bool>
@@ -447,7 +447,7 @@
                   <item row="1" column="0">
                    <widget class="QListWidget" name="Panels_IS">
                     <property name="selectionMode">
-                     <enum>QAbstractItemView::SelectionMode::MultiSelection</enum>
+                     <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
                     </property>
                     <property name="selectionBehavior">
                      <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
@@ -1104,6 +1104,9 @@
                  <widget class="QListWidget" name="WorkbenchesSelected_IW">
                   <property name="defaultDropAction">
                    <enum>Qt::DropAction::MoveAction</enum>
+                  </property>
+                  <property name="selectionMode">
+                   <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
                   </property>
                   <property name="movement">
                    <enum>QListView::Movement::Free</enum>
@@ -1974,7 +1977,7 @@
                   <item row="0" column="0">
                    <widget class="QListWidget" name="NewPanel_NP">
                     <property name="selectionMode">
-                     <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+                     <enum>QAbstractItemView::SelectionMode::ExtendedSelection</enum>
                     </property>
                     <property name="sortingEnabled">
                      <bool>false</bool>
