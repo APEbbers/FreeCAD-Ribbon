@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
+from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
 from PySide.QtWidgets import (
     QTabWidget,
     QSlider,
@@ -98,6 +98,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             
     def __init__(self):
         super(LoadDialog, self).__init__()
+        
+        # Set the wait cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
 
         # # this will create a Qt widget from our ui file
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "AddCommands.ui"))
@@ -353,6 +357,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.cancelButton.clicked.connect(self.on_Cancel_Clicked)
         self.form.okButton.clicked.connect(self.on_Ok_Clicked)
 
+        # Restore the cursor
+        QApplication.restoreOverrideCursor()
         return        
         
     def addWorkbenches(self):

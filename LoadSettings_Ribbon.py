@@ -23,7 +23,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL, QSize, Signal, QObject, QEvent, QPoint
+from PySide.QtCore import Qt, SIGNAL, QSize, Signal, QObject, QEvent, QPoint, QEventLoop
 from PySide.QtWidgets import (
     QTabWidget,
     QSlider,
@@ -38,7 +38,7 @@ from PySide.QtWidgets import (
     QWidget,
     QGroupBox,
     QMenu,
-    
+    QApplication,
 )
 from PySide.QtGui import QIcon, QPixmap, QColor, QBrush, QPaintEvent, QPen, QPainter
 
@@ -187,6 +187,10 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
     def __init__(self):
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
         super(LoadDialog, self).__init__()
+        
+        # Set the wait cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
 
         # # this will create a Qt widget from our ui file
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "Settings.ui"))
@@ -721,6 +725,10 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
                                               border-bottom: 0.5px solid red;
                                               border-top-right-radius: 5px;
                                               border-bottom-right-radius: 5px;""")
+        
+        # Restore the cursor
+        QApplication.restoreOverrideCursor()
+        
         return
 
     # region - Control functions----------------------------------------------------------------------

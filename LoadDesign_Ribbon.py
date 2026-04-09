@@ -39,8 +39,10 @@ from PySide.QtWidgets import (
     QRadioButton,
     QLabel,
     QProgressBar,
+    QApplication,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
+from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
+
 import sys
 import json
 from datetime import datetime
@@ -125,6 +127,11 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
         super(LoadDialog, self).__init__()
 
+        # Set the wait cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+
+        
         # Get the main window from FreeCAD
         mw = Gui.getMainWindow()
 
@@ -838,6 +845,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.form.LoadWB.setIcon(Gui.getIcon("view-refresh"))
         self.form.LoadWB.setIconSize(QSize(20, 20))
 
+        # Restore the cursor
+        QApplication.restoreOverrideCursor()
         return
 
     def on_ReloadWB_clicked(self, resetTexts=False, RestartFreeCAD=False):
