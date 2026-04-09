@@ -5097,6 +5097,7 @@ class ModernMenu(RibbonBar):
                 and "toolbars" in dict["workbenches"][workbenchName]
                 and panelName
                 in dict["workbenches"][workbenchName]["toolbars"]
+                and "commands" in dict["workbenches"][workbenchName]["toolbars"][panelName]
             ):
                 # Add custom dropdown buttons to the list that are on default panels
                 button = QToolButton()
