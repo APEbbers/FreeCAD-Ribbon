@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
-from PySide6.QtWidgets import (
+from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
+from PySide.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -39,7 +39,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     QLineEdit,
 )
-from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent
+from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent
 import sys
 import json
 from datetime import datetime, timedelta
@@ -379,7 +379,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         if TimeStamp == "" or TimeStamp is None:
             TimeStamp = "-"
         self.form.TimeStamp_Reloaded.setText(
-            translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}. This is {delta_days} days {delta_hours} hour(s) and {delta_minutes} ago.")
+            translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}. This is {delta_days} days, {delta_hours} hour(s) and {delta_minutes} ago.")
         )
         
         # Connect the OK and Cancel buttons
