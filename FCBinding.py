@@ -1033,11 +1033,11 @@ class ModernMenu(RibbonBar):
     # Mouse event funtions are needed to allow properly drag the window.
     initialPos = None
     def mousePress_Titlebar(self, event):
-        self.initialPos = event.position().toPoint()
+        self.initialPos = event.pos().toPoint()
     
     def mouseMove_Titlebar(self, event):
         if self.initialPos is not None:
-            delta = event.position().toPoint() - self.initialPos
+            delta = event.pos().toPoint() - self.initialPos
             mw.move(
                 mw.window().x() + delta.x(),
                 mw.window().y() + delta.y(),
@@ -4814,9 +4814,9 @@ class ModernMenu(RibbonBar):
         """
 
         icon = QIcon()
-        for item in self.List_CommandIcons:
-            if item[0] == CommandName:
-                icon = item[1]
+        # for item in self.List_CommandIcons:
+        #     if item[0] == CommandName:
+        #         icon = item[1]
         if icon is None or (icon is not None and icon.isNull()):
             icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap)
         return icon
@@ -5487,42 +5487,42 @@ class ModernMenu(RibbonBar):
                         except KeyError:
                             pass
 
-                        # If the icon is still none, try to retrieve it from the data file
-                        if action.icon() is None or (
-                            action.icon() is not None and action.icon().isNull()
-                        ):
-                            StandardFunctions.Print(
-                                f"An icon retrieved from data file for '{CommandName}'"
-                            )
-                            DataFile = os.path.join(
-                                ConfigDirectory, "RibbonDataFile.dat"
-                            )
+                        # # If the icon is still none, try to retrieve it from the data file
+                        # if action.icon() is None or (
+                        #     action.icon() is not None and action.icon().isNull()
+                        # ):
+                        #     StandardFunctions.Print(
+                        #         f"An icon retrieved from data file for '{CommandName}'"
+                        #     )
+                        #     DataFile = os.path.join(
+                        #         ConfigDirectory, "RibbonDataFile.dat"
+                        #     )
 
-                            if os.path.exists(DataFile) is True:
-                                Data = {}
-                                # read ribbon structure from JSON file
-                                with open(DataFile, "r") as file:
-                                    Data.update(json.load(file))
-                                file.close()
-                                try:
-                                    # Load the lists for the deserialized icons
-                                    for IconItem in Data["Command_Icons"]:
-                                        # This works only for FreeCAD Commands
-                                        CommandName_Icon = action.data()
-                                        if CommandName_Icon == IconItem[0]:
-                                            Icon: QIcon = (
-                                                Serialize_Ribbon.deserializeIcon(
-                                                    IconItem[1]
-                                                )
-                                            )
-                                            action.setIcon(Icon)
-                                except Exception as e:
-                                    if Parameters.DEBUG_MODE is True:
-                                        StandardFunctions.Print(
-                                            f"Trying the get an icon for {CommandName}\n{e}",
-                                            "Warning",
-                                        )
-                                    pass
+                        #     if os.path.exists(DataFile) is True:
+                        #         Data = {}
+                        #         # read ribbon structure from JSON file
+                        #         with open(DataFile, "r") as file:
+                        #             Data.update(json.load(file))
+                        #         file.close()
+                        #         try:
+                        #             # Load the lists for the deserialized icons
+                        #             for IconItem in Data["Command_Icons"]:
+                        #                 # This works only for FreeCAD Commands
+                        #                 CommandName_Icon = action.data()
+                        #                 if CommandName_Icon == IconItem[0]:
+                        #                     Icon: QIcon = (
+                        #                         Serialize_Ribbon.deserializeIcon(
+                        #                             IconItem[1]
+                        #                         )
+                        #                     )
+                        #                     action.setIcon(Icon)
+                        #         except Exception as e:
+                        #             if Parameters.DEBUG_MODE is True:
+                        #                 StandardFunctions.Print(
+                        #                     f"Trying the get an icon for {CommandName}\n{e}",
+                        #                     "Warning",
+                        #                 )
+                        #             pass
 
                         # get button size from ribbonStructure
                         try:
