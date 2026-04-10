@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
-from PySide.QtWidgets import (
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
+from PySide6.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -39,7 +39,7 @@ from PySide.QtWidgets import (
     QListWidgetItem,
     QLineEdit,
 )
-from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent
+from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent
 import sys
 import json
 from datetime import datetime, timedelta
@@ -471,6 +471,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             if MenuNameTranslated != "":
                 if f"{MenuNameTranslated}" not in ShadowList:
                     Icon = None
+                    FreeCAD_Icons = os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons")
+                    for root, dirs, files in os.walk(FreeCAD_Icons):
+                        for fileName in files:
+                            if CommandName in fileName:
+                                Icon = QIcon()
+                                Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
+                    
                     for item in self.List_CommandIcons:
                         if item[0] == CommandName:
                             Icon = item[1]

@@ -54,6 +54,7 @@ from Parameters_Ribbon import Parameters
 import Serialize_Ribbon
 import webbrowser
 import StyleMapping_Ribbon
+import requests
 
 # Get the resources
 ConfigDirectory = Parameters.CONFIG_DIR
@@ -756,3 +757,18 @@ def loadAllWorkbenches(AutoHide=True, HideOnly=False, FinishMessage="", progress
   
         return
 # endregion---------------------------------------------------------------------------------------
+
+def DownLoadIcons():
+    PathList = []
+
+    url = 'https://raw.githubusercontent.com/FreeCAD/FreeCAD/main/src/Gui/Icons/3dx_pivot.png'
+    
+    
+    response = requests.get(url)
+    response.raise_for_status() # proper handle HTTP errors
+
+    file_content = response.text
+    print(f"HTTP status: {response.status_code}")
+
+    with open("setup.py", "w") as file:
+        file.write(file_content)
