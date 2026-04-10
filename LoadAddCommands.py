@@ -471,7 +471,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             if MenuNameTranslated != "":
                 if f"{MenuNameTranslated}" not in ShadowList:
                     Icon = QIcon()
-                    FreeCAD_Icons = os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons")
+                    FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                     for root, dirs, files in os.walk(FreeCAD_Icons):
                         for fileName in files:
                             if CommandName in fileName:
@@ -619,7 +619,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             ):
                                 # Define a new ListWidgetItem.
                                 Icon = QIcon()
-                                FreeCAD_Icons = os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons")
+                                FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                                 for root, dirs, files in os.walk(FreeCAD_Icons):
                                     for fileName in files:
                                         if CommandName in fileName:
@@ -753,7 +753,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             ):
                                 # Define a new ListWidgetItem.
                                 Icon = QIcon()
-                                FreeCAD_Icons = os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons")
+                                FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                                 for root, dirs, files in os.walk(FreeCAD_Icons):
                                     for fileName in files:
                                         if CommandName in fileName:

@@ -5476,7 +5476,15 @@ class ModernMenu(RibbonBar):
                             actionIcon = self.ReturnCommandIcon(action.data(), pixmap)
                         if actionIcon is not None:
                             action.setIcon(actionIcon)
-
+                        
+                        FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
+                        for root, dirs, files in os.walk(FreeCAD_Icons):
+                            for fileName in files:
+                                if CommandName in fileName:
+                                    Icon = QIcon()
+                                    Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
+                                    action.setIcon(Icon)
+                        
                         # try to get alternative icon from ribbonStructure
                         try:
                             icon_Json = dict["workbenches"][
