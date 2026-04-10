@@ -345,6 +345,11 @@ class ModernMenu(RibbonBar):
         self.connectSignals()
 
         # read ribbon structure from JSON file
+        if os.path.exists(Parameters.RIBBON_STRUCTURE_JSON) is False:
+            #Create the new folder for the data
+            if not os.path.exists(ConfigDirectory):
+                os.makedirs(ConfigDirectory)
+            Parameters.RIBBON_STRUCTURE_JSON = os.path.join(ConfigDirectory, "RibbonStructure.json")        
         with open(Parameters.RIBBON_STRUCTURE_JSON, "r") as file:
             self.ribbonStructure.update(json.load(file))
         file.close()
