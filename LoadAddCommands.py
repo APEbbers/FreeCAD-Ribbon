@@ -920,15 +920,15 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Create the data file
         CacheFunctions.CreateCache(resetTexts=resetTexts)
 
-        if RestartFreeCAD is False:
-            # Show the dialog again
-            self.closeSignal.emit()
+        # if RestartFreeCAD is False:
+        #     # Show the dialog again
+        #     self.closeSignal.emit()
         if RestartFreeCAD is True:
             result = StandardFunctions.RestartDialog(includeIcons=True)
             if result == "yes":
                 StandardFunctions.restart_freecad()
-            else:
-                self.closeSignal.emit()
+            # else:
+            #     self.closeSignal.emit()
         # show the dialog
         self.form.show()
         return
