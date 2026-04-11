@@ -520,7 +520,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
                     # Add the ListWidgetItem to the correct ListWidget
                     #
-                    if Icon is not None and Icon.isNull() is False:
+                    HasIcon = False
+                    if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
+                        HasIcon = True
+                    if Icon is not None and Icon.isNull() is False and HasIcon:
                         # Add clones of the listWidgetItem to the other listwidgets
                         self.form.CommandsAvailable_NP.addItem(ListWidgetItem)
                         # self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
@@ -668,7 +671,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     Qt.ItemDataRole.UserRole, CommandName
                                 )
                                 
-                                if Icon is not None and Icon.isNull() is False:
+                                HasIcon = False
+                                if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
+                                    HasIcon = True
+                                if Icon is not None and Icon.isNull() is False and HasIcon is True:
                                     ListWidgetItem.setIcon(Icon)
                                     ListWidgetItem.setToolTip(
                                         CommandName
@@ -802,7 +808,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 ListWidgetItem.setData(
                                     Qt.ItemDataRole.UserRole, CommandName
                                 )
-                                if Icon is not None and Icon.isNull() is False:
+                                HasIcon = False
+                                if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
+                                    HasIcon = True
+                                if Icon is not None and Icon.isNull() is False and HasIcon:
                                     ListWidgetItem.setIcon(Icon)
                                     ListWidgetItem.setToolTip(
                                         CommandName
@@ -834,7 +843,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         )  # Use the tooltip to store the actual command.
 
                         # Add the ListWidgetItem to the correct ListWidget
-                        if Icon is not None and Icon.isNull() is False:
+                        HasIcon = False
+                        if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
+                            HasIcon = True
+                        if Icon is not None and Icon.isNull() is False and HasIcon:
                             ListWidget_Commands.addItem(ListWidgetItem)
 
                     if (
@@ -891,7 +903,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             ListWidgetItem.setData(
                                 Qt.ItemDataRole.UserRole, CommandName
                             )
-                            if Icon is not None and Icon.isNull() is False:
+                            HasIcon = False
+                            if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
+                                HasIcon = True
+                            if Icon is not None and Icon.isNull() is False and HasIcon:
                                 ListWidgetItem.setIcon(Icon)
                                 ListWidgetItem.setToolTip(
                                     CommandName
