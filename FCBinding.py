@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -52,7 +52,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -91,7 +91,7 @@ from PySide.QtWidgets import (
     QListWidgetItem,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -4661,16 +4661,23 @@ class ModernMenu(RibbonBar):
             # Get the command
             Command = Gui.Command.get(commandName)
             action = None            
-            Icon = None
+            Icon = QIcon()
             if Command is not None:
                 action = Command.getAction()
-                Icon = Gui.getIcon(
-                    CommandInfoCorrections(commandName)[
-                        "pixmap"
-                    ]
-                )
-                if Icon is None or Icon.isNull() is True:
+                FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
+                for root, dirs, files in os.walk(FreeCAD_Icons):
+                    for fileName in files:
+                        if commandName in fileName:
+                            Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
+                if Icon is not None and Icon.isNull():
+                    Icon = Gui.getIcon(
+                        CommandInfoCorrections(commandName)[
+                            "pixmap"
+                        ]
+                    )
+                if Icon is not None and Icon.isNull():
                     Icon = self.ReturnCommandIcon(commandName)
+                    
                 action = Command.getAction()
                 Button = QToolButton()                                
                 try:
@@ -4695,7 +4702,8 @@ class ModernMenu(RibbonBar):
                     if isinstance(action, QAction):
                         Button.addAction(action)
                         Button.setDefaultAction(action)
-                Button.setIcon(Icon)
+                if Icon is not None and Icon.isNull():
+                    Button.setIcon(Icon)
                 Button.setText(CommandInfoCorrections(commandName)[
                         "menuText"
                     ])
@@ -4813,13 +4821,41 @@ class ModernMenu(RibbonBar):
             QIcon: the command icon.
         """
 
-        icon = QIcon()
-        # for item in self.List_CommandIcons:
-        #     if item[0] == CommandName:
-        #         icon = item[1]
-        if icon is None or (icon is not None and icon.isNull()):
-            icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap)
-        return icon
+        Icon = QIcon()
+        if Icon.isNull():
+            Icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap)
+        if Icon.isNull():
+            StandardFunctions.Print(
+                f"An icon retrieved from data file for '{CommandName}'"
+            )
+            DataFile = os.path.join(
+                ConfigDirectory, "RibbonDataFile.dat"
+            )
+
+            if os.path.exists(DataFile) is True:
+                Data = {}
+                # read ribbon structure from JSON file
+                with open(DataFile, "r") as file:
+                    Data.update(json.load(file))
+                file.close()
+                try:
+                    # Load the lists for the deserialized icons
+                    for IconItem in Data["Command_Icons"]:
+                        # This works only for FreeCAD Commands
+                        if CommandName == IconItem[0]:
+                            Icon: QIcon = (
+                                Serialize_Ribbon.deserializeIcon(
+                                    IconItem[1]
+                                )
+                            )
+                except Exception as e:
+                    if Parameters.DEBUG_MODE is True:
+                        StandardFunctions.Print(
+                            f"Trying the get an icon for {CommandName}\n{e}",
+                            "Warning",
+                        )
+                    pass
+        return Icon
 
     def ReturnWorkbenchIcon(self, WorkBenchName: str, pixmap: str = "") -> QIcon:
         """_summary_
@@ -4848,7 +4884,7 @@ class ModernMenu(RibbonBar):
 
     def RunCommand(self, Command: str):
         try:
-            Gui.doCommand(Command)
+            Gui.runCommand(Command)
         except Exception:
             pass
         return
@@ -5413,7 +5449,20 @@ class ModernMenu(RibbonBar):
                         # CommandName = self.ReturnCommand_string(dict, panel, button)
                         # CommandName = button.toolTip()
                         action = button.defaultAction()
-                        Icon = button.icon()
+                        if action is None:
+                            if isinstance(button.actions(), list):
+                                if len(button.actions()) > 0:
+                                    action = button.actions()[0]
+                                if isinstance(button.actions(), QAction):
+                                    action = button.actions()
+                                if action is None:
+                                    action = QAction(mw)
+                                    # action.triggered.connect(lambda: Gui.runCommand(CommandName))
+                                    action.triggered.connect(lambda: self.RunCommand(CommandName))
+                                if action is None:
+                                    print(f"{CommandName} has no action!")
+                                    continue
+                        Icon = QIcon()
 
                         if CommandName == "":
                             continue
@@ -5463,74 +5512,29 @@ class ModernMenu(RibbonBar):
                                 print(f"No alternative text!. WB={workbenchName}, cmd={action.data()}, key={e}")
                             text = action.text()
                                                 
-                        # Get the icon from cache. Use the pixmap as backup
-                        pixmap = ""
-                        try:
-                            pixmap = dict["workbenches"][
-                                workbenchName
-                            ]["toolbars"][panelName]["commands"][CommandName]["icon"]
-                        except Exception:
-                            pass
-                        actionIcon = action.icon()
-                        if actionIcon is None or (actionIcon is not None and actionIcon.isNull()):
-                            actionIcon = self.ReturnCommandIcon(action.data(), pixmap)
-                        if actionIcon is not None:
-                            action.setIcon(actionIcon)
-                        
+                        # Try to get the icon from the stored freecad icons                      
                         FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                         for root, dirs, files in os.walk(FreeCAD_Icons):
                             for fileName in files:
                                 if CommandName in fileName:
-                                    Icon = QIcon()
                                     Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                                     action.setIcon(Icon)
                         
-                        # try to get alternative icon from ribbonStructure
-                        try:
-                            icon_Json = dict["workbenches"][
-                                workbenchName
-                            ]["toolbars"][panelName]["commands"][CommandName]["icon"]
-                            if icon_Json != "":
-                                action.setIcon(Gui.getIcon(icon_Json))
-                        except KeyError:
-                            pass
-
-                        # If the icon is still none, try to retrieve it from the data file
-                        if action.icon() is None or (
-                            action.icon() is not None and action.icon().isNull()
-                        ):
-                            StandardFunctions.Print(
-                                f"An icon retrieved from data file for '{CommandName}'"
-                            )
-                            DataFile = os.path.join(
-                                ConfigDirectory, "RibbonDataFile.dat"
-                            )
-
-                            if os.path.exists(DataFile) is True:
-                                Data = {}
-                                # read ribbon structure from JSON file
-                                with open(DataFile, "r") as file:
-                                    Data.update(json.load(file))
-                                file.close()
-                                try:
-                                    # Load the lists for the deserialized icons
-                                    for IconItem in Data["Command_Icons"]:
-                                        # This works only for FreeCAD Commands
-                                        CommandName_Icon = action.data()
-                                        if CommandName_Icon == IconItem[0]:
-                                            Icon: QIcon = (
-                                                Serialize_Ribbon.deserializeIcon(
-                                                    IconItem[1]
-                                                )
-                                            )
-                                            action.setIcon(Icon)
-                                except Exception as e:
-                                    if Parameters.DEBUG_MODE is True:
-                                        StandardFunctions.Print(
-                                            f"Trying the get an icon for {CommandName}\n{e}",
-                                            "Warning",
-                                        )
-                                    pass
+                        # If not get the Icon from FreeCAD or the data file
+                        if Icon.isNull():
+                            pixmap = ""
+                            try:
+                                pixmap = dict["workbenches"][
+                                    workbenchName
+                                ]["toolbars"][panelName]["commands"][CommandName]["icon"]
+                            except Exception:
+                                pass
+                            if action.data() is not None:
+                                Icon = self.ReturnCommandIcon(action.data(), pixmap)
+                            else:
+                                Icon = self.ReturnCommandIcon(CommandName, pixmap)
+                            if Icon is not None and Icon.isNull() is False:
+                                action.setIcon(Icon)
 
                         # get button size from ribbonStructure
                         try:
@@ -5595,7 +5599,7 @@ class ModernMenu(RibbonBar):
                             btn = CustomControls(
                                 Text=action.text(),
                                 Action=action,
-                                Icon=action.icon(),
+                                Icon=Icon,
                                 IconSize=IconSize,
                                 ButtonSize=ButtonSize,
                                 FontSize=Parameters.FONTSIZE_BUTTONS,
@@ -5657,7 +5661,7 @@ class ModernMenu(RibbonBar):
                             btn = CustomControls(
                                 Text=action.text(),
                                 Action=action,
-                                Icon=action.icon(),
+                                Icon=Icon,
                                 IconSize=IconSize,
                                 ButtonSize=ButtonSize,
                                 FontSize=Parameters.FONTSIZE_BUTTONS,
@@ -5721,7 +5725,7 @@ class ModernMenu(RibbonBar):
                             btn = CustomControls(
                                 Text=action.text(),
                                 Action=action,
-                                Icon=action.icon(),
+                                Icon=Icon,
                                 IconSize=IconSize,
                                 ButtonSize=ButtonSize,
                                 FontSize=Parameters.FONTSIZE_BUTTONS,
@@ -5764,6 +5768,7 @@ class ModernMenu(RibbonBar):
                         shadowList.append(button.text())
 
                     except Exception as e:
+                        raise e
                         if Parameters.DEBUG_MODE is True:
                             raise e
                         continue
