@@ -469,7 +469,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
 
             if MenuNameTranslated != "":
-                if f"{MenuNameTranslated}" not in ShadowList:
+                if f"{CommandName}" not in ShadowList:
                     Icon = QIcon()
                     FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                     for root, dirs, files in os.walk(FreeCAD_Icons):
@@ -512,7 +512,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     ListWidgetItem = QListWidgetItem()
                     ListWidgetItem.setText(Text)
                     ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
-                    if Icon.isNull() is False:
+                    if Icon is not None and Icon.isNull() is False:
                         ListWidgetItem.setIcon(Icon)
                         ListWidgetItem.setToolTip(
                             CommandName
@@ -520,8 +520,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
                     # Add the ListWidgetItem to the correct ListWidget
                     #
-                    # Default a command is not selected
-                    if Icon.isNull() is False:
+                    if Icon is not None and Icon.isNull() is False:
                         # Add clones of the listWidgetItem to the other listwidgets
                         self.form.CommandsAvailable_NP.addItem(ListWidgetItem)
                         # self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
@@ -535,7 +534,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         #         CommandName.replace("_ddb", "")
                         #     )
 
-                        ShadowList.append(f"{MenuNameTranslated}")
+                        ShadowList.append(f"{CommandName}")
 
         # # Add a "new" item to the dropdown list
         # self.form.CommandList_DDB.addItem(translate("FreeCAD Ribbon", "New"), "new")
@@ -592,7 +591,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     SearchbarText != ""
                     and MenuNameTranslated.lower().startswith(SearchbarText)
                 ) or SearchbarText == "":
-                    if f"{MenuNameTranslated}" not in ShadowList:
+                    if f"{CommandName}" not in ShadowList:
                         try:
                             if (
                                 workbenchName != "Global"
@@ -668,21 +667,22 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 ListWidgetItem.setData(
                                     Qt.ItemDataRole.UserRole, CommandName
                                 )
-                                if Icon.isNull() is False:
+                                
+                                if Icon is not None and Icon.isNull() is False:
                                     ListWidgetItem.setIcon(Icon)
                                     ListWidgetItem.setToolTip(
                                         CommandName
                                     )
 
                                     ListWidget.addItem(ListWidgetItem)
-                                if Icon.isNull():
+                                if Icon.isNull() or Icon is None:
                                     if Parameters.DEBUG_MODE is True:
                                         StandardFunctions.Print(
                                             f"{CommandName} has no icon!", "Warning"
                                         )
                         except Exception:
                             continue
-            ShadowList.append(f"{MenuNameTranslated}")
+            ShadowList.append(f"{CommandName}")
 
         return
 
@@ -730,7 +730,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         != "All"
                     ):
                         if (
-                            f"{MenuNameTranslated}" not in ShadowList
+                            f"{CommandName}" not in ShadowList
                             and workbenchName != "Global"
                             and workbenchName != "General"
                             and workbenchName != "Standard"
@@ -802,14 +802,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 ListWidgetItem.setData(
                                     Qt.ItemDataRole.UserRole, CommandName
                                 )
-                                if Icon is not None:
+                                if Icon is not None and Icon.isNull() is False:
                                     ListWidgetItem.setIcon(Icon)
-                                ListWidgetItem.setToolTip(
-                                    CommandName
-                                )  # Use the tooltip to store the actual command.
+                                    ListWidgetItem.setToolTip(
+                                        CommandName
+                                    )  # Use the tooltip to store the actual command.
 
-                                # Add the ListWidgetItem to the correct ListWidget
-                                if Icon is not None:
+                                    # Add the ListWidgetItem to the correct ListWidget
                                     ListWidget_Commands.addItem(ListWidgetItem)
 
                         ShadowList.append(f"{MenuNameTranslated}")
@@ -835,7 +834,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         )  # Use the tooltip to store the actual command.
 
                         # Add the ListWidgetItem to the correct ListWidget
-                        if Icon is not None:
+                        if Icon is not None and Icon.isNull() is False:
                             ListWidget_Commands.addItem(ListWidgetItem)
 
                     if (
@@ -892,14 +891,14 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             ListWidgetItem.setData(
                                 Qt.ItemDataRole.UserRole, CommandName
                             )
-                            if Icon is not None:
+                            if Icon is not None and Icon.isNull() is False:
                                 ListWidgetItem.setIcon(Icon)
                                 ListWidgetItem.setToolTip(
                                     CommandName
                                 )  # Use the tooltip to store the actual command.
 
                                 # Add the ListWidgetItem to the correct ListWidget
-                                ListWidget_Commands.addItem(ListWidgetItem)
+                                ListWidget_Commands.addItem(CommandName)
         return
 
     def on_CreateNewPanel_clicked(self):
