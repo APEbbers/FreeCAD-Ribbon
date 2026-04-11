@@ -4988,17 +4988,20 @@ class ModernMenu(RibbonBar):
 
         # Get the current data from the ribbonstructure
         CommandName = ""
-        for child in ButtonWidget.children():
-            if (
-                type(child) == QToolButton
-                and child.objectName() == "CommandButton"
-            ):
-                CommandName = child.defaultAction().data()
-                if CommandName == "" or CommandName is None:
-                    if isinstance(child.actions(), list):
-                        CommandName = child.actions()[0].objectName()
-                    if isinstance(child.actions(), QAction):
-                        CommandName = child.actions().data()
+        if type(ButtonWidget.parent()) is CustomControls:
+            CommandName = ButtonWidget.parent().objectName()
+        else:
+            for child in ButtonWidget.children():
+                if (
+                    type(child) == QToolButton
+                    and child.objectName() == "CommandButton"
+                ):
+                    CommandName = child.defaultAction().data()
+                    if CommandName == "" or CommandName is None:
+                        if isinstance(child.actions(), list):
+                            CommandName = child.actions()[0].objectName()
+                        if isinstance(child.actions(), QAction):
+                            CommandName = child.actions().data()
 
         if CommandName != "" and CommandName is not None:        
             for key, value in property.items():

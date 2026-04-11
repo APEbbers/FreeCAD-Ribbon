@@ -788,12 +788,14 @@ def CommandInfoCorrections(CommandName):
         if Command is not None:
             CommandInfo = Command.getInfo()
 
+            # Part Design
             if CommandName == "PartDesign_CompSketches":
                 CommandInfo["menuText"] = "Create sketch..."
                 CommandInfo["toolTip"] = "Create or edit a sketch"
                 CommandInfo["whatsThis"] = "PartDesign_CompSketches"
                 CommandInfo["statusTip"] = "Create or edit a sketch"
 
+            # Sketcher
             if CommandName == "Sketcher_Grid":
                 CommandInfo["pixmap"] = "Sketcher_GridToggle_Deactivated.svg"
             if CommandName == "Sketcher_Snap":
@@ -890,7 +892,8 @@ def addMissingCommands(CommandList: list):
 
 
 def returnQiCons_Commands(CommandName, pixmap=""):
-    from PySide.QtGui import QIcon
+    from PySide.QtGui import QIcon, QAction
+    from PySide.QtWidgets import QToolButton, QMenu
 
     try:
         if len(CommandName.split(", ")) > 1:
@@ -931,6 +934,20 @@ def returnQiCons_Commands(CommandName, pixmap=""):
             icon = Gui.getIcon(CommandName)
         except Exception:
             pass
+        
+    if icon is None or (icon is not None and icon.isNull()):
+        Menus = mw.findChildren(QToolButton)
+        for i in range(len(Menus)):
+            icon = Menus[i].icon()
+            
+    # if icon is None or (icon is not None and icon.isNull()):
+    #     Menus = mw.findChildren(QMenu)
+    #     for i in range(len(Menus)):
+    #         Menu: QMenu = Menus[i]
+    #         for j in range(len(Menu.actions())):
+    #             action = Menu.actions()[j]
+    #             if action.data() == CommandName:
+    #                 icon = action.icon()
     
     # If the icon still none, set a replacement Icon
     if icon is None or (icon is not None and icon.isNull()):
