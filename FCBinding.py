@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -52,7 +52,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -92,7 +92,7 @@ from PySide.QtWidgets import (
     QAbstractButton,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -4642,13 +4642,13 @@ class ModernMenu(RibbonBar):
             pass
         return ButtonList
 
-    def CreateButtonFromCommand(self, commandName: str):
+    def CreateButtonFromCommand(self, CommandName: str):
         try:
             # Activate the workbench, the command belongs to. Otherwise, the command wont be created later
             # Get the current category
             currentCategory = self.currentCategory()
             for CommandItem in self.List_Commands:
-                if CommandItem[0] == commandName:
+                if CommandItem[0] == CommandName:
                     if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard"):                                
                         # Activate the workbench if not loaded
                         Gui.activateWorkbench(CommandItem[3])
@@ -4669,24 +4669,23 @@ class ModernMenu(RibbonBar):
                 child.setEnabled(True)
    
             # Get the command
-            Command = Gui.Command.get(commandName)
+            Command = Gui.Command.get(CommandName)
             action = None            
             Icon = QIcon()
             if Command is not None:
-                action = Command.getAction()
                 FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                 for root, dirs, files in os.walk(FreeCAD_Icons):
                     for fileName in files:
-                        if commandName in fileName:
+                        if CommandName in fileName:
                             Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                 if Icon is not None and Icon.isNull():
                     Icon = Gui.getIcon(
-                        CommandInfoCorrections(commandName)[
+                        CommandInfoCorrections(CommandName)[
                             "pixmap"
                         ]
                     )
                 if Icon is not None and Icon.isNull():
-                    Icon = self.ReturnCommandIcon(commandName)
+                    Icon = self.ReturnCommandIcon(CommandName)
                     
                 action = Command.getAction()
                 Button = QToolButton()                                
@@ -4712,16 +4711,29 @@ class ModernMenu(RibbonBar):
                     if isinstance(action, QAction):
                         Button.addAction(action)
                         Button.setDefaultAction(action)
+                # if there is no action or an empty action, create a new one
+                if action is None or (type(action) is list and len(action) == 0):
+                    # Create the action and use the runCommand from FC
+                    action = QAction(mw)
+                    action.setText(CommandInfoCorrections(CommandName)["menuText"])
+                    action.setObjectName(CommandName)
+                    action.triggered.connect(lambda: self.RunCommand(action.objectName()))
+                    # Add the action to the button
+                    Button.addAction(action)
+                    Button.setDefaultAction(action)
+                if action is None:
+                    print(f"{CommandName} has no action!")
+                        
                 if Icon is not None and Icon.isNull():
                     Button.setIcon(Icon)
-                Button.setText(CommandInfoCorrections(commandName)[
+                Button.setText(CommandInfoCorrections(CommandName)[
                         "menuText"
                     ])
                 if Button.text() == "":
-                    Button.setText(commandName)
-                Button.setToolTip(commandName)
+                    Button.setText(CommandName)
+                Button.setToolTip(CommandName)
                 # Set the commandName as objectName as backup
-                Button.setObjectName(commandName)
+                Button.setObjectName(CommandName)
                 
                 return Button
         except Exception as e:
@@ -4892,6 +4904,7 @@ class ModernMenu(RibbonBar):
 
     def RunCommand(self, Command: str):
         try:
+            print(Command)
             Gui.runCommand(Command)
         except Exception:
             pass
@@ -5019,7 +5032,6 @@ class ModernMenu(RibbonBar):
                     endEmpty=True
                 )
                 self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]["commands"][CommandName][key] = value       
-                print(self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]["commands"][CommandName])
         return
                       
     def ReturnPanelTitle(self, panel: RibbonPanel, dict = ribbonStructure, filterOnly = False):
@@ -5207,7 +5219,6 @@ class ModernMenu(RibbonBar):
                         if button is not None:
                             # button.setProperty("CommandName", key)
                             button.setObjectName(key)
-                            # print(button.objectName())
                             # button.setToolTip(key)
                             allButtons.append(button)
                     
@@ -5218,6 +5229,26 @@ class ModernMenu(RibbonBar):
                 ExtraButton.setObjectName(ExtraCommand)
                 # ExtraButton.setToolTip(ExtraCommand)
                 allButtons.append(ExtraButton)
+                
+        # add the extra commands to the command list that are present in the dict.
+        if workbenchName in dict["workbenches"]:
+            if (
+                panelName != ""
+                and "toolbars" in dict["workbenches"][workbenchName]
+                and panelName
+                in dict["workbenches"][workbenchName]["toolbars"]
+            ):
+                for orderedToolbar in dict["workbenches"][workbenchName]["toolbars"]:
+                    if orderedToolbar.lower() == panelName.lower():
+                        if "commands" in dict["workbenches"][workbenchName]["toolbars"][panelName]:
+                            for Command in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
+                                if Command != "order":
+                                    if "IsExtra" in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]:
+                                        if dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]["IsExtra"]:
+                                            ExtraCommand = self.CreateButtonFromCommand(Command)
+                                            if ExtraCommand is not None:
+                                                ExtraCommand.setObjectName(Command)
+                                                allButtons.append(ExtraCommand)
             
         # add separators to the command list.
         if workbenchName in dict["workbenches"]:
@@ -5331,6 +5362,7 @@ class ModernMenu(RibbonBar):
         # Go through the button list:
         for i in range(len(allButtons)):
             button = allButtons[i]
+            CommandName = button.objectName()
             
             # count the number of buttons per type. Needed for proper sorting the buttons later.
             buttonSize = "small"
@@ -5468,20 +5500,6 @@ class ModernMenu(RibbonBar):
                         # CommandName = self.ReturnCommand_string(dict, panel, button)
                         # CommandName = button.toolTip()
                         action = button.defaultAction()
-                        if action is None:
-                            if isinstance(button.actions(), list):
-                                if len(button.actions()) > 0:
-                                    action = button.actions()[0]
-                                if isinstance(button.actions(), QAction):
-                                    action = button.actions()
-                                if action is None:
-                                    action = QAction(mw)
-                                    action.setText(CommandInfoCorrections(CommandName)["menuText"])
-                                    action.triggered.connect(lambda: self.RunCommand(CommandName))
-                                    action.setObjectName(CommandName)
-                                if action is None:
-                                    print(f"{CommandName} has no action!")
-                                    continue
                         Icon = QIcon()
 
                         if CommandName == "":
