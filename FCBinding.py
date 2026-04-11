@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -52,7 +52,7 @@ from PySide6.QtGui import (
     QScreen,
     QPen,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -89,9 +89,10 @@ from PySide6.QtWidgets import (
     QDialog,
     QListWidget,
     QListWidgetItem,
+    QAbstractButton,
     
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1026,6 +1027,7 @@ class ModernMenu(RibbonBar):
         # This is needed to be able to drag the main window properly when the titlebar is hidden
         self._titleWidget.mousePressEvent = lambda e: self.mousePress_Titlebar(e)
         mw.moveEvent = lambda e: self.mouseMove_Titlebar(e)
+        
         return
 
     # region - Ribbon event fuctions
@@ -1033,7 +1035,10 @@ class ModernMenu(RibbonBar):
     # Mouse event funtions are needed to allow properly drag the window.
     initialPos = None
     def mousePress_Titlebar(self, event):
-        self.initialPos = event.pos().toPoint()
+        try:
+            self.initialPos = event.pos().toPoint()
+        except Exception:
+            pass
     
     def mouseMove_Titlebar(self, event):
         if self.initialPos is not None:
@@ -6576,6 +6581,10 @@ class run:
             # set the name of the object and the window title
             ribbonDock.setObjectName("Ribbon")
             ribbonDock.setWindowTitle("Ribbon")
+            # Make sure that the ribbon is docked
+            btn = ribbonDock.findChild(QAbstractButton, "qt_dockwidget_floatbutton")
+            if ribbonDock.isFloating():
+                btn.animateClick()
             # Set the titlebar to an empty widget (effectively hide it)
             ribbonDock.setTitleBarWidget(QWidget())
             ribbonDock.setContentsMargins(0, 0, 0, 0)
@@ -6585,10 +6594,10 @@ class run:
             if Parameters.AUTOHIDE_RIBBON is True:
                 ribbonDock.setMaximumHeight(ribbon.RibbonMinimalHeight)
             # Add the dockwidget to the main window
-            mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock)
-
+            mw.addDockWidget(Qt.DockWidgetArea.TopDockWidgetArea, ribbonDock, Qt.Orientation.Horizontal)
             # attach the ribbon to the dockwidget            
             ribbonDock.setEnabled(True)
             ribbonDock.setVisible(True)
             ribbonDock.show()
+
             return
