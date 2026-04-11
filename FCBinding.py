@@ -1194,7 +1194,7 @@ class ModernMenu(RibbonBar):
                                     type(child) is QToolButton
                                     and child.objectName() == "CommandButton"
                                 ):
-                                    CommandName = child.defaultAction().data()
+                                    CommandName = child.objectName()
                             textVisible = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]["textEnabled"]
                         except Exception:
                             pass
@@ -1202,6 +1202,8 @@ class ModernMenu(RibbonBar):
                             for child in widget.children():
                                 if type(child) is QLabel:
                                     textVisible = child.isVisible()
+                        if textVisible is None:
+                            textVisible = False                                    
                         # set the checkbox for enabling text
                         RibbonButtonAction_Text = ToggleAction(self, translate("FreeCAD Ribbon", "Show button text"), textVisible)
                         RibbonButtonAction_Text.setText(translate("FreeCAD Ribbon", "Show button text"))
@@ -1243,8 +1245,11 @@ class ModernMenu(RibbonBar):
                         
                         # Add a line edit for changing the text
                         ChangeButtonText = CustomWidgets.LineEditAction(self, translate("FreeCAD Ribbon", "Set button text"))
-                        text = widget.parent().findChild(QLabel).text().replace("\n", " ")
                         ChangeButtonText.setText("")
+                        text = ""
+                        label = widget.parent().findChild(QLabel)
+                        if label is not None:
+                            text = label.text().replace("\n", " ")
                         ChangeButtonText.setPlaceholderText(text)
                         ChangeButtonText.setFixedSize(200,21)
                         ChangeButtonText.setClearButtonEnabled(True)
@@ -1383,7 +1388,7 @@ class ModernMenu(RibbonBar):
                                 if control is not None:                                    
                                     # Update the orderlist
                                     command = self.ReturnCommand_string(self.workBenchDict, objPanel, control)
-                                    if command != "":
+                                    if command != "" and command is not None:
                                         orderList.append(command)
   
                                         # Add the command if they don't exist
@@ -1432,7 +1437,7 @@ class ModernMenu(RibbonBar):
                                     if control is not None:                                                                       
                                         # Update the orderlist
                                         command = self.ReturnCommand_string(self.workBenchDict, objPanel, control)
-                                        if command != "":
+                                        if command != "" and command is not None:
                                             orderList.append(command)
 
                                         # Add the command if they don't exist
@@ -4715,8 +4720,6 @@ class ModernMenu(RibbonBar):
                 if Button.text() == "":
                     Button.setText(commandName)
                 Button.setToolTip(commandName)
-                # # Store the commmandName as a property
-                # Button.setProperty("CommandName", commandName)
                 # Set the commandName as objectName as backup
                 Button.setObjectName(commandName)
                 
@@ -4991,8 +4994,13 @@ class ModernMenu(RibbonBar):
                 and child.objectName() == "CommandButton"
             ):
                 CommandName = child.defaultAction().data()
+                if CommandName == "" or CommandName is None:
+                    if isinstance(child.actions(), list):
+                        CommandName = child.actions()[0].objectName()
+                    if isinstance(child.actions(), QAction):
+                        CommandName = child.actions().data()
 
-        if CommandName != "":        
+        if CommandName != "" and CommandName is not None:        
             for key, value in property.items():
                 StandardFunctions.add_keys_nested_dict(
                     self.workBenchDict,
@@ -5005,9 +5013,10 @@ class ModernMenu(RibbonBar):
                         CommandName,
                         key,
                     ],
+                    endEmpty=True
                 )
                 self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]["commands"][CommandName][key] = value       
-            
+                print(self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]["commands"][CommandName])
         return
                       
     def ReturnPanelTitle(self, panel: RibbonPanel, dict = ribbonStructure, filterOnly = False):
@@ -5147,37 +5156,39 @@ class ModernMenu(RibbonBar):
             ):
                 # Add custom dropdown buttons to the list that are on default panels
                 button = QToolButton()
+                # print(dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys())
                 for command in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():
-                    if command.endswith("_ddb"):
-                        for key, value in dict["dropdownButtons"].items():
-                            if key == command:
-                                currentCategory = self.currentCategory()
-                                for CommandItem in self.List_Commands:
-                                    if CommandItem[0] == value[0]:
-                                        if (value[1] != "General" and value[1] != "Global" and value[1] != "Standard"):                                
-                                            # Activate the workbench if not loaded
-                                            Gui.activateWorkbench(value[1])
-                                            break
-                                # Set the current  category after activating the workbench
-                                self.setCurrentCategory(currentCategory)
-                                Gui.activateWorkbench(currentCategory.objectName())
+                    if command is not None and command !="":
+                        if command.endswith("_ddb"):
+                            for key, value in dict["dropdownButtons"].items():
+                                if key == command:
+                                    currentCategory = self.currentCategory()
+                                    for CommandItem in self.List_Commands:
+                                        if CommandItem[0] == value[0]:
+                                            if (value[1] != "General" and value[1] != "Global" and value[1] != "Standard"):                                
+                                                # Activate the workbench if not loaded
+                                                Gui.activateWorkbench(value[1])
+                                                break
+                                    # Set the current  category after activating the workbench
+                                    self.setCurrentCategory(currentCategory)
+                                    Gui.activateWorkbench(currentCategory.objectName())
 
-                                # Get the actions and add them one by one
-                                QuickAction = self.returnCustomDropDown(key)
-                                menu = QMenu()
-                                for action in QuickAction:
-                                    if len(action) > 0:
-                                        menu.addAction(action[0])
-                                button.setMenu(menu)
-                                # # Set the default action
-                                button.setDefaultAction(QuickAction[0][0])                                
-                                # # Store the commmandName as a property
-                                # button.setProperty("CommandName", command)
-                                # Set the commandName as objectName as backup
-                                button.setObjectName(command)
-                                button.setToolTip(command)
-                                # Add the button
-                                allButtons.append(button)
+                                    # Get the actions and add them one by one
+                                    QuickAction = self.returnCustomDropDown(key)
+                                    menu = QMenu()
+                                    for action in QuickAction:
+                                        if len(action) > 0:
+                                            menu.addAction(action[0])
+                                    button.setMenu(menu)
+                                    # # Set the default action
+                                    button.setDefaultAction(QuickAction[0][0])                                
+                                    # # Store the commmandName as a property
+                                    # button.setProperty("CommandName", command)
+                                    # Set the commandName as objectName as backup
+                                    button.setObjectName(command)
+                                    button.setToolTip(command)
+                                    # Add the button
+                                    allButtons.append(button)
             
         # Add custom panels
         if panelName.endswith("_custom"):
@@ -5188,7 +5199,7 @@ class ModernMenu(RibbonBar):
         if panelName.endswith("_newPanel"):
             if panelName in dict["workbenches"][workbenchName]["toolbars"]:
                 for key in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():
-                    if key != "order":
+                    if key != "order" and key is not None and key != "":
                         button = self.CreateButtonFromCommand(key)
                         if button is not None:
                             # button.setProperty("CommandName", key)
@@ -5462,8 +5473,9 @@ class ModernMenu(RibbonBar):
                                     action = button.actions()
                                 if action is None:
                                     action = QAction(mw)
-                                    # action.triggered.connect(lambda: Gui.runCommand(CommandName))
+                                    action.setText(CommandInfoCorrections(CommandName)["menuText"])
                                     action.triggered.connect(lambda: self.RunCommand(CommandName))
+                                    action.setObjectName(CommandName)
                                 if action is None:
                                     print(f"{CommandName} has no action!")
                                     continue
