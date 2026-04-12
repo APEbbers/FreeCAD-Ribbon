@@ -3461,9 +3461,7 @@ class ModernMenu(RibbonBar):
         )
         self.helpRibbonButton().setToolTip(translate("FreeCAD Ribbon", "Help") + "...")
         # Get the default help action from FreeCAD
-        helpMenu = mw.findChildren(QMenu, "&Help")[0]
-        helpAction = helpMenu.actions()[0]
-        self.helpRibbonButton().setIcon(helpAction.icon())
+        self.helpRibbonButton().setIcon(Gui.getIcon("help-browser"))
         self.helpRibbonButton().setMenu(self.HelpMenu)
         self.helpRibbonButton().setFixedSize(
             self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize
@@ -3898,7 +3896,7 @@ class ModernMenu(RibbonBar):
                 actions[0].setText(translate("FreeCAD Ribbon", "Help"))
                 HelpMenu.addActions(actions)
                 # Store the help icon for the Ribbon help
-                HelpIcon = action.actions()[0].icon()
+                HelpIcon = Gui.getIcon("help-browser")
                 # Remove the menu from the Ribbon Application Menu
                 MenuBar.removeAction(action.menuAction())
 
