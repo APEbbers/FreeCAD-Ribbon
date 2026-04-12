@@ -328,6 +328,8 @@ class ModernMenu(RibbonBar):
     MaxRowsPerWB = {}
     
     CustomizeOffset = 0
+    
+    FloatingTitleBarHeight = 20
     # endregion
 
     def __init__(self):
@@ -1064,6 +1066,7 @@ class ModernMenu(RibbonBar):
         self.hideClassicToolbars()
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
         TB.show()
+                
         # In FreeCAD 1.0, Overlays are introduced. These have also an enterEvent which results in strange behavior
         # Therefore this function is only activated when FreeCAD's overlay function is disabled.
         if (
@@ -4378,8 +4381,14 @@ class ModernMenu(RibbonBar):
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             if self.RibbonHeight > 0:
-                TB.setFixedHeight(self.RibbonHeight)
-                # self.setRibbonHeight(self.RibbonHeight)
+                # TB.setFixedHeight(self.RibbonHeight)
+                if TB.isFloating():
+                    if self.RibbonHeight > 0:
+                        TB.setFixedHeight(self.RibbonHeight + self.FloatingTitleBarHeight)
+                if TB.isFloating() is False:
+                    if self.RibbonHeight > 0:
+                        TB.setFixedHeight(self.RibbonHeight)
+                
         return
 
     def FoldRibbon(self, Ignore=False):
@@ -4390,8 +4399,12 @@ class ModernMenu(RibbonBar):
         ):
             if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
                 TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-                TB.setMinimumHeight(self.RibbonMinimalHeight)
-                TB.setMaximumHeight(self.RibbonMinimalHeight)
+                if TB.isFloating():
+                    TB.setMinimumHeight(self.RibbonMinimalHeight+self.FloatingTitleBarHeight)
+                    TB.setMaximumHeight(self.RibbonMinimalHeight+self.FloatingTitleBarHeight)
+                if TB.isFloating() is False:
+                    TB.setMinimumHeight(self.RibbonMinimalHeight)
+                    TB.setMaximumHeight(self.RibbonMinimalHeight)
         return
 
     def List_ReturnCustomToolbars(self):
@@ -4893,7 +4906,6 @@ class ModernMenu(RibbonBar):
             # Correct the height of the ribbon
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             if self.RibbonHeight > 0:
-                self.RibbonHeight = self.RibbonHeight - 24
                 TB.setFixedHeight(self.RibbonHeight)
             return
         
@@ -4903,8 +4915,7 @@ class ModernMenu(RibbonBar):
             # Increase the ribbon height
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             if self.RibbonHeight > 0:
-                self.RibbonHeight = self.RibbonHeight + 24
-                TB.setFixedHeight(self.RibbonHeight)
+                TB.setFixedHeight(self.RibbonHeight + self.FloatingTitleBarHeight)
             # Try to remove the empty titlebar. Restoring the original one
             try:
                 ribbonDock.titleBarWidget().deleteLater()
@@ -6483,35 +6494,28 @@ class EventInspector(QObject):
 
     def eventFilter(self, obj, event: QEvent):
         # This makes sure that the ribbon is enabled, when overlay is switched of  
+        mw = Gui.getMainWindow()
+        DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
         if Parameters.USE_FC_OVERLAY is False:
-            mw = Gui.getMainWindow()
-            DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
             if DockWidget_Ribbon is not None and DockWidget_Ribbon.isVisible() is False:
                 DockWidget_Ribbon.show()
-                return QObject.eventFilter(self, obj, event)
-        
-        if event.type() == QEvent.Type.WindowActivate:
-            mw = Gui.getMainWindow()
-            DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
-            if DockWidget_Ribbon is not None:
-                RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
-                FloatButton: QToolButton = RibbonBar.currentCategory().findChild(QToolButton ,"FLoatButton")
-                if DockWidget_Ribbon.isFloating() is False:
-                    if FloatButton is not None:
-                        FloatButton.setIcon(
-                                StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2]
-                            )
-                        try:
-                            DockWidget_Ribbon.setTitleBarWidget(QWidget())
-                        except Exception:
-                            pass
-                        # return QObject.eventFilter(self, obj, event)
-                if DockWidget_Ribbon.isFloating():
-                    if FloatButton is not None:
-                        FloatButton.setIcon(
-                                StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1]
-                            )
-                return QObject.eventFilter(self, obj, event)
+        if DockWidget_Ribbon is not None:
+            RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+            FloatButton: QToolButton = RibbonBar.currentCategory().findChild(QToolButton ,"FLoatButton")
+            if DockWidget_Ribbon.isFloating() is False:
+                if FloatButton is not None:
+                    FloatButton.setIcon(
+                            StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2]
+                        )
+                try:
+                    DockWidget_Ribbon.setTitleBarWidget(QWidget())
+                except Exception:
+                    pass
+            if DockWidget_Ribbon.isFloating():
+                if FloatButton is not None:
+                    FloatButton.setIcon(
+                            StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1]
+                        )
                                     
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
