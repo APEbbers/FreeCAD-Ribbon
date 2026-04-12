@@ -1394,7 +1394,6 @@ class ModernMenu(RibbonBar):
                                         # Add the command if they don't exist
                                         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", command, "size"], "small")
                                         # Set the sizes
-                                        # print(control.ButtonStyle)
                                         style = control.ButtonStyle
                                         if style == RibbonButtonStyle.Small:
                                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "small"
@@ -3244,9 +3243,7 @@ class ModernMenu(RibbonBar):
 
                 # Add the button to the quickaccess toolbar
                 if len(button.actions()) > 0:
-                    # widget = QWidgetAction.createWidget(button)
                     self.addQuickAccessButton(button)
-                    # self.addQuickAccessButton(widget)
                 else:
                     StandardFunctions.Print(
                         f"{commandName} did not contain any actions!", "Log"
@@ -3256,7 +3253,6 @@ class ModernMenu(RibbonBar):
             except Exception as e:
                 if Parameters.DEBUG_MODE is True:
                     StandardFunctions.Print(f"{commandName}, {e}", "Warning")
-                # raise (e)
                 continue
 
         self.quickAccessToolBar().show()
@@ -3350,24 +3346,6 @@ class ModernMenu(RibbonBar):
                         # Set the title
                         category = self.addCategory(name)
                         category.setObjectName(workbenchName)
-                        # category.setAcceptDrops(True)
-                        
-                        # # Add a drag function to the category
-                        # def mouseMoveEvent(self, e):
-                        #     if e.buttons() == Qt.MouseButton.LeftButton and customizeEnabled is True:
-                        #         try:
-                        #             drag = QDrag(self)
-                        #             mime = QMimeData()
-                        #             drag.setMimeData(mime)
-                        #             pixmap = QPixmap(self.size())
-                        #             self.render(pixmap)
-                        #             drag.setPixmap(pixmap)
-
-                        #             drag.exec(Qt.DropAction.MoveAction)
-                        #         except Exception as e:
-                        #             print(e)
-                        
-                        # category.mouseMoveEvent = lambda e: mouseMoveEvent(category, e)
 
                         # Set the tabbar according the style setting
                         if Parameters.TABBAR_STYLE <= 1:
@@ -4504,9 +4482,9 @@ class ModernMenu(RibbonBar):
                                 try:
                                     if len(action) > 1:
                                         Icon = action[0].icon()
-                                        # menu = QMenu(self)
-                                        # menu.addActions(action)
-                                        # Button.setMenu(menu)
+                                        menu = QMenu(self)
+                                        menu.addActions(action)
+                                        Button.setMenu(menu)
                                 except Exception:
                                     pass
                                 # Add the button to the button list
@@ -4539,23 +4517,6 @@ class ModernMenu(RibbonBar):
                         # NewToolbutton = RibbonToolButton()
                         NewToolbutton = QToolButton()
                         if CommandName.endswith("_ddb") is False:
-                            CommandActionList = None
-                            # # Get the translated menutext
-                            # # if the commandname cannot be split, it is a nromal command
-                            # if len(CommandName.split(", ")) <= 1:
-                            #     # Get the command
-                            #     Command = Gui.Command.get(CommandName)
-                            #     if Command is not None:
-                            #         # Get tis action
-                            #         CommandActionList = Command.getAction()
-                            #     if Command is None:
-                            #         if Parameters.DEBUG_MODE is True:
-                            #             StandardFunctions.Print(
-                            #                 f"{CommandName} was None", "Warning"
-                            #             )
-                            # # If the commandname can be splitted, it is a FreeCAD dropdown
-                            # print(CommandName)
-                            # if len(CommandName.split(", ")) > 1:
                             CommandActionList = self.LoadDropDownAction(CommandName)
                             if CommandActionList is None:
                                 continue
@@ -4904,7 +4865,8 @@ class ModernMenu(RibbonBar):
 
     def RunCommand(self, Command: str):
         try:
-            print(Command)
+            if Parameters.DEBUG_MODE is True:
+                print(f"{Command} has no action and was run from console!")
             Gui.runCommand(Command)
         except Exception:
             pass
@@ -4984,7 +4946,7 @@ class ModernMenu(RibbonBar):
                                             "toolbars"
                                         ][ToolBar]["commands"][Command]["text"] = ""
 
-                print("Ribbon UI: Custom text are reset because the language was changed")
+                                    print("Ribbon UI: Custom text are reset because the language was changed")
         return
     
     def WriteButtonSettings(self, ButtonWidget, panel, property: dict = {"size": "small",}):
@@ -5135,7 +5097,8 @@ class ModernMenu(RibbonBar):
 
                     drag.exec(Qt.DropAction.MoveAction)
                 except Exception as e:
-                    print(e)
+                    if Parameters.DEBUG_MODE is True:
+                        print(e)
         
         panel.mouseMoveEvent = lambda e: mouseMoveEvent(panel, e, self.CustomizeEnabled)
         
@@ -5171,7 +5134,6 @@ class ModernMenu(RibbonBar):
             ):
                 # Add custom dropdown buttons to the list that are on default panels
                 button = QToolButton()
-                # print(dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys())
                 for command in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():
                     if command is not None and command !="":
                         if command.endswith("_ddb"):
@@ -5313,21 +5275,9 @@ class ModernMenu(RibbonBar):
                 def sortButtons(button: QToolButton):
                     # Use the text from the button
                     Text = button.objectName()
-                    # if "ddb" not in Text and "separator" not in Text:
-                    #     Text = self.ReturnCommand_string(dict, panel, button)
-                    # versionCheck = StandardFunctions.checkFreeCADVersion(
-                    #         Parameters.FreeCAD_Version["mainVersion"],
-                    #         Parameters.FreeCAD_Version["subVersion"],
-                    #         Parameters.FreeCAD_Version["patchVersion"],
-                    #         Parameters.FreeCAD_Version["gitVersion"],
-                    #     )
-                    # if (versionCheck is True):
-                    #     # if it is not a custom button or separator, update the Text
-                    #     if "ddb" not in Text and "separator" not in Text:
-                    #         Text = self.ReturnCommand_string(dict, panel, button)
-                    # print(Text)
-
+                    # Define a position variable
                     position = None
+                    # Try to get the position, if it fails, put it at the end
                     try:
                         position = OrderList.index(Text)
                     except ValueError:
@@ -5658,7 +5608,6 @@ class ModernMenu(RibbonBar):
                                 alignment=self.ButtonAlignment,
                                 fixedHeight=False,
                             ).setObjectName(CommandName)  # Set fixedheight to false. This is set in the custom widgets
-                            # print(f"CustomWidget_Small;{CommandName}")
                         elif buttonSize == "medium":
                             showText = Parameters.SHOW_ICON_TEXT_MEDIUM
                             if (
@@ -6131,7 +6080,8 @@ class ModernMenu(RibbonBar):
             Gui.updateGui()
                         
         except Exception as e:
-            print(e)
+            if Parameters.DEBUG_MODE is True:
+                print(e)
             pass
         
         return
