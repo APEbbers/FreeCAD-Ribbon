@@ -6483,32 +6483,35 @@ class EventInspector(QObject):
 
     def eventFilter(self, obj, event: QEvent):
         # This makes sure that the ribbon is enabled, when overlay is switched of  
-        mw = Gui.getMainWindow()
-        DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
         if Parameters.USE_FC_OVERLAY is False:
+            mw = Gui.getMainWindow()
+            DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
             if DockWidget_Ribbon is not None and DockWidget_Ribbon.isVisible() is False:
                 DockWidget_Ribbon.show()
                 return QObject.eventFilter(self, obj, event)
-                
-        if DockWidget_Ribbon is not None:
-            RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
-            FloatButton: QToolButton = RibbonBar.currentCategory().findChild(QToolButton ,"FLoatButton")
-            if DockWidget_Ribbon.isFloating() is False:
-                if FloatButton is not None:
-                    FloatButton.setIcon(
-                            StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2]
-                        )
-                    try:
-                        DockWidget_Ribbon.setTitleBarWidget(QWidget())
-                    except Exception:
-                        pass
-                    return QObject.eventFilter(self, obj, event)
-            if DockWidget_Ribbon.isFloating():
-                if FloatButton is not None:
-                    FloatButton.setIcon(
-                            StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1]
-                        )
-                    return QObject.eventFilter(self, obj, event)
+        
+        if event.type() == QEvent.Type.WindowActivate:
+            mw = Gui.getMainWindow()
+            DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
+            if DockWidget_Ribbon is not None:
+                RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+                FloatButton: QToolButton = RibbonBar.currentCategory().findChild(QToolButton ,"FLoatButton")
+                if DockWidget_Ribbon.isFloating() is False:
+                    if FloatButton is not None:
+                        FloatButton.setIcon(
+                                StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2]
+                            )
+                        try:
+                            DockWidget_Ribbon.setTitleBarWidget(QWidget())
+                        except Exception:
+                            pass
+                        # return QObject.eventFilter(self, obj, event)
+                if DockWidget_Ribbon.isFloating():
+                    if FloatButton is not None:
+                        FloatButton.setIcon(
+                                StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1]
+                            )
+                return QObject.eventFilter(self, obj, event)
                                     
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
