@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -52,7 +52,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -92,7 +92,7 @@ from PySide.QtWidgets import (
     QAbstractButton,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -4231,8 +4231,12 @@ class ModernMenu(RibbonBar):
             # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
             self.overlayButtonList.append(overlayButton)
         ribbonDock = mw.findChild(QDockWidget, "Ribbon")
-        btn = ribbonDock.findChild(QAbstractButton, "qt_dockwidget_floatbutton")
-        layout.addWidget(btn, 2,4,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+        # btn = ribbonDock.findChild(QAbstractButton, "qt_dockwidget_floatbutton")
+        btn = QToolButton()
+        btn.setIcon(mw.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
+        btn.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
+        btn.clicked.connect(self.ToggleDockWidget)
+        layout.addWidget(btn, 0,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
         return
 
     # endregion
@@ -4875,7 +4879,16 @@ class ModernMenu(RibbonBar):
             pass
         return
 
-    def ToggleOverlay(self,):                
+    def ToggleDockWidget(self):
+        ribbonDock = mw.findChild(QDockWidget, "Ribbon")
+        if ribbonDock.isFloating():
+            ribbonDock.setFloating(False)
+            return
+        if ribbonDock.isFloating() is False:
+            ribbonDock.setFloating(True)
+        
+
+    def ToggleOverlay(self):                
         # Get the parameter group
         OverlayParam_Top = App.ParamGet(
             "User parameter:BaseApp/MainWindow/DockWindows/OverlayTop"
