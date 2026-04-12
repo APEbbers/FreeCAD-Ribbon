@@ -4230,6 +4230,9 @@ class ModernMenu(RibbonBar):
             layout.addWidget(overlayButton, 2,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
             # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
             self.overlayButtonList.append(overlayButton)
+        ribbonDock = mw.findChild(QDockWidget, "Ribbon")
+        btn = ribbonDock.findChild(QAbstractButton, "qt_dockwidget_floatbutton")
+        layout.addWidget(btn, 2,4,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
         return
 
     # endregion
@@ -6565,9 +6568,11 @@ class run:
             ribbonDock.setObjectName("Ribbon")
             ribbonDock.setWindowTitle("Ribbon")
             # Make sure that the ribbon is docked
-            btn = ribbonDock.findChild(QAbstractButton, "qt_dockwidget_floatbutton")
-            if ribbonDock.isFloating():
-                btn.animateClick()
+            # btn = ribbonDock.findChild(QAbstractButton, "qt_dockwidget_floatbutton")
+            # if ribbonDock.isFloating():
+            #     btn.animateClick()
+            # if ribbonDock.isFloating():
+            #     btn.animateClick()
             # Set the titlebar to an empty widget (effectively hide it)
             ribbonDock.setTitleBarWidget(QWidget())
             ribbonDock.setContentsMargins(0, 0, 0, 0)
