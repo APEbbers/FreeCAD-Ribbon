@@ -4883,9 +4883,15 @@ class ModernMenu(RibbonBar):
         ribbonDock = mw.findChild(QDockWidget, "Ribbon")
         if ribbonDock.isFloating():
             ribbonDock.setFloating(False)
+            ribbonDock.setTitleBarWidget(QWidget())
             return
         if ribbonDock.isFloating() is False:
             ribbonDock.setFloating(True)
+            try:
+                ribbonDock.titleBarWidget().deleteLater()
+            except Exception:
+                pass
+            return
         
 
     def ToggleOverlay(self):                
@@ -6580,12 +6586,6 @@ class run:
             # set the name of the object and the window title
             ribbonDock.setObjectName("Ribbon")
             ribbonDock.setWindowTitle("Ribbon")
-            # Make sure that the ribbon is docked
-            # btn = ribbonDock.findChild(QAbstractButton, "qt_dockwidget_floatbutton")
-            # if ribbonDock.isFloating():
-            #     btn.animateClick()
-            # if ribbonDock.isFloating():
-            #     btn.animateClick()
             # Set the titlebar to an empty widget (effectively hide it)
             ribbonDock.setTitleBarWidget(QWidget())
             ribbonDock.setContentsMargins(0, 0, 0, 0)
