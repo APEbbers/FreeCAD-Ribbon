@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -52,7 +52,7 @@ from PySide6.QtGui import (
     QScreen,
     QPen,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -92,7 +92,7 @@ from PySide6.QtWidgets import (
     QAbstractButton,
     
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -4200,7 +4200,14 @@ class ModernMenu(RibbonBar):
         
         # Add a pinbutton to the current tab in the right bottom corner
         layout: QGridLayout = self.currentCategory()._mainLayout
-        # if Parameters.USE_FC_OVERLAY is False:            
+        # Set a toggle button for docking the ribbon
+        FLoatingButton = QToolButton()
+        FLoatingButton.setObjectName("FLoatButton")
+        FLoatingButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
+        FLoatingButton.clicked.connect(self.ToggleDockWidget)
+        layout.addWidget(FLoatingButton, 0,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+        
+        # Set the pinbutton when overlay is disabled
         if Parameters.USE_OVERLAY is False:            
             pinButton = QToolButton()
             # btn.setIcon(self.pinButton.icon())
@@ -4213,9 +4220,10 @@ class ModernMenu(RibbonBar):
             else:
                 pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
             pinButton.clicked.connect(lambda: self.on_Pin_clicked(pinButton))
-            layout.addWidget(pinButton, 2,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+            layout.addWidget(pinButton, 3,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
             # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
             self.pinButtonList.append(pinButton)
+        
         # If freecads overlay functions are enabled, add a spacer instead. 
         # This prevents the scroll buttons from being placed at the bottom
         if Parameters.USE_OVERLAY is True:   
@@ -4227,16 +4235,10 @@ class ModernMenu(RibbonBar):
             )
             overlayButton.setObjectName("overlayButton")
             overlayButton.clicked.connect(self.ToggleOverlay)
-            layout.addWidget(overlayButton, 2,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+            layout.addWidget(overlayButton, 3,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
             # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
             self.overlayButtonList.append(overlayButton)
-        ribbonDock = mw.findChild(QDockWidget, "Ribbon")
-        # btn = ribbonDock.findChild(QAbstractButton, "qt_dockwidget_floatbutton")
-        btn = QToolButton()
-        btn.setIcon(mw.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarNormalButton))
-        btn.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
-        btn.clicked.connect(self.ToggleDockWidget)
-        layout.addWidget(btn, 0,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+        
         return
 
     # endregion
@@ -4880,13 +4882,30 @@ class ModernMenu(RibbonBar):
         return
 
     def ToggleDockWidget(self):
+        # Get the DockWidget for the ribbon
         ribbonDock = mw.findChild(QDockWidget, "Ribbon")
+
         if ribbonDock.isFloating():
+            # If the DockWidget is floating, dock it
             ribbonDock.setFloating(False)
+            # Set an empty titlebar widget. Effectivly hide the titlebar
             ribbonDock.setTitleBarWidget(QWidget())
+            # Correct the height of the ribbon
+            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            if self.RibbonHeight > 0:
+                self.RibbonHeight = self.RibbonHeight - 24
+                TB.setFixedHeight(self.RibbonHeight)
             return
+        
         if ribbonDock.isFloating() is False:
+            # If the DockWidget is docked, set it floating
             ribbonDock.setFloating(True)
+            # Increase the ribbon height
+            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+            if self.RibbonHeight > 0:
+                self.RibbonHeight = self.RibbonHeight + 24
+                TB.setFixedHeight(self.RibbonHeight)
+            # Try to remove the empty titlebar. Restoring the original one
             try:
                 ribbonDock.titleBarWidget().deleteLater()
             except Exception:
@@ -6464,17 +6483,28 @@ class EventInspector(QObject):
 
     def eventFilter(self, obj, event: QEvent):
         # This makes sure that the ribbon is enabled, when overlay is switched of  
+        mw = Gui.getMainWindow()
+        DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
         if Parameters.USE_FC_OVERLAY is False:
-            mw = Gui.getMainWindow()
-            DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
             if DockWidget_Ribbon is not None and DockWidget_Ribbon.isVisible() is False:
                 DockWidget_Ribbon.show()
-            if DockWidget_Ribbon is not None:
-                if DockWidget_Ribbon.isFloating() is False:
-                    try:
-                        DockWidget_Ribbon.setTitleBarWidget(QWidget())
-                    except Exception:
-                        pass
+        if DockWidget_Ribbon is not None:
+            RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+            FloatButton: QToolButton = RibbonBar.currentCategory().findChild(QToolButton ,"FLoatButton")
+            if DockWidget_Ribbon.isFloating() is False:
+                if FloatButton is not None:
+                    FloatButton.setIcon(
+                            StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2]
+                        )
+                try:
+                    DockWidget_Ribbon.setTitleBarWidget(QWidget())
+                except Exception:
+                    pass
+            if DockWidget_Ribbon.isFloating():
+                if FloatButton is not None:
+                    FloatButton.setIcon(
+                            StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1]
+                        )
                                     
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
