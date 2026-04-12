@@ -6469,6 +6469,12 @@ class EventInspector(QObject):
             DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
             if DockWidget_Ribbon is not None and DockWidget_Ribbon.isVisible() is False:
                 DockWidget_Ribbon.show()
+            if DockWidget_Ribbon is not None:
+                if DockWidget_Ribbon.isFloating() is False:
+                    try:
+                        DockWidget_Ribbon.setTitleBarWidget(QWidget())
+                    except Exception:
+                        pass
                                     
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
