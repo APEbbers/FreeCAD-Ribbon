@@ -6515,19 +6515,22 @@ class EventInspector(QObject):
         super(EventInspector, self).__init__(parent)
 
     def eventFilter(self, obj, event: QEvent):
-        # This makes sure that the ribbon is enabled, when overlay is switched of  
-        mw = Gui.getMainWindow()
-        DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
+        # This makes sure that the ribbon is enabled, when overlay is switched of          
         if Parameters.USE_FC_OVERLAY is False:
+            mw = Gui.getMainWindow()
+            DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
             if DockWidget_Ribbon is not None and DockWidget_Ribbon.isVisible() is False:
                 DockWidget_Ribbon.show()
-        if DockWidget_Ribbon is not None:
-            RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
-            if DockWidget_Ribbon.isFloating() is False:
-                try:
-                    DockWidget_Ribbon.setTitleBarWidget(QWidget())
-                except Exception:
-                    pass
+        if event.type() == QEvent.Type.WindowActivate or event.type() == QEvent.Type.WindowDeactivate:
+            mw = Gui.getMainWindow()
+            DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
+            if DockWidget_Ribbon is not None:
+                RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+                if DockWidget_Ribbon.isFloating() is False:
+                    try:
+                        DockWidget_Ribbon.setTitleBarWidget(QWidget())
+                    except Exception:
+                        pass
                                     
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
