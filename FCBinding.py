@@ -4211,8 +4211,8 @@ class ModernMenu(RibbonBar):
         else:
             ScrollRightButton_Category.setArrowType(Qt.ArrowType.RightArrow)
         # Set the heihgt of the buttons
-        ScrollLeftButton_Category.setFixedHeight(Parameters.ICON_SIZE_SMALL * 3)
-        ScrollRightButton_Category.setFixedHeight(Parameters.ICON_SIZE_SMALL * 3)
+        # ScrollLeftButton_Category.setFixedHeight(Parameters.ICON_SIZE_SMALL * 3)
+        # ScrollRightButton_Category.setFixedHeight(Parameters.ICON_SIZE_SMALL * 3)
         # Set the stylesheet
         ScrollLeftButton_Category.setStyleSheet(
             StyleMapping_Ribbon.ReturnStyleSheet("toolbutton")
@@ -4249,46 +4249,25 @@ class ModernMenu(RibbonBar):
             Gui.updateGui()
         
         # # Add a Floating button to the current tab in the right bottom corner
-        # layout: QGridLayout = self.currentCategory()._mainLayout
-        # # Set a toggle button for docking the ribbon
-        # FLoatingButton = QToolButton()
-        # FLoatingButton.setObjectName("FLoatButton")
-        # FLoatingButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
-        # FLoatingButton.clicked.connect(self.ToggleDockWidget)
-        # layout.addWidget(FLoatingButton, 0,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
-        
-        # # Set the pinbutton when overlay is disabled
-        # if Parameters.USE_OVERLAY is False:            
-        #     pinButton = QToolButton()
-        #     # btn.setIcon(self.pinButton.icon())
-        #     pinButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
-        #     pinButton.setObjectName("pinButton")
-        #     pinButton.setCheckable(True)
-        #     pinButton.setChecked(not Parameters.AUTOHIDE_RIBBON)
-        #     if Parameters.AUTOHIDE_RIBBON is False:
-        #         pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
-        #     else:
-        #         pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
-        #     pinButton.clicked.connect(lambda: self.on_Pin_clicked(pinButton))
-        #     layout.addWidget(pinButton, 3,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
-        #     # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
-        #     self.pinButtonList.append(pinButton)
-        
-        # # If freecads overlay functions are enabled, add a spacer instead. 
-        # # This prevents the scroll buttons from being placed at the bottom
-        # if Parameters.USE_OVERLAY is True:   
-        #     overlayButton = QToolButton()
-        #     overlayButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
-        #     overlayButton.setIcon(mw.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
-        #     overlayButton.setToolTip(
-        #         translate("FreeCAD Ribbon", "Toggle overlay ")
-        #     )
-        #     overlayButton.setObjectName("overlayButton")
-        #     overlayButton.clicked.connect(self.ToggleOverlay)
-        #     layout.addWidget(overlayButton, 3,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
-        #     # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
-        #     self.overlayButtonList.append(overlayButton)
-        
+        layout: QGridLayout = self.currentCategory()._mainLayout   
+        # Set the pinbutton when overlay is disabled        
+        pinButton = QToolButton()
+        pinButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
+        pinButton.setObjectName("pinButton")
+        pinButton.setCheckable(True)
+        pinButton.setChecked(not Parameters.AUTOHIDE_RIBBON)
+        if Parameters.AUTOHIDE_RIBBON is False:
+            pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
+        else:
+            pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
+        pinButton.setStyleSheet("border: none")
+        pinButton.clicked.connect(lambda: self.on_Pin_clicked(pinButton))
+        layout.addWidget(pinButton, 3,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+        # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
+        self.pinButtonList.append(pinButton)
+        if Parameters.USE_OVERLAY is True: 
+             pinButton.setIcon(QIcon())   
+             pinButton.setDisabled(True)             
         return
 
     # endregion
