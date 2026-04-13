@@ -470,7 +470,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
 
             if MenuNameTranslated != "":
-                if f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)["toolTip"]}" not in ShadowList:
+                if f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" not in ShadowList:
                     Icon = QIcon()
                     FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                     for root, dirs, files in os.walk(FreeCAD_Icons):
