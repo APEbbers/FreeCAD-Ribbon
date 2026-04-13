@@ -3613,6 +3613,7 @@ class ModernMenu(RibbonBar):
         checkState = self.BetaFunctionsEnabled
         if Parameters.BETA_FUNCTIONS_ENABLED is True:
             checkState = True
+            self.BetaFunctionsEnabled = True
         switch = ToggleAction(self, "Enable béta functions", checkState)
         switch.setFixedSize(40, 20)
         switch.setObjectName("bétaSwitch")
@@ -3640,17 +3641,16 @@ class ModernMenu(RibbonBar):
         switch.setToolTip(toolTipText)
         switch.checkStateChanged.connect(
             lambda: self.on_ToggleBetaFunctions_toggled(switch.isChecked())
-        )
-        # Add the switch button to the right toolbar
-        BeforeAction = self.rightToolBar().actions()[2]        
-        # self.rightToolBar().insertWidget(BeforeAction, switch)
+        )           
+        # Now added to the settings menu
+        SettingsMenu.addAction(switch)
+        
+        # Add a expanding spacer to the right toolbar
+        BeforeAction = self.rightToolBar().actions()[2]     
         spacer = QWidget()
         spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         self.rightToolBar().insertWidget(BeforeAction, spacer)
-        #
-        # Now added to the settings menu
-        SettingsMenu.addAction(switch)
-
+        
         # Set the width of the right toolbar
         RightToolbarWidth = (
             SearchBarWidth
