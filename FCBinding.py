@@ -4260,7 +4260,6 @@ class ModernMenu(RibbonBar):
             pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
         else:
             pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
-        pinButton.setStyleSheet("border: none")
         pinButton.clicked.connect(lambda: self.on_Pin_clicked(pinButton))
         layout.addWidget(pinButton, 3,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
         # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
