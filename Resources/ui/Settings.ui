@@ -2331,8 +2331,7 @@
                 <item row="0" column="0">
                  <widget class="QCheckBox" name="FCOverlayEnabled">
                   <property name="toolTip">
-                   <string>Use the overlay function from FreeCAD.
-Uncheck this when there are issues with the overlay function and the FreeCAD Ribbon.</string>
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the overlay function enabled for the Ribbon at startup.&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;Warning&lt;/span&gt;: this will result in an empty window at startup!&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
                   <property name="text">
                    <string>Set the overlay enabled by default</string>

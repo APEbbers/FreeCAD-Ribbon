@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingswshwCe.ui'
+## Form generated from reading UI file 'SettingsYktujv.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -1417,14 +1417,13 @@ class Ui_Settings(object):
         self.PreferedViewPanel.setItemText(3, QCoreApplication.translate("Settings", u"None", None))
 
         self.EnableToolsPanel.setText(QCoreApplication.translate("Settings", u"Use standard Tools panel", None))
-        self.EnableOverlay.setTitle(QCoreApplication.translate("Settings", u"Enable overlay function", None))
+        self.EnableOverlay.setTitle(QCoreApplication.translate("Settings", u"Enable Ribbon overlay function", None))
 #if QT_CONFIG(tooltip)
-        self.FCOverlayEnabled.setToolTip(QCoreApplication.translate("Settings", u"Use the overlay function from FreeCAD.\n"
-"Uncheck this when there are issues with the overlay function and the FreeCAD Ribbon.", None))
+        self.FCOverlayEnabled.setToolTip(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the overlay function enabled for the Ribbon at startup.</p><p><span style=\" font-weight:700;\">Warning</span>: this will result in an empty window at startup!</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.FCOverlayEnabled.setText(QCoreApplication.translate("Settings", u"Set the overlay enabled by default", None))
         self.UseButtonBackGround.setText(QCoreApplication.translate("Settings", u"Use background on buttons", None))
-        self.label_26.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-weight:700; font-style:italic;\">Warning:</span></p><p><span style=\" font-size:8pt; font-style:italic;\">When overlay is enabled by default, the ribbon is hidden until you open or create a document. Use &quot;ctrl+N&quot; (Linux, Windows) or &quot;meta+N&quot; (macOs) to create a new document.</span></p></body></html>", None))
+        self.label_26.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-weight:700; font-style:italic;\">Warning:</span></p><p><span style=\" font-size:8pt; font-style:italic;\">When overlay is enabled by default, the ribbon is hidden until you open or create a document. Use &quot;ctrl+N&quot; (Linux, Windows) or &quot;meta+N&quot; (macOs) to create a new document.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">The pin button does not work with FreeCAD's overlay function. Enabling this, replaces the pin button with a overlay button.</span></p><p><span style=\" font-size:8pt; font-weight:700; font-style:italic;\">Note:</span></p><p><span style=\" font-size:8pt; font-style:italic;\">This only allowes to trigger FreeCAD's overlay function for the RibbonUI. Other Overlay settings are set under FreeCAD preferences.</span></p></body></html>", None))
         self.groupBox_15.setTitle(QCoreApplication.translate("Settings", u"Advanced size settings", None))
         self.label_43.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">Extra settings that might be usefull if there are issues with your display and FreeCAD. Normally, it should not be needed to change these. </span></p><p><span style=\" font-size:8pt; font-style:italic;\">The settings might not work on all systems!</span></p></body></html>", None))
         self.label_40.setText(QCoreApplication.translate("Settings", u"Extra offset for the panel height", None))

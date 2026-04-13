@@ -769,22 +769,34 @@ class ModernMenu(RibbonBar):
             Parameters.AUTOHIDE_RIBBON = False
         self.setAutoHideRibbon(Parameters.AUTOHIDE_RIBBON)
         
+        # Get the parameter group
+        OverlayParam_Top = App.ParamGet(
+            "User parameter:BaseApp/MainWindow/DockWindows/OverlayTop"
+        )
         if Parameters.USE_OVERLAY is False:
             Parameters.USE_FC_OVERLAY = False
             self.OverlayToggled_Top = False
-            # self.ToggleOverlay()
-            # Get the parameter group
-            OverlayParam_Top = App.ParamGet(
-                "User parameter:BaseApp/MainWindow/DockWindows/OverlayTop"
-            )
+
             # Create a new string without "Ribbon"       
             newString = OverlayParam_Top.GetString("Widgets").replace("Ribbon,", "")
             # Set the new string in parameters
             OverlayParam_Top.SetString("Widgets",newString)
         
-        if Parameters.USE_OVERLAY is True and Parameters.USE_FC_OVERLAY is True:
-            self.OverlayToggled_Top = False
-            self.ToggleOverlay()
+        if Parameters.USE_OVERLAY is True:
+            self.OverlayToggled_Top = True
+            if Parameters.USE_FC_OVERLAY is True:
+                # Get the current string, if Ribbon is not in it, add it
+                newString = OverlayParam_Top.GetString("Widgets")
+                if "Ribbon" not in newString:
+                    newString = "Ribbon," + newString
+                    OverlayParam_Top.SetString("Widgets",newString)
+            else:
+                self.OverlayToggled_Top = False
+                # Create a new string without "Ribbon"       
+                newString = OverlayParam_Top.GetString("Widgets").replace("Ribbon,", "")
+                # Set the new string in parameters
+                OverlayParam_Top.SetString("Widgets",newString)
+        App.saveParameter()
 
         # Remove the collapseble button
         RightToolbar = self.rightToolBar()
@@ -889,6 +901,30 @@ class ModernMenu(RibbonBar):
         self.applicationOptionButton().enterEvent = lambda enter: self.leaveEvent(enter)
 
         # Rearrange the tabbar and toolbars
+        #
+        # Create a floating button
+        FloatingButton = QToolButton()
+        FloatingButton.setObjectName("FloatButton")
+        FloatingButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
+        FloatingButton.clicked.connect(self.ToggleDockWidget)
+        FloatingButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2])
+        #
+        # Create an overlay button  
+        overlayButton = QToolButton()
+        overlayButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
+        # overlayButton.setIcon(mw.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
+        overlayButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1])
+        overlayButton.setToolTip(
+            translate("FreeCAD Ribbon", "Toggle overlay ")
+        )
+        overlayButton.setObjectName("overlayButton")
+        overlayButton.clicked.connect(self.ToggleOverlay)
+        if Parameters.USE_OVERLAY is True:
+            overlayButton.animateClick() # Otherwise, the first time you need to click twice
+        if Parameters.USE_OVERLAY is False:
+            overlayButton.setDisabled(True)
+            overlayButton.setIcon(QIcon())
+            overlayButton.setFixedSize(QSize(0.1,self.iconSize * 0.8))
         if (
             Parameters.TOOLBAR_POSITION == 0
             or Parameters.TOOLBAR_POSITION == 1
@@ -922,19 +958,25 @@ class ModernMenu(RibbonBar):
                 spacer.setFixedWidth(3)
                 self._titleWidget._tabBarLayout.setContentsMargins(3, 3, 3, 0)
                 self._titleWidget._tabBarLayout.addWidget(
-                    _quickAccessToolBarWidget, 0, 0, 1, 2, Qt.AlignmentFlag.AlignVCenter
+                    _quickAccessToolBarWidget, 0, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
                 self._titleWidget._tabBarLayout.addWidget(
-                    _titleLabel, 0, 2, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                    _titleLabel, 0, 1, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
                 self._titleWidget._tabBarLayout.addWidget(
-                    _rightToolBar, 0, 3, 1, 2, Qt.AlignmentFlag.AlignVCenter
+                    _rightToolBar, 0, 3, 1, 3, Qt.AlignmentFlag.AlignVCenter
                 )
                 self._titleWidget._tabBarLayout.addWidget(
-                    spacer, 1, 0, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                    spacer, 1, 4, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
                 self._titleWidget._tabBarLayout.addWidget(
-                    _tabBar, 1, 1, 1, 4, Qt.AlignmentFlag.AlignVCenter
+                    _tabBar, 1, 0, 1, 4, Qt.AlignmentFlag.AlignVCenter
+                )
+                self._titleWidget._tabBarLayout.addWidget(
+                    overlayButton, 1, 4, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                )
+                self._titleWidget._tabBarLayout.addWidget(
+                    FloatingButton, 1, 5, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
@@ -4201,46 +4243,46 @@ class ModernMenu(RibbonBar):
             self.applicationOptionButton().setDisabled(True)
             Gui.updateGui()
         
-        # Add a pinbutton to the current tab in the right bottom corner
-        layout: QGridLayout = self.currentCategory()._mainLayout
-        # Set a toggle button for docking the ribbon
-        FLoatingButton = QToolButton()
-        FLoatingButton.setObjectName("FLoatButton")
-        FLoatingButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
-        FLoatingButton.clicked.connect(self.ToggleDockWidget)
-        layout.addWidget(FLoatingButton, 0,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+        # # Add a Floating button to the current tab in the right bottom corner
+        # layout: QGridLayout = self.currentCategory()._mainLayout
+        # # Set a toggle button for docking the ribbon
+        # FLoatingButton = QToolButton()
+        # FLoatingButton.setObjectName("FLoatButton")
+        # FLoatingButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
+        # FLoatingButton.clicked.connect(self.ToggleDockWidget)
+        # layout.addWidget(FLoatingButton, 0,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
         
-        # Set the pinbutton when overlay is disabled
-        if Parameters.USE_OVERLAY is False:            
-            pinButton = QToolButton()
-            # btn.setIcon(self.pinButton.icon())
-            pinButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
-            pinButton.setObjectName("pinButton")
-            pinButton.setCheckable(True)
-            pinButton.setChecked(not Parameters.AUTOHIDE_RIBBON)
-            if Parameters.AUTOHIDE_RIBBON is False:
-                pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
-            else:
-                pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
-            pinButton.clicked.connect(lambda: self.on_Pin_clicked(pinButton))
-            layout.addWidget(pinButton, 3,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
-            # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
-            self.pinButtonList.append(pinButton)
+        # # Set the pinbutton when overlay is disabled
+        # if Parameters.USE_OVERLAY is False:            
+        #     pinButton = QToolButton()
+        #     # btn.setIcon(self.pinButton.icon())
+        #     pinButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
+        #     pinButton.setObjectName("pinButton")
+        #     pinButton.setCheckable(True)
+        #     pinButton.setChecked(not Parameters.AUTOHIDE_RIBBON)
+        #     if Parameters.AUTOHIDE_RIBBON is False:
+        #         pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
+        #     else:
+        #         pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
+        #     pinButton.clicked.connect(lambda: self.on_Pin_clicked(pinButton))
+        #     layout.addWidget(pinButton, 3,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+        #     # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
+        #     self.pinButtonList.append(pinButton)
         
-        # If freecads overlay functions are enabled, add a spacer instead. 
-        # This prevents the scroll buttons from being placed at the bottom
-        if Parameters.USE_OVERLAY is True:   
-            overlayButton = QToolButton()
-            overlayButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
-            overlayButton.setIcon(mw.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
-            overlayButton.setToolTip(
-                translate("FreeCAD Ribbon", "Toggle overlay ")
-            )
-            overlayButton.setObjectName("overlayButton")
-            overlayButton.clicked.connect(self.ToggleOverlay)
-            layout.addWidget(overlayButton, 3,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
-            # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
-            self.overlayButtonList.append(overlayButton)
+        # # If freecads overlay functions are enabled, add a spacer instead. 
+        # # This prevents the scroll buttons from being placed at the bottom
+        # if Parameters.USE_OVERLAY is True:   
+        #     overlayButton = QToolButton()
+        #     overlayButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
+        #     overlayButton.setIcon(mw.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
+        #     overlayButton.setToolTip(
+        #         translate("FreeCAD Ribbon", "Toggle overlay ")
+        #     )
+        #     overlayButton.setObjectName("overlayButton")
+        #     overlayButton.clicked.connect(self.ToggleOverlay)
+        #     layout.addWidget(overlayButton, 3,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+        #     # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
+        #     self.overlayButtonList.append(overlayButton)
         
         return
 
@@ -4940,14 +4982,11 @@ class ModernMenu(RibbonBar):
             return True
             
         if self.OverlayToggled_Top is True: 
-            # Get the parameter string "Widgets"
-            WidgetsList: list = OverlayParam_Top.GetString("Widgets").split(",")
-            if "Ribbon" not in WidgetsList:
-                WidgetsList.append("Ribbon")
-            newString = ""
-            for item in WidgetsList:
-                newString = newString + "," + item
-            OverlayParam_Top.SetString("Widgets",newString)
+            # Get the current string, if Ribbon is not in it, add it
+            newString = OverlayParam_Top.GetString("Widgets")
+            if "Ribbon" not in newString:
+                newString = "Ribbon," + newString
+                OverlayParam_Top.SetString("Widgets",newString)
             App.saveParameter()
             self.OverlayToggled_Top = False
             return True
@@ -6499,23 +6538,24 @@ class EventInspector(QObject):
         if Parameters.USE_FC_OVERLAY is False:
             if DockWidget_Ribbon is not None and DockWidget_Ribbon.isVisible() is False:
                 DockWidget_Ribbon.show()
-        if DockWidget_Ribbon is not None:
-            RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
-            FloatButton: QToolButton = RibbonBar.currentCategory().findChild(QToolButton ,"FLoatButton")
-            if DockWidget_Ribbon.isFloating() is False:
-                if FloatButton is not None:
-                    FloatButton.setIcon(
-                            StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2]
-                        )
-                try:
-                    DockWidget_Ribbon.setTitleBarWidget(QWidget())
-                except Exception:
-                    pass
-            if DockWidget_Ribbon.isFloating():
-                if FloatButton is not None:
-                    FloatButton.setIcon(
-                            StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1]
-                        )
+        # if DockWidget_Ribbon is not None:
+        #     RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+        #     # FloatButton: QToolButton = RibbonBar.currentCategory().findChild(QToolButton ,"FLoatButton")
+        #     FloatButton: QToolButton = RibbonBar._titleWidget._tabBarLayout.findChild(QToolButton ,"FloatButton")
+        #     if DockWidget_Ribbon.isFloating() is False:
+        #         if FloatButton is not None:
+        #             FloatButton.setIcon(
+        #                     StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2]
+        #                 )
+        #         try:
+        #             DockWidget_Ribbon.setTitleBarWidget(QWidget())
+        #         except Exception:
+        #             pass
+        #     if DockWidget_Ribbon.isFloating():
+        #         if FloatButton is not None:
+        #             FloatButton.setIcon(
+        #                     StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1]
+        #                 )
                                     
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
