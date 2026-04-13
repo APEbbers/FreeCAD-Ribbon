@@ -540,7 +540,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         #         CommandName.replace("_ddb", "")
                         #     )
 
-                        ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)["toolTip"]}")
+                        ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
 
         # # Add a "new" item to the dropdown list
         # self.form.CommandList_DDB.addItem(translate("FreeCAD Ribbon", "New"), "new")
@@ -597,7 +597,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     SearchbarText != ""
                     and MenuNameTranslated.lower().startswith(SearchbarText)
                 ) or SearchbarText == "":
-                    if f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)["toolTip"]}" not in ShadowList:
+                    if f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" not in ShadowList:
                         try:
                             if (
                                 workbenchName != "Global"
@@ -691,7 +691,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                         StandardFunctions.Print(
                                             f"{CommandName} has no icon!", "Warning"
                                         )
-                                ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)["toolTip"]}")
+                                ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
                         except Exception:
                             continue            
 
@@ -741,7 +741,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         != "All"
                     ):
                         if (
-                            f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)["toolTip"]}" not in ShadowList
+                            f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}"  not in ShadowList
                             and workbenchName != "Global"
                             and workbenchName != "General"
                             and workbenchName != "Standard"
@@ -827,7 +827,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     # Add the ListWidgetItem to the correct ListWidget
                                     ListWidget_Commands.addItem(ListWidgetItem)
 
-                                    ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)["toolTip"]}")
+                                    ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
                     if (
                         workbenchName == "Standard" and
                         ListWidget_WorkBenches.currentText() == "Standard"
