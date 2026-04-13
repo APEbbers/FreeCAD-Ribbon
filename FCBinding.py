@@ -908,15 +908,14 @@ class ModernMenu(RibbonBar):
         FloatingButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
         FloatingButton.clicked.connect(self.ToggleDockWidget)
         FloatingButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2])
+        FloatingButton.setToolTip(translate("FreeCAD Ribbon", "Set the ribbon docked or floating"))
         #
         # Create an overlay button  
         overlayButton = QToolButton()
         overlayButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
         # overlayButton.setIcon(mw.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
         overlayButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1])
-        overlayButton.setToolTip(
-            translate("FreeCAD Ribbon", "Toggle overlay ")
-        )
+        overlayButton.setToolTip(translate("FreeCAD Ribbon", "Toggle overlay "))
         overlayButton.setObjectName("overlayButton")
         overlayButton.clicked.connect(self.ToggleOverlay)
         if Parameters.USE_OVERLAY is True:
@@ -998,7 +997,13 @@ class ModernMenu(RibbonBar):
                     _titleLabel, 0, 2, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
                 self._titleWidget._tabBarLayout.addWidget(
-                    _rightToolBar, 0, 3, 1, 2, Qt.AlignmentFlag.AlignVCenter
+                    overlayButton, 0, 3, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                )
+                self._titleWidget._tabBarLayout.addWidget(
+                    FloatingButton, 0, 4, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                )
+                self._titleWidget._tabBarLayout.addWidget(
+                    _rightToolBar, 0, 5, 1, 2, Qt.AlignmentFlag.AlignVCenter
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize + 10
