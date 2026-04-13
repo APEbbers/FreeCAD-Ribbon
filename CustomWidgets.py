@@ -1706,7 +1706,8 @@ class ToggleAction(QWidgetAction):
     Toggle.setObjectName("toggle")
         
     checkStateChanged = Toggle.stateChanged
-
+    checkState = Toggle.checkState()
+    
     def __init__(self, parent, text, checked):
         super(ToggleAction, self).__init__(parent)
         layout = QHBoxLayout()
@@ -1727,9 +1728,11 @@ class ToggleAction(QWidgetAction):
     def setCheckState(self, CheckState: Qt.CheckState):
         self.Toggle.setCheckState(CheckState)
         if CheckState == Qt.CheckState.Checked:
+            self.checkState = Qt.CheckState.Checked
             self.Toggle._handle_position = 1
             self.Toggle.update()
         else:
+            self.checkState = Qt.CheckState.Unchecked
             self.Toggle._handle_position = 0
             self.Toggle.update()
         return
@@ -1758,7 +1761,7 @@ class ToggleAction(QWidgetAction):
     def setFixedSize(self, w, h):
         self.Toggle.setFixedSize(w, h)
         return
-
+ 
 class CheckBoxAction(QWidgetAction):
     checkbox = QCheckBox()
     checkbox.setObjectName("checkbox")

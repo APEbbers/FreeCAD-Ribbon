@@ -3266,7 +3266,7 @@ class ModernMenu(RibbonBar):
         self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
         # Set the size policy
         self.quickAccessToolBar().setSizePolicy(
-            QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding
+            QSizePolicy.Policy.Minimum, QSizePolicy.Policy.MinimumExpanding
         )
         # needed for excluding from hiding toolbars
         self.quickAccessToolBar().setObjectName("quickAccessToolBar")
@@ -3610,10 +3610,11 @@ class ModernMenu(RibbonBar):
             self.rightToolBar().addWidget(CloseButton)
 
         # Add a switch to enable beta functions
-        BetaLabel = QLabel(translate("FreeCAD Ribbon", "Béta functions"))
-        BeforeAction = self.rightToolBar().actions()[1]
-        self.rightToolBar().insertWidget(BeforeAction, BetaLabel)
-        switch = Toggle(self)
+        checkState = self.BetaFunctionsEnabled
+        if Parameters.BETA_FUNCTIONS_ENABLED is True:
+            checkState = True
+        switch = ToggleAction(self, "Enable béta functions", checkState)
+        switch.setFixedSize(40, 20)
         switch.setObjectName("bétaSwitch")
         toolTipText = (translate("FreeCAD Ribbon",
     """
@@ -3637,18 +3638,18 @@ class ModernMenu(RibbonBar):
     """
     ))
         switch.setToolTip(toolTipText)
-        BetaLabel.setToolTip(toolTipText)
-        switch.setMaximumHeight(self.RightToolBarButtonSize)
-        switch.setMaximumWidth(self.RightToolBarButtonSize * 1.8)
-        switch.toggled.connect(
+        switch.checkStateChanged.connect(
             lambda: self.on_ToggleBetaFunctions_toggled(switch.isChecked())
         )
-        if Parameters.BETA_FUNCTIONS_ENABLED is True:
-            switch.setChecked(True)
-        else:
-            switch.setChecked(False)
-        BeforeAction = self.rightToolBar().actions()[2]
-        self.rightToolBar().insertWidget(BeforeAction, switch)
+        # Add the switch button to the right toolbar
+        BeforeAction = self.rightToolBar().actions()[2]        
+        # self.rightToolBar().insertWidget(BeforeAction, switch)
+        spacer = QWidget()
+        spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        self.rightToolBar().insertWidget(BeforeAction, spacer)
+        #
+        # Now added to the settings menu
+        SettingsMenu.addAction(switch)
 
         # Set the width of the right toolbar
         RightToolbarWidth = (
@@ -3671,6 +3672,7 @@ class ModernMenu(RibbonBar):
         
         # Store the pinbutton globally
         self.pinButton = pinButton
+        
         return
 
     # Add the searchBar if it is present
