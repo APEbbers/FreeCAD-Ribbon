@@ -6543,24 +6543,13 @@ class EventInspector(QObject):
         if Parameters.USE_FC_OVERLAY is False:
             if DockWidget_Ribbon is not None and DockWidget_Ribbon.isVisible() is False:
                 DockWidget_Ribbon.show()
-        # if DockWidget_Ribbon is not None:
-        #     RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
-        #     # FloatButton: QToolButton = RibbonBar.currentCategory().findChild(QToolButton ,"FLoatButton")
-        #     FloatButton: QToolButton = RibbonBar._titleWidget._tabBarLayout.findChild(QToolButton ,"FloatButton")
-        #     if DockWidget_Ribbon.isFloating() is False:
-        #         if FloatButton is not None:
-        #             FloatButton.setIcon(
-        #                     StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2]
-        #                 )
-        #         try:
-        #             DockWidget_Ribbon.setTitleBarWidget(QWidget())
-        #         except Exception:
-        #             pass
-        #     if DockWidget_Ribbon.isFloating():
-        #         if FloatButton is not None:
-        #             FloatButton.setIcon(
-        #                     StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1]
-        #                 )
+        if DockWidget_Ribbon is not None:
+            RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+            if DockWidget_Ribbon.isFloating() is False:
+                try:
+                    DockWidget_Ribbon.setTitleBarWidget(QWidget())
+                except Exception:
+                    pass
                                     
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
