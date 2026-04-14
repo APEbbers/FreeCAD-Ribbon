@@ -1178,7 +1178,7 @@ class ModernMenu(RibbonBar):
     #            
     def contextMenuEvent(self, event: QContextMenuEvent):
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-        
+
         # Create the menu
         self.contextMenu = QMenu(self)
         self.contextMenu.setStyleSheet("spacing: 0px;margin: 0px;padding: 0px;")
@@ -1557,7 +1557,7 @@ class ModernMenu(RibbonBar):
                 
                 # Disconnect the widgetActions
                 removeSeparator.triggered.disconnect()
-                
+             
         widget = None
         panel = None
         return
@@ -2355,7 +2355,7 @@ class ModernMenu(RibbonBar):
                         # Store the beforeAction globally
                         self.dropWidget_QuickAccess = beforeAction
                         # Store the index of the current beforeAction. This is needed for the drop function to save the order
-                        self.DropIndex_QuickAccess = QuickAccessToolBar.actions().index(beforeAction) - 1
+                        self.DropIndex_QuickAccess = QuickAccessToolBar.actions().index(beforeAction)
                     # If the button is an Target indicator or is None, remove it.
                     if type(CommandName) is DragTargetIndicator or CommandName is None:
                         QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
@@ -2780,25 +2780,32 @@ class ModernMenu(RibbonBar):
                 OrderList = self.quickAccessCommands
                 # Determine the index of the Button that is clicked on
                 buttonList = self._titleWidget._quickAccessToolBar.findChildren(QToolButton)
-                startIndex = -1
+                newOrderList = []
+                startIndex = 0
+                offSet = 0
                 for i in range(len(buttonList)):
-                    buttonName = buttonList[i].objectName()
-                    if widget.objectName() == buttonName:
-                        startIndex = i -2 # plus 1, to get the correct position in the list
-                        break
+                    if type(buttonList[i]) is QuickAccessToolButton or type(buttonList[i]) is QuickAccessSeparator :
+                        newOrderList.append(buttonList[i].objectName())
+                    if type(buttonList[i]) is not QuickAccessToolButton and type(buttonList[i]) is not QuickAccessSeparator :
+                        offSet += 1
+                for i in range(len(newOrderList)):
+                    if widget.objectName() == newOrderList[i]:
+                        startIndex = i 
+                        break         
+                
                 # if startIndex > len(self.quickAccessCommands):
                 #     startIndex = len(self.quickAccessCommands) - 1
                 
                 # Remove the current widget
-                self.quickAccessCommands.pop(startIndex)
-                # Get the current index stored in the dragmove function. Do minus 1, because the current widget is removed
+                newOrderList.pop(startIndex)
+                # Get the current index stored in the dragmove function.
                 if self.DropIndex_QuickAccess is not None:
-                    endIndex = self.DropIndex_QuickAccess - 1
+                    endIndex = self.DropIndex_QuickAccess - offSet
                     # Insert the commandName in the orderlist
-                    OrderList.insert(endIndex, widget.objectName())
+                    newOrderList.insert(endIndex, widget.objectName())
 
                 # Set the quickaccessCommands
-                self.quickAccessCommands = OrderList
+                self.quickAccessCommands = newOrderList
                 
                 # Delete the drag indicater
                 try:
