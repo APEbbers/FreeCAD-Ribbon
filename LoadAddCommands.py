@@ -470,7 +470,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
 
             if MenuNameTranslated != "":
-                if f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" not in ShadowList:
+                # if f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" not in ShadowList:
+                if CommandName not in ShadowList:
                     Icon = QIcon()
                     FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                     for root, dirs, files in os.walk(FreeCAD_Icons):
@@ -519,14 +520,14 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             CommandName
                         )  # Use the tooltip to store the actual command.
 
-                    # Add the ListWidgetItem to the correct ListWidget
-                    #
-                    HasIcon = True
-                    if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
-                        HasIcon = True
-                    if len(CommandName.split(",")) > 1:
-                        HasIcon = True
-                    if Icon is not None and Icon.isNull() is False and HasIcon:
+                        # Add the ListWidgetItem to the correct ListWidget
+                        #
+                        # HasIcon = True
+                        # if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
+                        #     HasIcon = True
+                        # if len(CommandName.split(",")) > 1:
+                        #     HasIcon = True
+                        # if Icon is not None and Icon.isNull() is False and HasIcon:
                         # Add clones of the listWidgetItem to the other listwidgets
                         self.form.CommandsAvailable_NP.addItem(ListWidgetItem)
                         # self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
@@ -540,7 +541,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         #         CommandName.replace("_ddb", "")
                         #     )
 
-                        ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                        # ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                        ShadowList.append(CommandName)
 
         # # Add a "new" item to the dropdown list
         # self.form.CommandList_DDB.addItem(translate("FreeCAD Ribbon", "New"), "new")
@@ -597,7 +599,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     SearchbarText != ""
                     and MenuNameTranslated.lower().startswith(SearchbarText)
                 ) or SearchbarText == "":
-                    if f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" not in ShadowList:
+                    # if f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" not in ShadowList:
+                    if CommandName not in ShadowList:
                         try:
                             if (
                                 workbenchName != "Global"
@@ -622,42 +625,18 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 )[2]
                                 or ListWidget_WorkBenches.currentText() == "All"
                             ):
-                                IsInlist = False
-                                for i in range(ListWidget_Commands.count()):
-                                    CommandItem = ListWidget_Commands.item(i)
-                                    if CommandItem.text() == MenuNameTranslated:
-                                        IsInlist = True
-
-                                if IsInlist is False:
-                                    # Define a new ListWidgetItem.
-                                    Icon = QIcon()
-                                    FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
-                                    for root, dirs, files in os.walk(FreeCAD_Icons):
-                                        for fileName in files:
-                                            if CommandName in fileName:
-                                                Icon = QIcon()
-                                                Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
-                                    if Icon.isNull():
-                                        for item in self.List_CommandIcons:
-                                            if item[0] == CommandName:
-                                                Icon = item[1]
-                                            if (
-                                                str(CommandName).endswith("_ddb")
-                                                and "dropdownButtons" in self.Dict_DropDownButtons
-                                            ):
-                                                for (
-                                                    DropDownCommand,
-                                                    Commands,
-                                                ) in self.Dict_DropDownButtons[
-                                                    "dropdownButtons"
-                                                ].items():
-                                                    if Commands[0][0] == item[0]:
-                                                        Icon = item[1]
-                                    if Icon.isNull():
-                                        IconName = StandardFunctions.CommandInfoCorrections(
-                                            CommandName
-                                        )["pixmap"]
-                                        Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
+                                # Define a new ListWidgetItem.
+                                Icon = QIcon()
+                                FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
+                                for root, dirs, files in os.walk(FreeCAD_Icons):
+                                    for fileName in files:
+                                        if CommandName in fileName:
+                                            Icon = QIcon()
+                                            Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
+                                if Icon.isNull():
+                                    for item in self.List_CommandIcons:
+                                        if item[0] == CommandName:
+                                            Icon = item[1]
                                         if (
                                             str(CommandName).endswith("_ddb")
                                             and "dropdownButtons" in self.Dict_DropDownButtons
@@ -668,11 +647,28 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                             ) in self.Dict_DropDownButtons[
                                                 "dropdownButtons"
                                             ].items():
-                                                if Commands[0][0] == CommandName:
-                                                    IconName = ToolbarCommand[1]
-                                                    Icon = StandardFunctions.returnQiCons_Commands(
-                                                        CommandName, IconName
-                                        )
+                                                if Commands[0][0] == item[0]:
+                                                    Icon = item[1]
+                                if Icon.isNull():
+                                    IconName = StandardFunctions.CommandInfoCorrections(
+                                        CommandName
+                                    )["pixmap"]
+                                    Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
+                                    if (
+                                        str(CommandName).endswith("_ddb")
+                                        and "dropdownButtons" in self.Dict_DropDownButtons
+                                    ):
+                                        for (
+                                            DropDownCommand,
+                                            Commands,
+                                        ) in self.Dict_DropDownButtons[
+                                            "dropdownButtons"
+                                        ].items():
+                                            if Commands[0][0] == CommandName:
+                                                IconName = ToolbarCommand[1]
+                                                Icon = StandardFunctions.returnQiCons_Commands(
+                                                    CommandName, IconName
+                                    )
 
                                     # Define a new ListWidgetItem.
                                     ListWidgetItem = QListWidgetItem()
@@ -681,24 +677,28 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                         Qt.ItemDataRole.UserRole, CommandName
                                     )
                                     
-                                    HasIcon = True
-                                    if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
-                                        HasIcon = True
-                                    if len(CommandName.split(",")) > 1:
-                                        HasIcon = True
-                                    if Icon is not None and Icon.isNull() is False and HasIcon is True:
+                                    # HasIcon = True
+                                    # if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
+                                    #     HasIcon = True
+                                    # if len(CommandName.split(",")) > 1:
+                                    #     HasIcon = True
+                                    if Icon is not None and Icon.isNull() is False:
                                         ListWidgetItem.setIcon(Icon)
                                         ListWidgetItem.setToolTip(
                                             CommandName
                                         )
 
                                         ListWidget_Commands.addItem(ListWidgetItem)
+                                        
+                                        # ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                                        ShadowList.append(CommandName)
+                                        
                                     if Icon.isNull() or Icon is None:
                                         if Parameters.DEBUG_MODE is True:
                                             StandardFunctions.Print(
                                                 f"{CommandName} has no icon!", "Warning"
                                             )
-                                    ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                                    
                         except Exception:
                             continue            
 
@@ -748,7 +748,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         != "All"
                     ):
                         if (
-                            f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}"  not in ShadowList
+                            # f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}"  not in ShadowList
+                            CommandName not in ShadowList
                             and workbenchName != "Global"
                             and workbenchName != "General"
                             and workbenchName != "Standard"
@@ -827,12 +828,12 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     ListWidgetItem.setData(
                                         Qt.ItemDataRole.UserRole, CommandName
                                     )
-                                    HasIcon = False
-                                    if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
-                                        HasIcon = True
-                                    if len(CommandName.split(",")) > 1:
-                                        HasIcon = True
-                                    if Icon is not None and Icon.isNull() is False and HasIcon:
+                                    # HasIcon = False
+                                    # if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
+                                    #     HasIcon = True
+                                    # if len(CommandName.split(",")) > 1:
+                                    #     HasIcon = True
+                                    if Icon is not None and Icon.isNull() is False:
                                         ListWidgetItem.setIcon(Icon)
                                         ListWidgetItem.setToolTip(
                                             CommandName
@@ -841,7 +842,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                         # Add the ListWidgetItem to the correct ListWidget
                                         ListWidget_Commands.addItem(ListWidgetItem)
 
-                                        ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                                        # ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                                        ShadowList.append(CommandName)
                     if (
                         workbenchName == "Standard" and
                         ListWidget_WorkBenches.currentText() == "Standard"
@@ -854,7 +856,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
                         if IsInlist is False:
                             # Define a commandname for the icon
-                            CommandName_Icon = CommandName
                             Icon = QIcon()
                             FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                             for root, dirs, files in os.walk(FreeCAD_Icons):
@@ -912,14 +913,15 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             )  # Use the tooltip to store the actual command.
 
                             # Add the ListWidgetItem to the correct ListWidget
-                            HasIcon = True
-                            if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
-                                HasIcon = True
-                            if len(CommandName.split(",")) > 1:
-                                HasIcon = True
-                            if Icon is not None and Icon.isNull() is False and HasIcon:
+                            # HasIcon = True
+                            # if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
+                            #     HasIcon = True
+                            # if len(CommandName.split(",")) > 1:
+                            #     HasIcon = True
+                            if Icon is not None and Icon.isNull() is False:
                                 ListWidget_Commands.addItem(ListWidgetItem)
-                                ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                                # ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                                ShadowList.append(CommandName)
 
                     if (
                         ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole)
@@ -983,12 +985,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             ListWidgetItem.setData(
                                 Qt.ItemDataRole.UserRole, CommandName
                             )
-                            HasIcon = True
-                            if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
-                                HasIcon = True
-                            if len(CommandName.split(",")) > 1:
-                                HasIcon = True
-                            if Icon is not None and Icon.isNull() is False and HasIcon:
+                            if Icon is not None and Icon.isNull() is False:
                                 ListWidgetItem.setIcon(Icon)
                                 ListWidgetItem.setToolTip(
                                     CommandName
@@ -996,7 +993,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
                                 # Add the ListWidgetItem to the correct ListWidget
                                 ListWidget_Commands.addItem(ListWidgetItem)
-                                ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                                # ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                                ShadowList.append(CommandName)
         return
 
     def on_CreateNewPanel_clicked(self):

@@ -242,10 +242,11 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
         for key, value in list(ToolbarItems.items()):
             for j in range(len(value)):
                 if value[j] != "Std_Workbench":
-                    if value[j].startswith("Std_"):
-                        Item = [value[j], "Standard"]
+                    CommandName = GetCommand(value[j])
+                    if CommandName.startswith("Std_"):
+                        Item = [CommandName, "Standard"]
                     else:
-                        Item = [value[j], WorkBenchName]
+                        Item = [CommandName, WorkBenchName]
                     IsInList = False
                     for CommandNamesItem in CommandNames:
                         if CommandNamesItem == Item:
@@ -254,11 +255,12 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
                     if IsInList is False:
                         CommandNames.append(Item)
         # Add commands that are not in any toolbars
-        for commandNamesItem in Gui.listCommands():            
-            if commandNamesItem.lower().startswith("std_"):
+        for commandNamesItem in Gui.listCommands():
+            CommandName_2 = GetCommand(commandNamesItem)          
+            if CommandName_2.lower().startswith("std_"):
                 inList = False
                 for CommandName in CommandNames:
-                    if CommandName[0] == commandNamesItem:
+                    if CommandName[0] == CommandName_2:
                         inList = True
                 
                 # Skip "Std_Workbench".
@@ -266,7 +268,7 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
                     continue
                 
                 if inList is False:                    
-                    CommandNames.append([commandNamesItem, "Standard"])
+                    CommandNames.append([CommandName_2, "Standard"])
             else:
                 inList = False
                 for CommandName in CommandNames:
@@ -276,18 +278,19 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
                 if inList is False:
                     WorkBench = ""
                     for WorkBenchName in List_Workbenches:
-                        if commandNamesItem.startswith(WorkBenchName[0]) or WorkBenchName[0].startswith(commandNamesItem.split("_")[0]):
+                        if CommandName_2.startswith(WorkBenchName[0]) or WorkBenchName[0].startswith(CommandName_2.split("_")[0]):
                             WorkBench = WorkBenchName[0]
                             break
-                    Icon = StandardFunctions.returnQiCons_Commands(commandNamesItem)
+                    Icon = StandardFunctions.returnQiCons_Commands(CommandName_2)
                     if Icon is not None or Icon.isNull() is False:
-                        CommandNames.append([commandNamesItem, WorkBench])
+                        CommandNames.append([CommandName_2, WorkBench])
 
     # Go through the list
+    shadowList = []
     for CommandName in CommandNames:
         # get the command with this name
         command = Gui.Command.get(CommandName[0])
-        ChildCommands = returnDropDownCommands(command)
+        ChildCommands = returnDropDownCommands(CommandName[0])
         WorkBenchName = CommandName[1]
         if command is not None:
             # get the icon for this command
@@ -306,33 +309,37 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
                 MenuName = MenuName.split(" ")[1]
             if MenuNameTranslated.split(" ")[0].isdigit() is True:
                 MenuNameTranslated = MenuNameTranslated.split(" ")[1]
-            if len(ChildCommands) > 1:
+            if len(ChildCommands) > 0:
                 if not MenuName.endswith("..."):
                     MenuName = MenuName + "..."
                 if not MenuNameTranslated.endswith("..."):
                     MenuNameTranslated = MenuNameTranslated + "..."
 
-            List_Commands.append(
-                [
-                    CommandName[0],
-                    IconName,
-                    MenuName,
-                    WorkBenchName,
-                    MenuNameTranslated,
-                ]
-            )
+            if CommandName[0] not in shadowList:
+                List_Commands.append(
+                    [
+                        CommandName[0],
+                        IconName,
+                        MenuName,
+                        WorkBenchName,
+                        MenuNameTranslated,
+                    ]
+                )
+                shadowList.append(CommandName[0])
             # Add children of the commands if there are any
             if len(ChildCommands) > 0:
                 for childCommand in ChildCommands:
-                    List_Commands.append(
-                        [
-                            childCommand[0],
-                            childCommand[1],
-                            childCommand[2],
-                            WorkBenchName,
-                            childCommand[3],
-                        ]
-                    )
+                    if childCommand[0] not in shadowList:
+                        List_Commands.append(
+                            [
+                                childCommand[0],
+                                childCommand[1],
+                                childCommand[2],
+                                WorkBenchName,
+                                childCommand[3],
+                            ]
+                        )
+                        shadowList.append(childCommand[0])
 
     # add also custom commands
     Toolbars = List_ReturnCustomToolbars()
@@ -342,43 +349,48 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
             if WorkbenchTitle == WorkBench[2]:
                 WorkBenchName = WorkBench[0]
                 for CustomCommand in Toolbar[2]:
-                    command = Gui.Command.get(CustomCommand)
-                    if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
-                        IconName = CommandInfoCorrections(CustomCommand)["pixmap"]
-                    else:
-                        IconName = ""
-                    MenuName = CommandInfoCorrections(CustomCommand)[
-                        "menuText"
-                    ].replace("&", "")
-                    MenuNameTranslated = CommandInfoCorrections(CustomCommand)[
-                        "ActionText"
-                    ].replace("&", "")
-                    List_Commands.append(
-                        [
-                            CustomCommand,
-                            IconName,
-                            MenuName,
-                            WorkBenchName,
-                            MenuNameTranslated,
-                        ]
-                    )
+                    if CustomCommand not in shadowList:
+                        command = Gui.Command.get(CustomCommand)
+                        if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
+                            IconName = CommandInfoCorrections(CustomCommand)["pixmap"]
+                        else:
+                            IconName = ""
+                        MenuName = CommandInfoCorrections(CustomCommand)[
+                            "menuText"
+                        ].replace("&", "")
+                        MenuNameTranslated = CommandInfoCorrections(CustomCommand)[
+                            "ActionText"
+                        ].replace("&", "")
+                        List_Commands.append(
+                            [
+                                CustomCommand,
+                                IconName,
+                                MenuName,
+                                WorkBenchName,
+                                MenuNameTranslated,
+                            ]
+                        )
+                        shadowList.append(CustomCommand)
+                        
     Toolbars = List_ReturnCustomToolbars_Global()
     for Toolbar in Toolbars:
         for CustomCommand in Toolbar[2]:
-            command = Gui.Command.get(CustomCommand)
-            if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
-                IconName = CommandInfoCorrections(CustomCommand)["pixmap"]
-            else:
-                IconName = None
-            MenuName = CommandInfoCorrections(CustomCommand)["menuText"].replace(
-                "&", ""
-            )
-            MenuNameTranslated = CommandInfoCorrections(CustomCommand)[
-                "ActionText"
-            ].replace("&", "")
-            List_Commands.append(
-                [CustomCommand, IconName, MenuName, Toolbar[1], MenuNameTranslated]
-            )
+            if CustomCommand not in shadowList:
+                command = Gui.Command.get(CustomCommand)
+                if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
+                    IconName = CommandInfoCorrections(CustomCommand)["pixmap"]
+                else:
+                    IconName = None
+                MenuName = CommandInfoCorrections(CustomCommand)["menuText"].replace(
+                    "&", ""
+                )
+                MenuNameTranslated = CommandInfoCorrections(CustomCommand)[
+                    "ActionText"
+                ].replace("&", "")
+                List_Commands.append(
+                    [CustomCommand, IconName, MenuName, Toolbar[1], MenuNameTranslated]
+                )
+                shadowList.append(CustomCommand)
     # Add general commands
     if int(App.Version()[0]) > 0:
         ListCommands = [
@@ -393,20 +405,22 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
             "Std_BoxSelection",
         ]
         for CommandName in ListCommands:
-            command = Gui.Command.get(CommandName)
-            if CommandInfoCorrections(CommandName)["pixmap"] != "":
-                IconName = CommandInfoCorrections(CommandName)["pixmap"]
-            else:
-                IconName = ""
-            MenuName = CommandInfoCorrections(CommandName)["menuText"].replace(
-                "&", ""
-            )
-            MenuNameTranslated = CommandInfoCorrections(CommandName)[
-                "ActionText"
-            ].replace("&", "")
-            List_Commands.append(
-                [CommandName, IconName, MenuName, "Standard", MenuNameTranslated]
-            )
+            if CommandName not in shadowList:
+                command = Gui.Command.get(CommandName)
+                if CommandInfoCorrections(CommandName)["pixmap"] != "":
+                    IconName = CommandInfoCorrections(CommandName)["pixmap"]
+                else:
+                    IconName = ""
+                MenuName = CommandInfoCorrections(CommandName)["menuText"].replace(
+                    "&", ""
+                )
+                MenuNameTranslated = CommandInfoCorrections(CommandName)[
+                    "ActionText"
+                ].replace("&", "")
+                List_Commands.append(
+                    [CommandName, IconName, MenuName, "Standard", MenuNameTranslated]
+                )
+                shadowList.append(CommandName)
 
     # # re-activate the workbench that was stored.
     # Gui.activateWorkbench(ActiveWB)
@@ -499,6 +513,24 @@ def CreateCache(resetTexts=False, RestartFreeCAD=False):
 
 
 # region - helper functions
+def GetCommand(CommandName):
+    if len(CommandName.split(", ")) > 1:
+        # Split the commandname
+        CommandName_1 = CommandName.split(", ")[0]
+        ActionNumber = int(CommandName.split(", ")[1])
+        # Get the parent command
+        ParentCommand = Gui.Command.get(CommandName_1)
+        # If parent is not none, get the action based on the number
+        if ParentCommand is not None:
+            action = ParentCommand.getAction()[ActionNumber]
+            if action.objectName() != "":
+                CommandName = action.objectName()
+                return CommandName
+            else:
+                return CommandName
+        return CommandName
+    return CommandName
+
 
 def List_ReturnCustomToolbars():
     """
@@ -707,23 +739,26 @@ def returnToolbarCommands(WorkBenchName):
         Toolbars = Gui.getWorkbench(WorkBenchName).getToolbarItems()
         return Toolbars
 
-def returnDropDownCommands(command):
+def returnDropDownCommands(commandName):
     Commands = []
-    if command is not None:
-        if len(command.getAction()) > 1:
-            for i in range(len(command.getAction()) - 1):
-                action = command.getAction()[i]
-                if action is not None and (
-                    action.icon() is not None and not action.icon().isNull()
-                ):
-                    Commands.append(
-                        [
-                            f"{command.getInfo()['name']}, {i}",
-                            "actionIcon",
-                            action.text(),
-                            action.text(),
-                        ]
-                    )
+    if commandName is not None:
+        command = Gui.Command.get(commandName)
+        if command is not None:
+            if len(command.getAction()) > 1:
+                for i in range(len(command.getAction()) - 1):
+                    action = command.getAction()[i]
+                    if action is not None and (
+                        action.icon() is not None and not action.icon().isNull()
+                    ):
+                        Commands.append(
+                            [
+                                # f"{command.getInfo()['name']}, {i}",
+                                action.objectName(),
+                                "actionIcon",
+                                action.text(),
+                                action.text(),
+                            ]
+                        )
     return Commands
 
 def loadAllWorkbenches(AutoHide=True, HideOnly=False, FinishMessage="", progressBar: QProgressBar = None, maximum = 0):        
