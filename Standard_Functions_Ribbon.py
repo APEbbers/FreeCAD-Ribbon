@@ -802,11 +802,6 @@ def CommandInfoCorrections(CommandName):
                 CommandInfo["pixmap"] = "Sketcher_Snap_Deactivated.svg"
             if CommandName == "Sketcher_RenderingOrder":
                 CommandInfo["pixmap"] = "Sketcher_RenderingOrder_External.svg"
-                
-            # BIM
-            if CommandName == "BIM_OffsetTools":
-                CommandInfo["menuText"] = CommandInfo["menuText"] + "..."
-                CommandInfo["ActionText"] = CommandInfo["ActionText"] + "..."
 
             # add an extra entry for action text
             add_keys_nested_dict(CommandInfo, "ActionText")

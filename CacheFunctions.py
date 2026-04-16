@@ -750,11 +750,11 @@ def returnDropDownCommands(commandName):
                     if action is not None and (
                         action.icon() is not None and not action.icon().isNull()
                     ):
+                        IconName = StandardFunctions.CommandInfoCorrections(action.objectName())["pixmap"]
                         Commands.append(
                             [
-                                # f"{command.getInfo()['name']}, {i}",
                                 action.objectName(),
-                                "actionIcon",
+                                IconName,
                                 action.text(),
                                 action.text(),
                             ]
