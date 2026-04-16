@@ -3729,7 +3729,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
 
             if MenuNameTranslated != "":
-                if f"{MenuNameTranslated}" not in ShadowList:
+                if CommandName not in ShadowList:
                     Icon = None
                     for item in self.List_CommandIcons:
                         if item[0] == CommandName:
@@ -3819,7 +3819,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             CommandName.replace("_ddb", "")
                         )
 
-            ShadowList.append(f"{MenuNameTranslated}")
+            ShadowList.append(CommandName)
 
         # Add separators to the CommandsSelected_QC listwidget
         for i in range(len(self.List_QuickAccessCommands)):
@@ -4845,7 +4845,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     SearchbarText != ""
                     and MenuNameTranslated.replace(" ", "").lower().startswith(SearchbarText)
                 ) or SearchbarText == "":
-                    if f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" not in ShadowList:
+                    if CommandName not in ShadowList:
                         try:
                             if (
                                 workbenchName != "Global"
@@ -4946,12 +4946,14 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                                 IsInList = True
                                         if IsInList is False:
                                             ListWidget_Commands.addItem(ListWidgetItem)
-                                    if Icon is None:
+                                            # Add the commandName to the shadowList
+                                            ShadowList.append(CommandName)
+                                    if Icon.isNull() or Icon is None:
                                         if Parameters.DEBUG_MODE is True:
                                             StandardFunctions.Print(
                                                 f"{CommandName} has no icon!", "Warning"
                                             )
-                                    ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                                    
                         except Exception:
                             continue                        
 
@@ -5000,7 +5002,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         != "All"
                     ):
                         if (
-                            f"{MenuNameTranslated}" not in ShadowList
+                            CommandName not in ShadowList
                             and workbenchName != "Global"
                             and workbenchName != "General"
                             and workbenchName != "Standard"
@@ -5081,12 +5083,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                     ListWidgetItem.setData(
                                         Qt.ItemDataRole.UserRole, CommandName
                                     )                                
-                                    HasIcon = False
-                                    if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
-                                        HasIcon = True
-                                    if len(CommandName.split(",")) > 1:
-                                        HasIcon = True
-                                    if Icon is not None and Icon.isNull() is False and HasIcon:
+                                    
+                                    if Icon is not None and Icon.isNull() is False:
                                         ListWidgetItem.setIcon(Icon)
                                         ListWidgetItem.setToolTip(
                                             CommandName
@@ -5094,8 +5092,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
                                         # Add the ListWidgetItem to the correct ListWidget
                                         ListWidget_Commands.addItem(ListWidgetItem)
-
-                                        ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                                        # Add the commandname to the shadow list
+                                        ShadowList.append(CommandName)
                     if (
                         workbenchName == "Standard" and
                         ListWidget_WorkBenches.currentText() == "Standard"
@@ -5110,7 +5108,6 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             WorkbenchTitle = workbenchName
 
                             # Define a commandname for the icon
-                            CommandName_Icon = CommandName
                             Icon = QIcon()
                             FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                             for root, dirs, files in os.walk(FreeCAD_Icons):
@@ -5170,7 +5167,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             # Add the ListWidgetItem to the correct ListWidget
                             if Icon is not None:
                                 ListWidget_Commands.addItem(ListWidgetItem)
-                                ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                                ShadowList.append(CommandName)
 
                     if (
                         ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole)
@@ -5245,7 +5242,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
                                 # Add the ListWidgetItem to the correct ListWidget
                                 ListWidget_Commands.addItem(ListWidgetItem)      
-                                ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )              
+                                ShadowList.append(CommandName)              
         return
 
     def CreateRibbonStructure_WB(self, WorkBenchName="All", Size="small"):

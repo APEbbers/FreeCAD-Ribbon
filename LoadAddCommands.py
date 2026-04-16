@@ -458,7 +458,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
         for CommandItem in self.List_Commands:
             CommandName = CommandItem[0]
-            workbenchName = CommandItem[3]
             MenuNameTranslated = CommandItem[2].replace("&", "")  # Not translated
             if len(CommandItem) == 5:
                 MenuNameTranslated = CommandItem[4].replace("&", "")  # Translated
@@ -470,7 +469,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
 
             if MenuNameTranslated != "":
-                # if f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" not in ShadowList:
                 if CommandName not in ShadowList:
                     Icon = QIcon()
                     FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
@@ -541,7 +539,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         #         CommandName.replace("_ddb", "")
                         #     )
 
-                        # ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
                         ShadowList.append(CommandName)
 
         # # Add a "new" item to the dropdown list
@@ -598,8 +595,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 if (
                     SearchbarText != ""
                     and MenuNameTranslated.lower().startswith(SearchbarText)
-                ) or SearchbarText == "":
-                    # if f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" not in ShadowList:
+                ) or SearchbarText == "":                    
                     if CommandName not in ShadowList:
                         try:
                             if (
@@ -676,12 +672,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     ListWidgetItem.setData(
                                         Qt.ItemDataRole.UserRole, CommandName
                                     )
-                                    
-                                    # HasIcon = True
-                                    # if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
-                                    #     HasIcon = True
-                                    # if len(CommandName.split(",")) > 1:
-                                    #     HasIcon = True
+
                                     if Icon is not None and Icon.isNull() is False:
                                         ListWidgetItem.setIcon(Icon)
                                         ListWidgetItem.setToolTip(
@@ -689,8 +680,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                         )
 
                                         ListWidget_Commands.addItem(ListWidgetItem)
-                                        
-                                        # ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                                        # Add the commandName to the shadowList
                                         ShadowList.append(CommandName)
                                         
                                     if Icon.isNull() or Icon is None:
@@ -748,7 +738,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         != "All"
                     ):
                         if (
-                            # f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}"  not in ShadowList
                             CommandName not in ShadowList
                             and workbenchName != "Global"
                             and workbenchName != "General"
@@ -828,11 +817,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     ListWidgetItem.setData(
                                         Qt.ItemDataRole.UserRole, CommandName
                                     )
-                                    # HasIcon = False
-                                    # if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
-                                    #     HasIcon = True
-                                    # if len(CommandName.split(",")) > 1:
-                                    #     HasIcon = True
+
                                     if Icon is not None and Icon.isNull() is False:
                                         ListWidgetItem.setIcon(Icon)
                                         ListWidgetItem.setToolTip(
@@ -842,7 +827,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                         # Add the ListWidgetItem to the correct ListWidget
                                         ListWidget_Commands.addItem(ListWidgetItem)
 
-                                        # ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                                        # Add the commandname to the shadow list
                                         ShadowList.append(CommandName)
                     if (
                         workbenchName == "Standard" and
@@ -913,14 +898,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             )  # Use the tooltip to store the actual command.
 
                             # Add the ListWidgetItem to the correct ListWidget
-                            # HasIcon = True
-                            # if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
-                            #     HasIcon = True
-                            # if len(CommandName.split(",")) > 1:
-                            #     HasIcon = True
+    
                             if Icon is not None and Icon.isNull() is False:
                                 ListWidget_Commands.addItem(ListWidgetItem)
-                                # ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
                                 ShadowList.append(CommandName)
 
                     if (
@@ -992,8 +972,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 )  # Use the tooltip to store the actual command.
 
                                 # Add the ListWidgetItem to the correct ListWidget
-                                ListWidget_Commands.addItem(ListWidgetItem)
-                                # ShadowList.append(f"{MenuNameTranslated}, {StandardFunctions.CommandInfoCorrections(CommandName)['toolTip']}" )
+                                ListWidget_Commands.addItem(ListWidgetItem)                                
                                 ShadowList.append(CommandName)
         return
 
