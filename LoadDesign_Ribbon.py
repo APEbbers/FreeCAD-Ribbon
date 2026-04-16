@@ -3713,8 +3713,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.form.CommandsAvailable_NP.clear()
         self.form.CommandList_DDB.clear()
 
-        ShadowList = []  # List to add the commands and prevent duplicates
-        
+        ShadowList = []  # List to add the commands and prevent duplicates        
         # Add the commands
         for CommandItem in self.List_Commands:
             CommandName = CommandItem[0]
@@ -3730,7 +3729,13 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
             if MenuNameTranslated != "":
                 if CommandName not in ShadowList:
-                    Icon = None
+                    Icon = QIcon()
+                    FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
+                    for root, dirs, files in os.walk(FreeCAD_Icons):
+                        for fileName in files:
+                            if CommandName in fileName:
+                                Icon = QIcon()
+                                Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                     for item in self.List_CommandIcons:
                         if item[0] == CommandName:
                             Icon = item[1]
@@ -3744,10 +3749,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             ) in self.Dict_DropDownButtons["dropdownButtons"].items():
                                 if Commands[0][0] == item[0]:
                                     Icon = item[1]
-                    if Icon is None:
-                        IconName = StandardFunctions.CommandInfoCorrections(
-                            CommandName
-                        )["pixmap"]
+                    if Icon.isNull():
+                        IconName = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
+                        Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
                         if (
                             str(CommandName).endswith("_ddb")
                             and "dropdownButtons" in self.Dict_DropDownButtons
@@ -3758,9 +3762,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             ) in self.Dict_DropDownButtons["dropdownButtons"].items():
                                 if Commands[0][0] == CommandName:
                                     IconName = CommandItem[1]
-                        Icon = StandardFunctions.returnQiCons_Commands(
-                            CommandName, IconName
-                        )
+                                    Icon = StandardFunctions.returnQiCons_Commands(
+                                        CommandName, IconName
+                                    )
+
 
                     Text = MenuNameTranslated
                     ListWidgetItem = QListWidgetItem()
@@ -3809,6 +3814,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         # Add clones of the listWidgetItem to the other listwidgets
                         self.form.CommandsAvailable_NP.addItem(ListWidgetItem.clone())
                         self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
+                        
+                        ShadowList.append(CommandName)
 
                     # If there are any dropdown buttons in the json file, add them to the dropdown list
                     if (
@@ -3818,8 +3825,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         self.form.CommandList_DDB.addItem(
                             CommandName.replace("_ddb", "")
                         )
-
-            ShadowList.append(CommandName)
+            
 
         # Add separators to the CommandsSelected_QC listwidget
         for i in range(len(self.List_QuickAccessCommands)):
@@ -4872,42 +4878,18 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 )[2]
                                 or ListWidget_WorkBenches.currentText() == "All"
                             ):
-                                IsInlist = False
-                                for i in range(ListWidget_Commands.count()):
-                                    CommandItem = ListWidget_Commands.item(i)
-                                    if CommandItem.text() == MenuNameTranslated:
-                                        IsInlist = True
-
-                                if IsInlist is False:
-                                    # Define a new ListWidgetItem.
-                                    Icon = QIcon()
-                                    FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
-                                    for root, dirs, files in os.walk(FreeCAD_Icons):
-                                        for fileName in files:
-                                            if CommandName in fileName:
-                                                Icon = QIcon()
-                                                Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
-                                    if Icon.isNull():
-                                        for item in self.List_CommandIcons:
-                                            if item[0] == CommandName:
-                                                Icon = item[1]
-                                            if (
-                                                str(CommandName).endswith("_ddb")
-                                                and "dropdownButtons" in self.Dict_DropDownButtons
-                                            ):
-                                                for (
-                                                    DropDownCommand,
-                                                    Commands,
-                                                ) in self.Dict_DropDownButtons[
-                                                    "dropdownButtons"
-                                                ].items():
-                                                    if Commands[0][0] == item[0]:
-                                                        Icon = item[1]
-                                    if Icon.isNull():
-                                        IconName = StandardFunctions.CommandInfoCorrections(
-                                            CommandName
-                                        )["pixmap"]
-                                        Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
+                                # Define a new ListWidgetItem.
+                                Icon = QIcon()
+                                FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
+                                for root, dirs, files in os.walk(FreeCAD_Icons):
+                                    for fileName in files:
+                                        if CommandName in fileName:
+                                            Icon = QIcon()
+                                            Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
+                                if Icon.isNull():
+                                    for item in self.List_CommandIcons:
+                                        if item[0] == CommandName:
+                                            Icon = item[1]
                                         if (
                                             str(CommandName).endswith("_ddb")
                                             and "dropdownButtons" in self.Dict_DropDownButtons
@@ -4918,41 +4900,58 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                             ) in self.Dict_DropDownButtons[
                                                 "dropdownButtons"
                                             ].items():
-                                                if Commands[0][0] == CommandName:
-                                                    IconName = ToolbarCommand[1]
-                                                    Icon = StandardFunctions.returnQiCons_Commands(
-                                                        CommandName, IconName
-                                        )
-
-                                    # Define a new ListWidgetItem.
-                                    ListWidgetItem = QListWidgetItem()
-                                    ListWidgetItem.setText(MenuNameTranslated)
-                                    ListWidgetItem.setData(
-                                        Qt.ItemDataRole.UserRole, CommandName
+                                                if Commands[0][0] == item[0]:
+                                                    Icon = item[1]
+                                if Icon.isNull():
+                                    IconName = StandardFunctions.CommandInfoCorrections(
+                                        CommandName
+                                    )["pixmap"]
+                                    Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
+                                    if (
+                                        str(CommandName).endswith("_ddb")
+                                        and "dropdownButtons" in self.Dict_DropDownButtons
+                                    ):
+                                        for (
+                                            DropDownCommand,
+                                            Commands,
+                                        ) in self.Dict_DropDownButtons[
+                                            "dropdownButtons"
+                                        ].items():
+                                            if Commands[0][0] == CommandName:
+                                                IconName = ToolbarCommand[1]
+                                                Icon = StandardFunctions.returnQiCons_Commands(
+                                                    CommandName, IconName
                                     )
-                                    if Icon is not None:
-                                        ListWidgetItem.setIcon(Icon)
-                                        ListWidgetItem.setToolTip(
-                                            CommandName
-                                        )  # Use the tooltip to store the actual command.
 
-                                        # Add the ListWidgetItem to the correct ListWidget
-                                        IsInList = False
-                                        for i in range(DestinationWidget.count()):
-                                            item = DestinationWidget.item(i)
-                                            if item.data(
-                                                Qt.ItemDataRole.UserRole
-                                            ) == ListWidgetItem.data(Qt.ItemDataRole.UserRole):
-                                                IsInList = True
-                                        if IsInList is False:
-                                            ListWidget_Commands.addItem(ListWidgetItem)
-                                            # Add the commandName to the shadowList
-                                            ShadowList.append(CommandName)
-                                    if Icon.isNull() or Icon is None:
-                                        if Parameters.DEBUG_MODE is True:
-                                            StandardFunctions.Print(
-                                                f"{CommandName} has no icon!", "Warning"
-                                            )
+                                # Define a new ListWidgetItem.
+                                ListWidgetItem = QListWidgetItem()
+                                ListWidgetItem.setText(MenuNameTranslated)
+                                ListWidgetItem.setData(
+                                    Qt.ItemDataRole.UserRole, CommandName
+                                )
+                                if Icon is not None:
+                                    ListWidgetItem.setIcon(Icon)
+                                    ListWidgetItem.setToolTip(
+                                        CommandName
+                                    )  # Use the tooltip to store the actual command.
+
+                                    # Add the ListWidgetItem to the correct ListWidget
+                                    IsInList = False
+                                    for i in range(DestinationWidget.count()):
+                                        item = DestinationWidget.item(i)
+                                        if item.data(
+                                            Qt.ItemDataRole.UserRole
+                                        ) == ListWidgetItem.data(Qt.ItemDataRole.UserRole):
+                                            IsInList = True
+                                    if IsInList is False:
+                                        ListWidget_Commands.addItem(ListWidgetItem)
+                                        # Add the commandName to the shadowList
+                                        ShadowList.append(CommandName)
+                                if Icon.isNull() or Icon is None:
+                                    if Parameters.DEBUG_MODE is True:
+                                        StandardFunctions.Print(
+                                            f"{CommandName} has no icon!", "Warning"
+                                        )
                                     
                         except Exception:
                             continue                        
@@ -5008,59 +5007,35 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             and workbenchName != "Standard"
                             and workbenchName != ""
                         ):
-                            IsInlist = False
-                            for i in range(ListWidget_Commands.count()):
-                                CommandItem = ListWidget_Commands.item(i)
-                                if CommandItem.text() == MenuNameTranslated:
-                                    IsInlist = True
-
-                            if IsInlist is False:
-                                try:
-                                    WorkbenchTitle = Gui.getWorkbench(
-                                        workbenchName
-                                    ).MenuText
-                                except Exception as e:
-                                    if Parameters.DEBUG_MODE is True:
-                                        print(e)
-                                    return
-                                if (
-                                    ListWidget_WorkBenches.currentData(
-                                        Qt.ItemDataRole.UserRole
-                                    ) is not None and
-                                    WorkbenchTitle
-                                    == ListWidget_WorkBenches.currentData(
-                                        Qt.ItemDataRole.UserRole
-                                    )[2]
-                                ):
-                                    # Define a new ListWidgetItem.
-                                    Icon = QIcon()
-                                    FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
-                                    for root, dirs, files in os.walk(FreeCAD_Icons):
-                                        for fileName in files:
-                                            if CommandName in fileName:
-                                                Icon = QIcon()
-                                                Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
-                                    if Icon.isNull():
-                                        for item in self.List_CommandIcons:
-                                            if item[0] == CommandName:
-                                                Icon = item[1]
-                                            if (
-                                                str(CommandName).endswith("_ddb")
-                                                and "dropdownButtons" in self.Dict_DropDownButtons
-                                            ):
-                                                for (
-                                                    DropDownCommand,
-                                                    Commands,
-                                                ) in self.Dict_DropDownButtons[
-                                                    "dropdownButtons"
-                                                ].items():
-                                                    if Commands[0][0] == item[0]:
-                                                        Icon = item[1]
-                                    if Icon.isNull():
-                                        IconName = StandardFunctions.CommandInfoCorrections(
-                                            CommandName
-                                        )["pixmap"]
-                                        Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
+                            try:
+                                WorkbenchTitle = Gui.getWorkbench(
+                                    workbenchName
+                                ).MenuText
+                            except Exception as e:
+                                if Parameters.DEBUG_MODE is True:
+                                    print(e)
+                                return
+                            if (
+                                ListWidget_WorkBenches.currentData(
+                                    Qt.ItemDataRole.UserRole
+                                ) is not None and
+                                WorkbenchTitle
+                                == ListWidget_WorkBenches.currentData(
+                                    Qt.ItemDataRole.UserRole
+                                )[2]
+                            ):
+                                # Define a new ListWidgetItem.
+                                Icon = QIcon()
+                                FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
+                                for root, dirs, files in os.walk(FreeCAD_Icons):
+                                    for fileName in files:
+                                        if CommandName in fileName:
+                                            Icon = QIcon()
+                                            Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
+                                if Icon.isNull():
+                                    for item in self.List_CommandIcons:
+                                        if item[0] == CommandName:
+                                            Icon = item[1]
                                         if (
                                             str(CommandName).endswith("_ddb")
                                             and "dropdownButtons" in self.Dict_DropDownButtons
@@ -5071,54 +5046,13 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                             ) in self.Dict_DropDownButtons[
                                                 "dropdownButtons"
                                             ].items():
-                                                if Commands[0][0] == CommandName:
-                                                    IconName = ToolbarCommand[1]
-                                                    Icon = StandardFunctions.returnQiCons_Commands(
-                                                        CommandName, IconName
-                                        )
-
-                                    Text = MenuNameTranslated
-                                    ListWidgetItem = QListWidgetItem()
-                                    ListWidgetItem.setText(Text)
-                                    ListWidgetItem.setData(
-                                        Qt.ItemDataRole.UserRole, CommandName
-                                    )                                
-                                    
-                                    if Icon is not None and Icon.isNull() is False:
-                                        ListWidgetItem.setIcon(Icon)
-                                        ListWidgetItem.setToolTip(
-                                            CommandName
-                                        )  # Use the tooltip to store the actual command.
-
-                                        # Add the ListWidgetItem to the correct ListWidget
-                                        ListWidget_Commands.addItem(ListWidgetItem)
-                                        # Add the commandname to the shadow list
-                                        ShadowList.append(CommandName)
-                    if (
-                        workbenchName == "Standard" and
-                        ListWidget_WorkBenches.currentText() == "Standard"
-                    ):
-                        IsInlist = False
-                        for i in range(ListWidget_Commands.count()):
-                            CommandItem = ListWidget_Commands.item(i)
-                            if CommandItem.text() == MenuNameTranslated:
-                                IsInlist = True
-
-                        if IsInlist is False:
-                            WorkbenchTitle = workbenchName
-
-                            # Define a commandname for the icon
-                            Icon = QIcon()
-                            FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
-                            for root, dirs, files in os.walk(FreeCAD_Icons):
-                                for fileName in files:
-                                    if CommandName in fileName:
-                                        Icon = QIcon()
-                                        Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
-                            if Icon.isNull():
-                                for item in self.List_CommandIcons:
-                                    if item[0] == CommandName:
-                                        Icon = item[1]
+                                                if Commands[0][0] == item[0]:
+                                                    Icon = item[1]
+                                if Icon.isNull():
+                                    IconName = StandardFunctions.CommandInfoCorrections(
+                                        CommandName
+                                    )["pixmap"]
+                                    Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
                                     if (
                                         str(CommandName).endswith("_ddb")
                                         and "dropdownButtons" in self.Dict_DropDownButtons
@@ -5129,13 +5063,47 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                         ) in self.Dict_DropDownButtons[
                                             "dropdownButtons"
                                         ].items():
-                                            if Commands[0][0] == item[0]:
-                                                Icon = item[1]
-                            if Icon.isNull():
-                                IconName = StandardFunctions.CommandInfoCorrections(
-                                    CommandName
-                                )["pixmap"]
-                                Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
+                                            if Commands[0][0] == CommandName:
+                                                IconName = ToolbarCommand[1]
+                                                Icon = StandardFunctions.returnQiCons_Commands(
+                                                    CommandName, IconName
+                                    )
+
+                                Text = MenuNameTranslated
+                                ListWidgetItem = QListWidgetItem()
+                                ListWidgetItem.setText(Text)
+                                ListWidgetItem.setData(
+                                    Qt.ItemDataRole.UserRole, CommandName
+                                )                                
+                                
+                                if Icon is not None and Icon.isNull() is False:
+                                    ListWidgetItem.setIcon(Icon)
+                                    ListWidgetItem.setToolTip(
+                                        CommandName
+                                    )  # Use the tooltip to store the actual command.
+
+                                    # Add the ListWidgetItem to the correct ListWidget
+                                    ListWidget_Commands.addItem(ListWidgetItem)
+                                    # Add the commandname to the shadow list
+                                    ShadowList.append(CommandName)
+                    if (
+                        workbenchName == "Standard" and
+                        ListWidget_WorkBenches.currentText() == "Standard"
+                    ):
+                        WorkbenchTitle = workbenchName
+
+                        # Define a commandname for the icon
+                        Icon = QIcon()
+                        FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
+                        for root, dirs, files in os.walk(FreeCAD_Icons):
+                            for fileName in files:
+                                if CommandName in fileName:
+                                    Icon = QIcon()
+                                    Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
+                        if Icon.isNull():
+                            for item in self.List_CommandIcons:
+                                if item[0] == CommandName:
+                                    Icon = item[1]
                                 if (
                                     str(CommandName).endswith("_ddb")
                                     and "dropdownButtons" in self.Dict_DropDownButtons
@@ -5146,69 +5114,62 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                     ) in self.Dict_DropDownButtons[
                                         "dropdownButtons"
                                     ].items():
-                                        if Commands[0][0] == CommandName:
-                                            IconName = ToolbarCommand[1]
-                                            Icon = StandardFunctions.returnQiCons_Commands(
-                                                CommandName, IconName
-                                )
-                                                    
-                            Text = MenuNameTranslated
-                            ListWidgetItem = QListWidgetItem()
-                            ListWidgetItem.setText(Text)
-                            ListWidgetItem.setData(
-                                Qt.ItemDataRole.UserRole, CommandName
-                            )
-                            if Icon is not None:
-                                ListWidgetItem.setIcon(Icon)
-                            ListWidgetItem.setToolTip(
+                                        if Commands[0][0] == item[0]:
+                                            Icon = item[1]
+                        if Icon.isNull():
+                            IconName = StandardFunctions.CommandInfoCorrections(
                                 CommandName
-                            )  # Use the tooltip to store the actual command.
+                            )["pixmap"]
+                            Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
+                            if (
+                                str(CommandName).endswith("_ddb")
+                                and "dropdownButtons" in self.Dict_DropDownButtons
+                            ):
+                                for (
+                                    DropDownCommand,
+                                    Commands,
+                                ) in self.Dict_DropDownButtons[
+                                    "dropdownButtons"
+                                ].items():
+                                    if Commands[0][0] == CommandName:
+                                        IconName = ToolbarCommand[1]
+                                        Icon = StandardFunctions.returnQiCons_Commands(
+                                            CommandName, IconName
+                            )
+                                                
+                        Text = MenuNameTranslated
+                        ListWidgetItem = QListWidgetItem()
+                        ListWidgetItem.setText(Text)
+                        ListWidgetItem.setData(
+                            Qt.ItemDataRole.UserRole, CommandName
+                        )
+                        if Icon is not None:
+                            ListWidgetItem.setIcon(Icon)
+                        ListWidgetItem.setToolTip(
+                            CommandName
+                        )  # Use the tooltip to store the actual command.
 
-                            # Add the ListWidgetItem to the correct ListWidget
-                            if Icon is not None:
-                                ListWidget_Commands.addItem(ListWidgetItem)
-                                ShadowList.append(CommandName)
+                        # Add the ListWidgetItem to the correct ListWidget
+                        if Icon is not None:
+                            ListWidget_Commands.addItem(ListWidgetItem)
+                            ShadowList.append(CommandName)
 
                     if (
                         ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole)
                         == "All"
                     ):
-                        IsInlist = False
-                        for i in range(ListWidget_Commands.count()):
-                            CommandItem = ListWidget_Commands.item(i)
-                            if CommandItem.text() == MenuNameTranslated:
-                                IsInlist = True
-
-                        if IsInlist is False:
-                            # Define a new ListWidgetItem.
-                            Icon = QIcon()
-                            FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
-                            for root, dirs, files in os.walk(FreeCAD_Icons):
-                                for fileName in files:
-                                    if CommandName in fileName:
-                                        Icon = QIcon()
-                                        Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
-                            if Icon.isNull():
-                                for item in self.List_CommandIcons:
-                                    if item[0] == CommandName:
-                                        Icon = item[1]
-                                    if (
-                                        str(CommandName).endswith("_ddb")
-                                        and "dropdownButtons" in self.Dict_DropDownButtons
-                                    ):
-                                        for (
-                                            DropDownCommand,
-                                            Commands,
-                                        ) in self.Dict_DropDownButtons[
-                                            "dropdownButtons"
-                                        ].items():
-                                            if Commands[0][0] == item[0]:
-                                                Icon = item[1]
-                            if Icon.isNull():
-                                IconName = StandardFunctions.CommandInfoCorrections(
-                                    CommandName
-                                )["pixmap"]
-                                Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
+                        # Define a new ListWidgetItem.
+                        Icon = QIcon()
+                        FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
+                        for root, dirs, files in os.walk(FreeCAD_Icons):
+                            for fileName in files:
+                                if CommandName in fileName:
+                                    Icon = QIcon()
+                                    Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
+                        if Icon.isNull():
+                            for item in self.List_CommandIcons:
+                                if item[0] == CommandName:
+                                    Icon = item[1]
                                 if (
                                     str(CommandName).endswith("_ddb")
                                     and "dropdownButtons" in self.Dict_DropDownButtons
@@ -5219,30 +5180,47 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                     ) in self.Dict_DropDownButtons[
                                         "dropdownButtons"
                                     ].items():
-                                        if Commands[0][0] == CommandName:
-                                            IconName = ToolbarCommand[1]
-                                            Icon = StandardFunctions.returnQiCons_Commands(
-                                                CommandName, IconName
-                                )
-
-                            Text = MenuNameTranslated
-                            ListWidgetItem = QListWidgetItem()
-                            ListWidgetItem.setText(Text)
-                            ListWidgetItem.setData(
-                                Qt.ItemDataRole.UserRole, CommandName
+                                        if Commands[0][0] == item[0]:
+                                            Icon = item[1]
+                        if Icon.isNull():
+                            IconName = StandardFunctions.CommandInfoCorrections(
+                                CommandName
+                            )["pixmap"]
+                            Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
+                            if (
+                                str(CommandName).endswith("_ddb")
+                                and "dropdownButtons" in self.Dict_DropDownButtons
+                            ):
+                                for (
+                                    DropDownCommand,
+                                    Commands,
+                                ) in self.Dict_DropDownButtons[
+                                    "dropdownButtons"
+                                ].items():
+                                    if Commands[0][0] == CommandName:
+                                        IconName = ToolbarCommand[1]
+                                        Icon = StandardFunctions.returnQiCons_Commands(
+                                            CommandName, IconName
                             )
-                            HasIcon = True
-                            if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
-                                HasIcon = True
-                            if len(CommandName.split(",")) > 1:
-                                HasIcon = True
-                            if Icon is not None and Icon.isNull() is False and HasIcon:
-                                ListWidgetItem.setIcon(Icon)
-                                ListWidgetItem.setToolTip(CommandName)  # Use the tooltip to store the actual command.
 
-                                # Add the ListWidgetItem to the correct ListWidget
-                                ListWidget_Commands.addItem(ListWidgetItem)      
-                                ShadowList.append(CommandName)              
+                        Text = MenuNameTranslated
+                        ListWidgetItem = QListWidgetItem()
+                        ListWidgetItem.setText(Text)
+                        ListWidgetItem.setData(
+                            Qt.ItemDataRole.UserRole, CommandName
+                        )
+                        HasIcon = True
+                        if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
+                            HasIcon = True
+                        if len(CommandName.split(",")) > 1:
+                            HasIcon = True
+                        if Icon is not None and Icon.isNull() is False and HasIcon:
+                            ListWidgetItem.setIcon(Icon)
+                            ListWidgetItem.setToolTip(CommandName)  # Use the tooltip to store the actual command.
+
+                            # Add the ListWidgetItem to the correct ListWidget
+                            ListWidget_Commands.addItem(ListWidgetItem)      
+                            ShadowList.append(CommandName)              
         return
 
     def CreateRibbonStructure_WB(self, WorkBenchName="All", Size="small"):
