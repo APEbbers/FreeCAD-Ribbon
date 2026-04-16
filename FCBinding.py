@@ -147,6 +147,9 @@ import shutil
 # import Ribbon. This contains the ribbon commands for FreeCAD
 import Ribbon
 
+# Set the data file version. Triggeres an question if an update is needed
+DataFileVersion = "1.4"
+
 # Get the resources
 ConfigDirectory = Parameters.CONFIG_DIR
 pathIcons = Parameters.ICON_LOCATION
@@ -184,6 +187,7 @@ class ModernMenu(RibbonBar):
     """
     Create ModernMenu QWidget.
     """
+    
 
     # region - class parameters
     # Add workbenches that need to be loaded first or early here
@@ -346,6 +350,9 @@ class ModernMenu(RibbonBar):
                         
         # connect the signals
         self.connectSignals()
+        
+        # Check the dataFileVersion
+        CacheFunctions.CheckDataFileVersion(DataFileVersion=DataFileVersion)
 
         # read ribbon structure from JSON file
         if os.path.exists(Parameters.RIBBON_STRUCTURE_JSON) is False:
@@ -748,16 +755,6 @@ class ModernMenu(RibbonBar):
         )
         self.StyleSheet = self.StyleSheet + StyleSheet_Addition_5
         self.setStyleSheet(self.StyleSheet)
-        
-        # # Add a line at the bottom of the ribbon
-        # StyleSheet_Addition_6 = (
-        # """RibbonCategory {
-        #     border-bottom: 0.5px solid"""
-        # + StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
-        # + """;}"""
-        # )
-        # self.StyleSheet = self.StyleSheet + StyleSheet_Addition_6
-        # self.setStyleSheet(self.StyleSheet)
         
         # get the state of the mainwindow
         self.MainWindowLoaded = True

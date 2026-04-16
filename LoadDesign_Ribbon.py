@@ -215,73 +215,73 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             Data.update(json.load(file))
         file.close()
 
-        DataUpdateNeeded = False
-        try:
-            FileVersion = Data["dataVersion"]
-            if FileVersion != self.DataFileVersion:
-                DataUpdateNeeded = True
-        except Exception:
-            DataUpdateNeeded = True
-        if DataUpdateNeeded is True:
-            Question = translate(
-                "FreeCAD Ribbon",
-                "The current data file is based on an older format!\n"
-                "It is important to update the data!\n"
-                "Do you want to proceed?\n"
-                "This can take a while!",
-            )
+        # DataUpdateNeeded = False
+        # try:
+        #     FileVersion = Data["dataVersion"]
+        #     if FileVersion != self.DataFileVersion:
+        #         DataUpdateNeeded = True
+        # except Exception:
+        #     DataUpdateNeeded = True
+        # if DataUpdateNeeded is True:
+        #     Question = translate(
+        #         "FreeCAD Ribbon",
+        #         "The current data file is based on an older format!\n"
+        #         "It is important to update the data!\n"
+        #         "Do you want to proceed?\n"
+        #         "This can take a while!",
+        #     )
 
-            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
-            if Answer == "yes":
-                self.on_ReloadWB_clicked()
+        #     Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+        #     if Answer == "yes":
+        #         self.on_ReloadWB_clicked()
 
-        # get the system language
-        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
-        try:
-            FCLanguage = FreeCAD_preferences.GetString("Language")
-            # Check if the language in the data file machtes the system language
-            IsSystemLanguage = True
-            if FCLanguage != Data["Language"]:
-                IsSystemLanguage = False
-            # If the languguage doesn't match, ask the user to update the data
-            if IsSystemLanguage is False:
-                Question = translate(
-                    "FreeCAD Ribbon",
-                    "The data was generated for a differernt language!\n"
-                    "Do you want to update the data?\n"
-                    "This can take a while!",
-                )
+        # # get the system language
+        # FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
+        # try:
+        #     FCLanguage = FreeCAD_preferences.GetString("Language")
+        #     # Check if the language in the data file machtes the system language
+        #     IsSystemLanguage = True
+        #     if FCLanguage != Data["Language"]:
+        #         IsSystemLanguage = False
+        #     # If the languguage doesn't match, ask the user to update the data
+        #     if IsSystemLanguage is False:
+        #         Question = translate(
+        #             "FreeCAD Ribbon",
+        #             "The data was generated for a differernt language!\n"
+        #             "Do you want to update the data?\n"
+        #             "This can take a while!",
+        #         )
 
-                Answer = StandardFunctions.Mbox(
-                    Question, "FreeCAD Ribbon", 1, "Question"
-                )
-                if Answer == "yes":
-                    self.on_ReloadWB_clicked(resetTexts=True)
-        except Exception:
-            pass
+        #         Answer = StandardFunctions.Mbox(
+        #             Question, "FreeCAD Ribbon", 1, "Question"
+        #         )
+        #         if Answer == "yes":
+        #             self.on_ReloadWB_clicked(resetTexts=True)
+        # except Exception:
+        #     pass
 
         # Load the standard lists for Workbenches, toolbars and commands
         self.List_Workbenches = Data["List_Workbenches"]
         self.StringList_Toolbars = Data["StringList_Toolbars"]
         self.List_Commands = Data["List_Commands"]
 
-        # test if List_Commands is correct
-        i = 5
-        if len(self.List_Commands) > 0:
-            for item in self.List_Commands:
-                if len(item) < 5:
-                    i = len(item)
-                    break
-        if i < 5:
-            Question = translate(
-                "FreeCAD Ribbon",
-                "It seems that the data file is not up-to-date.\n"
-                "Do you want to update the data?\n"
-                "This can take a while!",
-            )
-            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
-            if Answer == "yes":
-                self.on_ReloadWB_clicked()
+        # # test if List_Commands is correct
+        # i = 5
+        # if len(self.List_Commands) > 0:
+        #     for item in self.List_Commands:
+        #         if len(item) < 5:
+        #             i = len(item)
+        #             break
+        # if i < 5:
+        #     Question = translate(
+        #         "FreeCAD Ribbon",
+        #         "It seems that the data file is not up-to-date.\n"
+        #         "Do you want to update the data?\n"
+        #         "This can take a while!",
+        #     )
+        #     Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+        #     if Answer == "yes":
+        #         self.on_ReloadWB_clicked()
 
         # Load the lists for the deserialized icons
         try:
