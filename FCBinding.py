@@ -194,7 +194,7 @@ class ModernMenu(RibbonBar):
     WBtoLoadFirst = ["BillOfMaterialsWB"]
 
     # The datafile version is set in LoadDesign.py
-    DataFileVersion = LoadDesign_Ribbon.LoadDialog.DataFileVersion
+    DataFileVersion = CacheFunctions.DataFileVersion
 
     # Define a placeholder for the repro adress
     ReproAdress: str = ""
