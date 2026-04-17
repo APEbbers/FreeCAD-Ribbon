@@ -3786,12 +3786,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         if CommandItem[0] == QuickCommand:
                             IsSelected = True
                             
-                    # # Check if there is an Icon. if not add a replacement
-                    # if CommandName != "Std_OnlineHelp":
-                    #     result = StandardFunctions.CompareIcons(QIcon, Icon)
-                    #     if result is True:
-                    #         Icon = Gui.getIcon("preferences-workbenches")
-                    #         ListWidgetItem.setIcon(Icon)
+                    # Check if there is an Icon. if not add a replacement
+                    if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
+                        Icon = Gui.getIcon("preferences-workbenches")
+                        ListWidgetItem.setIcon(Icon)
 
                     if Icon is not None:
                         if IsSelected is False:
@@ -4944,11 +4942,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                     )  # Use the tooltip to store the actual command.
                                     
                                     # Check if there is an Icon. if not add a replacement
-                                    if CommandName != "Std_OnlineHelp":
-                                        result = StandardFunctions.CompareIcons(QIcon, Icon)
-                                        if result is True:
-                                            Icon = Gui.getIcon("preferences-workbenches")
-                                            ListWidgetItem.setIcon(Icon)
+                                    if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
+                                        Icon = Gui.getIcon("preferences-workbenches")
+                                        ListWidgetItem.setIcon(Icon)
                                     
                                     # Add the ListWidgetItem to the correct ListWidget
                                     IsInList = False
@@ -5091,12 +5087,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                     Qt.ItemDataRole.UserRole, CommandName
                                 )             
                                 
-                                # # Check if there is an Icon. if not add a replacement
-                                # if CommandName != "Std_OnlineHelp":
-                                #     result = StandardFunctions.CompareIcons(QIcon, Icon)
-                                #     if result is True:
-                                #         Icon = Gui.getIcon("preferences-workbenches")
-                                #         ListWidgetItem.setIcon(Icon)                   
+                                # Check if there is an Icon. if not add a replacement
+                                if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
+                                    Icon = Gui.getIcon("preferences-workbenches")
+                                    ListWidgetItem.setIcon(Icon)                 
                                 
                                 if Icon is not None and Icon.isNull() is False:
                                     ListWidgetItem.setIcon(Icon)
@@ -5170,6 +5164,11 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         ListWidgetItem.setToolTip(
                             CommandName
                         )  # Use the tooltip to store the actual command.
+                        
+                        # Check if there is an Icon. if not add a replacement
+                        if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
+                            Icon = Gui.getIcon("preferences-workbenches")
+                            ListWidgetItem.setIcon(Icon)
 
                         # Add the ListWidgetItem to the correct ListWidget
                         if Icon is not None:
@@ -5231,12 +5230,13 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         ListWidgetItem.setData(
                             Qt.ItemDataRole.UserRole, CommandName
                         )
-                        HasIcon = True
-                        if StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"] != "":
-                            HasIcon = True
-                        if len(CommandName.split(",")) > 1:
-                            HasIcon = True
-                        if Icon is not None and Icon.isNull() is False and HasIcon:
+                       
+                       # Check if there is an Icon. if not add a replacement
+                        if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
+                            Icon = Gui.getIcon("preferences-workbenches")
+                            ListWidgetItem.setIcon(Icon)
+                       
+                        if Icon is not None and Icon.isNull() is False:
                             ListWidgetItem.setIcon(Icon)
                             ListWidgetItem.setToolTip(CommandName)  # Use the tooltip to store the actual command.
 
