@@ -3786,12 +3786,12 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         if CommandItem[0] == QuickCommand:
                             IsSelected = True
                             
-                    # Check if there is an Icon. if not add a replacement
-                    if CommandName != "Std_OnlineHelp":
-                        result = StandardFunctions.CompareIcons(QIcon, Icon)
-                        if result is True:
-                            Icon = Gui.getIcon("preferences-workbenches")
-                            ListWidgetItem.setIcon(Icon)
+                    # # Check if there is an Icon. if not add a replacement
+                    # if CommandName != "Std_OnlineHelp":
+                    #     result = StandardFunctions.CompareIcons(QIcon, Icon)
+                    #     if result is True:
+                    #         Icon = Gui.getIcon("preferences-workbenches")
+                    #         ListWidgetItem.setIcon(Icon)
 
                     if Icon is not None:
                         if IsSelected is False:
@@ -5091,12 +5091,12 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                     Qt.ItemDataRole.UserRole, CommandName
                                 )             
                                 
-                                # Check if there is an Icon. if not add a replacement
-                                if CommandName != "Std_OnlineHelp":
-                                    result = StandardFunctions.CompareIcons(QIcon, Icon)
-                                    if result is True:
-                                        Icon = Gui.getIcon("preferences-workbenches")
-                                        ListWidgetItem.setIcon(Icon)                   
+                                # # Check if there is an Icon. if not add a replacement
+                                # if CommandName != "Std_OnlineHelp":
+                                #     result = StandardFunctions.CompareIcons(QIcon, Icon)
+                                #     if result is True:
+                                #         Icon = Gui.getIcon("preferences-workbenches")
+                                #         ListWidgetItem.setIcon(Icon)                   
                                 
                                 if Icon is not None and Icon.isNull() is False:
                                     ListWidgetItem.setIcon(Icon)
