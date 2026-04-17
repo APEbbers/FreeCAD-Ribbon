@@ -517,11 +517,11 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     ListWidgetItem.setText(Text)
                     ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
                     
-                    # Check if there is an Icon. if not add a replacement
-                    if CommandName != "Std_OnlineHelp":
-                        if len(Icon.availableSizes()) == 0:
-                            Icon = Gui.getIcon("preferences-workbenches")
-                            ListWidgetItem.setIcon(Icon)
+                    # # Check if there is an Icon. if not add a replacement
+                    # if CommandName != "Std_OnlineHelp":
+                    #     if len(Icon.availableSizes()) == 0:
+                    #         Icon = Gui.getIcon("preferences-workbenches")
+                    #         ListWidgetItem.setIcon(Icon)
                     #     result = StandardFunctions.CompareIcons(self.NoneIcon, Icon)
                     #     if result is True:
                     #         Icon = Gui.getIcon("preferences-workbenches")
