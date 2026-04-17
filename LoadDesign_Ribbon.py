@@ -859,12 +859,12 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         QApplication.restoreOverrideCursor()
         return
 
-    def on_ReloadWB_clicked(self, resetTexts=False, RestartFreeCAD=False):
+    def on_ReloadWB_clicked(self, RestartFreeCAD=False):
         # minimize the dialog
         self.form.hide()
         
         # Create the data file
-        CacheFunctions.CreateCache(resetTexts=resetTexts)
+        CacheFunctions.CreateCache()
 
         if RestartFreeCAD is False:
             # Show the dialog again

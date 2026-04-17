@@ -97,6 +97,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     
     buttonRemove = Signal()
     
+    NoneIcon = QIcon()
+    
     # Create a signal to emit the closeEvent to FCBinding
     closeSignal = Signal()
             
@@ -209,6 +211,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.List_Workbenches = Data["List_Workbenches"]
         self.StringList_Toolbars = Data["StringList_Toolbars"]
         self.List_Commands = Data["List_Commands"]
+        # self.NoneIcon = Serialize_Ribbon.deserializeIcon(Data["NoneIcon"])
+        # print(self.NoneIcon)
 
         # test if List_Commands is correct
         i = 5
@@ -515,10 +519,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     
                     # Check if there is an Icon. if not add a replacement
                     if CommandName != "Std_OnlineHelp":
-                        result = StandardFunctions.CompareIcons(QIcon, Icon)
-                        if result is True:
+                        if len(Icon.availableSizes()) == 0:
                             Icon = Gui.getIcon("preferences-workbenches")
                             ListWidgetItem.setIcon(Icon)
+                    #     result = StandardFunctions.CompareIcons(self.NoneIcon, Icon)
+                    #     if result is True:
+                    #         Icon = Gui.getIcon("preferences-workbenches")
+                    #         ListWidgetItem.setIcon(Icon)
                     
                     if Icon is not None and Icon.isNull() is False:
                         ListWidgetItem.setIcon(Icon)
@@ -681,18 +688,18 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     Qt.ItemDataRole.UserRole, CommandName
                                 )
                                 
-                                # Check if there is an Icon. if not add a replacement
-                                if CommandName != "Std_OnlineHelp":
-                                    result = StandardFunctions.CompareIcons(QIcon, Icon)
-                                    if result is True:
-                                        Icon = Gui.getIcon("preferences-workbenches")
-                                        ListWidgetItem.setIcon(Icon)
+                                # # Check if there is an Icon. if not add a replacement
+                                # if CommandName != "Std_OnlineHelp":
+                                #     result = StandardFunctions.CompareIcons(QIcon, Icon)
+                                #     if result is True:
+                                #         Icon = Gui.getIcon("preferences-workbenches")
+                                #         ListWidgetItem.setIcon(Icon)
 
-                                        if Icon is not None and Icon.isNull() is False:
-                                            ListWidgetItem.setIcon(Icon)
-                                            ListWidgetItem.setToolTip(
-                                                CommandName
-                                            )
+                                if Icon is not None and Icon.isNull() is False:
+                                    ListWidgetItem.setIcon(Icon)
+                                    ListWidgetItem.setToolTip(
+                                        CommandName
+                                    )
 
                                     ListWidget_Commands.addItem(ListWidgetItem)
                                     # Add the commandName to the shadowList
@@ -826,12 +833,12 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     Qt.ItemDataRole.UserRole, CommandName
                                 )
                                 
-                                # Check if there is an Icon. if not add a replacement
-                                if CommandName != "Std_OnlineHelp":
-                                    result = StandardFunctions.CompareIcons(QIcon, Icon)
-                                    if result is True:
-                                        Icon = Gui.getIcon("preferences-workbenches")
-                                        ListWidgetItem.setIcon(Icon)
+                                # # Check if there is an Icon. if not add a replacement
+                                # if CommandName != "Std_OnlineHelp":
+                                #     result = StandardFunctions.CompareIcons(QIcon, Icon)
+                                #     if result is True:
+                                #         Icon = Gui.getIcon("preferences-workbenches")
+                                #         ListWidgetItem.setIcon(Icon)
 
                                 if Icon is not None and Icon.isNull() is False:
                                     ListWidgetItem.setIcon(Icon)
@@ -905,12 +912,12 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             CommandName
                         )  # Use the tooltip to store the actual command.
 
-                        # Check if there is an Icon. if not add a replacement
-                        if CommandName != "Std_OnlineHelp":
-                            result = StandardFunctions.CompareIcons(QIcon, Icon)
-                            if result is True:
-                                Icon = Gui.getIcon("preferences-workbenches")
-                                ListWidgetItem.setIcon(Icon)
+                        # # Check if there is an Icon. if not add a replacement
+                        # if CommandName != "Std_OnlineHelp":
+                        #     result = StandardFunctions.CompareIcons(QIcon, Icon)
+                        #     if result is True:
+                        #         Icon = Gui.getIcon("preferences-workbenches")
+                        #         ListWidgetItem.setIcon(Icon)
                         
                         if Icon is not None and Icon.isNull() is False:
                             ListWidget_Commands.addItem(ListWidgetItem)
@@ -972,12 +979,12 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             Qt.ItemDataRole.UserRole, CommandName
                         )
                         
-                        # Check if there is an Icon. if not add a replacement
-                        if CommandName != "Std_OnlineHelp":
-                            result = StandardFunctions.CompareIcons(QIcon, Icon)
-                            if result is True:
-                                Icon = Gui.getIcon("preferences-workbenches")
-                                ListWidgetItem.setIcon(Icon)
+                        # # Check if there is an Icon. if not add a replacement
+                        # if CommandName != "Std_OnlineHelp":
+                        #     result = StandardFunctions.CompareIcons(QIcon, Icon)
+                        #     if result is True:
+                        #         Icon = Gui.getIcon("preferences-workbenches")
+                        #         ListWidgetItem.setIcon(Icon)
                         
                         if Icon is not None and Icon.isNull() is False:
                             ListWidgetItem.setIcon(Icon)
@@ -1011,7 +1018,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.hide()
         
         # Create the data file
-        CacheFunctions.CreateCache(resetTexts=resetTexts)
+        CacheFunctions.CreateCache()
 
         # if RestartFreeCAD is False:
         #     # Show the dialog again

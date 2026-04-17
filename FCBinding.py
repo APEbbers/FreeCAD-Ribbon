@@ -5600,12 +5600,12 @@ class ModernMenu(RibbonBar):
                             if Icon is not None and Icon.isNull() is False:
                                 action.setIcon(Icon)
                                 
-                        # Check if there is an Icon. if not add a replacement
-                        if CommandName != "Std_OnlineHelp":
-                            result = StandardFunctions.CompareIcons(QIcon, Icon)
-                            if result is True:
-                                Icon = Gui.getIcon("preferences-workbenches")
-                                action.setIcon(Icon)
+                        # # Check if there is an Icon. if not add a replacement
+                        # if CommandName != "Std_OnlineHelp":
+                        #     result = StandardFunctions.CompareIcons(QIcon, Icon)
+                        #     if result is True:
+                        #         Icon = Gui.getIcon("preferences-workbenches")
+                        #         action.setIcon(Icon)
 
                         # get button size from ribbonStructure
                         try:
@@ -6541,6 +6541,9 @@ class EventInspector(QObject):
                     except Exception:
                         pass
                                     
+        if event.type() == QEvent.Type.ToolBarChange:
+            print(event)                                            
+                                    
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
             mw.setWindowState(Qt.WindowState.WindowMaximized)
@@ -6661,7 +6664,7 @@ class run:
             ribbonDock.setTitleBarWidget(QWidget())
             ribbonDock.setContentsMargins(0, 0, 0, 0)
             ribbonDock.setWidget(ribbon)
-                        
+                                    
             # # make sure that there are no negative valules
             if Parameters.AUTOHIDE_RIBBON is True:
                 ribbonDock.setMaximumHeight(ribbon.RibbonMinimalHeight)
