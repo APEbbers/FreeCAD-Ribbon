@@ -3733,7 +3733,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                     for root, dirs, files in os.walk(FreeCAD_Icons):
                         for fileName in files:
-                            if CommandName.lower() in fileName.lower() or (fileName.lower().split(".")[0] in CommandName.lower()):
+                            if CommandName in fileName:
                                 Icon = QIcon()
                                 Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                     if Icon.isNull():
@@ -4889,7 +4889,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                                 for root, dirs, files in os.walk(FreeCAD_Icons):
                                     for fileName in files:
-                                        if CommandName.lower() in fileName.lower() or (fileName.lower().split(".")[0] in CommandName.lower()):
+                                        if CommandName in fileName:
                                             Icon = QIcon()
                                             Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                                 if Icon.isNull():
@@ -5040,7 +5040,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                                 for root, dirs, files in os.walk(FreeCAD_Icons):
                                     for fileName in files:
-                                        if CommandName.lower() in fileName.lower() or (fileName.lower().split(".")[0] in CommandName.lower()):
+                                        if CommandName in fileName:
                                             Icon = QIcon()
                                             Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                                 if Icon.isNull():
