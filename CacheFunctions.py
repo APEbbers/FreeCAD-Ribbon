@@ -809,7 +809,7 @@ def DownLoadIcons():
         file.write(file_content)
 
         
-def CheckDataFileVersion(DataFileVersion):
+def CheckDataFileVersion():
     DataFileIsUpToDate = False
     
     # Check if there is a datafile. if not, ask the user to create one.

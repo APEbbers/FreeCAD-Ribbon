@@ -350,9 +350,6 @@ class ModernMenu(RibbonBar):
                         
         # connect the signals
         self.connectSignals()
-        
-        # Check the dataFileVersion
-        CacheFunctions.CheckDataFileVersion(DataFileVersion=DataFileVersion)
 
         # read ribbon structure from JSON file
         if os.path.exists(Parameters.RIBBON_STRUCTURE_JSON) is False:
@@ -1044,9 +1041,7 @@ class ModernMenu(RibbonBar):
         self.isLoaded = True
         # Fold the ribbon if unpinned
         self.FoldRibbon()
-        # Check if an reload of the datafile is needed an show an message
-        self.CheckDataFile()
-
+        
         # Activate some WB's first to ensure proper loading of the panels
         for Wb in self.WBtoLoadFirst:
             try:
@@ -1073,6 +1068,9 @@ class ModernMenu(RibbonBar):
         # This is needed to be able to drag the main window properly when the titlebar is hidden
         self._titleWidget.mousePressEvent = lambda e: self.mousePress_Titlebar(e)
         mw.moveEvent = lambda e: self.mouseMove_Titlebar(e)
+        
+        # Check if an reload of the datafile is needed an show an message
+        CacheFunctions.CheckDataFileVersion()
         
         return
 
