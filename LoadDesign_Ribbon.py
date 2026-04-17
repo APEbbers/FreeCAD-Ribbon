@@ -3733,22 +3733,23 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                     for root, dirs, files in os.walk(FreeCAD_Icons):
                         for fileName in files:
-                            if CommandName in fileName:
+                            if CommandName.lower() in fileName.lower() or (fileName.lower().split(".")[0] in CommandName.lower()):
                                 Icon = QIcon()
                                 Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
-                    for item in self.List_CommandIcons:
-                        if item[0] == CommandName:
-                            Icon = item[1]
-                        if (
-                            str(CommandName).endswith("_ddb")
-                            and "dropdownButtons" in self.Dict_DropDownButtons
-                        ):
-                            for (
-                                DropDownCommand,
-                                Commands,
-                            ) in self.Dict_DropDownButtons["dropdownButtons"].items():
-                                if Commands[0][0] == item[0]:
-                                    Icon = item[1]
+                    if Icon.isNull():
+                        for item in self.List_CommandIcons:
+                            if item[0] == CommandName:
+                                Icon = item[1]
+                            if (
+                                str(CommandName).endswith("_ddb")
+                                and "dropdownButtons" in self.Dict_DropDownButtons
+                            ):
+                                for (
+                                    DropDownCommand,
+                                    Commands,
+                                ) in self.Dict_DropDownButtons["dropdownButtons"].items():
+                                    if Commands[0][0] == item[0]:
+                                        Icon = item[1]
                     if Icon.isNull():
                         IconName = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
                         Icon = StandardFunctions.returnQiCons_Commands(CommandName, IconName)
@@ -3784,6 +3785,13 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     for QuickCommand in self.List_QuickAccessCommands:
                         if CommandItem[0] == QuickCommand:
                             IsSelected = True
+                            
+                    # Check if there is an Icon. if not add a replacement
+                    if CommandName != "Std_OnlineHelp":
+                        result = StandardFunctions.CompareIcons(QIcon, Icon)
+                        if result is True:
+                            Icon = Gui.getIcon("preferences-workbenches")
+                            ListWidgetItem.setIcon(Icon)
 
                     if Icon is not None:
                         if IsSelected is False:
@@ -4883,7 +4891,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                                 for root, dirs, files in os.walk(FreeCAD_Icons):
                                     for fileName in files:
-                                        if CommandName in fileName:
+                                        if CommandName.lower() in fileName.lower() or (fileName.lower().split(".")[0] in CommandName.lower()):
                                             Icon = QIcon()
                                             Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                                 if Icon.isNull():
@@ -4934,7 +4942,14 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                     ListWidgetItem.setToolTip(
                                         CommandName
                                     )  # Use the tooltip to store the actual command.
-
+                                    
+                                    # Check if there is an Icon. if not add a replacement
+                                    if CommandName != "Std_OnlineHelp":
+                                        result = StandardFunctions.CompareIcons(QIcon, Icon)
+                                        if result is True:
+                                            Icon = Gui.getIcon("preferences-workbenches")
+                                            ListWidgetItem.setIcon(Icon)
+                                    
                                     # Add the ListWidgetItem to the correct ListWidget
                                     IsInList = False
                                     for i in range(DestinationWidget.count()):
@@ -5029,7 +5044,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                                 for root, dirs, files in os.walk(FreeCAD_Icons):
                                     for fileName in files:
-                                        if CommandName in fileName:
+                                        if CommandName.lower() in fileName.lower() or (fileName.lower().split(".")[0] in CommandName.lower()):
                                             Icon = QIcon()
                                             Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                                 if Icon.isNull():
@@ -5074,7 +5089,14 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 ListWidgetItem.setText(Text)
                                 ListWidgetItem.setData(
                                     Qt.ItemDataRole.UserRole, CommandName
-                                )                                
+                                )             
+                                
+                                # Check if there is an Icon. if not add a replacement
+                                if CommandName != "Std_OnlineHelp":
+                                    result = StandardFunctions.CompareIcons(QIcon, Icon)
+                                    if result is True:
+                                        Icon = Gui.getIcon("preferences-workbenches")
+                                        ListWidgetItem.setIcon(Icon)                   
                                 
                                 if Icon is not None and Icon.isNull() is False:
                                     ListWidgetItem.setIcon(Icon)

@@ -512,6 +512,14 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     ListWidgetItem = QListWidgetItem()
                     ListWidgetItem.setText(Text)
                     ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+                    
+                    # Check if there is an Icon. if not add a replacement
+                    if CommandName != "Std_OnlineHelp":
+                        result = StandardFunctions.CompareIcons(QIcon, Icon)
+                        if result is True:
+                            Icon = Gui.getIcon("preferences-workbenches")
+                            ListWidgetItem.setIcon(Icon)
+                    
                     if Icon is not None and Icon.isNull() is False:
                         ListWidgetItem.setIcon(Icon)
                         ListWidgetItem.setToolTip(
@@ -672,12 +680,19 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 ListWidgetItem.setData(
                                     Qt.ItemDataRole.UserRole, CommandName
                                 )
+                                
+                                # Check if there is an Icon. if not add a replacement
+                                if CommandName != "Std_OnlineHelp":
+                                    result = StandardFunctions.CompareIcons(QIcon, Icon)
+                                    if result is True:
+                                        Icon = Gui.getIcon("preferences-workbenches")
+                                        ListWidgetItem.setIcon(Icon)
 
-                                if Icon is not None and Icon.isNull() is False:
-                                    ListWidgetItem.setIcon(Icon)
-                                    ListWidgetItem.setToolTip(
-                                        CommandName
-                                    )
+                                        if Icon is not None and Icon.isNull() is False:
+                                            ListWidgetItem.setIcon(Icon)
+                                            ListWidgetItem.setToolTip(
+                                                CommandName
+                                            )
 
                                     ListWidget_Commands.addItem(ListWidgetItem)
                                     # Add the commandName to the shadowList
@@ -810,6 +825,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 ListWidgetItem.setData(
                                     Qt.ItemDataRole.UserRole, CommandName
                                 )
+                                
+                                # Check if there is an Icon. if not add a replacement
+                                if CommandName != "Std_OnlineHelp":
+                                    result = StandardFunctions.CompareIcons(QIcon, Icon)
+                                    if result is True:
+                                        Icon = Gui.getIcon("preferences-workbenches")
+                                        ListWidgetItem.setIcon(Icon)
 
                                 if Icon is not None and Icon.isNull() is False:
                                     ListWidgetItem.setIcon(Icon)
@@ -831,7 +853,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                         for root, dirs, files in os.walk(FreeCAD_Icons):
                             for fileName in files:
-                                if CommandName in fileName:
+                                if CommandName.lower() in fileName.lower() or (fileName.lower().split(".")[0] in CommandName.lower()):
                                     Icon = QIcon()
                                     Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                         if Icon.isNull():
@@ -883,8 +905,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             CommandName
                         )  # Use the tooltip to store the actual command.
 
-                        # Add the ListWidgetItem to the correct ListWidget
-
+                        # Check if there is an Icon. if not add a replacement
+                        if CommandName != "Std_OnlineHelp":
+                            result = StandardFunctions.CompareIcons(QIcon, Icon)
+                            if result is True:
+                                Icon = Gui.getIcon("preferences-workbenches")
+                                ListWidgetItem.setIcon(Icon)
+                        
                         if Icon is not None and Icon.isNull() is False:
                             ListWidget_Commands.addItem(ListWidgetItem)
                             ShadowList.append(CommandName)
@@ -898,7 +925,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                         for root, dirs, files in os.walk(FreeCAD_Icons):
                             for fileName in files:
-                                if CommandName in fileName:
+                                if CommandName.lower() in fileName.lower() or (fileName.lower().split(".")[0] in CommandName.lower()):
                                     Icon = QIcon()
                                     Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                         if Icon.isNull():
@@ -944,6 +971,14 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         ListWidgetItem.setData(
                             Qt.ItemDataRole.UserRole, CommandName
                         )
+                        
+                        # Check if there is an Icon. if not add a replacement
+                        if CommandName != "Std_OnlineHelp":
+                            result = StandardFunctions.CompareIcons(QIcon, Icon)
+                            if result is True:
+                                Icon = Gui.getIcon("preferences-workbenches")
+                                ListWidgetItem.setIcon(Icon)
+                        
                         if Icon is not None and Icon.isNull() is False:
                             ListWidgetItem.setIcon(Icon)
                             ListWidgetItem.setToolTip(

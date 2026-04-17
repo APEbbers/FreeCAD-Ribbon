@@ -20,9 +20,10 @@
 # *                                                                       *
 # *************************************************************************
 
-from xml.etree.ElementTree import Element, ElementTree
+from xml.etree.ElementTree import Element
+from PySide.QtGui import QIcon
+from PySide.QtCore import QSize
 
-from requests import Request
 import FreeCAD as App
 import FreeCADGui as Gui
 import math
@@ -1059,3 +1060,7 @@ def TimeDeltaToDict(timeDelta:datetime.timedelta) -> dict:
         ,'milliseconds': milliseconds
         ,'microseconds': microseconds
     }
+    
+def CompareIcons(icon1: QIcon, icon2: QIcon):
+    icon1 = Gui.getIcon("Std_OnlineHelp")
+    return (icon1.pixmap(icon1.actualSize(QSize(16,16))).toImage() == icon2.pixmap(icon2.actualSize(QSize(16,16))).toImage())
