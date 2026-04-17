@@ -5599,6 +5599,13 @@ class ModernMenu(RibbonBar):
                                 Icon = self.ReturnCommandIcon(CommandName, pixmap)
                             if Icon is not None and Icon.isNull() is False:
                                 action.setIcon(Icon)
+                                
+                        # Check if there is an Icon. if not add a replacement
+                        if CommandName != "Std_OnlineHelp":
+                            result = StandardFunctions.CompareIcons(QIcon, Icon)
+                            if result is True:
+                                Icon = Gui.getIcon("preferences-workbenches")
+                                action.setIcon(Icon)
 
                         # get button size from ribbonStructure
                         try:
