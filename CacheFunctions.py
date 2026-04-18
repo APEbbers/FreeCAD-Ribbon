@@ -80,7 +80,7 @@ ReproAdress: str = ""
 IsChanged = False
 
 # Set the data file version. Triggeres an question if an update is needed
-DataFileVersion = "1.4"
+DataFileVersion = "1.4.1"
 
 # Define list of the workbenches, toolbars and commands on class level
 List_Workbenches = []
@@ -157,7 +157,7 @@ def CreateCache(RestartFreeCAD=False):
     progressBar.setValue(progressBar.value() + 1)
     #
     List_Workbenches.clear()
-    for WorkBenchName in Gui.listWorkbenches().copy():
+    for WorkBenchName in Gui.listWorkbenches().keys():
         try:
             if str(WorkBenchName) != "" or WorkBenchName is not None:
                 if str(WorkBenchName) != "NoneWorkbench":
@@ -292,7 +292,7 @@ def CreateCache(RestartFreeCAD=False):
         command = Gui.Command.get(CommandName[0])
         ChildCommands = returnDropDownCommands(CommandName[0])
         WorkBenchName = CommandName[1]
-        if command is not None:
+        if command is not None and WorkBenchName != "":
             # get the icon for this command
             if CommandInfoCorrections(CommandName[0])["pixmap"] != "":
                 IconName = CommandInfoCorrections(CommandName[0])["pixmap"]
