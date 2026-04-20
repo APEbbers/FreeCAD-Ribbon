@@ -2644,7 +2644,7 @@ class ModernMenu(RibbonBar):
                             "order"
                         ],
                     )
-                    OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][title]["order"]
+                    OrderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"][title]["order"]
 
                     if type(widgetType) is CustomControls:
                         for n in range(gridLayout.count()):
@@ -4652,17 +4652,24 @@ class ModernMenu(RibbonBar):
             pass
         return ButtonList
 
-    def CreateButtonFromCommand(self, CommandName: str):
+    def CreateButtonFromCommand(self, CommandName: str, ActivateWorkBench = True):
         try:
             # Activate the workbench, the command belongs to. Otherwise, the command wont be created later
             # Get the current category
             currentCategory = self.currentCategory()
-            for CommandItem in self.List_Commands:
-                if CommandItem[0] == CommandName:
-                    if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard"):                                
-                        # Activate the workbench if not loaded
-                        Gui.activateWorkbench(CommandItem[3])
-                        break
+            if ActivateWorkBench is True:
+                for CommandItem in self.List_Commands:
+                    if CommandItem[0] == CommandName:
+                        if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard" and CommandItem[3] != "Standard"):                                
+                            if CommandItem[3] not in self.isWbLoaded:
+                                # Activate the workbench if not loaded
+                                Gui.activateWorkbench(CommandItem[3])
+                                self.isWbLoaded[CommandItem[3]] = True
+                            if CommandItem[3] in self.isWbLoaded and self.isWbLoaded[CommandItem[3]] is False:    
+                                # Activate the workbench if not loaded
+                                Gui.activateWorkbench(CommandItem[3])
+                                self.isWbLoaded[CommandItem[3]] = True
+                                break
             # Set the current  category after activating the workbench
             self.setCurrentCategory(currentCategory)
             Gui.activateWorkbench(currentCategory.objectName())
@@ -4885,6 +4892,8 @@ class ModernMenu(RibbonBar):
                             "Warning",
                         )
                     pass
+            if Icon.isNull():
+                Icon = None
         return Icon
 
     def ReturnWorkbenchIcon(self, WorkBenchName: str, pixmap: str = "") -> QIcon:
@@ -5143,6 +5152,7 @@ class ModernMenu(RibbonBar):
                     enableSeparator = False, 
                     ExtraCommand = "",
                     ActivateButtons = False,
+                    ActivateWorkbench = True,
                     ):
         if SetToUpdate is True:
             dict = self.ribbonStructure
@@ -5253,7 +5263,7 @@ class ModernMenu(RibbonBar):
             if panelName in dict["workbenches"][workbenchName]["toolbars"]:
                 for key in dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():
                     if key != "order" and key is not None and key != "":
-                        button = self.CreateButtonFromCommand(key)
+                        button = self.CreateButtonFromCommand(key, ActivateWorkBench=ActivateWorkbench)
                         if button is not None:
                             # button.setProperty("CommandName", key)
                             button.setObjectName(key)
@@ -5453,7 +5463,7 @@ class ModernMenu(RibbonBar):
             if button.text() == "":
                 continue
             # If the command is already there, remove it, skip it and increase the counter.
-            elif shadowList.__contains__(button.text()) is True:                
+            elif shadowList.__contains__(CommandName) is True:                
                 continue
             else:
                 # If the number of columns is more than allowed,
@@ -5583,6 +5593,7 @@ class ModernMenu(RibbonBar):
                                 if CommandName in fileName:
                                     Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                                     action.setIcon(Icon)
+                                    break
                         
                         # If not get the Icon from FreeCAD or the data file
                         if Icon.isNull():
@@ -5833,10 +5844,9 @@ class ModernMenu(RibbonBar):
                         btn.setStyleSheet(StyleSheet_Addition_Button)
 
                         # add the button text to the shadowList for checking if buttons are already there.
-                        shadowList.append(button.text())
+                        shadowList.append(CommandName)
 
                     except Exception as e:
-                        raise e
                         if Parameters.DEBUG_MODE is True:
                             raise e
                         continue
@@ -5852,9 +5862,9 @@ class ModernMenu(RibbonBar):
         # EnableControl = QCheckBox()
         EnableControl = Toggle()
         EnableControl.setChecked(True)
-        if panel.objectName() in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]:
-            if "Enabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
-                Enabled = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"]
+        if panel.objectName() in dict["workbenches"][workbenchName]["toolbars"]:
+            if "Enabled" in dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
+                Enabled = dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"]
                 EnableControl.setChecked(bool(Enabled))
         EnableControl.setFixedWidth(32)
         EnableControl.setObjectName("EnablePanel")
@@ -6062,7 +6072,7 @@ class ModernMenu(RibbonBar):
     def ReturnCommand_string(self, Dict: dict, panel: RibbonPanel, widget) -> str:
         # Define a button and a command
         button = None
-        command = None
+        command = ""
         
         # Try to get the command from the widget
         if type(widget) is CustomControls:
@@ -6079,16 +6089,16 @@ class ModernMenu(RibbonBar):
         if button is not None and command != "":
             command = button.defaultAction().data()
             if isinstance(button.actions(), list):
-                if command is None and command != "":
+                if command is None or command == "":
                     command = button.actions()[0].objectName()
-                    if command is None and command != "":
+                    if command is None or command == "":
                         command = button.actions()[0].data()
             if isinstance(button.actions(), QAction):
-                if command is None and command != "":
+                if command is None or command == "":
                     command = button.actions().objectName()
-                    if command is None and command != "":
+                    if command is None or command == "":
                         command = button.actions().data()
-        if command is None and command != "":
+        if command is None or command == "":
             command = button.objectName()
 
         return command
@@ -6098,7 +6108,8 @@ class ModernMenu(RibbonBar):
         panelName = panel.objectName()
         
         # Get the command
-        command = self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=widget.parent())
+        # command = self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=widget.parent())
+        command = widget.parent().objectName()
            
         try:
             orderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
@@ -6136,74 +6147,65 @@ class ModernMenu(RibbonBar):
      
             
             # Close the widget
-            widget.close()
-            newPanel = self.CreatePanel(workbenchName, panelName, addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
+            # widget.close()
+            newPanel = self.CreatePanel(workbenchName, panelName, addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True, ActivateWorkbench=False)
             # Add the panel to the list with long panels
             if newPanel.panelOptionButton().isVisible():
                 self.longPanels.append(newPanel)
-                    
             # Replace the panel with the new panel
             self.currentCategory().replacePanel(panel, newPanel)
-            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-            self.setPanelProperties(newPanel)
-
             # Update the dict of the currentCategory with the new panel
             self.currentCategory()._panels[newPanel.objectName()] = newPanel
             
-            # Enable all buttons, so you can access them with a right click
-            for child in mw.findChildren(QToolButton):
-                try:
-                    for subAction in child.actions():
-                        subAction.setEnabled(True)                
-                except Exception:
-                    pass
-                child.setEnabled(True)
-            Gui.updateGui()
-                        
+            # Restore the cursor
+            QApplication.restoreOverrideCursor()
+            return True     
         except Exception as e:
             if Parameters.DEBUG_MODE is True:
                 print(e)
-            pass
-        
-        return
+
+        return False
     
     def RemoveButtonFromQuickAccess(self, widget: QuickAccessToolButton, pos: QPoint):
-        # Get a list of all buttons
-        buttonList = self._titleWidget._quickAccessToolBar.findChildren(QToolButton)
-        # Start with the index at -1. This way, the index is zero based
-        index = -1
-        # Go through the button list. if the passed position is withing the edges of a button,
-        # You got the right one
-        IsDeleted = False
-        for button in buttonList:
-            if button.objectName() == widget.objectName():
-                index = index + 1
-                # Map the for corners of the button to global
-                pos_tl = mw.mapToGlobal(button.rect().topLeft())
-                pos_tr = button.mapToGlobal(button.rect().topRight())
-                pos_bl = button.mapToGlobal(button.rect().bottomLeft())
-                pos_br = mw.mapToGlobal(button.rect().bottomRight())
-
-                # If the position of the context menu event is within the global corners
-                # delete the button
-                if pos.x() > pos_tl.x() and pos.x() < pos_tr.x():
-                    if pos.y() > pos_tl.y() and pos.y() < pos_bl.y():                    
-                        # if button.objectName() == widget.objectName():
-                        button.deleteLater()                                                
-                        IsDeleted = True
-                        break
-        
-        if IsDeleted is True:
-            # Update the quickAccessCommands list
-            self.quickAccessCommands.remove(widget.objectName())
-
-        # Delete the drag indicater
         try:
-            self._titleWidget._quickAccessToolBar.removeAction(self.dragAction_QuickAccess)
-            self._titleWidget._quickAccessToolBar.removeAction(self.dragIndicator_QuickAccess_Action)
+            # Get a list of all buttons
+            buttonList = self._titleWidget._quickAccessToolBar.findChildren(QToolButton)
+            # Start with the index at -1. This way, the index is zero based
+            index = -1
+            # Go through the button list. if the passed position is withing the edges of a button,
+            # You got the right one
+            IsDeleted = False
+            for button in buttonList:
+                if button.objectName() == widget.objectName():
+                    index = index + 1
+                    # Map the for corners of the button to global
+                    pos_tl = mw.mapToGlobal(button.rect().topLeft())
+                    pos_tr = button.mapToGlobal(button.rect().topRight())
+                    pos_bl = button.mapToGlobal(button.rect().bottomLeft())
+                    pos_br = mw.mapToGlobal(button.rect().bottomRight())
+
+                    # If the position of the context menu event is within the global corners
+                    # delete the button
+                    if pos.x() > pos_tl.x() and pos.x() < pos_tr.x():
+                        if pos.y() > pos_tl.y() and pos.y() < pos_bl.y():                    
+                            # if button.objectName() == widget.objectName():
+                            button.deleteLater()                                                
+                            IsDeleted = True
+                            break
+            
+            if IsDeleted is True:
+                # Update the quickAccessCommands list
+                self.quickAccessCommands.remove(widget.objectName())
+
+            # Delete the drag indicater
+            try:
+                self._titleWidget._quickAccessToolBar.removeAction(self.dragAction_QuickAccess)
+                self._titleWidget._quickAccessToolBar.removeAction(self.dragIndicator_QuickAccess_Action)
+            except Exception:
+                pass
+            return True
         except Exception:
-            pass
-        return
+            return False
         
     # endregion
 

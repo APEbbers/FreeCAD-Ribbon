@@ -39,7 +39,7 @@ from PySide.QtWidgets import (
     QListWidgetItem,
     QLineEdit,
 )
-from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent
+from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent
 import sys
 import json
 from datetime import datetime, timedelta
@@ -1121,10 +1121,27 @@ class EventInspector(QObject):
             RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
             if type(self.widget) is not QuickAccessToolButton:
                 if panel is not None:
-                    RibbonBar.RemoveButtonFromPanel(panel, self.widget)                    
+                    # Set the wait cursor
+                    QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+                    QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+                    # Remove the button from the panel
+                    RibbonBar.RemoveButtonFromPanel(panel, self.widget)
+                    self.dragEntered = False
+                    # Restore the cursor
+                    QApplication.restoreOverrideCursor()
+                    event.accept()
+                    return True              
             if type(self.widget) is QuickAccessToolButton:
+                # Set the wait cursor
+                QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+                QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+                # Remove the button from the panel
                 RibbonBar.RemoveButtonFromQuickAccess(self.widget, self.pos)
-            self.dragEntered = False
+                # Restore the cursor
+                QApplication.restoreOverrideCursor()
+                self.dragEntered = False
+                event.accept()
+                return True
             # return True
         # # Show the mainwindow after the application is activated
         if event.type() == QEvent.Type.DragEnter:
@@ -1138,5 +1155,6 @@ class EventInspector(QObject):
                 self.widget = None
                 self.pos = None
                 self.dragEntered = False
+            event.accept()
         return False
   
