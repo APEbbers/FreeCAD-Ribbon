@@ -389,6 +389,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Connect the OK and Cancel buttons
         self.form.cancelButton.clicked.connect(self.on_Cancel_Clicked)
         self.form.okButton.clicked.connect(self.on_Ok_Clicked)
+        
+        # Set the first tab active
+        self.form.tabWidget.setCurrentIndex(0)
 
         # Restore the cursor
         QApplication.restoreOverrideCursor()
@@ -403,12 +406,12 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
         # Add "All" to the categoryListWidgets
         All_KeyWord = translate("FreeCAD Ribbon", "All")
-        self.form.ListCategory_NP.addItem(All_KeyWord, "All")
+        self.form.ListCategory_NP.addItem(All_KeyWord, "All", [All_KeyWord, "All", "All"])
         # self.form.ListCategory_DDB.addItem(All_KeyWord, "All")
         
         # Add "Standard" to the list for the panels
         Standard_KeyWord = translate("FreeCAD Ribbon", "Standard")
-        self.form.ListCategory_NP.addItem(Gui.getIcon("freecad"), Standard_KeyWord)
+        self.form.ListCategory_NP.addItem(Gui.getIcon("freecad"), Standard_KeyWord, [Standard_KeyWord, "Standard", "Standard"])
         # self.form.ListCategory_DDB.addItem(Gui.getIcon("freecad"), Standard_KeyWord)
 
         self.List_Workbenches.sort()
@@ -519,8 +522,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     
                     # Check if there is an Icon. if not add a replacement
                     if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                        Icon = Gui.getIcon("preferences-workbenches")
-                        ListWidgetItem.setIcon(Icon)
+                        # Icon = Gui.getIcon("preferences-workbenches")
+                        # ListWidgetItem.setIcon(Icon)
+                        continue
                     
                     if Icon is not None and Icon.isNull() is False:
                         ListWidgetItem.setIcon(Icon)
@@ -685,8 +689,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 
                                 # Check if there is an Icon. if not add a replacement
                                 if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                                    Icon = Gui.getIcon("preferences-workbenches")
-                                    ListWidgetItem.setIcon(Icon)
+                                    # Icon = Gui.getIcon("preferences-workbenches")
+                                    # ListWidgetItem.setIcon(Icon)
+                                    continue
 
                                 if Icon is not None and Icon.isNull() is False:
                                     ListWidgetItem.setIcon(Icon)
@@ -704,7 +709,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                             f"{CommandName} has no icon!", "Warning"
                                         )
                                     
-                        except Exception:
+                        except Exception as e:
                             continue            
 
         return
@@ -828,8 +833,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 
                                 # Check if there is an Icon. if not add a replacement
                                 if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                                    Icon = Gui.getIcon("preferences-workbenches")
-                                    ListWidgetItem.setIcon(Icon)
+                                    # Icon = Gui.getIcon("preferences-workbenches")
+                                    # ListWidgetItem.setIcon(Icon)
+                                    continue
 
                                 if Icon is not None and Icon.isNull() is False:
                                     ListWidgetItem.setIcon(Icon)
@@ -905,8 +911,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
                         # Check if there is an Icon. if not add a replacement
                         if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                            Icon = Gui.getIcon("preferences-workbenches")
-                            ListWidgetItem.setIcon(Icon)
+                            # Icon = Gui.getIcon("preferences-workbenches")
+                            # ListWidgetItem.setIcon(Icon)
+                            continue
                         
                         if Icon is not None and Icon.isNull() is False:
                             ListWidget_Commands.addItem(ListWidgetItem)
@@ -970,8 +977,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         
                         # Check if there is an Icon. if not add a replacement
                         if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                            Icon = Gui.getIcon("preferences-workbenches")
-                            ListWidgetItem.setIcon(Icon)
+                            # Icon = Gui.getIcon("preferences-workbenches")
+                            # ListWidgetItem.setIcon(Icon)
+                            continue
                         
                         if Icon is not None and Icon.isNull() is False:
                             ListWidgetItem.setIcon(Icon)
