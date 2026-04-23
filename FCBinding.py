@@ -3493,12 +3493,13 @@ class ModernMenu(RibbonBar):
                     break
         except Exception:
             pass        
-        # add the settingsmenu to the right toolbar
-        SettingsButton = QToolButton()
         # add the ribbon settings menu
-        SettingsButton.addAction(self.RibbonMenu.menuAction())
-        SettingsButton.setIcon(Gui.getIcon("Std_DlgParameter.svg"))
-        SettingsButton.setToolTip(translate("FreeCAD Ribbon", "Preferences") + "...")
+        SettingsMenu.addAction(self.RibbonMenu.menuAction())        
+        SettingsMenu.setToolTip(translate("FreeCAD Ribbon", "Preferences") + "...")
+        
+        # add the settingsmenu to the right toolbar
+        SettingsButton = QToolButton()   
+        SettingsButton.setIcon(Gui.getIcon("Std_DlgParameter.svg"))     
         SettingsButton.setFixedSize(
             self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize
         )
