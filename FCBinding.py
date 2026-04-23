@@ -901,7 +901,7 @@ class ModernMenu(RibbonBar):
         FloatingButton = QToolButton()
         FloatingButton.setObjectName("FloatButton")
         FloatingButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
-        FloatingButton.clicked.connect(self.ToggleDockWidget)
+        FloatingButton.clicked.connect(self.on_DockWidget_Toggled)
         FloatingButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2])
         FloatingButton.setToolTip(translate("FreeCAD Ribbon", "Set the ribbon docked or floating"))
         #
@@ -4953,7 +4953,7 @@ class ModernMenu(RibbonBar):
             pass
         return
 
-    def ToggleDockWidget(self):
+    def on_DockWidget_Toggled(self):
         # Get the DockWidget for the ribbon
         ribbonDock = mw.findChild(QDockWidget, "Ribbon")
 
@@ -4971,6 +4971,7 @@ class ModernMenu(RibbonBar):
         if ribbonDock.isFloating() is False:
             # If the DockWidget is docked, set it floating
             ribbonDock.setFloating(True)
+            
             # Increase the ribbon height
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             if self.RibbonHeight > 0:
@@ -4980,6 +4981,12 @@ class ModernMenu(RibbonBar):
                 ribbonDock.titleBarWidget().deleteLater()
             except Exception:
                 pass
+                                    
+            # Position the dialog in front of FreeCAD
+            centerPoint = mw.geometry().center()
+            Rectangle = ribbonDock.frameGeometry()
+            Rectangle.moveCenter(centerPoint)
+            ribbonDock.move(Rectangle.topLeft())
             return
         
 
@@ -6562,21 +6569,7 @@ class EventInspector(QObject):
                     try:
                         DockWidget_Ribbon.setTitleBarWidget(QWidget())
                     except Exception:
-                        pass
-                                    
-        # if event.type() == QEvent.Type.MouseButtonPress:
-        #     mw = Gui.getMainWindow()
-        #     RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
-        #     if event.button() == Qt.MouseButton.RightButton and RibbonBar.underMouse():
-        #         print(event)  
-                
-        # if event.type() == QEvent.Type.MouseButtonPress:
-        #     mw = Gui.getMainWindow()
-        #     RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
-        #     settingsMenu = RibbonBar.SettingsMenu
-        #     if settingsMenu is not None:
-        #         if event.button() == Qt.MouseButton.LeftButton and settingsMenu.underMouse():
-        #             print(event)                                          
+                        pass                                      
                                     
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
