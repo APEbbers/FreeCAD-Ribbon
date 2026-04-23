@@ -115,9 +115,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             
     def __init__(self):
         super(LoadDialog, self).__init__()
-        
-        
-        
+
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
@@ -224,8 +222,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.List_Workbenches = Data["List_Workbenches"]
         self.StringList_Toolbars = Data["StringList_Toolbars"]
         self.List_Commands = Data["List_Commands"]
-        # self.NoneIcon = Serialize_Ribbon.deserializeIcon(Data["NoneIcon"])
-        # print(self.NoneIcon)
 
         # test if List_Commands is correct
         i = 5
@@ -366,7 +362,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Connect the filter for the quick commands on the quickcommands tab
         def FilterWorkbench_NP():
             self.on_ListCategory_NP_TextChanged()
-            
 
         #
         # --- AddCOmmandsTab ------------------
@@ -379,8 +374,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         )
         
         # Connect the "CreateNewPanel" button
-        self.form.CreateNewPanel.clicked.connect(self.on_CreateNewPanel_clicked)
-        
+        self.form.CreateNewPanel.clicked.connect(self.on_CreateNewPanel_clicked)        
         
         #
         # --- CombinePanelsTab ------------------
