@@ -1073,11 +1073,10 @@ class ModernMenu(RibbonBar):
         # Check if an reload of the datafile is needed an show an message
         CacheFunctions.CheckDataFileVersion()
         
-        # layout: QVBoxLayout = self._mainLayout
-        # widget = QMainWindow(dockOptions=QMainWindow.DockOption.AllowNestedDocks)
-        # widget.setCentralWidget(QWidget())        
-        # widget.setFixedHeight(6)
-        # layout.addWidget(widget)
+        if Parameters.BETA_FUNCTIONS_ENABLED is True:
+                self.BetaFunctionsEnabled = True   
+        else:
+            self.BetaFunctionsEnabled = False 
         
         return
 
@@ -3670,12 +3669,8 @@ class ModernMenu(RibbonBar):
         # Add a beta button when showing the settings menu. 
         # Otherwise the button will be removed when using the context menus for the buttons
         def LoadBetaButton():
-            # Add a switch to enable beta functions
-            checkState = False
-            if Parameters.BETA_FUNCTIONS_ENABLED is True:
-                checkState = True
-                self.BetaFunctionsEnabled = True
-            switch = ToggleAction(self, "Enable béta functions", checkState)
+            # Add a switch to enable beta functions            
+            switch = ToggleAction(self, "Enable béta functions", Parameters.BETA_FUNCTIONS_ENABLED)
             switch.setFixedSize(40, 20)
             switch.setObjectName("bétaSwitch")
             toolTipText = (translate("FreeCAD Ribbon",
@@ -3702,7 +3697,14 @@ class ModernMenu(RibbonBar):
             switch.setToolTip(toolTipText)
             switch.checkStateChanged.connect(
                 lambda: self.on_ToggleBetaFunctions_toggled(switch.isChecked())
-            )           
+            )       
+            
+            if Parameters.BETA_FUNCTIONS_ENABLED is True:
+                self.BetaFunctionsEnabled = True
+                switch.setChecked(True)
+            else:
+                self.BetaFunctionsEnabled = False   
+                switch.setChecked(False)            
             
             # if present remove the old switch
             for action in SettingsMenu.actions():
@@ -4367,6 +4369,7 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", True)
             # print a message
             print(translate("FreeCAD Ribbon", "Ribbon UI: Béta functions enabled"))
+            Parameters.BETA_FUNCTIONS_ENABLED = True
             
             # Create a backup
             #
@@ -4387,6 +4390,7 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", False)
             # print a message
             print(translate("FreeCAD Ribbon", "Ribbon UI: Béta functions disabled"))
+            Parameters.BETA_FUNCTIONS_ENABLED = False
         return
 
     # endregion
