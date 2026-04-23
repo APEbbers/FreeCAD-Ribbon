@@ -30,6 +30,7 @@ from PySide.QtGui import (
     QDragMoveEvent,
     QDropEvent,
     QContextMenuEvent,
+    QMouseEvent,
     QIcon,
     QAction,
     QPixmap,
@@ -90,7 +91,6 @@ from PySide.QtWidgets import (
     QListWidget,
     QListWidgetItem,
     QAbstractButton,
-    
 )
 from PySide.QtCore import (
     Qt,
@@ -109,7 +109,7 @@ from PySide.QtCore import (
     QSettings,
     QSignalBlocker,
     QMimeData,
-    QEventLoop,
+    QEventLoop,  
 )
 from CustomWidgets import (
     CustomControls, 
@@ -273,6 +273,7 @@ class ModernMenu(RibbonBar):
     # Define the menus
     RibbonMenu = QMenu()
     HelpMenu = QMenu()
+    SettingsMenu = QMenu()
     OverlayMenu = None
     AccessoriesMenu = None
 
@@ -1071,6 +1072,12 @@ class ModernMenu(RibbonBar):
         
         # Check if an reload of the datafile is needed an show an message
         CacheFunctions.CheckDataFileVersion()
+        
+        # layout: QVBoxLayout = self._mainLayout
+        # widget = QMainWindow(dockOptions=QMainWindow.DockOption.AllowNestedDocks)
+        # widget.setCentralWidget(QWidget())        
+        # widget.setFixedHeight(6)
+        # layout.addWidget(widget)
         
         return
 
@@ -3464,7 +3471,7 @@ class ModernMenu(RibbonBar):
             # self.rightToolBar().addWidget(OverlayButton)
 
         # add a settings button with menu
-        SettingsMenu = QToolButton()
+        SettingsMenu = QMenu()
         # Get the freecad preference button
         editMenu = mw.findChildren(QMenu, "&Edit")[0]
         for action in editMenu.actions():
@@ -3486,22 +3493,24 @@ class ModernMenu(RibbonBar):
                     SettingsMenu.addAction(SaveAndRestore)
                     break
         except Exception:
-            pass
+            pass        
+        # add the settingsmenu to the right toolbar
+        SettingsButton = QToolButton()
         # add the ribbon settings menu
-        SettingsMenu.addAction(self.RibbonMenu.menuAction())
-        SettingsMenu.setIcon(Gui.getIcon("Std_DlgParameter.svg"))
-        SettingsMenu.setToolTip(translate("FreeCAD Ribbon", "Preferences") + "...")
-        SettingsMenu.setFixedSize(
+        SettingsButton.addAction(self.RibbonMenu.menuAction())
+        SettingsButton.setIcon(Gui.getIcon("Std_DlgParameter.svg"))
+        SettingsButton.setToolTip(translate("FreeCAD Ribbon", "Preferences") + "...")
+        SettingsButton.setFixedSize(
             self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize
         )
-        SettingsMenu.setStyleSheet(
+        SettingsButton.setStyleSheet(
             StyleMapping_Ribbon.ReturnStyleSheet(
                 control="toolbutton", padding_right="12px"
             )
-        )
-        SettingsMenu.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
-        # add the settingsmenu to the right toolbar
-        self.rightToolBar().addWidget(SettingsMenu)
+        )        
+        SettingsButton.setMenu(SettingsMenu)
+        SettingsButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+        self.rightToolBar().addWidget(SettingsButton)
 
         # Set the helpbutton
         self.helpRibbonButton().setEnabled(True)
@@ -3658,41 +3667,51 @@ class ModernMenu(RibbonBar):
             )
             self.rightToolBar().addWidget(CloseButton)
 
-        # Add a switch to enable beta functions
-        checkState = self.BetaFunctionsEnabled
-        if Parameters.BETA_FUNCTIONS_ENABLED is True:
-            checkState = True
-            self.BetaFunctionsEnabled = True
-        switch = ToggleAction(self, "Enable béta functions", checkState)
-        switch.setFixedSize(40, 20)
-        switch.setObjectName("bétaSwitch")
-        toolTipText = (translate("FreeCAD Ribbon",
-    """
-    Enables the following experimental functions:
-    - a new customisation enviroment. With this enviroment activated, the following customizations can be done per button:
-        - Enable or disable text.
-        - Set the button size.
-        - Set the button type to:
-            - Small  -> three rows of buttons, text on the right side.
-            - Medium -> two rows of buttons, text on the right side.
-            - Large -> One button row, text below the button.
-        - Reorder the buttons by dragging. Currently only drag within their panels is supported.
-        - Change the text of a button.
-        - Add and remove separators.
-        - Reorder panels by dragging.
-        - Change the title of a panel.
-        
-        To start the customisation enviroment, right click on the ribbon (outside the buttons) and click customize.
-        The customization enviroment is enabled and with a right click on a button, its properties can be changed.
-        Right click on the ribbon agian to save and exit the customisation enviroment.
-    """
-    ))
-        switch.setToolTip(toolTipText)
-        switch.checkStateChanged.connect(
-            lambda: self.on_ToggleBetaFunctions_toggled(switch.isChecked())
-        )           
-        # Now added to the settings menu
-        SettingsMenu.addAction(switch)
+        # Add a beta button when showing the settings menu. 
+        # Otherwise the button will be removed when using the context menus for the buttons
+        def LoadBetaButton():
+            # Add a switch to enable beta functions
+            checkState = False
+            if Parameters.BETA_FUNCTIONS_ENABLED is True:
+                checkState = True
+                self.BetaFunctionsEnabled = True
+            switch = ToggleAction(self, "Enable béta functions", checkState)
+            switch.setFixedSize(40, 20)
+            switch.setObjectName("bétaSwitch")
+            toolTipText = (translate("FreeCAD Ribbon",
+        """
+        Enables the following experimental functions:
+        - a new customisation enviroment. With this enviroment activated, the following customizations can be done per button:
+            - Enable or disable text.
+            - Set the button size.
+            - Set the button type to:
+                - Small  -> three rows of buttons, text on the right side.
+                - Medium -> two rows of buttons, text on the right side.
+                - Large -> One button row, text below the button.
+            - Reorder the buttons by dragging. Currently only drag within their panels is supported.
+            - Change the text of a button.
+            - Add and remove separators.
+            - Reorder panels by dragging.
+            - Change the title of a panel.
+            
+            To start the customisation enviroment, right click on the ribbon (outside the buttons) and click customize.
+            The customization enviroment is enabled and with a right click on a button, its properties can be changed.
+            Right click on the ribbon agian to save and exit the customisation enviroment.
+        """
+        ))
+            switch.setToolTip(toolTipText)
+            switch.checkStateChanged.connect(
+                lambda: self.on_ToggleBetaFunctions_toggled(switch.isChecked())
+            )           
+            
+            # if present remove the old switch
+            for action in SettingsMenu.actions():
+                if type(action) is ToggleAction:
+                    SettingsMenu.removeAction(action)
+            # Now added to the settings menu
+            SettingsMenu.addAction(switch)
+        # Connect the function to load the beta button
+        SettingsMenu.aboutToShow.connect(LoadBetaButton)
         
         # Add a expanding spacer to the right toolbar
         BeforeAction = self.rightToolBar().actions()[2]     
@@ -6541,8 +6560,19 @@ class EventInspector(QObject):
                     except Exception:
                         pass
                                     
-        if event.type() == QEvent.Type.ToolBarChange:
-            print(event)                                            
+        # if event.type() == QEvent.Type.MouseButtonPress:
+        #     mw = Gui.getMainWindow()
+        #     RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+        #     if event.button() == Qt.MouseButton.RightButton and RibbonBar.underMouse():
+        #         print(event)  
+                
+        # if event.type() == QEvent.Type.MouseButtonPress:
+        #     mw = Gui.getMainWindow()
+        #     RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+        #     settingsMenu = RibbonBar.SettingsMenu
+        #     if settingsMenu is not None:
+        #         if event.button() == Qt.MouseButton.LeftButton and settingsMenu.underMouse():
+        #             print(event)                                          
                                     
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
@@ -6664,7 +6694,9 @@ class run:
             ribbonDock.setTitleBarWidget(QWidget())
             ribbonDock.setContentsMargins(0, 0, 0, 0)
             ribbonDock.setWidget(ribbon)
-                                    
+            # Set the allowed areas to dock
+            ribbonDock.setAllowedAreas(Qt.DockWidgetArea.TopDockWidgetArea|Qt.DockWidgetArea.BottomDockWidgetArea)
+                                                
             # # make sure that there are no negative valules
             if Parameters.AUTOHIDE_RIBBON is True:
                 ribbonDock.setMaximumHeight(ribbon.RibbonMinimalHeight)

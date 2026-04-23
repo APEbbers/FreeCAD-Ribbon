@@ -116,6 +116,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     def __init__(self):
         super(LoadDialog, self).__init__()
         
+        
+        
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
@@ -358,6 +360,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Load the commands
         self.LoadCommands()
         
+        # Add all toolbar to the listboxes for the panels
+        self.LoadPanels()
+        
         # Connect the filter for the quick commands on the quickcommands tab
         def FilterWorkbench_NP():
             self.on_ListCategory_NP_TextChanged()
@@ -493,11 +498,11 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
                 # Define a new ListWidgetItem.
                 Icon = QIcon()
-                for item in self.List_WorkBenchIcons:
-                    if item[0] == WorkbenchName:
-                        Icon = item[1]
-                if Icon is None:
-                    Icon = Gui.getIcon(workbench[1])
+                Icon = Gui.getIcon(workbench[1])
+                if Icon.isNull() or Icon is None:
+                    for item in self.List_WorkBenchIcons:
+                        if item[0] == WorkbenchName:
+                            Icon = item[1]       
 
                 # Add the ListWidgetItem also to the categoryListWidgets
                 self.form.ListCategory_NP.addItem(
@@ -1897,6 +1902,34 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         PanelList_RD.sort(key=SortList)
 
         return PanelList_RD
+    
+    def LoadPanels(self):
+        self.form.CustomToolbarSelector_CP.clear()
+
+        # -- Custom panel tab --
+        self.form.CustomToolbarSelector_CP.addItem(
+            translate("FreeCAD Ribbon", "New"), "new"
+        )
+        try:
+            for WorkBenchName in self.Dict_CustomToolbars["customToolbars"]:
+                WorkBenchTitle = ""
+                for WorkBenchItem in self.List_Workbenches:
+                    if WorkBenchItem[0] == WorkBenchName:
+                        WorkBenchTitle = WorkBenchItem[2]
+                for CustomPanelTitle in self.Dict_CustomToolbars["customToolbars"][
+                    WorkBenchName
+                ]:
+                    if WorkBenchTitle != "":
+                        self.form.CustomToolbarSelector_CP.addItem(
+                            f'{CustomPanelTitle.replace("_custom", "")}, {WorkBenchTitle}'
+                        )
+        except Exception as e:
+            if Parameters.DEBUG_MODE is True:
+                StandardFunctions.Print(
+                    f"{e.with_traceback(e.__traceback__)}", "Warning"
+                )
+            pass
+        return
     
     def ReadJson(self, Section="All", JsonFile=""):
         # Open the JsonFile and load the data
