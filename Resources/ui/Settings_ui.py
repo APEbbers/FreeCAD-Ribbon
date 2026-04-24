@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsYktujv.ui'
+## Form generated from reading UI file 'SettingsoWuUwR.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
+from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
     QDoubleSpinBox, QFrame, QGridLayout, QGroupBox,
     QLabel, QPushButton, QScrollArea, QSizePolicy,
     QSlider, QSpacerItem, QSpinBox, QTabWidget,
@@ -49,7 +49,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 697, 1350))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, -562, 697, 1350))
         self.gridLayout_28 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_28.setObjectName(u"gridLayout_28")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -1291,31 +1291,45 @@ class Ui_Settings(object):
         self.Cancel = QPushButton(Settings)
         self.Cancel.setObjectName(u"Cancel")
 
-        self.gridLayout_7.addWidget(self.Cancel, 0, 3, 1, 1)
+        self.gridLayout_7.addWidget(self.Cancel, 1, 3, 1, 1)
 
         self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout_7.addItem(self.horizontalSpacer_2, 0, 1, 1, 1)
-
-        self.horizontalSpacer_11 = QSpacerItem(10, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_7.addItem(self.horizontalSpacer_11, 0, 4, 1, 1)
-
-        self.Reset = QPushButton(Settings)
-        self.Reset.setObjectName(u"Reset")
-
-        self.gridLayout_7.addWidget(self.Reset, 0, 0, 1, 1)
+        self.gridLayout_7.addItem(self.horizontalSpacer_2, 1, 1, 1, 1)
 
         self.GenerateJsonExit = QPushButton(Settings)
         self.GenerateJsonExit.setObjectName(u"GenerateJsonExit")
 
-        self.gridLayout_7.addWidget(self.GenerateJsonExit, 0, 2, 1, 1)
+        self.gridLayout_7.addWidget(self.GenerateJsonExit, 1, 2, 1, 1)
+
+        self.horizontalSpacer_11 = QSpacerItem(10, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_7.addItem(self.horizontalSpacer_11, 1, 4, 1, 1)
 
         self.HelpButton = QToolButton(Settings)
         self.HelpButton.setObjectName(u"HelpButton")
         self.HelpButton.setText(u"...")
 
-        self.gridLayout_7.addWidget(self.HelpButton, 0, 5, 1, 1)
+        self.gridLayout_7.addWidget(self.HelpButton, 1, 5, 1, 1)
+
+        self.Reset = QPushButton(Settings)
+        self.Reset.setObjectName(u"Reset")
+
+        self.gridLayout_7.addWidget(self.Reset, 1, 0, 1, 1)
+
+        self.LoadDialogs = QCheckBox(Settings)
+        self.LoadDialogs.setObjectName(u"LoadDialogs")
+
+        self.gridLayout_7.addWidget(self.LoadDialogs, 0, 0, 1, 1)
+
+        self.label_31 = QLabel(Settings)
+        self.label_31.setObjectName(u"label_31")
+        font4 = QFont()
+        font4.setPointSize(8)
+        font4.setItalic(True)
+        self.label_31.setFont(font4)
+
+        self.gridLayout_7.addWidget(self.label_31, 0, 1, 1, 2)
 
 
         self.gridLayout_36.addLayout(self.gridLayout_7, 1, 0, 1, 1)
@@ -1329,7 +1343,7 @@ class Ui_Settings(object):
         self.ShowText_Large.toggled.connect(self.EnableWrap_Large.setEnabled)
         self.FCOverlayEnabled.toggled.connect(self.UseButtonBackGround.setEnabled)
 
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Settings)
@@ -1438,10 +1452,12 @@ class Ui_Settings(object):
 #if QT_CONFIG(shortcut)
         self.Cancel.setShortcut(QCoreApplication.translate("Settings", u"Esc", None))
 #endif // QT_CONFIG(shortcut)
-        self.Reset.setText(QCoreApplication.translate("Settings", u"Reset", None))
         self.GenerateJsonExit.setText(QCoreApplication.translate("Settings", u"Close", None))
 #if QT_CONFIG(shortcut)
         self.GenerateJsonExit.setShortcut("")
 #endif // QT_CONFIG(shortcut)
+        self.Reset.setText(QCoreApplication.translate("Settings", u"Reset", None))
+        self.LoadDialogs.setText(QCoreApplication.translate("Settings", u"Load dialogs docked", None))
+        self.label_31.setText(QCoreApplication.translate("Settings", u"Load dialogs as panels.", None))
     # retranslateUi
 

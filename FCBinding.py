@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -53,7 +53,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -92,7 +92,7 @@ from PySide.QtWidgets import (
     QListWidgetItem,
     QAbstractButton,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1521,11 +1521,26 @@ class ModernMenu(RibbonBar):
                                 EnableControl.setVisible(True)
                                 
                         # Load the dialog
-                        # self.CreateNewPanel()
+                        # 
                         # Get the form
                         self.AddCommandsDialog = LoadAddCommands.LoadDialog()
-                        # Show the form
-                        self.AddCommandsDialog.form.show()
+                        if Parameters.DOCKED_DIALOGS is False:
+                            # Show the form
+                            self.AddCommandsDialog.form.show()
+                        else:
+                            RibbonLayoutDock = QDockWidget()
+                            # set the name of the object and the window title
+                            RibbonLayoutDock.setObjectName("RibbonLayout")
+                            RibbonLayoutDock.setWindowTitle("Ribbon Layout")
+                            RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
+                            RibbonLayoutDock.setWidget(self.AddCommandsDialog.form)
+                            # Set the allowed areas to dock
+                            RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
+                            # Set the featers: Dragable but not closable
+                            RibbonLayoutDock.setFeatures(~QDockWidget.DockWidgetFeature.DockWidgetClosable|QDockWidget.DockWidgetFeature.DockWidgetFloatable|QDockWidget.DockWidgetFeature.DockWidgetMovable)
+                            # Add the dockwidget
+                            mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)                      
+                        
                         return
                     if self.CustomizeEnabled is True:
                         self.on_Ok_Clicked()
@@ -1721,6 +1736,10 @@ class ModernMenu(RibbonBar):
         if self.AddCommandsDialog is not None:
             self.AddCommandsDialog.form.close()
             self.AddCommandsDialog = None
+            # Close the dockwidget is there is one
+            DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
+            if DockWidget is not None:
+                DockWidget.close()
             
         return
     
@@ -1805,6 +1824,12 @@ class ModernMenu(RibbonBar):
         if self.AddCommandsDialog is not None:
             self.AddCommandsDialog.form.close()
             self.AddCommandsDialog = None
+            # Close the dockwidget is there is one
+            DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
+            if DockWidget is not None:
+                DockWidget.close()
+        
+        return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                                 
         # get the size to set
@@ -3015,12 +3040,12 @@ class ModernMenu(RibbonBar):
         """
         Import selected workbench toolbars to ModernMenu section.
         """
-        if len(self.LastCustomized) > 0:
-            category = self.categories()[self.LastCustomized[1]]
-            if self.CustomizeEnabled is True and self.currentCategory() != category:            
-                self.setCurrentCategory(category)
-                StandardFunctions.Mbox(translate("FreeCAD Ribbon", "Close customize enviroment first!"), "", 0, "Warning")
-                return
+        # if len(self.LastCustomized) > 0:
+        #     category = self.categories()[self.LastCustomized[1]]
+        #     if self.CustomizeEnabled is True and self.currentCategory() != category:            
+        #         self.setCurrentCategory(category)
+        #         StandardFunctions.Mbox(translate("FreeCAD Ribbon", "Close customize enviroment first!"), "", 0, "Warning")
+        #         return
         
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             if Parameters.AUTOHIDE_RIBBON is False:
@@ -4026,8 +4051,22 @@ class ModernMenu(RibbonBar):
         
         # Get the form
         Dialog = LoadDesign_Ribbon.LoadDialog()
-        # Show the form
-        Dialog.form.show()
+        if Parameters.DOCKED_DIALOGS is False:
+            # Show the form
+            Dialog.form.show()
+        else:
+            RibbonLayoutDock = QDockWidget()
+            # set the name of the object and the window title
+            RibbonLayoutDock.setObjectName("RibbonLayout")
+            RibbonLayoutDock.setWindowTitle("Ribbon Layout")
+            RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
+            RibbonLayoutDock.setWidget(Dialog.form)
+            # Set the allowed areas to dock
+            RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
+            # Set the featers: Dragable but not closable
+            RibbonLayoutDock.setFeatures(~QDockWidget.DockWidgetFeature.DockWidgetClosable|QDockWidget.DockWidgetFeature.DockWidgetFloatable|QDockWidget.DockWidgetFeature.DockWidgetMovable)
+            # Add the dockwidget
+            mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
         # Disable the quick toolbar, righttoolbar and application menu
         self.rightToolBar().setDisabled(True)
@@ -4052,8 +4091,22 @@ class ModernMenu(RibbonBar):
         
         # Get the form
         Dialog = LoadSettings_Ribbon.LoadDialog()
-        # Show the form
-        Dialog.form.show()
+        if Parameters.DOCKED_DIALOGS is False:
+            # Show the form
+            Dialog.form.show()
+        else:
+            RibbonLayoutDock = QDockWidget()
+            # set the name of the object and the window title
+            RibbonLayoutDock.setObjectName("RibbonSettings")
+            RibbonLayoutDock.setWindowTitle("Ribbon Preferences")
+            RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
+            RibbonLayoutDock.setWidget(Dialog.form)
+            # Set the allowed areas to dock
+            RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
+            # Set the featers: Dragable but not closable
+            RibbonLayoutDock.setFeatures(~QDockWidget.DockWidgetFeature.DockWidgetClosable|QDockWidget.DockWidgetFeature.DockWidgetFloatable|QDockWidget.DockWidgetFeature.DockWidgetMovable)
+            # Add the dockwidget
+            mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
         # Disable the quick toolbar, righttoolbar and application menu
         self.rightToolBar().setDisabled(True)
@@ -4079,6 +4132,14 @@ class ModernMenu(RibbonBar):
         Gui.updateGui()
 
         # self.loadDesignMenu = False
+        
+        DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
+        if DockWidget is not None:
+            DockWidget.close()
+        
+        DockWidget = mw.findChild(QDockWidget, "RibbonSettings")
+        if DockWidget is not None:
+            DockWidget.close()
 
         return
 

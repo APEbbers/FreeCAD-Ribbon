@@ -37,6 +37,7 @@ STYLESHEET_LOCATION = os.path.join(
     )
 
 DefaultSettings = {
+    "Docked_Dialogs": bool(False),
     "ConfigDir":os.path.join(App.getUserAppDataDir(), "RibbonUI_Data"),
     "ImportLocation": os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", ""),
     "ExportLocation": os.path.join(App.getUserAppDataDir(), "RibbonUI_Data", ""),
@@ -212,7 +213,12 @@ class Parameters:
     }
     # endregion
 
-
+    # region - Set Windows to be docked option ------------------------------------------------------------------------------------------------
+    if Settings.GetBoolSetting("Docked_Dialogs") is None:
+        DOCKED_DIALOGS = bool(DefaultSettings["Docked_Dialogs"])
+        Settings.SetBoolSetting("Docked_Dialogs", DOCKED_DIALOGS)
+    DOCKED_DIALOGS = Settings.GetBoolSetting("Docked_Dialogs")
+    # endregion
 
     # region - Define the resources ----------------------------------------------------------------------------------------
     ICON_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "icons")
@@ -642,4 +648,3 @@ class Parameters:
         Settings.SetIntSetting("ButtonSpacing", BUTTON_SPACING)
     BUTTON_SPACING = Settings.GetIntSetting("ButtonSpacing")
     # endregion
-
