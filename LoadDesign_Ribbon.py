@@ -40,6 +40,8 @@ from PySide.QtWidgets import (
     QLabel,
     QProgressBar,
     QApplication,
+    QDockWidget,
+    QMainWindow,
 )
 from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
 
@@ -78,7 +80,7 @@ import Design_ui as Design_ui
 translate = App.Qt.translate
 
 # Get the main window of FreeCAD
-mw = Gui.getMainWindow()
+mw: QMainWindow = Gui.getMainWindow()
 
 
 class LoadDialog(Design_ui.Ui_Form, QObject):
@@ -3476,6 +3478,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         Parameters_Ribbon.Settings.SetIntSetting(
             "LayoutDialog_Width", self.form.width()
         )
+        
+        DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
+        if DockWidget is not None:
+            DockWidget.close()
         # Emit a close signal
         # self.closeSignal.emit()
         # Close the form
@@ -3497,6 +3503,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         Parameters_Ribbon.Settings.SetIntSetting(
             "LayoutDialog_Width", self.form.width()
         )
+        DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
+        if DockWidget is not None:
+            DockWidget.close()
         # Emit a close signal
         # self.closeSignal.emit()
         # Close the form

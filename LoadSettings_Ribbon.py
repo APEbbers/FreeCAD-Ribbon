@@ -33,12 +33,14 @@ from PySide.QtWidgets import (
     QLabel,
     QTabWidget,
     QSizePolicy,
+    QDockWidget,
     QPushButton,
     QLineEdit,
     QWidget,
     QGroupBox,
     QMenu,
     QApplication,
+    QMainWindow,
 )
 from PySide.QtGui import QIcon, QPixmap, QColor, QBrush, QPaintEvent, QPen, QPainter
 
@@ -67,6 +69,9 @@ sys.path.append(pathBackup)
 
 # import graphical created Ui. (With QtDesigner or QtCreator)
 import Settings_ui as Settings_ui
+
+# Get the main window of FreeCAD
+mw: QMainWindow = Gui.getMainWindow()
 
 # Define the translation
 translate = App.Qt.translate
@@ -1486,6 +1491,10 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         Parameters_Ribbon.Settings.SetIntSetting("RibbonMinimumHeight", self.OriginalValues["RibbonMinimumHeight"])
         Parameters_Ribbon.Settings.SetIntSetting("ButtonSpacing", self.OriginalValues["ButtonSpacing"])
 
+        DockWidget = mw.findChild(QDockWidget, "RibbonSettings")
+        if DockWidget is not None:
+            DockWidget.close()
+
         # Emit a close signal
         self.closeSignal.emit()
         # Close the form
@@ -1652,6 +1661,10 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         Parameters_Ribbon.Settings.SetIntSetting("RibbonMinimumHeight", self.ValuesToUpdate["RibbonMinimumHeight"])
         Parameters_Ribbon.Settings.SetIntSetting("ButtonSpacing", self.ValuesToUpdate["ButtonSpacing"])
 
+        DockWidget = mw.findChild(QDockWidget, "RibbonSettings")
+        if DockWidget is not None:
+            DockWidget.close()
+        
         # Emit a close signal
         self.closeSignal.emit()
         # Close the form
