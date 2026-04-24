@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -53,7 +53,7 @@ from PySide6.QtGui import (
     QScreen,
     QPen,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -92,7 +92,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     QAbstractButton,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1533,11 +1533,9 @@ class ModernMenu(RibbonBar):
                             RibbonLayoutDock.setObjectName("RibbonLayout")
                             RibbonLayoutDock.setWindowTitle("Ribbon Layout")
                             RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
-                            RibbonLayoutDock.setWidget(self.AddCommandsDialog.form)
+                            RibbonLayoutDock.setWidget(self.AddCommandsDialog.form)                            
                             # Set the allowed areas to dock
                             RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
-                            # Set the featers: Dragable but not closable
-                            RibbonLayoutDock.setFeatures(~QDockWidget.DockWidgetFeature.DockWidgetClosable|QDockWidget.DockWidgetFeature.DockWidgetFloatable|QDockWidget.DockWidgetFeature.DockWidgetMovable)
                             # Add the dockwidget
                             mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)                      
                         
@@ -1602,7 +1600,7 @@ class ModernMenu(RibbonBar):
             if item[1] is False:
                 item[0].setDisabled(True)
             else:
-                item[0].setEnabled(True)                                
+                item[0].setEnabled(True)
         Gui.updateGui()       
 
         # update the ribbonstructure before writing it to disk
@@ -4063,8 +4061,6 @@ class ModernMenu(RibbonBar):
             RibbonLayoutDock.setWidget(Dialog.form)
             # Set the allowed areas to dock
             RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
-            # Set the featers: Dragable but not closable
-            RibbonLayoutDock.setFeatures(~QDockWidget.DockWidgetFeature.DockWidgetClosable|QDockWidget.DockWidgetFeature.DockWidgetFloatable|QDockWidget.DockWidgetFeature.DockWidgetMovable)
             # Add the dockwidget
             mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
@@ -4103,8 +4099,6 @@ class ModernMenu(RibbonBar):
             RibbonLayoutDock.setWidget(Dialog.form)
             # Set the allowed areas to dock
             RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
-            # Set the featers: Dragable but not closable
-            RibbonLayoutDock.setFeatures(~QDockWidget.DockWidgetFeature.DockWidgetClosable|QDockWidget.DockWidgetFeature.DockWidgetFloatable|QDockWidget.DockWidgetFeature.DockWidgetMovable)
             # Add the dockwidget
             mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
@@ -4130,17 +4124,6 @@ class ModernMenu(RibbonBar):
         self.quickAccessToolBar().setEnabled(True)
         self.applicationOptionButton().setEnabled(True)
         Gui.updateGui()
-
-        # self.loadDesignMenu = False
-        
-        DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
-        if DockWidget is not None:
-            DockWidget.close()
-        
-        DockWidget = mw.findChild(QDockWidget, "RibbonSettings")
-        if DockWidget is not None:
-            DockWidget.close()
-
         return
 
     def buildPanels(self):
@@ -6632,7 +6615,7 @@ class EventInspector(QObject):
                         DockWidget_Ribbon.setTitleBarWidget(QWidget())
                     except Exception:
                         pass                                      
-                                    
+            
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
             mw.setWindowState(Qt.WindowState.WindowMaximized)

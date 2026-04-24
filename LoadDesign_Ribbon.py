@@ -3457,6 +3457,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             if answer == "yes":
                 StandardFunctions.restart_freecad()
 
+            DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
+            if DockWidget is not None:
+                DockWidget.deleteLater()
+            
             self.form.close()
         return
 
@@ -3481,7 +3485,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         
         DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
         if DockWidget is not None:
-            DockWidget.close()
+            DockWidget.deleteLater()
         # Emit a close signal
         # self.closeSignal.emit()
         # Close the form
@@ -3505,7 +3509,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         )
         DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
         if DockWidget is not None:
-            DockWidget.close()
+            DockWidget.deleteLater()
         # Emit a close signal
         # self.closeSignal.emit()
         # Close the form

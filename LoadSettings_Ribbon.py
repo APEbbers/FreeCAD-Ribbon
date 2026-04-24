@@ -51,6 +51,7 @@ import Parameters_Ribbon
 from Parameters_Ribbon import DefaultSettings
 from Parameters_Ribbon import Parameters
 import webbrowser
+import FCBinding
 
 # Get the resources
 ConfigDirectory = Parameters.CONFIG_DIR
@@ -1491,10 +1492,11 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         Parameters_Ribbon.Settings.SetIntSetting("RibbonMinimumHeight", self.OriginalValues["RibbonMinimumHeight"])
         Parameters_Ribbon.Settings.SetIntSetting("ButtonSpacing", self.OriginalValues["ButtonSpacing"])
 
+        # Close the dockwidget as well, if there is one
         DockWidget = mw.findChild(QDockWidget, "RibbonSettings")
         if DockWidget is not None:
-            DockWidget.close()
-
+            DockWidget.deleteLater()
+        
         # Emit a close signal
         self.closeSignal.emit()
         # Close the form
@@ -1661,10 +1663,11 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         Parameters_Ribbon.Settings.SetIntSetting("RibbonMinimumHeight", self.ValuesToUpdate["RibbonMinimumHeight"])
         Parameters_Ribbon.Settings.SetIntSetting("ButtonSpacing", self.ValuesToUpdate["ButtonSpacing"])
 
+        # Close the dockwidget as well, if there is one
         DockWidget = mw.findChild(QDockWidget, "RibbonSettings")
         if DockWidget is not None:
-            DockWidget.close()
-        
+            DockWidget.deleteLater()
+
         # Emit a close signal
         self.closeSignal.emit()
         # Close the form
