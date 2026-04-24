@@ -294,6 +294,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # region - load all settings
         #
         # General
+        self.form.LoadDialogs.setChecked(Parameters.DOCKED_DIALOGS)
         self.form.EnableBackup.setChecked(Parameters.ENABLE_BACKUP)
         self.form.label_4.setText(Parameters.BACKUP_LOCATION)
         self.form.TabbarStyle.setCurrentIndex(Parameters.TABBAR_STYLE)
@@ -521,6 +522,8 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
 
         # region - connect controls with functions----------------------------------------------------
         #
+        # Connect Load dialogs as dockwidgets
+        self.form.LoadDialogs.clicked.connect(self.on_LoadDialogs_clicked)
         # Connect Backup
         self.form.EnableBackup.clicked.connect(self.on_EnableBackup_clicked)
         self.form.BackUpLocation.clicked.connect(self.on_BackUpLocation_clicked)
@@ -733,6 +736,17 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
 
     # region - Control functions----------------------------------------------------------------------
 
+    def on_LoadDialogs_clicked(self):
+        if self.form.EnableBackup.isChecked() is True:
+            self.ValuesToUpdate["Docked_Dialogs"] = True
+            self.Backup = True
+        if self.form.EnableBackup.isChecked() is False:
+            self.ValuesToUpdate["Docked_Dialogs"] = False
+            self.Backup = False
+
+        self.settingChanged = True
+        return
+    
     def on_EnableBackup_clicked(self):
         if self.form.EnableBackup.isChecked() is True:
             self.ValuesToUpdate["BackupEnabled"] = True
@@ -1316,6 +1330,10 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
 
     @staticmethod
     def on_Cancel_clicked(self):
+        # Save docked dialogs
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "Docked_Dialogs", self.OriginalValues["Docked_Dialogs"]
+        )
         # Save backup settings
         Parameters_Ribbon.Settings.SetBoolSetting(
             "BackupEnabled", self.OriginalValues["BackupEnabled"]
@@ -1474,6 +1492,10 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
 
     @staticmethod
     def on_Close_clicked(self):
+        # Save docked dialogs
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "Docked_Dialogs", self.ValuesToUpdate["Docked_Dialogs"]
+        )
         # Save backup settings
         Parameters_Ribbon.Settings.SetBoolSetting(
             "BackupEnabled", self.ValuesToUpdate["BackupEnabled"]
@@ -1654,6 +1676,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
     @staticmethod
     def on_Reset_clicked(self):
         # load all settings
+        self.form.LoadDialogs.setChecked(DefaultSettings["Docked_Dialogs"])
         self.form.EnableBackup.setChecked(DefaultSettings["BackupEnabled"])
         self.form.label_4.setText(DefaultSettings["BackupFolder"])
         self.form.TabbarStyle.setCurrentIndex(DefaultSettings["TabBar_Style"])
