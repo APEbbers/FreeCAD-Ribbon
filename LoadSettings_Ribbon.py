@@ -75,6 +75,7 @@ translate = App.Qt.translate
 class LoadDialog(Settings_ui.Ui_Settings, QObject):
     # Store the current values before change
     OriginalValues = {
+        "Docked_Dialogs": Parameters.DOCKED_DIALOGS,
         "BackupEnabled": Parameters.ENABLE_BACKUP,
         "BackupFolder": Parameters.BACKUP_LOCATION,
         "TabBar_Style": Parameters.TABBAR_STYLE,
@@ -127,6 +128,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
 
     # Store the current values before change
     ValuesToUpdate = {
+        "Docked_Dialogs": Parameters.DOCKED_DIALOGS,
         "BackupEnabled": Parameters.ENABLE_BACKUP,
         "BackupFolder": Parameters.BACKUP_LOCATION,
         "TabBar_Style": Parameters.TABBAR_STYLE,
