@@ -747,12 +747,12 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
     def on_LoadDialogs_clicked(self):
         if self.form.LoadDialogs.isChecked() is True:
             self.ValuesToUpdate["Docked_Dialogs"] = True
-            self.Backup = True
+            Parameters.DOCKED_DIALOGS = True
         if self.form.LoadDialogs.isChecked() is False:
             self.ValuesToUpdate["Docked_Dialogs"] = False
-            self.Backup = False
+            Parameters.DOCKED_DIALOGS = False
 
-        self.settingChanged = True
+        # self.settingChanged = True
         return
     
     def on_EnableBackup_clicked(self):
