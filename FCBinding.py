@@ -1737,7 +1737,7 @@ class ModernMenu(RibbonBar):
             # Close the dockwidget is there is one
             DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
             if DockWidget is not None:
-                DockWidget.close()
+                DockWidget.deleteLater()
             
         return
     
@@ -1825,7 +1825,7 @@ class ModernMenu(RibbonBar):
             # Close the dockwidget is there is one
             DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
             if DockWidget is not None:
-                DockWidget.close()
+                DockWidget.deleteLater()
         
         return
         
