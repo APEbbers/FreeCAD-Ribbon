@@ -1195,6 +1195,10 @@ class ModernMenu(RibbonBar):
         self.workBenchDict["quickAccessCommands"] = self.ribbonStructure["quickAccessCommands"]
         self.workBenchDict["newPanels"] = self.ribbonStructure["newPanels"]
         self.workBenchDict["dropdownButtons"] = self.ribbonStructure["dropdownButtons"]
+        self.workBenchDict["ignoredToolbars"] = self.ribbonStructure["ignoredToolbars"]
+        self.workBenchDict["ignoredWorkbenches"] = self.ribbonStructure["ignoredWorkbenches"]
+        self.workBenchDict["iconOnlyToolbars"] = self.ribbonStructure["iconOnlyToolbars"]
+        self.workBenchDict["customToolbars"] = self.ribbonStructure["customToolbars"]
     
         # If betaFunctions is enabled, coninue
         if self.BetaFunctionsEnabled is True:
@@ -1523,7 +1527,7 @@ class ModernMenu(RibbonBar):
                         # Load the dialog
                         # 
                         # Get the form
-                        self.AddCommandsDialog = LoadAddCommands.LoadDialog()
+                        self.AddCommandsDialog = LoadAddCommands.LoadDialog(self.workBenchDict)
                         if Parameters.DOCKED_DIALOGS is False:
                             # Show the form
                             self.AddCommandsDialog.form.show()
@@ -1604,7 +1608,8 @@ class ModernMenu(RibbonBar):
         Gui.updateGui()       
 
         # update the ribbonstructure before writing it to disk
-        self.ribbonStructure["workbenches"][workbenchName] = self.workBenchDict["workbenches"][workbenchName]
+        # self.ribbonStructure["workbenches"][workbenchName] = self.workBenchDict["workbenches"][workbenchName]
+        self.ribbonStructure.update(self.workBenchDict)
 
         # Restore the original panel with the overflow menu
         panels = {} # Needed to update the panel dict of the currentCategory
@@ -1709,9 +1714,8 @@ class ModernMenu(RibbonBar):
                     separator.setFixedWidth(6)
                                                                                                             
         # Clear the list with the long panels, so that it can be filled again next time
-        self.longPanels.clear()                        
-        panel = None
-        
+        self.longPanels.clear()
+
         # Save the quickcommands order to the ribbon structure
         self.ribbonStructure["quickAccessCommands"] = self.quickAccessCommands
         self.ribbonStructure["newPanels"] = self.workBenchDict["newPanels"]
@@ -1770,6 +1774,10 @@ class ModernMenu(RibbonBar):
         for title, objPanel in self.currentCategory().panels().items():
             # If it is an new panel without a set title, remove it
             if objPanel.title() == "<New panel>":
+                objPanel.close()
+                continue
+            # If the panel is not in the ribbon structure, remove it
+            if objPanel.objectName() not in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]:
                 objPanel.close()
                 continue
             
@@ -2243,7 +2251,7 @@ class ModernMenu(RibbonBar):
             count = 0
             parent = widget.parent()
             panel = RibbonPanel()
-            while (count < 20):
+            while (count < 100):
                 try:
                     try:    
                         parent.setAcceptDrop(True)
@@ -2252,6 +2260,7 @@ class ModernMenu(RibbonBar):
                     parent = parent.parent()
                     if type(parent) is RibbonPanel:
                         panel = parent
+                        break
                     count = count + 1
                 except Exception:
                     break
@@ -5241,6 +5250,8 @@ class ModernMenu(RibbonBar):
                 title=title,
                 showPanelOptionButton=True,
             )
+            # Update the dict of the currentCategory with the new panel
+            self.currentCategory()._panels[title] = panel
         panel.setObjectName(panelName)
         panel.panelOptionButton().hide()
         panel.setAcceptDrops(True)

@@ -40,6 +40,7 @@ from PySide.QtWidgets import (
     QLineEdit,
     QToolBar,
     QToolButton,
+    QDockWidget,
 )
 from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent
 import sys
@@ -112,9 +113,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     NoneIcon = QIcon()
     
     DialogClosed = False
+    
+    workBenchDict = {}
             
-    def __init__(self):
+    def __init__(self, workBenchDict):
         super(LoadDialog, self).__init__()
+        
+        self.workBenchDict = workBenchDict
 
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
@@ -747,18 +752,18 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     def on_MoveUpPanelCommand_CP_clicked(self):
         self.MoveItem(ListWidget=self.form.PanelSelected_CP, Up=True)
 
-        # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+        # # Enable the apply button
+        # if self.CheckChanges() is True:
+        #     self.form.UpdateJson.setEnabled(True)
 
         return
 
     def on_MoveDownPanelCommand_CP_clicked(self):
         self.MoveItem(ListWidget=self.form.PanelSelected_CP, Up=False)
 
-        # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+        # # Enable the apply button
+        # if self.CheckChanges() is True:
+        #     self.form.UpdateJson.setEnabled(True)
 
         return
 
@@ -834,13 +839,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 if IsInList is False:
                                     self.form.PanelSelected_CP.addItem(ListWidgetItem)
 
-        # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
+        # # Enable the apply button
+        # if self.CheckChanges() is True:
+        #     self.form.UpdateJson.setEnabled(True)
 
         return
 
-    def on_AddCustomPanel_CP_clicked(self):
+    def on_AddCustomPanel_CP_clicked(self):        
         # define the suffix
         Suffix = "_custom"
         CustomPanelTitle = ""
@@ -896,7 +901,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
                     # Create or modify the dict that will be entered
                     StandardFunctions.add_keys_nested_dict(
-                        self.Dict_CustomToolbars,
+                        self.workBenchDict,
                         [
                             "customToolbars",
                             WorkBenchName,
@@ -907,7 +912,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     )
 
                     # Update the dict
-                    self.Dict_CustomToolbars["customToolbars"][WorkBenchName][
+                    self.workBenchDict["customToolbars"][WorkBenchName][
                         CustomPanelTitle + Suffix
                     ]["commands"][MenuName] = OriginalToolbar
 
@@ -930,23 +935,47 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             )
 
             # Add the order of panels to the Json file
-            ToolbarOrder = []
-            for i2 in range(self.form.PanelOrder_RD.count()):
-                ToolbarOrder.append(
-                    self.form.PanelOrder_RD.item(i2).data(Qt.ItemDataRole.UserRole)
-                )
             StandardFunctions.add_keys_nested_dict(
-                self.Dict_RibbonCommandPanel,
+                self.workBenchDict,
                 ["workbenches", WorkBenchName, "toolbars", "order"],
             )
-            self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][
+            ToolbarOrder = self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][
                 "order"
-            ] = ToolbarOrder
+            ]
+            ToolbarOrder.append(CustomPanelTitle + Suffix)
 
-        # Enable the apply button
-        if self.CheckChanges() is True:
-            self.form.UpdateJson.setEnabled(True)
-
+        # Get the ribbon
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+        # Update the workBenchDict in the Ribbon
+        RibbonBar.workBenchDict.update(self.workBenchDict)
+        # Create the new panel in the ribbon
+        newPanel = RibbonBar.CreatePanel(
+            workbenchName=WorkBenchName,
+            panelName=CustomPanelTitle + Suffix,
+            addPanel=True,
+            dict=self.workBenchDict,
+            ignoreColumnLimit=True,
+            showEnableControl=True,
+            ActivateButtons=True
+            )
+        # Add the newPanel to the list of longPanels
+        RibbonBar.longPanels.append(newPanel)
+        # Remove the original panels
+        for key, value in self.workBenchDict["customToolbars"][WorkBenchName][CustomPanelTitle + Suffix]["commands"].items():
+            for title, objPanel in RibbonBar.currentCategory().panels().items():
+                if objPanel.objectName() == value:
+                    # hide the enable checkboxes and hide the panel if it is unchecked
+                    titleLayout = objPanel._titleLayout
+                    EnableControl = titleLayout.itemAt(0).widget()
+                    if EnableControl is not None:
+                        EnableControl.setCheckState(Qt.CheckState.Unchecked) 
+                        # Hide the panel
+                        objPanel.close()
+                        # Write the state to the structure
+                        StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", WorkBenchName, "toolbars", objPanel.objectName(), "Enabled"])
+                        self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][objPanel.objectName()]["Enabled"] = False
+                        # Update the workBenchDict in the Ribbon
+                        RibbonBar.workBenchDict.update(self.workBenchDict)
         return
 
     def on_CustomToolbarSelector_CP_activated(self):
@@ -1159,7 +1188,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
     def on_ReloadWB_clicked(self, resetTexts=False, RestartFreeCAD=False):
         # minimize the dialog
-        self.form.hide()
+        DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
+        if DockWidget is None:
+            self.form.hide()
         
         # Create the data file
         CacheFunctions.CreateCache()
@@ -1174,7 +1205,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             # else:
             #     self.closeSignal.emit()
         # show the dialog
-        self.form.show()
+        if DockWidget is None:
+            self.form.show()
         return
     # endregion
     
