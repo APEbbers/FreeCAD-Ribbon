@@ -322,37 +322,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 )
             pass
 
-        # add commands from newpanels to the list of commands
-        try:
-            for NewPanelWorkBench in self.Dict_NewPanels["newPanels"]:
-                for NewPanel in self.Dict_NewPanels["newPanels"][NewPanelWorkBench]:
-                    for NewPanelCommand in self.Dict_NewPanels["newPanels"][
-                        NewPanelWorkBench
-                    ][NewPanel]:
-                        # get the icon for this command
-                        if CommandInfoCorrections(NewPanelCommand[0])["pixmap"] != "":
-                            IconName = CommandInfoCorrections(NewPanelCommand[0])[
-                                "pixmap"
-                            ]
-                        else:
-                            IconName = ""
-                        MenuName = CommandInfoCorrections(NewPanelCommand[0])[
-                            "menuText"
-                        ].replace("&", "")
-                        MenuNameTranslated = CommandInfoCorrections(NewPanelCommand[0])[
-                            "ActionText"
-                        ].replace("&", "")
-                        self.List_Commands.append(
-                            [
-                                NewPanelCommand[0],
-                                IconName,
-                                MenuName,
-                                NewPanelWorkBench,
-                                MenuNameTranslated,
-                            ]
-                        )
-        except Exception:
-            pass
         # endregion
 
         # Add the workbenches
@@ -1175,14 +1144,20 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     def on_Cancel_Clicked(self):
         if self.DialogClosed is False:
             RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")        
-            RibbonBar.on_Cancel_Clicked()
+            for category in RibbonBar.CustomizedCategories:
+                RibbonBar.setCurrentCategory(category)
+                RibbonBar.on_Cancel_Clicked()
+            RibbonBar.CustomizedCategories.clear()
         return
         
     def on_Ok_Clicked(self):
         self.DialogClosed = True
         if self.DialogClosed is True:
-            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")        
-            RibbonBar.on_Ok_Clicked()
+            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")       
+            for category in RibbonBar.CustomizedCategories:
+                RibbonBar.setCurrentCategory(category) 
+                RibbonBar.on_Ok_Clicked()
+            RibbonBar.CustomizedCategories.clear()
             self.DialogClosed = False
         return
         
