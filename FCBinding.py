@@ -3076,12 +3076,12 @@ class ModernMenu(RibbonBar):
         """
         Import selected workbench toolbars to ModernMenu section.
         """
-        # if len(self.LastCustomized) > 0:
-        #     category = self.categories()[self.LastCustomized[1]]
-        #     if self.CustomizeEnabled is True and self.currentCategory() != category:            
-        #         self.setCurrentCategory(category)
-        #         StandardFunctions.Mbox(translate("FreeCAD Ribbon", "Close customize enviroment first!"), "", 0, "Warning")
-        #         return
+        if len(self.LastCustomized) > 0:
+            category = self.categories()[self.LastCustomized[1]]
+            if self.CustomizeEnabled is True and self.currentCategory() != category:            
+                self.setCurrentCategory(category)
+                StandardFunctions.Mbox(translate("FreeCAD Ribbon", "Close customize enviroment first!"), "", 0, "Warning")
+                return
         
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             if Parameters.AUTOHIDE_RIBBON is False:
