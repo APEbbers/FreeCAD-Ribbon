@@ -1768,8 +1768,18 @@ class ModernMenu(RibbonBar):
         Dict = {}
         with open(Parameters.RIBBON_STRUCTURE_JSON, "r") as file:
             Dict.update(json.load(file))
-
-            # Restore the original panel with the overflow menu
+            
+        # # Remove panels that newly added by combining panels
+        # panelsToRemove = []
+        # for title, objPanel in self.currentCategory().panels().items():
+        #     if workbenchName in self.ribbonStructure["customToolbars"]:
+        #         if objPanel.objectName() not in self.ribbonStructure["customToolbars"][workbenchName]:
+        #             panelsToRemove.append(title)
+        # for panel in panelsToRemove:
+        #     self.currentCategory().panels().pop(panel)
+        #     self.currentCategory()._panels.pop(panel)
+        
+        # Restore the original panel with the overflow menu
         panels = {} # Needed to update the panel dict of the currentCategory
         for title, objPanel in self.currentCategory().panels().items():
             # If it is an new panel without a set title, remove it
@@ -1781,30 +1791,49 @@ class ModernMenu(RibbonBar):
                 objPanel.close()
                 continue
             
-            # Create keys if there are not existing yet for the temporary panel dict
-            StandardFunctions.add_keys_nested_dict(panels, [title])
-
             # Create a panel and replace the long panel with this one
-            newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=Dict)
-            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-            self.setPanelProperties(newPanel)
-            try:
-                self.currentCategory().replacePanel(objPanel, newPanel)
-            except Exception:
-                pass
-            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-            self.setPanelProperties(newPanel)
-            # Close the old panel
-            objPanel.close()
-            # Update the temporary panel dict
-            panels[title] = newPanel   
+            if objPanel.objectName().endswith("_custom") is False:
+                # Create keys if there are not existing yet for the temporary panel dict
+                StandardFunctions.add_keys_nested_dict(panels, [title])
+
+                newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=Dict)
+                if newPanel is None:
+                    continue
+                # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                # if newPanel is not None:
+                self.setPanelProperties(newPanel)
+                try:
+                    self.currentCategory().replacePanel(objPanel, newPanel)
+                except Exception:
+                    pass
+                # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                # if newPanel is not None:
+                self.setPanelProperties(newPanel)
+                # Close the old panel
+                objPanel.close()
+                # Update the temporary panel dict
+                panels[title] = newPanel   
                                                                                             
         # Update the panel dict of the current catergory with the temporary panel dict
-        self.currentCategory()._panels = panels
+        # self.currentCategory()._panels = panels
+        self.currentCategory()._panels.update(panels)
         
+        # Remove panels that newly added by combining panels
+        for objPanel in self.longPanels:
+            try:
+                if objPanel.objectName() not in self.ribbonStructure["customToolbars"][workbenchName]:  
+                    objPanel.close()
+            except Exception:
+                pass
+            try:
+                if workbenchName not in self.ribbonStructure["customToolbars"]:
+                    objPanel.close()
+            except Exception:
+                pass
+
         # Restore the ribbonstructure
         self.ribbonStructure = Dict
-        
+                
         # Set the buttonstate back as it was
         for title, objPanel in self.currentCategory().panels().items():
             # Get the panel name and the gridlayout
@@ -1825,7 +1854,7 @@ class ModernMenu(RibbonBar):
                     separator.setEnabled(False)
                     # Set the separator to its original width
                     separator.setFixedWidth(6)
-                    
+                   
         # Close the AddCommands dialog
         if self.AddCommandsDialog is not None:
             self.AddCommandsDialog.form.close()
@@ -4549,14 +4578,17 @@ class ModernMenu(RibbonBar):
 
         return Toolbars
 
-    def List_AddCustomToolBarToWorkbench(self, workbenchName, CustomToolbar):
+    def List_AddCustomToolBarToWorkbench(self, workbenchName, CustomToolbar, Dict = None):
         ButtonList = []
+        
+        if Dict is None:
+            Dict = self.customToolbars
 
         # Get the commands from the custom panel
-        if workbenchName in self.customToolbars:
-            for toolbar in self.customToolbars[workbenchName]:
+        if workbenchName in Dict:
+            for toolbar in Dict[workbenchName]:
                 if CustomToolbar.lower() == toolbar.lower():
-                    Commands = self.customToolbars[workbenchName][
+                    Commands = Dict[workbenchName][
                         toolbar
                     ]["commands"]
 
@@ -5341,7 +5373,7 @@ class ModernMenu(RibbonBar):
             
         # Add custom panels
         if panelName.endswith("_custom"):
-            customList = self.List_AddCustomToolBarToWorkbench(workbenchName, panelName)
+            customList = self.List_AddCustomToolBarToWorkbench(workbenchName, panelName, Dict = dict["customToolbars"])
             allButtons.extend(customList)
 
         # # Add new Panels
