@@ -1595,11 +1595,21 @@ class ModernMenu(RibbonBar):
             EnableControl = titleLayout.itemAt(0).widget()
             if EnableControl is not None:
                 EnableControl.setVisible(True)
+                
+            # Enable all buttons, so you can access them with a right click
+            for child in mw.findChildren(QToolButton):
+                child.setEnabled(True)
+                try:
+                    for subAction in child.actions():
+                        subAction.setEnabled(True)                
+                except Exception:
+                    pass            
+            Gui.updateGui()
     
     def on_Ok_Clicked(self, workbenchName = ""):
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+        # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
         
         # Get the name of the current workbench
         if workbenchName == "":
@@ -1771,7 +1781,7 @@ class ModernMenu(RibbonBar):
     def on_Cancel_Clicked(self, workbenchName = ""):
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+        # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
         
         # Get the name of the current workbench
         if workbenchName == "":
@@ -3095,14 +3105,7 @@ class ModernMenu(RibbonBar):
     def onUserChangedWorkbench(self, tabActivated=True):
         """
         Import selected workbench toolbars to ModernMenu section.
-        """
-        # if len(self.LastCustomized) > 0:
-        #     category = self.categories()[self.LastCustomized[1]]
-        #     if self.CustomizeEnabled is True and self.currentCategory() != category:            
-        #         self.setCurrentCategory(category)
-        #         StandardFunctions.Mbox(translate("FreeCAD Ribbon", "Close customize enviroment first!"), "", 0, "Warning")
-        #         return
-                
+        """                
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             if Parameters.AUTOHIDE_RIBBON is False:
                 self.UnfoldRibbon()
@@ -3115,7 +3118,7 @@ class ModernMenu(RibbonBar):
         if tabName is not None and tabName != "" and tabName != "test":
             # activate selected workbench
             tabName = tabName.replace("&", "")
-            if self.wbNameMapping[tabName] is not None:
+            if self.wbNameMapping[tabName] is not None:                
                 Gui.activateWorkbench(self.wbNameMapping[tabName])
 
             if tabActivated is True:
@@ -3127,18 +3130,14 @@ class ModernMenu(RibbonBar):
         
         if self.CustomizeEnabled:
             self.on_Customize_Clicked()
-
         return
 
-    def onWbActivated(self):
+    def onWbActivated(self):        
         if len(mw.findChildren(QDockWidget, "Ribbon")) > 0:
             if Parameters.AUTOHIDE_RIBBON is False:
                 self.UnfoldRibbon()
             # else:
             #     self.FoldRibbon(True)
-        
-        # if self.CustomizeEnabled:
-        #     self.on_Customize_Clicked()
 
         # Set the text color depending in tabstyle
         if Parameters.TABBAR_STYLE != 1:
@@ -3195,6 +3194,9 @@ class ModernMenu(RibbonBar):
         
         # hide normal toolbars
         self.hideClassicToolbars()
+        
+        if self.CustomizeEnabled:
+            self.on_Customize_Clicked()
 
         # if self.DesignMenuLoaded is True:
         #     # Disable the quick toolbar, righttoolbar and application menu
@@ -3202,6 +3204,7 @@ class ModernMenu(RibbonBar):
         #     self.quickAccessToolBar().setDisabled(True)
         #     self.applicationOptionButton().setDisabled(True)
         #     Gui.updateGui()
+        
         return
 
     def onTabBarClicked(self):
@@ -4398,7 +4401,7 @@ class ModernMenu(RibbonBar):
         self.pinButtonList.append(pinButton)
         if Parameters.USE_OVERLAY is True: 
              pinButton.setIcon(QIcon())   
-             pinButton.setDisabled(True)             
+             pinButton.setDisabled(True)         
         return
 
     # endregion
