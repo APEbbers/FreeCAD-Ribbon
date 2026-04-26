@@ -188,7 +188,6 @@ class ModernMenu(RibbonBar):
     Create ModernMenu QWidget.
     """
     
-
     # region - class parameters
     # Add workbenches that need to be loaded first or early here
     WBtoLoadFirst = ["BillOfMaterialsWB"]
@@ -337,6 +336,8 @@ class ModernMenu(RibbonBar):
     FloatingTitleBarHeight = 20
     
     CustomizedCategories = []
+    
+    TabChanged = Signal()
     # endregion
 
     def __init__(self):
@@ -3130,6 +3131,8 @@ class ModernMenu(RibbonBar):
         
         if self.CustomizeEnabled:
             self.on_Customize_Clicked()
+            
+        self.TabChanged.emit()
         return
 
     def onWbActivated(self):        

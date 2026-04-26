@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
-from PySide.QtWidgets import (
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
+from PySide6.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -42,7 +42,7 @@ from PySide.QtWidgets import (
     QToolButton,
     QDockWidget,
 )
-from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent
+from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent
 import sys
 import json
 from datetime import datetime, timedelta
@@ -425,6 +425,11 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.cancelButton.clicked.connect(self.on_Cancel_Clicked)
         self.form.okButton.clicked.connect(self.on_Ok_Clicked)
         
+        # mw = Gui.getMainWindow()
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+        RibbonBar.TabChanged.connect(self.setWB)
+        self.setWB()
+        
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
 
@@ -633,6 +638,14 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     # endregion
     
     # region - Combine panels tab
+    def setWB(self):
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+        # WorkBenchName = RibbonBar.tabBar().tabData(RibbonBar.tabBar().currentIndex())
+        WorkBenchName = RibbonBar.currentCategory().title()
+
+        self.on_WorkbenchList_CP__activated(CurrentText=WorkBenchName)
+        return
+    
     def on_WorkbenchList_CP__activated(
         self, setCustomToolbarSelector_CP: bool = False, CurrentText=""
     ):
