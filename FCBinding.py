@@ -1191,14 +1191,13 @@ class ModernMenu(RibbonBar):
         self.contextMenu = QMenu(self)
         self.contextMenu.setStyleSheet("spacing: 0px;margin: 0px;padding: 0px;")
         
-        # Declare a dict for this workbench only
-        self.workBenchDict = {}
+        # # Declare a dict for this workbench only
+        # self.workBenchDict = {}
 
         # add keys if they don´t exist
         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName], endEmpty=True)
         Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName], endEmpty=True)
-        # if not self.WorkingDictUpdated:
-        # self.workBenchDict["workbenches"][workbenchName] = self.ribbonStructure["workbenches"][workbenchName]
+
         self.workBenchDict["workbenches"] = self.ribbonStructure["workbenches"]
         self.workBenchDict["quickAccessCommands"] = self.ribbonStructure["quickAccessCommands"]
         self.workBenchDict["newPanels"] = self.ribbonStructure["newPanels"]
@@ -1751,9 +1750,6 @@ class ModernMenu(RibbonBar):
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
         with open(JsonFile, "w") as outfile:
             json.dump(self.ribbonStructure, outfile, indent=4)
-        
-        # Clear the workbench dict
-        self.workBenchDict.clear()
         
         # Close the temporary document
         try:
