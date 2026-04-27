@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -53,7 +53,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -92,7 +92,7 @@ from PySide.QtWidgets import (
     QListWidgetItem,
     QAbstractButton,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -2306,7 +2306,8 @@ class ModernMenu(RibbonBar):
                             self.dropPanelName = panelName                                             
                 
             # Store the position were the drag is started
-            self.StartPositionDrag = [event.pos(), widget.rect()]
+            if self.StartPositionDrag is None:
+                self.StartPositionDrag = [event.pos(), widget.rect()]
             
             count = 0
             parent = widget.parent()
@@ -2414,8 +2415,8 @@ class ModernMenu(RibbonBar):
                         widgetHoveredOver = gridLayout.itemAtPosition(position[0], position[1]).widget().findChild(CustomControls)
                         self.target = position
                         try:
-                            CommandName = self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=widgetHoveredOver)
-                            self.target = [position[0], position[1], CommandName]
+                            Button = self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=widgetHoveredOver)
+                            self.target = [position[0], position[1], Button]
                         except Exception:
                             pass
                                     
@@ -2441,7 +2442,9 @@ class ModernMenu(RibbonBar):
                     point = QPoint(event.pos().x() + widget.width(), event.pos().y())
                     buttonPos = QuickAccessToolBar.mapTo(QuickAccessToolBar ,point)
                     # Get the button
-                    CommandName = QuickAccessToolBar.childAt(buttonPos)
+                    Button = QuickAccessToolBar.childAt(buttonPos)
+                    if type(Button) is QuickAccessSeparator:
+                         return
                     # Get the action before which the drag indicator has to be placed
                     beforeAction = QuickAccessToolBar.actionAt(buttonPos)
                     if beforeAction is not None:
@@ -2450,10 +2453,10 @@ class ModernMenu(RibbonBar):
                         # Store the index of the current beforeAction. This is needed for the drop function to save the order
                         self.DropIndex_QuickAccess = QuickAccessToolBar.actions().index(beforeAction)
                     # If the button is an Target indicator or is None, remove it.
-                    if type(CommandName) is DragTargetIndicator or CommandName is None:
+                    if type(Button) is DragTargetIndicator or Button is None:
                         QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
                     # If the button is an quickaccessbutton, show a drag indicator in the quickaccess toolbar
-                    if CommandName is not None and type(CommandName) is QuickAccessToolButton:
+                    if Button is not None and type(Button) is QuickAccessToolButton:
                         dragIndicator = self.dragIndicator_QuickAccess
                         if self.dragAction_QuickAccess is None:
                             self.dragAction_QuickAccess = QuickAccessToolBar.insertWidget(beforeAction, dragIndicator)
@@ -2854,6 +2857,15 @@ class ModernMenu(RibbonBar):
 
             if QuickAccessToolBar.objectName() == "quickAccessToolBar":
                 widget = event.source()
+                
+                if widget.objectName() == "separator":
+                    # Delete the drag indicater
+                    try:
+                        QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
+                        QuickAccessToolBar.removeAction(self.dragIndicator_QuickAccess_Action)
+                    except Exception:
+                        pass
+                    return
 
                 # Get the relative position of the cursor
                 point = QPoint(event.pos().x() + widget.width(), event.pos().y())

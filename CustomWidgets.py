@@ -1488,20 +1488,20 @@ class QuickAccessSeparator(QToolButton):
         self._topMargins = margins
         self._bottomMargins = margins
 
-    # Add dragdrop functionality
-    def mouseMoveEvent(self, e):
-        if e.buttons() == Qt.MouseButton.LeftButton:
-            try:
-                drag = QDrag(self)
-                mime = QMimeData()
-                drag.setMimeData(mime)
-                pixmap = QPixmap(self.size())
-                self.render(pixmap)
-                drag.setPixmap(pixmap)
+    # # Add dragdrop functionality
+    # def mouseMoveEvent(self, e):
+    #     if e.buttons() == Qt.MouseButton.LeftButton:
+    #         try:
+    #             drag = QDrag(self)
+    #             mime = QMimeData()
+    #             drag.setMimeData(mime)
+    #             pixmap = QPixmap(self.size())
+    #             self.render(pixmap)
+    #             drag.setPixmap(pixmap)
 
-                drag.exec_(Qt.DropAction.MoveAction)
-            except Exception as e:
-                print(e)
+    #             drag.exec_(Qt.DropAction.MoveAction)
+    #         except Exception as e:
+    #             print(e)
     
     def paintEvent(self, event: QPaintEvent) -> None:
         painter = QPainter(self)
