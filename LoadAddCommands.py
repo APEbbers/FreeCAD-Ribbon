@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
-from PySide6.QtWidgets import (
+from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
+from PySide.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -42,7 +42,7 @@ from PySide6.QtWidgets import (
     QToolButton,
     QDockWidget,
 )
-from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent
+from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent
 import sys
 import json
 from datetime import datetime, timedelta
@@ -115,6 +115,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     DialogClosed = False
     
     workBenchDict = {}
+    
+    CurrentWorkBenchTitle = None
+    CurrentWorkBenchName = None
             
     def __init__(self, workBenchDict):
         super(LoadDialog, self).__init__()
@@ -376,12 +379,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.on_AddCustomPanel_CP_clicked,
         )
 
-        # Connect LoadWorkbenches with the dropdown WorkbenchList on the Ribbon design tab
-        def LoadWorkbenches_CP():
-            self.on_WorkbenchList_CP__activated()
-
-        self.form.WorkbenchList_CP.activated.connect(LoadWorkbenches_CP)
-
         # Connect custom toolbar selector on the Custom Panels Tab
         def CommandList_CP():
             self.on_CustomToolbarSelector_CP_activated()
@@ -393,6 +390,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             SIGNAL("clicked()"),
             self.on_RemovePanel_CP_clicked,
         )
+        
+        self.form.WorkbenchList_CP.setHidden(True)
+        self.form.label_7.setHidden(True)
         
         # --- Form controls ------------------
         #
@@ -442,7 +442,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
         # Fill the Workbenches available, selected and workbench list
         self.form.ListCategory_NP.clear()
-        self.form.WorkbenchList_CP.clear()
         # self.form.ListCategory_DDB.clear()
 
         # Add "All" to the categoryListWidgets
@@ -461,6 +460,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         for workbench in self.List_Workbenches:
             WorkbenchName = workbench[0]
             WorkbenchTitle = workbench[2]
+            
+            if WorkbenchTitle in self.List_IgnoredWorkbenches:
+                continue
 
             if [WorkbenchName, WorkbenchTitle] not in ShadowList:
                  # Get the translate worbench title
@@ -483,12 +485,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     WorkbenchTitle,
                     workbench,
                 )
-                # Add the ListWidgetItem also to the workbenchList_CP.
-                self.form.WorkbenchList_CP.addItem(
-                    Icon,
-                    WorkbenchTitle,
-                    workbench,
-                )
                 # self.form.ListCategory_DDB.addItem(
                 #     Icon,
                 #     WorkbenchTitle,
@@ -500,11 +496,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.ListCategory_NP.setCurrentText(All_KeyWord)
         # self.form.ListCategory_DDB.setCurrentText(All_KeyWord)
 
-        self.form.WorkbenchList_CP.setCurrentText(
-            StandardFunctions.TranslationsMapping(
-                WorkbenchName, Gui.activeWorkbench().name()
-            )
-        )
         return    
     
     
@@ -640,27 +631,17 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     # region - Combine panels tab
     def setWB(self):
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-        # WorkBenchName = RibbonBar.tabBar().tabData(RibbonBar.tabBar().currentIndex())
-        WorkBenchName = RibbonBar.currentCategory().title()
-
-        self.on_WorkbenchList_CP__activated(CurrentText=WorkBenchName)
+        self.CurrentWorkBenchTitle = RibbonBar.currentCategory().title()
+        self.CurrentWorkBenchName = RibbonBar.currentCategory().objectName()
+        self.on_WorkbenchList_CP__activated()
         return
     
     def on_WorkbenchList_CP__activated(
         self, setCustomToolbarSelector_CP: bool = False, CurrentText=""
     ):
         # Set the workbench name.
-        WorkBenchName = ""
-        WorkBenchTitle = ""
-        try:
-            WorkBenchName = self.form.WorkbenchList_CP.currentData(
-                Qt.ItemDataRole.UserRole
-            )[0]
-            WorkBenchTitle = self.form.WorkbenchList_CP.currentData(
-                Qt.ItemDataRole.UserRole
-            )[2]
-        except Exception:
-            pass
+        WorkBenchName = self.CurrentWorkBenchName
+        WorkBenchTitle = self.CurrentWorkBenchTitle
 
         # If there is no workbench, return
         if WorkBenchName == "":
@@ -725,10 +706,12 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         0, "new", Qt.ItemDataRole.UserRole
                     )
 
-                if CurrentText != "":
-                    self.form.WorkbenchList_CP.setCurrentText(CurrentText)
+                # Get the ribbonbar
+                RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+                # Activate all buttons
+                RibbonBar.activateButtons()
 
-            self.form.PanelSelected_CP.clear()
+            self.form.PanelSelected_CP.clear()       
         return
 
     def on_MoveUpPanelCommand_CP_clicked(self):
@@ -753,9 +736,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         SelectedToolbars = self.form.PanelAvailable_CP.selectedItems()
 
         # Set the workbench name.
-        WorkbenchName = self.form.WorkbenchList_CP.currentData(
-            Qt.ItemDataRole.UserRole
-        )[0]
+        WorkbenchName = self.CurrentWorkBenchName
 
         # Get the dict with the toolbars of this workbench
         ToolbarItems = self.returnToolbarCommands(WorkbenchName)
@@ -854,12 +835,14 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.show()
             return
 
-        WorkBenchName = self.form.WorkbenchList_CP.currentData(
-            Qt.ItemDataRole.UserRole
-        )[0]
-        WorkBenchTitle = self.form.WorkbenchList_CP.currentData(
-            Qt.ItemDataRole.UserRole
-        )[2]
+        # WorkBenchName = self.form.WorkbenchList_CP.currentData(
+        #     Qt.ItemDataRole.UserRole
+        # )[0]
+        # WorkBenchTitle = self.form.WorkbenchList_CP.currentData(
+        #     Qt.ItemDataRole.UserRole
+        # )[2]
+        WorkBenchName = self.CurrentWorkBenchName
+        WorkBenchTitle = self.CurrentWorkBenchTitle
         # Create item that defines the custom toolbar
         MenuName = ""
         for i in range(self.form.PanelSelected_CP.count()):
@@ -984,9 +967,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 ", "
             )[1]
 
-            # Set the workbench selector to the workbench to which this custom toolbar belongs
-            self.form.WorkbenchList_CP.setCurrentText(WorkBenchTitle)
-            self.on_WorkbenchList_CP__activated(False, WorkBenchTitle)
+            # # Set the workbench selector to the workbench to which this custom toolbar belongs
+            # self.form.WorkbenchList_CP.setCurrentText(WorkBenchTitle)
+            # self.on_WorkbenchList_CP__activated(False, WorkBenchTitle)
 
             ShadowList = (
                 []

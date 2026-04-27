@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -53,7 +53,7 @@ from PySide6.QtGui import (
     QScreen,
     QPen,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -92,7 +92,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     QAbstractButton,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1493,13 +1493,8 @@ class ModernMenu(RibbonBar):
                 
         # Enable all buttons, so you can access them with a right click
         self.actionList = []
-        for child in mw.findChildren(QToolButton):
-            try:
-                for subAction in child.actions():
-                    subAction.setEnabled(True)                                                                  
-            except Exception:
-                pass
-            child.setEnabled(True)
+        # Activate all buttons
+        self.activateButtons()
                                 
         # Create all order lists and commands, incase they are not all present
         for title, objPanel in self.currentCategory().panels().items():                            
@@ -1598,14 +1593,9 @@ class ModernMenu(RibbonBar):
                 EnableControl.setVisible(True)
                 
             # Enable all buttons, so you can access them with a right click
-            for child in mw.findChildren(QToolButton):
-                child.setEnabled(True)
-                try:
-                    for subAction in child.actions():
-                        subAction.setEnabled(True)                
-                except Exception:
-                    pass            
-            Gui.updateGui()
+            self.activateButtons()
+            
+            return
     
     def on_Ok_Clicked(self, workbenchName = ""):
         # Set the wait cursor
@@ -1925,14 +1915,7 @@ class ModernMenu(RibbonBar):
         self.currentCategory()._panels[newPanel.objectName()] = newPanel
         
         # Enable all buttons, so you can access them with a right click
-        for child in mw.findChildren(QToolButton):
-            try:
-                for subAction in child.actions():
-                    subAction.setEnabled(True)                
-            except Exception:
-                pass
-            child.setEnabled(True)
-        Gui.updateGui()
+        self.activateButtons()
         
         # Close the old panel
         panel.close()
@@ -2006,14 +1989,7 @@ class ModernMenu(RibbonBar):
         self.currentCategory()._panels[newPanel.objectName()] = newPanel
 
         # Enable all buttons, so you can access them with a right click
-        for child in mw.findChildren(QToolButton):
-            try:
-                for subAction in child.actions():
-                    subAction.setEnabled(True)                
-            except Exception:
-                pass
-            child.setEnabled(True)
-        Gui.updateGui()
+        self.activateButtons()
         
         # Close the old panel
         panel.close()
@@ -2143,14 +2119,7 @@ class ModernMenu(RibbonBar):
             self.currentCategory()._panels[newPanel.objectName()] = newPanel
 
             # Enable all buttons, so you can access them with a right click
-            for child in mw.findChildren(QToolButton):
-                try:
-                    for subAction in child.actions():
-                        subAction.setEnabled(True)                
-                except Exception:
-                    pass
-                child.setEnabled(True)
-            Gui.updateGui()
+            self.activateButtons()
             
             # Close the old panel
             panel.close()
@@ -2197,14 +2166,7 @@ class ModernMenu(RibbonBar):
             self.setPanelProperties(newPanel)
             
             # Enable all buttons, so you can access them with a right click
-            for child in mw.findChildren(QToolButton):
-                try:
-                    for subAction in child.actions():
-                        subAction.setEnabled(True)                
-                except Exception:
-                    pass
-                child.setEnabled(True)
-            Gui.updateGui()
+            self.activateButtons()
             
             # Close the old panel
             panel.close()
@@ -2347,14 +2309,8 @@ class ModernMenu(RibbonBar):
             
             # Enable all buttons, so you can access them with a right click
             self.actionList = []
-            for child in mw.findChildren(QToolButton):
-                try:
-                    if type(child.actions) is list:
-                        for subAction in child.actions():
-                            subAction.setEnabled(True)                        
-                except Exception :
-                    pass
-                child.setEnabled(True)
+            # Activate all buttons
+            self.activateButtons()
         
         return
   
@@ -2573,14 +2529,7 @@ class ModernMenu(RibbonBar):
                         self.currentCategory()._panels[self.dropPanelName] = newPanel
                         
                         # Enable all buttons, so you can access them with a right click
-                        for child in mw.findChildren(QToolButton):
-                            try:
-                                for subAction in child.actions():
-                                    subAction.setEnabled(True)                
-                            except Exception:
-                                pass
-                            child.setEnabled(True)
-                        Gui.updateGui()
+                        self.activateButtons()
                         
                         # Close the old panel and the dragindicator
                         panel.close()
@@ -2920,14 +2869,7 @@ class ModernMenu(RibbonBar):
                     pass
                 
             # Enable all buttons, so you can access them with a right click
-            for child in mw.findChildren(QToolButton):
-                try:
-                    for subAction in child.actions():
-                        subAction.setEnabled(True)                
-                except Exception:
-                    pass
-                child.setEnabled(True)
-            Gui.updateGui()
+            self.activateButtons()
 
             event.accept()
             return
@@ -4829,14 +4771,8 @@ class ModernMenu(RibbonBar):
             
             # Enable all buttons, so you can access them with a right click
             self.actionList = []
-            for child in mw.findChildren(QToolButton):
-                try:
-                    if type(child.actions) is list:
-                        for subAction in child.actions():
-                            subAction.setEnabled(True)                        
-                except Exception :
-                    pass
-                child.setEnabled(True)
+            # Activate all commands
+            self.activateButtons()
    
             # Get the command
             Command = Gui.Command.get(CommandName)
@@ -6045,15 +5981,7 @@ class ModernMenu(RibbonBar):
         panel.addWidget(spacer, rowSpan=6)
 
         # Enable all buttons, so you can access them with a right click
-        if ActivateButtons is True:
-            for child in mw.findChildren(QToolButton):
-                child.setEnabled(True)
-                try:
-                    for subAction in child.actions():
-                        subAction.setEnabled(True)                
-                except Exception:
-                    pass            
-            Gui.updateGui()
+        self.activateButtons()
 
         if panel._actionsLayout.count() > 1:            
             return panel
@@ -6368,6 +6296,19 @@ class ModernMenu(RibbonBar):
             return True
         except Exception:
             return False
+        
+    def activateButtons(self):
+         # Enable all buttons, so you can access them with a right click
+        if self.isLoaded:
+            for child in mw.findChildren(QToolButton):
+                try:
+                    for subAction in child.actions():
+                        subAction.setEnabled(True)                
+                except Exception:
+                    pass
+                child.setEnabled(True)
+            # Gui.updateGui()
+        return
         
     # endregion
 
