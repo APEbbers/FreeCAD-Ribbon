@@ -331,12 +331,16 @@ class ModernMenu(RibbonBar):
     # Store the number of rows for each wb
     MaxRowsPerWB = {}
     
+    # Create variant to store a custom offset for the ribbon
     CustomizeOffset = 0
     
+    # Set a value for the titlebar height if the ribbon is floating
     FloatingTitleBarHeight = 20
     
+    # Create a list for customized categories
     CustomizedCategories = []
     
+    # Create a signal to indicate that there is a different tab active.
     TabChanged = Signal()
     # endregion
 
@@ -1455,7 +1459,8 @@ class ModernMenu(RibbonBar):
     def on_Customize_Clicked(self):
         # Get the name of the current workbench
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-        self.CustomizedCategories.append(self.currentCategory())
+        if self.currentCategory() not in self.CustomizedCategories:
+            self.CustomizedCategories.append(self.currentCategory())
         
         # Set a stylesheet to indicate that you are in the customize enviroment
         Addition = """RibbonCategory, QToolBar {
@@ -1502,6 +1507,12 @@ class ModernMenu(RibbonBar):
             # Get the panel name and the gridlayout
             panelName = objPanel.objectName()
             gridLayout: QGridLayout = objPanel._actionsLayout
+            
+            # show the enable checkboxes  
+            titleLayout: QHBoxLayout = objPanel._titleLayout
+            EnableControl = titleLayout.itemAt(0).widget()
+            if EnableControl is not None:
+                EnableControl.setVisible(True)
 
             # Recreate the order list for the new panel. 
             # This makes sure that all controls are added to the order list
@@ -1585,17 +1596,11 @@ class ModernMenu(RibbonBar):
                 # Write the order list
                 Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], [])                         
                 self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                                      
-                    
-            # show the enable checkboxes  
-            titleLayout: QHBoxLayout = objPanel._titleLayout
-            EnableControl = titleLayout.itemAt(0).widget()
-            if EnableControl is not None:
-                EnableControl.setVisible(True)
-                
+                                    
             # Enable all buttons, so you can access them with a right click
             self.activateButtons()
             
-            return
+        return
     
     def on_Ok_Clicked(self, workbenchName = ""):
         # Set the wait cursor
