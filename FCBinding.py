@@ -1190,22 +1190,19 @@ class ModernMenu(RibbonBar):
         # Create the menu
         self.contextMenu = QMenu(self)
         self.contextMenu.setStyleSheet("spacing: 0px;margin: 0px;padding: 0px;")
-        
-        # # Declare a dict for this workbench only
-        # self.workBenchDict = {}
 
-        # add keys if they don´t exist
-        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName], endEmpty=True)
-        Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName], endEmpty=True)
+        # # add keys if they don´t exist
+        # Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName], endEmpty=True)
+        # Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName], endEmpty=True)
 
-        self.workBenchDict["workbenches"] = self.ribbonStructure["workbenches"]
-        self.workBenchDict["quickAccessCommands"] = self.ribbonStructure["quickAccessCommands"]
-        self.workBenchDict["newPanels"] = self.ribbonStructure["newPanels"]
-        self.workBenchDict["dropdownButtons"] = self.ribbonStructure["dropdownButtons"]
-        self.workBenchDict["ignoredToolbars"] = self.ribbonStructure["ignoredToolbars"]
-        self.workBenchDict["ignoredWorkbenches"] = self.ribbonStructure["ignoredWorkbenches"]
-        self.workBenchDict["iconOnlyToolbars"] = self.ribbonStructure["iconOnlyToolbars"]
-        self.workBenchDict["customToolbars"] = self.ribbonStructure["customToolbars"]
+        # self.workBenchDict["workbenches"] = self.ribbonStructure["workbenches"]
+        # self.workBenchDict["quickAccessCommands"] = self.ribbonStructure["quickAccessCommands"]
+        # self.workBenchDict["newPanels"] = self.ribbonStructure["newPanels"]
+        # self.workBenchDict["dropdownButtons"] = self.ribbonStructure["dropdownButtons"]
+        # self.workBenchDict["ignoredToolbars"] = self.ribbonStructure["ignoredToolbars"]
+        # self.workBenchDict["ignoredWorkbenches"] = self.ribbonStructure["ignoredWorkbenches"]
+        # self.workBenchDict["iconOnlyToolbars"] = self.ribbonStructure["iconOnlyToolbars"]
+        # self.workBenchDict["customToolbars"] = self.ribbonStructure["customToolbars"]
     
         # If betaFunctions is enabled, coninue
         if self.BetaFunctionsEnabled is True:
@@ -1391,6 +1388,19 @@ class ModernMenu(RibbonBar):
                 # Perfom the action depending on which button is clicked
                 if action == CustomizeStartAct:
                     if self.CustomizeEnabled is False:
+                        # add keys if they don´t exist
+                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName], endEmpty=True)
+                        Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName], endEmpty=True)
+
+                        self.workBenchDict["workbenches"] = self.ribbonStructure["workbenches"]
+                        self.workBenchDict["quickAccessCommands"] = self.ribbonStructure["quickAccessCommands"]
+                        self.workBenchDict["newPanels"] = self.ribbonStructure["newPanels"]
+                        self.workBenchDict["dropdownButtons"] = self.ribbonStructure["dropdownButtons"]
+                        self.workBenchDict["ignoredToolbars"] = self.ribbonStructure["ignoredToolbars"]
+                        self.workBenchDict["ignoredWorkbenches"] = self.ribbonStructure["ignoredWorkbenches"]
+                        self.workBenchDict["iconOnlyToolbars"] = self.ribbonStructure["iconOnlyToolbars"]
+                        self.workBenchDict["customToolbars"] = self.ribbonStructure["customToolbars"]
+
                         self.on_Customize_Clicked()
                                 
                         # Load the dialog
