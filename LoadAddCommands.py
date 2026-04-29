@@ -432,13 +432,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         RibbonBar.TabChanged.connect(self.setWB)
         self.setWB()
         # Hide the correct ok and cancel button when the form is docked or not
-        ribbonDock = RibbonBar.findChild(QDockWidget, "RibbonLayout")
-        if ribbonDock is not None:
+        if Parameters.DOCKED_DIALOGS is True:
             self.form.okButton.setHidden(True)
-            self.form.cancelButton(True)
+            self.form.cancelButton.setHidden(True)
         else:
-            self.form.okButton.setHidden_2(True)
-            self.form.cancelButton_2(True)
+            self.form.okButton_2.setHidden(True)
+            self.form.cancelButton_2.setHidden(True)
+            self.form.verticalSpacer_dockedButtons.setHidden(True)
         
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)

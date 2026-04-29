@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandssoiuxQ.ui'
+## Form generated from reading UI file 'AddCommandsVnNXRw.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -98,7 +98,11 @@ class Ui_Form(object):
         self.gridLayout.addWidget(self.cancelButton, 0, 4, 2, 1)
 
 
-        self.gridLayout_7.addLayout(self.gridLayout, 2, 0, 1, 2)
+        self.gridLayout_7.addLayout(self.gridLayout, 3, 0, 1, 2)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_7.addItem(self.verticalSpacer_2, 4, 0, 1, 2)
 
         self.tabWidget = QTabWidget(Form)
         self.tabWidget.setObjectName(u"tabWidget")
@@ -480,11 +484,11 @@ class Ui_Form(object):
 
         self.tabWidget.addTab(self.widget, "")
 
-        self.gridLayout_7.addWidget(self.tabWidget, 1, 0, 1, 2)
+        self.gridLayout_7.addWidget(self.tabWidget, 2, 0, 1, 2)
 
-        self.verticalSpacer_2 = QSpacerItem(20, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer_dockedButtons = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
-        self.gridLayout_7.addItem(self.verticalSpacer_2, 3, 0, 1, 2)
+        self.gridLayout_7.addItem(self.verticalSpacer_dockedButtons, 1, 0, 1, 2)
 
 
         self.retranslateUi(Form)
