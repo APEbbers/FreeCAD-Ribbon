@@ -421,14 +421,24 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}. This is {delta_days} days, {delta_hours} hour(s) and {delta_minutes} minutes ago.")
         )
         
-        # Connect the OK and Cancel buttons
+       # Connect the OK and Cancel buttons
         self.form.cancelButton.clicked.connect(self.on_Cancel_Clicked)
         self.form.okButton.clicked.connect(self.on_Ok_Clicked)
+        self.form.cancelButton_2.clicked.connect(self.on_Cancel_Clicked)
+        self.form.okButton_2.clicked.connect(self.on_Ok_Clicked)
         
-        # mw = Gui.getMainWindow()
+        # Set the correct workbench active and connect it with the tab change
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
         RibbonBar.TabChanged.connect(self.setWB)
         self.setWB()
+        # Hide the correct ok and cancel button when the form is docked or not
+        ribbonDock = RibbonBar.findChild(QDockWidget, "RibbonLayout")
+        if ribbonDock is not None:
+            self.form.okButton.setHidden(True)
+            self.form.cancelButton(True)
+        else:
+            self.form.okButton.setHidden_2(True)
+            self.form.cancelButton_2(True)
         
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
