@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsQVxpmO.ui'
+## Form generated from reading UI file 'AddCommandsERBKVB.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -15,11 +15,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QGridLayout,
-    QGroupBox, QLabel, QLayout, QLineEdit,
-    QListView, QListWidget, QListWidgetItem, QPushButton,
-    QSizePolicy, QSpacerItem, QTabWidget, QToolButton,
-    QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QComboBox, QFrame,
+    QGridLayout, QGroupBox, QLabel, QLayout,
+    QLineEdit, QListView, QListWidget, QListWidgetItem,
+    QPushButton, QSizePolicy, QSpacerItem, QTabWidget,
+    QToolButton, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -29,33 +29,6 @@ class Ui_Form(object):
         Form.setAcceptDrops(True)
         self.gridLayout_7 = QGridLayout(Form)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.gridLayout_Docked = QGridLayout()
-        self.gridLayout_Docked.setObjectName(u"gridLayout_Docked")
-        self.okButton_2 = QPushButton(Form)
-        self.okButton_2.setObjectName(u"okButton_2")
-
-        self.gridLayout_Docked.addWidget(self.okButton_2, 0, 1, 1, 1)
-
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_Docked.addItem(self.horizontalSpacer_2, 0, 4, 1, 1)
-
-        self.cancelButton_2 = QPushButton(Form)
-        self.cancelButton_2.setObjectName(u"cancelButton_2")
-
-        self.gridLayout_Docked.addWidget(self.cancelButton_2, 0, 3, 1, 1)
-
-        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_Docked.addItem(self.horizontalSpacer_3, 0, 0, 1, 1)
-
-        self.verticalSpacer_dockedButtons = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.gridLayout_Docked.addItem(self.verticalSpacer_dockedButtons, 1, 1, 1, 1)
-
-
-        self.gridLayout_7.addLayout(self.gridLayout_Docked, 0, 0, 1, 2)
-
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
@@ -490,6 +463,35 @@ class Ui_Form(object):
 
         self.gridLayout_7.addWidget(self.tabWidget, 2, 0, 1, 2)
 
+        self.DockedButtonFrame = QFrame(Form)
+        self.DockedButtonFrame.setObjectName(u"DockedButtonFrame")
+        self.gridLayout_Docked = QGridLayout(self.DockedButtonFrame)
+        self.gridLayout_Docked.setObjectName(u"gridLayout_Docked")
+        self.okButton_2 = QPushButton(self.DockedButtonFrame)
+        self.okButton_2.setObjectName(u"okButton_2")
+
+        self.gridLayout_Docked.addWidget(self.okButton_2, 0, 1, 1, 1)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_Docked.addItem(self.horizontalSpacer_2, 0, 4, 1, 1)
+
+        self.cancelButton_2 = QPushButton(self.DockedButtonFrame)
+        self.cancelButton_2.setObjectName(u"cancelButton_2")
+
+        self.gridLayout_Docked.addWidget(self.cancelButton_2, 0, 3, 1, 1)
+
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_Docked.addItem(self.horizontalSpacer_3, 0, 0, 1, 1)
+
+        self.verticalSpacer_dockedButtons = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.gridLayout_Docked.addItem(self.verticalSpacer_dockedButtons, 1, 1, 1, 1)
+
+
+        self.gridLayout_7.addWidget(self.DockedButtonFrame, 0, 0, 1, 2)
+
 
         self.retranslateUi(Form)
 
@@ -501,11 +503,6 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
-        self.okButton_2.setText(QCoreApplication.translate("Form", u"Ok", None))
-        self.cancelButton_2.setText(QCoreApplication.translate("Form", u"Cancel", None))
-#if QT_CONFIG(shortcut)
-        self.cancelButton_2.setShortcut(QCoreApplication.translate("Form", u"Esc", None))
-#endif // QT_CONFIG(shortcut)
         self.okButton.setText(QCoreApplication.translate("Form", u"Ok", None))
         self.TimeStamp_Reloaded.setText(QCoreApplication.translate("Form", u"Last reloaded on: -", None))
         self.LoadWB.setText("")
@@ -601,5 +598,10 @@ class Ui_Form(object):
         self.ControlName_DDB.setPlaceholderText(QCoreApplication.translate("Form", u"Enter command name...", None))
         self.CreateControl_DDB.setText(QCoreApplication.translate("Form", u"Create/update dropdown button", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget), QCoreApplication.translate("Form", u"Create dropdown buttons", None))
+        self.okButton_2.setText(QCoreApplication.translate("Form", u"Ok", None))
+        self.cancelButton_2.setText(QCoreApplication.translate("Form", u"Cancel", None))
+#if QT_CONFIG(shortcut)
+        self.cancelButton_2.setShortcut(QCoreApplication.translate("Form", u"Esc", None))
+#endif // QT_CONFIG(shortcut)
     # retranslateUi
 
