@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsVnNXRw.ui'
+## Form generated from reading UI file 'AddCommandsqqttae.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
