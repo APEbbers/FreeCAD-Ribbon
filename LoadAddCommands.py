@@ -436,9 +436,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.okButton.setHidden(True)
             self.form.cancelButton.setHidden(True)
         else:
-            self.form.okButton_2.setHidden(True)
-            self.form.cancelButton_2.setHidden(True)
-            self.form.verticalSpacer_dockedButtons.setHidden(True)
+            self.form.gridLayout_Docked.setHidden(True)
         
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsqqttae.ui'
+## Form generated from reading UI file 'AddCommandsQVxpmO.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -29,28 +29,32 @@ class Ui_Form(object):
         Form.setAcceptDrops(True)
         self.gridLayout_7 = QGridLayout(Form)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.gridLayout_4 = QGridLayout()
-        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.gridLayout_Docked = QGridLayout()
+        self.gridLayout_Docked.setObjectName(u"gridLayout_Docked")
         self.okButton_2 = QPushButton(Form)
         self.okButton_2.setObjectName(u"okButton_2")
 
-        self.gridLayout_4.addWidget(self.okButton_2, 0, 1, 1, 1)
+        self.gridLayout_Docked.addWidget(self.okButton_2, 0, 1, 1, 1)
 
         self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout_4.addItem(self.horizontalSpacer_2, 0, 3, 1, 1)
+        self.gridLayout_Docked.addItem(self.horizontalSpacer_2, 0, 4, 1, 1)
 
         self.cancelButton_2 = QPushButton(Form)
         self.cancelButton_2.setObjectName(u"cancelButton_2")
 
-        self.gridLayout_4.addWidget(self.cancelButton_2, 0, 2, 1, 1)
+        self.gridLayout_Docked.addWidget(self.cancelButton_2, 0, 3, 1, 1)
 
         self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout_4.addItem(self.horizontalSpacer_3, 0, 0, 1, 1)
+        self.gridLayout_Docked.addItem(self.horizontalSpacer_3, 0, 0, 1, 1)
+
+        self.verticalSpacer_dockedButtons = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.gridLayout_Docked.addItem(self.verticalSpacer_dockedButtons, 1, 1, 1, 1)
 
 
-        self.gridLayout_7.addLayout(self.gridLayout_4, 0, 0, 1, 2)
+        self.gridLayout_7.addLayout(self.gridLayout_Docked, 0, 0, 1, 2)
 
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
@@ -485,10 +489,6 @@ class Ui_Form(object):
         self.tabWidget.addTab(self.widget, "")
 
         self.gridLayout_7.addWidget(self.tabWidget, 2, 0, 1, 2)
-
-        self.verticalSpacer_dockedButtons = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.gridLayout_7.addItem(self.verticalSpacer_dockedButtons, 1, 0, 1, 2)
 
 
         self.retranslateUi(Form)
