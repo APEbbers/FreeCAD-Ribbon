@@ -526,6 +526,13 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.HelpButton.setMinimumHeight(
             self.form.GenerateJsonExit.minimumHeight()
         )
+        
+        # Hide the correct ok and cancel button when the form is docked or not
+        if Parameters.DOCKED_DIALOGS is True:
+            self.form.GenerateJsonExit.setHidden(True)
+            self.form.Cancel.setHidden(True)
+        else:
+            self.form.DockedButtonFrame.setHidden(True)
         # endregion
 
         # region - connect controls with functions----------------------------------------------------
@@ -605,6 +612,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.on_Cancel_clicked(self)
 
         self.form.Cancel.connect(self.form.Cancel, SIGNAL("clicked()"), Cancel)
+        self.form.Cancel_2.connect(self.form.Cancel_2, SIGNAL("clicked()"), Cancel)
 
         # Connect the help buttons
         def Help():
@@ -616,9 +624,8 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         def GenerateJsonExit():
             self.on_Close_clicked(self)
 
-        self.form.GenerateJsonExit.connect(
-            self.form.GenerateJsonExit, SIGNAL("clicked()"), GenerateJsonExit
-        )
+        self.form.GenerateJsonExit.connect(self.form.GenerateJsonExit, SIGNAL("clicked()"), GenerateJsonExit)
+        self.form.GenerateJsonExit_2.connect(self.form.GenerateJsonExit_2, SIGNAL("clicked()"), GenerateJsonExit)
 
         # Connect the reset button
         def Reset():

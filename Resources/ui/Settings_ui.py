@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsoWuUwR.ui'
+## Form generated from reading UI file 'SettingsLkaVrv.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -49,7 +49,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, -562, 697, 1350))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 697, 1350))
         self.gridLayout_28 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_28.setObjectName(u"gridLayout_28")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -1284,7 +1284,7 @@ class Ui_Settings(object):
         self.gridLayout_6.addWidget(self.scrollArea, 0, 0, 1, 3)
 
 
-        self.gridLayout_36.addLayout(self.gridLayout_6, 0, 0, 1, 1)
+        self.gridLayout_36.addLayout(self.gridLayout_6, 1, 0, 1, 2)
 
         self.gridLayout_7 = QGridLayout()
         self.gridLayout_7.setObjectName(u"gridLayout_7")
@@ -1332,7 +1332,36 @@ class Ui_Settings(object):
         self.gridLayout_7.addWidget(self.label_31, 0, 1, 1, 2)
 
 
-        self.gridLayout_36.addLayout(self.gridLayout_7, 1, 0, 1, 1)
+        self.gridLayout_36.addLayout(self.gridLayout_7, 2, 0, 1, 2)
+
+        self.DockedButtonFrame = QFrame(Settings)
+        self.DockedButtonFrame.setObjectName(u"DockedButtonFrame")
+        self.gridLayout_34 = QGridLayout(self.DockedButtonFrame)
+        self.gridLayout_34.setObjectName(u"gridLayout_34")
+        self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_34.addItem(self.horizontalSpacer_10, 0, 0, 1, 1)
+
+        self.verticalSpacer_5 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.gridLayout_34.addItem(self.verticalSpacer_5, 1, 1, 1, 1)
+
+        self.Cancel_2 = QPushButton(self.DockedButtonFrame)
+        self.Cancel_2.setObjectName(u"Cancel_2")
+
+        self.gridLayout_34.addWidget(self.Cancel_2, 0, 2, 1, 1)
+
+        self.GenerateJsonExit_2 = QPushButton(self.DockedButtonFrame)
+        self.GenerateJsonExit_2.setObjectName(u"GenerateJsonExit_2")
+
+        self.gridLayout_34.addWidget(self.GenerateJsonExit_2, 0, 1, 1, 1)
+
+        self.horizontalSpacer_15 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_34.addItem(self.horizontalSpacer_15, 0, 3, 1, 1)
+
+
+        self.gridLayout_36.addWidget(self.DockedButtonFrame, 0, 1, 1, 1)
 
 
         self.retranslateUi(Settings)
@@ -1452,12 +1481,20 @@ class Ui_Settings(object):
 #if QT_CONFIG(shortcut)
         self.Cancel.setShortcut(QCoreApplication.translate("Settings", u"Esc", None))
 #endif // QT_CONFIG(shortcut)
-        self.GenerateJsonExit.setText(QCoreApplication.translate("Settings", u"Close", None))
+        self.GenerateJsonExit.setText(QCoreApplication.translate("Settings", u"Ok", None))
 #if QT_CONFIG(shortcut)
         self.GenerateJsonExit.setShortcut("")
 #endif // QT_CONFIG(shortcut)
         self.Reset.setText(QCoreApplication.translate("Settings", u"Reset", None))
         self.LoadDialogs.setText(QCoreApplication.translate("Settings", u"Load dialogs docked", None))
         self.label_31.setText(QCoreApplication.translate("Settings", u"Load dialogs as panels.", None))
+        self.Cancel_2.setText(QCoreApplication.translate("Settings", u"Cancel", None))
+#if QT_CONFIG(shortcut)
+        self.Cancel_2.setShortcut(QCoreApplication.translate("Settings", u"Esc", None))
+#endif // QT_CONFIG(shortcut)
+        self.GenerateJsonExit_2.setText(QCoreApplication.translate("Settings", u"Close", None))
+#if QT_CONFIG(shortcut)
+        self.GenerateJsonExit_2.setShortcut("")
+#endif // QT_CONFIG(shortcut)
     # retranslateUi
 

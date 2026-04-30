@@ -145,7 +145,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Get the address of the repository address
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         self.ReproAdress = StandardFunctions.ReturnXML_Value(
-            PackageXML, "url", "type", "repository"
+            PackageXML, "url", "type", "website"
         )
 
         # Make sure that the dialog stays on top
@@ -775,6 +775,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
         # Connect the button Close with the function on_Close_clicked
         self.form.Close.clicked.connect(self.on_Close_clicked)
+        self.form.Close_2.clicked.connect(self.on_Close_clicked)
 
         self.form.RestoreJson.connect(
             self.form.RestoreJson, SIGNAL("clicked()"), self.on_RestoreJson_clicked
@@ -791,6 +792,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             self.on_Cancel_clicked(self)
 
         self.form.Cancel.connect(self.form.Cancel, SIGNAL("clicked()"), Cancel)
+        self.form.Cancel_2.connect(self.form.Cancel_2, SIGNAL("clicked()"), Cancel)
 
         # Connect the help buttons
         def Help():
@@ -844,6 +846,13 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         if helpIcon is not None:
             self.form.HelpButton.setIcon(helpIcon)
         self.form.HelpButton.setMinimumHeight(self.form.Close.minimumHeight())
+        
+        # Hide the correct ok and cancel button when the form is docked or not
+        if Parameters.DOCKED_DIALOGS is True:
+            self.form.Close.setHidden(True)
+            self.form.Cancel.setHidden(True)
+        else:
+            self.form.DockedButtonFrame.setHidden(True)
 
         # Disable and hide the restore button if the backup function is disabled
         if Parameters.ENABLE_BACKUP is False:

@@ -56,6 +56,7 @@ import CacheFunctions
 import FCBinding
 from CustomWidgets import QuickAccessToolButton, CustomControls
 import StyleMapping_Ribbon
+import webbrowser
 
 import pyqtribbon_local as pyqtribbon
 from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonTitleWidget, RibbonApplicationButton
@@ -88,7 +89,8 @@ translate = App.Qt.translate
  # Get the main window from FreeCAD
 mw = Gui.getMainWindow()
 
-class LoadDialog(AddCommands_ui.Ui_Form):    
+class LoadDialog(AddCommands_ui.Ui_Form):
+    ReproAdress: str = "" 
     # Create a list for the commands
     List_Commands = []
     # Create a dict for the dropdownbuttons and newPanels
@@ -426,6 +428,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.okButton.clicked.connect(self.on_Ok_Clicked)
         self.form.cancelButton_2.clicked.connect(self.on_Cancel_Clicked)
         self.form.okButton_2.clicked.connect(self.on_Ok_Clicked)
+        
+        # Connect the helpbutton
+        self.form.HelpButton.setIcon(Gui.getIcon("help-browser"))
+        self.form.HelpButton.clicked.connect(self.on_Helpbutton_clicked(self))
         
         # Set the correct workbench active and connect it with the tab change
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
@@ -1163,6 +1169,15 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 RibbonBar.on_Ok_Clicked()
             RibbonBar.CustomizedCategories.clear()
             self.DialogClosed = False
+        return
+    
+    def on_Helpbutton_clicked(self):
+        if self.ReproAdress != "" or self.ReproAdress is not None:
+            if not self.ReproAdress.endswith("/"):
+                self.ReproAdress = self.ReproAdress + "/"
+
+            Adress = self.ReproAdress + "wiki"
+            webbrowser.open(Adress, new=2, autoraise=True)
         return
         
     def on_ReloadWB_clicked(self, resetTexts=False, RestartFreeCAD=False):
