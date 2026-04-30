@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsLkaVrv.ui'
+## Form generated from reading UI file 'SettingsAlwmqg.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -1329,7 +1329,7 @@ class Ui_Settings(object):
         font4.setItalic(True)
         self.label_31.setFont(font4)
 
-        self.gridLayout_7.addWidget(self.label_31, 0, 1, 1, 2)
+        self.gridLayout_7.addWidget(self.label_31, 0, 1, 1, 5)
 
 
         self.gridLayout_36.addLayout(self.gridLayout_7, 2, 0, 1, 2)
@@ -1492,7 +1492,7 @@ class Ui_Settings(object):
 #if QT_CONFIG(shortcut)
         self.Cancel_2.setShortcut(QCoreApplication.translate("Settings", u"Esc", None))
 #endif // QT_CONFIG(shortcut)
-        self.GenerateJsonExit_2.setText(QCoreApplication.translate("Settings", u"Close", None))
+        self.GenerateJsonExit_2.setText(QCoreApplication.translate("Settings", u"Ok", None))
 #if QT_CONFIG(shortcut)
         self.GenerateJsonExit_2.setShortcut("")
 #endif // QT_CONFIG(shortcut)

@@ -769,20 +769,15 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         def UpdateJson():
             self.on_UpdateJson_clicked(self)
 
-        self.form.UpdateJson.connect(
-            self.form.UpdateJson, SIGNAL("clicked()"), UpdateJson
-        )
+        self.form.UpdateJson.connect(self.form.UpdateJson, SIGNAL("clicked()"), UpdateJson)
+        self.form.UpdateJson_2.connect(self.form.UpdateJson_2, SIGNAL("clicked()"), UpdateJson)
 
         # Connect the button Close with the function on_Close_clicked
         self.form.Close.clicked.connect(self.on_Close_clicked)
         self.form.Close_2.clicked.connect(self.on_Close_clicked)
 
-        self.form.RestoreJson.connect(
-            self.form.RestoreJson, SIGNAL("clicked()"), self.on_RestoreJson_clicked
-        )
-        self.form.ResetJson.connect(
-            self.form.ResetJson, SIGNAL("clicked()"), self.on_ResetJson_clicked
-        )
+        self.form.RestoreJson.connect(self.form.RestoreJson, SIGNAL("clicked()"), self.on_RestoreJson_clicked)
+        self.form.ResetJson.connect(self.form.ResetJson, SIGNAL("clicked()"), self.on_ResetJson_clicked)
 
         # # connect the change of the current tab event to a function to set the size per tab
         # self.form.tabWidget.currentChanged.connect(self.on_tabBar_currentIndexChanged)
@@ -851,6 +846,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         if Parameters.DOCKED_DIALOGS is True:
             self.form.Close.setHidden(True)
             self.form.Cancel.setHidden(True)
+            self.form.UpdateJson_2.setHidden(True)
         else:
             self.form.DockedButtonFrame.setHidden(True)
 

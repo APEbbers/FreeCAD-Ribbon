@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignuHnkms.ui'
+## Form generated from reading UI file 'DesignZkDqpP.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -45,27 +45,32 @@ class Ui_Form(object):
         self.DockedButtonFrame.setObjectName(u"DockedButtonFrame")
         self.gridLayout_49 = QGridLayout(self.DockedButtonFrame)
         self.gridLayout_49.setObjectName(u"gridLayout_49")
+        self.horizontalSpacer_11 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_49.addItem(self.horizontalSpacer_11, 0, 6, 1, 1)
+
         self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.gridLayout_49.addItem(self.horizontalSpacer_10, 0, 0, 1, 1)
 
+        self.verticalSpacer_22 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.gridLayout_49.addItem(self.verticalSpacer_22, 1, 4, 1, 1)
+
         self.Close_2 = QPushButton(self.DockedButtonFrame)
         self.Close_2.setObjectName(u"Close_2")
 
-        self.gridLayout_49.addWidget(self.Close_2, 0, 1, 1, 1)
+        self.gridLayout_49.addWidget(self.Close_2, 0, 2, 1, 1)
 
         self.Cancel_2 = QPushButton(self.DockedButtonFrame)
         self.Cancel_2.setObjectName(u"Cancel_2")
 
-        self.gridLayout_49.addWidget(self.Cancel_2, 0, 2, 1, 1)
+        self.gridLayout_49.addWidget(self.Cancel_2, 0, 4, 1, 1)
 
-        self.horizontalSpacer_11 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.UpdateJson_2 = QPushButton(self.DockedButtonFrame)
+        self.UpdateJson_2.setObjectName(u"UpdateJson_2")
 
-        self.gridLayout_49.addItem(self.horizontalSpacer_11, 0, 3, 1, 1)
-
-        self.verticalSpacer_22 = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.gridLayout_49.addItem(self.verticalSpacer_22, 1, 2, 1, 1)
+        self.gridLayout_49.addWidget(self.UpdateJson_2, 0, 1, 1, 1)
 
 
         self.gridLayout_53.addWidget(self.DockedButtonFrame, 0, 0, 1, 1)
@@ -97,7 +102,7 @@ class Ui_Form(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1013, 631))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 1013, 621))
         self.gridLayout_26 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_26.setObjectName(u"gridLayout_26")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -1442,7 +1447,8 @@ class Ui_Form(object):
 #if QT_CONFIG(shortcut)
         self.Cancel_2.setShortcut(QCoreApplication.translate("Form", u"Esc", None))
 #endif // QT_CONFIG(shortcut)
-        self.UpdateJson.setText(QCoreApplication.translate("Form", u"Update", None))
+        self.UpdateJson_2.setText(QCoreApplication.translate("Form", u"Apply", None))
+        self.UpdateJson.setText(QCoreApplication.translate("Form", u"Apply", None))
         self.Close.setText(QCoreApplication.translate("Form", u"Ok", None))
         self.SetupBox.setTitle(QCoreApplication.translate("Form", u"Set inital button size - Workbenches", None))
         self.label_15.setText(QCoreApplication.translate("Form", u"Set all buttons to: ", None))

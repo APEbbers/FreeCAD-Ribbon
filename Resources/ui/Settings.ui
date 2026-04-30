@@ -2862,7 +2862,7 @@
       <item row="0" column="1">
        <widget class="QPushButton" name="GenerateJsonExit_2">
         <property name="text">
-         <string>Close</string>
+         <string>Ok</string>
         </property>
         <property name="shortcut">
          <string/>

@@ -50,6 +50,19 @@
    <item row="0" column="0">
     <widget class="QFrame" name="DockedButtonFrame">
      <layout class="QGridLayout" name="gridLayout_49">
+      <item row="0" column="6">
+       <spacer name="horizontalSpacer_11">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
       <item row="0" column="0">
        <spacer name="horizontalSpacer_10">
         <property name="orientation">
@@ -63,37 +76,7 @@
         </property>
        </spacer>
       </item>
-      <item row="0" column="1">
-       <widget class="QPushButton" name="Close_2">
-        <property name="text">
-         <string>Ok</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QPushButton" name="Cancel_2">
-        <property name="text">
-         <string>Cancel</string>
-        </property>
-        <property name="shortcut">
-         <string>Esc</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <spacer name="horizontalSpacer_11">
-        <property name="orientation">
-         <enum>Qt::Orientation::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="2">
+      <item row="1" column="4">
        <spacer name="verticalSpacer_22">
         <property name="orientation">
          <enum>Qt::Orientation::Vertical</enum>
@@ -109,6 +92,30 @@
         </property>
        </spacer>
       </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="Close_2">
+        <property name="text">
+         <string>Ok</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="Cancel_2">
+        <property name="text">
+         <string>Cancel</string>
+        </property>
+        <property name="shortcut">
+         <string>Esc</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="UpdateJson_2">
+        <property name="text">
+         <string>Apply</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -117,7 +124,7 @@
      <item row="3" column="4">
       <widget class="QPushButton" name="UpdateJson">
        <property name="text">
-        <string>Update</string>
+        <string>Apply</string>
        </property>
       </widget>
      </item>
@@ -164,7 +171,7 @@
           <x>0</x>
           <y>0</y>
           <width>1013</width>
-          <height>631</height>
+          <height>621</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="gridLayout_26">
