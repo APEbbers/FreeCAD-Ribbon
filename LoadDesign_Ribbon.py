@@ -846,7 +846,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         if Parameters.DOCKED_DIALOGS is True:
             self.form.Close.setHidden(True)
             self.form.Cancel.setHidden(True)
-            self.form.UpdateJson_2.setHidden(True)
+            self.form.UpdateJson.setHidden(True)
         else:
             self.form.DockedButtonFrame.setHidden(True)
 
