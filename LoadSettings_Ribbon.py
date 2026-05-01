@@ -41,6 +41,7 @@ from PySide.QtWidgets import (
     QMenu,
     QApplication,
     QMainWindow,
+    QLayout,
 )
 from PySide.QtGui import QIcon, QPixmap, QColor, QBrush, QPaintEvent, QPen, QPainter
 
@@ -1674,6 +1675,10 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         DockWidget = mw.findChild(QDockWidget, "RibbonSettings")
         if DockWidget is not None:
             DockWidget.deleteLater()
+            
+            # RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+            # mw.centralWidget().setFixedWidth(RibbonBar.CentralWidgetWidth[0])
+            
 
         # Emit a close signal
         self.closeSignal.emit()
@@ -1891,11 +1896,10 @@ class EventInspector(QObject):
         # Show the mainwindow after the application is activated
         if event.type() == QEvent.Type.Close:
             # self.closeSignal.emit()
-            mw = Gui.getMainWindow()
+            mw: QMainWindow = Gui.getMainWindow()
             RibbonBar: FCBinding.ModernMenu = mw.findChild(
                 FCBinding.ModernMenu, "Ribbon"
             )
-            self.EnableRibbonToolbarsAndMenus(RibbonBar=RibbonBar)
             return False
 
         if event.type() == QEvent.Type.WindowStateChange:

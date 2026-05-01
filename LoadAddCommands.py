@@ -41,6 +41,9 @@ from PySide.QtWidgets import (
     QToolBar,
     QToolButton,
     QDockWidget,
+    QSizePolicy,
+    QGridLayout,
+    QHBoxLayout,
 )
 from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent
 import sys
@@ -431,7 +434,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
         # Connect the helpbutton
         self.form.HelpButton.setIcon(Gui.getIcon("help-browser"))
-        self.form.HelpButton.clicked.connect(self.on_Helpbutton_clicked(self))
+        self.form.HelpButton.clicked.connect(self.on_Helpbutton_clicked)
         
         # Set the correct workbench active and connect it with the tab change
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
@@ -954,7 +957,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", WorkBenchName, "toolbars", objPanel.objectName(), "Enabled"])
                         self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][objPanel.objectName()]["Enabled"] = False
                         # Update the workBenchDict in the Ribbon
-                        RibbonBar.workBenchDict.update(self.workBenchDict)
+                        RibbonBar.workBenchDict.update(self.workBenchDict)                        
         return
 
     def on_CustomToolbarSelector_CP_activated(self):
@@ -980,10 +983,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             WorkBenchTitle = self.form.CustomToolbarSelector_CP.currentText().split(
                 ", "
             )[1]
-
-            # # Set the workbench selector to the workbench to which this custom toolbar belongs
-            # self.form.WorkbenchList_CP.setCurrentText(WorkBenchTitle)
-            # self.on_WorkbenchList_CP__activated(False, WorkBenchTitle)
 
             ShadowList = (
                 []
@@ -1069,69 +1068,63 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             return
 
         WorkBenchName = ""
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
         for WorkBench in self.List_Workbenches:
             if WorkBench[2] == WorkBenchTitle:
                 WorkBenchName = WorkBench[0]
                 try:
-                    for key, value in list(
-                        self.Dict_CustomToolbars["customToolbars"][
-                            WorkBenchName
-                        ].items()
-                    ):
-                        if key == CustomPanelTitle:
+                    for panel, commands in list(self.workBenchDict["customToolbars"][WorkBenchName].items()):
+                        if panel == CustomPanelTitle:
+                            # Get the order list
+                            orderList: list = self.workBenchDict["workbenches"][WorkBenchName]["toolbars"]["order"]
+                            
+                            ListPanels = []
+                            for command, toolbar in self.Dict_CustomToolbars["customToolbars"][WorkBenchName][panel]["commands"].items():
+                                if toolbar not in ListPanels:
+                                    ListPanels.append(toolbar)
+
+                            # Add the original panels
+                            for toolbar in ListPanels:
+                                TB = mw.findChildren(QToolBar, toolbar)
+                                if TB is not None:
+                                    # Create the panel based on the toolbars
+                                    newPanel = RibbonBar.CreatePanel(workbenchName=WorkBenchName, panelName=toolbar, addPanel=False, dict=self.workBenchDict, showEnableControl=True, ActivateButtons=True)                                                                        
+                                    # show the enable checkboxes  
+                                    titleLayout: QHBoxLayout = newPanel._titleLayout
+                                    EnableControl = titleLayout.itemAt(0).widget()
+                                    if EnableControl is not None:
+                                        EnableControl.setVisible(True)
+                                        EnableControl.setChecked(True)
+                                    # Add the original panel to the orderList
+                                    if toolbar not in orderList:
+                                        orderList.append(toolbar)
+                                    # Add the panel
+                                    index = orderList.index(toolbar)
+                                    RibbonBar.currentCategory().insertWidget(newPanel, index)
+                                    # Update the dict of the currentCategory with the new panel
+                                    RibbonBar.currentCategory()._panels[newPanel.objectName()] = newPanel                                  
+                            
+                            # Remove the custom panel
+                            RibbonBar.currentCategory().removePanel(panel)
+                                                                                                                
                             # remove the custom toolbar from the combobox
                             for i in range(self.form.CustomToolbarSelector_CP.count()):
-                                if (
-                                    self.form.CustomToolbarSelector_CP.itemText(
-                                        i
-                                    ).split(", ")[0]
-                                    == key
-                                ):
-                                    if (
-                                        self.form.CustomToolbarSelector_CP.itemText(
-                                            i
-                                        ).split(", ")[1]
-                                        == WorkBenchTitle
-                                        and self.form.CustomToolbarSelector_CP.itemText(
-                                            i
-                                        ).split(", ")[1]
-                                        != ""
-                                    ):
+                                if (self.form.CustomToolbarSelector_CP.itemText(i).split(", ")[0] == panel):
+                                    if (self.form.CustomToolbarSelector_CP.itemText(i).split(", ")[1] == WorkBenchTitle and self.form.CustomToolbarSelector_CP.itemText(i).split(", ")[1] != ""):
                                         self.form.CustomToolbarSelector_CP.removeItem(i)
-                                        self.form.CustomToolbarSelector_CP.setCurrentText(
-                                            self.form.CustomToolbarSelector_CP.itemText(
-                                                i - 1
-                                            )
-                                        )
+                                        self.form.CustomToolbarSelector_CP.setCurrentText(self.form.CustomToolbarSelector_CP.itemText(i - 1))
 
-                            orderList: list = self.Dict_RibbonCommandPanel[
-                                "workbenches"
-                            ][WorkBenchName]["toolbars"]["order"]
-                            if key in orderList:
-                                orderList.remove(key)
+                            # Remove the custom panel from the order list
+                            if panel in orderList:
+                                orderList.remove(panel)
 
                             # remove the custom toolbar also from the workbenches dict
-                            del self.Dict_CustomToolbars["customToolbars"][
-                                WorkBenchName
-                            ][key]
-                            if (
-                                key
-                                in self.Dict_RibbonCommandPanel["workbenches"][
-                                    WorkBenchName
-                                ]["toolbars"]
-                            ):
-                                del self.Dict_RibbonCommandPanel["workbenches"][
-                                    WorkBenchName
-                                ]["toolbars"][key]
+                            del self.workBenchDict["customToolbars"][WorkBenchName][panel]
+                            if (panel in self.workBenchDict["workbenches"][WorkBenchName]["toolbars"]):
+                                del self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel]
 
                             # update the order list
-                            self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName][
-                                "order"
-                            ] = orderList
-
-                            # Enable the apply button
-                            if self.CheckChanges() is True:
-                                self.form.UpdateJson.setEnabled(True)
+                            self.workBenchDict["workbenches"][WorkBenchName]["order"] = orderList
 
                             # Set the current text to new
                             self.form.CustomToolbarSelector_CP.setCurrentText("New")
@@ -1147,6 +1140,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 except Exception as e:
                     if Parameters.DEBUG_MODE is True:
                         raise (e)
+                    raise (e)
         return
     # endregion
     
@@ -2089,9 +2083,12 @@ class EventInspector(QObject):
                 self.dragEntered = False
             event.accept()
         if event.type() == QEvent.Type.Close:
-            if LoadDialog.DialogClosed is False:
-                mw = Gui.getMainWindow()
-                RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")        
+            mw = Gui.getMainWindow()
+            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")      
+            if LoadDialog.DialogClosed is False:                  
                 RibbonBar.on_Cancel_Clicked()
+            # # Set the size of the central wiget back
+            # mw.centralWidget().setFixedWidth(RibbonBar.CentralWidgetWidth)
+            # mw.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         return False
   

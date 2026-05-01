@@ -342,6 +342,10 @@ class ModernMenu(RibbonBar):
     
     # Create a signal to indicate that there is a different tab active.
     TabChanged = Signal()
+    
+    # store the CentralWidget width
+    CentralWidgetWidth = None
+    
     # endregion
 
     def __init__(self):
@@ -1129,7 +1133,11 @@ class ModernMenu(RibbonBar):
             and Parameters.USE_FC_OVERLAY is False
         ):
             self.UnfoldRibbon()
-            return
+            
+        if self.CustomizeEnabled:
+            # If not activated, activate all buttons    
+            self.activateButtons() 
+        return
 
     def leaveEvent(self, QEvent):
         if Parameters.AUTOHIDE_RIBBON is True and self.MenuEntered is False:
@@ -1678,7 +1686,11 @@ class ModernMenu(RibbonBar):
             # Create a bool to state if a panel is new or not
             IsNewPanel = False                            
             for longPanel in self.longPanels:                                
-                if longPanel.objectName() == objPanel.objectName() and longPanel.objectName() != "" and objPanel.objectName() != "":                                    
+                if longPanel.objectName() == objPanel.objectName() and longPanel.objectName() != "" and objPanel.objectName() != "":
+                    if longPanel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
+                        if self.workBenchDict["workbenches"][workbenchName]["toolbars"][longPanel.objectName()]["Enabled"] is False:
+                            continue
+                    
                     # Create a panel and replace the long panel with this one
                     newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=self.workBenchDict, ActivateButtons=True)  
                     if newPanel is not None:
@@ -1710,7 +1722,7 @@ class ModernMenu(RibbonBar):
         self.currentCategory()._panels = panels
         
         # Hide unchecked panels after the panel duct is updated
-        for title, objPanel in self.currentCategory().panels().items():
+        for title, objPanel in self.currentCategory()._panels.items():
             # hide the enable checkboxes and hide the panel if it is unchecked
             titleLayout: QHBoxLayout = objPanel._titleLayout
             EnableControl = titleLayout.itemAt(0).widget()
@@ -2261,6 +2273,7 @@ class ModernMenu(RibbonBar):
             
             # Get the widget from the source
             widget = event.source()
+            print(widget)
             
             # If you drag and drop a new command, you actually dragging the complete QListWidget
             if type(widget) is QListWidget:
@@ -2276,7 +2289,10 @@ class ModernMenu(RibbonBar):
                     
                     if position.x() >= xMin and position.x() < xMax:
                         if position.y() >= yMin and position.y() < yMax:
-                            self.dropPanelName = panelName                                             
+                            self.dropPanelName = panelName      
+                
+                # If not activated, activate all buttons    
+                self.activateButtons()                                       
                 
             # Store the position were the drag is started
             if self.StartPositionDrag is None:
@@ -2456,8 +2472,8 @@ class ModernMenu(RibbonBar):
             widget = event.source()
         
         # Define a parent
-        parent = None
-        
+        parent = widget.parent()
+
         # Get the current category
         currentCategory = self.currentCategory()
 
@@ -3165,6 +3181,8 @@ class ModernMenu(RibbonBar):
         
         if self.CustomizeEnabled:
             self.on_Customize_Clicked()
+            # If not activated, activate all buttons    
+            self.activateButtons() 
 
         # if self.DesignMenuLoaded is True:
         #     # Disable the quick toolbar, righttoolbar and application menu
@@ -3181,6 +3199,10 @@ class ModernMenu(RibbonBar):
 
         # hide normal toolbars
         self.hideClassicToolbars()
+                            
+        if self.CustomizeEnabled:
+            # If not activated, activate all buttons    
+            self.activateButtons() 
         return
 
     def updateCurrentTab(self):
@@ -3199,7 +3221,6 @@ class ModernMenu(RibbonBar):
             self.quickAccessToolBar().setDisabled(True)
             self.applicationOptionButton().setDisabled(True)
             Gui.updateGui()
-
         return
 
     # endregion
@@ -4159,6 +4180,7 @@ class ModernMenu(RibbonBar):
         self.quickAccessToolBar().setEnabled(True)
         self.applicationOptionButton().setEnabled(True)
         Gui.updateGui()
+
         return
 
     def buildPanels(self):
@@ -4370,6 +4392,11 @@ class ModernMenu(RibbonBar):
         if Parameters.USE_OVERLAY is True: 
              pinButton.setIcon(QIcon())   
              pinButton.setDisabled(True)         
+
+        if self.CustomizeEnabled:
+            # If not activated, activate all buttons    
+            self.activateButtons() 
+
         return
 
     # endregion
