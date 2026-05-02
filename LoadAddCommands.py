@@ -964,7 +964,11 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Remove the panels also from the current category. Othewise the will showup on clicking Ok
         for panel in panelsToRemove:
             RibbonBar.currentCategory().removeWidget(panel)
+            panel.close()
         
+        # Store the panels to remove also in the ribbon. 
+        # This to prevent them from showing up when the customize enviroment is activated again
+        RibbonBar.panelsToRemove = panelsToRemove
         return
 
     def on_CustomToolbarSelector_CP_activated(self):
@@ -1047,10 +1051,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                         ShadowList.append(CommandItem[0])
 
             self.form.PanelName_CP.setText(CustomPanelTitle.split("_")[0])
-
-            # Enable the apply button
-            if self.CheckChanges() is True:
-                self.form.UpdateJson.setEnabled(True)
         else:
             return
 
@@ -1131,7 +1131,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 del self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel]
 
                             # update the order list
-                            self.workBenchDict["workbenches"][WorkBenchName]["order"] = orderList
+                            if panel in self.workBenchDict["workbenches"][WorkBenchName]:
+                                self.workBenchDict["workbenches"][WorkBenchName][panel]["order"] = orderList
 
                             # Set the current text to new
                             self.form.CustomToolbarSelector_CP.setCurrentText("New")
