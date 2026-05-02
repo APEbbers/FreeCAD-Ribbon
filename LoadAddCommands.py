@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
-from PySide.QtWidgets import (
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
+from PySide6.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -45,7 +45,7 @@ from PySide.QtWidgets import (
     QGridLayout,
     QHBoxLayout,
 )
-from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent
+from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent
 import sys
 import json
 from datetime import datetime, timedelta
@@ -943,6 +943,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Add the newPanel to the list of longPanels
         RibbonBar.longPanels.append(newPanel)
         # Remove the original panels
+        panelsToRemove = []
         for key, value in self.workBenchDict["customToolbars"][WorkBenchName][CustomPanelTitle + Suffix]["commands"].items():
             for title, objPanel in RibbonBar.currentCategory().panels().items():
                 if objPanel.objectName() == value:
@@ -951,13 +952,19 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     EnableControl = titleLayout.itemAt(0).widget()
                     if EnableControl is not None:
                         EnableControl.setCheckState(Qt.CheckState.Unchecked) 
+                        panelsToRemove.append(objPanel)
                         # Hide the panel
                         objPanel.close()
                         # Write the state to the structure
                         StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", WorkBenchName, "toolbars", objPanel.objectName(), "Enabled"])
                         self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][objPanel.objectName()]["Enabled"] = False
                         # Update the workBenchDict in the Ribbon
-                        RibbonBar.workBenchDict.update(self.workBenchDict)                        
+                        RibbonBar.workBenchDict.update(self.workBenchDict)
+        
+        # Remove the panels also from the current category. Othewise the will showup on clicking Ok
+        for panel in panelsToRemove:
+            RibbonBar.currentCategory().removeWidget(panel)
+        
         return
 
     def on_CustomToolbarSelector_CP_activated(self):
