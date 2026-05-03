@@ -24,7 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -53,7 +53,7 @@ from PySide6.QtGui import (
     QScreen,
     QPen,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -92,7 +92,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     QAbstractButton,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1509,91 +1509,51 @@ class ModernMenu(RibbonBar):
                                 
         # Create all order lists and commands, incase they are not all present
         for title, objPanel in self.currentCategory().panels().items():
-            # Panels are just removed in this session, check if the oanel is actually removed, skip it.
-            if objPanel in self.panelsToRemove:
-                continue
-                                   
-            objPanel.show()
-            # Get the panel name and the gridlayout
-            panelName = objPanel.objectName()
-            gridLayout: QGridLayout = objPanel._actionsLayout
-            
-            # show the enable checkboxes  
-            titleLayout: QHBoxLayout = objPanel._titleLayout
-            EnableControl = titleLayout.itemAt(0).widget()
-            if EnableControl is not None:
-                EnableControl.setVisible(True)
-
-            # Recreate the order list for the new panel. 
-            # This makes sure that all controls are added to the order list
-            orderList = []
-            for n in range(gridLayout.count()):
-                control = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                if control is not None:                                    
-                    # Update the orderlist
-                    command = self.ReturnCommand_string(self.workBenchDict, objPanel, control)
-                    if command != "" and command is not None:
-                        orderList.append(command)
-
-                        # Add the command if they don't exist
-                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", command, "size"], "small")
-                        # Set the sizes
-                        style = control.ButtonStyle
-                        if style == RibbonButtonStyle.Small:
-                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "small"
-                        if style == RibbonButtonStyle.Medium:
-                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "medium"
-                        if style == RibbonButtonStyle.Large:
-                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "large"
-                
-                separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
-                if separator is not None:
-                    # Set the separator enabled, so that hovering works
-                    separator.setEnabled(True)
-                    # Make the separator wider, for easier clicking
-                    separator.setFixedWidth(16)
-                    # Add the separator to the orderlist
-                    orderList.append(separator.objectName())
-                                                
-                # Write the order list
-                Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], endEmpty=True)                         
-                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                                                        
-
-                
-            # If the panel has an overflow menu, replace it with a complete (long) panel
-            if objPanel.panelOptionButton().isVisible():
-                newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)                                
-                replacedPanel = self.currentCategory().replacePanel(objPanel, newPanel)
-                # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-                self.setPanelProperties(replacedPanel)
-                # Add the newPanel to the list of longPanels
-                self.longPanels.append(newPanel)
-                # Close the old panel
+            # If panels are just removed in this session, they might be still present int the panel list of this category
+            # Make sure by comparing the panel with the panels that are replaced by a new custom panel and close it.
+            skip = False
+            if workbenchName in self.workBenchDict["customToolbars"]:
+                for toolbar in self.workBenchDict["customToolbars"][workbenchName].keys():
+                    for toolbar in self.workBenchDict["customToolbars"][workbenchName][toolbar]["commands"].values():
+                        if toolbar == objPanel.objectName():
+                            skip = True
+            if skip is True:
                 objPanel.close()
-                
-                # Recreate the order list from the new panel
+            # If  the panel is not replaced by a custom panel, show it
+            if skip is False:
+                objPanel.show()
                 # Get the panel name and the gridlayout
-                panelName = newPanel.objectName()
-                gridLayout: QGridLayout = newPanel._actionsLayout
+                panelName = objPanel.objectName()
+                gridLayout: QGridLayout = objPanel._actionsLayout
+                
+                # show the enable checkboxes  
+                titleLayout: QHBoxLayout = objPanel._titleLayout
+                EnableControl = titleLayout.itemAt(0).widget()
+                if EnableControl is not None:
+                    EnableControl.setVisible(True)
+
+                # Recreate the order list for the new panel. 
+                # This makes sure that all controls are added to the order list
+                orderList = []
                 for n in range(gridLayout.count()):
                     control = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                    if control is not None:                                                                       
+                    if control is not None:                                    
                         # Update the orderlist
                         command = self.ReturnCommand_string(self.workBenchDict, objPanel, control)
                         if command != "" and command is not None:
                             orderList.append(command)
 
-                        # Add the command if they don't exist
-                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", command, "size"], "small")
-                        # Set the sizes
-                        style = control.ButtonStyle
-                        if style == RibbonButtonStyle.Small:
-                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "small"
-                        if style == RibbonButtonStyle.Medium:
-                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "medium"
-                        if style == RibbonButtonStyle.Large:
-                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "large"
-
+                            # Add the command if they don't exist
+                            Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", command, "size"], "small")
+                            # Set the sizes
+                            style = control.ButtonStyle
+                            if style == RibbonButtonStyle.Small:
+                                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "small"
+                            if style == RibbonButtonStyle.Medium:
+                                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "medium"
+                            if style == RibbonButtonStyle.Large:
+                                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "large"
+                    
                     separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
                     if separator is not None:
                         # Set the separator enabled, so that hovering works
@@ -1602,6 +1562,54 @@ class ModernMenu(RibbonBar):
                         separator.setFixedWidth(16)
                         # Add the separator to the orderlist
                         orderList.append(separator.objectName())
+                                                    
+                    # Write the order list
+                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], endEmpty=True)                         
+                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                                                        
+
+                    
+                # If the panel has an overflow menu, replace it with a complete (long) panel
+                if objPanel.panelOptionButton().isVisible():
+                    newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)                                
+                    replacedPanel = self.currentCategory().replacePanel(objPanel, newPanel)
+                    # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                    self.setPanelProperties(replacedPanel)
+                    # Add the newPanel to the list of longPanels
+                    self.longPanels.append(newPanel)
+                    # Close the old panel
+                    objPanel.close()
+                    
+                    # Recreate the order list from the new panel
+                    # Get the panel name and the gridlayout
+                    panelName = newPanel.objectName()
+                    gridLayout: QGridLayout = newPanel._actionsLayout
+                    for n in range(gridLayout.count()):
+                        control = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                        if control is not None:                                                                       
+                            # Update the orderlist
+                            command = self.ReturnCommand_string(self.workBenchDict, objPanel, control)
+                            if command != "" and command is not None:
+                                orderList.append(command)
+
+                            # Add the command if they don't exist
+                            Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "commands", command, "size"], "small")
+                            # Set the sizes
+                            style = control.ButtonStyle
+                            if style == RibbonButtonStyle.Small:
+                                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "small"
+                            if style == RibbonButtonStyle.Medium:
+                                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "medium"
+                            if style == RibbonButtonStyle.Large:
+                                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = "large"
+
+                        separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
+                        if separator is not None:
+                            # Set the separator enabled, so that hovering works
+                            separator.setEnabled(True)
+                            # Make the separator wider, for easier clicking
+                            separator.setFixedWidth(16)
+                            # Add the separator to the orderlist
+                            orderList.append(separator.objectName())
                                                 
                 # Write the order list
                 Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], [])                         
