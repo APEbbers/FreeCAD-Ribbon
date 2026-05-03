@@ -1663,23 +1663,6 @@ class ModernMenu(RibbonBar):
             if objPanel.title() == "<New panel>" or objPanel.title() == "":
                 objPanel.close()
                 continue
-            
-            # Add any new panel to the dict. It will be loaded with the next start
-            if objPanel.objectName().endswith("_newPanel"):
-                if workbenchName in self.workBenchDict["newPanels"]:
-                    commandList = []
-                    if objPanel.objectName() in self.workBenchDict["newPanels"][workbenchName]:                        
-                        for widget in objPanel.widgets():
-                            if type(widget) is CustomControls:
-                                command =self.ReturnCommand_string(Dict=self.workBenchDict, panel=objPanel, widget=widget)
-                                if command is not None and command != "":
-                                    if command.startswith("Std_") is False:
-                                        for item in self.List_Commands:
-                                            if item[0] == command:
-                                                commandList.append([item[0], item[3]])
-                                    if command.startswith("Std_"):
-                                        commandList.append([command, "Standard"])
-                    self.workBenchDict["newPanels"][workbenchName][objPanel.objectName()] = commandList
                                                                             
             # Create keys if there are not existing yet for the temporary panel dict
             StandardFunctions.add_keys_nested_dict(panels, [title])
@@ -2496,15 +2479,15 @@ class ModernMenu(RibbonBar):
 
                         # Define a holder for the Menu Text
                         MenuText = ""
+                        ExtraCommand_WB = ""
                         for CommandItem in self.List_Commands:
                             if CommandItem[0] == ExtraCommand:
                                 MenuText = CommandItem[4]
-
-                        # Define a holder for the Menu Text
-                        MenuText = ""
-                        for CommandItem in self.List_Commands:
-                            if CommandItem[0] == ExtraCommand:
-                                MenuText = CommandItem[4]
+                                ExtraCommand_WB = CommandItem[3]
+                        
+                        if ExtraCommand.endswith("_ddb"):
+                            MenuText = ExtraCommand.replace("_ddb", "")
+                            ExtraCommand_WB = "General"
                                             
                         # Get the workbench name and the panel name                  
                         title = panel.objectName()
@@ -2541,7 +2524,16 @@ class ModernMenu(RibbonBar):
                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["icon"] = ""
                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["IsExtra"] = True
                         
+                        # if this is a newPanel, update the newpanel dict as well
+                        if panel.objectName().endswith("_newPanel"):
+                            Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName, panel.objectName()], endEmpty=True)
+                            newPanelCommandList = self.workBenchDict["newPanels"][workbenchName][panel.objectName()]
+                            newPanelCommandList.append([ExtraCommand, ExtraCommand_WB])
+                            self.workBenchDict["newPanels"][workbenchName][panel.objectName()] = newPanelCommandList
+                        
+                        # Get the name from  current workbench
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                        # Create a new panel with the extra command
                         newPanel = self.CreatePanel(workbenchName, self.dropPanelName, addPanel=False, dict=self.workBenchDict, SetToUpdate=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand, ActivateButtons=True)
                                                 
                         # Add the panel to the list with long panels

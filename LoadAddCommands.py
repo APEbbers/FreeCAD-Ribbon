@@ -679,13 +679,27 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         CustomToolbars = self.Dict_ReturnCustomToolbars_Global()
         for CustomToolbar in CustomToolbars:
             wbToolbars.append(CustomToolbar)
-        # # Get the custom panels
-        # CustomPanel = self.List_AddCustomPanel(
-        #     self.Dict_CustomToolbars, WorkBenchName=WorkBenchName
-        # )
-        # for CustomToolbar in CustomPanel:
-        #     if CustomToolbar[1] == WorkBenchTitle:
-        #         wbToolbars.append(CustomToolbar[0])
+        # Get the custom panels
+        CustomPanel = self.List_ReturnCustomPanel(
+            self.workBenchDict["customToolbars"], WorkBenchName=WorkBenchName
+        )
+        for CustomToolbar in CustomPanel:
+            if CustomToolbar[1] == WorkBenchTitle or CustomToolbar[1] == "Global":
+                wbToolbars.append(CustomToolbar[0])
+        # Get the new panels per workbench
+        NewPanels = self.List_ReturnNewPanel(
+            self.Dict_NewPanels, WorkBenchName=WorkBenchName, PanelDict="newPanels"
+        )
+        for Newpanel in NewPanels:
+            if Newpanel[1] == WorkBenchTitle:
+                wbToolbars.append(Newpanel[0])
+        # Get the new panels globally
+        NewPanels = self.List_ReturnNewPanel(
+            self.Dict_NewPanels, WorkBenchName="Global", PanelDict="newPanels"
+        )
+        for Newpanel in NewPanels:
+            if Newpanel[1] == "Global":
+                wbToolbars.append(Newpanel[0])
 
         # Clear the listwidget before filling it
         self.form.PanelAvailable_CP.clear()
@@ -693,7 +707,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         wbToolbars = self.SortedPanelList(wbToolbars, WorkBenchName)
 
         # Go through the toolbars and check if they must be ignored.
+        shadowList = []
         for Toolbar in wbToolbars:
+            if Toolbar in shadowList:
+                continue
             IsIgnored = False
             for IgnoredToolbar in self.List_IgnoredToolbars:
                 if Toolbar == IgnoredToolbar:
@@ -718,6 +735,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 ListWidgetItem.setText(ToolbarTransLated.replace("&", ""))
                 ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
                 self.form.PanelAvailable_CP.addItem(ListWidgetItem)
+                
+                # Add the toolbar to the shadow list to prevent from being added more than once.
+                shadowList.append(Toolbar)
 
                 if setCustomToolbarSelector_CP is True:
                     self.form.CustomToolbarSelector_CP.setCurrentText(
@@ -767,6 +787,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Get the global custom toolbars
         CustomCommands = self.Dict_ReturnCustomToolbars_Global()
         ToolbarItems.update(CustomCommands)
+        # Get the new panels from each installed workbench
+        NewPanelCommands = self.Dict_ReturnNewPanel(self.workBenchDict, WorkbenchName)
+        ToolbarItems.update(NewPanelCommands)
+        # Get the global new panels
+        NewPanelCommands = self.Dict_ReturnNewPanel(self.workBenchDict)
+        ToolbarItems.update(NewPanelCommands)
+        
         for key, value in list(ToolbarItems.items()):
             # Go through the selected items, if they mach continue
             for i in range(len(SelectedToolbars)):
@@ -856,12 +883,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.show()
             return
 
-        # WorkBenchName = self.form.WorkbenchList_CP.currentData(
-        #     Qt.ItemDataRole.UserRole
-        # )[0]
-        # WorkBenchTitle = self.form.WorkbenchList_CP.currentData(
-        #     Qt.ItemDataRole.UserRole
-        # )[2]
         WorkBenchName = self.CurrentWorkBenchName
         WorkBenchTitle = self.CurrentWorkBenchTitle
         # Create item that defines the custom toolbar
@@ -1858,6 +1879,103 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     Toolbars[Name] = ListCommands
 
         return Toolbars
+    
+    
+    def Dict_ReturnNewPanel(self, DictPanels: dict, WorkBenchName="Global", PanelDict="newPanels"):
+        Toolbars = {}
+
+        try:
+            for NewPanel in DictPanels[PanelDict][WorkBenchName]:
+                ListCommands = []
+                Commands = DictPanels[PanelDict][WorkBenchName][NewPanel]
+
+                for commandName in Commands:
+                    ListCommands.append(commandName[0])
+                Toolbars[NewPanel] = ListCommands
+
+            for NewPanel in DictPanels[PanelDict]["Global"]:
+                ListCommands = []
+                Commands = DictPanels[PanelDict][WorkBenchName][NewPanel]
+
+                for commandName in Commands:
+                    ListCommands.append(commandName[0])
+                Toolbars[NewPanel] = ListCommands
+        except Exception:
+            pass
+        return Toolbars
+    
+    
+    def List_ReturnCustomPanel(self, DictPanels: dict, WorkBenchName="Global", PanelDict="customToolbars"):
+        Toolbars = []
+
+        if str(WorkBenchName) != "" or WorkBenchName is not None:
+            if str(WorkBenchName) != "NoneWorkbench":
+                try:
+                    for CustomToolbar in DictPanels[PanelDict][WorkBenchName]:
+                        if len(DictPanels[PanelDict][WorkBenchName]) > 0:
+                            ListCommands = []
+                            Commands = DictPanels[PanelDict][WorkBenchName][
+                                CustomToolbar
+                            ]["commands"]
+
+                            WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
+                            if WorkBenchName == "Global":
+                                WorkbenchTitle = "Global"
+
+                            for key, value in list(Commands.items()):
+                                for i in range(len(self.List_Commands)):
+                                    if (
+                                        self.List_Commands[i][0] == key
+                                        and self.List_Commands[i][3] == WorkBenchName
+                                    ):
+                                        Command = self.List_Commands[i][0]
+                                        ListCommands.append(Command)
+                                    if (
+                                        self.List_Commands[i][0] == key
+                                        and self.List_Commands[i][3] == "Global"
+                                    ):
+                                        Command = self.List_Commands[i][0]
+                                        ListCommands.append(Command)
+
+                                if value not in self.List_IgnoredToolbars_internal:
+                                    self.List_IgnoredToolbars_internal.append(
+                                        f"{value}"
+                                    )
+
+                            Toolbars.append(
+                                [
+                                    CustomToolbar,
+                                    WorkbenchTitle,
+                                    ListCommands,
+                                    CustomToolbar,
+                                ]
+                            )
+                except Exception:
+                    pass
+
+        return Toolbars
+
+
+    def List_ReturnNewPanel(self, DictPanels: dict, WorkBenchName="Global", PanelDict="newPanels"):
+        Toolbars = []
+
+        if WorkBenchName != "" or WorkBenchName is not None:
+            if WorkBenchName != "NoneWorkbench":
+                try:
+                    for NewPanel in DictPanels[PanelDict][WorkBenchName]:
+                        ListCommands = DictPanels[PanelDict][WorkBenchName][NewPanel]
+                        if WorkBenchName == "Global":
+                            WorkbenchTitle = WorkBenchName
+                        else:
+                            WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
+
+                        Toolbars.append(
+                            [NewPanel, WorkbenchTitle, ListCommands, NewPanel]
+                        )
+                except Exception:
+                    pass
+        return Toolbars
+
 
     def CheckChanges(self):
         # Open the JsonFile and load the data
