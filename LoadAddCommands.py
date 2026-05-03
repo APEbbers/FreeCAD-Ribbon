@@ -440,6 +440,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
         RibbonBar.TabChanged.connect(self.setWB)
         self.setWB()
+        
         # Hide the correct ok and cancel button when the form is docked or not
         if Parameters.DOCKED_DIALOGS is True:
             self.form.okButton.setHidden(True)
@@ -647,10 +648,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     
     # region - Combine panels tab
     def setWB(self):
+        # Get the ribbon, the current wb title and name
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
         self.CurrentWorkBenchTitle = RibbonBar.currentCategory().title()
         self.CurrentWorkBenchName = RibbonBar.currentCategory().objectName()
+        # Activate the correct workbench in this dialog (ComboBox is hidden)
         self.on_WorkbenchList_CP__activated()
+        
         return
     
     def on_WorkbenchList_CP__activated(
@@ -981,20 +985,24 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         ):
             self.form.PanelAvailable_CP.clear()
             self.form.PanelName_CP.clear()
+            self.on_WorkbenchList_CP__activated()
             return
 
         # Get the current custom toolbar name
         CustomPanelTitle = ""
         WorkBenchTitle = ""
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
         if self.form.CustomToolbarSelector_CP.currentText() != "":
             CustomPanelTitle = (
                 self.form.CustomToolbarSelector_CP.currentText().split(", ")[0]
                 + "_custom"
             )
-            WorkBenchTitle = self.form.CustomToolbarSelector_CP.currentText().split(
-                ", "
-            )[1]
-
+            WorkBenchTitle = self.form.CustomToolbarSelector_CP.currentText().split(", ")[1]
+            category = RibbonBar.categories()[WorkBenchTitle]
+            if category is not None:
+                RibbonBar.setCurrentCategory(category)
+                self.setWB()
+            
             ShadowList = (
                 []
             )  # Create a shadow list. To check if items are already existing.
@@ -1112,8 +1120,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     RibbonBar.currentCategory()._panels[newPanel.objectName()] = newPanel                                  
                             
                             # Remove the custom panel
+                            #
+                            # Close the panel first before removing
+                            panelToRemove = RibbonBar.currentCategory().panels()[panel]                            
+                            panelToRemove.close()
+                            # Remove it
                             RibbonBar.currentCategory().removePanel(panel)
-                                                                                                                
+                                                                          
                             # remove the custom toolbar from the combobox
                             for i in range(self.form.CustomToolbarSelector_CP.count()):
                                 if (self.form.CustomToolbarSelector_CP.itemText(i).split(", ")[0] == panel):
