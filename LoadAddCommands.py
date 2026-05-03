@@ -990,10 +990,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         for panel in panelsToRemove:
             RibbonBar.currentCategory().removeWidget(panel)
             panel.close()
-        
-        # Store the panels to remove also in the ribbon. 
-        # This to prevent them from showing up when the customize enviroment is activated again
-        RibbonBar.panelsToRemove = panelsToRemove
         return
 
     def on_CustomToolbarSelector_CP_activated(self):
@@ -2184,7 +2180,7 @@ class EventInspector(QObject):
             # Get the mainwindow, the ribbon and the title
             mw = Gui.getMainWindow()
             RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-            if type(self.widget) is not QuickAccessToolButton:
+            if type(self.widget) is not QuickAccessToolButton and type(self.widget) is not RibbonPanel:
                 if panel is not None:
                     # Set the wait cursor
                     QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
