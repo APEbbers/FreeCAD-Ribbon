@@ -188,7 +188,6 @@ FreeCAD_Version = {
 # endregion
 
 
-
 # region - Define the resources ----------------------------------------------------------------------------------------
 ICON_LOCATION = os.path.join(os.path.dirname(__file__), "Resources", "icons")
 STYLESHEET_LOCATION = os.path.join(
@@ -259,17 +258,17 @@ DefaultSettings = {
 }
 
 # Get the install location of FreeCAD
-AppDir = os.path.join(App.getUserAppDataDir().split('FreeCAD')[0], "FreeCAD")
+AppDir = os.path.join(App.getUserAppDataDir().split("FreeCAD")[0], "FreeCAD")
 OldModDir = os.path.join(AppDir, "Mod")
 CurrentModDir = os.path.join(App.getUserAppDataDir(), "Mod")
 
 # region - Define the import location ----------------------------------------------------------------------------------
 IMPORT_LOCATION = Settings.GetStringSetting("ImportLocation")
-if IMPORT_LOCATION == ""  or os.path.isfile(IMPORT_LOCATION) is False:
+if IMPORT_LOCATION == "" or os.path.isfile(IMPORT_LOCATION) is False:
     IMPORT_LOCATION = str(DefaultSettings["ImportLocation"])
     Settings.SetStringSetting("ImportLocation", IMPORT_LOCATION)
     Settings.SetStringSetting("AddonDir", os.path.dirname(__file__))
-    
+
 # endregion ------------------------------------------------------------------------------------------------------------
 
 # region - Define the export location ----------------------------------------------------------------------------------
@@ -383,7 +382,10 @@ if Settings.GetBoolSetting("BackupEnabled") is None:
     Settings.SetBoolSetting("BackupEnabled", ENABLE_BACKUP)
 
 BACKUP_LOCATION = Settings.GetStringSetting("BackupFolder")
-if Settings.GetStringSetting("BackupFolder") == "" or os.path.isfile(BACKUP_LOCATION) is False:
+if (
+    Settings.GetStringSetting("BackupFolder") == ""
+    or os.path.isfile(BACKUP_LOCATION) is False
+):
     BACKUP_LOCATION = str(DefaultSettings["BackupFolder"])
     Settings.SetStringSetting("BackupFolder", BACKUP_LOCATION)
 # endregion ------------------------------------------------------------------------------------------------------------
