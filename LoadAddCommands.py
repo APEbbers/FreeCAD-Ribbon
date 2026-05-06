@@ -979,7 +979,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         EnableControl.setCheckState(Qt.CheckState.Unchecked) 
                         panelsToRemove.append(objPanel)
                         # Hide the panel
-                        objPanel.close()
+                        objPanel.hide()
                         # Write the state to the structure
                         StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", WorkBenchName, "toolbars", objPanel.objectName(), "Enabled"])
                         self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][objPanel.objectName()]["Enabled"] = False
@@ -988,8 +988,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
         # Remove the panels also from the current category. Othewise the will showup on clicking Ok
         for panel in panelsToRemove:
-            RibbonBar.currentCategory().removeWidget(panel)
-            panel.close()
+            # RibbonBar.currentCategory().removeWidget(panel)
+            panel.hide()
+            RibbonBar.ReplacedPanels.append(panel)
         return
 
     def on_CustomToolbarSelector_CP_activated(self):
@@ -2203,6 +2204,9 @@ class EventInspector(QObject):
                 self.dragEntered = False
                 event.accept()
                 return True
+            if type(self.widget) is RibbonPanel:
+                RibbonBar.RemovePanelFromDict(self.widget)
+                self.dragEntered = False
             # return True
         # # Show the mainwindow after the application is activated
         if event.type() == QEvent.Type.DragEnter:

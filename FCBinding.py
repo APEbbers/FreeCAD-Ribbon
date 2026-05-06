@@ -347,6 +347,7 @@ class ModernMenu(RibbonBar):
     CentralWidgetWidth = None
     
     HiddenPanels = []
+    ReplacedPanels = []
     
     # endregion
 
@@ -1685,6 +1686,12 @@ class ModernMenu(RibbonBar):
                     StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", objPanel.objectName(), "Enabled"])
                     self.ribbonStructure["workbenches"][workbenchName]["toolbars"][objPanel.objectName()]["Enabled"] = True
                     objPanel.show()
+                    for panel in self.HiddenPanels:
+                        if panel.objectName() == objPanel.objectName():
+                            self.HiddenPanels.remove(panel)
+                    for panel in self.ReplacedPanels:
+                        if panel.objectName() == objPanel.objectName():
+                            self.ReplacedPanels.remove(panel)
                 EnableControl.setVisible(False)
                                                                             
             # Create keys if there are not existing yet for the temporary panel dict
@@ -1696,7 +1703,7 @@ class ModernMenu(RibbonBar):
                 if longPanel.objectName() == objPanel.objectName() and longPanel.objectName() != "" and objPanel.objectName() != "":
                     if longPanel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
                         if self.workBenchDict["workbenches"][workbenchName]["toolbars"][longPanel.objectName()]["Enabled"] is False:
-                            continue
+                            continue                               
                     
                     # Create a panel and replace the long panel with this one
                     newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=self.workBenchDict, ActivateButtons=True)  
@@ -1760,7 +1767,7 @@ class ModernMenu(RibbonBar):
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
         with open(JsonFile, "w") as outfile:
             json.dump(self.ribbonStructure, outfile, indent=4)
-        
+                
         # Close the temporary document
         try:
             App.closeDocument("Temporary")
@@ -1778,6 +1785,26 @@ class ModernMenu(RibbonBar):
         
         # Restore the cursor
         QApplication.restoreOverrideCursor()
+        
+        # Hide the panels that are toggled off
+        for objPanel in self.currentCategory().panels().values():
+            for panel in self.HiddenPanels:
+                if panel.objectName() == objPanel.objectName():
+                    panel.hide()
+                    objPanel.hide()
+        # Hide the replaced panels (by a combined panel)
+        for objPanel in self.currentCategory().panels().values():
+            for panel in self.ReplacedPanels:
+                if panel.objectName() == objPanel.objectName():
+                    panel.hide()
+                    objPanel.hide()
+        
+        # Clear the working dict
+        self.workBenchDict.clear()
+                            
+        # Clear the panel lists
+        self.HiddenPanels.clear()
+        self.ReplacedPanels.clear()
         return
     
     def on_Cancel_Clicked(self, workbenchName = ""):
@@ -1811,42 +1838,73 @@ class ModernMenu(RibbonBar):
         
         # Restore the original panel with the overflow menu
         panels = {} # Needed to update the panel dict of the currentCategory
-        for title, objPanel in self.currentCategory().panels().items():
+        dictPanels = self.currentCategory().panels()
+        for panel in self.HiddenPanels:
+            dictPanels[panel.title()] = panel
+        for title, objPanel in dictPanels.items():
             # If it is an new panel without a set title, remove it
             if objPanel.title() == "<New panel>":
-                objPanel.close()
+                objPanel.hide()
                 continue
             # If the panel is not in the ribbon structure, remove it
             if objPanel.objectName() not in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]:
-                objPanel.close()
-                continue
+                objPanel.hide()
+                continue     
             
             # Create a panel and replace the long panel with this one
-            if objPanel.objectName().endswith("_custom") is False:
-                # Create keys if there are not existing yet for the temporary panel dict
-                StandardFunctions.add_keys_nested_dict(panels, [title])
+            # 
+            # Create keys if there are not existing yet for the temporary panel dict
+            StandardFunctions.add_keys_nested_dict(panels, [title])
 
-                newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=Dict)
-                if newPanel is None:
-                    continue
-                # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-                # if newPanel is not None:
-                self.setPanelProperties(newPanel)
-                try:
-                    self.currentCategory().replacePanel(objPanel, newPanel)
-                except Exception:
-                    pass
-                # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-                # if newPanel is not None:
-                self.setPanelProperties(newPanel)
-                # Close the old panel
-                objPanel.close()
-                # Update the temporary panel dict
-                panels[title] = newPanel   
+            newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=Dict)
+            if newPanel is None:
+                continue
+            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+            self.setPanelProperties(newPanel)
+            try:
+                self.currentCategory().replacePanel(objPanel, newPanel)
+            except Exception:
+                pass
+            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+            # if newPanel is not None:
+            self.setPanelProperties(newPanel)
+            # Close the old panel
+            objPanel.close()
+            # Update the temporary panel dict
+            panels[title] = newPanel   
+            
+            # Set the buttonstate back as it was
+            panelName = newPanel.objectName()
+            gridLayout: QGridLayout = newPanel._actionsLayout
+            for n in range(gridLayout.count()):
+                control = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                if control is not None:
+                    try:
+                        ButtonState = self.ButtonState[panelName][control.actions().data()]
+                        control.actions().setEnabled(ButtonState)
+                    except Exception:
+                        pass
+                
+                separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
+                if separator is not None:
+                    # Disable the separators to avoid highlighting when hovering
+                    separator.setEnabled(False)
+                    # Set the separator to its original width
+                    separator.setFixedWidth(6)
                                                                                             
         # Update the panel dict of the current catergory with the temporary panel dict
-        # self.currentCategory()._panels = panels
+        self.currentCategory()._panels = panels
         self.currentCategory()._panels.update(panels)
+                            
+        # Hide the panels that are toggled off
+        for objPanel in self.currentCategory().panels().values():
+            for panel in self.HiddenPanels:
+                if panel.objectName() == objPanel.objectName():
+                    panel.hide()
+                    objPanel.hide()
+        # Restore the replaced panels
+        for panel in self.ReplacedPanels:
+            panel.show()
         
         # Remove panels that newly added by combining panels
         for objPanel in self.longPanels:
@@ -1863,27 +1921,13 @@ class ModernMenu(RibbonBar):
 
         # Restore the ribbonstructure
         self.ribbonStructure = Dict
-                
-        # Set the buttonstate back as it was
-        for title, objPanel in self.currentCategory().panels().items():
-            # Get the panel name and the gridlayout
-            panelName = objPanel.objectName()
-            gridLayout: QGridLayout = objPanel._actionsLayout
-            for n in range(gridLayout.count()):
-                control = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                if control is not None:
-                    try:
-                        ButtonState = self.ButtonState[panelName][control.actions().data()]
-                        control.actions().setEnabled(ButtonState)
-                    except Exception:
-                        pass
-                
-                separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
-                if separator is not None:
-                    # Disable the separators to avoid highlighting when hovering
-                    separator.setEnabled(False)
-                    # Set the separator to its original width
-                    separator.setFixedWidth(6)
+        
+        # Clear the workbench dict
+        self.workBenchDict.clear()
+        
+        # Clear the panel lists
+        # self.HiddenPanels.clear()
+        self.ReplacedPanels.clear()
                    
         # Close the AddCommands dialog
         if self.AddCommandsDialog is not None:
@@ -2901,6 +2945,7 @@ class ModernMenu(RibbonBar):
         if type(widget) is RibbonPanel:
             # Get the position (index, position)
             position = self.find_drop_location(event)
+
             # Create a new panel
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
             newPanel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True, ActivateButtons=True)
@@ -4295,8 +4340,9 @@ class ModernMenu(RibbonBar):
                 if "Enabled" in self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
                     Enabled = self.ribbonStructure["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"]
                     if Enabled is False:
+                        self.HiddenPanels.append(panel)
                         panel.hide()
-            
+                                   
             # Writing to ribbonStructure.json
             JsonFile = Parameters.RIBBON_STRUCTURE_JSON
             with open(JsonFile, "w") as outfile:
@@ -6055,6 +6101,27 @@ class ModernMenu(RibbonBar):
             StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName, panel.objectName()])
             self.workBenchDict["newPanels"][workbenchName][panel.objectName()] = []
         
+        return
+    
+    def RemovePanelFromDict(self, panel: RibbonPanel):
+        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        if panel.objectName().endswith("_newPanel"):
+            # Remove the panel from the workbench dict
+            if workbenchName in self.workBenchDict["newPanels"]:
+                if panel.objectName() in self.workBenchDict["newPanels"][workbenchName]:
+                    del self.workBenchDict["newPanels"][workbenchName][panel.objectName()]
+            
+            # Remove the panel also from the workbench dict
+            if workbenchName in self.workBenchDict["workbenches"]:
+                if panel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
+                    orderList = []
+                    if "order" in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
+                        orderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
+                        if panel.objectName() in orderList:
+                            orderList.remove(panel.objectName())
+                    del self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]
+            
+            panel.close()
         return
     
     def setPanelProperties(self, panel: RibbonPanel):
