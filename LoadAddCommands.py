@@ -680,26 +680,28 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         for CustomToolbar in CustomToolbars:
             wbToolbars.append(CustomToolbar)
         # Get the custom panels
-        CustomPanel = self.List_ReturnCustomPanel(
-            self.workBenchDict["customToolbars"], WorkBenchName=WorkBenchName
-        )
-        for CustomToolbar in CustomPanel:
-            if CustomToolbar[1] == WorkBenchTitle or CustomToolbar[1] == "Global":
-                wbToolbars.append(CustomToolbar[0])
+        if "customToolbars" in self.workBenchDict:
+            CustomPanel = self.List_ReturnCustomPanel(
+                self.workBenchDict["customToolbars"], WorkBenchName=WorkBenchName
+            )
+            for CustomToolbar in CustomPanel:
+                if CustomToolbar[1] == WorkBenchTitle or CustomToolbar[1] == "Global":
+                    wbToolbars.append(CustomToolbar[0])
         # Get the new panels per workbench
-        NewPanels = self.List_ReturnNewPanel(
-            self.Dict_NewPanels, WorkBenchName=WorkBenchName, PanelDict="newPanels"
-        )
-        for Newpanel in NewPanels:
-            if Newpanel[1] == WorkBenchTitle:
-                wbToolbars.append(Newpanel[0])
-        # Get the new panels globally
-        NewPanels = self.List_ReturnNewPanel(
-            self.Dict_NewPanels, WorkBenchName="Global", PanelDict="newPanels"
-        )
-        for Newpanel in NewPanels:
-            if Newpanel[1] == "Global":
-                wbToolbars.append(Newpanel[0])
+        if "newPanels" in self.workBenchDict:
+            NewPanels = self.List_ReturnNewPanel(
+                self.workBenchDict["newPanels"], WorkBenchName=WorkBenchName, PanelDict="newPanels"
+            )
+            for Newpanel in NewPanels:
+                if Newpanel[1] == WorkBenchTitle:
+                    wbToolbars.append(Newpanel[0])
+            # Get the new panels globally
+            NewPanels = self.List_ReturnNewPanel(
+                self.workBenchDict["newPanels"], WorkBenchName="Global", PanelDict="newPanels"
+            )
+            for Newpanel in NewPanels:
+                if Newpanel[1] == "Global":
+                    wbToolbars.append(Newpanel[0])                       
 
         # Clear the listwidget before filling it
         self.form.PanelAvailable_CP.clear()
@@ -712,8 +714,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             if Toolbar in shadowList:
                 continue
             IsIgnored = False
-            for IgnoredToolbar in self.List_IgnoredToolbars:
-                if Toolbar == IgnoredToolbar:
+            for IgnoredToolbar in self.workBenchDict["ignoredToolbars"]:
+                if Toolbar.lower() == IgnoredToolbar.lower():
                     IsIgnored = True
 
             # If the are not to be ignored, add them to the listwidget
@@ -2019,17 +2021,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     def SortedPanelList(self, PanelList_RD: list, WorkBenchName):
         JsonOrderList = []
         try:
-            if (
-                len(
-                    self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName][
-                        "toolbars"
-                    ]["order"]
-                )
-                > 0
-            ):
-                JsonOrderList = self.Dict_RibbonCommandPanel["workbenches"][
-                    WorkBenchName
-                ]["toolbars"]["order"]
+            if (len(self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]) > 0):
+                JsonOrderList = self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"]["order"]
         except Exception:
             JsonOrderList = PanelList_RD
 
