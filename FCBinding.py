@@ -1464,6 +1464,7 @@ class ModernMenu(RibbonBar):
         return
     
     def on_Customize_Clicked(self):
+        # print(self.currentCategory().panels())
         # Get the name of the current workbench
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         if self.currentCategory() not in self.CustomizedCategories:
@@ -1493,7 +1494,7 @@ class ModernMenu(RibbonBar):
         # Store the state of the buttons
         for title, objPanel in self.currentCategory().panels().items():
             panelName = objPanel.objectName()
-            gridLayout = objPanel._actionsLayout
+            gridLayout: QGridLayout = objPanel._actionsLayout
             for n in range(gridLayout.count()):
                 try:
                     control: QToolButton = gridLayout.itemAt(n).widget().findChild(CustomControls)
@@ -1534,6 +1535,7 @@ class ModernMenu(RibbonBar):
                 titleLayout: QHBoxLayout = objPanel._titleLayout
                 EnableControl = titleLayout.itemAt(0).widget()
                 if EnableControl is not None:
+                    EnableControl.setEnabled(True)
                     EnableControl.setVisible(True)
 
                 # Recreate the order list for the new panel. 
@@ -1591,7 +1593,7 @@ class ModernMenu(RibbonBar):
                         control = gridLayout.itemAt(n).widget().findChild(CustomControls)
                         if control is not None:                                                                       
                             # Update the orderlist
-                            command = self.ReturnCommand_string(self.workBenchDict, objPanel, control)
+                            command = self.ReturnCommand_string(self.workBenchDict, newPanel, control)
                             if command != "" and command is not None:
                                 orderList.append(command)
 
@@ -1618,10 +1620,12 @@ class ModernMenu(RibbonBar):
                 # Write the order list
                 Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panelName, "order"], [])                         
                 self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                                      
-                                    
+
+                           
             # Enable all buttons, so you can access them with a right click
-            self.activateButtons()
+            self.activateButtons()            
             
+        self.currentCategory().panels().update(dictPanels)
         return
     
     def on_Ok_Clicked(self, workbenchName = ""):
@@ -1840,7 +1844,13 @@ class ModernMenu(RibbonBar):
         panels = {} # Needed to update the panel dict of the currentCategory
         dictPanels = self.currentCategory().panels()
         for panel in self.HiddenPanels:
-            dictPanels[panel.title()] = panel
+            isInList = False
+            for objPanel in dictPanels:
+                if panel.objectName() == objPanel.objectName():
+                    isInList = True
+            if isInList is False:
+                dictPanels[panel.title()] = panel
+                
         for title, objPanel in dictPanels.items():
             # If it is an new panel without a set title, remove it
             if objPanel.title() == "<New panel>":
@@ -1852,10 +1862,6 @@ class ModernMenu(RibbonBar):
                 continue     
             
             # Create a panel and replace the long panel with this one
-            # 
-            # Create keys if there are not existing yet for the temporary panel dict
-            StandardFunctions.add_keys_nested_dict(panels, [title])
-
             newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=Dict)
             if newPanel is None:
                 continue
@@ -1868,10 +1874,10 @@ class ModernMenu(RibbonBar):
             # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
             # if newPanel is not None:
             self.setPanelProperties(newPanel)
-            # Close the old panel
-            objPanel.close()
-            # Update the temporary panel dict
-            panels[title] = newPanel   
+            # Delete the old panel
+            objPanel.deleteLater()
+            # Update the panel dict            
+            self.currentCategory().panels()[title] = newPanel
             
             # Set the buttonstate back as it was
             panelName = newPanel.objectName()
@@ -1891,11 +1897,7 @@ class ModernMenu(RibbonBar):
                     separator.setEnabled(False)
                     # Set the separator to its original width
                     separator.setFixedWidth(6)
-                                                                                            
-        # Update the panel dict of the current catergory with the temporary panel dict
-        self.currentCategory()._panels = panels
-        self.currentCategory()._panels.update(panels)
-                            
+                                                                                         
         # Hide the panels that are toggled off
         for objPanel in self.currentCategory().panels().values():
             for panel in self.HiddenPanels:
@@ -1926,7 +1928,7 @@ class ModernMenu(RibbonBar):
         self.workBenchDict.clear()
         
         # Clear the panel lists
-        # self.HiddenPanels.clear()
+        self.HiddenPanels.clear()
         self.ReplacedPanels.clear()
                    
         # Close the AddCommands dialog
