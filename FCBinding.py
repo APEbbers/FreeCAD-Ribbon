@@ -1426,12 +1426,14 @@ class ModernMenu(RibbonBar):
                             self.setCurrentCategory(category)
                             self.on_Ok_Clicked()
                         self.CustomizedCategories.clear()
+                        return
  
                 if action == CustomizeCancelAct:
                     for category in self.CustomizedCategories:
                         self.setCurrentCategory(category)
                         self.on_Cancel_Clicked()
                     self.CustomizedCategories.clear()
+                    return
             
             # Add a context menu to the quickaccess button
             if panel is not None and type(panel) is not RibbonPanel and quickaccessbutton is not None and self.CustomizeEnabled is True and quickaccessbutton.underMouse():
@@ -1625,7 +1627,7 @@ class ModernMenu(RibbonBar):
             # Enable all buttons, so you can access them with a right click
             self.activateButtons()            
             
-        self.currentCategory().panels().update(dictPanels)
+        # self.currentCategory().panels().update(dictPanels)
         return
     
     def on_Ok_Clicked(self, workbenchName = ""):
@@ -1668,9 +1670,12 @@ class ModernMenu(RibbonBar):
         panels = {} # Needed to update the panel dict of the currentCategory
         for title, objPanel in self.currentCategory().panels().items():
             # If it is an new panel without a set title, remove it
+            # try:
             if objPanel.title() == "<New panel>" or objPanel.title() == "":
                 objPanel.close()
                 continue
+            # except Exception:
+            #     continue
             
             # hide the enable checkboxes and hide the panel if it is unchecked
             titleLayout: QHBoxLayout = objPanel._titleLayout
@@ -1725,8 +1730,8 @@ class ModernMenu(RibbonBar):
                         # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
                         self.setPanelProperties(newPanel)
                         # Close the old panel
-                        objPanel.close()
-                        longPanel.close()
+                        objPanel.deleteLater()
+                        longPanel.deleteLater()
                         # Update the temporary panel dict
                         panels[title] = newPanel
                         # Set the bool to True
@@ -1786,21 +1791,21 @@ class ModernMenu(RibbonBar):
             DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
             if DockWidget is not None:
                 DockWidget.deleteLater()
-        
-        # Restore the cursor
+                
+         # Restore the cursor
         QApplication.restoreOverrideCursor()
         
         # Hide the panels that are toggled off
         for objPanel in self.currentCategory().panels().values():
             for panel in self.HiddenPanels:
                 if panel.objectName() == objPanel.objectName():
-                    panel.hide()
+                    panel.deleteLater()
                     objPanel.hide()
         # Hide the replaced panels (by a combined panel)
         for objPanel in self.currentCategory().panels().values():
             for panel in self.ReplacedPanels:
                 if panel.objectName() == objPanel.objectName():
-                    panel.hide()
+                    panel.deleteLater()
                     objPanel.hide()
         
         # Clear the working dict
@@ -1808,14 +1813,19 @@ class ModernMenu(RibbonBar):
                             
         # Clear the panel lists
         self.HiddenPanels.clear()
-        self.ReplacedPanels.clear()
+        self.ReplacedPanels.clear()        
+                
         return
     
+    Cancel = False
     def on_Cancel_Clicked(self, workbenchName = ""):
+        if self.Cancel is True:
+            return
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
         
+        print(self.currentCategory().panels())
         # Get the name of the current workbench
         if workbenchName == "":
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
@@ -1841,24 +1851,23 @@ class ModernMenu(RibbonBar):
             Dict.update(json.load(file))
         
         # Restore the original panel with the overflow menu
-        panels = {} # Needed to update the panel dict of the currentCategory
         dictPanels = self.currentCategory().panels()
-        for panel in self.HiddenPanels:
+        for panel in self.ReplacedPanels:
             isInList = False
-            for objPanel in dictPanels:
+            for objPanel in dictPanels.values():
                 if panel.objectName() == objPanel.objectName():
                     isInList = True
             if isInList is False:
                 dictPanels[panel.title()] = panel
-                
+
         for title, objPanel in dictPanels.items():
             # If it is an new panel without a set title, remove it
             if objPanel.title() == "<New panel>":
-                objPanel.hide()
+                objPanel.deleteLater()
                 continue
             # If the panel is not in the ribbon structure, remove it
-            if objPanel.objectName() not in self.ribbonStructure["workbenches"][workbenchName]["toolbars"]:
-                objPanel.hide()
+            if objPanel.objectName() not in Dict["workbenches"][workbenchName]["toolbars"]:
+                objPanel.deleteLater()
                 continue     
             
             # Create a panel and replace the long panel with this one
@@ -1867,17 +1876,17 @@ class ModernMenu(RibbonBar):
                 continue
             # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
             self.setPanelProperties(newPanel)
-            try:
-                self.currentCategory().replacePanel(objPanel, newPanel)
-            except Exception:
-                pass
+            # try:
+            self.currentCategory().replacePanel(objPanel, newPanel)
+            # except Exception:
+            #     pass
             # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
             # if newPanel is not None:
             self.setPanelProperties(newPanel)
+            # Update the panel dict            
+            dictPanels[title] = newPanel
             # Delete the old panel
             objPanel.deleteLater()
-            # Update the panel dict            
-            self.currentCategory().panels()[title] = newPanel
             
             # Set the buttonstate back as it was
             panelName = newPanel.objectName()
@@ -1901,25 +1910,38 @@ class ModernMenu(RibbonBar):
         # Hide the panels that are toggled off
         for objPanel in self.currentCategory().panels().values():
             for panel in self.HiddenPanels:
-                if panel.objectName() == objPanel.objectName():
-                    panel.hide()
-                    objPanel.hide()
+                if panel.objectName() == objPanel.objectName(): 
+                    panel.deleteLater()
+                    objPanel.close()
         # Restore the replaced panels
         for panel in self.ReplacedPanels:
             panel.show()
         
-        # Remove panels that newly added by combining panels
-        for objPanel in self.longPanels:
-            try:
-                if objPanel.objectName() not in self.ribbonStructure["customToolbars"][workbenchName]:  
-                    objPanel.close()
-            except Exception:
-                pass
-            try:
-                if workbenchName not in self.ribbonStructure["customToolbars"]:
-                    objPanel.close()
-            except Exception:
-                pass
+        # # Remove panels that newly added by combining panels
+        # for objPanel in self.longPanels:
+        #     try:
+        #         if objPanel.objectName() not in Dict["customToolbars"][workbenchName]:  
+        #             objPanel.deleteLater()
+        #     except Exception:
+        #         pass
+        #     try:
+        #         if workbenchName not in self.ribbonStructure["customToolbars"]:
+        #             objPanel.deleteLater()
+        #     except Exception:
+        #         pass
+        # Clear the list with the long panels, so that it can be filled again next time
+        self.longPanels.clear()
+        
+        for objPanel in self.currentCategory().panels().values():
+            # show the enable checkboxes
+            titleLayout: QHBoxLayout = objPanel._titleLayout
+            EnableControl = titleLayout.itemAt(0).widget()
+            # if EnableControl is not None:
+            #     print(f"{objPanel.objectName()}, {EnableControl.isChecked()}, {objPanel.parent()}")
+            if objPanel.parent() is None:
+                print(f"{objPanel.objectName()}, {EnableControl.isChecked()}, {objPanel.parent()}, {objPanel.title()}")
+                objPanel.close()
+        # self.Cancel = True
 
         # Restore the ribbonstructure
         self.ribbonStructure = Dict
@@ -2584,25 +2606,26 @@ class ModernMenu(RibbonBar):
                         # Get the name from  current workbench
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                         # Create a new panel with the extra command
-                        newPanel = self.CreatePanel(workbenchName, self.dropPanelName, addPanel=False, dict=self.workBenchDict, SetToUpdate=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand, ActivateButtons=True)
+                        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, dict=self.workBenchDict, SetToUpdate=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand, ActivateButtons=True)
                                                 
                         # Add the panel to the list with long panels
-                        if newPanel.panelOptionButton().isVisible():
-                            self.longPanels.append(newPanel)
-                                                
-                        # Replace the panel with the new panel
-                        self.currentCategory().replacePanel(panel, newPanel)
-                        # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-                        self.setPanelProperties(newPanel)
-                        
-                        # Update the dict of the currentCategory with the new panel
-                        self.currentCategory()._panels[self.dropPanelName] = newPanel
-                        
-                        # Enable all buttons, so you can access them with a right click
-                        self.activateButtons()
-                        
-                        # Close the old panel and the dragindicator
-                        panel.close()
+                        if newPanel is not None:
+                            if newPanel.panelOptionButton().isVisible():
+                                self.longPanels.append(newPanel)
+                                                    
+                            # Replace the panel with the new panel
+                            self.currentCategory().replacePanel(panel, newPanel)
+                            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                            self.setPanelProperties(newPanel)
+                            
+                            # Update the dict of the currentCategory with the new panel
+                            self.currentCategory()._panels[panel.objectName()] = newPanel
+                            
+                            # Enable all buttons, so you can access them with a right click
+                            self.activateButtons()
+                            
+                            # Close the old panel and the dragindicator
+                            panel.close()
             
             if self.quickAccessToolBar().underMouse() is True:
                 padding = 0

@@ -743,45 +743,46 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             if Toolbar in shadowList:
                 continue
             IsIgnored = False
-            for IgnoredToolbar in self.workBenchDict["ignoredToolbars"]:
-                if Toolbar.lower() == IgnoredToolbar.lower():
-                    IsIgnored = True
+            if "ignoredToolbars" in self.workBenchDict:
+                for IgnoredToolbar in self.workBenchDict["ignoredToolbars"]:
+                    if Toolbar.lower() == IgnoredToolbar.lower():
+                        IsIgnored = True
 
-            # If the are not to be ignored, add them to the listwidget
-            if IsIgnored is False and Toolbar != "":
-                ToolbarTransLated = Toolbar
-                # Get the translated toolbar name
-                for ToolBarItem in self.StringList_Toolbars:
-                    if ToolBarItem[0] == Toolbar:
-                        if len(ToolBarItem) == 4:
-                            ToolbarTransLated = ToolBarItem[3]
-                        else:
-                            ToolbarTransLated = ToolBarItem[0]
-                # If it is a custom toolbar, remove the suffix
-                ToolbarTransLated = ToolbarTransLated.replace("_custom", "").replace(
-                    "_newPanel", ""
-                )
-
-                ListWidgetItem = QListWidgetItem()
-                ListWidgetItem.setText(ToolbarTransLated.replace("&", ""))
-                ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
-                self.form.PanelAvailable_CP.addItem(ListWidgetItem)
-                
-                # Add the toolbar to the shadow list to prevent from being added more than once.
-                shadowList.append(Toolbar)
-
-                if setCustomToolbarSelector_CP is True:
-                    self.form.CustomToolbarSelector_CP.setCurrentText(
-                        translate("FreeCAD Ribbon", "New")
-                    )
-                    self.form.CustomToolbarSelector_CP.setItemData(
-                        0, "new", Qt.ItemDataRole.UserRole
+                # If the are not to be ignored, add them to the listwidget
+                if IsIgnored is False and Toolbar != "":
+                    ToolbarTransLated = Toolbar
+                    # Get the translated toolbar name
+                    for ToolBarItem in self.StringList_Toolbars:
+                        if ToolBarItem[0] == Toolbar:
+                            if len(ToolBarItem) == 4:
+                                ToolbarTransLated = ToolBarItem[3]
+                            else:
+                                ToolbarTransLated = ToolBarItem[0]
+                    # If it is a custom toolbar, remove the suffix
+                    ToolbarTransLated = ToolbarTransLated.replace("_custom", "").replace(
+                        "_newPanel", ""
                     )
 
-                # Get the ribbonbar
-                RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-                # Activate all buttons
-                RibbonBar.activateButtons()
+                    ListWidgetItem = QListWidgetItem()
+                    ListWidgetItem.setText(ToolbarTransLated.replace("&", ""))
+                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
+                    self.form.PanelAvailable_CP.addItem(ListWidgetItem)
+                    
+                    # Add the toolbar to the shadow list to prevent from being added more than once.
+                    shadowList.append(Toolbar)
+
+                    if setCustomToolbarSelector_CP is True:
+                        self.form.CustomToolbarSelector_CP.setCurrentText(
+                            translate("FreeCAD Ribbon", "New")
+                        )
+                        self.form.CustomToolbarSelector_CP.setItemData(
+                            0, "new", Qt.ItemDataRole.UserRole
+                        )
+
+                    # Get the ribbonbar
+                    RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+                    # Activate all buttons
+                    RibbonBar.activateButtons()
 
             self.form.PanelSelected_CP.clear()       
         return
@@ -2474,12 +2475,16 @@ class EventInspector(QObject):
             event.accept()
         if event.type() == QEvent.Type.Close:
             mw = Gui.getMainWindow()
-            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")      
-            if LoadDialog.DialogClosed is False:        
-                try:          
-                    RibbonBar.on_Cancel_Clicked()
-                except Exception:
-                    pass
+            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+            DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
+            if DockWidget is None:   
+                if LoadDialog.DialogClosed is False:        
+                    try:          
+                        RibbonBar.on_Cancel_Clicked()
+                        LoadDialog.DialogClosed = True
+                    except Exception:
+                        pass
+                return True
             # # Set the size of the central wiget back
             # mw.centralWidget().setFixedWidth(RibbonBar.CentralWidgetWidth)
             # mw.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
