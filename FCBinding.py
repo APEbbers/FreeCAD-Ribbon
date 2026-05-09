@@ -348,6 +348,7 @@ class ModernMenu(RibbonBar):
     
     HiddenPanels = []
     ReplacedPanels = []
+    CombinePanels = []
     
     # endregion
 
@@ -1495,16 +1496,20 @@ class ModernMenu(RibbonBar):
         
         # Store the state of the buttons
         for title, objPanel in self.currentCategory().panels().items():
-            panelName = objPanel.objectName()
-            gridLayout: QGridLayout = objPanel._actionsLayout
-            for n in range(gridLayout.count()):
-                try:
-                    control: QToolButton = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                    if control is not None:
-                        StandardFunctions.add_keys_nested_dict(self.ButtonState, [panelName, control.actions().data()])
-                        self.ButtonState[panelName][control.actions().data()] = control.actions().isEnabled()
-                except Exception:
-                    pass     
+            try:
+                panelName = objPanel.objectName()
+                gridLayout: QGridLayout = objPanel._actionsLayout
+                for n in range(gridLayout.count()):
+                    try:
+                        control: QToolButton = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                        if control is not None:
+                            StandardFunctions.add_keys_nested_dict(self.ButtonState, [panelName, control.actions().data()])
+                            self.ButtonState[panelName][control.actions().data()] = control.actions().isEnabled()
+                    except Exception:
+                        pass     
+            except Exception:
+                print(title)
+                pass
                 
         # Enable all buttons, so you can access them with a right click
         self.actionList = []
@@ -1513,9 +1518,15 @@ class ModernMenu(RibbonBar):
                                 
         # Create all order lists and commands, incase they are not all present
         dictPanels = self.currentCategory().panels()
-        for panel in self.HiddenPanels:
-            dictPanels[panel.title()] = panel
+        # for panel in self.HiddenPanels:
+        #     dictPanels[panel.title()] = panel
         for title, objPanel in dictPanels.items():
+            # Test iff the panel is not already deleted.
+            # This is needed, if a combined panel was added and then removed by clicking cancel
+            try:
+                objPanel.objectName()
+            except Exception:
+                continue
             # If panels are just removed in this session, they might be still present int the panel list of this category
             # Make sure by comparing the panel with the panels that are replaced by a new custom panel and close it.
             skip = False
@@ -1669,6 +1680,13 @@ class ModernMenu(RibbonBar):
         # Restore the original panel with the overflow menu
         panels = {} # Needed to update the panel dict of the currentCategory
         for title, objPanel in self.currentCategory().panels().items():
+            # Test iff the panel is not already deleted.
+            # This is needed, if a combined panel was added and then removed by clicking cancel
+            try:
+                objPanel.objectName()
+            except Exception:
+                continue
+            
             # If it is an new panel without a set title, remove it
             # try:
             if objPanel.title() == "<New panel>" or objPanel.title() == "":
@@ -1813,8 +1831,10 @@ class ModernMenu(RibbonBar):
                             
         # Clear the panel lists
         self.HiddenPanels.clear()
-        self.ReplacedPanels.clear()        
-                
+        self.ReplacedPanels.clear()
+        
+        # Clear the list with the Combined panels, so that it can be filled again next time
+        self.CombinePanels.clear()        
         return
     
     Cancel = False
@@ -1824,8 +1844,7 @@ class ModernMenu(RibbonBar):
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
-        
-        print(self.currentCategory().panels())
+
         # Get the name of the current workbench
         if workbenchName == "":
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
@@ -1861,14 +1880,25 @@ class ModernMenu(RibbonBar):
                 dictPanels[panel.title()] = panel
 
         for title, objPanel in dictPanels.items():
+            # Test if the panel is not already deleted.
+            # This is needed, if a combined panel was added and then removed by clicking cancel
+            try:
+                objPanel.objectName()
+            except Exception:
+                continue
             # If it is an new panel without a set title, remove it
             if objPanel.title() == "<New panel>":
-                objPanel.deleteLater()
+                objPanel.close()
                 continue
             # If the panel is not in the ribbon structure, remove it
             if objPanel.objectName() not in Dict["workbenches"][workbenchName]["toolbars"]:
-                objPanel.deleteLater()
-                continue     
+                objPanel.close()
+                continue
+            # Close any combined panels
+            for panel in self.CombinePanels:
+                if panel.objectName() == objPanel.objectName():
+                    objPanel.close()
+                    continue
             
             # Create a panel and replace the long panel with this one
             newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=Dict)
@@ -1907,41 +1937,25 @@ class ModernMenu(RibbonBar):
                     # Set the separator to its original width
                     separator.setFixedWidth(6)
                                                                                          
-        # Hide the panels that are toggled off
-        for objPanel in self.currentCategory().panels().values():
-            for panel in self.HiddenPanels:
-                if panel.objectName() == objPanel.objectName(): 
-                    panel.deleteLater()
-                    objPanel.close()
+            # Hide the panels that are toggled off
+            titleLayout: QHBoxLayout = newPanel._titleLayout
+            EnableControl: Toggle = titleLayout.itemAt(0).widget()
+            if EnableControl is not None:
+                if EnableControl.isChecked() is False: 
+                    newPanel.hide()
+        
         # Restore the replaced panels
         for panel in self.ReplacedPanels:
             panel.show()
         
-        # # Remove panels that newly added by combining panels
-        # for objPanel in self.longPanels:
-        #     try:
-        #         if objPanel.objectName() not in Dict["customToolbars"][workbenchName]:  
-        #             objPanel.deleteLater()
-        #     except Exception:
-        #         pass
-        #     try:
-        #         if workbenchName not in self.ribbonStructure["customToolbars"]:
-        #             objPanel.deleteLater()
-        #     except Exception:
-        #         pass
-        # Clear the list with the long panels, so that it can be filled again next time
-        self.longPanels.clear()
-        
-        for objPanel in self.currentCategory().panels().values():
-            # show the enable checkboxes
-            titleLayout: QHBoxLayout = objPanel._titleLayout
-            EnableControl = titleLayout.itemAt(0).widget()
-            # if EnableControl is not None:
-            #     print(f"{objPanel.objectName()}, {EnableControl.isChecked()}, {objPanel.parent()}")
-            if objPanel.parent() is None:
-                print(f"{objPanel.objectName()}, {EnableControl.isChecked()}, {objPanel.parent()}, {objPanel.title()}")
-                objPanel.close()
-        # self.Cancel = True
+        # Remove panels that newly added by combining panels
+        for objPanel in self.CombinePanels:
+            if objPanel.objectName() not in Dict["customToolbars"][workbenchName]:                     
+                objPanel.deleteLater()
+            try:
+                 self.currentCategory().removePanel(objPanel.title())
+            except Exception:
+                pass      
 
         # Restore the ribbonstructure
         self.ribbonStructure = Dict
@@ -1952,6 +1966,7 @@ class ModernMenu(RibbonBar):
         # Clear the panel lists
         self.HiddenPanels.clear()
         self.ReplacedPanels.clear()
+        self.CombinePanels.clear()
                    
         # Close the AddCommands dialog
         if self.AddCommandsDialog is not None:

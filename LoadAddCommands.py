@@ -997,8 +997,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             showEnableControl=True,
             ActivateButtons=True
             )
-        # Add the newPanel to the list of longPanels
+        # Add the newPanel to the list of CombinePanels
+        RibbonBar.CombinePanels.append(newPanel)
         RibbonBar.longPanels.append(newPanel)
+        
         # Remove the original panels
         panelsToRemove = []
         for key, value in self.workBenchDict["customToolbars"][WorkBenchName][CustomPanelTitle + Suffix]["commands"].items():
