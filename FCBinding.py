@@ -1674,7 +1674,6 @@ class ModernMenu(RibbonBar):
         Gui.updateGui()       
 
         # update the ribbonstructure before writing it to disk
-        # self.ribbonStructure["workbenches"][workbenchName] = self.workBenchDict["workbenches"][workbenchName]
         self.ribbonStructure.update(self.workBenchDict)
 
         # Restore the original panel with the overflow menu
@@ -1685,42 +1684,14 @@ class ModernMenu(RibbonBar):
             try:
                 objPanel.objectName()
             except Exception:
+                print(title)
                 continue
             
             # If it is an new panel without a set title, remove it
-            # try:
             if objPanel.title() == "<New panel>" or objPanel.title() == "":
                 objPanel.close()
                 continue
-            # except Exception:
-            #     continue
-            
-            # hide the enable checkboxes and hide the panel if it is unchecked
-            titleLayout: QHBoxLayout = objPanel._titleLayout
-            EnableControl = titleLayout.itemAt(0).widget()
-            if EnableControl is not None:
-                if EnableControl.checkState() == Qt.CheckState.Unchecked:
-                    # Hide the panel
-                    objPanel.hide()
-                    self.HiddenPanels.append(objPanel)
-                    # Write the state to the structure
-                    StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", objPanel.objectName(), "Enabled"])
-                    self.ribbonStructure["workbenches"][workbenchName]["toolbars"][objPanel.objectName()]["Enabled"] = False
-                    # If it is not a new panel, add the current panel to temporary panel dict
-                    continue
-                if EnableControl.checkState() == Qt.CheckState.Checked:
-                    # Write the state to the structure
-                    StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", objPanel.objectName(), "Enabled"])
-                    self.ribbonStructure["workbenches"][workbenchName]["toolbars"][objPanel.objectName()]["Enabled"] = True
-                    objPanel.show()
-                    for panel in self.HiddenPanels:
-                        if panel.objectName() == objPanel.objectName():
-                            self.HiddenPanels.remove(panel)
-                    for panel in self.ReplacedPanels:
-                        if panel.objectName() == objPanel.objectName():
-                            self.ReplacedPanels.remove(panel)
-                EnableControl.setVisible(False)
-                                                                            
+                                                                                        
             # Create keys if there are not existing yet for the temporary panel dict
             StandardFunctions.add_keys_nested_dict(panels, [title])
             
@@ -1728,9 +1699,9 @@ class ModernMenu(RibbonBar):
             IsNewPanel = False                            
             for longPanel in self.longPanels:                                
                 if longPanel.objectName() == objPanel.objectName() and longPanel.objectName() != "" and objPanel.objectName() != "":
-                    if longPanel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
-                        if self.workBenchDict["workbenches"][workbenchName]["toolbars"][longPanel.objectName()]["Enabled"] is False:
-                            continue                               
+                    # if longPanel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
+                    #     if self.workBenchDict["workbenches"][workbenchName]["toolbars"][longPanel.objectName()]["Enabled"] is False:
+                    #         continue                               
                     
                     # Create a panel and replace the long panel with this one
                     newPanel = self.CreatePanel(workbenchName=workbenchName, panelName=objPanel.objectName(), addPanel=False, dict=self.workBenchDict, ActivateButtons=True)  
@@ -1758,6 +1729,25 @@ class ModernMenu(RibbonBar):
             # If it is not a new panel, add the current panel to temporary panel dict
             if IsNewPanel is False:
                 panels[title] = objPanel
+                
+            # hide the enable checkboxes and hide the panel if it is unchecked
+            titleLayout: QHBoxLayout = objPanel._titleLayout
+            EnableControl = titleLayout.itemAt(0).widget()
+            if EnableControl is not None:
+                if EnableControl.checkState() == Qt.CheckState.Unchecked:
+                    # Hide the panel
+                    objPanel.hide()
+                    # Write the state to the structure
+                    StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", objPanel.objectName(), "Enabled"])
+                    self.ribbonStructure["workbenches"][workbenchName]["toolbars"][objPanel.objectName()]["Enabled"] = False
+                    # If it is not a new panel, add the current panel to temporary panel dict
+                    continue
+                if EnableControl.checkState() == Qt.CheckState.Checked:
+                    # Write the state to the structure
+                    StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", objPanel.objectName(), "Enabled"])
+                    self.ribbonStructure["workbenches"][workbenchName]["toolbars"][objPanel.objectName()]["Enabled"] = True
+                    objPanel.show()
+                EnableControl.setVisible(False)
                                                                                             
         # Update the panel dict of the current catergory with the temporary panel dict
         self.currentCategory()._panels = panels
@@ -1800,25 +1790,7 @@ class ModernMenu(RibbonBar):
             App.closeDocument("Temporary")
         except Exception:
             pass
-        
-        # Close the AddCommands dialog
-        if self.AddCommandsDialog is not None:
-            self.AddCommandsDialog.form.close()
-            self.AddCommandsDialog = None
-            # Close the dockwidget is there is one
-            DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
-            if DockWidget is not None:
-                DockWidget.deleteLater()
                 
-         # Restore the cursor
-        QApplication.restoreOverrideCursor()
-        
-        # Hide the panels that are toggled off
-        for objPanel in self.currentCategory().panels().values():
-            for panel in self.HiddenPanels:
-                if panel.objectName() == objPanel.objectName():
-                    panel.deleteLater()
-                    objPanel.hide()
         # Hide the replaced panels (by a combined panel)
         for objPanel in self.currentCategory().panels().values():
             for panel in self.ReplacedPanels:
@@ -1834,7 +1806,19 @@ class ModernMenu(RibbonBar):
         self.ReplacedPanels.clear()
         
         # Clear the list with the Combined panels, so that it can be filled again next time
-        self.CombinePanels.clear()        
+        self.CombinePanels.clear()     
+        
+        # Close the AddCommands dialog
+        if self.AddCommandsDialog is not None:
+            self.AddCommandsDialog.form.close()
+            self.AddCommandsDialog = None
+            # Close the dockwidget is there is one
+            DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
+            if DockWidget is not None:
+                DockWidget.deleteLater()
+                
+         # Restore the cursor
+        QApplication.restoreOverrideCursor()   
         return
     
     Cancel = False
@@ -1937,12 +1921,9 @@ class ModernMenu(RibbonBar):
                     # Set the separator to its original width
                     separator.setFixedWidth(6)
                                                                                          
-            # Hide the panels that are toggled off
-            titleLayout: QHBoxLayout = newPanel._titleLayout
-            EnableControl: Toggle = titleLayout.itemAt(0).widget()
-            if EnableControl is not None:
-                if EnableControl.isChecked() is False: 
-                    newPanel.hide()
+            # # Hide the panels that are toggled off
+            if self.ribbonStructure["workbenches"][workbenchName]["toolbars"][objPanel.objectName()]["Enabled"] is False:
+                newPanel.hide()           
         
         # Restore the replaced panels
         for panel in self.ReplacedPanels:
