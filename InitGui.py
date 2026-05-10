@@ -152,6 +152,13 @@ except Exception:
 preferences_DockWindows = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
 if preferences_DockWindows.GetBool("ActivateOverlay") is True:
     Parameters.USE_OVERLAY = True
+    if Parameters.OVERLAYSTATE == 2:
+        state = Parameters_Ribbon.Settings.GetStringSetting("StoredOverlayState")
+        if state != "":
+            OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
+            # Set the new string in parameters
+            OverlayParam_Top.SetString("Widgets",state)
+
 # Check if a reset is present for the overlay function
 USECUSTOMOVERLAY = os.path.join(os.path.dirname(FCBinding.__file__), "OVERLAY_DISABLED")
 if (os.path.exists(USECUSTOMOVERLAY) is True):

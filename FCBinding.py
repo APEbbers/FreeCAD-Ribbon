@@ -25,7 +25,7 @@ import FreeCADGui as Gui
 from pathlib import Path
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -54,7 +54,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -93,7 +93,7 @@ from PySide.QtWidgets import (
     QListWidgetItem,
     QAbstractButton,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -2346,21 +2346,20 @@ class ModernMenu(RibbonBar):
             # If you drag and drop a new command, you actually dragging the complete QListWidget
             if type(widget) is QListWidget:
                 # get the position
-                position = event.pos()
+                position = mw.mapToGlobal(event.pos())
+                # Get the local cursor position
+                cursorposition = widget.mapFromGlobal(QCursor.pos())
                 # If the position is within a panel, store the panel name
                 for panelName, panel in self.currentCategory().panels().items():
-                    panelPos = panel.pos()
-                    xMin = panelPos.x()
+                    panelPos = mw.mapToGlobal(panel.pos())
+                    xMin = panelPos.x() + panel.rect().width() - cursorposition.x()
                     xMax = xMin + panel.rect().width()
-                    yMin = panel.mapTo(mw, panelPos).y()
-                    yMax = yMin + panel.rect().height()
                     
                     if position.x() >= xMin and position.x() < xMax:
-                        if position.y() >= yMin and position.y() < yMax:
-                            self.dropPanelName = panelName      
+                        self.dropPanelName = panelName      
                 
                 # If not activated, activate all buttons    
-                self.activateButtons()                                       
+                self.activateButtons()                              
                 
             # Store the position were the drag is started
             if self.StartPositionDrag is None:
