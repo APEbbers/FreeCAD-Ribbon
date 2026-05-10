@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL, QSize, Signal, QObject, QEvent, QPoint, QEventLoop
-from PySide.QtWidgets import (
+from PySide6.QtCore import Qt, SIGNAL, QSize, Signal, QObject, QEvent, QPoint, QEventLoop
+from PySide6.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -43,7 +43,7 @@ from PySide.QtWidgets import (
     QMainWindow,
     QLayout,
 )
-from PySide.QtGui import QIcon, QPixmap, QColor, QBrush, QPaintEvent, QPen, QPainter
+from PySide6.QtGui import QIcon, QPixmap, QColor, QBrush, QPaintEvent, QPen, QPainter
 
 import sys
 import StyleMapping_Ribbon
@@ -111,8 +111,8 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "UseToolsPanel": Parameters.USE_TOOLSPANEL,
         "WrapText_Large": Parameters.WRAPTEXT_LARGE,
         "WrapText_Medium": Parameters.WRAPTEXT_LARGE,
-        "UseOverlay": Parameters.USE_OVERLAY,
-        "UseFCOverlay": Parameters.USE_FC_OVERLAY,
+        # "UseOverlay": Parameters.USE_OVERLAY,
+        # "UseFCOverlay": Parameters.USE_FC_OVERLAY,
         "UseButtonBackGround": Parameters.BUTTON_BACKGROUND_ENABLED,
         "CustomIcons": Parameters.BETA_FUNCTIONS_ENABLED,
         "CustomColors": Parameters.CUSTOM_COLORS_ENABLED,
@@ -164,8 +164,8 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "UseToolsPanel": Parameters.USE_TOOLSPANEL,
         "WrapText_Medium": Parameters.WRAPTEXT_LARGE,
         "WrapText_Large": Parameters.WRAPTEXT_LARGE,
-        "UseOverlay": Parameters.USE_OVERLAY,
-        "UseFCOverlay": Parameters.USE_FC_OVERLAY,
+        # "UseOverlay": Parameters.USE_OVERLAY,
+        # "UseFCOverlay": Parameters.USE_FC_OVERLAY,
         "UseButtonBackGround": Parameters.BUTTON_BACKGROUND_ENABLED,
         "CustomIcons": Parameters.BETA_FUNCTIONS_ENABLED,
         "CustomColors": Parameters.CUSTOM_COLORS_ENABLED,
@@ -400,10 +400,10 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         else:
             self.form.EnableToolsPanel.setCheckState(Qt.CheckState.Unchecked)
 
-        if Parameters.USE_OVERLAY is True:
-            self.form.EnableOverlay.setChecked(True)
-        else:
-            self.form.EnableOverlay.setChecked(False)
+        # if Parameters.USE_OVERLAY is True:
+        #     self.form.EnableOverlay.setChecked(True)
+        # else:
+        #     self.form.EnableOverlay.setChecked(False)
 
         if Parameters.USE_FC_OVERLAY is True:
             self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Checked)
@@ -656,8 +656,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # Connect the EnableTools checkbox:
         self.form.EnableToolsPanel.clicked.connect(self.on_EnableToolsPanel_clicked)
         # Connect the overlay setting:
-        self.form.EnableOverlay.clicked.connect(self.on_OverlayEnabled_clicked)
-        self.form.FCOverlayEnabled.clicked.connect(self.on_FCOverlayEnabled_clicked)
+        self.form.OverlayState.currentIndexChanged.connect(self.on_OverlayState_currentIndexChanged)
         self.form.UseButtonBackGround.clicked.connect(
             self.on_UseButtonBackGround_clicked
         )
@@ -1045,44 +1044,22 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.settingChanged = True
         return
 
-    def on_OverlayEnabled_clicked(self):
-        preferences_DockWindows = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
-        if self.form.EnableOverlay.isChecked() is True:
-            self.ValuesToUpdate["UseOverlay"] = True
-            preferences_DockWindows.SetBool("ActivateOverlay", True)
-                                    
-            # Set a few overlay preferences. Users can change them afterwards
-            preferences_View = App.ParamGet("User parameter:BaseApp/Preferences/View")
-            preferences_View.SetBool("DockOverlayHideTabBar", False)
-            preferences_View.SetBool("DockOverlayAutoView", True)
-            preferences_View.SetBool("DockOverlayActivateOnHover", True)
-            preferences_View.SetBool("DockOverlayHintTabBar", True)
+    def on_OverlayState_currentIndexChanged(self):
+        if self.form.OverlayState.currentText() == "Disabled":
+            self.ValuesToUpdate["OverlayState"] = 0
             
-        if self.form.EnableOverlay.isChecked() is False:
-            self.ValuesToUpdate["UseOverlay"] = False
-            # Disable FreeCAD's overlay as well
-            preferences_DockWindows.SetBool("ActivateOverlay", False)
-        self.settingChanged = True
+        if self.form.OverlayState.currentText() == "Enabled":
+            self.ValuesToUpdate["OverlayState"] = 1
+        
+        if self.form.OverlayState.currentText() == "Last saved":
+            self.ValuesToUpdate["OverlayState"] = 2
 
-    def on_FCOverlayEnabled_clicked(self):
-        if self.form.FCOverlayEnabled.isChecked() is True:
-            self.ValuesToUpdate["UseFCOverlay"] = True
-
-            # Disable the texts because they are not compatible with FreeCAD's overlay
-            self.form.ShowText_Small.setDisabled(True)
-            self.form.ShowText_Medium.setDisabled(True)
-            self.form.ShowText_Large.setDisabled(True)
-            self.form.EnableWrap_Medium.setDisabled(True)
-            self.form.EnableWrap_Large.setDisabled(True)
-        if self.form.FCOverlayEnabled.isChecked() is False:
-            self.ValuesToUpdate["UseFCOverlay"] = False
-
-            # Enable the texts again
-            self.form.ShowText_Small.setEnabled(True)
-            self.form.ShowText_Medium.setEnabled(True)
-            self.form.ShowText_Large.setEnabled(True)
-            self.form.EnableWrap_Medium.setEnabled(True)
-            self.form.EnableWrap_Large.setEnabled(True)
+        # Disable the texts because they are not compatible with FreeCAD's overlay
+        self.form.ShowText_Small.setDisabled(True)
+        self.form.ShowText_Medium.setDisabled(True)
+        self.form.ShowText_Large.setDisabled(True)
+        self.form.EnableWrap_Medium.setDisabled(True)
+        self.form.EnableWrap_Large.setDisabled(True)
         self.settingChanged = True
         return
 
@@ -1455,12 +1432,15 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             "UseToolsPanel", self.OriginalValues["UseToolsPanel"]
         )
         # Set the use of FreeCAD's overlay function
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "UseOverlay", self.OriginalValues["UseOverlay"]
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "OverlayState", self.OriginalValues["OverlayState"]
         )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "UseFCOverlay", self.OriginalValues["UseFCOverlay"]
-        )
+        # Parameters_Ribbon.Settings.SetBoolSetting(
+        #     "UseOverlay", self.OriginalValues["UseOverlay"]
+        # )
+        # Parameters_Ribbon.Settings.SetBoolSetting(
+        #     "UseFCOverlay", self.OriginalValues["UseFCOverlay"]
+        # )
         Parameters_Ribbon.Settings.SetBoolSetting(
             "UseButtonBackGround", self.OriginalValues["UseButtonBackGround"]
         )
@@ -1625,12 +1605,15 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             "UseToolsPanel", self.ValuesToUpdate["UseToolsPanel"]
         )
         # Set the use of FreeCAD's overlay function
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "UseOverlay", self.ValuesToUpdate["UseOverlay"]
+        Parameters_Ribbon.Settings.SetIntSetting(
+            "OverlayState", self.ValuesToUpdate["OverlayState"]
         )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "UseFCOverlay", self.ValuesToUpdate["UseFCOverlay"]
-        )
+        # Parameters_Ribbon.Settings.SetBoolSetting(
+        #     "UseOverlay", self.ValuesToUpdate["UseOverlay"]
+        # )
+        # Parameters_Ribbon.Settings.SetBoolSetting(
+        #     "UseFCOverlay", self.ValuesToUpdate["UseFCOverlay"]
+        # )
         Parameters_Ribbon.Settings.SetBoolSetting(
             "UseButtonBackGround", self.ValuesToUpdate["UseButtonBackGround"]
         )
@@ -1774,14 +1757,15 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.form.EnableToolsPanel.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.EnableToolsPanel.setCheckState(Qt.CheckState.Unchecked)
-        if DefaultSettings["UseOverlay"] is True:
-            self.form.EnableOverlay.setChecked(True)
-        else:
-            self.form.EnableOverlay.setChecked(False)
-        if DefaultSettings["UseFCOverlay"] is True:
-            self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Checked)
-        else:
-            self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Unchecked)
+        self.form.OverlayState.setCurrentIndex(DefaultSettings["OverlayState"])
+        # if DefaultSettings["UseOverlay"] is True:
+        #     self.form.EnableOverlay.setChecked(True)
+        # else:
+        #     self.form.EnableOverlay.setChecked(False)
+        # if DefaultSettings["UseFCOverlay"] is True:
+        #     self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Checked)
+        # else:
+        #     self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Unchecked)
         if DefaultSettings["UseButtonBackGround"] is True:
             self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Checked)
         else:

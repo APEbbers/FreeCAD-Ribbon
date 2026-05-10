@@ -73,7 +73,8 @@ DefaultSettings = {
     "WrapText_Medium": bool(True),
     "WrapText_Large": bool(True),
     "UseOverlay": bool(True),
-    "UseFCOverlay": bool(False),
+    # "UseFCOverlay": bool(False),
+    "OverlayState": int(0),
     "UseButtonBackGround": bool(False),
     "CustomColors": bool(False),
     "BorderTransparant": bool(True),
@@ -509,10 +510,7 @@ class Parameters:
     # endregion ------------------------------------------------------------------------------------------------------------
 
     # region - Miscellaneous settings --------------------------------------------------------------------------------------
-    if (
-        Settings.GetIntSetting("Preferred_view") is None
-        or Settings.GetIntSetting("Preferred_view") == 0
-    ):
+    if (Settings.GetIntSetting("Preferred_view") is None or Settings.GetIntSetting("Preferred_view") == 0):
         PREFERRED_VIEW = int(DefaultSettings["Preferred_view"])
         Settings.SetIntSetting("Preferred_view", PREFERRED_VIEW)
     PREFERRED_VIEW = Settings.GetIntSetting("Preferred_view")
@@ -527,10 +525,15 @@ class Parameters:
         Settings.SetBoolSetting("UseOverlay", USE_OVERLAY)
     USE_OVERLAY = Settings.GetBoolSetting("UseOverlay")
 
-    if Settings.GetBoolSetting("UseFCOverlay") is None:
-        USE_FC_OVERLAY = bool(DefaultSettings["UseFCOverlay"])
-        Settings.SetBoolSetting("UseFCOverlay", USE_FC_OVERLAY)
-    USE_FC_OVERLAY = Settings.GetBoolSetting("UseFCOverlay")
+    # if Settings.GetBoolSetting("UseFCOverlay") is None:
+    #     USE_FC_OVERLAY = bool(DefaultSettings["UseFCOverlay"])
+    #     Settings.SetBoolSetting("UseFCOverlay", USE_FC_OVERLAY)
+    # USE_FC_OVERLAY = Settings.GetBoolSetting("UseFCOverlay")
+    
+    if (Settings.GetIntSetting("OverlayState") is None or Settings.GetIntSetting("OverlayState") == 0):
+        OVERLAYSTATE = int(DefaultSettings["OverlayState"])
+        Settings.SetIntSetting("OverlayState", OVERLAYSTATE)
+    OVERLAYSTATE = Settings.GetIntSetting("OverlayState")
 
     if Settings.GetBoolSetting("UseButtonBackGround") is None:
         BUTTON_BACKGROUND_ENABLED = bool(DefaultSettings["UseButtonBackGround"])

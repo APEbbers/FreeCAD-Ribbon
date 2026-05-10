@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsAlwmqg.ui'
+## Form generated from reading UI file 'SettingsIDfNGL.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
+from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
     QDoubleSpinBox, QFrame, QGridLayout, QGroupBox,
     QLabel, QPushButton, QScrollArea, QSizePolicy,
     QSlider, QSpacerItem, QSpinBox, QTabWidget,
@@ -1088,27 +1088,48 @@ class Ui_Settings(object):
 
         self.gridLayout_32.addWidget(self.groupBox_11, 0, 0, 1, 1)
 
-        self.EnableOverlay = QGroupBox(self.tab_3)
-        self.EnableOverlay.setObjectName(u"EnableOverlay")
-        sizePolicy4.setHeightForWidth(self.EnableOverlay.sizePolicy().hasHeightForWidth())
-        self.EnableOverlay.setSizePolicy(sizePolicy4)
-        self.EnableOverlay.setMinimumSize(QSize(0, 20))
-        self.EnableOverlay.setCheckable(True)
-        self.gridLayout_30 = QGridLayout(self.EnableOverlay)
-        self.gridLayout_30.setObjectName(u"gridLayout_30")
-        self.FCOverlayEnabled = QCheckBox(self.EnableOverlay)
-        self.FCOverlayEnabled.setObjectName(u"FCOverlayEnabled")
-        self.FCOverlayEnabled.setChecked(False)
-
-        self.gridLayout_30.addWidget(self.FCOverlayEnabled, 0, 0, 1, 1)
-
-        self.UseButtonBackGround = QCheckBox(self.EnableOverlay)
+        self.OverlaySettings = QGroupBox(self.tab_3)
+        self.OverlaySettings.setObjectName(u"OverlaySettings")
+        sizePolicy4.setHeightForWidth(self.OverlaySettings.sizePolicy().hasHeightForWidth())
+        self.OverlaySettings.setSizePolicy(sizePolicy4)
+        self.OverlaySettings.setMinimumSize(QSize(0, 20))
+        self.OverlaySettings.setCheckable(False)
+        self.gridLayout_37 = QGridLayout(self.OverlaySettings)
+        self.gridLayout_37.setObjectName(u"gridLayout_37")
+        self.UseButtonBackGround = QCheckBox(self.OverlaySettings)
         self.UseButtonBackGround.setObjectName(u"UseButtonBackGround")
         self.UseButtonBackGround.setEnabled(False)
 
-        self.gridLayout_30.addWidget(self.UseButtonBackGround, 1, 0, 1, 1)
+        self.gridLayout_37.addWidget(self.UseButtonBackGround, 1, 0, 1, 1)
 
-        self.label_26 = QLabel(self.EnableOverlay)
+        self.gridLayout_30 = QGridLayout()
+        self.gridLayout_30.setObjectName(u"gridLayout_30")
+        self.OverlayState = QComboBox(self.OverlaySettings)
+        self.OverlayState.addItem("")
+        self.OverlayState.addItem("")
+        self.OverlayState.addItem("")
+        self.OverlayState.setObjectName(u"OverlayState")
+
+        self.gridLayout_30.addWidget(self.OverlayState, 0, 1, 1, 1)
+
+        self.label_45 = QLabel(self.OverlaySettings)
+        self.label_45.setObjectName(u"label_45")
+        sizePolicy11 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
+        sizePolicy11.setHorizontalStretch(0)
+        sizePolicy11.setVerticalStretch(0)
+        sizePolicy11.setHeightForWidth(self.label_45.sizePolicy().hasHeightForWidth())
+        self.label_45.setSizePolicy(sizePolicy11)
+
+        self.gridLayout_30.addWidget(self.label_45, 0, 0, 1, 1)
+
+        self.horizontalSpacer_16 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_30.addItem(self.horizontalSpacer_16, 0, 2, 1, 1)
+
+
+        self.gridLayout_37.addLayout(self.gridLayout_30, 0, 0, 1, 1)
+
+        self.label_26 = QLabel(self.OverlaySettings)
         self.label_26.setObjectName(u"label_26")
         self.label_26.setEnabled(False)
         sizePolicy4.setHeightForWidth(self.label_26.sizePolicy().hasHeightForWidth())
@@ -1118,10 +1139,14 @@ class Ui_Settings(object):
         self.label_26.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
         self.label_26.setWordWrap(True)
 
-        self.gridLayout_30.addWidget(self.label_26, 2, 0, 1, 1)
+        self.gridLayout_37.addWidget(self.label_26, 3, 0, 1, 1)
+
+        self.verticalSpacer_6 = QSpacerItem(20, 5, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+
+        self.gridLayout_37.addItem(self.verticalSpacer_6, 2, 0, 1, 1)
 
 
-        self.gridLayout_32.addWidget(self.EnableOverlay, 1, 0, 1, 1)
+        self.gridLayout_32.addWidget(self.OverlaySettings, 1, 0, 1, 1)
 
         self.groupBox_15 = QGroupBox(self.tab_3)
         self.groupBox_15.setObjectName(u"groupBox_15")
@@ -1213,11 +1238,11 @@ class Ui_Settings(object):
 
         self.RibbonHeightOffset = QSpinBox(self.AdvancedGroup)
         self.RibbonHeightOffset.setObjectName(u"RibbonHeightOffset")
-        sizePolicy11 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-        sizePolicy11.setHorizontalStretch(0)
-        sizePolicy11.setVerticalStretch(0)
-        sizePolicy11.setHeightForWidth(self.RibbonHeightOffset.sizePolicy().hasHeightForWidth())
-        self.RibbonHeightOffset.setSizePolicy(sizePolicy11)
+        sizePolicy12 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        sizePolicy12.setHorizontalStretch(0)
+        sizePolicy12.setVerticalStretch(0)
+        sizePolicy12.setHeightForWidth(self.RibbonHeightOffset.sizePolicy().hasHeightForWidth())
+        self.RibbonHeightOffset.setSizePolicy(sizePolicy12)
         self.RibbonHeightOffset.setMinimumSize(QSize(50, 20))
         self.RibbonHeightOffset.setSizeIncrement(QSize(0, 0))
         self.RibbonHeightOffset.setBaseSize(QSize(0, 0))
@@ -1370,9 +1395,8 @@ class Ui_Settings(object):
         self.CustomIcons.toggled.connect(self.IconS.setEnabled)
         self.ShowText_Medium.toggled.connect(self.EnableWrap_Medium.setEnabled)
         self.ShowText_Large.toggled.connect(self.EnableWrap_Large.setEnabled)
-        self.FCOverlayEnabled.toggled.connect(self.UseButtonBackGround.setEnabled)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(Settings)
@@ -1460,13 +1484,14 @@ class Ui_Settings(object):
         self.PreferedViewPanel.setItemText(3, QCoreApplication.translate("Settings", u"None", None))
 
         self.EnableToolsPanel.setText(QCoreApplication.translate("Settings", u"Use standard Tools panel", None))
-        self.EnableOverlay.setTitle(QCoreApplication.translate("Settings", u"Enable Ribbon overlay function", None))
-#if QT_CONFIG(tooltip)
-        self.FCOverlayEnabled.setToolTip(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the overlay function enabled for the Ribbon at startup.</p><p><span style=\" font-weight:700;\">Warning</span>: this will result in an empty window at startup!</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.FCOverlayEnabled.setText(QCoreApplication.translate("Settings", u"Set the overlay enabled by default", None))
+        self.OverlaySettings.setTitle(QCoreApplication.translate("Settings", u"Ovelay settings", None))
         self.UseButtonBackGround.setText(QCoreApplication.translate("Settings", u"Use background on buttons", None))
-        self.label_26.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-weight:700; font-style:italic;\">Warning:</span></p><p><span style=\" font-size:8pt; font-style:italic;\">When overlay is enabled by default, the ribbon is hidden until you open or create a document. Use &quot;ctrl+N&quot; (Linux, Windows) or &quot;meta+N&quot; (macOs) to create a new document.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">The pin button does not work with FreeCAD's overlay function. Enabling this, replaces the pin button with a overlay button.</span></p><p><span style=\" font-size:8pt; font-weight:700; font-style:italic;\">Note:</span></p><p><span style=\" font-size:8pt; font-style:italic;\">This only allowes to trigger FreeCAD's overlay function for the RibbonUI. Other Overlay settings are set under FreeCAD preferences.</span></p></body></html>", None))
+        self.OverlayState.setItemText(0, QCoreApplication.translate("Settings", u"Disabled", None))
+        self.OverlayState.setItemText(1, QCoreApplication.translate("Settings", u"Enabled", None))
+        self.OverlayState.setItemText(2, QCoreApplication.translate("Settings", u"Last saved", None))
+
+        self.label_45.setText(QCoreApplication.translate("Settings", u"Set the default state of the Ribbon:", None))
+        self.label_26.setText(QCoreApplication.translate("Settings", u"<span style=\" font-size:8pt; font-weight:700; font-style:italic;\">Warning:</span><br><span style=\" font-size:8pt; font-style:italic;\">When overlay is enabled by default, the ribbon is hidden until you open or create a document. Use &quot;ctrl+N&quot; (Linux, Windows) or &quot;meta+N&quot; (macOs) to create a new document.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">The pin button does not work with FreeCAD's overlay function. Enabling this, replaces the pin button with a overlay button.</span></p></body></html>", None))
         self.groupBox_15.setTitle(QCoreApplication.translate("Settings", u"Advanced size settings", None))
         self.label_43.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">Extra settings that might be usefull if there are issues with your display and FreeCAD. Normally, it should not be needed to change these. </span></p><p><span style=\" font-size:8pt; font-style:italic;\">The settings might not work on all systems!</span></p></body></html>", None))
         self.label_40.setText(QCoreApplication.translate("Settings", u"Extra offset for the panel height", None))

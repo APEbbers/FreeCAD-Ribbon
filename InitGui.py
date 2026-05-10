@@ -148,25 +148,16 @@ try:
 except Exception:
     pass
 
+# Get the overlay settings
+preferences_DockWindows = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
+if preferences_DockWindows.GetBool("ActivateOverlay") is True:
+    Parameters.USE_OVERLAY = True
+# Check if a reset is present for the overlay function
 USECUSTOMOVERLAY = os.path.join(os.path.dirname(FCBinding.__file__), "OVERLAY_DISABLED")
-if (
-    Parameters.USE_FC_OVERLAY is False
-    or os.path.exists(USECUSTOMOVERLAY) is True
-):
-    # Disable the overlay function
-    preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
-    preferences.SetBool("ActivateOverlay", False)
-
-    # make sure that the ribbon will be shown on startup -> reset OverlayTop
-    preferences = App.ParamGet(
-        "User parameter:BaseApp/MainWindow/DockWindows/OverlayTop"
-    )
-    preferences.SetString("Widgets", "")
-if Parameters.USE_FC_OVERLAY is True:
-    # Disable the overlay function
-    preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
-    preferences.SetBool("ActivateOverlay", True)
-
+if (os.path.exists(USECUSTOMOVERLAY) is True):
+    print("Overlay function is disabled by RibbonUI")
+    preferences_DockWindows.SetBool("ActivateOverlay", False)
+    Parameters.USE_OVERLAY = False
 try:
     print(translate("FreeCAD Ribbon", "Activating Ribbon UI..."))
     # mw: QMainWindow = Gui.getMainWindow()

@@ -326,9 +326,6 @@ class ModernMenu(RibbonBar):
     # Create a list to store the pin buttons off each category
     pinButtonList = []
     
-    # Create a list to store the overlay buttons off each category
-    overlayButtonList = []
-    
     # Store the number of rows for each wb
     MaxRowsPerWB = {}
     
@@ -795,13 +792,13 @@ class ModernMenu(RibbonBar):
         
         if Parameters.USE_OVERLAY is True:
             self.OverlayToggled_Top = True
-            if Parameters.USE_FC_OVERLAY is True:
+            if Parameters.OVERLAYSTATE == 1:
                 # Get the current string, if Ribbon is not in it, add it
                 newString = OverlayParam_Top.GetString("Widgets")
                 if "Ribbon" not in newString:
                     newString = "Ribbon," + newString
                     OverlayParam_Top.SetString("Widgets",newString)
-            else:
+            if Parameters.OVERLAYSTATE == 0:
                 self.OverlayToggled_Top = False
                 # Create a new string without "Ribbon"       
                 newString = OverlayParam_Top.GetString("Widgets").replace("Ribbon,", "")
@@ -4473,7 +4470,8 @@ class ModernMenu(RibbonBar):
         self.pinButtonList.append(pinButton)
         if Parameters.USE_OVERLAY is True: 
              pinButton.setIcon(QIcon())   
-             pinButton.setDisabled(True)         
+             pinButton.setDisabled(True)
+             pinButton.setHidden(True)    
 
         if self.CustomizeEnabled:
             # If not activated, activate all buttons    
