@@ -25,7 +25,7 @@ import FreeCADGui as Gui
 from pathlib import Path
 import traceback
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -54,7 +54,7 @@ from PySide6.QtGui import (
     QScreen,
     QPen,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -93,7 +93,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     QAbstractButton,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -782,7 +782,7 @@ class ModernMenu(RibbonBar):
             "User parameter:BaseApp/MainWindow/DockWindows/OverlayTop"
         )
         if Parameters.USE_OVERLAY is False:
-            Parameters.USE_FC_OVERLAY = False
+            # Parameters.USE_FC_OVERLAY = False
             self.OverlayToggled_Top = False
 
             # Create a new string without "Ribbon"       
@@ -1132,7 +1132,7 @@ class ModernMenu(RibbonBar):
         # Therefore this function is only activated when FreeCAD's overlay function is disabled.
         if (
             Parameters.SHOW_ON_HOVER is True
-            and Parameters.USE_FC_OVERLAY is False
+            and Parameters.USE_OVERLAY is False
         ):
             self.UnfoldRibbon()
             
@@ -3886,8 +3886,8 @@ class ModernMenu(RibbonBar):
             + 3 * (self.RightToolBarButtonSize + 16)
             # + self.RightToolBarButtonSize
         )
-        if Parameters.USE_FC_OVERLAY is True:
-            RightToolbarWidth = SearchBarWidth + 2 * (self.RightToolBarButtonSize + 16)
+        # if Parameters.USE_FC_OVERLAY is True:
+        #     RightToolbarWidth = SearchBarWidth + 2 * (self.RightToolBarButtonSize + 16)
         self.rightToolBar().setMinimumWidth(RightToolbarWidth)
         self.setRightToolBarHeight(self.RibbonMinimalHeight)
         
@@ -6853,11 +6853,11 @@ class EventInspector(QObject):
 
     def eventFilter(self, obj, event: QEvent):
         # This makes sure that the ribbon is enabled, when overlay is switched of          
-        if Parameters.USE_FC_OVERLAY is False:
-            mw = Gui.getMainWindow()
-            DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
-            if DockWidget_Ribbon is not None and DockWidget_Ribbon.isVisible() is False:
-                DockWidget_Ribbon.show()
+        # if Parameters.USE_FC_OVERLAY is False:
+        #     mw = Gui.getMainWindow()
+        #     DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
+        #     if DockWidget_Ribbon is not None and DockWidget_Ribbon.isVisible() is False:
+        #         DockWidget_Ribbon.show()
         if event.type() == QEvent.Type.WindowActivate or event.type() == QEvent.Type.WindowDeactivate:
             mw = Gui.getMainWindow()
             DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
@@ -6867,7 +6867,12 @@ class EventInspector(QObject):
                     try:
                         DockWidget_Ribbon.setTitleBarWidget(QWidget())
                     except Exception:
-                        pass                                      
+                        pass       
+        if event.type() == QEvent.Type.Close:
+            OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
+            String = OverlayParam_Top.GetString("Widgets")
+            Parameters_Ribbon.Settings.SetStringSetting("StoredOverlayState", String)
+            App.saveParameter()                           
             
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()

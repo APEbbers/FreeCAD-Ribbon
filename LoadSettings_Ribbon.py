@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide6.QtCore import Qt, SIGNAL, QSize, Signal, QObject, QEvent, QPoint, QEventLoop
-from PySide6.QtWidgets import (
+from PySide.QtCore import Qt, SIGNAL, QSize, Signal, QObject, QEvent, QPoint, QEventLoop
+from PySide.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -43,7 +43,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QLayout,
 )
-from PySide6.QtGui import QIcon, QPixmap, QColor, QBrush, QPaintEvent, QPen, QPainter
+from PySide.QtGui import QIcon, QPixmap, QColor, QBrush, QPaintEvent, QPen, QPainter
 
 import sys
 import StyleMapping_Ribbon
@@ -113,6 +113,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "WrapText_Medium": Parameters.WRAPTEXT_LARGE,
         # "UseOverlay": Parameters.USE_OVERLAY,
         # "UseFCOverlay": Parameters.USE_FC_OVERLAY,
+        "OverlayState": Parameters.OVERLAYSTATE,
         "UseButtonBackGround": Parameters.BUTTON_BACKGROUND_ENABLED,
         "CustomIcons": Parameters.BETA_FUNCTIONS_ENABLED,
         "CustomColors": Parameters.CUSTOM_COLORS_ENABLED,
@@ -166,6 +167,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "WrapText_Large": Parameters.WRAPTEXT_LARGE,
         # "UseOverlay": Parameters.USE_OVERLAY,
         # "UseFCOverlay": Parameters.USE_FC_OVERLAY,
+        "OverlayState": Parameters.OVERLAYSTATE,
         "UseButtonBackGround": Parameters.BUTTON_BACKGROUND_ENABLED,
         "CustomIcons": Parameters.BETA_FUNCTIONS_ENABLED,
         "CustomColors": Parameters.CUSTOM_COLORS_ENABLED,
@@ -284,6 +286,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.label_15.setDisabled(True)
         self.form.ScrollClicks_TabBar.setHidden(True)
         self.form.ScrollClicks_TabBar.setDisabled(True)
+        # Currently, FC is not remebering the Overlay state properly,
+        # Remove the last index for now
+        self.form.OverlayState.removeItem(2)
         # Remove the 'Use backgound on buttons' from settings menu
         self.form.UseButtonBackGround.setHidden(True)
         self.form.UseButtonBackGround.setDisabled(True)
@@ -404,17 +409,15 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         #     self.form.EnableOverlay.setChecked(True)
         # else:
         #     self.form.EnableOverlay.setChecked(False)
+        self.form.OverlayState.setCurrentIndex(Parameters.OVERLAYSTATE)
 
-        if Parameters.USE_FC_OVERLAY is True:
-            self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Checked)
+        if Parameters.USE_OVERLAY is True:
             # Disable the texts because they are not compatible with FreeCAD's overlay
             self.form.ShowText_Small.setDisabled(True)
             self.form.ShowText_Medium.setDisabled(True)
             self.form.ShowText_Large.setDisabled(True)
             self.form.EnableWrap_Medium.setDisabled(True)
             self.form.EnableWrap_Large.setDisabled(True)
-        else:
-            self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Unchecked)
 
         if Parameters.BUTTON_BACKGROUND_ENABLED is True:
             self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Checked)
@@ -1045,14 +1048,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         return
 
     def on_OverlayState_currentIndexChanged(self):
-        if self.form.OverlayState.currentText() == "Disabled":
-            self.ValuesToUpdate["OverlayState"] = 0
-            
-        if self.form.OverlayState.currentText() == "Enabled":
-            self.ValuesToUpdate["OverlayState"] = 1
-        
-        if self.form.OverlayState.currentText() == "Last saved":
-            self.ValuesToUpdate["OverlayState"] = 2
+        self.ValuesToUpdate["OverlayState"] = self.form.OverlayState.currentIndex()
 
         # Disable the texts because they are not compatible with FreeCAD's overlay
         self.form.ShowText_Small.setDisabled(True)

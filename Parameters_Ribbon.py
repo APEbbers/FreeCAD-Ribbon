@@ -75,6 +75,7 @@ DefaultSettings = {
     "UseOverlay": bool(True),
     # "UseFCOverlay": bool(False),
     "OverlayState": int(0),
+    "StoredOverlayState": "",
     "UseButtonBackGround": bool(False),
     "CustomColors": bool(False),
     "BorderTransparant": bool(True),
