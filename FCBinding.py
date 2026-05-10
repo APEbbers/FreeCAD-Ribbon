@@ -25,7 +25,7 @@ import FreeCADGui as Gui
 from pathlib import Path
 import traceback
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -54,7 +54,7 @@ from PySide6.QtGui import (
     QScreen,
     QPen,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -93,7 +93,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     QAbstractButton,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -2326,6 +2326,7 @@ class ModernMenu(RibbonBar):
     spaceWidget_Left = RibbonToolButton()
     spaceWidget_Right = RibbonToolButton()
     target = None
+    targetPanel = None
     StartPositionDrag = None
     #
     # AddCommands
@@ -2345,18 +2346,16 @@ class ModernMenu(RibbonBar):
              
             # If you drag and drop a new command, you actually dragging the complete QListWidget
             if type(widget) is QListWidget:
-                # get the position
-                position = mw.mapToGlobal(event.pos())
-                # Get the local cursor position
-                cursorposition = widget.mapFromGlobal(QCursor.pos())
                 # If the position is within a panel, store the panel name
                 for panelName, panel in self.currentCategory().panels().items():
-                    panelPos = mw.mapToGlobal(panel.pos())
-                    xMin = panelPos.x() + panel.rect().width() - cursorposition.x()
-                    xMax = xMin + panel.rect().width()
-                    
-                    if position.x() >= xMin and position.x() < xMax:
-                        self.dropPanelName = panelName      
+                    if panel.underMouse():
+                        self.targetPanel = panel
+                        self.dropPanelName = panelName
+                    #     HoverColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                    #     panel.setStyleSheet("""RibbonPanel:hover{border: 0.5px solid """
+                    #                         + HoverColor + """;}""")
+                    # else:
+                    #     panel.setStyleSheet("""RibbonPanel:hover{border:none}""")  
                 
                 # If not activated, activate all buttons    
                 self.activateButtons()                              
@@ -2400,6 +2399,11 @@ class ModernMenu(RibbonBar):
             self.dragIndicator_Panels.close()
             # self.dragIndicator_QuickAccess.close()
             self.target = None
+            # # if self.targetPanel is not None:
+            # for panel in self.currentCategory().panels().values():
+            #     # borderColer = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+            #     panel.setStyleSheet("""RibbonPanel:hover{border:none}""")  
+            # # self.targetPanel = None
             
             # Enable all buttons, so you can access them with a right click
             self.actionList = []
