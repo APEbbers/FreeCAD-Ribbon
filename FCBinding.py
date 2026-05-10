@@ -1521,7 +1521,7 @@ class ModernMenu(RibbonBar):
         # for panel in self.HiddenPanels:
         #     dictPanels[panel.title()] = panel
         for title, objPanel in dictPanels.items():
-            # Test iff the panel is not already deleted.
+            # Test if the panel is not already deleted.
             # This is needed, if a combined panel was added and then removed by clicking cancel
             try:
                 objPanel.objectName()
@@ -1726,7 +1726,13 @@ class ModernMenu(RibbonBar):
             
             # Create a bool to state if a panel is new or not
             IsNewPanel = False                            
-            for longPanel in self.longPanels:                                
+            for longPanel in self.longPanels:
+                # Test if the panel is not already deleted.
+                # This is needed, if a combined panel was added and then removed by clicking cancel
+                try:
+                    objPanel.objectName()
+                except Exception:
+                    continue                          
                 if longPanel.objectName() == objPanel.objectName() and longPanel.objectName() != "" and objPanel.objectName() != "":
                     if longPanel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
                         if self.workBenchDict["workbenches"][workbenchName]["toolbars"][longPanel.objectName()]["Enabled"] is False:
@@ -6802,18 +6808,13 @@ class EventInspector(QObject):
                                             
             return QObject.eventFilter(self, obj, event)
         # This is a workaround for windows
-        # If the window stat changes and the titlebar is hidden, catch the event
-        if (
-            event.type() == QEvent.Type.WindowStateChange
-            or event.type() == QEvent.Type.DragMove
-        ) and Parameters.HIDE_TITLEBAR_FC is True:            
+        # If the window state changes and the titlebar is hidden, catch the event
+        if (event.type() == QEvent.Type.WindowStateChange or event.type() == QEvent.Type.DragMove) and Parameters.HIDE_TITLEBAR_FC is True:            
             # Get the main window, its style, the ribbon and the restore button
             mw = Gui.getMainWindow()
             Style = mw.style()
             RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
-            RestoreButton: QToolButton = RibbonBar.rightToolBar().findChildren(
-                QToolButton, "RestoreButton"
-            )[0]
+            RestoreButton: QToolButton = RibbonBar.rightToolBar().findChildren(QToolButton, "RestoreButton")[0]
             # If the mainwindow is maximized, set the window state to maximize and set the correct icon
             if mw.isMaximized():
                 try:
@@ -6823,8 +6824,6 @@ class EventInspector(QObject):
                     )
                 except Exception:
                     pass
-                mw.setWindowState(Qt.WindowState.WindowMaximized)
-                # mw.showMaximal()
                 return QObject.eventFilter(self, obj, event)
             # If the mainwindow is not maximized, set the window state to no state and set the correct icon
             if mw.isMaximized() is False:
@@ -6839,10 +6838,7 @@ class EventInspector(QObject):
                 return QObject.eventFilter(self, obj, event)
         # If the event is a modfied event, update the title
         # This is done when switching from one part to another
-        if (
-            event.type() == QEvent.Type.ModifiedChange
-            and Parameters.TOOLBAR_POSITION == 0
-        ):
+        if (event.type() == QEvent.Type.ModifiedChange and Parameters.TOOLBAR_POSITION == 0):
             # Get the mainwindow, the ribbon and the title
             mw = Gui.getMainWindow()
             RibbonBar = mw.findChild(ModernMenu, "Ribbon")
