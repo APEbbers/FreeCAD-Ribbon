@@ -23,8 +23,9 @@ import CustomWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
+import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -53,7 +54,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -92,7 +93,7 @@ from PySide.QtWidgets import (
     QListWidgetItem,
     QAbstractButton,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1405,7 +1406,7 @@ class ModernMenu(RibbonBar):
                         # Load the dialog
                         # 
                         # Get the form
-                        self.AddCommandsDialog = LoadAddCommands.LoadDialog(self.workBenchDict)
+                        self.AddCommandsDialog = LoadAddCommands.LoadDialog(mw, self.workBenchDict)
                         if Parameters.DOCKED_DIALOGS is False:
                             # Show the form
                             self.AddCommandsDialog.form.show()
@@ -1467,7 +1468,6 @@ class ModernMenu(RibbonBar):
         return
     
     def on_Customize_Clicked(self):
-        # print(self.currentCategory().panels())
         # Get the name of the current workbench
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         if self.currentCategory() not in self.CustomizedCategories:
@@ -1507,8 +1507,11 @@ class ModernMenu(RibbonBar):
                             self.ButtonState[panelName][control.actions().data()] = control.actions().isEnabled()
                     except Exception:
                         pass     
-            except Exception:
-                print(title)
+            except Exception as e:
+                if Parameters.DEBUG_MODE is True:
+                    print(f"{title} had a problem with storing the state of its buttons")
+                    print(e.args)
+                    print(e.__traceback__)
                 pass
                 
         # Enable all buttons, so you can access them with a right click
@@ -1525,7 +1528,11 @@ class ModernMenu(RibbonBar):
             # This is needed, if a combined panel was added and then removed by clicking cancel
             try:
                 objPanel.objectName()
-            except Exception:
+            except Exception as e:
+                if Parameters.DEBUG_MODE is True:
+                    print(f"{title} had an error")
+                    print(e.args)
+                    print(e.__traceback__)
                 continue
             # If panels are just removed in this session, they might be still present int the panel list of this category
             # Make sure by comparing the panel with the panels that are replaced by a new custom panel and close it.
@@ -1674,11 +1681,9 @@ class ModernMenu(RibbonBar):
         Gui.updateGui()       
 
         # update the ribbonstructure before writing it to disk
-        # self.ribbonStructure["workbenches"][workbenchName] = self.workBenchDict["workbenches"][workbenchName]
         self.ribbonStructure.update(self.workBenchDict)
 
         # Restore the original panel with the overflow menu
-        panels = {} # Needed to update the panel dict of the currentCategory
         for title, objPanel in self.currentCategory().panels().items():
             # Test iff the panel is not already deleted.
             # This is needed, if a combined panel was added and then removed by clicking cancel
@@ -1688,12 +1693,9 @@ class ModernMenu(RibbonBar):
                 continue
             
             # If it is an new panel without a set title, remove it
-            # try:
             if objPanel.title() == "<New panel>" or objPanel.title() == "":
                 objPanel.close()
                 continue
-            # except Exception:
-            #     continue
             
             # hide the enable checkboxes and hide the panel if it is unchecked
             titleLayout: QHBoxLayout = objPanel._titleLayout
@@ -1720,19 +1722,17 @@ class ModernMenu(RibbonBar):
                         if panel.objectName() == objPanel.objectName():
                             self.ReplacedPanels.remove(panel)
                 EnableControl.setVisible(False)
-                                                                            
-            # Create keys if there are not existing yet for the temporary panel dict
-            StandardFunctions.add_keys_nested_dict(panels, [title])
-            
+
             # Create a bool to state if a panel is new or not
             IsNewPanel = False                            
             for longPanel in self.longPanels:
                 # Test if the panel is not already deleted.
                 # This is needed, if a combined panel was added and then removed by clicking cancel
                 try:
-                    objPanel.objectName()
+                    longPanel.objectName()
                 except Exception:
-                    continue                          
+                    continue
+                
                 if longPanel.objectName() == objPanel.objectName() and longPanel.objectName() != "" and objPanel.objectName() != "":
                     if longPanel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
                         if self.workBenchDict["workbenches"][workbenchName]["toolbars"][longPanel.objectName()]["Enabled"] is False:
@@ -1757,16 +1757,13 @@ class ModernMenu(RibbonBar):
                         objPanel.deleteLater()
                         longPanel.deleteLater()
                         # Update the temporary panel dict
-                        panels[title] = newPanel
+                        self.currentCategory().panels()[title] = newPanel
                         # Set the bool to True
                         IsNewPanel = True
                         break
             # If it is not a new panel, add the current panel to temporary panel dict
             if IsNewPanel is False:
-                panels[title] = objPanel
-                                                                                            
-        # Update the panel dict of the current catergory with the temporary panel dict
-        self.currentCategory()._panels = panels
+                self.currentCategory().panels()[title] = objPanel
         
         # Set the buttonstate back as it was
         for title, objPanel in self.currentCategory().panels().items():
@@ -1788,6 +1785,13 @@ class ModernMenu(RibbonBar):
                     separator.setEnabled(False)
                     # Set the separator to its original width
                     separator.setFixedWidth(6)
+                    
+            # Hide the panels that are toggled off
+            titleLayout: QHBoxLayout = objPanel._titleLayout
+            EnableControl: Toggle = titleLayout.itemAt(0).widget()
+            if EnableControl is not None:
+                if EnableControl.isChecked() is False: 
+                    objPanel.hide()
                                                                    
         # Clear the list with the long panels, so that it can be filled again next time
         self.longPanels.clear()
@@ -1818,18 +1822,12 @@ class ModernMenu(RibbonBar):
                 
          # Restore the cursor
         QApplication.restoreOverrideCursor()
-        
-        # Hide the panels that are toggled off
-        for objPanel in self.currentCategory().panels().values():
-            for panel in self.HiddenPanels:
-                if panel.objectName() == objPanel.objectName():
-                    panel.deleteLater()
-                    objPanel.hide()
+
         # Hide the replaced panels (by a combined panel)
         for objPanel in self.currentCategory().panels().values():
             for panel in self.ReplacedPanels:
                 if panel.objectName() == objPanel.objectName():
-                    panel.deleteLater()
+                    panel.hide()
                     objPanel.hide()
         
         # Clear the working dict
@@ -1843,10 +1841,7 @@ class ModernMenu(RibbonBar):
         self.CombinePanels.clear()        
         return
     
-    Cancel = False
     def on_Cancel_Clicked(self, workbenchName = ""):
-        if self.Cancel is True:
-            return
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
@@ -2350,8 +2345,7 @@ class ModernMenu(RibbonBar):
             
             # Get the widget from the source
             widget = event.source()
-            print(widget)
-            
+             
             # If you drag and drop a new command, you actually dragging the complete QListWidget
             if type(widget) is QListWidget:
                 # get the position
@@ -6150,24 +6144,110 @@ class ModernMenu(RibbonBar):
         return
     
     def RemovePanelFromDict(self, panel: RibbonPanel):
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        WorkBenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        WorkBenchTitle = self.currentCategory().title()
+        
+        # _newPanel
         if panel.objectName().endswith("_newPanel"):
-            # Remove the panel from the workbench dict
-            if workbenchName in self.workBenchDict["newPanels"]:
-                if panel.objectName() in self.workBenchDict["newPanels"][workbenchName]:
-                    del self.workBenchDict["newPanels"][workbenchName][panel.objectName()]
+            # Remove the panel from the newPanels dict
+            if WorkBenchName in self.workBenchDict["newPanels"]:
+                if panel.objectName() in self.workBenchDict["newPanels"][WorkBenchName]:
+                    del self.workBenchDict["newPanels"][WorkBenchName][panel.objectName()]
             
             # Remove the panel also from the workbench dict
-            if workbenchName in self.workBenchDict["workbenches"]:
-                if panel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
+            if WorkBenchName in self.workBenchDict["workbenches"]:
+                if panel.objectName() in self.workBenchDict["workbenches"][WorkBenchName]["toolbars"]:
                     orderList = []
-                    if "order" in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
-                        orderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
+                    if "order" in self.workBenchDict["workbenches"][WorkBenchName]["toolbars"]:
+                        orderList: list = self.workBenchDict["workbenches"][WorkBenchName]["toolbars"]["order"]
                         if panel.objectName() in orderList:
                             orderList.remove(panel.objectName())
-                    del self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]
-            
+                    del self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]
+            # Close the panel
             panel.close()
+            # Remove the panel from the current category dict
+            self.currentCategory().panels().pop(panel.objectName())
+            
+        # _custom
+        if panel.objectName().endswith("_custom"):
+            if WorkBenchName in self.workBenchDict["customToolbars"]:
+                if panel.objectName() in self.workBenchDict["customToolbars"][WorkBenchName]:
+                    # Get the order list
+                    orderList: list = self.workBenchDict["workbenches"][WorkBenchName]["toolbars"]["order"]
+                    
+                    ListPanels = []
+                    for command, toolbar in self.workBenchDict["customToolbars"][WorkBenchName][panel.objectName()]["commands"].items():
+                        if toolbar not in ListPanels:
+                            ListPanels.append(toolbar)
+
+                    # Add the original panels
+                    for toolbar in ListPanels:
+                        TB = mw.findChildren(QToolBar, toolbar)
+                        if TB is not None:
+                            # Create the panel based on the toolbars
+                            newPanel = self.CreatePanel(workbenchName=WorkBenchName, panelName=toolbar, addPanel=False, dict=self.workBenchDict, showEnableControl=True, ActivateButtons=True)                                                                        
+                            # show the enable checkboxes  
+                            titleLayout: QHBoxLayout = newPanel._titleLayout
+                            EnableControl = titleLayout.itemAt(0).widget()
+                            if EnableControl is not None:
+                                EnableControl.setVisible(True)
+                                EnableControl.setChecked(True)
+                            # Add the original panel to the orderList
+                            if toolbar not in orderList:
+                                orderList.append(toolbar)
+                            # Add the panel
+                            index = orderList.index(toolbar)
+                            self.currentCategory().insertWidget(newPanel, index)
+                            # Update the dict of the currentCategory with the new panel
+                            self.currentCategory()._panels[newPanel.objectName()] = newPanel
+                    
+                    # Remove the custom panel
+                    #
+                    # Close the panel first before removing
+                    panelToRemove = self.currentCategory().panels()[panel.objectName()]                            
+                    panelToRemove.close()
+                    # Remove it
+                    self.currentCategory().removePanel(panel.objectName())
+                    
+                    # Remove the custom panel from the order list
+                    if panel in orderList:
+                        orderList.remove(panel.objectName())
+
+                    # remove the custom toolbar also from the workbenches dict
+                    del self.workBenchDict["customToolbars"][WorkBenchName][panel.objectName()]
+                    if (panel.objectName() in self.workBenchDict["workbenches"][WorkBenchName]["toolbars"]):
+                        del self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]
+
+                    # update the order list
+                    if panel.objectName() in self.workBenchDict["workbenches"][WorkBenchName]:
+                        self.workBenchDict["workbenches"][WorkBenchName][panel.objectName()]["order"] = orderList
+                        
+                    # Get the Dialog and remove the item from the list
+                    Dialog = self.AddCommandsDialog.form
+                    if Dialog is not None:
+                        # remove the custom toolbar from the combobox
+                        for i in range(Dialog.CustomToolbarSelector_CP.count()):
+                            if (Dialog.CustomToolbarSelector_CP.itemText(i).split(", ")[0] + "_custom" == panel.objectName()):
+                                if (Dialog.CustomToolbarSelector_CP.itemText(i).split(", ")[1] == WorkBenchTitle and Dialog.CustomToolbarSelector_CP.itemText(i).split(", ")[1] != ""):
+                                    Dialog.CustomToolbarSelector_CP.removeItem(i)
+                                    Dialog.CustomToolbarSelector_CP.setCurrentText(Dialog.CustomToolbarSelector_CP.itemText(i - 1))
+                    
+                    # Set the current text to new
+                    Dialog.CustomToolbarSelector_CP.setCurrentText("New")
+
+                    if (
+                        Dialog.CustomToolbarSelector_CP.currentText()
+                        == "New"
+                    ):
+                        Dialog.PanelSelected_CP.clear()
+                        Dialog.PanelName_CP.clear()
+        
+        # Standard panels
+        if panel.objectName().endswith("_custom") is False and panel.objectName().endswith("_newPanel") is False:
+            titleLayout: QHBoxLayout = panel._titleLayout
+            EnableControl: Toggle = titleLayout.itemAt(0).widget()
+            if EnableControl is not None:
+                EnableControl.setChecked(False)
         return
     
     def setPanelProperties(self, panel: RibbonPanel):

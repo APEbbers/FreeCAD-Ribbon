@@ -126,7 +126,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     # Create a tomporary list for newly added dropdown buttons
     newDDBList = []
             
-    def __init__(self, workBenchDict):
+    def __init__(self, parent, workBenchDict):
         super(LoadDialog, self).__init__()
         
         self.workBenchDict = workBenchDict
@@ -140,6 +140,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Set its title
         self.form.setWindowTitle(translate("FreeCAD Ribbon", "Add or remove buttons"))
         self.form.setAcceptDrops(True)
+        
+        self.form.setParent(parent)
         
         # Install an event filter to catch events from the main window and act on it.
         self.form.installEventFilter(EventInspector(self.form))
@@ -1198,6 +1200,11 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             # update the order list
                             if panel in self.workBenchDict["workbenches"][WorkBenchName]:
                                 self.workBenchDict["workbenches"][WorkBenchName][panel]["order"] = orderList
+
+                            # Get the ribbon
+                            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+                            # Update the workBenchDict in the Ribbon
+                            RibbonBar.workBenchDict.update(self.workBenchDict)
 
                             # Set the current text to new
                             self.form.CustomToolbarSelector_CP.setCurrentText("New")
