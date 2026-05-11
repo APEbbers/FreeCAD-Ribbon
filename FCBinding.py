@@ -4372,10 +4372,11 @@ class ModernMenu(RibbonBar):
                         panel.hide()
                                    
             # Writing to ribbonStructure.json
-            JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-            with open(JsonFile, "w") as outfile:
-                json.dump(Dict, outfile, indent=4)
-            outfile.close()
+            if UpdateDict is True:
+                JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+                with open(JsonFile, "w") as outfile:
+                    json.dump(Dict, outfile, indent=4)
+                outfile.close()
 
         self.isWbLoaded[tabName] = True
 
