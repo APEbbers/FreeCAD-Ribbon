@@ -53,24 +53,25 @@ sys.path.append(pathBackup)
 
 mw: QMainWindow = Gui.getMainWindow()
 
-preferences = App.ParamGet('User parameter:BaseApp/Preferences/Themes/UserTokens/')
-BackGroundColor = preferences.GetString('GeneralBackgroundColor')
-HoverColor = preferences.GetString('GeneralBackgroundHoverColor')
-BorderColor = preferences.GetString('GeneralBorderColor')
-BorderColorHover = preferences.GetString('GeneralBorderHoverColor')
-TextColor = preferences.GetString('TextForegroundColor')
+preferences = App.ParamGet("User parameter:BaseApp/Preferences/Themes/UserTokens/")
+BackGroundColor = preferences.GetString("GeneralBackgroundColor")
+HoverColor = preferences.GetString("GeneralBackgroundHoverColor")
+BorderColor = preferences.GetString("GeneralBorderColor")
+BorderColorHover = preferences.GetString("GeneralBorderHoverColor")
+TextColor = preferences.GetString("TextForegroundColor")
 
 btn = QToolButton()
 
 
 def GetColorSetting(settingName: str) -> object:
-        # Create a tuple from the int value of the color
-        result = QColor.fromRgba(preferences.GetUnsigned(settingName)).toTuple()
+    # Create a tuple from the int value of the color
+    result = QColor.fromRgba(preferences.GetUnsigned(settingName)).toTuple()
 
-        # correct the order of the tuple
-        result = (result[3], result[0], result[1], result[2])
+    # correct the order of the tuple
+    result = (result[3], result[0], result[1], result[2])
 
-        return result
+    return result
+
 
 def DarkMode():
     import xml.etree.ElementTree as ET
@@ -179,9 +180,9 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
     #         currentStyleSheet = "FreeCAD Light.qss"
     #     if str("FreeCAD Dark").lower() in Theme.lower():
     #         currentStyleSheet = "FreeCAD Dark.qss"
-    
+
     # currentStyleSheet = "FreeCAD.qss"
-    
+
     IsInList = False
     for key, value in StyleMapping_default["Stylesheets"].items():
         if key == currentStyleSheet:
@@ -211,7 +212,10 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
         if isIcon is True:
             result = None
             PixmapName = ""
-            if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True or ShowCustomIcon is True:
+            if (
+                Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True
+                or ShowCustomIcon is True
+            ):
                 PixmapName = StyleMapping["Stylesheets"][ControlName]
             else:
                 PixmapName = ""
@@ -340,10 +344,10 @@ def ReturnStyleSheet(
                     + BorderColor
                     + """;}"""
                     + "QToolButton:disabled, QLabel:disabled {background-color: "
-                        + ReturnStyleItem("Background_Color")
-                        + ";border: 0.5px solid"
-                        + BorderColor
-                        + ";}"
+                    + ReturnStyleItem("Background_Color")
+                    + ";border: 0.5px solid"
+                    + BorderColor
+                    + ";}"
                 )
                 return StyleSheet
             if control.lower() == "applicationbutton":
@@ -471,6 +475,7 @@ def ReturnTitleBarIcons():
         Icons.append(Icon)
     return Icons
 
+
 def ReturnIcons_ThemeEditor():
     lightIcons = {
         "ScrollLeftButton_Tab": "backward_small_default.svg",
@@ -480,9 +485,13 @@ def ReturnIcons_ThemeEditor():
         "OptionButton": "more_default.svg",
         "PinButton_open": "pin-icon-open.svg",
         "PinButton_closed": "pin-icon-default.svg",
-        "TitleBarButtons": ["maximize_default.svg", "restore_default.svg", "minimize_default.svg"]
+        "TitleBarButtons": [
+            "maximize_default.svg",
+            "restore_default.svg",
+            "minimize_default.svg",
+        ],
     }
-    
+
     darkIcons = {
         "ScrollLeftButton_Tab": "backward_small_default_white.svg",
         "ScrollRightButton_Tab": "forward_small_default_white.svg",
@@ -491,15 +500,20 @@ def ReturnIcons_ThemeEditor():
         "OptionButton": "more_default_white.svg",
         "PinButton_open": "pin-icon-open_white.svg",
         "PinButton_closed": "pin-icon-default_white.svg",
-        "TitleBarButtons": ["maximize_default_white.svg", "restore_default_white.svg", "minimize_default_white.svg"]
+        "TitleBarButtons": [
+            "maximize_default_white.svg",
+            "restore_default_white.svg",
+            "minimize_default_white.svg",
+        ],
     }
-    color = GetColorSetting('TextForegroundColor')
+    color = GetColorSetting("TextForegroundColor")
     # if StandardFunctions.LightOrDark(color) == "dark":
     IsDarkTheme = darkMode
     if IsDarkTheme is False:
         return lightIcons
     else:
         return darkIcons
+
 
 # Used when custom colors are enabled
 StyleMapping = {
@@ -526,9 +540,15 @@ StyleMapping_default = {
     "Stylesheets": {
         "": {
             "Background_Color": "none",
-            "Background_Color_Hover": StandardFunctions.ColorConvertor(mw.palette().highlight().color().toTuple(), 1, True, False),
-            "Border_Color": StandardFunctions.ColorConvertor(mw.palette().text().color().toTuple(), 1, True, False),
-            "ApplicationButton_Background": StandardFunctions.ColorConvertor(mw.palette().highlight().color().toTuple(), 1, True, False),
+            "Background_Color_Hover": StandardFunctions.ColorConvertor(
+                mw.palette().highlight().color().toTuple(), 1, True, False
+            ),
+            "Border_Color": StandardFunctions.ColorConvertor(
+                mw.palette().text().color().toTuple(), 1, True, False
+            ),
+            "ApplicationButton_Background": StandardFunctions.ColorConvertor(
+                mw.palette().highlight().color().toTuple(), 1, True, False
+            ),
             "FontColor": ReturnFontColor(),
             "UpdateColor": ReturnUpdateColor(),
             "DevelopColor": ReturnDevelopColor(),
@@ -570,10 +590,14 @@ StyleMapping_default = {
             "DevelopColor": ReturnDevelopColor(),
             "ScrollLeftButton_Tab": ReturnIcons_ThemeEditor()["ScrollLeftButton_Tab"],
             "ScrollRightButton_Tab": ReturnIcons_ThemeEditor()["ScrollRightButton_Tab"],
-            "ScrollLeftButton_Category": ReturnIcons_ThemeEditor()["ScrollLeftButton_Category"],
-            "ScrollRightButton_Category": ReturnIcons_ThemeEditor()["ScrollRightButton_Category"],
+            "ScrollLeftButton_Category": ReturnIcons_ThemeEditor()[
+                "ScrollLeftButton_Category"
+            ],
+            "ScrollRightButton_Category": ReturnIcons_ThemeEditor()[
+                "ScrollRightButton_Category"
+            ],
             "OptionButton": ReturnIcons_ThemeEditor()["OptionButton"],
-            "PinButton_open":  ReturnIcons_ThemeEditor()["PinButton_open"],
+            "PinButton_open": ReturnIcons_ThemeEditor()["PinButton_open"],
             "PinButton_closed": ReturnIcons_ThemeEditor()["PinButton_closed"],
             "TitleBarButtons": ReturnIcons_ThemeEditor()["TitleBarButtons"],
         },
@@ -746,4 +770,3 @@ StyleMapping_default = {
         },
     }
 }
-

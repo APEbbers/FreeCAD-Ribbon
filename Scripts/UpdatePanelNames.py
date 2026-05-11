@@ -30,10 +30,10 @@ import os
 # Fill the correction list -> {workbenchname [[new toolbar, old toolbar], [new toolbar, old toolbar]]}
 CorrectionList = {
     "PartDesignWorkbench": [
-        ['Part Design Helper Features', "Part Design Helper"],
-        ['Part Design Modeling Features', "Part Design Modeling"],
-        ['Part Design Dress-Up Features', "Part Design Derssup"],
-        ['Part Design Transformation Features', "Part Design Patterns"],
+        ["Part Design Helper Features", "Part Design Helper"],
+        ["Part Design Modeling Features", "Part Design Modeling"],
+        ["Part Design Dress-Up Features", "Part Design Derssup"],
+        ["Part Design Transformation Features", "Part Design Patterns"],
     ]
 }
 
@@ -65,8 +65,8 @@ for WorkBench in RibbonStructure["workbenches"]:
                 # If the toolbars match, update the json file
                 Dict: dict = RibbonStructure["workbenches"][WorkBench]["toolbars"]
                 if ToolBarToCorrect[1] == toolbar:
-                    Dict.update({ToolBarToCorrect[0]: Dict.pop(toolbar)}) 
-                    
+                    Dict.update({ToolBarToCorrect[0]: Dict.pop(toolbar)})
+
 
 # Write it to disk
 with open(JsonFile, "w") as outfile:
