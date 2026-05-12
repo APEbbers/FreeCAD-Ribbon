@@ -956,11 +956,14 @@ class ModernMenu(RibbonBar):
     # region - Ribbon event fuctions
     initialPos = None
     def mousePress_Titlebar(self, event):
-        self.initialPos = event.pos()
+        try:
+            self.initialPos = event.pos().toPoint()
+        except Exception:
+            pass
     
     def mouseMove_Titlebar(self, event):
         if self.initialPos is not None:
-            delta = event.pos() - self.initialPos
+            delta = event.pos().toPoint() - self.initialPos
             mw.move(
                 mw.window().x() + delta.x(),
                 mw.window().y() + delta.y(),
