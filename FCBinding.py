@@ -344,10 +344,13 @@ class ModernMenu(RibbonBar):
     # store the CentralWidget width
     CentralWidgetWidth = None
     
+    # Define panel lists for the customise enviroment
     HiddenPanels = []
     ReplacedPanels = []
     CombinePanels = []
     
+    # Define a variable for storing the current category when the customise enviroment is activated
+    CurrentCategoryToRestore = None
     # endregion
 
     def __init__(self):
@@ -1454,7 +1457,8 @@ class ModernMenu(RibbonBar):
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         if self.currentCategory() not in self.CustomizedCategories:
             self.CustomizedCategories.append(self.currentCategory())
-        
+        self.CurrentCategoryToRestore = self.currentCategory()
+                
         # Set a stylesheet to indicate that you are in the customize enviroment
         Addition = """RibbonCategory, QToolBar {
             border-top: 0.5px solid red;
@@ -1816,7 +1820,11 @@ class ModernMenu(RibbonBar):
         self.ReplacedPanels.clear()
         
         # Clear the list with the Combined panels, so that it can be filled again next time
-        self.CombinePanels.clear()        
+        self.CombinePanels.clear()  
+        
+        # Activate the stored category when the customise enviroment was started
+        self.setCurrentCategory(self.CurrentCategoryToRestore)
+        self.hideClassicToolbars()  
         
         # Print a message
         print(translate("FreeCAD Ribbon", "RibbonUI: Changes are saved"))
@@ -1961,6 +1969,10 @@ class ModernMenu(RibbonBar):
         
         # Restore the cursor
         QApplication.restoreOverrideCursor()
+        
+        # Activate the stored category when the customise enviroment was started
+        self.setCurrentCategory(self.CurrentCategoryToRestore)
+        self.hideClassicToolbars()
         
         # Print a message
         print(translate("FreeCAD Ribbon", "RibbonUI: Changes are rolled back"))
@@ -3284,6 +3296,10 @@ class ModernMenu(RibbonBar):
             self.tabBar().setCurrentIndex(currentWbIndex)
             self.connectSignals()
         self.ApplicationMenus()
+        
+        if self.CustomizeEnabled:
+            # If not activated, activate all buttons    
+            self.activateButtons() 
 
         if self.DesignMenuLoaded is True:
             # Disable the quick toolbar, righttoolbar and application menu
