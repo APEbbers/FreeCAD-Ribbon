@@ -241,7 +241,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
                 result = StyleMapping["Stylesheets"][ControlName]
             if (
                 Parameters.BUTTON_BACKGROUND_ENABLED is False
-                and Parameters.USE_FC_OVERLAY is True
+                and Parameters.USE_OVERLAY is True
                 and ControlName == "Background_Color"
                 and IgnoreOverlay is False
             ):
