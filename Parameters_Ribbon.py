@@ -83,6 +83,8 @@ DefaultSettings = {
     # "Color_Background": "",
     "Color_Background_Hover": "",
     "Color_Background_App": "",
+    "Color_Background_Tabs": "",
+    "Color_Background_TitleBar": "",
     "CustomIcons": bool(False),
     "ScrollLeftButton_Tab": "",
     "ScrollRightButton_Tab": "",
@@ -598,12 +600,7 @@ class Parameters:
     if Settings.GetStringSetting("Color_Borders") == "":
         COLOR_BORDERS = str(DefaultSettings["Color_Borders"])
         Settings.SetStringSetting("Color_Borders", COLOR_BORDERS)
-    COLOR_BORDERS = Settings.GetStringSetting("Color_Borders")
-
-    # if Settings.GetStringSetting("Color_Background") == "":
-    #     COLOR_BACKGROUND = str(DefaultSettings["Color_Background"])
-    #     Settings.SetStringSetting("Color_Background", COLOR_BACKGROUND)
-    # COLOR_BACKGROUND = Settings.GetStringSetting("Color_Background")
+    COLOR_BORDERS = Settings.GetStringSetting("Color_Borders")    
 
     if Settings.GetStringSetting("Color_Background_Hover") == "":
         COLOR_BACKGROUND_HOVER = str(DefaultSettings["Color_Background_Hover"])
@@ -616,6 +613,16 @@ class Parameters:
             "Color_Background_App", COLOR_APPLICATION_BUTTON_BACKGROUND
         )
     COLOR_APPLICATION_BUTTON_BACKGROUND = Settings.GetStringSetting("Color_Background_App")
+    
+    if Settings.GetStringSetting("Color_Background_Tabs") == "":
+        COLOR_BACKGROUND_TABS = str(DefaultSettings["Color_Background_Tabs"])
+        Settings.SetStringSetting("Color_Background_Tabs", COLOR_BACKGROUND_TABS)
+    COLOR_BACKGROUND_TABS = Settings.GetStringSetting("Color_Background_Tabs")
+    
+    if Settings.GetStringSetting("Color_Background_TitleBar") == "":
+        COLOR_BACKGROUND_TITLEBAR = str(DefaultSettings["Color_Background_TitleBar"])
+        Settings.SetStringSetting("Color_Background_TitleBar", COLOR_BACKGROUND_TITLEBAR)
+    COLOR_BACKGROUND_TITLEBAR = Settings.GetStringSetting("Color_Background_TitleBar")
 
     # endregion ------------------------------------------------------------------------------------------------------------
 

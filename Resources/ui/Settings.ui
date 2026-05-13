@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>736</width>
-    <height>848</height>
+    <height>861</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -76,7 +76,7 @@
             <string notr="true"/>
            </property>
            <property name="currentIndex">
-            <number>3</number>
+            <number>2</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideRight</enum>
@@ -1774,26 +1774,6 @@
                 <string>Icons</string>
                </property>
                <layout class="QGridLayout" name="gridLayout_23">
-                <item row="0" column="0">
-                 <widget class="QCheckBox" name="CustomIcons">
-                  <property name="text">
-                   <string>Enable custom icons</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <spacer name="horizontalSpacer_6">
-                  <property name="orientation">
-                   <enum>Qt::Orientation::Horizontal</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
                 <item row="1" column="0">
                  <widget class="QGroupBox" name="IconS">
                   <property name="enabled">
@@ -2055,6 +2035,26 @@
                   </layout>
                  </widget>
                 </item>
+                <item row="0" column="0">
+                 <widget class="QCheckBox" name="CustomIcons">
+                  <property name="text">
+                   <string>Enable custom icons</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <spacer name="horizontalSpacer_6">
+                  <property name="orientation">
+                   <enum>Qt::Orientation::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
                </layout>
               </widget>
              </item>
@@ -2062,6 +2062,9 @@
               <spacer name="verticalSpacer_2">
                <property name="orientation">
                 <enum>Qt::Orientation::Vertical</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Policy::Expanding</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
@@ -2073,6 +2076,12 @@
              </item>
              <item row="0" column="0">
               <widget class="QGroupBox" name="groupBox_8">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="title">
                 <string>Colors</string>
                </property>
@@ -2084,21 +2093,68 @@
                   </property>
                  </widget>
                 </item>
+                <item row="1" column="0">
+                 <widget class="QCheckBox" name="BorderTransparant">
+                  <property name="text">
+                   <string>Set border invisible for ribbon buttons</string>
+                  </property>
+                 </widget>
+                </item>
                 <item row="2" column="0">
                  <widget class="QGroupBox" name="ColorS">
                   <property name="enabled">
                    <bool>false</bool>
                   </property>
-                  <layout class="QGridLayout" name="gridLayout_35" rowminimumheight="0">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_35">
                    <item row="0" column="0">
                     <layout class="QGridLayout" name="gridLayout_20">
-                     <property name="verticalSpacing">
-                      <number>6</number>
-                     </property>
-                     <item row="2" column="1" colspan="2">
-                      <widget class="Gui::ColorButton" name="Color_Background_App">
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_6">
+                       <property name="minimumSize">
+                        <size>
+                         <width>200</width>
+                         <height>50</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>300</width>
+                         <height>16777215</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Set the color for control borders when hovering over them:</string>
+                       </property>
+                       <property name="wordWrap">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="0" column="1">
+                      <widget class="Gui::ColorButton" name="Color_Borders">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>20</width>
+                         <height>40</height>
+                        </size>
+                       </property>
                        <property name="text">
                         <string notr="true"/>
+                       </property>
+                       <property name="allowTransparency">
+                        <bool>true</bool>
                        </property>
                       </widget>
                      </item>
@@ -2107,7 +2163,7 @@
                        <property name="minimumSize">
                         <size>
                          <width>200</width>
-                         <height>0</height>
+                         <height>50</height>
                         </size>
                        </property>
                        <property name="maximumSize">
@@ -2124,31 +2180,24 @@
                        </property>
                       </widget>
                      </item>
-                     <item row="0" column="1" colspan="2">
-                      <widget class="Gui::ColorButton" name="Color_Borders">
+                     <item row="1" column="1">
+                      <widget class="Gui::ColorButton" name="Color_Background_Hover">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>20</width>
+                         <height>40</height>
+                        </size>
+                       </property>
                        <property name="text">
                         <string notr="true"/>
                        </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_6">
-                       <property name="minimumSize">
-                        <size>
-                         <width>200</width>
-                         <height>0</height>
-                        </size>
-                       </property>
-                       <property name="maximumSize">
-                        <size>
-                         <width>300</width>
-                         <height>16777215</height>
-                        </size>
-                       </property>
-                       <property name="text">
-                        <string>Set the color for control borders when hovering over them:</string>
-                       </property>
-                       <property name="wordWrap">
+                       <property name="allowTransparency">
                         <bool>true</bool>
                        </property>
                       </widget>
@@ -2175,16 +2224,95 @@
                        </property>
                       </widget>
                      </item>
-                     <item row="1" column="1" colspan="2">
-                      <widget class="Gui::ColorButton" name="Color_Background_Hover">
+                     <item row="2" column="1">
+                      <widget class="Gui::ColorButton" name="Color_Background_App">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>20</width>
+                         <height>40</height>
+                        </size>
+                       </property>
                        <property name="text">
                         <string notr="true"/>
+                       </property>
+                       <property name="allowTransparency">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="0">
+                      <widget class="QLabel" name="label_46">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>50</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Set the background color for the tabs</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="3" column="1">
+                      <widget class="Gui::ColorButton" name="Color_Background_Tabs">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>20</width>
+                         <height>40</height>
+                        </size>
+                       </property>
+                       <property name="allowTransparency">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="0">
+                      <widget class="QLabel" name="label_47">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>50</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>Set the background color for titlebar</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="4" column="1">
+                      <widget class="Gui::ColorButton" name="Color_Background_TitleBar">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>20</width>
+                         <height>40</height>
+                        </size>
+                       </property>
+                       <property name="allowTransparency">
+                        <bool>true</bool>
                        </property>
                       </widget>
                      </item>
                     </layout>
                    </item>
-                   <item row="0" column="2">
+                   <item row="0" column="1">
                     <spacer name="horizontalSpacer_5">
                      <property name="orientation">
                       <enum>Qt::Orientation::Horizontal</enum>
@@ -2198,26 +2326,6 @@
                     </spacer>
                    </item>
                   </layout>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <spacer name="verticalSpacer_4">
-                  <property name="orientation">
-                   <enum>Qt::Orientation::Vertical</enum>
-                  </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>20</width>
-                    <height>40</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QCheckBox" name="BorderTransparant">
-                  <property name="text">
-                   <string>Set border invisible for ribbon buttons</string>
-                  </property>
                  </widget>
                 </item>
                </layout>

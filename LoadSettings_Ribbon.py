@@ -734,6 +734,12 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.Color_Background_App.clicked.connect(
             self.on_Color_Background_App_clicked
         )
+        self.form.Color_Background_Tabs.clicked.connect(
+            self.on_Color_Background_Tabs_clicked
+        )
+        self.form.Color_Background_TitleBar.clicked.connect(
+            self.on_Color_Background_TitleBar_clicked
+        )
         # endregion
 
         # Set the first tab active
@@ -1314,6 +1320,34 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         except Exception:
             pass
         return
+    
+    def on_Color_Background_Tabs_clicked(self):
+        try:
+            Color = QColor(
+                self.form.Color_Background_Tabs.property("color")
+            ).toTuple()  # RGBA tupple
+            HexColor = StandardFunctions.ColorConvertor(
+                Color, Color[3] / 255, True, False
+            )
+            self.ValuesToUpdate["Color_Background_Tabs"] = HexColor
+            self.settingChanged = True
+        except Exception:
+            pass
+        return
+    
+    def on_Color_Background_TitleBar_clicked(self):
+        try:
+            Color = QColor(
+                self.form.Color_Background_TitleBar.property("color")
+            ).toTuple()  # RGBA tupple
+            HexColor = StandardFunctions.ColorConvertor(
+                Color, Color[3] / 255, True, False
+            )
+            self.ValuesToUpdate["Color_Background_TitleBar"] = HexColor
+            self.settingChanged = True
+        except Exception:
+            pass
+        return
 
     # endregion
 
@@ -1459,6 +1493,12 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         )
         Parameters_Ribbon.Settings.SetStringSetting(
             "Color_Background_App", self.OriginalValues["Color_Background_App"]
+        )
+        Parameters_Ribbon.Settings.SetStringSetting(
+            "Color_Background_Tabs", self.OriginalValues["Color_Background_Tabs"]
+        )
+        Parameters_Ribbon.Settings.SetStringSetting(
+            "Color_Background_TitleBar", self.OriginalValues["Color_Background_TitleBar"]
         )
 
         # Set the size of the window to the previous state
@@ -1633,6 +1673,12 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         )
         Parameters_Ribbon.Settings.SetStringSetting(
             "Color_Background_App", self.ValuesToUpdate["Color_Background_App"]
+        )
+        Parameters_Ribbon.Settings.SetStringSetting(
+            "Color_Background_Tabs", self.ValuesToUpdate["Color_Background_Tabs"]
+        )
+        Parameters_Ribbon.Settings.SetStringSetting(
+            "Color_Background_TitleBar", self.ValuesToUpdate["Color_Background_TitleBar"]
         )
 
         # Set the size of the window to the previous state
@@ -1851,6 +1897,12 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         )
         self.form.Color_Background_App.setProperty(
             "color", QColor(StyleMapping_Ribbon.ReturnStyleItem("Color_Background_App"))
+        )
+        self.form.Color_Background_Tabs.setProperty(
+            "color", QColor(StyleMapping_Ribbon.ReturnStyleItem("Color_Background_Tabs"))
+        )
+        self.form.Color_Background_TitleBar.setProperty(
+            "color", QColor(StyleMapping_Ribbon.ReturnStyleItem("Color_Background_TitleBar"))
         )
         
         self.form.RibbonHeightOffset.setValue(DefaultSettings["RibbonHeightOffset"])
