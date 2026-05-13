@@ -349,8 +349,6 @@ class ModernMenu(RibbonBar):
     ReplacedPanels = []
     CombinePanels = []
     
-    QuickPanelItems = []
-    
     # Define a variable for storing the current category when the customise enviroment is activated
     CurrentCategoryToRestore = None
     # endregion
@@ -1951,29 +1949,17 @@ class ModernMenu(RibbonBar):
         # Restore the ribbonstructure
         self.ribbonStructure = Dict
         
-        for child in self.quickAccessToolBar().children():
-            if child.objectName() != "":
-                if child.objectName() not in self.ribbonStructure["quickAccessCommands"]:
-                    if type(child) is QuickAccessSeparator or type(child) is QuickAccessToolButton:
-                        child.deleteLater()
-                        # Update the quickAccessCommands list
-                        self.workBenchDict["quickAccessCommands"].remove(child.objectName())
-                        
+        # Restore the quickaccess toolbar
+        #
+        # Remove the current buttons
+        for child in self.quickAccessToolBar().findChildren(QToolButton):
+            if type(child) is QuickAccessSeparator or type(child) is QuickAccessToolButton or type(child) is DragTargetIndicator:
+                child.deleteLater()
+        # Create new buttons and add them to the quickacces toolbar based on the original order
         for commandName in self.ribbonStructure["quickAccessCommands"]:
-            if commandName not in self.workBenchDict["quickAccessCommands"]:
-                index = 0
-                for item in self.QuickPanelItems:              
-                    if item[1] == commandName:
-                        index = item[0]
-                
-                # Define a button
-                button = self.CreateQuickButtonFromCommand(commandName)                
-                self.quickAccessToolBar().insertWidget(self.quickAccessToolBar().actions()[index], button)
-            
+            button = self.CreateQuickButtonFromCommand(commandName=commandName)
+            self.addQuickAccessButton(button)
                                            
-        self.buildPanels(self.ribbonStructure["quickAccessCommands"])
-
-        
         # Clear the workbench dict
         self.workBenchDict.clear()
         
@@ -6414,7 +6400,6 @@ class ModernMenu(RibbonBar):
                     # If the position of the context menu event is within the global corners
                     # delete the button
                     if pos.x() >= pos_tl.x() and pos.x() < pos_tr.x():             
-                        self.QuickPanelItems.append([index, widget.objectName()])
                         button.deleteLater()                                                
                         IsDeleted = True
                                 
@@ -6575,7 +6560,18 @@ class ModernMenu(RibbonBar):
                     "toolbutton", "2px", padding_right=f"{padding}px"
                 )
             )     
-                
+        
+        # if it is a separator return a separator
+        if "separator" in commandName:
+            width = 12
+            height = self.QuickAccessButtonSize
+            separator = QuickAccessSeparator(self.quickAccessToolBar())
+            separator.setObjectName(commandName)
+            separator.setFixedSize(width, height)
+            separator.setEnabled(True)
+            button = separator
+        
+        # Set the command as objectName for future reference
         button.setObjectName(commandName)
         return button
         
