@@ -514,7 +514,7 @@ StyleMapping = {
         "Background_Color_Hover": Parameters.COLOR_BACKGROUND_HOVER,
         "Border_Color": Parameters.COLOR_BORDERS,
         "ApplicationButton_Background": Parameters.COLOR_APPLICATION_BUTTON_BACKGROUND,
-        "FontColor": Parameters.COLOR_BORDERS,  # Set the font and border equal when custom colors is enabled
+        "FontColor": ReturnFontColor(),  
         "UpdateColor": ReturnUpdateColor(),
         "DevelopColor": ReturnDevelopColor(),
         "ScrollLeftButton_Tab": Parameters.SCROLL_LEFT_BUTTON_TAB,

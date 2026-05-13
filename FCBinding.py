@@ -25,7 +25,7 @@ import FreeCADGui as Gui
 from pathlib import Path
 import traceback
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -54,7 +54,7 @@ from PySide6.QtGui import (
     QScreen,
     QPen,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -93,7 +93,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     QAbstractButton,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -674,6 +674,20 @@ class ModernMenu(RibbonBar):
         hexColorTab = StyleMapping_Ribbon.ReturnStyleItem(
             "Background_Color", True, True
         )
+        if Parameters.CUSTOM_COLORS_ENABLED is True:            
+            hexColorTab = Parameters.COLOR_BACKGROUND_TABS
+            
+            self.quickAccessToolBar().setStyleSheet("background: " + hexColor + ";")
+            self.rightToolBar().setStyleSheet("background: " + hexColor + ";")
+            
+            StyleSheet_Addition_Tabs = "QTabBar::tab {background: " + hexColorTab + ";}"
+            StyleSheet_Addition_TitleWidget = "RibbonTitleWidget {background: " + Parameters.COLOR_BACKGROUND_TITLEBAR + ";}"
+            # StyleSheet_Addition_ToolBars = "QToolBar {background: " + Parameters.COLOR_BACKGROUND_TITLEBAR + ";}"
+
+            # self.StyleSheet = self.StyleSheet + StyleSheet_Addition_TitleWidget + StyleSheet_Addition_Tabs + StyleSheet_Addition_ToolBars 
+            self.StyleSheet = self.StyleSheet + StyleSheet_Addition_TitleWidget + StyleSheet_Addition_Tabs
+            self.setStyleSheet(self.StyleSheet)
+            
         if (
             hexColor is not None
             and hexColor != ""
@@ -685,7 +699,7 @@ class ModernMenu(RibbonBar):
             )
             self.tabBar().setStyleSheet("background: " + hexColorTab + ";")
             # Set the background color. This fixes transparant backgrounds when FreeCAD has no stylesheet
-            StyleSheet_Addition = (
+            StyleSheet_Addition_Tabs = (
                 "\n\nQToolButton {background: solid " + hexColor + ";}"
             )
             StyleSheet_Addition_2 = (
@@ -695,7 +709,7 @@ class ModernMenu(RibbonBar):
                 + hexColor
                 + ";}"
             )
-            self.StyleSheet = StyleSheet_Addition_2 + self.StyleSheet + StyleSheet_Addition
+            self.StyleSheet = StyleSheet_Addition_2 + self.StyleSheet + StyleSheet_Addition_Tabs
         self.setStyleSheet(self.StyleSheet)
 
         # If the text for the tabs is set to be disabled, update the stylesheet
@@ -1008,11 +1022,6 @@ class ModernMenu(RibbonBar):
                     0, self.QuickAccessButtonSize
                 )
                 
-        if Parameters.CUSTOM_COLORS_ENABLED is True:
-            # Set the stylesheet for the titlebar
-            self._titleWidget.setStyleSheet("RibbonTitleWidget {background-color: " + Parameters.COLOR_BACKGROUND_TITLEBAR + ";}")
-            self.rightToolBar().setStyleSheet("background-color: " + Parameters.COLOR_BACKGROUND_TITLEBAR + ";}")
-
         # Get the main window, its style, the ribbon and the restore button
         try:
             RestoreButton: QToolButton = self.rightToolBar().findChildren(
@@ -3494,8 +3503,6 @@ class ModernMenu(RibbonBar):
                         self.tabBar().setTabToolTip(
                             len(self.categories()) - 1, MenuText
                         )
-                        
-                        self.tabBar().setStyleSheet("QTabBar::tab {background-color: " + Parameters.COLOR_BACKGROUND_TABS + "}")
 
         # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(
