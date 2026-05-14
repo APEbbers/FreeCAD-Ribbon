@@ -101,7 +101,7 @@ DefaultSettings = {
     "FontSize_Panels": int(11),
     "Toolbar_Position": int(0),
     "Hide_Titlebar_FC": bool(True),
-    "BetaFunctions": bool(False),
+    "BetaFunctions": bool(True),
     "SizeFactor": float(1.3),
     "PanelHeightOffset": int(26),
     "RibbonHeightOffset": int(20),
