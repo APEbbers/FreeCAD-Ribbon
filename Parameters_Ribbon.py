@@ -61,7 +61,7 @@ DefaultSettings = {
     "ShowIconText_Small": bool(False),
     "ShowIconText_Medium": bool(False),
     "ShowIconText_Large": bool(True),
-    "MaxColumnsPerPanel": int(6),
+    "MaxColumnsPerPanel": int(0),
     "DebugMode": bool(False),
     "ShowOnHover": bool(False),
     "TabBar_Scroll": int(1),
@@ -174,18 +174,18 @@ class Settings:
         return
 
     def SetIntSetting(settingName, value: int):
-        if str(value).lower() == "":
-            value = int(DefaultSettings[settingName])
-        if str(value).lower() != "":
-            preferences.SetInt(settingName, value)
+        # if str(value).lower() == "":
+            # value = int(DefaultSettings[settingName])
+        # if str(value).lower() != "":
+        preferences.SetInt(settingName, value)
         App.saveParameter()
         return
     
     def SetFloatSetting(settingName, value: float):
-        if str(value).lower() == "":
-            value = float(DefaultSettings[settingName])
-        if str(value).lower() != "":
-            preferences.SetFloat(settingName, value)
+        # if str(value).lower() == "":
+        #     value = float(DefaultSettings[settingName])
+        # if str(value).lower() != "":
+        preferences.SetFloat(settingName, value)
         App.saveParameter()
         return
 
@@ -193,6 +193,9 @@ class Settings:
 
     def WriteMissingSettings():
         for DefaultSetting_Name, DefaultSetting_Value in DefaultSettings.items():
+            # for o in getmembers(Parameters):
+            #     if o.lower() == DefaultSetting_Name:
+            #         print(o)
             if type(DefaultSetting_Value) is str:
                 if Settings.GetStringSetting(DefaultSetting_Name) == "":
                     Settings.SetStringSetting(DefaultSetting_Name, DefaultSetting_Value)
@@ -205,6 +208,7 @@ class Settings:
             if type(DefaultSetting_Value) is float:
                 if Settings.GetFloatSetting(DefaultSetting_Name) is None:
                     Settings.SetFloatSetting(DefaultSetting_Name, DefaultSetting_Value)
+        App.saveParameter()
         return
 
 class Parameters:
@@ -397,7 +401,7 @@ class Parameters:
         STYLESHEET = str(DefaultSettings["Stylesheet"])
         Settings.SetStringSetting("Stylesheet", STYLESHEET)
 
-    if Settings.GetBoolSetting("ShowIconText_Small") is FileExistsError:
+    if Settings.GetBoolSetting("ShowIconText_Small") is None:
         SHOW_ICON_TEXT_SMALL = bool(DefaultSettings["ShowIconText_Small"])
         Settings.SetBoolSetting("ShowIconText_Small", SHOW_ICON_TEXT_SMALL)
     SHOW_ICON_TEXT_SMALL = Settings.GetBoolSetting("ShowIconText_Small")
@@ -412,17 +416,17 @@ class Parameters:
         Settings.SetBoolSetting("ShowIconText_Large", SHOW_ICON_TEXT_LARGE)
     SHOW_ICON_TEXT_LARGE = Settings.GetBoolSetting("ShowIconText_Large")
 
-    if Settings.GetIntSetting("MaxColumnsPerPanel") is None:
+    if Settings.GetIntSetting("MaxColumnsPerPanel") is None or Settings.GetIntSetting("MaxColumnsPerPanel") == 0:
         MAX_COLUMN_PANELS = int(DefaultSettings["MaxColumnsPerPanel"])
         Settings.SetIntSetting("MaxColumnsPerPanel", MAX_COLUMN_PANELS)
     MAX_COLUMN_PANELS = Settings.GetIntSetting("MaxColumnsPerPanel")
 
-    if Settings.GetBoolSetting("WrapText_Medium") == "":
+    if Settings.GetBoolSetting("WrapText_Medium") is None:
         WRAPTEXT_MEDIUM = bool(DefaultSettings["WrapText_Medium"])
         Settings.SetBoolSetting("WrapText_Medium", WRAPTEXT_MEDIUM)
     WRAPTEXT_MEDIUM = Settings.GetBoolSetting("WrapText_Medium")
 
-    if Settings.GetBoolSetting("WrapText_Large") == "":
+    if Settings.GetBoolSetting("WrapText_Large") is None:
         WRAPTEXT_LARGE = bool(DefaultSettings["WrapText_Large"])
         Settings.SetBoolSetting("WrapText_Large", WRAPTEXT_LARGE)
     WRAPTEXT_LARGE = Settings.GetBoolSetting("WrapText_Large")
@@ -634,28 +638,28 @@ class Parameters:
     # endregion
 
     # region - Advanced size settings ------------------------------------------------------------------------------------------------
-    if Settings.GetFloatSetting("BetaFunctions") is None:
-        SIZE_FACTOR = bool(DefaultSettings["SizeFactor"])
+    if Settings.GetFloatSetting("BetaFunctions") is None or Settings.GetFloatSetting("BetaFunctions") == 0:
+        SIZE_FACTOR = float(DefaultSettings["SizeFactor"])
         Settings.SetFloatSetting("SizeFactor", SIZE_FACTOR)
     SIZE_FACTOR = Settings.GetFloatSetting("SizeFactor")
         
-    if Settings.GetIntSetting("PanelHeightOffset") is None:
-        PANEL_HEIGHT_OFFSET = bool(DefaultSettings["PanelHeightOffset"])
+    if Settings.GetIntSetting("PanelHeightOffset") is None or Settings.GetIntSetting("PanelHeightOffset") == 0:
+        PANEL_HEIGHT_OFFSET = int(DefaultSettings["PanelHeightOffset"])
         Settings.SetIntSetting("PanelHeightOffset", PANEL_HEIGHT_OFFSET)
     PANEL_HEIGHT_OFFSET = Settings.GetIntSetting("PanelHeightOffset")
         
-    if Settings.GetIntSetting("RibbonHeightOffset") is None:
-        RIBBON_HEIGHT_OFFSET = bool(DefaultSettings["RibbonHeightOffset"])
+    if Settings.GetIntSetting("RibbonHeightOffset") is None or Settings.GetIntSetting("RibbonHeightOffset") == 0:
+        RIBBON_HEIGHT_OFFSET = int(DefaultSettings["RibbonHeightOffset"])
         Settings.SetIntSetting("RibbonHeightOffset", RIBBON_HEIGHT_OFFSET)
     RIBBON_HEIGHT_OFFSET = Settings.GetIntSetting("RibbonHeightOffset")
         
-    if Settings.GetIntSetting("RibbonMinimumHeight") is None:
-        RIBBON_MINIMUM_HEIGHT = bool(DefaultSettings["RibbonMinimumHeight"])
+    if Settings.GetIntSetting("RibbonMinimumHeight") is None or Settings.GetIntSetting("RibbonHeightOffset") == 0:
+        RIBBON_MINIMUM_HEIGHT = int(DefaultSettings["RibbonMinimumHeight"])
         Settings.SetIntSetting("RibbonMinimumHeight", RIBBON_MINIMUM_HEIGHT)
     RIBBON_MINIMUM_HEIGHT = Settings.GetIntSetting("RibbonMinimumHeight")
         
-    if Settings.GetIntSetting("ButtonSpacing") is None:
-        BUTTON_SPACING = bool(DefaultSettings["ButtonSpacing"])
+    if Settings.GetIntSetting("ButtonSpacing") is None or Settings.GetIntSetting("ButtonSpacing") == 0:
+        BUTTON_SPACING = int(DefaultSettings["ButtonSpacing"])
         Settings.SetIntSetting("ButtonSpacing", BUTTON_SPACING)
     BUTTON_SPACING = Settings.GetIntSetting("ButtonSpacing")
     # endregion
