@@ -528,7 +528,18 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.ListCategory_NP.addItem(Gui.getIcon("freecad"), Standard_KeyWord, [Standard_KeyWord, "Standard", "Standard"])
         self.form.ListCategory_DDB.addItem(Gui.getIcon("freecad"), Standard_KeyWord)
 
-        self.List_Workbenches.sort()
+        # Sort the workbenches according the order of tabs
+        def sortWorkbenches(item):
+            WorkbenchOrderedList: list = Parameters.TAB_ORDER.split(",")
+            
+            position = None
+            try:
+                position = WorkbenchOrderedList.index(item[0])
+            except ValueError as e:
+                position = 999999
+            return position
+            
+        self.List_Workbenches.sort(key=sortWorkbenches)       
 
         WorkbenchName =""
         for workbench in self.List_Workbenches:

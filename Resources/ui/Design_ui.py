@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignZkDqpP.ui'
+## Form generated from reading UI file 'DesignkDWBPm.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -556,7 +556,7 @@ class Ui_Form(object):
         __qlistwidgetitem4.setCheckState(Qt.Checked)
         self.WorkbenchesAvailable_IW.setObjectName(u"WorkbenchesAvailable_IW")
         self.WorkbenchesAvailable_IW.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
-        self.WorkbenchesAvailable_IW.setSortingEnabled(True)
+        self.WorkbenchesAvailable_IW.setSortingEnabled(False)
 
         self.gridLayout_3.addWidget(self.WorkbenchesAvailable_IW, 1, 0, 1, 1)
 
@@ -567,7 +567,7 @@ class Ui_Form(object):
         self.WorkbenchesSelected_IW.setDefaultDropAction(Qt.DropAction.MoveAction)
         self.WorkbenchesSelected_IW.setSelectionMode(QAbstractItemView.SelectionMode.ExtendedSelection)
         self.WorkbenchesSelected_IW.setMovement(QListView.Movement.Free)
-        self.WorkbenchesSelected_IW.setSortingEnabled(True)
+        self.WorkbenchesSelected_IW.setSortingEnabled(False)
 
         self.gridLayout_3.addWidget(self.WorkbenchesSelected_IW, 1, 2, 1, 1)
 
@@ -1434,7 +1434,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(4)
+        self.tabWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(Form)
