@@ -3574,7 +3574,18 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         ListWidgetItem_IS.setData(Qt.ItemDataRole.UserRole, ["All", "", "All", {}])
         self.form.WorkbenchList_IS.addItem(ListWidgetItem_IS)
 
-        self.List_Workbenches.sort()
+        # Sort the workbenches according the order of tabs
+        def sortWorkbenches(item):
+            WorkbenchOrderedList: list = Parameters.TAB_ORDER.split(",")
+            
+            position = None
+            try:
+                position = WorkbenchOrderedList.index(item[0])
+            except ValueError as e:
+                position = 999999
+            return position
+            
+        self.List_Workbenches.sort(key=sortWorkbenches)   
 
         WorkbenchName =""
         for workbench in self.List_Workbenches:
