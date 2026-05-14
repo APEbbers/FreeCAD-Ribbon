@@ -210,9 +210,10 @@ class ModernMenu(RibbonBar):
     # use icon size from FreeCAD preferences
     iconSize = Parameters.ICON_SIZE_SMALL
     ApplicationButtonSize = Parameters.APP_ICON_SIZE
-    QuickAccessButtonSize = Parameters.QUICK_ICON_SIZE
-    # RightToolBarButtonSize = Parameters.RIGHT_ICON_SIZE  # Is overruled
-    # TabBar_Size = Parameters.TABBAR_SIZE  # Is overruled
+    QuickAccessButtonSize = Parameters.QUICK_ICON_SIZE    
+    TabBar_Size = Parameters.TABBAR_SIZE  
+    if Parameters.LINK_ICON_SIZES is True:
+        TabBar_Size = QuickAccessButtonSize
     LargeButtonSize = Parameters.ICON_SIZE_LARGE
 
     # Define a placeholder for the ribbon height
@@ -229,9 +230,8 @@ class ModernMenu(RibbonBar):
     )  # Set to zero to hide the panel titles
 
     # Set the minimum height for the ribbon
-    RibbonMinimalHeight = QuickAccessButtonSize * 2 + Parameters.RIBBON_MINIMUM_HEIGHT
-    # From v1.6.x, the size of tab bar and right toolbar are controlled by the size of the quickaccess toolbar
-    TabBar_Size = QuickAccessButtonSize
+    RibbonMinimalHeight = QuickAccessButtonSize + TabBar_Size + Parameters.RIBBON_MINIMUM_HEIGHT    
+    # RightToolBarButtonSize = Parameters.RIGHT_ICON_SIZE  # Is overruled
     RightToolBarButtonSize = QuickAccessButtonSize
 
     # Declare the right padding for dropdown menus

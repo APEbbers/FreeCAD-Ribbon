@@ -339,14 +339,15 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.form.PanelHeightOffset.setDisabled(True)
             self.form.IconSize_QuickAccessButton.setValue(Parameters.ICON_SIZE_SMALL)
             self.form.PanelHeightOffset.setValue(Parameters.ICON_SIZE_SMALL)
+            self.form.TabbarHeight.setValue(Parameters.ICON_SIZE_SMALL)
         else:
             self.form.LinkIconSizes.setCheckState(Qt.CheckState.Unchecked)
-        self.form.IconSize_ApplicationButton.setValue(Parameters.APP_ICON_SIZE)
-        self.form.IconSize_QuickAccessButton.setValue(Parameters.QUICK_ICON_SIZE)
-        self.form.IconSize_rightToolbarButton.setValue(
-            Parameters.RIGHT_ICON_SIZE
-        )
-        self.form.TabbarHeight.setValue(Parameters.TABBAR_SIZE)
+            self.form.IconSize_ApplicationButton.setValue(Parameters.APP_ICON_SIZE)
+            self.form.IconSize_QuickAccessButton.setValue(Parameters.QUICK_ICON_SIZE)
+            self.form.IconSize_rightToolbarButton.setValue(
+                Parameters.RIGHT_ICON_SIZE
+            )
+            self.form.TabbarHeight.setValue(Parameters.TABBAR_SIZE)
 
         self.form.TextSize_Menus.setValue(Parameters.FONTSIZE_MENUS)
         self.form.TextSize_Buttons.setValue(Parameters.FONTSIZE_BUTTONS)

@@ -106,7 +106,7 @@ DefaultSettings = {
     "PanelHeightOffset": int(26),
     "RibbonHeightOffset": int(20),
     "RibbonMinimumHeight": int(16),
-    "ButtonSpacing": int(6),
+    "ButtonSpacing": int(3),
 }
 
 class Settings:
