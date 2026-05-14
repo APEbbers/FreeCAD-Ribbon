@@ -1444,7 +1444,12 @@ class ModernMenu(RibbonBar):
                 AddSeparator_Left = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Add separator left"))
                 AddSeparator_Left.triggered.connect(lambda: self.on_AddSeparator_QC_Clicked(quickaccessbutton, event.pos(), "left"))
                 AddSeparator_Right = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Add separator right"))
-                AddSeparator_Right.triggered.connect(lambda: self.on_AddSeparator_QC_Clicked(quickaccessbutton, event.pos(),"right"))         
+                AddSeparator_Right.triggered.connect(lambda: self.on_AddSeparator_QC_Clicked(quickaccessbutton, event.pos(),"right"))
+                
+                # Create a button to clear the entire quickaccess toolbar
+                self.contextMenu.addSeparator()
+                ClearToolBar = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Remove all buttons"))
+                ClearToolBar.triggered.connect(self.on_ClearToolBar_QC_Clicked)
                 
                 # create the context menu action
                 self.contextMenu.exec_(self.mapToGlobal(event.pos()))
@@ -1477,10 +1482,13 @@ class ModernMenu(RibbonBar):
                 
        # Set a stylesheet to indicate that you are in the customize enviroment
         HoverColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+        Color = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
         Addition = (
         """RibbonCategory, QToolBar {
-            border-top: 0.5px solid red 
-        }
+            border-top: 0.5px solid red;
+            background: """
+            + Color +
+        """;}
         RibbonPanelTitle:hover {
             background: 0.5px solid """
             + HoverColor
@@ -1673,6 +1681,14 @@ class ModernMenu(RibbonBar):
 
         # Set stylesheets
         self.currentCategory().setStyleSheet(self.StyleSheet)
+        Color = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        Addition = (
+        """RibbonCategory, QToolBar {
+            background: """
+            + Color +
+        """;}"""
+        )
+        self.StyleSheet = self.StyleSheet + Addition
         self.quickAccessToolBar().setStyleSheet(self.StyleSheet)
         
         # Set the state for the enviroment to False again
@@ -1869,6 +1885,14 @@ class ModernMenu(RibbonBar):
         
         # Set stylesheets
         self.currentCategory().setStyleSheet(self.StyleSheet)
+        Color = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        Addition = (
+        """RibbonCategory, QToolBar {
+            background: """
+            + Color +
+        """;}"""
+        )
+        self.StyleSheet = self.StyleSheet + Addition
         self.quickAccessToolBar().setStyleSheet(self.StyleSheet)
         
         # define a boolan for the enviroment state
@@ -2126,6 +2150,15 @@ class ModernMenu(RibbonBar):
         
         # Close the context menu
         self.contextMenu.close() 
+        return
+    
+    def on_ClearToolBar_QC_Clicked(self):
+        # Remove the buttons from the quickaccess toolbar
+        for child in self.quickAccessToolBar().findChildren(QToolButton):
+            if type(child) is QuickAccessSeparator or type(child) is QuickAccessToolButton or type(child) is DragTargetIndicator:
+                child.deleteLater()
+        self.quickAccessToolBar().setMinimumWidth(self.applicationOptionButton().width())
+        self.workBenchDict["quickAccessCommands"].clear()
         return
     
     def on_AddSeparator_QC_Clicked(self, ButtonWidget: QuickAccessToolButton, pos: QPoint, Side = "left"):
@@ -3375,7 +3408,7 @@ class ModernMenu(RibbonBar):
         )
         # Set the icon
         self.setApplicationIcon(Gui.getIcon("freecad"))
-        # Set the styling of the button including padding (Text widht + 2*maring)
+        # Set the styling of the button including padding
         self.applicationOptionButton().setStyleSheet(
             StyleMapping_Ribbon.ReturnStyleSheet(
                 "applicationbutton",
@@ -3392,15 +3425,15 @@ class ModernMenu(RibbonBar):
         # add the menus from the menubar to the application button
         self.ApplicationMenus()
 
-        # add quick access buttons        
-        toolBarWidth = self.BuildQuickToolbar(self.ribbonStructure["quickAccessCommands"])
+        # add quickaccess buttons        
+        self.BuildQuickToolbar(self.ribbonStructure["quickAccessCommands"])
 
         self.quickAccessToolBar().show()
         # Set the height of the quickaccess toolbar
         self.quickAccessToolBar().setMinimumHeight(self.QuickAccessButtonSize)
 
-        # Set the width of the quickaccess toolbar.
-        self.quickAccessToolBar().setMinimumWidth(toolBarWidth)
+        # Set the minimum width of the quickaccess toolbar.
+        self.quickAccessToolBar().setMinimumWidth(self.applicationOptionButton().width())
         # Set the size policy
         self.quickAccessToolBar().setSizePolicy(
             QSizePolicy.Policy.Minimum, QSizePolicy.Policy.MinimumExpanding

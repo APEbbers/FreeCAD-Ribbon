@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 import typing
 import sys
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
@@ -39,7 +39,7 @@ from PySide6.QtGui import (
     QPainter,
     
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QComboBox,
     QMainWindow,
     QSizePolicy,
@@ -55,7 +55,7 @@ from PySide6.QtWidgets import (
     QWidgetAction,
     QLineEdit,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QSize,
     QMimeData,
