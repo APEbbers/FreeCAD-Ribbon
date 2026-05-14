@@ -1448,7 +1448,7 @@ class ModernMenu(RibbonBar):
                 
                 # Create a button to clear the entire quickaccess toolbar
                 self.contextMenu.addSeparator()
-                ClearToolBar = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Remove all buttons"))
+                ClearToolBar = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Clear toolbar"))
                 ClearToolBar.triggered.connect(self.on_ClearToolBar_QC_Clicked)
                 
                 # create the context menu action
@@ -1462,6 +1462,11 @@ class ModernMenu(RibbonBar):
                 # Create the buttons for removing the separator
                 removeSeparator = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Remove separator"))
                 removeSeparator.triggered.connect(lambda: self.on_RemoveSeparator_QC_Clicked(quickaccessseparator, event.pos()))
+                
+                # Create a button to clear the entire quickaccess toolbar
+                self.contextMenu.addSeparator()
+                ClearToolBar = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Clear toolbar"))
+                ClearToolBar.triggered.connect(self.on_ClearToolBar_QC_Clicked)
                 
                 # create the context menu action
                 self.contextMenu.exec_(self.mapToGlobal(event.pos()))
