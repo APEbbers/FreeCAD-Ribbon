@@ -2129,7 +2129,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string>Set the color for control borders when hovering over them:</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the border color for buttons when hovering over them:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                        <property name="wordWrap">
                         <bool>true</bool>
@@ -2173,7 +2173,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string>Set the color for buttons when hovering over them</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the background color for buttons when hovering over them:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                        <property name="wordWrap">
                         <bool>true</bool>
@@ -2255,7 +2255,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string>Set the background color for the tabs</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the background color for the tabs:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                       </widget>
                      </item>
@@ -2287,7 +2287,7 @@
                         </size>
                        </property>
                        <property name="text">
-                        <string>Set the background color for titlebar</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the background color for titlebar:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
                       </widget>
                      </item>
@@ -2958,20 +2958,7 @@
      <item row="0" column="0">
       <widget class="QCheckBox" name="LoadDialogs">
        <property name="text">
-        <string>Load dialogs docked</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1" colspan="5">
-      <widget class="QLabel" name="label_31">
-       <property name="font">
-        <font>
-         <pointsize>8</pointsize>
-         <italic>true</italic>
-        </font>
-       </property>
-       <property name="text">
-        <string>Load dialogs as panels.</string>
+        <string>Load dialogs as panels</string>
        </property>
       </widget>
      </item>

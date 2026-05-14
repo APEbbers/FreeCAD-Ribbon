@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsoeIGcm.ui'
+## Form generated from reading UI file 'SettingsHZEWkd.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -1391,15 +1391,6 @@ class Ui_Settings(object):
 
         self.gridLayout_7.addWidget(self.LoadDialogs, 0, 0, 1, 1)
 
-        self.label_31 = QLabel(Settings)
-        self.label_31.setObjectName(u"label_31")
-        font4 = QFont()
-        font4.setPointSize(8)
-        font4.setItalic(True)
-        self.label_31.setFont(font4)
-
-        self.gridLayout_7.addWidget(self.label_31, 0, 1, 1, 5)
-
 
         self.gridLayout_36.addLayout(self.gridLayout_7, 2, 0, 1, 2)
 
@@ -1516,11 +1507,11 @@ class Ui_Settings(object):
         self.groupBox_8.setTitle(QCoreApplication.translate("Settings", u"Colors", None))
         self.CustomColors.setText(QCoreApplication.translate("Settings", u"Enable custom colors", None))
         self.BorderTransparant.setText(QCoreApplication.translate("Settings", u"Set border invisible for ribbon buttons", None))
-        self.label_6.setText(QCoreApplication.translate("Settings", u"Set the color for control borders when hovering over them:", None))
-        self.label_30.setText(QCoreApplication.translate("Settings", u"Set the color for buttons when hovering over them", None))
+        self.label_6.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the border color for buttons when hovering over them:</p></body></html>", None))
+        self.label_30.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the background color for buttons when hovering over them:</p></body></html>", None))
         self.label_9.setText(QCoreApplication.translate("Settings", u"Set the background color for the application button:", None))
-        self.label_46.setText(QCoreApplication.translate("Settings", u"Set the background color for the tabs", None))
-        self.label_47.setText(QCoreApplication.translate("Settings", u"Set the background color for titlebar", None))
+        self.label_46.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the background color for the tabs:</p></body></html>", None))
+        self.label_47.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the background color for titlebar:</p></body></html>", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("Settings", u"Colors and icons", None))
         self.groupBox_11.setTitle(QCoreApplication.translate("Settings", u"Standard panels preferences", None))
         self.label_27.setText(QCoreApplication.translate("Settings", u"Select preferred standard view panel: ", None))
@@ -1557,8 +1548,7 @@ class Ui_Settings(object):
         self.GenerateJsonExit.setShortcut("")
 #endif // QT_CONFIG(shortcut)
         self.Reset.setText(QCoreApplication.translate("Settings", u"Reset", None))
-        self.LoadDialogs.setText(QCoreApplication.translate("Settings", u"Load dialogs docked", None))
-        self.label_31.setText(QCoreApplication.translate("Settings", u"Load dialogs as panels.", None))
+        self.LoadDialogs.setText(QCoreApplication.translate("Settings", u"Load dialogs as panels", None))
         self.Cancel_2.setText(QCoreApplication.translate("Settings", u"Cancel", None))
 #if QT_CONFIG(shortcut)
         self.Cancel_2.setShortcut(QCoreApplication.translate("Settings", u"Esc", None))
