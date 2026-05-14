@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 import typing
 import sys
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
@@ -39,7 +39,7 @@ from PySide.QtGui import (
     QPainter,
     
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QComboBox,
     QMainWindow,
     QSizePolicy,
@@ -55,7 +55,7 @@ from PySide.QtWidgets import (
     QWidgetAction,
     QLineEdit,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QSize,
     QMimeData,
@@ -754,27 +754,15 @@ class CustomControls(RibbonToolButton):
             Label_Text.setFixedHeight(Label_Text.height() + MenuButtonSpace)
         ArrowButton.setFixedWidth(width)
         CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        # Compensate the height when text is visible
+        if showText is True:
+            CommandButton.setFixedHeight(ButtonSize.height()-Label_Text.height())
+        # Compensate the height when text is visible and a menu is present
+        if showText is True and Menu is not None and len(Menu.actions()) <= 1:
+            CommandButton.setFixedHeight(ButtonSize.height()-Label_Text.height() - MenuButtonSpace)
+        
         btn.setFixedSize(QSize(width, ButtonSize.height()))
         
-        # # Adjust the font for the label if the text doesn't fit
-        # CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        # textHeight = QFontMetrics(Font).boundingRect(Label_Text.text()).height() + 3
-        # if Label_Text.text().find("\n") != -1:
-        #     textHeight = textHeight*MaxNumberOfLines
-        # if textHeight >= Label_Text.height():
-        #     for i in range(FontSize):
-        #         Font.setPixelSize(FontSize - i)
-        #         textHeight = QFontMetrics(Font).boundingRect(Label_Text.text()).height() + 3
-        #         if Label_Text.text().find("\n") != -1:
-        #             textHeight = textHeight*MaxNumberOfLines
-        #         if textHeight >= Label_Text.height():
-        #             print(Font.pixelSize())
-        #             Label_Text.setFont(Font)
-        #             Label_Text.adjustSize()
-        #         if textHeight <= Label_Text.height():
-        #             print(Font.pixelSize())
-        #             break
-                    
         # Store the widths
         self.labelWidth = width
         self.menuButtonWidth = ArrowButton.width()
