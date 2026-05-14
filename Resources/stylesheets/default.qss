@@ -82,38 +82,6 @@ RibbonCategoryScrollAreaContents {
 	spacing: 0px;
 }
 
-RibbonPanel {
-	padding-top: 0px;
-	padding-bottom: 0px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-left: 0px;
-	margin-bottom: 0px;
-	spacing: 0px;
-}
-
-RibbonPanelTitle {
-	background-color: transparent;
-	border: none;
-	padding-top: 0px;
-	padding-bottom: 0px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-left: 0px;
-	margin-bottom: 0px;
-	spacing: 0px;
-}
-
-RibbonPanelItemWidget {
-    padding-top: 0px;
-	padding-bottom: 0px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-left: 0px;
-	margin-bottom: 0px;
-	spacing: 0px;
-}
-
 QTabBar {
     background-color: transparent;
 }

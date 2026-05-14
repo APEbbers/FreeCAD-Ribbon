@@ -92,6 +92,7 @@ from PySide.QtWidgets import (
     QListWidget,
     QListWidgetItem,
     QAbstractButton,
+    QStackedWidget,
 )
 from PySide.QtCore import (
     Qt,
@@ -243,7 +244,7 @@ class ModernMenu(RibbonBar):
     ButtonAlignment = Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
     
     # Declare the top and bottom margin for the tabbar (category)
-    TopMargin = 3
+    TopMargin = 6
     BottomMargin = 0
 
     # Create the lists and ditcs for the lists in the ribbon structure, 
@@ -666,7 +667,7 @@ class ModernMenu(RibbonBar):
         # Create the ribbon
         self.CreateMenus()  # Create the menus
         self.createModernMenu()  # Create the ribbon
-
+        
         # Set the custom stylesheet
         self.StyleSheet = Path(Parameters.STYLESHEET).read_text()
         # modify the stylesheet to set the border and background for a toolbar and menu
@@ -1137,6 +1138,7 @@ class ModernMenu(RibbonBar):
             and Parameters.USE_OVERLAY is False
         ):
             self.UnfoldRibbon()
+            self.setRibbonVisible(True)
             
         if self.CustomizeEnabled:
             # If not activated, activate all buttons    
@@ -1473,10 +1475,22 @@ class ModernMenu(RibbonBar):
             self.CustomizedCategories.append(self.currentCategory())
         self.CurrentCategoryToRestore = self.currentCategory()
                 
-        # Set a stylesheet to indicate that you are in the customize enviroment
-        Addition = """RibbonCategory, QToolBar {
-            border-top: 0.5px solid red;
-        }"""
+       # Set a stylesheet to indicate that you are in the customize enviroment
+        HoverColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+        Addition = (
+        """RibbonCategory, QToolBar {
+            border-top: 0.5px solid red 
+        }
+        RibbonPanelTitle:hover {
+            background: 0.5px solid """
+            + HoverColor
+            + """;
+            RibbonToolButton {
+                background: 0.5px solid """
+            + HoverColor
+            + """;
+            }
+        }""")
         StyleSheet = self.StyleSheet + Addition
         self.currentCategory().setStyleSheet(StyleSheet)
         self.quickAccessToolBar().setStyleSheet(StyleSheet)
@@ -1524,6 +1538,7 @@ class ModernMenu(RibbonBar):
         # for panel in self.HiddenPanels:
         #     dictPanels[panel.title()] = panel
         for title, objPanel in dictPanels.items():
+            
             # Test if the panel is not already deleted.
             # This is needed, if a combined panel was added and then removed by clicking cancel
             try:
@@ -3652,16 +3667,6 @@ class ModernMenu(RibbonBar):
             )
         )
 
-        # If FreeCAD's overlay function is active, set the pinbutton to checked and then to disabled
-        preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
-        if preferences.GetBool("ActivateOverlay") is True:
-            pinButton.setChecked(True)
-            pinButton.setDisabled(True)
-        else:
-            pinButton.clicked.connect(lambda: self.on_Pin_clicked(pinButton))
-            # pinbutton is moved to the ribbon right bottom corner
-            # self.rightToolBar().addWidget(pinButton)
-
         # if the FreeCAD titlebar is hidden,add close, minimize and maximize buttons
         if Parameters.HIDE_TITLEBAR_FC is True:
             spacer = QWidget()
@@ -4534,8 +4539,7 @@ class ModernMenu(RibbonBar):
                         TB.setFixedHeight(self.RibbonHeight + self.FloatingTitleBarHeight)
                 if TB.isFloating() is False:
                     if self.RibbonHeight > 0:
-                        TB.setFixedHeight(self.RibbonHeight)
-                
+                        TB.setFixedHeight(self.RibbonHeight)                
         return
 
     def FoldRibbon(self, Ignore=False):
@@ -6171,7 +6175,7 @@ class ModernMenu(RibbonBar):
         Font.setPixelSize(Parameters.FONTSIZE_PANELS)
         panel._titleLabel.setFont(Font)
         panel._titleWidget.setFixedHeight(QFontMetrics(Font).boundingRect(panel.title()).height()+6)
-        
+                
         # Set the properties for the layouts
         panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
         panel._actionsLayout.setSpacing(self.ButtonSpacing)
@@ -6181,7 +6185,7 @@ class ModernMenu(RibbonBar):
         panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
         #
         # Set the ribbonheight
-        self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset+QFontMetrics(Font).tightBoundingRect(panel.title()).height() - 9 )
+        self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset+QFontMetrics(Font).tightBoundingRect(panel.title()).height() - 10 )
         # Correct the width of the (hidden) option button
         OptionButton = panel.panelOptionButton()
         OptionButton.setFixedSize(Parameters.ICON_SIZE_SMALL, self.RibbonOffset+QFontMetrics(Font).tightBoundingRect(panel.title()).height())
