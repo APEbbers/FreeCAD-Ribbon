@@ -85,7 +85,7 @@
    <item row="1" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -142,14 +142,11 @@
            <property name="selectionMode">
             <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
            </property>
-           <property name="itemAlignment">
-            <set>Qt::AlignmentFlag::AlignLeading</set>
-           </property>
            <property name="sortingEnabled">
             <bool>true</bool>
            </property>
            <property name="supportedDragActions">
-            <set>Qt::DropAction::CopyAction</set>
+            <set>Qt::DropAction::CopyAction|Qt::DropAction::MoveAction</set>
            </property>
            <item>
             <property name="text">

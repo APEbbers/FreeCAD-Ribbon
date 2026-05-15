@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsHbUJTK.ui'
+## Form generated from reading UI file 'AddCommandsTGTYZO.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -99,9 +99,8 @@ class Ui_Form(object):
         self.CommandsAvailable_NP.setAcceptDrops(True)
         self.CommandsAvailable_NP.setDragDropMode(QAbstractItemView.DragDropMode.DragDrop)
         self.CommandsAvailable_NP.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-        self.CommandsAvailable_NP.setItemAlignment(Qt.AlignmentFlag.AlignLeading)
         self.CommandsAvailable_NP.setSortingEnabled(True)
-        self.CommandsAvailable_NP.setSupportedDragActions(Qt.DropAction.CopyAction)
+        self.CommandsAvailable_NP.setSupportedDragActions(Qt.DropAction.CopyAction|Qt.DropAction.MoveAction)
 
         self.gridLayout_38.addWidget(self.CommandsAvailable_NP, 2, 0, 1, 1)
 
@@ -501,7 +500,7 @@ class Ui_Form(object):
 
         self.retranslateUi(Form)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Form)

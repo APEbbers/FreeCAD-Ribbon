@@ -141,8 +141,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.setWindowTitle(translate("FreeCAD Ribbon", "Add or remove buttons"))
         self.form.setAcceptDrops(True)
         
-        self.form.setParent(parent)
-        
         # Install an event filter to catch events from the main window and act on it.
         self.form.installEventFilter(EventInspector(self.form))
         
@@ -163,6 +161,12 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.raise_()
         self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
         self.form.setFocus(Qt.FocusReason.PopupFocusReason)
+        
+        # Get the style from the main window and use it for this form
+        palette = mw.palette()
+        self.form.setPalette(palette)
+        Style = mw.style()
+        self.form.setStyle(Style)
 
         # Position the dialog in front of FreeCAD
         centerPoint = mw.geometry().center()
