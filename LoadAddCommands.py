@@ -515,6 +515,11 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.ListCategory_NP.setSupportedDragActions(Qt.DropAction.CopyAction|Qt.DropAction.MoveAction)
         except Exception:
             pass
+        
+        try:
+            self.form.ListCategory_NP.setDragEnabled(True)
+        except Exception:
+            pass
                 
         # Restore the cursor
         QApplication.restoreOverrideCursor()
