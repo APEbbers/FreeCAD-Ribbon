@@ -510,7 +510,12 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
-
+        
+        try:
+            self.form.ListCategory_NP.setSupportedDragActions(Qt.DropAction.CopyAction|Qt.DropAction.MoveAction)
+        except Exception:
+            pass
+                
         # Restore the cursor
         QApplication.restoreOverrideCursor()
         return        
