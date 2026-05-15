@@ -5112,13 +5112,11 @@ class ModernMenu(RibbonBar):
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             if self.RibbonHeight > 0:
                 TB.setFixedHeight(self.RibbonHeight + self.FloatingTitleBarHeight)
-            # Try to remove the empty titlebar. Restoring the original one
+            # Set a label with title as titlebar widget. This works on all OS
             try:
-                ribbonDock.titleBarWidget().deleteLater()
+                ribbonDock.setTitleBarWidget(QLabel("Ribbon", alignment=Qt.AlignmentFlag.AlignCenter))
             except Exception:
                 pass
-            if platform.system() == "Windows":
-                ribbonDock.setWindowFlag(Qt.WindowType.Dialog)
             
                                     
             # Position the dialog in front of FreeCAD
