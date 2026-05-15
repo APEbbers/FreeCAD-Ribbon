@@ -25,7 +25,7 @@ import FreeCADGui as Gui
 from pathlib import Path
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -54,7 +54,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -94,7 +94,7 @@ from PySide.QtWidgets import (
     QAbstractButton,
     QStackedWidget,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -5118,7 +5118,7 @@ class ModernMenu(RibbonBar):
             except Exception:
                 pass
             if platform.system() == "Windows":
-                ribbonDock.windowType(Qt.WindowType.Dialog)
+                ribbonDock.setWindowFlag(Qt.WindowType.Dialog)
             
                                     
             # Position the dialog in front of FreeCAD
