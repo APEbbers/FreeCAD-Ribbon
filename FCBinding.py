@@ -5117,6 +5117,9 @@ class ModernMenu(RibbonBar):
                 ribbonDock.titleBarWidget().deleteLater()
             except Exception:
                 pass
+            if platform.system() == "Windows":
+                ribbonDock.windowType(Qt.WindowType.Dialog)
+            
                                     
             # Position the dialog in front of FreeCAD
             centerPoint = mw.geometry().center()
