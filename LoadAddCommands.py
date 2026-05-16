@@ -2444,12 +2444,22 @@ class EventInspector(QObject):
     dragEntered = False
     widget = None
     pos = None
+    ButtonPressed = False
+    ButtonReleased = True
     
     def __init__(self, parent):
         super(EventInspector, self).__init__(parent)
 
-    def eventFilter(self, obj, event: QEvent):
-        if self.dragEntered is True and QApplication.mouseButtons().value == 0:
+    def eventFilter(self, obj, event: QEvent):   
+        if event.type() == QEvent.Type.MouseButtonPress:
+            if event.button() == Qt.MouseButton.LeftButton:
+                self.ButtonPressed = True
+        
+        if event.type() == QEvent.Type.MouseButtonRelease:
+            if event.button() == Qt.MouseButton.LeftButton:
+                self.ButtonPressed = False
+        
+        if self.dragEntered is True and self.ButtonPressed is True:
             count = 0
             parent = None
             panel = None
