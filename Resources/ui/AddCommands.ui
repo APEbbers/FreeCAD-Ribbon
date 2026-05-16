@@ -146,7 +146,7 @@
             <bool>true</bool>
            </property>
            <property name="supportedDragActions">
-            <set>Qt::DropAction::CopyAction|Qt::DropAction::MoveAction</set>
+            <set>Qt::DropAction::IgnoreAction</set>
            </property>
            <item>
             <property name="text">

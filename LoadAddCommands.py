@@ -517,6 +517,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             pass
         
         try:
+            self.form.setAcceptDrops(True)
             self.form.ListCategory_NP.setDragEnabled(True)
         except Exception:
             pass
