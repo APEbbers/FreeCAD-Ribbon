@@ -511,11 +511,14 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
         
+        # Enable drag for the listWidget.
+        #
+        # Qt6
         try:
             self.form.ListCategory_NP.setSupportedDragActions(Qt.DropAction.CopyAction|Qt.DropAction.MoveAction)
         except Exception:
             pass
-        
+        # Qt5
         try:
             from PySide2 import QtWidgets
             self.form.ListCategory_NP.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
@@ -2450,14 +2453,20 @@ class EventInspector(QObject):
     def __init__(self, parent):
         super(EventInspector, self).__init__(parent)
 
-    def eventFilter(self, obj, event: QEvent):   
+    def eventFilter(self, obj, event: QEvent):
+        # Detect mousebutton press. --------------------------------------------
+        # This method is also compatible with PySide2
+        #
+        # Detect button press
         if event.type() == QEvent.Type.MouseButtonPress:
             if event.button() == Qt.MouseButton.LeftButton:
                 self.ButtonPressed = True
         
+        # Detect button release
         if event.type() == QEvent.Type.MouseButtonRelease:
             if event.button() == Qt.MouseButton.LeftButton:
                 self.ButtonPressed = False
+        # -----------------------------------------------------------------------
         
         if self.dragEntered is True and self.ButtonPressed is True:
             count = 0
