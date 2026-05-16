@@ -242,7 +242,7 @@ class ModernMenu(RibbonBar):
     ButtonSpacing = Parameters.BUTTON_SPACING
     
     # Declare the alignment of the buttons
-    ButtonAlignment = Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
+    ButtonAlignment = Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop
     
     # Declare the top and bottom margin for the tabbar (category)
     TopMargin = 3
@@ -2047,7 +2047,18 @@ class ModernMenu(RibbonBar):
         print(translate("FreeCAD Ribbon", "RibbonUI: Changes are rolled back"))
         return
         
-    def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):                                 
+    def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):     
+        # Get tabBar
+        parent = panel.parent()
+        count = 0
+        while (count < 10):
+            if type(parent) == RibbonNormalCategory or type(parent) == RibbonContextCategory:
+                break
+            else:
+                parent = parent.parent()
+        # Get the workbench name                    
+        WorkBenchName = parent.objectName()
+                                    
         # get the size to set
         Size = "small"
         if ButtonStyleWidget.currentText() == "Medium":
@@ -2077,11 +2088,45 @@ class ModernMenu(RibbonBar):
         # Enable all buttons, so you can access them with a right click
         self.activateButtons()
         
+        # Check if there are other large or medium buttons
+        LargeButtons = 0
+        MediumButtons = 0
+        SmallButtons = 0
+        self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] = 0
+        self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"] = 0
+        self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] = 0
+        for panel in self.currentCategory().panels().values():
+            for widget in panel.widgets():
+                if type(widget) is CustomControls:
+                    if widget.ButtonStyle is RibbonButtonStyle.Small:
+                        SmallButtons = SmallButtons + 1
+                    if widget.ButtonStyle is RibbonButtonStyle.Medium:
+                        MediumButtons = MediumButtons + 1
+                    if widget.ButtonStyle is RibbonButtonStyle.Large:
+                        LargeButtons = LargeButtons + 1                
+        if LargeButtons > 0:
+            self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] = 1
+        if MediumButtons >= 2:  
+            self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"] = 2
+        if SmallButtons >= 3:
+            self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] = 3
+            
+        # Correct the height of each panel
+        for objPanel in self.currentCategory().panels().values():
+            self.setPanelProperties(objPanel)
+
+        # reset the ribbonheight
+        self.currentCategory().setMinimumHeight(
+            self.RibbonHeight - self.RibbonMinimalHeight - 3
+        )
+        self.currentCategory().setMaximumHeight(
+            self.RibbonHeight - self.RibbonMinimalHeight - 3
+        )
+        # Make sure that the ribbon is completly unfolded.
+        self.UnfoldRibbon()
+      
         # Close the old panel
         panel.close()
-        
-        for title, objPanel in self.currentCategory().panels().items():
-            self.setPanelProperties(objPanel)
         
         # Close the context menu
         self.contextMenu.close()
@@ -4344,6 +4389,10 @@ class ModernMenu(RibbonBar):
                 outfile.close()
 
         self.isWbLoaded[tabName] = True
+        
+        # Correct the height of each panel
+        for objPanel in self.currentCategory().panels().values():
+            self.setPanelProperties(objPanel)
 
         # Set the previous/next buttons
         category: RibbonCategory = self.currentCategory()
@@ -4960,7 +5009,7 @@ class ModernMenu(RibbonBar):
                 App.loadFile(script)
         return
 
-    def     ReturnRibbonHeight(self, offset=0):
+    def ReturnRibbonHeight(self, offset=0):
         # Get the name of the current workbench
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         
@@ -4975,7 +5024,7 @@ class ModernMenu(RibbonBar):
         #
         # If there are small, medium and large buttons
         if Parameters.LINK_ICON_SIZES is False:
-            if self.MaxRowsPerWB[workbenchName]["Rows"]  == 3:
+            if self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] == 3:
                 if (
                     Parameters.ICON_SIZE_SMALL * 3
                     >= Parameters.ICON_SIZE_MEDIUM * 2
@@ -4995,17 +5044,22 @@ class ModernMenu(RibbonBar):
                     ribbonHeight = LargeButtonHeight
             
             # If there only medium or large buttons
-            if self.MaxRowsPerWB[workbenchName]["LargeButtonsPresent"] is True:
-                if self.MaxRowsPerWB[workbenchName]["Rows"]  == 2 and Parameters.ICON_SIZE_MEDIUM * 2 < LargeButtonHeight:
-                    ribbonHeight = LargeButtonHeight
-                if self.MaxRowsPerWB[workbenchName]["Rows"]  == 2 and Parameters.ICON_SIZE_MEDIUM * 2 >= LargeButtonHeight:
+            if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  == 2 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 0 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
+                if Parameters.ICON_SIZE_SMALL * 2 < Parameters.ICON_SIZE_MEDIUM or self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 2:
                     ribbonHeight = Parameters.ICON_SIZE_MEDIUM * 2 + self.ButtonSpacing
-            if self.MaxRowsPerWB[workbenchName]["LargeButtonsPresent"] is False and self.MaxRowsPerWB[workbenchName]["Rows"]  == 2:
-                ribbonHeight = Parameters.ICON_SIZE_MEDIUM * 2 + self.ButtonSpacing
+                if Parameters.ICON_SIZE_SMALL * 2 > Parameters.ICON_SIZE_MEDIUM and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] == 2:
+                    ribbonHeight = Parameters.ICON_SIZE_SMALL * 2 + self.ButtonSpacing
             
             # If there are only large buttons
-            if self.MaxRowsPerWB[workbenchName]["Rows"] == 1:
-                ribbonHeight = LargeButtonHeight
+            if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  <= 2 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 1 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
+                if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"] < 2:
+                    ribbonHeight = LargeButtonHeight
+                if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"] == 2:
+                    if Parameters.ICON_SIZE_MEDIUM * 2 > LargeButtonHeight:
+                        ribbonHeight = Parameters.ICON_SIZE_MEDIUM * 2 + self.ButtonSpacing
+                    if Parameters.ICON_SIZE_MEDIUM * 2 <= LargeButtonHeight:
+                        ribbonHeight = LargeButtonHeight
+                        
         if Parameters.LINK_ICON_SIZES is True:
             ribbonHeight = Parameters.ICON_SIZE_SMALL * 3 + self.ButtonSpacing*2
         return ribbonHeight + offset + Parameters.RIBBON_HEIGHT_OFFSET
@@ -5592,11 +5646,15 @@ class ModernMenu(RibbonBar):
             #
             # get the number of rows in the panel and store the maximum number of rows per wb.
             if workbenchName not in self.MaxRowsPerWB:
-                Standard_Functions_Ribbon.add_keys_nested_dict(self.MaxRowsPerWB, [workbenchName, "Rows"])
+                Standard_Functions_Ribbon.add_keys_nested_dict(self.MaxRowsPerWB, [workbenchName, "SmallButtons", "Rows"])
+                Standard_Functions_Ribbon.add_keys_nested_dict(self.MaxRowsPerWB, [workbenchName, "MediumButtons", "Rows"])
+                Standard_Functions_Ribbon.add_keys_nested_dict(self.MaxRowsPerWB, [workbenchName, "LargeButtons", "Rows"])
                 Standard_Functions_Ribbon.add_keys_nested_dict(self.MaxRowsPerWB, [workbenchName, "SmallButtonsPresent"])
                 Standard_Functions_Ribbon.add_keys_nested_dict(self.MaxRowsPerWB, [workbenchName, "MediumButtonsPresent"])
                 Standard_Functions_Ribbon.add_keys_nested_dict(self.MaxRowsPerWB, [workbenchName, "LargeButtonsPresent"])
-                self.MaxRowsPerWB[workbenchName]["Rows"] = 0
+                self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] = 0
+                self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"] = 0
+                self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] = 0
                 self.MaxRowsPerWB[workbenchName]["SmallButtonsPresent"] = False
                 self.MaxRowsPerWB[workbenchName]["MediumButtonsPresent"] = False
                 self.MaxRowsPerWB[workbenchName]["LargeButtonsPresent"] = False
@@ -5608,7 +5666,7 @@ class ModernMenu(RibbonBar):
                     columnCount = columnCount + 1
                     smallButtons.clear()
                     # Store the number of rows for this workbench
-                    self.MaxRowsPerWB[workbenchName]["Rows"] = 3
+                    self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] = 3
                     # Save that small buttons are present
                     self.MaxRowsPerWB[workbenchName]["SmallButtonsPresent"] = True
             if buttonSize == "medium":                
@@ -5619,8 +5677,7 @@ class ModernMenu(RibbonBar):
                     columnCount = columnCount + 1
                     mediumButtons.clear()
                     # Store the number of rows for this workbench
-                    if self.MaxRowsPerWB[workbenchName]["Rows"]  <= 2:
-                        self.MaxRowsPerWB[workbenchName]["Rows"]  = 2
+                    self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  = 2
                     # Save that medium buttons are present
                     self.MaxRowsPerWB[workbenchName]["MediumButtonsPresent"] = True
             if buttonSize == "large":                
@@ -5631,8 +5688,7 @@ class ModernMenu(RibbonBar):
                     columnCount = columnCount + 1
                     largeButtons.clear()
                     # Store the number of rows for this workbench
-                    if self.MaxRowsPerWB[workbenchName]["Rows"]  <= 1:
-                        self.MaxRowsPerWB[workbenchName]["Rows"]  = 1
+                    self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"]  = 1
                     # Save that large buttons are present
                     self.MaxRowsPerWB[workbenchName]["LargeButtonsPresent"] = True
 
@@ -6231,19 +6287,18 @@ class ModernMenu(RibbonBar):
         # Set the properties for the layouts
         panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
         panel._actionsLayout.setSpacing(self.ButtonSpacing)
-        # panel._actionsLayout.setSpacing(0)
         panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         panel._actionsLayout.setContentsMargins(0, self.TopMargin, 3, self.BottomMargin) # Left, Top, Right, Bottom
         panel._mainLayout.setSpacing(0)
         panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset)-10)
-        #
+
         # Set the ribbonheight
         self.RibbonHeight = panel.height() + self.RibbonOffset
         # Correct the width of the (hidden) option button
         OptionButton = panel.panelOptionButton()
         OptionButton.setFixedSize(Parameters.ICON_SIZE_SMALL, self.RibbonOffset+QFontMetrics(Font).tightBoundingRect(panel.title()).height())
         # # Set the size policy to fixed. Otherwise resizing is not working properly
-        # panel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        panel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         return
     
     def PopulateOverflowMenu(self, panel: RibbonPanel, ButtonList: list):
