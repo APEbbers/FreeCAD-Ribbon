@@ -169,6 +169,7 @@ sys.path.append(pathBackup)
 
 translate = App.Qt.translate
 
+import pyqtribbon_local
 import pyqtribbon_local as pyqtribbon
 from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar, RibbonTitleWidget, RibbonApplicationButton
 from pyqtribbon_local.panel import RibbonPanel, RibbonPanelItemWidget, RibbonPanelTitle
@@ -4956,7 +4957,7 @@ class ModernMenu(RibbonBar):
                 App.loadFile(script)
         return
 
-    def ReturnRibbonHeight(self, offset=0):
+    def     ReturnRibbonHeight(self, offset=0):
         # Get the name of the current workbench
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         
@@ -5619,7 +5620,7 @@ class ModernMenu(RibbonBar):
                         self.MaxRowsPerWB[workbenchName]["Rows"]  = 2
                     # Save that medium buttons are present
                     self.MaxRowsPerWB[workbenchName]["MediumButtonsPresent"] = True
-            if buttonSize == "large" or "separator" in button.text().lower():                
+            if buttonSize == "large":                
                 smallButtons.clear()
                 mediumButtons.clear()
                 largeButtons.append(button)
@@ -5660,9 +5661,10 @@ class ModernMenu(RibbonBar):
                 if "separator" in button.text() and i < len(allButtons):
                     separatorWidget = CustomWidgets.CustomSeparator()
                     rowSpan = 6
-                    separator = panel.addWidget(separatorWidget, rowSpan=rowSpan, fixedHeight=False, alignment=Qt.AlignmentFlag.AlignCenter)
+                    separator = panel.addWidget(separatorWidget, rowSpan=rowSpan, fixedHeight=False, alignment=Qt.AlignmentFlag.AlignTop)
                     separator.setObjectName(button.text())
                     separator.setDisabled(not enableSeparator)
+                    separator.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
                     if enableSeparator is True:
                         separator.setFixedWidth(16)
                     separator.setStyleSheet(
@@ -5677,27 +5679,35 @@ class ModernMenu(RibbonBar):
                     # (adding spacers did not work)
                     if float((NoSmallButtons_spacer + 1) / 3).is_integer():
                         spacer_1 = panel.addSmallButton()
+                        spacer_1.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
                         spacer_1.setFixedWidth(self.iconSize)
+                        spacer_1.setFixedHeight(1)
                         spacer_1.setEnabled(False)
                         spacer_1.setStyleSheet("background-color: none;border: none")
                         spacer_1.setObjectName("spacer")
                     if float((NoSmallButtons_spacer + 2) / 3).is_integer():
                         spacer_1 = panel.addSmallButton()
+                        spacer_1.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
                         spacer_1.setFixedWidth(self.iconSize)
+                        spacer_1.setFixedHeight(1)
                         spacer_1.setEnabled(False)
                         spacer_1.setStyleSheet("background-color: none;border: none")
                         spacer_1.setObjectName("spacer")
                         spacer_2 = panel.addSmallButton()
+                        spacer_2.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
                         spacer_2.setFixedWidth(self.iconSize)
+                        spacer_2.setFixedHeight(1)
                         spacer_2.setEnabled(False)
                         spacer_2.setStyleSheet("background-color: none;border: none")
-                        spacer_1.setObjectName("spacer")
+                        spacer_2.setObjectName("spacer")
                     # reset the counter after a separator is added.
                     NoSmallButtons_spacer = 0
                     # Same principle for medium buttons
                     if float((NoMediumButtons_spacer-1) / 2).is_integer():
                         spacer_1 = panel.addMediumButton()
+                        spacer_1.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
                         spacer_1.setFixedWidth(Parameters.ICON_SIZE_MEDIUM)
+                        spacer_1.setFixedHeight(1)
                         spacer_1.setEnabled(False)
                         spacer_1.setStyleSheet("background-color: none;border: none")
                         spacer_1.setObjectName("spacer")
@@ -6218,6 +6228,7 @@ class ModernMenu(RibbonBar):
         # Set the properties for the layouts
         panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
         panel._actionsLayout.setSpacing(self.ButtonSpacing)
+        # panel._actionsLayout.setSpacing(0)
         panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         panel._actionsLayout.setContentsMargins(0, self.TopMargin, 3, self.BottomMargin) # Left, Top, Right, Bottom
         panel._mainLayout.setSpacing(0)
@@ -6228,8 +6239,8 @@ class ModernMenu(RibbonBar):
         # Correct the width of the (hidden) option button
         OptionButton = panel.panelOptionButton()
         OptionButton.setFixedSize(Parameters.ICON_SIZE_SMALL, self.RibbonOffset+QFontMetrics(Font).tightBoundingRect(panel.title()).height())
-        # Set the size policy to fixed. Otherwise resizing is not working properly
-        panel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        # # Set the size policy to fixed. Otherwise resizing is not working properly
+        # panel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         return
     
     def PopulateOverflowMenu(self, panel: RibbonPanel, ButtonList: list):
