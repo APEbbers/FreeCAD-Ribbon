@@ -518,8 +518,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
         try:
             from PySide2 import QtWidgets
-            self.form.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
-            self.form.setAcceptDrops(True)
+            self.form.ListCategory_NP.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
+            self.form.ListCategory_NP.setAcceptDrops(True)
             self.form.ListCategory_NP.setDragEnabled(True)
         except Exception:
             pass
