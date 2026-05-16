@@ -245,7 +245,7 @@ class ModernMenu(RibbonBar):
     ButtonAlignment = Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
     
     # Declare the top and bottom margin for the tabbar (category)
-    TopMargin = 6
+    TopMargin = 3
     BottomMargin = 0
 
     # Create the lists and ditcs for the lists in the ribbon structure, 
@@ -991,7 +991,7 @@ class ModernMenu(RibbonBar):
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
-                self.RibbonOffset = 45 + self.QuickAccessButtonSize * 2
+                self.RibbonOffset = 23 + self.QuickAccessButtonSize * 2
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(
                     0, self.QuickAccessButtonSize
                 )
@@ -1019,7 +1019,7 @@ class ModernMenu(RibbonBar):
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize + 10
-                self.RibbonOffset = 37 + self.QuickAccessButtonSize
+                self.RibbonOffset = 15 + self.QuickAccessButtonSize
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(
                     0, self.QuickAccessButtonSize
                 )
@@ -2079,6 +2079,9 @@ class ModernMenu(RibbonBar):
         
         # Close the old panel
         panel.close()
+        
+        for title, objPanel in self.currentCategory().panels().items():
+            self.setPanelProperties(objPanel)
         
         # Close the context menu
         self.contextMenu.close()
@@ -6223,7 +6226,7 @@ class ModernMenu(RibbonBar):
         Font = QFont()
         Font.setPixelSize(Parameters.FONTSIZE_PANELS)
         panel._titleLabel.setFont(Font)
-        panel._titleWidget.setFixedHeight(QFontMetrics(Font).boundingRect(panel.title()).height()+6)
+        panel._titleWidget.setFixedHeight(QFontMetrics(Font).boundingRect(panel.title()).height())
                 
         # Set the properties for the layouts
         panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
@@ -6232,10 +6235,10 @@ class ModernMenu(RibbonBar):
         panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         panel._actionsLayout.setContentsMargins(0, self.TopMargin, 3, self.BottomMargin) # Left, Top, Right, Bottom
         panel._mainLayout.setSpacing(0)
-        panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
+        panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset)-10)
         #
         # Set the ribbonheight
-        self.RibbonHeight = self.ReturnRibbonHeight(self.RibbonOffset+QFontMetrics(Font).tightBoundingRect(panel.title()).height() - 10 )
+        self.RibbonHeight = panel.height() + self.RibbonOffset
         # Correct the width of the (hidden) option button
         OptionButton = panel.panelOptionButton()
         OptionButton.setFixedSize(Parameters.ICON_SIZE_SMALL, self.RibbonOffset+QFontMetrics(Font).tightBoundingRect(panel.title()).height())
