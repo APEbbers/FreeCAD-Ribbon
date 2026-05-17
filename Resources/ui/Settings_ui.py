@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsrCJigR.ui'
+## Form generated from reading UI file 'SettingsmmrepJ.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.1
 ##
@@ -26,7 +26,7 @@ class Ui_Settings(object):
         if not Settings.objectName():
             Settings.setObjectName(u"Settings")
         Settings.setWindowModality(Qt.WindowModality.WindowModal)
-        Settings.resize(736, 861)
+        Settings.resize(736, 847)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -45,7 +45,7 @@ class Ui_Settings(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.scrollArea.sizePolicy().hasHeightForWidth())
         self.scrollArea.setSizePolicy(sizePolicy1)
-        self.scrollArea.setMinimumSize(QSize(0, 550))
+        self.scrollArea.setMinimumSize(QSize(0, 0))
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")

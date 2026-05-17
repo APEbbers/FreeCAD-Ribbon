@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>736</width>
-    <height>861</height>
+    <height>847</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -45,7 +45,7 @@
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>550</height>
+         <height>0</height>
         </size>
        </property>
        <property name="widgetResizable">
