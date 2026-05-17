@@ -1803,6 +1803,13 @@ class ModernMenu(RibbonBar):
         
         # Set the buttonstate back as it was
         for title, objPanel in self.currentCategory().panels().items():
+            # Test if the panel is not already deleted.
+            # This is needed, if a combined panel was added and then removed by clicking cancel
+            try:
+                objPanel.objectName()
+            except Exception:
+                continue
+            
             # Get the panel name and the gridlayout
             panelName = objPanel.objectName()
             gridLayout: QGridLayout = objPanel._actionsLayout
@@ -2085,6 +2092,13 @@ class ModernMenu(RibbonBar):
         # Update the dict of the currentCategory with the new panel
         self.currentCategory()._panels[newPanel.objectName()] = newPanel
         
+        # Close the old panel
+        try:
+            # if panel.objectName() == newPanel.objectName():
+            panel.close()
+        except Exception:
+            pass
+        
         # Enable all buttons, so you can access them with a right click
         self.activateButtons()
         
@@ -2124,10 +2138,7 @@ class ModernMenu(RibbonBar):
         )
         # Make sure that the ribbon is completly unfolded.
         self.UnfoldRibbon()
-      
-        # Close the old panel
-        panel.close()
-        
+
         # Close the context menu
         self.contextMenu.close()
         return
@@ -6278,6 +6289,12 @@ class ModernMenu(RibbonBar):
         return
     
     def setPanelProperties(self, panel: RibbonPanel):
+        # Test if the panel is not already deleted.
+        # This is needed, if a combined panel was added and then removed by clicking cancel
+        try:
+            panel.objectName()
+        except Exception:
+            return
         # Set the panelheight. setting the ribbonheigt, cause the first tab to be shown to large
         # add an offset to make room for the panel titles and icons
         #
