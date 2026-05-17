@@ -211,11 +211,8 @@ class ModernMenu(RibbonBar):
     # use icon size from FreeCAD preferences
     iconSize = Parameters.ICON_SIZE_SMALL
     ApplicationButtonSize = Parameters.APP_ICON_SIZE
-    QuickAccessButtonSize = Parameters.QUICK_ICON_SIZE    
-    # TabBar_Size = Parameters.TABBAR_SIZE  
-    # if Parameters.LINK_ICON_SIZES is True:
-    # TabBar_Size = QuickAccessButtonSize
-    # Parameters.FONTSIZE_TABS = TabBar_Size - 6
+    # QuickAccessButtonSize = Parameters.QUICK_ICON_SIZE    
+    QuickAccessButtonSize = Parameters.ICON_SIZE_SMALL 
     TabBar_Size = Parameters.FONTSIZE_TABS + 6
     LargeButtonSize = Parameters.ICON_SIZE_LARGE
     
@@ -993,14 +990,11 @@ class ModernMenu(RibbonBar):
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
-                self.RibbonOffset = 23 + self.QuickAccessButtonSize * 2
+                self.RibbonOffset = self.QuickAccessButtonSize + self.TabBar_Size + 27
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(
                     0, self.QuickAccessButtonSize
                 )
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(1, self.TabBar_Size)
-                print(self._titleWidget.height())
-                print(self.QuickAccessButtonSize + 6 + self.TabBar_Size + 6)
-                print(self.RibbonOffset)
             if Parameters.TOOLBAR_POSITION == 1:  # Toolbars inline with tabbar
                 # Add the widgets again in a different position
                 self._titleWidget._tabBarLayout.addWidget(
@@ -1023,7 +1017,10 @@ class ModernMenu(RibbonBar):
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize + 10
-                self.RibbonOffset = 15 + self.QuickAccessButtonSize
+                if self.TabBar_Size > self.QuickAccessButtonSize:
+                    self.RibbonOffset = 15 + self.TabBar_Size
+                else:
+                    self.RibbonOffset = 15 + self.QuickAccessButtonSize
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(
                     0, self.QuickAccessButtonSize
                 )
@@ -3484,14 +3481,15 @@ class ModernMenu(RibbonBar):
         self.ApplicationMenus()
 
         # add quickaccess buttons        
-        self.BuildQuickToolbar(self.ribbonStructure["quickAccessCommands"])
+        toolbarWidth = self.BuildQuickToolbar(self.ribbonStructure["quickAccessCommands"])
 
         self.quickAccessToolBar().show()
         # Set the height of the quickaccess toolbar
         self.quickAccessToolBar().setMinimumHeight(self.QuickAccessButtonSize)
 
         # Set the minimum width of the quickaccess toolbar.
-        self.quickAccessToolBar().setMinimumWidth(self.applicationOptionButton().width())
+        
+        self.quickAccessToolBar().setMinimumWidth(self.applicationOptionButton().width() + toolbarWidth)
         # Set the size policy
         self.quickAccessToolBar().setSizePolicy(
             QSizePolicy.Policy.Minimum, QSizePolicy.Policy.MinimumExpanding
@@ -6565,17 +6563,13 @@ class ModernMenu(RibbonBar):
     
     def BuildQuickToolbar(self, ButtonList = []):
         # add quick access buttons
-        i = 1  # Start value for button count. Used for width of quickaccess toolbar
-        toolBarWidth = (
-            (self.QuickAccessButtonSize * self.sizeFactor) * i
-        ) + self.applicationOptionButton().width()
+        toolBarWidth = 0
+        if len(ButtonList) > 0:
+            toolBarWidth = self.QuickAccessButtonSize * 2
         
         for commandName in ButtonList:
-            i = i + 1
             # Define a width
             width = 0
-            # # Define a button
-            # button = QuickAccessToolButton(self.quickAccessToolBar())
             # set the default padding to zero
             padding = 0
 
@@ -6603,12 +6597,11 @@ class ModernMenu(RibbonBar):
                 # Add the button to the quickaccess toolbar
                 if len(button.actions()) > 0:
                     self.addQuickAccessButton(button)
+                    toolBarWidth = toolBarWidth + self.QuickAccessButtonSize
                 else:
                     StandardFunctions.Print(
                         f"{commandName} did not contain any actions!", "Log"
                     )
-
-                toolBarWidth = toolBarWidth + width
             except Exception as e:
                 if Parameters.DEBUG_MODE is True:
                     StandardFunctions.Print(f"{commandName}, {e}", "Warning")
