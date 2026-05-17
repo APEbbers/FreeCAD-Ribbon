@@ -1294,11 +1294,12 @@ class ModernMenu(RibbonBar):
                         RibbonButtonAction_Style.addItem("Small")
                         RibbonButtonAction_Style.addItem("Medium")
                         RibbonButtonAction_Style.addItem("Large")
-                        if widget.objectName() == "CustomWidget_Small":
+
+                        if widget.parent().ButtonStyle == RibbonButtonStyle.Small:
                             RibbonButtonAction_Style.setCurrentText("Small")
-                        if widget.objectName() == "CustomWidget_Medium":
+                        if widget.parent().ButtonStyle == RibbonButtonStyle.Medium:
                             RibbonButtonAction_Style.setCurrentText("Medium")
-                        if widget.objectName() == "CustomWidget_Large":
+                        if widget.parent().ButtonStyle == RibbonButtonStyle.Large:
                             RibbonButtonAction_Style.setCurrentText("Large")
                         RibbonButtonAction_Style.setFixedWidth(82)
                         RibbonButtonAction_Style.currentTextChanged.connect(lambda: self.on_ButtonStyle_Clicked(panel, widget, RibbonButtonAction_Style, RibbonButtonAction_Size))                      
