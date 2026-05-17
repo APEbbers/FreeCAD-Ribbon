@@ -2468,7 +2468,7 @@ class EventInspector(QObject):
                 self.ButtonPressed = False
         # -----------------------------------------------------------------------
         
-        if self.dragEntered is True and self.ButtonPressed is True:
+        if event.type() == QEvent.Type.Drop and self.dragEntered is True:
             count = 0
             parent = None
             panel = None
