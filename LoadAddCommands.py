@@ -629,7 +629,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                     for root, dirs, files in os.walk(FreeCAD_Icons):
                         for fileName in files:
-                            if CommandName in fileName:
+                            if CommandName == fileName.split(".")[0]:
                                 Icon = QIcon()
                                 Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                     if Icon.isNull():
