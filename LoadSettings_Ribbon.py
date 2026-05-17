@@ -258,24 +258,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.setSizePolicy(
             QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred
         )
-
-        # Disable and hide the controls for the old application button
-        self.form.label_5.setDisabled(True)
-        self.form.label_5.setHidden(True)
-        self.form.IconSize_ApplicationButton.setDisabled(True)
-        self.form.IconSize_ApplicationButton.setHidden(True)
-        # Disable and hide the controls for the tabbar size
-        self.form.label_23.setDisabled(True)
-        self.form.label_23.setHidden(True)
-        self.form.TabbarHeight.setDisabled(True)
-        self.form.TabbarHeight.setHidden(True)
-        # Disable and hide the controls for the right toolbar control size
-        self.form.label_22.setDisabled(True)
-        self.form.label_22.setHidden(True)
-        self.form.IconSize_rightToolbarButton.setDisabled(True)
-        self.form.IconSize_rightToolbarButton.setHidden(True)
-        # Change the text for the quick button label
-        self.form.label_21.setText("Size of tab bar")
+     
         # Set the limits for the spinboxes
         self.form.IconSize_Small.setRange(8, 36)
         self.form.IconSize_Medium.setRange(12, 48)
@@ -297,6 +280,26 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.UseButtonBackGround.setHidden(True)
         self.form.UseButtonBackGround.setDisabled(True)
         Parameters.BUTTON_BACKGROUND_ENABLED = False
+        # Disable and hide the controls for the old application button
+        self.form.label_5.setDisabled(True)
+        self.form.label_5.setHidden(True)
+        self.form.IconSize_ApplicationButton.setDisabled(True)
+        self.form.IconSize_ApplicationButton.setHidden(True)
+        # Disable and hide the controls for the QuickButton size
+        self.form.label_21.setDisabled(True)
+        self.form.label_21.setHidden(True)
+        self.form.IconSize_QuickAccessButton.setDisabled(True)
+        self.form.IconSize_QuickAccessButton.setHidden(True)
+        # Disable and hide the controls for the tabbar size
+        self.form.label_23.setDisabled(True)
+        self.form.label_23.setHidden(True)
+        self.form.TabbarHeight.setDisabled(True)
+        self.form.TabbarHeight.setHidden(True)
+        # Disable and hide the controls for the right toolbar control size
+        self.form.label_22.setDisabled(True)
+        self.form.label_22.setHidden(True)
+        self.form.IconSize_rightToolbarButton.setDisabled(True)
+        self.form.IconSize_rightToolbarButton.setHidden(True)
         
         # Hide button size factor. It is not needed right now
         self.form.ButtonSizeFactor.setHidden(True)
@@ -347,6 +350,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.form.IconSize_rightToolbarButton.setValue(
                 Parameters.RIGHT_ICON_SIZE
             )
+            Parameters.TABBAR_SIZE = Parameters.QUICK_ICON_SIZE
             self.form.TabbarHeight.setValue(Parameters.TABBAR_SIZE)
 
         self.form.TextSize_Menus.setValue(Parameters.FONTSIZE_MENUS)
@@ -410,10 +414,6 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         else:
             self.form.EnableToolsPanel.setCheckState(Qt.CheckState.Unchecked)
 
-        # if Parameters.USE_OVERLAY is True:
-        #     self.form.EnableOverlay.setChecked(True)
-        # else:
-        #     self.form.EnableOverlay.setChecked(False)
         self.form.OverlayState.setCurrentIndex(Parameters.OVERLAYSTATE)
 
         if Parameters.USE_OVERLAY is True:
