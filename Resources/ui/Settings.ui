@@ -76,7 +76,7 @@
             <string notr="true"/>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>3</number>
            </property>
            <property name="elideMode">
             <enum>Qt::TextElideMode::ElideRight</enum>
@@ -2789,7 +2789,7 @@
                       <bool>false</bool>
                      </property>
                      <property name="minimum">
-                      <number>0</number>
+                      <number>-500</number>
                      </property>
                      <property name="maximum">
                       <number>500</number>
@@ -2844,7 +2844,7 @@
                       <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
                      </property>
                      <property name="minimum">
-                      <number>0</number>
+                      <number>-300</number>
                      </property>
                      <property name="maximum">
                       <number>300</number>

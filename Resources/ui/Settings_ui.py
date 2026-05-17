@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsHZEWkd.ui'
+## Form generated from reading UI file 'SettingslmvngE.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.11.0
+## Created by: Qt User Interface Compiler version 6.11.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -20,6 +20,8 @@ from PySide.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboB
     QLabel, QPushButton, QScrollArea, QSizePolicy,
     QSlider, QSpacerItem, QSpinBox, QTabWidget,
     QToolButton, QVBoxLayout, QWidget)
+
+from Gui.Widgets import Gui
 
 class Ui_Settings(object):
     def setupUi(self, Settings):
@@ -996,7 +998,7 @@ class Ui_Settings(object):
 
         self.gridLayout_20.addWidget(self.label_6, 0, 0, 1, 1)
 
-        self.Color_Borders = Gui_ColorButton(self.ColorS)
+        self.Color_Borders = Gui.ColorButton(self.ColorS)
         self.Color_Borders.setObjectName(u"Color_Borders")
         sizePolicy5.setHeightForWidth(self.Color_Borders.sizePolicy().hasHeightForWidth())
         self.Color_Borders.setSizePolicy(sizePolicy5)
@@ -1014,7 +1016,7 @@ class Ui_Settings(object):
 
         self.gridLayout_20.addWidget(self.label_30, 1, 0, 1, 1)
 
-        self.Color_Background_Hover = Gui_ColorButton(self.ColorS)
+        self.Color_Background_Hover = Gui.ColorButton(self.ColorS)
         self.Color_Background_Hover.setObjectName(u"Color_Background_Hover")
         sizePolicy5.setHeightForWidth(self.Color_Background_Hover.sizePolicy().hasHeightForWidth())
         self.Color_Background_Hover.setSizePolicy(sizePolicy5)
@@ -1032,7 +1034,7 @@ class Ui_Settings(object):
 
         self.gridLayout_20.addWidget(self.label_9, 2, 0, 1, 1)
 
-        self.Color_Background_App = Gui_ColorButton(self.ColorS)
+        self.Color_Background_App = Gui.ColorButton(self.ColorS)
         self.Color_Background_App.setObjectName(u"Color_Background_App")
         sizePolicy5.setHeightForWidth(self.Color_Background_App.sizePolicy().hasHeightForWidth())
         self.Color_Background_App.setSizePolicy(sizePolicy5)
@@ -1048,7 +1050,7 @@ class Ui_Settings(object):
 
         self.gridLayout_20.addWidget(self.label_46, 3, 0, 1, 1)
 
-        self.Color_Background_Tabs = Gui_ColorButton(self.ColorS)
+        self.Color_Background_Tabs = Gui.ColorButton(self.ColorS)
         self.Color_Background_Tabs.setObjectName(u"Color_Background_Tabs")
         sizePolicy5.setHeightForWidth(self.Color_Background_Tabs.sizePolicy().hasHeightForWidth())
         self.Color_Background_Tabs.setSizePolicy(sizePolicy5)
@@ -1063,7 +1065,7 @@ class Ui_Settings(object):
 
         self.gridLayout_20.addWidget(self.label_47, 4, 0, 1, 1)
 
-        self.Color_Background_TitleBar = Gui_ColorButton(self.ColorS)
+        self.Color_Background_TitleBar = Gui.ColorButton(self.ColorS)
         self.Color_Background_TitleBar.setObjectName(u"Color_Background_TitleBar")
         sizePolicy5.setHeightForWidth(self.Color_Background_TitleBar.sizePolicy().hasHeightForWidth())
         self.Color_Background_TitleBar.setSizePolicy(sizePolicy5)
@@ -1296,7 +1298,7 @@ class Ui_Settings(object):
         self.RibbonHeightOffset.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.RibbonHeightOffset.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
         self.RibbonHeightOffset.setProperty(u"showGroupSeparator", False)
-        self.RibbonHeightOffset.setMinimum(0)
+        self.RibbonHeightOffset.setMinimum(-500)
         self.RibbonHeightOffset.setMaximum(500)
         self.RibbonHeightOffset.setValue(0)
         self.RibbonHeightOffset.setDisplayIntegerBase(10)
@@ -1323,7 +1325,7 @@ class Ui_Settings(object):
         self.PanelHeightOffset.setFont(font1)
         self.PanelHeightOffset.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.PanelHeightOffset.setCorrectionMode(QAbstractSpinBox.CorrectionMode.CorrectToNearestValue)
-        self.PanelHeightOffset.setMinimum(0)
+        self.PanelHeightOffset.setMinimum(-300)
         self.PanelHeightOffset.setMaximum(300)
         self.PanelHeightOffset.setValue(11)
 
@@ -1431,7 +1433,7 @@ class Ui_Settings(object):
         self.ShowText_Medium.toggled.connect(self.EnableWrap_Medium.setEnabled)
         self.ShowText_Large.toggled.connect(self.EnableWrap_Large.setEnabled)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(Settings)
