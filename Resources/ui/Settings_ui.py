@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingslmvngE.ui'
+## Form generated from reading UI file 'SettingsrCJigR.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.1
 ##
