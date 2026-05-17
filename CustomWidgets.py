@@ -395,7 +395,7 @@ class CustomControls(RibbonToolButton):
                     if FontMetrics.tightBoundingRect(line2).width() > TextWidth:
                         TextWidth = FontMetrics.tightBoundingRect(line2).width()
                 except Exception as e:
-                    # print(e.with_traceback(None))
+                    Label_Text.setText(line1 + "\n   ")
                     pass
 
             # Add the label with alignment

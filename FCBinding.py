@@ -241,7 +241,7 @@ class ModernMenu(RibbonBar):
     ButtonSpacing = Parameters.BUTTON_SPACING
     
     # Declare the alignment of the buttons
-    ButtonAlignment = Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop
+    ButtonAlignment = Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
     
     # Declare the top and bottom margin for the tabbar (category)
     TopMargin = 3
@@ -282,7 +282,6 @@ class ModernMenu(RibbonBar):
     UpdateVersion = ""
     DeveloperVersion = ""
 
-    # Define a boolan to detect if an menu is entered.
     # Define a boolan to detect if an menu is entered.
     # used to keep the ribbon unfolded, when clicking on a dropdown menu
     MenuEntered = False
