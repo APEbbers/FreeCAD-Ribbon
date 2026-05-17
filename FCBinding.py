@@ -4392,12 +4392,13 @@ class ModernMenu(RibbonBar):
             if panel is None:
                 continue
             # Hide the panel if stated in the ribbon structure
-            if panel.objectName() in Dict["workbenches"][workbenchName]["toolbars"]:
-                if "Enabled" in Dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
-                    Enabled = Dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"]
-                    if Enabled is False:
-                        self.HiddenPanels.append(panel)
-                        panel.hide()
+            if workbenchName in Dict["workbenches"]:
+                if panel.objectName() in Dict["workbenches"][workbenchName]["toolbars"]:
+                    if "Enabled" in Dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
+                        Enabled = Dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"]
+                        if Enabled is False:
+                            self.HiddenPanels.append(panel)
+                            panel.hide()
                                    
             # Writing to ribbonStructure.json
             if UpdateDict is True:
@@ -5505,15 +5506,16 @@ class ModernMenu(RibbonBar):
 
         # # Add new Panels
         if panelName.endswith("_newPanel"):
-            if panelName in Dict["workbenches"][workbenchName]["toolbars"]:
-                for key in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():
-                    if key != "order" and key is not None and key != "":
-                        button = self.CreateButtonFromCommand(key, ActivateWorkBench=ActivateWorkbench)
-                        if button is not None:
-                            # button.setProperty("CommandName", key)
-                            button.setObjectName(key)
-                            # button.setToolTip(key)
-                            allButtons.append(button)
+            if workbenchName in Dict["workbenches"]:
+                if panelName in Dict["workbenches"][workbenchName]["toolbars"]:
+                    for key in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():
+                        if key != "order" and key is not None and key != "":
+                            button = self.CreateButtonFromCommand(key, ActivateWorkBench=ActivateWorkbench)
+                            if button is not None:
+                                # button.setProperty("CommandName", key)
+                                button.setObjectName(key)
+                                # button.setToolTip(key)
+                                allButtons.append(button)
                     
         # If a new command needs to be added, create a button and add it to allButtons
         if ExtraCommand != "":
@@ -6118,10 +6120,11 @@ class ModernMenu(RibbonBar):
         # EnableControl = QCheckBox()
         EnableControl = Toggle()
         EnableControl.setChecked(True)
-        if panel.objectName() in Dict["workbenches"][workbenchName]["toolbars"]:
-            if "Enabled" in Dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
-                Enabled = Dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"]
-                EnableControl.setChecked(bool(Enabled))
+        if workbenchName in Dict["workbenches"]:
+            if panel.objectName() in Dict["workbenches"][workbenchName]["toolbars"]:
+                if "Enabled" in Dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
+                    Enabled = Dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"]
+                    EnableControl.setChecked(bool(Enabled))
         EnableControl.setFixedWidth(32)
         EnableControl.setObjectName("EnablePanel")
         titleLayout.insertWidget(0, EnableControl)
