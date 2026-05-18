@@ -2480,22 +2480,9 @@ class ModernMenu(RibbonBar):
             
             # Get the widget from the source
             widget = event.source()
-             
-            # If you drag and drop a new command, you actually dragging the complete QListWidget
-            if type(widget) is QListWidget:
-                # If the position is within a panel, store the panel name
-                for panelName, panel in self.currentCategory().panels().items():
-                    if panel.underMouse():
-                        self.targetPanel = panel
-                        self.dropPanelName = panelName
-                    #     HoverColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-                    #     panel.setStyleSheet("""RibbonPanel:hover{border: 0.5px solid """
-                    #                         + HoverColor + """;}""")
-                    # else:
-                    #     panel.setStyleSheet("""RibbonPanel:hover{border:none}""")  
                 
-                # If not activated, activate all buttons    
-                self.activateButtons()                              
+            # If not activated, activate all buttons    
+            self.activateButtons()                              
                 
             # Store the position were the drag is started
             if self.StartPositionDrag is None:
@@ -2535,6 +2522,9 @@ class ModernMenu(RibbonBar):
             self.dragIndicator_Panels.close()
             # self.dragIndicator_QuickAccess.close()
             self.target = None
+            self.targetPanel = None
+            self.dropPanelName = None
+            print(f"Leave: {self.dropPanelName}")
             # # if self.targetPanel is not None:
             # for panel in self.currentCategory().panels().values():
             #     # borderColer = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
@@ -2551,6 +2541,18 @@ class ModernMenu(RibbonBar):
     def dragMoveEvent(self, event: QDragMoveEvent):
         if self.CustomizeEnabled is True:
             widget = event.source()
+            
+             # If you drag and drop a new command, you actually dragging the complete QListWidget
+            if type(widget) is QListWidget:
+                position = event.pos()
+                # If the position is within a panel, store the panel name
+                for panelName, panel in self.currentCategory().panels().items():
+                    panelPos = mw.mapToGlobal(panel.pos())
+                    xMin = panelPos.x()
+                    xMax = xMin + panel.rect().width()
+                    
+                    if position.x() >= xMin and position.x() < xMax:
+                        self.dropPanelName = panelName      
             
             # If the widget is not a panel, continue here
             if type(widget) is not RibbonPanel  and type(widget) is not QListWidget:
@@ -2688,6 +2690,7 @@ class ModernMenu(RibbonBar):
                 for panelName, panel in currentCategory.panels().items():
                     # If the panelName is equal to the panel name on which the command is dropped, continue.
                     if panelName == self.dropPanelName:
+                        print(self.dropPanelName)
                         # Get the command to be added
                         ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
                         # If the commands is part of a dropdown, get the actual command name
