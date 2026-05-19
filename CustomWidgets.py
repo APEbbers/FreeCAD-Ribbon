@@ -315,8 +315,8 @@ class CustomControls(RibbonToolButton):
         SingleHeight = QFontMetrics(Font).boundingRect("Text").height() + 3
         Label_Text.setMinimumHeight(SingleHeight * 1)
         Label_Text.setMaximumHeight(SingleHeight * MaxNumberOfLines)
-        # Set the width of the label based on the size of the button
-        Label_Text.setFixedWidth(ButtonSize.width())
+        # # Set the width of the label based on the size of the button
+        # Label_Text.setFixedWidth(ButtonSize.width())
         Label_Text.setScaledContents(True)
         if Text != "":
             # Create a label with the correct properties
@@ -397,6 +397,8 @@ class CustomControls(RibbonToolButton):
                 except Exception as e:
                     Label_Text.setText(line1 + "\n   ")
                     pass
+            
+            Label_Text.setFixedWidth(TextWidth + 6)
 
             # Add the label with alignment
             Layout.addWidget(Label_Text)
@@ -415,9 +417,9 @@ class CustomControls(RibbonToolButton):
             ArrowButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
             # Set the height according the space for the menubutton
             ArrowButton.setFixedHeight(MenuButtonSpace)
-            # Set the width according the commandbutton
-            ArrowButton.setFixedWidth(ButtonSize.width() + Space)
-            ArrowButton.adjustSize()
+            # # Set the width according the commandbutton
+            # ArrowButton.setFixedWidth(ButtonSize.width() + Space)
+            # ArrowButton.adjustSize()
             # Set the arrow to none
             ArrowButton.setArrowType(Qt.ArrowType.DownArrow)
             # Set the content margins
@@ -748,10 +750,17 @@ class CustomControls(RibbonToolButton):
         btn.setStyleSheet(StyleSheet)
 
         # Set the final sizes
-        width = ButtonSize.width()
-        Label_Text.setFixedWidth(width)
+        width = Label_Text.width()
         if Menu is not None and len(Menu.actions()) <= 1:
             Label_Text.setFixedHeight(Label_Text.height() + MenuButtonSpace)
+        # Check if the button becomes too small and if so adjust it
+        iconHeight = ButtonSize.height() - Label_Text.height()
+        if width < iconHeight:
+            width = iconHeight
+        # Add some space to the width
+        width = width + 12
+        Label_Text.setFixedWidth(width)
+        
         ArrowButton.setFixedWidth(width)
         CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         # Compensate the height when text is visible

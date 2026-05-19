@@ -983,21 +983,25 @@ def ReturnWrappedText(text: str, max_length: int = 50, max_Lines=0, returnList=F
     import textwrap
 
     result = ""
+    wrapped_text = []
+    
+    if len(text.split(" ")) == 2:
+        wrapped_text = text.split(" ")
+    else:
+        # Wrap the text as list
+        wrapped_text = textwrap.wrap(text=text, width=max_length)
 
-    # Wrap the text as list
-    wrapped_text = textwrap.wrap(text=text, width=max_length)
+        # remove spaces at the end of each line
+        for line in wrapped_text:
+            line = textwrap.dedent(line)
 
-    # remove spaces at the end of each line
-    for line in wrapped_text:
-        line = textwrap.dedent(line)
-
-    # remove any line that is more then> allowed
-    if max_Lines > 0 and len(wrapped_text) > max_Lines:
-        for i in range(max_Lines, len(wrapped_text)):
-            try:
-                wrapped_text.pop(i)
-            except Exception:
-                continue
+        # remove any line that is more then> allowed
+        if max_Lines > 0 and len(wrapped_text) > max_Lines:
+            for i in range(max_Lines, len(wrapped_text)):
+                try:
+                    wrapped_text.pop(i)
+                except Exception:
+                    continue
 
     # return the desired result
     if returnList is False:
