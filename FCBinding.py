@@ -2683,14 +2683,23 @@ class ModernMenu(RibbonBar):
 
         # Get the current category
         currentCategory = self.currentCategory()
+        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
 
         # If you drag and drop a new command, you actually dragging the complete QListWidget
         if type(widget) is QListWidget:
             if self.quickAccessToolBar().underMouse() is False:
+                # Set the default size depending on the max size of the button
+                Size = "small"
+                if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  == 2 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 0 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
+                    Size = "medium"
+                if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  <= 2 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 1 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
+                    Size = "medium"
+                if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  == 0 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 1 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
+                    Size = "large"
+                
                 for panelName, panel in currentCategory.panels().items():
                     # If the panelName is equal to the panel name on which the command is dropped, continue.
                     if panelName == self.dropPanelName:
-                        print(self.dropPanelName)
                         # Get the command to be added
                         ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
                         # If the commands is part of a dropdown, get the actual command name
@@ -2743,7 +2752,7 @@ class ModernMenu(RibbonBar):
                         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "text"], endEmpty=True)
                         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "icon"], endEmpty=True)
                         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "IsExtra"], endEmpty=True)
-                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["size"] = "small"
+                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["size"] = Size
                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["text"] = MenuText
                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["icon"] = ""
                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["IsExtra"] = True
