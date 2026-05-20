@@ -2759,10 +2759,12 @@ class ModernMenu(RibbonBar):
                         
                         # if this is a newPanel, update the newpanel dict as well
                         if panel.objectName().endswith("_newPanel"):
-                            Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName, panel.objectName()], endEmpty=True)
-                            newPanelCommandList = self.workBenchDict["newPanels"][workbenchName][panel.objectName()]
-                            newPanelCommandList.append([ExtraCommand, ExtraCommand_WB])
-                            self.workBenchDict["newPanels"][workbenchName][panel.objectName()] = newPanelCommandList
+                            if workbenchName not in self.workBenchDict["newPanels"]:
+                                Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName], endEmpty=True)
+                            if panel.objectName() not in self.workBenchDict["newPanels"][workbenchName]:
+                                Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName, panel.objectName()], endEmpty=True)
+                                self.workBenchDict["newPanels"][workbenchName][panel.objectName()] = []
+                            self.workBenchDict["newPanels"][workbenchName][panel.objectName()].append([ExtraCommand, ExtraCommand_WB])
                         
                         # Get the name from  current workbench
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
