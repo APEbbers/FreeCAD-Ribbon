@@ -3630,8 +3630,6 @@ class ModernMenu(RibbonBar):
                         Font = QFont()
                         Font.setPixelSize(Parameters.FONTSIZE_TABS)
                         self.tabBar().setFont(Font)
-                        # print(Parameters.FONTSIZE_TABS)
-                        # print(Parameters.TABBAR_SIZE)
 
                         # Set the tooltip
                         MenuText = workbench.MenuText
@@ -6624,8 +6622,8 @@ class ModernMenu(RibbonBar):
     def BuildQuickToolbar(self, ButtonList = []):
         # add quick access buttons
         toolBarWidth = 0
-        if len(ButtonList) > 0:
-            toolBarWidth = self.QuickAccessButtonSize * 2
+        # if len(ButtonList) > 0:
+        #     toolBarWidth = self.QuickAccessButtonSize * 2
         
         for commandName in ButtonList:
             # Define a width
