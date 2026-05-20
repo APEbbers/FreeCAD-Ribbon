@@ -6940,37 +6940,39 @@ class ModernMenu(RibbonBar):
                                 ]["toolbars"][ToolBar]["order"]
                                 # Define a new list for the conversion
                                 ConvertedList = []
-                                # Go through the current order list
-                                for i in range(len(OrderList)):
-                                    MenuText = OrderList[i]
-                                    # if it is an separator of custom dropdown button, just added ti the coverted list.
-                                    # For everything else, find the commandname in the datafile
-                                    if MenuText is not None:
-                                        if "separator" in MenuText or "ddb" in MenuText:
-                                            ConvertedList.append(MenuText)
-                                        else:
-                                            for DataItem in self.List_Commands:
-                                                if DataItem[3] == WorkBenchName:
-                                                    # If the data item is already converted to a command. append that to the list
-                                                    if (
-                                                        MenuText.lower()
-                                                        == DataItem[0].lower()
-                                                    ):
-                                                        ConvertedList.append(DataItem[0])
-                                                        break
-                                                    # If the data item is still a menutext, add the command instead.
-                                                    if (
-                                                        MenuText.lower()
-                                                        == DataItem[4].lower()
-                                                    ):
-                                                        ConvertedList.append(DataItem[0])
-                                                        break
+                                # Go through the current order list if there is an datafile
+                                DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
+                                if os.path.exists(DataFile) is True:
+                                    for i in range(len(OrderList)):
+                                        MenuText = OrderList[i]
+                                        # if it is an separator of custom dropdown button, just added ti the coverted list.
+                                        # For everything else, find the commandname in the datafile
+                                        if MenuText is not None:
+                                            if "separator" in MenuText or "ddb" in MenuText:
+                                                ConvertedList.append(MenuText)
+                                            else:
+                                                for DataItem in self.List_Commands:
+                                                    if DataItem[3] == WorkBenchName:
+                                                        # If the data item is already converted to a command. append that to the list
+                                                        if (
+                                                            MenuText.lower()
+                                                            == DataItem[0].lower()
+                                                        ):
+                                                            ConvertedList.append(DataItem[0])
+                                                            break
+                                                        # If the data item is still a menutext, add the command instead.
+                                                        if (
+                                                            MenuText.lower()
+                                                            == DataItem[4].lower()
+                                                        ):
+                                                            ConvertedList.append(DataItem[0])
+                                                            break
 
-                                # Update the ordered list
-                                if len(ConvertedList) > 0:
-                                    self.ribbonStructure["workbenches"][WorkBenchName][
-                                        "toolbars"
-                                    ][ToolBar]["order"] = ConvertedList
+                                    # Update the ordered list
+                                    if len(ConvertedList) > 0:
+                                        self.ribbonStructure["workbenches"][WorkBenchName][
+                                            "toolbars"
+                                        ][ToolBar]["order"] = ConvertedList
         
         # Convert toolbar names to new names for certain WB's
         #
