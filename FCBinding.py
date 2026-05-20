@@ -3954,6 +3954,7 @@ class ModernMenu(RibbonBar):
         if TB is not None:
             try:
                 import SearchBoxLight
+                import StyleMapping_SearchBar
 
                 width = 10 * self.RightToolBarButtonSize
 
@@ -3971,6 +3972,12 @@ class ModernMenu(RibbonBar):
                         index, groupId
                     )
                 )
+                StyleSheet = (
+                        """background: """
+                        + StyleMapping_SearchBar.ReturnStyleItem("Background_Color")
+                        + """;"""
+                    )
+                sea.setStyleSheet(StyleSheet)
                 sea.setFixedSize(width, self.RightToolBarButtonSize)
                 BeforeAction = self.rightToolBar().actions()[1]
                 self.rightToolBar().insertWidget(BeforeAction, sea)
