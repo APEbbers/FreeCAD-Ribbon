@@ -1409,21 +1409,38 @@ class ModernMenu(RibbonBar):
                         # Load the dialog
                         # 
                         # Get the form
-                        self.AddCommandsDialog = LoadAddCommands.LoadDialog(mw, self.workBenchDict)
-                        if Parameters.DOCKED_DIALOGS is False:
-                            # Show the form
-                            self.AddCommandsDialog.form.show()
-                        else:
-                            RibbonLayoutDock = QDockWidget()
-                            # set the name of the object and the window title
-                            RibbonLayoutDock.setObjectName("RibbonLayout")
-                            RibbonLayoutDock.setWindowTitle("Ribbon Layout")
-                            RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
-                            RibbonLayoutDock.setWidget(self.AddCommandsDialog.form)                            
-                            # Set the allowed areas to dock
-                            RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
-                            # Add the dockwidget
-                            mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)                      
+                        DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
+                        if os.path.exists(DataFile) is False:
+                            Question = translate(
+                                "FreeCAD Ribbon",
+                                "a data file must be generated first!\n"
+                                "Do you want to create one now?\n",
+                            )
+                            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+                            if Answer == "yes":
+                                CacheFunctions.CreateCache()
+                                DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
+                            else:
+                                self.on_Cancel_Clicked()
+                                return
+                        if os.path.exists(DataFile) is True:
+                            self.AddCommandsDialog = LoadAddCommands.LoadDialog(mw, self.workBenchDict)
+                            if Parameters.DOCKED_DIALOGS is False:
+                                # Show the form
+                                self.AddCommandsDialog.form.show()
+                            else:
+                                RibbonLayoutDock = QDockWidget()
+                                # set the name of the object and the window title
+                                RibbonLayoutDock.setObjectName("RibbonLayout")
+                                RibbonLayoutDock.setWindowTitle("Ribbon Layout")
+                                RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
+                                RibbonLayoutDock.setWidget(self.AddCommandsDialog.form)                            
+                                # Set the allowed areas to dock
+                                RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
+                                # Add the dockwidget
+                                mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
+
+                            
                         
                         return
                     if self.CustomizeEnabled is True:
@@ -2520,16 +2537,10 @@ class ModernMenu(RibbonBar):
             # Hide the drag indicator when you leave the drag area
             self.dragIndicator_Buttons.close()
             self.dragIndicator_Panels.close()
-            # self.dragIndicator_QuickAccess.close()
+            self.dragIndicator_QuickAccess.close()
             self.target = None
             self.targetPanel = None
             self.dropPanelName = None
-            print(f"Leave: {self.dropPanelName}")
-            # # if self.targetPanel is not None:
-            # for panel in self.currentCategory().panels().values():
-            #     # borderColer = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            #     panel.setStyleSheet("""RibbonPanel:hover{border:none}""")  
-            # # self.targetPanel = None
             
             # Enable all buttons, so you can access them with a right click
             self.actionList = []
@@ -4212,40 +4223,55 @@ class ModernMenu(RibbonBar):
 
     # Function for loading the design menu
     def loadDesignMenu(self):
-        # Set the wait cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+        DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
+        if os.path.exists(DataFile) is False:
+            Question = translate(
+                "FreeCAD Ribbon",
+                "a data file must be generated first!\n"
+                "Do you want to create one now?\n",
+            )
+            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+            if Answer == "yes":
+                CacheFunctions.CreateCache()
+                DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
+            else:
+                return
         
-        # Get the form
-        Dialog = LoadDesign_Ribbon.LoadDialog()
-        if Parameters.DOCKED_DIALOGS is False:
-            # Show the form
-            Dialog.form.show()
-        else:
-            RibbonLayoutDock = QDockWidget()
-            # set the name of the object and the window title
-            RibbonLayoutDock.setObjectName("RibbonLayout")
-            RibbonLayoutDock.setWindowTitle("Ribbon Layout")
-            RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
-            RibbonLayoutDock.setWidget(Dialog.form)
-            # Set the allowed areas to dock
-            RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
-            # Add the dockwidget
-            mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
+        if os.path.exists(DataFile) is True:            
+            # Set the wait cursor
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+            
+            # Get the form
+            Dialog = LoadDesign_Ribbon.LoadDialog()
+            if Parameters.DOCKED_DIALOGS is False:
+                # Show the form
+                Dialog.form.show()
+            else:
+                RibbonLayoutDock = QDockWidget()
+                # set the name of the object and the window title
+                RibbonLayoutDock.setObjectName("RibbonLayout")
+                RibbonLayoutDock.setWindowTitle("Ribbon Layout")
+                RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
+                RibbonLayoutDock.setWidget(Dialog.form)
+                # Set the allowed areas to dock
+                RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
+                # Add the dockwidget
+                mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
-        # Disable the quick toolbar, righttoolbar and application menu
-        self.rightToolBar().setDisabled(True)
-        self.quickAccessToolBar().setDisabled(True)
-        self.applicationOptionButton().setDisabled(True)
-        Gui.updateGui()
-        # indicate that the design menu is loaded
-        self.DesignMenuLoaded = True
+            # Disable the quick toolbar, righttoolbar and application menu
+            self.rightToolBar().setDisabled(True)
+            self.quickAccessToolBar().setDisabled(True)
+            self.applicationOptionButton().setDisabled(True)
+            Gui.updateGui()
+            # indicate that the design menu is loaded
+            self.DesignMenuLoaded = True
 
-        # Connect the close signal of the designmenu
-        Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
+            # Connect the close signal of the designmenu
+            Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
 
-        # Restore the cursor
-        QApplication.restoreOverrideCursor()
+            # Restore the cursor
+            QApplication.restoreOverrideCursor()
         return
 
     # Function for loading the settings menu

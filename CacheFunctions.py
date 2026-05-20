@@ -823,6 +823,8 @@ def CheckDataFileVersion():
         Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
         if Answer == "yes":
             CreateCache()
+        else:
+            return
 
     # region - Load data------------------------------------------------------------------
     #

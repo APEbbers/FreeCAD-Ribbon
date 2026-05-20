@@ -185,6 +185,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
             if Answer == "yes":
                 CacheFunctions.CreateCache()
+            else:
+                # Restore the cursor
+                QApplication.restoreOverrideCursor()
+                return
         
         # region - Load data------------------------------------------------------------------
         #
