@@ -4228,6 +4228,11 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 MenuName = self.form.CommandTable_RD.item(row, 0).data(
                     Qt.ItemDataRole.UserRole
                 )
+                # Get the menuname from the command list
+                for i2 in range(len(self.List_Commands)):
+                    if MenuName == self.List_Commands[i2][2]:
+                        CommandName = self.List_Commands[i2][0]
+                
                 # If it is a newer version of FreeCAD. use the commandname instead
                 if (
                     StandardFunctions.checkFreeCADVersion(
@@ -4240,7 +4245,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 ):
                     CommandName = self.form.CommandTable_RD.item(row, 0).data(
                         Qt.ItemDataRole.UserRole
-                    )
+                    )                    
 
                     # Get the menuname from the command list
                     for i2 in range(len(self.List_Commands)):
