@@ -4006,7 +4006,6 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 # Get the custom menu name
                 MenuNameEntered = self.form.CommandTable_RD.item(row, 0).text()
 
-                print(CommandName)
                 # Go through the list with all available commands.
                 # If the commandText is in this list, get the command name.
                 if (
