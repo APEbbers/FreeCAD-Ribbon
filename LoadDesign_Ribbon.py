@@ -3983,7 +3983,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             )[0]
             try:
                 # get the name of the toolbar
-                Toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
+                # Toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
+                Toolbar = self.form.PanelOrder_RD.currentItem().data(Qt.ItemDataRole.UserRole)
                   # create a empty size string
                 Size = ""
                 # Define empty strings for the command name and icon name
