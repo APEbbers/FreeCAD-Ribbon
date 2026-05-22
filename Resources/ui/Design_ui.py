@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignMZSPda.ui'
+## Form generated from reading UI file 'DesigneZfioc.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QApplication, QCheckBox,
+from PySide6.QtWidgets import (QAbstractItemView, QAbstractScrollArea, QApplication, QCheckBox,
     QComboBox, QFrame, QGridLayout, QGroupBox,
     QHeaderView, QLabel, QLayout, QLineEdit,
     QListView, QListWidget, QListWidgetItem, QPushButton,
@@ -1159,6 +1159,37 @@ class Ui_Form(object):
         self.gridLayout_14.setSpacing(6)
         self.gridLayout_14.setObjectName(u"gridLayout_14")
         self.gridLayout_14.setContentsMargins(6, 6, 6, 6)
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_14.addItem(self.horizontalSpacer_4, 2, 0, 1, 1)
+
+        self.label_12 = QLabel(self.frame2)
+        self.label_12.setObjectName(u"label_12")
+        font2 = QFont()
+        font2.setBold(True)
+        font2.setStyleStrategy(QFont.NoAntialias)
+        self.label_12.setFont(font2)
+
+        self.gridLayout_14.addWidget(self.label_12, 0, 0, 1, 5)
+
+        self.AddSeparator_RD = QPushButton(self.frame2)
+        self.AddSeparator_RD.setObjectName(u"AddSeparator_RD")
+        self.AddSeparator_RD.setMinimumSize(QSize(100, 0))
+        self.AddSeparator_RD.setFont(font1)
+
+        self.gridLayout_14.addWidget(self.AddSeparator_RD, 2, 1, 1, 1)
+
+        self.RemoveSeparator_RD = QPushButton(self.frame2)
+        self.RemoveSeparator_RD.setObjectName(u"RemoveSeparator_RD")
+        self.RemoveSeparator_RD.setMinimumSize(QSize(100, 0))
+        self.RemoveSeparator_RD.setFont(font1)
+
+        self.gridLayout_14.addWidget(self.RemoveSeparator_RD, 2, 2, 1, 1)
+
+        self.horizontalSpacer_12 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_14.addItem(self.horizontalSpacer_12, 2, 3, 1, 1)
+
         self.verticalLayout = QVBoxLayout()
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalSpacer_9 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
@@ -1184,7 +1215,7 @@ class Ui_Form(object):
         self.verticalLayout.addItem(self.verticalSpacer_8)
 
 
-        self.gridLayout_14.addLayout(self.verticalLayout, 1, 3, 1, 1)
+        self.gridLayout_14.addLayout(self.verticalLayout, 1, 4, 1, 1)
 
         self.CommandTable_RD = QTableWidget(self.frame2)
         if (self.CommandTable_RD.columnCount() < 5):
@@ -1244,38 +1275,7 @@ class Ui_Form(object):
         self.CommandTable_RD.horizontalHeader().setProperty(u"showSortIndicator", False)
         self.CommandTable_RD.verticalHeader().setVisible(False)
 
-        self.gridLayout_14.addWidget(self.CommandTable_RD, 1, 0, 1, 3)
-
-        self.horizontalSpacer_5 = QSpacerItem(30, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_14.addItem(self.horizontalSpacer_5, 2, 3, 1, 1)
-
-        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_14.addItem(self.horizontalSpacer_4, 2, 0, 1, 1)
-
-        self.AddSeparator_RD = QPushButton(self.frame2)
-        self.AddSeparator_RD.setObjectName(u"AddSeparator_RD")
-        self.AddSeparator_RD.setMinimumSize(QSize(100, 0))
-        self.AddSeparator_RD.setFont(font1)
-
-        self.gridLayout_14.addWidget(self.AddSeparator_RD, 2, 1, 1, 1)
-
-        self.RemoveSeparator_RD = QPushButton(self.frame2)
-        self.RemoveSeparator_RD.setObjectName(u"RemoveSeparator_RD")
-        self.RemoveSeparator_RD.setMinimumSize(QSize(100, 0))
-        self.RemoveSeparator_RD.setFont(font1)
-
-        self.gridLayout_14.addWidget(self.RemoveSeparator_RD, 2, 2, 1, 1)
-
-        self.label_12 = QLabel(self.frame2)
-        self.label_12.setObjectName(u"label_12")
-        font2 = QFont()
-        font2.setBold(True)
-        font2.setStyleStrategy(QFont.NoAntialias)
-        self.label_12.setFont(font2)
-
-        self.gridLayout_14.addWidget(self.label_12, 0, 0, 1, 4)
+        self.gridLayout_14.addWidget(self.CommandTable_RD, 1, 0, 1, 4)
 
 
         self.gridLayout_16.addWidget(self.frame2, 1, 0, 1, 5)
@@ -1679,6 +1679,9 @@ class Ui_Form(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Createnewpanels), QCoreApplication.translate("Form", u"Create new panels", None))
         self.label_2.setText(QCoreApplication.translate("Form", u"Select panel:", None))
         self.label.setText(QCoreApplication.translate("Form", u"Select workbench:", None))
+        self.label_12.setText(QCoreApplication.translate("Form", u"Set the icon size", None))
+        self.AddSeparator_RD.setText(QCoreApplication.translate("Form", u"Add separator", None))
+        self.RemoveSeparator_RD.setText(QCoreApplication.translate("Form", u"Remove separator", None))
 #if QT_CONFIG(tooltip)
         self.MoveUp_RibbonCommand_RD.setToolTip(QCoreApplication.translate("Form", u"Move up", None))
 #endif // QT_CONFIG(tooltip)
@@ -1704,9 +1707,6 @@ class Ui_Form(object):
         ___qtablewidgetitem6.setText(QCoreApplication.translate("Form", u"Enabled", None))
         self.CommandTable_RD.setSortingEnabled(__sortingEnabled13)
 
-        self.AddSeparator_RD.setText(QCoreApplication.translate("Form", u"Add separator", None))
-        self.RemoveSeparator_RD.setText(QCoreApplication.translate("Form", u"Remove separator", None))
-        self.label_12.setText(QCoreApplication.translate("Form", u"Set the icon size", None))
         self.label_4.setText(QCoreApplication.translate("Form", u"Set the panel order", None))
         self.IconOnly_RD.setText(QCoreApplication.translate("Form", u"Icon only", None))
 
