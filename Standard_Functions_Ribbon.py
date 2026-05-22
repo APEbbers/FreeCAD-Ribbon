@@ -910,8 +910,6 @@ def returnQiCons_Commands(CommandName, pixmap=""):
         pass
 
     icon = QIcon()
-    if pixmap != "" and pixmap is not None:
-        icon = Gui.getIcon(pixmap)
         
     if icon is None or (icon is not None and icon.isNull()):
         try:
@@ -929,26 +927,11 @@ def returnQiCons_Commands(CommandName, pixmap=""):
             icon = action.icon()
         except Exception:
             pass
-    
-    if icon is None or (icon is not None and icon.isNull()):
-        try:
-            icon = Gui.getIcon(CommandName)
-        except Exception:
-            pass
         
     if icon is None or (icon is not None and icon.isNull()):
         Menus = mw.findChildren(QToolButton)
         for i in range(len(Menus)):
             icon = Menus[i].icon()
-            
-    # if icon is None or (icon is not None and icon.isNull()):
-    #     Menus = mw.findChildren(QMenu)
-    #     for i in range(len(Menus)):
-    #         Menu: QMenu = Menus[i]
-    #         for j in range(len(Menu.actions())):
-    #             action = Menu.actions()[j]
-    #             if action.data() == CommandName:
-    #                 icon = action.icon()
     
     # If the icon still none, set a replacement Icon
     if icon is None or (icon is not None and icon.isNull()):
