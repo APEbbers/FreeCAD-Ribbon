@@ -5467,10 +5467,9 @@ class ModernMenu(RibbonBar):
                     self.render(pixmap)
                     drag.setPixmap(pixmap)
                     try:
-                        import PySide6
+
                         drag.exec(Qt.DropAction.MoveAction)
-                    except ImportError:
-                        import PySide2
+                    except Exception:
                         drag.exec_(Qt.MoveAction)
                 except Exception as e:
                     if Parameters.DEBUG_MODE is True:
