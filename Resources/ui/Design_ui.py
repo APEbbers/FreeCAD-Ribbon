@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'DesignOrhUhr.ui'
+## Form generated from reading UI file 'DesignMZSPda.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.1
 ##
@@ -1113,7 +1113,7 @@ class Ui_Form(object):
         self.gridLayout_15.setObjectName(u"gridLayout_15")
         self.gridLayout_5 = QGridLayout()
         self.gridLayout_5.setObjectName(u"gridLayout_5")
-        self.gridLayout_5.setContentsMargins(6, 6, 6, 6)
+        self.gridLayout_5.setContentsMargins(6, 6, 0, 6)
         self.label_2 = QLabel(self.RibbonDesign)
         self.label_2.setObjectName(u"label_2")
 
@@ -1144,96 +1144,18 @@ class Ui_Form(object):
 
         self.gridLayout_15.addLayout(self.gridLayout_5, 0, 0, 1, 1)
 
-        self.gridLayout_19 = QGridLayout()
-        self.gridLayout_19.setSpacing(0)
-        self.gridLayout_19.setObjectName(u"gridLayout_19")
-        self.gridLayout_19.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
-        self.frame2 = QFrame(self.RibbonDesign)
-        self.frame2.setObjectName(u"frame2")
-        sizePolicy3.setHeightForWidth(self.frame2.sizePolicy().hasHeightForWidth())
-        self.frame2.setSizePolicy(sizePolicy3)
-        self.frame2.setMinimumSize(QSize(350, 0))
-        self.frame2.setBaseSize(QSize(350, 0))
-        self.frame2.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame2.setFrameShadow(QFrame.Shadow.Plain)
-        self.gridLayout_13 = QGridLayout(self.frame2)
-        self.gridLayout_13.setObjectName(u"gridLayout_13")
-        self.gridLayout_13.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
-        self.gridLayout_13.setVerticalSpacing(6)
-        self.gridLayout_13.setContentsMargins(6, 6, 6, 6)
-        self.label_4 = QLabel(self.frame2)
-        self.label_4.setObjectName(u"label_4")
-        font2 = QFont()
-        font2.setBold(True)
-        font2.setStyleStrategy(QFont.NoAntialias)
-        self.label_4.setFont(font2)
-
-        self.gridLayout_13.addWidget(self.label_4, 0, 0, 1, 1)
-
-        self.IconOnly_RD = QCheckBox(self.frame2)
-        self.IconOnly_RD.setObjectName(u"IconOnly_RD")
-        self.IconOnly_RD.setMinimumSize(QSize(0, 34))
-
-        self.gridLayout_13.addWidget(self.IconOnly_RD, 2, 0, 1, 1)
-
-        self.PanelOrder_RD = QListWidget(self.frame2)
-        __qlistwidgetitem12 = QListWidgetItem(self.PanelOrder_RD)
-        __qlistwidgetitem12.setCheckState(Qt.Checked)
-        self.PanelOrder_RD.setObjectName(u"PanelOrder_RD")
-        sizePolicy1.setHeightForWidth(self.PanelOrder_RD.sizePolicy().hasHeightForWidth())
-        self.PanelOrder_RD.setSizePolicy(sizePolicy1)
-        self.PanelOrder_RD.setMinimumSize(QSize(300, 0))
-        self.PanelOrder_RD.setDefaultDropAction(Qt.DropAction.MoveAction)
-        self.PanelOrder_RD.setMovement(QListView.Movement.Free)
-        self.PanelOrder_RD.setSortingEnabled(False)
-
-        self.gridLayout_13.addWidget(self.PanelOrder_RD, 1, 0, 1, 1)
-
-        self.gridLayout_20 = QGridLayout()
-        self.gridLayout_20.setObjectName(u"gridLayout_20")
-        self.verticalSpacer_12 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_20.addItem(self.verticalSpacer_12, 0, 0, 1, 1)
-
-        self.MoveUpPanel_RD = QToolButton(self.frame2)
-        self.MoveUpPanel_RD.setObjectName(u"MoveUpPanel_RD")
-        self.MoveUpPanel_RD.setText(u"...")
-        self.MoveUpPanel_RD.setArrowType(Qt.ArrowType.UpArrow)
-
-        self.gridLayout_20.addWidget(self.MoveUpPanel_RD, 1, 0, 1, 1)
-
-        self.MoveDownPanel_RD = QToolButton(self.frame2)
-        self.MoveDownPanel_RD.setObjectName(u"MoveDownPanel_RD")
-        self.MoveDownPanel_RD.setText(u"...")
-        self.MoveDownPanel_RD.setArrowType(Qt.ArrowType.DownArrow)
-
-        self.gridLayout_20.addWidget(self.MoveDownPanel_RD, 2, 0, 1, 1)
-
-        self.verticalSpacer_11 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_20.addItem(self.verticalSpacer_11, 3, 0, 1, 1)
-
-
-        self.gridLayout_13.addLayout(self.gridLayout_20, 1, 1, 1, 1)
-
-
-        self.gridLayout_19.addWidget(self.frame2, 1, 0, 1, 1)
-
-
-        self.gridLayout_15.addLayout(self.gridLayout_19, 1, 0, 1, 1)
-
         self.gridLayout_16 = QGridLayout()
         self.gridLayout_16.setSpacing(0)
         self.gridLayout_16.setObjectName(u"gridLayout_16")
         self.gridLayout_16.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         self.gridLayout_16.setContentsMargins(0, 0, 0, 0)
-        self.frame3 = QFrame(self.RibbonDesign)
-        self.frame3.setObjectName(u"frame3")
-        sizePolicy3.setHeightForWidth(self.frame3.sizePolicy().hasHeightForWidth())
-        self.frame3.setSizePolicy(sizePolicy3)
-        self.frame3.setMinimumSize(QSize(506, 0))
-        self.frame3.setFrameShape(QFrame.Shape.StyledPanel)
-        self.gridLayout_14 = QGridLayout(self.frame3)
+        self.frame2 = QFrame(self.RibbonDesign)
+        self.frame2.setObjectName(u"frame2")
+        sizePolicy3.setHeightForWidth(self.frame2.sizePolicy().hasHeightForWidth())
+        self.frame2.setSizePolicy(sizePolicy3)
+        self.frame2.setMinimumSize(QSize(506, 0))
+        self.frame2.setFrameShape(QFrame.Shape.StyledPanel)
+        self.gridLayout_14 = QGridLayout(self.frame2)
         self.gridLayout_14.setSpacing(6)
         self.gridLayout_14.setObjectName(u"gridLayout_14")
         self.gridLayout_14.setContentsMargins(6, 6, 6, 6)
@@ -1243,14 +1165,14 @@ class Ui_Form(object):
 
         self.verticalLayout.addItem(self.verticalSpacer_9)
 
-        self.MoveUp_RibbonCommand_RD = QToolButton(self.frame3)
+        self.MoveUp_RibbonCommand_RD = QToolButton(self.frame2)
         self.MoveUp_RibbonCommand_RD.setObjectName(u"MoveUp_RibbonCommand_RD")
         self.MoveUp_RibbonCommand_RD.setText(u"...")
         self.MoveUp_RibbonCommand_RD.setArrowType(Qt.ArrowType.UpArrow)
 
         self.verticalLayout.addWidget(self.MoveUp_RibbonCommand_RD)
 
-        self.MoveDown_RibbonCommand_RD = QToolButton(self.frame3)
+        self.MoveDown_RibbonCommand_RD = QToolButton(self.frame2)
         self.MoveDown_RibbonCommand_RD.setObjectName(u"MoveDown_RibbonCommand_RD")
         self.MoveDown_RibbonCommand_RD.setText(u"...")
         self.MoveDown_RibbonCommand_RD.setArrowType(Qt.ArrowType.DownArrow)
@@ -1264,7 +1186,7 @@ class Ui_Form(object):
 
         self.gridLayout_14.addLayout(self.verticalLayout, 1, 3, 1, 1)
 
-        self.CommandTable_RD = QTableWidget(self.frame3)
+        self.CommandTable_RD = QTableWidget(self.frame2)
         if (self.CommandTable_RD.columnCount() < 5):
             self.CommandTable_RD.setColumnCount(5)
         __qtablewidgetitem = QTableWidgetItem()
@@ -1332,31 +1254,109 @@ class Ui_Form(object):
 
         self.gridLayout_14.addItem(self.horizontalSpacer_4, 2, 0, 1, 1)
 
-        self.AddSeparator_RD = QPushButton(self.frame3)
+        self.AddSeparator_RD = QPushButton(self.frame2)
         self.AddSeparator_RD.setObjectName(u"AddSeparator_RD")
         self.AddSeparator_RD.setMinimumSize(QSize(100, 0))
         self.AddSeparator_RD.setFont(font1)
 
         self.gridLayout_14.addWidget(self.AddSeparator_RD, 2, 1, 1, 1)
 
-        self.RemoveSeparator_RD = QPushButton(self.frame3)
+        self.RemoveSeparator_RD = QPushButton(self.frame2)
         self.RemoveSeparator_RD.setObjectName(u"RemoveSeparator_RD")
         self.RemoveSeparator_RD.setMinimumSize(QSize(100, 0))
         self.RemoveSeparator_RD.setFont(font1)
 
         self.gridLayout_14.addWidget(self.RemoveSeparator_RD, 2, 2, 1, 1)
 
-        self.label_12 = QLabel(self.frame3)
+        self.label_12 = QLabel(self.frame2)
         self.label_12.setObjectName(u"label_12")
+        font2 = QFont()
+        font2.setBold(True)
+        font2.setStyleStrategy(QFont.NoAntialias)
         self.label_12.setFont(font2)
 
         self.gridLayout_14.addWidget(self.label_12, 0, 0, 1, 4)
 
 
-        self.gridLayout_16.addWidget(self.frame3, 1, 0, 1, 5)
+        self.gridLayout_16.addWidget(self.frame2, 1, 0, 1, 5)
 
 
-        self.gridLayout_15.addLayout(self.gridLayout_16, 1, 1, 1, 1)
+        self.gridLayout_15.addLayout(self.gridLayout_16, 1, 2, 1, 1)
+
+        self.gridLayout_19 = QGridLayout()
+        self.gridLayout_19.setSpacing(0)
+        self.gridLayout_19.setObjectName(u"gridLayout_19")
+        self.gridLayout_19.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
+        self.frame3 = QFrame(self.RibbonDesign)
+        self.frame3.setObjectName(u"frame3")
+        sizePolicy3.setHeightForWidth(self.frame3.sizePolicy().hasHeightForWidth())
+        self.frame3.setSizePolicy(sizePolicy3)
+        self.frame3.setMinimumSize(QSize(350, 0))
+        self.frame3.setBaseSize(QSize(350, 0))
+        self.frame3.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame3.setFrameShadow(QFrame.Shadow.Plain)
+        self.gridLayout_13 = QGridLayout(self.frame3)
+        self.gridLayout_13.setObjectName(u"gridLayout_13")
+        self.gridLayout_13.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
+        self.gridLayout_13.setVerticalSpacing(6)
+        self.gridLayout_13.setContentsMargins(6, 6, 0, 6)
+        self.label_4 = QLabel(self.frame3)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setFont(font2)
+
+        self.gridLayout_13.addWidget(self.label_4, 0, 0, 1, 1)
+
+        self.IconOnly_RD = QCheckBox(self.frame3)
+        self.IconOnly_RD.setObjectName(u"IconOnly_RD")
+        self.IconOnly_RD.setMinimumSize(QSize(0, 34))
+
+        self.gridLayout_13.addWidget(self.IconOnly_RD, 2, 0, 1, 1)
+
+        self.PanelOrder_RD = QListWidget(self.frame3)
+        __qlistwidgetitem12 = QListWidgetItem(self.PanelOrder_RD)
+        __qlistwidgetitem12.setCheckState(Qt.Checked)
+        self.PanelOrder_RD.setObjectName(u"PanelOrder_RD")
+        sizePolicy1.setHeightForWidth(self.PanelOrder_RD.sizePolicy().hasHeightForWidth())
+        self.PanelOrder_RD.setSizePolicy(sizePolicy1)
+        self.PanelOrder_RD.setMinimumSize(QSize(300, 0))
+        self.PanelOrder_RD.setDefaultDropAction(Qt.DropAction.MoveAction)
+        self.PanelOrder_RD.setMovement(QListView.Movement.Free)
+        self.PanelOrder_RD.setSortingEnabled(False)
+
+        self.gridLayout_13.addWidget(self.PanelOrder_RD, 1, 0, 1, 1)
+
+
+        self.gridLayout_19.addWidget(self.frame3, 1, 0, 1, 1)
+
+
+        self.gridLayout_15.addLayout(self.gridLayout_19, 1, 0, 1, 1)
+
+        self.gridLayout_20 = QGridLayout()
+        self.gridLayout_20.setObjectName(u"gridLayout_20")
+        self.verticalSpacer_12 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_20.addItem(self.verticalSpacer_12, 0, 0, 1, 1)
+
+        self.MoveUpPanel_RD = QToolButton(self.RibbonDesign)
+        self.MoveUpPanel_RD.setObjectName(u"MoveUpPanel_RD")
+        self.MoveUpPanel_RD.setText(u"...")
+        self.MoveUpPanel_RD.setArrowType(Qt.ArrowType.UpArrow)
+
+        self.gridLayout_20.addWidget(self.MoveUpPanel_RD, 1, 0, 1, 1)
+
+        self.MoveDownPanel_RD = QToolButton(self.RibbonDesign)
+        self.MoveDownPanel_RD.setObjectName(u"MoveDownPanel_RD")
+        self.MoveDownPanel_RD.setText(u"...")
+        self.MoveDownPanel_RD.setArrowType(Qt.ArrowType.DownArrow)
+
+        self.gridLayout_20.addWidget(self.MoveDownPanel_RD, 2, 0, 1, 1)
+
+        self.verticalSpacer_11 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_20.addItem(self.verticalSpacer_11, 3, 0, 1, 1)
+
+
+        self.gridLayout_15.addLayout(self.gridLayout_20, 1, 1, 1, 1)
 
         self.tabWidget.addTab(self.RibbonDesign, "")
 
@@ -1679,21 +1679,6 @@ class Ui_Form(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.Createnewpanels), QCoreApplication.translate("Form", u"Create new panels", None))
         self.label_2.setText(QCoreApplication.translate("Form", u"Select panel:", None))
         self.label.setText(QCoreApplication.translate("Form", u"Select workbench:", None))
-        self.label_4.setText(QCoreApplication.translate("Form", u"Set the panel order", None))
-        self.IconOnly_RD.setText(QCoreApplication.translate("Form", u"Icon only", None))
-
-        __sortingEnabled13 = self.PanelOrder_RD.isSortingEnabled()
-        self.PanelOrder_RD.setSortingEnabled(False)
-        ___qlistwidgetitem13 = self.PanelOrder_RD.item(0)
-        ___qlistwidgetitem13.setText(QCoreApplication.translate("Form", u"New Item", None))
-        self.PanelOrder_RD.setSortingEnabled(__sortingEnabled13)
-
-#if QT_CONFIG(tooltip)
-        self.MoveUpPanel_RD.setToolTip(QCoreApplication.translate("Form", u"Move up", None))
-#endif // QT_CONFIG(tooltip)
-#if QT_CONFIG(tooltip)
-        self.MoveDownPanel_RD.setToolTip(QCoreApplication.translate("Form", u"Move down", None))
-#endif // QT_CONFIG(tooltip)
 #if QT_CONFIG(tooltip)
         self.MoveUp_RibbonCommand_RD.setToolTip(QCoreApplication.translate("Form", u"Move up", None))
 #endif // QT_CONFIG(tooltip)
@@ -1711,17 +1696,32 @@ class Ui_Form(object):
         ___qtablewidgetitem4 = self.CommandTable_RD.horizontalHeaderItem(4)
         ___qtablewidgetitem4.setText(QCoreApplication.translate("Form", u"Enabled", None))
 
-        __sortingEnabled14 = self.CommandTable_RD.isSortingEnabled()
+        __sortingEnabled13 = self.CommandTable_RD.isSortingEnabled()
         self.CommandTable_RD.setSortingEnabled(False)
         ___qtablewidgetitem5 = self.CommandTable_RD.item(0, 0)
         ___qtablewidgetitem5.setText(QCoreApplication.translate("Form", u"All", None))
         ___qtablewidgetitem6 = self.CommandTable_RD.item(0, 4)
         ___qtablewidgetitem6.setText(QCoreApplication.translate("Form", u"Enabled", None))
-        self.CommandTable_RD.setSortingEnabled(__sortingEnabled14)
+        self.CommandTable_RD.setSortingEnabled(__sortingEnabled13)
 
         self.AddSeparator_RD.setText(QCoreApplication.translate("Form", u"Add separator", None))
         self.RemoveSeparator_RD.setText(QCoreApplication.translate("Form", u"Remove separator", None))
         self.label_12.setText(QCoreApplication.translate("Form", u"Set the icon size", None))
+        self.label_4.setText(QCoreApplication.translate("Form", u"Set the panel order", None))
+        self.IconOnly_RD.setText(QCoreApplication.translate("Form", u"Icon only", None))
+
+        __sortingEnabled14 = self.PanelOrder_RD.isSortingEnabled()
+        self.PanelOrder_RD.setSortingEnabled(False)
+        ___qlistwidgetitem13 = self.PanelOrder_RD.item(0)
+        ___qlistwidgetitem13.setText(QCoreApplication.translate("Form", u"New Item", None))
+        self.PanelOrder_RD.setSortingEnabled(__sortingEnabled14)
+
+#if QT_CONFIG(tooltip)
+        self.MoveUpPanel_RD.setToolTip(QCoreApplication.translate("Form", u"Move up", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.MoveDownPanel_RD.setToolTip(QCoreApplication.translate("Form", u"Move down", None))
+#endif // QT_CONFIG(tooltip)
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.RibbonDesign), QCoreApplication.translate("Form", u"Ribbon design", None))
         self.Cancel.setText(QCoreApplication.translate("Form", u"Cancel", None))
 #if QT_CONFIG(shortcut)
