@@ -690,8 +690,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         def LoadPanels_RD():
             self.on_PanelList_RD__TextChanged()
 
-        # self.form.PanelList_RD.currentTextChanged.connect(LoadPanels_RD)
-        self.form.PanelOrder_RD.currentItemChanged.connect(LoadPanels_RD)
+        self.form.PanelList_RD.currentTextChanged.connect(LoadPanels_RD)
 
         # Connect the icon only checkbox
         self.form.IconOnly_RD.clicked.connect(self.on_IconOnly_RD_clicked)
@@ -799,12 +798,6 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         )
 
         # -- Ribbon design tab --
-        # Hide the panel dropdown
-        self.form.PanelList_RD.setEnabled(False)
-        self.form.PanelList_RD.setHidden(True)
-        self.form.label_2.setEnabled(False)
-        self.form.label_2.setHidden(True)
-        
         # Settings for the table widget
         self.form.CommandTable_RD.setEnabled(True)
         self.form.CommandTable_RD.horizontalHeader().setVisible(True)
@@ -834,7 +827,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Set the icon and size for the refresh button
         self.form.LoadWB.setIcon(Gui.getIcon("view-refresh"))
         self.form.LoadWB.setIconSize(QSize(20, 20))
-        
+
         return
 
     def on_ReloadWB_clicked(self, resetTexts=False, RestartFreeCAD=False):
@@ -2907,13 +2900,12 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
                     self.form.PanelOrder_RD.addItem(ListWidgetItem)
                     shadowList.append(Toolbar)
-                
+
         # Update the combobox PanelList_RD
-        self.form.PanelOrder_RD.item(0).setSelected(True)
-        self.on_PanelList_RD__TextChanged(wbToolbars[0])
+        self.on_PanelList_RD__TextChanged()
         return
 
-    def on_PanelList_RD__TextChanged(self, Toolbar = ""):
+    def on_PanelList_RD__TextChanged(self):
         if "workbenches" in self.Dict_RibbonCommandPanel:
             # Clear the table
             self.form.CommandTable_RD.setRowCount(0)
@@ -2969,12 +2961,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             )[0]
 
             # Get the toolbar name
-            # Toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
-            if Toolbar == "":
-                if self.form.PanelOrder_RD.currentItem() is not None:
-                    Toolbar = self.form.PanelOrder_RD.currentItem().data(Qt.ItemDataRole.UserRole)
-                else:
-                    return
+            Toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
             # Copy the workbench Toolbars
             ToolbarItems = self.returnToolbarCommands(WorkBenchName)
             # Get the custom toolbars from each installed workbench
@@ -3495,14 +3482,12 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
     def on_IconOnly_RD_clicked(self):
         if self.form.IconOnly_RD.isChecked() is True:
-            # toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
-            toolbar = self.form.currentItem().data(Qt.ItemDataRole.UserRole)
+            toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
             if toolbar not in self.List_IconOnly_Toolbars:
                 self.List_IconOnly_Toolbars.append(toolbar)
 
         if self.form.IconOnly_RD.isChecked() is False:
-            # toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
-            toolbar = self.form.currentItem().data(Qt.ItemDataRole.UserRole)
+            toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
             if toolbar in self.List_IconOnly_Toolbars:
                 self.List_IconOnly_Toolbars.remove(toolbar)
 
@@ -5065,7 +5050,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.on_WorkbenchList_RD__TextChanged()
         self.on_WorkbenchList_CP__activated(False)
 
-        # # # load the commands in the table.
+        # # load the commands in the table.
         # self.on_PanelList_RD__TextChanged()
 
         # -- Excluded toolbars --
