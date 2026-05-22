@@ -135,12 +135,13 @@ class Settings:
         result = None
         settings = preferences.GetContents()
         exists = False
-        for setting in settings:
-            if setting[0] == "Boolean" and setting[1] == settingName:
-                exists = True
-                break
-        if exists is True:
-            result = preferences.GetBool(settingName)
+        if settings is not None:
+            for setting in settings:
+                if setting[0] == "Boolean" and setting[1] == settingName:
+                    exists = True
+                    break
+            if exists is True:
+                result = preferences.GetBool(settingName)
         return result
 
     def GetColorSetting(self, settingName: str) -> object:

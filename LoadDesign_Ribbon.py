@@ -411,20 +411,20 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         
         # Create the a message to indicate when the last time the data was (re)created.
         TimeStamp = Parameters_Ribbon.Settings.GetStringSetting("ReloadTimeStamp")
-        date_format = "%B %d, %Y, %H:%M:%S"
-        lastDate = datetime.strptime(TimeStamp, date_format)
-        deltaDate: timedelta = datetime.now()-lastDate
-        deltaDict = StandardFunctions.TimeDeltaToDict(deltaDate)
-        # Get the separate values
-        delta_days = deltaDict['days']
-        delta_hours = deltaDict['hours']
-        delta_minutes= deltaDict['minutes']
-        # Set the message        
-        if TimeStamp == "" or TimeStamp is None:
+        if TimeStamp != "":
+            date_format = "%B %d, %Y, %H:%M:%S"
+            lastDate = datetime.strptime(TimeStamp, date_format)
+            deltaDate: timedelta = datetime.now()-lastDate
+            deltaDict = StandardFunctions.TimeDeltaToDict(deltaDate)
+            # Get the separate values
+            delta_days = deltaDict['days']
+            delta_hours = deltaDict['hours']
+            delta_minutes= deltaDict['minutes']
+            # Set the message    
+            translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}. This is {delta_days} days, {delta_hours} hour(s) and {delta_minutes} minutes ago.")            
+        else:
             TimeStamp = "-"
-        self.form.TimeStamp_Reloaded.setText(
-            translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}. This is {delta_days} days, {delta_hours} hour(s) and {delta_minutes} minutes ago.")
-        )
+            self.form.TimeStamp_Reloaded.setText(self.form.TimeStamp_Reloaded.setText(translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}.")))          
 
         # --- Initial setup functions -----------
         #
