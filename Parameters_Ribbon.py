@@ -27,6 +27,9 @@ import os
 import sys
 import Standard_Functions_Ribbon as StandardFunctions
 
+# Set the AdvancesSizeSettingsReset version number
+AdvancedSizeReset = "1.0"
+
 # Define the translation
 translate = App.Qt.translate
 
@@ -192,7 +195,10 @@ class Settings:
 
     # endregion
 
-    def WriteMissingSettings():
+    def WriteMissingSettings(self):
+        if self.GetStringSetting("AdvancedSizeReset") == "" or self.GetStringSetting("AdvancedSizeReset") != AdvancedSizeReset:
+            self.SetStringSetting("AdvancedSizeReset", AdvancedSizeReset)
+
         for DefaultSetting_Name, DefaultSetting_Value in DefaultSettings.items():
             # for o in getmembers(Parameters):
             #     if o.lower() == DefaultSetting_Name:
@@ -639,27 +645,27 @@ class Parameters:
     # endregion
 
     # region - Advanced size settings ------------------------------------------------------------------------------------------------
-    if Settings.GetFloatSetting("SizeFactor") is None or Settings.GetFloatSetting("SizeFactor") == 0:
+    if Settings.GetFloatSetting("SizeFactor") is None or Settings.GetFloatSetting("SizeFactor") == 0 or (Settings.GetStringSetting("AdvancedSizeReset") == "" or Settings.GetStringSetting("AdvancedSizeReset") != AdvancedSizeReset):
         SIZE_FACTOR = float(DefaultSettings["SizeFactor"])
         Settings.SetFloatSetting("SizeFactor", SIZE_FACTOR)
     SIZE_FACTOR = Settings.GetFloatSetting("SizeFactor")
         
-    if Settings.GetIntSetting("PanelHeightOffset") is None:
+    if Settings.GetIntSetting("PanelHeightOffset") is None or (Settings.GetStringSetting("AdvancedSizeReset") == "" or Settings.GetStringSetting("AdvancedSizeReset") != AdvancedSizeReset):
         PANEL_HEIGHT_OFFSET = int(DefaultSettings["PanelHeightOffset"])
         Settings.SetIntSetting("PanelHeightOffset", PANEL_HEIGHT_OFFSET)
     PANEL_HEIGHT_OFFSET = Settings.GetIntSetting("PanelHeightOffset")
         
-    if Settings.GetIntSetting("RibbonHeightOffset") is None:
+    if Settings.GetIntSetting("RibbonHeightOffset") is None or (Settings.GetStringSetting("AdvancedSizeReset") == "" or Settings.GetStringSetting("AdvancedSizeReset") != AdvancedSizeReset):
         RIBBON_HEIGHT_OFFSET = int(DefaultSettings["RibbonHeightOffset"])
         Settings.SetIntSetting("RibbonHeightOffset", RIBBON_HEIGHT_OFFSET)
     RIBBON_HEIGHT_OFFSET = Settings.GetIntSetting("RibbonHeightOffset")
         
-    if Settings.GetIntSetting("RibbonMinimumHeight") is None or Settings.GetIntSetting("RibbonHeightOffset") == 0:
+    if Settings.GetIntSetting("RibbonMinimumHeight") is None or Settings.GetIntSetting("RibbonMinimumHeight") == 0 or (Settings.GetStringSetting("AdvancedSizeReset") == "" or Settings.GetStringSetting("AdvancedSizeReset") != AdvancedSizeReset):
         RIBBON_MINIMUM_HEIGHT = int(DefaultSettings["RibbonMinimumHeight"])
         Settings.SetIntSetting("RibbonMinimumHeight", RIBBON_MINIMUM_HEIGHT)
     RIBBON_MINIMUM_HEIGHT = Settings.GetIntSetting("RibbonMinimumHeight")
         
-    if Settings.GetIntSetting("ButtonSpacing") is None:
+    if Settings.GetIntSetting("ButtonSpacing") is None or (Settings.GetStringSetting("AdvancedSizeReset") == "" or Settings.GetStringSetting("AdvancedSizeReset") != AdvancedSizeReset):
         BUTTON_SPACING = int(DefaultSettings["ButtonSpacing"])
         Settings.SetIntSetting("ButtonSpacing", BUTTON_SPACING)
     BUTTON_SPACING = Settings.GetIntSetting("ButtonSpacing")

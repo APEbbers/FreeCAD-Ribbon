@@ -149,9 +149,6 @@ import shutil
 # import Ribbon. This contains the ribbon commands for FreeCAD
 import Ribbon
 
-# Set the data file version. Triggeres an question if an update is needed
-DataFileVersion = "1.4"
-
 # Get the resources
 ConfigDirectory = Parameters.CONFIG_DIR
 pathIcons = Parameters.ICON_LOCATION
@@ -184,7 +181,7 @@ mw: QMainWindow = Gui.getMainWindow()
 timer = QTimer()
 
 # Write all settings, if they are not present yet
-Parameters_Ribbon.Settings.WriteMissingSettings()
+Parameters_Ribbon.Settings.WriteMissingSettings(Parameters_Ribbon.Settings)
 
 class ModernMenu(RibbonBar):
     """
