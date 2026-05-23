@@ -5135,14 +5135,43 @@ class ModernMenu(RibbonBar):
         Returns:
             QIcon: the command icon.
         """
-
+        # Get the standard pixmap, if a pixmap is not provided
+        if pixmap == "":
+            pixmap = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
+        # Define an empty icon
         Icon = QIcon()
-        if Icon.isNull():
+        # Try to get the icon from file
+        if Icon is None or (Icon is not None and Icon.isNull()):
+            FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
+            for root, dirs, files in os.walk(FreeCAD_Icons):
+                for fileName in files:
+                    if CommandName in fileName:
+                        Icon = QIcon()
+                        Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
+
+                    if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.ribbonStructure):
+                        for (DropDownCommand,Commands) in self.ribbonStructure["dropdownButtons"].items():
+                            for CommandItem in self.List_Commands:
+                                if Commands[0][0] == CommandItem[0]:
+                                    pixmap = StandardFunctions.CommandInfoCorrections(CommandItem[0])["pixmap"]
+                                    Icon = StandardFunctions.returnQiCons_Commands(CommandItem[0], pixmap)
+
+        # If the icon is still empty, try to get it from FreeCAD. This will only work with loaded workbenches.
+        # Therefore this is the last resort
+        if Icon is None or (Icon is not None and Icon.isNull()):
             Icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap)
-        if Icon.isNull():
-            StandardFunctions.Print(
-                f"An icon retrieved from data file for '{CommandName}'"
-            )
+            if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.ribbonStructure):
+                    for (DropDownCommand,Commands) in self.ribbonStructure["dropdownButtons"].items():
+                        for CommandItem in self.List_Commands:
+                            if Commands[0][0] == CommandItem[0]:
+                                pixmap = StandardFunctions.CommandInfoCorrections(CommandItem[0])["pixmap"]
+                                Icon = StandardFunctions.returnQiCons_Commands(CommandItem[0], pixmap)
+
+        if Icon is None or (Icon is not None and Icon.isNull()):
+            if Parameters.DEBUG_MODE is True:
+                StandardFunctions.Print(
+                    f"An icon retrieved from data file for '{CommandName}'"
+                )
             DataFile = os.path.join(
                 ConfigDirectory, "RibbonDataFile.dat"
             )
@@ -5163,6 +5192,10 @@ class ModernMenu(RibbonBar):
                                     IconItem[1]
                                 )
                             )
+                            # Add the icons to open the dialog faster a second time
+                            item = [IconItem[0], Icon]
+                            
+                            return Icon
                 except Exception as e:
                     if Parameters.DEBUG_MODE is True:
                         StandardFunctions.Print(
@@ -5170,8 +5203,8 @@ class ModernMenu(RibbonBar):
                             "Warning",
                         )
                     pass
-            if Icon.isNull():
-                Icon = None
+        if Icon is None or (Icon is not None and Icon.isNull()):
+            Icon = None
         return Icon
 
     def ReturnWorkbenchIcon(self, WorkBenchName: str, pixmap: str = "") -> QIcon:

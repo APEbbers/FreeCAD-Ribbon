@@ -566,7 +566,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Add "Standard" to the list for the panels
         Standard_KeyWord = translate("FreeCAD Ribbon", "Standard")
         self.form.ListCategory_NP.addItem(Gui.getIcon("freecad"), Standard_KeyWord, [Standard_KeyWord, "Standard", "Standard"])
-        self.form.ListCategory_DDB.addItem(Gui.getIcon("freecad"), Standard_KeyWord)
+        self.form.ListCategory_DDB.addItem(Gui.getIcon("freecad"), Standard_KeyWord, [Standard_KeyWord, "Standard", "Standard"])
 
         # Sort the workbenches according the order of tabs
         def sortWorkbenches(item):
@@ -1518,7 +1518,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             # Remove numbers from dropdown child commands
             if MenuNameTranslated.split(" ")[0].isdigit() is True:
                 MenuNameTranslated = MenuNameTranslated.split(" ")[1]
-            # Remove any suffix frp, the menuname
+            # Remove any suffix from the menuname
             if CommandName.endswith("_ddb"):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
 
@@ -1541,7 +1541,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 ).MenuText
                             else:
                                 WorkbenchTitle = workbenchName
-                        except Exception:
+                        except Exception as e:
+                            if Parameters.DEBUG_MODE is True:
+                                print(e)
                             return
                         try:
                             if (
@@ -1550,7 +1552,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 == ListWidget_WorkBenches.currentData(
                                     Qt.ItemDataRole.UserRole
                                 )[2]
-                                or ListWidget_WorkBenches.currentText() == "All"
+                                or ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "All")
                             ):
                                 # Define a new ListWidgetItem.
                                 Icon = QIcon()
@@ -1598,8 +1600,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     ):
         if (
             ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole) is None
-            and ListWidget_WorkBenches.currentText() != "All"
-            and ListWidget_WorkBenches.currentText() != "Standard"
+            and ListWidget_WorkBenches.currentText() != translate("FreeCAD Ribbon", "All")
+            and ListWidget_WorkBenches.currentText() != translate("FreeCAD Ribbon", "Standard")
         ):
             return
 
@@ -1643,7 +1645,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 WorkbenchTitle = Gui.getWorkbench(
                                     workbenchName
                                 ).MenuText
-                            except Exception:
+                            except Exception as e:
+                                if Parameters.DEBUG_MODE is True:
+                                    print(e)
                                 return
                             if (
                                 ListWidget_WorkBenches.currentData(
@@ -1684,7 +1688,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     ShadowList.append(CommandName)
                     if (
                         workbenchName == "Standard" and
-                        ListWidget_WorkBenches.currentText() == "Standard"
+                        ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "Standard")
                     ):                        
                         # Define a commandname for the icon
                         Icon = QIcon()
@@ -1773,8 +1777,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         Icon = QIcon()
                         Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
 
-                    if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons):
-                        for (DropDownCommand,Commands) in self.Dict_DropDownButtons["dropdownButtons"].items():
+                    if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.workBenchDict):
+                        for (DropDownCommand,Commands) in self.workBenchDict["dropdownButtons"].items():
                             for CommandItem in self.List_Commands:
                                 if Commands[0][0] == CommandItem[0]:
                                     pixmap = StandardFunctions.CommandInfoCorrections(CommandItem[0])["pixmap"]
@@ -1784,8 +1788,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Therefore this is the last resort
         if Icon is None or (Icon is not None and Icon.isNull()):
             Icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap)
-            if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons):
-                    for (DropDownCommand,Commands) in self.Dict_DropDownButtons["dropdownButtons"].items():
+            if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.workBenchDict):
+                    for (DropDownCommand,Commands) in self.workBenchDict["dropdownButtons"].items():
                         for CommandItem in self.List_Commands:
                             if Commands[0][0] == CommandItem[0]:
                                 pixmap = StandardFunctions.CommandInfoCorrections(CommandItem[0])["pixmap"]
