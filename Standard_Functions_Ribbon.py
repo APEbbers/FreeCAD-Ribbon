@@ -910,33 +910,47 @@ def returnQiCons_Commands(CommandName, pixmap=""):
         pass
 
     icon = QIcon()
+    
+    if pixmap != "":
+        if icon is None or (icon is not None and icon.isNull()):
+            try:
+                icon = Gui.getIcon(pixmap)
+                if icon is not None and icon.isNull() is False:
+                    return icon
+            except Exception:
+                pass
         
-    if icon is None or (icon is not None and icon.isNull()):
-        try:
-            Command = Gui.Command.get(CommandName)
-            CommandInfo = Command.getInfo()
-            pixmap = CommandInfo["pixmap"]
-            icon = Gui.getIcon(pixmap)
-        except Exception:
-            pass
+    # if icon is None or (icon is not None and icon.isNull()):
+    #     try:
+    #         Command = Gui.Command.get(CommandName)
+    #         pixmap = CommandInfoCorrections(CommandName)["pixmap"]
+    #         icon = Gui.getIcon(pixmap)
+    #         if icon is not None and icon.isNull() is False:
+    #             return icon
+    #     except Exception:
+    #         pass
 
     if icon is None or (icon is not None and icon.isNull()):
         try:
             Command = Gui.Command.get(CommandName)
             action = Command.getAction()[0]
             icon = action.icon()
+            if icon is not None and icon.isNull() is False:
+                return icon
         except Exception:
             pass
         
     if icon is None or (icon is not None and icon.isNull()):
-        Menus = mw.findChildren(QToolButton)
-        for i in range(len(Menus)):
-            icon = Menus[i].icon()
-    
-    # If the icon still none, set a replacement Icon
-    if icon is None or (icon is not None and icon.isNull()):
         try:
-            icon = Gui.getIcon("preferences-workbenches")
+            Menus = mw.findChildren(QToolButton)
+            for i in range(len(Menus)):
+                action = Menus[i].defaultAction()
+                if action is None:
+                    action = Menus[i].actions()[0]
+                if action.data() == CommandName:
+                    icon = Menus[i].icon()
+                    if icon is not None and icon.isNull() is False:
+                        return icon
         except Exception:
             pass
     return icon
