@@ -6568,6 +6568,7 @@ class ModernMenu(RibbonBar):
             self.currentCategory().replacePanel(panel, newPanel)
             # Update the dict of the currentCategory with the new panel
             self.currentCategory()._panels[newPanel.objectName()] = newPanel
+            panel.close()
             
             # Restore the cursor
             QApplication.restoreOverrideCursor()
