@@ -1420,9 +1420,40 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 ToolbarTransLated = ToolbarTransLated.replace("_custom", "").replace(
                     "_newPanel", ""
                 )
+                
+                # Remove possible workbench names from the titles
+                title = ToolbarTransLated
+                if (
+                    "_custom" not in title
+                    and "_global" not in title
+                    and "_newPanel" not in title
+                ):
+                    List = [
+                        WorkBenchName,
+                        WorkBenchTitle,
+                        WorkBenchTitle.replace(" ", ""),
+                    ]
+                    for Name in List:                          
+                        ListDelimiters = [" - ", "-", "_"]
+                        for delimiter in ListDelimiters:
+                            if f"{delimiter}{Name}" in title:
+                                title = title.replace(f"{delimiter}{Name}", "")
+                            elif f"{Name}{delimiter}" in title:
+                                title = title.replace(f"{Name}{delimiter}", "")
+                        if Name in title and Name != title:                        
+                            title = title.replace(Name, "")
+                        if title[:1] == " ":
+                            title = title[1:]
+                # remove any suffix from the panel title
+                if title.endswith("_custom"):
+                    title = title.replace("_custom", "")
+                if title.endswith("_global"):
+                    title = title.replace("_global", "")
+                if title.endswith("_newPanel"):
+                    title = title.replace("_newPanel", "")
 
                 ListWidgetItem = QListWidgetItem()
-                ListWidgetItem.setText(ToolbarTransLated.replace("&", ""))
+                ListWidgetItem.setText(title.replace("&", ""))
                 ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
                 self.form.PanelAvailable_CP.addItem(ListWidgetItem)
 
@@ -2498,6 +2529,30 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 if ToolBarItem[0] == Toolbar and ToolBarItem[2] == WorkBenchName:
                     if len(ToolBarItem) == 4:
                         ToolbarTransLated = ToolBarItem[3]
+                        
+            # Remove possible workbench names from the titles
+            title = ToolbarTransLated
+            if (
+                "_custom" not in title
+                and "_global" not in title
+                and "_newPanel" not in title
+            ):
+                List = [
+                    WorkBenchName,
+                    WorkBenchTitle,
+                    WorkBenchTitle.replace(" ", ""),
+                ]
+                for Name in List:                          
+                    ListDelimiters = [" - ", "-", "_"]
+                    for delimiter in ListDelimiters:
+                        if f"{delimiter}{Name}" in title:
+                            title = title.replace(f"{delimiter}{Name}", "")
+                        elif f"{Name}{delimiter}" in title:
+                            title = title.replace(f"{Name}{delimiter}", "")
+                    if Name in title and Name != title:                        
+                        title = title.replace(Name, "")
+                    if title[:1] == " ":
+                        title = title[1:]
 
             # If the are not to be ignored, add them to the listwidget
             if IsIgnored is False:
@@ -2509,7 +2564,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     )
                     # Define a new ListWidgetItem.
                     ListWidgetItem = QListWidgetItem()
-                    ListWidgetItem.setText(ToolbarTransLated)
+                    ListWidgetItem.setText(title)
                     ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
                     self.form.PanelOrder_RD.addItem(ListWidgetItem)
                     shadowList.append(Toolbar)
