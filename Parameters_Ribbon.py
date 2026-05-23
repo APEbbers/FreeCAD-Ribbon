@@ -103,8 +103,8 @@ DefaultSettings = {
     "Hide_Titlebar_FC": bool(True),
     "BetaFunctions": bool(True),
     "SizeFactor": float(1.3),
-    "PanelHeightOffset": int(26),
-    "RibbonHeightOffset": int(20),
+    "PanelHeightOffset": int(24),
+    "RibbonHeightOffset": int(0),
     "RibbonMinimumHeight": int(16),
     "ButtonSpacing": int(3),
 }
@@ -639,17 +639,17 @@ class Parameters:
     # endregion
 
     # region - Advanced size settings ------------------------------------------------------------------------------------------------
-    if Settings.GetFloatSetting("BetaFunctions") is None or Settings.GetFloatSetting("BetaFunctions") == 0:
+    if Settings.GetFloatSetting("SizeFactor") is None or Settings.GetFloatSetting("SizeFactor") == 0:
         SIZE_FACTOR = float(DefaultSettings["SizeFactor"])
         Settings.SetFloatSetting("SizeFactor", SIZE_FACTOR)
     SIZE_FACTOR = Settings.GetFloatSetting("SizeFactor")
         
-    if Settings.GetIntSetting("PanelHeightOffset") is None or Settings.GetIntSetting("PanelHeightOffset") == 0:
+    if Settings.GetIntSetting("PanelHeightOffset") is None:
         PANEL_HEIGHT_OFFSET = int(DefaultSettings["PanelHeightOffset"])
         Settings.SetIntSetting("PanelHeightOffset", PANEL_HEIGHT_OFFSET)
     PANEL_HEIGHT_OFFSET = Settings.GetIntSetting("PanelHeightOffset")
         
-    if Settings.GetIntSetting("RibbonHeightOffset") is None or Settings.GetIntSetting("RibbonHeightOffset") == 0:
+    if Settings.GetIntSetting("RibbonHeightOffset") is None:
         RIBBON_HEIGHT_OFFSET = int(DefaultSettings["RibbonHeightOffset"])
         Settings.SetIntSetting("RibbonHeightOffset", RIBBON_HEIGHT_OFFSET)
     RIBBON_HEIGHT_OFFSET = Settings.GetIntSetting("RibbonHeightOffset")
@@ -659,7 +659,7 @@ class Parameters:
         Settings.SetIntSetting("RibbonMinimumHeight", RIBBON_MINIMUM_HEIGHT)
     RIBBON_MINIMUM_HEIGHT = Settings.GetIntSetting("RibbonMinimumHeight")
         
-    if Settings.GetIntSetting("ButtonSpacing") is None or Settings.GetIntSetting("ButtonSpacing") == 0:
+    if Settings.GetIntSetting("ButtonSpacing") is None:
         BUTTON_SPACING = int(DefaultSettings["ButtonSpacing"])
         Settings.SetIntSetting("ButtonSpacing", BUTTON_SPACING)
     BUTTON_SPACING = Settings.GetIntSetting("ButtonSpacing")

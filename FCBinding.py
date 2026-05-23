@@ -993,7 +993,7 @@ class ModernMenu(RibbonBar):
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
-                self.RibbonOffset = self.QuickAccessButtonSize + self.TabBar_Size + 27
+                self.RibbonOffset = self.QuickAccessButtonSize + self.TabBar_Size + 27 + Parameters.RIBBON_HEIGHT_OFFSET
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(
                     0, self.QuickAccessButtonSize
                 )
@@ -1021,9 +1021,9 @@ class ModernMenu(RibbonBar):
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize + 10
                 if self.TabBar_Size > self.QuickAccessButtonSize:
-                    self.RibbonOffset = 15 + self.TabBar_Size
+                    self.RibbonOffset = 15 + self.TabBar_Size + Parameters.RIBBON_HEIGHT_OFFSET
                 else:
-                    self.RibbonOffset = 15 + self.QuickAccessButtonSize
+                    self.RibbonOffset = 15 + self.QuickAccessButtonSize + Parameters.RIBBON_HEIGHT_OFFSET
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(
                     0, self.QuickAccessButtonSize
                 )
@@ -5173,7 +5173,8 @@ class ModernMenu(RibbonBar):
                 if Parameters.ICON_SIZE_MEDIUM * 2 <= LargeButtonHeight:
                     ribbonHeight = LargeButtonHeight
 
-        return ribbonHeight + offset + Parameters.RIBBON_HEIGHT_OFFSET
+        # return ribbonHeight + offset + Parameters.RIBBON_HEIGHT_OFFSET
+        return ribbonHeight + offset
 
     def ReturnCommandIcon(self, CommandName: str, pixmap: str = "") -> QIcon:
         """_summary_
@@ -6447,7 +6448,7 @@ class ModernMenu(RibbonBar):
         panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         panel._actionsLayout.setContentsMargins(0, self.TopMargin, 3, self.BottomMargin) # Left, Top, Right, Bottom
         panel._mainLayout.setSpacing(0)
-        panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset)-10)
+        panel.setFixedHeight(self.ReturnRibbonHeight(Parameters.PANEL_HEIGHT_OFFSET))
         # Set the ribbonheight
         self.RibbonHeight = panel.height() + self.RibbonOffset
         # Correct the width of the (hidden) option button
