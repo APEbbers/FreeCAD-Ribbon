@@ -3781,8 +3781,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             
                     # Check if there is an Icon. if not add a replacement
                     if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                        Icon = Gui.getIcon("preferences-workbenches")
-                        ListWidgetItem.setIcon(Icon)
+                        # Icon = Gui.getIcon("preferences-workbenches")
+                        # ListWidgetItem.setIcon(Icon)
+                        continue
 
                     if Icon is not None:
                         if IsSelected is False:
@@ -4941,8 +4942,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                     
                                     # Check if there is an Icon. if not add a replacement
                                     if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                                        Icon = Gui.getIcon("preferences-workbenches")
-                                        ListWidgetItem.setIcon(Icon)
+                                        # Icon = Gui.getIcon("preferences-workbenches")
+                                        # ListWidgetItem.setIcon(Icon)
+                                        continue
                                     
                                     # Add the ListWidgetItem to the correct ListWidget
                                     IsInList = False
@@ -5087,8 +5089,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                 
                                 # Check if there is an Icon. if not add a replacement
                                 if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                                    Icon = Gui.getIcon("preferences-workbenches")
-                                    ListWidgetItem.setIcon(Icon)                 
+                                    # Icon = Gui.getIcon("preferences-workbenches")
+                                    # ListWidgetItem.setIcon(Icon)      
+                                    continue           
                                 
                                 if Icon is not None and Icon.isNull() is False:
                                     ListWidgetItem.setIcon(Icon)
@@ -5165,8 +5168,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         
                         # Check if there is an Icon. if not add a replacement
                         if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                            Icon = Gui.getIcon("preferences-workbenches")
-                            ListWidgetItem.setIcon(Icon)
+                            # Icon = Gui.getIcon("preferences-workbenches")
+                            # ListWidgetItem.setIcon(Icon)
+                            continue
 
                         # Add the ListWidgetItem to the correct ListWidget
                         if Icon is not None:
@@ -5231,8 +5235,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                        
                        # Check if there is an Icon. if not add a replacement
                         if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                            Icon = Gui.getIcon("preferences-workbenches")
-                            ListWidgetItem.setIcon(Icon)
+                            # Icon = Gui.getIcon("preferences-workbenches")
+                            # ListWidgetItem.setIcon(Icon)
+                            continue
                        
                         if Icon is not None and Icon.isNull() is False:
                             ListWidgetItem.setIcon(Icon)

@@ -653,8 +653,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     if Icon is not None and Icon.isNull() is False:
                         # Check if there is an Icon. if not add a replacement
                         if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                            Icon = Gui.getIcon("preferences-workbenches")
-                            ListWidgetItem.setIcon(Icon)
+                            # Icon = Gui.getIcon("preferences-workbenches")
+                            # ListWidgetItem.setIcon(Icon)
                             continue
                         
                         ListWidgetItem.setIcon(Icon)
@@ -1568,8 +1568,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 if Icon is not None and Icon.isNull() is False:
                                     # Check if there is an Icon. if not add a replacement
                                     if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                                        Icon = Gui.getIcon("preferences-workbenches")
-                                        ListWidgetItem.setIcon(Icon)
+                                        # Icon = Gui.getIcon("preferences-workbenches")
+                                        # ListWidgetItem.setIcon(Icon)
+                                        continue
                                 
                                     ListWidgetItem.setIcon(Icon)
                                     ListWidgetItem.setToolTip(
@@ -1669,8 +1670,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 if Icon is not None and Icon.isNull() is False:
                                     # Check if there is an Icon. if not add a replacement
                                     if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                                        Icon = Gui.getIcon("preferences-workbenches")
-                                        ListWidgetItem.setIcon(Icon)
+                                        # Icon = Gui.getIcon("preferences-workbenches")
+                                        # ListWidgetItem.setIcon(Icon)
+                                        continue
                                     
                                     ListWidgetItem.setIcon(Icon)
                                     ListWidgetItem.setToolTip(
@@ -1703,8 +1705,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         if Icon is not None and Icon.isNull() is False:
                             # Check if there is an Icon. if not add a replacement
                             if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                                Icon = Gui.getIcon("preferences-workbenches")
-                                ListWidgetItem.setIcon(Icon)
+                                # Icon = Gui.getIcon("preferences-workbenches")
+                                # ListWidgetItem.setIcon(Icon)
+                                continue
                         
                             ListWidget_Commands.addItem(ListWidgetItem)
                             ShadowList.append(CommandName)
