@@ -269,7 +269,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Load the lists for the deserialized icons
         try:
             for IconItem in Data["WorkBench_Icons"]:
-                
                 Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
                 item = [IconItem[0], Icon]
                 if item not in self.List_CommandIcons:
@@ -279,21 +278,20 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 # Check first if the icon can be loaded quickly
                 Icon = QIcon()
                 if Icon is None or (Icon is not None and Icon.isNull()):
-                    Icon = StandardFunctions.returnQiCons_Commands(IconItem[0])
-                if Icon is None or (Icon is not None and Icon.isNull()):
                     FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                     for root, dirs, files in os.walk(FreeCAD_Icons):
                         for fileName in files:
                             if IconItem[0] == fileName.split(".")[0]:
                                 Icon = QIcon()
                                 Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
+                if Icon is None or (Icon is not None and Icon.isNull()):
+                    Icon = StandardFunctions.returnQiCons_Commands(IconItem[0])
                                 
                 # If the Icon is still none or empty, get it from the datafile
                 if Icon is None or (Icon is not None and Icon.isNull()):
                     Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
                 item = [IconItem[0], Icon]
-                if item not in self.List_CommandIcons:
-                    self.List_CommandIcons.append(item)
+                self.List_CommandIcons.append(item)
         except Exception as e:
             StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
             pass
@@ -1727,8 +1725,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         if Icon is not None and Icon.isNull() is False:
                             # Check if there is an Icon. if not add a replacement
                             if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                                Icon = Gui.getIcon("preferences-workbenches")
-                                ListWidgetItem.setIcon(Icon)
+                                # Icon = Gui.getIcon("preferences-workbenches")
+                                # ListWidgetItem.setIcon(Icon)
+                                continue
                                 
                             ListWidgetItem.setIcon(Icon)
                             ListWidgetItem.setToolTip(
@@ -1750,23 +1749,48 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         Returns:
             QIcon: the command icon.
         """
-
+        # Get the standard pixmap, if a pixmap is not provided
+        if pixmap == "":
+            pixmap = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
+        # Define an empty icon
         Icon = QIcon()
+        # Try to get the icon from the icon list first. This list is created on load and is the fasted to read
         if Icon is None or (Icon is not None and Icon.isNull()):
-            Icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap)
+            for item in self.List_CommandIcons:
+                if CommandName in item[0]:
+                    Icon = item[1]
+                if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.workBenchDict):
+                        for (DropDownCommand, Commands) in self.workBenchDict["dropdownButtons"].items():
+                            if Commands[0][0] == item[0]:
+                                Icon = item[1]
+
+        # If the icon is still empty, try to get the icon from file
         if Icon is None or (Icon is not None and Icon.isNull()):
             FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
             for root, dirs, files in os.walk(FreeCAD_Icons):
                 for fileName in files:
-                    if CommandName == fileName.split(".")[0]:
+                    if CommandName in fileName:
                         Icon = QIcon()
                         Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
-                        return Icon
+
+                    if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons):
+                        for (DropDownCommand,Commands) in self.Dict_DropDownButtons["dropdownButtons"].items():
+                            for CommandItem in self.List_Commands:
+                                if Commands[0][0] == CommandItem[0]:
+                                    pixmap = StandardFunctions.CommandInfoCorrections(CommandItem[0])["pixmap"]
+                                    Icon = StandardFunctions.returnQiCons_Commands(CommandItem[0], pixmap)
+
+        # If the icon is still empty, try to get it from FreeCAD. This will only work with loaded workbenches.
+        # Therefore this is the last resort
         if Icon is None or (Icon is not None and Icon.isNull()):
-            for item in self.List_CommandIcons:
-                if item[0] == CommandName:
-                    Icon = item[1]
-                    return Icon
+            Icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap)
+            if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.Dict_DropDownButtons):
+                    for (DropDownCommand,Commands) in self.Dict_DropDownButtons["dropdownButtons"].items():
+                        for CommandItem in self.List_Commands:
+                            if Commands[0][0] == CommandItem[0]:
+                                pixmap = StandardFunctions.CommandInfoCorrections(CommandItem[0])["pixmap"]
+                                Icon = StandardFunctions.returnQiCons_Commands(CommandItem[0], pixmap)
+
         if Icon is None or (Icon is not None and Icon.isNull()):
             if Parameters.DEBUG_MODE is True:
                 StandardFunctions.Print(
