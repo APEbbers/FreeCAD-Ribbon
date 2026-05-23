@@ -775,6 +775,10 @@ class ModernMenu(RibbonBar):
         # Set these settings and connections at init
         # Set the autohide behavior of the ribbon
         preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
+        if preferences.GetBool("ActivateOverlay") is True:
+            Parameters.USE_OVERLAY = True
+        else:
+            Parameters.USE_OVERLAY = False
         if preferences.GetBool("ActivateOverlay") is True or Parameters.USE_OVERLAY is True:
             Parameters.AUTOHIDE_RIBBON = False
         self.setAutoHideRibbon(Parameters.AUTOHIDE_RIBBON)
