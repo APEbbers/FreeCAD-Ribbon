@@ -3352,6 +3352,8 @@ class ModernMenu(RibbonBar):
         
         if self.CustomizeEnabled:
             self.on_Customize_Clicked()
+            # Activate all commands
+            self.activateButtons()
         
         # Emit a signal when switching to a new tab. Used to update the "addcommands" panel
         self.TabChanged.emit()
@@ -4695,7 +4697,7 @@ class ModernMenu(RibbonBar):
                         TB.setFixedHeight(self.RibbonHeight + self.FloatingTitleBarHeight)
                 if TB.isFloating() is False:
                     if self.RibbonHeight > 0:
-                        TB.setFixedHeight(self.RibbonHeight)                
+                        TB.setFixedHeight(self.RibbonHeight)              
         return
 
     def FoldRibbon(self, Ignore=False):
@@ -4936,14 +4938,14 @@ class ModernMenu(RibbonBar):
         return ButtonList
 
     def CreateButtonFromCommand(self, CommandName: str, ActivateWorkBench = True):
-        try:
+        try:            
             # Activate the workbench, the command belongs to. Otherwise, the command wont be created later
             # Get the current category
             currentCategory = self.currentCategory()
             if ActivateWorkBench is True:
                 for CommandItem in self.List_Commands:
                     if CommandItem[0] == CommandName:
-                        if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard" and CommandItem[3] != "Standard"):                                
+                        if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard" and CommandItem[3] != ""):                                
                             if CommandItem[3] not in self.isWbLoaded:
                                 # Activate the workbench if not loaded
                                 Gui.activateWorkbench(CommandItem[3])
@@ -5030,13 +5032,57 @@ class ModernMenu(RibbonBar):
                 Button.setObjectName(CommandName)
                 
                 return Button
+
+            # If the command is None, it is probally a command from a FreeCAD dropdow button.
+            # Try to get its QAction and create a button from it.
+            # The commands needs to have either the name or title of its workbench in it
+            if Command is None:
+                # Get the workbence
+                WorkBenchName = ""
+                for item in Gui.listWorkbenches():
+                    if CommandName.split("_")[0] in item:
+                        WorkBenchName = item
+                
+                # If you have a workbench name, continue
+                if WorkBenchName != "":
+                    # get the workbench
+                    wb = Gui.getWorkbench(WorkBenchName)
+
+                    # If you heve the workbench, continue
+                    if wb is not None:
+                        # Get the toolbars with their commands from the workbench
+                        dictCommands: dict = wb.getToolbarItems()
+                        # Go through the toolbar commands              
+                        for Toolbar, ToolbarCommands in dictCommands.items():
+                            for ToolbarCommand in ToolbarCommands:
+                                # Get the actual command
+                                command = Gui.Command.get(ToolbarCommand)
+                                if command is not None:
+                                    # If the command has more actions, it is a dropdown button
+                                    if len(command.getAction()) > 1:
+                                        # Go through its child buttons and get the action
+                                        for i in range(len(command.getAction()) - 1):
+                                            action = command.getAction()[i]
+                                            # If the action is not empty, and the objectname maches the commandName
+                                            # Create a button with this action and return it
+                                            if action is not None and (action.icon() is not None and not action.icon().isNull()):
+                                                if action.objectName() == CommandName:
+                                                    Button = QToolButton()
+                                                    if isinstance(action, list):
+                                                        Button.addAction(action[0])
+                                                        Button.setDefaultAction(action[0])
+                                                    if isinstance(action, QAction):
+                                                        Button.addAction(action)
+                                                        Button.setDefaultAction(action)
+
+                                                    return Button
+                
         except Exception as e:
             if Parameters.DEBUG_MODE is True:
                 StandardFunctions.Print(
                     f"{e.with_traceback(e.__traceback__)}, 3",
                     "Warning",
                 )
-            raise e
             return None
 
     def LoadDropDownAction(self, CommandName):
