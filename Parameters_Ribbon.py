@@ -558,9 +558,9 @@ class Parameters:
 
     # region - Color and icon settings -------------------------------------------------------------------------------------
     if Settings.GetBoolSetting("CustomIcons") is None:
-        BETA_FUNCTIONS_ENABLED = bool(DefaultSettings["CustomIcons"])
-        Settings.SetBoolSetting("CustomIcons", BETA_FUNCTIONS_ENABLED)
-    BETA_FUNCTIONS_ENABLED = Settings.GetBoolSetting("CustomIcons")
+        CUSTOM_ICONS_ENABLED = bool(DefaultSettings["CustomIcons"])
+        Settings.SetBoolSetting("CustomIcons", CUSTOM_ICONS_ENABLED)
+    CUSTOM_ICONS_ENABLED = Settings.GetBoolSetting("CustomIcons")
 
     if Settings.GetStringSetting("ScrollLeftButton_Tab") == "":
         SCROLL_LEFT_BUTTON_TAB = str(DefaultSettings["ScrollLeftButton_Tab"])
