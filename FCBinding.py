@@ -1024,6 +1024,9 @@ class ModernMenu(RibbonBar):
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(
                     0, self.QuickAccessButtonSize
                 )
+
+        # Set the font color
+        self._titleWidget.setStyleSheet(f"color: {StyleMapping_Ribbon.ReturnStyleItem('FontColor')}")
                 
         # Get the main window, its style, the ribbon and the restore button
         try:
@@ -3977,7 +3980,9 @@ class ModernMenu(RibbonBar):
                 )
                 StyleSheet = (
                         """background: """
-                        + StyleMapping_SearchBar.ReturnStyleItem("Background_Color")
+                        + "white;"
+                        + "color: black"
+                        # + StyleMapping_SearchBar.ReturnStyleItem("Background_Color")
                         + """;"""
                     )
                 sea.setStyleSheet(StyleSheet)

@@ -390,6 +390,8 @@ def ReturnStyleSheet(
                     + AppColor_1
                     + """;border: 0.5px solid"""
                     + BorderColor
+                     + """;color: """
+                    + FontColor
                     + """;}"""
                     + """QToolButton:hover { """
                     + """border: 2px solid"""
