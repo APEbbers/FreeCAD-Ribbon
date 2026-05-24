@@ -36,11 +36,11 @@ RibbonApplicationButton::menu-indicator {
 	border: none;
 }
 
-QTabBar, QDockWidget QTabBar {
+QTabBar, QDockWidget, QTabBar {
   qproperty-drawBase: 0;
 }
 
-RibbonBar {
+RibbonBar, RibbonTitleWidget {
 	padding-top: 0px;
 	padding-bottom: 0px;
 	margin-top: 0px;
@@ -84,4 +84,11 @@ RibbonCategoryScrollAreaContents {
 
 QTabBar {
     background-color: transparent;
+}
+
+/* Needed for the ColorPalette Theme */
+QToolBar QToolButton {
+  min-width: 0px;
+  min-height: 0px;
+
 }

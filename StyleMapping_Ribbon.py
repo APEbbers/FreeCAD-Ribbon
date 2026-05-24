@@ -361,6 +361,12 @@ def ReturnStyleSheet(
                     """QToolButton {
                         border-radius : """
                     + radius
+                    + """;padding-left: """
+                    + padding_left
+                    + """;padding-top: """
+                    + padding_top
+                    + """;padding-bottom: """
+                    + padding_bottom
                     + """;padding-right: """
                     + padding_right
                     + """;background-color: """

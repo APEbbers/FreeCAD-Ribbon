@@ -3524,6 +3524,9 @@ class ModernMenu(RibbonBar):
             + 12,
             self.QuickAccessButtonSize,
         )
+        self.applicationOptionButton().setSizePolicy(
+            QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed
+        )
         # Set the icon
         self.setApplicationIcon(Gui.getIcon("freecad"))
         # Set the styling of the button including padding
