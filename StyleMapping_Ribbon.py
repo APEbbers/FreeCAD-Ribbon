@@ -481,9 +481,9 @@ def ReturnTitleBarIcons():
         "restore_default.svg",
         "minimize_default.svg",
     ]
-    IsDarkTheme = darkMode
+    IsDarkTheme = ReturnFontColor()
 
-    if IsDarkTheme is True:
+    if IsDarkTheme == "#ffffff":
         IconNames = [
             "close_default_white.svg",
             "maximize_default_white.svg",

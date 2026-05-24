@@ -3848,6 +3848,7 @@ class ModernMenu(RibbonBar):
         )
 
         # if the FreeCAD titlebar is hidden,add close, minimize and maximize buttons
+        padding = "5px"
         if Parameters.HIDE_TITLEBAR_FC is True:
             spacer = QWidget()
             spacer.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
@@ -3862,10 +3863,10 @@ class ModernMenu(RibbonBar):
                 StyleMapping_Ribbon.ReturnStyleSheet(
                     control="toolbutton",
                     radius="2px",
-                    padding_left="3px",
-                    padding_top="3px",
-                    padding_bottom="3px",
-                    padding_right="3px",
+                    padding_left=padding,
+                    padding_top=padding,
+                    padding_bottom=padding,
+                    padding_right=padding,
                 )
             )
             MinimzeButton.setIcon(
@@ -3883,10 +3884,10 @@ class ModernMenu(RibbonBar):
                 StyleMapping_Ribbon.ReturnStyleSheet(
                     control="toolbutton",
                     radius="2px",
-                    padding_left="3px",
-                    padding_top="3px",
-                    padding_bottom="3px",
-                    padding_right="3px",
+                    padding_left=padding,
+                    padding_top=padding,
+                    padding_bottom=padding,
+                    padding_right=padding,
                 )
             )
             RestoreButton.setIcon(
@@ -3903,10 +3904,10 @@ class ModernMenu(RibbonBar):
                 StyleMapping_Ribbon.ReturnStyleSheet(
                     control="toolbutton",
                     radius="2px",
-                    padding_left="3px",
-                    padding_top="3px",
-                    padding_bottom="3px",
-                    padding_right="3px",
+                    padding_left=padding,
+                    padding_top=padding,
+                    padding_bottom=padding,
+                    padding_right=padding,
                     HoverColor="#e62424",
                 )
             )
