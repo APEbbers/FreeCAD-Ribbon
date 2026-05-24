@@ -221,7 +221,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
         if isIcon is True:
             result = None
             PixmapName = ""
-            if Parameters.BETA_FUNCTIONS_ENABLED is True or ShowCustomIcon is True:
+            if Parameters.CUSTOM_ICONS_ENABLED is True or ShowCustomIcon is True:
                 PixmapName = StyleMapping["Stylesheets"][ControlName]
             else:
                 PixmapName = ""

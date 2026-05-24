@@ -433,7 +433,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Unchecked)
 
         # Set the color and icon buttons
-        if Parameters.BETA_FUNCTIONS_ENABLED is True:
+        if Parameters.CUSTOM_ICONS_ENABLED is True:
             self.form.CustomIcons.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.CustomIcons.setCheckState(Qt.CheckState.Unchecked)
