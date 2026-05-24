@@ -111,41 +111,69 @@ def DarkMode():
 
     path = os.path.dirname(__file__)
     # Get the folder with add-ons
-    for i in range(2):
+    for i in range(1):
         # Starting point
         path = os.path.dirname(path)
 
     # Go through the sub-folders
     for root, dirs, files in os.walk(path):
         for name in dirs:
+            # # if the current stylesheet matches a sub directory, try to get the package.xml
+            # if currentStyleSheet.replace(".qss", "").lower() in name.lower():
+            try:
+                packageXML = os.path.join(path, name, "package.xml")
 
-            # if the current stylesheet matches a sub directory, try to get the package.xml
-            if currentStyleSheet.replace(".qss", "").lower() in name.lower():
-                try:
-                    packageXML = os.path.join(path, name, "package.xml")
+                # Get the tree and root of the xml file
+                tree = ET.parse(packageXML)
+                treeRoot = tree.getroot()
 
-                    # Get the tree and root of the xml file
-                    tree = ET.parse(packageXML)
-                    treeRoot = tree.getroot()
+                # Get all the tag elements
+                tags = []
+                namespaces = {"i": "https://wiki.freecad.org/Package_Metadata"}
+                tags = treeRoot.findall(
+                    ".//i:content/i:preferencepack/i:tag", namespaces
+                )
+                files = treeRoot.findall(
+                    ".//i:content/i:preferencepack/i:file", namespaces
+                )
 
-                    # Get all the tag elements
-                    elements = []
-                    namespaces = {"i": "https://wiki.freecad.org/Package_Metadata"}
-                    elements = treeRoot.findall(
-                        ".//i:content/i:preferencepack/i:tag", namespaces
-                    )
-
-                    # go throug all tags. If 'dark' in the element text, this is a dark theme
-                    for element in elements:
+                # go throug all tags. If 'dark' in the element text, this is a dark theme
+                isCurrentStyleSheet = False
+                for element in tags:
+                    if currentStyleSheet.lower() in element.text.lower():
+                        isCurrentStyleSheet = True
+                        if Parameters.DEBUG_MODE:
+                            print(f"{currentStyleSheet} detected in tag: {element.text}")
+                        continue
+                if isCurrentStyleSheet is True:
+                    for element in tags:
                         if "dark" in element.text.lower():
                             IsDarkTheme = True
+                            if Parameters.DEBUG_MODE:
+                                print(f"\'dark\' detected in tag: {element.text}")
+                            break
+                
+                # go throug all files. If 'dark' in the element text, this is a dark theme
+                isCurrentStyleSheet = False
+                for element in files:
+                    if currentStyleSheet.lower() in element.text.lower():
+                        isCurrentStyleSheet = True
+                        if Parameters.DEBUG_MODE:
+                            print(f"{currentStyleSheet} detected in file: {element.text}")
+                        continue
+                if isCurrentStyleSheet is True:
+                    for element in tags:
+                        if "dark" in element.text.lower():
+                            IsDarkTheme = True
+                            if Parameters.DEBUG_MODE:
+                                print(f"\'dark\' detected in file: {element.text}")
                             break
 
-                except Exception:
-                    if not os.path.isfile(packageXML):
-                        if "dark" in currentStyleSheet.lower():
-                            IsDarkTheme = True
-
+            except Exception:
+                if not os.path.isfile(packageXML):
+                    if "dark" in currentStyleSheet.lower():
+                        IsDarkTheme = True
+    IsDarkTheme
     return IsDarkTheme
 
 
