@@ -3376,6 +3376,12 @@ class ModernMenu(RibbonBar):
                 "QTabBar::tab {color: "
                 + StyleMapping_Ribbon.ReturnStyleItem("FontColor")
                 + ";}"
+                # + """ QToolTip {
+                #     background-color: #FFFFE1;
+                #     color: black;
+                #     border: black solid 1px;
+                #     border-radius: 2px;
+                #     }"""
             )
         if Parameters.TABBAR_STYLE == 1:
             self.tabBar().setStyleSheet(
@@ -3399,6 +3405,14 @@ class ModernMenu(RibbonBar):
                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                 + ";}"
             )
+        # Make sure that the tooltip has the correct color settings
+        styleSheet = self.tabBar().styleSheet()
+        self.tabBar().setStyleSheet(styleSheet + """\n QToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }""")
 
         # ensure that workbench is already loaded
         workbench = Gui.activeWorkbench()
