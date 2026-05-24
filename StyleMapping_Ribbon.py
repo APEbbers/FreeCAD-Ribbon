@@ -144,7 +144,7 @@ def DarkMode():
                         isCurrentStyleSheet = True
                         if Parameters.DEBUG_MODE:
                             print(f"{currentStyleSheet} detected in tag: {element.text}")
-                        continue
+                        break
                 if isCurrentStyleSheet is True:
                     for element in tags:
                         if "dark" in element.text.lower():
@@ -160,7 +160,7 @@ def DarkMode():
                         isCurrentStyleSheet = True
                         if Parameters.DEBUG_MODE:
                             print(f"{currentStyleSheet} detected in file: {element.text}")
-                        continue
+                        break
                 if isCurrentStyleSheet is True:
                     for element in tags:
                         if "dark" in element.text.lower():
@@ -173,7 +173,7 @@ def DarkMode():
                 if not os.path.isfile(packageXML):
                     if "dark" in currentStyleSheet.lower():
                         IsDarkTheme = True
-    IsDarkTheme
+
     return IsDarkTheme
 
 
