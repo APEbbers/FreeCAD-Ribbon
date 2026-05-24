@@ -189,7 +189,7 @@
       <string notr="true"/>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <property name="elideMode">
       <enum>Qt::TextElideMode::ElideRight</enum>
@@ -207,6 +207,9 @@
       <layout class="QGridLayout" name="gridLayout_9">
        <item row="0" column="0">
         <widget class="QScrollArea" name="scrollArea_4">
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
+         </property>
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
@@ -214,7 +217,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-586</y>
+            <y>0</y>
             <width>681</width>
             <height>1278</height>
            </rect>
@@ -230,7 +233,7 @@
              </property>
              <property name="font">
               <font>
-               <bold>true</bold>
+               <bold>false</bold>
               </font>
              </property>
              <property name="title">
@@ -1368,7 +1371,7 @@
              </property>
              <property name="font">
               <font>
-               <bold>true</bold>
+               <bold>false</bold>
               </font>
              </property>
              <property name="title">
@@ -1507,6 +1510,9 @@
       <layout class="QGridLayout" name="gridLayout_14">
        <item row="0" column="0">
         <widget class="QScrollArea" name="scrollArea_3">
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
+         </property>
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
@@ -1515,7 +1521,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>702</width>
+            <width>681</width>
             <height>646</height>
            </rect>
           </property>
@@ -1858,6 +1864,9 @@
       <layout class="QGridLayout" name="gridLayout_19">
        <item row="0" column="0">
         <widget class="QScrollArea" name="scrollArea">
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
+         </property>
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
@@ -1898,7 +1907,7 @@
                </widget>
               </item>
               <item row="2" column="0">
-               <widget class="QGroupBox" name="ColorS">
+               <widget class="QFrame" name="ColorS">
                 <property name="enabled">
                  <bool>false</bool>
                 </property>
@@ -2454,6 +2463,9 @@
       <layout class="QGridLayout" name="gridLayout_32">
        <item row="0" column="0">
         <widget class="QScrollArea" name="scrollArea_2">
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
+         </property>
          <property name="widgetResizable">
           <bool>true</bool>
          </property>
@@ -2461,7 +2473,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-57</y>
+            <y>0</y>
             <width>681</width>
             <height>695</height>
            </rect>
@@ -3104,22 +3116,6 @@
     <hint type="destinationlabel">
      <x>173</x>
      <y>115</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>CustomColors</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>ColorS</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>189</x>
-     <y>87</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>473</x>
-     <y>290</y>
     </hint>
    </hints>
   </connection>
