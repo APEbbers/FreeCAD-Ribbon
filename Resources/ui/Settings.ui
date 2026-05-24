@@ -1876,7 +1876,7 @@
             <x>0</x>
             <y>0</y>
             <width>681</width>
-            <height>848</height>
+            <height>844</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_36">
@@ -2912,17 +2912,17 @@
                  <widget class="QComboBox" name="OverlayState">
                   <item>
                    <property name="text">
-                    <string>Disabled</string>
+                    <string>Visible</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>Enabled</string>
+                    <string>Hidden</string>
                    </property>
                   </item>
                   <item>
                    <property name="text">
-                    <string>Last saved</string>
+                    <string>Last saved state</string>
                    </property>
                   </item>
                  </widget>

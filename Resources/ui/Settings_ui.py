@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsEVhXsa.ui'
+## Form generated from reading UI file 'SettingskDRYRW.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.1
 ##
@@ -875,7 +875,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 681, 848))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 681, 844))
         self.gridLayout_36 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_36.setObjectName(u"gridLayout_36")
         self.groupBox_8 = QGroupBox(self.scrollAreaWidgetContents)
@@ -1585,9 +1585,9 @@ class Ui_Settings(object):
         self.EnableToolsPanel.setText(QCoreApplication.translate("Settings", u"Use standard Tools panel", None))
         self.OverlaySettings.setTitle(QCoreApplication.translate("Settings", u"Ovelay settings", None))
         self.UseButtonBackGround.setText(QCoreApplication.translate("Settings", u"Use background on buttons", None))
-        self.OverlayState.setItemText(0, QCoreApplication.translate("Settings", u"Disabled", None))
-        self.OverlayState.setItemText(1, QCoreApplication.translate("Settings", u"Enabled", None))
-        self.OverlayState.setItemText(2, QCoreApplication.translate("Settings", u"Last saved", None))
+        self.OverlayState.setItemText(0, QCoreApplication.translate("Settings", u"Visible", None))
+        self.OverlayState.setItemText(1, QCoreApplication.translate("Settings", u"Hidden", None))
+        self.OverlayState.setItemText(2, QCoreApplication.translate("Settings", u"Last saved state", None))
 
         self.label_45.setText(QCoreApplication.translate("Settings", u"Set the default state of the Ribbon:", None))
         self.label_26.setText(QCoreApplication.translate("Settings", u"<span style=\" font-size:8pt; font-weight:700; font-style:italic;\">Warning:</span><br><span style=\" font-size:8pt; font-style:italic;\">When overlay is enabled by default, the ribbon is hidden until you open or create a document. Use &quot;ctrl+N&quot; (Linux, Windows) or &quot;meta+N&quot; (macOs) to create a new document.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">The pin button does not work with FreeCAD's overlay function. Enabling this, replaces the pin button with a overlay button.</span></p></body></html>", None))
