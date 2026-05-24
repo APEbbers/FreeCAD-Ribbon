@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingskDRYRW.ui'
+## Form generated from reading UI file 'SettingsXBjWnK.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.1
 ##
@@ -1466,8 +1466,9 @@ class Ui_Settings(object):
         self.CustomIcons.toggled.connect(self.IconS.setEnabled)
         self.ShowText_Medium.toggled.connect(self.EnableWrap_Medium.setEnabled)
         self.ShowText_Large.toggled.connect(self.EnableWrap_Large.setEnabled)
+        self.CustomColors.toggled.connect(self.ColorS.setEnabled)
 
-        self.tabWidget.setCurrentIndex(3)
+        self.tabWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(Settings)

@@ -189,7 +189,7 @@
       <string notr="true"/>
      </property>
      <property name="currentIndex">
-      <number>3</number>
+      <number>2</number>
      </property>
      <property name="elideMode">
       <enum>Qt::TextElideMode::ElideRight</enum>
@@ -3110,12 +3110,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>166</x>
-     <y>87</y>
+     <x>183</x>
+     <y>175</y>
     </hint>
     <hint type="destinationlabel">
-     <x>173</x>
-     <y>115</y>
+     <x>190</x>
+     <y>257</y>
     </hint>
    </hints>
   </connection>
@@ -3126,12 +3126,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>237</x>
-     <y>712</y>
+     <x>236</x>
+     <y>597</y>
     </hint>
     <hint type="destinationlabel">
-     <x>210</x>
-     <y>943</y>
+     <x>227</x>
+     <y>897</y>
     </hint>
    </hints>
   </connection>
@@ -3142,12 +3142,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>167</x>
-     <y>913</y>
+     <x>166</x>
+     <y>1102</y>
     </hint>
     <hint type="destinationlabel">
-     <x>593</x>
-     <y>913</y>
+     <x>673</x>
+     <y>1102</y>
     </hint>
    </hints>
   </connection>
@@ -3158,12 +3158,28 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>151</x>
-     <y>966</y>
+     <x>150</x>
+     <y>1130</y>
     </hint>
     <hint type="destinationlabel">
-     <x>593</x>
-     <y>966</y>
+     <x>673</x>
+     <y>1130</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>CustomColors</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>ColorS</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>107</x>
+     <y>173</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>362</x>
+     <y>235</y>
     </hint>
    </hints>
   </connection>
