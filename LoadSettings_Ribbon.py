@@ -124,6 +124,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "Color_Background_App": Parameters.COLOR_APPLICATION_BUTTON_BACKGROUND,
         "Color_Background_Tabs": Parameters.COLOR_BACKGROUND_TABS,
         "Color_Background_TitleBar": Parameters.COLOR_BACKGROUND_TITLEBAR,
+        "Color_Font": Parameters.COLOR_FONT,
         "Shortcut_Application": Parameters.SHORTCUT_APPLICATION,
         "FontSize_Menus": Parameters.FONTSIZE_MENUS,
         "FontSize_Buttons": Parameters.FONTSIZE_BUTTONS,
@@ -180,6 +181,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "Color_Background_App": Parameters.COLOR_APPLICATION_BUTTON_BACKGROUND,
         "Color_Background_Tabs": Parameters.COLOR_BACKGROUND_TABS,
         "Color_Background_TitleBar": Parameters.COLOR_BACKGROUND_TITLEBAR,
+        "Color_Font": Parameters.COLOR_FONT,
         "Shortcut_Application": Parameters.SHORTCUT_APPLICATION,
         "FontSize_Menus": Parameters.FONTSIZE_MENUS,
         "FontSize_Buttons": Parameters.FONTSIZE_BUTTONS,
@@ -299,18 +301,19 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.label_22.setDisabled(True)
         self.form.label_22.setHidden(True)
         self.form.IconSize_rightToolbarButton.setDisabled(True)
-        self.form.IconSize_rightToolbarButton.setHidden(True)
-        
+        self.form.IconSize_rightToolbarButton.setHidden(True)        
         # Hide button size factor. It is not needed right now
         self.form.ButtonSizeFactor.setHidden(True)
         self.form.ButtonSizeFactor.setDisabled(True)
         self.form.label_38.setHidden(True)
         self.form.label_38.setDisabled(True)
-        # # Hide the ribbon height offset.It is not needed right now
-        # self.form.RibbonHeightOffset.setHidden(True)
-        # self.form.RibbonHeightOffset.setDisabled(True)
-        # self.form.label_37.setHidden(True)
-        # self.form.label_37.setDisabled(True)
+        # Disable and hide the controls for the panelheight offset
+        self.form.label_40.setDisabled(True)
+        self.form.label_40.setHidden(True)
+        self.form.label_44.setDisabled(True)
+        self.form.label_44.setHidden(True)
+        self.form.PanelHeightOffset.setDisabled(True)
+        self.form.PanelHeightOffset.setHidden(True)
 
         # region - load all settings
         #
@@ -524,6 +527,16 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.Color_Background_App.setProperty(
             "color", QColor(Parameters.COLOR_APPLICATION_BUTTON_BACKGROUND)
         )
+        self.form.Color_Background_Tabs.setProperty(
+            "color", QColor(Parameters.COLOR_BACKGROUND_TABS)
+        )
+        self.form.Color_Background_TitleBar.setProperty(
+            "color", QColor(Parameters.COLOR_BACKGROUND_TITLEBAR)
+        )
+        self.form.Color_Font.setProperty(
+            "color", QColor(Parameters.COLOR_FONT)
+        )
+
 
         # Get the icon from the FreeCAD help
         helpMenu = mw.findChildren(QMenu, "&Help")[0]
@@ -744,6 +757,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         )
         self.form.Color_Background_TitleBar.clicked.connect(
             self.on_Color_Background_TitleBar_clicked
+        )
+        self.form.Color_Font.clicked.connect(
+            self.on_Color_Font_clicked
         )
         # endregion
 
@@ -1353,6 +1369,20 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         except Exception:
             pass
         return
+    
+    def on_Color_Font_clicked(self):
+        try:
+            Color = QColor(
+                self.form.Color_Font.property("color")
+            ).toTuple()  # RGBA tupple
+            HexColor = StandardFunctions.ColorConvertor(
+                Color, Color[3] / 255, True, False
+            )
+            self.ValuesToUpdate["Color_Font"] = HexColor
+            self.settingChanged = True
+        except Exception:
+            pass
+        return
 
     # endregion
 
@@ -1504,6 +1534,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         )
         Parameters_Ribbon.Settings.SetStringSetting(
             "Color_Background_TitleBar", self.OriginalValues["Color_Background_TitleBar"]
+        )
+        Parameters_Ribbon.Settings.SetStringSetting(
+            "Color_Font", self.OriginalValues["Color_Font"]
         )
 
         # Set the size of the window to the previous state
@@ -1684,6 +1717,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         )
         Parameters_Ribbon.Settings.SetStringSetting(
             "Color_Background_TitleBar", self.ValuesToUpdate["Color_Background_TitleBar"]
+        )
+        Parameters_Ribbon.Settings.SetStringSetting(
+            "Color_Font", self.ValuesToUpdate["Color_Font"]
         )
 
         # Set the size of the window to the previous state
@@ -1908,6 +1944,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         )
         self.form.Color_Background_TitleBar.setProperty(
             "color", QColor(StyleMapping_Ribbon.ReturnStyleItem("Color_Background_TitleBar"))
+        )
+        self.form.Color_Font.setProperty(
+            "color", QColor(StyleMapping_Ribbon.ReturnStyleItem("Color_Font"))
         )
         
         self.form.RibbonHeightOffset.setValue(DefaultSettings["RibbonHeightOffset"])

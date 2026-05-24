@@ -26,6 +26,7 @@ from PySide.QtGui import QColor
 import os
 import sys
 import Standard_Functions_Ribbon as StandardFunctions
+import StyleMapping_Ribbon
 
 # Set the AdvancesSizeSettingsReset version number
 AdvancedSizeReset = "1.0"
@@ -88,6 +89,7 @@ DefaultSettings = {
     "Color_Background_App": "",
     "Color_Background_Tabs": "",
     "Color_Background_TitleBar": "",
+    "Color_Font": StyleMapping_Ribbon.ReturnFontColor(),
     "CustomIcons": bool(False),
     "ScrollLeftButton_Tab": "",
     "ScrollRightButton_Tab": "",
@@ -634,6 +636,11 @@ class Parameters:
         COLOR_BACKGROUND_TITLEBAR = str(DefaultSettings["Color_Background_TitleBar"])
         Settings.SetStringSetting("Color_Background_TitleBar", COLOR_BACKGROUND_TITLEBAR)
     COLOR_BACKGROUND_TITLEBAR = Settings.GetStringSetting("Color_Background_TitleBar")
+    
+    if Settings.GetStringSetting("Color_Font") == "":
+        COLOR_FONT = str(DefaultSettings["Color_Font"])
+        Settings.SetStringSetting("Color_Font", COLOR_FONT)
+    COLOR_FONT = Settings.GetStringSetting("Color_Font")
 
     # endregion ------------------------------------------------------------------------------------------------------------
 

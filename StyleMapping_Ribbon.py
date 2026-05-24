@@ -456,6 +456,10 @@ def ReturnFontColor():
 
     if IsDarkTheme is True:
         fontColor = "#ffffff"
+    
+    if Parameters.CUSTOM_COLORS_ENABLED:
+        if Parameters.COLOR_FONT != "":
+            fontColor = Parameters.COLOR_FONT
 
     return fontColor
 

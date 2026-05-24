@@ -6437,6 +6437,7 @@ class ModernMenu(RibbonBar):
         Font = QFont()
         Font.setPixelSize(Parameters.FONTSIZE_PANELS)
         panel._titleLabel.setFont(Font)
+        panel._titleLabel.setStyleSheet(f"color: {StyleMapping_Ribbon.ReturnStyleItem('FontColor')}")
         panel._titleWidget.setFixedHeight(QFontMetrics(Font).boundingRect(panel.title()).height())
                 
         # Set the properties for the layouts
