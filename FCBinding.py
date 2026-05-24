@@ -666,6 +666,13 @@ class ModernMenu(RibbonBar):
         
         # Set the custom stylesheet
         self.StyleSheet = Path(Parameters.STYLESHEET).read_text()
+        # Set the tooltip colors, so that they are uniform accros FreeCAD.
+        mw.setStyleSheet(""" QToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }""")
         # modify the stylesheet to set the border and background for a toolbar and menu
         hexColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
         hexColorTab = StyleMapping_Ribbon.ReturnStyleItem(
@@ -3553,7 +3560,7 @@ class ModernMenu(RibbonBar):
         # needed for excluding from hiding toolbars
         self.quickAccessToolBar().setObjectName("quickAccessToolBar")
         self.quickAccessToolBar().setWindowTitle("quickAccessToolBar")
-
+        
         # Set the tabbar height and textsize
         self.tabBar().setContentsMargins(0, 0, 0, 0)
         font = self.tabBar().font()
@@ -3566,7 +3573,13 @@ class ModernMenu(RibbonBar):
         )
         
         # Correct colors when no stylesheet is selected for FreeCAD.
-        self.quickAccessToolBar().setStyleSheet("")
+        self.quickAccessToolBar().setStyleSheet(""" QToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }"""
+                    )
         if Parameters.BUTTON_BACKGROUND_ENABLED is True:
             FreeCAD_preferences = App.ParamGet(
                 "User parameter:BaseApp/Preferences/MainWindow"
@@ -3727,6 +3740,15 @@ class ModernMenu(RibbonBar):
         # add the ribbon settings menu
         SettingsMenu.addAction(self.RibbonMenu.menuAction())        
         SettingsMenu.setToolTip(translate("FreeCAD Ribbon", "Preferences") + "...")
+        StyleSheet_SettingsMenu = SettingsMenu.styleSheet()
+        SettingsMenu.setStyleSheet(
+            StyleSheet_SettingsMenu
+                                   + """\n\nQToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }""")
         
         # add the settingsmenu to the right toolbar
         SettingsButton = QToolButton()   
@@ -3756,10 +3778,16 @@ class ModernMenu(RibbonBar):
             self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize
         )
         self.helpRibbonButton().setStyleSheet(
-            StyleMapping_Ribbon.ReturnStyleSheet(
+            str(StyleMapping_Ribbon.ReturnStyleSheet(
                 control="toolbutton", padding_right="12px"
-            )
-        )
+            ))
+            + """\n\nQToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }"""
+        )   
         self.helpRibbonButton().setPopupMode(
             QToolButton.ToolButtonPopupMode.InstantPopup
         )
@@ -4019,6 +4047,12 @@ class ModernMenu(RibbonBar):
         # Set a stylesheet specific for the menubar. Otherwise the fontsize of the menus will not be applied
         StyleSheet_MenuBar = (
             "* {font-size: " + str(Parameters.FONTSIZE_MENUS) + "px;}"
+            + """ QToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }"""
         )
         MenuBar.setStyleSheet(StyleSheet_MenuBar)
         # # Add the actions of the menubar to the application menu
@@ -4246,6 +4280,7 @@ class ModernMenu(RibbonBar):
         HelpMenu.addMenu(AboutMenu)
 
         self.HelpMenu = HelpMenu
+        
         return
 
     # Function for loading the design menu
@@ -6765,6 +6800,14 @@ class ModernMenu(RibbonBar):
                 self.setQuickAccessButtonHeight(self.RibbonMinimalHeight)
 
                 button.setContentsMargins(3, 3, 3, 3)
+                styleSheetButton = button.styleSheet()
+                button.setStyleSheet(styleSheetButton + """\n\nQToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }"""
+                )
 
                 # Add the button to the quickaccess toolbar
                 if len(button.actions()) > 0:
