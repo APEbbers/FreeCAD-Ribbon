@@ -39,7 +39,6 @@ from PySide.QtWidgets import (
 from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread
 import sys
 import Standard_Functions_Ribbon as StandardFunctions
-import Parameters_Ribbon
 from Parameters_Ribbon import Parameters
 
 # Get the resources
