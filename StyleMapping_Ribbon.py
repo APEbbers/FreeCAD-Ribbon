@@ -376,6 +376,12 @@ def ReturnStyleSheet(
                     + """;border-radius : """
                     + radius
                     + """;}"""
+                    + """\n\nQToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }"""
                 )
             if control.lower() == "dragindicator":
                 StyleSheet = (
