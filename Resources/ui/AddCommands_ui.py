@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsdRsbtw.ui'
+## Form generated from reading UI file 'AddCommandsKIoNIs.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.1
 ##
@@ -54,6 +54,11 @@ class Ui_Form(object):
         self.verticalSpacer_dockedButtons = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
         self.gridLayout_Docked.addItem(self.verticalSpacer_dockedButtons, 1, 1, 1, 1)
+
+        self.applyButton_2 = QPushButton(self.DockedButtonFrame)
+        self.applyButton_2.setObjectName(u"applyButton_2")
+
+        self.gridLayout_Docked.addWidget(self.applyButton_2, 0, 2, 1, 1)
 
 
         self.gridLayout_4.addWidget(self.DockedButtonFrame, 0, 0, 1, 1)
@@ -446,9 +451,21 @@ class Ui_Form(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.gridLayout.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         self.gridLayout.setVerticalSpacing(0)
-        self.horizontalSpacer = QSpacerItem(651, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.cancelButton = QPushButton(Form)
+        self.cancelButton.setObjectName(u"cancelButton")
 
-        self.gridLayout.addItem(self.horizontalSpacer, 1, 2, 1, 1)
+        self.gridLayout.addWidget(self.cancelButton, 0, 5, 2, 1)
+
+        self.HelpButton = QToolButton(Form)
+        self.HelpButton.setObjectName(u"HelpButton")
+        self.HelpButton.setText(u"...")
+
+        self.gridLayout.addWidget(self.HelpButton, 0, 7, 2, 1)
+
+        self.okButton = QPushButton(Form)
+        self.okButton.setObjectName(u"okButton")
+
+        self.gridLayout.addWidget(self.okButton, 0, 3, 2, 1)
 
         self.LoadWB = QPushButton(Form)
         self.LoadWB.setObjectName(u"LoadWB")
@@ -460,26 +477,9 @@ class Ui_Form(object):
 
         self.gridLayout.addWidget(self.LoadWB, 0, 0, 2, 1)
 
-        self.label = QLabel(Form)
-        self.label.setObjectName(u"label")
+        self.horizontalSpacer_11 = QSpacerItem(10, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout.addWidget(self.label, 0, 1, 1, 1)
-
-        self.okButton = QPushButton(Form)
-        self.okButton.setObjectName(u"okButton")
-
-        self.gridLayout.addWidget(self.okButton, 0, 3, 2, 1)
-
-        self.cancelButton = QPushButton(Form)
-        self.cancelButton.setObjectName(u"cancelButton")
-
-        self.gridLayout.addWidget(self.cancelButton, 0, 4, 2, 1)
-
-        self.HelpButton = QToolButton(Form)
-        self.HelpButton.setObjectName(u"HelpButton")
-        self.HelpButton.setText(u"...")
-
-        self.gridLayout.addWidget(self.HelpButton, 0, 6, 2, 1)
+        self.gridLayout.addItem(self.horizontalSpacer_11, 0, 6, 2, 1)
 
         self.TimeStamp_Reloaded = QLabel(Form)
         self.TimeStamp_Reloaded.setObjectName(u"TimeStamp_Reloaded")
@@ -490,9 +490,19 @@ class Ui_Form(object):
 
         self.gridLayout.addWidget(self.TimeStamp_Reloaded, 1, 1, 1, 1)
 
-        self.horizontalSpacer_11 = QSpacerItem(10, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer = QSpacerItem(651, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout.addItem(self.horizontalSpacer_11, 0, 5, 2, 1)
+        self.gridLayout.addItem(self.horizontalSpacer, 1, 2, 1, 1)
+
+        self.label = QLabel(Form)
+        self.label.setObjectName(u"label")
+
+        self.gridLayout.addWidget(self.label, 0, 1, 1, 1)
+
+        self.applyButton = QPushButton(Form)
+        self.applyButton.setObjectName(u"applyButton")
+
+        self.gridLayout.addWidget(self.applyButton, 0, 4, 2, 1)
 
 
         self.gridLayout_4.addLayout(self.gridLayout, 2, 0, 1, 1)
@@ -513,6 +523,7 @@ class Ui_Form(object):
 #if QT_CONFIG(shortcut)
         self.cancelButton_2.setShortcut(QCoreApplication.translate("Form", u"Esc", None))
 #endif // QT_CONFIG(shortcut)
+        self.applyButton_2.setText(QCoreApplication.translate("Form", u"Apply", None))
         self.label_21.setText(QCoreApplication.translate("Form", u"Category:", None))
         self.SearchBar_NP.setInputMask("")
         self.SearchBar_NP.setText("")
@@ -600,13 +611,14 @@ class Ui_Form(object):
         self.ControlName_DDB.setPlaceholderText(QCoreApplication.translate("Form", u"Enter command name...", None))
         self.CreateControl_DDB.setText(QCoreApplication.translate("Form", u"Create/update dropdown button", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget), QCoreApplication.translate("Form", u"Create dropdown buttons", None))
-        self.LoadWB.setText("")
-        self.label.setText(QCoreApplication.translate("Form", u"Refresh workbench data", None))
-        self.okButton.setText(QCoreApplication.translate("Form", u"Ok", None))
         self.cancelButton.setText(QCoreApplication.translate("Form", u"Cancel", None))
 #if QT_CONFIG(shortcut)
         self.cancelButton.setShortcut(QCoreApplication.translate("Form", u"Esc", None))
 #endif // QT_CONFIG(shortcut)
+        self.okButton.setText(QCoreApplication.translate("Form", u"Ok", None))
+        self.LoadWB.setText("")
         self.TimeStamp_Reloaded.setText(QCoreApplication.translate("Form", u"Last reloaded on: -", None))
+        self.label.setText(QCoreApplication.translate("Form", u"Refresh workbench data", None))
+        self.applyButton.setText(QCoreApplication.translate("Form", u"Apply", None))
     # retranslateUi
 

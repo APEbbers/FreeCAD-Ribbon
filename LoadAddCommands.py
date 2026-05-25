@@ -509,8 +509,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
        # Connect the OK and Cancel buttons
         self.form.cancelButton.clicked.connect(self.on_Cancel_Clicked)
         self.form.okButton.clicked.connect(self.on_Ok_Clicked)
+        self.form.applyButton.clicked.connect(self.on_Apply_Clicked)
         self.form.cancelButton_2.clicked.connect(self.on_Cancel_Clicked)
         self.form.okButton_2.clicked.connect(self.on_Ok_Clicked)
+        self.form.applyButton_2.clicked.connect(self.on_Apply_Clicked)
         
         # Connect the helpbutton
         self.form.HelpButton.setIcon(Gui.getIcon("help-browser"))
@@ -525,6 +527,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         if Parameters.DOCKED_DIALOGS is True:
             self.form.okButton.setHidden(True)
             self.form.cancelButton.setHidden(True)
+            self.form.applyButton.setHidden(True)
         else:
             self.form.DockedButtonFrame.setHidden(True)
         
@@ -1503,6 +1506,15 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 RibbonBar.on_Ok_Clicked()
             RibbonBar.CustomizedCategories.clear()
             # self.DialogClosed = False
+        return
+
+    def on_Apply_Clicked(self):
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")       
+        RibbonBar.ribbonStructure.update(RibbonBar.workBenchDict)
+        # Writing to ribbonStructure.json
+        JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+        with open(JsonFile, "w") as outfile:
+            json.dump(RibbonBar.ribbonStructure, outfile, indent=4)
         return
     
     def on_Helpbutton_clicked(self):
