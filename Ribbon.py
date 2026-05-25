@@ -124,7 +124,7 @@ class MenuBar_Class:
     def GetResources(self):
         return {
             "Pixmap": "./Resources/icons/FreecadNew.svg",
-            "Accel": "Alt+M",
+            "Accel": "Shift+M",
             "MenuText": "Toggle menubar",
             "ToolTip": "Click to show or hide the menubar",
         }
