@@ -1045,7 +1045,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             workbenchName=WorkBenchName,
             panelName=CustomPanelTitle + Suffix,
             addPanel=True,
-            dict=self.workBenchDict,
+            Dict=self.workBenchDict,
             ignoreColumnLimit=True,
             showEnableControl=True,
             ActivateButtons=True
@@ -1204,7 +1204,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 TB = mw.findChildren(QToolBar, toolbar)
                                 if TB is not None:
                                     # Create the panel based on the toolbars
-                                    newPanel = RibbonBar.CreatePanel(workbenchName=WorkBenchName, panelName=toolbar, addPanel=False, dict=self.workBenchDict, showEnableControl=True, ActivateButtons=True)                                                                        
+                                    newPanel = RibbonBar.CreatePanel(workbenchName=WorkBenchName, panelName=toolbar, addPanel=False, Dict=self.workBenchDict, showEnableControl=True, ActivateButtons=True)                                                                        
                                     # show the enable checkboxes  
                                     titleLayout: QHBoxLayout = newPanel._titleLayout
                                     EnableControl = titleLayout.itemAt(0).widget()
