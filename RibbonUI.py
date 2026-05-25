@@ -33,7 +33,7 @@ translate = App.Qt.translate
 class RibbonApplicationMenu_Class:
     def GetResources(self):
         return {
-            "Pixmap": "./Resources/icons/FreecadNew.svg",  # the name of a svg file available in the resources
+            "Pixmap": "",  # the name of a svg file available in the resources
             "Accel": "Alt+A",
             "MenuText": "Ribbon menu",
             "ToolTip": "Shows the ribbon menu",
@@ -55,7 +55,7 @@ class RibbonApplicationMenu_Class:
 class RibbonLayout_Class:
     def GetResources(self):
         return {
-            "Pixmap": "./Resources/icons/FreecadNew.svg",
+            "Pixmap": "",
             "Accel": "Alt+L",
             "MenuText": "Ribbon Layout",
             "ToolTip": "Design the ribbon to your preference",
@@ -77,7 +77,7 @@ class RibbonLayout_Class:
 class RibbonPreferences_Class:
     def GetResources(self):
         return {
-            "Pixmap": "./Resources/icons/FreecadNew.svg",
+            "Pixmap": "Std_DlgParameter.svg",
             "Accel": "Alt+P",
             "MenuText": "Ribbon Preferences",
             "ToolTip": "Set preferences for the Ribbon UI",
@@ -98,8 +98,13 @@ class RibbonPreferences_Class:
 
 class RibbonPin_Class:
     def GetResources(self):
+        import StyleMapping_Ribbon
+        pixmap = "./Resources/icons/pin-icon-default.svg"
+        if StyleMapping_Ribbon.darkMode:
+            pixmap = "./Resources/icons/pin-icon-default_white.svg"
+        
         return {
-            "Pixmap": "./Resources/icons/pin-icon-default.svg",
+            "Pixmap": pixmap,
             "Accel": "Alt+T",
             "MenuText": "Pin button",
             "ToolTip": "Click to toggle the autohide function on or off",
@@ -123,7 +128,7 @@ class RibbonPin_Class:
 class MenuBar_Class:
     def GetResources(self):
         return {
-            "Pixmap": "./Resources/icons/FreecadNew.svg",
+            "Pixmap": "",
             "Accel": "Shift+M",
             "MenuText": "Toggle menubar",
             "ToolTip": "Click to show or hide the menubar",

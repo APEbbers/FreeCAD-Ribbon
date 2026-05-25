@@ -927,15 +927,28 @@ class ModernMenu(RibbonBar):
         FloatingButton.clicked.connect(self.on_DockWidget_Toggled)
         FloatingButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2])
         FloatingButton.setToolTip(translate("FreeCAD Ribbon", "Set the ribbon docked or floating"))
+        FloatingButton.setStyleSheet(""" QToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }"""
+                )
         #
         # Create an overlay button  
         overlayButton = QToolButton()
         overlayButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
-        # overlayButton.setIcon(mw.style().standardIcon(QStyle.StandardPixmap.SP_TitleBarMaxButton))
         overlayButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1])
         overlayButton.setToolTip(translate("FreeCAD Ribbon", "Toggle overlay "))
         overlayButton.setObjectName("overlayButton")
         overlayButton.clicked.connect(self.ToggleOverlay)
+        overlayButton.setStyleSheet(""" QToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }"""
+                )
         if Parameters.USE_OVERLAY is True:
             overlayButton.animateClick() # Otherwise, the first time you need to click twice
         if Parameters.USE_OVERLAY is False:
@@ -3582,7 +3595,7 @@ class ModernMenu(RibbonBar):
                     border: black solid 1px;
                     border-radius: 2px;
                     }"""
-                    )
+                )
         if Parameters.BUTTON_BACKGROUND_ENABLED is True:
             FreeCAD_preferences = App.ParamGet(
                 "User parameter:BaseApp/Preferences/MainWindow"
