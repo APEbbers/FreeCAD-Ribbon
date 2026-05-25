@@ -25,7 +25,7 @@ import FreeCADGui as Gui
 from pathlib import Path
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -54,7 +54,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -94,7 +94,7 @@ from PySide.QtWidgets import (
     QAbstractButton,
     QStackedWidget,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -3793,59 +3793,7 @@ class ModernMenu(RibbonBar):
         )   
         self.helpRibbonButton().setPopupMode(
             QToolButton.ToolButtonPopupMode.InstantPopup
-        )
-
-        # Add a button the enable or disable AutoHide
-        pinButton = QToolButton()
-        pinButton.setCheckable(True)
-        pinButton.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
-        )
-        pinButton.setFixedSize(self.RightToolBarButtonSize, self.RightToolBarButtonSize)
-        # Set the correct icon
-        pinButtonIcon = None
-        if Parameters.AUTOHIDE_RIBBON is True:
-            pinButtonIcon = StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed")
-        if Parameters.AUTOHIDE_RIBBON is False:
-            pinButtonIcon = StyleMapping_Ribbon.ReturnStyleItem("PinButton_open")
-        # Set the icon
-        if pinButtonIcon is not None:
-            pinButton.setIcon(pinButtonIcon)
-        # Set the text and objectname
-        pinButton.setText(translate("FreeCAD Ribbon", "Pin Ribbon"))
-        pinButton.setObjectName("Pin Ribbon")
-        # Set the correct checkstate
-        if Parameters.AUTOHIDE_RIBBON is True:
-            pinButton.setChecked(False)
-        if Parameters.AUTOHIDE_RIBBON is False:
-            pinButton.setChecked(True)
-        pinButton.setStyleSheet(
-            StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px")
-        )
-        ShortcutKey = "Alt+T"
-        try:
-            CustomShortCuts = App.ParamGet(
-                "User parameter:BaseApp/Preferences/Shortcut"
-            )
-            if "Ribbon_Pin" in CustomShortCuts.GetStrings():
-                ShortcutKey = CustomShortCuts.GetString("Ribbon_Pin")
-            if ShortcutKey != "" and ShortcutKey is not None:
-                pinButton.setShortcut(ShortcutKey)
-        except Exception:
-            pass
-        # Set the tooltip
-        ToolTip = translate(
-            "FreeCAD Ribbon", "Click to toggle the autohide function on or off"
-        )
-        if ShortcutKey != "none":
-            ToolTip = ToolTip + f"<br></br><i>{ShortcutKey}</i>"
-        pinButton.setToolTip(
-            translate(
-                "FreeCAD Ribbon",
-                "Click to toggle the autohide function on or off"
-                + f"<br></br><i>{ShortcutKey}</i>",
-            )
-        )
+        )        
 
         # if the FreeCAD titlebar is hidden,add close, minimize and maximize buttons
         padding = "5px"
@@ -3993,10 +3941,7 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setSizeIncrement(1, 1)
         # Set the objectName for the right toolbar. needed for excluding from hiding.
         self.rightToolBar().setObjectName("rightToolBar")
-        
-        # Store the pinbutton globally
-        self.pinButton = pinButton
-        
+                
         return
 
     # Add the searchBar if it is present
@@ -4587,16 +4532,7 @@ class ModernMenu(RibbonBar):
         # # Add a Floating button to the current tab in the right bottom corner
         layout: QGridLayout = self.currentCategory()._mainLayout   
         # Set the pinbutton when overlay is disabled        
-        pinButton = QToolButton()
-        pinButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
-        pinButton.setObjectName("pinButton")
-        pinButton.setCheckable(True)
-        pinButton.setChecked(not Parameters.AUTOHIDE_RIBBON)
-        if Parameters.AUTOHIDE_RIBBON is False:
-            pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
-        else:
-            pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
-        pinButton.clicked.connect(lambda: self.on_Pin_clicked(pinButton))
+        pinButton = self.CreatePinButton()
         layout.addWidget(pinButton, 3,3,1,1, Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
         # Add the pinButton to a list with all pinbuttons. Needed to set all pin buttons to the same state
         self.pinButtonList.append(pinButton)
@@ -4610,6 +4546,43 @@ class ModernMenu(RibbonBar):
             self.activateButtons() 
 
         return
+    
+    def CreatePinButton(self):
+        # Add a button to enable or disable AutoHide
+        pinButton = QToolButton()
+        pinButton.setCheckable(True)
+        pinButton.setObjectName("pinButton")
+        pinButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
+        
+        # Set the correct icon
+        if Parameters.AUTOHIDE_RIBBON is False:
+            pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
+        else:
+            pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
+            
+        # Connect the pinbutton with its function
+        pinButton.clicked.connect(lambda: self.on_Pin_clicked(pinButton))
+        
+        # Set the text and objectname
+        pinButton.setText(translate("FreeCAD Ribbon", "Pin Ribbon"))
+        pinButton.setObjectName("pinButton")
+        
+        # Set the correct checkstate
+        if Parameters.AUTOHIDE_RIBBON is True:
+            pinButton.setChecked(False)
+        if Parameters.AUTOHIDE_RIBBON is False:
+            pinButton.setChecked(True)
+        pinButton.setStyleSheet(
+            StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px")
+        )
+        
+        # Set the tooltip
+        pinButton.setToolTip(translate("FreeCAD Ribbon", "Click to toggle the autohide function on or off"))
+                
+        # Store the pinbutton globally
+        self.pinButton = pinButton
+        
+        return pinButton
 
     # endregion
 
@@ -4638,7 +4611,10 @@ class ModernMenu(RibbonBar):
             webbrowser.open(Adress, new=2, autoraise=True)
         return
 
-    def on_Pin_clicked(self, pinButton):
+    def on_Pin_clicked(self, pinButton = None):
+        if pinButton is None:
+            pinButton = self.currentCategory().findChildren(QToolButton, "pinButton")[0]
+        
         if Parameters.AUTOHIDE_RIBBON is False:
             self.FoldRibbon()
             Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", True)
@@ -6782,7 +6758,7 @@ class ModernMenu(RibbonBar):
             # Define a width
             width = 0
             # set the default padding to zero
-            padding = 0
+            padding = 6
 
             try:
                 # If there is 'separator' in the commandname, add a separator
@@ -6803,16 +6779,31 @@ class ModernMenu(RibbonBar):
                 # Set the height
                 self.setQuickAccessButtonHeight(self.RibbonMinimalHeight)
 
-                button.setContentsMargins(3, 3, 3, 3)
-                styleSheetButton = button.styleSheet()
-                button.setStyleSheet(styleSheetButton + """\n\nQToolTip {
-                    background-color: #FFFFE1;
-                    color: black;
-                    border: black solid 1px;
-                    border-radius: 2px;
-                    }"""
-                )
-
+                # button.setContentsMargins(3, 3, 3, 3)
+                # styleSheetButton = button.styleSheet()
+                # StyleSheet_Addition_Arrow = (
+                #     "QToolButton, QLabel {background-color: "
+                #     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                #     + ";margin: 0px"
+                #     + ";spacing: 0px"
+                #     + ";}"
+                #     + """QToolButton::menu-indicator {
+                #             image: none;
+                #             subcontrol-origin: padding;
+                #             subcontrol-position: right top;
+                #         }"""
+                # )
+                # button.setStyleSheet(StyleSheet_Addition_Arrow + """\n\nQToolTip {
+                #     background-color: #FFFFE1;
+                #     color: black;
+                #     border: black solid 1px;
+                #     border-radius: 2px;
+                #     }"""
+                # )
+                # if len(button.actions()) > 1:
+                #     button.setArrowType(Qt.ArrowType.NoArrow)
+                #     button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
+                
                 # Add the button to the quickaccess toolbar
                 if len(button.actions()) > 0:
                     self.addQuickAccessButton(button)
@@ -6855,7 +6846,7 @@ class ModernMenu(RibbonBar):
                 # Set the stylesheet
                 button.setStyleSheet(
                     StyleMapping_Ribbon.ReturnStyleSheet(
-                        "toolbutton", "2px", f"{padding}px"
+                        "toolbutton", "2px", f"{0}px"
                     )
                 )
             elif len(QuickAction) > 1:
@@ -6874,9 +6865,9 @@ class ModernMenu(RibbonBar):
                 )
                 # Set the stylesheet
                 button.setStyleSheet(
-                    StyleMapping_Ribbon.ReturnStyleSheet(
+                    str(StyleMapping_Ribbon.ReturnStyleSheet(
                         "toolbutton", "2px", f"{padding}px"
-                    )
+                    )) 
                 )
 
         # If it is a custom dropdown, add the actions one by one.
@@ -7237,12 +7228,19 @@ class EventInspector(QObject):
         super(EventInspector, self).__init__(parent)
 
     def eventFilter(self, obj, event: QEvent):
-        # This makes sure that the ribbon is enabled, when overlay is switched of          
-        # if Parameters.USE_FC_OVERLAY is False:
-        #     mw = Gui.getMainWindow()
-        #     DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
-        #     if DockWidget_Ribbon is not None and DockWidget_Ribbon.isVisible() is False:
-        #         DockWidget_Ribbon.show()
+        if event.type() == QEvent.Type.KeyPress:
+            if event.modifiers() & Qt.KeyboardModifier.AltModifier:
+                if event.key() == Qt.Key.Key_T:
+                    mw = Gui.getMainWindow()
+                    RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+                    RibbonBar.on_Pin_clicked()
+            
+            if event.modifiers() & Qt.KeyboardModifier.ShiftModifier:
+                if event.key() == Qt.Key.Key_M:
+                    mw = Gui.getMainWindow()
+                    RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+                    RibbonBar.ToggleMenuBar()
+        
         if event.type() == QEvent.Type.WindowActivate or event.type() == QEvent.Type.WindowDeactivate:
             mw = Gui.getMainWindow()
             DockWidget_Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")

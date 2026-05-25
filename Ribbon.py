@@ -78,7 +78,7 @@ class RibbonPreferences_Class:
     def GetResources(self):
         return {
             "Pixmap": "./Resources/icons/FreecadNew.svg",
-            "Accel": "Alt+P",
+            "Accel": "Shft+P",
             "MenuText": "Ribbon Preferences",
             "ToolTip": "Set preferences for the Ribbon UI",
         }
@@ -114,9 +114,9 @@ class RibbonPin_Class:
 
         DockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
         Ribbon = DockWidget.findChildren(ModernMenu, "Ribbon")[0]
-        RightToolbar = Ribbon.rightToolBar()
-        PinButton = RightToolbar.findChildren(QToolButton, "Pin Ribbon")[0]
-        PinButton.animateClick()
+        RightToolbar = Ribbon.currentCategory()
+        PinButton = RightToolbar.findChildren(QToolButton, "pinButton")
+        PinButton[0].animateClick()
         return
 
 
@@ -130,16 +130,16 @@ class MenuBar_Class:
         }
 
     def Activated(self):
-        from PySide.QtWidgets import QMenuBar, QToolButton
-
         # Get the main window of FreeCAD
         mw = Gui.getMainWindow()
 
-        DockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-        Ribbon = DockWidget.findChildren(ModernMenu, "Ribbon")[0]
-        RightToolbar = Ribbon.rightToolBar()
-        ToggleButton = RightToolbar.findChildren(QToolButton, "ToggleMenuBar")[0]
-        ToggleButton.animateClick()
+        mb = mw.menuBar()
+        if mb.isVisible():
+            mb.hide()
+            return
+        if mb.isVisible() is False:
+            mb.show()
+            return        
         return
 
 
@@ -147,4 +147,4 @@ Gui.addCommand("Ribbon_Menu", RibbonApplicationMenu_Class())
 Gui.addCommand("Ribbon_Layout", RibbonLayout_Class())
 Gui.addCommand("Ribbon_Preferences", RibbonPreferences_Class())
 Gui.addCommand("Ribbon_Pin", RibbonPin_Class())
-# Gui.addCommand("Ribbon_Menubar", MenuBar_Class())
+Gui.addCommand("Ribbon_Menubar", MenuBar_Class())
