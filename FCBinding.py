@@ -4283,17 +4283,6 @@ class ModernMenu(RibbonBar):
                 # Add the dockwidget
                 mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
-            # Disable the quick toolbar, righttoolbar and application menu
-            self.rightToolBar().setDisabled(True)
-            self.quickAccessToolBar().setDisabled(True)
-            self.applicationOptionButton().setDisabled(True)
-            Gui.updateGui()
-            # indicate that the design menu is loaded
-            self.DesignMenuLoaded = True
-
-            # Connect the close signal of the designmenu
-            Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
-
             # Restore the cursor
             QApplication.restoreOverrideCursor()
         return
@@ -4321,29 +4310,11 @@ class ModernMenu(RibbonBar):
             # Add the dockwidget
             mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
-        # Disable the quick toolbar, righttoolbar and application menu
-        self.rightToolBar().setDisabled(True)
-        self.quickAccessToolBar().setDisabled(True)
-        self.applicationOptionButton().setDisabled(True)
-        Gui.updateGui()
         # indicate that the design menu is loaded
         self.DesignMenuLoaded = True
 
-        # Connect the close signal of the designmenu
-        Dialog.closeSignal.connect(self.EnableRibbonToolbarsAndMenus)
-
         # Restore the cursor
         QApplication.restoreOverrideCursor()
-        return
-
-    # Function to activate the toolbars and menus
-    # after closing the design menu or settings menu
-    def EnableRibbonToolbarsAndMenus(self):
-        self.rightToolBar().setEnabled(True)
-        self.quickAccessToolBar().setEnabled(True)
-        self.applicationOptionButton().setEnabled(True)
-        Gui.updateGui()
-
         return
 
     def buildPanels(self, Dict=ribbonStructure, UpdateDict=True):
