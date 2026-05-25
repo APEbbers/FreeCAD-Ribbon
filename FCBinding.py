@@ -25,7 +25,7 @@ import FreeCADGui as Gui
 from pathlib import Path
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -54,7 +54,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -94,7 +94,7 @@ from PySide.QtWidgets import (
     QAbstractButton,
     QStackedWidget,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -2582,7 +2582,7 @@ class ModernMenu(RibbonBar):
                 position = event.pos()
                 # If the position is within a panel, store the panel name
                 for panelName, panel in self.currentCategory().panels().items():
-                    panelPos = mw.mapToGlobal(panel.pos())
+                    panelPos = panel.pos()
                     xMin = panelPos.x()
                     xMax = xMin + panel.rect().width()
                     
@@ -4536,7 +4536,8 @@ class ModernMenu(RibbonBar):
         pinButton = QToolButton()
         pinButton.setCheckable(True)
         pinButton.setObjectName("pinButton")
-        pinButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
+        pinButton.setSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.MinimumExpanding)
+        pinButton.setFixedSize(QSize(self.iconSize * 0.6,self.iconSize * 0.6))
         
         # Set the correct icon
         if Parameters.AUTOHIDE_RIBBON is False:
