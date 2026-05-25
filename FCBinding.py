@@ -4617,38 +4617,37 @@ class ModernMenu(RibbonBar):
         return
 
     def on_Pin_clicked(self, pinButton = None):
-        if pinButton is None:
-            pinButton = self.currentCategory().findChildren(QToolButton, "pinButton")[0]
-        
-        if Parameters.AUTOHIDE_RIBBON is False:
-            self.FoldRibbon()
-            Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", True)
-            Parameters.AUTOHIDE_RIBBON = True
+        if Parameters.USE_OVERLAY is False:
+            if pinButton is None:
+                pinButton = self.currentCategory().findChildren(QToolButton, "pinButton")[0]
+            
+            if Parameters.AUTOHIDE_RIBBON is False:
+                Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", True)
+                Parameters.AUTOHIDE_RIBBON = True
 
-            pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
-            # Set the pin button for all tabs
-            for btn in self.pinButtonList:
-                btn.setChecked(False)
-                btn.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
+                pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
+                # Set the pin button for all tabs
+                for btn in self.pinButtonList:
+                    btn.setChecked(False)
+                    btn.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_closed"))
 
-            # Make sure that the ribbon remains visible
-            self.setRibbonVisible(True)
-            return
-        if Parameters.AUTOHIDE_RIBBON is True:
-            self.UnfoldRibbon()
+                self.FoldRibbon()
+                return
+            if Parameters.AUTOHIDE_RIBBON is True:
+                self.UnfoldRibbon()
 
-            Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
-            Parameters.AUTOHIDE_RIBBON = False
+                Parameters_Ribbon.Settings.SetBoolSetting("AutoHideRibbon", False)
+                Parameters.AUTOHIDE_RIBBON = False
 
-            pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
-            # Set the pin button for all tabs
-            for btn in self.pinButtonList:
-                btn.setChecked(True)
-                btn.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
+                pinButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
+                # Set the pin button for all tabs
+                for btn in self.pinButtonList:
+                    btn.setChecked(True)
+                    btn.setIcon(StyleMapping_Ribbon.ReturnStyleItem("PinButton_open"))
 
-            # Make sure that the ribbon remains visible
-            self.setRibbonVisible(True)
-            return
+                # Make sure that the ribbon remains visible
+                self.setRibbonVisible(True)
+                return
         return
 
     def on_ApplicationButton_toggled(self):
