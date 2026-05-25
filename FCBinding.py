@@ -7249,62 +7249,65 @@ class EventInspector(QObject):
 
     def eventFilter(self, obj, event: QEvent):
         if event.type() == QEvent.Type.KeyRelease:
-            # Get the main window and the ribbon
-            mw = Gui.getMainWindow()
-            RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
-            
-            # Define variables
-            Key = ""
-            KeyModifier = ""
-            StoredShortCutKey_Pin = "Alt+T"
-            StoredShortCutKey_MenuBar = "Shift+M"
-            
-            # if modifiers are set, store its name
-            if event.modifiers():                
-                # Get the name of modifier key
-                for keyModifierName, keyModifierItem in Qt.KeyboardModifier._member_map_.items():
-                    if event.modifiers() == keyModifierItem:
-                        KeyModifier = keyModifierName
-            # Get the key name
-            for keyName, keyItem in Qt.Key._member_map_.items():
-                if event.key() == keyItem:
-                    Key = keyName
-            
-            # Check if the shortcuts are modified by the user. if so update the variables
             try:
-                CustomShortCuts = App.ParamGet(
-                    "User parameter:BaseApp/Preferences/Shortcut"
-                )
-                if "Ribbon_Pin" in CustomShortCuts.GetStrings():
-                    StoredShortCutKey_Pin = CustomShortCuts.GetString("Ribbon_Pin") 
-                if "Ribbon_Menubar" in CustomShortCuts.GetStrings():
-                    StoredShortCutKey_MenuBar = CustomShortCuts.GetString("Ribbon_Menubar")                   
-            except Exception:
-                pass
-                        
-            # Check if the shortcut for the pin button matches the pressed key and modifier key.
-            # If so, use the pin function
-            if StoredShortCutKey_Pin.split("+")[0] in KeyModifier:
-                if len(StoredShortCutKey_Pin.split("+")) > 1:
-                    if StoredShortCutKey_Pin.split("+")[1] in Key:
+                # Get the main window and the ribbon
+                mw = Gui.getMainWindow()
+                RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+                
+                # Define variables
+                Key = ""
+                KeyModifier = ""
+                StoredShortCutKey_Pin = "Alt+T"
+                StoredShortCutKey_MenuBar = "Shift+M"
+                
+                # if modifiers are set, store its name
+                if event.modifiers():                
+                    # Get the name of modifier key
+                    for keyModifierName, keyModifierItem in Qt.KeyboardModifier._member_map_.items():
+                        if event.modifiers() == keyModifierItem:
+                            KeyModifier = keyModifierName
+                # Get the key name
+                for keyName, keyItem in Qt.Key._member_map_.items():
+                    if event.key() == keyItem:
+                        Key = keyName
+                
+                # Check if the shortcuts are modified by the user. if so update the variables
+                try:
+                    CustomShortCuts = App.ParamGet(
+                        "User parameter:BaseApp/Preferences/Shortcut"
+                    )
+                    if "Ribbon_Pin" in CustomShortCuts.GetStrings():
+                        StoredShortCutKey_Pin = CustomShortCuts.GetString("Ribbon_Pin") 
+                    if "Ribbon_Menubar" in CustomShortCuts.GetStrings():
+                        StoredShortCutKey_MenuBar = CustomShortCuts.GetString("Ribbon_Menubar")                   
+                except Exception:
+                    pass
+                            
+                # Check if the shortcut for the pin button matches the pressed key and modifier key.
+                # If so, use the pin function
+                if StoredShortCutKey_Pin.split("+")[0] in KeyModifier:
+                    if len(StoredShortCutKey_Pin.split("+")) > 1:
+                        if StoredShortCutKey_Pin.split("+")[1] in Key:
+                            RibbonBar.on_Pin_clicked()
+                            return QObject.eventFilter(self, obj, event)
+                else:
+                    if StoredShortCutKey_Pin in Key:
                         RibbonBar.on_Pin_clicked()
                         return QObject.eventFilter(self, obj, event)
-            else:
-                if StoredShortCutKey_Pin in Key:
-                    RibbonBar.on_Pin_clicked()
-                    return QObject.eventFilter(self, obj, event)
-            
-            # Check if the shortcut for the menubar matches the pressed key and modifier key.
-            # If so, use the menubar function
-            if StoredShortCutKey_MenuBar.split("+")[0] in KeyModifier:
-                if len(StoredShortCutKey_MenuBar.split("+")) > 1:
-                    if StoredShortCutKey_MenuBar.split("+")[1] in Key:
+                
+                # Check if the shortcut for the menubar matches the pressed key and modifier key.
+                # If so, use the menubar function
+                if StoredShortCutKey_MenuBar.split("+")[0] in KeyModifier:
+                    if len(StoredShortCutKey_MenuBar.split("+")) > 1:
+                        if StoredShortCutKey_MenuBar.split("+")[1] in Key:
+                            RibbonBar.ToggleMenuBar()
+                            return QObject.eventFilter(self, obj, event)
+                else:
+                    if StoredShortCutKey_MenuBar in Key:
                         RibbonBar.ToggleMenuBar()
                         return QObject.eventFilter(self, obj, event)
-            else:
-                if StoredShortCutKey_MenuBar in Key:
-                    RibbonBar.ToggleMenuBar()
-                    return QObject.eventFilter(self, obj, event)
+            except Exception:
+                return False
         
         if event.type() == QEvent.Type.WindowActivate or event.type() == QEvent.Type.WindowDeactivate:
             mw = Gui.getMainWindow()
