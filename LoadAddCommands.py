@@ -624,6 +624,18 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.CommandList_DDB.clear()
         self.form.CommandsAvailable_DDB.clear()
         self.form.NewControl_DDB.clear()
+        
+        # Set the stylesheet for the listwidgets
+        stylesheet = """ QToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }"""
+        self.form.CommandsAvailable_NP.setStyleSheet(stylesheet)
+        self.form.CommandList_DDB.setStyleSheet(stylesheet)
+        self.form.CommandsAvailable_DDB.setStyleSheet(stylesheet)
+        self.form.NewControl_DDB.setStyleSheet(stylesheet)
 
         ShadowList = []  # List to add the commands and prevent duplicates
         for CommandItem in self.List_Commands:
@@ -654,7 +666,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             # Icon = Gui.getIcon("preferences-workbenches")
                             # ListWidgetItem.setIcon(Icon)
                             continue
-                        
+                                                
                         ListWidgetItem.setIcon(Icon)
                         ListWidgetItem.setToolTip(
                             CommandName
