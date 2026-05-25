@@ -1510,11 +1510,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
     def on_Apply_Clicked(self):
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")       
-        RibbonBar.ribbonStructure.update(RibbonBar.workBenchDict)
-        # Writing to ribbonStructure.json
-        JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-        with open(JsonFile, "w") as outfile:
-            json.dump(RibbonBar.ribbonStructure, outfile, indent=4)
+        RibbonBar.on_ApplyClicked()
         return
     
     def on_Helpbutton_clicked(self):

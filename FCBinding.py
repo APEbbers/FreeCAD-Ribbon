@@ -1723,6 +1723,16 @@ class ModernMenu(RibbonBar):
         # self.currentCategory().panels().update(dictPanels)
         return
     
+    def on_ApplyClicked(self):
+        self.AddedPanels.clear()
+        self.RemovedPanels.clear()
+        self.ribbonStructure.update(self.workBenchDict)
+        # Writing to ribbonStructure.json
+        JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+        with open(JsonFile, "w") as outfile:
+            json.dump(self.ribbonStructure, outfile, indent=4)
+        
+    
     def on_Ok_Clicked(self, workbenchName = ""):
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
@@ -6417,6 +6427,7 @@ class ModernMenu(RibbonBar):
             for panel in self.RemovedPanels:
                 if panel.objectName() == f"{title}_newPanel":
                     self.RemovedPanels.remove(panel)
+                    panel.close()
         
         return
     
