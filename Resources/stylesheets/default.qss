@@ -88,7 +88,7 @@ QTabBar {
 
 /* Needed for the ColorPalette Theme */
 QToolBar QToolButton {
-  min-width: 0px;
-  min-height: 0px;
+  min-width: 8px;
+  min-height: 8px;
 
 }
