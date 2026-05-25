@@ -587,7 +587,8 @@ class ModernMenu(RibbonBar):
                             and CommandItem[1] != "Standard"
                         ):
                             # Activate the workbench if not loaded
-                                Gui.activateWorkbench(CommandItem[1])
+                            Gui.activateWorkbench(CommandItem[1])
+                            self.isWbLoaded[CommandItem[1]] = True
         except Exception as e:
             if Parameters.DEBUG_MODE is True:
                 StandardFunctions.Print(
@@ -607,6 +608,7 @@ class ModernMenu(RibbonBar):
                     ):
                         # Activate the workbench if not loaded
                         Gui.activateWorkbench(CommandItem[1])
+                        self.isWbLoaded[CommandItem[1]] = True
         except Exception as e:
             if Parameters.DEBUG_MODE is True:
                 StandardFunctions.Print(
@@ -1090,6 +1092,7 @@ class ModernMenu(RibbonBar):
         for Wb in self.WBtoLoadFirst:
             try:
                 Gui.activateWorkbench(Wb)
+                self.isWbLoaded[Wb] = True
             except Exception:
                 pass
         
@@ -2900,6 +2903,7 @@ class ModernMenu(RibbonBar):
                             if CommandItem[0] == commandName and CommandItem[3] not in self.isWbLoaded:
                             # if CommandItem[0] == commandName:
                                 Gui.activateWorkbench(CommandItem[3])
+                                self.isWbLoaded[CommandItem[3]] = True
                                 break
                     except Exception:
                         pass
@@ -5711,9 +5715,11 @@ class ModernMenu(RibbonBar):
                                                 # Activate the workbench if not loaded
                                                 if CommandItem[3] in self.isWbLoaded and self.isWbLoaded[CommandItem[3]] is False:    
                                                     Gui.activateWorkbench(value[1])
+                                                    self.isWbLoaded[value[1]] = True
                                                     break
                                                 if CommandItem[3] not in self.isWbLoaded:
                                                     Gui.activateWorkbench(value[1])
+                                                    self.isWbLoaded[value[1]] = True
                                                     break
                                                 
                                     # Set the current  category after activating the workbench
@@ -6934,6 +6940,7 @@ class ModernMenu(RibbonBar):
                     for CommandItem in self.List_Commands:
                         if CommandItem[0] == commandName and CommandItem[3] not in self.isWbLoaded:
                             Gui.activateWorkbench(CommandItem[3])
+                            self.isWbLoaded[CommandItem[3]] = True
                             break
             except Exception:
                 pass
