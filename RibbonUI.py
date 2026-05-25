@@ -78,7 +78,7 @@ class RibbonPreferences_Class:
     def GetResources(self):
         return {
             "Pixmap": "./Resources/icons/FreecadNew.svg",
-            "Accel": "Shft+P",
+            "Accel": "Alt+P",
             "MenuText": "Ribbon Preferences",
             "ToolTip": "Set preferences for the Ribbon UI",
         }

@@ -147,7 +147,7 @@ from datetime import datetime
 import shutil
 
 # import Ribbon. This contains the ribbon commands for FreeCAD
-import Ribbon
+import RibbonUI
 
 # Get the resources
 ConfigDirectory = Parameters.CONFIG_DIR
