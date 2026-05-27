@@ -243,6 +243,9 @@ class ModernMenu(RibbonBar):
     # Declare the top and bottom margin for the tabbar (category)
     TopMargin = 3
     BottomMargin = 0
+    
+    # Set the value for the menubutton width
+    MenuButtonSpace = 8
 
     # Create the lists and ditcs for the lists in the ribbon structure, 
     ignoredToolbars = []
@@ -2718,36 +2721,42 @@ class ModernMenu(RibbonBar):
 
                 if type(parent) is QToolBar and parent.objectName() == "quickAccessToolBar":
                     # Get the relative position of the cursor
-                    point = QPoint(event.pos().x() + widget.width(), event.pos().y())
+                    # point = QPoint(event.pos().x() + widget.width(), event.pos().y())
+                    point = QPoint(event.pos().x(), event.pos().y())
                     buttonPos = QuickAccessToolBar.mapTo(QuickAccessToolBar ,point)
                     # Get the button
                     Button = QuickAccessToolBar.childAt(buttonPos)
-                    if type(Button) is QuickAccessSeparator:
-                         return
                     # Get the action before which the drag indicator has to be placed
                     beforeAction = QuickAccessToolBar.actionAt(buttonPos)
-                    if beforeAction is not None:
-                        # Store the beforeAction globally
-                        self.dropWidget_QuickAccess = beforeAction
-                        # Store the index of the current beforeAction. This is needed for the drop function to save the order
-                        self.DropIndex_QuickAccess = QuickAccessToolBar.actions().index(beforeAction)
-                    # If the button is an Target indicator or is None, remove it.
-                    if type(Button) is DragTargetIndicator or Button is None:
-                        QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
-                    # If the button is an quickaccessbutton, show a drag indicator in the quickaccess toolbar
-                    if Button is not None and type(Button) is QuickAccessToolButton:
-                        dragIndicator = self.dragIndicator_QuickAccess
-                        if self.dragAction_QuickAccess is None:
-                            self.dragAction_QuickAccess = QuickAccessToolBar.insertWidget(beforeAction, dragIndicator)
-                            dragIndicator.show()                        
-                        else:
-                            QuickAccessToolBar.insertAction(beforeAction, self.dragAction_QuickAccess)
-                            self.dragAction_QuickAccess.setVisible(True)
-                    # If the beforeAction is None, you are at the end of the QuickAccess Toolbar
-                    if beforeAction is None:
+                    
+                    if Button is None:
+                        return
+                                            
+                    if beforeAction is not None and Button is not None:
+                        if type(Button) is QuickAccessToolButton or type(Button) is QToolButton or type(Button) is QuickAccessSeparator:
+                            # Store the beforeAction globally
+                            self.dropWidget_QuickAccess = beforeAction
+                            # Store the index of the current beforeAction. This is needed for the drop function to save the order
+                            self.DropIndex_QuickAccess = QuickAccessToolBar.actions().index(beforeAction)
+                            # If the button is an Target indicator or is None, remove it.
+                            if type(Button) is DragTargetIndicator:
+                                QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
+                                return
+                                
+                            # If the button is an quickaccessbutton, show a drag indicator in the quickaccess toolbar
                             dragIndicator = self.dragIndicator_QuickAccess
-                            self.dragIndicator_QuickAccess_Action = QuickAccessToolBar.addWidget(dragIndicator)
-                            self.dragIndicator_QuickAccess_Action.setVisible(True)
+                            if self.dragAction_QuickAccess is None:
+                                self.dragAction_QuickAccess = QuickAccessToolBar.insertWidget(beforeAction, dragIndicator)
+                                dragIndicator.show()                        
+                            else:
+                                QuickAccessToolBar.insertAction(beforeAction, self.dragAction_QuickAccess)
+                                self.dragAction_QuickAccess.setVisible(True)
+                                                
+                    # # If the beforeAction is None, you are at the end of the QuickAccess Toolbar
+                    # if len(QuickAccessToolBar.actions()) + 1 == self.DropIndex_QuickAccess:
+                    #     dragIndicator = self.dragIndicator_QuickAccess
+                    #     self.dragIndicator_QuickAccess_Action = QuickAccessToolBar.addWidget(dragIndicator)
+                    #     self.dragIndicator_QuickAccess_Action.setVisible(True)
                                         
             if type(widget) is RibbonPanel:
                 position: object= self.find_drop_location(event)
@@ -2890,18 +2899,15 @@ class ModernMenu(RibbonBar):
                 # Get the command to be added
                 commandName = widget.currentItem().data(Qt.ItemDataRole.UserRole)
                 # Define a button
-                button = QuickAccessToolButton(self.quickAccessToolBar())
+                button = None
                 QuickAction = None
                 # If it is a standard freecad button, set the command accordingly
                 if commandName.endswith("_ddb") is False and "separator" not in commandName:
                     try:
                         # Check if the workbench is loaded. If not, actions will be an empty list
                         # Find the command its workbench and activate it
-                        # QuickAction = Gui.Command.get(commandName).getAction()
-                        # if len(QuickAction) == 0:
                         for CommandItem in self.List_Commands:
                             if CommandItem[0] == commandName and CommandItem[3] not in self.isWbLoaded:
-                            # if CommandItem[0] == commandName:
                                 Gui.activateWorkbench(CommandItem[3])
                                 self.isWbLoaded[CommandItem[3]] = True
                                 break
@@ -2910,76 +2916,21 @@ class ModernMenu(RibbonBar):
                     QuickAction = Gui.Command.get(commandName).getAction()
 
                     if len(QuickAction) == 1:
-                        button.setDefaultAction(QuickAction[0])
-                        width = self.QuickAccessButtonSize
-                        height = self.QuickAccessButtonSize
-                        button.setFixedSize(width, height)
-                        # Set the stylesheet
-                        button.setStyleSheet(
-                            StyleMapping_Ribbon.ReturnStyleSheet(
-                                "toolbutton", "2px", f"{padding}px"
-                            )
-                        )
+                        button = self.CreateQuickButtonFromCommand(commandName)
                     elif len(QuickAction) > 1:
                         # set the padding for a dropdown button
                         padding = self.PaddingRight
-
-                        button.addActions(QuickAction)
-                        button.setDefaultAction(QuickAction[0])
-                        # Set the width and height
-                        width = self.QuickAccessButtonSize + padding
-                        height = self.QuickAccessButtonSize
-                        button.setFixedSize(width, height)
-                        # Set the PopupMode
-                        button.setPopupMode(
-                            QToolButton.ToolButtonPopupMode.MenuButtonPopup
-                        )
-                        # Set the stylesheet
-                        button.setStyleSheet(
-                            StyleMapping_Ribbon.ReturnStyleSheet(
-                                "toolbutton", "2px", f"{padding}px"
-                            )
-                        )
+                        button = self.CreateQuickButtonFromCommand(commandName, padding)
 
                 # If it is a custom dropdown, add the actions one by one.
                 if commandName.endswith("_ddb") is True and "separator" not in commandName:
                     # set the padding for a dropdown button
                     padding = self.PaddingRight
-                    # Get the actions and add them one by one
-                    QuickAction = self.returnCustomDropDown(commandName, dict=self.workBenchDict)
-                    for action in QuickAction:
-                        if len(action) > 0:
-                            button.addAction(action[0])
-                    # Set the default action
-                    button.setDefaultAction(button.actions()[0])
-                    # Set the width and height
-                    width = self.QuickAccessButtonSize + padding
-                    height = self.QuickAccessButtonSize
-                    button.setFixedSize(width, height)
-                    # Set the PopupMode
-                    button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-
-                    # Set the stylesheet
-                    button.setStyleSheet(
-                        StyleMapping_Ribbon.ReturnStyleSheet(
-                            "toolbutton", "2px", padding_right=f"{padding}px"
-                        )
-                    )
-                
-                button.setObjectName(commandName)
-
-                # Set the height
-                self.setQuickAccessButtonHeight(self.RibbonMinimalHeight)
-
-                button.setContentsMargins(3, 3, 3, 3)
+                    button = self.CreateQuickButtonFromCommand(commandName, padding)
 
                 # Add the button to the quickaccess toolbar
-                if len(button.actions()) > 0:
+                if button is not None:
                     self.addQuickAccessButton(button)
-                else:
-                    StandardFunctions.Print(
-                        f"{commandName} did not contain any actions!", "Log"
-                    )
                 
                 # Add the command to the quickaccess command list
                 self.workBenchDict["quickAccessCommands"].append(commandName)
@@ -3171,26 +3122,10 @@ class ModernMenu(RibbonBar):
             if QuickAccessToolBar.objectName() == "quickAccessToolBar":
                 widget = event.source()
                 
-                if "separator" in widget.objectName():
-                    # Delete the drag indicater
-                    try:
-                        QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
-                        QuickAccessToolBar.removeAction(self.dragIndicator_QuickAccess_Action)
-                    except Exception:
-                        pass
-                    return
-
-                # Get the relative position of the cursor
-                point = QPoint(event.pos().x() + widget.width(), event.pos().y())
-                buttonPos = QuickAccessToolBar.mapTo(QuickAccessToolBar ,point)
-                
-                # Get the commandname under the mouse
-                beforeAction = QuickAccessToolBar.actionAt(buttonPos)
+                # Use the action stored during the dragmove function
+                beforeAction = self.dragAction_QuickAccess
                 # insert the dragged widget
                 QuickAccessToolBar.insertWidget(beforeAction, widget)
-                if beforeAction is None:
-                    button = QuickAccessToolBar.addWidget(widget)
-                    button.setVisible(True)
 
                 # Update the orderlist
                 #
@@ -6192,7 +6127,7 @@ class ModernMenu(RibbonBar):
                                 ElideMode=False,
                                 MaxNumberOfLines=2,
                                 Menu=Menu,
-                                MenuButtonSpace=16,
+                                MenuButtonSpace=self.MenuButtonSpace,
                                 parent=self,
                                 ButtonStyle=pyqtribbon.RibbonButtonStyle.Small
                             )
@@ -6252,7 +6187,7 @@ class ModernMenu(RibbonBar):
                                 setWordWrap=Parameters.WRAPTEXT_MEDIUM,
                                 MaxNumberOfLines=2,
                                 Menu=Menu,
-                                MenuButtonSpace=16,
+                                MenuButtonSpace=self.MenuButtonSpace,
                                 parent=self,
                                 ButtonStyle=pyqtribbon.RibbonButtonStyle.Medium
                             )
@@ -6316,7 +6251,7 @@ class ModernMenu(RibbonBar):
                                 setWordWrap=Parameters.WRAPTEXT_LARGE,
                                 MaxNumberOfLines=2,
                                 Menu=Menu,
-                                MenuButtonSpace=16,
+                                MenuButtonSpace=self.MenuButtonSpace,
                                 parent=self,
                                 ButtonStyle=pyqtribbon.RibbonButtonStyle.Large
                             )
@@ -6858,8 +6793,6 @@ class ModernMenu(RibbonBar):
     def BuildQuickToolbar(self, ButtonList = []):
         # add quick access buttons
         toolBarWidth = 0
-        # if len(ButtonList) > 0:
-        #     toolBarWidth = self.QuickAccessButtonSize * 2
         
         for commandName in ButtonList:
             # Define a width
@@ -6882,43 +6815,18 @@ class ModernMenu(RibbonBar):
                     continue
                     
                 button = self.CreateQuickButtonFromCommand(commandName=commandName, padding=padding)
+                button.setFixedWidth(button.width())
+                # print(button.width())
 
                 # Set the height
                 self.setQuickAccessButtonHeight(self.RibbonMinimalHeight)
 
-                # button.setContentsMargins(3, 3, 3, 3)
-                # styleSheetButton = button.styleSheet()
-                # StyleSheet_Addition_Arrow = (
-                #     "QToolButton, QLabel {background-color: "
-                #     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                #     + ";margin: 0px"
-                #     + ";spacing: 0px"
-                #     + ";}"
-                #     + """QToolButton::menu-indicator {
-                #             image: none;
-                #             subcontrol-origin: padding;
-                #             subcontrol-position: right top;
-                #         }"""
-                # )
-                # button.setStyleSheet(StyleSheet_Addition_Arrow + """\n\nQToolTip {
-                #     background-color: #FFFFE1;
-                #     color: black;
-                #     border: black solid 1px;
-                #     border-radius: 2px;
-                #     }"""
-                # )
-                # if len(button.actions()) > 1:
-                #     button.setArrowType(Qt.ArrowType.NoArrow)
-                #     button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-                
-                # Add the button to the quickaccess toolbar
-                if len(button.actions()) > 0:
-                    self.addQuickAccessButton(button)
-                    toolBarWidth = toolBarWidth + self.QuickAccessButtonSize
-                else:
-                    StandardFunctions.Print(
-                        f"{commandName} did not contain any actions!", "Log"
-                    )
+                # Add the button to the quickaccess toolbar as an WidgetAction. This is needed for custom widgets
+                # Otherwise you cannot get the index later during drag
+                WidgetAction = QWidgetAction(self.quickAccessToolBar())
+                WidgetAction.setDefaultWidget(button)           
+                self.quickAccessToolBar().addAction(WidgetAction)
+                toolBarWidth = toolBarWidth + button.width()
             except Exception as e:
                 if Parameters.DEBUG_MODE is True:
                     StandardFunctions.Print(f"{commandName}, {e}", "Warning")
@@ -6928,7 +6836,7 @@ class ModernMenu(RibbonBar):
     
     def CreateQuickButtonFromCommand(self, commandName, padding = 0):
         # Define a button
-        button = QuickAccessToolButton(self.quickAccessToolBar())
+        button = None
 
         # If it is a standard freecad button, set the command accordingly
         if commandName.endswith("_ddb") is False and "separator" not in commandName:
@@ -6947,61 +6855,38 @@ class ModernMenu(RibbonBar):
             QuickAction = Gui.Command.get(commandName).getAction()
 
             if len(QuickAction) == 1:
-                button.setDefaultAction(QuickAction[0])
-                width = self.QuickAccessButtonSize
-                height = self.QuickAccessButtonSize
-                button.setFixedSize(width, height)
-                # Set the stylesheet
-                button.setStyleSheet(
-                    StyleMapping_Ribbon.ReturnStyleSheet(
-                        "toolbutton", "2px", f"{0}px"
-                    )
-                )
+                button = QuickAccessToolButton(Action=QuickAction[0], parent=self.quickAccessToolBar(), Size=self.QuickAccessButtonSize)
+                
+                # Set the command as objectName for future reference
+                button.setObjectName(commandName)
+                return button
+                
             elif len(QuickAction) > 1:
                 # set the padding for a dropdown button
                 padding = self.PaddingRight
+                menu = QMenu()
+                menu.addActions(QuickAction)
+                button = QuickAccessToolButton(Action=QuickAction[0], parent=self.quickAccessToolBar(), Menu=menu, Size=self.QuickAccessButtonSize, MenuButtonSpace=padding)
 
-                button.addActions(QuickAction)
-                button.setDefaultAction(QuickAction[0])
-                # Set the width and height
-                width = self.QuickAccessButtonSize + padding
-                height = self.QuickAccessButtonSize
-                button.setFixedSize(width, height)
-                # Set the PopupMode
-                button.setPopupMode(
-                    QToolButton.ToolButtonPopupMode.MenuButtonPopup
-                )
-                # Set the stylesheet
-                button.setStyleSheet(
-                    str(StyleMapping_Ribbon.ReturnStyleSheet(
-                        "toolbutton", "2px", f"{padding}px"
-                    )) 
-                )
+                # Set the command as objectName for future reference
+                button.setObjectName(commandName)
+                return button
 
         # If it is a custom dropdown, add the actions one by one.
         if commandName.endswith("_ddb") is True and "separator" not in commandName:
+            menu = QMenu()
             # set the padding for a dropdown button
             padding = self.PaddingRight
             # Get the actions and add them one by one
             QuickAction = self.returnCustomDropDown(commandName, dict=self.ribbonStructure)
             for action in QuickAction:
                 if len(action) > 0:
-                    button.addAction(action[0])
-            # Set the default action
-            button.setDefaultAction(button.actions()[0])
-            # Set the width and height
-            width = self.QuickAccessButtonSize + padding
-            height = self.QuickAccessButtonSize
-            button.setFixedSize(width, height)
-            # Set the PopupMode
-            button.setPopupMode(QToolButton.ToolButtonPopupMode.MenuButtonPopup)
-
-            # Set the stylesheet
-            button.setStyleSheet(
-                StyleMapping_Ribbon.ReturnStyleSheet(
-                    "toolbutton", "2px", padding_right=f"{padding}px"
-                )
-            )     
+                    menu.addAction(action[0])
+            button = QuickAccessToolButton(Action=QuickAction[0], parent=self.quickAccessToolBar(), Menu=menu, Size=self.QuickAccessButtonSize, MenuButtonSpace=padding)
+              
+            # Set the command as objectName for future reference
+            button.setObjectName(commandName)
+            return button
         
         # if it is a separator return a separator
         if "separator" in commandName:

@@ -54,6 +54,7 @@ from PySide.QtWidgets import (
     QWidget,
     QWidgetAction,
     QLineEdit,
+    QLayout,
 )
 from PySide.QtCore import (
     Qt,
@@ -747,7 +748,6 @@ class CustomControls(RibbonToolButton):
             Label_Text.setFixedWidth(width)
         
         ArrowButton.setFixedWidth(width)
-        CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         # Compensate the height when text is visible
         if showText is True:
             CommandButton.setFixedHeight(ButtonSize.height()-Label_Text.height())
@@ -761,8 +761,6 @@ class CustomControls(RibbonToolButton):
         self.labelWidth = width
         self.menuButtonWidth = ArrowButton.width()
 
-        # Return the button
-        # btn.setObjectName("CustomWidget_Large")
         return btn
 
     @classmethod
@@ -829,13 +827,14 @@ class CustomControls(RibbonToolButton):
         # Add the command button
         Layout.addWidget(CommandButton)
         Layout.setAlignment(TextPositionAlignment)
+        Layout.setSizeConstraints(QLayout.SizeConstraint.SetFixedSize, QLayout.SizeConstraint.SetFixedSize)
 
         # Set the content margins to zero
         Layout.setContentsMargins(0, 0, 0, 0)
 
         # if showText is False:
-        if MenuButtonSpace < 12:
-            MenuButtonSpace = 12
+        if MenuButtonSpace < 8:
+            MenuButtonSpace = 8
             
         # Set the width according the commandbutton
         ArrowButton.setFixedWidth(MenuButtonSpace)
@@ -961,7 +960,7 @@ class CustomControls(RibbonToolButton):
             ArrowButton.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
             ArrowButton.adjustSize()
             # Set the arrow to none. It will be defined via CSS
-            ArrowButton.setArrowType(Qt.ArrowType.NoArrow)
+            ArrowButton.setArrowType(Qt.ArrowType.DownArrow)
             # Set the content margins
             ArrowButton.setContentsMargins(0, 0, 0, 0)
             # Add the Arrow button to the layout
@@ -1009,6 +1008,13 @@ class CustomControls(RibbonToolButton):
                         + ";margin: 0px"
                         + ";spacing: 0px"
                         + ";}"
+                        + """QToolButton::menu-indicator, QToolButton::menu-button:hover {
+                                margin: 0px;
+                                spacing: 0px;
+                                image: none;
+                                subcontrol-origin: padding;
+                                subcontrol-position: center top;
+                            }"""
                     )
                     StyleSheet_Addition_Label = (
                         "QToolButton, QLabel {background-color: "
@@ -1036,6 +1042,13 @@ class CustomControls(RibbonToolButton):
                         + ";margin: 0px"
                         + ";spacing: 0px"
                         + ";}"
+                        + """QToolButton::menu-indicator, QToolButton::menu-button:hover {
+                                margin: 0px;
+                                spacing: 0px;
+                                image: none;
+                                subcontrol-origin: padding;
+                                subcontrol-position: center top;
+                            }"""
                     )
                     StyleSheet_Addition_Label = (
                         "QToolButton, QLabel {background-color: "
@@ -1086,8 +1099,15 @@ class CustomControls(RibbonToolButton):
                     control="toolbutton",
                     radius="2px",
                 )
+                StyleSheet_Addition = """QToolButton::menu-indicator, QToolButton::menu-button:hover {
+                    margin: 0px;
+                    spacing: 0px;
+                    image: none;
+                    subcontrol-origin: padding;
+                    subcontrol-position: center top;
+                }"""
                 Label_Text.setStyleSheet(StyleSheet)
-                ArrowButton.setStyleSheet(StyleSheet)
+                ArrowButton.setStyleSheet(StyleSheet_Addition + StyleSheet)
 
                 if parent is not None:
                     # If the menu is hidden, set the value in the parent for detecting that the menu is entered to False.
@@ -1249,12 +1269,40 @@ class CustomControls(RibbonToolButton):
 
         # Add the layout
         btn.setLayout(Layout)
-        # Set the stylesheet for the controls
+         # Set the stylesheet for the controls
         StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(control="toolbutton")
+        StyleSheet_Addition_Arrow = (
+            str(StyleMapping_Ribbon.ReturnStyleSheet(control="toolbutton")) +
+            "QToolButton, QLabel {background-color: "
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+            + ";margin: 0px"
+            + ";spacing: 0px"
+            + ";}"
+            + """QToolButton::menu-indicator, QToolButton::menu-button:hover {
+                    margin: 0px;
+                    spacing: 0px;
+                    image: none;
+                    subcontrol-origin: padding;
+                    subcontrol-position: center top;
+                }"""
+        )
+        BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
+        if Parameters.BORDER_TRANSPARANT is True:
+            BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        StyleSheet_Widget = (
+            """QToolButton, QLabel, RibbonToolButton, QLayout {
+                        margin: 0px;
+                        spacing: 0px;"""
+                    + """;background: """
+                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                    + """;border: """
+                    + BorderColor
+                    + """;}"""
+        )
         CommandButton.setStyleSheet(StyleSheet)
-        ArrowButton.setStyleSheet(StyleSheet)
+        ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow + StyleSheet)
         Label_Text.setStyleSheet(StyleSheet)
-        btn.setStyleSheet(StyleSheet)
+        btn.setStyleSheet(StyleSheet_Widget)
 
         # Set the correct dimensions
         btn.setFixedWidth(ButtonSize.width() + MenuButtonSpace + TextWidth)
@@ -1262,9 +1310,6 @@ class CustomControls(RibbonToolButton):
             Label_Text.setHidden(True)
             btn.setFixedWidth(ButtonSize.width() + MenuButtonSpace)
         btn.setFixedHeight(ButtonSize.height())
-        CommandButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        Label_Text.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        ArrowButton.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         
         self.labelWidth = TextWidth
         self.menuButtonWidth = ArrowButton.width()
@@ -1351,11 +1396,113 @@ class CustomControls(RibbonToolButton):
 class QuickAccessToolButton(QToolButton):
     def __init__(
         self,
+        Action: QAction,
+        Size: int = 0,
+        Menu = None,
+        MenuButtonSpace=0,
         parent=None,
+        *args,
+        **kwargs       
     ):
-        super().__init__(parent)
+        QToolButton.__init__(self, parent=None, *args, **kwargs)
+        self.menu = Menu
+        self.menuButtonWidth = 0
+        self.action = Action
+        self.layout = QHBoxLayout(self)
+        self.layout.setContentsMargins(0, 0, 0, 0)
+        self.layout.setSpacing(0)
+        self.layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
         
-    
+        widget = QToolButton()
+        CommandButton = QToolButton()
+        ArrowButton = QToolButton()
+        
+        if type(Action) is QAction:
+            CommandButton.setDefaultAction(Action)
+        else:
+            CommandButton.setDefaultAction(Action[0])
+        
+        CommandButton.setObjectName("CommandButton")
+        ArrowButton.setObjectName("MenuButton")
+        CommandButton.setIcon(CommandButton.defaultAction().icon())
+        CommandButton.setIconSize(QSize(Size, Size).expandedTo(CommandButton.size()))
+        CommandButton.setContentsMargins(0, 0, 0, 0)
+        
+        # Add the command button
+        Layout = QHBoxLayout(widget)
+        Layout.addWidget(CommandButton)
+        # Set the content margins to zero
+        Layout.setContentsMargins(0, 0, 0, 0)
+        Layout.setSpacing(0)
+        Layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
+        Layout.setSizeConstraints(QLayout.SizeConstraint.SetFixedSize, QLayout.SizeConstraint.SetFixedSize)
+        
+        if Menu is not None and len(Menu.actions()) > 1:
+            # Define a menu
+            ArrowButton.setMenu(Menu)
+            Menu.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+            ArrowButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
+            # Set the height according the space for the menubutton
+            ArrowButton.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+            ArrowButton.adjustSize()
+            # Set the arrow to none. It will be defined via CSS
+            ArrowButton.setArrowType(Qt.ArrowType.DownArrow)
+            # Set the content margins
+            ArrowButton.setContentsMargins(0, 0, 0, 0)            
+            if MenuButtonSpace < 12:
+                MenuButtonSpace = 12
+            ArrowButton.setFixedWidth(MenuButtonSpace)
+            # Add the Arrow button to the layout
+            Layout.addWidget(ArrowButton)
+        else:
+            MenuButtonSpace = 0
+        
+        # Set the stylesheet for the controls
+        StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(control="toolbutton")
+        StyleSheet_Addition_Arrow = (
+            str(StyleMapping_Ribbon.ReturnStyleSheet(control="toolbutton")) +
+            "QToolButton, QLabel {background-color: "
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+            + ";margin: 0px"
+            + ";spacing: 0px"
+            + ";}"
+            + """QToolButton::menu-indicator {
+                    image: none;
+                    subcontrol-origin: padding;
+                    subcontrol-position: center top;
+                }"""
+        )
+        BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
+        if Parameters.BORDER_TRANSPARANT is True:
+            BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        StyleSheet_Widget = (
+            """QToolButton, QLabel, RibbonToolButton, QLayout {
+                        margin: 0px;
+                        spacing: 0px;"""
+                    + """;background: """
+                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                    + """;border: """
+                    + BorderColor
+                    + """;}"""
+        )
+        CommandButton.setStyleSheet(StyleSheet)
+        ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
+        widget.setStyleSheet(StyleSheet_Widget)
+
+        # Set the correct dimensions
+        CommandButton.setFixedSize(QSize(Size, Size))
+        ArrowButton.setFixedSize(QSize(MenuButtonSpace, Size))        
+        widget.setFixedSize(QSize(Size + MenuButtonSpace, Size))
+      
+        # Added the widget
+        self.widget = widget
+        self.layout.addWidget(widget)
+        self.setStyleSheet(StyleSheet_Widget)
+
+        # Set the correct size
+        self.setFixedSize(QSize(Size + MenuButtonSpace, Size))
+        self.setContentsMargins(0,0,0,0)
+                
     # Add dragdrop functionality
     def mouseMoveEvent(self, e):
         if e.buttons() == Qt.MouseButton.LeftButton:
@@ -1370,6 +1517,10 @@ class QuickAccessToolButton(QToolButton):
                 drag.exec_(Qt.DropAction.MoveAction)
             except Exception as e:
                 print(e)
+
+        
+    
+    
 
 class CustomSeparator(RibbonSeparator):
     def mouseMoveEvent(self, e):
