@@ -1520,9 +1520,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         Parameters_Ribbon.Settings.SetBoolSetting(
             "CustomColors", self.OriginalValues["CustomColors"]
         )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "BorderTransparant", self.OriginalValues["BorderTransparant"]
-        )
+        # Parameters_Ribbon.Settings.SetBoolSetting(
+        #     "BorderTransparant", self.OriginalValues["BorderTransparant"]
+        # )
         Parameters_Ribbon.Settings.SetStringSetting(
             "Color_Borders", self.OriginalValues["Color_Borders"]
         )
@@ -1702,9 +1702,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         Parameters_Ribbon.Settings.SetBoolSetting(
             "CustomColors", self.ValuesToUpdate["CustomColors"]
         )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "BorderTransparant", self.ValuesToUpdate["BorderTransparant"]
-        )
+        # Parameters_Ribbon.Settings.SetBoolSetting(
+        #     "BorderTransparant", self.ValuesToUpdate["BorderTransparant"]
+        # )
         Parameters_Ribbon.Settings.SetStringSetting(
             "Color_Borders", self.ValuesToUpdate["Color_Borders"]
         )
