@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 import typing
 import sys
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
@@ -39,7 +39,7 @@ from PySide.QtGui import (
     QPainter,
     
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QComboBox,
     QMainWindow,
     QSizePolicy,
@@ -55,8 +55,10 @@ from PySide.QtWidgets import (
     QWidgetAction,
     QLineEdit,
     QLayout,
+    QGridLayout,
+    QPushButton,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QSize,
     QMimeData,
@@ -1408,11 +1410,50 @@ class QuickAccessToolButton(QToolButton):
         self.menu = Menu
         self.menuButtonWidth = 0
         self.action = Action
+        
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
         self.layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+                
+        # Added the widget
+        widget = self.CreateButton(Action,Size, Menu, MenuButtonSpace, parent)
+        self.setFixedSize(QSize(Size + MenuButtonSpace, Size))
+        self.layout.addWidget(widget)
+        self.setContentsMargins(0,0,0,0)
+        self.layout.setStretchFactor(widget, Size)
         
+        BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
+        if Parameters.BORDER_TRANSPARANT is True:
+            BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        StyleSheet_Widget = (
+            """QToolButton, QLabel, RibbonToolButton, QLayout {
+                        margin: 0px;
+                        spacing: 0px;"""
+                    + """;padding-right: """
+                    + str(MenuButtonSpace) + """px"""
+                    + """;background: """
+                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                    + """;border: """
+                    + BorderColor
+                    + """;}"""
+                    + """ QToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }"""
+        )
+        self.setStyleSheet(StyleSheet_Widget)
+        
+    def CreateButton(
+        self,
+        Action: QAction,
+        Size: int = 0,
+        Menu = None,
+        MenuButtonSpace=0,
+        parent=None,
+    ):
         widget = QToolButton()
         CommandButton = QToolButton()
         ArrowButton = QToolButton()
@@ -1429,13 +1470,11 @@ class QuickAccessToolButton(QToolButton):
         CommandButton.setContentsMargins(0, 0, 0, 0)
         
         # Add the command button
-        Layout = QHBoxLayout(widget)
-        Layout.addWidget(CommandButton)
+        Layout = QGridLayout(widget)
+        Layout.addWidget(CommandButton, 0,0)
         # Set the content margins to zero
         Layout.setContentsMargins(0, 0, 0, 0)
         Layout.setSpacing(0)
-        Layout.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
-        Layout.setSizeConstraints(QLayout.SizeConstraint.SetFixedSize, QLayout.SizeConstraint.SetFixedSize)
         
         if Menu is not None and len(Menu.actions()) > 1:
             # Define a menu
@@ -1453,7 +1492,7 @@ class QuickAccessToolButton(QToolButton):
                 MenuButtonSpace = 12
             ArrowButton.setFixedWidth(MenuButtonSpace)
             # Add the Arrow button to the layout
-            Layout.addWidget(ArrowButton)
+            Layout.addWidget(ArrowButton,0,1)
         else:
             MenuButtonSpace = 0
         
@@ -1491,17 +1530,9 @@ class QuickAccessToolButton(QToolButton):
 
         # Set the correct dimensions
         CommandButton.setFixedSize(QSize(Size, Size))
-        ArrowButton.setFixedSize(QSize(MenuButtonSpace, Size))        
-        widget.setFixedSize(QSize(Size + MenuButtonSpace, Size))
-      
-        # Added the widget
-        self.widget = widget
-        self.layout.addWidget(widget)
-        self.setStyleSheet(StyleSheet_Widget)
-
-        # Set the correct size
-        self.setFixedSize(QSize(Size + MenuButtonSpace, Size))
-        self.setContentsMargins(0,0,0,0)
+        # ArrowButton.setFixedSize(QSize(MenuButtonSpace, Size))        
+                
+        return(widget)
                 
     # Add dragdrop functionality
     def mouseMoveEvent(self, e):
