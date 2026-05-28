@@ -117,7 +117,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "UseButtonBackGround": Parameters.BUTTON_BACKGROUND_ENABLED,
         "CustomIcons": Parameters.CUSTOM_ICONS_ENABLED,
         "CustomColors": Parameters.CUSTOM_COLORS_ENABLED,
-        "BorderTransparant": Parameters.BORDER_TRANSPARANT,
+        # "BorderTransparant": Parameters.BORDER_TRANSPARANT,
         "Color_Borders": Parameters.COLOR_BORDERS,
         # "Color_Background": Parameters.COLOR_BACKGROUND,
         "Color_Background_Hover": Parameters.COLOR_BACKGROUND_HOVER,
@@ -174,7 +174,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "UseButtonBackGround": Parameters.BUTTON_BACKGROUND_ENABLED,
         "CustomIcons": Parameters.CUSTOM_ICONS_ENABLED,
         "CustomColors": Parameters.CUSTOM_COLORS_ENABLED,
-        "BorderTransparant": Parameters.BORDER_TRANSPARANT,
+        # "BorderTransparant": Parameters.BORDER_TRANSPARANT,
         "Color_Borders": Parameters.COLOR_BORDERS,
         # "Color_Background": Parameters.COLOR_BACKGROUND,
         "Color_Background_Hover": Parameters.COLOR_BACKGROUND_HOVER,
@@ -314,6 +314,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.label_44.setHidden(True)
         self.form.PanelHeightOffset.setDisabled(True)
         self.form.PanelHeightOffset.setHidden(True)
+        # Disable the Border transparant setting
+        self.form.BorderTransparant.setDisabled(True)
+        self.form.BorderTransparant.setHidden(True)
 
         # region - load all settings
         #
@@ -512,10 +515,10 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         else:
             self.form.CustomColors.setCheckState(Qt.CheckState.Unchecked)
 
-        if Parameters.BORDER_TRANSPARANT is True:
-            self.form.BorderTransparant.setCheckState(Qt.CheckState.Checked)
-        else:
-            self.form.BorderTransparant.setCheckState(Qt.CheckState.Unchecked)
+        # if Parameters.BORDER_TRANSPARANT is True:
+        #     self.form.BorderTransparant.setCheckState(Qt.CheckState.Checked)
+        # else:
+        #     self.form.BorderTransparant.setCheckState(Qt.CheckState.Unchecked)
 
         self.form.Color_Borders.setProperty(
             "color", QColor(Parameters.COLOR_BORDERS)
@@ -743,7 +746,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.form.pinButton_closed, SIGNAL("clicked()"), PinButtonClosed
         )
         self.form.CustomColors.clicked.connect(self.on_CustomColors_clicked)
-        self.form.BorderTransparant.clicked.connect(self.on_BorderTransparant_clicked)
+        # self.form.BorderTransparant.clicked.connect(self.on_BorderTransparant_clicked)
         self.form.Color_Borders.clicked.connect(self.on_Color_Borders_clicked)
         # self.form.Color_Background.clicked.connect(self.on_Color_Background_clicked)
         self.form.Color_Background_Hover.clicked.connect(

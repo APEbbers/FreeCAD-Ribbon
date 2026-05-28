@@ -124,6 +124,7 @@ from CustomWidgets import (
     CustomSeparator, 
     QuickAccessToolButton, 
     QuickAccessSeparator,
+    RightToolButton,
 )
 import json
 import os
@@ -369,6 +370,9 @@ class ModernMenu(RibbonBar):
                         
         # connect the signals
         self.connectSignals()
+        
+        # Set the border for buttons always hidden
+        Parameters.BORDER_TRANSPARANT = True
 
         # read ribbon structure from JSON file
         if os.path.exists(Parameters.RIBBON_STRUCTURE_JSON) is False:
@@ -2138,7 +2142,7 @@ class ModernMenu(RibbonBar):
                 child.deleteLater()
         # Create new buttons and add them to the quickacces toolbar based on the original order
         for commandName in self.ribbonStructure["quickAccessCommands"]:
-            button = self.CreateQuickButtonFromCommand(commandName=commandName)
+            button = self.CreateToolBarButtonFromCommand(commandName=commandName)
             self.addQuickAccessButton(button)
                                            
         # Clear the workbench dict
@@ -2946,17 +2950,17 @@ class ModernMenu(RibbonBar):
                     QuickAction = Gui.Command.get(commandName).getAction()
 
                     if len(QuickAction) == 1:
-                        button = self.CreateQuickButtonFromCommand(commandName)
+                        button = self.CreateToolBarButtonFromCommand(commandName)
                     elif len(QuickAction) > 1:
                         # set the padding for a dropdown button
                         padding = self.PaddingRight
-                        button = self.CreateQuickButtonFromCommand(commandName, padding)
+                        button = self.CreateToolBarButtonFromCommand(commandName, padding)
 
                 # If it is a custom dropdown, add the actions one by one.
                 if commandName.endswith("_ddb") is True and "separator" not in commandName:
                     # set the padding for a dropdown button
                     padding = self.PaddingRight
-                    button = self.CreateQuickButtonFromCommand(commandName, padding)
+                    button = self.CreateToolBarButtonFromCommand(commandName, padding)
 
                 # Add the button to the quickaccess toolbar
                 if button is not None:
@@ -3791,48 +3795,26 @@ class ModernMenu(RibbonBar):
                     border-radius: 2px;
                     }""")
         
-        # add the settingsmenu to the right toolbar
-        SettingsButton = QToolButton()   
-        SettingsButton.setIcon(Gui.getIcon("Std_DlgParameter.svg"))     
-        SettingsButton.setFixedSize(
-            self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize
-        )
-        SettingsButton.setStyleSheet(
-            StyleMapping_Ribbon.ReturnStyleSheet(
-                control="toolbutton", padding_right="12px"
-            )
-        )        
-        SettingsButton.setMenu(SettingsMenu)
-        SettingsButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
-        self.rightToolBar().addWidget(SettingsButton)
-
-        # Set the helpbutton
-        self.helpRibbonButton().setEnabled(True)
-        self.helpRibbonButton().setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
-        )
-        self.helpRibbonButton().setToolTip(translate("FreeCAD Ribbon", "Help") + "...")
-        # Get the default help action from FreeCAD
-        self.helpRibbonButton().setIcon(Gui.getIcon("help-browser"))
-        self.helpRibbonButton().setMenu(self.HelpMenu)
-        self.helpRibbonButton().setFixedSize(
-            self.RightToolBarButtonSize + 12, self.RightToolBarButtonSize
-        )
-        self.helpRibbonButton().setStyleSheet(
-            str(StyleMapping_Ribbon.ReturnStyleSheet(
-                control="toolbutton", padding_right="12px"
-            ))
-            + """\n\nQToolTip {
-                    background-color: #FFFFE1;
-                    color: black;
-                    border: black solid 1px;
-                    border-radius: 2px;
-                    }"""
-        )   
-        self.helpRibbonButton().setPopupMode(
-            QToolButton.ToolButtonPopupMode.InstantPopup
-        )        
-
+        # add the helpMenu to the right toolbar 
+        self._titleWidget._helpButton.deleteLater() # Remove the original helpbutton
+        # Create a new helpbutton
+        HelpButton = RightToolButton(Menu=self.HelpMenu, Size=self.RightToolBarButtonSize, MenuButtonSpace=self.MenuButtonSpace) 
+        HelpButton.setIcon(Gui.getIcon("help-browser"))                
+        # Create the widget action from the button
+        WidgetAction = QWidgetAction(self.rightToolBar())
+        WidgetAction.setDefaultWidget(HelpButton)
+        # Add the widgetaction to the toolbar      
+        self.rightToolBar().addAction(WidgetAction)
+        
+        # add the settingsmenu to the right toolbar 
+        SettingsButton = RightToolButton(Menu=SettingsMenu, Size=self.RightToolBarButtonSize, MenuButtonSpace=self.MenuButtonSpace) 
+        SettingsButton.setIcon(Gui.getIcon("Std_DlgParameter.svg"))                
+        # Create the widget action from the button
+        WidgetAction = QWidgetAction(self.rightToolBar())
+        WidgetAction.setDefaultWidget(SettingsButton)
+        # Add the widgetaction to the toolbar      
+        self.rightToolBar().addAction(WidgetAction)
+                
         # if the FreeCAD titlebar is hidden,add close, minimize and maximize buttons
         padding = "5px"
         if Parameters.HIDE_TITLEBAR_FC is True:
@@ -3979,7 +3961,6 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setSizeIncrement(1, 1)
         # Set the objectName for the right toolbar. needed for excluding from hiding.
         self.rightToolBar().setObjectName("rightToolBar")
-                
         return
 
     # Add the searchBar if it is present
@@ -6847,7 +6828,7 @@ class ModernMenu(RibbonBar):
                     continue
                 
                 # Create a button
-                button = self.CreateQuickButtonFromCommand(commandName=commandName, padding=padding)
+                button = self.CreateToolBarButtonFromCommand(commandName=commandName, padding=padding)
 
                 # Set the height of the toolbar
                 self.setQuickAccessButtonHeight(self.RibbonMinimalHeight)
@@ -6874,7 +6855,7 @@ class ModernMenu(RibbonBar):
         self.ribbonStructure["quickAccessCommands"] = OrderList
         return toolBarWidth
     
-    def CreateQuickButtonFromCommand(self, commandName, padding = 0):
+    def CreateToolBarButtonFromCommand(self, commandName, padding = 0, RightToolBarButton=False):
         # Define a button
         button = None
 
@@ -6906,7 +6887,10 @@ class ModernMenu(RibbonBar):
                 padding = self.PaddingRight
                 menu = QMenu()
                 menu.addActions(QuickAction)
-                button = QuickAccessToolButton(Action=QuickAction[0], parent=self.quickAccessToolBar(), Menu=menu, Size=self.QuickAccessButtonSize, MenuButtonSpace=padding)
+                if RightToolBarButton is False:
+                    button = QuickAccessToolButton(Action=QuickAction[0], parent=self.quickAccessToolBar(), Menu=menu, Size=self.QuickAccessButtonSize, MenuButtonSpace=padding)
+                else:
+                    button = RightToolButton(Action=QuickAction[0], parent=self.quickAccessToolBar(), Menu=menu, Size=self.QuickAccessButtonSize, MenuButtonSpace=padding)
 
                 # Set the command as objectName for future reference
                 button.setObjectName(commandName)
@@ -6922,7 +6906,11 @@ class ModernMenu(RibbonBar):
             for action in QuickAction:
                 if len(action) > 0:
                     menu.addAction(action[0])
-            button = QuickAccessToolButton(Action=QuickAction[0], parent=self.quickAccessToolBar(), Menu=menu, Size=self.QuickAccessButtonSize, MenuButtonSpace=padding)
+            if RightToolBarButton is False:
+                button = QuickAccessToolButton(Action=QuickAction[0], parent=self.quickAccessToolBar(), Menu=menu, Size=self.QuickAccessButtonSize, MenuButtonSpace=padding)
+            else:
+                button = RightToolButton(Action=QuickAction[0], parent=self.quickAccessToolBar(), Menu=menu, Size=self.QuickAccessButtonSize, MenuButtonSpace=padding)
+
               
             # Set the command as objectName for future reference
             button.setObjectName(commandName)
