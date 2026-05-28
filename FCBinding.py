@@ -245,7 +245,7 @@ class ModernMenu(RibbonBar):
     BottomMargin = 0
     
     # Set the value for the menubutton width
-    MenuButtonSpace = 8
+    MenuButtonSpace = 12
 
     # Create the lists and ditcs for the lists in the ribbon structure, 
     ignoredToolbars = []
@@ -1726,7 +1726,16 @@ class ModernMenu(RibbonBar):
             # Enable all buttons, so you can access them with a right click
             self.activateButtons()            
             
-        # self.currentCategory().panels().update(dictPanels)
+        # StyleSheet_QC = self.quickAccessToolBar().styleSheet()
+        # for action in self.quickAccessToolBar().actions():
+        #     if "separator" in action.objectName().lower():
+        #         self.quickAccessToolBar().setStyleSheet(StyleSheet_QC +
+        #             """QuickAccessToolButton#"""
+        #                 + action.objectName()
+        #                 + """ {background: """
+        #                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+        #                 + ";}"
+        #         )
         return
     
     def on_ApplyClicked(self):
@@ -1963,6 +1972,16 @@ class ModernMenu(RibbonBar):
         self.setCurrentCategory(self.CurrentCategoryToRestore)
         self.hideClassicToolbars()  
         
+        # for action in self.quickAccessToolBar().actions():
+        #     if "separator" in action.objectName().lower():
+        #         self.quickAccessToolBar().setStyleSheet(
+        #             """QToolButton#"""
+        #                 + action.objectName()
+        #                 + """{background: """
+        #                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        #                 + ";}"
+        #         )
+        
         # Print a message
         print(translate("FreeCAD Ribbon", "RibbonUI: Changes are saved"))
         return
@@ -2147,6 +2166,16 @@ class ModernMenu(RibbonBar):
         # Activate the stored category when the customise enviroment was started
         self.setCurrentCategory(self.CurrentCategoryToRestore)
         self.hideClassicToolbars()
+        
+        # for action in self.quickAccessToolBar().actions():
+        #     if "separator" in action.objectName().lower():
+        #         self.quickAccessToolBar().setStyleSheet(
+        #             """QToolButton#"""
+        #                 + action.objectName()
+        #                 + """{background: """
+        #                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        #                 + ";}"
+        #         )
         
         # Print a message
         print(translate("FreeCAD Ribbon", "RibbonUI: Changes are rolled back"))
@@ -2728,14 +2757,14 @@ class ModernMenu(RibbonBar):
                     Button = QuickAccessToolBar.childAt(buttonPos)
                     # Get the action before which the drag indicator has to be placed
                     beforeAction = QuickAccessToolBar.actionAt(buttonPos)
-                    
+                                        
                     if Button is None:
                         return
                                             
                     if beforeAction is not None and Button is not None:
                         if type(Button) is QuickAccessToolButton or type(Button) is QToolButton or type(Button) is QuickAccessSeparator:
                             # Store the beforeAction globally
-                            self.dropWidget_QuickAccess = beforeAction
+                            self.dropWidget_QuickAccess = beforeAction                            
                             # Store the index of the current beforeAction. This is needed for the drop function to save the order
                             self.DropIndex_QuickAccess = QuickAccessToolBar.actions().index(beforeAction)
                             # If the button is an Target indicator or is None, remove it.
@@ -2751,6 +2780,7 @@ class ModernMenu(RibbonBar):
                             else:
                                 QuickAccessToolBar.insertAction(beforeAction, self.dragAction_QuickAccess)
                                 self.dragAction_QuickAccess.setVisible(True)
+                            self.dragAction_QuickAccess.setObjectName(Button.objectName())
                                                 
                     # # If the beforeAction is None, you are at the end of the QuickAccess Toolbar
                     # if len(QuickAccessToolBar.actions()) + 1 == self.DropIndex_QuickAccess:
@@ -3130,39 +3160,27 @@ class ModernMenu(RibbonBar):
                 # Update the orderlist
                 #
                 # Define the orderlist as the current list of quickaccess commands
-                OrderList = self.workBenchDict["quickAccessCommands"]
-                # Determine the index of the Button that is clicked on
-                buttonList = self._titleWidget._quickAccessToolBar.findChildren(QToolButton)
-                newOrderList = []
-                startIndex = 0
-                offSet = 0
-                for i in range(len(buttonList)):
-                    if type(buttonList[i]) is QuickAccessToolButton or type(buttonList[i]) is QuickAccessSeparator :
-                        newOrderList.append(buttonList[i].objectName())
-                    if type(buttonList[i]) is not QuickAccessToolButton and type(buttonList[i]) is not QuickAccessSeparator :
-                        offSet += 1
-                for i in range(len(newOrderList)):
-                    if widget.objectName() == newOrderList[i]:
-                        startIndex = i 
-                        break         
-
-                # Remove the current widget
-                newOrderList.pop(startIndex)
-                # Get the current index stored in the dragmove function.
-                if self.DropIndex_QuickAccess is not None:
-                    endIndex = self.DropIndex_QuickAccess - offSet
-                    # Insert the commandName in the orderlist
-                    newOrderList.insert(endIndex, widget.objectName())
-
-                # Set the quickaccessCommands
-                self.workBenchDict["quickAccessCommands"] = newOrderList
-                
-                # Delete the drag indicater
                 try:
-                    QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
-                    QuickAccessToolBar.removeAction(self.dragIndicator_QuickAccess_Action)
+                    OrderList = self.workBenchDict["quickAccessCommands"]
+                    OrderList.remove(widget.objectName())
+                    index = OrderList.index(beforeAction.objectName())
+                    OrderList.insert(index, widget.objectName())
+
+                    # Set the quickaccessCommands
+                    self.workBenchDict["quickAccessCommands"] = OrderList
+                    
+                    # Delete the drag indicater
+                    try:
+                        QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
+                        QuickAccessToolBar.removeAction(self.dragIndicator_QuickAccess)
+                    except Exception:
+                        pass
                 except Exception:
-                    pass
+                    try:
+                        QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
+                        QuickAccessToolBar.removeAction(self.dragIndicator_QuickAccess)
+                    except Exception:
+                        pass
                 
             # Enable all buttons, so you can access them with a right click
             self.activateButtons()
@@ -6793,7 +6811,10 @@ class ModernMenu(RibbonBar):
     def BuildQuickToolbar(self, ButtonList = []):
         # add quick access buttons
         toolBarWidth = 0
+        # Add a counter to count the separators
+        counter = 0
         
+        OrderList = []
         for commandName in ButtonList:
             # Define a width
             width = 0
@@ -6803,35 +6824,54 @@ class ModernMenu(RibbonBar):
             try:
                 # If there is 'separator' in the commandname, add a separator
                 if "separator" in commandName:
+                    # Increase the counter
+                    counter = counter + 1
+                    # Set the width and height
                     width = 12
                     height = self.QuickAccessButtonSize
+                    # Create the separator
                     separator = QuickAccessSeparator(self.quickAccessToolBar())
-                    separator.setObjectName(commandName)
-                    # separator = button
+                    separator.setObjectName(f"separator_{counter}")
                     separator.setFixedSize(width, height)
                     separator.setEnabled(True)
-                    self._titleWidget.addQuickAccessButton(separator)                    
+                    # Create the widget action from the separator
+                    WidgetAction = QWidgetAction(self.quickAccessToolBar())
+                    WidgetAction.setObjectName(f"separator_{counter}")
+                    WidgetAction.setDefaultWidget(separator)
+                    # Add the widgetaction to the toolbar      
+                    self.quickAccessToolBar().addAction(WidgetAction)
+                    # Update the toolbar width               
                     toolBarWidth = toolBarWidth + width
+                    # Update the order list
+                    OrderList.append(f"separator_{counter}")
                     continue
-                    
+                
+                # Create a button
                 button = self.CreateQuickButtonFromCommand(commandName=commandName, padding=padding)
-                button.setFixedWidth(button.width())
-                # print(button.width())
 
-                # Set the height
+                # Set the height of the toolbar
                 self.setQuickAccessButtonHeight(self.RibbonMinimalHeight)
 
                 # Add the button to the quickaccess toolbar as an WidgetAction. This is needed for custom widgets
                 # Otherwise you cannot get the index later during drag
+                #
+                # Create the widget action from the button
                 WidgetAction = QWidgetAction(self.quickAccessToolBar())
-                WidgetAction.setDefaultWidget(button)           
+                WidgetAction.setObjectName(commandName)
+                WidgetAction.setDefaultWidget(button)
+                # Add the widgetaction to the toolbar      
                 self.quickAccessToolBar().addAction(WidgetAction)
+                # Update the toolbar width   
                 toolBarWidth = toolBarWidth + button.width()
+                # Update the order list
+                OrderList.append(commandName)
             except Exception as e:
                 if Parameters.DEBUG_MODE is True:
                     StandardFunctions.Print(f"{commandName}, {e}", "Warning")
                 continue
         
+        # Update the ribbon structure with the order list
+        self.ribbonStructure["quickAccessCommands"] = OrderList
         return toolBarWidth
     
     def CreateQuickButtonFromCommand(self, commandName, padding = 0):

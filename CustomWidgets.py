@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 import typing
 import sys
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
@@ -39,7 +39,7 @@ from PySide6.QtGui import (
     QPainter,
     
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QComboBox,
     QMainWindow,
     QSizePolicy,
@@ -58,7 +58,7 @@ from PySide6.QtWidgets import (
     QGridLayout,
     QPushButton,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QSize,
     QMimeData,
@@ -326,8 +326,8 @@ class CustomControls(RibbonToolButton):
             Label_Text.setTextInteractionFlags(Qt.TextInteractionFlag.NoTextInteraction)
             Label_Text.setFocusPolicy(Qt.FocusPolicy.NoFocus)
             # change the menubutton space because text is included in the click area
-            if showText is True:
-                MenuButtonSpace = 6
+            # if showText is True:
+            #     MenuButtonSpace = 6
 
             # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
             if setWordWrap is False:
@@ -754,8 +754,8 @@ class CustomControls(RibbonToolButton):
         if showText is True:
             CommandButton.setFixedHeight(ButtonSize.height()-Label_Text.height())
         # Compensate the height when text is visible and a menu is present
-        if showText is True and Menu is not None and len(Menu.actions()) <= 1:
-            CommandButton.setFixedHeight(ButtonSize.height()-Label_Text.height() - MenuButtonSpace)
+        if showText is True and Menu is not None and len(Menu.actions()) > 0:
+            CommandButton.setFixedHeight(ButtonSize.height()-Label_Text.height() - MenuButtonSpace + 3)
         
         btn.setFixedSize(QSize(width, ButtonSize.height()))
         
@@ -1549,10 +1549,6 @@ class QuickAccessToolButton(QToolButton):
             except Exception as e:
                 print(e)
 
-        
-    
-    
-
 class CustomSeparator(RibbonSeparator):
     def mouseMoveEvent(self, e):
         if e.buttons() == Qt.MouseButton.LeftButton:
@@ -1652,20 +1648,20 @@ class QuickAccessSeparator(QToolButton):
         self._topMargins = margins
         self._bottomMargins = margins
 
-    # # Add dragdrop functionality
-    # def mouseMoveEvent(self, e):
-    #     if e.buttons() == Qt.MouseButton.LeftButton:
-    #         try:
-    #             drag = QDrag(self)
-    #             mime = QMimeData()
-    #             drag.setMimeData(mime)
-    #             pixmap = QPixmap(self.size())
-    #             self.render(pixmap)
-    #             drag.setPixmap(pixmap)
+    # Add dragdrop functionality
+    def mouseMoveEvent(self, e):
+        if e.buttons() == Qt.MouseButton.LeftButton:
+            try:
+                drag = QDrag(self)
+                mime = QMimeData()
+                drag.setMimeData(mime)
+                pixmap = QPixmap(self.size())
+                self.render(pixmap)
+                drag.setPixmap(pixmap)
 
-    #             drag.exec_(Qt.DropAction.MoveAction)
-    #         except Exception as e:
-    #             print(e)
+                drag.exec_(Qt.DropAction.MoveAction)
+            except Exception as e:
+                print(e)
     
     def paintEvent(self, event: QPaintEvent) -> None:
         painter = QPainter(self)
