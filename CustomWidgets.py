@@ -37,7 +37,7 @@ from PySide6.QtGui import (
     QPaintEvent,
     QPen,
     QPainter,
-    
+    QEnterEvent,   
 )
 from PySide6.QtWidgets import (
     QComboBox,
@@ -57,6 +57,7 @@ from PySide6.QtWidgets import (
     QLayout,
     QGridLayout,
     QPushButton,
+    QGraphicsEffect,
 )
 from PySide6.QtCore import (
     Qt,
@@ -266,14 +267,6 @@ class CustomControls(RibbonToolButton):
         Layout = QVBoxLayout()
         Label_Text = QLabel()
 
-        # Set the default stylesheet
-        StyleSheet_Addition_Button = (
-            "QToolButton, QToolButton:hover {background-color: "
-            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            + ";border: none"
-            + ";}"
-        )        
-        btn.setStyleSheet(StyleSheet_Addition_Button)
         # Define the parameters
         CommandButtonHeight = 0
         TextWidth = 0
@@ -391,7 +384,7 @@ class CustomControls(RibbonToolButton):
                     if FontMetrics.tightBoundingRect(line2).width() > TextWidth:
                         TextWidth = FontMetrics.tightBoundingRect(line2).width()
                 except Exception as e:
-                    Label_Text.setText(line1 + "\n   ")
+                    # Label_Text.setText(line1 + "\n   ")
                     pass
             
             Label_Text.setFixedWidth(TextWidth + 6)
@@ -445,70 +438,80 @@ class CustomControls(RibbonToolButton):
                 StyleSheet_Addition_Label= ""
                 if showText is False:
                     StyleSheet_Addition_Arrow = (
-                        "QToolButton, QLabel {background-color: "
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid "
                         + BorderColor
-                        + ";border-top: 0.5px solid "
-                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        # + ";border-top: 0.5px solid "
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
                         + ";spacing: 0px"
+                        + ";padding: 0px"
                         + ";}"
                         + """QToolButton::menu-indicator {
+                                margin: 0px;
+                                spacing: 0px;
+                                padding: 0px;
                                 image: none;
-                                subcontrol-origin: padding;
+                                subcontrol-origin: border;
                                 subcontrol-position: center top;
                             }"""
                     )
                     StyleSheet_Addition_Label = (
-                        "QToolButton, QLabel {background-color: "
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid "
                         + BorderColor
-                        + ";border-bottom: 0.5px solid "
-                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        # + ";border-bottom: 0.5px solid "
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
                         + ";spacing: 0px"
+                        + ";padding: 0px"
                         + ";}"
                     )
                 if showText is True:
                     StyleSheet_Addition_Arrow = (
-                        "QToolButton, QLabel {background-color: "
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid "
                         + BorderColor
-                        + ";border-top: 0.5px solid "
-                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        # + ";border-top: 0.5px solid "
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
                         + ";spacing: 0px"
+                        + ";padding: 0px"
                         + ";}"
                         + """QToolButton::menu-indicator {
+                                margin: 0px;
+                                spacing: 0px;
+                                padding: 0px;
                                 image: none;
-                                subcontrol-origin: padding;
+                                subcontrol-origin: border;
                                 subcontrol-position: center top;
                             }"""
                     )
                     StyleSheet_Addition_Label = (
-                        "QToolButton, QLabel {background-color: "
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid "
                         + BorderColor
-                        + ";border-bottom: 0.5px solid "
-                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        # + ";border-bottom: 0.5px solid "
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
                         + ";margin: 0px"
                         + ";spacing: 0px"
+                        + ";padding: 0px"
                         + ";}"
                     )
                 StyleSheet_Addition_Button = (
-                    "QToolButton, QLabel, QToolButton {background-color: "
+                    "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";border: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
@@ -516,7 +519,7 @@ class CustomControls(RibbonToolButton):
                     + ";spacing: 0px"
                     + ";}"
                 )
-                btn.setStyleSheet(StyleSheet_Addition_Button)
+                # btn.setStyleSheet(StyleSheet_Addition_Button)
                 if ArrowButton.underMouse():
                     Label_Text.setStyleSheet(StyleSheet_Addition_Label)
                     ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
@@ -540,7 +543,7 @@ class CustomControls(RibbonToolButton):
                 )
                 StyleSheet_Addition = """QToolButton::menu-indicator {
                     image: none;
-                    subcontrol-origin: padding;
+                    subcontrol-origin: border;
                     subcontrol-position: center top;
                 }"""
                 Label_Text.setStyleSheet(StyleSheet)
@@ -593,25 +596,26 @@ class CustomControls(RibbonToolButton):
                 StyleSheet_Addition_Label = ""               
                 if showText is False:
                     StyleSheet_Addition_Label = (
-                        "QToolButton, QLabel {background-color: "
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-top: 0px solid"
+                        # + ";border-top: 0px solid"
                         + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
                         + ";spacing: 0px"
+                        + ";padding: 0px"
                         + ";}"
                         + "QToolButton:disabled, QLabel:disabled {background-color: "
                         + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                        + ";border: 0.5px solid"
-                        + BorderColor
+                        # + ";border: 0.5px solid"
+                        # + BorderColor
                         + ";}"
                     )
                     StyleSheet_Addition_Command = (
-                        "QToolButton, QLabel {background-color: "
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid"
                         + BorderColor
@@ -621,34 +625,36 @@ class CustomControls(RibbonToolButton):
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
                         + ";spacing: 0px"
+                        + ";padding: 0px"
                         + ";}"
                     )
                 if showText is True:
                     StyleSheet_Addition_Label = (
-                        "QToolButton, QLabel {background-color: "
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-top: 0px solid"
-                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        # + ";border-top: 0px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
                         + ";spacing: 0px"
+                        + ";padding: 0px"
                         + ";}"
                         + "QToolButton:disabled, QLabel:disabled {background-color: "
                         + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                        + ";border: 0.5px solid"
-                        + BorderColor
+                        # + ";border: 0.5px solid"
+                        # + BorderColor
                         + ";}"
                     )
                     StyleSheet_Addition_Command = (
-                        "QToolButton, QLabel {background-color: "
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-bottom: 0px solid"
-                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        # + ";border-bottom: 0px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 0px"
                         + ";margin: 0px"
@@ -656,15 +662,15 @@ class CustomControls(RibbonToolButton):
                         + ";}"
                     )
                 StyleSheet_Addition_Button = (
-                    "QToolButton, QLabel {background-color: "
+                    "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                    + ";border: "
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                    # + ";border: "
+                    # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";margin: 0px"
                     + ";spacing: 0px"
                     + ";}"
                 )
-                btn.setStyleSheet(StyleSheet_Addition_Button)
+                # btn.setStyleSheet(StyleSheet_Addition_Button)
                 if CommandButton.underMouse():
                     Label_Text.setStyleSheet(StyleSheet_Addition_Label)
                     CommandButton.setStyleSheet(StyleSheet_Addition_Command)
@@ -691,8 +697,8 @@ class CustomControls(RibbonToolButton):
                 StyleSheet_Addition = (
                     "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                    + ";border: 0.5px solid"
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                    # + ";border: 0.5px solid"
+                    # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";}"
                 )
                 Label_Text.setStyleSheet(StyleSheet_Addition + StyleSheet)
@@ -717,28 +723,6 @@ class CustomControls(RibbonToolButton):
             Label_Text.setHidden(True)
             TextWidth = 0
 
-        # Set the stylesheet
-        StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(
-            control="toolbutton", radius="2px"
-        )
-        StyleSheet_Addition_Arrow = (
-            "QToolButton, QLabel {background-color: "
-            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-            + ";margin: 0px"
-            + ";spacing: 0px"
-            + ";}"
-            + """QToolButton::menu-indicator {
-                    image: none;
-                    subcontrol-origin: padding;
-                    subcontrol-position: center top;
-                }"""
-        )
-        # CommandButton.setStyleSheet(StyleSheet_Addition_Command + StyleSheet)
-        ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow + StyleSheet)
-        CommandButton.setStyleSheet(StyleSheet)
-        Label_Text.setStyleSheet(StyleSheet)
-        btn.setStyleSheet(StyleSheet)
-
         # Set the final sizes
         width = Label_Text.width()
         if Menu is not None and len(Menu.actions()) <= 1:
@@ -759,10 +743,34 @@ class CustomControls(RibbonToolButton):
         
         btn.setFixedSize(QSize(width, ButtonSize.height()))
         
+        # Set the stylesheet
+        StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(
+            control="toolbutton", radius="2px"
+        )
+        StyleSheet_Addition_Arrow = (
+            "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+            + ";margin: 0px"
+            + ";spacing: 0px"
+            + ";padding: 0px"
+            + ";}"
+            + """QToolButton::menu-indicator {
+                    margin: 0px;
+                    spacing: 0px;
+                    padding: 0px;
+                    image: none;
+                    subcontrol-origin: border;
+                    subcontrol-position: center top;
+                }"""
+        )
+        # CommandButton.setStyleSheet(StyleSheet_Addition_Command + StyleSheet)
+        ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow + StyleSheet)
+        CommandButton.setStyleSheet(StyleSheet)
+        Label_Text.setStyleSheet(StyleSheet)
+        
         # Store the widths
         self.labelWidth = width
         self.menuButtonWidth = ArrowButton.width()
-
         return btn
 
     @classmethod
@@ -797,7 +805,7 @@ class CustomControls(RibbonToolButton):
         Label_Text = QLabel()
         # Set the default stylesheet
         StyleSheet_Addition_Button = (
-            "QToolButton, QToolButton:hover, QToolButton, QToolButton:hover {background-color: "
+            "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";border: none"
             + ";}"
@@ -998,13 +1006,13 @@ class CustomControls(RibbonToolButton):
                 StyleSheet_Addition_Label = ""   
                 if showText is False:        
                     StyleSheet_Addition_Arrow = (
-                        "QToolButton, QLabel {"
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {"
                         + "background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-left: 0.5 px solid"
-                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        # + ";border-left: 0.5 px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
@@ -1014,17 +1022,17 @@ class CustomControls(RibbonToolButton):
                                 margin: 0px;
                                 spacing: 0px;
                                 image: none;
-                                subcontrol-origin: padding;
+                                subcontrol-origin: border;
                                 subcontrol-position: center top;
                             }"""
                     )
                     StyleSheet_Addition_Label = (
-                        "QToolButton, QLabel {background-color: "
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-right: 0.5px solid"
-                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        # + ";border-right: 0.5px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
@@ -1033,12 +1041,12 @@ class CustomControls(RibbonToolButton):
                     )
                 if showText is True:        
                     StyleSheet_Addition_Arrow = (
-                        "QToolButton, QLabel {background-color: "
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-left: 0.5 px solid"
-                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        # + ";border-left: 0.5 px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
@@ -1048,17 +1056,17 @@ class CustomControls(RibbonToolButton):
                                 margin: 0px;
                                 spacing: 0px;
                                 image: none;
-                                subcontrol-origin: padding;
+                                subcontrol-origin: border;
                                 subcontrol-position: center top;
                             }"""
                     )
                     StyleSheet_Addition_Label = (
-                        "QToolButton, QLabel {background-color: "
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-right: 0.5px solid"
-                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        # + ";border-right: 0.5px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
                         + ";margin: 0px"
@@ -1066,10 +1074,10 @@ class CustomControls(RibbonToolButton):
                         + ";}"
                     )
                 StyleSheet_Addition_Button = (
-                    "QToolButton, QLabel {background-color: "
+                    "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                    + ";border: "
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                    # + ";border: "
+                    # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";margin: 0px"
                     + ";spacing: 0px"
                     + ";}"
@@ -1101,11 +1109,11 @@ class CustomControls(RibbonToolButton):
                     control="toolbutton",
                     radius="2px",
                 )
-                StyleSheet_Addition = """QToolButton::menu-indicator, QToolButton::menu-button:hover {
+                StyleSheet_Addition = """QToolButton, QToolButton:hover, QLabel, QLabel:hover, QToolButton::menu-indicator, QToolButton::menu-button:hover {
                     margin: 0px;
                     spacing: 0px;
                     image: none;
-                    subcontrol-origin: padding;
+                    subcontrol-origin: border;
                     subcontrol-position: center top;
                 }"""
                 Label_Text.setStyleSheet(StyleSheet)
@@ -1158,12 +1166,12 @@ class CustomControls(RibbonToolButton):
                 StyleSheet_Addition_Label= ""
                 if showText is False:                    
                     StyleSheet_Addition_Label = (
-                        "QToolButton, QLabel, QToolButton {background-color: "
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-left: 0.5px solid"
-                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        # + ";border-left: 0.5px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
@@ -1171,12 +1179,12 @@ class CustomControls(RibbonToolButton):
                         + ";}"
                     )
                     StyleSheet_Addition_Command = (
-                        "QToolButton, QLabel, QToolButton {background-color: "
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-right: 0.5px solid"
-                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        # + ";border-right: 0.5px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
@@ -1185,12 +1193,12 @@ class CustomControls(RibbonToolButton):
                     )
                 if showText is True:
                     StyleSheet_Addition_Label = (
-                        "QToolButton, QLabel, QToolButton {background-color: "
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-left: 0px solid"
-                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        # + ";border-left: 0px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 0px;border-bottom-left-radius: 0px;"
                         + "border-top-right-radius: 2px;border-bottom-right-radius: 2px"
                         + ";margin: 0px"
@@ -1198,12 +1206,12 @@ class CustomControls(RibbonToolButton):
                         + ";}"
                     )
                     StyleSheet_Addition_Command = (
-                        "QToolButton, QLabel, QToolButton {background-color: "
+                        "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                         # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         # + ";border: 0.5px solid"
                         + BorderColor
-                        + ";border-right: 0px solid"
-                        + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                        # + ";border-right: 0px solid"
+                        # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";border-top-left-radius: 2px;border-bottom-left-radius: 2px;"
                         + "border-top-right-radius: 0px;border-bottom-right-radius: 0px"
                         + ";margin: 0px"
@@ -1211,10 +1219,10 @@ class CustomControls(RibbonToolButton):
                         + ";}"
                     )
                 StyleSheet_Addition_Button = (
-                    "QToolButton, QLabel, QToolButton {background-color: "
+                    "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                    + ";border: "
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                    # + ";border: "
+                    # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";margin: 0px"
                     + ";spacing: 0px"
                     + ";}"
@@ -1239,10 +1247,10 @@ class CustomControls(RibbonToolButton):
                     radius="2px",
                 )
                 StyleSheet_Addition = (
-                    "QToolButton, QToolButton:hover, QLabel, QLabel:hover, QToolButton, QToolButton:hover {background-color: "
+                    "QToolButton, QToolButton:hover, QLabel, QLabel:hover {background-color: "
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                    + ";border: 0.5px solid"
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                    # + ";border: 0.5px solid"
+                    # + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + ";}"
                 )
                 Label_Text.setStyleSheet(StyleSheet + StyleSheet_Addition)
@@ -1284,7 +1292,7 @@ class CustomControls(RibbonToolButton):
                     margin: 0px;
                     spacing: 0px;
                     image: none;
-                    subcontrol-origin: padding;
+                    subcontrol-origin: border;
                     subcontrol-position: center top;
                 }"""
         )
@@ -1297,8 +1305,8 @@ class CustomControls(RibbonToolButton):
                         spacing: 0px;"""
                     + """;background: """
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                    + """;border: """
-                    + BorderColor
+                    # + """;border: """
+                    # + BorderColor
                     + """;}"""
         )
         CommandButton.setStyleSheet(StyleSheet)
@@ -1513,7 +1521,7 @@ class QuickAccessToolButton(QToolButton):
             + ";}"
             + """QToolButton::menu-indicator {
                     image: none;
-                    subcontrol-origin: padding;
+                    subcontrol-origin: border;
                     subcontrol-position: center top;
                 }"""
         )
@@ -1684,18 +1692,21 @@ class QuickAccessSeparator(QToolButton):
         )
 
 class RightToolButton(QToolButton):
+    
     def __init__(
         self,
         Menu: QMenu,
         Size: int = 0,
         MenuButtonSpace=0,
         parent=None,
+        Icon = None,
         *args,
         **kwargs       
     ):
         QToolButton.__init__(self, parent=None, *args, **kwargs)
         self.menu = Menu
         self.menuButtonWidth = 0
+        self.size = Size
         
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
@@ -1703,34 +1714,28 @@ class RightToolButton(QToolButton):
         self.layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
                 
         # Added the widget
-        widget = self.CreateButton(Menu,Size, MenuButtonSpace, parent)
+        widget = self.CreateButton(Menu,Size, MenuButtonSpace, Icon, parent)
         self.setFixedSize(QSize(Size + MenuButtonSpace, Size))
         self.layout.addWidget(widget)
         self.setContentsMargins(0,0,0,0)
         self.layout.setStretchFactor(widget, Size)
         
-        # StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(control="toolbutton", padding_right=f"{MenuButtonSpace}")
-        # self.setStyleSheet(StyleSheet)
-        BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
-        if Parameters.BORDER_TRANSPARANT is True:
-            BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
         StyleSheet_Widget = (
-            """QToolButton, QLabel, RibbonToolButton, QLayout {
-                        margin: 0px;
-                        spacing: 0px;"""
-                    + """;padding-right: """
-                    + str(MenuButtonSpace) + """px"""
-                    + """;background: """
-                    + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                    + """;border: """
-                    + BorderColor
-                    + """;}"""
-                    + """ QToolTip {
-                    background-color: #FFFFE1;
-                    color: black;
-                    border: black solid 1px;
-                    border-radius: 2px;
-                    }"""
+            """QToolButton, QToolButton:hover {
+                margin: 0px;
+                spacing: 0px;"""
+            + """;padding-right: """
+            + str(MenuButtonSpace) + """px"""
+            + """;background: """
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+            + """;border: none"""
+            + """;}"""
+            + """\n\nQToolTip {
+            background-color: #FFFFE1;
+            color: black;
+            border: black solid 1px;
+            border-radius: 2px;
+            }"""
         )
         self.setStyleSheet(StyleSheet_Widget)
         
@@ -1739,18 +1744,20 @@ class RightToolButton(QToolButton):
         Menu: QMenu,
         Size: int = 0,
         MenuButtonSpace=0,
+        Icon = None,
         parent=None,
     ):
         widget = QToolButton()
         CommandButton = QToolButton()
         ArrowButton = QToolButton()
         
-        # CommandButton.setDefaultAction(Menu.menuAction())
-        # CommandButton.setArrowType(Qt.ArrowType.NoArrow)
-        
         CommandButton.setObjectName("CommandButton")
         ArrowButton.setObjectName("MenuButton")
-        CommandButton.setIcon(Menu.menuAction().icon())
+        self.actions = Menu.actions()
+        if Icon is None:
+            CommandButton.setIcon(self.actions[0].icon())
+        else:
+            CommandButton.setIcon(Icon)
         CommandButton.setIconSize(QSize(Size, Size).expandedTo(CommandButton.size()))
         CommandButton.setContentsMargins(0, 0, 0, 0)
         
@@ -1760,19 +1767,20 @@ class RightToolButton(QToolButton):
         # Set the content margins to zero
         Layout.setContentsMargins(0, 0, 0, 0)
         Layout.setSpacing(0)
-
+        
         # Define a menu
         ArrowButton.setMenu(Menu)
         Menu.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         StyleSheet_Menu = (
                 "QMenu::item, QMenu::menuAction, QMenuBar::item, QMenu>QLabel {font-size: "
                 + str(Parameters.FONTSIZE_MENUS)
-                + "px;}"
+                + """px;}"""
             )
-        Menu.setStyleSheet(StyleSheet_Menu)
+        
+        Menu.setStyleSheet(StyleSheet_Menu) 
         ArrowButton.setPopupMode(QToolButton.ToolButtonPopupMode.InstantPopup)
         # Set the height according the space for the menubutton
-        ArrowButton.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+        ArrowButton.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
         ArrowButton.adjustSize()
         # Set the arrow to none. It will be defined via CSS
         ArrowButton.setArrowType(Qt.ArrowType.DownArrow)
@@ -1796,29 +1804,33 @@ class RightToolButton(QToolButton):
         StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(control="toolbutton")
         StyleSheet_Addition_Arrow = (
             str(StyleMapping_Ribbon.ReturnStyleSheet(control="toolbutton")) +
-            "QToolButton {background-color: "
+            "QToolBar QToolButton, QToolButton:hover {background-color: "
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";margin: 0px"
             + ";spacing: 0px"
+            + ";padding: 0px"
             + ";}"
-            + """QToolButton::menu-indicator {
+            + """QToolButton::menu-indicator, QToolButton::menu-indicator:hover {
+                    margin: 0px;
+                    spacing: 0px;
+                    padding: 0px;
                     image: none;
-                    subcontrol-origin: padding;
-                    subcontrol-position: center top;
+                    subcontrol-origin: border;
+                    subcontrol-position: center top;                    
                 }"""
         )
         BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
         if Parameters.BORDER_TRANSPARANT is True:
             BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
         StyleSheet_Widget = (
-            """QToolButton {
+            """QToolBar QToolButton, QToolButton:hover {
                         margin: 0px;
                         spacing: 0px;"""
                     + """;background: """
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
                     + """;border: """
                     + BorderColor
-                    + """;}"""
+                    + """ 0.5px solid;}"""
         )
         CommandButton.setStyleSheet(StyleSheet)
         ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
@@ -1826,13 +1838,16 @@ class RightToolButton(QToolButton):
         
         def enterEventCustom(event):
             StyleSheet_Addition = (
-                """QToolButton, QToolButton:hover {
+                """QToolBar QToolButton, QToolButton:hover {
                     margin: 0px;
                     spacing: 0px;
                     ;background: """ + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                     + ";}"
                     + """QToolButton::menu-indicator {
-                        subcontrol-origin: padding;
+                        margin: 0px;
+                        spacing: 0px;
+                        padding: 0px;
+                        subcontrol-origin: border;
                         subcontrol-position: center top;
                         image: none;
                     }"""
@@ -1856,7 +1871,7 @@ class RightToolButton(QToolButton):
         CommandButton.setFixedSize(QSize(Size, Size))  
                 
         return(widget)
-                
+             
     # Add dragdrop functionality
     def mouseMoveEvent(self, e):
         if e.buttons() == Qt.MouseButton.LeftButton:
@@ -1871,7 +1886,8 @@ class RightToolButton(QToolButton):
                 drag.exec_(Qt.DropAction.MoveAction)
             except Exception as e:
                 print(e)
-
+                
+                
 class Toggle(QCheckBox):
 
     _transparent_pen = QPen(Qt.transparent)

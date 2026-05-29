@@ -25,7 +25,7 @@ import FreeCADGui as Gui
 from pathlib import Path
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -54,7 +54,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -94,7 +94,7 @@ from PySide.QtWidgets import (
     QAbstractButton,
     QStackedWidget,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -370,9 +370,6 @@ class ModernMenu(RibbonBar):
                         
         # connect the signals
         self.connectSignals()
-        
-        # Set the border for buttons always hidden
-        Parameters.BORDER_TRANSPARANT = True
 
         # read ribbon structure from JSON file
         if os.path.exists(Parameters.RIBBON_STRUCTURE_JSON) is False:
@@ -3760,6 +3757,13 @@ class ModernMenu(RibbonBar):
 
         # add a settings button with menu
         SettingsMenu = QMenu()
+        stylesheet_tooltip = (
+            """\n\nQToolTip {
+            background-color: #FFFFE1;
+            color: black;
+            border: black solid 1px;
+            border-radius: 2px;
+            }""")
         # Get the freecad preference button
         editMenu = mw.findChildren(QMenu, "&Edit")[0]
         for action in editMenu.actions():
@@ -3784,22 +3788,13 @@ class ModernMenu(RibbonBar):
             pass        
         # add the ribbon settings menu
         SettingsMenu.addAction(self.RibbonMenu.menuAction())        
-        SettingsMenu.setToolTip(translate("FreeCAD Ribbon", "Preferences") + "...")
-        StyleSheet_SettingsMenu = SettingsMenu.styleSheet()
-        SettingsMenu.setStyleSheet(
-            StyleSheet_SettingsMenu
-                                   + """\n\nQToolTip {
-                    background-color: #FFFFE1;
-                    color: black;
-                    border: black solid 1px;
-                    border-radius: 2px;
-                    }""")
+        SettingsMenu.setStyleSheet(stylesheet_tooltip)
+        self.HelpMenu.setStyleSheet(stylesheet_tooltip)
         
         # add the helpMenu to the right toolbar 
         self._titleWidget._helpButton.deleteLater() # Remove the original helpbutton
         # Create a new helpbutton
-        HelpButton = RightToolButton(Menu=self.HelpMenu, Size=self.RightToolBarButtonSize, MenuButtonSpace=self.MenuButtonSpace) 
-        HelpButton.setIcon(Gui.getIcon("help-browser"))                
+        HelpButton = RightToolButton(Menu=self.HelpMenu, Size=self.RightToolBarButtonSize, MenuButtonSpace=self.MenuButtonSpace, Icon=Gui.getIcon("help-browser"))             
         # Create the widget action from the button
         WidgetAction = QWidgetAction(self.rightToolBar())
         WidgetAction.setDefaultWidget(HelpButton)
@@ -3807,8 +3802,7 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().addAction(WidgetAction)
         
         # add the settingsmenu to the right toolbar 
-        SettingsButton = RightToolButton(Menu=SettingsMenu, Size=self.RightToolBarButtonSize, MenuButtonSpace=self.MenuButtonSpace) 
-        SettingsButton.setIcon(Gui.getIcon("Std_DlgParameter.svg"))                
+        SettingsButton = RightToolButton(Menu=SettingsMenu, Size=self.RightToolBarButtonSize, MenuButtonSpace=self.MenuButtonSpace, Icon=Gui.getIcon("Std_DlgParameter.svg"))              
         # Create the widget action from the button
         WidgetAction = QWidgetAction(self.rightToolBar())
         WidgetAction.setDefaultWidget(SettingsButton)
@@ -6273,9 +6267,10 @@ class ModernMenu(RibbonBar):
                         # Styling is managed in the custom button class
                         StyleSheet_Addition_Button = (
                             "QToolButton, QToolButton:hover {background-color: "
-                            + StyleMapping_Ribbon.ReturnStyleItem(
-                                "Background_Color"
-                            )
+                            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                            + ";margin: 0px"
+                            + ";spacing: 0px"
+                            + ";padding: 0px"
                             + ";border: none"
                             + ";}"
                         )

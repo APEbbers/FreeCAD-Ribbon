@@ -300,7 +300,7 @@ def ReturnStyleSheet(
                     BorderColor = BackgroundColor
                 StyleSheet = (
                     """QLayout {spacing: 0px}"""
-                    + """QToolButton, QLabel, RibbonToolButton, QLayout {
+                    + """QToolButton, QLabel {
                         margin: 0px;
                         padding: 0px;
                         color: """
@@ -316,11 +316,9 @@ def ReturnStyleSheet(
                     + """;padding-right: """
                     + padding_right
                     + """;spacing: 0px;}"""
-                    + """QToolButton::menu-arrow {
-                        subcontrol-origin: padding;
-                        subcontrol-position: center right;
-                    }"""
                     + """QToolButton::menu-button {
+                        top: 0px;
+                        right: 0px;
                         margin: 0px;
                         padding: 0px;
                         width: """
@@ -333,8 +331,8 @@ def ReturnStyleSheet(
                         subcontrol-origin: padding;
                         subcontrol-position: center right;
                     }"""
-                    + """QToolButton:hover, QLabel:hover, RibbonToolButton:hover {
-                        margin: 0px 0px 0px 0px;
+                    + """QToolButton:hover, QLabel:hover {
+                        margin: 0px;
                         padding: 0px;"""
                     + """;background: """
                     + HoverColor

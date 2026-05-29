@@ -264,7 +264,12 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # Set the limits for the spinboxes
         self.form.IconSize_Small.setRange(8, 36)
         self.form.IconSize_Medium.setRange(12, 48)
-        self.form.IconSize_Large.setRange(24, 120)
+        if (Parameters.ICON_SIZE_SMALL * 3 >= Parameters.ICON_SIZE_MEDIUM * 2):
+            max = Parameters.ICON_SIZE_SMALL * 3 + Parameters.BUTTON_SPACING*2
+            self.form.IconSize_Large.setRange(24, max)
+        if (Parameters.ICON_SIZE_MEDIUM * 2 > Parameters.ICON_SIZE_SMALL * 3):
+            max = Parameters.ICON_SIZE_MEDIUM * 2 + Parameters.BUTTON_SPACING
+            self.form.IconSize_Large.setRange(24, max)
         self.form.IconSize_QuickAccessButton.setRange(8, 36)
         self.form.TextSize_Menus.setRange(8, 24)
         self.form.TextSize_Buttons.setRange(8, 24)
@@ -866,17 +871,44 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.settingChanged = True
 
     def on_IconSize_Small_TextChanged(self):        
-        if self.form.LinkIconSizes.isChecked() is True or Parameters.LINK_ICON_SIZES is True:
+        if self.form.LinkIconSizes.isChecked() is True:
             # Set the values for medium and large buttons
             self.form.IconSize_Medium.setValue(int(self.form.IconSize_Small.text()) * 1.5)
             self.form.IconSize_Large.setValue(int(self.form.IconSize_Small.text()) * 3)
             self.form.IconSize_QuickAccessButton.setValue(int(self.form.IconSize_Small.text()))
             self.form.PanelHeightOffset.setValue(int(self.form.IconSize_Small.text()))
+        else:
+            if (
+                int(self.form.IconSize_Small.text()) * 3
+                >= int(self.form.IconSize_Medium.text()) * 2
+            ):
+                max = int(self.form.IconSize_Small.text()) * 3 + int(self.form.ButtonSpacing.text())*2
+                self.form.IconSize_Large.setRange(24, max)
+            if (
+                int(self.form.IconSize_Medium.text()) * 2
+                > int(self.form.IconSize_Small.text()) * 3
+            ):
+                max = int(self.form.IconSize_Medium.text()) * 2 + int(self.form.ButtonSpacing.text())
+                self.form.IconSize_Large.setRange(24, max)
+                
         self.ValuesToUpdate["IconSize_Small"] = int(self.form.IconSize_Small.text())
         self.settingChanged = True
         return
 
-    def on_IconSize_Medium_TextChanged(self):        
+    def on_IconSize_Medium_TextChanged(self):      
+        if (
+            int(self.form.IconSize_Small.text()) * 3
+            >= int(self.form.IconSize_Medium.text()) * 2
+        ):
+            max = int(self.form.IconSize_Small.text()) * 3 + int(self.form.ButtonSpacing.text())*2
+            self.form.IconSize_Large.setRange(24, max)
+        if (
+            int(self.form.IconSize_Medium.text()) * 2
+            > int(self.form.IconSize_Small.text()) * 3
+        ):
+            max = int(self.form.IconSize_Medium.text()) * 2 + int(self.form.ButtonSpacing.text())
+            self.form.IconSize_Large.setRange(24, max)  
+            
         self.ValuesToUpdate["IconSize_Medium"] = int(self.form.IconSize_Medium.text())
         self.settingChanged = True
         return
