@@ -1802,13 +1802,22 @@ class RightToolButton(QToolButton):
         
         # Set the stylesheet for the controls
         StyleSheet = StyleMapping_Ribbon.ReturnStyleSheet(control="toolbutton")
-        StyleSheet_Addition_Arrow = (
-            str(StyleMapping_Ribbon.ReturnStyleSheet(control="toolbutton")) +
-            "QToolBar QToolButton, QToolButton:hover {background-color: "
+        StyleSheet_Addition_Command = (
+            "QToolButton, QToolButton:hover {background-color: "
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             + ";margin: 0px"
             + ";spacing: 0px"
             + ";padding: 0px"
+            + f";width: {Size}px"
+            + ";}"
+        )
+        StyleSheet_Addition_Arrow = (
+            "QToolButton, QToolButton:hover {background-color: "
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+            + ";margin: 0px"
+            + ";spacing: 0px"
+            + ";padding: 0px"
+            + f";width: {MenuButtonSpace}px"
             + ";}"
             + """QToolButton::menu-indicator, QToolButton::menu-indicator:hover {
                     margin: 0px;
@@ -1819,28 +1828,38 @@ class RightToolButton(QToolButton):
                     subcontrol-position: center top;                    
                 }"""
         )
-        BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
-        if Parameters.BORDER_TRANSPARANT is True:
-            BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+        # BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
+        # if Parameters.BORDER_TRANSPARANT is True:
+        #     BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
         StyleSheet_Widget = (
-            """QToolBar QToolButton, QToolButton:hover {
+            """QToolButton, QToolButton:hover {
                         margin: 0px;
                         spacing: 0px;"""
                     + """;background: """
                     + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                    + """;border: """
-                    + BorderColor
-                    + """ 0.5px solid;}"""
+                    # + """;border: """
+                    # + BorderColor
+                    # + """ 0.5px solid"""
+                    + ";}"
+                    + """QToolButton::menu-indicator, QToolButton::menu-indicator:hover {
+                    margin: 0px;
+                    spacing: 0px;
+                    padding: 0px;
+                    image: none;
+                    subcontrol-origin: border;
+                    subcontrol-position: center top;                    
+                }"""
         )
-        CommandButton.setStyleSheet(StyleSheet)
+        CommandButton.setStyleSheet(StyleSheet_Addition_Command)
         ArrowButton.setStyleSheet(StyleSheet_Addition_Arrow)
         widget.setStyleSheet(StyleSheet_Widget)
         
         def enterEventCustom(event):
             StyleSheet_Addition = (
-                """QToolBar QToolButton, QToolButton:hover {
+                """QToolButton, QToolButton:hover {
                     margin: 0px;
                     spacing: 0px;
+                    padding: 0px;
                     ;background: """ + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                     + ";}"
                     + """QToolButton::menu-indicator {
@@ -1854,7 +1873,6 @@ class RightToolButton(QToolButton):
             )
             CommandButton.setStyleSheet(StyleSheet_Addition)
             ArrowButton.setStyleSheet(StyleSheet_Addition)
-            widget.setStyleSheet(StyleSheet_Addition)
             
         ArrowButton.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
         CommandButton.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
