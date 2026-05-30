@@ -2370,20 +2370,25 @@ class ModernMenu(RibbonBar):
         # And set the index for updating the dict.
         for i in range(len(self.quickAccessToolBar().actions())):
             action = self.quickAccessToolBar().actions()[i]
-            index = i-2          
-            if ButtonWidget.objectName() in action.defaultWidget().objectName():
+            # If the objectnames are equal, set the before action
+            # and set the index to the index of the buttonwidget
+            if ButtonWidget.objectName() == action.defaultWidget().objectName():
                 beforeAction = action
+                index = self.workBenchDict["quickAccessCommands"].index(action.defaultWidget().objectName())
                 break
         # If the separator must be placed on the right, get the action that is belongs to the widget right from the button widget
         # And set the index for updating the dict.
         if Side != "left" :
             for i in range(len(self.quickAccessToolBar().actions())):
                 action = self.quickAccessToolBar().actions()[i]
+                # prevent from adding a separator to the end
                 if i + 3 > len(self.quickAccessToolBar().actions()):                             
                     return 
-                if ButtonWidget.objectName() in action.defaultWidget().objectName():
+                # If the objectnames are equal, set the before action to the next action
+                # and set the index to the index of the buttonwidget + 1
+                if ButtonWidget.objectName() == action.defaultWidget().objectName():
                     beforeAction = self.quickAccessToolBar().actions()[i+1]
-                    index = i - 1
+                    index = self.workBenchDict["quickAccessCommands"].index(ButtonWidget.objectName()) + 1
                     break   
         
         # If there is an action, continue
@@ -2404,7 +2409,8 @@ class ModernMenu(RibbonBar):
             
             # Update the quickAccessCommands list
             self.workBenchDict["quickAccessCommands"].insert(index, separator.objectName())
-            print(self.workBenchDict["quickAccessCommands"])
+            if Parameters.DEBUG_MODE:
+                print(f"new order for the quickaccess toolbar is: \n{self.workBenchDict['quickAccessCommands']}")
         return       
     
     def on_RemoveSeparator_QC_Clicked(self, separator: QuickAccessSeparator):
@@ -2976,6 +2982,8 @@ class ModernMenu(RibbonBar):
                 
                 # Add the command to the quickaccess command list
                 self.workBenchDict["quickAccessCommands"].append(commandName)
+                if Parameters.DEBUG_MODE:
+                    print(f"new order for the quickaccess toolbar is: \n{self.workBenchDict['quickAccessCommands']}")
                 
                 # Enable all buttons, so you can access them with a right click
                 self.activateButtons()
