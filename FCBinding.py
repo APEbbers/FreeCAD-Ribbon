@@ -2407,6 +2407,7 @@ class ModernMenu(RibbonBar):
             
             # Add the separator to the quicktoolbar
             self._titleWidget._quickAccessToolBar.insertWidget(beforeAction, separator)
+            self.quickAccessToolBar().setMinimumWidth(self.quickAccessToolBar().width() + 12)
             
             # Update the quickAccessCommands list
             self.workBenchDict["quickAccessCommands"].insert(index, separator.objectName())
@@ -2429,6 +2430,7 @@ class ModernMenu(RibbonBar):
             # remove the separator from the toolbar
             self.quickAccessToolBar().removeAction(beforeAction)
             separator.deleteLater()
+            self.quickAccessToolBar().setMinimumWidth(self.quickAccessToolBar().width() - 12)
                     
         # Update the quickAccessCommands list
         self.workBenchDict["quickAccessCommands"].pop(index)
@@ -2986,6 +2988,7 @@ class ModernMenu(RibbonBar):
                     # Add the button to the quickaccess toolbar
                     if button is not None:
                         self.addQuickAccessButton(button)
+                        self.quickAccessToolBar().setMinimumWidth(self.quickAccessToolBar().width() + button.width())
                     
                     # Add the command to the quickaccess command list
                     self.workBenchDict["quickAccessCommands"].append(commandName)
@@ -6790,7 +6793,8 @@ class ModernMenu(RibbonBar):
 
                     # If the position of the context menu event is within the global corners
                     # delete the button
-                    if pos.x() >= pos_tl.x() and pos.x() < pos_tr.x():             
+                    if pos.x() >= pos_tl.x() and pos.x() < pos_tr.x(): 
+                        self.quickAccessToolBar().setMinimumWidth(self.quickAccessToolBar().width() - button.width())            
                         button.deleteLater()                                                
                         IsDeleted = True
                                 
@@ -6799,7 +6803,7 @@ class ModernMenu(RibbonBar):
             if IsDeleted is True:
                 # Update the quickAccessCommands list
                 self.workBenchDict["quickAccessCommands"].remove(widget.objectName())
-               
+                               
             # Delete the drag indicater
             try:
                 self._titleWidget._quickAccessToolBar.removeAction(self.dragAction_QuickAccess)
