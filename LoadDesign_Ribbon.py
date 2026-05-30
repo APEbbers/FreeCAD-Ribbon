@@ -222,31 +222,52 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.StringList_Toolbars = Data["StringList_Toolbars"]
         self.List_Commands = Data["List_Commands"]
 
-        # Load the lists for the deserialized icons
+        # Load icons for all workbenches
         try:
             for IconItem in Data["WorkBench_Icons"]:
                 Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
                 item = [IconItem[0], Icon]
-                self.List_WorkBenchIcons.append(item)
-            # Load the lists for the deserialized icons
-            for IconItem in Data["Command_Icons"]:
-                 # Check first if the icon can be loaded quickly
-                Icon = QIcon()
-                if Icon is None or (Icon is not None and Icon.isNull()):
-                    Icon = StandardFunctions.returnQiCons_Commands(IconItem[0])
-                if Icon is None or (Icon is not None and Icon.isNull()):
+                if item not in self.List_CommandIcons:
+                    self.List_WorkBenchIcons.append(item)
+        except Exception as e:
+            StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
+            pass
+        
+        # Load icons for all commands
+        try:
+            for CommandItem in self.List_Commands:
+                if CommandItem not in self.List_CommandIcons:
+                    # Check first if the icon can be loaded quickly
+                    Icon = QIcon()                                  
                     FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                     for root, dirs, files in os.walk(FreeCAD_Icons):
                         for fileName in files:
-                            if IconItem[0] == fileName.split(".")[0]:
+                            if CommandItem[0] == fileName.split(".")[0]:
                                 Icon = QIcon()
                                 Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
-                                
-                # If the Icon is still none or empty, get it from the datafile
-                if Icon is None or (Icon is not None and Icon.isNull()):
-                    Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
-                item = [IconItem[0], Icon]
-                self.List_CommandIcons.append(item)
+                                # Print a message when debug mode is enabled
+                                if Parameters.DEBUG_MODE:
+                                    print(f"{fileName} created from resources")
+                    
+                    if Icon is None or (Icon is not None and Icon.isNull()):
+                        IconName = StandardFunctions.CommandInfoCorrections(CommandItem[0])["pixmap"]      
+                        Icon = StandardFunctions.returnQiCons_Commands(CommandItem[0], IconName)
+                        # Print a message when debug mode is enabled
+                        if Parameters.DEBUG_MODE:
+                            print(f"Icon for {CommandItem[0]} retrieved from FreeCAD")
+                                    
+                    # If the Icon is still none or empty, get it from the datafile
+                    if Icon is None or (Icon is not None and Icon.isNull()):
+                        for IconItem in Data["Command_Icons"]:
+                            if IconItem[0] == CommandItem[0] and IconItem[0] != "" and CommandItem[0] != "":
+                                Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
+                                # Print a message when debug mode is enabled
+                                if Parameters.DEBUG_MODE:
+                                    print(f"Icon for {CommandItem[0]} retrieved from data file")
+                    
+                    # Add the icon to the icon list
+                    item = [CommandItem[0], Icon]
+                    self.List_CommandIcons.append(item)
         except Exception as e:
             StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
             pass
