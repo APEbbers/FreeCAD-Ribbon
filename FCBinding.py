@@ -665,7 +665,8 @@ class ModernMenu(RibbonBar):
                         if LatestVersionArray[i] > CurrentVersionArray[i]:
                             self.UpdateVersion = LatestVersion
         except Exception as e:
-            raise e
+            if Parameters.DEBUG_MODE:
+                print(e.with_traceback(e.__traceback__))
             pass
 
         # Create the ribbon
@@ -2836,43 +2837,221 @@ class ModernMenu(RibbonBar):
         if type(widget) is QListWidget:
             # Add buttons to panels
             if self.quickAccessToolBar().underMouse() is False:
-                # Set the default size depending on the max size of the button
-                Size = "small"
-                if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  == 2 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 0 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
-                    Size = "medium"
-                if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  <= 2 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 1 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
-                    Size = "medium"
-                if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  == 0 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 1 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
-                    Size = "large"
-                
-                for panelName, panel in currentCategory.panels().items():
-                    # If the panelName is equal to the panel name on which the command is dropped, continue.
-                    if panelName == self.dropPanelName and panel not in self.RemovedPanels:
-                        # Get the command to be added
-                        ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
-                        # If the commands is part of a dropdown, get the actual command name
-                        if len(ExtraCommand.split(", ")) > 1:
-                            Command = Gui.Command.get(ExtraCommand.split(", ")[0])
-                            if Command is not None:
-                                i = int(ExtraCommand.split(", ")[1])
-                                action = Command.getAction()[i]
-                                ExtraCommand = action.objectName()
+                try:
+                    # Set the default size depending on the max size of the button
+                    Size = "small"
+                    if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  == 2 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 0 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
+                        Size = "medium"
+                    if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  <= 2 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 1 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
+                        Size = "medium"
+                    if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  == 0 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 1 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
+                        Size = "large"
+                    
+                    for panelName, panel in currentCategory.panels().items():
+                        # If the panelName is equal to the panel name on which the command is dropped, continue.
+                        if panelName == self.dropPanelName and panel not in self.RemovedPanels:
+                            # Get the command to be added
+                            ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
+                            # If the commands is part of a dropdown, get the actual command name
+                            if len(ExtraCommand.split(", ")) > 1:
+                                Command = Gui.Command.get(ExtraCommand.split(", ")[0])
+                                if Command is not None:
+                                    i = int(ExtraCommand.split(", ")[1])
+                                    action = Command.getAction()[i]
+                                    ExtraCommand = action.objectName()
 
-                        # Define a holder for the Menu Text
-                        MenuText = ""
-                        ExtraCommand_WB = ""
-                        for CommandItem in self.List_Commands:
-                            if CommandItem[0] == ExtraCommand:
-                                MenuText = CommandItem[4]
-                                ExtraCommand_WB = CommandItem[3]
-                        
-                        if ExtraCommand.endswith("_ddb"):
-                            MenuText = ExtraCommand.replace("_ddb", "")
-                            ExtraCommand_WB = "General"
-                                            
+                            # Define a holder for the Menu Text
+                            MenuText = ""
+                            ExtraCommand_WB = ""
+                            for CommandItem in self.List_Commands:
+                                if CommandItem[0] == ExtraCommand:
+                                    MenuText = CommandItem[4]
+                                    ExtraCommand_WB = CommandItem[3]
+                            
+                            if ExtraCommand.endswith("_ddb"):
+                                MenuText = ExtraCommand.replace("_ddb", "")
+                                ExtraCommand_WB = "General"
+                                                
+                            # Get the workbench name and the panel name                  
+                            title = panel.objectName()
+                            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                            
+                            # Get the order list, if there isn't one, create it
+                            StandardFunctions.add_keys_nested_dict(
+                                self.workBenchDict,
+                                [
+                                    "workbenches",
+                                    workbenchName,
+                                    "toolbars",
+                                    panel.objectName(),
+                                ],
+                                endEmpty=True,
+                            )
+                            OrderList = []            
+                            if panel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
+                                if "order" in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
+                                    OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"]
+                                else:
+                                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList
+
+                            # Add the extra command to the order list
+                            OrderList.append(ExtraCommand)
+                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][title]["order"] = OrderList
+                            # Add the command to the panel in the dict
+                            Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "size"], endEmpty=True)
+                            Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "text"], endEmpty=True)
+                            Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "icon"], endEmpty=True)
+                            Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "IsExtra"], endEmpty=True)
+                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["size"] = Size
+                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["text"] = MenuText
+                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["icon"] = ""
+                            self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["IsExtra"] = True
+                            
+                            # if this is a newPanel, update the newpanel dict as well
+                            if panel.objectName().endswith("_newPanel"):
+                                if workbenchName not in self.workBenchDict["newPanels"]:
+                                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName], endEmpty=True)
+                                if panel.objectName() not in self.workBenchDict["newPanels"][workbenchName]:
+                                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName, panel.objectName()], endEmpty=True)
+                                    self.workBenchDict["newPanels"][workbenchName][panel.objectName()] = []
+                                self.workBenchDict["newPanels"][workbenchName][panel.objectName()].append([ExtraCommand, ExtraCommand_WB])
+                            
+                            # Get the name from  current workbench
+                            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                            # Create a new panel with the extra command
+                            newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict, UpdateDict=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand, ActivateButtons=True)
+                                                    
+                            # Add the panel to the list with long panels
+                            if newPanel is not None:
+                                if newPanel.panelOptionButton().isVisible():
+                                    self.longPanels.append(newPanel)
+                                                        
+                                # Replace the panel with the new panel
+                                self.currentCategory().replacePanel(panel, newPanel)
+                                # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                                self.setPanelProperties(newPanel)
+                                
+                                # Update the dict of the currentCategory with the new panel
+                                self.currentCategory()._panels[panel.objectName()] = newPanel
+
+                                # Close the old panel and the dragindicator
+                                panel.close()
+                                
+                                # Enable all buttons, so you can access them with a right click
+                                self.activateButtons()
+                                
+                                event.accept()
+                                return
+                except Exception as e:
+                    if Parameters.DEBUG_MODE:
+                        print(e.with_traceback(e.__traceback__))
+                        return
+            
+            # Add buttons to the quickaccess toolbar
+            if self.quickAccessToolBar().underMouse() is True:
+                try:
+                    padding = 0
+                    # Get the command to be added
+                    commandName = widget.currentItem().data(Qt.ItemDataRole.UserRole)
+                    # Define a button
+                    button = None
+                    QuickAction = None
+                    # If it is a standard freecad button, set the command accordingly
+                    if commandName.endswith("_ddb") is False and "separator" not in commandName:
+                        try:
+                            # Check if the workbench is loaded. If not, actions will be an empty list
+                            # Find the command its workbench and activate it
+                            for CommandItem in self.List_Commands:
+                                if CommandItem[0] == commandName and CommandItem[3] not in self.isWbLoaded:
+                                    Gui.activateWorkbench(CommandItem[3])
+                                    self.isWbLoaded[CommandItem[3]] = True
+                                    break
+                        except Exception:
+                            pass
+                        QuickAction = Gui.Command.get(commandName).getAction()
+
+                        if len(QuickAction) == 1:
+                            button = self.CreateToolBarButtonFromCommand(commandName)
+                        elif len(QuickAction) > 1:
+                            # set the padding for a dropdown button
+                            padding = self.PaddingRight
+                            button = self.CreateToolBarButtonFromCommand(commandName, padding)
+
+                    # If it is a custom dropdown, add the actions one by one.
+                    if commandName.endswith("_ddb") is True and "separator" not in commandName:
+                        # set the padding for a dropdown button
+                        padding = self.PaddingRight
+                        button = self.CreateToolBarButtonFromCommand(commandName, padding)
+
+                    # Add the button to the quickaccess toolbar
+                    if button is not None:
+                        self.addQuickAccessButton(button)
+                    
+                    # Add the command to the quickaccess command list
+                    self.workBenchDict["quickAccessCommands"].append(commandName)
+                    if Parameters.DEBUG_MODE:
+                        print(f"new order for the quickaccess toolbar is: \n{self.workBenchDict['quickAccessCommands']}")
+                    
+                    # Enable all buttons, so you can access them with a right click
+                    self.activateButtons()
+                    
+                    event.accept()
+                except Exception as e:
+                    if Parameters.DEBUG_MODE:
+                        print(e.with_traceback(e.__traceback__))
+                return
+         
+        # Reorder buttons on panel by Drag        
+        if type(widget) is not RibbonPanel and type(widget) is not QToolBar:
+            try:
+                # Get the panel
+                panel = RibbonPanel()
+                QuickAccessToolBar = QToolBar()
+                count = 0
+                parent = widget.parent()
+                while (count < 10):
+                    if type(parent) is RibbonPanel:
+                        panel = parent
+                        break
+                    if type(parent) is QToolBar:
+                        QuickAccessToolBar = parent
+                        break
+                    else:
+                        parent = parent.parent()
+                    count = count + 1
+                    
+                # Get the gridlayout
+                gridLayout: QGridLayout = panel._actionsLayout
+                # Hide the dragIndicater and the spacer widgets
+                self.dragIndicator_Buttons.hide()
+                self.spaceWidget_Left.hide()
+                self.spaceWidget_Right.hide()
+
+                if type(parent) is RibbonPanel:
+                    replace = False
+                    if not widget.geometry().contains(event.pos()):   
                         # Get the workbench name and the panel name                  
                         title = panel.objectName()
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                            
+                        # Get the coordinates of the drag location
+                        xPos_drag = self.target[0]
+                        yPos_drag = self.target[1]
+                        # Define the original widget
+                        OriginalItem = gridLayout.itemAtPosition(xPos_drag, yPos_drag)
+                        OriginalWidget = OriginalItem.widget().findChild(CustomControls)
+                        
+                        # Get the old position of the dragged widget
+                        n = 0
+                        OldPos = []
+                        widgetType = None
+                        # Get the type of widget
+                        widgetType = widget.parent().parent().findChild(CustomControls)
+                        if type(widget) is CustomSeparator:
+                            widgetType = widget
+                        # If the widgetType is still None, exit
+                        if widgetType is None:
+                            return
                         
                         # Get the order list, if there isn't one, create it
                         StandardFunctions.add_keys_nested_dict(
@@ -2881,389 +3060,230 @@ class ModernMenu(RibbonBar):
                                 "workbenches",
                                 workbenchName,
                                 "toolbars",
-                                panel.objectName(),
+                                title,
+                                "order"
                             ],
-                            endEmpty=True,
                         )
-                        OrderList = []            
-                        if panel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
-                            if "order" in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
-                                OrderList = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"]
-                            else:
-                                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList
+                        OrderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"][title]["order"]
 
-                        # Add the extra command to the order list
-                        OrderList.append(ExtraCommand)
-                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][title]["order"] = OrderList
-                        # Add the command to the panel in the dict
-                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "size"], endEmpty=True)
-                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "text"], endEmpty=True)
-                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "icon"], endEmpty=True)
-                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "IsExtra"], endEmpty=True)
-                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["size"] = Size
-                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["text"] = MenuText
-                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["icon"] = ""
-                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["IsExtra"] = True
-                        
-                        # if this is a newPanel, update the newpanel dict as well
-                        if panel.objectName().endswith("_newPanel"):
-                            if workbenchName not in self.workBenchDict["newPanels"]:
-                                Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName], endEmpty=True)
-                            if panel.objectName() not in self.workBenchDict["newPanels"][workbenchName]:
-                                Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName, panel.objectName()], endEmpty=True)
-                                self.workBenchDict["newPanels"][workbenchName][panel.objectName()] = []
-                            self.workBenchDict["newPanels"][workbenchName][panel.objectName()].append([ExtraCommand, ExtraCommand_WB])
-                        
-                        # Get the name from  current workbench
+                        if type(widgetType) is CustomControls:
+                            for n in range(gridLayout.count()):
+                                if gridLayout.itemAt(n).widget().findChild(CustomControls) == widgetType:
+                                    OldPos = gridLayout.getItemPosition(n)
+                                    break
+                                
+                            # if counter and old position is not empty, Swap the widgets
+                            if n > -1 and len(OldPos) > 0 :
+                                # Define the dragged widgets
+                                DraggedItem = gridLayout.itemAt(n)
+                                DraggedWidget = DraggedItem.widget().findChild(CustomControls)
+
+                                OrderList_Compare = []
+                                for n in range(gridLayout.count()):
+                                    control = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                                    separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
+                                    if control is not None and type(control) is CustomControls:
+                                        OrderList_Compare.append(self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=control))
+                                    if separator is not None and type(separator) is CustomSeparator:
+                                        OrderList_Compare.append(separator.objectName())
+                                if OrderList != OrderList_Compare:
+                                    OrderList = OrderList_Compare
+                                
+                                # Get the indexes of the widgets
+                                index_originalWidget = OrderList.index(self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=OriginalWidget)) # This is the location were will be dropped
+                                if DraggedWidget is not None:
+                                    index_newWidget = OrderList.index(self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=DraggedWidget)) # This is the original location of the dragged widget                                                        
+                                    if replace is True:                                
+                                        # Remove the command name of the original widget from the order list and
+                                        # Add the command of the dragged widget in its place
+                                        OrderList.pop(index_originalWidget)
+                                        OrderList.insert(index_originalWidget, self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=DraggedWidget))
+                                        # Remove the command name of the dragged widget from the order list and
+                                        # Add the command of the original widget in its place
+                                        OrderList.pop(index_newWidget)                                    
+                                        OrderList.insert(index_newWidget, self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=OriginalWidget))
+                                    else:
+                                        # Remove the dragged item from the list
+                                        OrderList.pop(index_newWidget)
+                                        # Inserted it at the new location
+                                        OrderList.insert(index_originalWidget, self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=DraggedWidget))
+
+                        if type(widgetType) is CustomSeparator:
+                            for n in range(gridLayout.count()):
+                                if gridLayout.itemAt(n).widget().findChild(CustomSeparator) == widgetType:
+                                    OldPos = gridLayout.getItemPosition(n)
+                                    break
+                                
+                            # if counter and old position is not empty, Swap the widgets
+                            if n > -1 and len(OldPos) > 0 :
+                                # Define the dragged widgets
+                                DraggedItem = gridLayout.itemAt(n)
+                                DraggedWidget = DraggedItem.widget().findChild(CustomSeparator)
+
+                                OrderList_Compare = []
+                                for n in range(gridLayout.count()):
+                                    control = gridLayout.itemAt(n).widget().findChild(CustomControls)
+                                    separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
+                                    if control is not None and type(control) is CustomControls:
+                                        OrderList_Compare.append(self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=control))
+                                    if separator is not None and type(separator) is CustomSeparator:
+                                        OrderList_Compare.append(separator.objectName())
+                                if OrderList != OrderList_Compare:
+                                    OrderList = OrderList_Compare
+                                
+                                # Get the indexes of the widgets
+                                index_originalWidget = OrderList.index(self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=OriginalWidget)) # This is the location were will be dropped
+                                if DraggedWidget is not None:
+                                    index_newWidget = OrderList.index(DraggedWidget.objectName()) # This is the original location of the dragged widget                        
+                                    if replace is True:                                
+                                        # Remove the command name of the original widget from the order list and
+                                        # Add the command of the dragged widget in its place
+                                        OrderList.pop(index_originalWidget)
+                                        OrderList.insert(index_originalWidget, DraggedWidget.objectName())
+                                        # Remove the command name of the dragged widget from the order list and
+                                        # Add the command of the original widget in its place
+                                        OrderList.pop(index_newWidget)
+                                        # OrderList.insert(index_newWidget, OriginalWidget.actions().data())
+                                        OrderList.insert(index_newWidget, self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=OriginalWidget))
+                                    else:
+                                        # Remove the dragged item from the list
+                                        OrderList.pop(index_newWidget)
+                                        # Inserted it at the new location
+                                        OrderList.insert(index_originalWidget, DraggedWidget.objectName())
+                                                
+                        # Safe the order
+                        self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList     
+                                                            
+                        # Create a new panel
                         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                        # Create a new panel with the extra command
-                        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict, UpdateDict=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand, ActivateButtons=True)
+                        newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
                                                 
                         # Add the panel to the list with long panels
-                        if newPanel is not None:
-                            if newPanel.panelOptionButton().isVisible():
-                                self.longPanels.append(newPanel)
-                                                    
-                            # Replace the panel with the new panel
-                            self.currentCategory().replacePanel(panel, newPanel)
-                            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-                            self.setPanelProperties(newPanel)
-                            
-                            # Update the dict of the currentCategory with the new panel
-                            self.currentCategory()._panels[panel.objectName()] = newPanel
+                        if newPanel.panelOptionButton().isVisible():
+                            self.longPanels.append(newPanel)
+                                                
+                        # Replace the panel with the new panel
+                        self.currentCategory().replacePanel(panel, newPanel)
+                        # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                        self.setPanelProperties(newPanel)
+                        
+                        # Update the dict of the currentCategory with the new panel
+                        self.currentCategory()._panels[newPanel.objectName()] = newPanel
+                        
+                        # Close the old panel and the dragindicator
+                        panel.close()
+                        self.dragIndicator_Buttons.close()
+                        
+                        # Enable all buttons, so you can access them with a right click
+                        self.activateButtons()
+                        
+                        event.accept()
+                        return
 
-                            # Close the old panel and the dragindicator
-                            panel.close()
-                            
-                            # Enable all buttons, so you can access them with a right click
-                            self.activateButtons()
-                            
-                            event.accept()
-                            return
-            
-            # Add buttons to the quickaccess toolbar
-            if self.quickAccessToolBar().underMouse() is True:
-                padding = 0
-                # Get the command to be added
-                commandName = widget.currentItem().data(Qt.ItemDataRole.UserRole)
-                # Define a button
-                button = None
-                QuickAction = None
-                # If it is a standard freecad button, set the command accordingly
-                if commandName.endswith("_ddb") is False and "separator" not in commandName:
+                if QuickAccessToolBar.objectName() == "quickAccessToolBar":
+                    widget = event.source()
+                    
+                    # Use the action stored during the dragmove function
+                    beforeAction = self.dragAction_QuickAccess
+                    # insert the dragged widget
+                    QuickAccessToolBar.insertWidget(beforeAction, widget)
+
+                    # Update the orderlist
+                    #
+                    # Define the orderlist as the current list of quickaccess commands
                     try:
-                        # Check if the workbench is loaded. If not, actions will be an empty list
-                        # Find the command its workbench and activate it
-                        for CommandItem in self.List_Commands:
-                            if CommandItem[0] == commandName and CommandItem[3] not in self.isWbLoaded:
-                                Gui.activateWorkbench(CommandItem[3])
-                                self.isWbLoaded[CommandItem[3]] = True
-                                break
+                        OrderList = self.workBenchDict["quickAccessCommands"]
+                        OrderList.remove(widget.objectName())
+                        index = OrderList.index(beforeAction.objectName())
+                        OrderList.insert(index, widget.objectName())
+
+                        # Set the quickaccessCommands
+                        self.workBenchDict["quickAccessCommands"] = OrderList
+                        
+                        # Delete the drag indicater
+                        try:
+                            QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
+                            QuickAccessToolBar.removeAction(self.dragIndicator_QuickAccess)
+                        except Exception:
+                            pass
                     except Exception:
-                        pass
-                    QuickAction = Gui.Command.get(commandName).getAction()
-
-                    if len(QuickAction) == 1:
-                        button = self.CreateToolBarButtonFromCommand(commandName)
-                    elif len(QuickAction) > 1:
-                        # set the padding for a dropdown button
-                        padding = self.PaddingRight
-                        button = self.CreateToolBarButtonFromCommand(commandName, padding)
-
-                # If it is a custom dropdown, add the actions one by one.
-                if commandName.endswith("_ddb") is True and "separator" not in commandName:
-                    # set the padding for a dropdown button
-                    padding = self.PaddingRight
-                    button = self.CreateToolBarButtonFromCommand(commandName, padding)
-
-                # Add the button to the quickaccess toolbar
-                if button is not None:
-                    self.addQuickAccessButton(button)
-                
-                # Add the command to the quickaccess command list
-                self.workBenchDict["quickAccessCommands"].append(commandName)
-                if Parameters.DEBUG_MODE:
-                    print(f"new order for the quickaccess toolbar is: \n{self.workBenchDict['quickAccessCommands']}")
-                
+                        try:
+                            QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
+                            QuickAccessToolBar.removeAction(self.dragIndicator_QuickAccess)
+                        except Exception:
+                            pass
+                    
                 # Enable all buttons, so you can access them with a right click
                 self.activateButtons()
-                
+
                 event.accept()
                 return
-         
-        # Reorder buttons on panel by Drag        
-        if type(widget) is not RibbonPanel and type(widget) is not QToolBar:
-            # Get the panel
-            panel = RibbonPanel()
-            QuickAccessToolBar = QToolBar()
-            count = 0
-            parent = widget.parent()
-            while (count < 10):
-                if type(parent) is RibbonPanel:
-                    panel = parent
-                    break
-                if type(parent) is QToolBar:
-                    QuickAccessToolBar = parent
-                    break
-                else:
-                    parent = parent.parent()
-                count = count + 1
-                
-            # Get the gridlayout
-            gridLayout: QGridLayout = panel._actionsLayout
-            # Hide the dragIndicater and the spacer widgets
-            self.dragIndicator_Buttons.hide()
-            self.spaceWidget_Left.hide()
-            self.spaceWidget_Right.hide()
-
-            if type(parent) is RibbonPanel:
-                replace = False
-                if not widget.geometry().contains(event.pos()):   
-                    # Get the workbench name and the panel name                  
-                    title = panel.objectName()
-                    workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                        
-                    # Get the coordinates of the drag location
-                    xPos_drag = self.target[0]
-                    yPos_drag = self.target[1]
-                    # Define the original widget
-                    OriginalItem = gridLayout.itemAtPosition(xPos_drag, yPos_drag)
-                    OriginalWidget = OriginalItem.widget().findChild(CustomControls)
-                    
-                    # Get the old position of the dragged widget
-                    n = 0
-                    OldPos = []
-                    widgetType = None
-                    # Get the type of widget
-                    widgetType = widget.parent().parent().findChild(CustomControls)
-                    if type(widget) is CustomSeparator:
-                        widgetType = widget
-                    # If the widgetType is still None, exit
-                    if widgetType is None:
-                        return
-                    
-                    # Get the order list, if there isn't one, create it
-                    StandardFunctions.add_keys_nested_dict(
-                        self.workBenchDict,
-                        [
-                            "workbenches",
-                            workbenchName,
-                            "toolbars",
-                            title,
-                            "order"
-                        ],
-                    )
-                    OrderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"][title]["order"]
-
-                    if type(widgetType) is CustomControls:
-                        for n in range(gridLayout.count()):
-                            if gridLayout.itemAt(n).widget().findChild(CustomControls) == widgetType:
-                                OldPos = gridLayout.getItemPosition(n)
-                                break
-                            
-                        # if counter and old position is not empty, Swap the widgets
-                        if n > -1 and len(OldPos) > 0 :
-                            # Define the dragged widgets
-                            DraggedItem = gridLayout.itemAt(n)
-                            DraggedWidget = DraggedItem.widget().findChild(CustomControls)
-
-                            OrderList_Compare = []
-                            for n in range(gridLayout.count()):
-                                control = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                                separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
-                                if control is not None and type(control) is CustomControls:
-                                    OrderList_Compare.append(self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=control))
-                                if separator is not None and type(separator) is CustomSeparator:
-                                    OrderList_Compare.append(separator.objectName())
-                            if OrderList != OrderList_Compare:
-                                OrderList = OrderList_Compare
-                            
-                            # Get the indexes of the widgets
-                            index_originalWidget = OrderList.index(self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=OriginalWidget)) # This is the location were will be dropped
-                            if DraggedWidget is not None:
-                                index_newWidget = OrderList.index(self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=DraggedWidget)) # This is the original location of the dragged widget                                                        
-                                if replace is True:                                
-                                    # Remove the command name of the original widget from the order list and
-                                    # Add the command of the dragged widget in its place
-                                    OrderList.pop(index_originalWidget)
-                                    OrderList.insert(index_originalWidget, self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=DraggedWidget))
-                                    # Remove the command name of the dragged widget from the order list and
-                                    # Add the command of the original widget in its place
-                                    OrderList.pop(index_newWidget)                                    
-                                    OrderList.insert(index_newWidget, self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=OriginalWidget))
-                                else:
-                                    # Remove the dragged item from the list
-                                    OrderList.pop(index_newWidget)
-                                    # Inserted it at the new location
-                                    OrderList.insert(index_originalWidget, self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=DraggedWidget))
-
-                    if type(widgetType) is CustomSeparator:
-                        for n in range(gridLayout.count()):
-                            if gridLayout.itemAt(n).widget().findChild(CustomSeparator) == widgetType:
-                                OldPos = gridLayout.getItemPosition(n)
-                                break
-                            
-                        # if counter and old position is not empty, Swap the widgets
-                        if n > -1 and len(OldPos) > 0 :
-                            # Define the dragged widgets
-                            DraggedItem = gridLayout.itemAt(n)
-                            DraggedWidget = DraggedItem.widget().findChild(CustomSeparator)
-
-                            OrderList_Compare = []
-                            for n in range(gridLayout.count()):
-                                control = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                                separator = gridLayout.itemAt(n).widget().findChild(CustomSeparator)
-                                if control is not None and type(control) is CustomControls:
-                                    OrderList_Compare.append(self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=control))
-                                if separator is not None and type(separator) is CustomSeparator:
-                                    OrderList_Compare.append(separator.objectName())
-                            if OrderList != OrderList_Compare:
-                                OrderList = OrderList_Compare
-                            
-                            # Get the indexes of the widgets
-                            index_originalWidget = OrderList.index(self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=OriginalWidget)) # This is the location were will be dropped
-                            if DraggedWidget is not None:
-                                index_newWidget = OrderList.index(DraggedWidget.objectName()) # This is the original location of the dragged widget                        
-                                if replace is True:                                
-                                    # Remove the command name of the original widget from the order list and
-                                    # Add the command of the dragged widget in its place
-                                    OrderList.pop(index_originalWidget)
-                                    OrderList.insert(index_originalWidget, DraggedWidget.objectName())
-                                    # Remove the command name of the dragged widget from the order list and
-                                    # Add the command of the original widget in its place
-                                    OrderList.pop(index_newWidget)
-                                    # OrderList.insert(index_newWidget, OriginalWidget.actions().data())
-                                    OrderList.insert(index_newWidget, self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=OriginalWidget))
-                                else:
-                                    # Remove the dragged item from the list
-                                    OrderList.pop(index_newWidget)
-                                    # Inserted it at the new location
-                                    OrderList.insert(index_originalWidget, DraggedWidget.objectName())
-                                               
-                    # Safe the order
-                    self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList     
-                                                        
-                    # Create a new panel
-                    workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-                    newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
-                                            
-                    # Add the panel to the list with long panels
-                    if newPanel.panelOptionButton().isVisible():
-                        self.longPanels.append(newPanel)
-                                            
-                    # Replace the panel with the new panel
-                    self.currentCategory().replacePanel(panel, newPanel)
-                    # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-                    self.setPanelProperties(newPanel)
-                    
-                    # Update the dict of the currentCategory with the new panel
-                    self.currentCategory()._panels[newPanel.objectName()] = newPanel
-                    
-                    # Close the old panel and the dragindicator
-                    panel.close()
-                    self.dragIndicator_Buttons.close()
-                    
-                    # Enable all buttons, so you can access them with a right click
-                    self.activateButtons()
-                    
-                    event.accept()
+            except Exception as e:
+                if Parameters.DEBUG_MODE:
+                    print(e.with_traceback(e.__traceback__))
                     return
-
-            if QuickAccessToolBar.objectName() == "quickAccessToolBar":
-                widget = event.source()
-                
-                # Use the action stored during the dragmove function
-                beforeAction = self.dragAction_QuickAccess
-                # insert the dragged widget
-                QuickAccessToolBar.insertWidget(beforeAction, widget)
-
-                # Update the orderlist
-                #
-                # Define the orderlist as the current list of quickaccess commands
-                try:
-                    OrderList = self.workBenchDict["quickAccessCommands"]
-                    OrderList.remove(widget.objectName())
-                    index = OrderList.index(beforeAction.objectName())
-                    OrderList.insert(index, widget.objectName())
-
-                    # Set the quickaccessCommands
-                    self.workBenchDict["quickAccessCommands"] = OrderList
-                    
-                    # Delete the drag indicater
-                    try:
-                        QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
-                        QuickAccessToolBar.removeAction(self.dragIndicator_QuickAccess)
-                    except Exception:
-                        pass
-                except Exception:
-                    try:
-                        QuickAccessToolBar.removeAction(self.dragAction_QuickAccess)
-                        QuickAccessToolBar.removeAction(self.dragIndicator_QuickAccess)
-                    except Exception:
-                        pass
-                
-            # Enable all buttons, so you can access them with a right click
-            self.activateButtons()
-
-            event.accept()
-            return
         
         # Reorder panels by drag           
         if type(widget) is RibbonPanel:
-            # Get the position (index, position)
-            position = self.find_drop_location(event)
+            try:
+                # Get the position (index, position)
+                position = self.find_drop_location(event)
 
-            # Create a new panel
-            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            newPanel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True, ActivateButtons=True)
+                # Create a new panel
+                workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                newPanel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True, ActivateButtons=True)
 
-            # Add the new panel
-            self.currentCategory().insertWidget(newPanel,position[0])
-            # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-            self.setPanelProperties(newPanel)
-            
-            # Update the dict of the currentCategory with the new panel
-            panels = {}
-            for title, panel in self.currentCategory().panels().items():
-                StandardFunctions.add_keys_nested_dict(panels, [title])
-                if panel.objectName() == newPanel.objectName():
-                    panels[title] = newPanel
-                else:
-                    panels[title] = panel
-            self.currentCategory()._panels = panels
-            
-            # Close the current panel
-            widget.close()
-
-            # Create the current orderlist from the panels
-            if "order" not in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
-                StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", "order"], endEmpty=True)
-                self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"] = []
-            OrderList:list = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
-            # if a panel is not in the orderlist, add it
-            for title, panel in self.currentCategory().panels().items():
-                if panel.objectName() not in OrderList:
-                    OrderList.append(panel.objectName())
-            # if an item in the orderlist is not in the panel list, remove it from the order list
-            for panelItem in OrderList:
-                isInList = False
+                # Add the new panel
+                self.currentCategory().insertWidget(newPanel,position[0])
+                # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
+                self.setPanelProperties(newPanel)
+                
+                # Update the dict of the currentCategory with the new panel
+                panels = {}
                 for title, panel in self.currentCategory().panels().items():
-                    if title == panelItem:
-                        isInList = True
-                if isInList is False:
-                    OrderList.remove(panelItem)
-            
-            # Add the widget in the new place of the order list
-            OrderIndex = position[0]
-            if widget.objectName() in OrderList:
-                OrderList.remove(widget.objectName())
-            OrderList.insert(OrderIndex, widget.objectName())
-            
-            # Update the workbench dict
-            self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"] = OrderList
-            
-            # Close the drag indicator
-            self.dragIndicator_Panels.close()
+                    StandardFunctions.add_keys_nested_dict(panels, [title])
+                    if panel.objectName() == newPanel.objectName():
+                        panels[title] = newPanel
+                    else:
+                        panels[title] = panel
+                self.currentCategory()._panels = panels
+                
+                # Close the current panel
+                widget.close()
+
+                # Create the current orderlist from the panels
+                if "order" not in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
+                    StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", "order"], endEmpty=True)
+                    self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"] = []
+                OrderList:list = self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"]
+                # if a panel is not in the orderlist, add it
+                for title, panel in self.currentCategory().panels().items():
+                    if panel.objectName() not in OrderList:
+                        OrderList.append(panel.objectName())
+                # if an item in the orderlist is not in the panel list, remove it from the order list
+                for panelItem in OrderList:
+                    isInList = False
+                    for title, panel in self.currentCategory().panels().items():
+                        if title == panelItem:
+                            isInList = True
+                    if isInList is False:
+                        OrderList.remove(panelItem)
+                
+                # Add the widget in the new place of the order list
+                OrderIndex = position[0]
+                if widget.objectName() in OrderList:
+                    OrderList.remove(widget.objectName())
+                OrderList.insert(OrderIndex, widget.objectName())
+                
+                # Update the workbench dict
+                self.workBenchDict["workbenches"][workbenchName]["toolbars"]["order"] = OrderList
+                
+                # Close the drag indicator
+                self.dragIndicator_Panels.close()
+            except Exception as e:
+                if Parameters.DEBUG_MODE:
+                    print(e.with_traceback(e.__traceback__))
+                    return
                            
         event.accept()
         return
@@ -3349,7 +3369,8 @@ class ModernMenu(RibbonBar):
                 position: object = gridLayout.getItemPosition(index)
                 return [position[0], position[1], position[2], w_origin]
             except Exception as e:
-                # raise e
+                if Parameters.DEBUG_MODE:
+                    print(e.with_traceback(e.__traceback__))
                 return None
         
         if type(widget) is RibbonPanel:
@@ -5166,9 +5187,8 @@ class ModernMenu(RibbonBar):
                 if isinstance(action, QAction):
                     return [action]
         except Exception as e:
-            if Parameters.DEBUG_MODE is True:
-                print(e)
-            # raise (e)
+            if Parameters.DEBUG_MODE:
+                print(e.with_traceback(e.__traceback__))
             pass
 
     def LoadMarcoFreeCAD(self, scriptName):
@@ -6299,8 +6319,8 @@ class ModernMenu(RibbonBar):
                         shadowList.append(CommandName)
 
                     except Exception as e:
-                        if Parameters.DEBUG_MODE is True:
-                            raise e
+                        if Parameters.DEBUG_MODE:
+                            print(e.with_traceback(e.__traceback__))
                         continue
         
         # Set the panel title
