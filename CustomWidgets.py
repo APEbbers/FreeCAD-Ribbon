@@ -837,7 +837,7 @@ class CustomControls(RibbonToolButton):
         # Add the command button
         Layout.addWidget(CommandButton)
         Layout.setAlignment(TextPositionAlignment)
-        Layout.setSizeConstraints(QLayout.SizeConstraint.SetFixedSize, QLayout.SizeConstraint.SetFixedSize)
+        Layout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
 
         # Set the content margins to zero
         Layout.setContentsMargins(0, 0, 0, 0)
@@ -1855,11 +1855,13 @@ class RightToolButton(QToolButton):
         widget.setStyleSheet(StyleSheet_Widget)
         
         def enterEventCustom(event):
-            StyleSheet_Addition = (
+            StyleSheet_Command = (
                 """QToolButton, QToolButton:hover {
                     margin: 0px;
                     spacing: 0px;
                     padding: 0px;
+                    border-top-left-radius: 2px;border-bottom-left-radius: 2px;
+                    border-top-right-radius: 0px;border-bottom-right-radius: 0px;
                     ;background: """ + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                     + ";}"
                     + """QToolButton::menu-indicator {
@@ -1871,8 +1873,26 @@ class RightToolButton(QToolButton):
                         image: none;
                     }"""
             )
-            CommandButton.setStyleSheet(StyleSheet_Addition)
-            ArrowButton.setStyleSheet(StyleSheet_Addition)
+            StyleSheet_Arrow = (
+                """QToolButton, QToolButton:hover {
+                    margin: 0px;
+                    spacing: 0px;
+                    padding: 0px;
+                    border-top-left-radius: 0px;border-bottom-left-radius: 0px;
+                    border-top-right-radius: 2px;border-bottom-right-radius: 2px;
+                    background: """ + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
+                    + ";}"
+                    + """QToolButton::menu-indicator {
+                        margin: 0px;
+                        spacing: 0px;
+                        padding: 0px;
+                        subcontrol-origin: border;
+                        subcontrol-position: center top;
+                        image: none;
+                    }"""
+            )
+            CommandButton.setStyleSheet(StyleSheet_Command)
+            ArrowButton.setStyleSheet(StyleSheet_Arrow)
             
         ArrowButton.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)
         CommandButton.enterEvent = lambda enterEvent: enterEventCustom(enterEvent)

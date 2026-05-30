@@ -1250,9 +1250,11 @@ class ModernMenu(RibbonBar):
             quickaccessbutton = None
             quickaccessseparator = None
             quickaccesstoolbar = None
-            if type(widget) is QToolBar:
+            # if type(widget) is QToolBar:
+            if self.quickAccessToolBar().underMouse():
                 quickaccesstoolbar = widget
-                for button in widget.findChildren(QToolButton):
+                
+                for button in self.quickAccessToolBar().findChildren(QToolButton):
                     # Map the for corners of the button to global
                     pos_tl = button.mapToGlobal(button.rect().topLeft())
                     pos_tr = button.mapToGlobal(button.rect().topRight())
@@ -1262,7 +1264,7 @@ class ModernMenu(RibbonBar):
                     # If the position of the context menu event is within the global corners
                     # redefine the quickaccess button or control
                     if event.globalPos().x() > pos_tl.x() and event.globalPos().x() < pos_tr.x():
-                        if event.globalPos().y() > pos_tl.y() and event.globalPos().y() < pos_bl.y():
+                        if event.globalPos().y() > pos_tl.y() and event.globalPos().y() < pos_bl.y():                            
                             if type(button) is QuickAccessToolButton:
                                 quickaccessbutton = button
                             if type(button) is QuickAccessSeparator:
@@ -2355,37 +2357,36 @@ class ModernMenu(RibbonBar):
         return
     
     def on_AddSeparator_QC_Clicked(self, ButtonWidget: QuickAccessToolButton, pos: QPoint, Side = "left"):
-        # Determine the index of the Button that is clicked on
-        buttonList = self._titleWidget._quickAccessToolBar.findChildren(QToolButton)
-        buttonAction = ButtonWidget.actions()[0]
-        index = -1
-        for i in range(len(buttonList)):
-            action = buttonList[i].defaultAction()
-            if action is not None:
-                if action.data() == buttonAction.data():
-                    index = i-2 # minus the application button and some hidden button
-                    break
-        
-        # Get the relative position of the cursor. Either left or right from the button that is clicked on
-        ExtraOffset = 0
-        if Side.lower() == "right":
-            ExtraOffset = ButtonWidget.width()
-        point = QPoint(pos.x() + ExtraOffset , pos.y())
-        buttonPos = self._titleWidget._quickAccessToolBar.mapTo(self._titleWidget._quickAccessToolBar ,point)
-        
         # Get the before action
-        beforeAction = self._titleWidget._quickAccessToolBar.actionAt(buttonPos)
-
-        # Create the separator
-        separator = QuickAccessSeparator(self.quickAccessToolBar())
-        separator.setObjectName("separator")
-        separator.setFixedSize(12, ButtonWidget.height())
+        beforeAction = None
+        index = 0
+        for i in range(len(self.quickAccessToolBar().actions())):
+            action = self.quickAccessToolBar().actions()[i]
+            index = i-2
+            if Side != "left" and i < len(self.quickAccessToolBar().actions()):
+                action = self.quickAccessToolBar().actions()[i+1]
+                index = i - 2 + 1
+            if ButtonWidget.objectName() in action.defaultWidget().objectName():
+                beforeAction = action
+                break
         
-        # Add the separator to the quicktoolbar
-        self._titleWidget._quickAccessToolBar.insertWidget(beforeAction, separator)
-        
-        # Update the quickAccessCommands list
-        self.workBenchDict["quickAccessCommands"].insert(index, separator.objectName())
+        if beforeAction is not None:
+            counter = 0
+            # Count the separators already present
+            for item in self.workBenchDict["quickAccessCommands"]:
+                if "separator" in item:
+                    counter = counter + 1
+            
+            # Create the separator
+            separator = QuickAccessSeparator(self.quickAccessToolBar())
+            separator.setObjectName(f"separator_{counter+1}")
+            separator.setFixedSize(12, ButtonWidget.height())
+            
+            # Add the separator to the quicktoolbar
+            self._titleWidget._quickAccessToolBar.insertWidget(beforeAction, separator)
+            
+            # Update the quickAccessCommands list
+            self.workBenchDict["quickAccessCommands"].insert(index, separator.objectName())
         return       
     
     def on_RemoveSeparator_QC_Clicked(self, separator: QuickAccessSeparator, pos: QPoint):
