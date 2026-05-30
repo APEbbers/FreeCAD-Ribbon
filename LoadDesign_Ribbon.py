@@ -4955,95 +4955,107 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Clear the listwidget
         ListWidget_Commands.clear()
 
-        ShadowList = []  # List to add the commands and prevent duplicates
-        for ToolbarCommand in self.List_Commands:
-            CommandName = ToolbarCommand[0]            
-            workbenchName = ToolbarCommand[3]
-            MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not translated
-            if len(ToolbarCommand) == 5:
-                MenuNameTranslated = ToolbarCommand[4].replace("&", "")  # Translated
-            # Remove numbers from dropdown child commands
-            if MenuNameTranslated.split(" ")[0].isdigit() is True:
-                MenuNameTranslated = MenuNameTranslated.split(" ")[1]
-            # Remove any suffix from the menuname
-            if CommandName.endswith("_ddb"):
-                MenuNameTranslated = CommandName.replace("_ddb", "")
+        if (ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole) != "All")  or SearchbarText != "":
+            ShadowList = []  # List to add the commands and prevent duplicates
+            for ToolbarCommand in self.List_Commands:
+                CommandName = ToolbarCommand[0]            
+                workbenchName = ToolbarCommand[3]
+                MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not translated
+                if len(ToolbarCommand) == 5:
+                    MenuNameTranslated = ToolbarCommand[4].replace("&", "")  # Translated
+                # Remove numbers from dropdown child commands
+                if MenuNameTranslated.split(" ")[0].isdigit() is True:
+                    MenuNameTranslated = MenuNameTranslated.split(" ")[1]
+                # Remove any suffix from the menuname
+                if CommandName.endswith("_ddb"):
+                    MenuNameTranslated = CommandName.replace("_ddb", "")
 
-            if MenuNameTranslated != "":                
-                if (
-                    SearchbarText != ""
-                    and MenuNameTranslated.lower().startswith(SearchbarText)
-                ) or SearchbarText == "":
-                    if CommandName not in ShadowList:
-                        try:
-                            if (
-                                workbenchName != "Global"
-                                and workbenchName != "General"
-                                and workbenchName != "Standard"
-                                and workbenchName != "All"
-                                and workbenchName != ""
-                            ):
-                                WorkbenchTitle = Gui.getWorkbench(
-                                    workbenchName
-                                ).MenuText
-                            else:
-                                WorkbenchTitle = workbenchName
-                        except Exception as e:
-                            if Parameters.DEBUG_MODE is True:
-                                print(e)
-                            return
-                        try:
-                            if (
-                                ListWidget_WorkBenches is not None and
-                                WorkbenchTitle
-                                == ListWidget_WorkBenches.currentData(
-                                    Qt.ItemDataRole.UserRole
-                                )[2]
-                                or ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "All")
-                            ):
-                                # Define a new ListWidgetItem.
-                                Icon = QIcon()
-                                Icon = self.ReturnCommandIcon(CommandName)
+                if MenuNameTranslated != "":                
+                    if (
+                        SearchbarText != ""
+                        and MenuNameTranslated.lower().startswith(SearchbarText)
+                    ) or SearchbarText == "":
+                        if CommandName not in ShadowList:
+                            try:
+                                if (
+                                    workbenchName != "Global"
+                                    and workbenchName != "General"
+                                    and workbenchName != "Standard"
+                                    and workbenchName != "All"
+                                    and workbenchName != ""
+                                ):
+                                    WorkbenchTitle = Gui.getWorkbench(
+                                        workbenchName
+                                    ).MenuText
+                                else:
+                                    WorkbenchTitle = workbenchName
+                            except Exception as e:
+                                if Parameters.DEBUG_MODE is True:
+                                    print(e)
+                                return
+                            try:
+                                if (
+                                    ListWidget_WorkBenches is not None and
+                                    WorkbenchTitle
+                                    == ListWidget_WorkBenches.currentData(
+                                        Qt.ItemDataRole.UserRole
+                                    )[2]
+                                    or ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "All")
+                                ):
+                                    # Define a new ListWidgetItem.
+                                    Icon = QIcon()
+                                    Icon = self.ReturnCommandIcon(CommandName)
 
-                                # Define a new ListWidgetItem.
-                                ListWidgetItem = QListWidgetItem()
-                                ListWidgetItem.setText(MenuNameTranslated)
-                                ListWidgetItem.setData(
-                                    Qt.ItemDataRole.UserRole, CommandName
-                                )
-                                if Icon is not None and Icon.isNull() is False:
-                                    # Check if there is an Icon. if not add a replacement
-                                    if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                                        # Icon = Gui.getIcon("preferences-workbenches")
-                                        # ListWidgetItem.setIcon(Icon)
-                                        continue
-                                    
-                                    ListWidgetItem.setIcon(Icon)
-                                    ListWidgetItem.setToolTip(
-                                        CommandName
-                                    )  # Use the tooltip to store the actual command.
-                                    
-                                    # Add the ListWidgetItem to the correct ListWidget
-                                    IsInList = False
-                                    for i in range(DestinationWidget.count()):
-                                        item = DestinationWidget.item(i)
-                                        if item.data(
-                                            Qt.ItemDataRole.UserRole
-                                        ) == ListWidgetItem.data(Qt.ItemDataRole.UserRole):
-                                            IsInList = True
-                                    if IsInList is False:
-                                        ListWidget_Commands.addItem(ListWidgetItem)
-                                        # Add the commandName to the shadowList
-                                        ShadowList.append(CommandName)
-                                if Icon.isNull() or Icon is None:
-                                    if Parameters.DEBUG_MODE is True:
-                                        StandardFunctions.Print(
-                                            f"{CommandName} has no icon!", "Warning"
-                                        )
-                                    
-                        except Exception:
-                            continue                        
-
+                                    # Define a new ListWidgetItem.
+                                    ListWidgetItem = QListWidgetItem()
+                                    ListWidgetItem.setText(MenuNameTranslated)
+                                    ListWidgetItem.setData(
+                                        Qt.ItemDataRole.UserRole, CommandName
+                                    )
+                                    if Icon is not None and Icon.isNull() is False:
+                                        # Check if there is an Icon. if not add a replacement
+                                        if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
+                                            # Icon = Gui.getIcon("preferences-workbenches")
+                                            # ListWidgetItem.setIcon(Icon)
+                                            continue
+                                        
+                                        ListWidgetItem.setIcon(Icon)
+                                        ListWidgetItem.setToolTip(
+                                            CommandName
+                                        )  # Use the tooltip to store the actual command.
+                                        
+                                        # Add the ListWidgetItem to the correct ListWidget
+                                        IsInList = False
+                                        for i in range(DestinationWidget.count()):
+                                            item = DestinationWidget.item(i)
+                                            if item.data(
+                                                Qt.ItemDataRole.UserRole
+                                            ) == ListWidgetItem.data(Qt.ItemDataRole.UserRole):
+                                                IsInList = True
+                                        if IsInList is False:
+                                            ListWidget_Commands.addItem(ListWidgetItem)
+                                            # Add the commandName to the shadowList
+                                            ShadowList.append(CommandName)
+                                    if Icon.isNull() or Icon is None:
+                                        if Parameters.DEBUG_MODE is True:
+                                            StandardFunctions.Print(
+                                                f"{CommandName} has no icon!", "Warning"
+                                            )
+                                        
+                            except Exception:
+                                continue           
+                                     
+        if (ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole) == "All") and SearchbarText == "":
+            # Go through the stored listwidget items and add them to the listwidget
+            for item in self.listWidgetItems:
+                ListWidget_Commands.addItem(item) 
+            
+            # Create a new list with a clone of each of the items
+            listWidgetItems = []
+            for i in range(ListWidget_Commands.count()):                            
+                listWidgetItems.append(ListWidget_Commands.item(i).clone())
+            # replace the stored listwidget items with the new list                      
+            self.listWidgetItems = listWidgetItems
         return
 
     def FilterCommands_ListCategory(
