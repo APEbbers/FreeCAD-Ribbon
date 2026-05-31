@@ -129,13 +129,12 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     # Create a list for all listwidget items. Used to switch filters to "All"
     listWidgetItems = []
             
-    def __init__(self, parent, workBenchDict, IconList):
+    def __init__(self, parent):
         super(LoadDialog, self).__init__()
         
-        # Get the current workbench dict
-        self.workBenchDict = workBenchDict
-        # Load the icon list for the commands
-        self.List_CommandIcons = IconList
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
+        
+        self.List_CommandIcons = RibbonBar.List_CommandIcons
 
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
@@ -358,7 +357,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
         # Add dropdownbuttons to the list of commands
         try:
-            for DropDownCommand, Commands in self.workBenchDict["dropdownButtons"].items():
+            for DropDownCommand, Commands in RibbonBar.workBenchDict["dropdownButtons"].items():
                 if isinstance(Commands, list):
                     CommandName = Commands[0][0]
                     IconName = ""
@@ -375,7 +374,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         ]
                     )
                 else:
-                    del self.workBenchDict["dropdownButtons"]
+                    del RibbonBar.workBenchDict["dropdownButtons"]
                     StandardFunctions.Print(
                         "dropdownbuttons have wrong format. Please create them again!",
                         "Warning",
@@ -662,6 +661,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         return    
        
     def LoadCommands(self):
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
+        
         """Fill the Quick Commands Available and Selected"""
         self.form.CommandsAvailable_NP.clear()
         self.form.CommandList_DDB.clear()
@@ -723,7 +724,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         self.listWidgetItems.append(ListWidgetItem.clone())
 
                     # If there are any dropdown buttons in the json file, add them to the dropdown list
-                    if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.workBenchDict):
+                    if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
                         self.form.CommandList_DDB.addItem(CommandName.replace("_ddb", ""))
 
                     ShadowList.append(CommandName)
@@ -772,6 +773,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     def on_WorkbenchList_CP__activated(
         self, setCustomToolbarSelector_CP: bool = False, CurrentText=""
     ):
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
+        
         # Set the workbench name.
         WorkBenchName = self.CurrentWorkBenchName
         WorkBenchTitle = self.CurrentWorkBenchTitle
@@ -792,24 +795,24 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         for CustomToolbar in CustomToolbars:
             wbToolbars.append(CustomToolbar)
         # Get the custom panels
-        if "customToolbars" in self.workBenchDict:
+        if "customToolbars" in RibbonBar.workBenchDict:
             CustomPanel = self.List_ReturnCustomPanel(
-                self.workBenchDict["customToolbars"], WorkBenchName=WorkBenchName
+                RibbonBar.workBenchDict["customToolbars"], WorkBenchName=WorkBenchName
             )
             for CustomToolbar in CustomPanel:
                 if CustomToolbar[1] == WorkBenchTitle or CustomToolbar[1] == "Global":
                     wbToolbars.append(CustomToolbar[0])
         # Get the new panels per workbench
-        if "newPanels" in self.workBenchDict:
+        if "newPanels" in RibbonBar.workBenchDict:
             NewPanels = self.List_ReturnNewPanel(
-                self.workBenchDict["newPanels"], WorkBenchName=WorkBenchName, PanelDict="newPanels"
+                RibbonBar.workBenchDict["newPanels"], WorkBenchName=WorkBenchName, PanelDict="newPanels"
             )
             for Newpanel in NewPanels:
                 if Newpanel[1] == WorkBenchTitle:
                     wbToolbars.append(Newpanel[0])
             # Get the new panels globally
             NewPanels = self.List_ReturnNewPanel(
-                self.workBenchDict["newPanels"], WorkBenchName="Global", PanelDict="newPanels"
+                RibbonBar.workBenchDict["newPanels"], WorkBenchName="Global", PanelDict="newPanels"
             )
             for Newpanel in NewPanels:
                 if Newpanel[1] == "Global":
@@ -826,8 +829,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             if Toolbar in shadowList:
                 continue
             IsIgnored = False
-            if "ignoredToolbars" in self.workBenchDict:
-                for IgnoredToolbar in self.workBenchDict["ignoredToolbars"]:
+            if "ignoredToolbars" in RibbonBar.workBenchDict:
+                for IgnoredToolbar in RibbonBar.workBenchDict["ignoredToolbars"]:
                     if Toolbar.lower() == IgnoredToolbar.lower():
                         IsIgnored = True
 
@@ -920,6 +923,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         return
 
     def on_AddPanel_CP_clicked(self):
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
+        
         SelectedToolbars = self.form.PanelAvailable_CP.selectedItems()
 
         # Set the workbench name.
@@ -934,10 +939,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         CustomCommands = self.Dict_ReturnCustomToolbars_Global()
         ToolbarItems.update(CustomCommands)
         # Get the new panels from each installed workbench
-        NewPanelCommands = self.Dict_ReturnNewPanel(self.workBenchDict, WorkbenchName)
+        NewPanelCommands = self.Dict_ReturnNewPanel(RibbonBar.workBenchDict, WorkbenchName)
         ToolbarItems.update(NewPanelCommands)
         # Get the global new panels
-        NewPanelCommands = self.Dict_ReturnNewPanel(self.workBenchDict)
+        NewPanelCommands = self.Dict_ReturnNewPanel(RibbonBar.workBenchDict)
         ToolbarItems.update(NewPanelCommands)
         
         for key, value in list(ToolbarItems.items()):
@@ -986,7 +991,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
         return
 
-    def on_AddCustomPanel_CP_clicked(self):        
+    def on_AddCustomPanel_CP_clicked(self):      
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
+          
         # define the suffix
         Suffix = "_custom"
         CustomPanelTitle = ""
@@ -1038,7 +1045,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
                     # Create or modify the dict that will be entered
                     StandardFunctions.add_keys_nested_dict(
-                        self.workBenchDict,
+                        RibbonBar.workBenchDict,
                         [
                             "customToolbars",
                             WorkBenchName,
@@ -1049,7 +1056,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     )
 
                     # Update the dict
-                    self.workBenchDict["customToolbars"][WorkBenchName][
+                    RibbonBar.workBenchDict["customToolbars"][WorkBenchName][
                         CustomPanelTitle + Suffix
                     ]["commands"][MenuName] = OriginalToolbar
 
@@ -1073,10 +1080,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
             # Add the order of panels to the Json file
             StandardFunctions.add_keys_nested_dict(
-                self.workBenchDict,
+                RibbonBar.workBenchDict,
                 ["workbenches", WorkBenchName, "toolbars", "order"],
             )
-            ToolbarOrder = self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][
+            ToolbarOrder = RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"][
                 "order"
             ]
             ToolbarOrder.append(CustomPanelTitle + Suffix)
@@ -1084,13 +1091,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Get the ribbon
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
         # Update the workBenchDict in the Ribbon
-        RibbonBar.workBenchDict.update(self.workBenchDict)
+        RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"].update(RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"])
         # Create the new panel in the ribbon
         newPanel = RibbonBar.CreatePanel(
             workbenchName=WorkBenchName,
             panelName=CustomPanelTitle + Suffix,
             addPanel=True,
-            Dict=self.workBenchDict,
+            Dict=RibbonBar.workBenchDict,
             ignoreColumnLimit=True,
             showEnableControl=True,
             ActivateButtons=True
@@ -1101,7 +1108,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
         # Remove the original panels
         panelsToRemove = []
-        for key, value in self.workBenchDict["customToolbars"][WorkBenchName][CustomPanelTitle + Suffix]["commands"].items():
+        for key, value in RibbonBar.workBenchDict["customToolbars"][WorkBenchName][CustomPanelTitle + Suffix]["commands"].items():
             for title, objPanel in RibbonBar.currentCategory().panels().items():
                 if objPanel.objectName() == value:
                     # hide the enable checkboxes and hide the panel if it is unchecked
@@ -1113,10 +1120,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         # Hide the panel
                         objPanel.hide()
                         # Write the state to the structure
-                        StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", WorkBenchName, "toolbars", objPanel.objectName(), "Enabled"])
-                        self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][objPanel.objectName()]["Enabled"] = False
+                        StandardFunctions.add_keys_nested_dict(RibbonBar.workBenchDict, ["workbenches", WorkBenchName, "toolbars", objPanel.objectName(), "Enabled"])
+                        RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"][objPanel.objectName()]["Enabled"] = False
                         # Update the workBenchDict in the Ribbon
-                        RibbonBar.workBenchDict.update(self.workBenchDict)
+                        RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"].update(RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"])
         
         # Remove the panels also from the current category. Othewise the will showup on clicking Ok
         for panel in panelsToRemove:
@@ -1126,6 +1133,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         return
 
     def on_CustomToolbarSelector_CP_activated(self):
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
+        
         self.form.PanelSelected_CP.clear()
 
         # If the selected item is "new", clear the list widgets and exit
@@ -1210,7 +1219,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
         return
 
-    def on_RemovePanel_CP_clicked(self):
+    def on_RemovePanel_CP_clicked(self):        
         # Get the current custom toolbar name
         CustomPanelTitle = ""
         WorkBenchTitle = ""
@@ -1234,13 +1243,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             if WorkBench[2] == WorkBenchTitle:
                 WorkBenchName = WorkBench[0]
                 try:
-                    for panel, commands in list(self.workBenchDict["customToolbars"][WorkBenchName].items()):
+                    for panel, commands in list(RibbonBar.workBenchDict["customToolbars"][WorkBenchName].items()):
                         if panel == CustomPanelTitle:
                             # Get the order list
-                            orderList: list = self.workBenchDict["workbenches"][WorkBenchName]["toolbars"]["order"]
+                            orderList: list = RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"]["order"]
                             
                             ListPanels = []
-                            for command, toolbar in self.workBenchDict["customToolbars"][WorkBenchName][panel]["commands"].items():
+                            for command, toolbar in RibbonBar.workBenchDict["customToolbars"][WorkBenchName][panel]["commands"].items():
                                 if toolbar not in ListPanels:
                                     ListPanels.append(toolbar)
 
@@ -1249,7 +1258,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 TB = mw.findChildren(QToolBar, toolbar)
                                 if TB is not None:
                                     # Create the panel based on the toolbars
-                                    newPanel = RibbonBar.CreatePanel(workbenchName=WorkBenchName, panelName=toolbar, addPanel=False, Dict=self.workBenchDict, showEnableControl=True, ActivateButtons=True)                                                                        
+                                    newPanel = RibbonBar.CreatePanel(workbenchName=WorkBenchName, panelName=toolbar, addPanel=False, Dict=RibbonBar.workBenchDict, showEnableControl=True, ActivateButtons=True)                                                                        
                                     # show the enable checkboxes  
                                     titleLayout: QHBoxLayout = newPanel._titleLayout
                                     EnableControl = titleLayout.itemAt(0).widget()
@@ -1285,18 +1294,18 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 orderList.remove(panel)
 
                             # remove the custom toolbar also from the workbenches dict
-                            del self.workBenchDict["customToolbars"][WorkBenchName][panel]
-                            if (panel in self.workBenchDict["workbenches"][WorkBenchName]["toolbars"]):
-                                del self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel]
+                            del RibbonBar.workBenchDict["customToolbars"][WorkBenchName][panel]
+                            if (panel in RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"]):
+                                del RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel]
 
                             # update the order list
-                            if panel in self.workBenchDict["workbenches"][WorkBenchName]:
-                                self.workBenchDict["workbenches"][WorkBenchName][panel]["order"] = orderList
+                            if panel in RibbonBar.workBenchDict["workbenches"][WorkBenchName]:
+                                RibbonBar.workBenchDict["workbenches"][WorkBenchName][panel]["order"] = orderList
 
-                            # Get the ribbon
-                            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-                            # Update the workBenchDict in the Ribbon
-                            RibbonBar.workBenchDict.update(self.workBenchDict)
+                            # # Get the ribbon
+                            # RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+                            # # Update the workBenchDict in the Ribbon
+                            # RibbonBar.workBenchDict["workbenches"][WorkBenchName].update(RibbonBar.workBenchDict["workbenches"][WorkBenchName])
 
                             # Set the current text to new
                             self.form.CustomToolbarSelector_CP.setCurrentText("New")
@@ -1318,6 +1327,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     
     # region - Create dropdown buttons tab
     def on_CreateControl_DDB_clicked(self):
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
+        
         DropDownButton = []
         DropDownName = ""
         Suffix = ""
@@ -1356,10 +1367,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
             # Create or modify the dict that will be entered
             Suffix = "_ddb"
-            StandardFunctions.add_keys_nested_dict(self.workBenchDict["dropdownButtons"], [DropDownName + Suffix], endEmpty=True)
+            StandardFunctions.add_keys_nested_dict(RibbonBar.workBenchDict["dropdownButtons"], [DropDownName + Suffix], endEmpty=True)
 
         # Update the dict
-        self.workBenchDict["dropdownButtons"][DropDownName + Suffix] = DropDownButton
+        RibbonBar.workBenchDict["dropdownButtons"][DropDownName + Suffix] = DropDownButton
 
         # Add the dropdown button to the command list widgets
         FirstCommand = DropDownButton[0][0]
@@ -1388,10 +1399,12 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.newDDBList.append(DropDownName)
 
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-        RibbonBar.workBenchDict["dropdownButtons"] = self.workBenchDict["dropdownButtons"]
+        RibbonBar.workBenchDict["dropdownButtons"].update(RibbonBar.workBenchDict["dropdownButtons"])
         return
 
     def on_CommandList_DDB_activated(self):
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
+
         self.form.NewControl_DDB.clear()
         DropDownControl = self.form.CommandList_DDB.currentText() + "_ddb"
 
@@ -1400,10 +1413,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             return
 
         # if the dropdown text is not empty, continue
-        if DropDownControl != "" and "dropdownButtons" in self.workBenchDict:
+        if DropDownControl != "" and "dropdownButtons" in RibbonBar.workBenchDict:
             # Go through the dropdown buttons.
             for DropDownButton, Commands in list(
-                self.workBenchDict["dropdownButtons"].items()
+                RibbonBar.workBenchDict["dropdownButtons"].items()
             ):
                 # If the DropDownButton is equal to the text in the combobox, go through its commands
                 if DropDownButton == DropDownControl:
@@ -1429,22 +1442,24 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         return
 
     def on_RemoveControl_DDB_clicked(self):
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
+        
         DropDownControl = self.form.CommandList_DDB.currentText() + "_ddb"
 
-        if DropDownControl != "" and "dropdownButtons" in self.workBenchDict:
+        if DropDownControl != "" and "dropdownButtons" in RibbonBar.workBenchDict:
             for DropDownButton, Commands in list(
-                self.workBenchDict["dropdownButtons"].items()
+                RibbonBar.workBenchDict["dropdownButtons"].items()
             ):
                 if DropDownButton == DropDownControl:
                     # remove the custom toolbar also from the workbenches dict
-                    del self.workBenchDict["dropdownButtons"][DropDownButton]
+                    del RibbonBar.workBenchDict["dropdownButtons"][DropDownButton]
 
                     # remove the command from the quickaccess toolbar
                     newList = []
-                    for item in self.workBenchDict["quickAccessCommands"]:
+                    for item in RibbonBar.workBenchDict["quickAccessCommands"]:
                         if item != DropDownControl:
                             newList.append(item)
-                    self.workBenchDict["quickAccessCommands"] = newList
+                    RibbonBar.workBenchDict["quickAccessCommands"] = newList
 
                     # remove the control from the combobox
                     for i in range(self.form.CommandList_DDB.count()):
@@ -1542,7 +1557,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     def on_Ok_Clicked(self):
         self.DialogClosed = True
         if self.DialogClosed is True:
-            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")       
+            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
             for category in RibbonBar.CustomizedCategories:
                 RibbonBar.setCurrentCategory(category) 
                 RibbonBar.on_Ok_Clicked()
@@ -1873,14 +1888,16 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         Returns:
             QIcon: the command icon.
         """
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
+        
         # Define an empty icon
         Icon = QIcon()
         # Try to get the icon from the icon list first. This list is created on load and is the fasted to read
         for item in self.List_CommandIcons:
             if CommandName in item[0]:
                 Icon = item[1]
-            if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.workBenchDict):
-                    for (DropDownCommand, Commands) in self.workBenchDict["dropdownButtons"].items():
+            if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
+                    for (DropDownCommand, Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
                         if Commands[0][0] == item[0]:
                             Icon = item[1]
 
@@ -1904,8 +1921,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         if Parameters.DEBUG_MODE:
                             print(f"{fileName} created from resources")
 
-                    if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.workBenchDict):
-                        for (DropDownCommand,Commands) in self.workBenchDict["dropdownButtons"].items():
+                    if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
+                        for (DropDownCommand,Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
                             for CommandItem in self.List_Commands:
                                 if CommandItem[0] == CommandItem[0]:
                                     Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
@@ -1921,8 +1938,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             # Therefore this is the last resort
             if Icon is None or (Icon is not None and Icon.isNull()):
                 Icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap)
-                if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.workBenchDict):
-                        for (DropDownCommand,Commands) in self.workBenchDict["dropdownButtons"].items():
+                if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
+                        for (DropDownCommand,Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
                             for CommandItem in self.List_Commands:
                                 if Commands[0][0] == CommandItem[0]:
                                     pixmap = StandardFunctions.CommandInfoCorrections(CommandItem[0])["pixmap"]
@@ -2428,7 +2445,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             if data["customToolbars"] != self.Dict_CustomToolbars["customToolbars"]:
                 IsChanged = True
         if "dropdownButtons" in data:
-            if data["dropdownButtons"] != self.workBenchDict["dropdownButtons"]:
+            if data["dropdownButtons"] != RibbonBar.workBenchDict["dropdownButtons"]:
                 IsChanged = True
         if "newPanels" in data:
             if data["newPanels"] != self.Dict_NewPanels["newPanels"]:
@@ -2538,7 +2555,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Get all the dropdown buttons
         if Section == "dropdownButtons" or Section == "All":
             try:
-                self.workBenchDict["dropdownButtons"] = data["dropdownButtons"]
+                RibbonBar.workBenchDict["dropdownButtons"] = data["dropdownButtons"]
             except Exception:
                 pass
 
