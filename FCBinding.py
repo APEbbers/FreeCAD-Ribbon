@@ -393,18 +393,21 @@ class ModernMenu(RibbonBar):
                 self.List_Commands = Data["List_Commands"]
             except Exception:
                 pass
-
-        if (
-            StandardFunctions.checkFreeCADVersion(
-                Parameters.FreeCAD_Version["mainVersion"],
-                Parameters.FreeCAD_Version["subVersion"],
-                Parameters.FreeCAD_Version["patchVersion"],
-                Parameters.FreeCAD_Version["gitVersion"],
-            )
-            is True
-        ):
-            self.ConvertRibbonStructure()
-
+        
+        if int(App.Version()[0]) == 0 or (int(App.Version()[0]) == 1 and int(App.Version()[1]) == 0):
+            self.ConvertRibbonStructure(checkFCVersion=False, RestartFreeCAD=False)
+        else:
+            if (
+                StandardFunctions.checkFreeCADVersion(
+                    Parameters.FreeCAD_Version["mainVersion"],
+                    Parameters.FreeCAD_Version["subVersion"],
+                    Parameters.FreeCAD_Version["patchVersion"],
+                    Parameters.FreeCAD_Version["gitVersion"],
+                )
+                is True
+            ):
+                self.ConvertRibbonStructure()
+        
         # check the language and remove texts from the ribbonstructure if the language does not match
         self.CheckLanguage()
 
@@ -4190,7 +4193,7 @@ class ModernMenu(RibbonBar):
             translate("FreeCAD Ribbon", "Repair functions...")
         )
         UpdateRibbonStructure = RepairMenu.addAction(translate("FreeCAD Ribbon", "Repair the Ribbon layout file"))
-        UpdateRibbonStructure.triggered.connect(lambda: self.ConvertRibbonStructure(False))
+        UpdateRibbonStructure.triggered.connect(lambda: self.ConvertRibbonStructure(checkFCVersion=False, RestartFreeCAD=True))
         RestoreLayout = RepairMenu.addAction(translate("FreeCAD Ribbon", "Restore a Ribbon layout"))
         RestoreLayout.triggered.connect(self.RestoreJson)
         OpenBackupFolder = RepairMenu.addAction(translate("FreeCAD Ribbon", "Open the backup directory"))
@@ -4846,9 +4849,7 @@ class ModernMenu(RibbonBar):
         if workbenchName in Dict:
             for toolbar in Dict[workbenchName]:
                 if CustomToolbar.lower() == toolbar.lower():
-                    Commands = Dict[workbenchName][
-                        toolbar
-                    ]["commands"]
+                    Commands = Dict[workbenchName][toolbar]["commands"]
 
                     # Create a QToolButton from the key and add it to the button list
                     allButtons: list = []
@@ -4877,9 +4878,18 @@ class ModernMenu(RibbonBar):
                         try:
                             # Get the command
                             Command = Gui.Command.get(key)
+                            CommandName = key
+                            if Command == None:
+                                for CommandItem in self.List_Commands:
+                                    if CommandItem[2] == CommandName:
+                                        Command = Gui.Command.get(CommandItem[0])
+                                    if CommandItem[4] == CommandName:
+                                        Command = Gui.Command.get(CommandItem[0])
+                                
+                            
                             if Command is not None:
                                 Icon = Gui.getIcon(
-                                    CommandInfoCorrections(key)[
+                                    CommandInfoCorrections(CommandName)[
                                         "pixmap"
                                     ]
                                 )
@@ -4888,13 +4898,13 @@ class ModernMenu(RibbonBar):
                                 Button.addActions(action)
                                 Button.setDefaultAction(action[0])
                                 Button.setIcon(Icon)
-                                Button.setText(CommandInfoCorrections(key)[
+                                Button.setText(CommandInfoCorrections(CommandName)[
                                         "menuText"
                                     ])
                                 # Store the commmandName as a property
-                                Button.setProperty("CommandName", key)
+                                Button.setProperty("CommandName", CommandName)
                                 # Set the commandName as objectName as backup
-                                Button.setObjectName(key)
+                                Button.setObjectName(CommandName)
                                 try:
                                     if len(action) > 1:
                                         Icon = action[0].icon()
@@ -7085,7 +7095,7 @@ class ModernMenu(RibbonBar):
         isConverted = False
         # Get the FreeCAD Version
         version = App.Version()
-
+      
         # Check if version is stored in the ribbon structure.
         # If so check if it is an older version.
         # If it is the same or newer version, return.
@@ -7103,7 +7113,7 @@ class ModernMenu(RibbonBar):
                                     print("no conversion needed")
                                 return
 
-        # Convert the commands from menuname to the commandames
+        # Convert the commands from menu name to the command names
         #
         # Convert the custompanels
         if "customToolbars" in self.ribbonStructure:
@@ -7208,12 +7218,20 @@ class ModernMenu(RibbonBar):
                 # Go through the toolbars of the workbench in the json file                
                 for toolbar in self.ribbonStructure["workbenches"][WorkBench]["toolbars"]:
                     for ToolBarToCorrect in ToolBarCorrectionList:
+                        oldToolBarName = ToolBarToCorrect[0]
+                        newToolBarName = ToolBarToCorrect[1]
+                        ToolBarToRemove = newToolBarName
+                        if int(App.Version()[0]) == 0 or (int(App.Version()[0]) == 1 and int(App.Version()[1]) == 0):
+                            if Parameters.DEBUG_MODE:
+                                print("converted new to old")
+                            ToolBarToRemove = oldToolBarName
+                        
                         # If the toolbars match, update the json file
-                        if ToolBarToCorrect[1] == toolbar or ToolBarToCorrect[0] == toolbar:
-                            Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", WorkBench, "toolbars", ToolBarToCorrect[1]], endEmpty=True)
-                            Dict["workbenches"][WorkBench]["toolbars"][ToolBarToCorrect[1]] = self.ribbonStructure["workbenches"][WorkBench]["toolbars"][toolbar]
+                        if newToolBarName == toolbar or oldToolBarName == toolbar:
+                            Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", WorkBench, "toolbars", ToolBarToRemove], endEmpty=True)
+                            Dict["workbenches"][WorkBench]["toolbars"][ToolBarToRemove] = self.ribbonStructure["workbenches"][WorkBench]["toolbars"][toolbar]
                         # if the toolbar doesn't match and is not the order list, just add it
-                        if ToolBarToCorrect[1] != toolbar and ToolBarToCorrect[0] != toolbar and toolbar != "order":
+                        if newToolBarName != toolbar and oldToolBarName != toolbar and toolbar != "order":
                             Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", WorkBench, "toolbars", toolbar], endEmpty=True)
                             Dict["workbenches"][WorkBench]["toolbars"][toolbar] = self.ribbonStructure["workbenches"][WorkBench]["toolbars"][toolbar]
                     # if the toolbar is the order list, update its contents
@@ -7222,9 +7240,18 @@ class ModernMenu(RibbonBar):
                         OrderList: list = self.ribbonStructure["workbenches"][WorkBench]["toolbars"]["order"]
                         # Go through the correction list. If the toolbar to correct is in the order list, replace it with the correction                       
                         for ToolBarToCorrect in ToolBarCorrectionList:
-                            if ToolBarToCorrect[0] in OrderList:
-                                index = OrderList.index(ToolBarToCorrect[0])
-                                OrderList[index] = ToolBarToCorrect[1]
+                            oldToolBarName = ToolBarToCorrect[0]
+                            newToolBarName = ToolBarToCorrect[1]
+                            if int(App.Version()[0]) == 0 or (int(App.Version()[0]) == 1 and int(App.Version()[1]) == 0):
+                                if newToolBarName in OrderList:
+                                    index = OrderList.index(newToolBarName)
+                                    OrderList[index] = oldToolBarName
+                                    if Parameters.DEBUG_MODE:
+                                        print("converted new to old")
+                            else:
+                                if oldToolBarName in OrderList:
+                                    index = OrderList.index(oldToolBarName)
+                                    OrderList[index] = newToolBarName
                 # If the orderlist is not empty, set the orderlist as the new order list in the ribbon structure
                 if len(OrderList) > 0:
                     Dict["workbenches"][WorkBench]["toolbars"]["order"] = OrderList
@@ -7237,8 +7264,16 @@ class ModernMenu(RibbonBar):
                 # Get the corresponding toolbar correction list
                 ToolBarCorrectionList = CorrectionList[WorkBench]
                 for ToolBarToCorrect in ToolBarCorrectionList:
-                    if ToolBarToCorrect[0] in self.ribbonStructure["workbenches"][WorkBench]["toolbars"]:
-                        self.ribbonStructure["workbenches"][WorkBench]["toolbars"].pop(ToolBarToCorrect[0])
+                    oldToolBarName = ToolBarToCorrect[0]
+                    newToolBarName = ToolBarToCorrect[1]
+                    ToolBarToRemove = oldToolBarName                    
+                    if int(App.Version()[0]) == 0 or (int(App.Version()[0]) == 1 and int(App.Version()[1]) == 0):
+                        ToolBarToRemove = newToolBarName
+                    
+                    if ToolBarToRemove in self.ribbonStructure["workbenches"][WorkBench]["toolbars"]:
+                        self.ribbonStructure["workbenches"][WorkBench]["toolbars"].pop(ToolBarToRemove)
+                        if Parameters.DEBUG_MODE:
+                            print("removed new toolbars")
 
         # Add the version of FreeCAD on which this conversion is done, to the ribbonstructure
         # Create a key if not present
