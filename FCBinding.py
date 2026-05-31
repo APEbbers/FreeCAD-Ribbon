@@ -1463,7 +1463,7 @@ class ModernMenu(RibbonBar):
                                 self.on_Cancel_Clicked()
                                 return
                         if os.path.exists(DataFile) is True:
-                            self.AddCommandsDialog = LoadAddCommands.LoadDialog(mw, self.workBenchDict, self.List_CommandIcons)
+                            self.AddCommandsDialog = LoadAddCommands.LoadDialog(self)
                             if Parameters.DOCKED_DIALOGS is False:
                                 # Show the form
                                 self.AddCommandsDialog.form.show()
@@ -1933,7 +1933,28 @@ class ModernMenu(RibbonBar):
             panel.close()
         
         # update the ribbonstructure before writing it to disk
-        self.ribbonStructure.update(self.workBenchDict)
+        # self.ribbonStructure.update(self.workBenchDict)
+        if "quickAccessCommands" in self.workBenchDict:
+            self.ribbonStructure["quickAccessCommands"] = self.workBenchDict["quickAccessCommands"]
+        if "newPanels" in self.workBenchDict:
+            self.ribbonStructure["newPanels"] = self.workBenchDict["newPanels"]
+        if "dropdownButtons" in self.workBenchDict: 
+            self.ribbonStructure["dropdownButtons"] = self.workBenchDict["dropdownButtons"]
+        if "ignoredToolbars" in self.workBenchDict:
+            self.ribbonStructure["ignoredToolbars"] = self.workBenchDict["ignoredToolbars"]
+        if "ignoredWorkbenches" in self.workBenchDict:
+            self.ribbonStructure["ignoredWorkbenches"] = self.workBenchDict["ignoredWorkbenches"]
+        if "iconOnlyToolbars" in self.workBenchDict:
+            self.ribbonStructure["iconOnlyToolbars"] = self.workBenchDict["iconOnlyToolbars"]
+        if "customToolbars" in self.workBenchDict:
+            self.ribbonStructure["customToolbars"] = self.workBenchDict["customToolbars"]
+        
+        for WorkBench in self.workBenchDict["workbenches"].keys():
+            self.ribbonStructure["workbenches"][WorkBench] == self.workBenchDict["workbenches"][WorkBench]
+        
+        # # Remove any leftovers from newPanels and CustomPanels that are removed
+        # for panel in self.workBenchDict["workbenches"][WorkBenchName]["toolbars"].keys():
+            
         
         # Writing to ribbonStructure.json
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
@@ -6450,14 +6471,12 @@ class ModernMenu(RibbonBar):
                 
                 # Remove the panel also from the workbench dict
                 if panel.objectName() in self.workBenchDict["workbenches"][WorkBenchName]["toolbars"]:
-                    del self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]
+                    self.workBenchDict["workbenches"][WorkBenchName]["toolbars"].pop(panel.objectName())
             
             # Close the panel
             panel.close()
             self.RemovedPanels.append(panel)
-            # Remove the panel from the current category dict
-            # self.currentCategory().panels().pop(panel.objectName())
-            # self.currentCategory().removePanel(panel.objectName())
+            return
             
         # _custom
         if panel.objectName().endswith("_custom"):
@@ -6543,6 +6562,8 @@ class ModernMenu(RibbonBar):
                     ):
                         Dialog.PanelSelected_CP.clear()
                         Dialog.PanelName_CP.clear()
+                        
+                    return
         
         # Standard panels
         if panel.objectName().endswith("_custom") is False and panel.objectName().endswith("_newPanel") is False:
@@ -6550,6 +6571,7 @@ class ModernMenu(RibbonBar):
             EnableControl: Toggle = titleLayout.itemAt(0).widget()
             if EnableControl is not None:
                 EnableControl.setChecked(False)
+                return
         return
     
     def setPanelProperties(self, panel: RibbonPanel):
