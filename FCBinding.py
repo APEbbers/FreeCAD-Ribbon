@@ -2127,8 +2127,9 @@ class ModernMenu(RibbonBar):
                 
         # Remove panels that newly added by combining panels
         for objPanel in self.CombinePanels:
-            if objPanel.objectName() not in Dict["customToolbars"][workbenchName]:                     
-                objPanel.deleteLater()
+            if workbenchName in Dict["customToolbars"]:
+                if objPanel.objectName() not in Dict["customToolbars"][workbenchName]:                     
+                    objPanel.deleteLater()
             try:
                  self.currentCategory().removePanel(objPanel.title())
             except Exception:
