@@ -4883,9 +4883,10 @@ class ModernMenu(RibbonBar):
                                 for CommandItem in self.List_Commands:
                                     if CommandItem[2] == CommandName:
                                         Command = Gui.Command.get(CommandItem[0])
+                                        CommandName = (CommandItem[0])
                                     if CommandItem[4] == CommandName:
                                         Command = Gui.Command.get(CommandItem[0])
-                                
+                                        CommandName = (CommandItem[0])
                             
                             if Command is not None:
                                 Icon = Gui.getIcon(
@@ -5728,6 +5729,7 @@ class ModernMenu(RibbonBar):
         if panelName.endswith("_custom"):
             customList = self.List_AddCustomToolBarToWorkbench(workbenchName, panelName, Dict = Dict["customToolbars"])
             allButtons.extend(customList)
+            print(customList)
 
         # # Add new Panels
         if panelName.endswith("_newPanel"):
