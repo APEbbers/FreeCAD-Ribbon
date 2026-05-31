@@ -5730,7 +5730,6 @@ class ModernMenu(RibbonBar):
         if panelName.endswith("_custom"):
             customList = self.List_AddCustomToolBarToWorkbench(workbenchName, panelName, Dict = Dict["customToolbars"])
             allButtons.extend(customList)
-            print(customList)
 
         # # Add new Panels
         if panelName.endswith("_newPanel"):
