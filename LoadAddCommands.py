@@ -1693,7 +1693,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             for i in range(ListWidget_Commands.count()):                            
                 listWidgetItems.append(ListWidget_Commands.item(i).clone())
             # replace the stored listwidget items with the new list                      
-            self.listWidgetItems = listWidgetItems         
+            self.listWidgetItems = listWidgetItems
 
         return
 
