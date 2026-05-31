@@ -127,10 +127,13 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
     # Create a list for all listwidget items. Used to switch filters to "All"
     listWidgetItems = []
 
-    def __init__(self):
+    def __init__(self, IconList):
 
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
         super(LoadDialog, self).__init__()
+        
+        # Load the icons for the commands
+        self.List_CommandIcons = IconList
 
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
@@ -239,7 +242,15 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Load icons for all commands
         try:
             for CommandItem in self.List_Commands:
-                if CommandItem not in self.List_CommandIcons:
+                isInList = False
+                for IconItem in self.List_CommandIcons:
+                    if CommandItem[0] == IconItem[0]:
+                        isInList = True
+                        if Parameters.DEBUG_MODE:
+                            print(f"{CommandItem[0]} already present in the list")
+                        break
+                    
+                if isInList is False:
                     # Check first if the icon can be loaded quickly
                     Icon = QIcon()                                  
                     FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))

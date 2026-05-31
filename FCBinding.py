@@ -1460,7 +1460,7 @@ class ModernMenu(RibbonBar):
                                 self.on_Cancel_Clicked()
                                 return
                         if os.path.exists(DataFile) is True:
-                            self.AddCommandsDialog = LoadAddCommands.LoadDialog(mw, self.workBenchDict)
+                            self.AddCommandsDialog = LoadAddCommands.LoadDialog(mw, self.workBenchDict, self.List_CommandIcons)
                             if Parameters.DOCKED_DIALOGS is False:
                                 # Show the form
                                 self.AddCommandsDialog.form.show()
@@ -4310,7 +4310,7 @@ class ModernMenu(RibbonBar):
             QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
             
             # Get the form
-            Dialog = LoadDesign_Ribbon.LoadDialog()
+            Dialog = LoadDesign_Ribbon.LoadDialog(self.List_CommandIcons)
             if Parameters.DOCKED_DIALOGS is False:
                 # Show the form
                 Dialog.form.show()
@@ -6089,6 +6089,11 @@ class ModernMenu(RibbonBar):
                         if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
                             Icon = Gui.getIcon("preferences-workbenches")
                             action.setIcon(Icon)
+                        
+                        # Add the icon to the iconList 
+                        newItem = [CommandName, Icon]
+                        if newItem not in self.List_CommandIcons:
+                            self.List_CommandIcons.append(newItem)
 
                         # get button size from ribbonStructure
                         try:
