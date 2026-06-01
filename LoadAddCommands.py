@@ -23,8 +23,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import os
 
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
-from PySide.QtWidgets import (
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
+from PySide6.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -45,7 +45,7 @@ from PySide.QtWidgets import (
     QGridLayout,
     QHBoxLayout,
 )
-from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent
+from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent
 import sys
 import json
 from datetime import datetime, timedelta
@@ -127,7 +127,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     newDDBList = []
     
     # Create a list for all listwidget items. Used to switch filters to "All"
-    listWidgetItems = []
+    listWidgetItems_NP = []
+    listWidgetItems_DDB = []
             
     def __init__(self, parent):
         super(LoadDialog, self).__init__()
@@ -718,10 +719,15 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
                         # Add the ListWidgetItem to the correct ListWidget
                         self.form.CommandsAvailable_NP.addItem(ListWidgetItem)
-                        # Add clones of the listWidgetItem to the other listwidgets
-                        self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
                         # Append a clone of the item to the listwidget item list
-                        self.listWidgetItems.append(ListWidgetItem.clone())
+                        self.listWidgetItems_NP.append(ListWidgetItem.clone())
+                        
+                        command = Gui.Command.get(CommandName)
+                        if command is not None and len(command.getAction()) == 1:
+                            # Add clones of the listWidgetItem to the other listwidgets
+                            self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
+                            # Append a clone of the item to the listwidget item list
+                            self.listWidgetItems_DDB.append(ListWidgetItem.clone())
 
                     # If there are any dropdown buttons in the json file, add them to the dropdown list
                     if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
@@ -1385,7 +1391,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             ListWidgetItem.setIcon(Icon)
             # Add the ListWidgetItem to the several listWidgets
             self.form.CommandsAvailable_NP.addItem(ListWidgetItem)
-            self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
+            # self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
 
             # Add the command to the list of commands
             self.List_Commands.append([DropDownName + Suffix, IconName, DropDownName, "General", DropDownName])
@@ -1487,6 +1493,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.CommandsAvailable_DDB,
             self.form.ListCategory_DDB,
             self.form.SearchBar_DDB,
+            True,
         )
         return
 
@@ -1495,6 +1502,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.CommandsAvailable_DDB,
             self.form.SearchBar_DDB,
             self.form.ListCategory_DDB,
+            True,
         )
         return
 
@@ -1609,6 +1617,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         ListWidget_Commands: QListWidget,
         SearchBar: QLineEdit,
         ListWidget_WorkBenches: QListWidget,
+        SingleCommandsOnly = False,
     ):
         # Get the text in the searchbar as lower case. (This makes it not sensitive for Upper or lower cases)
         SearchbarText = SearchBar.text().lower()
@@ -1669,22 +1678,29 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     ListWidgetItem = QListWidgetItem()
                                     ListWidgetItem.setText(MenuNameTranslated)
                                     ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
-
-                                    if Icon is not None and Icon.isNull() is False:
-                                        # Check if there is an Icon. if not add a replacement
-                                        if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                                            # Icon = Gui.getIcon("preferences-workbenches")
-                                            # ListWidgetItem.setIcon(Icon)
-                                            continue
                                     
-                                        ListWidgetItem.setIcon(Icon)
-                                        ListWidgetItem.setToolTip(
-                                            CommandName
-                                        )
+                                    if Icon is not None and Icon.isNull() is False:
+                                        Allow = False
+                                        if SingleCommandsOnly is True:
+                                            command = Gui.Command.get(CommandName)
+                                            if command is not None and len(command.getAction()) == 1:
+                                                Allow = True
+                                            
+                                        if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):
+                                            # Check if there is an Icon. if not add a replacement
+                                            if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
+                                                # Icon = Gui.getIcon("preferences-workbenches")
+                                                # ListWidgetItem.setIcon(Icon)
+                                                continue
+                                        
+                                            ListWidgetItem.setIcon(Icon)
+                                            ListWidgetItem.setToolTip(
+                                                CommandName
+                                            )
 
-                                        ListWidget_Commands.addItem(ListWidgetItem)
-                                        # Add the commandName to the shadowList
-                                        ShadowList.append(CommandName)
+                                            ListWidget_Commands.addItem(ListWidgetItem)
+                                            # Add the commandName to the shadowList
+                                            ShadowList.append(CommandName)
                                         
                                     if Icon.isNull() or Icon is None:
                                         if Parameters.DEBUG_MODE is True:
@@ -1696,15 +1712,29 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 continue   
         if (ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole) == "All") and SearchbarText == "":
             # Go through the stored listwidget items and add them to the listwidget
-            for item in self.listWidgetItems:
-                ListWidget_Commands.addItem(item) 
+            for item in self.listWidgetItems_NP:
+                Allow = False
+                if SingleCommandsOnly is True:
+                    CommandName = item.data(Qt.ItemDataRole.UserRole)
+                    command = Gui.Command.get(CommandName)
+                    if command is not None and len(command.getAction()) == 1:
+                        Allow = True
+                if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):      
+                    ListWidget_Commands.addItem(item) 
             
             # Create a new list with a clone of each of the items
-            listWidgetItems = []
+            listWidgetItems_NP = []
+            listWidgetItems_DDB = []
             for i in range(ListWidget_Commands.count()):                            
-                listWidgetItems.append(ListWidget_Commands.item(i).clone())
+                listWidgetItems_NP.append(ListWidget_Commands.item(i).clone())
+                CommandName = ListWidget_Commands.item(i).data(Qt.ItemDataRole.UserRole)
+                command = Gui.Command.get(CommandName)
+                if command is not None and len(command.getAction()) == 1:
+                    listWidgetItems_DDB.append(ListWidget_Commands.item(i).clone())
             # replace the stored listwidget items with the new list                      
-            self.listWidgetItems = listWidgetItems
+            self.listWidgetItems_NP = listWidgetItems_NP
+            self.listWidgetItems_DDB = listWidgetItems_DDB
+            
 
         return
 
@@ -1713,6 +1743,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         ListWidget_Commands: QListWidget,
         ListWidget_WorkBenches: QListWidget,
         SearchBar: QLineEdit,
+        SingleCommandsOnly = False,
     ):
         if (
             ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole) is None
@@ -1785,22 +1816,28 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     )
 
                                     if Icon is not None and Icon.isNull() is False:
-                                        # Check if there is an Icon. if not add a replacement
-                                        if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                                            # Icon = Gui.getIcon("preferences-workbenches")
-                                            # ListWidgetItem.setIcon(Icon)
-                                            continue
+                                        Allow = False
+                                        if SingleCommandsOnly is True:
+                                            command = Gui.Command.get(CommandName)
+                                            if command is not None and len(command.getAction()) == 1:
+                                                Allow = True
+                                            
+                                        if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):
+                                            # Check if there is an Icon. if not add a replacement
+                                            if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
+                                                # Icon = Gui.getIcon("preferences-workbenches")
+                                                # ListWidgetItem.setIcon(Icon)
+                                                continue
                                         
-                                        ListWidgetItem.setIcon(Icon)
-                                        ListWidgetItem.setToolTip(
-                                            CommandName
-                                        )  # Use the tooltip to store the actual command.
+                                            ListWidgetItem.setIcon(Icon)
+                                            ListWidgetItem.setToolTip(
+                                                CommandName
+                                            )
 
-                                        # Add the ListWidgetItem to the correct ListWidget
-                                        ListWidget_Commands.addItem(ListWidgetItem)
-
-                                        # Add the commandname to the shadow list
-                                        ShadowList.append(CommandName)
+                                            ListWidget_Commands.addItem(ListWidgetItem)
+                                            # Add the commandName to the shadowList
+                                            ShadowList.append(CommandName)
+                                        
                         if (
                             workbenchName == "Standard" and
                             ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "Standard")
@@ -1820,14 +1857,21 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             )  # Use the tooltip to store the actual command.
 
                             if Icon is not None and Icon.isNull() is False:
-                                # Check if there is an Icon. if not add a replacement
-                                if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                                    # Icon = Gui.getIcon("preferences-workbenches")
-                                    # ListWidgetItem.setIcon(Icon)
-                                    continue
-                            
-                                ListWidget_Commands.addItem(ListWidgetItem)
-                                ShadowList.append(CommandName)
+                                Allow = False
+                                if SingleCommandsOnly is True:
+                                    command = Gui.Command.get(CommandName)
+                                    if command is not None and len(command.getAction()) == 1:
+                                        Allow = True
+                                    
+                                if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):
+                                    # Check if there is an Icon. if not add a replacement
+                                    if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
+                                        # Icon = Gui.getIcon("preferences-workbenches")
+                                        # ListWidgetItem.setIcon(Icon)
+                                        continue
+                                
+                                    ListWidget_Commands.addItem(ListWidgetItem)
+                                    ShadowList.append(CommandName)
                                 
                         if (
                             workbenchName == "Global" and
@@ -1848,26 +1892,46 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             )  # Use the tooltip to store the actual command.
 
                             if Icon is not None and Icon.isNull() is False:
-                                # Check if there is an Icon. if not add a replacement
-                                if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
-                                    # Icon = Gui.getIcon("preferences-workbenches")
-                                    # ListWidgetItem.setIcon(Icon)
-                                    continue
-                            
-                                ListWidget_Commands.addItem(ListWidgetItem)
-                                ShadowList.append(CommandName)
+                                Allow = False
+                                if SingleCommandsOnly is True:
+                                    command = Gui.Command.get(CommandName)
+                                    if command is not None and len(command.getAction()) == 1:
+                                        Allow = True
+                                    
+                                if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):
+                                    # Check if there is an Icon. if not add a replacement
+                                    if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
+                                        # Icon = Gui.getIcon("preferences-workbenches")
+                                        # ListWidgetItem.setIcon(Icon)
+                                        continue
+                                
+                                    ListWidget_Commands.addItem(ListWidgetItem)
+                                    ShadowList.append(CommandName)
 
         if (ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole) == "All"):
             # Go through the stored listwidget items and add them to the listwidget
-            for item in self.listWidgetItems:
-                ListWidget_Commands.addItem(item) 
+            for item in self.listWidgetItems_NP:
+                Allow = False
+                if SingleCommandsOnly is True:
+                    CommandName = item.data(Qt.ItemDataRole.UserRole)
+                    command = Gui.Command.get(CommandName)
+                    if command is not None and len(command.getAction()) == 1:
+                        Allow = True
+                if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):      
+                    ListWidget_Commands.addItem(item) 
             
             # Create a new list with a clone of each of the items
-            listWidgetItems = []
+            listWidgetItems_NP = []
+            listWidgetItems_DDB = []
             for i in range(ListWidget_Commands.count()):                            
-                listWidgetItems.append(ListWidget_Commands.item(i).clone())
+                listWidgetItems_NP.append(ListWidget_Commands.item(i).clone())
+                commandName = ListWidget_Commands.item(i).data(Qt.ItemDataRole.UserRole)
+                command = Gui.Command.get(commandName)
+                if command is not None and len(command.getAction()) == 1:
+                    listWidgetItems_DDB.append(ListWidget_Commands.item(i).clone())
             # replace the stored listwidget items with the new list                      
-            self.listWidgetItems = listWidgetItems
+            self.listWidgetItems_NP = listWidgetItems_NP
+            self.listWidgetItems_DDB = listWidgetItems_DDB
 
         return
     
