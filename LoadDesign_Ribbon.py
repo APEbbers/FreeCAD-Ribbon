@@ -4828,17 +4828,14 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         for item in self.List_CommandIcons:
             if CommandName in item[0]:
                 Icon = item[1]
+                return Icon
             if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.Dict_RibbonCommandPanel):
-                    for (DropDownCommand, Commands) in self.Dict_RibbonCommandPanel["dropdownButtons"].items():
-                        if Commands[0][0] == item[0]:
-                            Icon = item[1]
+                for (DropDownCommand, Commands) in self.Dict_RibbonCommandPanel["dropdownButtons"].items():
+                    if DropDownCommand == CommandName and Commands[0][0] == item[0]:
+                        Icon = item[1]
 
         # If the icon is still empty, try to get the icon from file
         if Icon is None or (Icon is not None and Icon.isNull()):
-            # Get the standard pixmap, if a pixmap is not provided
-            if pixmap == "":
-                pixmap = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
-            
             FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
             for root, dirs, files in os.walk(FreeCAD_Icons):
                 for fileName in files:
@@ -4852,11 +4849,12 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         # Print a message when debug mode is enabled
                         if Parameters.DEBUG_MODE:
                             print(f"{fileName} created from resources")
+                        return Icon
 
                     if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.Dict_RibbonCommandPanel):
                         for (DropDownCommand,Commands) in self.Dict_RibbonCommandPanel["dropdownButtons"].items():
                             for CommandItem in self.List_Commands:
-                                if CommandItem[0] == CommandItem[0]:
+                                if DropDownCommand == CommandName and Commands[0][0] in fileName:
                                     Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                                     # Add the icons to open the dialog faster a second time
                                     item = [CommandName, Icon]
@@ -4865,23 +4863,27 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                     # Print a message when debug mode is enabled
                                     if Parameters.DEBUG_MODE:
                                         print(f"{fileName} created from resources")
+                                    return Icon
                                    
             # If the icon is still empty, try to get it from FreeCAD. This will only work with loaded workbenches.
             # Therefore this is the last resort
             if Icon is None or (Icon is not None and Icon.isNull()):
+                # Get the standard pixmap, if a pixmap is not provided
+                if pixmap == "":
+                    pixmap = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
                 Icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap)
                 if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.Dict_RibbonCommandPanel):
                         for (DropDownCommand,Commands) in self.Dict_RibbonCommandPanel["dropdownButtons"].items():
-                            for CommandItem in self.List_Commands:
-                                if Commands[0][0] == CommandItem[0]:
-                                    pixmap = StandardFunctions.CommandInfoCorrections(CommandItem[0])["pixmap"]
-                                    Icon = StandardFunctions.returnQiCons_Commands(CommandItem[0], pixmap)
-                                    # Add the icons to open the dialog faster a second time
-                                    item = [CommandItem[0], Icon]
-                                    self.List_CommandIcons.append(item)
-                                    
-                                    if Parameters.DEBUG_MODE:
-                                        print(f"Icon for {CommandItem[0]} retrieved from FreeCAD")
+                            if DropDownCommand == CommandName:
+                                pixmap = StandardFunctions.CommandInfoCorrections(Commands[0][0])["pixmap"]
+                                Icon = StandardFunctions.returnQiCons_Commands(Commands[0][0], pixmap)
+                                # Add the icons to open the dialog faster a second time
+                                item = [Commands[0][0], Icon]
+                                self.List_CommandIcons.append(item)
+                                
+                                if Parameters.DEBUG_MODE:
+                                    print(f"Icon for {Commands[0][0]} retrieved from FreeCAD")
+                                return Icon
 
                 if Icon is None or (Icon is not None and Icon.isNull()):
                     if Parameters.DEBUG_MODE is True:
@@ -4910,7 +4912,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                     )
                                     # Print a message when debug mode is enabled
                                     if Parameters.DEBUG_MODE:
-                                        print(f"Icon for {CommandItem[0]} retrieved from data file")
+                                        print(f"Icon for {CommandName} retrieved from data file")
                                     
                                     # Add the icons to open the dialog faster a second time
                                     item = [IconItem[0], Icon]

@@ -1627,9 +1627,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 # Remove numbers from dropdown child commands
                 if MenuNameTranslated.split(" ")[0].isdigit() is True:
                     MenuNameTranslated = MenuNameTranslated.split(" ")[1]
-                # Remove any suffix from the menuname
-                if CommandName.endswith("_ddb"):
-                    MenuNameTranslated = CommandName.replace("_ddb", "")
 
                 if MenuNameTranslated != "":
                     if (
@@ -1663,16 +1660,15 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     )[2]
                                     or ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "All")
                                 ):
-                                    # Define a new ListWidgetItem.
+                                    # Get the icon
                                     Icon = QIcon()
-                                    Icon = self.ReturnCommandIcon(CommandName=CommandName)
-
+                                    IconName = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
+                                    Icon = self.ReturnCommandIcon(CommandName=CommandName, pixmap=IconName)
+  
                                     # Define a new ListWidgetItem.
                                     ListWidgetItem = QListWidgetItem()
                                     ListWidgetItem.setText(MenuNameTranslated)
-                                    ListWidgetItem.setData(
-                                        Qt.ItemDataRole.UserRole, CommandName
-                                    )
+                                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
 
                                     if Icon is not None and Icon.isNull() is False:
                                         # Check if there is an Icon. if not add a replacement
@@ -1743,9 +1739,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 # Remove numbers from dropdown child commands
                 if MenuNameTranslated.split(" ")[0].isdigit() is True:
                     MenuNameTranslated = MenuNameTranslated.split(" ")[1]
-                # Remove any suffix frp, the menuname
-                if CommandName.endswith("_ddb"):
-                    MenuNameTranslated = CommandName.replace("_ddb", "")
 
                 if MenuNameTranslated != "":
                     if (
@@ -1896,17 +1889,14 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         for item in self.List_CommandIcons:
             if CommandName in item[0]:
                 Icon = item[1]
+                return Icon
             if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
-                    for (DropDownCommand, Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
-                        if Commands[0][0] == item[0]:
-                            Icon = item[1]
+                for (DropDownCommand, Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
+                    if DropDownCommand == CommandName and Commands[0][0] == item[0]:
+                        Icon = item[1]
 
         # If the icon is still empty, try to get the icon from file
-        if Icon is None or (Icon is not None and Icon.isNull()):
-            # Get the standard pixmap, if a pixmap is not provided
-            if pixmap == "":
-                pixmap = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
-            
+        if Icon is None or (Icon is not None and Icon.isNull()):            
             FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
             for root, dirs, files in os.walk(FreeCAD_Icons):
                 for fileName in files:
@@ -1920,36 +1910,40 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         # Print a message when debug mode is enabled
                         if Parameters.DEBUG_MODE:
                             print(f"{fileName} created from resources")
-
+                        return Icon
+                    
                     if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
                         for (DropDownCommand,Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
-                            for CommandItem in self.List_Commands:
-                                if CommandItem[0] == CommandItem[0]:
-                                    Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
-                                    # Add the icons to open the dialog faster a second time
-                                    item = [CommandName, Icon]
-                                    self.List_CommandIcons.append(item)
-                                    
-                                    # Print a message when debug mode is enabled
-                                    if Parameters.DEBUG_MODE:
-                                        print(f"{fileName} created from resources")
+                            if DropDownCommand == CommandName and Commands[0][0] in fileName:
+                                Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
+                                # Add the icons to open the dialog faster a second time
+                                item = [CommandName, Icon]
+                                self.List_CommandIcons.append(item)
+                                
+                                # Print a message when debug mode is enabled
+                                if Parameters.DEBUG_MODE:
+                                    print(f"{fileName} created from resources")
+                                return Icon
                                    
             # If the icon is still empty, try to get it from FreeCAD. This will only work with loaded workbenches.
             # Therefore this is the last resort
             if Icon is None or (Icon is not None and Icon.isNull()):
+                # Get the standard pixmap, if a pixmap is not provided
+                if pixmap == "":
+                    pixmap = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
                 Icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap)
                 if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
                         for (DropDownCommand,Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
-                            for CommandItem in self.List_Commands:
-                                if Commands[0][0] == CommandItem[0]:
-                                    pixmap = StandardFunctions.CommandInfoCorrections(CommandItem[0])["pixmap"]
-                                    Icon = StandardFunctions.returnQiCons_Commands(CommandItem[0], pixmap)
-                                    # Add the icons to open the dialog faster a second time
-                                    item = [CommandItem[0], Icon]
-                                    self.List_CommandIcons.append(item)
-                                    
-                                    if Parameters.DEBUG_MODE:
-                                        print(f"Icon for {CommandItem[0]} retrieved from FreeCAD")
+                            if DropDownCommand == CommandName:
+                                pixmap = StandardFunctions.CommandInfoCorrections(Commands[0][0])["pixmap"]
+                                Icon = StandardFunctions.returnQiCons_Commands(Commands[0][0], pixmap)
+                                # Add the icons to open the dialog faster a second time
+                                item = [Commands[0][0], Icon]
+                                self.List_CommandIcons.append(item)
+                                
+                                if Parameters.DEBUG_MODE:
+                                    print(f"Icon for {Commands[0][0]} retrieved from FreeCAD")
+                                return Icon
 
                 if Icon is None or (Icon is not None and Icon.isNull()):
                     if Parameters.DEBUG_MODE is True:
@@ -1978,7 +1972,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     )
                                     # Print a message when debug mode is enabled
                                     if Parameters.DEBUG_MODE:
-                                        print(f"Icon for {CommandItem[0]} retrieved from data file")
+                                        print(f"Icon for {CommandName} retrieved from data file")
                                     
                                     # Add the icons to open the dialog faster a second time
                                     item = [IconItem[0], Icon]
