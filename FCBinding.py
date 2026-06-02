@@ -400,7 +400,8 @@ class ModernMenu(RibbonBar):
                     IsInstalled = True
             
             if IsInstalled is False:
-                self.ribbonStructure["ignoredWorkbenches"].append(WorkBenchName)
+                if WorkBenchName not in self.ribbonStructure["ignoredWorkbenches"]:
+                    self.ribbonStructure["ignoredWorkbenches"].append(WorkBenchName)
         
         if int(App.Version()[0]) == 0 or (int(App.Version()[0]) == 1 and int(App.Version()[1]) == 0):
             self.ConvertRibbonStructure(checkFCVersion=False, RestartFreeCAD=False)
