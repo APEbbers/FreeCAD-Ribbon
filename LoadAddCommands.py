@@ -136,6 +136,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
         
         self.List_CommandIcons = RibbonBar.List_CommandIcons
+        self.List_IgnoredWorkbenches = RibbonBar.ribbonStructure["ignoredWorkbenches"]
 
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
@@ -630,6 +631,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             
             if WorkbenchTitle in self.List_IgnoredWorkbenches:
                 continue
+            if WorkbenchName in self.List_IgnoredWorkbenches:
+                continue
 
             if [WorkbenchName, WorkbenchTitle] not in ShadowList:
                  # Get the translate worbench title
@@ -1109,7 +1112,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             ActivateButtons=True
             )
         # Add the newPanel to the list of CombinePanels
-        RibbonBar.CombinePanels.append(newPanel)
         RibbonBar.longPanels.append(newPanel)
         
         # Remove the original panels
@@ -1135,7 +1137,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         for panel in panelsToRemove:
             # RibbonBar.currentCategory().removeWidget(panel)
             panel.hide()
-            RibbonBar.ReplacedPanels.append(panel)
         return
 
     def on_CustomToolbarSelector_CP_activated(self):
@@ -1437,14 +1438,21 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 ListWidgetItem.data(Qt.ItemDataRole.UserRole)
                                 == CommandName[0]
                             ):
-                                self.form.NewControl_DDB.addItem(ListWidgetItem.clone())
-                                self.form.CommandsAvailable_DDB.removeItemWidget(
-                                    ListWidgetItem
-                                )
-                                # load the text as well
-                                self.form.ControlName_DDB.setText(
-                                    DropDownControl.split("_")[0]
-                                )
+                                IsInList = False
+                                for i in range(self.form.NewControl_DDB.count()):
+                                    if self.form.NewControl_DDB.item(i).data(Qt.ItemDataRole.UserRole) == CommandName[0]:
+                                        IsInList = True
+                                        break
+                                
+                                if IsInList is False:
+                                    self.form.NewControl_DDB.addItem(ListWidgetItem.clone())
+                                    self.form.CommandsAvailable_DDB.removeItemWidget(
+                                        ListWidgetItem
+                                    )
+                                    # load the text as well
+                                    self.form.ControlName_DDB.setText(
+                                        DropDownControl.split("_")[0]
+                                    )
 
         return
 
@@ -1724,7 +1732,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     if command is not None and len(command.getAction()) == 1:
                         Allow = True
                 if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):      
-                    ListWidget_Commands.addItem(item) 
+                    ListWidget_Commands.addItem(item.clone()) 
             
             # Create a new list with a clone of each of the items
             listWidgetItems_NP = []
@@ -1840,7 +1848,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                                 CommandName
                                             )
 
-                                            ListWidget_Commands.addItem(ListWidgetItem)
+                                            ListWidget_Commands.addItem(ListWidgetItem.clone())
                                             # Add the commandName to the shadowList
                                             ShadowList.append(CommandName)
                                         
@@ -1876,7 +1884,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                         # ListWidgetItem.setIcon(Icon)
                                         continue
                                 
-                                    ListWidget_Commands.addItem(ListWidgetItem)
+                                    ListWidget_Commands.addItem(ListWidgetItem.clone())
                                     ShadowList.append(CommandName)
                                 
                         if (
@@ -1911,7 +1919,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                         # ListWidgetItem.setIcon(Icon)
                                         continue
                                 
-                                    ListWidget_Commands.addItem(ListWidgetItem)
+                                    ListWidget_Commands.addItem(ListWidgetItem.clone())
                                     ShadowList.append(CommandName)
 
         if (ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole) == "All"):
@@ -1924,7 +1932,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     if command is not None and len(command.getAction()) == 1:
                         Allow = True
                 if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):      
-                    ListWidget_Commands.addItem(item) 
+                    ListWidget_Commands.addItem(item.clone()) 
             
             # Create a new list with a clone of each of the items
             listWidgetItems_NP = []
@@ -2480,48 +2488,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
         return
 
-    def CheckChanges(self):
-        # Open the JsonFile and load the data
-        JsonFile = open(os.path.join(ConfigDirectory, "RibbonStructure.json"))
-        data = json.load(JsonFile)
-
-        IsChanged = False
-        if "ignoredToolbars" in data:
-            if data["ignoredToolbars"] != self.List_IgnoredToolbars:
-                IsChanged = True
-                print("ignoredToolbars")
-        if "iconOnlyToolbars" in data:
-            if data["iconOnlyToolbars"] != self.List_IconOnly_Toolbars:
-                IsChanged = True
-                print("iconOnlyToolbars")
-        if "quickAccessCommands" in data:
-            if (
-                data["quickAccessCommands"]
-                != self.List_QuickAccessCommands
-            ):
-                IsChanged = True
-                print("quickAccessCommands")
-        if "ignoredWorkbenches" in data:
-            if data["ignoredWorkbenches"] != self.List_IgnoredWorkbenches:
-                IsChanged = True
-                print("ignoredWorkbenches")
-        if "customToolbars" in data:
-            if data["customToolbars"] != self.Dict_CustomToolbars["customToolbars"]:
-                IsChanged = True
-        if "dropdownButtons" in data:
-            if data["dropdownButtons"] != RibbonBar.workBenchDict["dropdownButtons"]:
-                IsChanged = True
-        if "newPanels" in data:
-            if data["newPanels"] != self.Dict_NewPanels["newPanels"]:
-                IsChanged = True
-        if "workbenches" in data:
-            if data["workbenches"] != self.Dict_RibbonCommandPanel["workbenches"]:
-                IsChanged = True
-
-        JsonFile.close()
-        self.IsChanged = IsChanged
-        return IsChanged
-
     def SortedPanelList(self, PanelList_RD: list, WorkBenchName):
         JsonOrderList = []
         try:
@@ -2619,7 +2585,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Get all the dropdown buttons
         if Section == "dropdownButtons" or Section == "All":
             try:
-                RibbonBar.workBenchDict["dropdownButtons"] = data["dropdownButtons"]
+                self.workBenchDict["dropdownButtons"] = data["dropdownButtons"]
             except Exception:
                 pass
 
