@@ -5790,9 +5790,7 @@ class ModernMenu(RibbonBar):
                     if "commands" in Dict["workbenches"][workbenchName]["toolbars"][panelName]:
                         for key in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():
                             if key != "order" and key is not None and key != "":
-                                print(key)
                                 button = self.CreateButtonFromCommand(key, ActivateWorkBench=ActivateWorkbench, Dict=Dict)
-                                print(button)
                                 if button is not None:
                                     # button.setProperty("CommandName", key)
                                     button.setObjectName(key)                                    
