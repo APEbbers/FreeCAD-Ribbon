@@ -1757,16 +1757,10 @@ class ModernMenu(RibbonBar):
         return
     
     def on_ApplyClicked(self):
-        self.AddedPanels.clear()
-        self.RemovedPanels.clear()
-        self.ribbonStructure.update(self.workBenchDict)
-        # Writing to ribbonStructure.json
-        JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-        with open(JsonFile, "w") as outfile:
-            json.dump(self.ribbonStructure, outfile, indent=4)
+        self.on_Ok_Clicked(CloseDialog=False)
         
     
-    def on_Ok_Clicked(self, workbenchName = ""):
+    def on_Ok_Clicked(self, workbenchName = "", CloseDialog = True):
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
@@ -1810,7 +1804,8 @@ class ModernMenu(RibbonBar):
         #     self.currentCategory().panels()[panel.objectName()] = panel 
 
         # Restore the original panel with the overflow menu
-        for title, objPanel in self.currentCategory().panels().items():
+        dictPanels = self.currentCategory().panels().copy()
+        for title, objPanel in dictPanels.items():
             # Test iff the panel is not already deleted.
             # This is needed, if a combined panel was added and then removed by clicking cancel
             try:
@@ -1893,13 +1888,14 @@ class ModernMenu(RibbonBar):
                         objPanel.deleteLater()
                         longPanel.deleteLater()
                         # Update the temporary panel dict
-                        self.currentCategory().panels()[title] = newPanel
+                        dictPanels[title] = newPanel
                         # Set the bool to True
                         IsNewPanel = True
                         break
             # If it is not a new panel, add the current panel to temporary panel dict
             if IsNewPanel is False:
-                self.currentCategory().panels()[title] = objPanel
+                dictPanels[title] = objPanel
+        self.currentCategory().panels().update(dictPanels)
         
         # Set the buttonstate back as it was
         for title, objPanel in self.currentCategory().panels().items():
@@ -1975,13 +1971,14 @@ class ModernMenu(RibbonBar):
             pass
         
         # Close the AddCommands dialog
-        if self.AddCommandsDialog is not None:
-            self.AddCommandsDialog.form.close()
-            self.AddCommandsDialog = None
-            # Close the dockwidget is there is one
-            DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
-            if DockWidget is not None:
-                DockWidget.deleteLater()
+        if CloseDialog is True:
+            if self.AddCommandsDialog is not None:
+                self.AddCommandsDialog.form.close()
+                self.AddCommandsDialog = None
+                # Close the dockwidget is there is one
+                DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
+                if DockWidget is not None:
+                    DockWidget.deleteLater()
                 
          # Restore the cursor
         QApplication.restoreOverrideCursor()
@@ -2040,7 +2037,8 @@ class ModernMenu(RibbonBar):
             Dict.update(json.load(file))
         
         # Restore the original panels used with combine panels
-        for title, objPanel in self.currentCategory().panels().items():
+        dictPanels = self.currentCategory().panels().copy()
+        for title, objPanel in dictPanels.items():
             # Test if the panel is not already deleted.
             # This is needed, if a combined panel was added and then removed by clicking cancel
             try:
@@ -2070,7 +2068,7 @@ class ModernMenu(RibbonBar):
             # if newPanel is not None:
             self.setPanelProperties(newPanel)
             # Update the panel dict            
-            self.currentCategory().panels()[title] = newPanel
+            dictPanels[title] = newPanel
             # Delete the old panel
             objPanel.deleteLater()
             
@@ -2099,6 +2097,8 @@ class ModernMenu(RibbonBar):
             if EnableControl is not None:
                 if EnableControl.isChecked() is False: 
                     newPanel.hide()
+                
+        self.currentCategory().panels().update(dictPanels)
                 
         # Restore closed panels
         for panel in self.RemovedPanels:
