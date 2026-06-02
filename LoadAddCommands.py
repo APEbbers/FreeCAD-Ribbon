@@ -1427,8 +1427,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 # If the DropDownButton is equal to the text in the combobox, go through its commands
                 if DropDownButton == DropDownControl:
                     for CommandName in Commands:
-                        for i in range(self.form.CommandsAvailable_DDB.count()):
-                            ListWidgetItem = self.form.CommandsAvailable_DDB.item(i)
+                        # for i in range(self.form.CommandsAvailable_DDB.count()):
+                        for i in range(len(self.listWidgetItems_DDB)):
+                            ListWidgetItem = self.listWidgetItems_DDB[i].clone()
 
                             # If the command is equal to one in the commandsavaialble listwidget,
                             # Move it to the listwidget for the dropdown button.
@@ -1636,6 +1637,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 # Remove numbers from dropdown child commands
                 if MenuNameTranslated.split(" ")[0].isdigit() is True:
                     MenuNameTranslated = MenuNameTranslated.split(" ")[1]
+                # Remove any suffix from the menuname
+                if CommandName.endswith("_ddb"):
+                    MenuNameTranslated = CommandName.replace("_ddb", "")
 
                 if MenuNameTranslated != "":
                     if (
@@ -1734,7 +1738,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             # replace the stored listwidget items with the new list                      
             self.listWidgetItems_NP = listWidgetItems_NP
             self.listWidgetItems_DDB = listWidgetItems_DDB
-            
 
         return
 
@@ -1770,6 +1773,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 # Remove numbers from dropdown child commands
                 if MenuNameTranslated.split(" ")[0].isdigit() is True:
                     MenuNameTranslated = MenuNameTranslated.split(" ")[1]
+                # Remove any suffix from the menuname
+                if CommandName.endswith("_ddb"):
+                    MenuNameTranslated = CommandName.replace("_ddb", "")
 
                 if MenuNameTranslated != "":
                     if (

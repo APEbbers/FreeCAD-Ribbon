@@ -2364,8 +2364,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 # If the DropDownButton is equal to the text in the combobox, go through its commands
                 if DropDownButton == DropDownControl:
                     for CommandName in Commands:
-                        for i in range(self.form.CommandsAvailable_DDB.count()):
-                            ListWidgetItem = self.form.CommandsAvailable_DDB.item(i)
+                        for i in range(len(self.listWidgetItems_DDB)):
+                            ListWidgetItem = self.listWidgetItems_DDB[i].clone()
 
                             # If the command is equal to one in the commandsavaialble listwidget,
                             # Move it to the listwidget for the dropdown button.
