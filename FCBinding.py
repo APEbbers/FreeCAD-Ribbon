@@ -5641,12 +5641,30 @@ class ModernMenu(RibbonBar):
         title = StandardFunctions.TranslationsMapping(workbenchName, panelName)
         panel = RibbonPanel(title=title, showPanelOptionButton=True)
         if addPanel is True:
-            panel: RibbonPanel = self.currentCategory().addPanel(
-                title=title,
-                showPanelOptionButton=True,
-            )
-            # Update the dict of the currentCategory with the new panel
-            self.currentCategory()._panels[title] = panel
+            # Check if a panel with the same name is already present
+            IsPresent = False
+            for currentTitle, currentPanel in self.currentCategory().panels().items():
+                if currentTitle == title:
+                    IsPresent = True
+                    break
+            # if not, just add it
+            if IsPresent is False:
+                panel: RibbonPanel = self.currentCategory().addPanel(
+                    title=title,
+                    showPanelOptionButton=True,
+                )
+                # Update the dict of the currentCategory with the new panel
+                self.currentCategory()._panels[title] = panel
+            # If so delete the current one and add the new one
+            if IsPresent:
+                self.currentCategory().removePanel(title)
+                panel: RibbonPanel = self.currentCategory().addPanel(
+                    title=title,
+                    showPanelOptionButton=True,
+                )
+                # Update the dict of the currentCategory with the new panel
+                self.currentCategory()._panels[title] = panel
+                
         panel.setObjectName(panelName)
         panel.panelOptionButton().hide()
         panel.setAcceptDrops(True)
