@@ -1112,6 +1112,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             self.form.CommandsAvailable_QC,
             self.form.ListCategory_QC,
             self.form.SearchBar_QC,
+            False,
         )
         return
 
@@ -1121,6 +1122,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             self.form.SearchBar_QC,
             self.form.CommandsSelected_QC,
             self.form.ListCategory_QC,
+            False,
         )
         return
 
@@ -1273,9 +1275,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         == self.form.ListCategory_EP.currentData(
                             Qt.ItemDataRole.UserRole
                         )[2]
-                        and self.form.ListCategory_EP.currentText() == "All"
+                        or self.form.ListCategory_EP.currentText() == "All"
                     ):
                         # check if the panel is already excluded.
+                        IsInlist = False
                         for i in range(self.form.PanelsExcluded_EP.count()):
                             ToolbarItem = self.form.PanelsExcluded_EP.item(i)
                             if ToolbarItem.text() == ToolbarTransLated:
@@ -3541,10 +3544,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
         # Add "All" to the categoryListWidgets
         All_KeyWord = translate("FreeCAD Ribbon", "All")
-        self.form.ListCategory_QC.addItem(All_KeyWord, "All")
-        self.form.ListCategory_EP.addItem(All_KeyWord, "All")
-        self.form.ListCategory_NP.addItem(All_KeyWord, "All")
-        self.form.ListCategory_DDB.addItem(All_KeyWord, "All")
+        self.form.ListCategory_QC.addItem(All_KeyWord, "All", [All_KeyWord, "All", "All"])
+        self.form.ListCategory_EP.addItem(All_KeyWord, "All", [All_KeyWord, "All", "All"])
+        self.form.ListCategory_NP.addItem(All_KeyWord, "All", [All_KeyWord, "All", "All"])
+        self.form.ListCategory_DDB.addItem(All_KeyWord, "All", [All_KeyWord, "All", "All"])
 
         # Add "Global" to the list for the panels
         Global_KeyWord = translate("FreeCAD Ribbon", "Global")
@@ -3578,21 +3581,15 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         WorkbenchName =""
         for workbench in self.List_Workbenches:
             WorkbenchName = workbench[0]
-            WorkbenchTitle = workbench[2]
+            WorkbenchTitle = workbench[2]                        
 
             if [WorkbenchName, WorkbenchTitle] not in ShadowList:
                 # Default a workbench is selected
                 # if in List_IgnoredWorkbenches, set IsSelected to false
                 IsSelected = True
                 for IgnoredWorkbench in self.List_IgnoredWorkbenches:
-                    if WorkbenchTitle == IgnoredWorkbench:
+                    if WorkbenchTitle == IgnoredWorkbench or IgnoredWorkbench == WorkbenchName:
                         IsSelected = False
-
-                # Get the translate worbench title
-                if len(workbench) == 5:
-                    WorkbenchTitle = workbench[4]
-                else:
-                    WorkbenchTitle = workbench[2]
 
                 # Define a new ListWidgetItem.
                 ListWidgetItem_IW = QListWidgetItem()
@@ -3611,7 +3608,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 # Add the ListWidgetItem to the correct ListWidget
                 if IsSelected is False:
                     self.form.WorkbenchesAvailable_IW.addItem(ListWidgetItem_IW)
-                if IsSelected is True:
+                if IsSelected is True:                    
                     # Add the listwidgetItem to all workbench listwidgets
                     self.form.WorkbenchesSelected_IW.addItem(ListWidgetItem_IW)
                     self.form.WorkbenchList_IS.addItem(ListWidgetItem_IW.clone())
@@ -3634,32 +3631,32 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         workbench,
                     )
 
-                # Add the ListWidgetItem also to the categoryListWidgets
-                self.form.ImportWorkbenchSelector_IS.addItem(
-                    Icon,
-                    WorkbenchTitle,
-                    workbench,
-                )
-                self.form.ListCategory_QC.addItem(
-                    Icon,
-                    WorkbenchTitle,
-                    workbench,
-                )
-                self.form.ListCategory_EP.addItem(
-                    Icon,
-                    WorkbenchTitle,
-                    workbench,
-                )
-                self.form.ListCategory_NP.addItem(
-                    Icon,
-                    WorkbenchTitle,
-                    workbench,
-                )
-                self.form.ListCategory_DDB.addItem(
-                    Icon,
-                    WorkbenchTitle,
-                    workbench,
-                )
+                    # Add the ListWidgetItem also to the categoryListWidgets
+                    self.form.ImportWorkbenchSelector_IS.addItem(
+                        Icon,
+                        WorkbenchTitle,
+                        workbench,
+                    )
+                    self.form.ListCategory_QC.addItem(
+                        Icon,
+                        WorkbenchTitle,
+                        workbench,
+                    )
+                    self.form.ListCategory_EP.addItem(
+                        Icon,
+                        WorkbenchTitle,
+                        workbench,
+                    )
+                    self.form.ListCategory_NP.addItem(
+                        Icon,
+                        WorkbenchTitle,
+                        workbench,
+                    )
+                    self.form.ListCategory_DDB.addItem(
+                        Icon,
+                        WorkbenchTitle,
+                        workbench,
+                    )
 
             ShadowList.append([WorkbenchName, WorkbenchTitle])
 
@@ -3743,6 +3740,16 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             # Remove any suffix frp, the menuname
             if CommandName.endswith("_ddb"):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
+                
+            # If the command is from an ignored workbench, skip it
+            WorkBenchName = CommandItem[3]            
+            WorkbenchTitle = ""
+            try:
+                WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
+            except Exception:
+                pass
+            if WorkBenchName in self.List_IgnoredWorkbenches or WorkbenchTitle in self.List_IgnoredWorkbenches:
+                continue
 
             if MenuNameTranslated != "":
                 if CommandName not in ShadowList:
@@ -3821,8 +3828,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     ):
                         self.form.CommandList_DDB.addItem(
                             CommandName.replace("_ddb", "")
-                        )
-            
+                        ) 
 
         # Add separators to the CommandsSelected_QC listwidget
         for i in range(len(self.List_QuickAccessCommands)):
@@ -4094,7 +4100,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Get all the ignored workbenches
         if Section == "ignoredWorkbenches" or Section == "All":
             for IgnoredWorkbench in data["ignoredWorkbenches"]:
-                self.List_IgnoredWorkbenches.append(IgnoredWorkbench)
+                if IgnoredWorkbench not in self.List_IgnoredWorkbenches:
+                    self.List_IgnoredWorkbenches.append(IgnoredWorkbench)
 
         # Get all the custom toolbars
         if Section == "customToolbars" or Section == "All":
@@ -4982,7 +4989,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             ShadowList = []  # List to add the commands and prevent duplicates
             for ToolbarCommand in self.List_Commands:
                 CommandName = ToolbarCommand[0]            
-                workbenchName = ToolbarCommand[3]
+                WorkBenchName = ToolbarCommand[3]
                 MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not translated
                 if len(ToolbarCommand) == 5:
                     MenuNameTranslated = ToolbarCommand[4].replace("&", "")  # Translated
@@ -4993,6 +5000,16 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 if CommandName.endswith("_ddb"):
                     MenuNameTranslated = CommandName.replace("_ddb", "")
 
+                # If the command is from an ignored workbench, skip it         
+                WorkbenchTitle = ""
+                try:
+                    WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
+                except Exception:
+                    pass
+                if WorkBenchName in self.List_IgnoredWorkbenches or WorkbenchTitle in self.List_IgnoredWorkbenches:
+                    print(WorkBenchName)
+                    continue
+                
                 if MenuNameTranslated != "":                
                     if (
                         SearchbarText != ""
@@ -5001,17 +5018,17 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         if CommandName not in ShadowList:
                             try:
                                 if (
-                                    workbenchName != "Global"
-                                    and workbenchName != "General"
-                                    and workbenchName != "Standard"
-                                    and workbenchName != "All"
-                                    and workbenchName != ""
+                                    WorkBenchName != "Global"
+                                    and WorkBenchName != "General"
+                                    and WorkBenchName != "Standard"
+                                    and WorkBenchName != "All"
+                                    and WorkBenchName != ""
                                 ):
                                     WorkbenchTitle = Gui.getWorkbench(
-                                        workbenchName
+                                        WorkBenchName
                                     ).MenuText
                                 else:
-                                    WorkbenchTitle = workbenchName
+                                    WorkbenchTitle = WorkBenchName
                             except Exception as e:
                                 if Parameters.DEBUG_MODE is True:
                                     print(e)
@@ -5086,17 +5103,17 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     if command is not None and len(command.getAction()) == 1:
                         Allow = True
                 if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):      
-                    ListWidget_Commands.addItem(item)
+                    ListWidget_Commands.addItem(item.clone())
             
             # Create a new list with a clone of each of the items
             listWidgetItems = []
             listWidgetItems_DDB = []
-            for i in range(ListWidget_Commands.count()):                            
-                listWidgetItems.append(ListWidget_Commands.item(i).clone())
-                CommandName = ListWidget_Commands.item(i).data(Qt.ItemDataRole.UserRole)
+            for item in self.listWidgetItems:                            
+                listWidgetItems.append(item.clone())
+                CommandName = item.data(Qt.ItemDataRole.UserRole)
                 command = Gui.Command.get(CommandName)
                 if command is not None and len(command.getAction()) == 1:
-                    listWidgetItems_DDB.append(ListWidget_Commands.item(i).clone())
+                    listWidgetItems_DDB.append(item.clone())
             # replace the stored listwidget items with the new list                      
             self.listWidgetItems = listWidgetItems
             self.listWidgetItems_DDB = listWidgetItems_DDB
@@ -5128,7 +5145,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             ShadowList = []  # List to add the commands and prevent duplicates
             for ToolbarCommand in self.List_Commands:
                 CommandName = ToolbarCommand[0]            
-                workbenchName = ToolbarCommand[3]
+                WorkBenchName = ToolbarCommand[3]
                 MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not transleted!
                 if len(ToolbarCommand) == 5:
                     MenuNameTranslated = ToolbarCommand[4].replace("&", "")  # Translated
@@ -5138,6 +5155,16 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 # Remove any suffix frp, the menuname
                 if CommandName.endswith("_ddb"):
                     MenuNameTranslated = CommandName.replace("_ddb", "")
+                    
+                # If the command is from an ignored workbench, skip it         
+                WorkbenchTitle = ""
+                try:
+                    WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
+                except Exception:
+                    pass
+                if WorkBenchName in self.List_IgnoredWorkbenches or WorkbenchTitle in self.List_IgnoredWorkbenches:
+                    print(WorkBenchName)
+                    continue
 
                 if MenuNameTranslated != "":            
                     if (
@@ -5150,14 +5177,14 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         ):
                             if (
                                 CommandName not in ShadowList
-                                and workbenchName != "Global"
-                                and workbenchName != "General"
-                                and workbenchName != "Standard"
-                                and workbenchName != ""
+                                and WorkBenchName != "Global"
+                                and WorkBenchName != "General"
+                                and WorkBenchName != "Standard"
+                                and WorkBenchName != ""
                             ):
                                 try:
                                     WorkbenchTitle = Gui.getWorkbench(
-                                        workbenchName
+                                        WorkBenchName
                                     ).MenuText
                                 except Exception as e:
                                     if Parameters.DEBUG_MODE is True:
@@ -5207,7 +5234,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                             # Add the commandname to the shadow list
                                             ShadowList.append(CommandName)
                         if (
-                            workbenchName == "Standard" and
+                            WorkBenchName == "Standard" and
                             ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "Standard")
                         ):                        
                             # Define a commandname for the icon
@@ -5256,12 +5283,12 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             # Create a new list with a clone of each of the items
             listWidgetItems = []
             listWidgetItems_DDB = []
-            for i in range(ListWidget_Commands.count()):                            
-                listWidgetItems.append(ListWidget_Commands.item(i).clone())
-                commandName = ListWidget_Commands.item(i).data(Qt.ItemDataRole.UserRole)
+            for item in self.listWidgetItems:                            
+                listWidgetItems.append(item.clone())
+                commandName = item.data(Qt.ItemDataRole.UserRole)
                 command = Gui.Command.get(commandName)
                 if command is not None and len(command.getAction()) == 1:
-                    listWidgetItems_DDB.append(ListWidget_Commands.item(i).clone())
+                    listWidgetItems_DDB.append(item.clone())
             # replace the stored listwidget items with the new list                      
             self.listWidgetItems = listWidgetItems
             self.listWidgetItems_DDB = listWidgetItems_DDB

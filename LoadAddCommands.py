@@ -684,7 +684,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.CommandList_DDB.setStyleSheet(stylesheet)
         self.form.CommandsAvailable_DDB.setStyleSheet(stylesheet)
         self.form.NewControl_DDB.setStyleSheet(stylesheet)
-
+        
         ShadowList = []  # List to add the commands and prevent duplicates
         for CommandItem in self.List_Commands:
             CommandName = CommandItem[0]
@@ -697,6 +697,16 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             # Remove any suffix frp, the menuname
             if CommandName.endswith("_ddb"):
                 MenuNameTranslated = CommandName.replace("_ddb", "")
+            
+            # If the command is from an ignored workbench, skip it
+            WorkBenchName = CommandItem[3]            
+            WorkbenchTitle = ""
+            try:
+                WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
+            except Exception:
+                pass
+            if WorkBenchName in self.List_IgnoredWorkbenches or WorkbenchTitle in self.List_IgnoredWorkbenches:
+                continue
 
             if MenuNameTranslated != "":
                 if CommandName not in ShadowList:
@@ -749,6 +759,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.CommandsAvailable_NP,
             self.form.ListCategory_NP,
             self.form.SearchBar_NP,
+            False,
         )
         return
 
@@ -1638,7 +1649,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             ShadowList = []  # List to add the commands and prevent duplicates
             for ToolbarCommand in self.List_Commands:
                 CommandName = ToolbarCommand[0]
-                workbenchName = ToolbarCommand[3]
+                WorkBenchName = ToolbarCommand[3]
                 MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not translated
                 if len(ToolbarCommand) == 5:
                     MenuNameTranslated = ToolbarCommand[4].replace("&", "")  # Translated
@@ -1648,6 +1659,15 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 # Remove any suffix from the menuname
                 if CommandName.endswith("_ddb"):
                     MenuNameTranslated = CommandName.replace("_ddb", "")
+                
+                # If the command is from an ignored workbench, skip it          
+                WorkbenchTitle = ""
+                try:
+                    WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
+                except Exception:
+                    pass
+                if WorkBenchName in self.List_IgnoredWorkbenches or WorkbenchTitle in self.List_IgnoredWorkbenches:
+                    continue
 
                 if MenuNameTranslated != "":
                     if (
@@ -1657,17 +1677,17 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         if CommandName not in ShadowList:
                             try:
                                 if (
-                                    workbenchName != "Global"
-                                    and workbenchName != "General"
-                                    and workbenchName != "Standard"
-                                    and workbenchName != "All"
-                                    and workbenchName != ""
+                                    WorkBenchName != "Global"
+                                    and WorkBenchName != "General"
+                                    and WorkBenchName != "Standard"
+                                    and WorkBenchName != "All"
+                                    and WorkBenchName != ""
                                 ):
                                     WorkbenchTitle = Gui.getWorkbench(
-                                        workbenchName
+                                        WorkBenchName
                                     ).MenuText
                                 else:
-                                    WorkbenchTitle = workbenchName
+                                    WorkbenchTitle = WorkBenchName
                             except Exception as e:
                                 if Parameters.DEBUG_MODE is True:
                                     print(e)
@@ -1774,7 +1794,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             ShadowList = []  # List to add the commands and prevent duplicates
             for ToolbarCommand in self.List_Commands:
                 CommandName = ToolbarCommand[0]
-                workbenchName = ToolbarCommand[3]
+                WorkBenchName = ToolbarCommand[3]
                 MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not transleted!
                 if len(ToolbarCommand) == 5:
                     MenuNameTranslated = ToolbarCommand[4].replace("&", "")  # Translated
@@ -1784,6 +1804,15 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 # Remove any suffix from the menuname
                 if CommandName.endswith("_ddb"):
                     MenuNameTranslated = CommandName.replace("_ddb", "")
+
+                # If the command is from an ignored workbench, skip it          
+                WorkbenchTitle = ""
+                try:
+                    WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
+                except Exception:
+                    pass
+                if WorkBenchName in self.List_IgnoredWorkbenches or WorkbenchTitle in self.List_IgnoredWorkbenches:
+                    continue
 
                 if MenuNameTranslated != "":
                     if (
@@ -1796,14 +1825,14 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         ):
                             if (
                                 CommandName not in ShadowList
-                                and workbenchName != "Global"
-                                and workbenchName != "General"
-                                and workbenchName != "Standard"
-                                and workbenchName != ""
+                                and WorkBenchName != "Global"
+                                and WorkBenchName != "General"
+                                and WorkBenchName != "Standard"
+                                and WorkBenchName != ""
                             ):
                                 try:
                                     WorkbenchTitle = Gui.getWorkbench(
-                                        workbenchName
+                                        WorkBenchName
                                     ).MenuText
                                 except Exception as e:
                                     if Parameters.DEBUG_MODE is True:
@@ -1853,7 +1882,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                             ShadowList.append(CommandName)
                                         
                         if (
-                            workbenchName == "Standard" and
+                            WorkBenchName == "Standard" and
                             ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "Standard")
                         ):                                        
                             # Define a commandname for the icon
@@ -1888,7 +1917,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     ShadowList.append(CommandName)
                                 
                         if (
-                            workbenchName == "Global" and
+                            WorkBenchName == "Global" and
                             ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "Global")
                         ):                                          
                             # Define a commandname for the icon
@@ -1936,13 +1965,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             
             # Create a new list with a clone of each of the items
             listWidgetItems_NP = []
-            listWidgetItems_DDB = []
-            for i in range(ListWidget_Commands.count()):                            
-                listWidgetItems_NP.append(ListWidget_Commands.item(i).clone())
-                commandName = ListWidget_Commands.item(i).data(Qt.ItemDataRole.UserRole)
+            listWidgetItems_DDB = []                          
+            for item in self.listWidgetItems_NP:                          
+                listWidgetItems_NP.append(item.clone())
+                commandName = item.data(Qt.ItemDataRole.UserRole)
                 command = Gui.Command.get(commandName)
                 if command is not None and len(command.getAction()) == 1:
-                    listWidgetItems_DDB.append(ListWidget_Commands.item(i).clone())
+                    listWidgetItems_DDB.append(item.clone())
             # replace the stored listwidget items with the new list                      
             self.listWidgetItems_NP = listWidgetItems_NP
             self.listWidgetItems_DDB = listWidgetItems_DDB
@@ -2573,7 +2602,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Get all the ignored workbenches
         if Section == "ignoredWorkbenches" or Section == "All":
             for IgnoredWorkbench in data["ignoredWorkbenches"]:
-                self.List_IgnoredWorkbenches.append(IgnoredWorkbench)
+                if IgnoredWorkbench not in data["ignoredWorkbenches"]:
+                    self.List_IgnoredWorkbenches.append(IgnoredWorkbench)
 
         # Get all the custom toolbars
         if Section == "customToolbars" or Section == "All":

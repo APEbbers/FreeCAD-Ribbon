@@ -1758,29 +1758,6 @@ class ModernMenu(RibbonBar):
         return
     
     def on_ApplyClicked(self):
-        # # Clear the panel lists
-        # self.HiddenPanels.clear()
-        # self.AddedPanels.clear()
-        # self.RemovedPanels.clear()
-        
-        # # update the ribbonstructure before writing it to disk
-        # if "quickAccessCommands" in self.workBenchDict:
-        #     self.ribbonStructure["quickAccessCommands"] = self.workBenchDict["quickAccessCommands"]
-        # if "newPanels" in self.workBenchDict:
-        #     self.ribbonStructure["newPanels"] = self.workBenchDict["newPanels"]
-        # if "dropdownButtons" in self.workBenchDict: 
-        #     self.ribbonStructure["dropdownButtons"] = self.workBenchDict["dropdownButtons"]
-        # if "ignoredToolbars" in self.workBenchDict:
-        #     self.ribbonStructure["ignoredToolbars"] = self.workBenchDict["ignoredToolbars"]
-        # if "ignoredWorkbenches" in self.workBenchDict:
-        #     self.ribbonStructure["ignoredWorkbenches"] = self.workBenchDict["ignoredWorkbenches"]
-        # if "iconOnlyToolbars" in self.workBenchDict:
-        #     self.ribbonStructure["iconOnlyToolbars"] = self.workBenchDict["iconOnlyToolbars"]
-        # if "customToolbars" in self.workBenchDict:
-        #     self.ribbonStructure["customToolbars"] = self.workBenchDict["customToolbars"]
-        
-        # for WorkBench in self.workBenchDict["workbenches"].keys():
-        #     self.ribbonStructure["workbenches"][WorkBench] == self.workBenchDict["workbenches"][WorkBench]
         self.on_Ok_Clicked(CloseDialog=False)
     
     def on_Ok_Clicked(self, workbenchName = "", CloseDialog = True):
