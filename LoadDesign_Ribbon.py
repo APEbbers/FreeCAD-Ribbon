@@ -2206,6 +2206,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             self.form.CommandsAvailable_NP,
             self.form.ListCategory_NP,
             self.form.SearchBar_NP,
+            False,
         )
         return
 
@@ -2215,6 +2216,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             self.form.SearchBar_NP,
             self.form.NewPanel_NP,
             self.form.ListCategory_NP,
+            False,
         )
         return
 
@@ -3773,53 +3775,53 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                             CommandName
                         )  # Use the tooltip to store the actual command.
 
-                    # Add the ListWidgetItem to the correct ListWidget
-                    #
-                    # Default a command is not selected
-                    IsSelected = False
-                    for QuickCommand in self.List_QuickAccessCommands:
-                        if CommandItem[0] == QuickCommand:
-                            IsSelected = True
+                        # Add the ListWidgetItem to the correct ListWidget
+                        #
+                        # Default a command is not selected
+                        IsSelected = False
+                        for QuickCommand in self.List_QuickAccessCommands:
+                            if CommandItem[0] == QuickCommand:
+                                IsSelected = True
 
-                    if Icon is not None and Icon.isNull() is False:
-                        if IsSelected is False:
-                            IsInlist = False
-                            for i in range(self.form.CommandsAvailable_QC.count()):
-                                Command = self.form.CommandsAvailable_QC.item(i)
-                                if (
-                                    Command.data(Qt.ItemDataRole.UserRole)
-                                    == CommandName
-                                ):
-                                    IsInlist = True
+                        if Icon is not None and Icon.isNull() is False:
+                            if IsSelected is False:
+                                IsInlist = False
+                                for i in range(self.form.CommandsAvailable_QC.count()):
+                                    Command = self.form.CommandsAvailable_QC.item(i)
+                                    if (
+                                        Command.data(Qt.ItemDataRole.UserRole)
+                                        == CommandName
+                                    ):
+                                        IsInlist = True
 
-                            if IsInlist is False:
-                                self.form.CommandsAvailable_QC.addItem(ListWidgetItem)
-                        if IsSelected is True:
-                            IsInlist = False
-                            for i in range(self.form.CommandsSelected_QC.count()):
-                                Command = self.form.CommandsSelected_QC.item(i)
-                                if (
-                                    Command.data(Qt.ItemDataRole.UserRole)
-                                    == CommandName
-                                ):
-                                    IsInlist = True
+                                if IsInlist is False:
+                                    self.form.CommandsAvailable_QC.addItem(ListWidgetItem)
+                            if IsSelected is True:
+                                IsInlist = False
+                                for i in range(self.form.CommandsSelected_QC.count()):
+                                    Command = self.form.CommandsSelected_QC.item(i)
+                                    if (
+                                        Command.data(Qt.ItemDataRole.UserRole)
+                                        == CommandName
+                                    ):
+                                        IsInlist = True
 
-                            if IsInlist is False:
-                                self.form.CommandsSelected_QC.addItem(ListWidgetItem)
+                                if IsInlist is False:
+                                    self.form.CommandsSelected_QC.addItem(ListWidgetItem)
 
-                        # Add clones of the listWidgetItem to the other listwidgets
-                        self.form.CommandsAvailable_NP.addItem(ListWidgetItem.clone())
-                        # Append a clone of the item to the listwidget item list
-                        self.listWidgetItems.append(ListWidgetItem.clone())
-                        
-                        command = Gui.Command.get(CommandName)
-                        if command is not None and len(command.getAction()) == 1:
                             # Add clones of the listWidgetItem to the other listwidgets
-                            self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
+                            self.form.CommandsAvailable_NP.addItem(ListWidgetItem.clone())
                             # Append a clone of the item to the listwidget item list
-                            self.listWidgetItems_DDB.append(ListWidgetItem.clone())
-                        
-                        ShadowList.append(CommandName)
+                            self.listWidgetItems.append(ListWidgetItem.clone())
+                            
+                            command = Gui.Command.get(CommandName)
+                            if command is not None and len(command.getAction()) == 1:
+                                # Add clones of the listWidgetItem to the other listwidgets
+                                self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
+                                # Append a clone of the item to the listwidget item list
+                                self.listWidgetItems_DDB.append(ListWidgetItem.clone())
+                            
+                            ShadowList.append(CommandName)
 
                     # If there are any dropdown buttons in the json file, add them to the dropdown list
                     if (
@@ -5007,7 +5009,6 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 except Exception:
                     pass
                 if WorkBenchName in self.List_IgnoredWorkbenches or WorkbenchTitle in self.List_IgnoredWorkbenches:
-                    print(WorkBenchName)
                     continue
                 
                 if MenuNameTranslated != "":                
@@ -5163,7 +5164,6 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 except Exception:
                     pass
                 if WorkBenchName in self.List_IgnoredWorkbenches or WorkbenchTitle in self.List_IgnoredWorkbenches:
-                    print(WorkBenchName)
                     continue
 
                 if MenuNameTranslated != "":            
