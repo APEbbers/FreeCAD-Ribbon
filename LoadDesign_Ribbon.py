@@ -2170,6 +2170,16 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                                         and CommandItem[3] == WorkBenchNameCMD
                                     ):
                                         MenuName = CommandItem[4].replace("&", "")
+                                        
+                                        # If the command is from an ignored workbench, skip it
+                                        WorkBenchName = CommandItem[3]            
+                                        WorkbenchTitle = ""
+                                        try:
+                                            WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
+                                        except Exception:
+                                            pass
+                                        if WorkBenchName in self.List_IgnoredWorkbenches or WorkbenchTitle in self.List_IgnoredWorkbenches:
+                                            continue
 
                                         # Check if the items is already there
                                         # if not, continue
