@@ -4442,6 +4442,8 @@ class ModernMenu(RibbonBar):
             # Create the panel based on the toolbars
             panel = self.CreatePanel(workbenchName=workbenchName, panelName=toolbar, addPanel=True, Dict=Dict, UpdateDict=UpdateDict)
             if panel is None:
+                self.ignoredToolbars.append(toolbar)
+                Dict["ignoredToolbars"].append(toolbar)
                 continue
             # Hide the panel if stated in the ribbon structure
             if workbenchName in Dict["workbenches"]:
@@ -4776,7 +4778,7 @@ class ModernMenu(RibbonBar):
 
         List_Workbenches = Gui.listWorkbenches()
         for WorkBenchName in List_Workbenches:
-            if str(WorkBenchName) != "" or WorkBenchName is not None:
+            if str(WorkBenchName) != "" or WorkBenchName is not None:                
                 if str(WorkBenchName) != "NoneWorkbench":
                     CustomToolbars: list = App.ParamGet(
                         "User parameter:BaseApp/Workbench/" + WorkBenchName + "/Toolbar"
