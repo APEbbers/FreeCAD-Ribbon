@@ -24,6 +24,8 @@ import FreeCAD as App
 import FreeCADGui as Gui
 import FCBinding
 import Parameters_Ribbon
+from Parameters_Ribbon import Parameters
+from Parameters_Ribbon import Settings
 import Standard_Functions_Ribbon as StandardFunctions
 import shutil
 import sys
@@ -37,8 +39,10 @@ from PySide.QtWidgets import (
     QApplication,
     QToolButton,
     QStyle,
+    QDockWidget,
 )
 import logging
+import time
 
 # Set the logger levels to avoid extra output in the report panel
 logging.getLogger("urllib3").setLevel(logging.INFO)
@@ -54,25 +58,58 @@ def QT_TRANSLATE_NOOP(context, text):
 global pathIcons
 
 # Get the resources
-pathIcons = Parameters_Ribbon.ICON_LOCATION
-pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
-pathUI = Parameters_Ribbon.UI_LOCATION
-pathScripts = os.path.join(os.path.dirname(FCBinding.__file__), "Scripts")
-pathPackages = os.path.join(
-    os.path.dirname(FCBinding.__file__), "Resources", "packages"
-)
+ConfigDirectory = Parameters.CONFIG_DIR
+pathIcons = Parameters.ICON_LOCATION
+pathStylSheets = Parameters.STYLESHEET_LOCATION
+pathUI = Parameters.UI_LOCATION
+pathScripts = os.path.join(ConfigDirectory, "Scripts")
+pathPackages = os.path.join(os.path.dirname(FCBinding.__file__), "Resources", "packages")
+pathBackup = Parameters.BACKUP_LOCATION
+sys.path.append(ConfigDirectory)
 sys.path.append(pathIcons)
 sys.path.append(pathStylSheets)
 sys.path.append(pathUI)
 sys.path.append(pathPackages)
+sys.path.append(pathBackup)
 
 translate = App.Qt.translate
 
+mw: QMainWindow = Gui.getMainWindow()
+
+# Move the data files to the new location for fixing issue with the new addon manager
+# Function to move the data files out the addon folder to fix issue with the new addon manager
+#
+#Create the new folder for the data
+if not os.path.exists(ConfigDirectory):
+    os.makedirs(ConfigDirectory)
+    
+# Move the files if present
+if Settings.GetStringSetting("RibbonStructure") == os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json"):
+    try:
+        # Update the paths for the ribbon structure and the backup folder
+        Settings.SetStringSetting("RibbonStructure", os.path.join(ConfigDirectory, "RibbonStructure.json"))
+        # Copy the data files if they exits
+        if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json")): 
+            shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json"), os.path.join(ConfigDirectory, "RibbonStructure.json"))
+        if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile.dat")):
+            shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile.dat"), os.path.join(ConfigDirectory, "RibbonDataFile.dat"))
+        if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile2.dat")):
+            shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile2.dat"), os.path.join(ConfigDirectory, "RibbonDataFile2.dat"))
+    except Exception as e:
+        print(e)
+        pass
+
+if Settings.GetStringSetting("BackupFolder") == os.path.join(os.path.dirname(FCBinding.__file__), "BackupFolder"):
+    try:
+        Settings.SetStringSetting("BackupFolder", os.path.join(ConfigDirectory, "Backups"))
+        if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "Backups")):
+            shutil.copytree(os.path.join(os.path.dirname(FCBinding.__file__), "Backups"), os.path.join(ConfigDirectory, "Backups"))
+    except Exception:
+        pass
+
 # check if there is a "RibbonStructure.json". if not create one
-file = os.path.join(os.path.dirname(FCBinding.__file__), "RibbonStructure.json")
-file_default = os.path.join(
-    os.path.dirname(FCBinding.__file__), "RibbonStructure_default.json"
-)
+file = os.path.join(ConfigDirectory, "RibbonStructure.json")
+file_default = os.path.join(ConfigDirectory, "RibbonStructure_default.json")
 source = os.path.join(os.path.dirname(FCBinding.__file__), "CreateStructure.txt")
 source_default = os.path.join(
     os.path.dirname(FCBinding.__file__), "CreateStructure.txt"
@@ -84,7 +121,7 @@ if ribbonStructureVersion >= CurrentStructureVersion:
     NewDefaultNeeded = False
 
 # check if file exits
-fileExists = os.path.isfile(file)
+fileExists = os.path.exists(file)
 
 # if not, copy and rename
 if fileExists is False:
@@ -96,6 +133,14 @@ fileExists = os.path.isfile(file_default)
 if fileExists is False or NewDefaultNeeded is True:
     shutil.copy(source_default, file_default)
     Parameters_Ribbon.Settings.SetIntSetting("RibbonStructureVersion", CurrentStructureVersion)
+    
+# Make sure that the parameter for the ribbon structure is correct
+if os.path.exists(Settings.GetStringSetting("RibbonStructure")) is False:
+    Settings.SetStringSetting("RibbonStructure", os.path.join(ConfigDirectory, "RibbonStructure.json"))
+    
+# Make sure that the parameter for the backup folder is correct
+if os.path.exists(Settings.GetStringSetting("BackupFolder")) is False:
+    Settings.SetStringSetting("BackupFolder", os.path.join(ConfigDirectory, "Backups"))
 
 # remove the test workbench
 try:    
@@ -103,36 +148,34 @@ try:
 except Exception:
     pass
 
+# Get the overlay settings
+preferences_DockWindows = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
+if preferences_DockWindows.GetBool("ActivateOverlay") is True:
+    Parameters.USE_OVERLAY = True
+    if Parameters.OVERLAYSTATE == 2:
+        state = Parameters_Ribbon.Settings.GetStringSetting("StoredOverlayState")
+        if state != "":
+            OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
+            # Set the new string in parameters
+            OverlayParam_Top.SetString("Widgets",state)
+
+# Check if a reset is present for the overlay function
 USECUSTOMOVERLAY = os.path.join(os.path.dirname(FCBinding.__file__), "OVERLAY_DISABLED")
-if (
-    Parameters_Ribbon.USE_FC_OVERLAY is False
-    or os.path.exists(USECUSTOMOVERLAY) is True
-):
-    # Disable the overlay function
-    preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
-    preferences.SetBool("ActivateOverlay", False)
-
-    # make sure that the ribbon will be shown on startup -> reset OverlayTop
-    preferences = App.ParamGet(
-        "User parameter:BaseApp/MainWindow/DockWindows/OverlayTop"
-    )
-    preferences.SetString("Widgets", "")
-if Parameters_Ribbon.USE_FC_OVERLAY is True:
-    # Disable the overlay function
-    preferences = App.ParamGet("User parameter:BaseApp/Preferences/DockWindows")
-    preferences.SetBool("ActivateOverlay", True)
-
+if (os.path.exists(USECUSTOMOVERLAY) is True):
+    print("Overlay function is disabled by RibbonUI")
+    preferences_DockWindows.SetBool("ActivateOverlay", False)
+    Parameters.USE_OVERLAY = False
 try:
     print(translate("FreeCAD Ribbon", "Activating Ribbon UI..."))
-    mw = Gui.getMainWindow()
+    # mw: QMainWindow = Gui.getMainWindow()
 
-    if Parameters_Ribbon.HIDE_TITLEBAR_FC is False:
+    if Parameters.HIDE_TITLEBAR_FC is False:
         mw.setWindowFlags(Qt.WindowType.WindowFullscreenButtonHint)
         mw.workbenchActivated.connect(FCBinding.run)
         mw.showMaximized()
 
     # Hide the Titlebar of FreeCAD
-    if Parameters_Ribbon.HIDE_TITLEBAR_FC is True:
+    if Parameters.HIDE_TITLEBAR_FC is True:
         # make a customized toolbar and hide all the buttons.
         # This works better than a frameless window
         mw.setWindowFlags(Qt.WindowType.CustomizeWindowHint)
@@ -143,11 +186,17 @@ try:
         # Normally after setting the window frameless you show the window with mw.show()
         # This is now done in FCBinding with an eventfilter class
         print(translate("FreeCAD Ribbon", "Ribbon UI: FreeCAD loaded without titlebar"))
-
+    
+                
+    Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
+    Ribbon.show()
+        
 except Exception as e:
     # raise e
-    if Parameters_Ribbon.DEBUG_MODE is True:
+    if Parameters.DEBUG_MODE is True:
         print(f"{e.with_traceback(e.__traceback__)}, 0")
 
 Gui.addLanguagePath(os.path.join(os.path.dirname(FCBinding.__file__), "translations"))
 Gui.updateLocale()
+
+

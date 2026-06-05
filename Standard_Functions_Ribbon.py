@@ -20,12 +20,14 @@
 # *                                                                       *
 # *************************************************************************
 
-from xml.etree.ElementTree import Element, ElementTree
+from xml.etree.ElementTree import Element
+from PySide.QtGui import QIcon
+from PySide.QtCore import QSize
 
-from requests import Request
 import FreeCAD as App
 import FreeCADGui as Gui
 import math
+import datetime
 
 # Define the translation
 translate = App.Qt.translate
@@ -752,6 +754,14 @@ def add_keys_nested_dict(dict, keys, default=1, endEmpty = False):
         pass
     return result
 
+def remove_keys_with_values(Dict: dict, keyName):
+    DictCopy = {}
+    for key in Dict.keys():
+        if key != keyName:
+           DictCopy[key] = Dict[key]
+    
+    return DictCopy
+
 
 def returnDropDownCommands(command):
     Commands = []
@@ -779,12 +789,14 @@ def CommandInfoCorrections(CommandName):
         if Command is not None:
             CommandInfo = Command.getInfo()
 
+            # Part Design
             if CommandName == "PartDesign_CompSketches":
                 CommandInfo["menuText"] = "Create sketch..."
                 CommandInfo["toolTip"] = "Create or edit a sketch"
                 CommandInfo["whatsThis"] = "PartDesign_CompSketches"
                 CommandInfo["statusTip"] = "Create or edit a sketch"
 
+            # Sketcher
             if CommandName == "Sketcher_Grid":
                 CommandInfo["pixmap"] = "Sketcher_GridToggle_Deactivated.svg"
             if CommandName == "Sketcher_Snap":
@@ -801,6 +813,9 @@ def CommandInfoCorrections(CommandName):
             else:
                 CommandInfo["ActionText"] = CommandInfo["menuText"]
             if CommandInfo["ActionText"] == "":
+                CommandInfo["ActionText"] = CommandInfo["menuText"]
+            
+            if CommandName == "Std_RecentFiles":
                 CommandInfo["ActionText"] = CommandInfo["menuText"]
 
             ChildCommands = returnDropDownCommands(Command)
@@ -878,7 +893,8 @@ def addMissingCommands(CommandList: list):
 
 
 def returnQiCons_Commands(CommandName, pixmap=""):
-    from PySide.QtGui import QIcon
+    from PySide.QtGui import QIcon, QAction
+    from PySide.QtWidgets import QToolButton, QMenu
 
     try:
         if len(CommandName.split(", ")) > 1:
@@ -894,24 +910,49 @@ def returnQiCons_Commands(CommandName, pixmap=""):
         pass
 
     icon = QIcon()
-    if pixmap != "" and pixmap is not None:
-        icon = Gui.getIcon(pixmap)
-    else:
-        try:
-            Command = Gui.Command.get(CommandName)
-            CommandInfo = Command.getInfo()
-            pixmap = CommandInfo["pixmap"]
-            icon = Gui.getIcon(pixmap)
-        except Exception:
-            pass
+    
+    if pixmap != "":
+        if icon is None or (icon is not None and icon.isNull()):
+            try:
+                icon = Gui.getIcon(pixmap)
+                if icon is not None and icon.isNull() is False:
+                    return icon
+            except Exception:
+                pass
+        
+    # if icon is None or (icon is not None and icon.isNull()):
+    #     try:
+    #         Command = Gui.Command.get(CommandName)
+    #         pixmap = CommandInfoCorrections(CommandName)["pixmap"]
+    #         icon = Gui.getIcon(pixmap)
+    #         if icon is not None and icon.isNull() is False:
+    #             return icon
+    #     except Exception:
+    #         pass
 
     if icon is None or (icon is not None and icon.isNull()):
         try:
             Command = Gui.Command.get(CommandName)
             action = Command.getAction()[0]
             icon = action.icon()
+            if icon is not None and icon.isNull() is False:
+                return icon
         except Exception:
-            return None
+            pass
+        
+    if icon is None or (icon is not None and icon.isNull()):
+        try:
+            Menus = mw.findChildren(QToolButton)
+            for i in range(len(Menus)):
+                action = Menus[i].defaultAction()
+                if action is None:
+                    action = Menus[i].actions()[0]
+                if action.data() == CommandName:
+                    icon = Menus[i].icon()
+                    if icon is not None and icon.isNull() is False:
+                        return icon
+        except Exception:
+            pass
     return icon
 
 
@@ -939,21 +980,25 @@ def ReturnWrappedText(text: str, max_length: int = 50, max_Lines=0, returnList=F
     import textwrap
 
     result = ""
+    wrapped_text = []
+    
+    if len(text.split(" ")) == 2:
+        wrapped_text = text.split(" ")
+    else:
+        # Wrap the text as list
+        wrapped_text = textwrap.wrap(text=text, width=max_length)
 
-    # Wrap the text as list
-    wrapped_text = textwrap.wrap(text=text, width=max_length)
+        # remove spaces at the end of each line
+        for line in wrapped_text:
+            line = textwrap.dedent(line)
 
-    # remove spaces at the end of each line
-    for line in wrapped_text:
-        line = textwrap.dedent(line)
-
-    # remove any line that is more then> allowed
-    if max_Lines > 0 and len(wrapped_text) > max_Lines:
-        for i in range(max_Lines, len(wrapped_text)):
-            try:
-                wrapped_text.pop(i)
-            except Exception:
-                continue
+        # remove any line that is more then> allowed
+        if max_Lines > 0 and len(wrapped_text) > max_Lines:
+            for i in range(max_Lines, len(wrapped_text)):
+                try:
+                    wrapped_text.pop(i)
+                except Exception:
+                    continue
 
     # return the desired result
     if returnList is False:
@@ -998,3 +1043,25 @@ def checkFreeCADVersion(main: int, sub: int, patch: int, git: int):
                     return True
 
     return False
+
+def TimeDeltaToDict(timeDelta:datetime.timedelta) -> dict:
+    def __t(seconds, divider):
+        if seconds < divider: return (seconds, 0)
+        value = seconds//divider
+        return (seconds -  (value * divider), value)
+    (seconds, hours) = __t(timeDelta.seconds, 3600)
+    (seconds, minutes) = __t(seconds, 60)    
+    (microseconds, milliseconds) = __t(timeDelta.microseconds, 1000)
+
+    return {
+         'days': timeDelta.days
+        ,'hours': hours
+        ,'minutes': minutes
+        ,'seconds': seconds
+        ,'milliseconds': milliseconds
+        ,'microseconds': microseconds
+    }
+    
+def CompareIcons(icon1: QIcon, icon2: QIcon):
+    icon1 = Gui.getIcon("Std_OnlineHelp")
+    return (icon1.pixmap(icon1.actualSize(QSize(16,16))).toImage() == icon2.pixmap(icon2.actualSize(QSize(16,16))).toImage())

@@ -39,16 +39,21 @@ from PySide.QtWidgets import (
 from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread
 import sys
 import Standard_Functions_Ribbon as StandardFunctions
-import Parameters_Ribbon
+from Parameters_Ribbon import Parameters
 
 # Get the resources
-pathIcons = Parameters_Ribbon.ICON_LOCATION
-pathStylSheets = Parameters_Ribbon.STYLESHEET_LOCATION
-pathUI = Parameters_Ribbon.UI_LOCATION
-pathBackup = Parameters_Ribbon.BACKUP_LOCATION
+ConfigDirectory = Parameters.CONFIG_DIR
+pathIcons = Parameters.ICON_LOCATION
+pathStylSheets = Parameters.STYLESHEET_LOCATION
+pathUI = Parameters.UI_LOCATION
+pathScripts = os.path.join(ConfigDirectory, "Scripts")
+pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
+pathBackup = Parameters.BACKUP_LOCATION
+sys.path.append(ConfigDirectory)
 sys.path.append(pathIcons)
 sys.path.append(pathStylSheets)
 sys.path.append(pathUI)
+sys.path.append(pathPackages)
 sys.path.append(pathBackup)
 
 mw: QMainWindow = Gui.getMainWindow()
@@ -105,40 +110,45 @@ def DarkMode():
 
     path = os.path.dirname(__file__)
     # Get the folder with add-ons
-    for i in range(2):
+    for i in range(1):
         # Starting point
         path = os.path.dirname(path)
 
     # Go through the sub-folders
     for root, dirs, files in os.walk(path):
         for name in dirs:
-
-            # if the current stylesheet matches a sub directory, try to get the package.xml
-            if currentStyleSheet.replace(".qss", "").lower() in name.lower():
-                try:
-                    packageXML = os.path.join(path, name, "package.xml")
+            # # if the current stylesheet matches a sub directory, try to get the package.xml
+            packageXML = os.path.join(path, name, "package.xml")
+            try:
+                
+                if os.path.exists(packageXML):
 
                     # Get the tree and root of the xml file
                     tree = ET.parse(packageXML)
                     treeRoot = tree.getroot()
-
-                    # Get all the tag elements
-                    elements = []
                     namespaces = {"i": "https://wiki.freecad.org/Package_Metadata"}
-                    elements = treeRoot.findall(
-                        ".//i:content/i:preferencepack/i:tag", namespaces
+                    pack =  treeRoot.findall(
+                        ".//i:content/i:preferencepack", namespaces
                     )
 
-                    # go throug all tags. If 'dark' in the element text, this is a dark theme
-                    for element in elements:
-                        if "dark" in element.text.lower():
-                            IsDarkTheme = True
-                            break
+                    for element in pack:
+                        for child in element.iter():
+                            if child.text.lower() == currentStyleSheet.lower():
+                                for child2 in element.iter():
+                                    if child2.text.lower() == "dark":
+                                        if Parameters.DEBUG_MODE:
+                                            print(f"{child2.text} theme detected for: {child.text}")
+                                        return True
+                                    if child2.text.lower() == "light":
+                                        if Parameters.DEBUG_MODE:
+                                            print(f"{child2.text} theme detected for: {child.text}")
+                                        return False
 
-                except Exception:
-                    if not os.path.isfile(packageXML):
-                        if "dark" in currentStyleSheet.lower():
-                            IsDarkTheme = True
+
+            except Exception as e:
+                if not os.path.isfile(packageXML):
+                    if "dark" in currentStyleSheet.lower():
+                        IsDarkTheme = True
 
     return IsDarkTheme
 
@@ -211,7 +221,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
         if isIcon is True:
             result = None
             PixmapName = ""
-            if Parameters_Ribbon.BETA_FUNCTIONS_ENABLED is True or ShowCustomIcon is True:
+            if Parameters.CUSTOM_ICONS_ENABLED is True or ShowCustomIcon is True:
                 PixmapName = StyleMapping["Stylesheets"][ControlName]
             else:
                 PixmapName = ""
@@ -231,11 +241,11 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
         if isIcon is False:
             result = ""
 
-            if Parameters_Ribbon.CUSTOM_COLORS_ENABLED is True:
+            if Parameters.CUSTOM_COLORS_ENABLED is True:
                 result = StyleMapping["Stylesheets"][ControlName]
             if (
-                Parameters_Ribbon.BUTTON_BACKGROUND_ENABLED is False
-                and Parameters_Ribbon.USE_FC_OVERLAY is True
+                Parameters.BUTTON_BACKGROUND_ENABLED is False
+                and Parameters.USE_OVERLAY is True
                 and ControlName == "Background_Color"
                 and IgnoreOverlay is False
             ):
@@ -286,11 +296,11 @@ def ReturnStyleSheet(
         AppBorder_2 = BorderColor
         if BackgroundColor is not None and BorderColor is not None:
             if control.lower() == "toolbutton":
-                if Parameters_Ribbon.BORDER_TRANSPARANT is True:
+                if Parameters.BORDER_TRANSPARANT is True:
                     BorderColor = BackgroundColor
                 StyleSheet = (
                     """QLayout {spacing: 0px}"""
-                    + """QToolButton, QLabel, RibbonToolButton, QLayout {
+                    + """QToolButton, QLabel {
                         margin: 0px;
                         padding: 0px;
                         color: """
@@ -306,11 +316,9 @@ def ReturnStyleSheet(
                     + """;padding-right: """
                     + padding_right
                     + """;spacing: 0px;}"""
-                    + """QToolButton::menu-arrow {
-                        subcontrol-origin: padding;
-                        subcontrol-position: center right;
-                    }"""
                     + """QToolButton::menu-button {
+                        top: 0px;
+                        right: 0px;
                         margin: 0px;
                         padding: 0px;
                         width: """
@@ -323,8 +331,8 @@ def ReturnStyleSheet(
                         subcontrol-origin: padding;
                         subcontrol-position: center right;
                     }"""
-                    + """QToolButton:hover, QLabel:hover, RibbonToolButton:hover {
-                        margin: 0px 0px 0px 0px;
+                    + """QToolButton:hover, QLabel:hover {
+                        margin: 0px;
                         padding: 0px;"""
                     + """;background: """
                     + HoverColor
@@ -351,12 +359,20 @@ def ReturnStyleSheet(
                     """QToolButton {
                         border-radius : """
                     + radius
+                    + """;padding-left: """
+                    + padding_left
+                    + """;padding-top: """
+                    + padding_top
+                    + """;padding-bottom: """
+                    + padding_bottom
                     + """;padding-right: """
                     + padding_right
                     + """;background-color: """
                     + AppColor_1
                     + """;border: 0.5px solid"""
                     + BorderColor
+                     + """;color: """
+                    + FontColor
                     + """;}"""
                     + """QToolButton:hover { """
                     + """border: 2px solid"""
@@ -364,6 +380,12 @@ def ReturnStyleSheet(
                     + """;border-radius : """
                     + radius
                     + """;}"""
+                    + """\n\nQToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }"""
                 )
             if control.lower() == "dragindicator":
                 StyleSheet = (
@@ -422,6 +444,10 @@ def ReturnFontColor():
 
     if IsDarkTheme is True:
         fontColor = "#ffffff"
+    
+    if Parameters.CUSTOM_COLORS_ENABLED:
+        if Parameters.COLOR_FONT != "":
+            fontColor = Parameters.COLOR_FONT
 
     return fontColor
 
@@ -453,9 +479,9 @@ def ReturnTitleBarIcons():
         "restore_default.svg",
         "minimize_default.svg",
     ]
-    IsDarkTheme = darkMode
+    IsDarkTheme = ReturnFontColor()
 
-    if IsDarkTheme is True:
+    if IsDarkTheme == "#ffffff":
         IconNames = [
             "close_default_white.svg",
             "maximize_default_white.svg",
@@ -505,19 +531,19 @@ def ReturnIcons_ThemeEditor():
 StyleMapping = {
     "Stylesheets": {
         "Background_Color": "",
-        "Background_Color_Hover": Parameters_Ribbon.COLOR_BACKGROUND_HOVER,
-        "Border_Color": Parameters_Ribbon.COLOR_BORDERS,
-        "ApplicationButton_Background": Parameters_Ribbon.COLOR_APPLICATION_BUTTON_BACKGROUND,
-        "FontColor": Parameters_Ribbon.COLOR_BORDERS,  # Set the font and border equal when custom colors is enabled
+        "Background_Color_Hover": Parameters.COLOR_BACKGROUND_HOVER,
+        "Border_Color": Parameters.COLOR_BORDERS,
+        "ApplicationButton_Background": Parameters.COLOR_APPLICATION_BUTTON_BACKGROUND,
+        "FontColor": ReturnFontColor(),  
         "UpdateColor": ReturnUpdateColor(),
         "DevelopColor": ReturnDevelopColor(),
-        "ScrollLeftButton_Tab": Parameters_Ribbon.SCROLL_LEFT_BUTTON_TAB,
-        "ScrollRightButton_Tab": Parameters_Ribbon.SCROLL_RIGHT_BUTTON_TAB,
-        "ScrollLeftButton_Category": Parameters_Ribbon.SCROLL_LEFT_BUTTON_CATEGORY,
-        "ScrollRightButton_Category": Parameters_Ribbon.SCROLL_RIGHT_BUTTON_CATEGORY,
-        "OptionButton": Parameters_Ribbon.OPTION_BUTTON,
-        "PinButton_open": Parameters_Ribbon.PIN_BUTTON_OPEN,
-        "PinButton_closed": Parameters_Ribbon.PIN_BUTTON_CLOSED,
+        "ScrollLeftButton_Tab": Parameters.SCROLL_LEFT_BUTTON_TAB,
+        "ScrollRightButton_Tab": Parameters.SCROLL_RIGHT_BUTTON_TAB,
+        "ScrollLeftButton_Category": Parameters.SCROLL_LEFT_BUTTON_CATEGORY,
+        "ScrollRightButton_Category": Parameters.SCROLL_RIGHT_BUTTON_CATEGORY,
+        "OptionButton": Parameters.OPTION_BUTTON,
+        "PinButton_open": Parameters.PIN_BUTTON_OPEN,
+        "PinButton_closed": Parameters.PIN_BUTTON_CLOSED,
         "TitleBarButtons": ReturnTitleBarIcons(),
     }
 }
