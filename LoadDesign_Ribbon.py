@@ -5132,17 +5132,23 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     if command is not None and len(command.getAction()) == 1:
                         Allow = True
                 if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):      
-                    ListWidget_Commands.addItem(item.clone())
+                    try:
+                        ListWidget_Commands.addItem(item.clone())
+                    except Exception:
+                        pass
             
             # Create a new list with a clone of each of the items
             listWidgetItems = []
             listWidgetItems_DDB = []
             for item in self.listWidgetItems:                            
-                listWidgetItems.append(item.clone())
-                CommandName = item.data(Qt.ItemDataRole.UserRole)
-                command = Gui.Command.get(CommandName)
-                if command is not None and len(command.getAction()) == 1:
-                    listWidgetItems_DDB.append(item.clone())
+                try:                        
+                    listWidgetItems.append(item.clone())
+                    commandName = item.data(Qt.ItemDataRole.UserRole)
+                    command = Gui.Command.get(commandName)
+                    if command is not None and len(command.getAction()) == 1:
+                        listWidgetItems_DDB.append(item.clone())
+                except Exception:
+                    pass
             # replace the stored listwidget items with the new list                      
             self.listWidgetItems = listWidgetItems
             self.listWidgetItems_DDB = listWidgetItems_DDB
@@ -5306,17 +5312,23 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     if command is not None and len(command.getAction()) == 1:
                         Allow = True
                 if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):      
-                    ListWidget_Commands.addItem(item) 
+                    try:
+                        ListWidget_Commands.addItem(item.clone())
+                    except Exception:
+                        pass 
             
             # Create a new list with a clone of each of the items
             listWidgetItems = []
             listWidgetItems_DDB = []
-            for item in self.listWidgetItems:                            
-                listWidgetItems.append(item.clone())
-                commandName = item.data(Qt.ItemDataRole.UserRole)
-                command = Gui.Command.get(commandName)
-                if command is not None and len(command.getAction()) == 1:
-                    listWidgetItems_DDB.append(item.clone())
+            for item in self.listWidgetItems:    
+                try:                        
+                    listWidgetItems.append(item.clone())
+                    commandName = item.data(Qt.ItemDataRole.UserRole)
+                    command = Gui.Command.get(commandName)
+                    if command is not None and len(command.getAction()) == 1:
+                        listWidgetItems_DDB.append(item.clone())
+                except Exception:
+                    pass
             # replace the stored listwidget items with the new list                      
             self.listWidgetItems = listWidgetItems
             self.listWidgetItems_DDB = listWidgetItems_DDB
