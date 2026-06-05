@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsKIoNIs.ui'
+## Form generated from reading UI file 'AddCommandsNHLxzc.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.1
 ##
@@ -507,8 +507,44 @@ class Ui_Form(object):
 
         self.gridLayout_4.addLayout(self.gridLayout, 2, 0, 1, 1)
 
+        QWidget.setTabOrder(self.okButton_2, self.applyButton_2)
+        QWidget.setTabOrder(self.applyButton_2, self.cancelButton_2)
+        QWidget.setTabOrder(self.cancelButton_2, self.tabWidget)
+        QWidget.setTabOrder(self.tabWidget, self.SearchBar_NP)
+        QWidget.setTabOrder(self.SearchBar_NP, self.ListCategory_NP)
+        QWidget.setTabOrder(self.ListCategory_NP, self.CommandsAvailable_NP)
+        QWidget.setTabOrder(self.CommandsAvailable_NP, self.PanelTitle)
+        QWidget.setTabOrder(self.PanelTitle, self.CreateNewPanel)
+        QWidget.setTabOrder(self.CreateNewPanel, self.LoadWB)
+        QWidget.setTabOrder(self.LoadWB, self.okButton)
+        QWidget.setTabOrder(self.okButton, self.applyButton)
+        QWidget.setTabOrder(self.applyButton, self.cancelButton)
+        QWidget.setTabOrder(self.cancelButton, self.HelpButton)
+        QWidget.setTabOrder(self.HelpButton, self.CustomToolbarSelector_CP)
+        QWidget.setTabOrder(self.CustomToolbarSelector_CP, self.RemovePanel_CP)
+        QWidget.setTabOrder(self.RemovePanel_CP, self.WorkbenchList_CP)
+        QWidget.setTabOrder(self.WorkbenchList_CP, self.PanelName_CP)
+        QWidget.setTabOrder(self.PanelName_CP, self.PanelAvailable_CP)
+        QWidget.setTabOrder(self.PanelAvailable_CP, self.AddPanel_CP)
+        QWidget.setTabOrder(self.AddPanel_CP, self.MoveUpPanelCommand_CP)
+        QWidget.setTabOrder(self.MoveUpPanelCommand_CP, self.MoveDownPanelCommand_CP)
+        QWidget.setTabOrder(self.MoveDownPanelCommand_CP, self.PanelSelected_CP)
+        QWidget.setTabOrder(self.PanelSelected_CP, self.AddCustomPanel_CP)
+        QWidget.setTabOrder(self.AddCustomPanel_CP, self.SearchBar_DDB)
+        QWidget.setTabOrder(self.SearchBar_DDB, self.ListCategory_DDB)
+        QWidget.setTabOrder(self.ListCategory_DDB, self.CommandsAvailable_DDB)
+        QWidget.setTabOrder(self.CommandsAvailable_DDB, self.CommandList_DDB)
+        QWidget.setTabOrder(self.CommandList_DDB, self.RemoveControl_DDB)
+        QWidget.setTabOrder(self.RemoveControl_DDB, self.ControlName_DDB)
+        QWidget.setTabOrder(self.ControlName_DDB, self.NewControl_DDB)
+        QWidget.setTabOrder(self.NewControl_DDB, self.AddCommand_DDB)
+        QWidget.setTabOrder(self.AddCommand_DDB, self.RemoveCommand_DDB)
+        QWidget.setTabOrder(self.RemoveCommand_DDB, self.MoveUpCommand_DDB)
+        QWidget.setTabOrder(self.MoveUpCommand_DDB, self.MoveDownCommand_DDB)
+        QWidget.setTabOrder(self.MoveDownCommand_DDB, self.CreateControl_DDB)
 
         self.retranslateUi(Form)
+        self.PanelTitle.returnPressed.connect(self.CreateNewPanel.animateClick)
 
         self.tabWidget.setCurrentIndex(0)
 
