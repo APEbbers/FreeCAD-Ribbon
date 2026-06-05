@@ -80,7 +80,7 @@ ReproAdress: str = ""
 IsChanged = False
 
 # Set the data file version. Triggeres an question if an update is needed
-DataFileVersion = "1.4.1"
+DataFileVersion = "1.5"
 
 # Define list of the workbenches, toolbars and commands on class level
 List_Workbenches = []
