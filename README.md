@@ -35,6 +35,12 @@ See the [wiki page](https://github.com/APEbbers/FreeCAD-Ribbon/wiki) for more de
 In the [Road map](https://github.com/APEbbers/FreeCAD-Ribbon/wiki/07-%E2%80%90-Road-map) you can see the development plan for the Ribbon.
 Please note that the road map is a live document that can change over time.
 
+## Videos of the beta functionalities:
+  * [Add a new panel](https://codeberg.org/apebbers/FreeCAD-Ribbon/src/branch/Develop/Resources/Videos/Add%20a%20newPanel%20-%201.webm)
+  * [Customize the quick access toolbar](https://codeberg.org/apebbers/FreeCAD-Ribbon/src/branch/Develop/Resources/Videos/Customise%20quick%20toolbar%20-%201.webm)
+  * [Combine panels](https://codeberg.org/apebbers/FreeCAD-Ribbon/src/branch/Develop/Resources/Videos/Combine%20panels%20-%201.webm)
+  * [Create a dropdown button](https://codeberg.org/apebbers/FreeCAD-Ribbon/src/branch/Develop/Resources/Videos/Create%20dropdown%20button%20-%201.webm)
+
 ## Installation
 
 ### Install via the Addon Manager
