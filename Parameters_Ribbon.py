@@ -525,7 +525,7 @@ class Parameters:
     # endregion ------------------------------------------------------------------------------------------------------------
 
     # region - Miscellaneous settings --------------------------------------------------------------------------------------
-    if (Settings.GetIntSetting("Preferred_view") is None or Settings.GetIntSetting("Preferred_view") == 0):
+    if Settings.GetIntSetting("Preferred_view") is None:
         PREFERRED_VIEW = int(DefaultSettings["Preferred_view"])
         Settings.SetIntSetting("Preferred_view", PREFERRED_VIEW)
     PREFERRED_VIEW = Settings.GetIntSetting("Preferred_view")

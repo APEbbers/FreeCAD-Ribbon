@@ -5560,10 +5560,10 @@ class ModernMenu(RibbonBar):
                                     return dict["workbenches"][workbenchName]["toolbars"][panelName]["title"]
         # Change the name of the view panels to "View"
         if (
-            title in "Views - Ribbon_newPanel"
-            or title.lower() in str("Individual views").lower()
+            title.lower() == str("Views - Ribbon_newPanel").lower()
+            or title.lower() == str("Individual views").lower()
         ):
-            panel.setTitle(" Views ")
+            return " Views "
         else:
             # Remove possible workbench names from the titles
             if (
@@ -5747,7 +5747,7 @@ class ModernMenu(RibbonBar):
             customList = self.List_AddCustomToolBarToWorkbench(workbenchName, panelName, Dict = Dict["customToolbars"])
             allButtons.extend(customList)
 
-        # # Add newPanels
+        # Add newPanels
         if panelName.endswith("_newPanel"):
             if workbenchName in Dict["workbenches"]:
                 if panelName in Dict["workbenches"][workbenchName]["toolbars"]:
@@ -5760,6 +5760,20 @@ class ModernMenu(RibbonBar):
                                     button.setObjectName(key)                                    
                                     # button.setToolTip(key)
                                     allButtons.append(button)
+        
+        # Add global newPanels
+        if panelName.endswith("_newPanel"):
+            if "Global" in Dict["newPanels"]:
+                if panelName in Dict["newPanels"]["Global"]:
+                    Commands = Dict["newPanels"]["Global"][panelName]
+                    for CommandItem in Commands:
+                        CommandName = CommandItem[0]
+                        # Create a button
+                        button = self.CreateButtonFromCommand(CommandName, ActivateWorkBench=ActivateWorkbench, Dict=Dict)
+                        if button is not None:
+                            button.setObjectName(CommandName)                                    
+                            allButtons.append(button)
+                        
                     
         # If a new command needs to be added, create a button and add it to allButtons
         if ExtraCommand != "":
