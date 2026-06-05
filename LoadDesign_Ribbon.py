@@ -2556,7 +2556,18 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         )
         for Newpanel in NewPanels:
             if Newpanel[1] == "Global":
-                wbToolbars.append(Newpanel[0])
+                if Newpanel[0] != "Views - Ribbon_newPanel" or Newpanel[0] != "Individual views" or Newpanel[0] != "Views":
+                    wbToolbars.append(Newpanel[0])
+                PreferredToolbar = Parameters_Ribbon.Settings.GetIntSetting("Preferred_view")
+                if PreferredToolbar == 0:
+                    if Newpanel[0] == "Individual views":
+                        wbToolbars.append(Newpanel[0])
+                if PreferredToolbar == 1:
+                    if Newpanel[0] == "View":
+                        wbToolbars.append(Newpanel[0])
+                if PreferredToolbar == 2:
+                    if Newpanel[0] == "Views - Ribbon":
+                        wbToolbars.append(Newpanel[0])
 
         # Get the order from the json file
         wbToolbars = self.SortedPanelList(wbToolbars, WorkBenchName)
@@ -2585,6 +2596,13 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         
             # Remove possible workbench names from the titles
             title = ToolbarTransLated
+            # Change the name of the view panels to "View"
+            if (
+                title.lower() == str("Views - Ribbon_newPanel").lower()
+                or title.lower() == str("Individual views").lower()
+            ):
+                title = "Views"
+            
             if (
                 "_custom" not in title
                 and "_global" not in title
