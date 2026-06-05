@@ -1760,13 +1760,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             # Create a new list with a clone of each of the items
             listWidgetItems_NP = []
             listWidgetItems_DDB = []
-            for i in range(ListWidget_Commands.count()):     
+            for item in self.listWidgetItems_NP:     
                 try:                       
-                    listWidgetItems_NP.append(ListWidget_Commands.item(i).clone())
-                    CommandName = ListWidget_Commands.item(i).data(Qt.ItemDataRole.UserRole)
+                    listWidgetItems_NP.append(item.clone())
+                    CommandName = item.data(Qt.ItemDataRole.UserRole)
                     command = Gui.Command.get(CommandName)
                     if command is not None and len(command.getAction()) == 1:
-                        listWidgetItems_DDB.append(ListWidget_Commands.item(i).clone())
+                        listWidgetItems_DDB.append(item.clone())
                 except Exception:
                     pass
             # replace the stored listwidget items with the new list                      
@@ -1977,11 +1977,11 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             listWidgetItems_DDB = []                          
             for item in self.listWidgetItems_NP:                          
                 try:                       
-                    listWidgetItems_NP.append(ListWidget_Commands.item(i).clone())
-                    CommandName = ListWidget_Commands.item(i).data(Qt.ItemDataRole.UserRole)
+                    listWidgetItems_NP.append(item.clone())
+                    CommandName = item.data(Qt.ItemDataRole.UserRole)
                     command = Gui.Command.get(CommandName)
                     if command is not None and len(command.getAction()) == 1:
-                        listWidgetItems_DDB.append(ListWidget_Commands.item(i).clone())
+                        listWidgetItems_DDB.append(item.clone())
                 except Exception:
                     pass
             # replace the stored listwidget items with the new list                      
