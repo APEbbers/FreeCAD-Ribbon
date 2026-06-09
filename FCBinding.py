@@ -25,7 +25,7 @@ import FreeCADGui as Gui
 from pathlib import Path
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -54,7 +54,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -94,7 +94,7 @@ from PySide.QtWidgets import (
     QAbstractButton,
     QStackedWidget,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1141,6 +1141,7 @@ class ModernMenu(RibbonBar):
         else:
             self.BetaFunctionsEnabled = False 
 
+        mw.moveEvent = lambda e: self.mw_moveEvent(e)
         return
 
     # region - Ribbon event fuctions
@@ -1160,6 +1161,11 @@ class ModernMenu(RibbonBar):
                 mw.window().x() + delta.x(),
                 mw.window().y() + delta.y(),
             )
+            
+    def mw_moveEvent(self, event):
+        ribbonDock = mw.findChild(QDockWidget, "Ribbon")
+        if ribbonDock.isFloating:
+            event.ignore()
     
     def closeEvent(self, event):
         mw.menuBar().show()
@@ -5411,12 +5417,13 @@ class ModernMenu(RibbonBar):
         
         if ribbonDock.isFloating() is False:
             # If the DockWidget is docked, set it floating
-            ribbonDock.setFloating(True)
-            
+            ribbonDock.setFloating(True)           
+
             # Increase the ribbon height
             TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             if self.RibbonHeight > 0:
                 TB.setFixedHeight(self.RibbonHeight + self.FloatingTitleBarHeight)
+                TB.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
             # Set a label with title as titlebar widget. This works on all OS
             try:
                 ribbonDock.setTitleBarWidget(QLabel("Ribbon", alignment=Qt.AlignmentFlag.AlignCenter))
@@ -7397,7 +7404,7 @@ class EventInspector(QObject):
     def __init__(self, parent):
         super(EventInspector, self).__init__(parent)
 
-    def eventFilter(self, obj, event: QEvent):
+    def eventFilter(self, obj, event: QEvent):                
         if event.type() == QEvent.Type.KeyRelease:
             try:
                 # Get the main window and the ribbon
@@ -7467,8 +7474,10 @@ class EventInspector(QObject):
                 if DockWidget_Ribbon.isFloating() is False:
                     try:
                         DockWidget_Ribbon.setTitleBarWidget(QWidget())
+                        DockWidget_Ribbon.setFixedHeight(RibbonBar.RibbonHeight)
                     except Exception:
                         pass       
+        
         if event.type() == QEvent.Type.Close:
             OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
             String = OverlayParam_Top.GetString("Widgets")
