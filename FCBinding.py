@@ -25,7 +25,7 @@ import FreeCADGui as Gui
 from pathlib import Path
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -54,7 +54,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -94,7 +94,7 @@ from PySide.QtWidgets import (
     QAbstractButton,
     QStackedWidget,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -878,7 +878,7 @@ class ModernMenu(RibbonBar):
             "ScrollRightButton_Tab"
         )
         # Set the icons
-        StyleSheet = "QToolButton {image: none;margin-top:6px;margin-bottom:6px;};QToolButton::arrow {image: none};"
+        StyleSheet = "QToolButton {image: none;margin-top:6px;margin-bottom:6px;};QToolButton::menu-indicator {image: none};"
         BackgroundColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
         if (
             int(App.Version()[0]) == 0
@@ -893,13 +893,13 @@ class ModernMenu(RibbonBar):
         if ScrollLeftButton_Tab_Icon is not None:
             ScrollLeftButton_Tab.setStyleSheet(StyleSheet)
             ScrollLeftButton_Tab.setIcon(ScrollLeftButton_Tab_Icon)
+            ScrollLeftButton_Tab.setArrowType(Qt.ArrowType.NoArrow)
         else:
-            ScrollRightButton_Tab.setToolButtonStyle(
-                Qt.ToolButtonStyle.ToolButtonTextOnly
-            )
+            ScrollLeftButton_Tab.setArrowType(Qt.ArrowType.LeftArrow)
         if ScrollRightButton_Tab_Icon is not None:
             ScrollRightButton_Tab.setStyleSheet(StyleSheet)
             ScrollRightButton_Tab.setIcon(ScrollRightButton_Tab_Icon)
+            ScrollRightButton_Tab.setArrowType(Qt.ArrowType.NoArrow)
         else:
             ScrollRightButton_Tab.setArrowType(Qt.ArrowType.RightArrow)
 
@@ -1150,7 +1150,8 @@ class ModernMenu(RibbonBar):
     initialPos = None
     def mousePress_Titlebar(self, event):
         try:
-            self.initialPos = event.pos().toPoint()
+            if self.initialPos is not None:
+                self.initialPos = event.pos().toPoint()
         except Exception:
             pass
     
@@ -1165,7 +1166,7 @@ class ModernMenu(RibbonBar):
     def mw_moveEvent(self, event):
         ribbonDock = mw.findChild(QDockWidget, "Ribbon")
         if ribbonDock.isFloating:
-            event.ignore()
+            mw.move(mw.pos())
     
     def closeEvent(self, event):
         mw.menuBar().show()
@@ -1432,11 +1433,13 @@ class ModernMenu(RibbonBar):
                 self.contextMenu.addSeparator()
                 title = translate("FreeCAD Ribbon", "Customize...")
                 if self.CustomizeEnabled is True:
+                    SetLayoutsAct = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Layouts..."))
+                    self.contextMenu.addSeparator()
                     title = translate("FreeCAD Ribbon", "Save and exit customize...")
                 CustomizeStartAct = self.contextMenu.addAction(title)
                 # Add a cancel button
                 CustomizeCancelAct = QAction()
-                if self.CustomizeEnabled is True:
+                if self.CustomizeEnabled is True:                    
                     CustomizeCancelAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Cancel"))
                                 
                 # Create the action
@@ -5410,9 +5413,8 @@ class ModernMenu(RibbonBar):
             # Set an empty titlebar widget. Effectivly hide the titlebar
             ribbonDock.setTitleBarWidget(QWidget())
             # Correct the height of the ribbon
-            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             if self.RibbonHeight > 0:
-                TB.setFixedHeight(self.RibbonHeight)
+                ribbonDock.setFixedHeight(self.RibbonHeight)
             return
         
         if ribbonDock.isFloating() is False:
@@ -5420,10 +5422,10 @@ class ModernMenu(RibbonBar):
             ribbonDock.setFloating(True)           
 
             # Increase the ribbon height
-            TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
             if self.RibbonHeight > 0:
-                TB.setFixedHeight(self.RibbonHeight + self.FloatingTitleBarHeight)
-                TB.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+                ribbonDock.setFixedHeight(self.RibbonHeight + self.FloatingTitleBarHeight)
+                ribbonDock.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+                mw.setFocusPolicy(Qt.FocusPolicy.NoFocus)                
             # Set a label with title as titlebar widget. This works on all OS
             try:
                 ribbonDock.setTitleBarWidget(QLabel("Ribbon", alignment=Qt.AlignmentFlag.AlignCenter))
@@ -7477,7 +7479,7 @@ class EventInspector(QObject):
                         DockWidget_Ribbon.setFixedHeight(RibbonBar.RibbonHeight)
                     except Exception:
                         pass       
-        
+
         if event.type() == QEvent.Type.Close:
             OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
             String = OverlayParam_Top.GetString("Widgets")
