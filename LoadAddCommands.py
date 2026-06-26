@@ -19,8 +19,8 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
-import FreeCAD as App
-import FreeCADGui as Gui
+import FreeCAD as App  # pyright: ignore[reportMissingModuleSource]
+import FreeCADGui as Gui  # pyright: ignore[reportMissingModuleSource]
 import os
 
 from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop

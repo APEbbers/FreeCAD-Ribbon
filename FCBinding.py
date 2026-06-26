@@ -1433,6 +1433,7 @@ class ModernMenu(RibbonBar):
                 self.contextMenu.addSeparator()
                 title = translate("FreeCAD Ribbon", "Customize...")
                 if self.CustomizeEnabled is True:
+                    self.tabBar().setMovable(True)
                     SetLayoutsAct = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Layouts..."))
                     self.contextMenu.addSeparator()
                     title = translate("FreeCAD Ribbon", "Save and exit customize...")
@@ -2679,6 +2680,7 @@ class ModernMenu(RibbonBar):
     def dragMoveEvent(self, event: QDragMoveEvent):
         if self.CustomizeEnabled is True:
             widget = event.source()
+            print(widget)
             
              # If you drag and drop a new command, you actually dragging the complete QListWidget
             if type(widget) is QListWidget:
@@ -3762,6 +3764,21 @@ class ModernMenu(RibbonBar):
                         self.tabBar().setTabToolTip(
                             len(self.categories()) - 1, MenuText
                         )
+        
+        def mouseMoveEvent(self, e, Enabled):
+            if e.buttons() == Qt.MouseButton.LeftButton and Enabled is True:
+                try:
+                    drag = QDrag(self)
+                    mime = QMimeData()
+                    drag.setMimeData(mime)
+                    pixmap = QPixmap(self.size())
+                    self.render(pixmap)
+                    drag.setPixmap(pixmap)
+
+                    drag.exec_(Qt.DropAction.MoveAction)
+                except Exception as e:
+                    print(e)
+        self.tabBar().mouseMoveEvent = lambda e: mouseMoveEvent(self.currentCategory() ,e, self.CustomizeEnabled)
 
         # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(
