@@ -3784,15 +3784,16 @@ class ModernMenu(RibbonBar):
                             len(self.categories()) - 1, MenuText
                         )
         
+        # Override the mousemove event to enable drag for tabs
         def mouseMoveEvent(self, e, Enabled):
             if e.buttons() == Qt.MouseButton.LeftButton and Enabled is True:
                 try:
                     drag = QDrag(self)
                     mime = QMimeData()
                     drag.setMimeData(mime)
-                    pixmap = QPixmap(self.size())
-                    self.render(pixmap)
-                    drag.setPixmap(pixmap)
+                    # pixmap = QPixmap(self.size())
+                    # self.render(pixmap)
+                    # drag.setPixmap(pixmap)
 
                     drag.exec_(Qt.DropAction.MoveAction)
                 except Exception as e:
