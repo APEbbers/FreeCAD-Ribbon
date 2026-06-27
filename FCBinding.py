@@ -1936,8 +1936,7 @@ class ModernMenu(RibbonBar):
                     panel.close()
                 except Exception:
                     pass
-            
-                    
+                                    
         # update the ribbonstructure before writing it to disk
         if "quickAccessCommands" in self.workBenchDict:
             self.ribbonStructure["quickAccessCommands"] = self.workBenchDict["quickAccessCommands"]
@@ -1957,15 +1956,21 @@ class ModernMenu(RibbonBar):
         for WorkBench in self.workBenchDict["workbenches"].keys():
             self.ribbonStructure["workbenches"][WorkBench] == self.workBenchDict["workbenches"][WorkBench]
         
-        # CopyDict = {}
-        # for WorkBench in self.workBenchDict["workbenches"].keys():
-        #     for ToolBar in self.workBenchDict["workbenches"][WorkBench].keys():
-        #         if "commands" in self.workBenchDict["workbenches"][WorkBench][ToolBar]:   
-        #             StandardFunctions.add_keys_nested_dict(CopyDict, ["workbenches", WorkBench, ToolBar])                 
-        #             CopyDict["workbenches"][WorkBench][ToolBar] = self.workBenchDict["workbenches"][WorkBench][ToolBar]
-        # if "workbenches" in CopyDict:
-        #     for WorkBench in CopyDict["workbenches"].keys():
-        #         self.ribbonStructure["workbenches"][WorkBench] == CopyDict["workbenches"][WorkBench]
+        # Store the tab order to FreeCAD
+        OrderString = ""
+        for i in range(self.tabBar().count()):
+            OrderString = OrderString + ","+ self.tabBar().tabData(i)
+        if OrderString.startswith(","):
+            OrderString = OrderString[1:]
+        if OrderString.endswith(","):
+            OrderString = OrderString[:-1]
+        # Store the order for this session
+        Parameters.TAB_ORDER = OrderString
+        # Save the order to the settings for the Ribbon
+        Parameters_Ribbon.Settings.SetStringSetting("TabOrder", OrderString)
+        # Update the FreeCAD order as well
+        WorkbenchOrderParam = "User parameter:BaseApp/Preferences/Workbenches/"
+        App.ParamGet(WorkbenchOrderParam).SetString("Ordered", OrderString)
         
         # Writing to ribbonStructure.json
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
@@ -2700,6 +2705,7 @@ class ModernMenu(RibbonBar):
                     # Move the tab to the new index
                     if point.x() > TL.x() and point.x() < TR.x():
                         self.tabBar().moveTab(self._currentTabIndex, index)
+                                                
              # If you drag and drop a new command, you actually dragging the complete QListWidget
             if type(widget) is QListWidget:
                 position = event.pos()

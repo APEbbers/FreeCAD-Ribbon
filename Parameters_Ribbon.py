@@ -393,9 +393,10 @@ class Parameters:
     # endregion ------------------------------------------------------------------------------------------------------------
 
     # region - Ribbon settings ---------------------------------------------------------------------------------------------
-    WorkbenchOrderParam = "User parameter:BaseApp/Preferences/Workbenches/"
-    TAB_ORDER = str(App.ParamGet(WorkbenchOrderParam).GetString("Ordered"))
-    Settings.SetStringSetting("TabOrder", TAB_ORDER)
+    if Settings.GetStringSetting("TabOrder") == "":
+        TAB_ORDER = str(DefaultSettings["TabOrder"])
+        Settings.SetStringSetting("TabOrder", TAB_ORDER)
+    TAB_ORDER = Settings.GetStringSetting("TabOrder")
 
     if Settings.GetBoolSetting("AutoHideRibbon") is None:
         AUTOHIDE_RIBBON = bool(False)
