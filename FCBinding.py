@@ -2680,8 +2680,26 @@ class ModernMenu(RibbonBar):
     def dragMoveEvent(self, event: QDragMoveEvent):
         if self.CustomizeEnabled is True:
             widget = event.source()
-            print(widget)
             
+            if type(widget) is RibbonNormalCategory:
+                # Get the relative position of the cursor
+                point = QPoint(event.pos().x(), event.pos().y())
+                point = self.tabBar().mapTo(self.tabBar() ,point)
+                
+                # Go through the categories
+                for name, category in self.categories().items():       
+                    # Get the index of the category and its tab rect                                 
+                    index = self.tabBar().indexOf(name)
+                    rect: QRect = self.tabBar().tabRect(index)
+
+                    # Get the top left and top right corner of the tab
+                    TL = self.tabBar().mapTo(self.tabBar() ,rect.topLeft())
+                    TR = self.tabBar().mapTo(self.tabBar() ,rect.topRight())
+                    
+                    # If the cursor is between the left x coordinate and right x coordinate of the tab,
+                    # Move the tab to the new index
+                    if point.x() > TL.x() and point.x() < TR.x():
+                        self.tabBar().moveTab(self._currentTabIndex, index)
              # If you drag and drop a new command, you actually dragging the complete QListWidget
             if type(widget) is QListWidget:
                 position = event.pos()
@@ -3712,6 +3730,7 @@ class ModernMenu(RibbonBar):
 
         # add category for each workbench
         self.tabBar().setAcceptDrops(True)
+        self.tabBar().setMovable(True)
         for i in range(len(WorkbenchOrderedList)):
             for workbenchName, workbench in list(Gui.listWorkbenches().items()):
                 if workbenchName == WorkbenchOrderedList[i]:
