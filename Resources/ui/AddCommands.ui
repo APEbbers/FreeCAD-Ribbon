@@ -924,6 +924,61 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>okButton_2</tabstop>
+  <tabstop>applyButton_2</tabstop>
+  <tabstop>cancelButton_2</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>SearchBar_NP</tabstop>
+  <tabstop>ListCategory_NP</tabstop>
+  <tabstop>CommandsAvailable_NP</tabstop>
+  <tabstop>PanelTitle</tabstop>
+  <tabstop>CreateNewPanel</tabstop>
+  <tabstop>LoadWB</tabstop>
+  <tabstop>okButton</tabstop>
+  <tabstop>applyButton</tabstop>
+  <tabstop>cancelButton</tabstop>
+  <tabstop>HelpButton</tabstop>
+  <tabstop>CustomToolbarSelector_CP</tabstop>
+  <tabstop>RemovePanel_CP</tabstop>
+  <tabstop>WorkbenchList_CP</tabstop>
+  <tabstop>PanelName_CP</tabstop>
+  <tabstop>PanelAvailable_CP</tabstop>
+  <tabstop>AddPanel_CP</tabstop>
+  <tabstop>MoveUpPanelCommand_CP</tabstop>
+  <tabstop>MoveDownPanelCommand_CP</tabstop>
+  <tabstop>PanelSelected_CP</tabstop>
+  <tabstop>AddCustomPanel_CP</tabstop>
+  <tabstop>SearchBar_DDB</tabstop>
+  <tabstop>ListCategory_DDB</tabstop>
+  <tabstop>CommandsAvailable_DDB</tabstop>
+  <tabstop>CommandList_DDB</tabstop>
+  <tabstop>RemoveControl_DDB</tabstop>
+  <tabstop>ControlName_DDB</tabstop>
+  <tabstop>NewControl_DDB</tabstop>
+  <tabstop>AddCommand_DDB</tabstop>
+  <tabstop>RemoveCommand_DDB</tabstop>
+  <tabstop>MoveUpCommand_DDB</tabstop>
+  <tabstop>MoveDownCommand_DDB</tabstop>
+  <tabstop>CreateControl_DDB</tabstop>
+ </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>PanelTitle</sender>
+   <signal>returnPressed()</signal>
+   <receiver>CreateNewPanel</receiver>
+   <slot>animateClick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>663</x>
+     <y>488</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>763</x>
+     <y>485</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

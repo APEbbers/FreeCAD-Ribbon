@@ -1818,11 +1818,16 @@ class ModernMenu(RibbonBar):
                 except Exception:
                     pass
                 continue
-
+            
+            IsRemoved = False
+            for panel in self.RemovedPanels:
+                if panel.objectName() == objPanel.objectName():
+                    IsRemoved = True
+  
             # hide the enable checkboxes and hide the panel if it is unchecked
             titleLayout: QHBoxLayout = objPanel._titleLayout
             EnableControl = titleLayout.itemAt(0).widget()
-            if EnableControl is not None and CloseDialog is True:
+            if EnableControl is not None and CloseDialog is True and IsRemoved is False:
                 if EnableControl.checkState() == Qt.CheckState.Unchecked:
                     # Hide the panel
                     objPanel.hide()
@@ -1941,6 +1946,16 @@ class ModernMenu(RibbonBar):
         
         for WorkBench in self.workBenchDict["workbenches"].keys():
             self.ribbonStructure["workbenches"][WorkBench] == self.workBenchDict["workbenches"][WorkBench]
+        
+        # CopyDict = {}
+        # for WorkBench in self.workBenchDict["workbenches"].keys():
+        #     for ToolBar in self.workBenchDict["workbenches"][WorkBench].keys():
+        #         if "commands" in self.workBenchDict["workbenches"][WorkBench][ToolBar]:   
+        #             StandardFunctions.add_keys_nested_dict(CopyDict, ["workbenches", WorkBench, ToolBar])                 
+        #             CopyDict["workbenches"][WorkBench][ToolBar] = self.workBenchDict["workbenches"][WorkBench][ToolBar]
+        # if "workbenches" in CopyDict:
+        #     for WorkBench in CopyDict["workbenches"].keys():
+        #         self.ribbonStructure["workbenches"][WorkBench] == CopyDict["workbenches"][WorkBench]
         
         # Writing to ribbonStructure.json
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
@@ -5747,19 +5762,31 @@ class ModernMenu(RibbonBar):
             customList = self.List_AddCustomToolBarToWorkbench(workbenchName, panelName, Dict = Dict["customToolbars"])
             allButtons.extend(customList)
 
-        # Add newPanels
+        # # Add newPanels
+        # if panelName.endswith("_newPanel"):
+        #     if workbenchName in Dict["workbenches"]:
+        #         if panelName in Dict["workbenches"][workbenchName]["toolbars"]:
+        #             if "commands" in Dict["workbenches"][workbenchName]["toolbars"][panelName]:
+        #                 for key in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():
+        #                     if key != "order" and key is not None and key != "":
+        #                         button = self.CreateButtonFromCommand(key, ActivateWorkBench=ActivateWorkbench, Dict=Dict)
+        #                         if button is not None:
+        #                             # button.setProperty("CommandName", key)
+        #                             button.setObjectName(key)                                    
+        #                             # button.setToolTip(key)
+        #                             allButtons.append(button)
+        # Add global newPanels
         if panelName.endswith("_newPanel"):
-            if workbenchName in Dict["workbenches"]:
-                if panelName in Dict["workbenches"][workbenchName]["toolbars"]:
-                    if "commands" in Dict["workbenches"][workbenchName]["toolbars"][panelName]:
-                        for key in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():
-                            if key != "order" and key is not None and key != "":
-                                button = self.CreateButtonFromCommand(key, ActivateWorkBench=ActivateWorkbench, Dict=Dict)
-                                if button is not None:
-                                    # button.setProperty("CommandName", key)
-                                    button.setObjectName(key)                                    
-                                    # button.setToolTip(key)
-                                    allButtons.append(button)
+            if workbenchName in Dict["newPanels"]:
+                if panelName in Dict["newPanels"][workbenchName]:
+                    Commands = Dict["newPanels"][workbenchName][panelName]
+                    for CommandItem in Commands:
+                        CommandName = CommandItem[0]
+                        # Create a button
+                        button = self.CreateButtonFromCommand(CommandName, ActivateWorkBench=ActivateWorkbench, Dict=Dict)
+                        if button is not None:
+                            button.setObjectName(CommandName)                                    
+                            allButtons.append(button)
         
         # Add global newPanels
         if panelName.endswith("_newPanel"):
@@ -6467,6 +6494,8 @@ class ModernMenu(RibbonBar):
             if WorkBenchName in self.workBenchDict["newPanels"]:
                 if panel.objectName() in self.workBenchDict["newPanels"][WorkBenchName]:
                     del self.workBenchDict["newPanels"][WorkBenchName][panel.objectName()]
+                if len(self.workBenchDict["newPanels"][WorkBenchName].keys()) == 0:
+                    del self.workBenchDict["newPanels"][WorkBenchName]
             
             ## Remove the panel also from the workbench dict
             if WorkBenchName in self.workBenchDict["workbenches"]:
@@ -6477,12 +6506,19 @@ class ModernMenu(RibbonBar):
                         orderList.remove(panel.objectName())
                     
                     # update the order list
-                    if panel.objectName() in self.workBenchDict["workbenches"][WorkBenchName]:
-                        self.workBenchDict["workbenches"][WorkBenchName][panel.objectName()]["order"] = orderList
+                    self.workBenchDict["workbenches"][WorkBenchName]["order"] = orderList
                 
                 # Remove the panel also from the workbench dict
                 if panel.objectName() in self.workBenchDict["workbenches"][WorkBenchName]["toolbars"]:
-                    self.workBenchDict["workbenches"][WorkBenchName]["toolbars"].pop(panel.objectName())
+                    if "commands" in self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]:
+                        del self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]["commands"]
+                    if "order" in self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]:
+                        del self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]["order"]
+                    if "Enabled" in self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]:
+                        del self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]["Enabled"]
+                    
+                    # self.workBenchDict["workbenches"][WorkBenchName]["toolbars"].pop(panel.objectName())
+                    del self.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel.objectName()]
             
             # Close the panel
             panel.close()

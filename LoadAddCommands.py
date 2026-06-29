@@ -1751,18 +1751,24 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     command = Gui.Command.get(CommandName)
                     if command is not None and len(command.getAction()) == 1:
                         Allow = True
-                if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):      
-                    ListWidget_Commands.addItem(item.clone()) 
+                if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):   
+                    try:   
+                        ListWidget_Commands.addItem(item.clone()) 
+                    except Exception:
+                        pass
             
             # Create a new list with a clone of each of the items
             listWidgetItems_NP = []
             listWidgetItems_DDB = []
-            for i in range(ListWidget_Commands.count()):                            
-                listWidgetItems_NP.append(ListWidget_Commands.item(i).clone())
-                CommandName = ListWidget_Commands.item(i).data(Qt.ItemDataRole.UserRole)
-                command = Gui.Command.get(CommandName)
-                if command is not None and len(command.getAction()) == 1:
-                    listWidgetItems_DDB.append(ListWidget_Commands.item(i).clone())
+            for item in self.listWidgetItems_NP:     
+                try:                       
+                    listWidgetItems_NP.append(item.clone())
+                    CommandName = item.data(Qt.ItemDataRole.UserRole)
+                    command = Gui.Command.get(CommandName)
+                    if command is not None and len(command.getAction()) == 1:
+                        listWidgetItems_DDB.append(item.clone())
+                except Exception:
+                    pass
             # replace the stored listwidget items with the new list                      
             self.listWidgetItems_NP = listWidgetItems_NP
             self.listWidgetItems_DDB = listWidgetItems_DDB
@@ -1961,17 +1967,23 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     if command is not None and len(command.getAction()) == 1:
                         Allow = True
                 if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):      
-                    ListWidget_Commands.addItem(item.clone()) 
+                    try:   
+                        ListWidget_Commands.addItem(item.clone()) 
+                    except Exception:
+                        pass
             
             # Create a new list with a clone of each of the items
             listWidgetItems_NP = []
             listWidgetItems_DDB = []                          
             for item in self.listWidgetItems_NP:                          
-                listWidgetItems_NP.append(item.clone())
-                commandName = item.data(Qt.ItemDataRole.UserRole)
-                command = Gui.Command.get(commandName)
-                if command is not None and len(command.getAction()) == 1:
-                    listWidgetItems_DDB.append(item.clone())
+                try:                       
+                    listWidgetItems_NP.append(item.clone())
+                    CommandName = item.data(Qt.ItemDataRole.UserRole)
+                    command = Gui.Command.get(CommandName)
+                    if command is not None and len(command.getAction()) == 1:
+                        listWidgetItems_DDB.append(item.clone())
+                except Exception:
+                    pass
             # replace the stored listwidget items with the new list                      
             self.listWidgetItems_NP = listWidgetItems_NP
             self.listWidgetItems_DDB = listWidgetItems_DDB
