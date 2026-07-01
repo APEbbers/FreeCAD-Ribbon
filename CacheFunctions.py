@@ -768,20 +768,20 @@ def loadAllWorkbenches(AutoHide=True, HideOnly=False, FinishMessage="", progress
         lst = Gui.listWorkbenches()
         progressBar.setMaximum(len(lst) - 1 + maximum)
         for i, wb in enumerate(lst):
-            msg = (
-                translate("FreeCAD Ribbon", "Loading workbench ")
-                + wb
-                + " ("
-                + str(i + 1)
-                + "/"
-                + str(len(lst))
-                + ")"
-            )
-            print(msg)
-            progressBar.setFormat(msg)
-            progressBar.setValue(i)
-            Gui.updateGui()  # Probably slower with this, because it redraws the entire GUI with all tool buttons changed etc. but allows the label to actually be updated, and it looks nice and gives a quick overview of all the workbenches…
             try:
+                msg = (
+                    translate("FreeCAD Ribbon", "Loading workbench ")
+                    + wb
+                    + " ("
+                    + str(i + 1)
+                    + "/"
+                    + str(len(lst))
+                    + ")"
+                )
+                print(msg)
+                progressBar.setFormat(msg)
+                progressBar.setValue(i)
+                Gui.updateGui()  # Probably slower with this, because it redraws the entire GUI with all tool buttons changed etc. but allows the label to actually be updated, and it looks nice and gives a quick overview of all the workbenches…
                 Gui.activateWorkbench(wb)
                 List_Workbenches.append(wb)
             except Exception:
