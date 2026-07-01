@@ -7213,6 +7213,7 @@ class ModernMenu(RibbonBar):
                 StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
         return True
 
+
     def ConvertRibbonStructure(self, checkFCVersion = True, RestartFreeCAD = False):
         # Define a result parameter
         isConverted = False
@@ -7224,13 +7225,13 @@ class ModernMenu(RibbonBar):
         # If it is the same or newer version, return.
         if checkFCVersion is True:
             if "convertedWithVersion" in self.ribbonStructure:
-                main = self.ribbonStructure["convertedWithVersion"][0]
-                sub = self.ribbonStructure["convertedWithVersion"][1]
-                patch = self.ribbonStructure["convertedWithVersion"][2]
+                Main = self.ribbonStructure["convertedWithVersion"][0]
+                Sub = self.ribbonStructure["convertedWithVersion"][1]
+                Patch = self.ribbonStructure["convertedWithVersion"][2]
                 git_version = self.ribbonStructure["convertedWithVersion"][3]
-                if main >= int(version[0]):
-                    if sub >= int(version[1]):
-                        if patch >= int(version[2]):
+                if Main >= int(version[0]):
+                    if Sub >= int(version[1]):
+                        if Patch >= int(version[2]):
                             if git_version >= int(version[3].split(" ")[0]):
                                 if Parameters.DEBUG_MODE is True:
                                     print("no conversion needed")
@@ -7406,11 +7407,31 @@ class ModernMenu(RibbonBar):
                 "convertedWithVersion",
             ],
         )
+        Main = None
+        Sub = None
+        Patch = None
+        GitVersion = None
+        try:
+            Main = int(version[0])
+        except Exception:
+            Main = version[0]
+        try:
+            Sub = int(version[1])
+        except Exception:
+            Sub = version[1]
+        try:
+            Patch = int(version[2])
+        except Exception:
+            Patch = version[2]
+        try:
+            GitVersion = int(version[3].split(" ")[0])
+        except Exception:
+            GitVersion = version[3].split(" ")[0]
         self.ribbonStructure["convertedWithVersion"] = [
-            int(version[0]),
-            int(version[1]),
-            int(version[2]),
-            int(version[3].split(" ")[0]),
+            Main,
+            Sub,
+            Patch,
+            GitVersion,
         ]
 
         # Update the json file but make also an backup
