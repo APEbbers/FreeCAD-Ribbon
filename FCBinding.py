@@ -7463,15 +7463,16 @@ class EventInspector(QObject):
     dragEntered = False
     widget = None
     pos = None
+    PatchApplicable = True
     
     def __init__(self, parent):
         super(EventInspector, self).__init__(parent)
 
     def eventFilter(self, obj, event: QEvent):
         # This is an alternative drop function which works only with QT6.
-        # It is needed to avoid problems with older Nvidia Cards (Pascal and older) and Wayland
+        # It is needed to avoid problems with older Nvidia Cards (Pascal and older) and Wayland        
         try:       
-            if platform.system() == "Linux":
+            if self.PatchApplicable is True and platform.system() == "Linux":
                 session_id = subprocess.getoutput("env | grep -E -i 'x11|xorg|wayland'").split()[1].split("=")[1]
                 if session_id == "wayland":                                 
                     if self.dragEntered is True and QApplication.mouseButtons().value == 0:
@@ -7512,6 +7513,7 @@ class EventInspector(QObject):
                         
                         return True
         except Exception:
+            self.PatchApplicable = False
             pass
                  
         if event.type() == QEvent.Type.KeyRelease:
