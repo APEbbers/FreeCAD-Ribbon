@@ -2851,7 +2851,8 @@ class ModernMenu(RibbonBar):
         if widget is None:
             widget = event.source()
         if widget is None:
-            print("drop exited")
+            if Parameters.DEBUG_MODE:
+                print("drop exited")
             return
         
         # Define a parent
@@ -2877,8 +2878,7 @@ class ModernMenu(RibbonBar):
                         Size = "medium"
                     if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  == 0 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 1 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
                         Size = "large"
-                    
-                    print(f"drop panels: {self.dropPanelName}")
+
                     for panelName, panel in currentCategory.panels().items():
                         # If the panelName is equal to the panel name on which the command is dropped, continue.                        
                         if panelName == self.dropPanelName and panel not in self.RemovedPanels:
@@ -7477,7 +7477,8 @@ class EventInspector(QObject):
                 if session_id == "wayland":                                 
                     if self.dragEntered is True and QApplication.mouseButtons().value == 0:
                         self.dragEntered = False
-                        print("Alternative drop event")
+                        if Parameters.DEBUG_MODE:
+                            print("Wayland patch: Alternative drop event")
                         
                         # Get the main window and the ribbon
                         mw = Gui.getMainWindow()
@@ -7488,29 +7489,18 @@ class EventInspector(QObject):
                             self.pos = None
                             self.dragEntered
                         return QObject.eventFilter(self, obj, event)
-                    
-                    if event.type() == QEvent.Type.Drop or event.type() == QEvent.Type.GraphicsSceneDrop:
-                        print("drop")
-                        return True
                         
                     # Show the mainwindow after the application is activated
                     if event.type() == QEvent.Type.DragEnter:
                         if self.dragEntered is False:                
                             if self.widget is None:
-                                print("drag enter")
+                                if Parameters.DEBUG_MODE:
+                                    print("Wayland patch: drag entered")
                                 self.dragEntered = True
                                 self.widget = event.source()
                                 # self.widget = self.widget.parent()
                                 self.pos= event.source().pos()
-                                event.accept()
-                    # if event.type() == QEvent.Type.DragLeave:
-                    #     print("drag left")
-                    #     if self.widget is not None:
-                    #         self.widget = None
-                    #         self.pos = None
-                    #         self.dragEntered = False
-                    #     event.accept()
-                        
+                                event.accept()                        
                         return True
         except Exception:
             self.PatchApplicable = False
