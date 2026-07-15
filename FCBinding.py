@@ -167,7 +167,6 @@ sys.path.append(pathBackup)
 
 translate = App.Qt.translate
 
-import pyqtribbon_local
 import pyqtribbon_local as pyqtribbon
 from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonBar, RibbonTitleWidget, RibbonApplicationButton
 from pyqtribbon_local.panel import RibbonPanel, RibbonPanelItemWidget, RibbonPanelTitle
@@ -2623,7 +2622,7 @@ class ModernMenu(RibbonBar):
     AddCommand_Icon = None
     AddCommand_Text = ""
     
-    def dragEnterEvent(self, event: QDragEnterEvent):         
+    def dragEnterEvent(self, event: QDragEnterEvent):  
         if self.CustomizeEnabled is True:
             if self.dragIndicator_QuickAccess is None:
                 self.dragIndicator_QuickAccess = DragTargetIndicator(orientation="right")
@@ -2648,8 +2647,9 @@ class ModernMenu(RibbonBar):
                     except Exception:
                         pass
                     parent = parent.parent()
+                    panel.setAcceptDrops(True)
                     if type(parent) is RibbonPanel:
-                        panel = parent
+                        panel = parent                        
                         break
                     count = count + 1
                 except Exception:
@@ -2659,11 +2659,9 @@ class ModernMenu(RibbonBar):
             if len(panel.widgets()) <= 2 and type(widget) is not RibbonPanel and panel.findChild(QWidget, "ExtraSpacer") is not None:
                 event.ignore()
             else:
-                self.dropPanel = panel
-                event.acceptProposedAction()
-                event.setAccepted(True)
+                # self.dropPanel = panel
                 event.accept()
-        return
+        return True
                        
     def dragLeaveEvent(self, event: QDragLeaveEvent):
         if self.CustomizeEnabled is True:
@@ -2673,7 +2671,7 @@ class ModernMenu(RibbonBar):
             self.dragIndicator_QuickAccess.close()
             self.target = None
             self.targetPanel = None
-            self.dropPanelName = None
+            # self.dropPanelName = None
             
             # Enable all buttons, so you can access them with a right click
             self.actionList = []
@@ -2716,7 +2714,9 @@ class ModernMenu(RibbonBar):
                     xMax = xMin + panel.rect().width()
                     
                     if position.x() >= xMin and position.x() < xMax:
-                        self.dropPanelName = panelName
+                        if self.dropPanelName == "" or self.dropPanelName != panelName:
+                            self.dropPanelName = panelName
+                        # self.dropPanel = panel
 
             # If the widget is not a panel, continue here
             if type(widget) is not RibbonPanel  and type(widget) is not QListWidget:
@@ -2842,12 +2842,15 @@ class ModernMenu(RibbonBar):
             event.acceptProposedAction()
             event.setAccepted(True)
             event.accept()
-        return
+        return True
   
-    def dropEvent(self, event:QDropEvent, widget = None):        
+    def dropEvent(self, event:QDropEvent=None, widget = None):   
         # Get the widget
         if widget is None:
             widget = event.source()
+        if widget is None:
+            print("drop exited")
+            return
         
         # Define a parent
         parent = widget.parent()
@@ -2872,8 +2875,9 @@ class ModernMenu(RibbonBar):
                     if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  == 0 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 1 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
                         Size = "large"
                     
+                    print(f"drop panels: {self.dropPanelName}")
                     for panelName, panel in currentCategory.panels().items():
-                        # If the panelName is equal to the panel name on which the command is dropped, continue.
+                        # If the panelName is equal to the panel name on which the command is dropped, continue.                        
                         if panelName == self.dropPanelName and panel not in self.RemovedPanels:
                             # Get the command to be added
                             ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
@@ -2945,7 +2949,7 @@ class ModernMenu(RibbonBar):
                             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                             # Create a new panel with the extra command
                             newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict, UpdateDict=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand, ActivateButtons=True)
-                                                    
+                                                 
                             # Add the panel to the list with long panels
                             if newPanel is not None:
                                 if newPanel.panelOptionButton().isVisible():
@@ -2965,7 +2969,11 @@ class ModernMenu(RibbonBar):
                                 # Enable all buttons, so you can access them with a right click
                                 self.activateButtons()
                                 
-                                event.accept()
+                                if event is not None:
+                                    event.accept()
+                                
+                                self.dropPanelName = ""
+                                self.dropPanel.close()
                                 return
                 except Exception as e:
                     if Parameters.DEBUG_MODE:
@@ -3021,7 +3029,8 @@ class ModernMenu(RibbonBar):
                     # Enable all buttons, so you can access them with a right click
                     self.activateButtons()
                     
-                    event.accept()
+                    if event is not None:
+                        event.accept()
                 except Exception as e:
                     if Parameters.DEBUG_MODE:
                         print(e.with_traceback(e.__traceback__))
@@ -3203,7 +3212,8 @@ class ModernMenu(RibbonBar):
                         # Enable all buttons, so you can access them with a right click
                         self.activateButtons()
                         
-                        event.accept()
+                        if event is not None:
+                            event.accept()
                         return
 
                 if QuickAccessToolBar.objectName() == "quickAccessToolBar":
@@ -3242,7 +3252,8 @@ class ModernMenu(RibbonBar):
                 # Enable all buttons, so you can access them with a right click
                 self.activateButtons()
 
-                event.accept()
+                if event is not None:
+                    event.accept()
                 return
             except Exception as e:
                 if Parameters.DEBUG_MODE:
@@ -3311,8 +3322,9 @@ class ModernMenu(RibbonBar):
                     print(e.with_traceback(e.__traceback__))
                     return
                            
-        event.accept()
-        return
+        if event is not None:
+            event.accept()
+        return True
 
 
     def find_drop_location(self, event, panel=None):
@@ -6961,8 +6973,7 @@ class ModernMenu(RibbonBar):
                         subAction.setEnabled(True)                
                 except Exception:
                     pass
-                child.setEnabled(True)
-            # Gui.updateGui()
+                child.setEnabled(True)                
         return
     
     def BuildQuickToolbar(self, ButtonList = []):
@@ -7213,7 +7224,6 @@ class ModernMenu(RibbonBar):
                 StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
         return True
 
-
     def ConvertRibbonStructure(self, checkFCVersion = True, RestartFreeCAD = False):
         # Define a result parameter
         isConverted = False
@@ -7225,13 +7235,13 @@ class ModernMenu(RibbonBar):
         # If it is the same or newer version, return.
         if checkFCVersion is True:
             if "convertedWithVersion" in self.ribbonStructure:
-                Main = self.ribbonStructure["convertedWithVersion"][0]
-                Sub = self.ribbonStructure["convertedWithVersion"][1]
-                Patch = self.ribbonStructure["convertedWithVersion"][2]
+                main = self.ribbonStructure["convertedWithVersion"][0]
+                sub = self.ribbonStructure["convertedWithVersion"][1]
+                patch = self.ribbonStructure["convertedWithVersion"][2]
                 git_version = self.ribbonStructure["convertedWithVersion"][3]
-                if Main >= int(version[0]):
-                    if Sub >= int(version[1]):
-                        if Patch >= int(version[2]):
+                if main >= int(version[0]):
+                    if sub >= int(version[1]):
+                        if patch >= int(version[2]):
                             if git_version >= int(version[3].split(" ")[0]):
                                 if Parameters.DEBUG_MODE is True:
                                     print("no conversion needed")
@@ -7407,31 +7417,11 @@ class ModernMenu(RibbonBar):
                 "convertedWithVersion",
             ],
         )
-        Main = None
-        Sub = None
-        Patch = None
-        GitVersion = None
-        try:
-            Main = int(version[0])
-        except Exception:
-            Main = version[0]
-        try:
-            Sub = int(version[1])
-        except Exception:
-            Sub = version[1]
-        try:
-            Patch = int(version[2])
-        except Exception:
-            Patch = version[2]
-        try:
-            GitVersion = int(version[3].split(" ")[0])
-        except Exception:
-            GitVersion = version[3].split(" ")[0]
         self.ribbonStructure["convertedWithVersion"] = [
-            Main,
-            Sub,
-            Patch,
-            GitVersion,
+            int(version[0]),
+            int(version[1]),
+            int(version[2]),
+            int(version[3].split(" ")[0]),
         ]
 
         # Update the json file but make also an backup
@@ -7467,10 +7457,57 @@ class ModernMenu(RibbonBar):
     # endregion
 
 class EventInspector(QObject):
+    dragEntered = False
+    widget = None
+    pos = None
+    
     def __init__(self, parent):
         super(EventInspector, self).__init__(parent)
 
-    def eventFilter(self, obj, event: QEvent):                
+    def eventFilter(self, obj, event: QEvent):
+        # This is an alternative drop function which works only with QT6.
+        # It is needed to avoid problems with older Nvidia Cards (Pascal and older) and Wayland
+        try:
+            if self.dragEntered is True and QApplication.mouseButtons().value == 0:
+                self.dragEntered = False
+                print("Alternative drop event")
+                
+                # Get the main window and the ribbon
+                mw = Gui.getMainWindow()
+                RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+                if RibbonBar.dropPanelName != "":
+                    RibbonBar.dropEvent(widget=self.widget)
+                    self.widget = None
+                    self.pos = None
+                    self.dragEntered
+                return QObject.eventFilter(self, obj, event)
+            
+            if event.type() == QEvent.Type.Drop or event.type() == QEvent.Type.GraphicsSceneDrop:
+                print("drop")
+                return True
+                
+            # Show the mainwindow after the application is activated
+            if event.type() == QEvent.Type.DragEnter:
+                if self.dragEntered is False:                
+                    if self.widget is None:
+                        print("drag enter")
+                        self.dragEntered = True
+                        self.widget = event.source()
+                        # self.widget = self.widget.parent()
+                        self.pos= event.source().pos()
+                        event.accept()
+            # if event.type() == QEvent.Type.DragLeave:
+            #     print("drag left")
+            #     if self.widget is not None:
+            #         self.widget = None
+            #         self.pos = None
+            #         self.dragEntered = False
+            #     event.accept()
+                
+                return True
+        except Exception:
+            pass
+                 
         if event.type() == QEvent.Type.KeyRelease:
             try:
                 # Get the main window and the ribbon
