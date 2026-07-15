@@ -24,6 +24,7 @@ import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
 import traceback
+import subprocess
 
 from PySide.QtGui import (
     QDragEnterEvent,
@@ -2681,6 +2682,7 @@ class ModernMenu(RibbonBar):
         return
      
     def dragMoveEvent(self, event: QDragMoveEvent):
+        
         if self.CustomizeEnabled is True:
             widget = event.source()
             
@@ -2863,6 +2865,7 @@ class ModernMenu(RibbonBar):
         #
         # If you drag and drop a new command, you actually dragging the complete QListWidget with the sekected item as current item
         if type(widget) is QListWidget:
+            # print(type(widget))
             # Add buttons to panels
             if self.quickAccessToolBar().underMouse() is False:
                 try:
@@ -7467,44 +7470,47 @@ class EventInspector(QObject):
     def eventFilter(self, obj, event: QEvent):
         # This is an alternative drop function which works only with QT6.
         # It is needed to avoid problems with older Nvidia Cards (Pascal and older) and Wayland
-        try:
-            if self.dragEntered is True and QApplication.mouseButtons().value == 0:
-                self.dragEntered = False
-                print("Alternative drop event")
-                
-                # Get the main window and the ribbon
-                mw = Gui.getMainWindow()
-                RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
-                if RibbonBar.dropPanelName != "":
-                    RibbonBar.dropEvent(widget=self.widget)
-                    self.widget = None
-                    self.pos = None
-                    self.dragEntered
-                return QObject.eventFilter(self, obj, event)
-            
-            if event.type() == QEvent.Type.Drop or event.type() == QEvent.Type.GraphicsSceneDrop:
-                print("drop")
-                return True
-                
-            # Show the mainwindow after the application is activated
-            if event.type() == QEvent.Type.DragEnter:
-                if self.dragEntered is False:                
-                    if self.widget is None:
-                        print("drag enter")
-                        self.dragEntered = True
-                        self.widget = event.source()
-                        # self.widget = self.widget.parent()
-                        self.pos= event.source().pos()
-                        event.accept()
-            # if event.type() == QEvent.Type.DragLeave:
-            #     print("drag left")
-            #     if self.widget is not None:
-            #         self.widget = None
-            #         self.pos = None
-            #         self.dragEntered = False
-            #     event.accept()
-                
-                return True
+        try:       
+            if platform.system() == "Linux":
+                session_id = subprocess.getoutput("env | grep -E -i 'x11|xorg|wayland'").split()[1].split("=")[1]
+                if session_id == "wayland":                                 
+                    if self.dragEntered is True and QApplication.mouseButtons().value == 0:
+                        self.dragEntered = False
+                        print("Alternative drop event")
+                        
+                        # Get the main window and the ribbon
+                        mw = Gui.getMainWindow()
+                        RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+                        if RibbonBar.dropPanelName != "":
+                            RibbonBar.dropEvent(widget=self.widget)
+                            self.widget = None
+                            self.pos = None
+                            self.dragEntered
+                        return QObject.eventFilter(self, obj, event)
+                    
+                    if event.type() == QEvent.Type.Drop or event.type() == QEvent.Type.GraphicsSceneDrop:
+                        print("drop")
+                        return True
+                        
+                    # Show the mainwindow after the application is activated
+                    if event.type() == QEvent.Type.DragEnter:
+                        if self.dragEntered is False:                
+                            if self.widget is None:
+                                print("drag enter")
+                                self.dragEntered = True
+                                self.widget = event.source()
+                                # self.widget = self.widget.parent()
+                                self.pos= event.source().pos()
+                                event.accept()
+                    # if event.type() == QEvent.Type.DragLeave:
+                    #     print("drag left")
+                    #     if self.widget is not None:
+                    #         self.widget = None
+                    #         self.pos = None
+                    #         self.dragEntered = False
+                    #     event.accept()
+                        
+                        return True
         except Exception:
             pass
                  
