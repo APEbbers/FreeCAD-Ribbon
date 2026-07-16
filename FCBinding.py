@@ -2633,6 +2633,7 @@ class ModernMenu(RibbonBar):
     target = None
     targetPanel = None
     StartPositionDrag = None
+    SuspendBuildPanels = False
     #
     # AddCommands
     dropPanel = None
@@ -2703,7 +2704,8 @@ class ModernMenu(RibbonBar):
         if self.CustomizeEnabled is True:
             widget = event.source()
             
-            if type(widget) is RibbonNormalCategory:
+            if type(widget) is RibbonNormalCategory:                
+                self.SuspendBuildPanels = True
                 # Get the relative position of the cursor
                 point = QPoint(event.pos().x(), event.pos().y())
                 point = self.tabBar().mapTo(self.tabBar() ,point)
@@ -2722,7 +2724,9 @@ class ModernMenu(RibbonBar):
                     # Move the tab to the new index
                     if point.x() > TL.x() and point.x() < TR.x():
                         self.tabBar().moveTab(self._currentTabIndex, index)
-                                                
+                        break
+
+            self.SuspendBuildPanels = False
              # If you drag and drop a new command, you actually dragging the complete QListWidget
             if type(widget) is QListWidget:
                 position = event.pos()
@@ -3487,7 +3491,7 @@ class ModernMenu(RibbonBar):
         if tabName is not None and tabName != "" and tabName != "test":
             # activate selected workbench
             tabName = tabName.replace("&", "")
-            if self.wbNameMapping[tabName] is not None:                
+            if self.wbNameMapping[tabName] is not None and self.SuspendBuildPanels is False:                
                 Gui.activateWorkbench(self.wbNameMapping[tabName])
 
             if tabActivated is True:
@@ -3497,7 +3501,7 @@ class ModernMenu(RibbonBar):
         # hide normal toolbars
         self.hideClassicToolbars()
         
-        if self.CustomizeEnabled:
+        if self.CustomizeEnabled and self.SuspendBuildPanels is False:
             self.on_Customize_Clicked()
             # Activate all commands
             self.activateButtons()
@@ -3580,13 +3584,13 @@ class ModernMenu(RibbonBar):
         # Otherwise, the sketcher workbench won;t be loaded properly the first time
         if self.CustomizeEnabled is False: 
             self.buildPanels()
-        if self.CustomizeEnabled:
+        if self.CustomizeEnabled and self.SuspendBuildPanels is False:
             self.buildPanels(Dict=self.workBenchDict, UpdateDict=False)
         
         # hide normal toolbars
         self.hideClassicToolbars()
         
-        if self.CustomizeEnabled:
+        if self.CustomizeEnabled and self.SuspendBuildPanels is False:
             self.on_Customize_Clicked()
             # If not activated, activate all buttons    
             self.activateButtons() 
@@ -3607,7 +3611,7 @@ class ModernMenu(RibbonBar):
         # hide normal toolbars
         self.hideClassicToolbars()
                             
-        if self.CustomizeEnabled:
+        if self.CustomizeEnabled and self.SuspendBuildPanels is False:
             # If not activated, activate all buttons    
             self.activateButtons() 
         return
@@ -3622,7 +3626,7 @@ class ModernMenu(RibbonBar):
             self.connectSignals()
         self.ApplicationMenus()
         
-        if self.CustomizeEnabled:
+        if self.CustomizeEnabled and self.SuspendBuildPanels is False:
             # If not activated, activate all buttons    
             self.activateButtons() 
 
