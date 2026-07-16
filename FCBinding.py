@@ -2147,6 +2147,24 @@ class ModernMenu(RibbonBar):
         for commandName in self.ribbonStructure["quickAccessCommands"]:
             button = self.CreateToolBarButtonFromCommand(commandName=commandName)
             self.addQuickAccessButton(button)
+            
+        # Restore the tab order
+        #
+        # Get the original order
+        WorkbenchOrderedList: list = Parameters.TAB_ORDER.split(",")
+        # Go through the tabs
+        for i in range(self.tabBar().count()):
+            # Get the tabName (Workbench)
+            tabName = self.tabBar().tabData(i)
+            # Get the original index
+            originalIndex = WorkbenchOrderedList.index(tabName) - 1
+            # If the original index is not equal to the tab index, it has moved
+            if i != originalIndex:
+                # Move the tab to the original positions
+                self.tabBar().moveTab(i, originalIndex)
+                if Parameters.DEBUG_MODE:
+                    print(f"original index of {tabName} is {originalIndex} instead of {i}")
+                
                                            
         # Clear the workbench dict
         self.workBenchDict.clear()
@@ -2682,7 +2700,6 @@ class ModernMenu(RibbonBar):
         return
      
     def dragMoveEvent(self, event: QDragMoveEvent):
-        
         if self.CustomizeEnabled is True:
             widget = event.source()
             
@@ -3329,7 +3346,6 @@ class ModernMenu(RibbonBar):
             event.accept()
         return True
 
-
     def find_drop_location(self, event, panel=None):
         """
         Determines the drop location in a grid layout based on the position of a drag-and-drop event.
@@ -3748,6 +3764,7 @@ class ModernMenu(RibbonBar):
             if WorkbenchOrderedList[i] != "":
                 param_string = param_string + "," + WorkbenchOrderedList[i]
         Parameters_Ribbon.Settings.SetStringSetting("TabOrder", param_string)
+        Parameters.TAB_ORDER = param_string
 
         # add category for each workbench
         self.tabBar().setAcceptDrops(True)
