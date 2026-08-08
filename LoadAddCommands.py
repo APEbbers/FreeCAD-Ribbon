@@ -528,7 +528,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         TimeStamp = Parameters_Ribbon.Settings.GetStringSetting("ReloadTimeStamp")
         if TimeStamp != "":
             try:
-                date_format = "%m, %d, %Y, %H:%M:%S"
+                date_format = "%m-%d-%Y, %H:%M:%S"
                 lastDate = datetime.strptime(TimeStamp, date_format)
                 deltaDate: timedelta = datetime.now()-lastDate
                 deltaDict = StandardFunctions.TimeDeltaToDict(deltaDate)

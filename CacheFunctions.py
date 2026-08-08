@@ -500,7 +500,7 @@ def CreateCache(RestartFreeCAD=False):
     outfile.close()
 
     # Write a time stamp to preferences
-    TimeStamp = datetime.now().strftime("%m, %d, %Y, %H:%M:%S")
+    TimeStamp = datetime.now().strftime("%m-%d-%Y, %H:%M:%S")
     Parameters_Ribbon.Settings.SetStringSetting("ReloadTimeStamp", TimeStamp)
 
     if RestartFreeCAD is True:
