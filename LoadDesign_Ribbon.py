@@ -408,7 +408,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 delta_days = deltaDict['days']
                 delta_hours = deltaDict['hours']
                 delta_minutes= deltaDict['minutes']
-                # Set the message    
+                # Set the message
+                TimeStamp = datetime.strftime(lastDate, "%B %d, %Y, %H:%M:%S")
                 self.form.TimeStamp_Reloaded.setText(translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}. This is {delta_days} days, {delta_hours} hour(s) and {delta_minutes} minutes ago."))    
             except Exception:
                 pass
