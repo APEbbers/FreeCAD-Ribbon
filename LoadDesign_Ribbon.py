@@ -399,7 +399,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Create the a message to indicate when the last time the data was (re)created.
         TimeStamp = Parameters_Ribbon.Settings.GetStringSetting("ReloadTimeStamp")
         if TimeStamp != "":
-            date_format = "%B %d, %Y, %H:%M:%S"
+            date_format = "%Y-%m-%d %H:%M:%S"
             lastDate = datetime.strptime(TimeStamp, date_format)
             deltaDate: timedelta = datetime.now()-lastDate
             deltaDict = StandardFunctions.TimeDeltaToDict(deltaDate)
