@@ -515,16 +515,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
         # --- Form controls ------------------
         #
-        # Connect the reload button
-        self.form.LoadWB.connect(
-            self.form.LoadWB, SIGNAL("clicked()"), self.on_ReloadWB_clicked
-        )
-        # Set the icon and size for the refresh button
-        self.form.LoadWB.heightForWidth(1)
-        self.form.LoadWB.setIcon(Gui.getIcon("view-refresh"))
-        self.form.LoadWB.setIconSize(QSize(20, 20))
-        
-        # Create the a message to indicate when the last time the data was (re)created.
+        # Connect the reload button# Create the a message to indicate when the last time the data was (re)created.
         TimeStamp = Parameters_Ribbon.Settings.GetStringSetting("ReloadTimeStamp")
         if TimeStamp != "":
             date_format = "%B %d, %Y, %H:%M:%S"
@@ -537,6 +528,34 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             delta_minutes= deltaDict['minutes']
             # Set the message    
             self.form.TimeStamp_Reloaded.setText(translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}. This is {delta_days} days, {delta_hours} hour(s) and {delta_minutes} minutes ago."))
+        else:
+            TimeStamp = "-"
+            self.form.TimeStamp_Reloaded.setText(translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}."))
+        self.form.LoadWB.connect(
+            self.form.LoadWB, SIGNAL("clicked()"), self.on_ReloadWB_clicked
+        )
+        # Set the icon and size for the refresh button
+        self.form.LoadWB.heightForWidth(1)
+        self.form.LoadWB.setIcon(Gui.getIcon("view-refresh"))
+        self.form.LoadWB.setIconSize(QSize(20, 20))
+        
+        # Create the a message to indicate when the last time the data was (re)created.
+        TimeStamp = Parameters_Ribbon.Settings.GetStringSetting("ReloadTimeStamp")
+        if TimeStamp != "":
+            try:
+                date_format = "%m-%d-%Y, %H:%M:%S"
+                lastDate = datetime.strptime(TimeStamp, date_format)
+                deltaDate: timedelta = datetime.now()-lastDate
+                deltaDict = StandardFunctions.TimeDeltaToDict(deltaDate)
+                # Get the separate values
+                delta_days = deltaDict['days']
+                delta_hours = deltaDict['hours']
+                delta_minutes= deltaDict['minutes']
+                # Set the message    
+                TimeStamp = datetime.strftime(lastDate, "%B %d, %Y, %H:%M:%S")
+                self.form.TimeStamp_Reloaded.setText(translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}. This is {delta_days} days, {delta_hours} hour(s) and {delta_minutes} minutes ago."))
+            except Exception:
+                pass
         else:
             TimeStamp = "-"
             self.form.TimeStamp_Reloaded.setText(translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}."))
