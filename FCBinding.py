@@ -4801,7 +4801,6 @@ class ModernMenu(RibbonBar):
         return
 
     def on_ToggleBetaFunctions_toggled(self):
-        print("beta toggled")
         if Parameters.BETA_FUNCTIONS_ENABLED is False:
             # Write the parameter
             Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", True)
