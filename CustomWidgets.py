@@ -2185,6 +2185,9 @@ class CheckBoxAction(QWidgetAction):
         label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         layout.addWidget(self.checkbox)
         layout.addWidget(label)
+        spacer = QWidget()
+        spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        layout.addWidget(spacer)
         self.widget.setLayout(layout)
         
         self.setCheckable(True)

@@ -3917,8 +3917,7 @@ class ModernMenu(RibbonBar):
         # Otherwise the button will be removed when using the context menus for the buttons
         def LoadBetaButton():
             # Add a switch to enable beta functions            
-            switch = ToggleAction(self, "Enable béta functions", Parameters.BETA_FUNCTIONS_ENABLED)
-            switch.setFixedSize(40, 20)
+            switch = CheckBoxAction(self, "Enable béta functions")
             switch.setObjectName("bétaSwitch")
             toolTipText = (translate("FreeCAD Ribbon",
         """
@@ -3955,7 +3954,7 @@ class ModernMenu(RibbonBar):
             
             # if present remove the old switch
             for action in SettingsMenu.actions():
-                if type(action) is ToggleAction:
+                if type(action) is CheckBoxAction:
                     SettingsMenu.removeAction(action)
             # Now added to the settings menu
             SettingsMenu.addAction(switch)
