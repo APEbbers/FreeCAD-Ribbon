@@ -2117,7 +2117,7 @@ class ToggleAction(QWidgetAction):
     checkState = Toggle.checkState()
     focusPolicy = Toggle.focusPolicy()
     
-    def __init__(self, parent, text, checked):
+    def __init__(self, parent, text):
         super(ToggleAction, self).__init__(parent)
         layout = QHBoxLayout()
         self.widget = QWidget()
@@ -2125,11 +2125,7 @@ class ToggleAction(QWidgetAction):
         label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         layout.addWidget(self.Toggle)
         layout.addWidget(label)
-        self.widget.setLayout(layout)
-        if checked is None:
-            checked = False
-        self.Toggle.setChecked(checked)
-        
+        self.widget.setLayout(layout)        
         self.setCheckable(True)
         self.setDefaultWidget(self.widget)
         return
