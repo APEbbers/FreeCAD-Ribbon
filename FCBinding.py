@@ -93,7 +93,8 @@ from PySide.QtWidgets import (
     QListWidget,
     QListWidgetItem,
     QAbstractButton,
-    QStackedWidget,
+    QStackedWidget,    
+    QStyleOptionTab,
 )
 from PySide.QtCore import (
     Qt,
@@ -112,7 +113,7 @@ from PySide.QtCore import (
     QSettings,
     QSignalBlocker,
     QMimeData,
-    QEventLoop,      
+    QEventLoop,          
 )
 from CustomWidgets import (
     CustomControls, 
@@ -363,9 +364,10 @@ class ModernMenu(RibbonBar):
 
         # Enable dragdrop
         self.setAcceptDrops(True)
+                
         self.tabBar().setAcceptDrops(True)
         self._titleWidget.quickAccessToolBar().setAcceptDrops(True)
-                        
+
         # connect the signals
         self.connectSignals()
 
@@ -1321,7 +1323,8 @@ class ModernMenu(RibbonBar):
                         if textVisible is None:
                             textVisible = False                                    
                         # set the checkbox for enabling text
-                        RibbonButtonAction_Text = ToggleAction(self, translate("FreeCAD Ribbon", "Show button text"), textVisible)
+                        RibbonButtonAction_Text = ToggleAction(self, translate("FreeCAD Ribbon", "Show button text"))
+                        RibbonButtonAction_Text.setChecked(textVisible)
                         RibbonButtonAction_Text.setText(translate("FreeCAD Ribbon", "Show button text"))
                         # Set the checkbox action checked or unchecked
                         RibbonButtonAction_Text.setChecked(textVisible)
@@ -3841,6 +3844,21 @@ class ModernMenu(RibbonBar):
                 except Exception as e:
                     print(e)
         self.tabBar().mouseMoveEvent = lambda e: mouseMoveEvent(self.currentCategory() ,e, self.CustomizeEnabled)
+        
+        
+        # def paintEvent(self, e):
+        #     painter = QStylePainter(self)
+        #     painter.begin()
+        #     pen = QPen()
+        #     pen.setColor(QColor(Qt.GlobalColor.red))
+        #     pen.setWidth(3)
+        #     painter.setPen(pen)
+            
+        #     p1 = QCursor.pos()
+        #     p2 = QPoint(p1.x(), p1.y() + 20)
+        #     painter.drawLine(QPoint(p1), QPoint(p2))
+            
+        # self.tabBar().paintEvent = lambda e: paintEvent(self.currentCategory(), e)
 
         # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(
@@ -4005,8 +4023,9 @@ class ModernMenu(RibbonBar):
         # Otherwise the button will be removed when using the context menus for the buttons
         def LoadBetaButton():
             # Add a switch to enable beta functions            
-            switch = ToggleAction(self, "Enable béta functions", Parameters.BETA_FUNCTIONS_ENABLED)
-            switch.setFixedSize(40, 20)
+            switch = CheckBoxAction(self, "Enable béta functions")
+            switch.setChecked(Parameters.BETA_FUNCTIONS_ENABLED)
+            # switch.setFixedSize(50, 30)
             switch.setObjectName("bétaSwitch")
             toolTipText = (translate("FreeCAD Ribbon",
         """
@@ -4030,20 +4049,20 @@ class ModernMenu(RibbonBar):
         """
         ))
             switch.setToolTip(toolTipText)
-            switch.checkStateChanged.connect(
-                lambda: self.on_ToggleBetaFunctions_toggled(switch.isChecked())
-            )       
+            switch.checkStateChanged.connect(self.on_ToggleBetaFunctions_toggled)       
             
             if Parameters.BETA_FUNCTIONS_ENABLED is True:
                 self.BetaFunctionsEnabled = True
+                switch.setCheckState(Qt.CheckState.Checked)
                 switch.setChecked(True)
             else:
                 self.BetaFunctionsEnabled = False   
+                switch.setCheckState(Qt.CheckState.Unchecked)
                 switch.setChecked(False)            
             
             # if present remove the old switch
             for action in SettingsMenu.actions():
-                if type(action) is ToggleAction:
+                if type(action) is CheckBoxAction:
                     SettingsMenu.removeAction(action)
             # Now added to the settings menu
             SettingsMenu.addAction(switch)
@@ -4781,10 +4800,9 @@ class ModernMenu(RibbonBar):
             ScrollButton.click()
         return
 
-    def on_ToggleBetaFunctions_toggled(self, switchStatus):
-        # Store the status
-        self.BetaFunctionsEnabled = switchStatus
-        if switchStatus is True:
+    def on_ToggleBetaFunctions_toggled(self):
+        print("beta toggled")
+        if Parameters.BETA_FUNCTIONS_ENABLED is False:
             # Write the parameter
             Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", True)
             # print a message
@@ -4805,12 +4823,18 @@ class ModernMenu(RibbonBar):
             BackupFile = os.path.join(pathBackup, BackupName)
             # Copy the file
             shutil.copy(JsonFile, BackupFile)
-        if switchStatus is False:
+            # Store the status
+            self.BetaFunctionsEnabled = Parameters.BETA_FUNCTIONS_ENABLED
+            return
+        if Parameters.BETA_FUNCTIONS_ENABLED is True:
             # Write the parameter
             Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", False)
             # print a message
             print(translate("FreeCAD Ribbon", "Ribbon UI: Béta functions disabled"))
             Parameters.BETA_FUNCTIONS_ENABLED = False
+            # Store the status
+            self.BetaFunctionsEnabled = Parameters.BETA_FUNCTIONS_ENABLED
+            return
         return
 
     # endregion

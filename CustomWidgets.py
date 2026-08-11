@@ -1923,8 +1923,7 @@ class RightToolButton(QToolButton):
 
                 drag.exec_(Qt.DropAction.MoveAction)
             except Exception as e:
-                print(e)
-                
+                print(e)      
                 
 class Toggle(QCheckBox):
 
@@ -2116,6 +2115,7 @@ class ToggleAction(QWidgetAction):
         
     checkStateChanged = Toggle.stateChanged
     checkState = Toggle.checkState()
+    focusPolicy = Toggle.focusPolicy()
     
     def __init__(self, parent, text, checked):
         super(ToggleAction, self).__init__(parent)
@@ -2170,6 +2170,11 @@ class ToggleAction(QWidgetAction):
     def setFixedSize(self, w, h):
         self.Toggle.setFixedSize(w, h)
         return
+    
+    def setFocusPolicy(self, policy: Qt.FocusPolicy):
+        self.setFocusPolicy(policy)
+        self.focusPolicy = policy
+        return
  
 class CheckBoxAction(QWidgetAction):
     checkbox = QCheckBox()
@@ -2185,6 +2190,9 @@ class CheckBoxAction(QWidgetAction):
         label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         layout.addWidget(self.checkbox)
         layout.addWidget(label)
+        spacer = QWidget()
+        spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        layout.addWidget(spacer)
         self.widget.setLayout(layout)
         
         self.setCheckable(True)
