@@ -427,7 +427,7 @@ class CustomControls(RibbonToolButton):
             # Change the background color for commandbutton and label on hovering (CSS)
             def enterEventCustom(event):               
                 BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
-                if Parameters.CUSTOM_COLORS_ENABLED:
+                if Parameters.ENABLE_BORDER_COLOR:
                     BorderColor = Parameters.COLOR_BORDERS
                 if Parameters.BORDER_TRANSPARANT:
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
@@ -585,7 +585,7 @@ class CustomControls(RibbonToolButton):
             # Change the background color for commandbutton and label on hovering (CSS)
             def enterEventCustom(event):                
                 BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
-                if Parameters.CUSTOM_COLORS_ENABLED:
+                if Parameters.ENABLE_BORDER_COLOR:
                     BorderColor = Parameters.COLOR_BORDERS
                 if Parameters.BORDER_TRANSPARANT:
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
@@ -996,7 +996,7 @@ class CustomControls(RibbonToolButton):
                 #     return
                 
                 BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
-                if Parameters.CUSTOM_COLORS_ENABLED:
+                if Parameters.ENABLE_BORDER_COLOR:
                     BorderColor = Parameters.COLOR_BORDERS
                 if Parameters.BORDER_TRANSPARANT:
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
@@ -1155,7 +1155,7 @@ class CustomControls(RibbonToolButton):
                 #     return
                 
                 BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
-                if Parameters.CUSTOM_COLORS_ENABLED:
+                if Parameters.ENABLE_BORDER_COLOR:
                     BorderColor = Parameters.COLOR_BORDERS
                 if Parameters.BORDER_TRANSPARANT:
                     BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
@@ -1360,7 +1360,7 @@ class CustomControls(RibbonToolButton):
         # Set the stylesheet
         BackGroundColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
         BorderColor = StyleMapping_Ribbon.ReturnStyleItem("Border_Color")
-        if Parameters.CUSTOM_COLORS_ENABLED:
+        if Parameters.ENABLE_BORDER_COLOR:
             BorderColor = Parameters.COLOR_BORDERS
         if Parameters.BORDER_TRANSPARANT:
             BorderColor = StyleMapping_Ribbon.ReturnStyleItem(
