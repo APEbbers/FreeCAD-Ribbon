@@ -3656,7 +3656,7 @@ class ModernMenu(RibbonBar):
         Layout.setContentsMargins(0, 0, 0, 0)
         # Add the layout to the menu button
         self.applicationOptionButton().setLayout(Layout)
-        self.applicationOptionButton().setContentsMargins(0, 0, 9, 0)
+        self.applicationOptionButton().setContentsMargins(9, 0, 9, 0)
         # Set the size of the menu button
         self.applicationOptionButton().setFixedSize(
             self.QuickAccessButtonSize
@@ -3670,15 +3670,28 @@ class ModernMenu(RibbonBar):
         # Set the icon
         if Parameters.HIDE_MENU_ICON is False:
             self.setApplicationIcon(Gui.getIcon("freecad"))
-        # Set the styling of the button including padding
-        self.applicationOptionButton().setStyleSheet(
-            StyleMapping_Ribbon.ReturnStyleSheet(
-                "applicationbutton",
-                padding_right=str(FontMetrics.horizontalAdvance(Text.text(), -1) + 12)
-                + "px",
-                radius="4px",
+            # Set the styling of the button including padding
+            self.applicationOptionButton().setStyleSheet(
+                StyleMapping_Ribbon.ReturnStyleSheet(
+                    "applicationbutton",
+                    padding_right=str(FontMetrics.horizontalAdvance(Text.text(), -1) + 12)
+                    + "px",
+                    radius="4px",
+                )
             )
-        )
+        if Parameters.HIDE_MENU_ICON is True:
+            self.setApplicationIcon(QIcon())
+            self._titleWidget.applicationButton().setText("")
+            # Set the styling of the button including padding
+            self.applicationOptionButton().setStyleSheet(
+                StyleMapping_Ribbon.ReturnStyleSheet(
+                    "applicationbutton",
+                    padding_right=str(24)
+                    + "px",
+                    radius="4px",
+                )
+            )
+            
         # Add the default tooltip
         self.applicationOptionButton().setToolTip(
             translate("FreeCAD Ribbon", "FreeCAD Ribbon")

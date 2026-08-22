@@ -1197,7 +1197,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         if self.form.HideMenuIcon.isChecked() is True:
             self.ValuesToUpdate["HideMenuIcon"] = True
         if self.form.HideMenuIcon.isChecked() is False:
-            self.ValuesToUpdate["Enable_Tab_Scroll_Icon"] = False
+            self.ValuesToUpdate["HideMenuIcon"] = False
         self.settingChanged = True
         return
 

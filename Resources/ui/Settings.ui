@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>907</width>
-    <height>1034</height>
+    <width>1279</width>
+    <height>1021</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -218,7 +218,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>852</width>
+            <width>1224</width>
             <height>1278</height>
            </rect>
           </property>
@@ -1521,8 +1521,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>852</width>
-            <height>833</height>
+            <width>1224</width>
+            <height>820</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_43">
@@ -1875,8 +1875,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>852</width>
-            <height>833</height>
+            <width>1224</width>
+            <height>820</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_36">
@@ -1908,6 +1908,9 @@
                   <layout class="QGridLayout" name="gridLayout_20">
                    <item row="1" column="2">
                     <widget class="Gui::ColorButton" name="Color_Background_Hover">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -1929,10 +1932,17 @@
                     </widget>
                    </item>
                    <item row="5" column="2">
-                    <widget class="Gui::ColorButton" name="Color_Font"/>
+                    <widget class="Gui::ColorButton" name="Color_Font">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
                    </item>
                    <item row="4" column="1">
                     <widget class="QLabel" name="label_47">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="minimumSize">
                       <size>
                        <width>0</width>
@@ -1946,6 +1956,9 @@
                    </item>
                    <item row="3" column="2">
                     <widget class="Gui::ColorButton" name="Color_Background_Tabs">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -1965,6 +1978,9 @@
                    </item>
                    <item row="0" column="2">
                     <widget class="Gui::ColorButton" name="Color_Borders">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -1987,6 +2003,9 @@
                    </item>
                    <item row="1" column="1">
                     <widget class="QLabel" name="label_30">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="minimumSize">
                       <size>
                        <width>200</width>
@@ -2009,6 +2028,9 @@
                    </item>
                    <item row="2" column="2">
                     <widget class="Gui::ColorButton" name="Color_Background_App">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -2031,6 +2053,9 @@
                    </item>
                    <item row="2" column="1">
                     <widget class="QLabel" name="label_9">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="minimumSize">
                       <size>
                        <width>200</width>
@@ -2053,6 +2078,9 @@
                    </item>
                    <item row="3" column="1">
                     <widget class="QLabel" name="label_46">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="minimumSize">
                       <size>
                        <width>0</width>
@@ -2066,6 +2094,9 @@
                    </item>
                    <item row="4" column="2">
                     <widget class="Gui::ColorButton" name="Color_Background_TitleBar">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -2085,6 +2116,9 @@
                    </item>
                    <item row="0" column="1">
                     <widget class="QLabel" name="label_6">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="minimumSize">
                       <size>
                        <width>200</width>
@@ -2107,6 +2141,9 @@
                    </item>
                    <item row="5" column="1">
                     <widget class="QLabel" name="label_31">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
                      <property name="text">
                       <string>Set the text color</string>
                      </property>
@@ -2212,6 +2249,9 @@
                <layout class="QGridLayout" name="gridLayout_22">
                 <item row="6" column="1">
                  <widget class="QLabel" name="label_29">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="text">
                    <string>Pin button - pinned:</string>
                   </property>
@@ -2219,6 +2259,9 @@
                 </item>
                 <item row="6" column="2">
                  <widget class="QPushButton" name="pinButton_closed">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -2250,6 +2293,9 @@
                 </item>
                 <item row="1" column="2">
                  <widget class="QPushButton" name="Tab_Scroll_Right">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -2281,6 +2327,9 @@
                 </item>
                 <item row="2" column="2">
                  <widget class="QPushButton" name="Ribbon_Scroll_Left">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -2306,6 +2355,9 @@
                 </item>
                 <item row="3" column="1">
                  <widget class="QLabel" name="label_19">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="text">
                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ribbon bar scroll right:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
@@ -2313,6 +2365,9 @@
                 </item>
                 <item row="4" column="2">
                  <widget class="QPushButton" name="MoreCommands">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -2344,6 +2399,9 @@
                 </item>
                 <item row="5" column="1">
                  <widget class="QLabel" name="label_28">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="text">
                    <string>Pin button - unpinned:</string>
                   </property>
@@ -2351,6 +2409,9 @@
                 </item>
                 <item row="2" column="1">
                  <widget class="QLabel" name="label_18">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="text">
                    <string>Ribbon bar scroll left:</string>
                   </property>
@@ -2358,6 +2419,9 @@
                 </item>
                 <item row="5" column="2">
                  <widget class="QPushButton" name="pinButton_open">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -2383,6 +2447,9 @@
                 </item>
                 <item row="1" column="1">
                  <widget class="QLabel" name="label_17">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="text">
                    <string>Tab bar scroll right:</string>
                   </property>
@@ -2390,6 +2457,9 @@
                 </item>
                 <item row="0" column="2">
                  <widget class="QPushButton" name="Tab_Scroll_Left">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -2421,6 +2491,9 @@
                 </item>
                 <item row="4" column="1">
                  <widget class="QLabel" name="label_20">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="text">
                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;More commands button:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
@@ -2428,6 +2501,9 @@
                 </item>
                 <item row="3" column="2">
                  <widget class="QPushButton" name="Ribbon_Scroll_Right">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -2453,6 +2529,9 @@
                 </item>
                 <item row="0" column="1">
                  <widget class="QLabel" name="label_16">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="text">
                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tab bar scroll left:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
@@ -2528,8 +2607,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>852</width>
-            <height>779</height>
+            <width>1224</width>
+            <height>766</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_28">
@@ -3202,6 +3281,422 @@
     <hint type="destinationlabel">
      <x>673</x>
      <y>1130</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EnableBorderColor</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_6</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>45</x>
+     <y>245</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>274</x>
+     <y>244</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EnableBorderColor</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Color_Borders</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>46</x>
+     <y>232</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>319</x>
+     <y>239</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EnableBackGroundColor</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Color_Background_Hover</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>52</x>
+     <y>295</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>323</x>
+     <y>302</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EnableBackGroundColor</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_30</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>53</x>
+     <y>291</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>83</x>
+     <y>288</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EnableBackGroundColor_App</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Color_Background_App</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>48</x>
+     <y>346</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>317</x>
+     <y>359</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EnableBackGroundColor_App</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_9</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>50</x>
+     <y>351</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>101</x>
+     <y>347</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EnableBackGroundColor_Tab</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Color_Background_Tabs</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>53</x>
+     <y>401</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>326</x>
+     <y>414</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EnableBackGroundColor_Tab</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_46</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>43</x>
+     <y>399</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>120</x>
+     <y>405</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EnableBackGroundColor_TitleBar</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Color_Background_TitleBar</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>57</x>
+     <y>465</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>319</x>
+     <y>465</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EnableBackGroundColor_TitleBar</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_47</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>46</x>
+     <y>447</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>101</x>
+     <y>447</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EnableTextColor</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Color_Font</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>54</x>
+     <y>504</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>322</x>
+     <y>509</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>EnableTextColor</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_31</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>53</x>
+     <y>494</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>126</x>
+     <y>500</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Enable_Tab_Scroll_Icon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_16</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>47</x>
+     <y>601</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>72</x>
+     <y>589</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Enable_Tab_Scroll_Icon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_17</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>34</x>
+     <y>601</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>106</x>
+     <y>614</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Enable_Tab_Scroll_Icon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Tab_Scroll_Left</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>51</x>
+     <y>591</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>233</x>
+     <y>592</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Enable_Tab_Scroll_Icon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Tab_Scroll_Right</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>45</x>
+     <y>604</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>230</x>
+     <y>616</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Enable_Ribbon_Scroll_Icon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_18</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>42</x>
+     <y>696</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>111</x>
+     <y>671</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Enable_Ribbon_Scroll_Icon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_19</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>41</x>
+     <y>689</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>136</x>
+     <y>707</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Enable_Ribbon_Scroll_Icon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Ribbon_Scroll_Left</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>38</x>
+     <y>698</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>231</x>
+     <y>671</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Enable_Ribbon_Scroll_Icon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Ribbon_Scroll_Right</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>47</x>
+     <y>692</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>222</x>
+     <y>714</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Enable_MoreCommands_Icon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_20</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>43</x>
+     <y>776</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>94</x>
+     <y>778</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Enable_MoreCommands_Icon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>MoreCommands</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>48</x>
+     <y>777</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>235</x>
+     <y>776</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Enable_pinButton_Icon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_28</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>42</x>
+     <y>819</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>132</x>
+     <y>808</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Enable_pinButton_Icon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_29</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>48</x>
+     <y>816</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>85</x>
+     <y>832</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Enable_pinButton_Icon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pinButton_open</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>51</x>
+     <y>829</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>224</x>
+     <y>816</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>Enable_pinButton_Icon</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pinButton_closed</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>39</x>
+     <y>816</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>225</x>
+     <y>840</y>
     </hint>
    </hints>
   </connection>
