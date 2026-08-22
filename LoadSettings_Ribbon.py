@@ -115,8 +115,15 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # "UseFCOverlay": Parameters.USE_FC_OVERLAY,
         "OverlayState": Parameters.OVERLAYSTATE,
         "UseButtonBackGround": Parameters.BUTTON_BACKGROUND_ENABLED,
-        "CustomIcons": Parameters.CUSTOM_ICONS_ENABLED,
-        "CustomColors": Parameters.CUSTOM_COLORS_ENABLED,
+        "Enable_Tab_Scroll_Icon": Parameters.ENABLE_TAB_SCROLL_ICON,
+        "Enable_Ribbon_Scroll_Icon": Parameters.ENABLE_RIBBON_SCROLL_ICON,
+        "Enable_MoreCommands_Icon": Parameters.ENABLE_MORE_COMMANDS_ICON,
+        "Enable_pinButton_Icon": Parameters.ENABLE_PINBUTTON_ICON,
+        "EnableBorderColor": Parameters.ENABLE_BORDER_COLOR,
+        "EnableBackGroundColor": Parameters.ENABLE_BACKGROUND_COLOR,
+        "EnableBackGroundColor_App": Parameters.ENABLE_BACKGROUND_COLOR_APP,
+        "EnableBackGroundColor_Tab": Parameters.ENABLE_BACKGROUND_COLOR_TAB,
+        "EnableBackGroundColor_TitleBar": Parameters.ENABLE_BACKGROUND_COLOR_TITLEBAR,
         # "BorderTransparant": Parameters.BORDER_TRANSPARANT,
         "Color_Borders": Parameters.COLOR_BORDERS,
         # "Color_Background": Parameters.COLOR_BACKGROUND,
@@ -172,8 +179,15 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # "UseFCOverlay": Parameters.USE_FC_OVERLAY,
         "OverlayState": Parameters.OVERLAYSTATE,
         "UseButtonBackGround": Parameters.BUTTON_BACKGROUND_ENABLED,
-        "CustomIcons": Parameters.CUSTOM_ICONS_ENABLED,
-        "CustomColors": Parameters.CUSTOM_COLORS_ENABLED,
+        "Enable_Tab_Scroll_Icon": Parameters.ENABLE_TAB_SCROLL_ICON,
+        "Enable_Ribbon_Scroll_Icon": Parameters.ENABLE_RIBBON_SCROLL_ICON,
+        "Enable_MoreCommands_Icon": Parameters.ENABLE_MORE_COMMANDS_ICON,
+        "Enable_pinButton_Icon": Parameters.ENABLE_PINBUTTON_ICON,
+        "EnableBorderColor": Parameters.ENABLE_BORDER_COLOR,
+        "EnableBackGroundColor": Parameters.ENABLE_BACKGROUND_COLOR,
+        "EnableBackGroundColor_App": Parameters.ENABLE_BACKGROUND_COLOR_APP,
+        "EnableBackGroundColor_Tab": Parameters.ENABLE_BACKGROUND_COLOR_TAB,
+        "EnableBackGroundColor_TitleBar": Parameters.ENABLE_BACKGROUND_COLOR_TITLEBAR,
         # "BorderTransparant": Parameters.BORDER_TRANSPARANT,
         "Color_Borders": Parameters.COLOR_BORDERS,
         # "Color_Background": Parameters.COLOR_BACKGROUND,
@@ -441,10 +455,27 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Unchecked)
 
         # Set the color and icon buttons
-        if Parameters.CUSTOM_ICONS_ENABLED is True:
-            self.form.CustomIcons.setCheckState(Qt.CheckState.Checked)
+        if Parameters.HIDE_MENU_ICON is True:
+            self.form.HideMenuIcon.setCheckState(Qt.CheckState.Checked)
         else:
-            self.form.CustomIcons.setCheckState(Qt.CheckState.Unchecked)
+            self.form.HideMenuIcon.setCheckState(Qt.CheckState.Unchecked)
+        
+        if Parameters.ENABLE_TAB_SCROLL_ICON is True:
+            self.form.Enable_Tab_Scroll_Icon.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.Enable_Tab_Scroll_Icon.setCheckState(Qt.CheckState.Unchecked)
+        if Parameters.ENABLE_RIBBON_SCROLL_ICON is True:
+            self.form.Enable_Ribbon_Scroll_Icon.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.Enable_Ribbon_Scroll_Icon.setCheckState(Qt.CheckState.Unchecked)
+        if Parameters.ENABLE_MORE_COMMANDS_ICON is True:
+            self.form.Enable_MoreCommands_Icon.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.Enable_MoreCommands_Icon.setCheckState(Qt.CheckState.Unchecked)
+        if Parameters.ENABLE_PINBUTTON_ICON is True:
+            self.form.Enable_pinButton_Icon.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.Enable_pinButton_Icon.setCheckState(Qt.CheckState.Unchecked)
 
         self.form.Tab_Scroll_Left.setIcon(
             StyleMapping_Ribbon.ReturnStyleItem("ScrollLeftButton_Tab", True)
@@ -515,10 +546,30 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             )
         )
 
-        if Parameters.CUSTOM_COLORS_ENABLED is True:
-            self.form.CustomColors.setCheckState(Qt.CheckState.Checked)
+        if Parameters.ENABLE_BORDER_COLOR is True:
+            self.form.EnableBorderColor.setCheckState(Qt.CheckState.Checked)
         else:
-            self.form.CustomColors.setCheckState(Qt.CheckState.Unchecked)
+            self.form.EnableBorderColor.setCheckState(Qt.CheckState.Unchecked)
+        if Parameters.ENABLE_BACKGROUND_COLOR is True:
+            self.form.EnableBackGroundColor.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.EnableBackGroundColor.setCheckState(Qt.CheckState.Unchecked)
+        if Parameters.ENABLE_BACKGROUND_COLOR_APP is True:
+            self.form.EnableBackGroundColor_App.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.EnableBackGroundColor_App.setCheckState(Qt.CheckState.Unchecked)
+        if Parameters.ENABLE_BACKGROUND_COLOR_TAB is True:
+            self.form.EnableBackGroundColor_Tab.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.EnableBackGroundColor_Tab.setCheckState(Qt.CheckState.Unchecked)
+        if Parameters.ENABLE_BACKGROUND_COLOR_TITLEBAR is True:
+            self.form.EnableBackGroundColor_TitleBar.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.EnableBackGroundColor_TitleBar.setCheckState(Qt.CheckState.Unchecked)
+        if Parameters.ENABLE_TEXT_COLOR is True:
+            self.form.EnableTextColor.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.EnableTextColor.setCheckState(Qt.CheckState.Unchecked)
 
         # if Parameters.BORDER_TRANSPARANT is True:
         #     self.form.BorderTransparant.setCheckState(Qt.CheckState.Checked)
@@ -693,7 +744,12 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # endregion
 
         # region - Connect the controls for custom icons and colors
-        self.form.CustomIcons.clicked.connect(self.on_CustomIcons_clicked)
+        self.form.HideMenuIcon.clicked.connect(self.on_HideMenuIcon_clicked)
+        
+        self.form.Enable_Tab_Scroll_Icon.clicked.connect(self.on_Enable_Tab_Scroll_Icon_clicked)
+        self.form.Enable_Ribbon_Scroll_Icon.clicked.connect(self.on_Enable_Ribbon_Scroll_Icon_clicked)
+        self.form.Enable_MoreCommands_Icon.clicked.connect(self.on_Enable_MoreCommands_Icon_clicked)
+        self.form.Enable_pinButton_Icon.clicked.connect(self.on_Enable_pinButton_Icon_clicked)
 
         #
         def TabScrollLeft():
@@ -750,7 +806,13 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.pinButton_closed.connect(
             self.form.pinButton_closed, SIGNAL("clicked()"), PinButtonClosed
         )
-        self.form.CustomColors.clicked.connect(self.on_CustomColors_clicked)
+        self.form.EnableBorderColor.clicked.connect(self.on_EnableBorderColor_clicked)
+        self.form.EnableBackGroundColor.clicked.connect(self.on_EnableBackGroundColor_clicked)
+        self.form.EnableBackGroundColor_App.clicked.connect(self.on_EnableBackGroundColor_App_clicked)
+        self.form.EnableBackGroundColor_Tab.clicked.connect(self.on_EnableBackGroundColor_Tab_clicked)
+        self.form.EnableBackGroundColor_TitleBar.clicked.connect(self.on_EnableBackGroundColor_TitleBar_clicked)
+        self.form.EnableTextColor.clicked.connect(self.on_EnableTextColor_clicked)
+                
         # self.form.BorderTransparant.clicked.connect(self.on_BorderTransparant_clicked)
         self.form.Color_Borders.clicked.connect(self.on_Color_Borders_clicked)
         # self.form.Color_Background.clicked.connect(self.on_Color_Background_clicked)
@@ -1128,12 +1190,44 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.ValuesToUpdate["UseButtonBackGround"] = False
         self.settingChanged = True
         return
+    
+    def on_HideMenuIcon_clicked(self):
+        if self.form.HideMenuIcon.isChecked() is True:
+            self.ValuesToUpdate["Enable_Tab_Scroll_Icon"] = True
+        if self.form.HideMenuIcon.isChecked() is False:
+            self.ValuesToUpdate["Enable_Tab_Scroll_Icon"] = False
+        self.settingChanged = True
+        return
 
-    def on_CustomIcons_clicked(self):
-        if self.form.CustomIcons.isChecked() is True:
-            self.ValuesToUpdate["CustomIcons"] = True
-        if self.form.CustomIcons.isChecked() is False:
-            self.ValuesToUpdate["CustomIcons"] = False
+    def on_Enable_Tab_Scroll_Icon_clicked(self):
+        if self.form.Enable_Tab_Scroll_Icon.isChecked() is True:
+            self.ValuesToUpdate["HideMenuIcon"] = True
+        if self.form.Enable_Tab_Scroll_Icon.isChecked() is False:
+            self.ValuesToUpdate["HideMenuIcon"] = False
+        self.settingChanged = True
+        return
+    
+    def on_Enable_Ribbon_Scroll_Icon_clicked(self):
+        if self.form.Enable_Ribbon_Scroll_Icon.isChecked() is True:
+            self.ValuesToUpdate["Enable_Ribbon_Scroll_Icon"] = True
+        if self.form.Enable_Ribbon_Scroll_Icon.isChecked() is False:
+            self.ValuesToUpdate["Enable_Ribbon_Scroll_Icon"] = False
+        self.settingChanged = True
+        return
+    
+    def on_Enable_MoreCommands_Icon_clicked(self):
+        if self.form.Enable_MoreCommands_Icon.isChecked() is True:
+            self.ValuesToUpdate["Enable_MoreCommands_Icon"] = True
+        if self.form.Enable_MoreCommands_Icon.isChecked() is False:
+            self.ValuesToUpdate["Enable_MoreCommands_Icon"] = False
+        self.settingChanged = True
+        return
+    
+    def on_Enable_pinButton_Icon_clicked(self):
+        if self.form.Enable_pinButton_Icon.isChecked() is True:
+            self.ValuesToUpdate["Enable_pinButton_Icon"] = True
+        if self.form.Enable_pinButton_Icon.isChecked() is False:
+            self.ValuesToUpdate["Enable_pinButton_Icon"] = False
         self.settingChanged = True
         return
 
@@ -1317,11 +1411,51 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.settingChanged = True
         return
 
-    def on_CustomColors_clicked(self):
-        if self.form.CustomColors.isChecked() is True:
-            self.ValuesToUpdate["CustomColors"] = True
-        if self.form.CustomColors.isChecked() is False:
-            self.ValuesToUpdate["CustomColors"] = False
+    def on_EnableBorderColor_clicked(self):
+        if self.form.EnableBorderColor.isChecked() is True:
+            self.ValuesToUpdate["EnableBorderColor"] = True
+        if self.form.EnableBorderColor.isChecked() is False:
+            self.ValuesToUpdate["EnableBorderColor"] = False
+        self.settingChanged = True
+        return
+    
+    def on_EnableBackGroundColor_clicked(self):
+        if self.form.EnableBackGroundColor.isChecked() is True:
+            self.ValuesToUpdate["EnableBackGroundColor"] = True
+        if self.form.EnableBackGroundColor.isChecked() is False:
+            self.ValuesToUpdate["EnableBackGroundColor"] = False
+        self.settingChanged = True
+        return
+    
+    def on_EnableBackGroundColor_App_clicked(self):
+        if self.form.EnableBackGroundColor_App.isChecked() is True:
+            self.ValuesToUpdate["EnableBackGroundColor_App"] = True
+        if self.form.EnableBackGroundColor_App.isChecked() is False:
+            self.ValuesToUpdate["EnableBackGroundColor_App"] = False
+        self.settingChanged = True
+        return
+    
+    def on_EnableBackGroundColor_Tab_clicked(self):
+        if self.form.EnableBackGroundColor_Tab.isChecked() is True:
+            self.ValuesToUpdate["EnableBackGroundColor_Tab"] = True
+        if self.form.EnableBackGroundColor_Tab.isChecked() is False:
+            self.ValuesToUpdate["EnableBackGroundColor_Tab"] = False
+        self.settingChanged = True
+        return
+    
+    def on_EnableBackGroundColor_TitleBar_clicked(self):
+        if self.form.EnableBackGroundColor_TitleBar.isChecked() is True:
+            self.ValuesToUpdate["EnableBackGroundColor_TitleBar"] = True
+        if self.form.EnableBackGroundColor_TitleBar.isChecked() is False:
+            self.ValuesToUpdate["EnableBackGroundColor_TitleBar"] = False
+        self.settingChanged = True
+        return
+    
+    def on_EnableTextColor_clicked(self):
+        if self.form.EnableTextColor.isChecked() is True:
+            self.ValuesToUpdate["EnableTextColor"] = True
+        if self.form.EnableTextColor.isChecked() is False:
+            self.ValuesToUpdate["EnableTextColor"] = False
         self.settingChanged = True
         return
 
@@ -1546,11 +1680,38 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         )
         # Set the use of custom icons
         Parameters_Ribbon.Settings.SetBoolSetting(
-            "CustomIcons", self.OriginalValues["CustomIcons"]
+            "HideMenuIcon", self.OriginalValues["HideMenuIcon"]
         )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "Enable_Tab_Scroll_Icon", self.OriginalValues["Enable_Tab_Scroll_Icon"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "Enable_Ribbon_Scroll_Icon", self.OriginalValues["Enable_Ribbon_Scroll_Icon"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "Enable_MoreCommands_Icon", self.OriginalValues["Enable_MoreCommands_Icon"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "Enable_pinButton_Icon", self.OriginalValues["Enable_pinButton_Icon"]
+        )        
         # Set the use of custom colors
         Parameters_Ribbon.Settings.SetBoolSetting(
-            "CustomColors", self.OriginalValues["CustomColors"]
+            "EnableBorderColor", self.OriginalValues["EnableBorderColor"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "EnableBackGroundColor", self.OriginalValues["EnableBackGroundColor"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "EnableBackGroundColor_App", self.OriginalValues["EnableBackGroundColor_App"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "EnableBackGroundColor_Tab", self.OriginalValues["EnableBackGroundColor_Tab"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "EnableBackGroundColor_TitleBar", self.OriginalValues["EnableBackGroundColor_TitleBar"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "EnableTextColor", self.OriginalValues["EnableTextColor"]
         )
         # Parameters_Ribbon.Settings.SetBoolSetting(
         #     "BorderTransparant", self.OriginalValues["BorderTransparant"]
@@ -1728,11 +1889,38 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         )
         # Set the use of custom icons
         Parameters_Ribbon.Settings.SetBoolSetting(
-            "CustomIcons", self.ValuesToUpdate["CustomIcons"]
+            "HideMenuIcon", self.ValuesToUpdate["HideMenuIcon"]
         )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "Enable_Tab_Scroll_Icon", self.ValuesToUpdate["Enable_Tab_Scroll_Icon"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "Enable_Ribbon_Scroll_Icon", self.ValuesToUpdate["Enable_Ribbon_Scroll_Icon"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "Enable_MoreCommands_Icon", self.ValuesToUpdate["Enable_MoreCommands_Icon"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "Enable_pinButton_Icon", self.ValuesToUpdate["Enable_pinButton_Icon"]
+        )   
         # Set the use of custom colors
         Parameters_Ribbon.Settings.SetBoolSetting(
-            "CustomColors", self.ValuesToUpdate["CustomColors"]
+            "EnableBorderColor", self.ValuesToUpdate["EnableBorderColor"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "EnableBackGroundColor", self.ValuesToUpdate["EnableBackGroundColor"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "EnableBackGroundColor_App", self.ValuesToUpdate["EnableBackGroundColor_App"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "EnableBackGroundColor_Tab", self.ValuesToUpdate["EnableBackGroundColor_Tab"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "EnableBackGroundColor_TitleBar", self.ValuesToUpdate["EnableBackGroundColor_TitleBar"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "EnableTextColor", self.ValuesToUpdate["EnableTextColor"]
         )
         # Parameters_Ribbon.Settings.SetBoolSetting(
         #     "BorderTransparant", self.ValuesToUpdate["BorderTransparant"]
