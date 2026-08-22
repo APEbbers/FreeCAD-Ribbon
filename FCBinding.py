@@ -701,20 +701,17 @@ class ModernMenu(RibbonBar):
         hexColorTab = StyleMapping_Ribbon.ReturnStyleItem(
             "Background_Color", True, True
         )
-        if Parameters.CUSTOM_COLORS_ENABLED is True:            
-            hexColorTab = Parameters.COLOR_BACKGROUND_TABS
-            
+        if Parameters.ENABLE_BACKGROUND_COLOR_TITLEBAR is True:                        
             self.quickAccessToolBar().setStyleSheet("background: " + hexColor + ";")
             self.rightToolBar().setStyleSheet("background: " + hexColor + ";")
-            
-            StyleSheet_Addition_Tabs = "QTabBar::tab {background: " + hexColorTab + ";}"
-            StyleSheet_Addition_TitleWidget = "RibbonTitleWidget {background: " + Parameters.COLOR_BACKGROUND_TITLEBAR + ";}"
-            # StyleSheet_Addition_ToolBars = "QToolBar {background: " + Parameters.COLOR_BACKGROUND_TITLEBAR + ";}"
 
-            # self.StyleSheet = self.StyleSheet + StyleSheet_Addition_TitleWidget + StyleSheet_Addition_Tabs + StyleSheet_Addition_ToolBars 
-            self.StyleSheet = self.StyleSheet + StyleSheet_Addition_TitleWidget + StyleSheet_Addition_Tabs
+            StyleSheet_Addition_TitleWidget = "RibbonTitleWidget {background: " + Parameters.COLOR_BACKGROUND_TITLEBAR + ";}"
+            self.StyleSheet = self.StyleSheet + StyleSheet_Addition_TitleWidget
+        if Parameters.ENABLE_BACKGROUND_COLOR_TAB is True:            
+            hexColorTab = Parameters.COLOR_BACKGROUND_TABS
+            StyleSheet_Addition_Tabs = "QTabBar::tab {background: " + hexColorTab + ";}"
+            self.StyleSheet = self.StyleSheet + StyleSheet_Addition_Tabs
             self.setStyleSheet(self.StyleSheet)
-            
         if (
             hexColor is not None
             and hexColor != ""
