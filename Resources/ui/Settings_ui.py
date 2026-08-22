@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsqnXQnk.ui'
+## Form generated from reading UI file 'SettingsDoksPn.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.2
 ##
@@ -1043,27 +1043,22 @@ class Ui_Settings(object):
 
         self.gridLayout_36.addWidget(self.groupBox_8, 0, 0, 1, 1)
 
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_36.addItem(self.verticalSpacer_2, 2, 0, 1, 1)
+
         self.groupBox_9 = QGroupBox(self.scrollAreaWidgetContents)
         self.groupBox_9.setObjectName(u"groupBox_9")
         self.gridLayout_23 = QGridLayout(self.groupBox_9)
         self.gridLayout_23.setObjectName(u"gridLayout_23")
-        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_23.addItem(self.horizontalSpacer_6, 0, 1, 1, 1)
-
-        self.IconS = QGroupBox(self.groupBox_9)
-        self.IconS.setObjectName(u"IconS")
-        self.IconS.setEnabled(True)
-        self.gridLayout_33 = QGridLayout(self.IconS)
-        self.gridLayout_33.setObjectName(u"gridLayout_33")
         self.gridLayout_22 = QGridLayout()
         self.gridLayout_22.setObjectName(u"gridLayout_22")
-        self.label_29 = QLabel(self.IconS)
+        self.label_29 = QLabel(self.groupBox_9)
         self.label_29.setObjectName(u"label_29")
 
         self.gridLayout_22.addWidget(self.label_29, 6, 1, 1, 1)
 
-        self.pinButton_closed = QPushButton(self.IconS)
+        self.pinButton_closed = QPushButton(self.groupBox_9)
         self.pinButton_closed.setObjectName(u"pinButton_closed")
         sizePolicy4.setHeightForWidth(self.pinButton_closed.sizePolicy().hasHeightForWidth())
         self.pinButton_closed.setSizePolicy(sizePolicy4)
@@ -1074,7 +1069,7 @@ class Ui_Settings(object):
 
         self.gridLayout_22.addWidget(self.pinButton_closed, 6, 2, 1, 1)
 
-        self.Tab_Scroll_Right = QPushButton(self.IconS)
+        self.Tab_Scroll_Right = QPushButton(self.groupBox_9)
         self.Tab_Scroll_Right.setObjectName(u"Tab_Scroll_Right")
         sizePolicy4.setHeightForWidth(self.Tab_Scroll_Right.sizePolicy().hasHeightForWidth())
         self.Tab_Scroll_Right.setSizePolicy(sizePolicy4)
@@ -1085,7 +1080,7 @@ class Ui_Settings(object):
 
         self.gridLayout_22.addWidget(self.Tab_Scroll_Right, 1, 2, 1, 1)
 
-        self.Ribbon_Scroll_Left = QPushButton(self.IconS)
+        self.Ribbon_Scroll_Left = QPushButton(self.groupBox_9)
         self.Ribbon_Scroll_Left.setObjectName(u"Ribbon_Scroll_Left")
         sizePolicy4.setHeightForWidth(self.Ribbon_Scroll_Left.sizePolicy().hasHeightForWidth())
         self.Ribbon_Scroll_Left.setSizePolicy(sizePolicy4)
@@ -1095,12 +1090,12 @@ class Ui_Settings(object):
 
         self.gridLayout_22.addWidget(self.Ribbon_Scroll_Left, 2, 2, 1, 1)
 
-        self.label_19 = QLabel(self.IconS)
+        self.label_19 = QLabel(self.groupBox_9)
         self.label_19.setObjectName(u"label_19")
 
         self.gridLayout_22.addWidget(self.label_19, 3, 1, 1, 1)
 
-        self.MoreCommands = QPushButton(self.IconS)
+        self.MoreCommands = QPushButton(self.groupBox_9)
         self.MoreCommands.setObjectName(u"MoreCommands")
         sizePolicy4.setHeightForWidth(self.MoreCommands.sizePolicy().hasHeightForWidth())
         self.MoreCommands.setSizePolicy(sizePolicy4)
@@ -1111,17 +1106,17 @@ class Ui_Settings(object):
 
         self.gridLayout_22.addWidget(self.MoreCommands, 4, 2, 1, 1)
 
-        self.label_28 = QLabel(self.IconS)
+        self.label_28 = QLabel(self.groupBox_9)
         self.label_28.setObjectName(u"label_28")
 
         self.gridLayout_22.addWidget(self.label_28, 5, 1, 1, 1)
 
-        self.label_18 = QLabel(self.IconS)
+        self.label_18 = QLabel(self.groupBox_9)
         self.label_18.setObjectName(u"label_18")
 
         self.gridLayout_22.addWidget(self.label_18, 2, 1, 1, 1)
 
-        self.pinButton_open = QPushButton(self.IconS)
+        self.pinButton_open = QPushButton(self.groupBox_9)
         self.pinButton_open.setObjectName(u"pinButton_open")
         sizePolicy4.setHeightForWidth(self.pinButton_open.sizePolicy().hasHeightForWidth())
         self.pinButton_open.setSizePolicy(sizePolicy4)
@@ -1131,12 +1126,12 @@ class Ui_Settings(object):
 
         self.gridLayout_22.addWidget(self.pinButton_open, 5, 2, 1, 1)
 
-        self.label_17 = QLabel(self.IconS)
+        self.label_17 = QLabel(self.groupBox_9)
         self.label_17.setObjectName(u"label_17")
 
         self.gridLayout_22.addWidget(self.label_17, 1, 1, 1, 1)
 
-        self.Tab_Scroll_Left = QPushButton(self.IconS)
+        self.Tab_Scroll_Left = QPushButton(self.groupBox_9)
         self.Tab_Scroll_Left.setObjectName(u"Tab_Scroll_Left")
         sizePolicy4.setHeightForWidth(self.Tab_Scroll_Left.sizePolicy().hasHeightForWidth())
         self.Tab_Scroll_Left.setSizePolicy(sizePolicy4)
@@ -1147,12 +1142,12 @@ class Ui_Settings(object):
 
         self.gridLayout_22.addWidget(self.Tab_Scroll_Left, 0, 2, 1, 1)
 
-        self.label_20 = QLabel(self.IconS)
+        self.label_20 = QLabel(self.groupBox_9)
         self.label_20.setObjectName(u"label_20")
 
         self.gridLayout_22.addWidget(self.label_20, 4, 1, 1, 1)
 
-        self.Ribbon_Scroll_Right = QPushButton(self.IconS)
+        self.Ribbon_Scroll_Right = QPushButton(self.groupBox_9)
         self.Ribbon_Scroll_Right.setObjectName(u"Ribbon_Scroll_Right")
         sizePolicy4.setHeightForWidth(self.Ribbon_Scroll_Right.sizePolicy().hasHeightForWidth())
         self.Ribbon_Scroll_Right.setSizePolicy(sizePolicy4)
@@ -1162,43 +1157,40 @@ class Ui_Settings(object):
 
         self.gridLayout_22.addWidget(self.Ribbon_Scroll_Right, 3, 2, 1, 1)
 
-        self.label_16 = QLabel(self.IconS)
+        self.label_16 = QLabel(self.groupBox_9)
         self.label_16.setObjectName(u"label_16")
 
         self.gridLayout_22.addWidget(self.label_16, 0, 1, 1, 1)
 
-        self.Enable_MoreCommands_Icon = QCheckBox(self.IconS)
+        self.Enable_MoreCommands_Icon = QCheckBox(self.groupBox_9)
         self.Enable_MoreCommands_Icon.setObjectName(u"Enable_MoreCommands_Icon")
 
         self.gridLayout_22.addWidget(self.Enable_MoreCommands_Icon, 4, 0, 1, 1)
 
-        self.Enable_pinButton_Icon = QCheckBox(self.IconS)
+        self.Enable_pinButton_Icon = QCheckBox(self.groupBox_9)
         self.Enable_pinButton_Icon.setObjectName(u"Enable_pinButton_Icon")
 
         self.gridLayout_22.addWidget(self.Enable_pinButton_Icon, 5, 0, 2, 1)
 
-        self.Enable_Ribbon_Scroll_Icon = QCheckBox(self.IconS)
+        self.Enable_Ribbon_Scroll_Icon = QCheckBox(self.groupBox_9)
         self.Enable_Ribbon_Scroll_Icon.setObjectName(u"Enable_Ribbon_Scroll_Icon")
 
         self.gridLayout_22.addWidget(self.Enable_Ribbon_Scroll_Icon, 2, 0, 2, 1)
 
-        self.Enable_Tab_Scroll_Icon = QCheckBox(self.IconS)
+        self.Enable_Tab_Scroll_Icon = QCheckBox(self.groupBox_9)
         self.Enable_Tab_Scroll_Icon.setObjectName(u"Enable_Tab_Scroll_Icon")
 
         self.gridLayout_22.addWidget(self.Enable_Tab_Scroll_Icon, 0, 0, 2, 1)
 
 
-        self.gridLayout_33.addLayout(self.gridLayout_22, 0, 0, 1, 1)
+        self.gridLayout_23.addLayout(self.gridLayout_22, 0, 0, 1, 1)
 
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout_23.addWidget(self.IconS, 0, 0, 1, 1)
+        self.gridLayout_23.addItem(self.horizontalSpacer_6, 0, 1, 1, 1)
 
 
         self.gridLayout_36.addWidget(self.groupBox_9, 1, 0, 1, 1)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_36.addItem(self.verticalSpacer_2, 2, 0, 1, 1)
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
