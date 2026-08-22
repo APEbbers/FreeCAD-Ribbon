@@ -3668,7 +3668,8 @@ class ModernMenu(RibbonBar):
             QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed
         )
         # Set the icon
-        self.setApplicationIcon(Gui.getIcon("freecad"))
+        if Parameters.HIDE_MENU_ICON is False:
+            self.setApplicationIcon(Gui.getIcon("freecad"))
         # Set the styling of the button including padding
         self.applicationOptionButton().setStyleSheet(
             StyleMapping_Ribbon.ReturnStyleSheet(
