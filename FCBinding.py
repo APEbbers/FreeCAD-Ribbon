@@ -996,10 +996,11 @@ class ModernMenu(RibbonBar):
                 _titleLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
                 _titleLabel.setFont(font)
                 # Set the label text to FreeCAD's version
-                text = (
-                    f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
-                )
-                _titleLabel.setText(text)
+                if Parameters.HIDE_TITLEBAR_FC is True:
+                    text = (
+                        f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
+                    )
+                    _titleLabel.setText(text)
                 # Create a spacer to set the tab
                 spacer = QWidget()
                 spacer.setSizePolicy(
@@ -7692,7 +7693,7 @@ class EventInspector(QObject):
                 return QObject.eventFilter(self, obj, event)
         # If the event is a modfied event, update the title
         # This is done when switching from one part to another
-        if (event.type() == QEvent.Type.ModifiedChange and Parameters.TOOLBAR_POSITION == 0):
+        if (event.type() == QEvent.Type.ModifiedChange and Parameters.TOOLBAR_POSITION == 0 and Parameters.HIDE_TITLEBAR_FC is True):
             # Get the mainwindow, the ribbon and the title
             mw = Gui.getMainWindow()
             RibbonBar = mw.findChild(ModernMenu, "Ribbon")
