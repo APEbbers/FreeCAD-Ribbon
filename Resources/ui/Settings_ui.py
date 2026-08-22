@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'Settingsdnsdnz.ui'
+## Form generated from reading UI file 'SettingsqnXQnk.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.2
 ##
@@ -26,7 +26,7 @@ class Ui_Settings(object):
         if not Settings.objectName():
             Settings.setObjectName(u"Settings")
         Settings.setWindowModality(Qt.WindowModality.WindowModal)
-        Settings.resize(907, 847)
+        Settings.resize(907, 1034)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -712,7 +712,7 @@ class Ui_Settings(object):
         self.scrollArea_3.setWidgetResizable(True)
         self.scrollAreaWidgetContents_3 = QWidget()
         self.scrollAreaWidgetContents_3.setObjectName(u"scrollAreaWidgetContents_3")
-        self.scrollAreaWidgetContents_3.setGeometry(QRect(0, 0, 852, 646))
+        self.scrollAreaWidgetContents_3.setGeometry(QRect(0, 0, 852, 833))
         self.gridLayout_43 = QGridLayout(self.scrollAreaWidgetContents_3)
         self.gridLayout_43.setObjectName(u"gridLayout_43")
         self.groupBox_6 = QGroupBox(self.scrollAreaWidgetContents_3)
@@ -875,7 +875,7 @@ class Ui_Settings(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, -170, 852, 816))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 852, 833))
         self.gridLayout_36 = QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout_36.setObjectName(u"gridLayout_36")
         self.groupBox_8 = QGroupBox(self.scrollAreaWidgetContents)
@@ -889,7 +889,7 @@ class Ui_Settings(object):
         self.gridLayout_21.setObjectName(u"gridLayout_21")
         self.ColorS = QFrame(self.groupBox_8)
         self.ColorS.setObjectName(u"ColorS")
-        self.ColorS.setEnabled(False)
+        self.ColorS.setEnabled(True)
         sizePolicy3.setHeightForWidth(self.ColorS.sizePolicy().hasHeightForWidth())
         self.ColorS.setSizePolicy(sizePolicy3)
         self.gridLayout_35 = QGridLayout(self.ColorS)
@@ -1053,7 +1053,7 @@ class Ui_Settings(object):
 
         self.IconS = QGroupBox(self.groupBox_9)
         self.IconS.setObjectName(u"IconS")
-        self.IconS.setEnabled(False)
+        self.IconS.setEnabled(True)
         self.gridLayout_33 = QGridLayout(self.IconS)
         self.gridLayout_33.setObjectName(u"gridLayout_33")
         self.gridLayout_22 = QGridLayout()
@@ -1215,7 +1215,7 @@ class Ui_Settings(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 852, 695))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 852, 779))
         self.gridLayout_28 = QGridLayout(self.scrollAreaWidgetContents_2)
         self.gridLayout_28.setObjectName(u"gridLayout_28")
         self.groupBox_15 = QGroupBox(self.scrollAreaWidgetContents_2)
