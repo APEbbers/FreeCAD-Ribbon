@@ -4029,6 +4029,8 @@ class ModernMenu(RibbonBar):
                 self.RightToolBarButtonSize, self.RightToolBarButtonSize
             )
             self.rightToolBar().addWidget(CloseButton)
+        else:
+            self.setTitle("")
 
         # Add a beta button when showing the settings menu. 
         # Otherwise the button will be removed when using the context menus for the buttons

@@ -189,7 +189,7 @@
       <string notr="true"/>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::TextElideMode::ElideRight</enum>
@@ -3697,6 +3697,22 @@
     <hint type="destinationlabel">
      <x>225</x>
      <y>840</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>HideTitleBarFC</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>HideMenuIcon</receiver>
+   <slot>toggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>108</x>
+     <y>425</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>628</x>
+     <y>164</y>
     </hint>
    </hints>
   </connection>

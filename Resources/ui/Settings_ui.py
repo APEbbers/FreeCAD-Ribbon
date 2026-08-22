@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingswdhFzE.ui'
+## Form generated from reading UI file 'SettingsFbVMRD.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.2
 ##
@@ -11,7 +11,7 @@
 from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
@@ -1554,8 +1554,9 @@ class Ui_Settings(object):
         self.Enable_pinButton_Icon.toggled.connect(self.label_29.setEnabled)
         self.Enable_pinButton_Icon.toggled.connect(self.pinButton_open.setEnabled)
         self.Enable_pinButton_Icon.toggled.connect(self.pinButton_closed.setEnabled)
+        self.HideTitleBarFC.toggled.connect(self.HideMenuIcon.toggle)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(Settings)
