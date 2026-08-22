@@ -80,16 +80,24 @@ DefaultSettings = {
     "OverlayState": int(0),
     "StoredOverlayState": "",
     "UseButtonBackGround": bool(False),
-    "CustomColors": bool(False),
     "BorderTransparant": bool(True),
-    "Color_Borders": "",
+    "EnableBorderColor": bool(False),
+    "EnableBackGroundColor": bool(False),
+    "EnableBackGroundColor_App": bool(False),
+    "EnableBackGroundColor_Tab": bool(False),
+    "EnableBackGroundColor_TitleBar": bool(False),
+    "EnableTextColor": bool(False),
     # "Color_Background": "",
     "Color_Background_Hover": "",
     "Color_Background_App": "",
     "Color_Background_Tabs": "",
     "Color_Background_TitleBar": "",
     "Color_Font": "",
-    "CustomIcons": bool(False),
+    "HideMenuIcon": bool(False),
+    "Enable_Tab_Scroll_Icon": bool(False),
+    "Enable_Ribbon_Scroll_Icon": bool(False),
+    "Enable_MoreCommands_Icon": bool(False),
+    "Enable_pinButton_Icon": bool(False),
     "ScrollLeftButton_Tab": "",
     "ScrollRightButton_Tab": "",
     "ScrollLeftButton_Category": "",
@@ -557,11 +565,31 @@ class Parameters:
     BUTTON_BACKGROUND_ENABLED = Settings.GetBoolSetting("UseButtonBackGround")
     # endregion ------------------------------------------------------------------------------------------------------------
 
-    # region - Color and icon settings -------------------------------------------------------------------------------------
-    if Settings.GetBoolSetting("CustomIcons") is None:
-        CUSTOM_ICONS_ENABLED = bool(DefaultSettings["CustomIcons"])
-        Settings.SetBoolSetting("CustomIcons", CUSTOM_ICONS_ENABLED)
-    CUSTOM_ICONS_ENABLED = Settings.GetBoolSetting("CustomIcons")
+    # region - Icon settings -------------------------------------------------------------------------------------
+    if Settings.GetBoolSetting("HideMenuIcon") is None:
+        HIDE_MENU_ICON = bool(DefaultSettings["HideMenuIcon"])
+        Settings.SetBoolSetting("HideMenuIcon", HIDE_MENU_ICON)
+    HIDE_MENU_ICON = Settings.GetBoolSetting("HideMenuIcon")
+    
+    if Settings.GetBoolSetting("Enable_Tab_Scroll_Icon") is None:
+        ENABLE_TAB_SCROLL_ICON = bool(DefaultSettings["Enable_Tab_Scroll_Icon"])
+        Settings.SetBoolSetting("Enable_Tab_Scroll_Icon", ENABLE_TAB_SCROLL_ICON)
+    ENABLE_TAB_SCROLL_ICON = Settings.GetBoolSetting("Enable_Tab_Scroll_Icon")
+    
+    if Settings.GetBoolSetting("Enable_Ribbon_Scroll_Icon") is None:
+        ENABLE_RIBBON_SCROLL_ICON = bool(DefaultSettings["Enable_Ribbon_Scroll_Icon"])
+        Settings.SetBoolSetting("Enable_Ribbon_Scroll_Icon", ENABLE_RIBBON_SCROLL_ICON)
+    ENABLE_RIBBON_SCROLL_ICON = Settings.GetBoolSetting("Enable_Ribbon_Scroll_Icon")
+    
+    if Settings.GetBoolSetting("Enable_MoreCommands_Icon") is None:
+        ENABLE_MORE_COMMANDS_ICON = bool(DefaultSettings["Enable_MoreCommands_Icon"])
+        Settings.SetBoolSetting("Enable_MoreCommands_Icon", ENABLE_MORE_COMMANDS_ICON)
+    ENABLE_MORE_COMMANDS_ICON = Settings.GetBoolSetting("Enable_MoreCommands_Icon")
+    
+    if Settings.GetBoolSetting("Enable_pinButton_Icon") is None:
+        ENABLE_PINBUTTON_ICON = bool(DefaultSettings["Enable_pinButton_Icon"])
+        Settings.SetBoolSetting("Enable_pinButton_Icon", ENABLE_PINBUTTON_ICON)
+    ENABLE_PINBUTTON_ICON = Settings.GetBoolSetting("Enable_pinButton_Icon")
 
     if Settings.GetStringSetting("ScrollLeftButton_Tab") == "":
         SCROLL_LEFT_BUTTON_TAB = str(DefaultSettings["ScrollLeftButton_Tab"])
@@ -600,11 +628,39 @@ class Parameters:
         Settings.SetStringSetting("PinButton_closed", PIN_BUTTON_CLOSED)
     PIN_BUTTON_CLOSED = Settings.GetStringSetting("PinButton_closed")
 
-    if Settings.GetBoolSetting("CustomColors") is None:
-        CUSTOM_COLORS_ENABLED = bool(DefaultSettings["CustomColors"])
-        Settings.SetBoolSetting("CustomColors", CUSTOM_COLORS_ENABLED)
-    CUSTOM_COLORS_ENABLED = Settings.GetBoolSetting("CustomColors")
+    # endregion ------------------------------------------------------------------------------------------------------------
+    
+     # region - Color settings -------------------------------------------------------------------------------------
+    if Settings.GetBoolSetting("EnableBorderColor") is None:
+        ENABLE_BORDER_COLOR = bool(DefaultSettings["EnableBorderColor"])
+        Settings.SetBoolSetting("EnableBorderColor", ENABLE_BORDER_COLOR)
+    ENABLE_BORDER_COLOR = Settings.GetBoolSetting("EnableBorderColor")
+    
+    if Settings.GetBoolSetting("EnableBackGroundColor") is None:
+        ENABLE_BACKGROUND_COLOR = bool(DefaultSettings["EnableBackGroundColor"])
+        Settings.SetBoolSetting("EnableBackGroundColor", ENABLE_BACKGROUND_COLOR)
+    ENABLE_BACKGROUND_COLOR = Settings.GetBoolSetting("EnableBackGroundColor")
+    
+    if Settings.GetBoolSetting("EnableBackGroundColor_App") is None:
+        ENABLE_BACKGROUND_COLOR_APP = bool(DefaultSettings["EnableBackGroundColor_App"])
+        Settings.SetBoolSetting("EnableBackGroundColor_App", ENABLE_BACKGROUND_COLOR_APP)
+    ENABLE_BACKGROUND_COLOR_APP = Settings.GetBoolSetting("EnableBackGroundColor_App")
 
+    if Settings.GetBoolSetting("EnableBackGroundColor_Tab") is None:
+        ENABLE_BACKGROUND_COLOR_TAB = bool(DefaultSettings["EnableBackGroundColor_Tab"])
+        Settings.SetBoolSetting("EnableBackGroundColor_Tab", ENABLE_BACKGROUND_COLOR_TAB)
+    ENABLE_BACKGROUND_COLOR_TAB = Settings.GetBoolSetting("EnableBackGroundColor_Tab")
+    
+    if Settings.GetBoolSetting("EnableBackGroundColor_TitleBar") is None:
+        ENABLE_BACKGROUND_COLOR_TITLEBAR = bool(DefaultSettings["EnableBackGroundColor_TitleBar"])
+        Settings.SetBoolSetting("EnableBackGroundColor_TitleBar", ENABLE_BACKGROUND_COLOR_TITLEBAR)
+    ENABLE_BACKGROUND_COLOR_TITLEBAR = Settings.GetBoolSetting("EnableBackGroundColor_TitleBar")
+    
+    if Settings.GetBoolSetting("EnableTextColor") is None:
+        ENABLE_TEXT_COLOR = bool(DefaultSettings["EnableTextColor"])
+        Settings.SetBoolSetting("EnableTextColor", ENABLE_TEXT_COLOR)
+    ENABLE_TEXT_COLOR = Settings.GetBoolSetting("EnableTextColor")
+    
     if Settings.GetBoolSetting("BorderTransparant") is None:
         BORDER_TRANSPARANT = bool(DefaultSettings["BorderTransparant"])
         Settings.SetBoolSetting("BorderTransparant", BORDER_TRANSPARANT)

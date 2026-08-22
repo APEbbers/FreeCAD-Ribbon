@@ -4856,6 +4856,7 @@ class ModernMenu(RibbonBar):
                 or mw.toolBarArea(toolbar) == Qt.ToolBarArea.RightToolBarArea
                 or mw.toolBarArea(toolbar) == Qt.ToolBarArea.BottomToolBarArea
             ):
+                # print(toolbar)
                 toolbar.setEnabled(True)
                 toolbar.setVisible(True)
             # # # Show specific toolbars and go to the next
@@ -4863,6 +4864,8 @@ class ModernMenu(RibbonBar):
                 self.quickAccessToolBar().objectName(),
                 self.rightToolBar().objectName(),
             ]:
+                # print(toolbar)
+                # print(mw.toolBarArea(toolbar))
                 toolbar.setEnabled(True)
                 toolbar.setVisible(True)
         StatusArea = mw.findChildren(QWidget, "StatusBarArea")

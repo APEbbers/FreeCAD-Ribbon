@@ -165,7 +165,6 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
         "Border_Color" returns string,
         "FontColor" returns string,
         "ApplicationButton_Background" returns string,
-        "FontColor" returns string,
         "UpdateColor" returns string,
         "DevelopColor" returns string,
         "ScrollLeftButton_Tab returns QIcon",
@@ -221,10 +220,22 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
         if isIcon is True:
             result = None
             PixmapName = ""
-            if Parameters.CUSTOM_ICONS_ENABLED is True or ShowCustomIcon is True:
+            
+            if ControlName is "ScrollLeftButton_Tab" and Parameters.ENABLE_RIBBON_SCROLL_ICON is True:
                 PixmapName = StyleMapping["Stylesheets"][ControlName]
-            else:
-                PixmapName = ""
+            if ControlName is "ScrollRightButton_Tab" and Parameters.ENABLE_RIBBON_SCROLL_ICON is True:
+                PixmapName = StyleMapping["Stylesheets"][ControlName]
+            if ControlName is "ScrollLeftButton_Category" and Parameters.ENABLE_TAB_SCROLL_ICON is True:
+                PixmapName = StyleMapping["Stylesheets"][ControlName]
+            if ControlName is "ScrollRightButton_Category" and Parameters.ENABLE_TAB_SCROLL_ICON is True:
+                PixmapName = StyleMapping["Stylesheets"][ControlName]
+            if ControlName is "OptionButton" and Parameters.ENABLE_MORE_COMMANDS_ICON is True:
+                PixmapName = StyleMapping["Stylesheets"][ControlName]
+            if ControlName is "PinButton_open" and Parameters.ENABLE_PINBUTTON_ICON is True:
+                PixmapName = StyleMapping["Stylesheets"][ControlName]
+            if ControlName is "PinButton_closed" and Parameters.ENABLE_PINBUTTON_ICON is True:
+                PixmapName = StyleMapping["Stylesheets"][ControlName]
+
             if PixmapName == "" or PixmapName is None:
                 PixmapName = StyleMapping_default["Stylesheets"][currentStyleSheet][
                     ControlName
@@ -241,8 +252,15 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
         if isIcon is False:
             result = ""
 
-            if Parameters.CUSTOM_COLORS_ENABLED is True:
+            if ControlName is "Background_Color" and Parameters.ENABLE_BACKGROUND_COLOR is True:
                 result = StyleMapping["Stylesheets"][ControlName]
+            if ControlName is "Border_Color" and Parameters.ENABLE_BORDER_COLOR is True:
+                result = StyleMapping["Stylesheets"][ControlName]
+            if ControlName is "FontColor" and Parameters.ENABLE_TEXT_COLOR is True:
+                result = StyleMapping["Stylesheets"][ControlName]
+            if ControlName is "ApplicationButton_Background" and Parameters.ENABLE_BACKGROUND_COLOR_APP is True:
+                result = StyleMapping["Stylesheets"][ControlName]
+
             if (
                 Parameters.BUTTON_BACKGROUND_ENABLED is False
                 and Parameters.USE_OVERLAY is True

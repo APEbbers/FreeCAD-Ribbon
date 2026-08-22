@@ -1,0 +1,96 @@
+QToolTip {
+   background-color: #FFFFE1;
+   color: black;
+   border: black solid 1px;
+   border-radius: 2px;
+   }
+
+QTabBar {
+  margin: 0px;
+  padding-bottom: 0px;
+  padding-top: 0px;}
+  QTabBar::tab {
+  	background: transparent;
+	margin-top: 4px;
+	margin-bottom: 4px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	spacing: 0px;}
+  QTabBar::scroller {
+    min-width: 40px;}
+
+QDockWidget {
+	margin: 0px;
+	padding-bottom: 0px;
+	padding-top: 0px;}
+	QDockWidget::title {
+		margin: 0px;
+		padding: 0px;
+		text-align: center; }
+
+QDockWidget::title QToolButton, QDockWidget::title QWidget#Selector > QToolButton {
+	margin: 1px; }
+
+RibbonApplicationButton::menu-indicator {
+    image: none;
+	border: none;
+}
+
+QTabBar, QDockWidget, QTabBar {
+  qproperty-drawBase: 0;
+}
+
+RibbonBar, RibbonTitleWidget {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	margin-bottom: 0px;
+	spacing: 0px;
+}
+
+RibbonCategory {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-right: 3px;
+	margin-left: 3px;
+	margin-bottom: 0px;
+	spacing: 0px;
+}
+
+RibbonCategoryScrollArea {
+    background-color: transparent;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	margin-bottom: 0px;
+	spacing: 0px;
+}
+
+RibbonCategoryScrollAreaContents {
+    background-color: transparent;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+	margin-bottom: 0px;
+	spacing: 0px;
+}
+
+QTabBar {
+    background-color: transparent;
+}
+
+/* Needed for the ColorPalette Theme */
+QToolBar QToolButton {
+  min-width: 8px;
+  min-height: 8px;
+}
+QToolBar {
+    border: none;
+}

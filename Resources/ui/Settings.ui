@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>736</width>
+    <width>907</width>
     <height>847</height>
    </rect>
   </property>
@@ -218,7 +218,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>681</width>
+            <width>852</width>
             <height>1278</height>
            </rect>
           </property>
@@ -1521,7 +1521,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>681</width>
+            <width>852</width>
             <height>646</height>
            </rect>
           </property>
@@ -1874,9 +1874,9 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
-            <width>681</width>
-            <height>844</height>
+            <y>-170</y>
+            <width>852</width>
+            <height>816</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_36">
@@ -1892,20 +1892,6 @@
               <string>Colors</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_21">
-              <item row="0" column="0">
-               <widget class="QCheckBox" name="CustomColors">
-                <property name="text">
-                 <string>Enable custom colors</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QCheckBox" name="BorderTransparant">
-                <property name="text">
-                 <string>Set border invisible for ribbon buttons</string>
-                </property>
-               </widget>
-              </item>
               <item row="2" column="0">
                <widget class="QFrame" name="ColorS">
                 <property name="enabled">
@@ -1920,20 +1906,7 @@
                 <layout class="QGridLayout" name="gridLayout_35">
                  <item row="0" column="0">
                   <layout class="QGridLayout" name="gridLayout_20">
-                   <item row="4" column="0">
-                    <widget class="QLabel" name="label_47">
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>50</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the background color for titlebar:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
+                   <item row="1" column="2">
                     <widget class="Gui::ColorButton" name="Color_Background_Hover">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1955,7 +1928,42 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="1">
+                   <item row="5" column="2">
+                    <widget class="Gui::ColorButton" name="Color_Font"/>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QLabel" name="label_47">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>50</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the background color for titlebar:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="Gui::ColorButton" name="Color_Background_Tabs">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="allowTransparency">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
                     <widget class="Gui::ColorButton" name="Color_Borders">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1977,52 +1985,7 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="3" column="0">
-                    <widget class="QLabel" name="label_46">
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>50</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the background color for the tabs:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
-                    <widget class="Gui::ColorButton" name="Color_Background_App">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>20</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string notr="true"/>
-                     </property>
-                     <property name="allowTransparency">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="0">
-                    <widget class="QLabel" name="label_31">
-                     <property name="text">
-                      <string>Set the text color</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="1">
-                    <widget class="Gui::ColorButton" name="Color_Font"/>
-                   </item>
-                   <item row="1" column="0">
+                   <item row="1" column="1">
                     <widget class="QLabel" name="label_30">
                      <property name="minimumSize">
                       <size>
@@ -2044,7 +2007,29 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="0">
+                   <item row="2" column="2">
+                    <widget class="Gui::ColorButton" name="Color_Background_App">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string notr="true"/>
+                     </property>
+                     <property name="allowTransparency">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
                     <widget class="QLabel" name="label_9">
                      <property name="minimumSize">
                       <size>
@@ -2066,7 +2051,20 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="4" column="1">
+                   <item row="3" column="1">
+                    <widget class="QLabel" name="label_46">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>50</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the background color for the tabs:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="2">
                     <widget class="Gui::ColorButton" name="Color_Background_TitleBar">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -2085,7 +2083,7 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="0">
+                   <item row="0" column="1">
                     <widget class="QLabel" name="label_6">
                      <property name="minimumSize">
                       <size>
@@ -2107,22 +2105,52 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="3" column="1">
-                    <widget class="Gui::ColorButton" name="Color_Background_Tabs">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
+                   <item row="5" column="1">
+                    <widget class="QLabel" name="label_31">
+                     <property name="text">
+                      <string>Set the text color</string>
                      </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>20</width>
-                       <height>40</height>
-                      </size>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QCheckBox" name="EnableBorderColor">
+                     <property name="text">
+                      <string/>
                      </property>
-                     <property name="allowTransparency">
-                      <bool>true</bool>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QCheckBox" name="EnableBackGroundColor">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QCheckBox" name="EnableBackGroundColor_App">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QCheckBox" name="EnableBackGroundColor_Tab">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QCheckBox" name="EnableBackGroundColor_TitleBar">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="0">
+                    <widget class="QCheckBox" name="EnableTextColor">
+                     <property name="text">
+                      <string/>
                      </property>
                     </widget>
                    </item>
@@ -2144,6 +2172,20 @@
                 </layout>
                </widget>
               </item>
+              <item row="0" column="0">
+               <widget class="QCheckBox" name="HideMenuIcon">
+                <property name="text">
+                 <string>Hide FreeCAD icon for menu button</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="BorderTransparant">
+                <property name="text">
+                 <string>Set border invisible for ribbon buttons</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </widget>
            </item>
@@ -2153,7 +2195,20 @@
               <string>Icons</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_23">
-              <item row="1" column="0">
+              <item row="0" column="1">
+               <spacer name="horizontalSpacer_6">
+                <property name="orientation">
+                 <enum>Qt::Orientation::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="0">
                <widget class="QGroupBox" name="IconS">
                 <property name="enabled">
                  <bool>false</bool>
@@ -2161,224 +2216,14 @@
                 <layout class="QGridLayout" name="gridLayout_33">
                  <item row="0" column="0">
                   <layout class="QGridLayout" name="gridLayout_22">
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="label_16">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tab bar scroll left:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QPushButton" name="Tab_Scroll_Left">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>10</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>20</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                     <property name="baseSize">
-                      <size>
-                       <width>10</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string notr="true"/>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QLabel" name="label_17">
-                     <property name="text">
-                      <string>Tab bar scroll right:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="1">
-                    <widget class="QPushButton" name="Tab_Scroll_Right">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>10</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>20</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                     <property name="baseSize">
-                      <size>
-                       <width>10</width>
-                       <height>40</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string notr="true"/>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="label_18">
-                     <property name="text">
-                      <string>Ribbon bar scroll left:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="1">
-                    <widget class="QPushButton" name="Ribbon_Scroll_Left">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>20</width>
-                       <height>60</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>20</width>
-                       <height>60</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string notr="true"/>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="0">
-                    <widget class="QLabel" name="label_19">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ribbon bar scroll right:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="1">
-                    <widget class="QPushButton" name="Ribbon_Scroll_Right">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>20</width>
-                       <height>60</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>20</width>
-                       <height>60</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string notr="true"/>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="0">
-                    <widget class="QLabel" name="label_20">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;More commands button:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="1">
-                    <widget class="QPushButton" name="MoreCommands">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>30</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>30</width>
-                       <height>20</height>
-                      </size>
-                     </property>
-                     <property name="baseSize">
-                      <size>
-                       <width>30</width>
-                       <height>30</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string notr="true"/>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="0">
-                    <widget class="QLabel" name="label_28">
-                     <property name="text">
-                      <string>Pin button - unpinned:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="1">
-                    <widget class="QPushButton" name="pinButton_open">
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>30</width>
-                       <height>30</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>30</width>
-                       <height>30</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string notr="true"/>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="6" column="0">
+                   <item row="6" column="1">
                     <widget class="QLabel" name="label_29">
                      <property name="text">
                       <string>Pin button - pinned:</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="6" column="1">
+                   <item row="6" column="2">
                     <widget class="QPushButton" name="pinButton_closed">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -2409,30 +2254,248 @@
                      </property>
                     </widget>
                    </item>
+                   <item row="1" column="2">
+                    <widget class="QPushButton" name="Tab_Scroll_Right">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>10</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="baseSize">
+                      <size>
+                       <width>10</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string notr="true"/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="QPushButton" name="Ribbon_Scroll_Left">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>20</width>
+                       <height>60</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>20</width>
+                       <height>60</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string notr="true"/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QLabel" name="label_19">
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ribbon bar scroll right:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="2">
+                    <widget class="QPushButton" name="MoreCommands">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>30</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>30</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="baseSize">
+                      <size>
+                       <width>30</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string notr="true"/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="1">
+                    <widget class="QLabel" name="label_28">
+                     <property name="text">
+                      <string>Pin button - unpinned:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QLabel" name="label_18">
+                     <property name="text">
+                      <string>Ribbon bar scroll left:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="2">
+                    <widget class="QPushButton" name="pinButton_open">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>30</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>30</width>
+                       <height>30</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string notr="true"/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QLabel" name="label_17">
+                     <property name="text">
+                      <string>Tab bar scroll right:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QPushButton" name="Tab_Scroll_Left">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>10</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>20</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="baseSize">
+                      <size>
+                       <width>10</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string notr="true"/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QLabel" name="label_20">
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;More commands button:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="QPushButton" name="Ribbon_Scroll_Right">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>20</width>
+                       <height>60</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>20</width>
+                       <height>60</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string notr="true"/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QLabel" name="label_16">
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tab bar scroll left:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QCheckBox" name="Enable_MoreCommands_Icon">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="0" rowspan="2">
+                    <widget class="QCheckBox" name="Enable_pinButton_Icon">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0" rowspan="2">
+                    <widget class="QCheckBox" name="Enable_Ribbon_Scroll_Icon">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0" rowspan="2">
+                    <widget class="QCheckBox" name="Enable_Tab_Scroll_Icon">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
                   </layout>
                  </item>
                 </layout>
                </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QCheckBox" name="CustomIcons">
-                <property name="text">
-                 <string>Enable custom icons</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <spacer name="horizontalSpacer_6">
-                <property name="orientation">
-                 <enum>Qt::Orientation::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
               </item>
              </layout>
             </widget>
@@ -2474,7 +2537,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>681</width>
+            <width>852</width>
             <height>695</height>
            </rect>
           </property>
@@ -3120,22 +3183,6 @@
    </hints>
   </connection>
   <connection>
-   <sender>CustomIcons</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>IconS</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>236</x>
-     <y>597</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>227</x>
-     <y>897</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>ShowText_Medium</sender>
    <signal>toggled(bool)</signal>
    <receiver>EnableWrap_Medium</receiver>
@@ -3164,22 +3211,6 @@
     <hint type="destinationlabel">
      <x>673</x>
      <y>1130</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>CustomColors</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>ColorS</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>107</x>
-     <y>173</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>362</x>
-     <y>235</y>
     </hint>
    </hints>
   </connection>
