@@ -21,8 +21,6 @@ from PySide.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboB
     QSlider, QSpacerItem, QSpinBox, QTabWidget,
     QToolButton, QVBoxLayout, QWidget)
 
-from Gui.Widgets import Gui
-
 class Ui_Settings(object):
     def setupUi(self, Settings):
         if not Settings.objectName():
