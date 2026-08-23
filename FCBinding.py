@@ -218,11 +218,8 @@ class ModernMenu(RibbonBar):
     # Define a placeholder for the ribbon height
     RibbonHeight = 0
 
-    # Set a size factor for the buttons
-    sizeFactor = Parameters.SIZE_FACTOR
-    # Create an offset for the panelheight
+    # Create an offset for the panelheight. This is used for creating space for the panel titles
     PanelHeightOffset = Parameters.PANEL_HEIGHT_OFFSET
-    # PanelHeightOffset = 22
     # Create an offset for the whole ribbon height
     RibbonOffset = (
         20 + QuickAccessButtonSize * 2
@@ -5436,7 +5433,7 @@ class ModernMenu(RibbonBar):
                     ribbonHeight = LargeButtonHeight
         
         result = ribbonHeight + offset
-        if Parameters.HIDE_PANEL_TITLES:
+        if Parameters.HIDE_PANEL_TITLES is True:
             ribbonHeight + offset - self.panelTitleheight
         return result
 
@@ -6811,8 +6808,11 @@ class ModernMenu(RibbonBar):
         panel._actionsLayout.setSpacing(self.ButtonSpacing)
         panel._actionsLayout.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         panel._actionsLayout.setContentsMargins(0, self.TopMargin, 3, self.BottomMargin) # Left, Top, Right, Bottom
-        panel._mainLayout.setSpacing(6)       
-        panel.setFixedHeight(self.ReturnRibbonHeight(Parameters.PANEL_HEIGHT_OFFSET))
+        panel._mainLayout.setSpacing(6)
+        # If the panel titles are hidden, set the panel offset value to zero
+        if Parameters.HIDE_PANEL_TITLES:
+            self.PanelHeightOffset = 0
+        panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
         # Set the ribbonheight
         self.RibbonHeight = panel.height() + self.RibbonOffset
         # Correct the width of the (hidden) option button

@@ -87,6 +87,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "BackupFolder": Parameters.BACKUP_LOCATION,
         "TabBar_Style": Parameters.TABBAR_STYLE,
         "Toolbar_Position": Parameters.TOOLBAR_POSITION,
+        "HidePanelTitles": Parameters.HIDE_PANEL_TITLES,
         "Hide_Titlebar_FC": Parameters.HIDE_TITLEBAR_FC,
         "IconSize_Small": Parameters.ICON_SIZE_SMALL,
         "IconSize_Medium": Parameters.ICON_SIZE_MEDIUM,
