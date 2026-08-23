@@ -267,6 +267,33 @@
                   <layout class="QGridLayout" name="gridLayout_25">
                    <item row="0" column="0">
                     <layout class="QGridLayout" name="gridLayout_24">
+                     <item row="0" column="0">
+                      <widget class="QLabel" name="label_24">
+                       <property name="font">
+                        <font>
+                         <bold>false</bold>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the tab style: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item row="2" column="0" colspan="2">
+                      <widget class="QCheckBox" name="HideTitleBarFC">
+                       <property name="font">
+                        <font>
+                         <bold>false</bold>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Hide the titlebar of FreeCAD</string>
+                       </property>
+                       <property name="checked">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
                      <item row="1" column="1">
                       <widget class="QComboBox" name="ToolbarPositions">
                        <property name="minimumSize">
@@ -295,18 +322,37 @@
                        </item>
                       </widget>
                      </item>
-                     <item row="2" column="0" colspan="2">
-                      <widget class="QCheckBox" name="HideTitleBarFC">
+                     <item row="1" column="0">
+                      <widget class="QLabel" name="label_36">
                        <property name="font">
                         <font>
                          <bold>false</bold>
                         </font>
                        </property>
                        <property name="text">
-                        <string>Hide the titlebar of FreeCAD</string>
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the toolbar positions: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                        </property>
-                       <property name="checked">
+                      </widget>
+                     </item>
+                     <item row="4" column="0" colspan="2">
+                      <widget class="QLabel" name="label_8">
+                       <property name="minimumSize">
+                        <size>
+                         <width>0</width>
+                         <height>0</height>
+                        </size>
+                       </property>
+                       <property name="text">
+                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;For linux users: When running under Wayland, you have to set a window rule to hide the titlebar or change your theme! See &amp;quot; &lt;/span&gt;&lt;a href=&quot;https://codeberg.org/apebbers/FreeCAD-Ribbon/wiki/Workarounds#wayland&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#926ee4;&quot;&gt;Wayland workaround&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;&amp;quot; for an example. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                       </property>
+                       <property name="wordWrap">
                         <bool>true</bool>
+                       </property>
+                       <property name="openExternalLinks">
+                        <bool>true</bool>
+                       </property>
+                       <property name="textInteractionFlags">
+                        <set>Qt::TextInteractionFlag::TextBrowserInteraction</set>
                        </property>
                       </widget>
                      </item>
@@ -343,49 +389,10 @@
                        </item>
                       </widget>
                      </item>
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_24">
-                       <property name="font">
-                        <font>
-                         <bold>false</bold>
-                        </font>
-                       </property>
+                     <item row="3" column="0">
+                      <widget class="QCheckBox" name="HidePanelTitles">
                        <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the tab style: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="0">
-                      <widget class="QLabel" name="label_36">
-                       <property name="font">
-                        <font>
-                         <bold>false</bold>
-                        </font>
-                       </property>
-                       <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the toolbar positions: &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="3" column="0" colspan="2">
-                      <widget class="QLabel" name="label_8">
-                       <property name="minimumSize">
-                        <size>
-                         <width>0</width>
-                         <height>0</height>
-                        </size>
-                       </property>
-                       <property name="text">
-                        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;For linux users: When running under Wayland, you have to set a window rule to hide the titlebar or change your theme! See &amp;quot; &lt;/span&gt;&lt;a href=&quot;https://codeberg.org/apebbers/FreeCAD-Ribbon/wiki/Workarounds#wayland&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#926ee4;&quot;&gt;Wayland workaround&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;&amp;quot; for an example. &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                       </property>
-                       <property name="wordWrap">
-                        <bool>true</bool>
-                       </property>
-                       <property name="openExternalLinks">
-                        <bool>true</bool>
-                       </property>
-                       <property name="textInteractionFlags">
-                        <set>Qt::TextInteractionFlag::TextBrowserInteraction</set>
+                        <string>Hide panel titles</string>
                        </property>
                       </widget>
                      </item>
@@ -1521,8 +1528,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1224</width>
-            <height>820</height>
+            <width>326</width>
+            <height>286</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_43">
@@ -1875,8 +1882,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1224</width>
-            <height>820</height>
+            <width>358</width>
+            <height>800</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_36">
@@ -2607,8 +2614,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1224</width>
-            <height>766</height>
+            <width>478</width>
+            <height>710</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_28">

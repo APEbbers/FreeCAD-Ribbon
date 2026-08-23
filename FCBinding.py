@@ -5403,7 +5403,8 @@ class ModernMenu(RibbonBar):
                 if Parameters.ICON_SIZE_MEDIUM * 2 <= LargeButtonHeight:
                     ribbonHeight = LargeButtonHeight
 
-        # return ribbonHeight + offset + Parameters.RIBBON_HEIGHT_OFFSET
+        if Parameters.HIDE_PANEL_TITLES:
+            offset = offset - Parameters.FONTSIZE_PANELS
         return ribbonHeight + offset
 
     def ReturnCommandIcon(self, CommandName: str, pixmap: str = "") -> QIcon:

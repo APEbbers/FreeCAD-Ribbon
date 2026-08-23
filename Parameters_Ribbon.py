@@ -113,6 +113,7 @@ DefaultSettings = {
     "FontSize_Panels": int(11),
     "Toolbar_Position": int(0),
     "Hide_Titlebar_FC": bool(True),
+    "HidePanelTitles": bool(False),
     "BetaFunctions": bool(True),
     "SizeFactor": float(1.3),
     "PanelHeightOffset": int(24),
@@ -320,6 +321,11 @@ class Parameters:
         HIDE_TITLEBAR_FC = bool(DefaultSettings["Hide_Titlebar_FC"])
         Settings.SetBoolSetting("Hide_Titlebar_FC", HIDE_TITLEBAR_FC)
     HIDE_TITLEBAR_FC = Settings.GetBoolSetting("Hide_Titlebar_FC")
+    
+    if Settings.GetBoolSetting("HidePanelTitles") is None:
+        HIDE_PANEL_TITLES = bool(DefaultSettings["HidePanelTitles"])
+        Settings.SetBoolSetting("HHidePanelTitles", HIDE_PANEL_TITLES)
+    HIDE_PANEL_TITLES = Settings.GetBoolSetting("HidePanelTitles")
     # endregion ------------------------------------------------------------------------------------------------------------
 
     # region - Define the icon sizes ---------------------------------------------------------------------------------------

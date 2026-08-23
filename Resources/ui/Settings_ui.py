@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsFbVMRD.ui'
+## Form generated from reading UI file 'SettingsyOtGPp.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.2
 ##
@@ -11,7 +11,7 @@
 from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
@@ -20,6 +20,8 @@ from PySide.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboB
     QLabel, QPushButton, QScrollArea, QSizePolicy,
     QSlider, QSpacerItem, QSpinBox, QTabWidget,
     QToolButton, QVBoxLayout, QWidget)
+
+from Gui.Widgets import Gui
 
 class Ui_Settings(object):
     def setupUi(self, Settings):
@@ -152,14 +154,11 @@ class Ui_Settings(object):
         self.gridLayout_25.setObjectName(u"gridLayout_25")
         self.gridLayout_24 = QGridLayout()
         self.gridLayout_24.setObjectName(u"gridLayout_24")
-        self.ToolbarPositions = QComboBox(self.groupBox_10)
-        self.ToolbarPositions.addItem("")
-        self.ToolbarPositions.addItem("")
-        self.ToolbarPositions.setObjectName(u"ToolbarPositions")
-        self.ToolbarPositions.setMinimumSize(QSize(180, 0))
-        self.ToolbarPositions.setFont(font)
+        self.label_24 = QLabel(self.groupBox_10)
+        self.label_24.setObjectName(u"label_24")
+        self.label_24.setFont(font)
 
-        self.gridLayout_24.addWidget(self.ToolbarPositions, 1, 1, 1, 1)
+        self.gridLayout_24.addWidget(self.label_24, 0, 0, 1, 1)
 
         self.HideTitleBarFC = QCheckBox(self.groupBox_10)
         self.HideTitleBarFC.setObjectName(u"HideTitleBarFC")
@@ -168,21 +167,14 @@ class Ui_Settings(object):
 
         self.gridLayout_24.addWidget(self.HideTitleBarFC, 2, 0, 1, 2)
 
-        self.TabbarStyle = QComboBox(self.groupBox_10)
-        self.TabbarStyle.addItem("")
-        self.TabbarStyle.addItem("")
-        self.TabbarStyle.addItem("")
-        self.TabbarStyle.setObjectName(u"TabbarStyle")
-        self.TabbarStyle.setMinimumSize(QSize(180, 0))
-        self.TabbarStyle.setFont(font)
+        self.ToolbarPositions = QComboBox(self.groupBox_10)
+        self.ToolbarPositions.addItem("")
+        self.ToolbarPositions.addItem("")
+        self.ToolbarPositions.setObjectName(u"ToolbarPositions")
+        self.ToolbarPositions.setMinimumSize(QSize(180, 0))
+        self.ToolbarPositions.setFont(font)
 
-        self.gridLayout_24.addWidget(self.TabbarStyle, 0, 1, 1, 1)
-
-        self.label_24 = QLabel(self.groupBox_10)
-        self.label_24.setObjectName(u"label_24")
-        self.label_24.setFont(font)
-
-        self.gridLayout_24.addWidget(self.label_24, 0, 0, 1, 1)
+        self.gridLayout_24.addWidget(self.ToolbarPositions, 1, 1, 1, 1)
 
         self.label_36 = QLabel(self.groupBox_10)
         self.label_36.setObjectName(u"label_36")
@@ -197,7 +189,22 @@ class Ui_Settings(object):
         self.label_8.setOpenExternalLinks(True)
         self.label_8.setTextInteractionFlags(Qt.TextInteractionFlag.TextBrowserInteraction)
 
-        self.gridLayout_24.addWidget(self.label_8, 3, 0, 1, 2)
+        self.gridLayout_24.addWidget(self.label_8, 4, 0, 1, 2)
+
+        self.TabbarStyle = QComboBox(self.groupBox_10)
+        self.TabbarStyle.addItem("")
+        self.TabbarStyle.addItem("")
+        self.TabbarStyle.addItem("")
+        self.TabbarStyle.setObjectName(u"TabbarStyle")
+        self.TabbarStyle.setMinimumSize(QSize(180, 0))
+        self.TabbarStyle.setFont(font)
+
+        self.gridLayout_24.addWidget(self.TabbarStyle, 0, 1, 1, 1)
+
+        self.HidePanelTitles = QCheckBox(self.groupBox_10)
+        self.HidePanelTitles.setObjectName(u"HidePanelTitles")
+
+        self.gridLayout_24.addWidget(self.HidePanelTitles, 3, 0, 1, 1)
 
 
         self.gridLayout_25.addLayout(self.gridLayout_24, 0, 0, 1, 1)
@@ -1584,19 +1591,20 @@ class Ui_Settings(object):
         self.LoadDialogs.setText(QCoreApplication.translate("Settings", u"Load dialogs as panels", None))
         self.groupBox.setTitle(QCoreApplication.translate("Settings", u"Ribbon settings", None))
         self.groupBox_10.setTitle(QCoreApplication.translate("Settings", u"Tab style", None))
+        self.label_24.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the tab style: </p></body></html>", None))
+        self.HideTitleBarFC.setText(QCoreApplication.translate("Settings", u"Hide the titlebar of FreeCAD", None))
         self.ToolbarPositions.setItemText(0, QCoreApplication.translate("Settings", u"Toolbars above tabbar", None))
         self.ToolbarPositions.setItemText(1, QCoreApplication.translate("Settings", u"Toolbars inline with tabbar", None))
 
         self.ToolbarPositions.setCurrentText(QCoreApplication.translate("Settings", u"Toolbars above tabbar", None))
-        self.HideTitleBarFC.setText(QCoreApplication.translate("Settings", u"Hide the titlebar of FreeCAD", None))
+        self.label_36.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the toolbar positions: </p></body></html>", None))
+        self.label_8.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">For linux users: When running under Wayland, you have to set a window rule to hide the titlebar or change your theme! See &quot; </span><a href=\"https://codeberg.org/apebbers/FreeCAD-Ribbon/wiki/Workarounds#wayland\"><span style=\" text-decoration: underline; color:#926ee4;\">Wayland workaround</span></a><span style=\" font-size:8pt; font-style:italic;\">&quot; for an example. </span></p></body></html>", None))
         self.TabbarStyle.setItemText(0, QCoreApplication.translate("Settings", u"Icon + text", None))
         self.TabbarStyle.setItemText(1, QCoreApplication.translate("Settings", u"Icon only", None))
         self.TabbarStyle.setItemText(2, QCoreApplication.translate("Settings", u"Text only", None))
 
         self.TabbarStyle.setCurrentText(QCoreApplication.translate("Settings", u"Icon + text", None))
-        self.label_24.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the tab style: </p></body></html>", None))
-        self.label_36.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the toolbar positions: </p></body></html>", None))
-        self.label_8.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-size:8pt; font-style:italic;\">For linux users: When running under Wayland, you have to set a window rule to hide the titlebar or change your theme! See &quot; </span><a href=\"https://codeberg.org/apebbers/FreeCAD-Ribbon/wiki/Workarounds#wayland\"><span style=\" text-decoration: underline; color:#926ee4;\">Wayland workaround</span></a><span style=\" font-size:8pt; font-style:italic;\">&quot; for an example. </span></p></body></html>", None))
+        self.HidePanelTitles.setText(QCoreApplication.translate("Settings", u"Hide panel titles", None))
         self.groupBox_5.setTitle(QCoreApplication.translate("Settings", u"Panels", None))
         self.label.setText(QCoreApplication.translate("Settings", u"No. of columns per panel:", None))
         self.label_2.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-style:italic;\">Set to '0'  to disable the maximum of columns</span></p></body></html>", None))

@@ -151,6 +151,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "BackupFolder": Parameters.BACKUP_LOCATION,
         "TabBar_Style": Parameters.TABBAR_STYLE,
         "Toolbar_Position": Parameters.TOOLBAR_POSITION,
+        "HidePanelTitles": Parameters.HIDE_PANEL_TITLES,
         "Hide_Titlebar_FC": Parameters.HIDE_TITLEBAR_FC,
         "Link_IconSizes": Parameters.LINK_ICON_SIZES,
         "IconSize_Small": Parameters.ICON_SIZE_SMALL,
@@ -633,6 +634,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.on_ToolbarPositions_currentIndexChanged
         )
         self.form.HideTitleBarFC.clicked.connect(self.on_HideTitleBarFC_clicked)
+        self.form.HidePanelTitles.clicked.connect(self.on_HidePanelTitles_clicked)
         # Connect icon sizes
         self.form.LinkIconSizes.clicked.connect(self.on_LinkIconSizes_clicked)
         self.form.IconSize_Small.textChanged.connect(self.on_IconSize_Small_TextChanged)
@@ -904,6 +906,13 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.ValuesToUpdate["Hide_Titlebar_FC"] = True
         if self.form.HideTitleBarFC.isChecked() is False:
             self.ValuesToUpdate["Hide_Titlebar_FC"] = False
+        self.settingChanged = True
+        
+    def on_HidePanelTitles_clicked(self):
+        if self.form.HidePanelTitles.isChecked() is True:
+            self.ValuesToUpdate["HidePanelTitles"] = True
+        if self.form.HidePanelTitles.isChecked() is False:
+            self.ValuesToUpdate["HidePanelTitles"] = False
         self.settingChanged = True
         
     def on_LinkIconSizes_clicked(self):
@@ -1580,6 +1589,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         Parameters_Ribbon.Settings.SetBoolSetting(
             "Hide_Titlebar_FC", self.OriginalValues["Hide_Titlebar_FC"]
         )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "HidePanelTitles", self.OriginalValues["HidePanelTitles"]
+        )
         # Save icon sizes
         Parameters_Ribbon.Settings.SetBoolSetting(
             "Link_IconSizes", self.OriginalValues["Link_IconSizes"]
@@ -1785,6 +1797,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         )
         Parameters_Ribbon.Settings.SetBoolSetting(
             "Hide_Titlebar_FC", self.ValuesToUpdate["Hide_Titlebar_FC"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "HidePanelTitles", self.ValuesToUpdate["HidePanelTitles"]
         )
         # Save icon sizes
         Parameters_Ribbon.Settings.SetBoolSetting(
@@ -2006,6 +2021,10 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.form.HideTitleBarFC.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.HideTitleBarFC.setCheckState(Qt.CheckState.Unchecked)
+        if DefaultSettings["HidePanelTitles"] is True:
+            self.form.HidePanelTitles.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.HidePanelTitles.setCheckState(Qt.CheckState.Unchecked)
         
         if DefaultSettings["Link_IconSizes"] is True:
             self.form.LinkIconSizes.setCheckState(Qt.CheckState.Checked)
@@ -2082,7 +2101,11 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.settingChanged = True
 
         # Set the color and icon buttons
-        self.form.CustomIcons.setCheckState(Qt.CheckState.Unchecked)
+        self.form.HideMenuIcon.setCheckState(Qt.CheckState.Unchecked)
+        self.form.Enable_Tab_Scroll_Icon.setCheckState(Qt.CheckState.Unchecked)
+        self.form.Enable_Ribbon_Scroll_Icon.setCheckState(Qt.CheckState.Unchecked)
+        self.form.Enable_MoreCommands_Icon.setCheckState(Qt.CheckState.Unchecked)
+        self.form.Enable_pinButton_Icon.setCheckState(Qt.CheckState.Unchecked)
 
         self.form.Tab_Scroll_Left.setIcon(
             StyleMapping_Ribbon.ReturnStyleItem("ScrollLeftButton_Tab", False)
@@ -2152,6 +2175,13 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
                 self.form.pinButton_closed.height() - 6,
             )
         )
+        
+        self.form.EnableBorderColor.setCheckState(Qt.CheckState.Unchecked)
+        self.form.EnableBackGroundColor.setCheckState(Qt.CheckState.Unchecked)
+        self.form.EnableBackGroundColor_App.setCheckState(Qt.CheckState.Unchecked)
+        self.form.EnableBackGroundColor_Tab.setCheckState(Qt.CheckState.Unchecked)
+        self.form.EnableBackGroundColor_TitleBar.setCheckState(Qt.CheckState.Unchecked)
+        self.form.EnableTextColor.setCheckState(Qt.CheckState.Unchecked)
 
         self.form.Color_Borders.setProperty(
             "color", QColor(StyleMapping_Ribbon.ReturnStyleItem("Color_Borders"))
