@@ -348,10 +348,11 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.label_4.setText(Parameters.BACKUP_LOCATION)
         self.form.TabbarStyle.setCurrentIndex(Parameters.TABBAR_STYLE)
         self.form.ToolbarPositions.setCurrentIndex(Parameters.TOOLBAR_POSITION)
-        if (
-            Parameters.HIDE_TITLEBAR_FC is True
-            or Parameters.HIDE_TITLEBAR_FC is None
-        ):
+        if Parameters.HIDE_PANEL_TITLES is True or Parameters.HIDE_PANEL_TITLES is None:            
+            self.form.HidePanelTitles.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.HidePanelTitles.setCheckState(Qt.CheckState.Unchecked)
+        if Parameters.HIDE_TITLEBAR_FC is True or Parameters.HIDE_TITLEBAR_FC is None:
             self.form.HideTitleBarFC.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.HideTitleBarFC.setCheckState(Qt.CheckState.Unchecked)

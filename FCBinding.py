@@ -246,6 +246,9 @@ class ModernMenu(RibbonBar):
     TopMargin = 3
     BottomMargin = 0
     
+    # Declare a value for storing the panel title widget height
+    panelTitleheight = 0
+    
     # Set the value for the menubutton width
     MenuButtonSpace = 12
 
@@ -975,6 +978,11 @@ class ModernMenu(RibbonBar):
             overlayButton.setDisabled(True)
             overlayButton.setIcon(QIcon())
             overlayButton.setFixedSize(QSize(0.1,self.iconSize * 0.8))
+        
+        # Set the ribbon height
+        extraOffset = 0
+        # if Parameters.HIDE_PANEL_TITLES:
+        #     extraOffset = Parameters.FONTSIZE_PANELS           
         if (
             Parameters.TOOLBAR_POSITION == 0
             or Parameters.TOOLBAR_POSITION == 1
@@ -1031,7 +1039,7 @@ class ModernMenu(RibbonBar):
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
-                self.RibbonOffset = self.QuickAccessButtonSize + self.TabBar_Size + 27 + Parameters.RIBBON_HEIGHT_OFFSET
+                self.RibbonOffset = self.QuickAccessButtonSize + self.TabBar_Size + 27 + Parameters.RIBBON_HEIGHT_OFFSET - extraOffset
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(
                     0, self.QuickAccessButtonSize
                 )
@@ -1059,9 +1067,9 @@ class ModernMenu(RibbonBar):
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize + 10
                 if self.TabBar_Size > self.QuickAccessButtonSize:
-                    self.RibbonOffset = 15 + self.TabBar_Size + Parameters.RIBBON_HEIGHT_OFFSET
+                    self.RibbonOffset = 15 + self.TabBar_Size + Parameters.RIBBON_HEIGHT_OFFSET- extraOffset
                 else:
-                    self.RibbonOffset = 15 + self.QuickAccessButtonSize + Parameters.RIBBON_HEIGHT_OFFSET
+                    self.RibbonOffset = 15 + self.QuickAccessButtonSize + Parameters.RIBBON_HEIGHT_OFFSET- extraOffset
                 self._titleWidget._tabBarLayout.setRowMinimumHeight(
                     0, self.QuickAccessButtonSize
                 )
@@ -1618,6 +1626,10 @@ class ModernMenu(RibbonBar):
                     print(e.args)
                     print(e.__traceback__)
                 pass
+        
+        # # if panel titles are hidden, adjust the height
+        # if Parameters.HIDE_TITLEBAR_FC:
+            
                 
         # Enable all buttons, so you can access them with a right click
         self.actionList = []
@@ -1628,8 +1640,7 @@ class ModernMenu(RibbonBar):
         dictPanels = self.currentCategory().panels()
         # for panel in self.HiddenPanels:
         #     dictPanels[panel.title()] = panel
-        for title, objPanel in dictPanels.items():
-            
+        for title, objPanel in dictPanels.items():            
             # Test if the panel is not already deleted.
             # This is needed, if a combined panel was added and then removed by clicking cancel
             try:
@@ -1669,7 +1680,18 @@ class ModernMenu(RibbonBar):
                 if EnableControl is not None:
                     EnableControl.setEnabled(True)
                     EnableControl.setVisible(True)
-
+                # if panel titles are hidden, show them
+                if Parameters.HIDE_TITLEBAR_FC:
+                    objPanel._titleWidget.show()
+                    # Adjust heights
+                    objPanel.setFixedHeight(objPanel.height() + self.panelTitleheight)
+                    self.currentCategory().setMaximumHeight(
+                        self.RibbonHeight - self.RibbonMinimalHeight - 3 + self.panelTitleheight
+                    )
+                    self.setRibbonHeight(self.height() + self.panelTitleheight)
+                    TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+                    TB.setFixedHeight(self.RibbonHeight + self.panelTitleheight)          
+                
                 # Recreate the order list for the new panel. 
                 # This makes sure that all controls are added to the order list
                 orderList = []
@@ -1926,6 +1948,11 @@ class ModernMenu(RibbonBar):
                     separator.setEnabled(False)
                     # Set the separator to its original width
                     separator.setFixedWidth(6)
+            
+            # if panel titles are hidden, set the height of the dockwidget back as it was
+            if Parameters.HIDE_TITLEBAR_FC:
+                TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+                TB.setFixedHeight(self.RibbonHeight)  
                                                                    
         # Clear the list with the long panels, so that it can be filled again next time
         self.longPanels.clear()
@@ -2009,7 +2036,7 @@ class ModernMenu(RibbonBar):
         # Activate the stored category when the customise enviroment was started
         self.setCurrentCategory(self.CurrentCategoryToRestore)
         self.hideClassicToolbars()  
-        
+                        
         # Print a message
         print(translate("FreeCAD Ribbon", "RibbonUI: Changes are saved"))
         return
@@ -2112,6 +2139,11 @@ class ModernMenu(RibbonBar):
             if EnableControl is not None:
                 if EnableControl.isChecked() is False: 
                     newPanel.hide()
+                    
+            # if panel titles are hidden, set the height of the dockwidget back as it was
+            if Parameters.HIDE_TITLEBAR_FC:
+                TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
+                TB.setFixedHeight(self.RibbonHeight)  
                 
         self.currentCategory().panels().update(dictPanels)
                 
@@ -5402,10 +5434,8 @@ class ModernMenu(RibbonBar):
                     ribbonHeight = Parameters.ICON_SIZE_MEDIUM * 2 + self.ButtonSpacing
                 if Parameters.ICON_SIZE_MEDIUM * 2 <= LargeButtonHeight:
                     ribbonHeight = LargeButtonHeight
-
-        if Parameters.HIDE_PANEL_TITLES:
-            offset = offset - Parameters.FONTSIZE_PANELS
-        return ribbonHeight + offset
+                    
+        return ribbonHeight + offset - self.panelTitleheight
 
     def ReturnCommandIcon(self, CommandName: str, pixmap: str = "") -> QIcon:
         """_summary_
@@ -6536,7 +6566,7 @@ class ModernMenu(RibbonBar):
 
         # Set the panelheight. setting the ribbonheigt, cause the first tab to be shown to large
         self.setPanelProperties(panel)
-        
+                
         # Add a checkbox to the titlebar. Used for enabling or disabling panels. Default is hidden
         titleLayout: QHBoxLayout = panel._titleLayout
         # EnableControl = QCheckBox()
@@ -6766,6 +6796,12 @@ class ModernMenu(RibbonBar):
         panel._titleLabel.setFont(Font)
         panel._titleLabel.setStyleSheet(f"color: {StyleMapping_Ribbon.ReturnStyleItem('FontColor')}")
         panel._titleWidget.setFixedHeight(QFontMetrics(Font).boundingRect(panel.title()).height())
+        # Store the height, to adjust the ribbonheihgt if panel titles need to be hidden
+        self.panelTitleheight = panel._titleWidget.height()
+
+        # Hide the panel titles
+        if Parameters.HIDE_PANEL_TITLES:
+            panel._titleWidget.hide()
                 
         # Set the properties for the layouts
         panel._actionsLayout.setHorizontalSpacing(self.PaddingRight * 0.5)
