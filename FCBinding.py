@@ -1623,11 +1623,7 @@ class ModernMenu(RibbonBar):
                     print(e.args)
                     print(e.__traceback__)
                 pass
-        
-        # # if panel titles are hidden, adjust the height
-        # if Parameters.HIDE_TITLEBAR_FC:
-            
-                
+
         # Enable all buttons, so you can access them with a right click
         self.actionList = []
         # Activate all buttons
@@ -1683,11 +1679,11 @@ class ModernMenu(RibbonBar):
                     # Adjust heights
                     objPanel.setFixedHeight(objPanel.height() + self.panelTitleheight)
                     self.currentCategory().setMaximumHeight(
-                        self.RibbonHeight - self.RibbonMinimalHeight - 3 + self.panelTitleheight
+                        self.RibbonHeight - self.RibbonMinimalHeight - 3 + self.panelTitleheight + 12
                     )
-                    self.setRibbonHeight(self.height() + self.panelTitleheight)
+                    self.setRibbonHeight(self.RibbonHeight + self.panelTitleheight + 12)
                     TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-                    TB.setFixedHeight(self.RibbonHeight + self.panelTitleheight)          
+                    TB.setFixedHeight(self.RibbonHeight + self.panelTitleheight + 12)          
                 
                 # Recreate the order list for the new panel. 
                 # This makes sure that all controls are added to the order list
