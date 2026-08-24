@@ -126,6 +126,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "EnableBackGroundColor_App": Parameters.ENABLE_BACKGROUND_COLOR_APP,
         "EnableBackGroundColor_Tab": Parameters.ENABLE_BACKGROUND_COLOR_TAB,
         "EnableBackGroundColor_TitleBar": Parameters.ENABLE_BACKGROUND_COLOR_TITLEBAR,
+        "EnableTextColor": Parameters.ENABLE_TEXT_COLOR,
         # "BorderTransparant": Parameters.BORDER_TRANSPARANT,
         "Color_Borders": Parameters.COLOR_BORDERS,
         # "Color_Background": Parameters.COLOR_BACKGROUND,
