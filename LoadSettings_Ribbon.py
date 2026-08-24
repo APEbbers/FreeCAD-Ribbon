@@ -116,6 +116,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # "UseFCOverlay": Parameters.USE_FC_OVERLAY,
         "OverlayState": Parameters.OVERLAYSTATE,
         "UseButtonBackGround": Parameters.BUTTON_BACKGROUND_ENABLED,
+        "HideMenuIcon": Parameters.HIDE_MENU_ICON,
         "Enable_Tab_Scroll_Icon": Parameters.ENABLE_TAB_SCROLL_ICON,
         "Enable_Ribbon_Scroll_Icon": Parameters.ENABLE_RIBBON_SCROLL_ICON,
         "Enable_MoreCommands_Icon": Parameters.ENABLE_MORE_COMMANDS_ICON,
