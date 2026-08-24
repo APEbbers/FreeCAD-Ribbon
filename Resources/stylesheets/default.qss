@@ -40,6 +40,22 @@ QTabBar, QDockWidget, QTabBar {
   qproperty-drawBase: 0;
 }
 
+QTabBar QToolButton::left-arrow:enabled {
+  image: none;
+}
+
+QTabBar QToolButton::left-arrow:disabled {
+  image: none;
+}
+
+QTabBar QToolButton::right-arrow:enabled {
+  image: none;
+}
+
+QTabBar QToolButton::right-arrow:disabled {
+  image: none;
+}
+
 RibbonBar, RibbonTitleWidget {
 	padding-top: 0px;
 	padding-bottom: 0px;

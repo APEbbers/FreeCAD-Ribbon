@@ -7,8 +7,8 @@
    viewBox="0 0 16.933333 16.933333"
    version="1.1"
    id="svg1"
-   inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
-   sodipodi:docname="backward_small_default.svg"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   sodipodi:docname="backward_small_default_white.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -27,11 +27,11 @@
      inkscape:lockguides="true"
      inkscape:zoom="11.313709"
      inkscape:cx="17.147339"
-     inkscape:cy="27.53297"
-     inkscape:window-width="3440"
-     inkscape:window-height="1369"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
+     inkscape:cy="27.532969"
+     inkscape:window-width="1920"
+     inkscape:window-height="1002"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1">
     <inkscape:grid
@@ -59,7 +59,7 @@
      id="layer1">
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
-       d="M 16.933332,16.933332 5.1481066e-7,8.466667 16.933332,5.1487244e-7"
+       d="M 8.466667,16.933332 5.1481066e-7,8.466667 8.466667,5.1487244e-7"
        id="path1" />
   </g>
 </svg>
