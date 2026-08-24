@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="64"
-   height="64"
-   viewBox="0 0 16.933333 16.933333"
+   width="32"
+   height="63.999992"
+   viewBox="0 0 8.4666665 16.933331"
    version="1.1"
    id="svg1"
    inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
@@ -37,8 +37,8 @@
     <inkscape:grid
        id="grid1"
        units="px"
-       originx="0"
-       originy="0"
+       originx="-5.1481066e-07"
+       originy="-5.1487244e-07"
        spacingx="0.26458333"
        spacingy="0.26458333"
        empcolor="#0099e5"
