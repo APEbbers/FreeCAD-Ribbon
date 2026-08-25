@@ -869,10 +869,6 @@ class ModernMenu(RibbonBar):
         # Set the scroll buttons on the tabbar
         ScrollLeftButton_Tab: QToolButton = self.tabBar().findChildren(QToolButton)[0]
         ScrollRightButton_Tab: QToolButton = self.tabBar().findChildren(QToolButton)[1]
-        # ScrollLeftButton_Tab.setFixedSize(self.RightToolBarButtonSize*0.8, self.RightToolBarButtonSize*0.8)
-        # ScrollRightButton_Tab.setFixedSize(self.RightToolBarButtonSize*0.8, self.RightToolBarButtonSize*0.8)
-        # ScrollLeftButton_Tab.setContentsMargins(6,6,6,6)
-        # ScrollRightButton_Tab.setContentsMargins(6,6,6,6)
         # get the icons
         ScrollLeftButton_Tab_Icon = StyleMapping_Ribbon.ReturnStyleItem(
             "ScrollLeftButton_Tab"
@@ -880,8 +876,27 @@ class ModernMenu(RibbonBar):
         ScrollRightButton_Tab_Icon = StyleMapping_Ribbon.ReturnStyleItem(
             "ScrollRightButton_Tab"
         )
-        # Set the icons
-        # StyleSheet = """QTabBar QToolButton::left-arrow {image: none;}QTabBar QToolButton::right-arrow {image: none;}"""
+        # Set the icons     
+        StyleSheet = (
+            """QTabBar::pane {
+                margin: 10px;
+                } 
+                QTabBar QToolButton {
+                    height: 24px;
+                    margin-top: 6px;
+                    margin-bottom: 6px;
+                }
+                QTabBar QToolButton:hover {
+                    background: """
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover", True, True)
+            + """}
+                QTabBar QToolButton::left-arrow {
+                    image: none;
+                }
+                QTabBar QToolButton::right-arrow {
+                    image: none;
+                }"""
+            )
         BackgroundColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
         if (
             int(App.Version()[0]) == 0
@@ -894,13 +909,13 @@ class ModernMenu(RibbonBar):
                 + """};QToolButton::arrow {image: none;margin-top:6px;margin-bottom:6px;};"""
             )
         if ScrollLeftButton_Tab_Icon is not None:
-            # ScrollLeftButton_Tab.setStyleSheet(StyleSheet)
+            ScrollLeftButton_Tab.setStyleSheet(StyleSheet)
             ScrollLeftButton_Tab.setIcon(ScrollLeftButton_Tab_Icon)
             ScrollLeftButton_Tab.setArrowType(Qt.ArrowType.NoArrow)
         else:
             ScrollLeftButton_Tab.setArrowType(Qt.ArrowType.LeftArrow)
         if ScrollRightButton_Tab_Icon is not None:
-            # ScrollRightButton_Tab.setStyleSheet(StyleSheet)
+            ScrollRightButton_Tab.setStyleSheet(StyleSheet)
             ScrollRightButton_Tab.setIcon(ScrollRightButton_Tab_Icon)
             ScrollRightButton_Tab.setArrowType(Qt.ArrowType.NoArrow)
         else:

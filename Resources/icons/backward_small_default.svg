@@ -28,8 +28,8 @@
      inkscape:zoom="11.313709"
      inkscape:cx="17.235727"
      inkscape:cy="27.532969"
-     inkscape:window-width="1920"
-     inkscape:window-height="1002"
+     inkscape:window-width="3440"
+     inkscape:window-height="1362"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -59,7 +59,7 @@
      id="layer1">
     <path
        style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
-       d="M 8.466667,16.933332 5.1481066e-7,8.466667 8.466667,5.1487244e-7"
+       d="M 7.4083332,14.816665 1.0583333,8.4666662 7.4083332,2.1166658"
        id="path1" />
   </g>
 </svg>
