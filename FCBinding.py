@@ -1620,7 +1620,7 @@ class ModernMenu(RibbonBar):
             self.RibbonHeight - self.RibbonMinimalHeight - 3 + self.CustomizeOffset
         )
         
-        # Add a hidden checkbox to each tab
+        # Add a hidden checkbox to each tab and set the tab visible
         for i in range(self.tabBar().count()):
             # Create the checkbox
             checkBox = QCheckBox()            
@@ -1641,6 +1641,8 @@ class ModernMenu(RibbonBar):
                     checkBox.setCheckState(Qt.CheckState.Checked)
             # Add the checkbox to the tab
             self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, checkBox)
+            # Make sure to set the tab visible
+            self.tabBar().setTabVisible(i, True)      
                                 
         # Store the workbench name as the last customized name
         self.LastCustomized = [workbenchName, self.currentCategory().title()]
@@ -1999,7 +2001,7 @@ class ModernMenu(RibbonBar):
                 except Exception:
                     pass
                 
-        # Remove the checkboxes          
+        # Remove the checkboxes and set the tab visible or invisible based on checkstate        
         for i in range(self.tabBar().count()):
             checkBox: QCheckBox = self.tabBar().tabButton(i, QTabBar.ButtonPosition.RightSide)
             workbenchName = checkBox.objectName().split("_")[1]
@@ -2012,8 +2014,16 @@ class ModernMenu(RibbonBar):
                     if checkBox.isChecked():                        
                         # Set the state
                         self.workBenchDict["workbenches"][workbenchName]["Enabled"] = True
+                        # Make sure to set the tab visible
+                        self.tabBar().setTabVisible(i, True)  
                     else:
                         self.workBenchDict["workbenches"][workbenchName]["Enabled"] = False
+                        # Make sure to set the tab hidden
+                        self.tabBar().setTabVisible(i, False)
+                # If enabled is not present, set the tab always visible
+                else:
+                    # Make sure to set the tab visible
+                    self.tabBar().setTabVisible(i, True) 
             
             self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None)
                                     
@@ -2199,6 +2209,22 @@ class ModernMenu(RibbonBar):
         
         # Remove the checkboxes          
         for i in range(self.tabBar().count()):
+            checkBox: QCheckBox = self.tabBar().tabButton(i, QTabBar.ButtonPosition.RightSide)
+            workbenchName = checkBox.objectName().split("_")[1]
+            
+            # Make sure to set the tab visible
+            if "Enabled" in self.workBenchDict["workbenches"][workbenchName]:  # noqa: SIM102
+                if self.workBenchDict["workbenches"][workbenchName]["Enabled"] is True:
+                    # Make sure to set the tab visible
+                    self.tabBar().setTabVisible(i, True)  
+                else:
+                    # Make sure to set the tab hidden
+                    self.tabBar().setTabVisible(i, False)
+            # If enabled is not present, set the tab always visible
+            else:
+                # Make sure to set the tab visible
+                self.tabBar().setTabVisible(i, True) 
+
             self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None)
              
         self.currentCategory().panels().update(dictPanels)
@@ -3927,7 +3953,16 @@ class ModernMenu(RibbonBar):
 
                         self.tabBar().setTabToolTip(
                             len(self.categories()) - 1, MenuText
-                        )                                               
+                        )  
+                        
+                        # Hide or show the tab
+                        Enabled = True
+                        if workbenchName in self.ribbonStructure["workbenches"]:  # noqa: SIM102
+                            # If enabled is present, set the checkbox accordingly
+                            if "Enabled" in self.ribbonStructure["workbenches"][workbenchName]:  # noqa: SIM102
+                                if self.ribbonStructure["workbenches"][workbenchName]["Enabled"] is False:
+                                    Enabled = False
+                        self.tabBar().setTabVisible(len(self.categories()) - 1, Enabled)                                  
         
         # Override the mousemove event to enable drag for tabs
         def mouseMoveEvent(self, e, Enabled):
