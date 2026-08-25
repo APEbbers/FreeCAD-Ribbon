@@ -26,7 +26,7 @@ from pathlib import Path
 import traceback
 import subprocess
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -55,7 +55,7 @@ from PySide6.QtGui import (
     QScreen,
     QPen,
     )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -96,7 +96,7 @@ from PySide6.QtWidgets import (
     QStackedWidget,    
     QStyleOptionTab,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
