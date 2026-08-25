@@ -1619,6 +1619,12 @@ class ModernMenu(RibbonBar):
         self.currentCategory().setMaximumHeight(
             self.RibbonHeight - self.RibbonMinimalHeight - 3 + self.CustomizeOffset
         )
+        
+        for i in range(self.tabBar().count()):
+             # Add a hidden checkbox to each tab
+            checkBox = QCheckBox()            
+            checkBox.setObjectName(f"Enable_{self.tabBar().tabData(i)}")
+            self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, checkBox)
                                 
         # Store the workbench name as the last customized name
         self.LastCustomized = [workbenchName, self.currentCategory().title()]
@@ -2032,6 +2038,10 @@ class ModernMenu(RibbonBar):
                 DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
                 if DockWidget is not None:
                     DockWidget.deleteLater()
+        
+        # Remove the checkboxes          
+        for i in range(self.tabBar().count()):
+            self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None)
                 
          # Restore the cursor
         QApplication.restoreOverrideCursor()
@@ -2156,7 +2166,11 @@ class ModernMenu(RibbonBar):
             if Parameters.HIDE_TITLEBAR_FC:
                 TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
                 TB.setFixedHeight(self.RibbonHeight)  
-                
+        
+        # Remove the checkboxes          
+        for i in range(self.tabBar().count()):
+            self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None)
+             
         self.currentCategory().panels().update(dictPanels)
                 
         # Restore closed panels
@@ -3883,7 +3897,7 @@ class ModernMenu(RibbonBar):
 
                         self.tabBar().setTabToolTip(
                             len(self.categories()) - 1, MenuText
-                        )
+                        )                                               
         
         # Override the mousemove event to enable drag for tabs
         def mouseMoveEvent(self, e, Enabled):
