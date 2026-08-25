@@ -58,8 +58,8 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
-       d="M 7.4083332,14.816665 1.0583333,8.4666662 7.4083332,2.1166658"
+       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:1.1428;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       d="M 6.8369318,14.245263 1.6297149,8.466666 6.8369318,2.6880675"
        id="path1" />
   </g>
 </svg>
