@@ -1620,10 +1620,26 @@ class ModernMenu(RibbonBar):
             self.RibbonHeight - self.RibbonMinimalHeight - 3 + self.CustomizeOffset
         )
         
+        # Add a hidden checkbox to each tab
         for i in range(self.tabBar().count()):
-             # Add a hidden checkbox to each tab
+            # Create the checkbox
             checkBox = QCheckBox()            
-            checkBox.setObjectName(f"Enable_{self.tabBar().tabData(i)}")
+            tabData = self.tabBar().tabData(i)
+            checkBox.setObjectName(f"Enable_{tabData}")
+            checkBox.setTristate(False)
+            checkBox.setEnabled(True)            
+            # Set the checkbox enabled
+            if tabData in self.workBenchDict["workbenches"]:  # noqa: SIM102
+                # If enabled is present, set the checkbox accordingly
+                if "Enabled" in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
+                    if self.workBenchDict["workbenches"][tabData]["Enabled"] is False:
+                        checkBox.setCheckState(Qt.CheckState.Unchecked)
+                    if self.workBenchDict["workbenches"][tabData]["Enabled"] is True:
+                        checkBox.setCheckState(Qt.CheckState.Checked)
+                # If enabled is not present, set the checkbox checked by default
+                if "Enabled" not in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
+                    checkBox.setCheckState(Qt.CheckState.Checked)
+            # Add the checkbox to the tab
             self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, checkBox)
                                 
         # Store the workbench name as the last customized name
@@ -1982,6 +1998,24 @@ class ModernMenu(RibbonBar):
                     panel.close()
                 except Exception:
                     pass
+                
+        # Remove the checkboxes          
+        for i in range(self.tabBar().count()):
+            checkBox: QCheckBox = self.tabBar().tabButton(i, QTabBar.ButtonPosition.RightSide)
+            workbenchName = checkBox.objectName().split("_")[1]
+            
+            if workbenchName in self.workBenchDict["workbenches"]:  # noqa: SIM102
+                # Add the command if they don't exist
+                Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "Enabled"], True)
+                
+                if "Enabled" in self.workBenchDict["workbenches"][workbenchName]:  # noqa: SIM102
+                    if checkBox.isChecked():                        
+                        # Set the state
+                        self.workBenchDict["workbenches"][workbenchName]["Enabled"] = True
+                    else:
+                        self.workBenchDict["workbenches"][workbenchName]["Enabled"] = False
+            
+            self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None)
                                     
         # update the ribbonstructure before writing it to disk
         if "quickAccessCommands" in self.workBenchDict:
@@ -2037,11 +2071,7 @@ class ModernMenu(RibbonBar):
                 # Close the dockwidget is there is one
                 DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
                 if DockWidget is not None:
-                    DockWidget.deleteLater()
-        
-        # Remove the checkboxes          
-        for i in range(self.tabBar().count()):
-            self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None)
+                    DockWidget.deleteLater()       
                 
          # Restore the cursor
         QApplication.restoreOverrideCursor()
