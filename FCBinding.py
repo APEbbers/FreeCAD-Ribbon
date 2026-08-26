@@ -6460,13 +6460,13 @@ class ModernMenu(RibbonBar):
                                 Parameters.ICON_SIZE_SMALL,
                             )
                             IconSize = QSize(
-                                Parameters.ICON_SIZE_SMALL,
-                                Parameters.ICON_SIZE_SMALL,
+                                Parameters.ICON_SIZE_SMALL - 3,
+                                Parameters.ICON_SIZE_SMALL - 3,
                             )
                             if Parameters.BETA_FUNCTIONS_ENABLED is True:
                                 try:
                                     size = Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["ButtonSize_small"]                                    
-                                    IconSize = QSize(size, size)
+                                    IconSize = QSize(size - 3, size - 3)
                                     ButtonSize = IconSize
                                 except Exception:
                                     pass
@@ -6517,8 +6517,8 @@ class ModernMenu(RibbonBar):
                                 Parameters.ICON_SIZE_MEDIUM,
                             )
                             IconSize = QSize(
-                                Parameters.ICON_SIZE_MEDIUM,
-                                Parameters.ICON_SIZE_MEDIUM,
+                                Parameters.ICON_SIZE_MEDIUM - 3,
+                                Parameters.ICON_SIZE_MEDIUM - 3,
                             )
                             if Parameters.BETA_FUNCTIONS_ENABLED is True:
                                 try:
@@ -6528,7 +6528,7 @@ class ModernMenu(RibbonBar):
                                 except Exception:
                                     pass
                             if Parameters.LINK_ICON_SIZES is True:
-                                size = Parameters.ICON_SIZE_SMALL*1.5
+                                size = (Parameters.ICON_SIZE_SMALL*1.5 )- 3
                                 IconSize = QSize(size, size)
                                 ButtonSize = IconSize
                                 
@@ -6580,8 +6580,8 @@ class ModernMenu(RibbonBar):
                                 Parameters.ICON_SIZE_LARGE,
                             )
                             IconSize = QSize(
-                                Parameters.ICON_SIZE_LARGE,
-                                Parameters.ICON_SIZE_LARGE,
+                                Parameters.ICON_SIZE_LARGE - 3,
+                                Parameters.ICON_SIZE_LARGE - 3,
                             )
                             if Parameters.BETA_FUNCTIONS_ENABLED is True:
                                 try:                                    
@@ -6594,7 +6594,7 @@ class ModernMenu(RibbonBar):
                                     pass
                             if Parameters.LINK_ICON_SIZES is True:
                                 size = Parameters.ICON_SIZE_SMALL*3
-                                IconSize = QSize(size, size)
+                                IconSize = QSize(size -3, size - 3)
                                 ButtonSize = IconSize
                             Menu = None
                             if button.menu() is not None:
@@ -6901,7 +6901,7 @@ class ModernMenu(RibbonBar):
         # If the panel titles are hidden, set the panel offset value to zero
         if Parameters.HIDE_PANEL_TITLES:
             self.PanelHeightOffset = 0
-        panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
+        panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset)+6)
         # Set the ribbonheight
         self.RibbonHeight = panel.height() + self.RibbonOffset
         # Correct the width of the (hidden) option button

@@ -337,6 +337,13 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # Disable the Border transparant setting
         self.form.BorderTransparant.setDisabled(True)
         self.form.BorderTransparant.setHidden(True)
+        # Disable the border color controls
+        self.form.EnableBorderColor.setDisabled(True)
+        self.form.EnableBorderColor.setHidden(True)
+        self.form.label_6.setDisabled(True)
+        self.form.label_6.setHidden(True)
+        self.form.Color_Borders.setDisabled(True)
+        self.form.Color_Borders.setHidden(True)
 
         # region - load all settings
         #
@@ -1438,7 +1445,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         if self.form.EnableBackGroundColor.isChecked() is True:
             self.ValuesToUpdate["EnableBackGroundColor_Hover"] = True
         if self.form.EnableBackGroundColor.isChecked() is False:
-            self.ValuesToUpdate["EnableBackGroundColor"] = False
+            self.ValuesToUpdate["EnableBackGroundColor_Hover"] = False
         self.settingChanged = True
         return
     

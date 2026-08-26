@@ -182,6 +182,12 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="autoFillBackground">
       <bool>false</bool>
      </property>
@@ -1921,7 +1927,7 @@
                      <property name="minimumSize">
                       <size>
                        <width>0</width>
-                       <height>50</height>
+                       <height>0</height>
                       </size>
                      </property>
                      <property name="text">
@@ -1961,7 +1967,7 @@
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>250</width>
+                       <width>0</width>
                        <height>0</height>
                       </size>
                      </property>
@@ -2013,8 +2019,8 @@
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>20</width>
-                       <height>40</height>
+                       <width>0</width>
+                       <height>0</height>
                       </size>
                      </property>
                      <property name="text">
@@ -2038,8 +2044,8 @@
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>20</width>
-                       <height>40</height>
+                       <width>0</width>
+                       <height>0</height>
                       </size>
                      </property>
                      <property name="text">
@@ -2080,8 +2086,8 @@
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>20</width>
-                       <height>40</height>
+                       <width>0</width>
+                       <height>0</height>
                       </size>
                      </property>
                      <property name="text">
@@ -2105,8 +2111,8 @@
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>20</width>
-                       <height>40</height>
+                       <width>0</width>
+                       <height>0</height>
                       </size>
                      </property>
                      <property name="allowTransparency">
@@ -2122,7 +2128,7 @@
                      <property name="minimumSize">
                       <size>
                        <width>0</width>
-                       <height>50</height>
+                       <height>0</height>
                       </size>
                      </property>
                      <property name="text">
@@ -2150,8 +2156,8 @@
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>20</width>
-                       <height>40</height>
+                       <width>0</width>
+                       <height>0</height>
                       </size>
                      </property>
                      <property name="allowTransparency">
@@ -2180,8 +2186,8 @@
                      </property>
                      <property name="minimumSize">
                       <size>
-                       <width>200</width>
-                       <height>50</height>
+                       <width>0</width>
+                       <height>0</height>
                       </size>
                      </property>
                      <property name="maximumSize">
@@ -2191,7 +2197,7 @@
                       </size>
                      </property>
                      <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the border color for buttons when hovering over them:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the border color for buttons:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                      <property name="wordWrap">
                       <bool>true</bool>

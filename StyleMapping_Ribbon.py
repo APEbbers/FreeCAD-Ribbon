@@ -162,6 +162,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False, Igno
 
     ControlName (string):
         "Background_Color" returns string,
+        "Background_Color_Hover" returns string,
         "Border_Color" returns string,
         "FontColor" returns string,
         "ApplicationButton_Background" returns string,
@@ -182,14 +183,6 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False, Igno
     # Get the current stylesheet for FreeCAD
     FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
     currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
-    # if currentStyleSheet == "FreeCAD.qss":
-    #     Theme = FreeCAD_preferences.GetString("Theme")
-    #     if str("FreeCAD Light").lower() in Theme.lower():
-    #         currentStyleSheet = "FreeCAD Light.qss"
-    #     if str("FreeCAD Dark").lower() in Theme.lower():
-    #         currentStyleSheet = "FreeCAD Dark.qss"
-    
-    # currentStyleSheet = "FreeCAD.qss"
     
     IsInList = False
     for key, value in StyleMapping_default["Stylesheets"].items():
@@ -252,22 +245,27 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False, Igno
         if isIcon is False:
             result = ""
 
-            if ControlName == "Background_Color" and (Parameters.ENABLE_BACKGROUND_COLOR is True or IgnoreButtonBackground is True):
+            if ControlName == "Background_Color" and (Parameters.ENABLE_BACKGROUND_COLOR is False or IgnoreButtonBackground is True):
+                result = StyleMapping["Stylesheets"][ControlName]
+            if ControlName == "Background_Color" and Parameters.ENABLE_BACKGROUND_COLOR is True:
+                result = Parameters.COLOR_BACKGROUND
+            if ControlName == "Background_Color_Hover" and Parameters.ENABLE_BACKGROUND_COLOR_HOVER is False:
+                result = StyleMapping["Stylesheets"][ControlName]
+            if ControlName == "Background_Color_Hover" and Parameters.ENABLE_BACKGROUND_COLOR_HOVER is True:
+                result = Parameters.COLOR_BACKGROUND_HOVER
+            if ControlName == "Border_Color" and Parameters.ENABLE_BORDER_COLOR is False:
                 result = StyleMapping["Stylesheets"][ControlName]
             if ControlName == "Border_Color" and Parameters.ENABLE_BORDER_COLOR is True:
+                result = Parameters.COLOR_BORDERS
+            if ControlName == "FontColor" and Parameters.ENABLE_TEXT_COLOR is False:
                 result = StyleMapping["Stylesheets"][ControlName]
             if ControlName == "FontColor" and Parameters.ENABLE_TEXT_COLOR is True:
+                result = Parameters.COLOR_FONT
+            if ControlName == "ApplicationButton_Background" and Parameters.ENABLE_BACKGROUND_COLOR_APP is False:
                 result = StyleMapping["Stylesheets"][ControlName]
             if ControlName == "ApplicationButton_Background" and Parameters.ENABLE_BACKGROUND_COLOR_APP is True:
-                result = StyleMapping["Stylesheets"][ControlName]
-
-            if (
-                Parameters.ENABLE_BACKGROUND_COLOR is False
-                and Parameters.USE_OVERLAY is True
-                and ControlName == "Background_Color"
-                and IgnoreOverlay is False
-            ):
-                result = "none"
+                result = Parameters.COLOR_APPLICATION_BUTTON_BACKGROUND
+            
             if result == "" or result is None:
                 result = StyleMapping_default["Stylesheets"][currentStyleSheet][
                     ControlName
@@ -300,7 +298,8 @@ def ReturnStyleSheet(
     """
     StyleSheet = ""
     try:
-        BorderColor = ReturnStyleItem("Border_Color")
+        # BorderColor = ReturnStyleItem("Border_Color")
+        BorderColor = "none"
         BackgroundColor = ReturnStyleItem("Background_Color")
         ApplicationButton = ReturnStyleItem("ApplicationButton_Background")
         if HoverColor == "":
@@ -314,7 +313,7 @@ def ReturnStyleSheet(
         AppBorder_2 = BorderColor
         if BackgroundColor is not None and BorderColor is not None:
             if control.lower() == "toolbutton":
-                if Parameters.BORDER_TRANSPARANT is True:
+                if Parameters.ENABLE_BORDER_COLOR is False:
                     BorderColor = BackgroundColor
                 StyleSheet = (
                     """QLayout {spacing: 0px}"""
@@ -549,9 +548,9 @@ def ReturnIcons_ThemeEditor():
 StyleMapping = {
     "Stylesheets": {
         "Background_Color": "",
-        "Background_Color_Hover": Parameters.COLOR_BACKGROUND_HOVER,
-        "Border_Color": Parameters.COLOR_BORDERS,
-        "ApplicationButton_Background": Parameters.COLOR_APPLICATION_BUTTON_BACKGROUND,
+        "Background_Color_Hover": StandardFunctions.ColorConvertor(mw.palette().highlight().color().toTuple(), 1, True, False),
+        "Border_Color": "",
+        "ApplicationButton_Background": StandardFunctions.ColorConvertor(mw.palette().highlight().color().toTuple(), 1, True, False),
         "FontColor": ReturnFontColor(),  
         "UpdateColor": ReturnUpdateColor(),
         "DevelopColor": ReturnDevelopColor(),
@@ -571,7 +570,7 @@ StyleMapping_default = {
         "": {
             "Background_Color": "none",
             "Background_Color_Hover": StandardFunctions.ColorConvertor(mw.palette().highlight().color().toTuple(), 1, True, False),
-            "Border_Color": StandardFunctions.ColorConvertor(mw.palette().text().color().toTuple(), 1, True, False),
+            "Border_Color": "",
             "ApplicationButton_Background": StandardFunctions.ColorConvertor(mw.palette().highlight().color().toTuple(), 1, True, False),
             "FontColor": ReturnFontColor(),
             "UpdateColor": ReturnUpdateColor(),

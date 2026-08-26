@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsMZCXYZ.ui'
+## Form generated from reading UI file 'SettingswrzLRu.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
+from PySide.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
     QDoubleSpinBox, QFrame, QGridLayout, QGroupBox,
     QLabel, QPushButton, QScrollArea, QSizePolicy,
     QSlider, QSpacerItem, QSpinBox, QTabWidget,
@@ -111,6 +111,7 @@ class Ui_Settings(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.tabWidget.sizePolicy().hasHeightForWidth())
         self.tabWidget.setSizePolicy(sizePolicy1)
+        self.tabWidget.setMinimumSize(QSize(0, 0))
         self.tabWidget.setAutoFillBackground(False)
         self.tabWidget.setStyleSheet(u"")
         self.tabWidget.setElideMode(Qt.TextElideMode.ElideRight)
@@ -904,7 +905,7 @@ class Ui_Settings(object):
         self.label_47 = QLabel(self.ColorS)
         self.label_47.setObjectName(u"label_47")
         self.label_47.setEnabled(False)
-        self.label_47.setMinimumSize(QSize(0, 50))
+        self.label_47.setMinimumSize(QSize(0, 0))
 
         self.gridLayout_20.addWidget(self.label_47, 5, 1, 1, 1)
 
@@ -920,7 +921,7 @@ class Ui_Settings(object):
         self.label_30 = QLabel(self.ColorS)
         self.label_30.setObjectName(u"label_30")
         self.label_30.setEnabled(False)
-        self.label_30.setMinimumSize(QSize(250, 0))
+        self.label_30.setMinimumSize(QSize(0, 0))
         self.label_30.setMaximumSize(QSize(200, 16777215))
         self.label_30.setWordWrap(True)
 
@@ -947,7 +948,7 @@ class Ui_Settings(object):
         self.Color_Background_Hover.setEnabled(False)
         sizePolicy4.setHeightForWidth(self.Color_Background_Hover.sizePolicy().hasHeightForWidth())
         self.Color_Background_Hover.setSizePolicy(sizePolicy4)
-        self.Color_Background_Hover.setMinimumSize(QSize(20, 40))
+        self.Color_Background_Hover.setMinimumSize(QSize(0, 0))
         self.Color_Background_Hover.setText(u"")
         self.Color_Background_Hover.setAllowTransparency(True)
 
@@ -958,7 +959,7 @@ class Ui_Settings(object):
         self.Color_Borders.setEnabled(False)
         sizePolicy4.setHeightForWidth(self.Color_Borders.sizePolicy().hasHeightForWidth())
         self.Color_Borders.setSizePolicy(sizePolicy4)
-        self.Color_Borders.setMinimumSize(QSize(20, 40))
+        self.Color_Borders.setMinimumSize(QSize(0, 0))
         self.Color_Borders.setText(u"")
         self.Color_Borders.setAllowTransparency(True)
 
@@ -980,7 +981,7 @@ class Ui_Settings(object):
         self.Color_Background_App.setEnabled(False)
         sizePolicy4.setHeightForWidth(self.Color_Background_App.sizePolicy().hasHeightForWidth())
         self.Color_Background_App.setSizePolicy(sizePolicy4)
-        self.Color_Background_App.setMinimumSize(QSize(20, 40))
+        self.Color_Background_App.setMinimumSize(QSize(0, 0))
         self.Color_Background_App.setText(u"")
         self.Color_Background_App.setAllowTransparency(True)
 
@@ -991,7 +992,7 @@ class Ui_Settings(object):
         self.Color_Background_TitleBar.setEnabled(False)
         sizePolicy4.setHeightForWidth(self.Color_Background_TitleBar.sizePolicy().hasHeightForWidth())
         self.Color_Background_TitleBar.setSizePolicy(sizePolicy4)
-        self.Color_Background_TitleBar.setMinimumSize(QSize(20, 40))
+        self.Color_Background_TitleBar.setMinimumSize(QSize(0, 0))
         self.Color_Background_TitleBar.setAllowTransparency(True)
 
         self.gridLayout_20.addWidget(self.Color_Background_TitleBar, 5, 2, 1, 1)
@@ -999,7 +1000,7 @@ class Ui_Settings(object):
         self.label_46 = QLabel(self.ColorS)
         self.label_46.setObjectName(u"label_46")
         self.label_46.setEnabled(False)
-        self.label_46.setMinimumSize(QSize(0, 50))
+        self.label_46.setMinimumSize(QSize(0, 0))
 
         self.gridLayout_20.addWidget(self.label_46, 4, 1, 1, 1)
 
@@ -1013,7 +1014,7 @@ class Ui_Settings(object):
         self.Color_Background_Tabs.setEnabled(False)
         sizePolicy4.setHeightForWidth(self.Color_Background_Tabs.sizePolicy().hasHeightForWidth())
         self.Color_Background_Tabs.setSizePolicy(sizePolicy4)
-        self.Color_Background_Tabs.setMinimumSize(QSize(20, 40))
+        self.Color_Background_Tabs.setMinimumSize(QSize(0, 0))
         self.Color_Background_Tabs.setAllowTransparency(True)
 
         self.gridLayout_20.addWidget(self.Color_Background_Tabs, 4, 2, 1, 1)
@@ -1031,7 +1032,7 @@ class Ui_Settings(object):
         self.label_6 = QLabel(self.ColorS)
         self.label_6.setObjectName(u"label_6")
         self.label_6.setEnabled(False)
-        self.label_6.setMinimumSize(QSize(200, 50))
+        self.label_6.setMinimumSize(QSize(0, 0))
         self.label_6.setMaximumSize(QSize(300, 16777215))
         self.label_6.setWordWrap(True)
 
@@ -1667,7 +1668,7 @@ class Ui_Settings(object):
         self.EnableTextColor.setText("")
         self.EnableBackGroundColor_App.setText("")
         self.EnableBackGroundColor_Tab.setText("")
-        self.label_6.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the border color for buttons when hovering over them:</p></body></html>", None))
+        self.label_6.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the border color for buttons:</p></body></html>", None))
         self.EnableBackGroundColor.setText("")
         self.label_48.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the background color for buttons:</p></body></html>", None))
         self.HideMenuIcon.setText(QCoreApplication.translate("Settings", u"Hide FreeCAD icon for menu button", None))
