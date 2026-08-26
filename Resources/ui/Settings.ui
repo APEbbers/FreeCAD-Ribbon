@@ -1994,7 +1994,7 @@
                     </widget>
                    </item>
                    <item row="2" column="0">
-                    <widget class="QCheckBox" name="EnableBackGroundColor">
+                    <widget class="QCheckBox" name="EnableBackGroundColor_Hover">
                      <property name="text">
                       <string/>
                      </property>
@@ -2199,7 +2199,7 @@
                     </widget>
                    </item>
                    <item row="1" column="0">
-                    <widget class="QCheckBox" name="UseButtonBackGround">
+                    <widget class="QCheckBox" name="EnableBackGroundColor">
                      <property name="text">
                       <string/>
                      </property>
@@ -3332,13 +3332,13 @@
      <y>232</y>
     </hint>
     <hint type="destinationlabel">
-     <x>319</x>
+     <x>338</x>
      <y>239</y>
     </hint>
    </hints>
   </connection>
   <connection>
-   <sender>EnableBackGroundColor</sender>
+   <sender>EnableBackGroundColor_Hover</sender>
    <signal>toggled(bool)</signal>
    <receiver>Color_Background_Hover</receiver>
    <slot>setEnabled(bool)</slot>
@@ -3354,7 +3354,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>EnableBackGroundColor</sender>
+   <sender>EnableBackGroundColor_Hover</sender>
    <signal>toggled(bool)</signal>
    <receiver>label_30</receiver>
    <slot>setEnabled(bool)</slot>
@@ -3365,7 +3365,7 @@
     </hint>
     <hint type="destinationlabel">
      <x>133</x>
-     <y>352</y>
+     <y>342</y>
     </hint>
    </hints>
   </connection>
@@ -3380,7 +3380,7 @@
      <y>378</y>
     </hint>
     <hint type="destinationlabel">
-     <x>317</x>
+     <x>336</x>
      <y>359</y>
     </hint>
    </hints>
@@ -3444,7 +3444,7 @@
      <y>465</y>
     </hint>
     <hint type="destinationlabel">
-     <x>319</x>
+     <x>338</x>
      <y>465</y>
     </hint>
    </hints>
@@ -3738,7 +3738,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>UseButtonBackGround</sender>
+   <sender>EnableBackGroundColor</sender>
    <signal>toggled(bool)</signal>
    <receiver>label_48</receiver>
    <slot>setEnabled(bool)</slot>
@@ -3754,7 +3754,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>UseButtonBackGround</sender>
+   <sender>EnableBackGroundColor</sender>
    <signal>toggled(bool)</signal>
    <receiver>Color_Background</receiver>
    <slot>setEnabled(bool)</slot>

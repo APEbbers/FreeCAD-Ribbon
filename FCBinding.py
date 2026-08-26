@@ -715,7 +715,7 @@ class ModernMenu(RibbonBar):
         if (
             hexColor is not None
             and hexColor != ""
-            and Parameters.BUTTON_BACKGROUND_ENABLED is True
+            and Parameters.ENABLE_BACKGROUND_COLOR is True
         ):
             # Set the quickaccess toolbar background color. This fixes a transparant toolbar.
             self.quickAccessToolBar().setStyleSheet(
@@ -3847,7 +3847,7 @@ class ModernMenu(RibbonBar):
                     border-radius: 2px;
                     }"""
                 )
-        if Parameters.BUTTON_BACKGROUND_ENABLED is True:
+        if Parameters.ENABLE_BACKGROUND_COLOR is True:
             FreeCAD_preferences = App.ParamGet(
                 "User parameter:BaseApp/Preferences/MainWindow"
             )

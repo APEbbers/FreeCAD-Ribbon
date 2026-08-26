@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsmeIQyI.ui'
+## Form generated from reading UI file 'SettingsMZCXYZ.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
+from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
     QDoubleSpinBox, QFrame, QGridLayout, QGroupBox,
     QLabel, QPushButton, QScrollArea, QSizePolicy,
     QSlider, QSpacerItem, QSpinBox, QTabWidget,
@@ -937,10 +937,10 @@ class Ui_Settings(object):
 
         self.gridLayout_20.addWidget(self.EnableBackGroundColor_TitleBar, 5, 0, 1, 1)
 
-        self.EnableBackGroundColor = QCheckBox(self.ColorS)
-        self.EnableBackGroundColor.setObjectName(u"EnableBackGroundColor")
+        self.EnableBackGroundColor_Hover = QCheckBox(self.ColorS)
+        self.EnableBackGroundColor_Hover.setObjectName(u"EnableBackGroundColor_Hover")
 
-        self.gridLayout_20.addWidget(self.EnableBackGroundColor, 2, 0, 1, 1)
+        self.gridLayout_20.addWidget(self.EnableBackGroundColor_Hover, 2, 0, 1, 1)
 
         self.Color_Background_Hover = Gui.ColorButton(self.ColorS)
         self.Color_Background_Hover.setObjectName(u"Color_Background_Hover")
@@ -1037,10 +1037,10 @@ class Ui_Settings(object):
 
         self.gridLayout_20.addWidget(self.label_6, 0, 1, 1, 1)
 
-        self.UseButtonBackGround = QCheckBox(self.ColorS)
-        self.UseButtonBackGround.setObjectName(u"UseButtonBackGround")
+        self.EnableBackGroundColor = QCheckBox(self.ColorS)
+        self.EnableBackGroundColor.setObjectName(u"EnableBackGroundColor")
 
-        self.gridLayout_20.addWidget(self.UseButtonBackGround, 1, 0, 1, 1)
+        self.gridLayout_20.addWidget(self.EnableBackGroundColor, 1, 0, 1, 1)
 
         self.label_48 = QLabel(self.ColorS)
         self.label_48.setObjectName(u"label_48")
@@ -1546,8 +1546,8 @@ class Ui_Settings(object):
         self.ShowText_Large.toggled.connect(self.EnableWrap_Large.setEnabled)
         self.EnableBorderColor.toggled.connect(self.label_6.setEnabled)
         self.EnableBorderColor.toggled.connect(self.Color_Borders.setEnabled)
-        self.EnableBackGroundColor.toggled.connect(self.Color_Background_Hover.setEnabled)
-        self.EnableBackGroundColor.toggled.connect(self.label_30.setEnabled)
+        self.EnableBackGroundColor_Hover.toggled.connect(self.Color_Background_Hover.setEnabled)
+        self.EnableBackGroundColor_Hover.toggled.connect(self.label_30.setEnabled)
         self.EnableBackGroundColor_App.toggled.connect(self.Color_Background_App.setEnabled)
         self.EnableBackGroundColor_App.toggled.connect(self.label_9.setEnabled)
         self.EnableBackGroundColor_Tab.toggled.connect(self.Color_Background_Tabs.setEnabled)
@@ -1571,8 +1571,8 @@ class Ui_Settings(object):
         self.Enable_pinButton_Icon.toggled.connect(self.pinButton_open.setEnabled)
         self.Enable_pinButton_Icon.toggled.connect(self.pinButton_closed.setEnabled)
         self.HideTitleBarFC.toggled.connect(self.HideMenuIcon.toggle)
-        self.UseButtonBackGround.toggled.connect(self.label_48.setEnabled)
-        self.UseButtonBackGround.toggled.connect(self.Color_Background.setEnabled)
+        self.EnableBackGroundColor.toggled.connect(self.label_48.setEnabled)
+        self.EnableBackGroundColor.toggled.connect(self.Color_Background.setEnabled)
 
         self.tabWidget.setCurrentIndex(2)
 
@@ -1660,7 +1660,7 @@ class Ui_Settings(object):
         self.label_9.setText(QCoreApplication.translate("Settings", u"Set the background color for the application button:", None))
         self.label_30.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the background color for buttons when hovering over them:</p></body></html>", None))
         self.EnableBackGroundColor_TitleBar.setText("")
-        self.EnableBackGroundColor.setText("")
+        self.EnableBackGroundColor_Hover.setText("")
         self.EnableBorderColor.setText("")
         self.label_31.setText(QCoreApplication.translate("Settings", u"Set the text color", None))
         self.label_46.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the background color for the tabs:</p></body></html>", None))
@@ -1668,7 +1668,7 @@ class Ui_Settings(object):
         self.EnableBackGroundColor_App.setText("")
         self.EnableBackGroundColor_Tab.setText("")
         self.label_6.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the border color for buttons when hovering over them:</p></body></html>", None))
-        self.UseButtonBackGround.setText("")
+        self.EnableBackGroundColor.setText("")
         self.label_48.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the background color for buttons:</p></body></html>", None))
         self.HideMenuIcon.setText(QCoreApplication.translate("Settings", u"Hide FreeCAD icon for menu button", None))
         self.BorderTransparant.setText(QCoreApplication.translate("Settings", u"Set border invisible for ribbon buttons", None))

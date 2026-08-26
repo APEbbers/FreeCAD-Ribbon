@@ -79,15 +79,15 @@ DefaultSettings = {
     # "UseFCOverlay": bool(False),
     "OverlayState": int(0),
     "StoredOverlayState": "",
-    "UseButtonBackGround": bool(False),
+    "EnableBackGroundColor": bool(False),
     "BorderTransparant": bool(True),
     "EnableBorderColor": bool(False),
-    "EnableBackGroundColor": bool(False),
+    "EnableBackGroundColor_Hover": bool(False),
     "EnableBackGroundColor_App": bool(False),
     "EnableBackGroundColor_Tab": bool(False),
     "EnableBackGroundColor_TitleBar": bool(False),
     "EnableTextColor": bool(False),
-    # "Color_Background": "",
+    "Color_Background": "",
     "Color_Background_Hover": "",
     "Color_Background_App": "",
     "Color_Background_Tabs": "",
@@ -324,7 +324,7 @@ class Parameters:
     
     if Settings.GetBoolSetting("HidePanelTitles") is None:
         HIDE_PANEL_TITLES = bool(DefaultSettings["HidePanelTitles"])
-        Settings.SetBoolSetting("HHidePanelTitles", HIDE_PANEL_TITLES)
+        Settings.SetBoolSetting("HidePanelTitles", HIDE_PANEL_TITLES)
     HIDE_PANEL_TITLES = Settings.GetBoolSetting("HidePanelTitles")
     # endregion ------------------------------------------------------------------------------------------------------------
 
@@ -565,10 +565,10 @@ class Parameters:
         Settings.SetIntSetting("OverlayState", OVERLAYSTATE)
     OVERLAYSTATE = Settings.GetIntSetting("OverlayState")
 
-    if Settings.GetBoolSetting("UseButtonBackGround") is None:
-        BUTTON_BACKGROUND_ENABLED = bool(DefaultSettings["UseButtonBackGround"])
-        Settings.SetBoolSetting("UseButtonBackGround", BUTTON_BACKGROUND_ENABLED)
-    BUTTON_BACKGROUND_ENABLED = Settings.GetBoolSetting("UseButtonBackGround")
+    # if Settings.GetBoolSetting("EnableBackGroundColor") is None:
+    #     BUTTON_BACKGROUND_ENABLED = bool(DefaultSettings["EnableBackGroundColor"])
+    #     Settings.SetBoolSetting("EnableBackGroundColor", BUTTON_BACKGROUND_ENABLED)
+    # BUTTON_BACKGROUND_ENABLED = Settings.GetBoolSetting("EnableBackGroundColor")
     # endregion ------------------------------------------------------------------------------------------------------------
 
     # region - Icon settings -------------------------------------------------------------------------------------
@@ -647,6 +647,11 @@ class Parameters:
         Settings.SetBoolSetting("EnableBackGroundColor", ENABLE_BACKGROUND_COLOR)
     ENABLE_BACKGROUND_COLOR = Settings.GetBoolSetting("EnableBackGroundColor")
     
+    if Settings.GetBoolSetting("EnableBackGroundColor_Hover") is None:
+        ENABLE_BACKGROUND_COLOR_HOVER = bool(DefaultSettings["EnableBackGroundColor_Hover"])
+        Settings.SetBoolSetting("EnableBackGroundColor_Hover", ENABLE_BACKGROUND_COLOR_HOVER)
+    ENABLE_BACKGROUND_COLOR_HOVER = Settings.GetBoolSetting("EnableBackGroundColor_Hover")
+    
     if Settings.GetBoolSetting("EnableBackGroundColor_App") is None:
         ENABLE_BACKGROUND_COLOR_APP = bool(DefaultSettings["EnableBackGroundColor_App"])
         Settings.SetBoolSetting("EnableBackGroundColor_App", ENABLE_BACKGROUND_COLOR_APP)
@@ -676,6 +681,11 @@ class Parameters:
         COLOR_BORDERS = str(DefaultSettings["Color_Borders"])
         Settings.SetStringSetting("Color_Borders", COLOR_BORDERS)
     COLOR_BORDERS = Settings.GetStringSetting("Color_Borders")    
+    
+    if Settings.GetStringSetting("Color_Background") == "":
+        COLOR_BACKGROUND = str(DefaultSettings["Color_Background"])
+        Settings.SetStringSetting("Color_Background", COLOR_BACKGROUND)
+    COLOR_BACKGROUND = Settings.GetStringSetting("Color_Background")
 
     if Settings.GetStringSetting("Color_Background_Hover") == "":
         COLOR_BACKGROUND_HOVER = str(DefaultSettings["Color_Background_Hover"])

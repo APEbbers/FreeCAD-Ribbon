@@ -115,7 +115,6 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # "UseOverlay": Parameters.USE_OVERLAY,
         # "UseFCOverlay": Parameters.USE_FC_OVERLAY,
         "OverlayState": Parameters.OVERLAYSTATE,
-        "UseButtonBackGround": Parameters.BUTTON_BACKGROUND_ENABLED,
         "HideMenuIcon": Parameters.HIDE_MENU_ICON,
         "Enable_Tab_Scroll_Icon": Parameters.ENABLE_TAB_SCROLL_ICON,
         "Enable_Ribbon_Scroll_Icon": Parameters.ENABLE_RIBBON_SCROLL_ICON,
@@ -129,7 +128,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "EnableTextColor": Parameters.ENABLE_TEXT_COLOR,
         # "BorderTransparant": Parameters.BORDER_TRANSPARANT,
         "Color_Borders": Parameters.COLOR_BORDERS,
-        # "Color_Background": Parameters.COLOR_BACKGROUND,
+        "Color_Background": Parameters.COLOR_BACKGROUND,
         "Color_Background_Hover": Parameters.COLOR_BACKGROUND_HOVER,
         "Color_Background_App": Parameters.COLOR_APPLICATION_BUTTON_BACKGROUND,
         "Color_Background_Tabs": Parameters.COLOR_BACKGROUND_TABS,
@@ -182,7 +181,6 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # "UseOverlay": Parameters.USE_OVERLAY,
         # "UseFCOverlay": Parameters.USE_FC_OVERLAY,
         "OverlayState": Parameters.OVERLAYSTATE,
-        "UseButtonBackGround": Parameters.BUTTON_BACKGROUND_ENABLED,
         "HideMenuIcon": Parameters.HIDE_MENU_ICON,
         "Enable_Tab_Scroll_Icon": Parameters.ENABLE_TAB_SCROLL_ICON,
         "Enable_Ribbon_Scroll_Icon": Parameters.ENABLE_RIBBON_SCROLL_ICON,
@@ -190,13 +188,14 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "Enable_pinButton_Icon": Parameters.ENABLE_PINBUTTON_ICON,
         "EnableBorderColor": Parameters.ENABLE_BORDER_COLOR,
         "EnableBackGroundColor": Parameters.ENABLE_BACKGROUND_COLOR,
+        "EnableBackGroundColor_Hover": Parameters.ENABLE_BACKGROUND_COLOR_HOVER,
         "EnableBackGroundColor_App": Parameters.ENABLE_BACKGROUND_COLOR_APP,
         "EnableBackGroundColor_Tab": Parameters.ENABLE_BACKGROUND_COLOR_TAB,
         "EnableBackGroundColor_TitleBar": Parameters.ENABLE_BACKGROUND_COLOR_TITLEBAR,
         "EnableTextColor": Parameters.ENABLE_TEXT_COLOR,
         # "BorderTransparant": Parameters.BORDER_TRANSPARANT,
         "Color_Borders": Parameters.COLOR_BORDERS,
-        # "Color_Background": Parameters.COLOR_BACKGROUND,
+        "Color_Background": Parameters.COLOR_BACKGROUND,
         "Color_Background_Hover": Parameters.COLOR_BACKGROUND_HOVER,
         "Color_Background_App": Parameters.COLOR_APPLICATION_BUTTON_BACKGROUND,
         "Color_Background_Tabs": Parameters.COLOR_BACKGROUND_TABS,
@@ -303,10 +302,6 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # Currently, FC is not remebering the Overlay state properly,
         # Remove the last index for now
         self.form.OverlayState.removeItem(2)
-        # Remove the 'Use backgound on buttons' from settings menu
-        self.form.UseButtonBackGround.setHidden(True)
-        self.form.UseButtonBackGround.setDisabled(True)
-        Parameters.BUTTON_BACKGROUND_ENABLED = False
         # Disable and hide the controls for the old application button
         self.form.label_5.setDisabled(True)
         self.form.label_5.setHidden(True)
@@ -456,10 +451,10 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.form.EnableWrap_Medium.setDisabled(True)
             self.form.EnableWrap_Large.setDisabled(True)
 
-        if Parameters.BUTTON_BACKGROUND_ENABLED is True:
-            self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Checked)
+        if Parameters.ENABLE_BACKGROUND_COLOR is True:
+            self.form.EnableBackGroundColor.setCheckState(Qt.CheckState.Checked)
         else:
-            self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Unchecked)
+            self.form.EnableBackGroundColor.setCheckState(Qt.CheckState.Unchecked)
 
         # Set the color and icon buttons
         if Parameters.HIDE_MENU_ICON is True:
@@ -561,6 +556,10 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             self.form.EnableBackGroundColor.setCheckState(Qt.CheckState.Checked)
         else:
             self.form.EnableBackGroundColor.setCheckState(Qt.CheckState.Unchecked)
+        if Parameters.ENABLE_BACKGROUND_COLOR_HOVER is True:
+            self.form.EnableBackGroundColor_Hover.setCheckState(Qt.CheckState.Checked)
+        else:
+            self.form.EnableBackGroundColor_Hover.setCheckState(Qt.CheckState.Unchecked)
         if Parameters.ENABLE_BACKGROUND_COLOR_APP is True:
             self.form.EnableBackGroundColor_App.setCheckState(Qt.CheckState.Checked)
         else:
@@ -586,7 +585,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.Color_Borders.setProperty(
             "color", QColor(Parameters.COLOR_BORDERS)
         )
-        # self.form.Color_Background.setProperty("color", QColor(Parameters.COLOR_BACKGROUND))
+        self.form.Color_Background.setProperty("color", QColor(Parameters.COLOR_BACKGROUND))
         self.form.Color_Background_Hover.setProperty(
             "color", QColor(Parameters.COLOR_BACKGROUND_HOVER)
         )
@@ -745,8 +744,8 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.EnableToolsPanel.clicked.connect(self.on_EnableToolsPanel_clicked)
         # Connect the overlay setting:
         self.form.OverlayState.currentIndexChanged.connect(self.on_OverlayState_currentIndexChanged)
-        self.form.UseButtonBackGround.clicked.connect(
-            self.on_UseButtonBackGround_clicked
+        self.form.EnableBackGroundColor.clicked.connect(
+            self.on_EnableBackGroundColor_clicked
         )
 
         # endregion
@@ -816,6 +815,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         )
         self.form.EnableBorderColor.clicked.connect(self.on_EnableBorderColor_clicked)
         self.form.EnableBackGroundColor.clicked.connect(self.on_EnableBackGroundColor_clicked)
+        self.form.EnableBackGroundColor_Hover.clicked.connect(self.on_EnableBackGroundColor_Hover_clicked)
         self.form.EnableBackGroundColor_App.clicked.connect(self.on_EnableBackGroundColor_App_clicked)
         self.form.EnableBackGroundColor_Tab.clicked.connect(self.on_EnableBackGroundColor_Tab_clicked)
         self.form.EnableBackGroundColor_TitleBar.clicked.connect(self.on_EnableBackGroundColor_TitleBar_clicked)
@@ -823,7 +823,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
                 
         # self.form.BorderTransparant.clicked.connect(self.on_BorderTransparant_clicked)
         self.form.Color_Borders.clicked.connect(self.on_Color_Borders_clicked)
-        # self.form.Color_Background.clicked.connect(self.on_Color_Background_clicked)
+        self.form.Color_Background.clicked.connect(self.on_Color_Background_clicked)
         self.form.Color_Background_Hover.clicked.connect(
             self.on_Color_Background_Hover_clicked
         )
@@ -1197,14 +1197,6 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.EnableWrap_Large.setDisabled(True)
         self.settingChanged = True
         return
-
-    def on_UseButtonBackGround_clicked(self):
-        if self.form.UseButtonBackGround.isChecked() is True:
-            self.ValuesToUpdate["UseButtonBackGround"] = True
-        if self.form.UseButtonBackGround.isChecked() is False:
-            self.ValuesToUpdate["UseButtonBackGround"] = False
-        self.settingChanged = True
-        return
     
     def on_HideMenuIcon_clicked(self):
         if self.form.HideMenuIcon.isChecked() is True:
@@ -1442,6 +1434,14 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.settingChanged = True
         return
     
+    def on_EnableBackGroundColor_Hover_clicked(self):
+        if self.form.EnableBackGroundColor.isChecked() is True:
+            self.ValuesToUpdate["EnableBackGroundColor_Hover"] = True
+        if self.form.EnableBackGroundColor.isChecked() is False:
+            self.ValuesToUpdate["EnableBackGroundColor"] = False
+        self.settingChanged = True
+        return
+    
     def on_EnableBackGroundColor_App_clicked(self):
         if self.form.EnableBackGroundColor_App.isChecked() is True:
             self.ValuesToUpdate["EnableBackGroundColor_App"] = True
@@ -1497,6 +1497,20 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         except Exception:
             pass
         self.settingChanged = True
+        
+    def on_Color_Background_clicked(self):
+        try:
+            Color = QColor(
+                self.form.Color_Background.property("color")
+            ).toTuple()  # RGBA tupple
+            HexColor = StandardFunctions.ColorConvertor(
+                Color, Color[3] / 255, True, False
+            )
+            self.ValuesToUpdate["Color_Background"] = HexColor
+            self.settingChanged = True
+        except Exception:
+            pass
+        return
 
     def on_Color_Background_Hover_clicked(self):
         try:
@@ -1694,7 +1708,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         #     "UseFCOverlay", self.OriginalValues["UseFCOverlay"]
         # )
         Parameters_Ribbon.Settings.SetBoolSetting(
-            "UseButtonBackGround", self.OriginalValues["UseButtonBackGround"]
+            "EnableBackGroundColor", self.OriginalValues["EnableBackGroundColor"]
         )
         # Set the use of custom icons
         Parameters_Ribbon.Settings.SetBoolSetting(
@@ -1718,6 +1732,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         )
         Parameters_Ribbon.Settings.SetBoolSetting(
             "EnableBackGroundColor", self.OriginalValues["EnableBackGroundColor"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
+            "EnableBackGroundColor_Hover", self.OriginalValues["EnableBackGroundColor_Hover"]
         )
         Parameters_Ribbon.Settings.SetBoolSetting(
             "EnableBackGroundColor_App", self.OriginalValues["EnableBackGroundColor_App"]
@@ -1906,7 +1923,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         #     "UseFCOverlay", self.ValuesToUpdate["UseFCOverlay"]
         # )
         Parameters_Ribbon.Settings.SetBoolSetting(
-            "UseButtonBackGround", self.ValuesToUpdate["UseButtonBackGround"]
+            "EnableBackGroundColor", self.ValuesToUpdate["EnableBackGroundColor"]
         )
         # Set the use of custom icons
         Parameters_Ribbon.Settings.SetBoolSetting(
@@ -1932,6 +1949,9 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
             "EnableBackGroundColor", self.ValuesToUpdate["EnableBackGroundColor"]
         )
         Parameters_Ribbon.Settings.SetBoolSetting(
+            "EnableBackGroundColor_Hover", self.ValuesToUpdate["EnableBackGroundColor_Hover"]
+        )
+        Parameters_Ribbon.Settings.SetBoolSetting(
             "EnableBackGroundColor_App", self.ValuesToUpdate["EnableBackGroundColor_App"]
         )
         Parameters_Ribbon.Settings.SetBoolSetting(
@@ -1949,7 +1969,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         Parameters_Ribbon.Settings.SetStringSetting(
             "Color_Borders", self.ValuesToUpdate["Color_Borders"]
         )
-        # Parameters_Ribbon.Settings.SetStringSetting("Color_Background", self.ValuesToUpdate["Color_Background"])
+        Parameters_Ribbon.Settings.SetStringSetting("Color_Background", self.ValuesToUpdate["Color_Background"])
         Parameters_Ribbon.Settings.SetStringSetting(
             "Color_Background_Hover", self.ValuesToUpdate["Color_Background_Hover"]
         )
@@ -2097,10 +2117,10 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         #     self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Checked)
         # else:
         #     self.form.FCOverlayEnabled.setCheckState(Qt.CheckState.Unchecked)
-        if DefaultSettings["UseButtonBackGround"] is True:
-            self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Checked)
+        if DefaultSettings["EnableBackGroundColor"] is True:
+            self.form.EnableBackGroundColor.setCheckState(Qt.CheckState.Checked)
         else:
-            self.form.UseButtonBackGround.setCheckState(Qt.CheckState.Unchecked)
+            self.form.EnableBackGroundColor.setCheckState(Qt.CheckState.Unchecked)
 
         self.settingChanged = True
 
@@ -2182,6 +2202,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         
         self.form.EnableBorderColor.setCheckState(Qt.CheckState.Unchecked)
         self.form.EnableBackGroundColor.setCheckState(Qt.CheckState.Unchecked)
+        self.form.EnableBackGroundColor_Hover.setCheckState(Qt.CheckState.Unchecked)
         self.form.EnableBackGroundColor_App.setCheckState(Qt.CheckState.Unchecked)
         self.form.EnableBackGroundColor_Tab.setCheckState(Qt.CheckState.Unchecked)
         self.form.EnableBackGroundColor_TitleBar.setCheckState(Qt.CheckState.Unchecked)
@@ -2190,7 +2211,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.Color_Borders.setProperty(
             "color", QColor(StyleMapping_Ribbon.ReturnStyleItem("Color_Borders"))
         )
-        # self.form.Color_Background.setProperty("color", QColor(StyleMapping.ReturnStyleItem("Color_Background")))
+        self.form.Color_Background.setProperty("color", QColor(StyleMapping_Ribbon.ReturnStyleItem("Color_Background")))
         self.form.Color_Background_Hover.setProperty(
             "color",
             QColor(StyleMapping_Ribbon.ReturnStyleItem("Color_Background_Hover")),
