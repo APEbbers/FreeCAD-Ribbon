@@ -1069,7 +1069,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         return
     
     def on_ButtonSpacing_TextChanged(self):
-        self.ValuesToUpdate["ButtonSpacing"] = int(self.form.ButtonSpacing.text())
+        self.ValuesToUpdate["ButtonSpacing"] = int(self.form.ButtonSpacing.text())-3
         self.settingChanged = True
         return
     
