@@ -885,7 +885,9 @@ class ModernMenu(RibbonBar):
                     height: 24px;
                     margin-top: 6px;
                     margin-bottom: 6px;
-                }
+                    background: """
+            + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
+            + """}
                 QTabBar QToolButton:hover {
                     background: """
             + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover", True, True)
@@ -1610,20 +1612,12 @@ class ModernMenu(RibbonBar):
         self.currentCategory().setStyleSheet(StyleSheet)
         self.quickAccessToolBar().setStyleSheet(StyleSheet)
         self.CustomizeEnabled = True
-        # Just incase
-        self.CustomizeOffset = 6
-        # self.setRibbonHeight(self.RibbonHeight + self.CustomizeOffset)
-        self.currentCategory().setMinimumHeight(
-            self.RibbonHeight - self.RibbonMinimalHeight - 3 + self.CustomizeOffset
-        )
-        self.currentCategory().setMaximumHeight(
-            self.RibbonHeight - self.RibbonMinimalHeight - 3 + self.CustomizeOffset
-        )
         
         # Add a hidden checkbox to each tab and set the tab visible
         for i in range(self.tabBar().count()):
-            # Create the checkbox
-            checkBox = QCheckBox()            
+            # Create the checkbox         
+            checkBox = Toggle()
+            checkBox.setFixedSize(36,18)
             tabData = self.tabBar().tabData(i)
             checkBox.setObjectName(f"Enable_{tabData}")
             checkBox.setTristate(False)
@@ -1643,7 +1637,7 @@ class ModernMenu(RibbonBar):
             self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, checkBox)
             # Make sure to set the tab visible
             self.tabBar().setTabVisible(i, True)      
-                                
+                                           
         # Store the workbench name as the last customized name
         self.LastCustomized = [workbenchName, self.currentCategory().title()]
         
@@ -1719,14 +1713,15 @@ class ModernMenu(RibbonBar):
                 # if panel titles are hidden, show them
                 if Parameters.HIDE_TITLEBAR_FC:
                     objPanel._titleWidget.show()
+                    offset = 0
                     # Adjust heights
-                    objPanel.setFixedHeight(objPanel.height() + self.panelTitleheight)
+                    objPanel.setFixedHeight(objPanel.height() + self.panelTitleheight + offset)
                     self.currentCategory().setMaximumHeight(
-                        self.RibbonHeight - self.RibbonMinimalHeight - 3 + self.panelTitleheight + 12
+                        self.RibbonHeight - self.RibbonMinimalHeight - 3 + self.panelTitleheight + offset
                     )
-                    self.setRibbonHeight(self.RibbonHeight + self.panelTitleheight + 12)
+                    self.setRibbonHeight(self.RibbonHeight + self.panelTitleheight + offset)
                     TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
-                    TB.setFixedHeight(self.RibbonHeight + self.panelTitleheight + 12)          
+                    TB.setFixedHeight(self.RibbonHeight + self.panelTitleheight + offset)          
                 
                 # Recreate the order list for the new panel. 
                 # This makes sure that all controls are added to the order list
@@ -6671,7 +6666,7 @@ class ModernMenu(RibbonBar):
                 if "Enabled" in Dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
                     Enabled = Dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"]
                     EnableControl.setChecked(bool(Enabled))
-        EnableControl.setFixedWidth(32)
+        EnableControl.setFixedWidth(36)
         EnableControl.setObjectName("EnablePanel")
         titleLayout.insertWidget(0, EnableControl)
         if showEnableControl is False:

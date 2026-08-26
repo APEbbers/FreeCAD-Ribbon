@@ -189,7 +189,7 @@
       <string notr="true"/>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>2</number>
      </property>
      <property name="elideMode">
       <enum>Qt::TextElideMode::ElideRight</enum>
@@ -219,7 +219,7 @@
             <x>0</x>
             <y>0</y>
             <width>1224</width>
-            <height>1278</height>
+            <height>1306</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_44">
@@ -1528,8 +1528,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>326</width>
-            <height>286</height>
+            <width>1224</width>
+            <height>820</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_43">
@@ -1882,8 +1882,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>358</width>
-            <height>800</height>
+            <width>1224</width>
+            <height>820</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_36">
@@ -1913,7 +1913,94 @@
                 <layout class="QGridLayout" name="gridLayout_35">
                  <item row="0" column="0">
                   <layout class="QGridLayout" name="gridLayout_20">
-                   <item row="1" column="2">
+                   <item row="5" column="1">
+                    <widget class="QLabel" name="label_47">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>50</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the background color for titlebar:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QLabel" name="label_9">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>200</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>Set the background color for the application button:</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QLabel" name="label_30">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>250</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="maximumSize">
+                      <size>
+                       <width>200</width>
+                       <height>16777215</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the background color for buttons when hovering over them:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="2">
+                    <widget class="Gui::ColorButton" name="Color_Font">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="0">
+                    <widget class="QCheckBox" name="EnableBackGroundColor_TitleBar">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QCheckBox" name="EnableBackGroundColor">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="2">
                     <widget class="Gui::ColorButton" name="Color_Background_Hover">
                      <property name="enabled">
                       <bool>false</bool>
@@ -1932,51 +2019,6 @@
                      </property>
                      <property name="text">
                       <string notr="true"/>
-                     </property>
-                     <property name="allowTransparency">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="2">
-                    <widget class="Gui::ColorButton" name="Color_Font">
-                     <property name="enabled">
-                      <bool>false</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="1">
-                    <widget class="QLabel" name="label_47">
-                     <property name="enabled">
-                      <bool>false</bool>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>50</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the background color for titlebar:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="2">
-                    <widget class="Gui::ColorButton" name="Color_Background_Tabs">
-                     <property name="enabled">
-                      <bool>false</bool>
-                     </property>
-                     <property name="sizePolicy">
-                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                       <horstretch>0</horstretch>
-                       <verstretch>0</verstretch>
-                      </sizepolicy>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>20</width>
-                       <height>40</height>
-                      </size>
                      </property>
                      <property name="allowTransparency">
                       <bool>true</bool>
@@ -2008,32 +2050,24 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="1">
-                    <widget class="QLabel" name="label_30">
-                     <property name="enabled">
-                      <bool>false</bool>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>200</width>
-                       <height>50</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>200</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
+                   <item row="0" column="0">
+                    <widget class="QCheckBox" name="EnableBorderColor">
                      <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the background color for buttons when hovering over them:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                     <property name="wordWrap">
-                      <bool>true</bool>
+                      <string/>
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="2">
+                   <item row="6" column="1">
+                    <widget class="QLabel" name="label_31">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="text">
+                      <string>Set the text color</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
                     <widget class="Gui::ColorButton" name="Color_Background_App">
                      <property name="enabled">
                       <bool>false</bool>
@@ -2058,48 +2092,7 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="1">
-                    <widget class="QLabel" name="label_9">
-                     <property name="enabled">
-                      <bool>false</bool>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>200</width>
-                       <height>0</height>
-                      </size>
-                     </property>
-                     <property name="maximumSize">
-                      <size>
-                       <width>200</width>
-                       <height>16777215</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>Set the background color for the application button:</string>
-                     </property>
-                     <property name="wordWrap">
-                      <bool>true</bool>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="1">
-                    <widget class="QLabel" name="label_46">
-                     <property name="enabled">
-                      <bool>false</bool>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>50</height>
-                      </size>
-                     </property>
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the background color for the tabs:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="2">
+                   <item row="5" column="2">
                     <widget class="Gui::ColorButton" name="Color_Background_TitleBar">
                      <property name="enabled">
                       <bool>false</bool>
@@ -2118,6 +2111,65 @@
                      </property>
                      <property name="allowTransparency">
                       <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QLabel" name="label_46">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>50</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the background color for the tabs:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="0">
+                    <widget class="QCheckBox" name="EnableTextColor">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="2">
+                    <widget class="Gui::ColorButton" name="Color_Background_Tabs">
+                     <property name="enabled">
+                      <bool>false</bool>
+                     </property>
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>20</width>
+                       <height>40</height>
+                      </size>
+                     </property>
+                     <property name="allowTransparency">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QCheckBox" name="EnableBackGroundColor_App">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QCheckBox" name="EnableBackGroundColor_Tab">
+                     <property name="text">
+                      <string/>
                      </property>
                     </widget>
                    </item>
@@ -2146,55 +2198,27 @@
                      </property>
                     </widget>
                    </item>
-                   <item row="5" column="1">
-                    <widget class="QLabel" name="label_31">
+                   <item row="1" column="0">
+                    <widget class="QCheckBox" name="UseButtonBackGround_2">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QLabel" name="label_48">
                      <property name="enabled">
                       <bool>false</bool>
                      </property>
                      <property name="text">
-                      <string>Set the text color</string>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Set the background color for buttons:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="0">
-                    <widget class="QCheckBox" name="EnableBorderColor">
-                     <property name="text">
-                      <string/>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QCheckBox" name="EnableBackGroundColor">
-                     <property name="text">
-                      <string/>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QCheckBox" name="EnableBackGroundColor_App">
-                     <property name="text">
-                      <string/>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="0">
-                    <widget class="QCheckBox" name="EnableBackGroundColor_Tab">
-                     <property name="text">
-                      <string/>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="4" column="0">
-                    <widget class="QCheckBox" name="EnableBackGroundColor_TitleBar">
-                     <property name="text">
-                      <string/>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="0">
-                    <widget class="QCheckBox" name="EnableTextColor">
-                     <property name="text">
-                      <string/>
+                   <item row="1" column="2">
+                    <widget class="Gui::ColorButton" name="Color_Background">
+                     <property name="enabled">
+                      <bool>false</bool>
                      </property>
                     </widget>
                    </item>
@@ -2614,8 +2638,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>478</width>
-            <height>710</height>
+            <width>1224</width>
+            <height>766</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_28">
@@ -3267,11 +3291,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>166</x>
-     <y>1102</y>
+     <y>1130</y>
     </hint>
     <hint type="destinationlabel">
-     <x>673</x>
-     <y>1102</y>
+     <x>832</x>
+     <y>1130</y>
     </hint>
    </hints>
   </connection>
@@ -3283,11 +3307,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>150</x>
-     <y>1130</y>
+     <y>1158</y>
     </hint>
     <hint type="destinationlabel">
-     <x>673</x>
-     <y>1130</y>
+     <x>832</x>
+     <y>1158</y>
     </hint>
    </hints>
   </connection>
@@ -3330,12 +3354,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>52</x>
-     <y>295</y>
+     <x>57</x>
+     <y>332</y>
     </hint>
     <hint type="destinationlabel">
-     <x>323</x>
-     <y>302</y>
+     <x>347</x>
+     <y>342</y>
     </hint>
    </hints>
   </connection>
@@ -3346,12 +3370,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>53</x>
-     <y>291</y>
+     <x>57</x>
+     <y>332</y>
     </hint>
     <hint type="destinationlabel">
-     <x>83</x>
-     <y>288</y>
+     <x>133</x>
+     <y>352</y>
     </hint>
    </hints>
   </connection>
@@ -3362,8 +3386,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>48</x>
-     <y>346</y>
+     <x>57</x>
+     <y>378</y>
     </hint>
     <hint type="destinationlabel">
      <x>317</x>
@@ -3378,12 +3402,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>50</x>
-     <y>351</y>
+     <x>57</x>
+     <y>378</y>
     </hint>
     <hint type="destinationlabel">
-     <x>101</x>
-     <y>347</y>
+     <x>151</x>
+     <y>388</y>
     </hint>
    </hints>
   </connection>
@@ -3394,8 +3418,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>53</x>
-     <y>401</y>
+     <x>57</x>
+     <y>424</y>
     </hint>
     <hint type="destinationlabel">
      <x>326</x>
@@ -3410,8 +3434,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>43</x>
-     <y>399</y>
+     <x>57</x>
+     <y>424</y>
     </hint>
     <hint type="destinationlabel">
      <x>120</x>
@@ -3442,8 +3466,8 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>46</x>
-     <y>447</y>
+     <x>57</x>
+     <y>470</y>
     </hint>
     <hint type="destinationlabel">
      <x>101</x>
@@ -3720,6 +3744,38 @@
     <hint type="destinationlabel">
      <x>628</x>
      <y>164</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>UseButtonBackGround_2</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_48</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>42</x>
+     <y>282</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>117</x>
+     <y>284</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>UseButtonBackGround_2</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Color_Background</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>39</x>
+     <y>271</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>320</x>
+     <y>281</y>
     </hint>
    </hints>
   </connection>

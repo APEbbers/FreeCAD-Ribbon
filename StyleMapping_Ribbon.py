@@ -156,7 +156,7 @@ def DarkMode():
 darkMode = DarkMode()
 
 
-def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
+def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False, IgnoreButtonBackground=False):
     """
     Enter one of the names below:
 
@@ -252,7 +252,7 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False):
         if isIcon is False:
             result = ""
 
-            if ControlName is "Background_Color" and Parameters.ENABLE_BACKGROUND_COLOR is True:
+            if ControlName is "Background_Color" and (Parameters.ENABLE_BACKGROUND_COLOR is True or IgnoreButtonBackground is True):
                 result = StyleMapping["Stylesheets"][ControlName]
             if ControlName is "Border_Color" and Parameters.ENABLE_BORDER_COLOR is True:
                 result = StyleMapping["Stylesheets"][ControlName]
