@@ -396,7 +396,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.PanelHeightOffset.setValue(Parameters.PANEL_HEIGHT_OFFSET)
         self.form.ButtonSizeFactor.setValue(Parameters.SIZE_FACTOR)
         self.form.MinimumRibbonHeight.setValue(Parameters.RIBBON_MINIMUM_HEIGHT)
-        self.form.ButtonSpacing.setValue(Parameters.BUTTON_SPACING)
+        self.form.ButtonSpacing.setValue(Parameters.BUTTON_SPACING + 3)
 
         self.form.label_7.setText(Parameters.STYLESHEET)
         if Parameters.SHOW_ICON_TEXT_SMALL is True:
