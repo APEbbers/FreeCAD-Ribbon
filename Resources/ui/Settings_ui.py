@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'SettingsMbuCeb.ui'
+## Form generated from reading UI file 'SettingsmeIQyI.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+from PySide.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+from PySide.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
+from PySide.QtWidgets import (QAbstractSpinBox, QApplication, QCheckBox, QComboBox,
     QDoubleSpinBox, QFrame, QGridLayout, QGroupBox,
     QLabel, QPushButton, QScrollArea, QSizePolicy,
     QSlider, QSpacerItem, QSpinBox, QTabWidget,
@@ -1037,10 +1037,10 @@ class Ui_Settings(object):
 
         self.gridLayout_20.addWidget(self.label_6, 0, 1, 1, 1)
 
-        self.UseButtonBackGround_2 = QCheckBox(self.ColorS)
-        self.UseButtonBackGround_2.setObjectName(u"UseButtonBackGround_2")
+        self.UseButtonBackGround = QCheckBox(self.ColorS)
+        self.UseButtonBackGround.setObjectName(u"UseButtonBackGround")
 
-        self.gridLayout_20.addWidget(self.UseButtonBackGround_2, 1, 0, 1, 1)
+        self.gridLayout_20.addWidget(self.UseButtonBackGround, 1, 0, 1, 1)
 
         self.label_48 = QLabel(self.ColorS)
         self.label_48.setObjectName(u"label_48")
@@ -1456,11 +1456,21 @@ class Ui_Settings(object):
         self.OverlaySettings.setCheckable(False)
         self.gridLayout_37 = QGridLayout(self.OverlaySettings)
         self.gridLayout_37.setObjectName(u"gridLayout_37")
-        self.UseButtonBackGround = QCheckBox(self.OverlaySettings)
-        self.UseButtonBackGround.setObjectName(u"UseButtonBackGround")
-        self.UseButtonBackGround.setEnabled(False)
+        self.verticalSpacer_6 = QSpacerItem(20, 5, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
-        self.gridLayout_37.addWidget(self.UseButtonBackGround, 1, 0, 1, 1)
+        self.gridLayout_37.addItem(self.verticalSpacer_6, 1, 0, 1, 1)
+
+        self.label_26 = QLabel(self.OverlaySettings)
+        self.label_26.setObjectName(u"label_26")
+        self.label_26.setEnabled(False)
+        sizePolicy3.setHeightForWidth(self.label_26.sizePolicy().hasHeightForWidth())
+        self.label_26.setSizePolicy(sizePolicy3)
+        self.label_26.setMinimumSize(QSize(0, 0))
+        self.label_26.setSizeIncrement(QSize(0, 0))
+        self.label_26.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
+        self.label_26.setWordWrap(True)
+
+        self.gridLayout_37.addWidget(self.label_26, 2, 0, 1, 1)
 
         self.gridLayout_30 = QGridLayout()
         self.gridLayout_30.setObjectName(u"gridLayout_30")
@@ -1488,22 +1498,6 @@ class Ui_Settings(object):
 
 
         self.gridLayout_37.addLayout(self.gridLayout_30, 0, 0, 1, 1)
-
-        self.label_26 = QLabel(self.OverlaySettings)
-        self.label_26.setObjectName(u"label_26")
-        self.label_26.setEnabled(False)
-        sizePolicy3.setHeightForWidth(self.label_26.sizePolicy().hasHeightForWidth())
-        self.label_26.setSizePolicy(sizePolicy3)
-        self.label_26.setMinimumSize(QSize(0, 0))
-        self.label_26.setSizeIncrement(QSize(0, 0))
-        self.label_26.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
-        self.label_26.setWordWrap(True)
-
-        self.gridLayout_37.addWidget(self.label_26, 3, 0, 1, 1)
-
-        self.verticalSpacer_6 = QSpacerItem(20, 5, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
-
-        self.gridLayout_37.addItem(self.verticalSpacer_6, 2, 0, 1, 1)
 
 
         self.gridLayout_28.addWidget(self.OverlaySettings, 1, 0, 1, 1)
@@ -1577,8 +1571,8 @@ class Ui_Settings(object):
         self.Enable_pinButton_Icon.toggled.connect(self.pinButton_open.setEnabled)
         self.Enable_pinButton_Icon.toggled.connect(self.pinButton_closed.setEnabled)
         self.HideTitleBarFC.toggled.connect(self.HideMenuIcon.toggle)
-        self.UseButtonBackGround_2.toggled.connect(self.label_48.setEnabled)
-        self.UseButtonBackGround_2.toggled.connect(self.Color_Background.setEnabled)
+        self.UseButtonBackGround.toggled.connect(self.label_48.setEnabled)
+        self.UseButtonBackGround.toggled.connect(self.Color_Background.setEnabled)
 
         self.tabWidget.setCurrentIndex(2)
 
@@ -1674,7 +1668,7 @@ class Ui_Settings(object):
         self.EnableBackGroundColor_App.setText("")
         self.EnableBackGroundColor_Tab.setText("")
         self.label_6.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the border color for buttons when hovering over them:</p></body></html>", None))
-        self.UseButtonBackGround_2.setText("")
+        self.UseButtonBackGround.setText("")
         self.label_48.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p>Set the background color for buttons:</p></body></html>", None))
         self.HideMenuIcon.setText(QCoreApplication.translate("Settings", u"Hide FreeCAD icon for menu button", None))
         self.BorderTransparant.setText(QCoreApplication.translate("Settings", u"Set border invisible for ribbon buttons", None))
@@ -1709,13 +1703,12 @@ class Ui_Settings(object):
 
         self.EnableToolsPanel.setText(QCoreApplication.translate("Settings", u"Use standard Tools panel", None))
         self.OverlaySettings.setTitle(QCoreApplication.translate("Settings", u"Ovelay settings", None))
-        self.UseButtonBackGround.setText(QCoreApplication.translate("Settings", u"Use background on buttons", None))
+        self.label_26.setText(QCoreApplication.translate("Settings", u"<span style=\" font-size:8pt; font-weight:700; font-style:italic;\">Warning:</span><br><span style=\" font-size:8pt; font-style:italic;\">When overlay is enabled by default, the ribbon is hidden until you open or create a document. Use &quot;ctrl+N&quot; (Linux, Windows) or &quot;meta+N&quot; (macOs) to create a new document.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">The pin button does not work with FreeCAD's overlay function. Enabling this, replaces the pin button with a overlay button.</span></p></body></html>", None))
         self.OverlayState.setItemText(0, QCoreApplication.translate("Settings", u"Visible", None))
         self.OverlayState.setItemText(1, QCoreApplication.translate("Settings", u"Hidden", None))
         self.OverlayState.setItemText(2, QCoreApplication.translate("Settings", u"Last saved state", None))
 
         self.label_45.setText(QCoreApplication.translate("Settings", u"Set the default state of the Ribbon:", None))
-        self.label_26.setText(QCoreApplication.translate("Settings", u"<span style=\" font-size:8pt; font-weight:700; font-style:italic;\">Warning:</span><br><span style=\" font-size:8pt; font-style:italic;\">When overlay is enabled by default, the ribbon is hidden until you open or create a document. Use &quot;ctrl+N&quot; (Linux, Windows) or &quot;meta+N&quot; (macOs) to create a new document.</span></p><p><span style=\" font-size:8pt; font-style:italic;\">The pin button does not work with FreeCAD's overlay function. Enabling this, replaces the pin button with a overlay button.</span></p></body></html>", None))
         self.DebugMode.setText(QCoreApplication.translate("Settings", u"Debug mode", None))
         self.label_3.setText(QCoreApplication.translate("Settings", u"<html><head/><body><p><span style=\" font-style:italic;\">Debug mode enables extra reports in the report view for debugging purposes.</span></p></body></html>", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("Settings", u"Advanced", None))
