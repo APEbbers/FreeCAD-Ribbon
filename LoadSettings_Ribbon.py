@@ -122,6 +122,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         "Enable_pinButton_Icon": Parameters.ENABLE_PINBUTTON_ICON,
         "EnableBorderColor": Parameters.ENABLE_BORDER_COLOR,
         "EnableBackGroundColor": Parameters.ENABLE_BACKGROUND_COLOR,
+        "EnableBackGroundColor_Hover": Parameters.ENABLE_BACKGROUND_COLOR_HOVER,
         "EnableBackGroundColor_App": Parameters.ENABLE_BACKGROUND_COLOR_APP,
         "EnableBackGroundColor_Tab": Parameters.ENABLE_BACKGROUND_COLOR_TAB,
         "EnableBackGroundColor_TitleBar": Parameters.ENABLE_BACKGROUND_COLOR_TITLEBAR,
