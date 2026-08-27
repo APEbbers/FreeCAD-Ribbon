@@ -1849,13 +1849,14 @@ class ModernMenu(RibbonBar):
             # Set the state for the enviroment to False again
             self.CustomizeEnabled = False
             
-            # reset the ribbonheight
-            self.currentCategory().setMinimumHeight(
-                self.RibbonHeight - self.RibbonMinimalHeight - 3
-            )
-            self.currentCategory().setMaximumHeight(
-                self.RibbonHeight - self.RibbonMinimalHeight - 3
-            )
+            # # reset the ribbonheight
+            # self.currentCategory().setMinimumHeight(
+            #     self.RibbonHeight - self.RibbonMinimalHeight - 3
+            # )
+            # self.currentCategory().setMaximumHeight(
+            #     self.RibbonHeight - self.RibbonMinimalHeight - 3
+            # )
+            # self.setRibbonHeight(self.RibbonHeight - self.RibbonMinimalHeight - 3)
 
             # Return the original state of the buttons
             for item in self.actionList:
@@ -2073,7 +2074,7 @@ class ModernMenu(RibbonBar):
             if self.AddCommandsDialog is not None:
                 self.AddCommandsDialog.form.close()
                 self.AddCommandsDialog = None
-                # Close the dockwidget is there is one
+                # Close the dockwidget if there is one
                 DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
                 if DockWidget is not None:
                     DockWidget.deleteLater()       
@@ -2290,7 +2291,7 @@ class ModernMenu(RibbonBar):
         if self.AddCommandsDialog is not None:
             self.AddCommandsDialog.form.close()
             self.AddCommandsDialog = None
-            # Close the dockwidget is there is one
+            # Close the dockwidget if there is one
             DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
             if DockWidget is not None:
                 DockWidget.deleteLater()
@@ -6886,7 +6887,7 @@ class ModernMenu(RibbonBar):
         panel._titleLabel.setStyleSheet(f"color: {StyleMapping_Ribbon.ReturnStyleItem('FontColor')}")
         panel._titleWidget.setFixedHeight(QFontMetrics(Font).boundingRect(panel.title()).height())
         # Store the height, to adjust the ribbonheihgt if panel titles need to be hidden
-        self.panelTitleheight = panel._titleWidget.height()
+        # self.panelTitleheight = panel._titleWidget.height()
 
         # Hide the panel titles
         if Parameters.HIDE_PANEL_TITLES:
@@ -6901,7 +6902,7 @@ class ModernMenu(RibbonBar):
         # If the panel titles are hidden, set the panel offset value to zero
         if Parameters.HIDE_PANEL_TITLES:
             self.PanelHeightOffset = 0
-        panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset)+6)
+        panel.setFixedHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
         # Set the ribbonheight
         self.RibbonHeight = panel.height() + self.RibbonOffset
         # Correct the width of the (hidden) option button
