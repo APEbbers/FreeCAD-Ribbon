@@ -25,6 +25,7 @@ import FreeCADGui as Gui
 from pathlib import Path
 import traceback
 import subprocess
+from functools import partial
 
 from PySide.QtGui import (
     QDragEnterEvent,
@@ -370,6 +371,10 @@ class ModernMenu(RibbonBar):
 
         # connect the signals
         self.connectSignals()
+        
+        toolBars = mw.findChildren(QToolBar)
+        for toolBar in toolBars:
+            toolBar.setAllowedAreas(Qt.ToolBarArea.LeftToolBarArea|Qt.ToolBarArea.RightToolBarArea|Qt.ToolBarArea.BottomToolBarArea)
 
         # read ribbon structure from JSON file
         if os.path.exists(Parameters.RIBBON_STRUCTURE_JSON) is False:
@@ -4268,7 +4273,7 @@ class ModernMenu(RibbonBar):
             except Exception:
                 pass
         return width
-
+        
     # Function to create the application menu
     def ApplicationMenus(self):
         # Add a file menu
@@ -4293,10 +4298,42 @@ class ModernMenu(RibbonBar):
             if child.objectName() != "&Help" and child.objectName != "AccessoriesMenu":
                 ApplictionMenu.addAction(child)
             if (
-                child.objectName == "AccessoriesMenu"
+                child.objectName() == "AccessoriesMenu"
                 and self.AccessoriesMenu is not None
             ):
                 ApplictionMenu.addMenu(self.AccessoriesMenu)
+                
+        # Replace the toolbar actions with custom ones to control the behavior
+        # Clear the toolbars
+        for child in MenuBar.findChildren(QMenu):
+            if child.objectName() == "&View":                
+                for subChild in child.actions():
+                    if subChild.text() == "&Toolbars":
+                        if subChild.menu() is not None:
+                            subChild.menu().deleteLater()
+                        break
+        # Re-create a new menu with the toolbars but with custom actions
+        #
+        # Define a variable for the toolbar menu
+        ToolBar_Menu = None                
+        # Get the active workbench
+        workBench = Gui.activeWorkbench()
+        # Get the toolbars for this workbench
+        Toolbar_Names = workBench.listToolbars()            
+        # Find the empty toolbars menu
+        for child in MenuBar.findChildren(QMenu):
+            if child.objectName() == "&View":                
+                for subChild in child.actions():
+                    if subChild.text() == "&Toolbars":
+                        ToolBar_Menu = subChild
+        # Fill the toolbar menu with actions
+        if ToolBar_Menu is not None:            
+            menu = QMenu()
+            for Toolbar_Name in Toolbar_Names:
+                Action = self.createAction(Toolbar_Name, menu)
+                menu.addAction(Action)
+            # Add the menu
+            ToolBar_Menu.setMenu(menu)
 
         # if you on macOS, add the ribbon menus to the menubar
         if platform.system().lower() == "darwin":
@@ -4515,7 +4552,44 @@ class ModernMenu(RibbonBar):
         self.HelpMenu = HelpMenu
         
         return
-
+    
+    # Function to create an action for a menu
+    def createAction(self, toolbarName, parent):
+        # Defin a checkbox
+        checkbox = QCheckBox()
+        checkbox.setText(toolbarName)
+        checkbox.setObjectName(toolbarName)
+        # Set the checkstate
+        listToolBars = mw.findChildren(QToolBar)
+        for toolbar in listToolBars:
+            if toolbar.objectName() == toolbarName:
+                if toolbar.isVisible():
+                    checkbox.setChecked(True)
+                else:
+                   checkbox.setChecked(False) 
+        # Connect the checkstate slot
+        checkbox.checkStateChanged.connect(lambda e: self.HandleToolbar(toolbarName, e))
+        # Define a QWidgetAction
+        Action = QWidgetAction(parent)
+        Action.setDefaultWidget(checkbox)
+        Action.setObjectName(toolbarName)
+        return Action
+    
+    def HandleToolbar(self, toolbarName, CheckState: Qt.CheckState):
+        listToolBars = mw.findChildren(QToolBar)
+        for toolbar in listToolBars:
+            if toolbar.objectName() == toolbarName:
+                if CheckState is Qt.CheckState.Checked:
+                    toolbar.setFloatable(True)
+                    toolbar.setMovable(True)
+                    toolbar.setAllowedAreas(Qt.ToolBarArea.LeftToolBarArea| Qt.ToolBarArea.RightToolBarArea| Qt.ToolBarArea.BottomToolBarArea)                              
+                    mw.removeToolBar(toolbar)
+                    mw.addToolBar(Qt.ToolBarArea.BottomToolBarArea ,toolbar)
+                    toolbar.stackUnder(self)
+                    toolbar.show()
+                else:
+                    toolbar.close()
+        
     # Function for loading the design menu
     def loadDesignMenu(self):
         DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
@@ -4975,7 +5049,8 @@ class ModernMenu(RibbonBar):
     def hideClassicToolbars(self):
         for toolbar in mw.findChildren(QToolBar):
             parentWidget = toolbar.parentWidget()
-            toolbar.setHidden(True)
+            if mw.toolBarArea(toolbar) == Qt.ToolBarArea.TopToolBarArea:
+                toolbar.setHidden(True)
             # hide toolbars that are not in the statusBar and show toolbars that are in the statusbar.
             if (
                 parentWidget.objectName() == "statusBar"
@@ -4984,14 +5059,14 @@ class ModernMenu(RibbonBar):
                 toolbar.setEnabled(True)
                 toolbar.setVisible(True)
             #
-            if (
-                mw.toolBarArea(toolbar) == Qt.ToolBarArea.LeftToolBarArea
-                or mw.toolBarArea(toolbar) == Qt.ToolBarArea.RightToolBarArea
-                or mw.toolBarArea(toolbar) == Qt.ToolBarArea.BottomToolBarArea
-            ):
-                # print(toolbar)
-                toolbar.setEnabled(True)
-                toolbar.setVisible(True)
+            # if (
+            #     mw.toolBarArea(toolbar) == Qt.ToolBarArea.LeftToolBarArea
+            #     or mw.toolBarArea(toolbar) == Qt.ToolBarArea.RightToolBarArea
+            #     or mw.toolBarArea(toolbar) == Qt.ToolBarArea.BottomToolBarArea
+            # ):
+            #     # print(toolbar)
+            #     toolbar.setEnabled(True)
+            #     toolbar.setVisible(True)
             # # # Show specific toolbars and go to the next
             if toolbar.objectName() != "" and toolbar.objectName() in [
                 self.quickAccessToolBar().objectName(),
@@ -7696,6 +7771,9 @@ class EventInspector(QObject):
         except Exception:
             self.PatchApplicable = False
             pass
+        
+        if event.type() == QEvent.Type.ActionAdded:
+            print(event)
                  
         if event.type() == QEvent.Type.KeyRelease:
             try:

@@ -2029,7 +2029,6 @@ class AnimatedToggle(Toggle):
 
 class ToggleAction(QWidgetAction):
     Toggle = Toggle()
-    Toggle.setObjectName("toggle")
         
     checkStateChanged = Toggle.stateChanged
     checkState = Toggle.checkState()
@@ -2089,11 +2088,12 @@ class ToggleAction(QWidgetAction):
         self.setFocusPolicy(policy)
         self.focusPolicy = policy
         return
+    
+    def setObjectName(self, objectName = ""):
+        self.Toggle.setObjectName(objectName)
  
 class CheckBoxAction(QWidgetAction):
-    checkbox = QCheckBox()
-    checkbox.setObjectName("checkbox")
-        
+    checkbox = QCheckBox()        
     checkStateChanged = checkbox.stateChanged
 
     def __init__(self, parent, text):
@@ -2135,11 +2135,13 @@ class CheckBoxAction(QWidgetAction):
     def setFixedSize(self, w, h):
         self.checkbox.setFixedSize(w, h)
         return
+    
+    def setObjectName(self, objectName = ""):
+        self.checkbox.setObjectName(objectName)
 
 class SpinBoxAction(QWidgetAction):
         
     spinbox = QSpinBox()
-    spinbox.setObjectName("spinbox")
     spinbox.setAlignment(Qt.AlignmentFlag.AlignCenter)
     
     valueChanged =  spinbox.valueChanged
@@ -2184,10 +2186,11 @@ class SpinBoxAction(QWidgetAction):
         self.spinbox.setFixedSize(w, h)
         return
     
+    def setObjectName(self, objectName = ""):
+        self.spinbox.setObjectName(objectName)
+    
 class ComboBoxAction(QWidgetAction):
-        
     combobox = QComboBox()
-    combobox.setObjectName("combobox")
     combobox.setStyleSheet("""QComboBox {padding-left: 6px;}""")
         
     activated = combobox.activated
@@ -2241,10 +2244,12 @@ class ComboBoxAction(QWidgetAction):
         self.combobox.setFixedSize(w, h)
         return
     
+    def setObjectName(self, objectName = ""):
+        self.combobox.setObjectName(objectName)
+    
 class LineEditAction(QWidgetAction):
         
     lineEdit = QLineEdit()
-    lineEdit.setObjectName("lineEdit")
     lineEdit.setFixedSize(300, 21)
     lineEdit.setClearButtonEnabled(True)
         
@@ -2286,3 +2291,6 @@ class LineEditAction(QWidgetAction):
     def setClearButtonEnabled(self, enable: bool):
         self.lineEdit.setClearButtonEnabled(enable)
         return
+    
+    def setObjectName(self, objectName = ""):
+        self.lineEdit.setObjectName(objectName)
