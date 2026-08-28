@@ -4563,32 +4563,76 @@ class ModernMenu(RibbonBar):
         listToolBars = mw.findChildren(QToolBar)
         for toolbar in listToolBars:
             if toolbar.objectName() == toolbarName:
-                if toolbar.isVisible():
-                    checkbox.setChecked(True)
-                else:
-                   checkbox.setChecked(False) 
+                try:
+                    if "ToolBarStates" in self.ribbonStructure:
+                        if toolbarName in self.ribbonStructure["ToolBarStates"]:
+                            Checked = bool(self.ribbonStructure["ToolBarStates"][toolbarName][0])
+                            checkbox.setChecked(Checked)                        
+                    else:
+                        if toolbar.isVisible():
+                            checkbox.setChecked(True)
+                        else:
+                            checkbox.setChecked(False)
+                except Exception:
+                    pass
         # Connect the checkstate slot
         checkbox.checkStateChanged.connect(lambda e: self.HandleToolbar(toolbarName, e))
         # Define a QWidgetAction
         Action = QWidgetAction(parent)
         Action.setDefaultWidget(checkbox)
         Action.setObjectName(toolbarName)
+        
+        self.HandleToolbar(toolbarName, checkbox.checkState())
         return Action
     
     def HandleToolbar(self, toolbarName, CheckState: Qt.CheckState):
         listToolBars = mw.findChildren(QToolBar)
         for toolbar in listToolBars:
             if toolbar.objectName() == toolbarName:
+                # If not present, add a dict for the toolbar states to the ribbonstructure.json
+                Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["ToolBarStates", toolbarName], endEmpty=True)
+                # Get the stored location, if present
+                Location = "Bottom"
+                try:
+                    if "ToolBarStates" in self.ribbonStructure and toolbarName in self.ribbonStructure["ToolBarStates"]:
+                            Location = self.ribbonStructure["ToolBarStates"][toolbarName][1]
+                except Exception:
+                    pass
+                ToolBarArea = Qt.ToolBarArea.BottomToolBarArea
+                if Location == "Left":
+                    ToolBarArea = Qt.ToolBarArea.LeftToolBarArea
+                if Location == "Right":
+                    ToolBarArea = Qt.ToolBarArea.RightToolBarArea
+                
                 if CheckState is Qt.CheckState.Checked:
+                    # Set the toolbar floatable and movable
                     toolbar.setFloatable(True)
                     toolbar.setMovable(True)
-                    toolbar.setAllowedAreas(Qt.ToolBarArea.LeftToolBarArea| Qt.ToolBarArea.RightToolBarArea| Qt.ToolBarArea.BottomToolBarArea)                              
+                    # Set the allowed areas
+                    toolbar.setAllowedAreas(Qt.ToolBarArea.LeftToolBarArea| Qt.ToolBarArea.RightToolBarArea| Qt.ToolBarArea.BottomToolBarArea)
+                    toolbar.setWindowFlag(Qt.WindowType.WindowCloseButtonHint)
+                    # Remove the toolbar first.
                     mw.removeToolBar(toolbar)
-                    mw.addToolBar(Qt.ToolBarArea.BottomToolBarArea ,toolbar)
+                    # Add the toolbar again. But now only in one of the allowed areas
+                    
+                    mw.addToolBar(ToolBarArea ,toolbar)
                     toolbar.stackUnder(self)
                     toolbar.show()
-                else:
+                    
+                    # Write the location and state to the ribbon structure
+                    if mw.toolBarArea(toolbar) == Qt.ToolBarArea.LeftToolBarArea:
+                        Location = "Left"
+                    if mw.toolBarArea(toolbar) == Qt.ToolBarArea.RightToolBarArea:
+                        Location = "Right"
+                    self.ribbonStructure["ToolBarStates"][toolbarName] = [True, Location]
+                else:                    
+                    self.ribbonStructure["ToolBarStates"][toolbarName] = [False, Location]                    
                     toolbar.close()
+                    
+                # Writing to ribbonStructure.json
+                JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+                with open(JsonFile, "w") as outfile:
+                    json.dump(self.ribbonStructure, outfile, indent=4)
         
     # Function for loading the design menu
     def loadDesignMenu(self):
