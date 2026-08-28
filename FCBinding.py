@@ -4586,6 +4586,9 @@ class ModernMenu(RibbonBar):
         return Action
     
     def HandleToolbar(self, toolbarName, CheckState: Qt.CheckState):
+        if self.ribbonStructure is None:
+            return
+        
         listToolBars = mw.findChildren(QToolBar)
         for toolbar in listToolBars:
             if toolbar.objectName() == toolbarName:
@@ -4610,13 +4613,11 @@ class ModernMenu(RibbonBar):
                     toolbar.setMovable(True)
                     # Set the allowed areas
                     toolbar.setAllowedAreas(Qt.ToolBarArea.LeftToolBarArea| Qt.ToolBarArea.RightToolBarArea| Qt.ToolBarArea.BottomToolBarArea)
-                    toolbar.setWindowFlag(Qt.WindowType.WindowCloseButtonHint)
                     # Remove the toolbar first.
                     mw.removeToolBar(toolbar)
                     # Add the toolbar again. But now only in one of the allowed areas
                     
                     mw.addToolBar(ToolBarArea ,toolbar)
-                    toolbar.stackUnder(self)
                     toolbar.show()
                     
                     # Write the location and state to the ribbon structure
