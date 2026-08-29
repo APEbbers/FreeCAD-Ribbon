@@ -1176,24 +1176,7 @@ class ModernMenu(RibbonBar):
         mw.moveEvent = lambda e: self.mw_moveEvent(e)
         
         # Toolbars are enabled via Application menus because they need to be updated with a workbench activation 
-        
-        # Enable the status bar
-        # Find the statusbar
-        # If not present, add a dict for the toolbar states to the ribbonstructure.json
-        # statusBar = mw.statusBar()            
-        # if "ToolBarStates" in self.ribbonStructure and statusBar.objectName() in self.ribbonStructure["ToolBarStates"]:
-        #     preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
-        #     if bool(self.ribbonStructure["ToolBarStates"][statusBar.objectName()][0]) is True:        
-        #         print(True)          
-        #         preferences.SetBool("StatusBar", True)
-        #         App.saveParameter()
-        #         statusBar.show()
-        #     if bool(self.ribbonStructure["ToolBarStates"][statusBar.objectName()][0]) is False:
-        #         print(False)
-        #         preferences.SetBool("StatusBar", False)
-        #         App.saveParameter()
-        #         statusBar.close()
-        
+                
         # Enable the dockwidgets based on the saved data
         for dockWidget in mw.findChildren(QDockWidget):
             if "PanelStates" in self.ribbonStructure and dockWidget.objectName() in self.ribbonStructure["PanelStates"]:                
@@ -1239,23 +1222,22 @@ class ModernMenu(RibbonBar):
         menu.addSeparator()
         
         # Add a lock toolbars action
-        # Define a checkbox
-        checkbox = QCheckBox()
-        checkbox.setText(translate("FreeCAD Ribbon", "Lock all toolbars"))
-        checkbox.setObjectName("LockToolbars")
+        LockToolbars_Action = QAction(translate("FreeCAD Ribbon", "Lock all toolbars"), menu)
+        LockToolbars_Action.setObjectName("LockToolbars")
+        LockToolbars_Action.setCheckable(True)
         # Check if all toolbars are locked
-        checkbox.setChecked(True)
+        LockToolbars_Action.setChecked(False)
         listToolBars = mw.findChildren(QToolBar)
+        Locked = True
         for toolbar in listToolBars:
             if toolbar.isMovable() is False:
-                checkbox.setChecked(False)
+                Locked = False
                 break
+        LockToolbars_Action.setChecked(not Locked)
         # Connect the checkstate slot
-        checkbox.toggled.connect(lambda e: self.LockToolbars(e))
-        # Define a QWidgetAction
-        LockToolbars_Action = QWidgetAction(menu)
-        LockToolbars_Action.setDefaultWidget(checkbox)
-        LockToolbars_Action.setObjectName("LockToolbars")
+        LockToolbars_Action.toggled.connect(lambda e: self.LockToolbars(e))
+        self.toolbarsLocked = LockToolbars_Action.isChecked()
+        # Add the action
         menu.addAction(LockToolbars_Action)
         
         # Add the customize action for FreeCAD
@@ -4427,11 +4409,39 @@ class ModernMenu(RibbonBar):
             for Toolbar_Name in Toolbar_Names:
                 Action = self.createAction_ToolBar(Toolbar_Name, menu)
                 menu.addAction(Action)
-            # Add a separator and a action to lock all toolbars
+                
+            # Add a separator 
             menu.addSeparator()
+            
+            # Add a lock toolbars action
+            LockToolbars_Action = QAction(translate("FreeCAD Ribbon", "Lock all toolbars"), menu)
+            LockToolbars_Action.setObjectName("LockToolbars")
+            LockToolbars_Action.setCheckable(True)
+            # Check if all toolbars are locked
+            LockToolbars_Action.setChecked(False)
+            listToolBars = mw.findChildren(QToolBar)
+            Locked = True
+            for toolbar in listToolBars:
+                if toolbar.isMovable() is False:
+                    Locked = False
+                    break
+            LockToolbars_Action.setChecked(not Locked)
+            # Connect the checkstate slot
+            LockToolbars_Action.toggled.connect(lambda e: self.LockToolbars(e))
+            self.toolbarsLocked = LockToolbars_Action.isChecked()
+            # Add the action
+            menu.addAction(LockToolbars_Action)
+            
+            # Add the customize action for FreeCAD
+            cmd = Gui.Command.get("Std_DlgCustomize")
+            FC_Customise_Action = cmd.getAction()[0]
+            menu.addAction(FC_Customise_Action)
 
             # Add the menu
             ToolBar_Menu.setMenu(menu)
+            
+        # Lock the toolbars by default
+        self.LockToolbars(True)
 
         # Set the statusbar
         statusBar = mw.statusBar()            
@@ -4667,9 +4677,10 @@ class ModernMenu(RibbonBar):
     # Function to create an action for a menu
     def createAction_DockWidget(self, DockWidgetName, parent):
         # Defin a checkbox
-        checkbox = QCheckBox()
-        checkbox.setText(DockWidgetName)
-        checkbox.setObjectName(DockWidgetName)
+        Action = QAction(DockWidgetName, parent)
+        Action.setCheckable(True)
+        Action.setObjectName(DockWidgetName)
+        
         # Set the checkstate
         listToolBars = mw.findChildren(QDockWidget)
         for dockWidget in listToolBars:
@@ -4678,26 +4689,22 @@ class ModernMenu(RibbonBar):
                     if "PanelStates" in self.ribbonStructure:
                         if DockWidgetName in self.ribbonStructure["PanelStates"]:
                             Checked = bool(self.ribbonStructure["PanelStates"][DockWidgetName][0])
-                            checkbox.setChecked(Checked)                        
+                            Action.setChecked(Checked)                       
                     else:
                         if dockWidget.isVisible():
-                            checkbox.setChecked(True)
+                            Action.setChecked(True)
                         else:
-                            checkbox.setChecked(False)
+                            Action.setChecked(False)
                 except Exception:
                     pass
 
-        # Connect the checkstate slot
-        checkbox.checkStateChanged.connect(lambda e: self.HandleDockWidget(DockWidgetName, e))
-        # Define a QWidgetAction
-        Action = QWidgetAction(parent)
-        Action.setDefaultWidget(checkbox)
-        Action.setObjectName(DockWidgetName)
-                
-        self.HandleDockWidget(DockWidgetName, checkbox.checkState())
+        # Connect the action
+        Action.toggled.connect(lambda e: self.HandleDockWidget(DockWidgetName, e))
+        # Set the current state      
+        self.HandleDockWidget(DockWidgetName, Action.isChecked())
         return Action
     
-    def HandleDockWidget(self, dockWidget_Name, CheckState: Qt.CheckState):
+    def HandleDockWidget(self, dockWidget_Name, Checked = False):
         if self.ribbonStructure is None:
             return
         
@@ -4705,7 +4712,7 @@ class ModernMenu(RibbonBar):
             if dockWidget.objectName() == dockWidget_Name:
                 dockWidget_Area = dockWidget.dockLocation()
                 
-                if CheckState is Qt.CheckState.Checked:
+                if Checked is True:
                     dockWidget.show()
                 else:
                     dockWidget.close()
@@ -4733,10 +4740,10 @@ class ModernMenu(RibbonBar):
      # Function to create an action for a menu
     
     def createAction_ToolBar(self, toolbarName, parent):
-        # Define a checkbox
-        checkbox = QCheckBox()
-        checkbox.setText(toolbarName)
-        checkbox.setObjectName(toolbarName)
+        # Define a QAction
+        Action = QAction(toolbarName, parent=parent)
+        Action.setCheckable(True)
+        Action.setObjectName(toolbarName)
         # Set the checkstate
         listToolBars = mw.findChildren(QToolBar)
         for toolbar in listToolBars:
@@ -4745,27 +4752,22 @@ class ModernMenu(RibbonBar):
                     if "ToolBarStates" in self.ribbonStructure:
                         if toolbarName in self.ribbonStructure["ToolBarStates"]:
                             Checked = bool(self.ribbonStructure["ToolBarStates"][toolbarName][0])
-                            checkbox.setChecked(Checked)                        
+                            Action.setChecked(Checked)                     
                     else:
                         if toolbar.isVisible():
-                            checkbox.setChecked(True)
+                            Action.setChecked(True)
                         else:
-                            checkbox.setChecked(False)
+                            Action.setChecked(False)
                 except Exception:
                     pass
-
-        # Connect the checkstate slot
-        checkbox.checkStateChanged.connect(lambda e: self.HandleToolbar(toolbarName, e))
-        # Define a QWidgetAction
-        Action = QWidgetAction(parent)
-        Action.setDefaultWidget(checkbox)
-        Action.setObjectName(toolbarName)
-                
-        self.HandleToolbar(toolbarName, checkbox.checkState())
-        return Action
         
-    
-    def HandleToolbar(self, toolbarName, CheckState: Qt.CheckState):
+        # Connect the action
+        Action.toggled.connect(lambda e: self.HandleToolbar(toolbarName, e))
+        # Set the current state
+        self.HandleToolbar(toolbarName, Action.isChecked())
+        return Action   
+
+    def HandleToolbar(self, toolbarName, Checked = False):
         if self.ribbonStructure is None:
             return
         
@@ -4789,7 +4791,8 @@ class ModernMenu(RibbonBar):
                 if Location == "Right":
                     ToolBarArea = Qt.ToolBarArea.RightToolBarArea
                 
-                if CheckState is Qt.CheckState.Checked:
+                # if CheckState is Qt.CheckState.Checked:
+                if Checked is True:
                     # Set the toolbar floatable and movable
                     toolbar.setFloatable(False)
                     # Set the allowed areas
