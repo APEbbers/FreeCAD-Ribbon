@@ -1183,16 +1183,23 @@ class ModernMenu(RibbonBar):
                 if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is False: 
                     dockWidget.close()
         
-        # Add a custom context menu for dockwidgets. With this, the custom toolbar placement functions can be used
+        # Add a custom context menu to the dockwidgets. With this, the custom toolbar placement functions can be used
         for dockWidget in mw.findChildren(QDockWidget):            
             dockWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-            dockWidget.customContextMenuRequested.connect(lambda pos: self.contextMenu_DockWidgets(pos))
-            
+            dockWidget.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
+        
+        # Add the same custom context menu to the toolbars. With this, the custom toolbar placement functions can be used
+        listToolBars = mw.findChildren(QToolBar)
+        for toolbar in listToolBars:
+            toolbar.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+            toolbar.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
+        
+        # Update the Gui, to show all panels
         Gui.updateGui()
         return
 
     # region - Custom functions for FreeCAD
-    def contextMenu_DockWidgets(self, pos):                                 
+    def contextMenu_Panels_ToolBars(self, pos):                                 
         # Create the menu
         menu = QMenu()
         # Add the dockWidgets
@@ -1208,6 +1215,34 @@ class ModernMenu(RibbonBar):
         for Toolbar_Name in Toolbar_Names:
             Action_2 = self.createAction_ToolBar(Toolbar_Name, menu)
             menu.addAction(Action_2)
+        
+        # Add a separator
+        menu.addSeparator()
+        
+        # Add a lock toolbars action
+        # Define a checkbox
+        checkbox = QCheckBox()
+        checkbox.setText(translate("FreeCAD Ribbon", "Lock all toolbars"))
+        checkbox.setObjectName("LockToolbars")
+        # Check if all toolbars are locked
+        checkbox.setChecked(True)
+        listToolBars = mw.findChildren(QToolBar)
+        for toolbar in listToolBars:
+            if toolbar.isMovable() is False:
+                checkbox.setChecked(False)
+                break
+        # Connect the checkstate slot
+        checkbox.toggled.connect(lambda e: self.LockToolbars(e))
+        # Define a QWidgetAction
+        LockToolbars_Action = QWidgetAction(menu)
+        LockToolbars_Action.setDefaultWidget(checkbox)
+        LockToolbars_Action.setObjectName("LockToolbars")
+        menu.addAction(LockToolbars_Action)
+        
+        # Add the customize action for FreeCAD
+        cmd = Gui.Command.get("Std_DlgCustomize")
+        FC_Customise_Action = cmd.getAction()[0]
+        menu.addAction(FC_Customise_Action)
         
         # create the context menu action
         menu.exec_(QCursor.pos())
@@ -1566,7 +1601,7 @@ class ModernMenu(RibbonBar):
                                 RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
                                 # Add the custom context menu for dockwidgets
                                 RibbonLayoutDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-                                RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_DockWidgets(pos))
+                                RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
                                 # Add the dockwidget
                                 mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
@@ -4596,41 +4631,7 @@ class ModernMenu(RibbonBar):
         self.HelpMenu = HelpMenu
         
         return
-    
-    # Function to create an action for a menu
-    def createAction_ToolBar(self, toolbarName, parent):
-        # Defin a checkbox
-        checkbox = QCheckBox()
-        checkbox.setText(toolbarName)
-        checkbox.setObjectName(toolbarName)
-        # Set the checkstate
-        listToolBars = mw.findChildren(QToolBar)
-        for toolbar in listToolBars:
-            if toolbar.objectName() == toolbarName:
-                try:
-                    if "ToolBarStates" in self.ribbonStructure:
-                        if toolbarName in self.ribbonStructure["ToolBarStates"]:
-                            Checked = bool(self.ribbonStructure["ToolBarStates"][toolbarName][0])
-                            checkbox.setChecked(Checked)                        
-                    else:
-                        if toolbar.isVisible():
-                            checkbox.setChecked(True)
-                        else:
-                            checkbox.setChecked(False)
-                except Exception:
-                    pass
-
-        # Connect the checkstate slot
-        checkbox.checkStateChanged.connect(lambda e: self.HandleToolbar(toolbarName, e))
-        # Define a QWidgetAction
-        Action = QWidgetAction(parent)
-        Action.setDefaultWidget(checkbox)
-        Action.setObjectName(toolbarName)
-                
-        self.HandleToolbar(toolbarName, checkbox.checkState())
-        return Action
-        
-        
+            
     # Function to create an action for a menu
     def createAction_DockWidget(self, DockWidgetName, parent):
         # Defin a checkbox
@@ -4697,6 +4698,41 @@ class ModernMenu(RibbonBar):
                     
         return
     
+     # Function to create an action for a menu
+    
+    def createAction_ToolBar(self, toolbarName, parent):
+        # Define a checkbox
+        checkbox = QCheckBox()
+        checkbox.setText(toolbarName)
+        checkbox.setObjectName(toolbarName)
+        # Set the checkstate
+        listToolBars = mw.findChildren(QToolBar)
+        for toolbar in listToolBars:
+            if toolbar.objectName() == toolbarName:
+                try:
+                    if "ToolBarStates" in self.ribbonStructure:
+                        if toolbarName in self.ribbonStructure["ToolBarStates"]:
+                            Checked = bool(self.ribbonStructure["ToolBarStates"][toolbarName][0])
+                            checkbox.setChecked(Checked)                        
+                    else:
+                        if toolbar.isVisible():
+                            checkbox.setChecked(True)
+                        else:
+                            checkbox.setChecked(False)
+                except Exception:
+                    pass
+
+        # Connect the checkstate slot
+        checkbox.checkStateChanged.connect(lambda e: self.HandleToolbar(toolbarName, e))
+        # Define a QWidgetAction
+        Action = QWidgetAction(parent)
+        Action.setDefaultWidget(checkbox)
+        Action.setObjectName(toolbarName)
+                
+        self.HandleToolbar(toolbarName, checkbox.checkState())
+        return Action
+        
+    
     def HandleToolbar(self, toolbarName, CheckState: Qt.CheckState):
         if self.ribbonStructure is None:
             return
@@ -4750,6 +4786,12 @@ class ModernMenu(RibbonBar):
                     json.dump(self.ribbonStructure, outfile, indent=4)
                     
         return
+    
+    def LockToolbars(self, Locked=True):
+        listToolBars = mw.findChildren(QToolBar)
+        for toolbar in listToolBars:
+            toolbar.setMovable(not Locked)
+        return
         
     # Function for loading the design menu
     def loadDesignMenu(self):
@@ -4788,7 +4830,7 @@ class ModernMenu(RibbonBar):
                 RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
                 # Add the custom context menu for dockwidgets
                 RibbonLayoutDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-                RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_DockWidgets(pos))
+                RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
                 # Add the dockwidget
                 mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
@@ -4818,7 +4860,7 @@ class ModernMenu(RibbonBar):
             RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
             # Add the custom context menu for dockwidgets
             RibbonLayoutDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-            RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_DockWidgets(pos))
+            RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
             # Add the dockwidget
             mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
