@@ -1175,6 +1175,25 @@ class ModernMenu(RibbonBar):
         # Connect a custom moveEvent to the main window. This is needed for the custom titlebar
         mw.moveEvent = lambda e: self.mw_moveEvent(e)
         
+        # Toolbars are enabled via Application menus because they need to be updated with a workbench activation 
+        
+        # Enable the status bar
+        # Find the statusbar
+        # If not present, add a dict for the toolbar states to the ribbonstructure.json
+        # statusBar = mw.statusBar()            
+        # if "ToolBarStates" in self.ribbonStructure and statusBar.objectName() in self.ribbonStructure["ToolBarStates"]:
+        #     preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
+        #     if bool(self.ribbonStructure["ToolBarStates"][statusBar.objectName()][0]) is True:        
+        #         print(True)          
+        #         preferences.SetBool("StatusBar", True)
+        #         App.saveParameter()
+        #         statusBar.show()
+        #     if bool(self.ribbonStructure["ToolBarStates"][statusBar.objectName()][0]) is False:
+        #         print(False)
+        #         preferences.SetBool("StatusBar", False)
+        #         App.saveParameter()
+        #         statusBar.close()
+        
         # Enable the dockwidgets based on the saved data
         for dockWidget in mw.findChildren(QDockWidget):
             if "PanelStates" in self.ribbonStructure and dockWidget.objectName() in self.ribbonStructure["PanelStates"]:                
@@ -4413,6 +4432,19 @@ class ModernMenu(RibbonBar):
 
             # Add the menu
             ToolBar_Menu.setMenu(menu)
+
+        # Set the statusbar
+        statusBar = mw.statusBar()            
+        if "ToolBarStates" in self.ribbonStructure and statusBar.objectName() in self.ribbonStructure["ToolBarStates"]:
+            preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
+            if bool(self.ribbonStructure["ToolBarStates"][statusBar.objectName()][0]) is True:          
+                preferences.SetBool("StatusBar", True)
+                App.saveParameter()
+                statusBar.show()
+            if bool(self.ribbonStructure["ToolBarStates"][statusBar.objectName()][0]) is False:
+                preferences.SetBool("StatusBar", False)
+                App.saveParameter()
+                statusBar.close()
 
         # if you on macOS, add the ribbon menus to the menubar
         if platform.system().lower() == "darwin":
@@ -8082,7 +8114,14 @@ class EventInspector(QObject):
                         Location = "Right"
                     # Update the ribbon structure
                     RibbonBar.ribbonStructure["ToolBarStates"][toolbarName] = [toolbar.isVisible(), Location]
-                
+            
+            # Find the statusbar
+            # If not present, add a dict for the toolbar states to the ribbonstructure.json
+            statusBar = mw.statusBar()            
+            Standard_Functions_Ribbon.add_keys_nested_dict(RibbonBar.ribbonStructure, ["ToolBarStates", statusBar.objectName()], endEmpty=True)
+            RibbonBar.ribbonStructure["ToolBarStates"][statusBar.objectName()] = [statusBar.isVisible(), "-"]
+            
+            # Find the dockwidgets    
             for dockWidget in mw.findChildren(QDockWidget):                                    
                 dockWidget_Name = dockWidget.objectName()
                 dockWidget_Area = dockWidget.dockLocation()
@@ -8098,7 +8137,7 @@ class EventInspector(QObject):
                     RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Bottom"]
                 if dockWidget_Area == Qt.DockWidgetArea.TopDockWidgetArea:
                     RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Top"]
-                
+                                        
             # Writing to ribbonStructure.json
             JsonFile = Parameters.RIBBON_STRUCTURE_JSON
             with open(JsonFile, "w") as outfile:
