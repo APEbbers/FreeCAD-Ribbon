@@ -1172,8 +1172,43 @@ class ModernMenu(RibbonBar):
         else:
             self.BetaFunctionsEnabled = False 
 
+        # Connect a custom moveEvent to the main window. This is needed for the custom titlebar
         mw.moveEvent = lambda e: self.mw_moveEvent(e)
+        
+        # Enable the dockwidgets based on the saved data
+        for dockWidget in mw.findChildren(QDockWidget):
+            if "PanelStates" in self.ribbonStructure and dockWidget.objectName() in self.ribbonStructure["PanelStates"]:                
+                if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is True:                               
+                    dockWidget.show()        
+                if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is False: 
+                    dockWidget.close()
+        
+        # Add a custom context menu for dockwidgets. With this, the custom toolbar placement functions can be used
+        for dockWidget in mw.findChildren(QDockWidget):            
+            dockWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+            dockWidget.customContextMenuRequested.connect(lambda pos: self.contextMenu_DockWidgets(pos))
         return
+
+    # region - Custom functions for FreeCAD
+    def contextMenu_DockWidgets(self, pos):                                 
+        # Create the menu
+        menu = QMenu()
+        # Add the dockWidgets
+        for dockWidget in mw.findChildren(QDockWidget):
+            Action_1 = self.createAction_DockWidget(dockWidget.objectName(), menu)
+            menu.addAction(Action_1)
+        # Add a separator
+        menu.addSeparator()
+        # Add the toolbar actions
+        # Get the active workbench and the list of its toolbars  
+        workBench = Gui.activeWorkbench()    
+        Toolbar_Names = workBench.listToolbars()   
+        for Toolbar_Name in Toolbar_Names:
+            Action_2 = self.createAction_ToolBar(Toolbar_Name, menu)
+            menu.addAction(Action_2)
+        
+        # create the context menu action
+        menu.exec_(QCursor.pos())
 
     # region - Ribbon event fuctions
     
@@ -1527,6 +1562,9 @@ class ModernMenu(RibbonBar):
                                 RibbonLayoutDock.setWidget(self.AddCommandsDialog.form)                            
                                 # Set the allowed areas to dock
                                 RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
+                                # Add the custom context menu for dockwidgets
+                                RibbonLayoutDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+                                RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_DockWidgets(pos))
                                 # Add the dockwidget
                                 mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
@@ -4312,6 +4350,7 @@ class ModernMenu(RibbonBar):
                         if subChild.menu() is not None:
                             subChild.menu().deleteLater()
                         break
+
         # Re-create a new menu with the toolbars but with custom actions
         #
         # Define a variable for the toolbar menu
@@ -4330,8 +4369,11 @@ class ModernMenu(RibbonBar):
         if ToolBar_Menu is not None:            
             menu = QMenu()
             for Toolbar_Name in Toolbar_Names:
-                Action = self.createAction(Toolbar_Name, menu)
+                Action = self.createAction_ToolBar(Toolbar_Name, menu)
                 menu.addAction(Action)
+            # Add a separator and a action to lock all toolbars
+            menu.addSeparator()
+
             # Add the menu
             ToolBar_Menu.setMenu(menu)
 
@@ -4554,7 +4596,7 @@ class ModernMenu(RibbonBar):
         return
     
     # Function to create an action for a menu
-    def createAction(self, toolbarName, parent):
+    def createAction_ToolBar(self, toolbarName, parent):
         # Defin a checkbox
         checkbox = QCheckBox()
         checkbox.setText(toolbarName)
@@ -4575,15 +4617,83 @@ class ModernMenu(RibbonBar):
                             checkbox.setChecked(False)
                 except Exception:
                     pass
+
         # Connect the checkstate slot
         checkbox.checkStateChanged.connect(lambda e: self.HandleToolbar(toolbarName, e))
         # Define a QWidgetAction
         Action = QWidgetAction(parent)
         Action.setDefaultWidget(checkbox)
         Action.setObjectName(toolbarName)
-        
+                
         self.HandleToolbar(toolbarName, checkbox.checkState())
         return Action
+        
+        
+    # Function to create an action for a menu
+    def createAction_DockWidget(self, DockWidgetName, parent):
+        # Defin a checkbox
+        checkbox = QCheckBox()
+        checkbox.setText(DockWidgetName)
+        checkbox.setObjectName(DockWidgetName)
+        # Set the checkstate
+        listToolBars = mw.findChildren(QDockWidget)
+        for dockWidget in listToolBars:
+            if dockWidget.objectName() == DockWidgetName:
+                try:
+                    if "PanelStates" in self.ribbonStructure:
+                        if DockWidgetName in self.ribbonStructure["PanelStates"]:
+                            Checked = bool(self.ribbonStructure["PanelStates"][DockWidgetName][0])
+                            checkbox.setChecked(Checked)                        
+                    else:
+                        if dockWidget.isVisible():
+                            checkbox.setChecked(True)
+                        else:
+                            checkbox.setChecked(False)
+                except Exception:
+                    pass
+
+        # Connect the checkstate slot
+        checkbox.checkStateChanged.connect(lambda e: self.HandleDockWidget(DockWidgetName, e))
+        # Define a QWidgetAction
+        Action = QWidgetAction(parent)
+        Action.setDefaultWidget(checkbox)
+        Action.setObjectName(DockWidgetName)
+                
+        self.HandleDockWidget(DockWidgetName, checkbox.checkState())
+        return Action
+    
+    def HandleDockWidget(self, dockWidget_Name, CheckState: Qt.CheckState):
+        if self.ribbonStructure is None:
+            return
+        
+        for dockWidget in mw.findChildren(QDockWidget):                                    
+            if dockWidget.objectName() == dockWidget_Name:
+                dockWidget_Area = dockWidget.dockLocation()
+                
+                if CheckState is Qt.CheckState.Checked:
+                    dockWidget.show()
+                else:
+                    dockWidget.close()
+                
+                # If not present, add a dict for the toolbar states to the ribbonstructure.json
+                Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["PanelStates", dockWidget_Name], endEmpty=True)               
+                
+                if dockWidget_Area == Qt.DockWidgetArea.LeftDockWidgetArea:
+                    self.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Left"]
+                if dockWidget_Area == Qt.DockWidgetArea.RightDockWidgetArea:
+                    self.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Right"]
+                if dockWidget_Area == Qt.DockWidgetArea.BottomDockWidgetArea:
+                    self.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Bottom"]
+                if dockWidget_Area == Qt.DockWidgetArea.TopDockWidgetArea:
+                    self.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Top"]
+                break
+        
+        # Writing to ribbonStructure.json
+        JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+        with open(JsonFile, "w") as outfile:
+            json.dump(self.ribbonStructure, outfile, indent=4)
+                    
+        return
     
     def HandleToolbar(self, toolbarName, CheckState: Qt.CheckState):
         if self.ribbonStructure is None:
@@ -4601,7 +4711,9 @@ class ModernMenu(RibbonBar):
                             Location = self.ribbonStructure["ToolBarStates"][toolbarName][1]
                 except Exception:
                     pass
-                ToolBarArea = Qt.ToolBarArea.BottomToolBarArea
+                ToolBarArea = mw.toolBarArea(toolbar)
+                if ToolBarArea != Qt.ToolBarArea.BottomToolBarArea and ToolBarArea !=  Qt.ToolBarArea.LeftToolBarArea and ToolBarArea != Qt.ToolBarArea.RightToolBarArea:
+                    ToolBarArea = Qt.ToolBarArea.BottomToolBarArea
                 if Location == "Left":
                     ToolBarArea = Qt.ToolBarArea.LeftToolBarArea
                 if Location == "Right":
@@ -4609,10 +4721,10 @@ class ModernMenu(RibbonBar):
                 
                 if CheckState is Qt.CheckState.Checked:
                     # Set the toolbar floatable and movable
-                    toolbar.setFloatable(True)
-                    toolbar.setMovable(True)
+                    toolbar.setFloatable(False)
                     # Set the allowed areas
                     toolbar.setAllowedAreas(Qt.ToolBarArea.LeftToolBarArea| Qt.ToolBarArea.RightToolBarArea| Qt.ToolBarArea.BottomToolBarArea)
+
                     # Remove the toolbar first.
                     mw.removeToolBar(toolbar)
                     # Add the toolbar again. But now only in one of the allowed areas
@@ -4634,6 +4746,8 @@ class ModernMenu(RibbonBar):
                 JsonFile = Parameters.RIBBON_STRUCTURE_JSON
                 with open(JsonFile, "w") as outfile:
                     json.dump(self.ribbonStructure, outfile, indent=4)
+                    
+        return
         
     # Function for loading the design menu
     def loadDesignMenu(self):
@@ -4670,6 +4784,9 @@ class ModernMenu(RibbonBar):
                 RibbonLayoutDock.setWidget(Dialog.form)
                 # Set the allowed areas to dock
                 RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
+                # Add the custom context menu for dockwidgets
+                RibbonLayoutDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+                RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_DockWidgets(pos))
                 # Add the dockwidget
                 mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
@@ -4697,6 +4814,9 @@ class ModernMenu(RibbonBar):
             RibbonLayoutDock.setWidget(Dialog.form)
             # Set the allowed areas to dock
             RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
+            # Add the custom context menu for dockwidgets
+            RibbonLayoutDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+            RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_DockWidgets(pos))
             # Add the dockwidget
             mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
@@ -7798,13 +7918,11 @@ class EventInspector(QObject):
                             RibbonBar.dropEvent(widget=self.widget)
                             self.widget = None
                             self.pos = None
-                            self.dragEntered
                         return QObject.eventFilter(self, obj, event)
                         
-                    # Show the mainwindow after the application is activated
+                    # Store the dragged widget
                     if event.type() == QEvent.Type.DragEnter:
-                        if self.dragEntered is False:                
-                            if self.widget is None:
+                        if self.dragEntered is False and self.widget is None:
                                 if Parameters.DEBUG_MODE:
                                     print("Wayland patch: drag entered")
                                 self.dragEntered = True
@@ -7816,9 +7934,6 @@ class EventInspector(QObject):
         except Exception:
             self.PatchApplicable = False
             pass
-        
-        if event.type() == QEvent.Type.ActionAdded:
-            print(event)
                  
         if event.type() == QEvent.Type.KeyRelease:
             try:
@@ -7897,7 +8012,53 @@ class EventInspector(QObject):
             OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
             String = OverlayParam_Top.GetString("Widgets")
             Parameters_Ribbon.Settings.SetStringSetting("StoredOverlayState", String)
-            App.saveParameter()                           
+            App.saveParameter()        
+            
+            # Store the states of the toolbars and panels
+            #
+            # Get the main window and the ribbon
+            mw = Gui.getMainWindow()
+            RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+            
+            # Find the toolbars
+            for toolbar in mw.findChildren(QToolBar):
+                toolbarName = toolbar.objectName()
+                if toolbarName == "":
+                    toolbarName = toolbar.windowTitle()
+                
+                if toolbarName != "":
+                    # If not present, add a dict for the toolbar states to the ribbonstructure.json
+                    Standard_Functions_Ribbon.add_keys_nested_dict(RibbonBar.ribbonStructure, ["ToolBarStates", toolbarName], endEmpty=True)
+                    
+                    # Get the location area of the toolbar
+                    Location = "Bottom"
+                    if mw.toolBarArea(toolbar) == Qt.ToolBarArea.LeftToolBarArea:
+                        Location = "Left"
+                    if mw.toolBarArea(toolbar) == Qt.ToolBarArea.RightToolBarArea:
+                        Location = "Right"
+                    # Update the ribbon structure
+                    RibbonBar.ribbonStructure["ToolBarStates"][toolbarName] = [toolbar.isVisible(), Location]
+                
+            for dockWidget in mw.findChildren(QDockWidget):                                    
+                dockWidget_Name = dockWidget.objectName()
+                dockWidget_Area = dockWidget.dockLocation()
+                
+                # If not present, add a dict for the toolbar states to the ribbonstructure.json
+                Standard_Functions_Ribbon.add_keys_nested_dict(RibbonBar.ribbonStructure, ["PanelStates", dockWidget_Name], endEmpty=True)
+                
+                if dockWidget_Area == Qt.DockWidgetArea.LeftDockWidgetArea:
+                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Left"]
+                if dockWidget_Area == Qt.DockWidgetArea.RightDockWidgetArea:
+                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Right"]
+                if dockWidget_Area == Qt.DockWidgetArea.BottomDockWidgetArea:
+                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Bottom"]
+                if dockWidget_Area == Qt.DockWidgetArea.TopDockWidgetArea:
+                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Top"]
+                
+            # Writing to ribbonStructure.json
+            JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+            with open(JsonFile, "w") as outfile:
+                json.dump(RibbonBar.ribbonStructure, outfile, indent=4)                
             
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
