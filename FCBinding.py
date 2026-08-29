@@ -1187,6 +1187,8 @@ class ModernMenu(RibbonBar):
         for dockWidget in mw.findChildren(QDockWidget):            
             dockWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
             dockWidget.customContextMenuRequested.connect(lambda pos: self.contextMenu_DockWidgets(pos))
+            
+        Gui.updateGui()
         return
 
     # region - Custom functions for FreeCAD
