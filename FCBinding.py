@@ -924,7 +924,7 @@ class ModernMenu(RibbonBar):
             CustomShortCuts = App.ParamGet(
                 "User parameter:BaseApp/Preferences/Shortcut"
             )
-            if "Ribbon_Menu" in CustomShortCuts.GetStrings():
+            if "Ribbon_Menu" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Menu") != "":
                 ShortcutKey = CustomShortCuts.GetString("Ribbon_Menu")
         except Exception:
             pass
@@ -4143,7 +4143,7 @@ class ModernMenu(RibbonBar):
             CustomShortCuts = App.ParamGet(
                 "User parameter:BaseApp/Preferences/Shortcut"
             )
-            if "Ribbon_Layout" in CustomShortCuts.GetStrings():
+            if "Ribbon_Layout" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Layout") != "":
                 ShortcutKey = CustomShortCuts.GetString("Ribbon_Layout")
         except Exception:
             pass
@@ -4165,7 +4165,7 @@ class ModernMenu(RibbonBar):
             CustomShortCuts = App.ParamGet(
                 "User parameter:BaseApp/Preferences/Shortcut"
             )
-            if "Ribbon_Preferences" in CustomShortCuts.GetStrings():
+            if "Ribbon_Preferences" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Preferences") !=  "":
                 ShortcutKey = CustomShortCuts.GetString("Ribbon_Preferences")
         except Exception:
             pass
@@ -7425,9 +7425,9 @@ class EventInspector(QObject):
                     CustomShortCuts = App.ParamGet(
                         "User parameter:BaseApp/Preferences/Shortcut"
                     )
-                    if "Ribbon_Pin" in CustomShortCuts.GetStrings():
+                    if "Ribbon_Pin" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Pin") != "":
                         StoredShortCutKey_Pin = CustomShortCuts.GetString("Ribbon_Pin") 
-                    if "Ribbon_Menubar" in CustomShortCuts.GetStrings():
+                    if "Ribbon_Menubar" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Menubar") != "":
                         StoredShortCutKey_MenuBar = CustomShortCuts.GetString("Ribbon_Menubar")                   
                 except Exception:
                     pass
