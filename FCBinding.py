@@ -1400,9 +1400,9 @@ class ModernMenu(RibbonBar):
                 pos = QTabBar.mapFromGlobal(self.tabBar() ,event.pos())
                 tabIndex = QTabBar.tabAt(self.tabBar(), pos)
                 # Create an QAction for a new group
-                NewTabGroupAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to new group"))
+                NewTabGroupAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to a new group"))
                 # Create an QAction for adding a tab to an existing group
-                AddToTabGroupAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to existing group"))
+                AddToTabGroupAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to an existing group"))
                 # Add a separator
                 self.contextMenu.addSeparator()
                 
@@ -1919,16 +1919,8 @@ class ModernMenu(RibbonBar):
             # Enable all buttons, so you can access them with a right click
             self.activateButtons()            
             
-        # StyleSheet_QC = self.quickAccessToolBar().styleSheet()
-        # for action in self.quickAccessToolBar().actions():
-        #     if "separator" in action.objectName().lower():
-        #         self.quickAccessToolBar().setStyleSheet(StyleSheet_QC +
-        #             """QuickAccessToolButton#"""
-        #                 + action.objectName()
-        #                 + """ {background: """
-        #                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
-        #                 + ";}"
-        #         )
+        # Restore the cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         return
     
     def on_ApplyClicked(self):
@@ -2189,9 +2181,6 @@ class ModernMenu(RibbonBar):
                 DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
                 if DockWidget is not None:
                     DockWidget.deleteLater()       
-                
-         # Restore the cursor
-        QApplication.restoreOverrideCursor()
         
         # Clear the workbench dict
         if CloseDialog is True:
@@ -2208,6 +2197,9 @@ class ModernMenu(RibbonBar):
                         
         # Print a message
         print(translate("FreeCAD Ribbon", "RibbonUI: Changes are saved"))
+        
+        # Restore the cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         return
     
     def on_Cancel_Clicked(self, workbenchName = ""):
@@ -2407,25 +2399,15 @@ class ModernMenu(RibbonBar):
             if DockWidget is not None:
                 DockWidget.deleteLater()
         
-        # Restore the cursor
-        QApplication.restoreOverrideCursor()
-        
         # Activate the stored category when the customise enviroment was started
         self.setCurrentCategory(self.CurrentCategoryToRestore)
         self.hideClassicToolbars()
         
-        # for action in self.quickAccessToolBar().actions():
-        #     if "separator" in action.objectName().lower():
-        #         self.quickAccessToolBar().setStyleSheet(
-        #             """QToolButton#"""
-        #                 + action.objectName()
-        #                 + """{background: """
-        #                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-        #                 + ";}"
-        #         )
-        
         # Print a message
         print(translate("FreeCAD Ribbon", "RibbonUI: Changes are rolled back"))
+        
+        # Restore the cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction, ButtonSizeWidget: SpinBoxAction):     
@@ -4900,7 +4882,7 @@ class ModernMenu(RibbonBar):
                 mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
             # Restore the cursor
-            QApplication.restoreOverrideCursor()
+            QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         return
 
     # Function for loading the settings menu
@@ -4937,7 +4919,7 @@ class ModernMenu(RibbonBar):
         self.DesignMenuLoaded = True
 
         # Restore the cursor
-        QApplication.restoreOverrideCursor()
+        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         return
 
     def buildPanels(self, Dict=ribbonStructure, UpdateDict=True):
@@ -7464,7 +7446,7 @@ class ModernMenu(RibbonBar):
             panel.close()
             
             # Restore the cursor
-            QApplication.restoreOverrideCursor()
+            QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
             return True     
         except Exception as e:
             if Parameters.DEBUG_MODE is True:
