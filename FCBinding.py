@@ -96,6 +96,7 @@ from PySide.QtWidgets import (
     QAbstractButton,
     QStackedWidget,    
     QStyleOptionTab,
+    QComboBox,
 )
 from PySide.QtCore import (
     Qt,
@@ -968,6 +969,24 @@ class ModernMenu(RibbonBar):
 
         # Rearrange the tabbar and toolbars
         #
+        # Create a groupBox
+        # Add a Group box (dropdown) to the tabBar
+        GroupBox = QComboBox(self.tabBar())
+        GroupBox.setFixedWidth(100)
+        GroupBox.addItem("All")
+        GroupBox.setToolTip(translate("FreeCAD Ribbon", "Select a tab group"))
+        GroupBox.setObjectName("GroupBox")
+        # GroupBox.clicked.connect()
+        GroupBox.setStyleSheet(""" QToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }"""
+                )
+        GroupBox.view().setFixedWidth(200)
+        GroupBox.view().setSelectionMode(QListWidget.SelectionMode.MultiSelection)
+        #
         # Create a floating button
         FloatingButton = QToolButton()
         FloatingButton.setObjectName("FloatButton")
@@ -1048,7 +1067,7 @@ class ModernMenu(RibbonBar):
                     _titleLabel, 0, 1, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
                 self._titleWidget._tabBarLayout.addWidget(
-                    _rightToolBar, 0, 3, 1, 3, Qt.AlignmentFlag.AlignVCenter
+                    _rightToolBar, 0, 3, 1, 4, Qt.AlignmentFlag.AlignVCenter
                 )
                 self._titleWidget._tabBarLayout.addWidget(
                     spacer, 1, 4, 1, 1, Qt.AlignmentFlag.AlignVCenter
@@ -1060,7 +1079,10 @@ class ModernMenu(RibbonBar):
                     overlayButton, 1, 4, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
                 self._titleWidget._tabBarLayout.addWidget(
-                    FloatingButton, 1, 5, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                    GroupBox, 1, 5, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                )
+                self._titleWidget._tabBarLayout.addWidget(
+                    FloatingButton, 1, 6, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize * 2 + 20
@@ -1084,10 +1106,13 @@ class ModernMenu(RibbonBar):
                     overlayButton, 0, 3, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
                 self._titleWidget._tabBarLayout.addWidget(
-                    FloatingButton, 0, 4, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                    GroupBox, 0, 4, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
                 self._titleWidget._tabBarLayout.addWidget(
-                    _rightToolBar, 0, 5, 1, 2, Qt.AlignmentFlag.AlignVCenter
+                    FloatingButton, 0, 5, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                )
+                self._titleWidget._tabBarLayout.addWidget(
+                    _rightToolBar, 0, 6, 1, 2, Qt.AlignmentFlag.AlignVCenter
                 )
                 # Change the offsets
                 self.RibbonMinimalHeight = self.QuickAccessButtonSize + 10
@@ -1411,10 +1436,9 @@ class ModernMenu(RibbonBar):
                 action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
                 # Create a group for tabs or add tabs to an existing group
                 if action == NewTabGroupAct:
-                    print("Not implemented yet")
+                    self.on_AddToNewGroup_Clicked(tabIndex)
                 if action == AddToTabGroupAct:
-                    print("Not implemented yet")
-                
+                    self.on_AddToExistingGroup_Clicked(tabIndex)                
                 return
             
             # Check if the panel is not none and of type RibbonPanel. If so, continue
@@ -2816,6 +2840,14 @@ class ModernMenu(RibbonBar):
         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["title"] = Text
         # Set the panel title
         panel.setTitle(Text)
+        return
+    
+    def on_AddToNewGroup_Clicked(self, tabIndex):
+        print(f"RibbonUI: Not implemented yet. - {self.tabBar().tabText(tabIndex)}")
+        return
+    
+    def on_AddToExistingGroup_Clicked(self, tabIndex):
+        print(f"RibbonUI: Not implemented yet. - {self.tabBar().tabText(tabIndex)}")
         return
     # endregion
 
@@ -5119,8 +5151,8 @@ class ModernMenu(RibbonBar):
             self.quickAccessToolBar().setDisabled(True)
             self.applicationOptionButton().setDisabled(True)
             Gui.updateGui()
-        
-        # # Add a Floating button to the current tab in the right bottom corner
+            
+        # # Add a pin button button to the tabBar in the right bottom corner
         layout: QGridLayout = self.currentCategory()._mainLayout   
         # Set the pinbutton when overlay is disabled        
         pinButton = self.CreatePinButton()
