@@ -949,7 +949,7 @@ class ModernMenu(RibbonBar):
             CustomShortCuts = App.ParamGet(
                 "User parameter:BaseApp/Preferences/Shortcut"
             )
-            if "Ribbon_Menu" in CustomShortCuts.GetStrings():
+            if "Ribbon_Menu" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Menu") != "":
                 ShortcutKey = CustomShortCuts.GetString("Ribbon_Menu")
         except Exception:
             pass
@@ -8039,10 +8039,10 @@ class EventInspector(QObject):
                     CustomShortCuts = App.ParamGet(
                         "User parameter:BaseApp/Preferences/Shortcut"
                     )
-                    if "Ribbon_Pin" in CustomShortCuts.GetStrings():
+                    if "Ribbon_Pin" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Pin") != "":
                         StoredShortCutKey_Pin = CustomShortCuts.GetString("Ribbon_Pin") 
-                    if "Ribbon_Menubar" in CustomShortCuts.GetStrings():
-                        StoredShortCutKey_MenuBar = CustomShortCuts.GetString("Ribbon_Menubar")                   
+                    if "Ribbon_Menubar" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Menubar") != "":
+                            StoredShortCutKey_MenuBar = CustomShortCuts.GetString("Ribbon_Menubar")                   
                 except Exception:
                     pass
                             
