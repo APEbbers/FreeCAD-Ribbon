@@ -1430,7 +1430,8 @@ class ModernMenu(RibbonBar):
                 AddToTabGroupAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to an existing group"))
                 # Add a separator
                 self.contextMenu.addSeparator()
-                
+                # Create an QAction for removing a tab from an existing group
+                RemoveFromTabGroupAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", f"Remove {QTabBar.tabText(self.tabBar(), tabIndex)} from an existing group"))                
                 
                 # create the context menu action
                 action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
@@ -1438,7 +1439,9 @@ class ModernMenu(RibbonBar):
                 if action == NewTabGroupAct:
                     self.on_AddToNewGroup_Clicked(tabIndex)
                 if action == AddToTabGroupAct:
-                    self.on_AddToExistingGroup_Clicked(tabIndex)                
+                    self.on_AddToExistingGroup_Clicked(tabIndex)   
+                if action == RemoveFromTabGroupAct:
+                    self.on_RemoveFromExistingGroup_Clicked(tabIndex)               
                 return
             
             # Check if the panel is not none and of type RibbonPanel. If so, continue
@@ -2847,6 +2850,10 @@ class ModernMenu(RibbonBar):
         return
     
     def on_AddToExistingGroup_Clicked(self, tabIndex):
+        print(f"RibbonUI: Not implemented yet. - {self.tabBar().tabText(tabIndex)}")
+        return
+    
+    def on_RemoveFromExistingGroup_Clicked(self, tabIndex):
         print(f"RibbonUI: Not implemented yet. - {self.tabBar().tabText(tabIndex)}")
         return
     # endregion
