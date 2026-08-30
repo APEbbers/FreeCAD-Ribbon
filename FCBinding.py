@@ -1394,6 +1394,17 @@ class ModernMenu(RibbonBar):
                             if type(button) is QuickAccessSeparator:
                                 quickaccessseparator = button
             
+            if self.tabBar().underMouse():
+                # get the tab under the mouse
+                pos = QTabBar.mapFromGlobal(self.tabBar() ,event.pos())
+                tabIndex = QTabBar.tabAt(self.tabBar(), pos)
+                # Create an QAction for a new group
+                self.contextMenu.addAction(translate("FreeCAD Ribbon", f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to new group"))
+                # Create an QAction for adding a tab to an existing group
+                self.contextMenu.addAction(translate("FreeCAD Ribbon", f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to existing group"))
+                
+                action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
+            
             # Check if the panel is not none and of type RibbonPanel. If so, continue
             if panel is not None and type(panel) is RibbonPanel:
                 if (
@@ -1533,7 +1544,7 @@ class ModernMenu(RibbonBar):
                     return
             
             # Add the context menu for the ribbon
-            if panel is not None and type(panel) is not RibbonPanel and quickaccessbutton is None and quickaccesstoolbar is None:                
+            if panel is not None and type(panel) is not RibbonPanel and quickaccessbutton is None and quickaccesstoolbar is None and self.tabBar().underMouse() is False:                
                 # Add Customize buttons for entering and exiting customize enviroment
                 self.contextMenu.addSeparator()
                 title = translate("FreeCAD Ribbon", "Customize...")
@@ -1658,7 +1669,7 @@ class ModernMenu(RibbonBar):
                 
                 # Disconnect the widgetActions
                 removeSeparator.triggered.disconnect()
-             
+                  
         widget = None
         panel = None
         return
