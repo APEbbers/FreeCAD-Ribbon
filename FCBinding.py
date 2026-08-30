@@ -27,7 +27,7 @@ import traceback
 import subprocess
 from functools import partial
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -58,7 +58,7 @@ from PySide6.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -103,7 +103,7 @@ from PySide6.QtWidgets import (
     QTableWidgetItem,
     QCompleter,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -2871,10 +2871,67 @@ class ModernMenu(RibbonBar):
         return
     
     def on_AddToNewGroup_Clicked(self, tabIndex):
+        # Get the workbench name and the panel name
+        workbenchName = self.tabBar().tabData(tabIndex)
+        
+        # Get a name for the group
+        Question = translate(
+                "FreeCAD Ribbon",
+                "Enter a name for the group",
+            )
+        GroupName = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 20, "Group")
+        if GroupName == "" or GroupName is None:
+            return
+        
+        # Create an entry in the dict if there isn't one
+        Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["tabGroups", GroupName])
+        
+        if "tabGroups" in self.ribbonStructure and GroupName in self.ribbonStructure["tabGroups"]:
+            if type(self.ribbonStructure["tabGroups"][GroupName]) is list:           
+                self.ribbonStructure["tabGroups"][GroupName].append(workbenchName)
+            if type(self.ribbonStructure["tabGroups"][GroupName]) is not list: 
+                self.ribbonStructure["tabGroups"][GroupName] = [workbenchName]
+            
+            # Writing to ribbonStructure.json
+            JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+            with open(JsonFile, "w") as outfile:
+                json.dump(self.ribbonStructure, outfile, indent=4)      
+        
         print(f"RibbonUI: Not implemented yet. - {self.tabBar().tabText(tabIndex)}")
         return
     
     def on_AddToExistingGroup_Clicked(self, tabIndex):
+        # Get the workbench name and the panel name
+        workbenchName = self.tabBar().tabData(tabIndex)
+        
+        stringList = []
+        if "tabGroups" in self.ribbonStructure:
+            for key in self.ribbonStructure["tabGroups"].keys():
+                stringList.append(str(key))
+
+        # Get a name for the group
+        Question = translate(
+                "FreeCAD Ribbon",
+                "Enter a name for the group",
+            )
+        GroupName = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 21, "Question", "Group", stringList)
+        if GroupName == "" or GroupName is None:
+            return
+        
+        # Create an entry in the dict if there isn't one
+        Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["tabGroups", GroupName])
+        
+        if "tabGroups" in self.ribbonStructure and GroupName in self.ribbonStructure["tabGroups"]:
+            if type(self.ribbonStructure["tabGroups"][GroupName]) is list:           
+                self.ribbonStructure["tabGroups"][GroupName].append(workbenchName)
+            if type(self.ribbonStructure["tabGroups"][GroupName]) is not list: 
+                self.ribbonStructure["tabGroups"][GroupName] = [workbenchName]
+            
+            # Writing to ribbonStructure.json
+            JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+            with open(JsonFile, "w") as outfile:
+                json.dump(self.ribbonStructure, outfile, indent=4)
+                
         print(f"RibbonUI: Not implemented yet. - {self.tabBar().tabText(tabIndex)}")
         return
     

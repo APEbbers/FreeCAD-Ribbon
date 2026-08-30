@@ -41,7 +41,7 @@ def Mbox(
     style=0,
     IconType="Information",
     default="",
-    stringList="[,]",
+    stringList=[],
 ):
     """
     Message Styles:\n
