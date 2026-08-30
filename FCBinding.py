@@ -27,7 +27,7 @@ import traceback
 import subprocess
 from functools import partial
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -56,7 +56,7 @@ from PySide.QtGui import (
     QScreen,
     QPen,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -97,7 +97,7 @@ from PySide.QtWidgets import (
     QStackedWidget,    
     QStyleOptionTab,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1394,16 +1394,28 @@ class ModernMenu(RibbonBar):
                             if type(button) is QuickAccessSeparator:
                                 quickaccessseparator = button
             
+            # Add actions for a context menu for the tabs
             if self.tabBar().underMouse():
                 # get the tab under the mouse
                 pos = QTabBar.mapFromGlobal(self.tabBar() ,event.pos())
                 tabIndex = QTabBar.tabAt(self.tabBar(), pos)
                 # Create an QAction for a new group
-                self.contextMenu.addAction(translate("FreeCAD Ribbon", f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to new group"))
+                NewTabGroupAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to new group"))
                 # Create an QAction for adding a tab to an existing group
-                self.contextMenu.addAction(translate("FreeCAD Ribbon", f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to existing group"))
+                AddToTabGroupAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to existing group"))
+                # Add a separator
+                self.contextMenu.addSeparator()
                 
+                
+                # create the context menu action
                 action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
+                # Create a group for tabs or add tabs to an existing group
+                if action == NewTabGroupAct:
+                    print("Not implemented yet")
+                if action == AddToTabGroupAct:
+                    print("Not implemented yet")
+                
+                return
             
             # Check if the panel is not none and of type RibbonPanel. If so, continue
             if panel is not None and type(panel) is RibbonPanel:
@@ -1544,7 +1556,12 @@ class ModernMenu(RibbonBar):
                     return
             
             # Add the context menu for the ribbon
-            if panel is not None and type(panel) is not RibbonPanel and quickaccessbutton is None and quickaccesstoolbar is None and self.tabBar().underMouse() is False:                
+            if (
+                panel is not None and type(panel) is not RibbonPanel 
+                and quickaccessbutton is None 
+                and quickaccesstoolbar is None 
+                and self.tabBar().underMouse() is False
+                ):
                 # Add Customize buttons for entering and exiting customize enviroment
                 self.contextMenu.addSeparator()
                 title = translate("FreeCAD Ribbon", "Customize...")
@@ -1565,60 +1582,7 @@ class ModernMenu(RibbonBar):
                 # Perfom the action depending on which button is clicked
                 if action == CustomizeStartAct:
                     if self.CustomizeEnabled is False:
-                        # add keys if they don´t exist
-                        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName], endEmpty=True)
-                        Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName], endEmpty=True) # Just to prevent any errors
-                        # Create the workbench dict
-                        self.workBenchDict["workbenches"] = self.ribbonStructure["workbenches"]
-                        self.workBenchDict["quickAccessCommands"] = self.ribbonStructure["quickAccessCommands"]
-                        self.workBenchDict["newPanels"] = self.ribbonStructure["newPanels"]
-                        self.workBenchDict["dropdownButtons"] = self.ribbonStructure["dropdownButtons"]
-                        self.workBenchDict["ignoredToolbars"] = self.ribbonStructure["ignoredToolbars"]
-                        self.workBenchDict["ignoredWorkbenches"] = self.ribbonStructure["ignoredWorkbenches"]
-                        self.workBenchDict["iconOnlyToolbars"] = self.ribbonStructure["iconOnlyToolbars"]
-                        self.workBenchDict["customToolbars"] = self.ribbonStructure["customToolbars"]
-
                         self.on_Customize_Clicked()
-                                
-                        # Load the dialog
-                        # 
-                        # Get the form
-                        DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
-                        if os.path.exists(DataFile) is False:
-                            Question = translate(
-                                "FreeCAD Ribbon",
-                                "a data file must be generated first!\n"
-                                "Do you want to create one now?\n",
-                            )
-                            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
-                            if Answer == "yes":
-                                CacheFunctions.CreateCache()
-                                DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
-                            else:
-                                self.on_Cancel_Clicked()
-                                return
-                        if os.path.exists(DataFile) is True:
-                            self.AddCommandsDialog = LoadAddCommands.LoadDialog(self)
-                            if Parameters.DOCKED_DIALOGS is False:
-                                # Show the form
-                                self.AddCommandsDialog.form.show()
-                            else:
-                                RibbonLayoutDock = QDockWidget()
-                                # set the name of the object and the window title
-                                RibbonLayoutDock.setObjectName("RibbonLayout")
-                                RibbonLayoutDock.setWindowTitle("Ribbon Layout")
-                                RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
-                                RibbonLayoutDock.setWidget(self.AddCommandsDialog.form)                            
-                                # Set the allowed areas to dock
-                                RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
-                                # Add the custom context menu for dockwidgets
-                                RibbonLayoutDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-                                RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
-                                # Add the dockwidget
-                                mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
-
-                            
-                        
                         return
                     if self.CustomizeEnabled is True:
                         for category in self.CustomizedCategories:
@@ -1680,6 +1644,60 @@ class ModernMenu(RibbonBar):
         if self.currentCategory() not in self.CustomizedCategories:
             self.CustomizedCategories.append(self.currentCategory())
         self.CurrentCategoryToRestore = self.currentCategory()
+        
+        # add keys if they don´t exist
+        Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName], endEmpty=True)
+        Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName], endEmpty=True) # Just to prevent any errors
+        # Create the workbench dict
+        self.workBenchDict["workbenches"] = self.ribbonStructure["workbenches"]
+        self.workBenchDict["quickAccessCommands"] = self.ribbonStructure["quickAccessCommands"]
+        self.workBenchDict["newPanels"] = self.ribbonStructure["newPanels"]
+        self.workBenchDict["dropdownButtons"] = self.ribbonStructure["dropdownButtons"]
+        self.workBenchDict["ignoredToolbars"] = self.ribbonStructure["ignoredToolbars"]
+        self.workBenchDict["ignoredWorkbenches"] = self.ribbonStructure["ignoredWorkbenches"]
+        self.workBenchDict["iconOnlyToolbars"] = self.ribbonStructure["iconOnlyToolbars"]
+        self.workBenchDict["customToolbars"] = self.ribbonStructure["customToolbars"]
+                
+        # Load the dialog
+        # 
+        # Get the form
+        DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
+        if os.path.exists(DataFile) is False:
+            Question = translate(
+                "FreeCAD Ribbon",
+                "a data file must be generated first!\n"
+                "Do you want to create one now?\n",
+            )
+            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+            if Answer == "yes":
+                CacheFunctions.CreateCache()
+                DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
+            else:
+                self.on_Cancel_Clicked()
+                return
+        if os.path.exists(DataFile) is True:
+            # If there is already a form, return
+            if mw.findChild(QDockWidget, "AddCommands") is not None:
+                return
+        
+            self.AddCommandsDialog = LoadAddCommands.LoadDialog(self)
+            if Parameters.DOCKED_DIALOGS is False:
+                # Show the form
+                self.AddCommandsDialog.form.show()
+            else:
+                RibbonLayoutDock = QDockWidget()
+                # set the name of the object and the window title
+                RibbonLayoutDock.setObjectName("AddCommands")
+                RibbonLayoutDock.setWindowTitle("Customize RibbonUI")
+                RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
+                RibbonLayoutDock.setWidget(self.AddCommandsDialog.form)                            
+                # Set the allowed areas to dock
+                RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
+                # Add the custom context menu for dockwidgets
+                RibbonLayoutDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+                RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
+                # Add the dockwidget
+                mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
                 
        # Set a stylesheet to indicate that you are in the customize enviroment
         HoverColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
@@ -4838,6 +4856,10 @@ class ModernMenu(RibbonBar):
         
     # Function for loading the design menu
     def loadDesignMenu(self):
+        # If there is already a form, return
+        if mw.findChild(QDockWidget, "RibbonLayout") is not None:
+            return
+                
         DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
         if os.path.exists(DataFile) is False:
             Question = translate(
@@ -4883,17 +4905,21 @@ class ModernMenu(RibbonBar):
 
     # Function for loading the settings menu
     def loadSettingsMenu(self):
+        # If there is already a form, return
+        if mw.findChild(QDockWidget, "RibbonSettings") is not None:
+            return
+        
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
-        
+                
         # Get the form
         Dialog = LoadSettings_Ribbon.LoadDialog()
         if Parameters.DOCKED_DIALOGS is False:
             # Show the form
             Dialog.form.show()
         else:
-            RibbonLayoutDock = QDockWidget()
+            RibbonLayoutDock = QDockWidget(mw)
             # set the name of the object and the window title
             RibbonLayoutDock.setObjectName("RibbonSettings")
             RibbonLayoutDock.setWindowTitle("Ribbon Preferences")
