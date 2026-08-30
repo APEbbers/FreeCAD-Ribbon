@@ -27,7 +27,7 @@ import traceback
 import subprocess
 from functools import partial
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -55,8 +55,10 @@ from PySide.QtGui import (
     QDrag,
     QScreen,
     QPen,
+    QStandardItemModel,
+    QStandardItem,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -97,8 +99,11 @@ from PySide.QtWidgets import (
     QStackedWidget,    
     QStyleOptionTab,
     QComboBox,
+    QTableWidget,
+    QTableWidgetItem,
+    QCompleter,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -115,7 +120,8 @@ from PySide.QtCore import (
     QSettings,
     QSignalBlocker,
     QMimeData,
-    QEventLoop,          
+    QEventLoop,    
+    QAbstractItemModel,      
 )
 from CustomWidgets import (
     CustomControls, 
@@ -971,21 +977,40 @@ class ModernMenu(RibbonBar):
         #
         # Create a groupBox
         # Add a Group box (dropdown) to the tabBar
-        GroupBox = QComboBox(self.tabBar())
-        GroupBox.setFixedWidth(100)
-        GroupBox.addItem("All")
-        GroupBox.setToolTip(translate("FreeCAD Ribbon", "Select a tab group"))
-        GroupBox.setObjectName("GroupBox")
+        GroupBox = QHBoxLayout()
+        ComboBox = QComboBox(self.tabBar())
+        ComboBox.setFixedWidth(100)
+        ComboBox.addItem("All")
+        ComboBox.setToolTip(translate("FreeCAD Ribbon", "Select a tab group"))
+        ComboBox.setObjectName("GroupBox")
         # GroupBox.clicked.connect()
-        GroupBox.setStyleSheet(""" QToolTip {
+        ComboBox.setStyleSheet(""" QToolTip {
                     background-color: #FFFFE1;
                     color: black;
                     border: black solid 1px;
                     border-radius: 2px;
                     }"""
                 )
-        GroupBox.view().setFixedWidth(200)
-        GroupBox.view().setSelectionMode(QListWidget.SelectionMode.MultiSelection)
+        DeleteButton = QToolButton()
+        pixmap = QPixmap(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons", "edit_Cancel.svg"))
+        icon = QIcon()
+        # These lines are needed elswere but put in for later
+        icon.addPixmap(pixmap, mode=QIcon.Mode.Normal, state=QIcon.State.On)
+        grayed = icon.pixmap(pixmap.size(), QIcon.Mode.Disabled, QIcon.State.On)
+        icon.addPixmap(grayed, mode=QIcon.Mode.Normal, state=QIcon.State.Off)
+        DeleteButton.setIcon(icon)        
+        DeleteButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
+        DeleteButton.setFixedSize(ComboBox.height()*0.8, ComboBox.height()*0.8)
+        DeleteButton.setDisabled(True)
+        Spacer = QWidget()
+        Spacer.setFixedWidth(6)
+        GroupBox.addWidget(ComboBox)
+        GroupBox.addWidget(DeleteButton)
+        GroupBox.addWidget(Spacer)
+        # Set the widgets hidden by default
+        DeleteButton.hide()
+        ComboBox.hide()
+      
         #
         # Create a floating button
         FloatingButton = QToolButton()
@@ -1075,12 +1100,12 @@ class ModernMenu(RibbonBar):
                 self._titleWidget._tabBarLayout.addWidget(
                     _tabBar, 1, 0, 1, 4, Qt.AlignmentFlag.AlignVCenter
                 )
-                self._titleWidget._tabBarLayout.addWidget(
-                    overlayButton, 1, 4, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                self._titleWidget._tabBarLayout.addLayout(
+                    GroupBox, 1, 4, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
                 self._titleWidget._tabBarLayout.addWidget(
-                    GroupBox, 1, 5, 1, 1, Qt.AlignmentFlag.AlignVCenter
-                )
+                    overlayButton, 1, 5, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                )                
                 self._titleWidget._tabBarLayout.addWidget(
                     FloatingButton, 1, 6, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
@@ -1102,12 +1127,12 @@ class ModernMenu(RibbonBar):
                 self._titleWidget._tabBarLayout.addWidget(
                     _titleLabel, 0, 2, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
-                self._titleWidget._tabBarLayout.addWidget(
-                    overlayButton, 0, 3, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                self._titleWidget._tabBarLayout.addLayout(
+                    GroupBox, 0, 3, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
                 self._titleWidget._tabBarLayout.addWidget(
-                    GroupBox, 0, 4, 1, 1, Qt.AlignmentFlag.AlignVCenter
-                )
+                    overlayButton, 0, 4, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                )                
                 self._titleWidget._tabBarLayout.addWidget(
                     FloatingButton, 0, 5, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
