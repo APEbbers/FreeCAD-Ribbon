@@ -4538,7 +4538,7 @@ class ModernMenu(RibbonBar):
             CustomShortCuts = App.ParamGet(
                 "User parameter:BaseApp/Preferences/Shortcut"
             )
-            if "Ribbon_Layout" in CustomShortCuts.GetStrings():
+            if "Ribbon_Layout" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Layout") != "":
                 ShortcutKey = CustomShortCuts.GetString("Ribbon_Layout")
         except Exception:
             pass
@@ -4560,7 +4560,7 @@ class ModernMenu(RibbonBar):
             CustomShortCuts = App.ParamGet(
                 "User parameter:BaseApp/Preferences/Shortcut"
             )
-            if "Ribbon_Preferences" in CustomShortCuts.GetStrings():
+            if "Ribbon_Preferences" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Preferences") != "":
                 ShortcutKey = CustomShortCuts.GetString("Ribbon_Preferences")
         except Exception:
             pass
@@ -5154,7 +5154,7 @@ class ModernMenu(RibbonBar):
             CustomShortCuts = App.ParamGet(
                 "User parameter:BaseApp/Preferences/Shortcut"
             )
-            if "Ribbon_Pin" in CustomShortCuts.GetStrings():
+            if "Ribbon_Pin" in CustomShortCuts.GetStrings() and CustomShortCuts.GetStrings() != "":
                 ShortcutKey = CustomShortCuts.GetString("Ribbon_Pin")
             if ShortcutKey != "" and ShortcutKey is not None:
                 pinButton.setShortcut(ShortcutKey)
