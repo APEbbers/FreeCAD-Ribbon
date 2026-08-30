@@ -695,7 +695,7 @@ class ModernMenu(RibbonBar):
         # Set the custom stylesheet
         self.StyleSheet = Path(Parameters.STYLESHEET).read_text()
         # Set the tooltip colors, so that they are uniform accros FreeCAD.
-        mw.setStyleSheet(""" QToolTip {
+        mw.setStyleSheet("""\n\nQToolTip {
                     background-color: #FFFFE1;
                     color: black;
                     border: black solid 1px;
@@ -954,7 +954,9 @@ class ModernMenu(RibbonBar):
         except Exception:
             pass
         self.applicationOptionButton().setShortcut(ShortcutKey)
-        ToolTip = f"{ShortcutKey}"
+        ToolTip = (
+            f"FreeCAD menu<br></br>(<i>{ShortcutKey}</i>)"
+        )
         self.applicationOptionButton().setToolTip(ToolTip)
 
         # Add a custom close event to show the original menubar again
@@ -1124,12 +1126,8 @@ class ModernMenu(RibbonBar):
         except Exception:
             pass
 
-        # mw.setAcceptDrops(True)
-        # mw.dragEnterEvent = lambda e: self.dragEnterEvent(e)
-
         # Install an event filter to catch events from the main window and act on it.
         mw.installEventFilter(EventInspector(mw))
-        # self.installEventFilter(RibbonEventInspector(self))
         
         # Set isLoaded to True, to show that the loading is finished
         self.isLoaded = True
@@ -1243,10 +1241,12 @@ class ModernMenu(RibbonBar):
         # Add the customize action for FreeCAD
         cmd = Gui.Command.get("Std_DlgCustomize")
         FC_Customise_Action = cmd.getAction()[0]
+        
         menu.addAction(FC_Customise_Action)
         
         # create the context menu action
         menu.exec_(QCursor.pos())
+        menu.setFocusPolicy(Qt.FocusPolicy.NoFocus)
 
     # region - Ribbon event fuctions
     
@@ -2081,26 +2081,27 @@ class ModernMenu(RibbonBar):
         # Remove the checkboxes and set the tab visible or invisible based on checkstate        
         for i in range(self.tabBar().count()):
             checkBox: QCheckBox = self.tabBar().tabButton(i, QTabBar.ButtonPosition.RightSide)
-            workbenchName = checkBox.objectName().split("_")[1]
-            
-            if workbenchName in self.workBenchDict["workbenches"]:  # noqa: SIM102
-                # Add the command if they don't exist
-                Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "Enabled"], True)
+            if checkBox is not None:
+                workbenchName = checkBox.objectName().split("_")[1]
                 
-                if "Enabled" in self.workBenchDict["workbenches"][workbenchName]:  # noqa: SIM102
-                    if checkBox.isChecked():                        
-                        # Set the state
-                        self.workBenchDict["workbenches"][workbenchName]["Enabled"] = True
-                        # Make sure to set the tab visible
-                        self.tabBar().setTabVisible(i, True)  
+                if workbenchName in self.workBenchDict["workbenches"]:  # noqa: SIM102
+                    # Add the command if they don't exist
+                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "Enabled"], True)
+                    
+                    if "Enabled" in self.workBenchDict["workbenches"][workbenchName]:  # noqa: SIM102
+                        if checkBox.isChecked():                        
+                            # Set the state
+                            self.workBenchDict["workbenches"][workbenchName]["Enabled"] = True
+                            # Make sure to set the tab visible
+                            self.tabBar().setTabVisible(i, True)  
+                        else:
+                            self.workBenchDict["workbenches"][workbenchName]["Enabled"] = False
+                            # Make sure to set the tab hidden
+                            self.tabBar().setTabVisible(i, False)
+                    # If enabled is not present, set the tab always visible
                     else:
-                        self.workBenchDict["workbenches"][workbenchName]["Enabled"] = False
-                        # Make sure to set the tab hidden
-                        self.tabBar().setTabVisible(i, False)
-                # If enabled is not present, set the tab always visible
-                else:
-                    # Make sure to set the tab visible
-                    self.tabBar().setTabVisible(i, True) 
+                        # Make sure to set the tab visible
+                        self.tabBar().setTabVisible(i, True)
             
             self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None)
                                     
@@ -3715,12 +3716,6 @@ class ModernMenu(RibbonBar):
                 "QTabBar::tab {color: "
                 + StyleMapping_Ribbon.ReturnStyleItem("FontColor")
                 + ";}"
-                # + """ QToolTip {
-                #     background-color: #FFFFE1;
-                #     color: black;
-                #     border: black solid 1px;
-                #     border-radius: 2px;
-                #     }"""
             )
         if Parameters.TABBAR_STYLE == 1:
             self.tabBar().setStyleSheet(
@@ -3917,8 +3912,9 @@ class ModernMenu(RibbonBar):
         self.tabBar().setFont(font)
 
         self.tabBar().setIconSize(QSize(self.TabBar_Size - 6, self.TabBar_Size - 6))
-        self.tabBar().setStyleSheet(
-            "margin: 0px;padding: 0px;height: " + str(self.TabBar_Size) + ";"
+        styleSheet = self.tabBar().styleSheet()
+        self.tabBar().setStyleSheet(styleSheet + 
+            "\nQTabBar {margin: 0px;padding: 0px;height: " + str(self.TabBar_Size) + ";}"
         )
         
         # Correct colors when no stylesheet is selected for FreeCAD.
@@ -4010,7 +4006,7 @@ class ModernMenu(RibbonBar):
                         self.tabBar().setTabData(
                             len(self.categories()) - 1, workbenchName
                         )
-                        
+                                                
                         Font = QFont()
                         Font.setPixelSize(Parameters.FONTSIZE_TABS)
                         self.tabBar().setFont(Font)
@@ -4031,7 +4027,7 @@ class ModernMenu(RibbonBar):
                         self.tabBar().setTabToolTip(
                             len(self.categories()) - 1, MenuText
                         )  
-                        
+                                                
                         # Hide or show the tab
                         Enabled = True
                         if workbenchName in self.ribbonStructure["workbenches"]:  # noqa: SIM102
@@ -4704,7 +4700,7 @@ class ModernMenu(RibbonBar):
         self.HandleDockWidget(DockWidgetName, Action.isChecked())
         return Action
     
-    def HandleDockWidget(self, dockWidget_Name, Checked = False):
+    def HandleDockWidget(self, dockWidget_Name, Checked = False, skipChecked=False):
         if self.ribbonStructure is None:
             return
         
@@ -4811,6 +4807,7 @@ class ModernMenu(RibbonBar):
                     if mw.toolBarArea(toolbar) == Qt.ToolBarArea.RightToolBarArea:
                         Location = "Right"
                     self.ribbonStructure["ToolBarStates"][toolbarName] = [True, Location]
+                    
                 else:                    
                     self.ribbonStructure["ToolBarStates"][toolbarName] = [False, Location]                    
                     toolbar.close()
@@ -5152,7 +5149,7 @@ class ModernMenu(RibbonBar):
             StyleMapping_Ribbon.ReturnStyleSheet("toolbutton", "2px")
         )
         
-        ShortcutKey = ""
+        ShortcutKey = "Alt+T"
         try:
             CustomShortCuts = App.ParamGet(
                 "User parameter:BaseApp/Preferences/Shortcut"
@@ -5171,7 +5168,7 @@ class ModernMenu(RibbonBar):
                 translate(
                     "FreeCAD Ribbon",
                     "Click to toggle the autohide function on or off"
-                    + f"<br></br><i>{ShortcutKey}</i>",
+                    + f"<br></br>(<i>{ShortcutKey}</i>)",
                 )
             )
                         
