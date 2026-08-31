@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 import typing
 import sys
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
@@ -39,7 +39,7 @@ from PySide.QtGui import (
     QPainter,
     QEnterEvent,   
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QComboBox,
     QMainWindow,
     QSizePolicy,
@@ -59,7 +59,7 @@ from PySide.QtWidgets import (
     QPushButton,
     QGraphicsEffect,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QSize,
     QMimeData,
@@ -2236,7 +2236,7 @@ class SpinBoxAction(QWidgetAction):
 class ComboBoxAction(QWidgetAction):
     combobox = QComboBox()
     combobox.setStyleSheet("""QComboBox {padding-left: 6px;}""")
-        
+
     activated = combobox.activated
     currentTextChanged = combobox.currentTextChanged
     
@@ -2266,6 +2266,10 @@ class ComboBoxAction(QWidgetAction):
             self.widget.setLayout(layout_V)
 
         self.setDefaultWidget(self.widget)
+        return
+    
+    def clearEditText(self):
+        self.combobox.clearEditText()
         return
     
     def addItem(self, text: str, /, userData: typing.Any = None) -> None:

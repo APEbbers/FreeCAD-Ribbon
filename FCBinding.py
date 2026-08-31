@@ -27,7 +27,7 @@ import traceback
 import subprocess
 from functools import partial
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -58,7 +58,7 @@ from PySide.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -103,7 +103,7 @@ from PySide.QtWidgets import (
     QTableWidgetItem,
     QCompleter,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1477,6 +1477,7 @@ class ModernMenu(RibbonBar):
                     for key in self.ribbonStructure["tabGroups"]:
                         AddToTabGroupAct.addItem(str(key))
                 AddToTabGroupAct.currentTextChanged.connect(lambda: self.on_AddToExistingGroup_Clicked(tabIndex, AddToTabGroupAct.currentText()))
+                AddToTabGroupAct.currentTextChanged.connect(lambda: self.CloseContextMenu(AddToTabGroupAct))
                 self.contextMenu.addAction(AddToTabGroupAct)
                 # Add a separator
                 self.contextMenu.addSeparator()
@@ -1486,7 +1487,11 @@ class ModernMenu(RibbonBar):
                 # create the context menu action
                 action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
                 if action == RemoveFromTabGroupAct:
-                    self.on_RemoveFromExistingGroup_Clicked(tabIndex)               
+                    self.on_RemoveFromExistingGroup_Clicked(tabIndex)  
+                    
+                # Disconnect the widgetActions
+                NewTabGroupAct.returnPressed.disconnect()
+                AddToTabGroupAct.currentTextChanged.disconnect()                
                 return
             
             # Check if the panel is not none and of type RibbonPanel. If so, continue
@@ -2890,6 +2895,11 @@ class ModernMenu(RibbonBar):
         panel.setTitle(Text)
         return
     
+    def CloseContextMenu(self, Action):
+        self.contextMenu.close()
+        Action.clearEditText()
+        return
+    
     def on_AddToNewGroup_Clicked(self, tabIndex, GroupName = ""):
         # Get the workbench name and the panel name
         workbenchName = self.tabBar().tabData(tabIndex)
@@ -2943,7 +2953,12 @@ class ModernMenu(RibbonBar):
                 json.dump(self.ribbonStructure, outfile, indent=4)
                 
             ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
-            ComboBox.addItem(GroupName)
+            IsInList = False
+            for i in range(ComboBox.count()):
+                if ComboBox.itemText(i) == GroupName:
+                    IsInList = True
+            if IsInList is False:
+                ComboBox.addItem(GroupName)
         return
     
     def on_RemoveFromExistingGroup_Clicked(self, tabIndex):
