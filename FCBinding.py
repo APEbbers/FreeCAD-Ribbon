@@ -135,6 +135,7 @@ from CustomWidgets import (
     QuickAccessToolButton, 
     QuickAccessSeparator,
     RightToolButton,
+    LineEditAction,
 )
 import json
 import os
@@ -991,13 +992,20 @@ class ModernMenu(RibbonBar):
                     border-radius: 2px;
                     }"""
                 )
+        ComboBox.currentTextChanged.connect(lambda: self.on_Group_Changed(ComboBox.currentText( )))
+        if "tabGroups" in self.ribbonStructure:
+            for group in self.ribbonStructure["tabGroups"].keys():
+                ComboBox.addItem(group)        
         DeleteButton = QToolButton()
+        DeleteButton.setObjectName("DeleteGroupButton")
         pixmap = QPixmap(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons", "edit_Cancel.svg"))
         icon = QIcon()
-        # These lines are needed elswere but put in for later
+        # add a pixmap for de on state
         icon.addPixmap(pixmap, mode=QIcon.Mode.Normal, state=QIcon.State.On)
+        # Add a pixmap for the off state
         grayed = icon.pixmap(pixmap.size(), QIcon.Mode.Disabled, QIcon.State.On)
         icon.addPixmap(grayed, mode=QIcon.Mode.Normal, state=QIcon.State.Off)
+        # Add the icon
         DeleteButton.setIcon(icon)        
         DeleteButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
         DeleteButton.setFixedSize(ComboBox.height()*0.8, ComboBox.height()*0.8)
@@ -1010,7 +1018,12 @@ class ModernMenu(RibbonBar):
         # Set the widgets hidden by default
         DeleteButton.hide()
         ComboBox.hide()
-      
+        DeleteButton.setDisabled(True) 
+        # If there are groups, show them again
+        if ComboBox.count() > 1:
+            ComboBox.show()
+            DeleteButton.show()     
+            DeleteButton.setDisabled(True) 
         #
         # Create a floating button
         FloatingButton = QToolButton()
@@ -1452,9 +1465,19 @@ class ModernMenu(RibbonBar):
                 pos = QTabBar.mapFromGlobal(self.tabBar() ,event.pos())
                 tabIndex = QTabBar.tabAt(self.tabBar(), pos)
                 # Create an QAction for a new group
-                NewTabGroupAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to a new group"))
+                # NewTabGroupAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to a new group"))
+                NewTabGroupAct = LineEditAction(self, translate("FreeCAD Ribbon", f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to a new group"), Parameters.FONTSIZE_MENUS)
+                NewTabGroupAct.setClearButtonEnabled(True)
+                NewTabGroupAct.returnPressed.connect(lambda: self.on_AddToNewGroup_Clicked(tabIndex, NewTabGroupAct.text()))
+                NewTabGroupAct.returnPressed.connect(lambda: self.contextMenu.close())
+                self.contextMenu.addAction(NewTabGroupAct)
                 # Create an QAction for adding a tab to an existing group
-                AddToTabGroupAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to an existing group"))
+                AddToTabGroupAct = ComboBoxAction(self, f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to an existing group", "Top", Parameters.FONTSIZE_MENUS)
+                if "tabGroups" in self.ribbonStructure:
+                    for key in self.ribbonStructure["tabGroups"]:
+                        AddToTabGroupAct.addItem(str(key))
+                AddToTabGroupAct.currentTextChanged.connect(lambda: self.on_AddToExistingGroup_Clicked(tabIndex, AddToTabGroupAct.currentText()))
+                self.contextMenu.addAction(AddToTabGroupAct)
                 # Add a separator
                 self.contextMenu.addSeparator()
                 # Create an QAction for removing a tab from an existing group
@@ -1462,11 +1485,6 @@ class ModernMenu(RibbonBar):
                 
                 # create the context menu action
                 action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
-                # Create a group for tabs or add tabs to an existing group
-                if action == NewTabGroupAct:
-                    self.on_AddToNewGroup_Clicked(tabIndex)
-                if action == AddToTabGroupAct:
-                    self.on_AddToExistingGroup_Clicked(tabIndex)   
                 if action == RemoveFromTabGroupAct:
                     self.on_RemoveFromExistingGroup_Clicked(tabIndex)               
                 return
@@ -1479,8 +1497,8 @@ class ModernMenu(RibbonBar):
                 ):
                     if separator is None:
                         # Define the context menu for buttons
-                        self.contextMenu.setContentsMargins(3,3,3,3)
-                        self.contextMenu.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
+                        self.contextMenu.setContentsMargins(0,0,0,0)
+                        self.contextMenu.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
     
                         # Check if the widget has text enabled
                         textVisible = None
@@ -1502,7 +1520,7 @@ class ModernMenu(RibbonBar):
                         if textVisible is None:
                             textVisible = False                                    
                         # set the checkbox for enabling text
-                        RibbonButtonAction_Text = ToggleAction(self, translate("FreeCAD Ribbon", "Show button text"))
+                        RibbonButtonAction_Text = ToggleAction(self, translate("FreeCAD Ribbon", "Show button text"), "Top", Parameters.FONTSIZE_MENUS)
                         RibbonButtonAction_Text.setChecked(textVisible)
                         RibbonButtonAction_Text.setText(translate("FreeCAD Ribbon", "Show button text"))
                         # Set the checkbox action checked or unchecked
@@ -1511,13 +1529,13 @@ class ModernMenu(RibbonBar):
                             RibbonButtonAction_Text.setCheckState(Qt.CheckState.Checked)
                         if textVisible is False:
                             RibbonButtonAction_Text.setCheckState(Qt.CheckState.Unchecked)
-                        RibbonButtonAction_Text.setFixedSize(82,41)
+                        RibbonButtonAction_Text.setFixedSize(50,30)                        
                         RibbonButtonAction_Text.checkStateChanged.connect(lambda: self.on_TextState_Changed(panel, widget, RibbonButtonAction_Text.isChecked()))
                         # Add the checkbox action to the contextmenu
                         self.contextMenu.addAction(RibbonButtonAction_Text)
                         
                         # Set the spinbox for the button size
-                        RibbonButtonAction_Size = SpinBoxAction(self, translate("FreeCAD Ribbon", "Set button size"))
+                        RibbonButtonAction_Size = SpinBoxAction(self, translate("FreeCAD Ribbon", "Set button size"), "Top", Parameters.FONTSIZE_MENUS)
                         RibbonButtonAction_Size.setMinimum(16)
                         RibbonButtonAction_Size.setMaximum(120)                        
                         RibbonButtonAction_Size.setValue(widget.height())
@@ -1527,7 +1545,7 @@ class ModernMenu(RibbonBar):
                             self.contextMenu.addAction(RibbonButtonAction_Size)
                         
                         # Set the dropdown for the button style
-                        RibbonButtonAction_Style = ComboBoxAction(self, translate("FreeCAD Ribbon", "Set button type"))
+                        RibbonButtonAction_Style = ComboBoxAction(self, translate("FreeCAD Ribbon", "Set button type"), "Top", Parameters.FONTSIZE_MENUS)
                         RibbonButtonAction_Style.addItem("Small")
                         RibbonButtonAction_Style.addItem("Medium")
                         RibbonButtonAction_Style.addItem("Large")
@@ -1543,7 +1561,7 @@ class ModernMenu(RibbonBar):
                         self.contextMenu.addAction(RibbonButtonAction_Style)
                         
                         # Add a line edit for changing the text
-                        ChangeButtonText = CustomWidgets.LineEditAction(self, translate("FreeCAD Ribbon", "Set button text"))
+                        ChangeButtonText = LineEditAction(self, translate("FreeCAD Ribbon", "Set button text"), Parameters.FONTSIZE_MENUS)
                         ChangeButtonText.setText("")
                         text = ""
                         label = widget.parent().findChild(QLabel)
@@ -1553,7 +1571,7 @@ class ModernMenu(RibbonBar):
                         ChangeButtonText.setFixedSize(200,21)
                         ChangeButtonText.setClearButtonEnabled(True)
                         ChangeButtonText.textChanged.connect(lambda e: self.on_ButtonLabel_Changing(e, panel, widget, ChangeButtonText))
-                        ChangeButtonText.editingFinished.connect(lambda: lambda: self.contextMenu.close())
+                        ChangeButtonText.editingFinished.connect(lambda: self.contextMenu.close())
                         self.contextMenu.addAction(ChangeButtonText)
                         
                         # Create the buttons for adding a separator
@@ -2872,16 +2890,16 @@ class ModernMenu(RibbonBar):
         panel.setTitle(Text)
         return
     
-    def on_AddToNewGroup_Clicked(self, tabIndex):
+    def on_AddToNewGroup_Clicked(self, tabIndex, GroupName = ""):
         # Get the workbench name and the panel name
         workbenchName = self.tabBar().tabData(tabIndex)
         
-        # Get a name for the group
-        Question = translate(
-                "FreeCAD Ribbon",
-                "Enter a name for the group",
-            )
-        GroupName = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 20, "Group")
+        # # Get a name for the group
+        # Question = translate(
+        #         "FreeCAD Ribbon",
+        #         "Enter a name for the group",
+        #     )
+        # GroupName = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 20, "Group")
         if GroupName == "" or GroupName is None:
             return
         
@@ -2889,7 +2907,7 @@ class ModernMenu(RibbonBar):
         Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["tabGroups", GroupName])
         
         if "tabGroups" in self.ribbonStructure and GroupName in self.ribbonStructure["tabGroups"]:
-            if type(self.ribbonStructure["tabGroups"][GroupName]) is list:           
+            if type(self.ribbonStructure["tabGroups"][GroupName]) is list and workbenchName not in self.ribbonStructure["tabGroups"][GroupName]:           
                 self.ribbonStructure["tabGroups"][GroupName].append(workbenchName)
             if type(self.ribbonStructure["tabGroups"][GroupName]) is not list: 
                 self.ribbonStructure["tabGroups"][GroupName] = [workbenchName]
@@ -2899,24 +2917,14 @@ class ModernMenu(RibbonBar):
             with open(JsonFile, "w") as outfile:
                 json.dump(self.ribbonStructure, outfile, indent=4)      
         
-        print(f"RibbonUI: Not implemented yet. - {self.tabBar().tabText(tabIndex)}")
+        ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
+        ComboBox.addItem(GroupName)
         return
     
-    def on_AddToExistingGroup_Clicked(self, tabIndex):
+    def on_AddToExistingGroup_Clicked(self, tabIndex, GroupName = ""):
         # Get the workbench name and the panel name
         workbenchName = self.tabBar().tabData(tabIndex)
         
-        stringList = []
-        if "tabGroups" in self.ribbonStructure:
-            for key in self.ribbonStructure["tabGroups"].keys():
-                stringList.append(str(key))
-
-        # Get a name for the group
-        Question = translate(
-                "FreeCAD Ribbon",
-                "Enter a name for the group",
-            )
-        GroupName = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 21, "Question", "Group", stringList)
         if GroupName == "" or GroupName is None:
             return
         
@@ -2924,7 +2932,7 @@ class ModernMenu(RibbonBar):
         Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["tabGroups", GroupName])
         
         if "tabGroups" in self.ribbonStructure and GroupName in self.ribbonStructure["tabGroups"]:
-            if type(self.ribbonStructure["tabGroups"][GroupName]) is list:           
+            if type(self.ribbonStructure["tabGroups"][GroupName]) is list and workbenchName not in self.ribbonStructure["tabGroups"][GroupName]:        
                 self.ribbonStructure["tabGroups"][GroupName].append(workbenchName)
             if type(self.ribbonStructure["tabGroups"][GroupName]) is not list: 
                 self.ribbonStructure["tabGroups"][GroupName] = [workbenchName]
@@ -2934,12 +2942,53 @@ class ModernMenu(RibbonBar):
             with open(JsonFile, "w") as outfile:
                 json.dump(self.ribbonStructure, outfile, indent=4)
                 
-        print(f"RibbonUI: Not implemented yet. - {self.tabBar().tabText(tabIndex)}")
+            ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
+            ComboBox.addItem(GroupName)
         return
     
     def on_RemoveFromExistingGroup_Clicked(self, tabIndex):
+        # Get the workbench name and the panel name
+        workbenchName = self.tabBar().tabData(tabIndex)
+        
         print(f"RibbonUI: Not implemented yet. - {self.tabBar().tabText(tabIndex)}")
         return
+    
+    def on_Group_Changed(self, GroupName):        
+        # Check if the group is in the ribbonStructure
+        if "tabGroups" in self.ribbonStructure and GroupName in self.ribbonStructure["tabGroups"]:  # noqa: SIM102
+            if GroupName in self.ribbonStructure["tabGroups"]:
+                # Get the list of workbenches in this group
+                workBenchList = self.ribbonStructure["tabGroups"][GroupName]
+                # Go through the tabs. Hide when the workbench tab is not in the list.
+                # Show the tab when the workbench is in the list
+                for i in range(self.tabBar().count()):
+                    if self.tabBar().tabData(i) not in workBenchList:
+                        self.tabBar().setTabVisible(i, False)
+                    else:
+                        self.tabBar().setTabVisible(i, True)
+                
+                # Set the icon and enable the delete button
+                DeleteButton: QToolButton = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
+                DeleteButton.setEnabled(True)
+                # icon = DeleteButton.icon()
+                # colored = icon.pixmap(DeleteButton.iconSize(), QIcon.Mode.Normal, QIcon.State.On)
+                # icon.addPixmap(colored, mode=QIcon.Mode.Normal, state=QIcon.State.On)           
+                # DeleteButton.setIcon(icon) 
+                
+        # If the groupName is "All", show all tabs
+        if GroupName == translate("FreeCAD Ribbon", "All"):
+            for i in range(self.tabBar().count()):
+                self.tabBar().setTabVisible(i, True)   
+            
+            # Disable the delete button and set the icon
+            DeleteButton: QToolButton = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
+            DeleteButton.setEnabled(False)
+            # icon = DeleteButton.icon()
+            # grayed = icon.pixmap(DeleteButton.iconSize(), QIcon.Mode.Disabled, QIcon.State.On)
+            # icon.addPixmap(grayed, mode=QIcon.Mode.Normal, state=QIcon.State.Off)            
+            # DeleteButton.setIcon(icon)  
+        return
+    
     # endregion
 
     # region - drag drop event functions

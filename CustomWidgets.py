@@ -2034,15 +2034,31 @@ class ToggleAction(QWidgetAction):
     checkState = Toggle.checkState()
     focusPolicy = Toggle.focusPolicy()
     
-    def __init__(self, parent, text):
+    def __init__(self, parent, text, TextPostion = "Right", FontSize = 12):
         super(ToggleAction, self).__init__(parent)
-        layout = QHBoxLayout()
+        layout_H = QHBoxLayout()
+        layout_V = QVBoxLayout()
         self.widget = QWidget()
         label = QLabel(text)
+        Font = QFont()
+        Font.setPixelSize(FontSize)
+        label.setFont(Font)
+        
+        # Text right from toggle
         label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-        layout.addWidget(self.Toggle)
-        layout.addWidget(label)
-        self.widget.setLayout(layout)        
+        layout_H.addWidget(self.Toggle)
+        layout_H.addWidget(label)
+
+        # Text above checkbox
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        layout_V.addWidget(label)
+        layout_V.addWidget(self.Toggle)
+
+        if TextPostion == "Right":
+            self.widget.setLayout(layout_H)
+        if TextPostion == "Top":
+            self.widget.setLayout(layout_V)
+    
         self.setCheckable(True)
         self.setDefaultWidget(self.widget)
         return
@@ -2096,19 +2112,34 @@ class CheckBoxAction(QWidgetAction):
     checkbox = QCheckBox()        
     checkStateChanged = checkbox.stateChanged
 
-    def __init__(self, parent, text):
+    def __init__(self, parent, text, TextPostion = "Right", FontSize = 12):
         super(CheckBoxAction, self).__init__(parent)
-        layout = QHBoxLayout()
+        layout_H = QHBoxLayout()
+        layout_V = QVBoxLayout()
         self.widget = QWidget()
         label = QLabel(text)
+        Font = QFont()
+        Font.setPixelSize(FontSize)
+        label.setFont(Font)
+        
+        # Text right from checkbox
         label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-        layout.addWidget(self.checkbox)
-        layout.addWidget(label)
+        layout_H.addWidget(self.checkbox)
+        layout_H.addWidget(label)
         spacer = QWidget()
         spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-        layout.addWidget(spacer)
-        self.widget.setLayout(layout)
+        layout_H.addWidget(spacer)
         
+        # Text above checkbox
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        layout_V.addWidget(label)
+        layout_V.addWidget(self.checkbox)
+        
+        if TextPostion == "Right":
+            self.widget.setLayout(layout_H)
+        if TextPostion == "Top":
+            self.widget.setLayout(layout_V)
+            
         self.setCheckable(True)
         self.setDefaultWidget(self.widget)
         return
@@ -2146,15 +2177,28 @@ class SpinBoxAction(QWidgetAction):
     
     valueChanged =  spinbox.valueChanged
     
-    def __init__(self, parent, text):
+    def __init__(self, parent, text, TextPostion = "Right", FontSize = 12):
         super(SpinBoxAction, self).__init__(parent)
-        layout = QHBoxLayout()
+        layout_H = QHBoxLayout()
+        layout_V = QVBoxLayout()
         self.widget = QWidget()
         label = QLabel(text)
+        
+        # Text right from spinbox
         label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-        layout.addWidget(self.spinbox)
-        layout.addWidget(label)
-        self.widget.setLayout(layout)
+        layout_H.addWidget(self.spinbox)
+        layout_H.addWidget(label)
+        self.widget.setLayout(layout_H)
+        
+        # Text above spinbox
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        layout_V.addWidget(label)
+        layout_V.addWidget(self.spinbox)
+        
+        if TextPostion == "Right":
+            self.widget.setLayout(layout_H)
+        if TextPostion == "Top":
+            self.widget.setLayout(layout_V)
 
         self.setDefaultWidget(self.widget)
         return
@@ -2196,15 +2240,30 @@ class ComboBoxAction(QWidgetAction):
     activated = combobox.activated
     currentTextChanged = combobox.currentTextChanged
     
-    def __init__(self, parent, text):
+    def __init__(self, parent, text, TextPostion = "Right", FontSize = 12):
         super(ComboBoxAction, self).__init__(parent)
-        layout = QHBoxLayout()
+        layout_H = QHBoxLayout()
+        layout_V = QVBoxLayout()
         self.widget = QWidget()
         label = QLabel(text)
+        Font = QFont()
+        Font.setPixelSize(FontSize)
+        label.setFont(Font)
+        
+        # Text right from combobox
         label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-        layout.addWidget(self.combobox)
-        layout.addWidget(label)
-        self.widget.setLayout(layout)
+        layout_H.addWidget(self.combobox)
+        layout_H.addWidget(label)
+        
+         # Text above checkbox
+        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        layout_V.addWidget(label)
+        layout_V.addWidget(self.combobox)
+        
+        if TextPostion == "Right":
+            self.widget.setLayout(layout_H)
+        if TextPostion == "Top":
+            self.widget.setLayout(layout_V)
 
         self.setDefaultWidget(self.widget)
         return
@@ -2255,19 +2314,27 @@ class LineEditAction(QWidgetAction):
         
     editingFinished  = lineEdit.editingFinished    
     textChanged =  lineEdit.textChanged
+    returnPressed = lineEdit.returnPressed
     
-    def __init__(self, parent, text):
+    def __init__(self, parent, text, FontSize = 12):
         super(LineEditAction, self).__init__(parent)
         layout = QVBoxLayout()
         self.widget = QWidget()
         label = QLabel(text)
         label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-        layout.addWidget(label)
+        Font = QFont()
+        Font.setPixelSize(FontSize)
+        label.setFont(Font)
+        
+        layout.addWidget(label)        
         layout.addWidget(self.lineEdit)
         self.widget.setLayout(layout)
 
         self.setDefaultWidget(self.widget)
         return
+    
+    def text(self):
+        return self.lineEdit.text()
 
     def setText(self, val):
         self.lineEdit.setText(val)
