@@ -1246,6 +1246,7 @@ class ModernMenu(RibbonBar):
         
         # Update the Gui, to show all panels
         Gui.updateGui()
+        mw.setDockNestingEnabled(True)
         return
 
     # region - Custom functions for FreeCAD
@@ -1297,6 +1298,7 @@ class ModernMenu(RibbonBar):
         # create the context menu action
         menu.exec_(QCursor.pos())
         menu.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        return
 
     # region - Ribbon event fuctions
     
@@ -4838,7 +4840,7 @@ class ModernMenu(RibbonBar):
         
         for dockWidget in mw.findChildren(QDockWidget):                                    
             if dockWidget.objectName() == dockWidget_Name:
-                dockWidget_Area = dockWidget.dockLocation()
+                dockWidget_Area = mw.dockWidgetArea(dockWidget)
                 
                 if Checked is True:
                     dockWidget.show()
@@ -8264,7 +8266,7 @@ class EventInspector(QObject):
             # Find the dockwidgets    
             for dockWidget in mw.findChildren(QDockWidget):                                    
                 dockWidget_Name = dockWidget.objectName()
-                dockWidget_Area = dockWidget.dockLocation()
+                dockWidget_Area = mw.dockWidgetArea(dockWidget)
                 
                 # If not present, add a dict for the toolbar states to the ribbonstructure.json
                 Standard_Functions_Ribbon.add_keys_nested_dict(RibbonBar.ribbonStructure, ["PanelStates", dockWidget_Name], endEmpty=True)
