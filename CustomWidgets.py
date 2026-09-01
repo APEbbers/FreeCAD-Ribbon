@@ -38,6 +38,7 @@ from PySide.QtGui import (
     QPen,
     QPainter,
     QEnterEvent,   
+    QKeyEvent,
 )
 from PySide.QtWidgets import (
     QComboBox,
@@ -2029,6 +2030,7 @@ class AnimatedToggle(Toggle):
 
 class ToggleAction(QWidgetAction):
     Toggle = Toggle()
+    Toggle.setContentsMargins(3,0,3,0)
         
     checkStateChanged = Toggle.stateChanged
     checkState = Toggle.checkState()
@@ -2039,19 +2041,19 @@ class ToggleAction(QWidgetAction):
         layout_H = QHBoxLayout()
         layout_V = QVBoxLayout()
         self.widget = QWidget()
-        label = QLabel(text)
+        self.label = QLabel(text)
         Font = QFont()
         Font.setPixelSize(FontSize)
-        label.setFont(Font)
+        self.label.setFont(Font)
         
         # Text right from toggle
-        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         layout_H.addWidget(self.Toggle)
-        layout_H.addWidget(label)
+        layout_H.addWidget(self.label)
 
         # Text above checkbox
-        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-        layout_V.addWidget(label)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        layout_V.addWidget(self.label)
         layout_V.addWidget(self.Toggle)
 
         if TextPostion == "Right":
@@ -2090,10 +2092,12 @@ class ToggleAction(QWidgetAction):
     
     def setFixedWidth(self, w):
         self.Toggle.setFixedWidth(w)
+        self.label.setFixedWidth(w)
         return
     
     def setFixedHeight(self, h):
         self.Toggle.setFixedHeight(h)
+        self.label.setFixedHeight(h)
         return
     
     def setFixedSize(self, w, h):
@@ -2236,36 +2240,67 @@ class SpinBoxAction(QWidgetAction):
 class ComboBoxAction(QWidgetAction):
     combobox = QComboBox()
     combobox.setStyleSheet("""QComboBox {padding-left: 6px;}""")
+    
+    confirmButton = QPushButton()
+    confirmButton.setShortcut(Qt.Key.Key_Enter)
 
     activated = combobox.activated
     currentTextChanged = combobox.currentTextChanged
+    currentIndexChanged = combobox.currentIndexChanged
+    editTextChanged = combobox.editTextChanged
     
-    def __init__(self, parent, text, TextPostion = "Right", FontSize = 12):
+    clicked = confirmButton.clicked
+    
+    def __init__(self, parent, text, TextPostion = "Right", FontSize = 12, EnableConfirmButton = False, ButtonText = "Add"):
         super(ComboBoxAction, self).__init__(parent)
-        layout_H = QHBoxLayout()
-        layout_V = QVBoxLayout()
+        
+        self.combobox.setFixedHeight(20)
+        
+        self.confirmButton.setText(ButtonText)
+        self.confirmButton.setVisible(EnableConfirmButton)
+        self.confirmButton.setFixedWidth(self.confirmButton.fontMetrics().maxWidth())
+
+        layout = QGridLayout()
         self.widget = QWidget()
-        label = QLabel(text)
+        self.label = QLabel()
+        
+        
+        self.label.setText(text)
+        self.label.setWordWrap(True)
         Font = QFont()
         Font.setPixelSize(FontSize)
-        label.setFont(Font)
+        self.label.setFont(Font)
+        
+        # Make the text position accesible for the functions
+        self.TextPosition = TextPostion
         
         # Text right from combobox
-        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-        layout_H.addWidget(self.combobox)
-        layout_H.addWidget(label)
-        
+        if TextPostion == "Right":            
+            layout.addWidget(self.combobox, 1, 0, 1, 1)
+            layout.addWidget(self.confirmButton, 0, 2, 1, 1)
+            layout.addWidget(self.label, 0, 3, 1, 1)
+                    
          # Text above checkbox
-        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-        layout_V.addWidget(label)
-        layout_V.addWidget(self.combobox)
-        
-        if TextPostion == "Right":
-            self.widget.setLayout(layout_H)
         if TextPostion == "Top":
-            self.widget.setLayout(layout_V)
+            layout.addWidget(self.label, 0, 0, 1, 2)
+            layout.addWidget(self.combobox, 1, 0, 1, 1)
+            layout.addWidget(self.confirmButton, 1, 1, 1, 1)
+            
+        # Adjust the spacing and margins       
+        layout.setSpacing(3)
+        layout.setContentsMargins(6,6,6,6)
+   
+        # Adjust the size of the label to the widget
+        self.label.adjustSize()
+        self.widget.setFixedHeight(self.combobox.height() + self.label.height()+12)
+        
+        self.widget.setLayout(layout)
 
         self.setDefaultWidget(self.widget)
+        return
+    
+    def setEditable(self, editable = False):
+        self.combobox.setEditable(editable)
         return
     
     def clearEditText(self):
@@ -2300,7 +2335,13 @@ class ComboBoxAction(QWidgetAction):
         return
     
     def setFixedHeight(self, h):
-        self.combobox.setFixedHeight(h)
+        self.widget.setFixedHeight(h)
+        self.label.adjustSize()
+        
+        if self.TextPosition == "Right":
+            self.combobox.setFixedHeight(h)
+            self.label.setFixedHeight(h)
+            self.confirmButton.setFixedHeight(h)
         return
     
     def setFixedSize(self, w, h):
@@ -2324,13 +2365,14 @@ class LineEditAction(QWidgetAction):
         super(LineEditAction, self).__init__(parent)
         layout = QVBoxLayout()
         self.widget = QWidget()
-        label = QLabel(text)
-        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        self.label = QLabel(text)
+        self.label.setWordWrap(True)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         Font = QFont()
         Font.setPixelSize(FontSize)
-        label.setFont(Font)
+        self.label.setFont(Font)
         
-        layout.addWidget(label)        
+        layout.addWidget(self.label)        
         layout.addWidget(self.lineEdit)
         self.widget.setLayout(layout)
 
@@ -2350,6 +2392,7 @@ class LineEditAction(QWidgetAction):
     
     def setFixedWidth(self, w):
         self.lineEdit.setFixedWidth(w)
+        self.label.setFixedWidth(w)
         return
     
     def setFixedHeight(self, h):
@@ -2365,3 +2408,62 @@ class LineEditAction(QWidgetAction):
     
     def setObjectName(self, objectName = ""):
         self.lineEdit.setObjectName(objectName)
+        
+class ButtonAction(QWidgetAction):
+        
+    ToolButton = QToolButton()
+        
+    clicked  = ToolButton.clicked
+    triggerd = ToolButton.triggered   
+    
+    def __init__(self, parent, text, FontSize = 12, TextAlignment = Qt.AlignmentFlag.AlignLeft):
+        super(ButtonAction, self).__init__(parent)
+        layout = QHBoxLayout()
+        self.label = QLabel()
+        # Determine the number of lines in the text and set the text accordingly        
+        rowList = StandardFunctions.ReturnWrappedText(text=text, max_Lines=2, returnList=True)
+        if len(rowList) == 1:
+            self.label = QLabel(rowList[0])
+        if len(rowList) > 1:
+            text = rowList[0] + "\n" + rowList[1]
+            self.label.setText(text)
+        self.label.setWordWrap(True)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        Font = QFont()
+        Font.setPixelSize(FontSize)
+        self.label.setFont(Font)
+
+        # Add the label to the layout
+        layout.addWidget(self.label) 
+        # Adjust the spacing and margins       
+        layout.setSpacing(0)
+        layout.setContentsMargins(6,0,6,0)
+        # Add the layout to the widget
+        self.ToolButton.setLayout(layout)
+        # Adjust the size of the label to the widget
+        self.label.adjustSize()
+        # Set a fixed heigth
+        self.ToolButton.setFixedHeight(self.label.height() + 6)
+
+        self.setDefaultWidget(self.ToolButton)
+        return
+    
+    def text(self):
+        return self.label.text()
+
+    def setText(self, val):
+        self.label.setText(val)
+        return
+    
+    def setFixedWidth(self, w):
+        self.ToolButton.setFixedWidth(w)
+        return
+    
+    def setFixedHeight(self, h):
+        self.ToolButton.setFixedHeight(h)
+        self.label.setFixedHeight(h-6)
+        return
+
+    def setObjectName(self, objectName = ""):
+        self.ToolButton.setObjectName(objectName)
+        return
