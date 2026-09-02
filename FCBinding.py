@@ -980,52 +980,64 @@ class ModernMenu(RibbonBar):
         # Create a groupBox
         # Add a Group box (dropdown) to the tabBar
         GroupBox = QHBoxLayout()
+        # Create a combobox
         ComboBox = QComboBox(self.tabBar())
-        ComboBox.setFixedWidth(100)
-        ComboBox.addItem("All")
-        ComboBox.setToolTip(translate("FreeCAD Ribbon", "Select a tab group"))
         ComboBox.setObjectName("GroupBox")
-        # GroupBox.clicked.connect()
+        ComboBox.setFixedWidth(100)
+        ComboBox.addItem("All")        
+        ComboBox.setToolTip(translate("FreeCAD Ribbon", "Select a tab group"))
         ComboBox.setStyleSheet(""" QToolTip {
                     background-color: #FFFFE1;
                     color: black;
                     border: black solid 1px;
                     border-radius: 2px;
                     }"""
-                )
+                )        
         ComboBox.currentTextChanged.connect(lambda: self.on_Group_Changed(ComboBox.currentText( )))
         if "tabGroups" in self.ribbonStructure:
             for group in self.ribbonStructure["tabGroups"].keys():
-                ComboBox.addItem(group)        
+                ComboBox.addItem(group)    
+        # Create a delete button
         DeleteButton = QToolButton()
         DeleteButton.setObjectName("DeleteGroupButton")
+        DeleteButton.setToolTip(translate("FreeCAD Ribbon", "Delete the current group"))
+        DeleteButton.setStyleSheet(""" QToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }"""
+                )     
         DeleteButton.clicked.connect(lambda: self.on_Group_Delete_Clicked())
         pixmap = QPixmap(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons", "edit_Cancel.svg"))
         icon = QIcon()
         # add a pixmap for de on state
         icon.addPixmap(pixmap, mode=QIcon.Mode.Normal, state=QIcon.State.On)
         # Add a pixmap for the off state
-        grayed = icon.pixmap(pixmap.size(), QIcon.Mode.Disabled, QIcon.State.Off)
-        icon.addPixmap(grayed, mode=QIcon.Mode.Normal, state=QIcon.State.Off)
+        grayed = icon.pixmap(pixmap.size(), QIcon.Mode.Disabled, QIcon.State.On)
+        icon.addPixmap(grayed, mode=QIcon.Mode.Disabled, state=QIcon.State.Off)
         # Add the icon
         DeleteButton.setIcon(icon)        
         DeleteButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
         DeleteButton.setFixedSize(ComboBox.height()*0.8, ComboBox.height()*0.8)
         DeleteButton.setDisabled(True)
-        Spacer = QWidget()
-        Spacer.setFixedWidth(6)
-        GroupBox.addWidget(ComboBox)
-        GroupBox.addWidget(DeleteButton)
-        GroupBox.addWidget(Spacer)
-        # Set the widgets hidden by default
+        
+        # Hide the combobox and deletebutton by default
         DeleteButton.hide()
         ComboBox.hide()
-        DeleteButton.setDisabled(True) 
         # If there are groups, show them again
         if ComboBox.count() > 1:
             ComboBox.show()
             DeleteButton.show()     
             DeleteButton.setDisabled(True) 
+        # Create a spacer  
+        Spacer = QWidget()
+        Spacer.setFixedWidth(6)
+        # Add all the widgets to the layout    
+        GroupBox.addWidget(ComboBox)
+        GroupBox.addWidget(DeleteButton)
+        GroupBox.addWidget(Spacer)
+
         #
         # Create a floating button
         FloatingButton = QToolButton()
@@ -1258,7 +1270,7 @@ class ModernMenu(RibbonBar):
         for toolbar in listToolBars:
             toolbar.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
             toolbar.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
-        
+
         # Update the Gui, to show all panels
         Gui.updateGui()
         return
@@ -2946,7 +2958,9 @@ class ModernMenu(RibbonBar):
             ComboBox.addItem(GroupName)
         ComboBox.show()
         Button = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
-        Button.show()        
+        Button.show()  
+        if ComboBox.currentText() == translate("FreeCAD Ribbon", "All"):
+            Button.setDisabled(True)
         
         return
     
@@ -2963,17 +2977,35 @@ class ModernMenu(RibbonBar):
                 groupList: list = self.ribbonStructure["tabGroups"][GroupName]                
                 groupList.remove(workbenchName)
                 self.ribbonStructure["tabGroups"][GroupName] = groupList
-                
-                self.tabBar().setTabVisible(False, tabIndex)
-                                
+
                 # Writing to ribbonStructure.json
                 JsonFile = Parameters.RIBBON_STRUCTURE_JSON
                 with open(JsonFile, "w") as outfile:
                     json.dump(self.ribbonStructure, outfile, indent=4)
-                            
+                
+                # Hide the tab
+                self.on_Group_Changed(GroupName)                
         return
     
-    def on_Group_Changed(self, GroupName):        
+    def on_Group_Changed(self, GroupName):      
+        # If the groupName is "All", show all tabs
+        if GroupName == translate("FreeCAD Ribbon", "All"):            
+            for i in range(self.tabBar().count()):
+                self.tabBar().setTabVisible(i, True)   
+            
+            # Disable the delete button and set the icon
+            DeleteButton: QToolButton = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
+            DeleteButton.setDisabled(True)
+            
+            # Disable the remove group button in the context menu
+            try:
+                self.RemoveFromTabGroupAct.setEnabled(False)
+            except Exception:
+                pass
+            
+            self.onWbActivated()
+            return
+          
         # Check if the group is in the ribbonStructure
         if "tabGroups" in self.ribbonStructure and GroupName in self.ribbonStructure["tabGroups"]:  # noqa: SIM102
             if GroupName in self.ribbonStructure["tabGroups"]:
@@ -2990,43 +3022,19 @@ class ModernMenu(RibbonBar):
                 # Set the icon and enable the delete button
                 DeleteButton: QToolButton = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
                 DeleteButton.setEnabled(True)
-                # icon = DeleteButton.icon()
-                # colored = icon.pixmap(DeleteButton.iconSize(), QIcon.Mode.Normal, QIcon.State.On)
-                # icon.addPixmap(colored, mode=QIcon.Mode.Normal, state=QIcon.State.On)           
-                # DeleteButton.setIcon(icon) 
                 
                 # enable the remove group button in the context menu
                 try:
                     self.RemoveFromTabGroupAct.setEnabled(True)
                 except Exception:
                     pass
-                
-                self.onWbActivated()
-                
-        # If the groupName is "All", show all tabs
-        if GroupName == translate("FreeCAD Ribbon", "All"):
-            for i in range(self.tabBar().count()):
-                self.tabBar().setTabVisible(i, True)   
-            
-            # Disable the delete button and set the icon
-            DeleteButton: QToolButton = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
-            DeleteButton.setEnabled(False)
-            # icon = DeleteButton.icon()
-            # grayed = icon.pixmap(DeleteButton.iconSize(), QIcon.Mode.Disabled, QIcon.State.On)
-            # icon.addPixmap(grayed, mode=QIcon.Mode.Normal, state=QIcon.State.Off)            
-            # DeleteButton.setIcon(icon)  
-            
-            # Disable the remove group button in the context menu
-            try:
-                self.RemoveFromTabGroupAct.setEnabled(False)
-            except Exception:
-                pass
-            
-            self.onWbActivated()
+                self.onWbActivated()                       
+        
         return
     
     def on_Group_Delete_Clicked(self):
         # Get the current group
+        DeleteButton: QToolButton = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
         ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
         GroupName = ComboBox.currentText()
         
@@ -3042,17 +3050,15 @@ class ModernMenu(RibbonBar):
             # Remove the group from the combobox as welll
             ComboBox.removeItem(ComboBox.currentIndex())
             ComboBox.setCurrentText("All")
+            DeleteButton.setDisabled(True)
             
         if "tabGroups" in self.ribbonStructure:
             counter = 0            
             for GroupName in self.ribbonStructure["tabGroups"].keys():  # noqa: SIM118
                 counter = counter + 1
-            if counter == 0:
-                ComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
-                Button = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
-                
+            if counter == 0:                                
                 ComboBox.hide()
-                Button.hide()
+                DeleteButton.hide()
                 return
     # endregion
 
@@ -4551,6 +4557,7 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setSizeIncrement(1, 1)
         # Set the objectName for the right toolbar. needed for excluding from hiding.
         self.rightToolBar().setObjectName("rightToolBar")
+        
         return
 
     # Add the searchBar if it is present
@@ -7734,12 +7741,13 @@ class ModernMenu(RibbonBar):
          # Enable all buttons, so you can access them with a right click
         if self.isLoaded:
             for child in mw.findChildren(QToolButton):
-                try:
-                    for subAction in child.actions():
-                        subAction.setEnabled(True)                
-                except Exception:
-                    pass
-                child.setEnabled(True)                
+                if child.objectName() !="DeleteGroupButton":
+                    try:
+                        for subAction in child.actions():
+                            subAction.setEnabled(True)                
+                    except Exception:
+                        pass
+                    child.setEnabled(True)      
         return
     
     def BuildQuickToolbar(self, ButtonList = []):
