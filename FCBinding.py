@@ -1480,7 +1480,7 @@ class ModernMenu(RibbonBar):
                 tabIndex = QTabBar.tabAt(self.tabBar(), pos)
 
                 # Create an QAction for adding a tab to a new or existing group
-                self.AddToTabGroupAct = ComboBoxAction(self, f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to an existing group", "Top", Parameters.FONTSIZE_MENUS, True, "Add")
+                self.AddToTabGroupAct = ComboBoxAction(self, f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to a new or existing group", "Top", Parameters.FONTSIZE_MENUS, True, "Add")
                 self.AddToTabGroupAct.addItem("")
                 self.AddToTabGroupAct.setEditable(True)
                 if "tabGroups" in self.ribbonStructure:
