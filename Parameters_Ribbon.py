@@ -92,6 +92,7 @@ DefaultSettings = {
     "Color_Background_App": "",
     "Color_Background_Tabs": "",
     "Color_Background_TitleBar": "",
+    "Color_Borders": "",
     "Color_Font": "",
     "HideMenuIcon": bool(False),
     "Enable_Tab_Scroll_Icon": bool(False),
