@@ -2317,6 +2317,13 @@ class ComboBoxAction(QWidgetAction):
             self.combobox.addItem(text, userData)
         return
     
+    def removeItem(self, text: str):
+        for i in range(self.combobox.count()):
+            if self.combobox.itemText(i) == text:
+                self.combobox.removeItem(i)
+                break
+        return
+    
     def currentText(self, /):
         return self.combobox.currentText()
     

@@ -1278,7 +1278,7 @@ class ModernMenu(RibbonBar):
     # region - Custom functions for FreeCAD
     def contextMenu_Panels_ToolBars(self, pos):                                 
         # Create the menu
-        menu = QMenu()
+        menu = QMenu(mw)
         # Add the dockWidgets
         for dockWidget in mw.findChildren(QDockWidget):
             Action_1 = self.createAction_DockWidget(dockWidget.objectName(), menu)
@@ -3050,6 +3050,7 @@ class ModernMenu(RibbonBar):
             # Remove the group from the combobox as welll
             ComboBox.removeItem(ComboBox.currentIndex())
             ComboBox.setCurrentText("All")
+            self.AddToTabGroupAct.removeItem(ComboBox.currentIndex())
             DeleteButton.setDisabled(True)
             
         if "tabGroups" in self.ribbonStructure:
@@ -4656,7 +4657,7 @@ class ModernMenu(RibbonBar):
                         ToolBar_Menu = subChild
         # Fill the toolbar menu with actions
         if ToolBar_Menu is not None:            
-            menu = QMenu()
+            menu = QMenu(mw)
             for Toolbar_Name in Toolbar_Names:
                 Action = self.createAction_ToolBar(Toolbar_Name, menu)
                 menu.addAction(Action)
@@ -4933,26 +4934,18 @@ class ModernMenu(RibbonBar):
         Action.setObjectName(DockWidgetName)
         
         # Set the checkstate
-        listToolBars = mw.findChildren(QDockWidget)
-        for dockWidget in listToolBars:
+        listDockWidgets = mw.findChildren(QDockWidget)
+        for dockWidget in listDockWidgets:
             if dockWidget.objectName() == DockWidgetName:
                 try:
-                    if "PanelStates" in self.ribbonStructure:
-                        if DockWidgetName in self.ribbonStructure["PanelStates"]:
-                            Checked = bool(self.ribbonStructure["PanelStates"][DockWidgetName][0])
-                            Action.setChecked(Checked)                       
-                    else:
-                        if dockWidget.isVisible():
-                            Action.setChecked(True)
-                        else:
-                            Action.setChecked(False)
+                        Action.setChecked(dockWidget.isVisible())
                 except Exception:
                     pass
 
         # Connect the action
         Action.toggled.connect(lambda e: self.HandleDockWidget(DockWidgetName, e))
         # Set the current state      
-        self.HandleDockWidget(DockWidgetName, Action.isChecked())
+        # self.HandleDockWidget(DockWidgetName, Action.isChecked())        
         return Action
     
     def HandleDockWidget(self, dockWidget_Name, Checked = False, skipChecked=False):
