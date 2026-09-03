@@ -1831,7 +1831,7 @@ class ModernMenu(RibbonBar):
         # Add a hidden checkbox to each tab and set the tab visible
         for i in range(self.tabBar().count()):
             # Create the checkbox         
-            checkBox = Toggle()
+            checkBox = Toggle(self.tabBar())
             checkBox.setFixedSize(36,18)
             tabData = self.tabBar().tabData(i)
             checkBox.setObjectName(f"Enable_{tabData}")
@@ -8243,34 +8243,34 @@ class EventInspector(QObject):
         # This is an alternative drop function which works only with QT6.
         # It is needed to avoid problems with older Nvidia Cards (Pascal and older) and Wayland        
         try:       
-            if self.PatchApplicable is True and platform.system() == "Linux":
-                session_id = subprocess.getoutput("env | grep -E -i 'x11|xorg|wayland'").split()[1].split("=")[1]
-                if session_id == "wayland":                                 
-                    if self.dragEntered is True and QApplication.mouseButtons().value == 0:
-                        self.dragEntered = False
+            # if self.PatchApplicable is True and platform.system() == "Linux":
+            #     session_id = subprocess.getoutput("env | grep -E -i 'x11|xorg|wayland'").split()[1].split("=")[1]
+            #     if session_id == "wayland":                                 
+            if self.dragEntered is True and QApplication.mouseButtons().value == 0:
+                self.dragEntered = False
+                if Parameters.DEBUG_MODE:
+                    print("Wayland patch: Alternative drop event")
+                
+                # Get the main window and the ribbon
+                mw = Gui.getMainWindow()
+                RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+                if RibbonBar.dropPanelName != "":
+                    RibbonBar.dropEvent(widget=self.widget)
+                    self.widget = None
+                    self.pos = None
+                return QObject.eventFilter(self, obj, event)
+                
+            # Store the dragged widget
+            if event.type() == QEvent.Type.DragEnter:
+                if self.dragEntered is False and self.widget is None:
                         if Parameters.DEBUG_MODE:
-                            print("Wayland patch: Alternative drop event")
-                        
-                        # Get the main window and the ribbon
-                        mw = Gui.getMainWindow()
-                        RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
-                        if RibbonBar.dropPanelName != "":
-                            RibbonBar.dropEvent(widget=self.widget)
-                            self.widget = None
-                            self.pos = None
-                        return QObject.eventFilter(self, obj, event)
-                        
-                    # Store the dragged widget
-                    if event.type() == QEvent.Type.DragEnter:
-                        if self.dragEntered is False and self.widget is None:
-                                if Parameters.DEBUG_MODE:
-                                    print("Wayland patch: drag entered")
-                                self.dragEntered = True
-                                self.widget = event.source()
-                                # self.widget = self.widget.parent()
-                                self.pos= event.source().pos()
-                                event.accept()                        
-                        return True
+                            print("Wayland patch: drag entered")
+                        self.dragEntered = True
+                        self.widget = event.source()
+                        # self.widget = self.widget.parent()
+                        self.pos= event.source().pos()
+                        event.accept()                        
+                return True
         except Exception:
             self.PatchApplicable = False
             pass
