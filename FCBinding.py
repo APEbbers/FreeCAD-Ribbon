@@ -1028,8 +1028,8 @@ class ModernMenu(RibbonBar):
         # If there are groups, show them again
         if ComboBox.count() > 1:
             ComboBox.show()
-            DeleteButton.show()     
-            DeleteButton.setDisabled(True) 
+            # DeleteButton.show()     
+            # DeleteButton.setDisabled(True) 
         # Create a spacer  
         Spacer = QWidget()
         Spacer.setFixedWidth(6)
@@ -1474,7 +1474,7 @@ class ModernMenu(RibbonBar):
                                 quickaccessseparator = button
             
             # Add actions for a context menu for the tabs
-            if self.tabBar().underMouse():
+            if self.tabBar().underMouse() and self.CustomizeEnabled:
                 # get the tab under the mouse
                 pos = QTabBar.mapFromGlobal(self.tabBar() ,event.pos())
                 tabIndex = QTabBar.tabAt(self.tabBar(), pos)
@@ -1762,7 +1762,15 @@ class ModernMenu(RibbonBar):
         self.workBenchDict["ignoredWorkbenches"] = self.ribbonStructure["ignoredWorkbenches"]
         self.workBenchDict["iconOnlyToolbars"] = self.ribbonStructure["iconOnlyToolbars"]
         self.workBenchDict["customToolbars"] = self.ribbonStructure["customToolbars"]
-                
+        
+        # Show the comboBox and delete button for the tabgroups
+        ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
+        ComboBox.show()
+        Button = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
+        Button.show()  
+        if ComboBox.currentText() == translate("FreeCAD Ribbon", "All"):
+            Button.setDisabled(True)
+        
         # Load the dialog
         # 
         # Get the form
@@ -2042,6 +2050,14 @@ class ModernMenu(RibbonBar):
 
         # Set stylesheets
         if CloseDialog is True:
+            
+            # Hide the comboBox and delete button for the tabgroups
+            ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
+            if ComboBox.count() <= 1:
+                ComboBox.hide()
+            Button = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
+            Button.hide()
+            
             self.currentCategory().setStyleSheet(self.StyleSheet)
             Color = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             Addition = (
@@ -2328,7 +2344,14 @@ class ModernMenu(RibbonBar):
         self.StyleSheet = self.StyleSheet + Addition
         self.quickAccessToolBar().setStyleSheet(self.StyleSheet)
         
-        # define a boolan for the enviroment state
+         # Hide the comboBox and delete button for the tabgroups         
+        ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
+        if ComboBox.count() <= 1:
+            ComboBox.hide()
+        Button = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
+        Button.hide()
+        
+        # set the boolan for the enviroment state to False
         self.CustomizeEnabled = False
         
         # Change the height of the ribbon for the border line
@@ -2413,8 +2436,8 @@ class ModernMenu(RibbonBar):
         
         # Remove the checkboxes          
         for i in range(self.tabBar().count()):
-            checkBox: QCheckBox = self.tabBar().tabButton(i, QTabBar.ButtonPosition.RightSide)
-            workbenchName = checkBox.objectName().split("_")[1]
+            toggle: Toggle = self.tabBar().tabButton(i, QTabBar.ButtonPosition.RightSide)
+            workbenchName = toggle.objectName().split("_")[1]
             
             # Make sure to set the tab visible
             if "Enabled" in self.workBenchDict["workbenches"][workbenchName]:  # noqa: SIM102
