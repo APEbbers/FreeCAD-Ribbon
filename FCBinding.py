@@ -1680,6 +1680,43 @@ class ModernMenu(RibbonBar):
     def handleContextMenuAction(self, action):
         # Perfom the action depending on which button is clicked
         if action == "Start":
+             # Load the dialog
+            # 
+            # Get the form
+            DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
+            if os.path.exists(DataFile) is False:
+                Question = translate(
+                    "FreeCAD Ribbon",
+                    "a data file must be generated first!\n"
+                    "Do you want to create one now?\n",
+                )
+                Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+                if Answer == "yes":
+                    CacheFunctions.CreateCache()
+                    DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
+                else:
+                    self.on_Cancel_Clicked()
+                    return
+            if os.path.exists(DataFile) is True:
+                self.AddCommandsDialog = LoadAddCommands.LoadDialog(self)
+                if Parameters.DOCKED_DIALOGS is False:
+                    # Show the form
+                    self.AddCommandsDialog.form.show()
+                else:
+                    RibbonLayoutDock = QDockWidget()
+                    # set the name of the object and the window title
+                    RibbonLayoutDock.setObjectName("RibbonLayout")
+                    RibbonLayoutDock.setWindowTitle("Ribbon Layout")
+                    RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
+                    RibbonLayoutDock.setWidget(self.AddCommandsDialog.form)                            
+                    # Set the allowed areas to dock
+                    RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
+                    # Add the custom context menu for dockwidgets
+                    RibbonLayoutDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+                    RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
+                    # Add the dockwidget
+                    mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
+            
             if self.CustomizeEnabled is False:
                 self.on_Customize_Clicked()
                 return
@@ -1749,31 +1786,31 @@ class ModernMenu(RibbonBar):
             else:
                 self.on_Cancel_Clicked()
                 return
-        if os.path.exists(DataFile) is True:
-             # If there is already a form, return
-            DockWidget = mw.findChild(QDockWidget, "AddCommands")
-            if DockWidget is not None:
-                DockWidget.setVisible(True)
-                return
+        # if os.path.exists(DataFile) is True:
+        #      # If there is already a form, return
+        #     DockWidget = mw.findChild(QDockWidget, "AddCommands")
+        #     if DockWidget is not None:
+        #         DockWidget.setVisible(True)
+        #         return
         
-            self.AddCommandsDialog = LoadAddCommands.LoadDialog(self)
-            if Parameters.DOCKED_DIALOGS is False:
-                # Show the form
-                self.AddCommandsDialog.form.show()
-            else:
-                RibbonLayoutDock = QDockWidget()
-                # set the name of the object and the window title
-                RibbonLayoutDock.setObjectName("AddCommands")
-                RibbonLayoutDock.setWindowTitle("Customize RibbonUI")
-                RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
-                RibbonLayoutDock.setWidget(self.AddCommandsDialog.form)                            
-                # Set the allowed areas to dock
-                RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
-                # Add the custom context menu for dockwidgets
-                RibbonLayoutDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-                RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
-                # Add the dockwidget
-                mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
+        #     self.AddCommandsDialog = LoadAddCommands.LoadDialog(self)
+        #     if Parameters.DOCKED_DIALOGS is False:
+        #         # Show the form
+        #         self.AddCommandsDialog.form.show()
+        #     else:
+        #         RibbonLayoutDock = QDockWidget()
+        #         # set the name of the object and the window title
+        #         RibbonLayoutDock.setObjectName("AddCommands")
+        #         RibbonLayoutDock.setWindowTitle("Customize RibbonUI")
+        #         RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
+        #         RibbonLayoutDock.setWidget(self.AddCommandsDialog.form)                            
+        #         # Set the allowed areas to dock
+        #         RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
+        #         # Add the custom context menu for dockwidgets
+        #         RibbonLayoutDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        #         RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
+        #         # Add the dockwidget
+        #         mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
                 
        # Set a stylesheet to indicate that you are in the customize enviroment
         HoverColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
