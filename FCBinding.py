@@ -1718,7 +1718,13 @@ class ModernMenu(RibbonBar):
                     mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
             
             if self.CustomizeEnabled is False:
+                # Enter the customise enviroment
                 self.on_Customize_Clicked()
+                # Set the tabGroup to "All"
+                for toolBarAction in QToolBar.actions(self.rightToolBar()):    
+                    if toolBarAction is not None and type(toolBarAction) == QWidgetAction and toolBarAction.defaultWidget() is not None:  # noqa: SIM102
+                        if toolBarAction.defaultWidget().objectName() == "GroupBox":
+                           toolBarAction.defaultWidget().setCurrentIndex(0) 
                 return
             if self.CustomizeEnabled is True:
                 for category in self.CustomizedCategories:
@@ -1786,31 +1792,6 @@ class ModernMenu(RibbonBar):
             else:
                 self.on_Cancel_Clicked()
                 return
-        # if os.path.exists(DataFile) is True:
-        #      # If there is already a form, return
-        #     DockWidget = mw.findChild(QDockWidget, "AddCommands")
-        #     if DockWidget is not None:
-        #         DockWidget.setVisible(True)
-        #         return
-        
-        #     self.AddCommandsDialog = LoadAddCommands.LoadDialog(self)
-        #     if Parameters.DOCKED_DIALOGS is False:
-        #         # Show the form
-        #         self.AddCommandsDialog.form.show()
-        #     else:
-        #         RibbonLayoutDock = QDockWidget()
-        #         # set the name of the object and the window title
-        #         RibbonLayoutDock.setObjectName("AddCommands")
-        #         RibbonLayoutDock.setWindowTitle("Customize RibbonUI")
-        #         RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
-        #         RibbonLayoutDock.setWidget(self.AddCommandsDialog.form)                            
-        #         # Set the allowed areas to dock
-        #         RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
-        #         # Add the custom context menu for dockwidgets
-        #         RibbonLayoutDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        #         RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
-        #         # Add the dockwidget
-        #         mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
                 
        # Set a stylesheet to indicate that you are in the customize enviroment
         HoverColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
@@ -1858,8 +1839,6 @@ class ModernMenu(RibbonBar):
                     checkBox.setCheckState(Qt.CheckState.Checked)
             # Add the checkbox to the tab
             self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, checkBox)
-            # Make sure to set the tab visible
-            self.tabBar().setTabVisible(i, True)      
                                            
         # Store the workbench name as the last customized name
         self.LastCustomized = [workbenchName, self.currentCategory().title()]
@@ -3069,7 +3048,7 @@ class ModernMenu(RibbonBar):
                     self.RemoveFromTabGroupAct.setEnabled(True)
                 except Exception:
                     pass
-                self.onWbActivated()                       
+                self.onWbActivated()                     
         
         return
     
@@ -4134,12 +4113,12 @@ class ModernMenu(RibbonBar):
             # If not activated, activate all buttons    
             self.activateButtons() 
 
-        if self.DesignMenuLoaded is True:
-            # Disable the quick toolbar, righttoolbar and application menu
-            self.rightToolBar().setDisabled(True)
-            self.quickAccessToolBar().setDisabled(True)
-            self.applicationOptionButton().setDisabled(True)
-            Gui.updateGui()
+        # if self.DesignMenuLoaded is True:
+        #     # Disable the quick toolbar, righttoolbar and application menu
+        #     self.rightToolBar().setDisabled(True)
+        #     self.quickAccessToolBar().setDisabled(True)
+        #     self.applicationOptionButton().setDisabled(True)
+        #     Gui.updateGui()
         return
 
     # endregion
