@@ -1460,7 +1460,6 @@ class ModernMenu(RibbonBar):
                 
                 # create the context menu action
                 action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
-                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
 
                 # Disconnect the widgetActions
                 self.AddToTabGroupAct.currentIndexChanged.disconnect()                
