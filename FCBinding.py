@@ -1623,32 +1623,14 @@ class ModernMenu(RibbonBar):
                 CustomizeStartAct = self.contextMenu.addAction(title)
                 CustomizeStartAct.triggered.connect(lambda: self.handleContextMenuAction("Start"))
                 # Add a cancel button
-                CustomizeCancelAct = QAction()
-                if self.CustomizeEnabled is True:                    
-                    CustomizeCancelAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Cancel"))
-                    CustomizeCancelAct.triggered.connect(lambda: self.handleContextMenuAction("Cancel"))
+                CustomizeCancelAct = QAction()                 
+                CustomizeCancelAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Cancel"))
+                CustomizeCancelAct.triggered.connect(lambda: self.handleContextMenuAction("Cancel"))
+                CustomizeCancelAct.setVisible(self.CustomizeEnabled)
                                 
                 # Create the action
                 action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
                 
-                # # Perfom the action depending on which button is clicked
-                # if action == CustomizeStartAct:
-                #     if self.CustomizeEnabled is False:
-                #         self.on_Customize_Clicked()
-                #         return
-                #     if self.CustomizeEnabled is True:
-                #         for category in self.CustomizedCategories:
-                #             self.setCurrentCategory(category)
-                #             self.on_Ok_Clicked()
-                #         self.CustomizedCategories.clear()
-                #         return
- 
-                # if action == CustomizeCancelAct:
-                #     for category in self.CustomizedCategories:
-                #         self.setCurrentCategory(category)
-                #         self.on_Cancel_Clicked()
-                #     self.CustomizedCategories.clear()
-                #     return
                 CustomizeStartAct.triggered.disconnect()
                 if self.CustomizeEnabled is True:
                     CustomizeCancelAct.triggered.disconnect()
@@ -1663,8 +1645,8 @@ class ModernMenu(RibbonBar):
                 
                 # Create a button to clear the entire quickaccess toolbar
                 self.contextMenu.addSeparator()
-                ClearToolBar = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Clear toolbar"))
-                ClearToolBar.triggered.connect(self.on_ClearToolBar_QC_Clicked)
+                clearToolBar = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Clear toolbar"))
+                clearToolBar.triggered.connect(self.on_ClearToolBar_QC_Clicked)
                 
                 # create the context menu action
                 action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
@@ -1672,7 +1654,7 @@ class ModernMenu(RibbonBar):
                 # Disconnect the widgetActions
                 AddSeparator_Left.triggered.disconnect()                                
                 AddSeparator_Right.triggered.disconnect()
-                ClearToolBar.triggered.disconnect()
+                clearToolBar.triggered.disconnect()
                 
             if panel is not None and type(panel) is not RibbonPanel and quickaccessseparator is not None and self.CustomizeEnabled is True and quickaccessseparator.underMouse():
                 # Create the buttons for removing the separator
@@ -1681,15 +1663,15 @@ class ModernMenu(RibbonBar):
                 
                 # Create a button to clear the entire quickaccess toolbar
                 self.contextMenu.addSeparator()
-                ClearToolBar = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Clear toolbar"))
-                ClearToolBar.triggered.connect(self.on_ClearToolBar_QC_Clicked)
+                clearToolBar = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Clear toolbar"))
+                clearToolBar.triggered.connect(self.on_ClearToolBar_QC_Clicked)
                 
                 # create the context menu action
                 action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
                 
                 # Disconnect the widgetActions
                 removeSeparator.triggered.disconnect()
-                ClearToolBar.triggered.disconnect()
+                clearToolBar.triggered.disconnect()
                   
         widget = None
         panel = None
@@ -1902,7 +1884,7 @@ class ModernMenu(RibbonBar):
             if skip is True:
                 objPanel.close()
             # If  the panel is not replaced by a custom panel, show it
-            if skip is False:
+            if skip is False:            
                 objPanel.show()
                 # Get the panel name and the gridlayout
                 panelName = objPanel.objectName()
@@ -2011,8 +1993,8 @@ class ModernMenu(RibbonBar):
                 self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = orderList                                      
                                        
             # Enable all buttons, so you can access them with a right click
-            self.activateButtons()            
-            
+            self.activateButtons()                   
+                
         # Restore the cursor
         QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         return
@@ -2511,8 +2493,8 @@ class ModernMenu(RibbonBar):
         
         # # Clear the panel lists
         # self.HiddenPanels.clear()
-        # self.ReplacedPanels.clear()
-        # self.CombinePanels.clear()
+        # # self.ReplacedPanels.clear()
+        # # self.CombinePanels.clear()
         # self.AddedPanels.clear()
         # self.RemovedPanels.clear()
                    
