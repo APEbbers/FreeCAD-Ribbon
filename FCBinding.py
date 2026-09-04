@@ -27,7 +27,7 @@ import traceback
 import subprocess
 from functools import partial
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -58,7 +58,7 @@ from PySide.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -103,7 +103,7 @@ from PySide.QtWidgets import (
     QTableWidgetItem,
     QCompleter,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -363,6 +363,12 @@ class ModernMenu(RibbonBar):
     
     # Define a variable for storing the current category when the customise enviroment is activated
     CurrentCategoryToRestore = None
+    
+    # Definitions for the tabgroup functions
+    AddToTabGroupAct = None
+    RemoveFromTabGroupAct = None
+    ComboBox = None
+    DeleteButton = None
     # endregion
 
     def __init__(self):
@@ -977,67 +983,6 @@ class ModernMenu(RibbonBar):
 
         # Rearrange the tabbar and toolbars
         #
-        # Create a groupBox
-        # Add a Group box (dropdown) to the tabBar
-        GroupBox = QHBoxLayout()
-        # Create a combobox
-        ComboBox = QComboBox(self.tabBar())
-        ComboBox.setObjectName("GroupBox")
-        ComboBox.setFixedWidth(100)
-        ComboBox.addItem("All")        
-        ComboBox.setToolTip(translate("FreeCAD Ribbon", "Select a tab group"))
-        ComboBox.setStyleSheet(""" QToolTip {
-                    background-color: #FFFFE1;
-                    color: black;
-                    border: black solid 1px;
-                    border-radius: 2px;
-                    }"""
-                )        
-        ComboBox.currentTextChanged.connect(lambda: self.on_Group_Changed(ComboBox.currentText( )))
-        if "tabGroups" in self.ribbonStructure:
-            for group in self.ribbonStructure["tabGroups"].keys():
-                ComboBox.addItem(group)    
-        # Create a delete button
-        DeleteButton = QToolButton()
-        DeleteButton.setObjectName("DeleteGroupButton")
-        DeleteButton.setToolTip(translate("FreeCAD Ribbon", "Delete the current group"))
-        DeleteButton.setStyleSheet(""" QToolTip {
-                    background-color: #FFFFE1;
-                    color: black;
-                    border: black solid 1px;
-                    border-radius: 2px;
-                    }"""
-                )     
-        DeleteButton.clicked.connect(lambda: self.on_Group_Delete_Clicked())
-        pixmap = QPixmap(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons", "edit_Cancel.svg"))
-        icon = QIcon()
-        # add a pixmap for de on state
-        icon.addPixmap(pixmap, mode=QIcon.Mode.Normal, state=QIcon.State.On)
-        # Add a pixmap for the off state
-        grayed = icon.pixmap(pixmap.size(), QIcon.Mode.Disabled, QIcon.State.On)
-        icon.addPixmap(grayed, mode=QIcon.Mode.Disabled, state=QIcon.State.Off)
-        # Add the icon
-        DeleteButton.setIcon(icon)        
-        DeleteButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
-        DeleteButton.setFixedSize(ComboBox.height()*0.8, ComboBox.height()*0.8)
-        DeleteButton.setDisabled(True)
-        
-        # Hide the combobox and deletebutton by default
-        DeleteButton.hide()
-        ComboBox.hide()
-        # If there are groups, show them again
-        if ComboBox.count() > 1:
-            ComboBox.show()
-            # DeleteButton.show()     
-            # DeleteButton.setDisabled(True) 
-        # Create a spacer  
-        Spacer = QWidget()
-        Spacer.setFixedWidth(6)
-        # Add all the widgets to the layout    
-        GroupBox.addWidget(ComboBox)
-        GroupBox.addWidget(DeleteButton)
-        GroupBox.addWidget(Spacer)
-
         #
         # Create a floating button
         FloatingButton = QToolButton()
@@ -1127,9 +1072,9 @@ class ModernMenu(RibbonBar):
                 self._titleWidget._tabBarLayout.addWidget(
                     _tabBar, 1, 0, 1, 4, Qt.AlignmentFlag.AlignVCenter
                 )
-                self._titleWidget._tabBarLayout.addLayout(
-                    GroupBox, 1, 4, 1, 1, Qt.AlignmentFlag.AlignVCenter
-                )
+                # self._titleWidget._tabBarLayout.addLayout(
+                #     GroupBox, 1, 4, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                # )
                 self._titleWidget._tabBarLayout.addWidget(
                     overlayButton, 1, 5, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )                
@@ -1154,9 +1099,9 @@ class ModernMenu(RibbonBar):
                 self._titleWidget._tabBarLayout.addWidget(
                     _titleLabel, 0, 2, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )
-                self._titleWidget._tabBarLayout.addLayout(
-                    GroupBox, 0, 3, 1, 1, Qt.AlignmentFlag.AlignVCenter
-                )
+                # self._titleWidget._tabBarLayout.addLayout(
+                #     GroupBox, 0, 3, 1, 1, Qt.AlignmentFlag.AlignVCenter
+                # )
                 self._titleWidget._tabBarLayout.addWidget(
                     overlayButton, 0, 4, 1, 1, Qt.AlignmentFlag.AlignVCenter
                 )                
@@ -1478,9 +1423,10 @@ class ModernMenu(RibbonBar):
                 # get the tab under the mouse
                 pos = QTabBar.mapFromGlobal(self.tabBar() ,event.pos())
                 tabIndex = QTabBar.tabAt(self.tabBar(), pos)
+                tabText = QTabBar.tabText(self.tabBar(), tabIndex)
 
                 # Create an QAction for adding a tab to a new or existing group
-                self.AddToTabGroupAct = ComboBoxAction(self, f"Add {QTabBar.tabText(self.tabBar(), tabIndex)} to a new or existing group", "Top", Parameters.FONTSIZE_MENUS, True, "Add")
+                self.AddToTabGroupAct = ComboBoxAction(self, f"Add {tabText} to a new or existing group", "Top", Parameters.FONTSIZE_MENUS, True, "Add")
                 self.AddToTabGroupAct.addItem("")
                 self.AddToTabGroupAct.setEditable(True)
                 if "tabGroups" in self.ribbonStructure:
@@ -1498,10 +1444,11 @@ class ModernMenu(RibbonBar):
                 
                 # Create an QAction for removing a tab from an existing group
                 self.RemoveFromTabGroupAct = ButtonAction(
-                    self.contextMenu, translate("FreeCAD Ribbon", f"Remove {QTabBar.tabText(self.tabBar(), tabIndex)}\n from current group"), 
+                    self, translate("FreeCAD Ribbon", f"Remove {tabText}\n from current group"), 
                     Parameters.FONTSIZE_MENUS,
                     Qt.AlignmentFlag.AlignLeft
                     )
+                self.RemoveFromTabGroupAct.clicked.connect(lambda: self.on_RemoveFromExistingGroup_Clicked(tabIndex))
                 # Get the current group
                 ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
                 # Disable the action is the group is "All"
@@ -1509,17 +1456,16 @@ class ModernMenu(RibbonBar):
                     self.RemoveFromTabGroupAct.setDisabled(True)
                 else:
                     self.RemoveFromTabGroupAct.setDisabled(False)
-                self.RemoveFromTabGroupAct.clicked.connect(lambda: self.on_RemoveFromExistingGroup_Clicked(tabIndex))
-                self.RemoveFromTabGroupAct.clicked.connect(lambda: self.contextMenu.close())
                 self.contextMenu.addAction(self.RemoveFromTabGroupAct)
                 
                 # create the context menu action
-                action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
+                # action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
+                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
 
                 # Disconnect the widgetActions
                 self.AddToTabGroupAct.currentIndexChanged.disconnect()                
                 self.AddToTabGroupAct.clicked.disconnect()  
-                self.RemoveFromTabGroupAct.clicked.disconnect()              
+                self.RemoveFromTabGroupAct.clicked.disconnect()     
                 return
             
             # Check if the panel is not none and of type RibbonPanel. If so, continue
@@ -1676,32 +1622,37 @@ class ModernMenu(RibbonBar):
                     self.contextMenu.addSeparator()
                     title = translate("FreeCAD Ribbon", "Save and exit customize...")
                 CustomizeStartAct = self.contextMenu.addAction(title)
+                CustomizeStartAct.triggered.connect(lambda: self.handleContextMenuAction("Start"))
                 # Add a cancel button
                 CustomizeCancelAct = QAction()
                 if self.CustomizeEnabled is True:                    
                     CustomizeCancelAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Cancel"))
+                    CustomizeCancelAct.triggered.connect(lambda: self.handleContextMenuAction("Cancel"))
                                 
                 # Create the action
-                action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
+                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
                 
-                # Perfom the action depending on which button is clicked
-                if action == CustomizeStartAct:
-                    if self.CustomizeEnabled is False:
-                        self.on_Customize_Clicked()
-                        return
-                    if self.CustomizeEnabled is True:
-                        for category in self.CustomizedCategories:
-                            self.setCurrentCategory(category)
-                            self.on_Ok_Clicked()
-                        self.CustomizedCategories.clear()
-                        return
+                # # Perfom the action depending on which button is clicked
+                # if action == CustomizeStartAct:
+                #     if self.CustomizeEnabled is False:
+                #         self.on_Customize_Clicked()
+                #         return
+                #     if self.CustomizeEnabled is True:
+                #         for category in self.CustomizedCategories:
+                #             self.setCurrentCategory(category)
+                #             self.on_Ok_Clicked()
+                #         self.CustomizedCategories.clear()
+                #         return
  
-                if action == CustomizeCancelAct:
-                    for category in self.CustomizedCategories:
-                        self.setCurrentCategory(category)
-                        self.on_Cancel_Clicked()
-                    self.CustomizedCategories.clear()
-                    return
+                # if action == CustomizeCancelAct:
+                #     for category in self.CustomizedCategories:
+                #         self.setCurrentCategory(category)
+                #         self.on_Cancel_Clicked()
+                #     self.CustomizedCategories.clear()
+                #     return
+                CustomizeStartAct.triggered.disconnect()
+                if self.CustomizeEnabled is True:
+                    CustomizeCancelAct.triggered.disconnect()
             
             # Add a context menu to the quickaccess button
             if panel is not None and type(panel) is not RibbonPanel and quickaccessbutton is not None and self.CustomizeEnabled is True and quickaccessbutton.underMouse():
@@ -1722,6 +1673,7 @@ class ModernMenu(RibbonBar):
                 # Disconnect the widgetActions
                 AddSeparator_Left.triggered.disconnect()                                
                 AddSeparator_Right.triggered.disconnect()
+                ClearToolBar.triggered.disconnect()
                 
             if panel is not None and type(panel) is not RibbonPanel and quickaccessseparator is not None and self.CustomizeEnabled is True and quickaccessseparator.underMouse():
                 # Create the buttons for removing the separator
@@ -1738,10 +1690,31 @@ class ModernMenu(RibbonBar):
                 
                 # Disconnect the widgetActions
                 removeSeparator.triggered.disconnect()
+                ClearToolBar.triggered.disconnect()
                   
         widget = None
         panel = None
         return
+    
+    def handleContextMenuAction(self, action):
+        # Perfom the action depending on which button is clicked
+        if action == "Start":
+            if self.CustomizeEnabled is False:
+                self.on_Customize_Clicked()
+                return
+            if self.CustomizeEnabled is True:
+                for category in self.CustomizedCategories:
+                    self.setCurrentCategory(category)
+                    self.on_Ok_Clicked()
+                self.CustomizedCategories.clear()
+                return
+
+        if action == "Cancel":
+            for category in self.CustomizedCategories:
+                self.setCurrentCategory(category)
+                self.on_Cancel_Clicked()
+            self.CustomizedCategories.clear()
+            return
     
     def on_Customize_Clicked(self):
         # Get the name of the current workbench
@@ -1764,12 +1737,19 @@ class ModernMenu(RibbonBar):
         self.workBenchDict["customToolbars"] = self.ribbonStructure["customToolbars"]
         
         # Show the comboBox and delete button for the tabgroups
-        ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
-        ComboBox.show()
-        Button = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
-        Button.show()  
-        if ComboBox.currentText() == translate("FreeCAD Ribbon", "All"):
-            Button.setDisabled(True)
+        DeleteButtonOff = False
+        for action in QToolBar.actions(self.rightToolBar()):    
+            if action is not None and type(action) == QWidgetAction and action.defaultWidget() is not None:  # noqa: SIM102
+                if action.defaultWidget().objectName() == "GroupBox" :
+                    action.setVisible(True)                
+                    if action.defaultWidget().currentText() == translate("FreeCAD Ribbon", "All"):
+                        DeleteButtonOff = True
+        for action in QToolBar.actions(self.rightToolBar()):
+           if action is not None and type(action) == QWidgetAction and action.defaultWidget() is not None:  # noqa: SIM102
+                if action.defaultWidget().objectName() == "DeleteGroupButton":
+                    action.setVisible(True)
+                    if DeleteButtonOff is True:
+                        action.defaultWidget().setDisabled(True)
         
         # Load the dialog
         # 
@@ -2058,6 +2038,18 @@ class ModernMenu(RibbonBar):
             Button = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
             Button.hide()
             
+            # Hide the comboBox and delete button for the tabgroups
+            for action in QToolBar.actions(self.rightToolBar()):    
+                if action is not None and type(action) == QWidgetAction and action.defaultWidget() is not None:  # noqa: SIM102
+                    if action.defaultWidget().objectName() == "GroupBox":
+                        action.setVisible(True)
+                        if action.defaultWidget().count() <= 1:
+                            action.setVisible(False)
+            for action in QToolBar.actions(self.rightToolBar()):
+                if action is not None and type(action) == QWidgetAction and action.defaultWidget() is not None:  # noqa: SIM102
+                        if action.defaultWidget().objectName() == "DeleteGroupButton":
+                            action.setVisible(False)
+            
             self.currentCategory().setStyleSheet(self.StyleSheet)
             Color = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
             Addition = (
@@ -2344,12 +2336,17 @@ class ModernMenu(RibbonBar):
         self.StyleSheet = self.StyleSheet + Addition
         self.quickAccessToolBar().setStyleSheet(self.StyleSheet)
         
-         # Hide the comboBox and delete button for the tabgroups         
-        ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
-        if ComboBox.count() <= 1:
-            ComboBox.hide()
-        Button = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
-        Button.hide()
+        # Hide the comboBox and delete button for the tabgroups
+        for action in QToolBar.actions(self.rightToolBar()):    
+            if action is not None and type(action) == QWidgetAction and action.defaultWidget() is not None:  # noqa: SIM102
+                if action.defaultWidget().objectName() == "GroupBox":
+                    action.setVisible(True)
+                    if action.defaultWidget().count() <= 1:
+                        action.setVisible(False)
+        for action in QToolBar.actions(self.rightToolBar()):
+            if action is not None and type(action) == QWidgetAction and action.defaultWidget() is not None:  # noqa: SIM102
+                    if action.defaultWidget().objectName() == "DeleteGroupButton":
+                        action.setVisible(False)
         
         # set the boolan for the enviroment state to False
         self.CustomizeEnabled = False
@@ -3017,8 +3014,8 @@ class ModernMenu(RibbonBar):
                 self.tabBar().setTabVisible(i, True)   
             
             # Disable the delete button and set the icon
-            DeleteButton: QToolButton = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
-            DeleteButton.setDisabled(True)
+            # DeleteButton: QToolButton = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
+            self.DeleteButton.setDisabled(True)
             
             # Disable the remove group button in the context menu
             try:
@@ -3043,8 +3040,9 @@ class ModernMenu(RibbonBar):
                         self.tabBar().setTabVisible(i, True)
                 
                 # Set the icon and enable the delete button
-                DeleteButton: QToolButton = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
-                DeleteButton.setEnabled(True)
+                if self.CustomizeEnabled:
+                    # DeleteButton: QToolButton = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
+                    self.DeleteButton.setEnabled(True)
                 
                 # enable the remove group button in the context menu
                 try:
@@ -3084,6 +3082,27 @@ class ModernMenu(RibbonBar):
                 ComboBox.hide()
                 DeleteButton.hide()
                 return
+    
+    def returnGroupControls(self):
+        result = []
+        # Show the comboBox and delete button for the tabgroups
+        # DeleteButtonOff = False
+        for action in QToolBar.actions(self.rightToolBar()):    
+            if action is not None and type(action) == QWidgetAction and action.defaultWidget() is not None:  # noqa: SIM102
+                if action.defaultWidget().objectName() == "GroupBox" :
+                    # action.setVisible(True)                
+                    # if action.defaultWidget().currentText() == translate("FreeCAD Ribbon", "All"):
+                    #     DeleteButtonOff = True
+                    result.append(action.defaultWidget())
+        for action in QToolBar.actions(self.rightToolBar()):
+           if action is not None and type(action) == QWidgetAction and action.defaultWidget() is not None:  # noqa: SIM102
+                if action.defaultWidget().objectName() == "DeleteGroupButton":
+                    # action.setVisible(True)
+                    # if DeleteButtonOff is True:
+                    #     action.defaultWidget().setDisabled(True)
+                    result.append(action.defaultWidget())
+        
+        return result
     # endregion
 
     # region - drag drop event functions
@@ -4330,22 +4349,7 @@ class ModernMenu(RibbonBar):
                 except Exception as e:
                     print(e)
         self.tabBar().mouseMoveEvent = lambda e: mouseMoveEvent(self.currentCategory() ,e, self.CustomizeEnabled)
-        
-        
-        # def paintEvent(self, e):
-        #     painter = QStylePainter(self)
-        #     painter.begin()
-        #     pen = QPen()
-        #     pen.setColor(QColor(Qt.GlobalColor.red))
-        #     pen.setWidth(3)
-        #     painter.setPen(pen)
-            
-        #     p1 = QCursor.pos()
-        #     p2 = QPoint(p1.x(), p1.y() + 20)
-        #     painter.drawLine(QPoint(p1), QPoint(p2))
-            
-        # self.tabBar().paintEvent = lambda e: paintEvent(self.currentCategory(), e)
-
+      
         # Set the size of the collapseRibbonButton
         self.collapseRibbonButton().setFixedSize(
             self.RightToolBarButtonSize, self.RightToolBarButtonSize
@@ -4362,7 +4366,7 @@ class ModernMenu(RibbonBar):
             else:
                 BeforeAction = self.rightToolBar().actions()[1]
             self.rightToolBar().insertWidget(BeforeAction, spacer)
-        
+                                
         # Add an overlay toggle button if overlay is enabled
         if Parameters.USE_OVERLAY is True:
             OverlayButton = QToolButton()
@@ -4431,13 +4435,68 @@ class ModernMenu(RibbonBar):
         WidgetAction.setDefaultWidget(SettingsButton)
         # Add the widgetaction to the toolbar      
         self.rightToolBar().addAction(WidgetAction)
+        
+        # Add controls for the tabgroup function
+        self.ComboBox = QComboBox(self.rightToolBar())
+        self.ComboBox.setObjectName("GroupBox")
+        self.ComboBox.setFixedWidth(100)
+        self.ComboBox.addItem("All")        
+        self.ComboBox.setToolTip(translate("FreeCAD Ribbon", "Select a tab group"))
+        self.ComboBox.setStyleSheet(""" QToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }"""
+                )        
+        self.ComboBox.currentTextChanged.connect(lambda: self.on_Group_Changed(self.ComboBox.currentText( )))
+        if "tabGroups" in self.ribbonStructure:
+            for group in self.ribbonStructure["tabGroups"].keys():
+                self.ComboBox.addItem(group)    
+        # Create a delete button
+        self.DeleteButton = QToolButton(self.rightToolBar())
+        self.DeleteButton.setObjectName("DeleteGroupButton")
+        self.DeleteButton.setToolTip(translate("FreeCAD Ribbon", "Delete the current group"))
+        self.DeleteButton.setStyleSheet(""" QToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }"""
+                )     
+        self.DeleteButton.clicked.connect(lambda: self.on_Group_Delete_Clicked())
+        pixmap = QPixmap(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons", "edit_Cancel.svg"))
+        icon = QIcon()
+        # add a pixmap for de on state
+        icon.addPixmap(pixmap, mode=QIcon.Mode.Normal, state=QIcon.State.On)
+        # Add a pixmap for the off state
+        grayed = icon.pixmap(pixmap.size(), QIcon.Mode.Disabled, QIcon.State.On)
+        icon.addPixmap(grayed, mode=QIcon.Mode.Disabled, state=QIcon.State.Off)
+        # Add the icon
+        self.DeleteButton.setIcon(icon)        
+        self.DeleteButton.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
+        self.DeleteButton.setFixedSize(self.ComboBox.height()*0.8, self.ComboBox.height()*0.8)
+        self.DeleteButton.setDisabled(True)
+        # Hide the self.ComboBox and self.DeleteButton by default
+        self.DeleteButton.hide()
+        self.ComboBox.hide()
+        # If there are groups, show them again
+        if self.ComboBox.count() > 1:
+            self.ComboBox.show()
+        # Create a spacer  
+        spacer = QWidget()
+        spacer.setFixedWidth(6)
+        # Add them to the right toolbar
+        self.rightToolBar().addWidget(spacer)
+        self.rightToolBar().addWidget(self.ComboBox)
+        self.rightToolBar().addWidget(self.DeleteButton)
                 
         # if the FreeCAD titlebar is hidden,add close, minimize and maximize buttons
         padding = "5px"
         if Parameters.HIDE_TITLEBAR_FC is True:
             spacer = QWidget()
             spacer.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
-            spacer.setFixedWidth(30)
+            spacer.setFixedWidth(10)
             if Parameters.TOOLBAR_POSITION == 1:
                 spacer.setFixedWidth(5)
             self.rightToolBar().addWidget(spacer)
@@ -6217,11 +6276,19 @@ class ModernMenu(RibbonBar):
         icon = QIcon()
         for item in self.List_WorkBenchIcons:
             if item[0] == WorkBenchName:
-                icon = item[1]
+                if type(item[1]) == str:
+                    Pixmap = QPixmap(item[1])
+                    icon = QIcon(Pixmap)
+                else:
+                    icon = item[1]
                 return icon
         if icon is None or (icon is not None and icon.isNull()):
             workbench = Gui.getWorkbench(WorkBenchName)
-            icon = QIcon(workbench.Icon)
+            if type(workbench.Icon) == str:
+                Pixmap = QPixmap(workbench.Icon)
+                icon = QIcon(Pixmap)
+            else:
+                icon = QIcon(workbench.Icon)
             return icon
         if icon is None or (icon is not None and icon.isNull()):
             if pixmap != "":
