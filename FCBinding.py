@@ -1769,8 +1769,10 @@ class ModernMenu(RibbonBar):
                 self.on_Cancel_Clicked()
                 return
         if os.path.exists(DataFile) is True:
-            # If there is already a form, return
-            if mw.findChild(QDockWidget, "AddCommands") is not None:
+             # If there is already a form, return
+            DockWidget = mw.findChild(QDockWidget, "AddCommands")
+            if DockWidget is not None:
+                DockWidget.setVisible(True)
                 return
         
             self.AddCommandsDialog = LoadAddCommands.LoadDialog(self)
@@ -2291,7 +2293,7 @@ class ModernMenu(RibbonBar):
                 self.AddCommandsDialog.form.close()
                 self.AddCommandsDialog = None
                 # Close the dockwidget if there is one
-                DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
+                DockWidget = mw.findChild(QDockWidget, "AddCommands")
                 if DockWidget is not None:
                     DockWidget.deleteLater()       
         
@@ -2520,7 +2522,7 @@ class ModernMenu(RibbonBar):
             self.AddCommandsDialog.form.close()
             self.AddCommandsDialog = None
             # Close the dockwidget if there is one
-            DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
+            DockWidget = mw.findChild(QDockWidget, "AddCommands")
             if DockWidget is not None:
                 DockWidget.deleteLater()
         
