@@ -27,7 +27,7 @@ import traceback
 import subprocess
 from functools import partial
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -58,7 +58,7 @@ from PySide6.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -103,7 +103,7 @@ from PySide6.QtWidgets import (
     QTableWidgetItem,
     QCompleter,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1705,7 +1705,7 @@ class ModernMenu(RibbonBar):
                 else:
                     RibbonLayoutDock = QDockWidget()
                     # set the name of the object and the window title
-                    RibbonLayoutDock.setObjectName("RibbonLayout")
+                    RibbonLayoutDock.setObjectName("AddCommands")
                     RibbonLayoutDock.setWindowTitle("Ribbon Layout")
                     RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
                     RibbonLayoutDock.setWidget(self.AddCommandsDialog.form)                            
@@ -2063,15 +2063,6 @@ class ModernMenu(RibbonBar):
             # Set the state for the enviroment to False again
             self.CustomizeEnabled = False
             
-            # # reset the ribbonheight
-            # self.currentCategory().setMinimumHeight(
-            #     self.RibbonHeight - self.RibbonMinimalHeight - 3
-            # )
-            # self.currentCategory().setMaximumHeight(
-            #     self.RibbonHeight - self.RibbonMinimalHeight - 3
-            # )
-            # self.setRibbonHeight(self.RibbonHeight - self.RibbonMinimalHeight - 3)
-
             # Return the original state of the buttons
             for item in self.actionList:
                 if item[1] is False:
@@ -2292,7 +2283,7 @@ class ModernMenu(RibbonBar):
                 # Close the dockwidget if there is one
                 DockWidget = mw.findChild(QDockWidget, "AddCommands")
                 if DockWidget is not None:
-                    DockWidget.deleteLater()       
+                    DockWidget.deleteLater()  
         
         # Clear the workbench dict
         if CloseDialog is True:
@@ -2506,22 +2497,15 @@ class ModernMenu(RibbonBar):
                                            
         # Clear the workbench dict
         self.workBenchDict.clear()
-        
-        # # Clear the panel lists
-        # self.HiddenPanels.clear()
-        # # self.ReplacedPanels.clear()
-        # # self.CombinePanels.clear()
-        # self.AddedPanels.clear()
-        # self.RemovedPanels.clear()
                    
         # Close the AddCommands dialog
-        if self.AddCommandsDialog is not None:
+        if self.AddCommandsDialog is not None:            
             self.AddCommandsDialog.form.close()
-            self.AddCommandsDialog = None
+            self.AddCommandsDialog = None      
             # Close the dockwidget if there is one
             DockWidget = mw.findChild(QDockWidget, "AddCommands")
             if DockWidget is not None:
-                DockWidget.deleteLater()
+                DockWidget.deleteLater()      
         
         # Activate the stored category when the customise enviroment was started
         self.setCurrentCategory(self.CurrentCategoryToRestore)
