@@ -1459,7 +1459,6 @@ class ModernMenu(RibbonBar):
                 self.contextMenu.addAction(self.RemoveFromTabGroupAct)
                 
                 # create the context menu action
-                # action = self.contextMenu.exec_(self.mapToGlobal(event.pos()))
                 action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
 
                 # Disconnect the widgetActions
@@ -1560,7 +1559,7 @@ class ModernMenu(RibbonBar):
                         AddSeparator_Right.triggered.connect(lambda: self.on_AddSeparator_Clicked(panel, widget,"right"))                        
                         
                         # create the context menu action
-                        self.contextMenu.exec_(self.mapToGlobal(event.pos()))
+                        action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
 
                         # Disconnect the widgetActions
                         RibbonButtonAction_Style.currentTextChanged.disconnect()
@@ -1586,7 +1585,7 @@ class ModernMenu(RibbonBar):
                 self.contextMenu.addAction(ChangePanelTitle)
                 
                 # create the context menu action
-                self.contextMenu.exec_(self.mapToGlobal(event.pos()))
+                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
                 
                 # Disconnect the widgetActions
                 ChangePanelTitle.textChanged.disconnect()
@@ -1603,7 +1602,7 @@ class ModernMenu(RibbonBar):
                     RemoveSeparator.triggered.connect(lambda: self.on_RemoveSeparator_Clicked(panel, separator))
                     
                     # create the context menu action
-                    self.contextMenu.exec_(self.mapToGlobal(event.pos()))
+                    action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
                     return
             
             # Add the context menu for the ribbon
@@ -1668,7 +1667,7 @@ class ModernMenu(RibbonBar):
                 ClearToolBar.triggered.connect(self.on_ClearToolBar_QC_Clicked)
                 
                 # create the context menu action
-                self.contextMenu.exec_(self.mapToGlobal(event.pos()))
+                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
                 
                 # Disconnect the widgetActions
                 AddSeparator_Left.triggered.disconnect()                                
@@ -1686,7 +1685,7 @@ class ModernMenu(RibbonBar):
                 ClearToolBar.triggered.connect(self.on_ClearToolBar_QC_Clicked)
                 
                 # create the context menu action
-                self.contextMenu.exec_(self.mapToGlobal(event.pos()))
+                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
                 
                 # Disconnect the widgetActions
                 removeSeparator.triggered.disconnect()
