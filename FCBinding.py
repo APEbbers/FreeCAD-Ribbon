@@ -1621,11 +1621,11 @@ class ModernMenu(RibbonBar):
                     self.contextMenu.addSeparator()
                     title = translate("FreeCAD Ribbon", "Save and exit customize...")
                 CustomizeStartAct = self.contextMenu.addAction(title)
-                CustomizeStartAct.triggered.connect(lambda: self.handleContextMenuAction("Start"))
+                CustomizeStartAct.triggered.connect(lambda: self.handleRibbonContextMenuActions("Start"))
                 # Add a cancel button
                 CustomizeCancelAct = QAction()                 
                 CustomizeCancelAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Cancel"))
-                CustomizeCancelAct.triggered.connect(lambda: self.handleContextMenuAction("Cancel"))
+                CustomizeCancelAct.triggered.connect(lambda: self.handleRibbonContextMenuActions("Cancel"))
                 CustomizeCancelAct.setVisible(self.CustomizeEnabled)
                                 
                 # Create the action
@@ -1677,10 +1677,10 @@ class ModernMenu(RibbonBar):
         panel = None
         return
     
-    def handleContextMenuAction(self, action):
+    def handleRibbonContextMenuActions(self, action):
         # Perfom the action depending on which button is clicked
         if action == "Start":
-             # Load the dialog
+            # Load the dialog
             # 
             # Get the form
             DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
@@ -1714,8 +1714,9 @@ class ModernMenu(RibbonBar):
                     # Add the custom context menu for dockwidgets
                     RibbonLayoutDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
                     RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
-                    # Add the dockwidget
+                    # # Add the dockwidget
                     mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
+                    # mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock)
             
             if self.CustomizeEnabled is False:
                 # Enter the customise enviroment
@@ -1870,8 +1871,6 @@ class ModernMenu(RibbonBar):
                                 
         # Create all order lists and commands, incase they are not all present
         dictPanels = self.currentCategory().panels()
-        # for panel in self.HiddenPanels:
-        #     dictPanels[panel.title()] = panel
         for title, objPanel in dictPanels.items():            
             # Test if the panel is not already deleted.
             # This is needed, if a combined panel was added and then removed by clicking cancel
@@ -2502,10 +2501,13 @@ class ModernMenu(RibbonBar):
         if self.AddCommandsDialog is not None:            
             self.AddCommandsDialog.form.close()
             self.AddCommandsDialog = None      
-            # Close the dockwidget if there is one
-            DockWidget = mw.findChild(QDockWidget, "AddCommands")
-            if DockWidget is not None:
-                DockWidget.deleteLater()      
+            # # Close the dockwidget if there is one
+            # DockWidget = mw.findChild(QDockWidget, "AddCommands")
+            # if DockWidget is not None:
+            #     DockWidget.deleteLater()      
+            for DockWidget in mw.findChildren(QDockWidget):
+                if DockWidget.widget() is None:
+                    DockWidget.close()
         
         # Activate the stored category when the customise enviroment was started
         self.setCurrentCategory(self.CurrentCategoryToRestore)
