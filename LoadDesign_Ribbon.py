@@ -91,6 +91,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
     # Set the data file version. Triggeres an question if an update is needed
     DataFileVersion = "1.3"
+    
+    ribbonStructure = {}
 
     # Define list of the workbenches, toolbars and commands on class level
     List_Workbenches = []
@@ -128,10 +130,12 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
     listWidgetItems = []
     listWidgetItems_DDB = []
 
-    def __init__(self, IconList):
+    def __init__(self, IconList, ribbonStructure):
 
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
         super(LoadDialog, self).__init__()
+        
+        self.ribbonStructure = ribbonStructure
         
         # Load the icons for the commands
         self.List_CommandIcons = IconList
@@ -4107,15 +4111,17 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
     def ReadJson(self, Section="All", JsonFile=""):
         # Open the JsonFile and load the data
+        data = {}
         try:
             if JsonFile != "":
                 JsonFile = open(JsonFile)
+                data = json.load(JsonFile)
             else:
-                JsonFile = open(Parameters.RIBBON_STRUCTURE_JSON)
+                data = self.ribbonStructure
         except Exception:
             JsonFile = open(Parameters.RIBBON_STRUCTURE_JSON)
-        data = json.load(JsonFile)
-
+            data = json.load(JsonFile)
+                
         # Get all the ignored toolbars
         if Section == "ignoredToolbars" or Section == "All":
             for IgnoredToolbar in data["ignoredToolbars"]:
@@ -4165,7 +4171,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             except Exception:
                 pass
 
-        JsonFile.close()
+        # JsonFile.close()
         return
 
     def WriteJson(self):
@@ -4206,21 +4212,15 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             IgnoredWorkbench = ListWidgetItem.data(Qt.ItemDataRole.UserRole)
             List_IgnoredWorkbenches.append(IgnoredWorkbench[2])
 
-        # Create a resulting dict
-        resultingDict = {}
         # add the various lists to the resulting dict.
-        resultingDict["language"] = FCLanguage
-        resultingDict["ignoredToolbars"] = List_IgnoredToolbars
-        resultingDict["iconOnlyToolbars"] = List_IconOnly_Toolbars
-        resultingDict["quickAccessCommands"] = List_QuickAccessCommands
-        resultingDict["ignoredWorkbenches"] = List_IgnoredWorkbenches
-        resultingDict.update(self.Dict_CustomToolbars)
-        resultingDict.update(self.Dict_RibbonCommandPanel)
-        resultingDict.update(self.Dict_NewPanels)
-
-        # RibbonTabs
-        # Get the Ribbon dictionary
-        resultingDict.update(self.Dict_RibbonCommandPanel)
+        self.ribbonStructure["language"] = FCLanguage
+        self.ribbonStructure["ignoredToolbars"] = List_IgnoredToolbars
+        self.ribbonStructure["iconOnlyToolbars"] = List_IconOnly_Toolbars
+        self.ribbonStructure["quickAccessCommands"] = List_QuickAccessCommands
+        self.ribbonStructure["ignoredWorkbenches"] = List_IgnoredWorkbenches
+        self.ribbonStructure.update(self.Dict_CustomToolbars)
+        self.ribbonStructure.update(self.Dict_RibbonCommandPanel)
+        self.ribbonStructure.update(self.Dict_NewPanels)
 
         # get the path for the Json file
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
@@ -4236,7 +4236,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
         # Writing to sample.json
         with open(JsonFile, "w") as outfile:
-            json.dump(resultingDict, outfile, indent=4)
+            json.dump(self.ribbonStructure, outfile, indent=4)
 
         outfile.close()
         return
