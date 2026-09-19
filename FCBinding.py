@@ -400,15 +400,16 @@ class ModernMenu(RibbonBar):
                     if InstalledWB == WorkBenchName:
                         IsInstalled = True
                 
-                if IsInstalled is False:
+                if IsInstalled is False and "ignoredWorkbenches" in self.ribbonStructure:  # noqa: SIM102
                     if WorkBenchName not in self.ribbonStructure["ignoredWorkbenches"]:
                         self.ribbonStructure["ignoredWorkbenches"].append(WorkBenchName)
         if not "workbenches" in self.ribbonStructure:            
             for InstalledWB in Gui.listWorkbenches():
-                if InstalledWB not in self.ribbonStructure["ignoredWorkbenches"]:
-                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure,
-                "workbenches", InstalledWB, True
-            )
+                if "ignoredWorkbenches" in self.ribbonStructure and InstalledWB not in self.ribbonStructure["ignoredWorkbenches"]:
+                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, "workbenches", InstalledWB, True)
+                else:
+                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, "workbenches", InstalledWB, True)
+        
         
         if int(App.Version()[0]) == 0 or (int(App.Version()[0]) == 1 and int(App.Version()[1]) == 0):
             self.ConvertRibbonStructure(checkFCVersion=False, RestartFreeCAD=False)
