@@ -7620,6 +7620,11 @@ class ModernMenu(RibbonBar):
                 ).format(result),
                 "Warning",
             )
+            
+            # update the ribbon structure from the backup file
+            with open(BackupFile, "r") as file:
+                self.ribbonStructure.update(json.load(file))
+            file.close()
 
             message = translate(
                 "FreeCAD Ribbon",
