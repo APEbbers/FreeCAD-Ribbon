@@ -2365,18 +2365,23 @@ class ModernMenu(RibbonBar):
         index = 0
         # If the separator must be placed on the left, get the action that is belongs to the button widget
         # And set the index for updating the dict.
-        for i in range(len(self.quickAccessToolBar().actions())):
+        for i in range(1, len(self.quickAccessToolBar().actions())):
             action = self.quickAccessToolBar().actions()[i]
             # If the objectnames are equal, set the before action
             # and set the index to the index of the buttonwidget
             if ButtonWidget.objectName() == action.defaultWidget().objectName():
                 beforeAction = action
                 index = self.workBenchDict["quickAccessCommands"].index(action.defaultWidget().objectName())
+                
+                prevAction = self.quickAccessToolBar().actions()[i-1]
+                if "separator" in prevAction.defaultWidget().objectName():
+                        print("RibbonUI: There is already a separator")
+                        return
                 break
         # If the separator must be placed on the right, get the action that is belongs to the widget right from the button widget
         # And set the index for updating the dict.
         if Side != "left" :
-            for i in range(len(self.quickAccessToolBar().actions())):
+            for i in range(1, len(self.quickAccessToolBar().actions())):
                 action = self.quickAccessToolBar().actions()[i]
                 # prevent from adding a separator to the end
                 if i + 3 > len(self.quickAccessToolBar().actions()):                             
@@ -2386,10 +2391,15 @@ class ModernMenu(RibbonBar):
                 if ButtonWidget.objectName() == action.defaultWidget().objectName():
                     beforeAction = self.quickAccessToolBar().actions()[i+1]
                     index = self.workBenchDict["quickAccessCommands"].index(ButtonWidget.objectName()) + 1
+                    
+                    if "separator" in beforeAction.defaultWidget().objectName():
+                        print("RibbonUI: There is already a separator")
+                        return
                     break   
         
         # If there is an action, continue
         if beforeAction is not None:
+            print(beforeAction.defaultWidget().objectName())
             counter = 0
             # Count the separators already present
             for item in self.workBenchDict["quickAccessCommands"]:
@@ -6943,7 +6953,8 @@ class ModernMenu(RibbonBar):
         counter = 0
         
         OrderList = []
-        for commandName in ButtonList:
+        for i in range(len(ButtonList)):
+            commandName = ButtonList[i]
             # Define a width
             width = 0
             # set the default padding to zero
@@ -6951,7 +6962,10 @@ class ModernMenu(RibbonBar):
 
             try:
                 # If there is 'separator' in the commandname, add a separator
-                if "separator" in commandName:
+                if "separator" in commandName and i > 0 and i < len(ButtonList):
+                    prevCommandName = ButtonList[i-1]
+                    if "separator" in prevCommandName:
+                        continue
                     # Increase the counter
                     counter = counter + 1
                     # Set the width and height
