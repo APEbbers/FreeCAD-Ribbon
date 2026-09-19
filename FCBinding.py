@@ -1840,6 +1840,8 @@ class ModernMenu(RibbonBar):
                     checkBox.setCheckState(Qt.CheckState.Checked)
             # Add the checkbox to the tab
             self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, checkBox)
+            # Set the tab visible
+            self.tabBar().setTabVisible(i, True)
                                            
         # Store the workbench name as the last customized name
         self.LastCustomized = [workbenchName, self.currentCategory().title()]
