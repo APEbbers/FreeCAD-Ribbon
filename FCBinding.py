@@ -5150,7 +5150,7 @@ class ModernMenu(RibbonBar):
             QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
             
             # Get the form
-            Dialog = LoadDesign_Ribbon.LoadDialog(self.List_CommandIcons)
+            Dialog = LoadDesign_Ribbon.LoadDialog(self.List_CommandIcons, self.ribbonStructure)
             if Parameters.DOCKED_DIALOGS is False:
                 # Show the form
                 Dialog.form.show()
