@@ -135,7 +135,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Makes "self.on_CreateBOM_clicked" listen to the changed control values instead initial values
         super(LoadDialog, self).__init__()
         
-        self.ribbonStructure = ribbonStructure
+        self.Dict_RibbonCommandPanel = ribbonStructure
         
         # Load the icons for the commands
         self.List_CommandIcons = IconList
@@ -3140,7 +3140,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         )[0]
 
         # Get the toolbar name
-        Toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
+        Toolbar = self.form.PanelOrder_RD.selectedItems()[0].data(Qt.ItemDataRole.UserRole)
 
         # Define a table widget item
         CommandTable_RDItem = QTableWidgetItem()
@@ -4117,7 +4117,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 JsonFile = open(JsonFile)
                 data = json.load(JsonFile)
             else:
-                data = self.ribbonStructure
+                data = self.Dict_RibbonCommandPanel
         except Exception:
             JsonFile = open(Parameters.RIBBON_STRUCTURE_JSON)
             data = json.load(JsonFile)
@@ -4213,14 +4213,14 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             List_IgnoredWorkbenches.append(IgnoredWorkbench[2])
 
         # add the various lists to the resulting dict.
-        self.ribbonStructure["language"] = FCLanguage
-        self.ribbonStructure["ignoredToolbars"] = List_IgnoredToolbars
-        self.ribbonStructure["iconOnlyToolbars"] = List_IconOnly_Toolbars
-        self.ribbonStructure["quickAccessCommands"] = List_QuickAccessCommands
-        self.ribbonStructure["ignoredWorkbenches"] = List_IgnoredWorkbenches
-        self.ribbonStructure.update(self.Dict_CustomToolbars)
-        self.ribbonStructure.update(self.Dict_RibbonCommandPanel)
-        self.ribbonStructure.update(self.Dict_NewPanels)
+        self.Dict_RibbonCommandPanel["language"] = FCLanguage
+        self.Dict_RibbonCommandPanel["ignoredToolbars"] = List_IgnoredToolbars
+        self.Dict_RibbonCommandPanel["iconOnlyToolbars"] = List_IconOnly_Toolbars
+        self.Dict_RibbonCommandPanel["quickAccessCommands"] = List_QuickAccessCommands
+        self.Dict_RibbonCommandPanel["ignoredWorkbenches"] = List_IgnoredWorkbenches
+        self.Dict_RibbonCommandPanel.update(self.Dict_CustomToolbars)
+        self.Dict_RibbonCommandPanel.update(self.Dict_RibbonCommandPanel)
+        self.Dict_RibbonCommandPanel.update(self.Dict_NewPanels)
 
         # get the path for the Json file
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
@@ -4236,7 +4236,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
         # Writing to sample.json
         with open(JsonFile, "w") as outfile:
-            json.dump(self.ribbonStructure, outfile, indent=4)
+            json.dump(self.Dict_RibbonCommandPanel, outfile, indent=4)
 
         outfile.close()
         return
@@ -4298,6 +4298,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         ) == DestinationItem.data(Qt.ItemDataRole.UserRole):
                             SourceWidget.takeItem(i)
 
+        # Update the data with the (text)changed
+        self.UpdateData()
         return
 
     def MoveItem(self, ListWidget: QListWidget, Up: bool = True):
@@ -4338,6 +4340,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                     CommandTable.setCurrentCell(row - 1, column)
                 CommandTable.removeRow(row + 1)
 
+        # Update the data with the (text)changed
         self.UpdateData()
         return
 
@@ -4355,7 +4358,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         )[0]
 
         # Get the toolbar name
-        Toolbar = self.form.PanelList_RD.currentData(Qt.ItemDataRole.UserRole)
+        Toolbar = self.form.PanelOrder_RD.selectedItems()[0].data(Qt.ItemDataRole.UserRole)
 
         # Define the order based on the order in this table widget
         Order = []
@@ -4372,6 +4375,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.Dict_RibbonCommandPanel["workbenches"][WorkBenchName]["toolbars"][Toolbar][
             "order"
         ] = Order
+        
+        # Update the data with the (text)changed
+        self.UpdateData()
 
         return
 
