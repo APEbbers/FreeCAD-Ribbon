@@ -393,15 +393,22 @@ class ModernMenu(RibbonBar):
                 pass
         
         # Check if there are disabled workbenches. If so add them to the ignored workbenches
-        for WorkBenchName in self.ribbonStructure["workbenches"].keys():
-            IsInstalled = False
+        if "workbenches" in self.ribbonStructure:
+            for WorkBenchName in self.ribbonStructure["workbenches"].keys():
+                IsInstalled = False
+                for InstalledWB in Gui.listWorkbenches():
+                    if InstalledWB == WorkBenchName:
+                        IsInstalled = True
+                
+                if IsInstalled is False:
+                    if WorkBenchName not in self.ribbonStructure["ignoredWorkbenches"]:
+                        self.ribbonStructure["ignoredWorkbenches"].append(WorkBenchName)
+        if not "workbenches" in self.ribbonStructure:            
             for InstalledWB in Gui.listWorkbenches():
-                if InstalledWB == WorkBenchName:
-                    IsInstalled = True
-            
-            if IsInstalled is False:
-                if WorkBenchName not in self.ribbonStructure["ignoredWorkbenches"]:
-                    self.ribbonStructure["ignoredWorkbenches"].append(WorkBenchName)
+                if InstalledWB not in self.ribbonStructure["ignoredWorkbenches"]:
+                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure,
+                "workbenches", InstalledWB, True
+            )
         
         if int(App.Version()[0]) == 0 or (int(App.Version()[0]) == 1 and int(App.Version()[1]) == 0):
             self.ConvertRibbonStructure(checkFCVersion=False, RestartFreeCAD=False)
