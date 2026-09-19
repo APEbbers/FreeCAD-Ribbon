@@ -6034,7 +6034,11 @@ class ModernMenu(RibbonBar):
 
                 # If the last item is not an separator, you can add an separator
                 # With an paneloptionbutton, use an offset of 2 instead of 1 for i.
-                if "separator" in button.text() and i < len(allButtons):
+                if "separator" in button.text() and i < len(allButtons) and i > 0:
+                    prevButton = allButtons[i-1]
+                    if "separator" in prevButton.text():
+                        continue
+                    
                     separatorWidget = CustomWidgets.CustomSeparator()
                     rowSpan = 6
                     separator = panel.addWidget(separatorWidget, rowSpan=rowSpan, fixedHeight=False, alignment=Qt.AlignmentFlag.AlignTop)
