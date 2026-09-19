@@ -3,13 +3,13 @@
 
   <name>FreeCAD Ribbon</name>
 
-  <description>A Ribbon interface for FreeCAD</description>
+  <description>A customizable ribbon interface for FreeCAD</description>
 
-  <version>1.11.3</version>
+  <version>1.11.6</version>
 
   <date>2024-07-28</date>
 
-  <maintainer>Paul Ebbers</maintainer>
+  <author>Paul Ebbers</author>
 
   <license file="LICENSE">GPL-3.0-or-later</license>
 

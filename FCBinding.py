@@ -393,15 +393,23 @@ class ModernMenu(RibbonBar):
                 pass
         
         # Check if there are disabled workbenches. If so add them to the ignored workbenches
-        for WorkBenchName in self.ribbonStructure["workbenches"].keys():
-            IsInstalled = False
+        if "workbenches" in self.ribbonStructure:
+            for WorkBenchName in self.ribbonStructure["workbenches"].keys():
+                IsInstalled = False
+                for InstalledWB in Gui.listWorkbenches():
+                    if InstalledWB == WorkBenchName:
+                        IsInstalled = True
+                
+                if IsInstalled is False and "ignoredWorkbenches" in self.ribbonStructure:  # noqa: SIM102
+                    if WorkBenchName not in self.ribbonStructure["ignoredWorkbenches"]:
+                        self.ribbonStructure["ignoredWorkbenches"].append(WorkBenchName)
+        if not "workbenches" in self.ribbonStructure:            
             for InstalledWB in Gui.listWorkbenches():
-                if InstalledWB == WorkBenchName:
-                    IsInstalled = True
-            
-            if IsInstalled is False:
-                if WorkBenchName not in self.ribbonStructure["ignoredWorkbenches"]:
-                    self.ribbonStructure["ignoredWorkbenches"].append(WorkBenchName)
+                if "ignoredWorkbenches" in self.ribbonStructure and InstalledWB not in self.ribbonStructure["ignoredWorkbenches"]:
+                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, "workbenches", InstalledWB, True)
+                else:
+                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, "workbenches", InstalledWB, True)
+        
         
         if int(App.Version()[0]) == 0 or (int(App.Version()[0]) == 1 and int(App.Version()[1]) == 0):
             self.ConvertRibbonStructure(checkFCVersion=False, RestartFreeCAD=False)
@@ -924,7 +932,7 @@ class ModernMenu(RibbonBar):
             CustomShortCuts = App.ParamGet(
                 "User parameter:BaseApp/Preferences/Shortcut"
             )
-            if "Ribbon_Menu" in CustomShortCuts.GetStrings():
+            if "Ribbon_Menu" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Menu") != "":
                 ShortcutKey = CustomShortCuts.GetString("Ribbon_Menu")
         except Exception:
             pass
@@ -4143,7 +4151,7 @@ class ModernMenu(RibbonBar):
             CustomShortCuts = App.ParamGet(
                 "User parameter:BaseApp/Preferences/Shortcut"
             )
-            if "Ribbon_Layout" in CustomShortCuts.GetStrings():
+            if "Ribbon_Layout" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Layout") != "":
                 ShortcutKey = CustomShortCuts.GetString("Ribbon_Layout")
         except Exception:
             pass
@@ -4165,7 +4173,7 @@ class ModernMenu(RibbonBar):
             CustomShortCuts = App.ParamGet(
                 "User parameter:BaseApp/Preferences/Shortcut"
             )
-            if "Ribbon_Preferences" in CustomShortCuts.GetStrings():
+            if "Ribbon_Preferences" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Preferences") !=  "":
                 ShortcutKey = CustomShortCuts.GetString("Ribbon_Preferences")
         except Exception:
             pass
@@ -7425,9 +7433,9 @@ class EventInspector(QObject):
                     CustomShortCuts = App.ParamGet(
                         "User parameter:BaseApp/Preferences/Shortcut"
                     )
-                    if "Ribbon_Pin" in CustomShortCuts.GetStrings():
+                    if "Ribbon_Pin" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Pin") != "":
                         StoredShortCutKey_Pin = CustomShortCuts.GetString("Ribbon_Pin") 
-                    if "Ribbon_Menubar" in CustomShortCuts.GetStrings():
+                    if "Ribbon_Menubar" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Menubar") != "":
                         StoredShortCutKey_MenuBar = CustomShortCuts.GetString("Ribbon_Menubar")                   
                 except Exception:
                     pass
