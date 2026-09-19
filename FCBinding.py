@@ -422,15 +422,16 @@ class ModernMenu(RibbonBar):
                     if InstalledWB == WorkBenchName:
                         IsInstalled = True
                 
-                if IsInstalled is False and "ignoredWorkbenches" in self.ribbonStructure:  # noqa: SIM102
+                if IsInstalled is False:
                     if WorkBenchName not in self.ribbonStructure["ignoredWorkbenches"]:
                         self.ribbonStructure["ignoredWorkbenches"].append(WorkBenchName)
         if not "workbenches" in self.ribbonStructure:            
             for InstalledWB in Gui.listWorkbenches():
-                if "ignoredWorkbenches" in self.ribbonStructure and InstalledWB not in self.ribbonStructure["ignoredWorkbenches"]:
-                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, "workbenches", InstalledWB, True)
-                else:
-                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, "workbenches", InstalledWB, True)
+                if InstalledWB not in self.ribbonStructure["ignoredWorkbenches"]:
+                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure,
+                "workbenches", InstalledWB, True
+            )
+            
         
         if int(App.Version()[0]) == 0 or (int(App.Version()[0]) == 1 and int(App.Version()[1]) == 0):
             self.ConvertRibbonStructure(checkFCVersion=False, RestartFreeCAD=False)
@@ -4703,32 +4704,53 @@ class ModernMenu(RibbonBar):
             ):
                 ApplictionMenu.addMenu(self.AccessoriesMenu)
                 
-        # Replace the toolbar actions with custom ones to control the behavior
-        # Clear the toolbars
-        for child in MenuBar.findChildren(QMenu):
+        # Replace the toolbar and panel actions with custom ones to control the behavior
+        #
+        # Define a variable for the toolbar menu and panel menu
+        ToolBar_Menu = None                
+        Panel_Menu = None
+        # Get the active workbench
+        workBench = Gui.activeWorkbench()
+        # Store the panel names
+        panel_Names = []
+        for dockWidget in  mw.findChildren(QDockWidget):
+            panel_Names.append(dockWidget.objectName())
+        # Store the toolbar names
+        Toolbar_Names = workBench.listToolbars()  
+            
+        # Clear the toolbars and panels
+        for child in MenuBar.findChildren(QMenu):            
             if child.objectName() == "&View":                
                 for subChild in child.actions():
                     if subChild.text() == "&Toolbars":
                         if subChild.menu() is not None:
                             subChild.menu().deleteLater()
-                        break
+                    if subChild.objectName() == "Std_DockViewMenu":
+                        subChild.menu().deleteLater()
 
-        # Re-create a new menu with the toolbars but with custom actions
-        #
-        # Define a variable for the toolbar menu
-        ToolBar_Menu = None                
-        # Get the active workbench
-        workBench = Gui.activeWorkbench()
-        # Get the toolbars for this workbench
-        Toolbar_Names = workBench.listToolbars()            
-        # Find the empty toolbars menu
+        # Re-create new menu with the toolbars and panels but with custom actions
+        # 
+        # Find the empty toolbars menu and panel menu
         for child in MenuBar.findChildren(QMenu):
             if child.objectName() == "&View":                
                 for subChild in child.actions():
                     if subChild.text() == "&Toolbars":
                         ToolBar_Menu = subChild
+                    if subChild.objectName() == "Std_DockViewMenu":
+                        Panel_Menu = subChild
+        # Fill the panel menu with actions
+        if Panel_Menu is not None:                      
+            menu = QMenu(mw)
+            for Panel_Name in panel_Names:
+                Action = self.createAction_DockWidget(Panel_Name, menu)
+                menu.addAction(Action)
+                
+            # Add the menu
+            Panel_Menu.setMenu(menu)
+        
         # Fill the toolbar menu with actions
-        if ToolBar_Menu is not None:            
+        if ToolBar_Menu is not None:      
+                    
             menu = QMenu(mw)
             for Toolbar_Name in Toolbar_Names:
                 Action = self.createAction_ToolBar(Toolbar_Name, menu)
@@ -5027,11 +5049,16 @@ class ModernMenu(RibbonBar):
         for dockWidget in mw.findChildren(QDockWidget):                                    
             if dockWidget.objectName() == dockWidget_Name:
                 dockWidget_Area = mw.dockWidgetArea(dockWidget)
+                MenuBar = mw.menuBar()
                 
                 if Checked is True:
                     dockWidget.show()
+                    if dockWidget.objectName() == "Ribbon" and dockWidget.isVisible() is True:
+                        MenuBar.setVisible(False)
                 else:
                     dockWidget.close()
+                    if dockWidget.objectName() == "Ribbon" and dockWidget.isVisible() is False:
+                        MenuBar.setVisible(True)
                 
                 # If not present, add a dict for the toolbar states to the ribbonstructure.json
                 Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["PanelStates", dockWidget_Name], endEmpty=True)               
