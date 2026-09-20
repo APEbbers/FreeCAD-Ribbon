@@ -797,135 +797,140 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     def on_WorkbenchList_CP__activated(
         self, setCustomToolbarSelector_CP: bool = False, CurrentText=""
     ):
-        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
-        
-        # Set the workbench name.
-        WorkBenchName = self.CurrentWorkBenchName
-        WorkBenchTitle = self.CurrentWorkBenchTitle
+        try:
+            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
+            
+            # Set the workbench name.
+            WorkBenchName = self.CurrentWorkBenchName
+            WorkBenchTitle = self.CurrentWorkBenchTitle
 
-        # If there is no workbench, return
-        if WorkBenchName == "":
-            return
+            # If there is no workbench, return
+            if WorkBenchName == "":
+                return
 
-        # Get the toolbars of the workbench
-        wbToolbars = self.returnWorkBenchToolbars(WorkBenchName)
-        # Get all the custom toolbars from the toolbar layout
-        CustomToolbars = self.List_ReturnCustomToolbars()
-        for CustomToolbar in CustomToolbars:
-            if CustomToolbar[1] == WorkBenchTitle:
-                wbToolbars.append(CustomToolbar[0])
-        # Get the global custom toolbars
-        CustomToolbars = self.Dict_ReturnCustomToolbars_Global()
-        for CustomToolbar in CustomToolbars:
-            wbToolbars.append(CustomToolbar)
-        # Get the custom panels
-        if "customToolbars" in RibbonBar.workBenchDict:
-            CustomPanel = self.List_ReturnCustomPanel(
-                RibbonBar.workBenchDict["customToolbars"], WorkBenchName=WorkBenchName
-            )
-            for CustomToolbar in CustomPanel:
-                if CustomToolbar[1] == WorkBenchTitle or CustomToolbar[1] == "Global":
+            # Get the toolbars of the workbench
+            wbToolbars = self.returnWorkBenchToolbars(WorkBenchName)
+            # Get all the custom toolbars from the toolbar layout
+            CustomToolbars = self.List_ReturnCustomToolbars()
+            for CustomToolbar in CustomToolbars:
+                if CustomToolbar[1] == WorkBenchTitle:
                     wbToolbars.append(CustomToolbar[0])
-        # Get the new panels per workbench
-        if "newPanels" in RibbonBar.workBenchDict:
-            NewPanels = self.List_ReturnNewPanel(
-                RibbonBar.workBenchDict["newPanels"], WorkBenchName=WorkBenchName, PanelDict="newPanels"
-            )
-            for Newpanel in NewPanels:
-                if Newpanel[1] == WorkBenchTitle:
-                    wbToolbars.append(Newpanel[0])
-            # Get the new panels globally
-            NewPanels = self.List_ReturnNewPanel(
-                RibbonBar.workBenchDict["newPanels"], WorkBenchName="Global", PanelDict="newPanels"
-            )
-            for Newpanel in NewPanels:
-                if Newpanel[1] == "Global":
-                    wbToolbars.append(Newpanel[0])                       
+            # Get the global custom toolbars
+            CustomToolbars = self.Dict_ReturnCustomToolbars_Global()
+            for CustomToolbar in CustomToolbars:
+                wbToolbars.append(CustomToolbar)
+            # Get the custom panels
+            if "customToolbars" in RibbonBar.workBenchDict:
+                CustomPanel = self.List_ReturnCustomPanel(
+                    RibbonBar.workBenchDict["customToolbars"], WorkBenchName=WorkBenchName
+                )
+                for CustomToolbar in CustomPanel:
+                    if CustomToolbar[1] == WorkBenchTitle or CustomToolbar[1] == "Global":
+                        wbToolbars.append(CustomToolbar[0])
+            # Get the new panels per workbench
+            if "newPanels" in RibbonBar.workBenchDict:
+                NewPanels = self.List_ReturnNewPanel(
+                    RibbonBar.workBenchDict["newPanels"], WorkBenchName=WorkBenchName, PanelDict="newPanels"
+                )
+                for Newpanel in NewPanels:
+                    if Newpanel[1] == WorkBenchTitle:
+                        wbToolbars.append(Newpanel[0])
+                # Get the new panels globally
+                NewPanels = self.List_ReturnNewPanel(
+                    RibbonBar.workBenchDict["newPanels"], WorkBenchName="Global", PanelDict="newPanels"
+                )
+                for Newpanel in NewPanels:
+                    if Newpanel[1] == "Global":
+                        wbToolbars.append(Newpanel[0])                       
 
-        # Clear the listwidget before filling it
-        self.form.PanelAvailable_CP.clear()
-        # Sort the toolbar list
-        wbToolbars = self.SortedPanelList(wbToolbars, WorkBenchName)
+            # Clear the listwidget before filling it
+            self.form.PanelAvailable_CP.clear()
+            # Sort the toolbar list
+            wbToolbars = self.SortedPanelList(wbToolbars, WorkBenchName)
 
-        # Go through the toolbars and check if they must be ignored.
-        shadowList = []
-        for Toolbar in wbToolbars:
-            if Toolbar in shadowList:
-                continue
-            IsIgnored = False
-            if "ignoredToolbars" in RibbonBar.workBenchDict:
-                for IgnoredToolbar in RibbonBar.workBenchDict["ignoredToolbars"]:
-                    if Toolbar.lower() == IgnoredToolbar.lower():
-                        IsIgnored = True
+            # Go through the toolbars and check if they must be ignored.
+            shadowList = []
+            for Toolbar in wbToolbars:
+                if Toolbar in shadowList:
+                    continue
+                IsIgnored = False
+                if "ignoredToolbars" in RibbonBar.workBenchDict:
+                    for IgnoredToolbar in RibbonBar.workBenchDict["ignoredToolbars"]:
+                        if Toolbar.lower() == IgnoredToolbar.lower():
+                            IsIgnored = True
 
-                # If the are not to be ignored, add them to the listwidget
-                if IsIgnored is False and Toolbar != "":
-                    ToolbarTransLated = Toolbar
-                    # Get the translated toolbar name
-                    for ToolBarItem in self.StringList_Toolbars:
-                        if ToolBarItem[0] == Toolbar:
-                            if len(ToolBarItem) == 4:
-                                ToolbarTransLated = ToolBarItem[3]
-                            else:
-                                ToolbarTransLated = ToolBarItem[0]
-                    # If it is a custom toolbar, remove the suffix
-                    ToolbarTransLated = ToolbarTransLated.replace("_custom", "").replace(
-                        "_newPanel", ""
-                    )
-                    
-                    # Remove possible workbench names from the titles
-                    title = ToolbarTransLated
-                    if (
-                        "_custom" not in title
-                        and "_global" not in title
-                        and "_newPanel" not in title
-                    ):
-                        List = [
-                            WorkBenchName,
-                            WorkBenchTitle,
-                            WorkBenchTitle.replace(" ", ""),
-                        ]
-                        for Name in List:                          
-                            ListDelimiters = [" - ", "-", "_"]
-                            for delimiter in ListDelimiters:
-                                if f"{delimiter}{Name}" in title:
-                                    title = title.replace(f"{delimiter}{Name}", "")
-                                elif f"{Name}{delimiter}" in title:
-                                    title = title.replace(f"{Name}{delimiter}", "")
-                            if Name in title and Name != title:                        
-                                title = title.replace(Name, "")
-                            if title[:1] == " ":
-                                title = title[1:]
-                    # remove any suffix from the panel title
-                    if title.endswith("_custom"):
-                        title = title.replace("_custom", "")
-                    if title.endswith("_global"):
-                        title = title.replace("_global", "")
-                    if title.endswith("_newPanel"):
-                        title = title.replace("_newPanel", "")
-
-                    ListWidgetItem = QListWidgetItem()
-                    ListWidgetItem.setText(title.replace("&", ""))
-                    ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
-                    self.form.PanelAvailable_CP.addItem(ListWidgetItem)
-                    
-                    # Add the toolbar to the shadow list to prevent from being added more than once.
-                    shadowList.append(Toolbar)
-
-                    if setCustomToolbarSelector_CP is True:
-                        self.form.CustomToolbarSelector_CP.setCurrentText(
-                            translate("FreeCAD Ribbon", "New")
+                    # If the are not to be ignored, add them to the listwidget
+                    if IsIgnored is False and Toolbar != "":
+                        ToolbarTransLated = Toolbar
+                        # Get the translated toolbar name
+                        for ToolBarItem in self.StringList_Toolbars:
+                            if ToolBarItem[0] == Toolbar:
+                                if len(ToolBarItem) == 4:
+                                    ToolbarTransLated = ToolBarItem[3]
+                                else:
+                                    ToolbarTransLated = ToolBarItem[0]
+                        # If it is a custom toolbar, remove the suffix
+                        ToolbarTransLated = ToolbarTransLated.replace("_custom", "").replace(
+                            "_newPanel", ""
                         )
-                        self.form.CustomToolbarSelector_CP.setItemData(
-                            0, "new", Qt.ItemDataRole.UserRole
-                        )
+                        
+                        # Remove possible workbench names from the titles
+                        title = ToolbarTransLated
+                        if (
+                            "_custom" not in title
+                            and "_global" not in title
+                            and "_newPanel" not in title
+                        ):
+                            List = [
+                                WorkBenchName,
+                                WorkBenchTitle,
+                                WorkBenchTitle.replace(" ", ""),
+                            ]
+                            for Name in List:                          
+                                ListDelimiters = [" - ", "-", "_"]
+                                for delimiter in ListDelimiters:
+                                    if f"{delimiter}{Name}" in title:
+                                        title = title.replace(f"{delimiter}{Name}", "")
+                                    elif f"{Name}{delimiter}" in title:
+                                        title = title.replace(f"{Name}{delimiter}", "")
+                                if Name in title and Name != title:                        
+                                    title = title.replace(Name, "")
+                                if title[:1] == " ":
+                                    title = title[1:]
+                        # remove any suffix from the panel title
+                        if title.endswith("_custom"):
+                            title = title.replace("_custom", "")
+                        if title.endswith("_global"):
+                            title = title.replace("_global", "")
+                        if title.endswith("_newPanel"):
+                            title = title.replace("_newPanel", "")
 
-                    # Get the ribbonbar
-                    RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-                    # Activate all buttons
-                    RibbonBar.activateButtons()
+                        ListWidgetItem = QListWidgetItem()
+                        ListWidgetItem.setText(title.replace("&", ""))
+                        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Toolbar)
+                        self.form.PanelAvailable_CP.addItem(ListWidgetItem)
+                        
+                        # Add the toolbar to the shadow list to prevent from being added more than once.
+                        shadowList.append(Toolbar)
 
-            self.form.PanelSelected_CP.clear()       
+                        if setCustomToolbarSelector_CP is True:
+                            self.form.CustomToolbarSelector_CP.setCurrentText(
+                                translate("FreeCAD Ribbon", "New")
+                            )
+                            self.form.CustomToolbarSelector_CP.setItemData(
+                                0, "new", Qt.ItemDataRole.UserRole
+                            )
+
+                        # Get the ribbonbar
+                        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+                        # Activate all buttons
+                        RibbonBar.activateButtons()
+
+                self.form.PanelSelected_CP.clear()       
+        except Exception as e:
+            if Parameters.DEBUG_MODE:
+                print("RibbonUI: \n" + str(e))
+            pass
         return
 
     def on_MoveUpPanelCommand_CP_clicked(self):

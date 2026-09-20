@@ -27,7 +27,7 @@ import traceback
 import subprocess
 from functools import partial
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -58,7 +58,7 @@ from PySide6.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -81,6 +81,7 @@ from PySide6.QtWidgets import (
     QWidgetAction,
     QStylePainter,
     QStyle,
+    QProxyStyle,
     QStyleOptionButton,
     QPushButton,
     QHBoxLayout,
@@ -102,8 +103,9 @@ from PySide6.QtWidgets import (
     QTableWidget,
     QTableWidgetItem,
     QCompleter,
+    
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -752,7 +754,8 @@ class ModernMenu(RibbonBar):
             self.quickAccessToolBar().setStyleSheet(
                 "QToolBar {background: " + hexColor + ";}"
             )
-            self.tabBar().setStyleSheet("background: " + hexColorTab + ";")
+            self.tabBar().setStyleSheet("QTabBar: {background: " + hexColorTab + ";}")
+            
             # Set the background color. This fixes transparant backgrounds when FreeCAD has no stylesheet
             StyleSheet_Addition_Tabs = (
                 "\n\nQToolButton {background: solid " + hexColor + ";}"
@@ -1624,10 +1627,9 @@ class ModernMenu(RibbonBar):
                     # Add a menu to select tabs to be shown
                     SetTabsAct = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Show/Hide tabs..."))
                     for i in range(self.tabBar().count()):
-                        WorkbenchName = self.tabBar().tabData(i)  
-                        Workbench = Gui.getWorkbench(WorkbenchName)
-                        if WorkbenchName is not "NoneWorkbench":
-                            SetTabsAct.addAction(self.createAction_Tabs(Workbench, SetTabsAct))
+                        WorkbenchName = self.tabBar().tabData(i) 
+                        if WorkbenchName != "NoneWorkbench":
+                            SetTabsAct.addAction(self.createAction_Tabs(WorkbenchName, SetTabsAct))
                                         
                     # Add a separator
                     self.contextMenu.addSeparator()
@@ -1847,7 +1849,7 @@ class ModernMenu(RibbonBar):
                         pass     
             except Exception as e:
                 if Parameters.DEBUG_MODE is True:
-                    print(f"{title} had a problem with storing the state of its buttons")
+                    print(f"RibbonUI: {title} had a problem with storing the state of its buttons")
                     print(e.args)
                     print(e.__traceback__)
                 pass
@@ -2003,6 +2005,8 @@ class ModernMenu(RibbonBar):
             # Add show hidden tabs
             for i in range(self.tabBar().count()):
                 tabData = self.tabBar().tabData(i)  
+                # For some reason, you need to set a tabButton. Otherwise the tab won appear
+                self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None)
                 # Set the tab visible
                 self.tabBar().setTabVisible(i, True)         
                 # Set the checkbox enabled
@@ -2010,9 +2014,22 @@ class ModernMenu(RibbonBar):
                     # If enabled is present, set the checkbox accordingly
                     if "Enabled" in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
                         self.tabBar().setTabEnabled(i, self.workBenchDict["workbenches"][tabData]["Enabled"])
+                        if not self.tabBar().isTabEnabled(i):
+                            self.tabBar().setTabTextColor(i, "red")
+                            # self.tabBar().setStyleSheet("""QTabBar::tab["""
+                            #     + """isTabEnabled""" +
+                            #     """="false"] {
+                            #         color: red; /* Color for the important tab */
+                            #         font-weight: bold;
+                            #     }"""
+                            # )
+                            # self.tabBar().update()
+                        else:
+                            self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))
                     # If enabled is not present, set the checkbox checked by default
                     if "Enabled" not in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
-                        self.tabBar().setTabEnabled(i, True)                  
+                        self.tabBar().setTabEnabled(i, True)     
+                        self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))             
                 
         # Restore the cursor
         QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
@@ -2421,7 +2438,7 @@ class ModernMenu(RibbonBar):
                 TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
                 TB.setFixedHeight(self.RibbonHeight)  
         
-        # Remove the checkboxes          
+        # Hide tabs if they are set to hidden         
         for i in range(self.tabBar().count()):
             workbenchName = self.tabBar().tabData(i)
             
@@ -2695,7 +2712,6 @@ class ModernMenu(RibbonBar):
         
         # If there is an action, continue
         if beforeAction is not None:
-            print(beforeAction.defaultWidget().objectName())
             counter = 0
             # Count the separators already present
             for item in self.workBenchDict["quickAccessCommands"]:
@@ -2970,7 +2986,22 @@ class ModernMenu(RibbonBar):
         # If the groupName is "All", show all tabs
         if GroupName == translate("FreeCAD Ribbon", "All"):            
             for i in range(self.tabBar().count()):
-                self.tabBar().setTabVisible(i, True)   
+                workbenchName = self.tabBar().tabData(i)
+                
+                # Make sure to set the tab visible
+                if "Enabled" in self.ribbonStructure["workbenches"][workbenchName]:  # noqa: SIM102
+                    if self.ribbonStructure["workbenches"][workbenchName]["Enabled"] is True:
+                        # Make sure to set the tab visible
+                        self.tabBar().setTabVisible(i, True)  
+                    else:
+                        # Make sure to set the tab hidden
+                        self.tabBar().setTabEnabled(i, True)
+                        self.tabBar().setTabVisible(i, False)
+                # If enabled is not present, set the tab always visible
+                else:
+                    # Make sure to set the tab visible
+                    self.tabBar().setTabVisible(i, True) 
+                self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None) 
             
             # Disable the delete button and set the icon
             # DeleteButton: QToolButton = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
@@ -3064,13 +3095,10 @@ class ModernMenu(RibbonBar):
         return result
     
     # Function to create an action for the panel menu
-    def createAction_Tabs(self, WorkBench, parent):
-        workbenchText = WorkBench.MenuText
-        workbenchName = ""
-        try:
-            workbenchName = WorkBench.name()
-        except Exception:
-            pass
+    def createAction_Tabs(self, WorkbenchName, parent):
+        Workbench = Gui.getWorkbench(WorkbenchName)
+        workbenchText = Workbench.MenuText
+
         # Define a checkbox
         Action = QAction(workbenchText, parent)
         Action.setCheckable(True)
@@ -3081,20 +3109,20 @@ class ModernMenu(RibbonBar):
         for i in range(self.tabBar().count()):
             tabData = self.tabBar().tabData(i)   
             # Set the checkbox enabled
-            if "workbenches" in self.workBenchDict and tabData in self.workBenchDict["workbenches"] and tabData == workbenchName:  # noqa: SIM102
+            if "workbenches" in self.workBenchDict and tabData in self.workBenchDict["workbenches"] and tabData == WorkbenchName:  # noqa: SIM102
                 # If enabled is present, set the checkbox accordingly
                 if "Enabled" in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
                     Action.setChecked(self.workBenchDict["workbenches"][tabData]["Enabled"])
                 # If enabled is not present, set the checkbox checked by default
                 if "Enabled" not in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
                     # Add the command if they don't exist
-                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "Enabled"], True)
+                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", WorkbenchName, "Enabled"], True)
                     # Write the state to the dict
                     self.workBenchDict["workbenches"][tabData]["Enabled"] = True
                     Action.setChecked(True)
                      
         # # Connect the action
-        Action.toggled.connect(lambda e: self.HandleTab(WorkBench.name(), e))   
+        Action.toggled.connect(lambda e: self.HandleTab(WorkbenchName, e))   
         return Action
     
     def HandleTab(self, workbenchName, Checked = False):        
