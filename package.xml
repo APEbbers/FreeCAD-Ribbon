@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <package format="1" xmlns="https://wiki.freecad.org/Package_Metadata">
 
   <name>FreeCAD Ribbon</name>
@@ -30,7 +30,6 @@
       <depend type="addon" optional="true">SearchBar</depend>
       <depend type="addon" optional="true">SaveAndRestore</depend>
       <depend type="python" optional="true">git</depend>
-      <depend type="python" optional="true">gitpython</depend>
     </workbench>
   </content>
 

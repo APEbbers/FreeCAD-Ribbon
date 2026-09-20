@@ -489,7 +489,7 @@ def RemoveWorkBenchToolbars(Name: str, WorkBenchName: str = "Global") -> None:
 def ReturnXML_Value(
     path: str, ElementName: str, attribKey: str = "", attribValue: str = ""
 ):
-    import xml.etree.ElementTree as ET
+    import defusedxml.ElementTree as ET
     import os
 
     # Passing the path of the
@@ -524,7 +524,7 @@ def ReturnXML_Value_Git(
     host="https://codeberg.org",
 ):
     # import requests_local as requests
-    import xml.etree.ElementTree as ET
+    import defusedxml.ElementTree as ET
     from urllib import request
 
     result = None

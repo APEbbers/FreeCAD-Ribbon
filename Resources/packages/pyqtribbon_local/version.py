@@ -3,14 +3,16 @@ from re import error as RegexError
 
 
 def _get_version():
-    root = Path(__file__).resolve().parents[1]
-    if (root / ".git").exists() and not (root / ".git/shallow").exists():
-        try:
-            import setuptools_scm
+    # setuptools_scm is not allowed by the FreeCAD addon-manager 
+    #
+    # root = Path(__file__).resolve().parents[1]
+    # if (root / ".git").exists() and not (root / ".git/shallow").exists():
+        # try:
+        #     import setuptools_scm
 
-            return setuptools_scm.get_version(root=str(root))
-        except (ImportError, RegexError, LookupError):
-            pass
+        #     return setuptools_scm.get_version(root=str(root))
+        # except (ImportError, RegexError, LookupError):
+        #     pass
     try:
         from ._version import version
 
