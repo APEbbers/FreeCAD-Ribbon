@@ -1741,16 +1741,18 @@ class ModernMenu(RibbonBar):
                            toolBarAction.defaultWidget().setCurrentIndex(0) 
                 return
             if self.CustomizeEnabled is True:
-                for category in self.CustomizedCategories:
-                    self.setCurrentCategory(category)
-                    self.on_Ok_Clicked()
+                # for category in self.CustomizedCategories:
+                    # self.setCurrentCategory(category)
+                    # self.on_Ok_Clicked()
+                self.on_Ok_Clicked()
                 self.CustomizedCategories.clear()
                 return
 
         if action == "Cancel":
-            for category in self.CustomizedCategories:
-                self.setCurrentCategory(category)
-                self.on_Cancel_Clicked()
+            # for category in self.CustomizedCategories:
+                # self.setCurrentCategory(category)
+                # self.on_Cancel_Clicked()
+            self.on_Cancel_Clicked()
             self.CustomizedCategories.clear()
             return
     
@@ -2015,10 +2017,11 @@ class ModernMenu(RibbonBar):
                     if "Enabled" in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
                         self.tabBar().setTabEnabled(i, self.workBenchDict["workbenches"][tabData]["Enabled"])
                         if not self.tabBar().isTabEnabled(i):
+                            # Change the text color
                             self.tabBar().setStyleSheet(
                                 """QTabBar::tab:disabled {color: """
                                 + mw.palette().color(mw.palette().ColorGroup.Disabled, mw.palette().ColorRole.Text).name()
-                                + """;font-weight: bold;}"""
+                                + """;}"""
                             )
                             self.tabBar().update()
                         else:
@@ -2219,7 +2222,7 @@ class ModernMenu(RibbonBar):
                 except Exception:
                     pass
                 
-        # Remove the checkboxes and set the tab visible or invisible based on checkstate        
+        # Set the tab visible or invisible based on checkstate        
         for i in range(self.tabBar().count()):
             workbenchName = self.tabBar().tabData(i)
             
@@ -4014,7 +4017,8 @@ class ModernMenu(RibbonBar):
         if tabName is not None and tabName != "" and tabName != "test":
             # activate selected workbench
             tabName = tabName.replace("&", "")
-            if self.wbNameMapping[tabName] is not None and self.SuspendBuildPanels is False:                
+            # if self.wbNameMapping[tabName] is not None and self.SuspendBuildPanels is False:                
+            if self.wbNameMapping[tabName] is not None:                
                 Gui.activateWorkbench(self.wbNameMapping[tabName])
 
             if tabActivated is True:
@@ -4041,12 +4045,12 @@ class ModernMenu(RibbonBar):
             #     self.FoldRibbon(True)
 
         # Set the text color depending in tabstyle
-        if Parameters.TABBAR_STYLE != 1:
-            self.tabBar().setStyleSheet(
-                "QTabBar::tab {color: "
-                + StyleMapping_Ribbon.ReturnStyleItem("FontColor")
-                + ";}"
-            )
+        # if Parameters.TABBAR_STYLE != 1:
+        #     self.tabBar().setStyleSheet(
+        #         "QTabBar::tab {color: "
+        #         + StyleMapping_Ribbon.ReturnStyleItem("FontColor")
+        #         + ";}"
+        #     )
         if Parameters.TABBAR_STYLE == 1:
             self.tabBar().setStyleSheet(
                 "QTabBar::tab {background: "
@@ -4095,7 +4099,8 @@ class ModernMenu(RibbonBar):
         self.hideClassicToolbars()
 
         # switch tab if necessary
-        self.updateCurrentTab()
+        if self.CustomizeEnabled is False: 
+            self.updateCurrentTab()
 
         # create panels. Do this after updateCurrentTab.
         # Otherwise, the sketcher workbench won;t be loaded properly the first time
