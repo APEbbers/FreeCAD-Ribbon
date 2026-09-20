@@ -799,7 +799,7 @@ def DownLoadIcons():
     url = 'https://raw.githubusercontent.com/FreeCAD/FreeCAD/main/src/Gui/Icons/3dx_pivot.png'
     
     
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
     response.raise_for_status() # proper handle HTTP errors
 
     file_content = response.text
