@@ -27,7 +27,7 @@ import traceback
 import subprocess
 from functools import partial
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -58,7 +58,7 @@ from PySide.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -105,7 +105,7 @@ from PySide.QtWidgets import (
     QCompleter,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -2015,15 +2015,12 @@ class ModernMenu(RibbonBar):
                     if "Enabled" in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
                         self.tabBar().setTabEnabled(i, self.workBenchDict["workbenches"][tabData]["Enabled"])
                         if not self.tabBar().isTabEnabled(i):
-                            self.tabBar().setTabTextColor(i, "red")
-                            # self.tabBar().setStyleSheet("""QTabBar::tab["""
-                            #     + """isTabEnabled""" +
-                            #     """="false"] {
-                            #         color: red; /* Color for the important tab */
-                            #         font-weight: bold;
-                            #     }"""
-                            # )
-                            # self.tabBar().update()
+                            self.tabBar().setStyleSheet(
+                                """QTabBar::tab:disabled {color: """
+                                + mw.palette().color(mw.palette().ColorGroup.Disabled, mw.palette().ColorRole.Text).name()
+                                + """;font-weight: bold;}"""
+                            )
+                            self.tabBar().update()
                         else:
                             self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))
                     # If enabled is not present, set the checkbox checked by default
@@ -4358,8 +4355,8 @@ class ModernMenu(RibbonBar):
 
                         self.tabBar().setTabToolTip(
                             len(self.categories()) - 1, MenuText
-                        )  
-                                                
+                        )
+
                         # Hide or show the tab
                         Enabled = True
                         if workbenchName in self.ribbonStructure["workbenches"]:  # noqa: SIM102
