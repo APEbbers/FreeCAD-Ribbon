@@ -2249,6 +2249,9 @@ class ModernMenu(RibbonBar):
             self.ribbonStructure["customToolbars"] = self.workBenchDict["customToolbars"]
         
         for WorkBench in self.workBenchDict["workbenches"].keys():
+            # Add the command if they don't exist
+            Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["workbenches", WorkBench], True)
+            # Update the ribbon structure
             self.ribbonStructure["workbenches"][WorkBench] == self.workBenchDict["workbenches"][WorkBench]
         
         # Store the tab order to FreeCAD
