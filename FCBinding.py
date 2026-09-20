@@ -1565,8 +1565,6 @@ class ModernMenu(RibbonBar):
                         # Disconnect the widgetActions
                         RibbonButtonAction_Style.currentTextChanged.disconnect()
                         RibbonButtonAction_Text.checkStateChanged.disconnect()
-                        if Parameters.LINK_ICON_SIZES is False:
-                            RibbonButtonAction_Size.valueChanged.disconnect()
                         AddSeparator_Left.triggered.disconnect()                                
                         AddSeparator_Right.triggered.disconnect()
                         ChangeButtonText.textChanged.disconnect()                            
