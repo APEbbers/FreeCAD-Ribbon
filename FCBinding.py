@@ -139,6 +139,7 @@ from CustomWidgets import (
     RightToolButton,
     LineEditAction,
     ButtonAction,
+    StayOpenMenu,
 )
 import json
 import os
@@ -1625,11 +1626,13 @@ class ModernMenu(RibbonBar):
                     SetLayoutsAct.setDisabled(True) # ToDO
                     
                     # Add a menu to select tabs to be shown
-                    SetTabsAct = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Show/Hide tabs..."))
+                    menu = StayOpenMenu(self.contextMenu)
                     for i in range(self.tabBar().count()):
                         WorkbenchName = self.tabBar().tabData(i) 
                         if WorkbenchName != "NoneWorkbench":
-                            SetTabsAct.addAction(self.createAction_Tabs(WorkbenchName, SetTabsAct))
+                            menu.addAction(self.createAction_Tabs(WorkbenchName, menu))
+                    SetTabAct = self.contextMenu.addMenu(menu)
+                    SetTabAct.setText(translate("FreeCAD Ribbon", "Show/Hide tabs..."))
                                         
                     # Add a separator
                     self.contextMenu.addSeparator()
@@ -4787,7 +4790,7 @@ class ModernMenu(RibbonBar):
                         Panel_Menu = subChild
         # Fill the panel menu with actions
         if Panel_Menu is not None:                      
-            menu = QMenu(mw)
+            menu = StayOpenMenu(mw)
             for Panel_Name in panel_Names:
                 Action = self.createAction_DockWidget(Panel_Name, menu)
                 menu.addAction(Action)
@@ -4798,7 +4801,7 @@ class ModernMenu(RibbonBar):
         # Fill the toolbar menu with actions
         if ToolBar_Menu is not None:      
                     
-            menu = QMenu(mw)
+            menu = StayOpenMenu(mw)
             for Toolbar_Name in Toolbar_Names:
                 Action = self.createAction_ToolBar(Toolbar_Name, menu)
                 menu.addAction(Action)
