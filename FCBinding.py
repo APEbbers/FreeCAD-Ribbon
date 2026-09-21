@@ -383,8 +383,12 @@ class ModernMenu(RibbonBar):
 
         # Enable dragdrop
         self.setAcceptDrops(True)
-                
+
+        # Set the tabBar proerties
         self.tabBar().setAcceptDrops(True)
+        self.tabBar().setChangeCurrentOnDrag(False)
+        
+        # Set the quickaccess toolbar properties
         self._titleWidget.quickAccessToolBar().setAcceptDrops(True)
 
         # connect the signals
@@ -2052,7 +2056,6 @@ class ModernMenu(RibbonBar):
 
         # Set stylesheets
         if CloseDialog is True:
-            
             # Hide the comboBox and delete button for the tabgroups
             ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
             if ComboBox.count() <= 1:
@@ -2224,7 +2227,7 @@ class ModernMenu(RibbonBar):
                     panel.close()
                 except Exception:
                     pass
-                
+
         # Set the tab visible or invisible based on checkstate        
         for i in range(self.tabBar().count()):
             workbenchName = self.tabBar().tabData(i)
@@ -2248,7 +2251,7 @@ class ModernMenu(RibbonBar):
                 else:
                     # Make sure to set the tab visible
                     self.tabBar().setTabVisible(i, True)
-                                    
+        
         # update the ribbonstructure before writing it to disk
         if "quickAccessCommands" in self.workBenchDict:
             self.ribbonStructure["quickAccessCommands"] = self.workBenchDict["quickAccessCommands"]
@@ -2283,7 +2286,7 @@ class ModernMenu(RibbonBar):
         # Update the FreeCAD order as well
         WorkbenchOrderParam = "User parameter:BaseApp/Preferences/Workbenches/"
         App.ParamGet(WorkbenchOrderParam).SetString("Ordered", OrderString)
-        
+
         # Writing to ribbonStructure.json
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
         with open(JsonFile, "w") as outfile:
@@ -2294,6 +2297,15 @@ class ModernMenu(RibbonBar):
             App.closeDocument("Temporary")
         except Exception:
             pass
+                    
+        # Clear the panel lists
+        self.HiddenPanels.clear()
+        self.AddedPanels.clear()
+        self.RemovedPanels.clear()
+        
+        # Activate the stored category when the customise enviroment was started
+        self.setCurrentCategory(self.CurrentCategoryToRestore)
+        self.hideClassicToolbars() 
         
         # Close the AddCommands dialog
         if CloseDialog is True:
@@ -2305,18 +2317,15 @@ class ModernMenu(RibbonBar):
                 if DockWidget is not None:
                     DockWidget.deleteLater()  
         
-        # Clear the workbench dict
-        if CloseDialog is True:
+            # Clear the workbench dict
             self.workBenchDict.clear()
-        
-        # Clear the panel lists
-        self.HiddenPanels.clear()
-        self.AddedPanels.clear()
-        self.RemovedPanels.clear()
-        
-        # Activate the stored category when the customise enviroment was started
-        self.setCurrentCategory(self.CurrentCategoryToRestore)
-        self.hideClassicToolbars()  
+            
+            # For some reason, if the first tab is not activated, it will move to the end after closing the dialog
+            # Move it back based on the orderstring
+            orderList = OrderString.split(",")
+            for i in range(self.tabBar().count()):
+                if self.tabBar().tabData(i) == orderList[0]:
+                    self.tabBar().moveTab(i,0)
                         
         # Print a message
         print(translate("FreeCAD Ribbon", "RibbonUI: Changes are saved"))
@@ -2446,8 +2455,8 @@ class ModernMenu(RibbonBar):
             workbenchName = self.tabBar().tabData(i)
             
             # Make sure to set the tab visible
-            if "Enabled" in self.workBenchDict["workbenches"][workbenchName]:  # noqa: SIM102
-                if self.workBenchDict["workbenches"][workbenchName]["Enabled"] is True:
+            if "Enabled" in self.ribbonStructure["workbenches"][workbenchName]:  # noqa: SIM102
+                if self.ribbonStructure["workbenches"][workbenchName]["Enabled"] is True:
                     # Make sure to set the tab visible
                     self.tabBar().setTabVisible(i, True)  
                 else:
