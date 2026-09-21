@@ -1238,7 +1238,7 @@ class ModernMenu(RibbonBar):
     # region - Custom functions for FreeCAD
     def contextMenu_Panels_ToolBars(self, pos):                                 
         # Create the menu
-        menu = QMenu(mw)
+        menu = StayOpenMenu(mw)
         # Add the dockWidgets
         for dockWidget in mw.findChildren(QDockWidget):
             Action_1 = self.createAction_DockWidget(dockWidget.objectName(), menu)
