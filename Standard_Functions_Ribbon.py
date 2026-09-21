@@ -914,9 +914,10 @@ def returnQiCons_Commands(CommandName, pixmap=""):
     if pixmap != "":
         if icon is None or (icon is not None and icon.isNull()):
             try:
-                icon = Gui.getIcon(pixmap)
-                if icon is not None and icon.isNull() is False:
-                    return icon
+                if Gui.Command.get(pixmap.rsplit(".")[0]) is not None:
+                    icon = Gui.getIcon(pixmap)
+                    if icon is not None and icon.isNull() is False:
+                        return icon
             except Exception:
                 pass
         
