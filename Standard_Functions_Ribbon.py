@@ -141,7 +141,7 @@ def Mbox(
             replyText = reply[0]
         else:
             # user clicked Cancel
-            replyText = reply[0]  # which will be "" if they clicked Cancel
+            replyText = ""
         return str(replyText)
     if style == 30:
         # Set the messagebox
@@ -182,29 +182,33 @@ def RestartDialog(message="", includeIcons=False):
     msgBox.setWindowTitle("FreeCAD Ribbon")
     # Set the buttons and default button
     msgBox.setStandardButtons(
-        QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        QMessageBox.StandardButton.Cancel | QMessageBox.StandardButton.Ok
     )
-    msgBox.setDefaultButton(QMessageBox.StandardButton.No)
-    msgBox.button(QMessageBox.StandardButton.Yes).setText(
+    msgBox.setDefaultButton(QMessageBox.StandardButton.Ok)
+    msgBox.button(QMessageBox.StandardButton.Ok).setText(
         translate("FreeCAD Ribbon", "Restart now")
     )
-    msgBox.button(QMessageBox.StandardButton.No).setText(
+    msgBox.button(QMessageBox.StandardButton.Cancel).setText(
         translate("FreeCAD Ribbon", "Restart later")
     )
     if includeIcons is True:
-        msgBox.button(QMessageBox.StandardButton.No).setIcon(
+        msgBox.button(QMessageBox.StandardButton.Cancel).setIcon(
             Gui.getIcon("edit_Cancel.svg")
         )
-        msgBox.button(QMessageBox.StandardButton.Yes).setIcon(
+        msgBox.button(QMessageBox.StandardButton.Ok).setIcon(
             Gui.getIcon("edit_OK.svg")
         )
+        
 
     reply = msgBox.exec_()
-    if reply == QMessageBox.StandardButton.Yes:
-        return "yes"
-    if reply == QMessageBox.StandardButton.No:
+    if reply == QMessageBox.StandardButton.Cancel:
+        msgBox.close()
         return "no"
-
+    if reply == QMessageBox.StandardButton.Ok:
+        restart_freecad()
+        msgBox.close()
+        return "yes"
+    return
 
 def restart_freecad():
     from PySide import QtWidgets, QtCore

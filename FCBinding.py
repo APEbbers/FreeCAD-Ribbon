@@ -213,6 +213,7 @@ class ModernMenu(RibbonBar):
     # Define a placeholder for the repro adress
     ReproAdress: str = ""
     HelpAdress: str = ""
+    LatestVersion: str = ""
     # Placeholders for building the ribbonbar
     ribbonStructure = {}
     wbNameMapping = {}
@@ -292,6 +293,8 @@ class ModernMenu(RibbonBar):
     SettingsMenu = QMenu()
     OverlayMenu = None
     AccessoriesMenu = None
+    DesignButton = None
+    CustomizeRibbonButton = None
 
     # Define the versions for update and developments
     UpdateVersion = ""
@@ -686,7 +689,7 @@ class ModernMenu(RibbonBar):
             attribValue = ""
             # host: str ="https://codeberg.org"
             host = "https://github.com"
-            LatestVersion = StandardFunctions.ReturnXML_Value_Git(
+            self.LatestVersion = StandardFunctions.ReturnXML_Value_Git(
                 User=User, Repository=Repo, Branch=Branch, File=File, ElementName=ElementName, attribKey=attribKey, attribValue=attribValue, host=host
             )
             print(translate("FreeCAD Ribbon", "Ribbon UI: Latest released version: ") + str(LatestVersion))
@@ -989,7 +992,7 @@ class ModernMenu(RibbonBar):
             pass
         self.applicationOptionButton().setShortcut(ShortcutKey)
         ToolTip = (
-            f"FreeCAD menu<br></br>(<i>{ShortcutKey}</i>)"
+            f"<b>FreeCAD menu</b><br></br>(<i>{ShortcutKey}</i>)"
         )
         self.applicationOptionButton().setToolTip(ToolTip)
 
@@ -1628,7 +1631,11 @@ class ModernMenu(RibbonBar):
                     # Add a menu to select layout (themes)
                     SetLayoutsAct = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set Layouts..."))
                     SetLayoutsAct.setDisabled(True) # ToDO
-                    
+                    # Add a button to restore a layout
+                    RestoreLayoutAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Restore a Ribbon layout"))
+                    RestoreLayoutAct.triggered.connect(self.RestoreJson)
+                    # Add a separator
+                    self.contextMenu.addSeparator()
                     # Add a menu to select tabs to be shown
                     menu = StayOpenMenu(self.contextMenu)
                     for i in range(self.tabBar().count()):
@@ -1698,7 +1705,10 @@ class ModernMenu(RibbonBar):
         panel = None
         return
     
-    def handleContextMenuAction(self, action):
+    def handleContextMenuAction(self, action):        
+        # Set the wait cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        
         # Perfom the action depending on which button is clicked
         if action == "Start":
              # Load the dialog
@@ -1719,6 +1729,7 @@ class ModernMenu(RibbonBar):
                     self.on_Cancel_Clicked()
                     return
             if os.path.exists(DataFile) is True:
+                self.AddCommandsDialog  = None
                 self.AddCommandsDialog = LoadAddCommands.LoadDialog(self)
                 if Parameters.DOCKED_DIALOGS is False:
                     # Show the form
@@ -1762,8 +1773,16 @@ class ModernMenu(RibbonBar):
             self.on_Cancel_Clicked()
             self.CustomizedCategories.clear()
             return
+        
+        # Restore the cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        return
+    
     
     def on_Customize_Clicked(self):
+        # Set the wait cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        
         # Get the name of the current workbench
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         if self.currentCategory() not in self.CustomizedCategories:
@@ -2334,7 +2353,7 @@ class ModernMenu(RibbonBar):
         QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         return
     
-    def on_Cancel_Clicked(self, workbenchName = ""):
+    def on_Cancel_Clicked(self, workbenchName = ""):        
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
@@ -2529,8 +2548,7 @@ class ModernMenu(RibbonBar):
                    
         # Close the AddCommands dialog
         if self.AddCommandsDialog is not None:            
-            self.AddCommandsDialog.form.close()
-            self.AddCommandsDialog = None      
+            self.AddCommandsDialog.form.close()   
             # Close the dockwidget if there is one
             DockWidget = mw.findChild(QDockWidget, "AddCommands")
             if DockWidget is not None:
@@ -3001,14 +3019,16 @@ class ModernMenu(RibbonBar):
                 workbenchName = self.tabBar().tabData(i)
                 
                 # Make sure to set the tab visible
-                if "Enabled" in self.ribbonStructure["workbenches"][workbenchName]:  # noqa: SIM102
-                    if self.ribbonStructure["workbenches"][workbenchName]["Enabled"] is True:
-                        # Make sure to set the tab visible
-                        self.tabBar().setTabVisible(i, True)  
-                    else:
-                        # Make sure to set the tab hidden
-                        self.tabBar().setTabEnabled(i, True)
-                        self.tabBar().setTabVisible(i, False)
+                if "workbenches" in self.ribbonStructure and workbenchName in self.ribbonStructure["workbenches"]:
+                    if "Enabled" in self.ribbonStructure["workbenches"][workbenchName]:  # noqa: SIM102
+                        if self.ribbonStructure["workbenches"][workbenchName]["Enabled"] is True:
+                            # Make sure to set the tab visible
+                            self.tabBar().setTabEnabled(i, True)
+                            self.tabBar().setTabVisible(i, True)  
+                        else:
+                            # Make sure to set the tab hidden
+                            self.tabBar().setTabEnabled(i, False)
+                            self.tabBar().setTabVisible(i, False)
                 # If enabled is not present, set the tab always visible
                 else:
                     # Make sure to set the tab visible
@@ -3016,7 +3036,6 @@ class ModernMenu(RibbonBar):
                 self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None) 
             
             # Disable the delete button and set the icon
-            # DeleteButton: QToolButton = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
             self.DeleteButton.setDisabled(True)
             
             # Disable the remove group button in the context menu
@@ -3030,16 +3049,28 @@ class ModernMenu(RibbonBar):
           
         # Check if the group is in the ribbonStructure
         if "tabGroups" in self.ribbonStructure and GroupName in self.ribbonStructure["tabGroups"]:  # noqa: SIM102
-            if GroupName in self.ribbonStructure["tabGroups"]:
-                # Get the list of workbenches in this group
-                workBenchList = self.ribbonStructure["tabGroups"][GroupName]
-                # Go through the tabs. Hide when the workbench tab is not in the list.
-                # Show the tab when the workbench is in the list
+            if GroupName in self.ribbonStructure["tabGroups"]:                
+                # Go through all the tabs
                 for i in range(self.tabBar().count()):
-                    if self.tabBar().tabData(i) not in workBenchList:
-                        self.tabBar().setTabVisible(i, False)
-                    else:
-                        self.tabBar().setTabVisible(i, True)
+                    workbenchName = self.tabBar().tabData(i)
+                    DisabledWB = False
+                    # Check if the tab is not disabled by the user
+                    if "workbenches" in self.ribbonStructure and workbenchName in self.ribbonStructure["workbenches"]:
+                        if "Enabled" in self.ribbonStructure["workbenches"][workbenchName] and self.ribbonStructure["workbenches"][workbenchName]["Enabled"] is False:
+                            self.tabBar().setTabEnabled(i, False)
+                            self.tabBar().setTabVisible(i, False)
+                            DisabledWB = True
+                    # If the tab is not enabled, check if it is in the group                
+                    if DisabledWB is False:
+                        # Go through the tabs. Hide when the workbench tab is not in the list.
+                        # Get the list of workbenches in this group
+                        workBenchList = self.ribbonStructure["tabGroups"][GroupName]
+                        if workbenchName not in workBenchList:
+                            self.tabBar().setTabEnabled(i, False)
+                            self.tabBar().setTabVisible(i, False)
+                        else:
+                            self.tabBar().setTabVisible(i, True)
+                            self.tabBar().setTabEnabled(i, True)
                 
                 # Set the icon and enable the delete button
                 if self.CustomizeEnabled:
@@ -4209,11 +4240,6 @@ class ModernMenu(RibbonBar):
                     radius="4px",
                 )
             )
-            
-        # Add the default tooltip
-        self.applicationOptionButton().setToolTip(
-            translate("FreeCAD Ribbon", "FreeCAD Ribbon")
-        )
 
         # add the menus from the menubar to the application button
         self.ApplicationMenus()
@@ -4415,42 +4441,6 @@ class ModernMenu(RibbonBar):
             OverlayButton.clicked.connect(self.on_overlayButton_toggled)
             # is now set to replace the pin button
             # self.rightToolBar().addWidget(OverlayButton)
-
-        # add a settings button with menu
-        SettingsMenu = QMenu()
-        stylesheet_tooltip = (
-            """\n\nQToolTip {
-            background-color: #FFFFE1;
-            color: black;
-            border: black solid 1px;
-            border-radius: 2px;
-            }""")
-        # Get the freecad preference button
-        editMenu = mw.findChildren(QMenu, "&Edit")[0]
-        for action in editMenu.actions():
-            if action.objectName() == "Std_DlgPreferences":
-                preferenceButton_FreeCAD = action
-                SettingsMenu.addAction(preferenceButton_FreeCAD)
-        # Get the customize button from FreeCAD
-        toolsMenu = mw.findChildren(QMenu, "&Tools")[0]
-        for action in toolsMenu.actions():
-            if action.objectName() == "Std_DlgCustomize":
-                CustomizeButton_FreeCAD = action
-                SettingsMenu.addAction(CustomizeButton_FreeCAD)
-        # Add a save and restore button
-        try:
-            toolsMenu = mw.findChildren(QMenu, "&Tools")[0]
-            for action in toolsMenu.actions():
-                if action.objectName() == "SaveAndRestore":
-                    SaveAndRestore = action
-                    SettingsMenu.addAction(SaveAndRestore)
-                    break
-        except Exception:
-            pass        
-        # add the ribbon settings menu
-        SettingsMenu.addAction(self.RibbonMenu.menuAction())        
-        SettingsMenu.setStyleSheet(stylesheet_tooltip)
-        self.HelpMenu.setStyleSheet(stylesheet_tooltip)
         
         # add the helpMenu to the right toolbar 
         self._titleWidget._helpButton.deleteLater() # Remove the original helpbutton
@@ -4463,7 +4453,7 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().addAction(WidgetAction)
         
         # add the settingsmenu to the right toolbar 
-        SettingsButton = RightToolButton(Menu=SettingsMenu, Size=self.RightToolBarButtonSize, MenuButtonSpace=self.MenuButtonSpace, Icon=Gui.getIcon("Std_DlgParameter.svg"))              
+        SettingsButton = RightToolButton(Menu=self.SettingsMenu, Size=self.RightToolBarButtonSize, MenuButtonSpace=self.MenuButtonSpace, Icon=Gui.getIcon("Std_DlgParameter.svg"))              
         # Create the widget action from the button
         WidgetAction = QWidgetAction(self.rightToolBar())
         WidgetAction.setDefaultWidget(SettingsButton)
@@ -4600,16 +4590,18 @@ class ModernMenu(RibbonBar):
         else:
             self.setTitle("")
 
+        # Add a separator
+        self.SettingsMenu.addSeparator()   
+        
         # Add a beta button when showing the settings menu. 
         # Otherwise the button will be removed when using the context menus for the buttons
         def LoadBetaButton():
             # Add a switch to enable beta functions            
             switch = CheckBoxAction(self, "Enable béta functions")
             switch.setChecked(Parameters.BETA_FUNCTIONS_ENABLED)
-            # switch.setFixedSize(50, 30)
             switch.setObjectName("bétaSwitch")
             toolTipText = (translate("FreeCAD Ribbon",
-        """
+        """<b>Béta functions</b><br></br><i>
         Enables the following experimental functions:
         - a new customisation enviroment. With this enviroment activated, the following customizations can be done per button:
             - Enable or disable text.
@@ -4626,12 +4618,11 @@ class ModernMenu(RibbonBar):
             
             To start the customisation enviroment, right click on the ribbon (outside the buttons) and click customize.
             The customization enviroment is enabled and with a right click on a button, its properties can be changed.
-            Right click on the ribbon agian to save and exit the customisation enviroment.
+            Right click on the ribbon agian to save and exit the customisation enviroment.</i>
         """
         ))
             switch.setToolTip(toolTipText)
             switch.checkStateChanged.connect(self.on_ToggleBetaFunctions_toggled)       
-            
             if Parameters.BETA_FUNCTIONS_ENABLED is True:
                 self.BetaFunctionsEnabled = True
                 switch.setCheckState(Qt.CheckState.Checked)
@@ -4642,13 +4633,13 @@ class ModernMenu(RibbonBar):
                 switch.setChecked(False)            
             
             # if present remove the old switch
-            for action in SettingsMenu.actions():
+            for action in self.SettingsMenu.actions():
                 if type(action) is CheckBoxAction:
-                    SettingsMenu.removeAction(action)
+                    self.SettingsMenu.removeAction(action)
             # Now added to the settings menu
-            SettingsMenu.addAction(switch)
+            self.SettingsMenu.addAction(switch)
         # Connect the function to load the beta button
-        SettingsMenu.aboutToShow.connect(LoadBetaButton)
+        self.SettingsMenu.aboutToShow.connect(LoadBetaButton)
         
         # Add a expanding spacer to the right toolbar
         BeforeAction = self.rightToolBar().actions()[2]     
@@ -4725,6 +4716,17 @@ class ModernMenu(RibbonBar):
 
         # add the menus from the menubar to the application button
         MenuBar = mw.menuBar()
+        
+        # Create a accessories menu
+        AccessoriesMenu = None
+        for action in MenuBar.children():
+            if action.objectName() == "AccessoriesMenu":
+                AccessoriesMenu = action.menu()
+                self.AccessoriesMenu = QMenu()
+                subMenus = []
+                for subAction in AccessoriesMenu.actions():
+                    subMenus.append(subAction)
+                self.AccessoriesMenu.addActions(subMenus)
 
         # Set a stylesheet specific for the menubar. Otherwise the fontsize of the menus will not be applied
         StyleSheet_MenuBar = (
@@ -4899,33 +4901,62 @@ class ModernMenu(RibbonBar):
 
     # Function to create the extra menus on the right toolbar
     def CreateMenus(self):
-        MenuBar = mw.menuBar()
-
-        # Create a accessories menu
-        AccessoriesMenu = None
-        for action in MenuBar.children():
-            if action.objectName() == "AccessoriesMenu":
-                AccessoriesMenu = action.menu()
-                self.AccessoriesMenu = QMenu()
-                subMenus = []
-                for subAction in AccessoriesMenu.actions():
-                    subMenus.append(subAction)
-                self.AccessoriesMenu.addActions(subMenus)
-
-        # Create a ribbon menu
-        RibbonMenu = QMenu(
-            translate("FreeCAD Ribbon", "Ribbon UI preferences") + " ...", self
-        )
-        RibbonMenu.setToolTipsVisible(True)
+        CustomizeIcon = QIcon()
+        PreferencesIcon = QIcon()
+        # Get the freecad preference button
+        editMenu = mw.findChildren(QMenu, "&Edit")[0]
+        for action in editMenu.actions():
+            if action.objectName() == "Std_DlgPreferences":
+                preferenceButton_FreeCAD = action
+                PreferencesIcon = action.icon()
+                # Change the text to make clear that it is the FreeCAD preference page
+                preferenceButton_FreeCAD.setText("FreeCAD " + preferenceButton_FreeCAD.text())
+                self.SettingsMenu.addAction(preferenceButton_FreeCAD)
+        # Get the customize button from FreeCAD
+        toolsMenu = mw.findChildren(QMenu, "&Tools")[0]
+        for action in toolsMenu.actions():
+            if action.objectName() == "Std_DlgCustomize":
+                CustomizeButton_FreeCAD = action
+                CustomizeIcon = action.icon()
+                # Change the text to make clear that it is the FreeCAD preference page
+                CustomizeButton_FreeCAD.setText("FreeCAD " + CustomizeButton_FreeCAD.text())
+                self.SettingsMenu.addAction(CustomizeButton_FreeCAD)
         
-        # Add the ribbon design button
-        DesignButton = RibbonMenu.addAction(
-            translate("FreeCAD Ribbon", "Ribbon layout")
-        )
-        DesignButton.setToolTip(
-            translate("FreeCAD Ribbon", "Design the ribbon to your preference")
-        )
-        DesignButton.triggered.connect(self.loadDesignMenu)
+        # Add a separator
+        self.SettingsMenu.addSeparator()
+        
+        # Add a save and restore button
+        try:
+            toolsMenu = mw.findChildren(QMenu, "&Tools")[0]
+            for action in toolsMenu.actions():
+                if action.objectName() == "SaveAndRestore":
+                    SaveAndRestore = action
+                    # Change the text
+                    SaveAndRestore.setText(SaveAndRestore.replace("...", ""))
+                    self.SettingsMenu.addAction(SaveAndRestore)
+                    break
+        except Exception:
+            pass             
+
+        # Add a separator
+        self.SettingsMenu.addSeparator()   
+        
+        # Add a customize button to enter the customize enviroment if Beta functions are enabled
+        if Parameters.BETA_FUNCTIONS_ENABLED:
+            self.BetaFunctionsEnabled = True
+            self.CustomizeRibbonButton = self.SettingsMenu.addAction(translate("FreeCAD Ribbon", "Ribbon Customize"))
+            self.CustomizeRibbonButton.setIcon(CustomizeIcon)
+            self.CustomizeRibbonButton.setObjectName("CustomizeRibbon")
+            self.CustomizeRibbonButton.setToolTip(f"<b>Customize ribbon</b><br></br><i>{translate("FreeCAD Ribbon", "Enter the customize environment")}</i><br></br>")
+            self.CustomizeRibbonButton.triggered.connect(lambda: self.handleContextMenuAction("Start"))
+        
+        # Add the ribbon design button (Legacy)
+        self.DesignButton = self.SettingsMenu.addAction(translate("FreeCAD Ribbon", "Ribbon Layout"))
+        self.DesignButton.setObjectName("RibbonLayout")
+        if Parameters.BETA_FUNCTIONS_ENABLED:
+            self.DesignButton.setText(translate("FreeCAD Ribbon", "Ribbon Layout (Legacy)"))
+        self.DesignButton.setToolTip(f"<b>Ribbon layout menu</b><br></br><i>{translate("FreeCAD Ribbon", "Design the ribbon to your preference")}</i><br></br>(Legacy)")
+        self.DesignButton.triggered.connect(self.loadDesignMenu)
         ShortcutKey = "Alt+L"
         try:
             CustomShortCuts = App.ParamGet(
@@ -4936,16 +4967,16 @@ class ModernMenu(RibbonBar):
         except Exception:
             pass
         if ShortcutKey != "" and ShortcutKey is not None:
-            DesignButton.setShortcut(ShortcutKey)
+            self.DesignButton.setShortcut(ShortcutKey)
             self.LayoutMenuShortCut = ShortcutKey
+            self.DesignButton.setToolTip(f"<b>Ribbon layout menu</b><br></br><i>{translate("FreeCAD Ribbon", "Design the ribbon to your preference")}</i><br></br>({ShortcutKey})<br></br>(Legacy)")
         
         # Add the preference button
-        PreferenceButton = RibbonMenu.addAction(
-            translate("FreeCAD Ribbon", "Preferences")
-        )
-        PreferenceButton.setToolTip(
-            translate("FreeCAD Ribbon", "Set preferences for the Ribbon UI")
-        )
+        PreferenceButton = self.SettingsMenu.addAction(
+            translate("FreeCAD Ribbon", "Ribbon Preferences")
+        )     
+        PreferenceButton.setIcon(PreferencesIcon)   
+        PreferenceButton.setToolTip(f"<b>Ribbon preferences</b><br></br><i>{translate("FreeCAD Ribbon", "Set preferences for the Ribbon UI")}</i>")
         PreferenceButton.setMenuRole(QAction.MenuRole.NoRole)
         PreferenceButton.triggered.connect(self.loadSettingsMenu)
         ShortcutKey = "Alt+P"
@@ -4959,10 +4990,11 @@ class ModernMenu(RibbonBar):
             pass
         if ShortcutKey != "" and ShortcutKey is not None:
             PreferenceButton.setShortcut(ShortcutKey)
+            PreferenceButton.setToolTip(f"<b>Ribbon preferences</b><br></br><i>{translate("FreeCAD Ribbon", "Set preferences for the Ribbon UI")}</i><br></br>({ShortcutKey})")
         
         # Add the repair menu
-        RepairMenu: QMenu = RibbonMenu.addMenu(
-            translate("FreeCAD Ribbon", "Repair functions...")
+        RepairMenu: QMenu = self.SettingsMenu.addMenu(
+            translate("FreeCAD Ribbon", "Ribbon Repair functions...")
         )
         UpdateRibbonStructure = RepairMenu.addAction(translate("FreeCAD Ribbon", "Repair the Ribbon layout file"))
         UpdateRibbonStructure.triggered.connect(lambda: self.ConvertRibbonStructure(checkFCVersion=False, RestartFreeCAD=True))
@@ -4982,83 +5014,69 @@ class ModernMenu(RibbonBar):
         if os.path.exists(ScriptDir) is True:
             ListScripts = os.listdir(ScriptDir)
             if len(ListScripts) > 0:
-                ScriptButtonMenu = RibbonMenu.addMenu(
-                    translate("FreeCAD Ribbon", "Scripts")
-                )
-                ScriptButtonMenu.setToolTip(
-                    translate("FreeCAD Ribbon", "Scripts to help setup the ribbon.")
-                )
+                ScriptButtonMenu = self.SettingsMenu.addMenu(translate("FreeCAD Ribbon", "Ribbon Scripts"))
+                ScriptButtonMenu.setToolTip(translate("FreeCAD Ribbon", "<b>Ribbon Scripts</b><br></br><i>Scripts to help setup the ribbon.</i><br></br>"))
                 for i in range(len(ListScripts)):
                     ScriptButtonMenu.addAction(
                         ListScripts[i],
                         lambda i=i + 1: self.LoadMarcoFreeCAD(ListScripts[i - 1]),
                     )
-        # Set the RibbonMenu
-        self.RibbonMenu = RibbonMenu
 
         # Create a help menu
+        MenuBar = mw.menuBar()
         HelpMenu = QMenu(self)
         HelpMenu.setToolTipsVisible(True)
         # Get the icons
         HelpIcon = QIcon()
         AboutIcon = Gui.getIcon("freecad")
-
+        # A variable for the menu actions
         actions = [QAction()]
 
         # Get the standard help menu from FreeCAD
         for action in MenuBar.children():
             if action.objectName() == "&Help":
                 actions = action.actions()
-                # change help to FreeCAD help
-                actions[0].setText(translate("FreeCAD Ribbon", "Help"))
+                # # change help to FreeCAD help
+                # actions[0].setText(translate("FreeCAD Ribbon", "FreeCAD Help"))
                 HelpMenu.addActions(actions)
                 # Store the help icon for the Ribbon help
                 HelpIcon = Gui.getIcon("help-browser")
                 # Remove the menu from the Ribbon Application Menu
                 MenuBar.removeAction(action.menuAction())
-
+        
+        # Add a section for the RibbonUI with Ribbon about, Ribbon help and what's new
+        #
+        HelpMenu.addSeparator()        
         # Add the ribbon helpbutton under the FreeCAD
-        RibbonHelpButton = QAction(translate("FreeCAD Ribbon", "Ribbon UI help"))
-        RibbonHelpButton.setToolTip(
-            translate(
-                "FreeCAD Ribbon", "Open the help page for the Ribbon UI in your browser"
-            )
-        )
+        RibbonHelpButton = HelpMenu.addAction(translate("FreeCAD Ribbon", "Ribbon help"))
+        RibbonHelpButton.setToolTip(f"<b>Ribbon help</b><br></br><i>{translate("FreeCAD Ribbon", "Opens the wiki for the Ribbon in your browser")}</i>")
         RibbonHelpButton.setIcon(HelpIcon)
         RibbonHelpButton.triggered.connect(self.on_RibbonHelpButton_clicked)
-        HelpMenu.insertAction(actions[1], RibbonHelpButton)
-
-        # create an about button to store FreeCAD about, Ribbon about and what's new
-        AboutMenu = QMenu(translate("FreeCAD Ribbon", "About") + " ...", self)
-        # set the icon for the menu
-        AboutMenu.setIcon(AboutIcon)
-        # get the the about button from freecad
-        AboutAction_FreeCAD = actions[len(actions) - 1]
-        for action in actions:
-            if action.menuRole() == QAction.MenuRole.AboutRole:
-                AboutAction_FreeCAD = action
-                AboutAction_FreeCAD.setIcon(AboutIcon)
-        # add the FreeCAd about button to the aboutmenu
-        AboutMenu.addAction(AboutAction_FreeCAD)
-        # remove the FreeCAd about button from the help menu
-        HelpMenu.removeAction(AboutAction_FreeCAD)
-        # Get the version of this addon
-        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
-        version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
-        # Create the ribbon about button
-        AboutButton_Ribbon = AboutMenu.addAction(
-            translate("FreeCAD Ribbon", "About Ribbon UI ") + version
-        )
-        AboutButton_Ribbon.setIcon(AboutIcon)
-        AboutButton_Ribbon.triggered.connect(self.on_AboutButton_clicked)
+        
         # Create the what's new button
-        WhatsNewButton_Ribbon = AboutMenu.addAction(
+        WhatsNewButton_Ribbon = HelpMenu.addAction(
             translate("FreeCAD Ribbon", "What's new?")
         )
+        WhatsNewButton_Ribbon.setToolTip(f"<b>What's new</b><br></br><i>{translate("FreeCAD Ribbon", "shows the \'Change log\' wiki page for the Ribbon in your browser")}</i>")
         WhatsNewButton_Ribbon.triggered.connect(self.on_WhatsNewButton_clicked)
-        # add the aboutmenu to the help menu
-        HelpMenu.addMenu(AboutMenu)
+        
+        # Create the ribbon about button
+        AboutButton_Ribbon = HelpMenu.addAction(translate("FreeCAD Ribbon", "About RibbonUI ") + self.LatestVersion)
+        AboutButton_Ribbon.setIcon(AboutIcon)
+        AboutButton_Ribbon.triggered.connect(self.on_AboutButton_clicked)
 
+        # add a settings button with menu
+        stylesheet_tooltip = (
+            """\n\nQToolTip {
+            background-color: #FFFFE1;
+            color: black;
+            border: black solid 1px;
+            border-radius: 2px;
+            }""")
+        self.SettingsMenu.setStyleSheet(stylesheet_tooltip)
+        self.HelpMenu.setStyleSheet(stylesheet_tooltip)
+
+        # Store the helpmenu
         self.HelpMenu = HelpMenu
         
         return
@@ -5562,16 +5580,10 @@ class ModernMenu(RibbonBar):
         except Exception:
             pass
         # Set the tooltip
-        pinButton.setToolTip(translate("FreeCAD Ribbon", "Click to toggle the autohide function on or off"))
+        pinButton.setToolTip(f"<b>Pin button</b><br></br><i>{translate("FreeCAD Ribbon", "Click to toggle the autohide function on or off")}</i>")
         # If there is a shortcut key assinged, update the tooltip
         if ShortcutKey != "none" or ShortcutKey != "":
-            pinButton.setToolTip(
-                translate(
-                    "FreeCAD Ribbon",
-                    "Click to toggle the autohide function on or off"
-                    + f"<br></br>(<i>{ShortcutKey}</i>)",
-                )
-            )
+            pinButton.setToolTip(f"<b>Pin button</b><br></br><i>{translate("FreeCAD Ribbon", "Click to toggle the autohide function on or off")}</i><br></br>({ShortcutKey})")
                         
         # Store the pinbutton globally
         self.pinButton = pinButton
@@ -5647,6 +5659,19 @@ class ModernMenu(RibbonBar):
         return
 
     def on_ToggleBetaFunctions_toggled(self):
+        tooltip = self.DesignButton.toolTip()
+        DesignButtonText = self.DesignButton.text()
+        if Parameters.BETA_FUNCTIONS_ENABLED:    
+            if not tooltip.endswith("<br></br>(Legacy)"):
+                tooltip = tooltip + "<br></br>(Legacy)"
+            if not DesignButtonText.endswith(" (Legacy)"):
+                DesignButtonText = DesignButtonText + " (Legacy)"
+        else:
+            tooltip = tooltip.replace("<br></br>(Legacy)", "")
+            DesignButtonText = DesignButtonText.replace(" (Legacy)", "")
+        self.DesignButton.setToolTip(tooltip)
+        self.DesignButton.setText(DesignButtonText)
+        
         if Parameters.BETA_FUNCTIONS_ENABLED is False:
             # Write the parameter
             Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", True)
@@ -5670,7 +5695,32 @@ class ModernMenu(RibbonBar):
             shutil.copy(JsonFile, BackupFile)
             # Store the status
             self.BetaFunctionsEnabled = Parameters.BETA_FUNCTIONS_ENABLED
-            return
+            # Update the text of the layout menu button
+            if not tooltip.endswith("<br></br>(Legacy)"):
+                tooltip = tooltip + "<br></br>(Legacy)"
+            if not DesignButtonText.endswith(" (Legacy)"):
+                DesignButtonText = DesignButtonText + " (Legacy)"
+            self.DesignButton.setToolTip(tooltip)
+            self.DesignButton.setText(DesignButtonText)
+            # Add the Ribbon Customize button if not present
+            actions = self.SettingsMenu.actions()
+            # for action in actions:
+            #     if action.objectName() == "CustomizeRibbon":
+            #         return
+
+            actionBefore = None
+            for i in range(len(actions)):
+                action = actions[i]
+                if i > 0 and i < len(actions) and action.objectName() == "RibbonLayout":
+                    actionBefore = actions[i-1]
+                    if actionBefore.isSeparator():
+                        self.CustomizeRibbonButton = self.SettingsMenu.addAction(translate("FreeCAD Ribbon", "Ribbon Customize"))
+                        self.CustomizeRibbonButton.setIcon(Gui.getIcon("applications-accessories.svg"))
+                        self.CustomizeRibbonButton.setObjectName("CustomizeRibbon")
+                        self.CustomizeRibbonButton.setToolTip(f"<b>Customize ribbon</b><br></br><i>{translate("FreeCAD Ribbon", "Enter the customize environment")}</i><br></br>")
+                        self.CustomizeRibbonButton.triggered.connect(lambda: self.handleContextMenuAction("Start"))
+                        self.SettingsMenu.insertAction(action, self.CustomizeRibbonButton)
+                    return                    
         if Parameters.BETA_FUNCTIONS_ENABLED is True:
             # Write the parameter
             Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", False)
@@ -5679,6 +5729,18 @@ class ModernMenu(RibbonBar):
             Parameters.BETA_FUNCTIONS_ENABLED = False
             # Store the status
             self.BetaFunctionsEnabled = Parameters.BETA_FUNCTIONS_ENABLED
+            # Update the text of the layout menu button
+            tooltip = tooltip.replace("<br></br>(Legacy)", "")
+            DesignButtonText = DesignButtonText.replace(" (Legacy)", "")
+            self.DesignButton.setToolTip(tooltip)
+            self.DesignButton.setText(DesignButtonText)
+            # Remove the Ribbon Customize button
+            actions = self.SettingsMenu.actions()
+            for action in actions:
+                if action.objectName() == "CustomizeRibbon":
+                    action.triggered.disconnect()
+                    self.SettingsMenu.removeAction(action)
+                    break
             return
         return
 
@@ -7601,6 +7663,8 @@ class ModernMenu(RibbonBar):
                 BackupFiles[0],
                 BackupFiles,
             )
+            if SelectedFile == "":
+                return
             BackupFile = os.path.join(pathBackup, SelectedFile)
             result = shutil.copy(BackupFile, JsonFile)
             StandardFunctions.Print(
@@ -7619,10 +7683,7 @@ class ModernMenu(RibbonBar):
                 "FreeCAD Ribbon",
                 "Settings reset to {}!\nYou must restart FreeCAD for changes to take effect.",
             ).format(SelectedFile)
-            answer = StandardFunctions.RestartDialog(message=message)
-            if answer == "yes":
-                StandardFunctions.restart_freecad()
-
+            StandardFunctions.RestartDialog(message=message)
         return
     
     def ReturnCommand_string(self, Dict: dict, panel: RibbonPanel, widget) -> str:

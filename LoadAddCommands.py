@@ -2759,7 +2759,7 @@ class EventInspector(QObject):
                 if LoadDialog.DialogClosed is False:        
                     try:          
                         RibbonBar.on_Cancel_Clicked()
-                        LoadDialog.DialogClosed = True
+                        # LoadDialog.DialogClosed = True
                     except Exception:
                         pass
                 return True
