@@ -5010,6 +5010,7 @@ class ModernMenu(RibbonBar):
         UpdateRibbonStructure.triggered.connect(lambda: self.ConvertRibbonStructure(checkFCVersion=False, RestartFreeCAD=True))
         RestoreLayout = RepairMenu.addAction(translate("FreeCAD Ribbon", "Restore a Ribbon layout"))
         RestoreLayout.triggered.connect(self.RestoreJson)
+        RepairMenu.addSeparator()
         OpenBackupFolder = RepairMenu.addAction(translate("FreeCAD Ribbon", "Open the backup directory"))
         # If the backup folder doesn't exists, create it
         if os.path.exists(Parameters.BACKUP_LOCATION) is False:
@@ -5031,6 +5032,13 @@ class ModernMenu(RibbonBar):
                         ListScripts[i],
                         lambda i=i + 1: self.LoadMarcoFreeCAD(ListScripts[i - 1]),
                     )
+                ScriptButtonMenu.addSeparator()
+                # If the script folder doesn't exists, create it
+                if os.path.exists(ScriptDir) is False:
+                    os.makedirs(ScriptDir)
+                OpenScriptFolder = ScriptButtonMenu.addAction(translate("FreeCAD Ribbon", "Open the script directory"))
+                OpenScriptFolder.triggered.connect(lambda: StandardFunctions.OpenDirectory(ScriptDir))
+                
 
         # Create a help menu
         MenuBar = mw.menuBar()
