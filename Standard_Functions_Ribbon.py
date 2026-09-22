@@ -20,7 +20,6 @@
 # *                                                                       *
 # *************************************************************************
 
-from xml.etree.ElementTree import Element
 from PySide.QtGui import QIcon
 from PySide.QtCore import QSize
 
@@ -540,11 +539,10 @@ def ReturnXML_Value_Git(
         if host == "https://codeberg.org":
            url = f"{host}/{User}/{Repository}/src/branch/{Branch}/{File}" 
         if host == "https://github.com":
-            url = f"{host}/{User}/{Repository}/blob/{Branch}/{File}" 
-        url = "https://raw.githubusercontent.com/APEbbers/FreeCAD-Ribbon/refs/heads/main/package.xml"
+            url = f"https://raw.githubusercontent.com/{User}/{Repository}/refs/heads/{Branch}/{File}" 
         response = request.urlopen(url)
         data = response.read()
-        root: Element[str] = ET.fromstring(data)
+        root = ET.fromstring(data)
         result = ""
         for child in root:
             if str(child.tag).split("}")[1] == ElementName:
@@ -603,7 +601,7 @@ def GetGitData(PrintErrors=False):
         line = fd.readlines()[0]
         commit = line.strip()
 
-    # If gitpython is installed, get the list of contributors
+    # If git is installed, get the list of contributors
     if GitInstalled is True:
         repo = git.Repo(git_root)
         Git = repo.git
