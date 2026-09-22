@@ -74,14 +74,10 @@ sys.path.append(pathPackages)
 sys.path.append(pathBackup)
 
 translate = App.Qt.translate
-
 mw: QMainWindow = Gui.getMainWindow()
 
-# Set the mainwindow to the last state
-if Parameters_Ribbon.Settings.GetStringSetting("MainWindow") == "Maximized":
-    mw.setWindowState(Qt.WindowState.WindowMaximized)
-else:
-    mw.setWindowState(Qt.WindowState.WindowNoState)
+# Set the wait cursor
+QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
 
 # Move the data files to the new location for fixing issue with the new addon manager
 # Function to move the data files out the addon folder to fix issue with the new addon manager
@@ -166,19 +162,19 @@ if preferences_DockWindows.GetBool("ActivateOverlay") is True:
             # Set the new string in parameters
             OverlayParam_Top.SetString("Widgets",state)
 
-# Check if a reset is present for the overlay function
-USECUSTOMOVERLAY = os.path.join(os.path.dirname(FCBinding.__file__), "OVERLAY_DISABLED")
-if (os.path.exists(USECUSTOMOVERLAY) is True):
-    print("Overlay function is disabled by RibbonUI")
-    preferences_DockWindows.SetBool("ActivateOverlay", False)
-    Parameters.USE_OVERLAY = False
 try:   
     print(translate("FreeCAD Ribbon", "Activating Ribbon UI..."))
+    # # Set the wait cursor
+    # QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
 
     if Parameters.HIDE_TITLEBAR_FC is False:
         mw.setWindowFlags(Qt.WindowType.WindowFullscreenButtonHint)
         mw.workbenchActivated.connect(FCBinding.run)
-        mw.showMaximized()
+        # Set the mainwindow to the last state
+        if Parameters_Ribbon.Settings.GetStringSetting("MainWindow") == "Maximized":
+            mw.showMaximized()
+        # Restore the cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
 
     # Hide the Titlebar of FreeCAD
     if Parameters.HIDE_TITLEBAR_FC is True:
@@ -189,13 +185,18 @@ try:
         mw.setWindowFlag(Qt.WindowType.WindowCloseButtonHint, False)
         # Connect the ribbon when the workbench is activated
         mw.workbenchActivated.connect(FCBinding.run)
+        # Set the mainwindow to the last state
+        if Parameters_Ribbon.Settings.GetStringSetting("MainWindow") == "Maximized":
+            mw.showMaximized()
         # Normally after setting the window frameless you show the window with mw.show()
         # This is now done in FCBinding with an eventfilter class
         print(translate("FreeCAD Ribbon", "Ribbon UI: FreeCAD loaded without titlebar"))
-                        
+        # Restore the cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+       
     Ribbon = mw.findChild(QDockWidget, "Ribbon")
     Ribbon.show()
-        
+            
 except Exception as e:
     # raise e
     if Parameters.DEBUG_MODE is True:

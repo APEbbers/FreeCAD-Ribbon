@@ -19,7 +19,6 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
-import CustomWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
@@ -125,6 +124,7 @@ from PySide.QtCore import (
     QEventLoop,    
     QAbstractItemModel,      
 )
+import CustomWidgets
 from CustomWidgets import (
     CustomControls, 
     DragTargetIndicator, 
@@ -150,7 +150,6 @@ import Parameters_Ribbon
 from Parameters_Ribbon import Parameters
 import LoadSettings_Ribbon
 import LoadLicenseForm_Ribbon
-import LoadCombinePanel_Ribbon
 import LoadAddCommands
 import CacheFunctions
 import Standard_Functions_Ribbon as StandardFunctions
