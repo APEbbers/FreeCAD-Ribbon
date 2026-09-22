@@ -30,6 +30,7 @@ import Standard_Functions_Ribbon as StandardFunctions
 import shutil
 import sys
 import platform
+
 from PySide.QtCore import Qt, QTimer, QSize, QSettings
 from PySide.QtGui import QGuiApplication
 from PySide.QtWidgets import (
@@ -75,6 +76,12 @@ sys.path.append(pathBackup)
 translate = App.Qt.translate
 
 mw: QMainWindow = Gui.getMainWindow()
+
+# Set the mainwindow to the last state
+if Parameters_Ribbon.Settings.GetStringSetting("MainWindow") == "Maximized":
+    mw.setWindowState(Qt.WindowState.WindowMaximized)
+else:
+    mw.setWindowState(Qt.WindowState.WindowNoState)
 
 # Move the data files to the new location for fixing issue with the new addon manager
 # Function to move the data files out the addon folder to fix issue with the new addon manager
@@ -165,9 +172,8 @@ if (os.path.exists(USECUSTOMOVERLAY) is True):
     print("Overlay function is disabled by RibbonUI")
     preferences_DockWindows.SetBool("ActivateOverlay", False)
     Parameters.USE_OVERLAY = False
-try:
+try:   
     print(translate("FreeCAD Ribbon", "Activating Ribbon UI..."))
-    # mw: QMainWindow = Gui.getMainWindow()
 
     if Parameters.HIDE_TITLEBAR_FC is False:
         mw.setWindowFlags(Qt.WindowType.WindowFullscreenButtonHint)
@@ -186,9 +192,8 @@ try:
         # Normally after setting the window frameless you show the window with mw.show()
         # This is now done in FCBinding with an eventfilter class
         print(translate("FreeCAD Ribbon", "Ribbon UI: FreeCAD loaded without titlebar"))
-    
-                
-    Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")
+                        
+    Ribbon = mw.findChild(QDockWidget, "Ribbon")
     Ribbon.show()
         
 except Exception as e:

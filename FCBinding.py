@@ -692,7 +692,7 @@ class ModernMenu(RibbonBar):
             self.LatestVersion = StandardFunctions.ReturnXML_Value_Git(
                 User=User, Repository=Repo, Branch=Branch, File=File, ElementName=ElementName, attribKey=attribKey, attribValue=attribValue, host=host
             )
-            print(translate("FreeCAD Ribbon", "Ribbon UI: Latest released version: ") + str(LatestVersion))
+            print(translate("FreeCAD Ribbon", "Ribbon UI: Latest released version: ") + str(self.LatestVersion))
             # Get the current version
             PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
             CurrentVersion = StandardFunctions.ReturnXML_Value(
@@ -704,9 +704,9 @@ class ModernMenu(RibbonBar):
                 self.UpdateVersion = ""
             # If you are not on a developer version, check if you have the latest version
             if CurrentVersion.lower().endswith("dev") is False:
-                if LatestVersion is not None:
+                if self.LatestVersion is not None:
                     # Create arrays from the versions
-                    LatestVersionArray = LatestVersion.split(".")
+                    LatestVersionArray = self.LatestVersion.split(".")
                     CurrentVersionArray = CurrentVersion.split(".")
 
                     # Set the length to the shortest lenght
@@ -718,7 +718,7 @@ class ModernMenu(RibbonBar):
                     # if so set update version
                     for i in range(ArrayLenght):
                         if LatestVersionArray[i] > CurrentVersionArray[i]:
-                            self.UpdateVersion = LatestVersion
+                            self.UpdateVersion = self.LatestVersion
         except Exception as e:
             if Parameters.DEBUG_MODE:
                 print(e.with_traceback(e.__traceback__))
@@ -1236,8 +1236,8 @@ class ModernMenu(RibbonBar):
         listToolBars = mw.findChildren(QToolBar)
         for toolbar in listToolBars:
             toolbar.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-            toolbar.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
-
+            toolbar.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))        
+        
         # Update the Gui, to show all panels
         Gui.updateGui()
         return
@@ -1291,6 +1291,7 @@ class ModernMenu(RibbonBar):
         # create the context menu action
         menu.exec_(QCursor.pos())
         menu.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+                    
         return
     # endregion
 
@@ -8458,7 +8459,7 @@ class EventInspector(QObject):
             mw = Gui.getMainWindow()
             RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
             
-            # Find the toolbars
+            # Store the state of the toolbars
             for toolbar in mw.findChildren(QToolBar):
                 toolbarName = toolbar.objectName()
                 if toolbarName == "":
@@ -8477,13 +8478,13 @@ class EventInspector(QObject):
                     # Update the ribbon structure
                     RibbonBar.ribbonStructure["ToolBarStates"][toolbarName] = [toolbar.isVisible(), Location]
             
-            # Find the statusbar
+            # Store the state of the statusbar
             # If not present, add a dict for the toolbar states to the ribbonstructure.json
             statusBar = mw.statusBar()            
             Standard_Functions_Ribbon.add_keys_nested_dict(RibbonBar.ribbonStructure, ["ToolBarStates", statusBar.objectName()], endEmpty=True)
             RibbonBar.ribbonStructure["ToolBarStates"][statusBar.objectName()] = [statusBar.isVisible(), "-"]
             
-            # Find the dockwidgets    
+            # Store the state of the dockwidgets    
             for dockWidget in mw.findChildren(QDockWidget):                                    
                 dockWidget_Name = dockWidget.objectName()
                 dockWidget_Area = mw.dockWidgetArea(dockWidget)
@@ -8499,7 +8500,13 @@ class EventInspector(QObject):
                     RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Bottom"]
                 if dockWidget_Area == Qt.DockWidgetArea.TopDockWidgetArea:
                     RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Top"]
-                                        
+                
+            # Store the state of the mainwindow
+            if mw.isMaximized():
+                Parameters_Ribbon.Settings.SetStringSetting("MainWindow", "Maximized")
+            else:
+                Parameters_Ribbon.Settings.SetStringSetting("MainWindow", "Normal")
+            
             # Writing to ribbonStructure.json
             JsonFile = Parameters.RIBBON_STRUCTURE_JSON
             with open(JsonFile, "w") as outfile:
