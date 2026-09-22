@@ -1024,7 +1024,7 @@ class ModernMenu(RibbonBar):
         overlayButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1])
         overlayButton.setToolTip(translate("FreeCAD Ribbon", "Toggle overlay "))
         overlayButton.setObjectName("overlayButton")
-        overlayButton.clicked.connect(self.ToggleOverlay)
+        overlayButton.clicked.connect(self.on_overlayButton_toggled)
         overlayButton.setStyleSheet(""" QToolTip {
                     background-color: #FFFFE1;
                     color: black;
@@ -1213,7 +1213,7 @@ class ModernMenu(RibbonBar):
 
         # Connect a custom moveEvent to the main window. This is needed for the custom titlebar
         mw.moveEvent = lambda e: self.mw_moveEvent(e)
-        
+                
         # Toolbars are enabled via Application menus because they need to be updated with a workbench activation 
                 
         # Enable the dockwidgets based on the saved data
@@ -3985,22 +3985,6 @@ class ModernMenu(RibbonBar):
                         return [i, Widget_X]
         return None
     # endregion
-    
-    # region - standard class functions
-    #
-    # implementation to add actions to the Filemenu. Needed for the accessories menu
-    def addAction(self, action: QAction):
-        menu = self.findChild(RibbonMenu, "Ribbon")
-        StyleSheet_Menu = (
-            "* {font-size: " + str(Parameters.FONTSIZE_MENUS) + "px;}"
-        )
-        menu.setStyleSheet(StyleSheet_Menu)
-        if menu is None:
-            menu = self.addFileMenu()
-        menu.addAction(action)
-        return
-
-    # endregion
 
     # region - Standard ribbon functions
     def connectSignals(self):
@@ -4428,7 +4412,7 @@ class ModernMenu(RibbonBar):
             OverlayButton.setFixedSize(
                 self.RightToolBarButtonSize, self.RightToolBarButtonSize
             )
-            OverlayButton.clicked.connect(self.ToggleOverlay)
+            OverlayButton.clicked.connect(self.on_overlayButton_toggled)
             # is now set to replace the pin button
             # self.rightToolBar().addWidget(OverlayButton)
 
@@ -5079,7 +5063,7 @@ class ModernMenu(RibbonBar):
         
         return
             
-    # Function to create an action for the panel menu
+    # Functions to create an action for the panel menu
     def createAction_DockWidget(self, DockWidgetName, parent):
         # Defin a checkbox
         Action = QAction(DockWidgetName, parent)
@@ -5141,7 +5125,7 @@ class ModernMenu(RibbonBar):
     
      # Function to create an action for a menu
     
-    # Function to create an action for the toolbar menu
+    # Functions to create an action for the toolbar menu
     def createAction_ToolBar(self, toolbarName, parent):
         # Define a QAction
         Action = QAction(toolbarName, parent=parent)
@@ -5318,6 +5302,7 @@ class ModernMenu(RibbonBar):
         QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         return
 
+    # Build the panels from active workbench
     def buildPanels(self, Dict=ribbonStructure, UpdateDict=True):
         # Get the active workbench and get its name
         #
@@ -5534,6 +5519,7 @@ class ModernMenu(RibbonBar):
 
         return
     
+    # Create a pinbutton to pin or inpin the ribbon
     def CreatePinButton(self):
         # Add a button to enable or disable AutoHide
         pinButton = QToolButton()
@@ -5591,7 +5577,6 @@ class ModernMenu(RibbonBar):
         self.pinButton = pinButton
         
         return pinButton
-
     # endregion
 
     # region - Control functions
@@ -5656,9 +5641,7 @@ class ModernMenu(RibbonBar):
     def on_ApplicationButton_toggled(self):
         self.applicationOptionButton().showMenu()
 
-    def on_ScrollButton_Category_clicked(
-        self, event, ScrollButton: RibbonCategoryLayoutButton
-    ):
+    def on_ScrollButton_Category_clicked(self, event, ScrollButton: RibbonCategoryLayoutButton):
         for i in range(Parameters.RIBBON_CLICKSPEED):
             ScrollButton.click()
         return
@@ -5699,6 +5682,68 @@ class ModernMenu(RibbonBar):
             return
         return
 
+    def on_DockWidget_Toggled(self):
+        # Get the DockWidget for the ribbon
+        ribbonDock = mw.findChild(QDockWidget, "Ribbon")
+
+        if ribbonDock.isFloating():
+            # If the DockWidget is floating, dock it
+            ribbonDock.setFloating(False)
+            # Set an empty titlebar widget. Effectivly hide the titlebar
+            ribbonDock.setTitleBarWidget(QWidget())
+            # Correct the height of the ribbon
+            if self.RibbonHeight > 0:
+                ribbonDock.setFixedHeight(self.RibbonHeight)
+            return
+        
+        if ribbonDock.isFloating() is False:
+            # If the DockWidget is docked, set it floating
+            ribbonDock.setFloating(True)           
+
+            # Increase the ribbon height
+            if self.RibbonHeight > 0:
+                ribbonDock.setFixedHeight(self.RibbonHeight + self.FloatingTitleBarHeight)
+                ribbonDock.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+                mw.setFocusPolicy(Qt.FocusPolicy.NoFocus)                
+            # Set a label with title as titlebar widget. This works on all OS
+            try:
+                ribbonDock.setTitleBarWidget(QLabel("Ribbon", alignment=Qt.AlignmentFlag.AlignCenter))
+            except Exception:
+                pass
+            
+                                    
+            # Position the dialog in front of FreeCAD
+            centerPoint = mw.geometry().center()
+            Rectangle = ribbonDock.frameGeometry()
+            Rectangle.moveCenter(centerPoint)
+            ribbonDock.move(Rectangle.topLeft())
+            return
+    
+    def on_overlayButton_toggled(self):                
+        # Get the parameter group
+        OverlayParam_Top = App.ParamGet(
+            "User parameter:BaseApp/MainWindow/DockWindows/OverlayTop"
+        )
+
+        if self.OverlayToggled_Top is False:
+            # Create a new string without "Ribbon"       
+            newString = OverlayParam_Top.GetString("Widgets").replace("Ribbon,", "")
+            # Set the new string in parameters
+            OverlayParam_Top.SetString("Widgets",newString)
+            App.saveParameter()
+            self.OverlayToggled_Top = True
+            return True
+            
+        if self.OverlayToggled_Top is True: 
+            # Get the current string, if Ribbon is not in it, add it
+            newString = OverlayParam_Top.GetString("Widgets")
+            if "Ribbon" not in newString:
+                newString = "Ribbon," + newString
+                OverlayParam_Top.SetString("Widgets",newString)
+            App.saveParameter()
+            self.OverlayToggled_Top = False
+            return True
+        return False
     # endregion
 
     # region - helper functions
@@ -5888,111 +5933,6 @@ class ModernMenu(RibbonBar):
                                     "Warning",
                                 )
                             continue
-        return ButtonList
-
-    # To be removed
-    def List_AddNewPanelToWorkbench(self, WorkBenchName, NewPanel, dict=ribbonStructure):
-        ButtonList = []
-
-        try:
-            if WorkBenchName in dict["newPanels"]:
-                if NewPanel in dict["newPanels"][WorkBenchName]:
-                    # Get the commands from the custom panel
-                    Commands = dict["newPanels"][WorkBenchName][
-                        NewPanel
-                    ]
-                    
-                    # Get the command and its original toolbar
-                    for CommandItem in Commands:
-                        CommandName = CommandItem[0]
-                        # Define a new toolbutton
-                        # NewToolbutton = RibbonToolButton()
-                        NewToolbutton = QToolButton()
-                        if CommandName.endswith("_ddb") is False:
-                            CommandActionList = self.LoadDropDownAction(CommandName)
-                            if CommandActionList is None:
-                                continue
-                            # if there are actions, proceed
-                            if len(CommandActionList) > 0:
-                                # if there is only one action, add it directly
-                                if len(CommandActionList) == 1:
-                                    NewToolbutton.addAction(CommandActionList[0])
-                                    NewToolbutton.setDefaultAction(
-                                        NewToolbutton.actions()[0]
-                                    )
-                                    # If the commandname is from a FreeCAD dropdown, set the commandname as text
-                                    if len(CommandName.split(", ")) > 1:
-                                        NewToolbutton.setText(
-                                            NewToolbutton.actions()[0].text()
-                                        )
-                                # if there are more actions, create a menu
-                                elif len(CommandActionList) > 1:
-                                    menu = QMenu()
-                                    # menu.addActions(CommandActionList)
-                                    for action in CommandActionList:
-                                        menu.addAction(action)
-                                    NewToolbutton.setMenu(menu)
-                                    NewToolbutton.setDefaultAction(menu.actions()[0])
-                                    # Add the commandname as the objectname to detect if it is a dropdownbutton
-                                    NewToolbutton.setObjectName(CommandName)
-
-                                    # Do something with the menu. For some reason it will not be loaded otherwise
-                                    len(NewToolbutton.menu().actions())
-
-                                # Set the text for the toolbutton
-                                if len(CommandName.split(", ")) <= 1:
-                                    NewToolbutton.setText(
-                                        CommandInfoCorrections(CommandName)[
-                                            "menuText"
-                                        ].replace("&", "")
-                                    )
-                                # # If the commandname is from a FreeCAD dropdown, set the commandname as text
-                                # if len(CommandName.split(", ")) > 1:
-                                #     NewToolbutton.setText(CommandName)
-                                # add it to the list
-                                ButtonList.append(NewToolbutton)
-                        if CommandName.endswith("_ddb") is True:
-                            CommandActionList = self.returnCustomDropDown(CommandName, dict=self.workBenchDict)
-                            if CommandActionList is None or len(CommandActionList) < 1:
-                                continue
-
-                            # if there are actions, proceed
-                            if len(CommandActionList) > 0:
-                                # if there is only one action, add it directly
-                                if len(CommandActionList) == 1:
-                                    NewToolbutton.addAction(CommandActionList[0])
-                                    NewToolbutton.setDefaultAction(
-                                        NewToolbutton.actions()[0]
-                                    )
-                                # if there are more actions, create a menu
-                                if len(CommandActionList) > 1:
-                                    menu = QMenu()
-                                    for action in CommandActionList:
-                                        if len(action) > 0:
-                                            if action[0] is not None:
-                                                menu.addAction(action[0])
-                                    NewToolbutton.setMenu(menu)
-                                    NewToolbutton.setDefaultAction(CommandActionList[0][0])
-
-                                    # Do something with the menu. For some reason it will not be loaded otherwise
-                                    len(NewToolbutton.menu().actions())
-                                    
-                                # Add the commandname as the objectname to detect if it is a dropdownbutton
-                                NewToolbutton.setObjectName(CommandName)
-                                NewToolbutton.setToolTip(CommandName)
-
-                                # Set the text for the toolbutton
-                                NewToolbutton.setText(CommandName)
-
-                                # add it to the list
-                                ButtonList.append(NewToolbutton)
-
-        except Exception as e:
-            if Parameters.DEBUG_MODE is True:
-                StandardFunctions.Print(
-                    f"{e.with_traceback(e.__traceback__)}, 4", "Warning"
-                )
-            pass
         return ButtonList
 
     def CreateButtonFromCommand(self, CommandName: str, ActivateWorkBench = True, Dict=ribbonStructure):
@@ -6381,69 +6321,6 @@ class ModernMenu(RibbonBar):
         except Exception:
             pass
         return
-
-    def on_DockWidget_Toggled(self):
-        # Get the DockWidget for the ribbon
-        ribbonDock = mw.findChild(QDockWidget, "Ribbon")
-
-        if ribbonDock.isFloating():
-            # If the DockWidget is floating, dock it
-            ribbonDock.setFloating(False)
-            # Set an empty titlebar widget. Effectivly hide the titlebar
-            ribbonDock.setTitleBarWidget(QWidget())
-            # Correct the height of the ribbon
-            if self.RibbonHeight > 0:
-                ribbonDock.setFixedHeight(self.RibbonHeight)
-            return
-        
-        if ribbonDock.isFloating() is False:
-            # If the DockWidget is docked, set it floating
-            ribbonDock.setFloating(True)           
-
-            # Increase the ribbon height
-            if self.RibbonHeight > 0:
-                ribbonDock.setFixedHeight(self.RibbonHeight + self.FloatingTitleBarHeight)
-                ribbonDock.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
-                mw.setFocusPolicy(Qt.FocusPolicy.NoFocus)                
-            # Set a label with title as titlebar widget. This works on all OS
-            try:
-                ribbonDock.setTitleBarWidget(QLabel("Ribbon", alignment=Qt.AlignmentFlag.AlignCenter))
-            except Exception:
-                pass
-            
-                                    
-            # Position the dialog in front of FreeCAD
-            centerPoint = mw.geometry().center()
-            Rectangle = ribbonDock.frameGeometry()
-            Rectangle.moveCenter(centerPoint)
-            ribbonDock.move(Rectangle.topLeft())
-            return
-        
-    def ToggleOverlay(self):                
-        # Get the parameter group
-        OverlayParam_Top = App.ParamGet(
-            "User parameter:BaseApp/MainWindow/DockWindows/OverlayTop"
-        )
-
-        if self.OverlayToggled_Top is False:
-            # Create a new string without "Ribbon"       
-            newString = OverlayParam_Top.GetString("Widgets").replace("Ribbon,", "")
-            # Set the new string in parameters
-            OverlayParam_Top.SetString("Widgets",newString)
-            App.saveParameter()
-            self.OverlayToggled_Top = True
-            return True
-            
-        if self.OverlayToggled_Top is True: 
-            # Get the current string, if Ribbon is not in it, add it
-            newString = OverlayParam_Top.GetString("Widgets")
-            if "Ribbon" not in newString:
-                newString = "Ribbon," + newString
-                OverlayParam_Top.SetString("Widgets",newString)
-            App.saveParameter()
-            self.OverlayToggled_Top = False
-            return True
-        return False
 
     def returnCustomDropDown(self, CommandName, dict = ribbonStructure):
         actionList = []
@@ -8042,7 +7919,6 @@ class ModernMenu(RibbonBar):
         # Set the command as objectName for future reference
         button.setObjectName(commandName)
         return button
-        
     # endregion
 
     # region - Titlebar functions
@@ -8632,7 +8508,6 @@ class EventInspector(QObject):
                 )
             return QObject.eventFilter(self, obj, event)
         return False
-
 
 class run:
     """

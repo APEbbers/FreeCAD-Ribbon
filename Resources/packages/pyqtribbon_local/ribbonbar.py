@@ -161,10 +161,12 @@ class RibbonBar(QWidget):
             "RibbonBar.addMenu() is not implemented in the ribbon bar."
         )
 
-    def addAction(self, *__args):
-        raise NotImplementedError(
-            "RibbonBar.addAction() is not implemented in the ribbon bar."
-        )
+    # Implemented in RibbonUI
+    #
+    # def addAction(self, *__args):
+    #     raise NotImplementedError(
+    #         "RibbonBar.addAction() is not implemented in the ribbon bar."
+    #     )
 
     def addSeparator(self):
         raise NotImplementedError(
