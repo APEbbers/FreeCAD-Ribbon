@@ -1778,7 +1778,6 @@ class ModernMenu(RibbonBar):
         QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         return
     
-    
     def on_Customize_Clicked(self):
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
@@ -3179,6 +3178,16 @@ class ModernMenu(RibbonBar):
                     self.workBenchDict["workbenches"][tabData]["Enabled"] = Checked
                     # Enable or disable the tab
                     self.tabBar().setTabEnabled(i, Checked)
+                    if not self.tabBar().isTabEnabled(i):
+                        # Change the text color
+                        self.tabBar().setStyleSheet(
+                            """QTabBar::tab:disabled {color: """
+                            + mw.palette().color(mw.palette().ColorGroup.Disabled, mw.palette().ColorRole.Text).name()
+                            + """;}"""
+                        )
+                        self.tabBar().update()
+                    else:
+                        self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))
                 break                    
         return
     
@@ -5014,7 +5023,7 @@ class ModernMenu(RibbonBar):
         if os.path.exists(ScriptDir) is True:
             ListScripts = os.listdir(ScriptDir)
             if len(ListScripts) > 0:
-                ScriptButtonMenu = self.SettingsMenu.addMenu(translate("FreeCAD Ribbon", "Ribbon Scripts"))
+                ScriptButtonMenu = self.SettingsMenu.addMenu(translate("FreeCAD Ribbon", "Ribbon Scripts..."))
                 ScriptButtonMenu.setToolTip(translate("FreeCAD Ribbon", "<b>Ribbon Scripts</b><br></br><i>Scripts to help setup the ribbon.</i><br></br>"))
                 for i in range(len(ListScripts)):
                     ScriptButtonMenu.addAction(
