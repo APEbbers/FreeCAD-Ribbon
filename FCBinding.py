@@ -4940,10 +4940,7 @@ class ModernMenu(RibbonBar):
             toolsMenu = mw.findChildren(QMenu, "&Tools")[0]
             for action in toolsMenu.actions():
                 if action.objectName() == "SaveAndRestore":
-                    SaveAndRestore = action
-                    # Change the text
-                    SaveAndRestore.setText(SaveAndRestore.replace("...", ""))
-                    self.SettingsMenu.addAction(SaveAndRestore)
+                    self.SettingsMenu.addAction(action)
                     break
         except Exception:
             pass             
