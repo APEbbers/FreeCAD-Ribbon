@@ -5,7 +5,7 @@
 
   <description>A customizable ribbon interface for FreeCAD</description>
 
-  <version>1.11.7</version>
+  <version>1.11.8</version>
 
   <date>2024-07-28</date>
 
@@ -30,7 +30,6 @@
       <depend type="addon" optional="true">SearchBar</depend>
       <depend type="addon" optional="true">SaveAndRestore</depend>
       <depend type="python" optional="true">git</depend>
-      <depend type="python" optional="true">gitpython</depend>
     </workbench>
   </content>
 
