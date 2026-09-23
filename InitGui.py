@@ -76,6 +76,9 @@ translate = App.Qt.translate
 
 mw: QMainWindow = Gui.getMainWindow()
 
+# Set the wait cursor
+QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+
 # Move the data files to the new location for fixing issue with the new addon manager
 # Function to move the data files out the addon folder to fix issue with the new addon manager
 #
@@ -172,7 +175,11 @@ try:
     if Parameters.HIDE_TITLEBAR_FC is False:
         mw.setWindowFlags(Qt.WindowType.WindowFullscreenButtonHint)
         mw.workbenchActivated.connect(FCBinding.run)
-        mw.showMaximized()
+        # Set the mainwindow to the last state
+        if Parameters_Ribbon.Settings.GetStringSetting("MainWindow") == "Maximized":
+            mw.showMaximized()
+        # Restore the cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
 
     # Hide the Titlebar of FreeCAD
     if Parameters.HIDE_TITLEBAR_FC is True:
@@ -186,6 +193,11 @@ try:
         # Normally after setting the window frameless you show the window with mw.show()
         # This is now done in FCBinding with an eventfilter class
         print(translate("FreeCAD Ribbon", "Ribbon UI: FreeCAD loaded without titlebar"))
+        # Set the mainwindow to the last state
+        if Parameters_Ribbon.Settings.GetStringSetting("MainWindow") == "Maximized":
+            mw.showMaximized()
+        # Restore the cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
     
                 
     Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")

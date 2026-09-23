@@ -7481,11 +7481,18 @@ class EventInspector(QObject):
                         DockWidget_Ribbon.setTitleBarWidget(QWidget())
                     except Exception:
                         pass       
+        
         if event.type() == QEvent.Type.Close:
             OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
             String = OverlayParam_Top.GetString("Widgets")
             Parameters_Ribbon.Settings.SetStringSetting("StoredOverlayState", String)
-            App.saveParameter()                           
+            App.saveParameter()      
+            
+            # Store the state of the mainwindow
+            if mw.isMaximized():
+                Parameters_Ribbon.Settings.SetStringSetting("MainWindow", "Maximized")
+            else:
+                Parameters_Ribbon.Settings.SetStringSetting("MainWindow", "Normal")                     
             
         if event.type() == QEvent.Type.ApplicationActivated:
             mw = Gui.getMainWindow()
