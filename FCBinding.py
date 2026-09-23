@@ -22,9 +22,7 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
-import traceback
 import subprocess
-from functools import partial
 
 from PySide.QtGui import (
     QDragEnterEvent,
@@ -160,6 +158,7 @@ import StyleMapping_Ribbon
 import platform
 from datetime import datetime
 import shutil
+import time
 
 # import Ribbon. This contains the ribbon commands for FreeCAD
 import RibbonUI
@@ -192,7 +191,7 @@ from pyqtribbon_local.category import RibbonCategory, RibbonCategoryLayoutButton
 mw: QMainWindow = Gui.getMainWindow()
 
 # Define a timer
-timer = QTimer()
+Timer = QTimer()
 
 # Write all settings, if they are not present yet
 Parameters_Ribbon.Settings.WriteMissingSettings(Parameters_Ribbon.Settings)
@@ -383,6 +382,7 @@ class ModernMenu(RibbonBar):
         super().__init__(title="")
         self.setObjectName("Ribbon")
 
+        # Initual settings -------------------------------------------------------------------------------------------------
         # Enable dragdrop
         self.setAcceptDrops(True)
 
@@ -396,10 +396,13 @@ class ModernMenu(RibbonBar):
         # connect the signals
         self.connectSignals()
         
+        # Set allowed areas for toolbars
         toolBars = mw.findChildren(QToolBar)
         for toolBar in toolBars:
             toolBar.setAllowedAreas(Qt.ToolBarArea.LeftToolBarArea|Qt.ToolBarArea.RightToolBarArea|Qt.ToolBarArea.BottomToolBarArea)
+        # ------------------------------------------------------------------------------------------------------------------
 
+        # Read all data files and fill the lists and dicts -----------------------------------------------------------------
         # read ribbon structure from JSON file
         if os.path.exists(Parameters.RIBBON_STRUCTURE_JSON) is False:
             #Create the new folder for the data
@@ -409,7 +412,7 @@ class ModernMenu(RibbonBar):
         with open(Parameters.RIBBON_STRUCTURE_JSON, "r") as file:
             self.ribbonStructure.update(json.load(file))
         file.close()
-        
+        # Read a lighter version of the datafile used with the dialogs for icons
         DataFile2 = os.path.join(ConfigDirectory, "RibbonDataFile2.dat")
         if os.path.exists(DataFile2) is True:
             Data = {}
@@ -422,7 +425,7 @@ class ModernMenu(RibbonBar):
                 self.List_Commands = Data["List_Commands"]
             except Exception:
                 pass
-        
+                
         # Check if there are disabled workbenches. If so add them to the ignored workbenches
         if "workbenches" in self.ribbonStructure:
             for WorkBenchName in self.ribbonStructure["workbenches"].keys():
@@ -461,7 +464,38 @@ class ModernMenu(RibbonBar):
         
         # check the language and remove texts from the ribbonstructure if the language does not match
         self.CheckLanguage()
+        # ------------------------------------------------------------------------------------------------------------------     
+        
+        # Set the toolbars and panels as stored. ---------------------------------------------------------------------------
+        # This has to be done before any styling is done. Otherwise the tooltip text for taps is white.
+        #   
+        # Toolbars are enabled via Application menus because they need to be updated with a workbench activation 
+        #
+        # Enable the dockwidgets based on the saved data
+        for dockWidget in mw.findChildren(QDockWidget):
+            if "PanelStates" in self.ribbonStructure and dockWidget.objectName() in self.ribbonStructure["PanelStates"]:                
+                if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is True:                               
+                    dockWidget.show()        
+                if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is False: 
+                    dockWidget.close()
+        
+        # Add a custom context menu to the dockwidgets. With this, the custom toolbar placement functions can be used
+        for dockWidget in mw.findChildren(QDockWidget):            
+            dockWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+            dockWidget.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
+        
+        # Add the same custom context menu to the toolbars. With this, the custom toolbar placement functions can be used
+        listToolBars = mw.findChildren(QToolBar)
+        for toolbar in listToolBars:
+            toolbar.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+            toolbar.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))        
+        
+        # Update the Gui, to show all panels
+        Gui.updateGui()
+        # ------------------------------------------------------------------------------------------------------------------
 
+        # Add special Ribbon panels based on settings ----------------------------------------------------------------------
+        #
         # if FreeCAD is version 0.21 create a custom toolbar "Individual Views"
         if int(App.Version()[0]) == 0 and int(App.Version()[1]) <= 21:
             StandardFunctions.CreateToolbar(
@@ -528,6 +562,7 @@ class ModernMenu(RibbonBar):
                     ]
             except Exception:
                 pass
+            
         # # Add a toolbar "tools"
         #
         UseToolsPanel = Parameters_Ribbon.Settings.GetBoolSetting("UseToolsPanel")
@@ -609,7 +644,9 @@ class ModernMenu(RibbonBar):
         with open(Parameters.RIBBON_STRUCTURE_JSON, "w") as outfile:
             json.dump(self.ribbonStructure, outfile, indent=4)
         outfile.close()
+        # ------------------------------------------------------------------------------------------------------------------     
 
+        # Print the info about installed and latest version ----------------------------------------------------------------
         # Get the address of the repository address
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         self.ReproAdress = StandardFunctions.ReturnXML_Value(
@@ -627,7 +664,10 @@ class ModernMenu(RibbonBar):
         self.HelpAdress = StandardFunctions.ReturnXML_Value(
             PackageXML, "url", "type", "website"
         )
+        # ------------------------------------------------------------------------------------------------------------------     
         
+        # Do some checking and take measures so that everything will be loaded ---------------------------------------------
+        #
         # Activate the workbenches used in the new panels otherwise the panel stays empty
         try:
             for WorkBenchName in self.ribbonStructure["newPanels"]:
@@ -722,15 +762,16 @@ class ModernMenu(RibbonBar):
             if Parameters.DEBUG_MODE:
                 print(e.with_traceback(e.__traceback__))
             pass
+        # ------------------------------------------------------------------------------------------------------------------     
 
-        # Create the ribbon
+        # Create the ribbon ------------------------------------------------------------------------------------------------
         self.CreateMenus()  # Create the menus
         self.createModernMenu()  # Create the ribbon
         
         # Set the custom stylesheet
         self.StyleSheet = Path(Parameters.STYLESHEET).read_text()
         # Set the tooltip colors, so that they are uniform accros FreeCAD.
-        mw.setStyleSheet("""\n\nQToolTip {
+        mw.setStyleSheet("""QToolTip {
                     background-color: #FFFFE1;
                     color: black;
                     border: black solid 1px;
@@ -1012,7 +1053,7 @@ class ModernMenu(RibbonBar):
         FloatingButton.clicked.connect(self.on_DockWidget_Toggled)
         FloatingButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2])
         FloatingButton.setToolTip(translate("FreeCAD Ribbon", "Set the ribbon docked or floating"))
-        FloatingButton.setStyleSheet(""" QToolTip {
+        FloatingButton.setStyleSheet("""QToolTip {
                     background-color: #FFFFE1;
                     color: black;
                     border: black solid 1px;
@@ -1027,7 +1068,7 @@ class ModernMenu(RibbonBar):
         overlayButton.setToolTip(translate("FreeCAD Ribbon", "Toggle overlay "))
         overlayButton.setObjectName("overlayButton")
         overlayButton.clicked.connect(self.on_overlayButton_toggled)
-        overlayButton.setStyleSheet(""" QToolTip {
+        overlayButton.setStyleSheet("""QToolTip {
                     background-color: #FFFFE1;
                     color: black;
                     border: black solid 1px;
@@ -1168,7 +1209,10 @@ class ModernMenu(RibbonBar):
                     pass
         except Exception:
             pass
-
+        # ------------------------------------------------------------------------------------------------------------------     
+        
+        # Install eventfilters and connect custom events -------------------------------------------------------------------
+        #
         # Install an event filter to catch events from the main window and act on it.
         mw.installEventFilter(EventInspector(mw))
         
@@ -1215,30 +1259,7 @@ class ModernMenu(RibbonBar):
 
         # Connect a custom moveEvent to the main window. This is needed for the custom titlebar
         mw.moveEvent = lambda e: self.mw_moveEvent(e)
-                
-        # Toolbars are enabled via Application menus because they need to be updated with a workbench activation 
-                
-        # Enable the dockwidgets based on the saved data
-        for dockWidget in mw.findChildren(QDockWidget):
-            if "PanelStates" in self.ribbonStructure and dockWidget.objectName() in self.ribbonStructure["PanelStates"]:                
-                if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is True:                               
-                    dockWidget.show()        
-                if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is False: 
-                    dockWidget.close()
-        
-        # Add a custom context menu to the dockwidgets. With this, the custom toolbar placement functions can be used
-        for dockWidget in mw.findChildren(QDockWidget):            
-            dockWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-            dockWidget.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
-        
-        # Add the same custom context menu to the toolbars. With this, the custom toolbar placement functions can be used
-        listToolBars = mw.findChildren(QToolBar)
-        for toolbar in listToolBars:
-            toolbar.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-            toolbar.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))        
-        
-        # Update the Gui, to show all panels
-        Gui.updateGui()
+        # ------------------------------------------------------------------------------------------------------------------     
         return
 
     # region - Custom functions for FreeCAD
@@ -4111,7 +4132,7 @@ class ModernMenu(RibbonBar):
             )
         # Make sure that the tooltip has the correct color settings
         styleSheet = self.tabBar().styleSheet()
-        self.tabBar().setStyleSheet(styleSheet + """\n QToolTip {
+        self.tabBar().setStyleSheet(styleSheet + """\nQToolTip {
                     background-color: #FFFFE1;
                     color: black;
                     border: black solid 1px;
@@ -4126,9 +4147,9 @@ class ModernMenu(RibbonBar):
                 StandardFunctions.Print(f"wb {workbench.MenuText} not loaded", "Log")
 
             # wait for 0.1s hoping that after that time the workbench is loaded
-            timer.timeout.connect(self.onWbActivated)
-            timer.setSingleShot(True)
-            timer.start(1000)
+            Timer.timeout.connect(self.onWbActivated)
+            Timer.setSingleShot(True)
+            Timer.start(1000)
             return
 
         # hide normal toolbars
@@ -4284,7 +4305,7 @@ class ModernMenu(RibbonBar):
         )
         
         # Correct colors when no stylesheet is selected for FreeCAD.
-        self.quickAccessToolBar().setStyleSheet(""" QToolTip {
+        self.quickAccessToolBar().setStyleSheet("""QToolTip {
                     background-color: #FFFFE1;
                     color: black;
                     border: black solid 1px;
@@ -4475,7 +4496,7 @@ class ModernMenu(RibbonBar):
         self.ComboBox.setFixedWidth(100)
         self.ComboBox.addItem("All")        
         self.ComboBox.setToolTip(translate("FreeCAD Ribbon", "Select a tab group"))
-        self.ComboBox.setStyleSheet(""" QToolTip {
+        self.ComboBox.setStyleSheet("""QToolTip {
                     background-color: #FFFFE1;
                     color: black;
                     border: black solid 1px;
@@ -4490,7 +4511,7 @@ class ModernMenu(RibbonBar):
         self.DeleteButton = QToolButton(self.rightToolBar())
         self.DeleteButton.setObjectName("DeleteGroupButton")
         self.DeleteButton.setToolTip(translate("FreeCAD Ribbon", "Delete the current group"))
-        self.DeleteButton.setStyleSheet(""" QToolTip {
+        self.DeleteButton.setStyleSheet("""QToolTip {
                     background-color: #FFFFE1;
                     color: black;
                     border: black solid 1px;
@@ -4740,7 +4761,7 @@ class ModernMenu(RibbonBar):
         # Set a stylesheet specific for the menubar. Otherwise the fontsize of the menus will not be applied
         StyleSheet_MenuBar = (
             "* {font-size: " + str(Parameters.FONTSIZE_MENUS) + "px;}"
-            + """ QToolTip {
+            + """QToolTip {
                     background-color: #FFFFE1;
                     color: black;
                     border: black solid 1px;
@@ -5081,7 +5102,7 @@ class ModernMenu(RibbonBar):
 
         # add a settings button with menu
         stylesheet_tooltip = (
-            """\n\nQToolTip {
+            """QToolTip {
             background-color: #FFFFE1;
             color: black;
             border: black solid 1px;
@@ -8455,8 +8476,8 @@ class EventInspector(QObject):
             OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
             String = OverlayParam_Top.GetString("Widgets")
             Parameters_Ribbon.Settings.SetStringSetting("StoredOverlayState", String)
-            App.saveParameter()        
-            
+            App.saveParameter()   
+
             # Store the states of the toolbars and panels
             #
             # Get the main window and the ribbon
