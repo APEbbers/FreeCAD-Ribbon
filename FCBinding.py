@@ -7489,6 +7489,7 @@ class EventInspector(QObject):
             App.saveParameter()      
             
             # Store the state of the mainwindow
+            mw = Gui.getMainWindow()
             if mw.isMaximized():
                 Parameters_Ribbon.Settings.SetStringSetting("MainWindow", "Maximized")
             else:
