@@ -924,7 +924,6 @@ class ModernMenu(RibbonBar):
 
         # make sure that the ribbon cannot "disappear"
         self.setMinimumHeight(self.RibbonMinimalHeight)
-
         self.setSizeIncrement(1, 1)
 
         # Set the menuBar hidden as standard
@@ -1785,6 +1784,8 @@ class ModernMenu(RibbonBar):
                     # self.on_Ok_Clicked()
                 self.on_Ok_Clicked()
                 self.CustomizedCategories.clear()
+                # Print a message
+                print(translate("FreeCAD Ribbon", f"RibbonUI: Changes are saved."))
                 return
 
         if action == "Cancel":
@@ -2083,6 +2084,8 @@ class ModernMenu(RibbonBar):
     
     def on_ApplyClicked(self):
         self.on_Ok_Clicked(CloseDialog=False)
+        # Print a message
+        print(translate("FreeCAD Ribbon", f"RibbonUI: Changes are saved."))
     
     def on_Ok_Clicked(self, workbenchName = "", CloseDialog = True):
         # Set the wait cursor
@@ -2365,10 +2368,7 @@ class ModernMenu(RibbonBar):
             for i in range(self.tabBar().count()):
                 if self.tabBar().tabData(i) == orderList[0]:
                     self.tabBar().moveTab(i,0)
-                        
-        # Print a message
-        print(translate("FreeCAD Ribbon", "RibbonUI: Changes are saved"))
-        
+                                
         # Restore the cursor
         QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         return

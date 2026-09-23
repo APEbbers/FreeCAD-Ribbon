@@ -29,7 +29,6 @@ from Parameters_Ribbon import Settings
 import Standard_Functions_Ribbon as StandardFunctions
 import shutil
 import sys
-import platform
 
 from PySide.QtCore import Qt, QTimer, QSize, QSettings
 from PySide.QtGui import QGuiApplication
@@ -42,11 +41,6 @@ from PySide.QtWidgets import (
     QStyle,
     QDockWidget,
 )
-import logging
-import time
-
-# Set the logger levels to avoid extra output in the report panel
-logging.getLogger("urllib3").setLevel(logging.INFO)
 
 # Set a value for the current needed version of the Ribbon structure. 
 # Increasing this, results in a new created default structure file.
@@ -161,6 +155,15 @@ if preferences_DockWindows.GetBool("ActivateOverlay") is True:
             OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
             # Set the new string in parameters
             OverlayParam_Top.SetString("Widgets",state)
+            
+# If the searchBar is installed, disable the toolbar, since it is implemented in the ribbon
+# This avoids seeing the searchBar toolbar during startup         
+try:
+    preferences = App.ParamGet("User parameter:BaseApp/Preferences/Mod/SearchBar")
+    preferences.SetBool("EnableToolbars", False)
+    App.saveParameter()
+except Exception:
+    pass
 
 try:   
     print(translate("FreeCAD Ribbon", "Activating Ribbon UI..."))
