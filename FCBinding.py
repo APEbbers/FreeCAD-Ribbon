@@ -402,6 +402,21 @@ class ModernMenu(RibbonBar):
             toolBar.setAllowedAreas(Qt.ToolBarArea.LeftToolBarArea|Qt.ToolBarArea.RightToolBarArea|Qt.ToolBarArea.BottomToolBarArea)
         # ------------------------------------------------------------------------------------------------------------------
 
+        # Override the panel icons for all standard FreeCAD panels with better visible versions ----------------------------
+        DockWidgets = mw.findChildren(QDockWidget)
+        for DockWidget in DockWidgets:
+            for child in DockWidget.children():
+                if child.objectName() == "OverlayTitle":
+                    OverlayButton = child.findChild(QToolButton, "OBTN Overlay")
+                    OverlayButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1])
+                    
+                    FloatButton = child.findChild(QToolButton, "OBTN Float")
+                    FloatButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2])
+                    
+                    CloseButton = child.findChild(QToolButton, "OBTN Close")
+                    CloseButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[0])
+        # ------------------------------------------------------------------------------------------------------------------
+        
         # Read all data files and fill the lists and dicts -----------------------------------------------------------------
         # read ribbon structure from JSON file
         if os.path.exists(Parameters.RIBBON_STRUCTURE_JSON) is False:
@@ -466,35 +481,6 @@ class ModernMenu(RibbonBar):
         self.CheckLanguage()
         # ------------------------------------------------------------------------------------------------------------------     
         
-        # # Set the toolbars and panels as stored. ---------------------------------------------------------------------------
-        # # This has to be done before any styling is done. Otherwise the tooltip text for taps is white.
-        # #   
-        # # Toolbars are enabled via Application menus because they need to be updated with a workbench activation 
-        # #
-        # # Enable the dockwidgets based on the saved data
-        # for dockWidget in mw.findChildren(QDockWidget):
-        #     if "PanelStates" in self.ribbonStructure and dockWidget.objectName() in self.ribbonStructure["PanelStates"]:                
-        #         if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is True:                               
-        #             dockWidget.show()        
-        #         if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is False: 
-        #             dockWidget.close()
-        
-        # # Add a custom context menu to the dockwidgets. With this, the custom toolbar placement functions can be used
-        # for dockWidget in mw.findChildren(QDockWidget):            
-        #     dockWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        #     dockWidget.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
-        
-        # # Add the same custom context menu to the toolbars. With this, the custom toolbar placement functions can be used
-        # listToolBars = mw.findChildren(QToolBar)
-        # for toolbar in listToolBars:
-        #     toolbar.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-        #     toolbar.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))        
-        
-        # # Update the Gui, to show all panels
-        # Gui.updateGui()
-        # mw.repaint()
-        # # ------------------------------------------------------------------------------------------------------------------
-
         # Add special Ribbon panels based on settings ----------------------------------------------------------------------
         #
         # if FreeCAD is version 0.21 create a custom toolbar "Individual Views"
