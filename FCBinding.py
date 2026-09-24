@@ -466,33 +466,34 @@ class ModernMenu(RibbonBar):
         self.CheckLanguage()
         # ------------------------------------------------------------------------------------------------------------------     
         
-        # Set the toolbars and panels as stored. ---------------------------------------------------------------------------
-        # This has to be done before any styling is done. Otherwise the tooltip text for taps is white.
-        #   
-        # Toolbars are enabled via Application menus because they need to be updated with a workbench activation 
-        #
-        # Enable the dockwidgets based on the saved data
-        for dockWidget in mw.findChildren(QDockWidget):
-            if "PanelStates" in self.ribbonStructure and dockWidget.objectName() in self.ribbonStructure["PanelStates"]:                
-                if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is True:                               
-                    dockWidget.show()        
-                if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is False: 
-                    dockWidget.close()
+        # # Set the toolbars and panels as stored. ---------------------------------------------------------------------------
+        # # This has to be done before any styling is done. Otherwise the tooltip text for taps is white.
+        # #   
+        # # Toolbars are enabled via Application menus because they need to be updated with a workbench activation 
+        # #
+        # # Enable the dockwidgets based on the saved data
+        # for dockWidget in mw.findChildren(QDockWidget):
+        #     if "PanelStates" in self.ribbonStructure and dockWidget.objectName() in self.ribbonStructure["PanelStates"]:                
+        #         if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is True:                               
+        #             dockWidget.show()        
+        #         if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is False: 
+        #             dockWidget.close()
         
-        # Add a custom context menu to the dockwidgets. With this, the custom toolbar placement functions can be used
-        for dockWidget in mw.findChildren(QDockWidget):            
-            dockWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-            dockWidget.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
+        # # Add a custom context menu to the dockwidgets. With this, the custom toolbar placement functions can be used
+        # for dockWidget in mw.findChildren(QDockWidget):            
+        #     dockWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        #     dockWidget.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
         
-        # Add the same custom context menu to the toolbars. With this, the custom toolbar placement functions can be used
-        listToolBars = mw.findChildren(QToolBar)
-        for toolbar in listToolBars:
-            toolbar.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-            toolbar.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))        
+        # # Add the same custom context menu to the toolbars. With this, the custom toolbar placement functions can be used
+        # listToolBars = mw.findChildren(QToolBar)
+        # for toolbar in listToolBars:
+        #     toolbar.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        #     toolbar.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))        
         
-        # Update the Gui, to show all panels
-        Gui.updateGui()
-        # ------------------------------------------------------------------------------------------------------------------
+        # # Update the Gui, to show all panels
+        # Gui.updateGui()
+        # mw.repaint()
+        # # ------------------------------------------------------------------------------------------------------------------
 
         # Add special Ribbon panels based on settings ----------------------------------------------------------------------
         #
@@ -1259,6 +1260,42 @@ class ModernMenu(RibbonBar):
         # Connect a custom moveEvent to the main window. This is needed for the custom titlebar
         mw.moveEvent = lambda e: self.mw_moveEvent(e)
         # ------------------------------------------------------------------------------------------------------------------     
+        
+        # Set the toolbars and panels as stored. ---------------------------------------------------------------------------
+        # This has to be done before any styling is done. Otherwise the tooltip text for taps is white.
+        #   
+        # Toolbars are enabled via Application menus because they need to be updated with a workbench activation 
+        #
+        # Enable the dockwidgets based on the saved data
+        for dockWidget in mw.findChildren(QDockWidget):
+            if "PanelStates" in self.ribbonStructure and dockWidget.objectName() in self.ribbonStructure["PanelStates"]:                
+                if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is True:                               
+                    dockWidget.show()        
+                if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is False: 
+                    dockWidget.close()
+        
+        # Add a custom context menu to the dockwidgets. With this, the custom toolbar placement functions can be used
+        for dockWidget in mw.findChildren(QDockWidget):            
+            dockWidget.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+            dockWidget.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
+        
+        # Add the same custom context menu to the toolbars. With this, the custom toolbar placement functions can be used
+        listToolBars = mw.findChildren(QToolBar)
+        for toolbar in listToolBars:
+            toolbar.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+            toolbar.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))        
+        
+        # Update the Gui, to show all panels        
+        Gui.updateGui()
+        # Make sure that the tooltip has the correct color settings
+        styleSheet = self.tabBar().styleSheet()
+        self.tabBar().setStyleSheet(styleSheet + """\nQToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }""")
+        # ------------------------------------------------------------------------------------------------------------------
         return
 
     # region - Custom functions for FreeCAD
@@ -2134,7 +2171,6 @@ class ModernMenu(RibbonBar):
                     item[0].setDisabled(True)
                 else:
                     item[0].setEnabled(True)
-            Gui.updateGui()
 
         # Restore the original panel with the overflow menu
         dictPanels = self.currentCategory().panels().copy()
@@ -2365,6 +2401,16 @@ class ModernMenu(RibbonBar):
             for i in range(self.tabBar().count()):
                 if self.tabBar().tabData(i) == orderList[0]:
                     self.tabBar().moveTab(i,0)
+                    
+        Gui.updateGui()
+        # Make sure that the tooltip has the correct color settings
+        styleSheet = self.tabBar().styleSheet()
+        self.tabBar().setStyleSheet(styleSheet + """\nQToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }""")
                                 
         # Restore the cursor
         QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
@@ -2574,6 +2620,17 @@ class ModernMenu(RibbonBar):
         # Activate the stored category when the customise enviroment was started
         self.setCurrentCategory(self.CurrentCategoryToRestore)
         self.hideClassicToolbars()
+        
+        Gui.updateGui()
+        # Make sure that the tooltip has the correct color settings
+        styleSheet = self.tabBar().styleSheet()
+        self.tabBar().setStyleSheet(styleSheet + """\nQToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }""")
+        
         
         # Print a message
         print(translate("FreeCAD Ribbon", "RibbonUI: Changes are rolled back"))
@@ -5550,7 +5607,7 @@ class ModernMenu(RibbonBar):
             self.quickAccessToolBar().setDisabled(True)
             self.applicationOptionButton().setDisabled(True)
             Gui.updateGui()
-            
+                        
         # # Add a pin button button to the tabBar in the right bottom corner
         layout: QGridLayout = self.currentCategory()._mainLayout   
         # Set the pinbutton when overlay is disabled        
