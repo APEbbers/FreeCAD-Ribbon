@@ -1548,6 +1548,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.AddItem(
             SourceWidget=self.form.NewControl_DDB,
             DestinationWidget=self.form.CommandsAvailable_DDB,
+            CheckIfInList=False,
         )
 
         # # Enable the apply button
