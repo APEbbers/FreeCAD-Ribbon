@@ -1731,44 +1731,6 @@ class ModernMenu(RibbonBar):
         
         # Perfom the action depending on which button is clicked
         if action == "Start":
-             # Load the dialog
-            # 
-            # Get the form
-            DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
-            if os.path.exists(DataFile) is False:
-                Question = translate(
-                    "FreeCAD Ribbon",
-                    "a data file must be generated first!\n"
-                    "Do you want to create one now?\n",
-                )
-                Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
-                if Answer == "yes":
-                    CacheFunctions.CreateCache()
-                    DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
-                else:
-                    self.on_Cancel_Clicked()
-                    return
-            if os.path.exists(DataFile) is True:
-                self.AddCommandsDialog  = None
-                self.AddCommandsDialog = LoadAddCommands.LoadDialog(self)
-                if Parameters.DOCKED_DIALOGS is False:
-                    # Show the form
-                    self.AddCommandsDialog.form.show()
-                else:
-                    RibbonLayoutDock = QDockWidget()
-                    # set the name of the object and the window title
-                    RibbonLayoutDock.setObjectName("AddCommands")
-                    RibbonLayoutDock.setWindowTitle("Ribbon Layout")
-                    RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
-                    RibbonLayoutDock.setWidget(self.AddCommandsDialog.form)                            
-                    # Set the allowed areas to dock
-                    RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
-                    # Add the custom context menu for dockwidgets
-                    RibbonLayoutDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-                    RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
-                    # Add the dockwidget
-                    mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
-            
             if self.CustomizeEnabled is False:
                 # Enter the customise enviroment
                 self.on_Customize_Clicked()
@@ -1777,6 +1739,42 @@ class ModernMenu(RibbonBar):
                     if toolBarAction is not None and type(toolBarAction) == QWidgetAction and toolBarAction.defaultWidget() is not None:  # noqa: SIM102
                         if toolBarAction.defaultWidget().objectName() == "GroupBox":
                            toolBarAction.defaultWidget().setCurrentIndex(0) 
+
+                DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
+                if os.path.exists(DataFile) is False:
+                    Question = translate(
+                        "FreeCAD Ribbon",
+                        "a data file must be generated first!\n"
+                        "Do you want to create one now?\n",
+                    )
+                    Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+                    if Answer == "yes":
+                        CacheFunctions.CreateCache()
+                        DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
+                    else:
+                        self.on_Cancel_Clicked()
+                        return
+                if os.path.exists(DataFile) is True:
+                    # Load the dialog
+                    self.AddCommandsDialog  = None
+                    self.AddCommandsDialog = LoadAddCommands.LoadDialog(self)
+                    if Parameters.DOCKED_DIALOGS is False:
+                        # Show the form
+                        self.AddCommandsDialog.form.show()
+                    else:
+                        RibbonLayoutDock = QDockWidget()
+                        # set the name of the object and the window title
+                        RibbonLayoutDock.setObjectName("AddCommands")
+                        RibbonLayoutDock.setWindowTitle("Ribbon Layout")
+                        RibbonLayoutDock.setContentsMargins(0, 0, 0, 0)
+                        RibbonLayoutDock.setWidget(self.AddCommandsDialog.form)                            
+                        # Set the allowed areas to dock
+                        RibbonLayoutDock.setAllowedAreas(Qt.DockWidgetArea.LeftDockWidgetArea|Qt.DockWidgetArea.RightDockWidgetArea)
+                        # Add the custom context menu for dockwidgets
+                        RibbonLayoutDock.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+                        RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
+                        # Add the dockwidget
+                        mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
                 return
             if self.CustomizeEnabled is True:
                 # for category in self.CustomizedCategories:
@@ -1822,7 +1820,6 @@ class ModernMenu(RibbonBar):
         self.workBenchDict["ignoredWorkbenches"] = self.ribbonStructure["ignoredWorkbenches"]
         self.workBenchDict["iconOnlyToolbars"] = self.ribbonStructure["iconOnlyToolbars"]
         self.workBenchDict["customToolbars"] = self.ribbonStructure["customToolbars"]
-        
         # Show the comboBox and delete button for the tabgroups
         DeleteButtonOff = False
         for action in QToolBar.actions(self.rightToolBar()):    
