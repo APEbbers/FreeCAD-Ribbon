@@ -1553,6 +1553,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.AddItem(
             SourceWidget=self.form.NewControl_DDB,
             DestinationWidget=self.form.CommandsAvailable_DDB,
+            CheckIfInList=False,
         )
 
         # # Enable the apply button
@@ -2514,9 +2515,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     # If the item is not none and the item text is equal to itemText,
                     # remove it from the columns to add list.
                     if SourceItem is not None:
-                        if SourceItem.data(
-                            Qt.ItemDataRole.UserRole
-                        ) == DestinationItem.data(Qt.ItemDataRole.UserRole):
+                        if SourceItem.data(Qt.ItemDataRole.UserRole) == DestinationItem.data(Qt.ItemDataRole.UserRole):
                             SourceWidget.takeItem(i)
 
         return
