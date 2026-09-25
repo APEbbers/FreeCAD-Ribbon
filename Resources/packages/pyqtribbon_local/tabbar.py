@@ -103,16 +103,3 @@ class RibbonTabBar(QTabBar):
             else:
                 self.setStyleSheet("RibbonTabBar::tab:selected {color: black;}")
 
-    def paintEvent(self,event):
-        painter = QStylePainter(self)
-        
-        option  = QStyleOptionTab()
-        for i in range(self.count()):
-            self.initStyleOption(option,i)
-            rect = self.tabRect(i)
-            text = self.tabText(i)
-            
-            #Customise 'option' here            
-            painter.setPen(Qt.GlobalColor.blue)
-            painter.drawControl(QStyle.ControlElement.CE_TabBarTab, option)
-            painter.drawText(rect, text)
