@@ -5165,15 +5165,15 @@ class ModernMenu(RibbonBar):
         HelpMenu.addSeparator()        
         # Add the ribbon helpbutton under the FreeCAD
         RibbonHelpButton = HelpMenu.addAction(translate("FreeCAD Ribbon", "Ribbon help"))
-        RibbonHelpButton.setToolTip(f"<b>Ribbon help</b><br></br><i>{translate("FreeCAD Ribbon", "Opens the wiki for the Ribbon in your browser")}</i>")
+        RibbonHelpButton.setToolTip(f'<b>Ribbon help</b><br></br><i>{translate("FreeCAD Ribbon", "Opens the wiki for the Ribbon in your browser")}</i>')
         RibbonHelpButton.setIcon(HelpIcon)
         RibbonHelpButton.triggered.connect(self.on_RibbonHelpButton_clicked)
         
         # Create the what's new button
         WhatsNewButton_Ribbon = HelpMenu.addAction(
-            translate("FreeCAD Ribbon", "What's new?")
+            translate("FreeCAD Ribbon", "What is new?")
         )
-        WhatsNewButton_Ribbon.setToolTip(f'<b>What\'s new</b><br></br><i>{translate("FreeCAD Ribbon", "shows the \'Change log\' wiki page for the Ribbon in your browser")}</i>')
+        WhatsNewButton_Ribbon.setToolTip(f'<b>What is new</b><br></br><i>{translate("FreeCAD Ribbon", "shows the change log for the Ribbon in your browser")}</i>')
         WhatsNewButton_Ribbon.triggered.connect(self.on_WhatsNewButton_clicked)
         
         # Create the ribbon about button
