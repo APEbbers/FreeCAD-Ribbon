@@ -657,12 +657,16 @@ class ModernMenu(RibbonBar):
             LatestVersion = StandardFunctions.ReturnXML_Value_Git(
                 User=User, Repository=Repo, Branch=Branch, File=File, ElementName=ElementName, attribKey=attribKey, attribValue=attribValue, host=host
             )
+            if LatestVersion is None:
+                LatestVersion = ""
             print(translate("FreeCAD Ribbon", "Ribbon UI: Latest released version: ") + str(LatestVersion))
             # Get the current version
             PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
             CurrentVersion = StandardFunctions.ReturnXML_Value(
                 PackageXML, "version"
             )
+            if CurrentVersion is None:
+                CurrentVersion = ""
             # Check if you are on a developer version. If so set developer version
             if CurrentVersion.lower().endswith("dev"):
                 self.DeveloperVersion = CurrentVersion

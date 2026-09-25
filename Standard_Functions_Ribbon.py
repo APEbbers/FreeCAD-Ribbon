@@ -510,6 +510,8 @@ def ReturnXML_Value(
                         return result
             else:
                 result = child.text
+    if result is None:
+        result = ""
     return result
 
 
@@ -527,7 +529,7 @@ def ReturnXML_Value_Git(
     import xml.etree.ElementTree as ET
     from urllib import request
 
-    result = None
+    result = ""
     try:
         # Passing the path of the
         # xml document to enable the
@@ -554,6 +556,8 @@ def ReturnXML_Value_Git(
     except Exception as e:
         # raise e
         pass
+    if result is None:
+        result = ""
     return result
 
 
