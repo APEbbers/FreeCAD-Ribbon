@@ -1077,7 +1077,8 @@ class ModernMenu(RibbonBar):
         FloatingButton.clicked.connect(self.on_DockWidget_Toggled)
         FloatingButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[6])
         FloatingButton.setToolTip(translate("FreeCAD Ribbon", "Set the ribbon docked or floating"))
-        FloatingButton.setStyleSheet("""QToolTip {
+        FloatingButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton"))
+        FloatingButton.setStyleSheet(FloatingButton.styleSheet() + """\nQToolTip {
                     background-color: #FFFFE1;
                     color: black;
                     border: black solid 1px;
@@ -1092,7 +1093,8 @@ class ModernMenu(RibbonBar):
         overlayButton.setToolTip(translate("FreeCAD Ribbon", "Toggle overlay "))
         overlayButton.setObjectName("overlayButton")
         overlayButton.clicked.connect(self.on_overlayButton_toggled)
-        overlayButton.setStyleSheet("""QToolTip {
+        overlayButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton"))
+        overlayButton.setStyleSheet(overlayButton.styleSheet() + """\nQToolTip {
                     background-color: #FFFFE1;
                     color: black;
                     border: black solid 1px;
