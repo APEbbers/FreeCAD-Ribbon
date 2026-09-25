@@ -763,6 +763,8 @@ class ModernMenu(RibbonBar):
             CurrentVersion = StandardFunctions.ReturnXML_Value(
                 PackageXML, "version"
             )
+            if CurrentVersion is None:
+                CurrentVersion = ""
             # Check if you are on a developer version. If so set developer version
             if CurrentVersion.lower().endswith("dev"):
                 self.DeveloperVersion = CurrentVersion
