@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 from pathlib import Path
 import subprocess
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -55,7 +55,7 @@ from PySide.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -100,9 +100,11 @@ from PySide.QtWidgets import (
     QTableWidget,
     QTableWidgetItem,
     QCompleter,
+    QTabWidget,
+    QStyleOptionComplex,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -405,16 +407,52 @@ class ModernMenu(RibbonBar):
         # Override the panel icons for all standard FreeCAD panels with better visible versions ----------------------------
         DockWidgets = mw.findChildren(QDockWidget)
         for DockWidget in DockWidgets:
-            for child in DockWidget.children():
+            for child in DockWidget.children():                
                 if child.objectName() == "OverlayTitle":
                     OverlayButton = child.findChild(QToolButton, "OBTN Overlay")
-                    OverlayButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1])
+                    # # Set the toolbutton stylesheet as used for all other buttons
+                    OverlayButton.setStyleSheet(OverlayButton.styleSheet() + str(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton")))
+                    # Set a new icon based on the theme
+                    OverlayButton.defaultAction().setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[5])
                     
                     FloatButton = child.findChild(QToolButton, "OBTN Float")
-                    FloatButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2])
+                    # Set the toolbutton stylesheet as used for all other buttons
+                    FloatButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton"))
+                    # Set a new icon based on the theme
+                    FloatButton.defaultAction().setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[6])
                     
                     CloseButton = child.findChild(QToolButton, "OBTN Close")
-                    CloseButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[0])
+                    # Set the toolbutton stylesheet as used for all other buttons
+                    CloseButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton"))
+                    # Set a new icon based on the theme
+                    CloseButton.defaultAction().setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[0])
+        
+        TabWidgets = mw.findChildren(QTabWidget)
+        for child in TabWidgets:
+            if child.objectName() == "OverlayLeft" or child.objectName() == "OverlayRight" or child.objectName() == "OverlayBottom" or child.objectName() == "OverlayTop":
+                for action in child.actions():
+                    if action.data() == 'OBTN Transparent':          
+                        # Set the toolbutton stylesheet as used for all other buttons
+                        action.associatedObjects()[1].setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton"))
+                        # Set a new icon based on the theme
+                        action.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[4]) # Define new icons
+                    if action.data() == 'OBTN AutoMode':
+                        # Set the toolbutton stylesheet as used for all other buttons
+                        action.associatedObjects()[1].setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton"))
+                        # Set a new icon based on the theme
+                        action.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[7]) # Define new icons
+                    if action.data() == 'OBTN Overlay':
+                        # Set the toolbutton stylesheet as used for all other buttons
+                        action.associatedObjects()[1].setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton"))
+                        # Set a new icon based on the theme
+                        action.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[5])
+                    styleSheet_ToolTip = """\nQToolTip {
+                        background-color: #FFFFE1;
+                        color: black;
+                        border: black solid 1px;
+                        border-radius: 2px;
+                        }"""
+                    action.associatedObjects()[1].setStyleSheet(action.associatedObjects()[1].styleSheet() + styleSheet_ToolTip)
         # ------------------------------------------------------------------------------------------------------------------
         
         # Read all data files and fill the lists and dicts -----------------------------------------------------------------

@@ -320,6 +320,7 @@ def ReturnStyleSheet(
                     + """QToolButton, QLabel {
                         margin: 0px;
                         padding: 0px;
+                        image: none;
                         color: """
                     + FontColor
                     + """;background: """
@@ -496,6 +497,12 @@ def ReturnTitleBarIcons():
         "restore_default.svg",
         "minimize_default.svg",
     ]
+    IconNames_OverLay = [
+        "transparent.svg",
+        "overlay.svg",
+        "float.svg",
+        "mode.svg"
+    ]
     IsDarkTheme = ReturnFontColor()
 
     if IsDarkTheme == "#ffffff":
@@ -505,10 +512,23 @@ def ReturnTitleBarIcons():
             "restore_default_white.svg",
             "minimize_default_white.svg",
         ]
+        IconNames_OverLay = [
+        "transparent_lighter.svg",
+        "overlay_lighter.svg",
+        "float_lighter.svg",
+        "mode_lighter.svg"
+        
+    ]
 
     Icons = []
     for name in IconNames:
         pixMap = QPixmap(os.path.join(pathIcons, name))
+        Icon = QIcon()
+        Icon.addPixmap(pixMap)
+        Icons.append(Icon)
+    FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
+    for name in IconNames_OverLay:
+        pixMap = QPixmap(os.path.join(FreeCAD_Icons, name))
         Icon = QIcon()
         Icon.addPixmap(pixMap)
         Icons.append(Icon)
