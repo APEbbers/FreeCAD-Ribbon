@@ -453,6 +453,7 @@ class ModernMenu(RibbonBar):
                         border-radius: 2px;
                         }"""
                     action.associatedObjects()[1].setStyleSheet(action.associatedObjects()[1].styleSheet() + styleSheet_ToolTip)
+        
         # ------------------------------------------------------------------------------------------------------------------
         
         # Read all data files and fill the lists and dicts -----------------------------------------------------------------
@@ -5054,7 +5055,7 @@ class ModernMenu(RibbonBar):
             self.CustomizeRibbonButton = self.SettingsMenu.addAction(translate("FreeCAD Ribbon", "Ribbon Customize"))
             self.CustomizeRibbonButton.setIcon(CustomizeIcon)
             self.CustomizeRibbonButton.setObjectName("CustomizeRibbon")
-            self.CustomizeRibbonButton.setToolTip(f"<b>Customize ribbon</b><br></br><i>{translate("FreeCAD Ribbon", "Enter the customize environment")}</i><br></br>")
+            self.CustomizeRibbonButton.setToolTip(f'<b>Customize ribbon</b><br></br><i>{translate("FreeCAD Ribbon", "Enter the customize environment")}</i><br></br>')
             self.CustomizeRibbonButton.triggered.connect(lambda: self.handleContextMenuAction("Start"))
         
         # Add the ribbon design button (Legacy)
@@ -5062,7 +5063,7 @@ class ModernMenu(RibbonBar):
         self.DesignButton.setObjectName("RibbonLayout")
         if Parameters.BETA_FUNCTIONS_ENABLED:
             self.DesignButton.setText(translate("FreeCAD Ribbon", "Ribbon Layout (Legacy)"))
-        self.DesignButton.setToolTip(f"<b>Ribbon layout menu</b><br></br><i>{translate("FreeCAD Ribbon", "Design the ribbon to your preference")}</i><br></br>(Legacy)")
+        self.DesignButton.setToolTip(f'<b>Ribbon layout menu</b><br></br><i>{translate("FreeCAD Ribbon", "Design the ribbon to your preference")}</i><br></br>(Legacy)')
         self.DesignButton.triggered.connect(self.loadDesignMenu)
         ShortcutKey = "Alt+L"
         try:
@@ -5076,14 +5077,14 @@ class ModernMenu(RibbonBar):
         if ShortcutKey != "" and ShortcutKey is not None:
             self.DesignButton.setShortcut(ShortcutKey)
             self.LayoutMenuShortCut = ShortcutKey
-            self.DesignButton.setToolTip(f"<b>Ribbon layout menu</b><br></br><i>{translate("FreeCAD Ribbon", "Design the ribbon to your preference")}</i><br></br>({ShortcutKey})<br></br>(Legacy)")
+            self.DesignButton.setToolTip(f'<b>Ribbon layout menu</b><br></br><i>{translate("FreeCAD Ribbon", "Design the ribbon to your preference")}</i><br></br>({ShortcutKey})<br></br>(Legacy)')
         
         # Add the preference button
         PreferenceButton = self.SettingsMenu.addAction(
             translate("FreeCAD Ribbon", "Ribbon Preferences")
         )     
         PreferenceButton.setIcon(PreferencesIcon)   
-        PreferenceButton.setToolTip(f"<b>Ribbon preferences</b><br></br><i>{translate("FreeCAD Ribbon", "Set preferences for the Ribbon UI")}</i>")
+        PreferenceButton.setToolTip(f'<b>Ribbon preferences</b><br></br><i>{translate("FreeCAD Ribbon", "Set preferences for the Ribbon UI")}</i>')
         PreferenceButton.setMenuRole(QAction.MenuRole.NoRole)
         PreferenceButton.triggered.connect(self.loadSettingsMenu)
         ShortcutKey = "Alt+P"
@@ -5097,7 +5098,7 @@ class ModernMenu(RibbonBar):
             pass
         if ShortcutKey != "" and ShortcutKey is not None:
             PreferenceButton.setShortcut(ShortcutKey)
-            PreferenceButton.setToolTip(f"<b>Ribbon preferences</b><br></br><i>{translate("FreeCAD Ribbon", "Set preferences for the Ribbon UI")}</i><br></br>({ShortcutKey})")
+            PreferenceButton.setToolTip(f'<b>Ribbon preferences</b><br></br><i>{translate("FreeCAD Ribbon", "Set preferences for the Ribbon UI")}</i><br></br>({ShortcutKey})')
         
         # Add the repair menu
         RepairMenu: QMenu = self.SettingsMenu.addMenu(
@@ -5172,7 +5173,7 @@ class ModernMenu(RibbonBar):
         WhatsNewButton_Ribbon = HelpMenu.addAction(
             translate("FreeCAD Ribbon", "What's new?")
         )
-        WhatsNewButton_Ribbon.setToolTip(f"<b>What's new</b><br></br><i>{translate("FreeCAD Ribbon", "shows the \'Change log\' wiki page for the Ribbon in your browser")}</i>")
+        WhatsNewButton_Ribbon.setToolTip(f'<b>What\'s new</b><br></br><i>{translate("FreeCAD Ribbon", "shows the \'Change log\' wiki page for the Ribbon in your browser")}</i>')
         WhatsNewButton_Ribbon.triggered.connect(self.on_WhatsNewButton_clicked)
         
         # Create the ribbon about button
@@ -5695,10 +5696,10 @@ class ModernMenu(RibbonBar):
         except Exception:
             pass
         # Set the tooltip
-        pinButton.setToolTip(f"<b>Pin button</b><br></br><i>{translate("FreeCAD Ribbon", "Click to toggle the autohide function on or off")}</i>")
+        pinButton.setToolTip(f'<b>Pin button</b><br></br><i>{translate("FreeCAD Ribbon", "Click to toggle the autohide function on or off")}</i>')
         # If there is a shortcut key assinged, update the tooltip
         if ShortcutKey != "none" or ShortcutKey != "":
-            pinButton.setToolTip(f"<b>Pin button</b><br></br><i>{translate("FreeCAD Ribbon", "Click to toggle the autohide function on or off")}</i><br></br>({ShortcutKey})")
+            pinButton.setToolTip(f'<b>Pin button</b><br></br><i>{translate("FreeCAD Ribbon", "Click to toggle the autohide function on or off")}</i><br></br>({ShortcutKey})')
                         
         # Store the pinbutton globally
         self.pinButton = pinButton
@@ -5832,7 +5833,7 @@ class ModernMenu(RibbonBar):
                         self.CustomizeRibbonButton = self.SettingsMenu.addAction(translate("FreeCAD Ribbon", "Ribbon Customize"))
                         self.CustomizeRibbonButton.setIcon(Gui.getIcon("applications-accessories.svg"))
                         self.CustomizeRibbonButton.setObjectName("CustomizeRibbon")
-                        self.CustomizeRibbonButton.setToolTip(f"<b>Customize ribbon</b><br></br><i>{translate("FreeCAD Ribbon", "Enter the customize environment")}</i><br></br>")
+                        self.CustomizeRibbonButton.setToolTip(f'<b>Customize ribbon</b><br></br><i>{translate("FreeCAD Ribbon", "Enter the customize environment")}</i><br></br>')
                         self.CustomizeRibbonButton.triggered.connect(lambda: self.handleContextMenuAction("Start"))
                         self.SettingsMenu.insertAction(action, self.CustomizeRibbonButton)
                     return                    
