@@ -501,7 +501,8 @@ def ReturnTitleBarIcons():
         "transparent.svg",
         "overlay.svg",
         "float.svg",
-        "mode.svg"
+        "mode.svg",
+        "close"
     ]
     IsDarkTheme = ReturnFontColor()
 
@@ -516,8 +517,8 @@ def ReturnTitleBarIcons():
         "transparent_lighter.svg",
         "overlay_lighter.svg",
         "float_lighter.svg",
-        "mode_lighter.svg"
-        
+        "mode_lighter.svg",
+        "close_lighter"
     ]
 
     Icons = []

@@ -152,7 +152,7 @@ Gui.addCommand("Ribbon_Menu", RibbonApplicationMenu_Class())
 Gui.addCommand("Ribbon_Layout", RibbonLayout_Class())
 Gui.addCommand("Ribbon_Preferences", RibbonPreferences_Class())
 try: 
-    import PySide
+    import PySide6
     Gui.addCommand("Ribbon_Pin", RibbonPin_Class())
     Gui.addCommand("Ribbon_Menubar", MenuBar_Class())
 except Exception:
