@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 from pathlib import Path
 import subprocess
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -55,7 +55,7 @@ from PySide6.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -104,7 +104,7 @@ from PySide6.QtWidgets import (
     QStyleOptionComplex,
     
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -425,7 +425,7 @@ class ModernMenu(RibbonBar):
                     # Set the toolbutton stylesheet as used for all other buttons
                     CloseButton.setStyleSheet(StyleMapping_Ribbon.ReturnStyleSheet("toolbutton"))
                     # Set a new icon based on the theme
-                    CloseButton.defaultAction().setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[0])
+                    CloseButton.defaultAction().setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[8])
         
         TabWidgets = mw.findChildren(QTabWidget)
         for child in TabWidgets:
@@ -1075,7 +1075,7 @@ class ModernMenu(RibbonBar):
         FloatingButton.setObjectName("FloatButton")
         FloatingButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
         FloatingButton.clicked.connect(self.on_DockWidget_Toggled)
-        FloatingButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[2])
+        FloatingButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[6])
         FloatingButton.setToolTip(translate("FreeCAD Ribbon", "Set the ribbon docked or floating"))
         FloatingButton.setStyleSheet("""QToolTip {
                     background-color: #FFFFE1;
@@ -1088,7 +1088,7 @@ class ModernMenu(RibbonBar):
         # Create an overlay button  
         overlayButton = QToolButton()
         overlayButton.setFixedSize(QSize(self.iconSize * 0.8,self.iconSize * 0.8))
-        overlayButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[1])
+        overlayButton.setIcon(StyleMapping_Ribbon.ReturnStyleItem("TitleBarButtons")[5])
         overlayButton.setToolTip(translate("FreeCAD Ribbon", "Toggle overlay "))
         overlayButton.setObjectName("overlayButton")
         overlayButton.clicked.connect(self.on_overlayButton_toggled)
