@@ -149,9 +149,7 @@ if fileExists is True:
         
         # Create a new json file
         newFile = file
-        source_default = os.path.join(
-            os.path.dirname(FCBinding.__file__), "CreateStructure.txt"
-        )
+        source_default = os.path.join(os.path.dirname(FCBinding.__file__), "CreateStructure.txt")
         shutil.copy(source_default, newFile)
         
         # Print a message that the ribbon structure has ben reverted to default
@@ -160,7 +158,7 @@ if fileExists is True:
         # Print the error message, so that it is on the log
         StandardFunctions.Print(translate("FreeCAD Ribbon", "Traceback: \n") + str(e.with_traceback(e.__traceback__)) + "\n in " + os.path.join(ConfigDirectory, "RibbonStructure.json"), "Error")
 
-# if not, copy and rename
+# if there is no ribbonStructure.json, copy and rename
 if fileExists is False:
     shutil.copy(source, file)
 
@@ -204,6 +202,26 @@ try:
     App.saveParameter()
 except Exception:
     pass
+
+# Check if there is a layout folder with default layouts
+LayoutDir = os.path.join(ConfigDirectory, "Layouts", "Default")
+if os.path.exists(LayoutDir) is False:
+    # Create the directories
+    os.makedirs(LayoutDir)
+    # open "CreateStructure.txt" and create files for each workbench
+    ribbonStructure = os.path.join(os.path.dirname(FCBinding.__file__), "CreateStructure.txt")
+    structure = {}
+    with open(ribbonStructure, "r") as file:
+        structure.update(json.load(file))
+    
+    for workbench in structure["workbenches"]:
+        # Define a file
+        workbenchFile = os.path.join(LayoutDir, f"{workbench}.json")
+        # Fill the dict
+        workbenchDict = structure["workbenches"][workbench]        
+        # Writing to file
+        with open(workbenchFile, "w") as outfile:
+            json.dump(workbenchDict, outfile, indent=4)
 
 try:   
     print(translate("FreeCAD Ribbon", "Activating Ribbon UI..."))
