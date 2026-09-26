@@ -1730,7 +1730,10 @@ class ModernMenu(RibbonBar):
                     self.tabBar().setMovable(True)
                     # Add a menu to select layout (themes)
                     SetLayoutsAct = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set Layouts..."))
-                    SetLayoutsAct.setDisabled(True) # ToDO
+                    SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "Default layout"))
+                    SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "Large and medium buttons"))
+                    SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All small"))
+                    SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All medium"))
                     # Add a button to restore a layout
                     RestoreLayoutAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Restore a Ribbon layout"))
                     RestoreLayoutAct.triggered.connect(self.RestoreJson)
@@ -2580,7 +2583,7 @@ class ModernMenu(RibbonBar):
             workbenchName = self.tabBar().tabData(i)
             
             # Make sure to set the tab visible
-            if "Enabled" in self.ribbonStructure["workbenches"][workbenchName]:  # noqa: SIM102
+            if workbenchName in self.ribbonStructure["workbenches"] and "Enabled" in self.ribbonStructure["workbenches"][workbenchName]:  # noqa: SIM102
                 if self.ribbonStructure["workbenches"][workbenchName]["Enabled"] is True:
                     # Make sure to set the tab visible
                     self.tabBar().setTabVisible(i, True)  
