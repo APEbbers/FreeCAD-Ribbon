@@ -24,7 +24,7 @@ import FreeCADGui as Gui
 from pathlib import Path
 import subprocess
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -55,7 +55,7 @@ from PySide.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -104,7 +104,7 @@ from PySide.QtWidgets import (
     QStyleOptionComplex,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1299,8 +1299,19 @@ class ModernMenu(RibbonBar):
         for dockWidget in mw.findChildren(QDockWidget):
             if "PanelStates" in self.ribbonStructure and dockWidget.objectName() in self.ribbonStructure["PanelStates"]:                
                 try:
-                    if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is True:                               
-                        dockWidget.show()        
+                    if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is True:    
+                        if self.ribbonStructure["PanelStates"][dockWidget.objectName()][1] == "Left":
+                            dockWidget.setDockLocation(Qt.DockWidgetArea.LeftDockWidgetArea)
+                        if self.ribbonStructure["PanelStates"][dockWidget.objectName()][1] == "Right":
+                            dockWidget.setDockLocation(Qt.DockWidgetArea.RightDockWidgetArea)
+                        if self.ribbonStructure["PanelStates"][dockWidget.objectName()][1] == "Top":
+                            dockWidget.setDockLocation(Qt.DockWidgetArea.TopDockWidgetArea)
+                        if self.ribbonStructure["PanelStates"][dockWidget.objectName()][1] == "Bottem":
+                            dockWidget.setDockLocation(Qt.DockWidgetArea.BottomDockWidgetArea)                        
+                        dockWidget.show()     
+                        dockWidget.setFloating(False)   
+                        dockWidget.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+                        dockWidget.adjustSize()
                     if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is False: 
                         dockWidget.close()
                 except Exception:
