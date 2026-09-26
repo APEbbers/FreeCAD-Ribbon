@@ -29,6 +29,8 @@ from Parameters_Ribbon import Settings
 import Standard_Functions_Ribbon as StandardFunctions
 import shutil
 import sys
+from datetime import datetime
+import json
 
 from PySide.QtCore import Qt, QTimer, QSize, QSettings
 from PySide.QtGui import QGuiApplication
@@ -119,6 +121,44 @@ if ribbonStructureVersion >= CurrentStructureVersion:
 
 # check if file exits
 fileExists = os.path.exists(file)
+
+# Check if the json file is not corrupted
+if fileExists is True:  
+    try:   
+        with open(file, "r") as file_check:
+            json.load(file_check)
+    except Exception as e:
+        # Store  the current corrupted file
+        #
+        # Create a suffix with the date
+        Suffix = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # Create a backup name
+        FileName = f"RibbonStructure_{Suffix}.json"
+        Path = os.path.join(ConfigDirectory, "Error files")
+        # If the backup folder doesn't exists, create it
+        if os.path.exists(Path) is False:
+            os.makedirs(Path)
+        errorFile = os.path.join(Path, FileName)
+        # Copy the file
+        shutil.copy(file, errorFile)
+        # If present, copy the logfile as well
+        logFile = os.path.join(App.getUserAppDataDir(), "FreeCAD.log")
+        logFileCopy = os.path.join(Path, f"FreeCAD_{Suffix}.log")
+        if os.path.exists(logFile):
+            shutil.copy(logFile, logFileCopy)
+        
+        # Create a new json file
+        newFile = file
+        source_default = os.path.join(
+            os.path.dirname(FCBinding.__file__), "CreateStructure.txt"
+        )
+        shutil.copy(source_default, newFile)
+        
+        # Print a message that the ribbon structure has ben reverted to default
+        StandardFunctions.Print(translate("FreeCAD Ribbon", 
+            f"""RibbonUI: RibbonStructure.json got corrupted. A new file is created\nYou can find the corruped file in {Path}"""), "Error")
+        # Print the error message, so that it is on the log
+        StandardFunctions.Print(translate("FreeCAD Ribbon", "Traceback: \n") + str(e.with_traceback(e.__traceback__)) + "\n in " + os.path.join(ConfigDirectory, "RibbonStructure.json"), "Error")
 
 # if not, copy and rename
 if fileExists is False:
