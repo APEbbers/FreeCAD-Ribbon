@@ -1338,7 +1338,7 @@ class ModernMenu(RibbonBar):
                     border: black solid 1px;
                     border-radius: 2px;
                     }""")
-        # ------------------------------------------------------------------------------------------------------------------
+        # ------------------------------------------------------------------------------------------------------------------       
         return
 
     # region - Custom functions for FreeCAD
@@ -1730,10 +1730,10 @@ class ModernMenu(RibbonBar):
                     self.tabBar().setMovable(True)
                     # Add a menu to select layout (themes)
                     SetLayoutsAct = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set Layouts..."))
-                    SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "Default layout"))
-                    SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "Large and medium buttons"))
-                    SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All small"))
-                    SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All medium"))
+                    Default_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "Default layout"))
+                    LargeAndMedium_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "Large and medium buttons"))
+                    AllSmall_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All small"))
+                    AllMedium_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All medium"))
                     # Add a button to restore a layout
                     RestoreLayoutAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Restore a Ribbon layout"))
                     RestoreLayoutAct.triggered.connect(self.RestoreJson)
@@ -4286,6 +4286,7 @@ class ModernMenu(RibbonBar):
     def onTabBarClicked(self):
         self.UnfoldRibbon()
         self.setRibbonVisible(True)
+        self.ApplicationMenus()
 
         # hide normal toolbars
         self.hideClassicToolbars()
@@ -4849,9 +4850,17 @@ class ModernMenu(RibbonBar):
         
         # Create a accessories menu
         AccessoriesMenu = None
+        AccessoriesMenuPresent = False
         for action in MenuBar.children():
-            if action.objectName() == "AccessoriesMenu":
-                AccessoriesMenu = action.menu()
+            try:
+                if action.objectName() == "AccessoriesMenu":
+                    AccessoriesMenuPresent = True
+                    AccessoriesMenu = action.menu()
+                    break               
+            except Exception:
+                pass
+        if AccessoriesMenuPresent is True:
+            if self.AccessoriesMenu is None:
                 self.AccessoriesMenu = QMenu()
                 subMenus = []
                 for subAction in AccessoriesMenu.actions():
@@ -8709,6 +8718,18 @@ class EventInspector(QObject):
                     f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
                 )
             return QObject.eventFilter(self, obj, event)
+        
+        if event.type() == QEvent.Type.MouseMove:
+            # Get the mainwindow, the ribbon and the title
+            mw = Gui.getMainWindow()
+            RibbonBar = mw.findChild(ModernMenu, "Ribbon")
+            if RibbonBar.AccessoriesMenu is None:
+                RibbonBar.ApplicationMenus()
+                
+            Counter = 0
+            if Parameters.AUTOHIDE_RIBBON is False and Counter == 0:
+                RibbonBar.UnfoldRibbon()
+                Counter = 1
         return False
 
 class run:
