@@ -1298,10 +1298,13 @@ class ModernMenu(RibbonBar):
         # Enable the dockwidgets based on the saved data
         for dockWidget in mw.findChildren(QDockWidget):
             if "PanelStates" in self.ribbonStructure and dockWidget.objectName() in self.ribbonStructure["PanelStates"]:                
-                if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is True:                               
-                    dockWidget.show()        
-                if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is False: 
-                    dockWidget.close()
+                try:
+                    if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is True:                               
+                        dockWidget.show()        
+                    if bool(self.ribbonStructure["PanelStates"][dockWidget.objectName()][0]) is False: 
+                        dockWidget.close()
+                except Exception:
+                    pass
         
         # Add a custom context menu to the dockwidgets. With this, the custom toolbar placement functions can be used
         for dockWidget in mw.findChildren(QDockWidget):            
