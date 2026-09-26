@@ -164,6 +164,8 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
     @staticmethod
     def on_CopyVersionInfo_Clicked(self, Text):
         StandardFunctions.AddToClipboard(Text)
+        
+        self.form.CopyVersionInfo.setText(translate("FreeCAD Ribbon", "Copied!"))
         print(Text)
         return
 
