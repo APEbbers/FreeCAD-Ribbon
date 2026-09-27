@@ -1070,3 +1070,15 @@ def TimeDeltaToDict(timeDelta:datetime.timedelta) -> dict:
 def CompareIcons(icon1: QIcon, icon2: QIcon):
     icon1 = Gui.getIcon("Std_OnlineHelp")
     return (icon1.pixmap(icon1.actualSize(QSize(16,16))).toImage() == icon2.pixmap(icon2.actualSize(QSize(16,16))).toImage())
+
+def isWorkbenchActive(WorkBenchName = ""):
+    result = False
+    if WorkBenchName != "":
+        try:
+            wb = Gui.getWorkbench("PartDesignWorkbench")
+            wb.listToolbars()
+            result = True
+        except Exception:
+            pass
+    
+    return result
