@@ -540,19 +540,20 @@ def ReturnXML_Value_Git(
            url = f"{host}/{User}/{Repository}/src/branch/{Branch}/{File}" 
         if host == "https://github.com":
             url = f"https://raw.githubusercontent.com/{User}/{Repository}/refs/heads/{Branch}/{File}" 
-        response = request.urlopen(url)
-        data = response.read()
-        root = ET.fromstring(data)
-        result = ""
-        for child in root:
-            if str(child.tag).split("}")[1] == ElementName:
-                if attribKey != "" and attribValue != "":
-                    for key, value in child.attrib.items():
-                        if key == attribKey and value == attribValue:
-                            result = child.text
-                            return result
-                else:
-                    result = child.text
+        if url.startswith("https"):
+            response = request.urlopen(url)
+            data = response.read()
+            root = ET.fromstring(data)
+            result = ""
+            for child in root:
+                if str(child.tag).split("}")[1] == ElementName:
+                    if attribKey != "" and attribValue != "":
+                        for key, value in child.attrib.items():
+                            if key == attribKey and value == attribValue:
+                                result = child.text
+                                return result
+                    else:
+                        result = child.text
     except Exception as e:
         # raise e
         pass
