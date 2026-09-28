@@ -92,17 +92,53 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
         Maintainer = StandardFunctions.ReturnXML_Value(PackageXML, "maintainer")
-        branch = "main"
-        CommitID = ""
-        with open(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "version_main"), "r") as fd:
-            line = fd.readlines()[0]
-            CommitID = line[:10]
+
         
-        if version.endswith("dev"):
-            branch = "Develop"
-            with open(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "version_Develop"), "r") as fd:
+        # Try first to read from the local folder in case the repository is cloned
+        branch = ""
+        CommitID = ""
+        Contributers = []
+        localDorPresent = True
+
+        git_root = os.path.join(os.path.dirname(__file__), ".git")
+        if os.path.exists(git_root) is False:
+            localDorPresent = False
+        git_head = os.path.join(git_root, "HEAD")
+        if os.path.exists(git_head) is False:
+            localDorPresent = False
+
+        if localDorPresent:
+            head_ref = ""
+            # Read .git/HEAD file
+            with open(git_head, "r") as fd:
+                head_ref = fd.read()
+
+            # Find head file .git/HEAD (e.g. ref: ref/heads/master => .git/ref/heads/master)
+            if head_ref.startswith("ref: "):
+                head_ref = head_ref[5:].strip()
+
+            # Read commit id from head file
+            head_path = os.path.join(git_root, head_ref)
+            if os.path.exists(head_path):
+                # Read the branch version
+                branch = head_path.rsplit("/", 1)[1]
+                with open(head_path, "r") as fd:
+                    line = fd.readlines()[0]
+                    CommitID = line.strip()
+                    
+        # if there is no commitID, get the commitID from the shipped info
+        if CommitID == "":
+            with open(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "version_main"), "r") as fd:
                 line = fd.readlines()[0]
                 CommitID = line[:10]
+        # if there is no branch, get the branch from the version info
+        if branch == "":
+            branch = "main"
+            if version.endswith("dev"):
+                branch = "Develop"
+                with open(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "version_Develop"), "r") as fd:
+                    line = fd.readlines()[0]
+                    CommitID = line[:10]
 
         # Add a logo
         pixmap = QPixmap(os.path.join(pathIcons, "FreecadNew.svg"))
