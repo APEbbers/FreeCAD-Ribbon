@@ -88,17 +88,21 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         Style = mw.style()
         self.form.setStyle(Style)
 
-        GitData = StandardFunctions.GetGitData()
-
+        # Get the git info
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
         version = StandardFunctions.ReturnXML_Value(PackageXML, "version")
         Maintainer = StandardFunctions.ReturnXML_Value(PackageXML, "maintainer")
-        CommitID = GitData[0]
-        if CommitID is None:
-            CommitID = "-"
-        branch = GitData[1]
-        if branch is None:
-            branch = "-"
+        branch = "main"
+        CommitID = ""
+        with open(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "version_main"), "r") as fd:
+            line = fd.readlines()[0]
+            CommitID = line[:10]
+        
+        if version.endswith("dev"):
+            branch = "Develop"
+            with open(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "version_Develop"), "r") as fd:
+                line = fd.readlines()[0]
+                CommitID = line[:10]
 
         # Add a logo
         pixmap = QPixmap(os.path.join(pathIcons, "FreecadNew.svg"))
@@ -138,13 +142,24 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         )
 
         # Write the text for credits
-
-        Contributers = GitData[2]
-        if len(Contributers) > 0:
-            text = translate("FreeCAD Ribbon", "Contributors:\n")
-            for Contributor in Contributers:
-                text = text + " - " + Contributor + "\n"
-
+        if os.path.exists(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "contributors.txt")):
+            lines = []
+            with open(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "contributors.txt"), "r") as fd:
+                    lines = fd.readlines()
+                
+            text = translate("FreeCAD Ribbon", "Contributors:\n")                
+            for line in lines:
+                if "pre-commit" in line or "Email" in line:
+                    continue
+                # Filter the lines
+                addition = line.split()[0]
+                addition = addition.split("\t")[0]
+                if "@" in addition and "noreply" in addition:
+                    addition = addition.split("@")[0]
+                if "+" in addition:
+                    addition = addition.split("+")[1]
+                text = text + " - " + addition + "\n"
+            # Set the text
             self.form.ContributersText.setText(text)
         else:
             self.form.groupBox.setDisabled(True)
