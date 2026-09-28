@@ -94,13 +94,13 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         Maintainer = StandardFunctions.ReturnXML_Value(PackageXML, "maintainer")
         branch = "main"
         CommitID = ""
-        with open(os.path.join(os.path.dirname(__file__), "version_main"), "r") as fd:
+        with open(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "version_main"), "r") as fd:
             line = fd.readlines()[0]
             CommitID = line[:10]
         
         if version.endswith("dev"):
             branch = "Develop"
-            with open(os.path.join(os.path.dirname(__file__), "version_Develop"), "r") as fd:
+            with open(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "version_Develop"), "r") as fd:
                 line = fd.readlines()[0]
                 CommitID = line[:10]
 
@@ -142,9 +142,9 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         )
 
         # Write the text for credits
-        if os.path.exists(os.path.join(os.path.dirname(__file__), "contributors.txt")):
+        if os.path.exists(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "contributors.txt")):
             lines = []
-            with open(os.path.join(os.path.dirname(__file__), "contributors.txt"), "r") as fd:
+            with open(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "contributors.txt"), "r") as fd:
                     lines = fd.readlines()
                 
             text = translate("FreeCAD Ribbon", "Contributors:\n")                
