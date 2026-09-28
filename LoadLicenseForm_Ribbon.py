@@ -142,9 +142,9 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
         )
 
         # Write the text for credits
-        if os.path.exists(os.path.join(os.path.dirname(__file__), "Resources", "GetInfo", "contributors.txt")):
+        if os.path.exists(os.path.join(os.path.dirname(__file__), "contributors.txt")):
             lines = []
-            with open(os.path.join(os.path.dirname(__file__), "Resources", "GetInfo", "contributors.txt"), "r") as fd:
+            with open(os.path.join(os.path.dirname(__file__), "contributors.txt"), "r") as fd:
                     lines = fd.readlines()
                 
             text = translate("FreeCAD Ribbon", "Contributors:\n")                
