@@ -141,7 +141,7 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
             ),
         )
 
-        # Write the text for credits
+        # Write the text for credits if present
         if os.path.exists(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "contributors.txt")):
             lines = []
             with open(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "contributors.txt"), "r") as fd:
