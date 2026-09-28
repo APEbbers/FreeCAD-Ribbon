@@ -124,7 +124,7 @@ class LoadDialog(LicenseForm_ui.Ui_Dialog):
                 branch = head_path.rsplit("/", 1)[1]
                 with open(head_path, "r") as fd:
                     line = fd.readlines()[0]
-                    CommitID = line.strip()
+                    CommitID = line[:10]
                     
         # if there is no commitID, get the commitID from the shipped info
         if CommitID == "":
