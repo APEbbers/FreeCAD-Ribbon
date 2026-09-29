@@ -540,8 +540,12 @@ def ReturnXML_Value_Git(
            url = f"{host}/{User}/{Repository}/src/branch/{Branch}/{File}" 
         if host == "https://github.com":
             url = f"https://raw.githubusercontent.com/{User}/{Repository}/refs/heads/{Branch}/{File}" 
-        if url.startswith("https"):
-            response = request.urlopen(url)
+        if not url.startswith("https:"):
+            raise ValueError("URL must start with 'https:'")
+        
+        req = request.Request(url)
+        # url is validated above
+        with request.urlopen(req) as response: #nosec
             data = response.read()
             root = ET.fromstring(data)
             result = ""
