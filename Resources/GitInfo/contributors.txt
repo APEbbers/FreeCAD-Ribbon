@@ -1,0 +1,10 @@
+Email                         	Commits   	Files     	Insertions	Deletions 	Total Lines
+paul.ebbers@gmail.com         	2836      	326       	693950    	346056    	1040006   
+66853113+pre-commit-ci[bot]@users.noreply.github.com	277       	136       	136249    	55024     	191273    
+geolta@protonmail.com         	34        	46        	6261      	4798      	11059     
+hakanseven12@gmail.com        	86        	29        	6715      	2466      	9181      
+hasecilu@tuta.io              	15        	16        	5520      	1046      	6566      
+apebbers@noreply.codeberg.org 	57        	11        	294       	247       	541       
+luzpaz@users.noreply.github.com	3         	9         	99        	50        	149       
+46537884+syres916@users.noreply.github.com	3         	3         	84        	3         	87        
+115890454+geolta@users.noreply.github.com	5         	2         	12        	11        	23        
