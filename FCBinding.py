@@ -1309,12 +1309,14 @@ class ModernMenu(RibbonBar):
         Gui.updateGui()
         # Make sure that the tooltip has the correct color settings
         styleSheet = self.tabBar().styleSheet()
-        self.tabBar().setStyleSheet(styleSheet + """\nQToolTip {
+        self.tabBar().setStyleSheet("""\nQToolTip {
                     background-color: #FFFFE1;
                     color: black;
                     border: black solid 1px;
                     border-radius: 2px;
-                    }""")
+                }"""
+                + styleSheet
+            )
         # ------------------------------------------------------------------------------------------------------------------       
         return
 
@@ -2189,7 +2191,18 @@ class ModernMenu(RibbonBar):
                     if "Enabled" not in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
                         self.tabBar().setTabEnabled(i, True)     
                         self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))             
-                
+        
+        # Make sure that the tooltip has the correct color settings
+        styleSheet = self.tabBar().styleSheet()
+        self.tabBar().setStyleSheet("""\nQToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                }"""
+                + styleSheet
+            )
+             
         # Restore the cursor
         QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         return
@@ -2480,7 +2493,7 @@ class ModernMenu(RibbonBar):
                 if self.tabBar().tabData(i) == orderList[0]:
                     self.tabBar().moveTab(i,0)
                     
-        # Gui.updateGui()
+        Gui.updateGui()
         # Make sure that the tooltip has the correct color settings
         styleSheet = self.tabBar().styleSheet()
         self.tabBar().setStyleSheet(styleSheet + """\nQToolTip {
@@ -2702,7 +2715,7 @@ class ModernMenu(RibbonBar):
         self.setCurrentCategory(self.CurrentCategoryToRestore)
         self.hideClassicToolbars()
         
-        # Gui.updateGui()
+        Gui.updateGui()
         # Make sure that the tooltip has the correct color settings
         styleSheet = self.tabBar().styleSheet()
         self.tabBar().setStyleSheet(styleSheet + """\nQToolTip {
@@ -2711,7 +2724,6 @@ class ModernMenu(RibbonBar):
                     border: black solid 1px;
                     border-radius: 2px;
                     }""")
-        
         
         # Print a message
         print(translate("FreeCAD Ribbon", "RibbonUI: Changes are rolled back"))
@@ -4265,15 +4277,7 @@ class ModernMenu(RibbonBar):
                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                 + ";}"
             )
-        # Make sure that the tooltip has the correct color settings
-        styleSheet = self.tabBar().styleSheet()
-        self.tabBar().setStyleSheet(styleSheet + """\nQToolTip {
-                    background-color: #FFFFE1;
-                    color: black;
-                    border: black solid 1px;
-                    border-radius: 2px;
-                    }""")
-
+        
         # ensure that workbench is already loaded
         workbench = Gui.activeWorkbench()        
         if not hasattr(workbench, "__Workbench__"):
@@ -4312,12 +4316,16 @@ class ModernMenu(RibbonBar):
             # If not activated, activate all buttons    
             self.activateButtons() 
 
-        # if self.DesignMenuLoaded is True:
-        #     # Disable the quick toolbar, righttoolbar and application menu
-        #     self.rightToolBar().setDisabled(True)
-        #     self.quickAccessToolBar().setDisabled(True)
-        #     self.applicationOptionButton().setDisabled(True)
-        #     Gui.updateGui()
+        # Make sure that the tooltip has the correct color settings
+        styleSheet = self.tabBar().styleSheet()
+        self.tabBar().setStyleSheet("""\nQToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                }"""
+                + styleSheet
+            )
         
         return
 
@@ -4450,17 +4458,6 @@ class ModernMenu(RibbonBar):
                     border: black solid 1px;
                     border-radius: 2px;
                     }"""
-                )
-        if Parameters.ENABLE_BACKGROUND_COLOR is True:
-            FreeCAD_preferences = App.ParamGet(
-                "User parameter:BaseApp/Preferences/MainWindow"
-            )
-            currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
-            if currentStyleSheet == "":
-                hexColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
-                # Set the quickaccess toolbar background color
-                self.quickAccessToolBar().setStyleSheet(
-                    "background-color: " + hexColor + ";"
                 )
 
         # Get the order of workbenches from Parameters
