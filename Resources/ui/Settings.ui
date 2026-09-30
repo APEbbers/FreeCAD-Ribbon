@@ -195,7 +195,7 @@
       <string notr="true"/>
      </property>
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <property name="elideMode">
       <enum>Qt::TextElideMode::ElideRight</enum>
@@ -961,6 +961,23 @@
                        </property>
                       </widget>
                      </item>
+                     <item row="5" column="3">
+                      <widget class="QLabel" name="label_49">
+                       <property name="font">
+                        <font>
+                         <pointsize>8</pointsize>
+                         <italic>true</italic>
+                         <bold>false</bold>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>This will also set the icon size for the tabs</string>
+                       </property>
+                       <property name="wordWrap">
+                        <bool>true</bool>
+                       </property>
+                      </widget>
+                     </item>
                     </layout>
                    </item>
                    <item row="2" column="1">
@@ -1534,8 +1551,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1224</width>
-            <height>820</height>
+            <width>326</width>
+            <height>286</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_43">
@@ -2644,8 +2661,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1224</width>
-            <height>766</height>
+            <width>478</width>
+            <height>682</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_28">
