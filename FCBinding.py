@@ -1808,7 +1808,48 @@ class ModernMenu(RibbonBar):
                         if "workbenches" in self.ribbonStructure and WorkBenchName in self.ribbonStructure["workbenches"]:
                             self.ribbonStructure["workbenches"][WorkBenchName] = LayoutDict
                             result = True
+            
+            for WorkBenchName, Workbench in Gui.listWorkbenches().items():
+                for root, dirs, files in os.walk(LayoutDir):
+                    if WorkBenchName not in files:
+                        # ToolBarItems: dict = Workbench.getToolbarItems()
                         
+                        # for toolbar, commands in ToolBarItems.items():
+                        if (
+                            "workbenches" in self.ribbonStructure 
+                            and WorkBenchName in self.ribbonStructure["workbenches"]
+                            and "toolbars" in self.ribbonStructure["workbenches"][WorkBenchName]
+                        ):
+                            for toolbar in self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"].keys():
+                                if str(toolbar) != "order":
+                                    counter = 0                                                             
+                                    for command, values in self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][toolbar]["commands"].items():
+                                            if command != "order":
+                                                size = "small"
+                                                if counter == 0:
+                                                    size = "large"
+                                                counter = counter + 1
+                                                StandardFunctions.add_keys_nested_dict(
+                                                    self.ribbonStructure,
+                                                    [
+                                                        "workbenches",
+                                                        WorkBenchName,
+                                                        "toolbars",
+                                                        toolbar,
+                                                        "commands",
+                                                        command,
+                                                        "size",
+                                                    ],
+                                                    endEmpty=True
+                                                )
+                                                self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][toolbar]["commands"][command]["size"] = size
+        # get the path for the Json file
+        JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+        # Writing to sample.json
+        with open(JsonFile, "w") as outfile:
+            json.dump(self.ribbonStructure, outfile, indent=4)
+        
+        # Restart FreeCAD
         if result is True:
             StandardFunctions.RestartDialog(includeIcons=True)
          
@@ -3267,7 +3308,7 @@ class ModernMenu(RibbonBar):
         return result
     
     # Function to create an action for the panel menu
-    def createAction_Tabs(self, WorkbenchName, parent):
+    def createAction_Tabs(self, WorkbenchName, parent, Dict = ribbonStructure):
         Workbench = Gui.getWorkbench(WorkbenchName)
         workbenchText = Workbench.MenuText
 
@@ -3281,16 +3322,16 @@ class ModernMenu(RibbonBar):
         for i in range(self.tabBar().count()):
             tabData = self.tabBar().tabData(i)   
             # Set the checkbox enabled
-            if "workbenches" in self.workBenchDict and tabData in self.workBenchDict["workbenches"] and tabData == WorkbenchName:  # noqa: SIM102
+            if "workbenches" in Dict and tabData in Dict["workbenches"] and tabData == WorkbenchName:  # noqa: SIM102
                 # If enabled is present, set the checkbox accordingly
-                if "Enabled" in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
-                    Action.setChecked(self.workBenchDict["workbenches"][tabData]["Enabled"])
+                if "Enabled" in Dict["workbenches"][tabData]:  # noqa: SIM102
+                    Action.setChecked(Dict["workbenches"][tabData]["Enabled"])
                 # If enabled is not present, set the checkbox checked by default
-                if "Enabled" not in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
+                if "Enabled" not in Dict["workbenches"][tabData]:  # noqa: SIM102
                     # Add the command if they don't exist
-                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", WorkbenchName, "Enabled"], True)
+                    Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", WorkbenchName, "Enabled"], True)
                     # Write the state to the dict
-                    self.workBenchDict["workbenches"][tabData]["Enabled"] = True
+                    Dict["workbenches"][tabData]["Enabled"] = True
                     Action.setChecked(True)
                      
         # # Connect the action
@@ -5490,13 +5531,14 @@ class ModernMenu(RibbonBar):
         #
         workbenchTitle = self.tabBar().tabText(self.tabBar().currentIndex())
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        tabName = workbenchTitle
         if workbenchName is None:
             return
 
-        # check if the panel is already loaded. If so exit this function
-        tabName = workbenchTitle
-        if tabName in self.isWbLoaded and (self.isWbLoaded[tabName] or tabName == ""):
-            return
+        # # check if the panel is already loaded. If so exit this function        
+        # if tabName in self.isWbLoaded and (self.isWbLoaded[tabName] or tabName == ""):
+        #     print(tabName)
+        #     return
 
         workbench = Gui.getWorkbench(workbenchName)
         # Get the list of toolbars from the active workbench
