@@ -2025,8 +2025,6 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # show the restart dialog
         if self.settingChanged is True:
             result = StandardFunctions.RestartDialog(includeIcons=True)
-            if result == "yes":
-                StandardFunctions.restart_freecad()
             if result == "no":
                 App.saveParameter()
         return

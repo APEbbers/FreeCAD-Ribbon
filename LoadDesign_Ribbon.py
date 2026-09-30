@@ -3528,8 +3528,6 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # show the restart dialog
         if self.IsChanged is True:
             result = StandardFunctions.RestartDialog(includeIcons=True)
-            if result == "yes":
-                StandardFunctions.restart_freecad()
         return
 
     @staticmethod
