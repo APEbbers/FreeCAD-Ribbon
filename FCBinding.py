@@ -1309,14 +1309,12 @@ class ModernMenu(RibbonBar):
         Gui.updateGui()
         # Make sure that the tooltip has the correct color settings
         styleSheet = self.tabBar().styleSheet()
-        self.tabBar().setStyleSheet("""\nQToolTip {
+        self.tabBar().setStyleSheet(styleSheet + """\nQToolTip {
                     background-color: #FFFFE1;
                     color: black;
                     border: black solid 1px;
                     border-radius: 2px;
-                }"""
-                + styleSheet
-            )
+                    }""")
         # ------------------------------------------------------------------------------------------------------------------       
         return
 
@@ -1704,22 +1702,24 @@ class ModernMenu(RibbonBar):
                 # Add Customize buttons for entering and exiting customize enviroment
                 self.contextMenu.addSeparator()
                 title = translate("FreeCAD Ribbon", "Customize...")
+                # Add a menu to select layout (themes)
+                SetLayoutsAct = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set Layouts..."))
+                Default_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "Default layout"))
+                Default_Act.triggered.connect(lambda: self.handleLayoutMenuAction("Default"))
+                
+                LargeAndMedium_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "Large and medium buttons"))
+                LargeAndMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("LargeAndMedium"))
+                
+                AllSmall_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All small"))
+                AllSmall_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllSmall"))
+                
+                AllMedium_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All medium"))
+                AllMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllMedium"))
+                    
                 if self.CustomizeEnabled is True:
                     # Set the tabs movable
                     self.tabBar().setMovable(True)
-                    # Add a menu to select layout (themes)
-                    SetLayoutsAct = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set Layouts..."))
-                    Default_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "Default layout"))
-                    Default_Act.triggered.connect(lambda: self.handleLayoutMenuAction("Default"))
                     
-                    LargeAndMedium_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "Large and medium buttons"))
-                    LargeAndMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("LargeAndMedium"))
-                    
-                    AllSmall_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All small"))
-                    AllSmall_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllSmall"))
-                    
-                    AllMedium_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All medium"))
-                    AllMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllMedium"))
                     
                     # Add a button to restore a layout
                     RestoreLayoutAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Restore a Ribbon layout"))
@@ -1796,15 +1796,21 @@ class ModernMenu(RibbonBar):
         return
     
     def handleLayoutMenuAction(self, LayoutName = "Default"):
-        # if LayoutName == "Default":
-        #     LayoutDir = os.path.join(ConfigDirectory, "Layouts", "Default")       
-        #     for root, dirs, files in os.walk(LayoutDir):
-        #         for filename in files:
-        #             with open(os.path.join(LayoutDir, filename), "r") as file:
-        #                 LayoutDict = {}
-        #                 WorkBenchName = filename.replace(".json", "")
-        #                 LayoutDict.update(json.load(file))
-        #                 self.workBenchDict["workbenches"][WorkBenchName] = LayoutDict
+        result = False
+        
+        if LayoutName == "Default":
+            LayoutDir = os.path.join(ConfigDirectory, "Layouts", "Default")       
+            for root, dirs, files in os.walk(LayoutDir):
+                for filename in files:
+                    with open(os.path.join(LayoutDir, filename), "r") as file:
+                        LayoutDict = {}
+                        WorkBenchName = filename.replace(".json", "")
+                        LayoutDict.update(json.load(file))
+                        self.workBenchDict["workbenches"][WorkBenchName] = LayoutDict
+                        result = True
+                        
+        if result is True:
+            StandardFunctions.RestartDialog(includeIcons=True)
                                                                      
         #                 try:
         #                     workbench = Gui.getWorkbench(WorkBenchName)
@@ -2191,18 +2197,7 @@ class ModernMenu(RibbonBar):
                     if "Enabled" not in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
                         self.tabBar().setTabEnabled(i, True)     
                         self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))             
-        
-        # Make sure that the tooltip has the correct color settings
-        styleSheet = self.tabBar().styleSheet()
-        self.tabBar().setStyleSheet("""\nQToolTip {
-                    background-color: #FFFFE1;
-                    color: black;
-                    border: black solid 1px;
-                    border-radius: 2px;
-                }"""
-                + styleSheet
-            )
-             
+                
         # Restore the cursor
         QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         return
@@ -2493,7 +2488,7 @@ class ModernMenu(RibbonBar):
                 if self.tabBar().tabData(i) == orderList[0]:
                     self.tabBar().moveTab(i,0)
                     
-        Gui.updateGui()
+        # Gui.updateGui()
         # Make sure that the tooltip has the correct color settings
         styleSheet = self.tabBar().styleSheet()
         self.tabBar().setStyleSheet(styleSheet + """\nQToolTip {
@@ -2715,7 +2710,7 @@ class ModernMenu(RibbonBar):
         self.setCurrentCategory(self.CurrentCategoryToRestore)
         self.hideClassicToolbars()
         
-        Gui.updateGui()
+        # Gui.updateGui()
         # Make sure that the tooltip has the correct color settings
         styleSheet = self.tabBar().styleSheet()
         self.tabBar().setStyleSheet(styleSheet + """\nQToolTip {
@@ -2724,6 +2719,7 @@ class ModernMenu(RibbonBar):
                     border: black solid 1px;
                     border-radius: 2px;
                     }""")
+        
         
         # Print a message
         print(translate("FreeCAD Ribbon", "RibbonUI: Changes are rolled back"))
@@ -4277,7 +4273,15 @@ class ModernMenu(RibbonBar):
                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                 + ";}"
             )
-        
+        # Make sure that the tooltip has the correct color settings
+        styleSheet = self.tabBar().styleSheet()
+        self.tabBar().setStyleSheet(styleSheet + """\nQToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }""")
+
         # ensure that workbench is already loaded
         workbench = Gui.activeWorkbench()        
         if not hasattr(workbench, "__Workbench__"):
@@ -4316,16 +4320,12 @@ class ModernMenu(RibbonBar):
             # If not activated, activate all buttons    
             self.activateButtons() 
 
-        # Make sure that the tooltip has the correct color settings
-        styleSheet = self.tabBar().styleSheet()
-        self.tabBar().setStyleSheet("""\nQToolTip {
-                    background-color: #FFFFE1;
-                    color: black;
-                    border: black solid 1px;
-                    border-radius: 2px;
-                }"""
-                + styleSheet
-            )
+        # if self.DesignMenuLoaded is True:
+        #     # Disable the quick toolbar, righttoolbar and application menu
+        #     self.rightToolBar().setDisabled(True)
+        #     self.quickAccessToolBar().setDisabled(True)
+        #     self.applicationOptionButton().setDisabled(True)
+        #     Gui.updateGui()
         
         return
 
@@ -4458,6 +4458,17 @@ class ModernMenu(RibbonBar):
                     border: black solid 1px;
                     border-radius: 2px;
                     }"""
+                )
+        if Parameters.ENABLE_BACKGROUND_COLOR is True:
+            FreeCAD_preferences = App.ParamGet(
+                "User parameter:BaseApp/Preferences/MainWindow"
+            )
+            currentStyleSheet = FreeCAD_preferences.GetString("StyleSheet")
+            if currentStyleSheet == "":
+                hexColor = StyleMapping_Ribbon.ReturnStyleItem("Background_Color")
+                # Set the quickaccess toolbar background color
+                self.quickAccessToolBar().setStyleSheet(
+                    "background-color: " + hexColor + ";"
                 )
 
         # Get the order of workbenches from Parameters
@@ -7866,7 +7877,7 @@ class ModernMenu(RibbonBar):
                 "FreeCAD Ribbon",
                 "Settings reset to {}!\nYou must restart FreeCAD for changes to take effect.",
             ).format(SelectedFile)
-            StandardFunctions.RestartDialog(message=message)
+            StandardFunctions.RestartDialog(message=message, includeIcons=True)
         return
     
     def ReturnCommand_string(self, Dict: dict, panel: RibbonPanel, widget) -> str:
@@ -8494,9 +8505,7 @@ class ModernMenu(RibbonBar):
                 "FreeCAD Ribbon",
                 "The file containing the Ribbon layout is updated.\nYou must restart FreeCAD for changes to take effect.",
             )
-            answer = StandardFunctions.RestartDialog(message=message)
-            if answer == "yes":
-                StandardFunctions.restart_freecad()
+            StandardFunctions.RestartDialog(message=message, includeIcons=True)
 
         return isConverted
 
