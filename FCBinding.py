@@ -1811,41 +1811,7 @@ class ModernMenu(RibbonBar):
                         
         if result is True:
             StandardFunctions.RestartDialog(includeIcons=True)
-                                                                     
-        #                 try:
-        #                     workbench = Gui.getWorkbench(WorkBenchName)
-        #                     for CategoryName, Category in self.categories().items():
-        #                         if WorkBenchName in self.isWbLoaded and CategoryName == workbench.MenuText:  
-        #                             self.setCurrentCategory(Category)
-        #                             # self.on_Ok_Clicked(CloseDialog=False)
-        #                             print(CategoryName)     
-
-        #                             for panelName, panel in Category.panels().items():                                   
-        #                                 # Create a new panel with the extra command
-        #                                 newPanel = self.CreatePanel(WorkBenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict, UpdateDict=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ActivateButtons=True, Category=Category)
-        #                                 print(newPanel)              
-        #                                 # Add the panel to the list with long panels
-        #                                 if newPanel is not None:
-        #                                     if newPanel.panelOptionButton().isVisible():
-        #                                         self.longPanels.append(newPanel)
-                                                                    
-        #                                     # Replace the panel with the new panel
-        #                                     self.currentCategory().replacePanel(panel, newPanel)
-        #                                     # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-        #                                     self.setPanelProperties(newPanel)
-                                            
-        #                                     # # Close the old panel and the dragindicator
-        #                                     panel.close()
-                                            
-        #                                     # Enable all buttons, so you can access them with a right click
-        #                                     self.activateButtons()
-                                                            
-        #                 except Exception:
-        #                     print(traceback.print_exc())
-        #                     pass
-                                
-                            
-                        
+         
         return
     
     def handleContextMenuAction(self, action):        
