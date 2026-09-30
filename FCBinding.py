@@ -1698,10 +1698,7 @@ class ModernMenu(RibbonBar):
                 and quickaccessbutton is None 
                 and quickaccesstoolbar is None 
                 and self.tabBar().underMouse() is False
-                ):
-                # Add Customize buttons for entering and exiting customize enviroment
-                self.contextMenu.addSeparator()
-                title = translate("FreeCAD Ribbon", "Customize...")
+                ):                
                 # Add a menu to select layout (themes)
                 SetLayoutsAct = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set Layouts..."))
                 Default_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "Default layout"))
@@ -1715,6 +1712,10 @@ class ModernMenu(RibbonBar):
                 
                 AllMedium_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All medium"))
                 AllMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllMedium"))
+                
+                # Add Customize buttons for entering and exiting customize enviroment
+                self.contextMenu.addSeparator()
+                title = translate("FreeCAD Ribbon", "Customize...")
                     
                 if self.CustomizeEnabled is True:
                     # Set the tabs movable
@@ -1806,8 +1807,9 @@ class ModernMenu(RibbonBar):
                         LayoutDict = {}
                         WorkBenchName = filename.replace(".json", "")
                         LayoutDict.update(json.load(file))
-                        self.workBenchDict["workbenches"][WorkBenchName] = LayoutDict
-                        result = True
+                        if "workbenches" in self.ribbonStructure and WorkBenchName in self.ribbonStructure["workbenches"]:
+                            self.ribbonStructure["workbenches"][WorkBenchName] = LayoutDict
+                            result = True
                         
         if result is True:
             StandardFunctions.RestartDialog(includeIcons=True)
