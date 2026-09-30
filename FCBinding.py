@@ -1713,6 +1713,15 @@ class ModernMenu(RibbonBar):
                 AllMedium_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All medium"))
                 AllMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllMedium"))
                 
+                # Add a menu to select tabs to be shown
+                menu = StayOpenMenu(self.contextMenu)
+                for i in range(self.tabBar().count()):
+                    WorkbenchName = self.tabBar().tabData(i) 
+                    if WorkbenchName != "NoneWorkbench":
+                        menu.addAction(self.createAction_Tabs(WorkbenchName, menu))
+                SetTabAct = self.contextMenu.addMenu(menu)
+                SetTabAct.setText(translate("FreeCAD Ribbon", "Show/Hide tabs..."))
+                
                 # Add Customize buttons for entering and exiting customize enviroment
                 self.contextMenu.addSeparator()
                 title = translate("FreeCAD Ribbon", "Customize...")
@@ -1720,22 +1729,11 @@ class ModernMenu(RibbonBar):
                 if self.CustomizeEnabled is True:
                     # Set the tabs movable
                     self.tabBar().setMovable(True)
-                    
-                    
+
                     # Add a button to restore a layout
                     RestoreLayoutAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Restore a Ribbon layout"))
                     RestoreLayoutAct.triggered.connect(self.RestoreJson)
-                    # Add a separator
-                    self.contextMenu.addSeparator()
-                    # Add a menu to select tabs to be shown
-                    menu = StayOpenMenu(self.contextMenu)
-                    for i in range(self.tabBar().count()):
-                        WorkbenchName = self.tabBar().tabData(i) 
-                        if WorkbenchName != "NoneWorkbench":
-                            menu.addAction(self.createAction_Tabs(WorkbenchName, menu))
-                    SetTabAct = self.contextMenu.addMenu(menu)
-                    SetTabAct.setText(translate("FreeCAD Ribbon", "Show/Hide tabs..."))
-                                        
+                    
                     # Add a separator
                     self.contextMenu.addSeparator()
                     title = translate("FreeCAD Ribbon", "Save and exit customize...")
@@ -3299,15 +3297,17 @@ class ModernMenu(RibbonBar):
         Action.toggled.connect(lambda e: self.HandleTab(WorkbenchName, e))   
         return Action
     
-    def HandleTab(self, workbenchName, Checked = False):        
+    def HandleTab(self, workbenchName, Checked = False, Dict = ribbonStructure):   
+        if self.CustomizeEnabled: 
+            Dict = self.workBenchDict    
         for i in range(self.tabBar().count()):
             tabData = self.tabBar().tabData(i)
             if tabData == workbenchName:
-                if "workbenches" in self.workBenchDict and tabData in self.workBenchDict["workbenches"]:
+                if "workbenches" in Dict and tabData in Dict["workbenches"]:
                     # Add the command if they don't exist
-                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "Enabled"], True)
+                    Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "Enabled"], True)
                     # Write the state to the dict
-                    self.workBenchDict["workbenches"][tabData]["Enabled"] = Checked
+                    Dict["workbenches"][tabData]["Enabled"] = Checked
                     # Enable or disable the tab
                     self.tabBar().setTabEnabled(i, Checked)
                     if not self.tabBar().isTabEnabled(i):
@@ -3317,9 +3317,15 @@ class ModernMenu(RibbonBar):
                             + mw.palette().color(mw.palette().ColorGroup.Disabled, mw.palette().ColorRole.Text).name()
                             + """;}"""
                         )
+                        if not self.CustomizeEnabled:
+                            # Make sure to set the tab hidden
+                            self.tabBar().setTabVisible(i, False)
                         self.tabBar().update()
                     else:
                         self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))
+                        if not self.CustomizeEnabled:
+                            # Make sure to set the tab visible
+                            self.tabBar().setTabVisible(i, True)
                 break                    
         return
     
