@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1279</width>
-    <height>1021</height>
+    <width>773</width>
+    <height>655</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -223,8 +223,8 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
-            <width>1224</width>
+            <y>-646</y>
+            <width>718</width>
             <height>1306</height>
            </rect>
           </property>
@@ -961,23 +961,6 @@
                        </property>
                       </widget>
                      </item>
-                     <item row="5" column="3">
-                      <widget class="QLabel" name="label_49">
-                       <property name="font">
-                        <font>
-                         <pointsize>8</pointsize>
-                         <italic>true</italic>
-                         <bold>false</bold>
-                        </font>
-                       </property>
-                       <property name="text">
-                        <string>This will also set the icon size for the tabs</string>
-                       </property>
-                       <property name="wordWrap">
-                        <bool>true</bool>
-                       </property>
-                      </widget>
-                     </item>
                     </layout>
                    </item>
                    <item row="2" column="1">
@@ -1009,172 +992,117 @@
                   <property name="title">
                    <string>Text size</string>
                   </property>
-                  <layout class="QGridLayout" name="gridLayout_39">
-                   <item row="0" column="0">
-                    <layout class="QGridLayout" name="gridLayout_38">
-                     <item row="0" column="0">
-                      <widget class="QLabel" name="label_32">
-                       <property name="minimumSize">
-                        <size>
-                         <width>191</width>
-                         <height>0</height>
-                        </size>
-                       </property>
-                       <property name="text">
-                        <string>Text size of menus</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="2" column="0">
-                      <widget class="QLabel" name="label_34">
-                       <property name="text">
-                        <string>Text size of tabs</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="0" column="1">
-                      <widget class="QSpinBox" name="TextSize_Menus">
-                       <property name="sizePolicy">
-                        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                         <horstretch>0</horstretch>
-                         <verstretch>0</verstretch>
-                        </sizepolicy>
-                       </property>
-                       <property name="minimumSize">
-                        <size>
-                         <width>50</width>
-                         <height>20</height>
-                        </size>
-                       </property>
-                       <property name="sizeIncrement">
-                        <size>
-                         <width>0</width>
-                         <height>0</height>
-                        </size>
-                       </property>
-                       <property name="baseSize">
-                        <size>
-                         <width>0</width>
-                         <height>0</height>
-                        </size>
-                       </property>
-                       <property name="font">
-                        <font>
-                         <bold>false</bold>
-                        </font>
-                       </property>
-                       <property name="focusPolicy">
-                        <enum>Qt::FocusPolicy::WheelFocus</enum>
-                       </property>
-                       <property name="frame">
-                        <bool>true</bool>
-                       </property>
-                       <property name="alignment">
-                        <set>Qt::AlignmentFlag::AlignCenter</set>
-                       </property>
-                       <property name="correctionMode">
-                        <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
-                       </property>
-                       <property name="showGroupSeparator" stdset="0">
-                        <bool>false</bool>
-                       </property>
-                       <property name="minimum">
-                        <number>8</number>
-                       </property>
-                       <property name="maximum">
-                        <number>24</number>
-                       </property>
-                       <property name="value">
-                        <number>11</number>
-                       </property>
-                       <property name="displayIntegerBase">
-                        <number>10</number>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="3" column="0">
-                      <widget class="QLabel" name="label_35">
-                       <property name="text">
-                        <string>Text size of panel titles</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="0">
-                      <widget class="QLabel" name="label_33">
-                       <property name="text">
-                        <string>Text size of buttons</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="1" column="1">
-                      <widget class="QSpinBox" name="TextSize_Buttons">
-                       <property name="font">
-                        <font>
-                         <bold>false</bold>
-                        </font>
-                       </property>
-                       <property name="alignment">
-                        <set>Qt::AlignmentFlag::AlignCenter</set>
-                       </property>
-                       <property name="correctionMode">
-                        <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
-                       </property>
-                       <property name="minimum">
-                        <number>8</number>
-                       </property>
-                       <property name="maximum">
-                        <number>24</number>
-                       </property>
-                       <property name="value">
-                        <number>11</number>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="2" column="1">
-                      <widget class="QSpinBox" name="TextSize_Tabs">
-                       <property name="font">
-                        <font>
-                         <bold>false</bold>
-                        </font>
-                       </property>
-                       <property name="alignment">
-                        <set>Qt::AlignmentFlag::AlignCenter</set>
-                       </property>
-                       <property name="minimum">
-                        <number>8</number>
-                       </property>
-                       <property name="maximum">
-                        <number>24</number>
-                       </property>
-                       <property name="value">
-                        <number>14</number>
-                       </property>
-                      </widget>
-                     </item>
-                     <item row="3" column="1">
-                      <widget class="QSpinBox" name="TextSize_Panels">
-                       <property name="font">
-                        <font>
-                         <bold>false</bold>
-                        </font>
-                       </property>
-                       <property name="alignment">
-                        <set>Qt::AlignmentFlag::AlignCenter</set>
-                       </property>
-                       <property name="minimum">
-                        <number>8</number>
-                       </property>
-                       <property name="maximum">
-                        <number>24</number>
-                       </property>
-                       <property name="value">
-                        <number>11</number>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
+                  <layout class="QGridLayout" name="gridLayout_33">
+                   <item row="4" column="1">
+                    <widget class="QSpinBox" name="TextSize_Panels">
+                     <property name="font">
+                      <font>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignmentFlag::AlignCenter</set>
+                     </property>
+                     <property name="minimum">
+                      <number>8</number>
+                     </property>
+                     <property name="maximum">
+                      <number>24</number>
+                     </property>
+                     <property name="value">
+                      <number>11</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_33">
+                     <property name="text">
+                      <string>Text size of buttons</string>
+                     </property>
+                    </widget>
                    </item>
                    <item row="0" column="1">
+                    <widget class="QSpinBox" name="TextSize_Menus">
+                     <property name="sizePolicy">
+                      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                       <horstretch>0</horstretch>
+                       <verstretch>0</verstretch>
+                      </sizepolicy>
+                     </property>
+                     <property name="minimumSize">
+                      <size>
+                       <width>50</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="sizeIncrement">
+                      <size>
+                       <width>0</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="baseSize">
+                      <size>
+                       <width>0</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="font">
+                      <font>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="focusPolicy">
+                      <enum>Qt::FocusPolicy::WheelFocus</enum>
+                     </property>
+                     <property name="frame">
+                      <bool>true</bool>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignmentFlag::AlignCenter</set>
+                     </property>
+                     <property name="correctionMode">
+                      <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+                     </property>
+                     <property name="showGroupSeparator" stdset="0">
+                      <bool>false</bool>
+                     </property>
+                     <property name="minimum">
+                      <number>8</number>
+                     </property>
+                     <property name="maximum">
+                      <number>24</number>
+                     </property>
+                     <property name="value">
+                      <number>11</number>
+                     </property>
+                     <property name="displayIntegerBase">
+                      <number>10</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QSpinBox" name="TextSize_Tabs">
+                     <property name="font">
+                      <font>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignmentFlag::AlignCenter</set>
+                     </property>
+                     <property name="minimum">
+                      <number>8</number>
+                     </property>
+                     <property name="maximum">
+                      <number>24</number>
+                     </property>
+                     <property name="value">
+                      <number>14</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="4">
                     <spacer name="horizontalSpacer_12">
                      <property name="orientation">
                       <enum>Qt::Orientation::Horizontal</enum>
@@ -1182,6 +1110,87 @@
                      <property name="sizeHint" stdset="0">
                       <size>
                        <width>40</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                    </spacer>
+                   </item>
+                   <item row="1" column="1" rowspan="2">
+                    <widget class="QSpinBox" name="TextSize_Buttons">
+                     <property name="font">
+                      <font>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignmentFlag::AlignCenter</set>
+                     </property>
+                     <property name="correctionMode">
+                      <enum>QAbstractSpinBox::CorrectionMode::CorrectToNearestValue</enum>
+                     </property>
+                     <property name="minimum">
+                      <number>8</number>
+                     </property>
+                     <property name="maximum">
+                      <number>24</number>
+                     </property>
+                     <property name="value">
+                      <number>11</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_32">
+                     <property name="minimumSize">
+                      <size>
+                       <width>191</width>
+                       <height>0</height>
+                      </size>
+                     </property>
+                     <property name="text">
+                      <string>Text size of menus</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_35">
+                     <property name="text">
+                      <string>Text size of panel titles</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_34">
+                     <property name="text">
+                      <string>Text size of tabs</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="QLabel" name="label_49">
+                     <property name="font">
+                      <font>
+                       <pointsize>8</pointsize>
+                       <italic>true</italic>
+                       <bold>false</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>This will also set the icon size for the tabs</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <spacer name="horizontalSpacer_17">
+                     <property name="orientation">
+                      <enum>Qt::Orientation::Horizontal</enum>
+                     </property>
+                     <property name="sizeHint" stdset="0">
+                      <size>
+                       <width>140</width>
                        <height>20</height>
                       </size>
                      </property>
@@ -1551,8 +1560,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>326</width>
-            <height>286</height>
+            <width>718</width>
+            <height>454</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_43">
@@ -1905,8 +1914,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>1224</width>
-            <height>820</height>
+            <width>718</width>
+            <height>774</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_36">
@@ -2661,8 +2670,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>478</width>
-            <height>682</height>
+            <width>718</width>
+            <height>667</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_28">
