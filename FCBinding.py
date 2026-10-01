@@ -1802,63 +1802,93 @@ class ModernMenu(RibbonBar):
         return
     
     def handleLayoutMenuAction(self, LayoutName = "Default"):
-        result = False
+        # Set the wait cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        # Define a dict to temporaly store the new layout
+        WorkbenchDict = {}
+        # Add the "workbenches key" to the Workbench Dict
+        StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches"], endEmpty=True)
         
+        # Set the default layout
         if LayoutName == "Default":
-            LayoutDir = os.path.join(ConfigDirectory, "Layouts", "Default")       
+            # Get the directory with the files for the default layout
+            LayoutDir = os.path.join(ConfigDirectory, "Layouts", "Default")  
+            # Go through the directory     
             for root, dirs, files in os.walk(LayoutDir):
                 for filename in files:
+                    # Open the file and store its contents in the workbenchdict
                     with open(os.path.join(LayoutDir, filename), "r") as file:
-                        LayoutDict = {}
+                         # Get the workbench name and add it to the Workbench dict
                         WorkBenchName = filename.replace(".json", "")
-                        LayoutDict.update(json.load(file))
-                        if "workbenches" in self.ribbonStructure and WorkBenchName in self.ribbonStructure["workbenches"]:
-                            self.ribbonStructure["workbenches"][WorkBenchName] = LayoutDict
-                            result = True
+                        StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches",WorkBenchName], endEmpty=True)
+                        # Update the workbench dict with the contents of the file
+                        WorkbenchDict["workbenches"][WorkBenchName].update(json.load(file))
             
+            # Go through all the installed workbenches
             for WorkBenchName, Workbench in Gui.listWorkbenches().items():
                 for root, dirs, files in os.walk(LayoutDir):
-                    if WorkBenchName not in files:  # noqa: SIM102
-                        # ToolBarItems: dict = Workbench.getToolbarItems()
+                    # If the workbench is not in the layout directory, recreate its dict 
+                    # with every first command of a toolbar to set to large
+                    if WorkBenchName + ".json" not in files:  # noqa: SIM102
+                        # Activate the workbench
+                        Gui.activateWorkbench(WorkBenchName)
+                        # Get the toolbar with its command
+                        ToolBarItems: dict = Workbench.getToolbarItems()
+                        # Define a list for the toolbar order
+                        ToolBarOrder = []
                         
-                        # for toolbar, commands in ToolBarItems.items():
-                        if (
-                            "workbenches" in self.ribbonStructure 
-                            and WorkBenchName in self.ribbonStructure["workbenches"]
-                            and "toolbars" in self.ribbonStructure["workbenches"][WorkBenchName]
-                        ):
-                            for toolbar in self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"].keys():
-                                if str(toolbar) != "order":
-                                    counter = 0                                                             
-                                    for command, values in self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][toolbar]["commands"].items():
-                                            if command != "order":
-                                                size = "small"
-                                                if counter == 0:
-                                                    size = "large"
-                                                counter = counter + 1
-                                                StandardFunctions.add_keys_nested_dict(
-                                                    self.ribbonStructure,
-                                                    [
-                                                        "workbenches",
-                                                        WorkBenchName,
-                                                        "toolbars",
-                                                        toolbar,
-                                                        "commands",
-                                                        command,
-                                                        "size",
-                                                    ],
-                                                    endEmpty=True
-                                                )
-                                                self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][toolbar]["commands"][command]["size"] = size
+                        for toolbar, commands in ToolBarItems.items():
+                            # Skip certain toolbars
+                            if toolbar == "structure" or toolbar == "view" or toolbar == "Tools":
+                                continue
+                            
+                            # Create the workbench dict for the order key and set the order bast on the toolbar items
+                            StandardFunctions.add_keys_nested_dict(
+                                    WorkbenchDict,
+                                    ["workbenches",WorkBenchName, "toolbars", toolbar, "order"],
+                                    endEmpty=True
+                                )
+                            WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["order"] = commands
+                            # Go through the commands
+                            for command in commands:
+                                # The default size is 'small', if it is the first command, set it to 'large'
+                                size = "small"
+                                if command == commands[0]:
+                                    size = "large"
+                                # Create the workbench dict for the command and set the order bast on the toolbar items
+                                StandardFunctions.add_keys_nested_dict(
+                                    WorkbenchDict,
+                                    [
+                                        "workbenches",
+                                        WorkBenchName,
+                                        "toolbars",
+                                        toolbar,
+                                        "commands",
+                                        command,
+                                        "size",
+                                    ],
+                                    endEmpty=True
+                                )
+                                WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["commands"][command]["size"] = size
+                            # Add the toolbar to the toolbar order list
+                            ToolBarOrder.append(toolbar)
+                        # Write the toolbar order to the workbench dict
+                        WorkbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolBarOrder
+            # Update the ribbonStructure dict with the temporary WorkbenchDict        
+            self.ribbonStructure["workbenches"] = WorkbenchDict["workbenches"]
+
+        
         # get the path for the Json file
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
         # Writing to sample.json
         with open(JsonFile, "w") as outfile:
             json.dump(self.ribbonStructure, outfile, indent=4)
+            
+        # Restore the cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         
         # Restart FreeCAD
-        if result is True:
-            StandardFunctions.RestartDialog(includeIcons=True)
+        StandardFunctions.RestartDialog(includeIcons=True)
          
         return
     
