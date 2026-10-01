@@ -210,7 +210,10 @@ class ModernMenu(RibbonBar):
 
     # The datafile version is set in LoadDesign.py
     DataFileVersion = CacheFunctions.DataFileVersion
-
+    
+    # Set the default button style
+    DefaultButtonStyle = "small"
+        
     # Define a placeholder for the repro adress
     ReproAdress: str = ""
     HelpAdress: str = ""
@@ -403,6 +406,12 @@ class ModernMenu(RibbonBar):
         toolBars = mw.findChildren(QToolBar)
         for toolBar in toolBars:
             toolBar.setAllowedAreas(Qt.ToolBarArea.LeftToolBarArea|Qt.ToolBarArea.RightToolBarArea|Qt.ToolBarArea.BottomToolBarArea)
+        
+        # Set the default button style
+        if Parameters_Ribbon.Settings.GetStringSetting("Layout") == "LargeAndMedium":
+            self.DefaultButtonStyle = "medium"
+        else:
+            self.DefaultButtonStyle = "small"
         # ------------------------------------------------------------------------------------------------------------------
 
         # Correct the tooltips for the panels ------------------------------------------------------------------------------
@@ -1811,6 +1820,8 @@ class ModernMenu(RibbonBar):
         
         # Set the default layout
         if LayoutName == "Default":
+            # Write the layout to the parameters
+            Parameters_Ribbon.Settings.SetStringSetting("Layout", "Default")
             # Get the directory with the files for the default layout
             LayoutDir = os.path.join(ConfigDirectory, "Layouts", "Default")  
             # Go through the directory     
@@ -1839,7 +1850,7 @@ class ModernMenu(RibbonBar):
                         
                         for toolbar, commands in ToolBarItems.items():
                             # Skip certain toolbars
-                            if toolbar == "structure" or toolbar == "view" or toolbar == "Tools":
+                            if toolbar == "Structure" or toolbar == "View" or toolbar == "Tools":
                                 continue
                             
                             # Create the workbench dict for the order key and set the order bast on the toolbar items
@@ -1876,7 +1887,85 @@ class ModernMenu(RibbonBar):
                         WorkbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolBarOrder
             # Update the ribbonStructure dict with the temporary WorkbenchDict        
             self.ribbonStructure["workbenches"] = WorkbenchDict["workbenches"]
+            
+            # Disable text for buttons
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", False)
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", False)
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", True)
+            Parameters_Ribbon.Settings.SetBoolSetting("Link_IconSizes", True)
+            # Adjust the icon sizes
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_small", 24)
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 36)
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 72)
+            
+        if LayoutName == "LargeAndMedium":
+            # Write the layout to the parameters
+            Parameters_Ribbon.Settings.SetStringSetting("Layout", "LargeAndMedium")
+            # Get the directory with the files for the default layout
+            LayoutDir = os.path.join(ConfigDirectory, "Layouts", "LargeAndMedium")  
+            
+            # Go through all the installed workbenches
+            for WorkBenchName, Workbench in Gui.listWorkbenches().items():
+                for root, dirs, files in os.walk(LayoutDir):
+                    # If the workbench is not in the layout directory, recreate its dict 
+                    # with every first command of a toolbar to set to large
+                    if WorkBenchName + ".json" not in files:  # noqa: SIM102
+                        # Activate the workbench
+                        Gui.activateWorkbench(WorkBenchName)
+                        # Get the toolbar with its command
+                        ToolBarItems: dict = Workbench.getToolbarItems()
+                        # Define a list for the toolbar order
+                        ToolBarOrder = []
+                        
+                        for toolbar, commands in ToolBarItems.items():
+                            # Skip certain toolbars
+                            if toolbar == "View" or toolbar == "Tools":
+                                continue
+                            
+                            # Create the workbench dict for the order key and set the order bast on the toolbar items
+                            StandardFunctions.add_keys_nested_dict(
+                                    WorkbenchDict,
+                                    ["workbenches",WorkBenchName, "toolbars", toolbar, "order"],
+                                    endEmpty=True
+                                )
+                            WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["order"] = commands
+                            # Go through the commands
+                            for command in commands:
+                                # The default size is 'small', if it is the first command, set it to 'large'
+                                size = "medium"
+                                if command == commands[0] and toolbar != "Structure":
+                                    size = "large"
+                                # Create the workbench dict for the command and set the order bast on the toolbar items
+                                StandardFunctions.add_keys_nested_dict(
+                                    WorkbenchDict,
+                                    [
+                                        "workbenches",
+                                        WorkBenchName,
+                                        "toolbars",
+                                        toolbar,
+                                        "commands",
+                                        command,
+                                        "size",
+                                    ],
+                                    endEmpty=True
+                                )
+                                WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["commands"][command]["size"] = size
+                            # Add the toolbar to the toolbar order list
+                            ToolBarOrder.append(toolbar)
+                        # Write the toolbar order to the workbench dict
+                        WorkbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolBarOrder
+            # Update the ribbonStructure dict with the temporary WorkbenchDict        
+            self.ribbonStructure["workbenches"] = WorkbenchDict["workbenches"]
 
+        # Disable text for buttons
+        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", False)
+        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", False)
+        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", False)
+        Parameters_Ribbon.Settings.SetBoolSetting("Link_IconSizes", False)
+        # Adjust the icon sizes
+        Parameters_Ribbon.Settings.SetIntSetting("IconSize_small", 24)
+        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 24)
+        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 48)
         
         # get the path for the Json file
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
@@ -6499,14 +6588,14 @@ class ModernMenu(RibbonBar):
             ):
                 ribbonHeight = LargeButtonHeight
         
-        # If there only medium or large buttons
+        # If there only medium or small buttons
         if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  == 2 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 0 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
             if Parameters.ICON_SIZE_SMALL * 2 < Parameters.ICON_SIZE_MEDIUM or self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 2:
                 ribbonHeight = Parameters.ICON_SIZE_MEDIUM * 2 + self.ButtonSpacing
             if Parameters.ICON_SIZE_SMALL * 2 > Parameters.ICON_SIZE_MEDIUM and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] == 2:
                 ribbonHeight = Parameters.ICON_SIZE_SMALL * 2 + self.ButtonSpacing
         
-        # If there are only large buttons
+        # If there only medium or large buttons
         if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  <= 2 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 1 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
             if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"] < 2:
                 ribbonHeight = LargeButtonHeight
@@ -6967,7 +7056,7 @@ class ModernMenu(RibbonBar):
         #                             button.setObjectName(key)                                    
         #                             # button.setToolTip(key)
         #                             allButtons.append(button)
-        # Add global newPanels
+        # Add newPanels
         if panelName.endswith("_newPanel"):
             if workbenchName in Dict["newPanels"]:
                 if panelName in Dict["newPanels"][workbenchName]:
@@ -7127,9 +7216,15 @@ class ModernMenu(RibbonBar):
             CommandName = button.objectName()
             
             # count the number of buttons per type. Needed for proper sorting the buttons later.
-            buttonSize = "small"
+            buttonSize = self.DefaultButtonStyle
             try:
                 buttonSize = Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][self.ReturnCommand_string(Dict=Dict, panel=panel, widget=button)]["size"]
+                # If a layout is set with a different default size, adjust the button size
+                if buttonSize == "small" and buttonSize != self.DefaultButtonStyle:
+                    buttonSize = self.DefaultButtonStyle
+                if buttonSize == "":
+                    buttonSize = self.DefaultButtonStyle
+                
                 if buttonSize == "small":
                     NoSmallButtons_spacer += 1
                 if buttonSize == "medium":
@@ -7379,6 +7474,12 @@ class ModernMenu(RibbonBar):
                                 continue
                         except KeyError:
                             pass
+                        
+                        # If a layout is set with a different default size, adjust the button size
+                        if buttonSize == "small" and buttonSize != self.DefaultButtonStyle:
+                            buttonSize = self.DefaultButtonStyle
+                        if buttonSize == "":
+                            buttonSize = self.DefaultButtonStyle
 
                         # Check if this is an icon only toolbar
                         IconOnly = False
@@ -7836,6 +7937,8 @@ class ModernMenu(RibbonBar):
         OptionButton.setFixedSize(Parameters.ICON_SIZE_SMALL, self.RibbonOffset+QFontMetrics(Font).tightBoundingRect(panel.title()).height())
         # # Set the size policy to fixed. Otherwise resizing is not working properly
         panel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        
+        
         return
     
     def PopulateOverflowMenu(self, panel: RibbonPanel, ButtonList: list):
