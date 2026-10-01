@@ -1729,6 +1729,13 @@ class ModernMenu(RibbonBar):
                 if self.CustomizeEnabled is True:
                     # Set the tabs movable
                     self.tabBar().setMovable(True)
+                    
+                    # Add a menu for exporting layouts
+                    ExportLayoutsMenu = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Export..."))
+                    ExportAll = ExportLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Export layout for all tabs"))
+                    ExportAll.triggered.connect(lambda: self.ExportLayout())
+                    ExportSingle= ExportLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Export layout for current tab"))
+                    ExportSingle.triggered.connect(lambda: self.ExportLayout(self.tabBar().tabData(self.tabBar().currentIndex())))
 
                     # Add a button to restore a layout
                     RestoreLayoutAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Restore a Ribbon layout"))
@@ -8208,6 +8215,39 @@ class ModernMenu(RibbonBar):
         # Set the command as objectName for future reference
         button.setObjectName(commandName)
         return button
+    
+    def ExportLayout(self, WorkbenchName = ""):
+        # Update the ribbon structure file before copy
+        if WorkbenchName == "":
+            # Writing to ribbonStructure.json
+            JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+            with open(JsonFile, "w") as outfile:
+                json.dump(self.ribbonStructure, outfile, indent=4)
+            
+            FileName = StandardFunctions.GetFileDialog(
+                Filter="RibbonStructure (*.json)",
+                parent=self,
+                DefaultPath=Parameters.EXPORT_LOCATION,
+                SaveAs=True,
+            )
+            if FileName != "":
+                shutil.copy(Parameters.RIBBON_STRUCTURE_JSON, FileName)
+                
+        if WorkbenchName != "":
+            WorkbenchDict = {}
+            if "workbenches" in self.ribbonStructure and WorkbenchName in self.ribbonStructure["workbenches"]:
+                WorkbenchDict.update(self.ribbonStructure["workbenches"][WorkbenchName])
+                
+                FileName = StandardFunctions.GetFileDialog(
+                    Filter=f"{WorkbenchName} (*.json)",
+                    parent=self,
+                    DefaultPath=Parameters.EXPORT_LOCATION,
+                    SaveAs=True,
+                )
+                if FileName != "":
+                    with open(FileName, "w") as outfile:
+                        json.dump(WorkbenchDict, outfile, indent=4)
+        return
     # endregion
 
     # region - Titlebar functions
