@@ -5496,7 +5496,7 @@
                     "Enabled": true
                 }
             },
-			"Enabled": true
+			"Enabled": false
         },
         "ReverseEngineeringWorkbench": {
             "toolbars": {
@@ -6158,7 +6158,7 @@
                         "FCGear_PlanetaryGear"
                     ],
                     "Enabled": true
-                }
+                },
                 "Tools_newPanel": {
                     "commands": {
                         "Std_Measure": {
