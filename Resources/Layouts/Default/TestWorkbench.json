@@ -1,0 +1,32 @@
+{
+    "toolbars": {
+        "order": [
+            "Individual views",
+            "Structure",
+            "File",
+            "Edit",
+            "Clipboard",
+            "Workbench",
+            "Macro",
+            "View",
+            "Help",
+            "TestTools"
+        ],
+        "TestTools": {
+            "order": [
+                "Self-test",
+                "Test all",
+                "Test Document",
+                "Test base"
+            ],
+            "commands": {
+                "Test_Test": {
+                    "size": "large",
+                    "text": "",
+                    "icon": ""
+                }
+            }
+        }
+    },
+    "Enabled": false
+}
