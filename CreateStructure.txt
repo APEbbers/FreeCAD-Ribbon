@@ -34,7 +34,7 @@
     "ignoredWorkbenches": [
         "Material",
         "OpenSCAD",
-        "TestWorkbench",
+        "TestWorkbench"
     ],
     "customToolbars": {
         "TechDrawWorkbench": {
