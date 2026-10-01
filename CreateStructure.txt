@@ -4933,7 +4933,7 @@
                         }
                     }
                 }
-            }
+            },
 			"Enabled": false
         },
         "MeshWorkbench": {
@@ -5361,7 +5361,8 @@
                         }
                     }
                 }
-            }
+            },
+            "Enabled": false
         },
         "PointsWorkbench": {
             "toolbars": {
@@ -5494,7 +5495,7 @@
                     ],
                     "Enabled": true
                 }
-            }
+            },
 			"Enabled": true
         },
         "ReverseEngineeringWorkbench": {
@@ -5589,7 +5590,7 @@
                     ],
                     "Enabled": true
                 }
-            }
+            },
 			"Enabled": false
         },
         "RobotWorkbench": {
@@ -5887,7 +5888,7 @@
                         }
                     }
                 }
-            }
+            },
 			"Enabled": false
         },
         "SMWorkbench": {
