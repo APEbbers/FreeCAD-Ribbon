@@ -25,7 +25,7 @@ from pathlib import Path
 import subprocess
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -56,7 +56,7 @@ from PySide.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -105,7 +105,7 @@ from PySide.QtWidgets import (
     QStyleOptionComplex,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1811,7 +1811,7 @@ class ModernMenu(RibbonBar):
             
             for WorkBenchName, Workbench in Gui.listWorkbenches().items():
                 for root, dirs, files in os.walk(LayoutDir):
-                    if WorkBenchName not in files:
+                    if WorkBenchName not in files:  # noqa: SIM102
                         # ToolBarItems: dict = Workbench.getToolbarItems()
                         
                         # for toolbar, commands in ToolBarItems.items():
@@ -4867,11 +4867,9 @@ class ModernMenu(RibbonBar):
         if TB is not None:
             try:
                 import SearchBoxLight
-                import StyleMapping_SearchBar
 
                 width = 10 * self.RightToolBarButtonSize
-
-                sea = SearchBoxLight.SearchBoxLight(
+                sea: QLineEdit = SearchBoxLight.SearchBoxLight(
                     getItemGroups=lambda: __import__("GetItemGroups").getItemGroups(),
                     getToolTip=lambda groupId, setParent: __import__(
                         "GetItemGroups"
@@ -4885,20 +4883,40 @@ class ModernMenu(RibbonBar):
                         index, groupId
                     )
                 )
+                
+                # Set the stylesheet specific for use in the RibbonUI
                 StyleSheet = (
                         """background: """
                         + "white;"
                         + "color: black"
-                        # + StyleMapping_SearchBar.ReturnStyleItem("Background_Color")
                         + """;"""
                     )
                 sea.setStyleSheet(StyleSheet)
+                # Set the focus policy to clickFocus. This way it cannot take focus unless clicked
+                # This prevents focus during other processes
+                sea.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
+                
+                # Add leave and enter events, 
+                # so the input is only possible when the cursor is above the widget
+                def SearchBar_LeaveEvent(e):
+                    sea.setReadOnly(True)
+
+                sea.leaveEvent = lambda e: SearchBar_LeaveEvent(e)
+                
+                def SearchBar_EnterEvent(e):
+                    sea.setReadOnly(False)
+                    
+                sea.enterEvent = lambda e: SearchBar_EnterEvent(e)
+                
+                # Set the size
                 sea.setFixedSize(width, self.RightToolBarButtonSize)
+                
+                # Add it to the right toolbar
                 BeforeAction = self.rightToolBar().actions()[1]
                 self.rightToolBar().insertWidget(BeforeAction, sea)
-                # width = sea.width()
             except Exception:
                 pass
+        # return the widht, so that the correct width can be set for the right toolbar
         return width
         
     # Function to create the application menu
