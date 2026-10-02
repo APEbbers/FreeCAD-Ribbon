@@ -1,0 +1,124 @@
+{
+    "toolbars": {
+        "order": [
+            "Individual views",
+            "Structure",
+            "File",
+            "Edit",
+            "Clipboard",
+            "Workbench",
+            "Macro",
+            "View",
+            "Help",
+            "Surface"
+        ],
+        "Surface": {
+            "order": [
+                "Surface_GeomFillSurface",
+                "Surface_Sections",
+                "Surface_ExtendFace",
+                "Surface_Filling",
+                "Surface_CurveOnMesh",
+                "Surface_BlendCurve"
+            ],
+            "commands": {
+                "Surface_Filling": {
+                    "size": "large",
+                    "text": "",
+                    "icon": "Surface_Filling"
+                },
+                "Surface_GeomFillSurface": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Surface_Sections": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Surface_ExtendFace": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Surface_CurveOnMesh": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Surface_BlendCurve": {
+                    "size": "large",
+                    "text": ""
+                }
+            },
+            "Enabled": true
+        },
+        "Structure": {
+            "commands": {
+                "Std_Part": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Part_Datums": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_Group": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_LinkActions": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_VarSet": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Part_Datums",
+                "Std_Part",
+                "Std_Group",
+                "Std_LinkActions",
+                "Std_VarSet"
+            ],
+            "Enabled": true
+        },
+        "Tools_newPanel": {
+            "commands": {
+                "Std_Measure": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_UnitsCalculator": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_Properties": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_BoxElementSelection": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_BoxSelection": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_WhatsThis": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Std_Measure",
+                "Std_UnitsCalculator",
+                "Std_Properties",
+                "Std_BoxElementSelection",
+                "Std_BoxSelection",
+                "Std_WhatsThis"
+            ],
+            "Enabled": true
+        }
+    },
+    "Enabled": true
+}

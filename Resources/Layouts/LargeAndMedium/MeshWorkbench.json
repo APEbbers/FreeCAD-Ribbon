@@ -1,0 +1,378 @@
+{
+    "toolbars": {
+        "order": [
+            "Individual views",
+            "Structure",
+            "File",
+            "Edit",
+            "Clipboard",
+            "Workbench",
+            "Macro",
+            "View",
+            "Help",
+            "Mesh tools",
+            "Mesh modify",
+            "Mesh boolean",
+            "Mesh cutting",
+            "Mesh segmentation",
+            "Mesh analyze"
+        ],
+        "Mesh tools": {
+            "order": [
+                "Mesh_BuildRegularSolid"
+            ],
+            "commands": {
+                "Mesh_Import": {
+                    "size": "large",
+                    "text": "",
+                    "icon": "Mesh_Import"
+                }
+            }
+        },
+        "Mesh modify": {
+            "order": [
+                "Mesh_HarmonizeNormals",
+                "Mesh_FlipNormals",
+                "Mesh_FillupHoles",
+                "Mesh_FillInteractiveHole",
+                "Mesh_AddFacet",
+                "Mesh_RemoveComponents",
+                "Mesh_Smoothing",
+                "Mesh_RemeshGmsh",
+                "Mesh_Scale"
+            ],
+            "commands": {
+                "Mesh_HarmonizeNormals": {
+                    "size": "large",
+                    "text": "",
+                    "icon": "Mesh_HarmonizeNormals"
+                }
+            }
+        },
+        "Mesh boolean": {
+            "order": [
+                "Mesh_Union",
+                "Mesh_Intersection",
+                "Mesh_Difference"
+            ],
+            "commands": {
+                "Mesh_Union": {
+                    "size": "large",
+                    "text": "",
+                    "icon": "Mesh_Union"
+                }
+            }
+        },
+        "Mesh cutting": {
+            "order": [
+                "Mesh_CrossSections"
+            ],
+            "commands": {
+                "Mesh_PolyCut": {
+                    "size": "large",
+                    "text": "",
+                    "icon": "Mesh_PolyCut"
+                }
+            }
+        },
+        "Mesh segmentation": {
+            "order": [
+                "Mesh_Merge",
+                "Mesh_SplitComponents"
+            ],
+            "commands": {
+                "Mesh_Merge": {
+                    "size": "large",
+                    "text": "",
+                    "icon": "Mesh_Merge"
+                }
+            }
+        },
+        "Mesh analyze": {
+            "order": [
+                "Mesh_EvaluateFacet",
+                "Mesh_VertexCurvature",
+                "Mesh_CurvatureInfo"
+            ],
+            "commands": {
+                "Mesh_Evaluation": {
+                    "size": "large",
+                    "text": "",
+                    "icon": "Mesh_Evaluation"
+                }
+            }
+        },
+        "Structure": {
+            "commands": {
+                "Std_Part": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Part_Datums": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_Group": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_LinkActions": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_VarSet": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Part_Datums",
+                "Std_Part",
+                "Std_Group",
+                "Std_LinkActions",
+                "Std_VarSet"
+            ],
+            "Enabled": true
+        },
+        "Mesh Tools": {
+            "commands": {
+                "Mesh_Import": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Mesh_Export": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_FromPartShape": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_BuildRegularSolid": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Mesh_Import",
+                "Mesh_Export",
+                "Mesh_FromPartShape",
+                "Mesh_BuildRegularSolid"
+            ],
+            "Enabled": true
+        },
+        "Mesh Modify": {
+            "commands": {
+                "Mesh_HarmonizeNormals": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Mesh_FlipNormals": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_FillupHoles": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_FillInteractiveHole": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_AddFacet": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_RemoveComponents": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_Smoothing": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_RemeshGmsh": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_Decimating": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_Scale": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Mesh_HarmonizeNormals",
+                "Mesh_FlipNormals",
+                "Mesh_FillupHoles",
+                "Mesh_FillInteractiveHole",
+                "Mesh_AddFacet",
+                "Mesh_RemoveComponents",
+                "Mesh_Smoothing",
+                "Mesh_RemeshGmsh",
+                "Mesh_Decimating",
+                "Mesh_Scale"
+            ],
+            "Enabled": true
+        },
+        "Mesh Boolean": {
+            "commands": {
+                "Mesh_Union": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Mesh_Intersection": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_Difference": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Mesh_Union",
+                "Mesh_Intersection",
+                "Mesh_Difference"
+            ],
+            "Enabled": true
+        },
+        "Mesh Cutting": {
+            "commands": {
+                "Mesh_PolyCut": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Mesh_PolyTrim": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_TrimByPlane": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_SectionByPlane": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_CrossSections": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Mesh_PolyCut",
+                "Mesh_PolyTrim",
+                "Mesh_TrimByPlane",
+                "Mesh_SectionByPlane",
+                "Mesh_CrossSections"
+            ],
+            "Enabled": true
+        },
+        "Mesh Segmentation": {
+            "commands": {
+                "Mesh_Merge": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Mesh_SplitComponents": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_Segmentation": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_SegmentationBestFit": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Mesh_Merge",
+                "Mesh_SplitComponents",
+                "Mesh_Segmentation",
+                "Mesh_SegmentationBestFit"
+            ],
+            "Enabled": true
+        },
+        "Mesh Analyze": {
+            "commands": {
+                "Mesh_Evaluation": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Mesh_EvaluateFacet": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_VertexCurvature": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_CurvatureInfo": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_EvaluateSolid": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Mesh_BoundingBox": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Mesh_Evaluation",
+                "Mesh_EvaluateFacet",
+                "Mesh_VertexCurvature",
+                "Mesh_CurvatureInfo",
+                "Mesh_EvaluateSolid",
+                "Mesh_BoundingBox"
+            ],
+            "Enabled": true
+        },
+        "Tools_newPanel": {
+            "commands": {
+                "Std_Measure": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_UnitsCalculator": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_Properties": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_BoxElementSelection": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_BoxSelection": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_WhatsThis": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Std_Measure",
+                "Std_UnitsCalculator",
+                "Std_Properties",
+                "Std_BoxElementSelection",
+                "Std_BoxSelection",
+                "Std_WhatsThis"
+            ],
+            "Enabled": true
+        }
+    },
+    "Enabled": true
+}

@@ -1823,6 +1823,8 @@ class ModernMenu(RibbonBar):
         WorkbenchDict = {}
         # Add the "workbenches key" to the Workbench Dict
         StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches"], endEmpty=True)
+        # Define a variable for the layout directory 
+        LayoutDir = ""
         
         # Set the default layout
         if LayoutName == "Default":
@@ -1830,147 +1832,23 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.Settings.SetStringSetting("Layout", "Default")
             # Get the directory with the files for the default layout
             LayoutDir = os.path.join(ConfigDirectory, "Layouts", "Default")  
-            # Go through the directory     
-            for root, dirs, files in os.walk(LayoutDir):
-                for filename in files:
-                    # Open the file and store its contents in the workbenchdict
-                    with open(os.path.join(LayoutDir, filename), "r") as file:
-                         # Get the workbench name and add it to the Workbench dict
-                        WorkBenchName = filename.replace(".json", "")
-                        StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches",WorkBenchName], endEmpty=True)
-                        # Update the workbench dict with the contents of the file
-                        WorkbenchDict["workbenches"][WorkBenchName].update(json.load(file))
-            
-            # Go through all the installed workbenches
-            for WorkBenchName, Workbench in Gui.listWorkbenches().items():
-                for root, dirs, files in os.walk(LayoutDir):
-                    # If the workbench is not in the layout directory, recreate its dict 
-                    # with every first command of a toolbar to set to large
-                    if WorkBenchName + ".json" not in files:  # noqa: SIM102
-                        # Activate the workbench
-                        Gui.activateWorkbench(WorkBenchName)
-                        # Get the toolbar with its command
-                        ToolBarItems: dict = Workbench.getToolbarItems()
-                        # Define a list for the toolbar order
-                        ToolBarOrder = []
                         
-                        for toolbar, commands in ToolBarItems.items():
-                            # Skip certain toolbars
-                            if toolbar == "Structure" or toolbar == "View" or toolbar == "Tools":
-                                continue
-                            
-                            # Create the workbench dict for the order key and set the order bast on the toolbar items
-                            StandardFunctions.add_keys_nested_dict(
-                                    WorkbenchDict,
-                                    ["workbenches",WorkBenchName, "toolbars", toolbar, "order"],
-                                    endEmpty=True
-                                )
-                            WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["order"] = commands
-                            # Go through the commands
-                            for command in commands:
-                                # The default size is 'small', if it is the first command, set it to 'large'
-                                size = "small"
-                                if command == commands[0]:
-                                    size = "large"
-                                # Create the workbench dict for the command and set the order bast on the toolbar items
-                                StandardFunctions.add_keys_nested_dict(
-                                    WorkbenchDict,
-                                    [
-                                        "workbenches",
-                                        WorkBenchName,
-                                        "toolbars",
-                                        toolbar,
-                                        "commands",
-                                        command,
-                                        "size",
-                                    ],
-                                    endEmpty=True
-                                )
-                                WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["commands"][command]["size"] = size
-                            # Add the toolbar to the toolbar order list
-                            ToolBarOrder.append(toolbar)
-                        # Write the toolbar order to the workbench dict
-                        WorkbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolBarOrder
-            # Update the ribbonStructure dict with the temporary WorkbenchDict        
-            self.ribbonStructure["workbenches"] = WorkbenchDict["workbenches"]
-            
             # Adjust the icon sizes
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 24)
-            Parameters.ICON_SIZE_SMALL = 24
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 36)
-            Parameters.ICON_SIZE_MEDIUM = 36
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 72)
-            Parameters.ICON_SIZE_LARGE = 72
             Parameters_Ribbon.Settings.SetBoolSetting("Link_IconSizes", True)
-            Parameters.LINK_ICON_SIZES = True
             # Disable text for buttons
             Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", False)
-            Parameters.SHOW_ICON_TEXT_SMALL = False
             Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", False)
-            Parameters.SHOW_ICON_TEXT_MEDIUM = False
             Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", True)
-            Parameters.SHOW_ICON_TEXT_LARGE = True
-            App.saveParameter()
                                     
         if LayoutName == "LargeAndMedium":
             # Write the layout to the parameters
             Parameters_Ribbon.Settings.SetStringSetting("Layout", "LargeAndMedium")
             # Get the directory with the files for the default layout
-            LayoutDir = os.path.join(ConfigDirectory, "Layouts", "LargeAndMedium")  
+            LayoutDir = os.path.join(ConfigDirectory, "Layouts", "LargeAndMedium")
             
-            # Go through all the installed workbenches
-            for WorkBenchName, Workbench in Gui.listWorkbenches().items():
-                for root, dirs, files in os.walk(LayoutDir):
-                    # If the workbench is not in the layout directory, recreate its dict 
-                    # with every first command of a toolbar to set to large
-                    if WorkBenchName + ".json" not in files:  # noqa: SIM102
-                        # Activate the workbench
-                        Gui.activateWorkbench(WorkBenchName)
-                        # Get the toolbar with its command
-                        ToolBarItems: dict = Workbench.getToolbarItems()
-                        # Define a list for the toolbar order
-                        ToolBarOrder = []
-                        
-                        for toolbar, commands in ToolBarItems.items():
-                            # Skip certain toolbars
-                            if toolbar == "View" or toolbar == "Tools":
-                                continue
-                            
-                            # Create the workbench dict for the order key and set the order bast on the toolbar items
-                            StandardFunctions.add_keys_nested_dict(
-                                    WorkbenchDict,
-                                    ["workbenches",WorkBenchName, "toolbars", toolbar, "order"],
-                                    endEmpty=True
-                                )
-                            WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["order"] = commands
-                            # Go through the commands
-                            for command in commands:
-                                # The default size is 'small', if it is the first command, set it to 'large'
-                                size = "medium"
-                                if command == commands[0] and toolbar != "Structure":
-                                    size = "large"
-                                # Create the workbench dict for the command and set the order bast on the toolbar items
-                                StandardFunctions.add_keys_nested_dict(
-                                    WorkbenchDict,
-                                    [
-                                        "workbenches",
-                                        WorkBenchName,
-                                        "toolbars",
-                                        toolbar,
-                                        "commands",
-                                        command,
-                                        "size",
-                                    ],
-                                    endEmpty=True
-                                )
-                                WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["commands"][command]["size"] = size
-                            # Add the toolbar to the toolbar order list
-                            ToolBarOrder.append(toolbar)
-                        # Write the toolbar order to the workbench dict
-                        WorkbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolBarOrder
-            # Update the ribbonStructure dict with the temporary WorkbenchDict        
-            self.ribbonStructure["workbenches"] = WorkbenchDict["workbenches"]
-
             # Disable text for buttons
             Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", False)
             Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", False)
@@ -1980,7 +1858,70 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 24)
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 24)
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 48)
-            App.saveParameter()
+
+        # Go through the directory     
+        for root, dirs, files in os.walk(LayoutDir):
+            for filename in files:
+                # Open the file and store its contents in the workbenchdict
+                with open(os.path.join(LayoutDir, filename), "r") as file:
+                        # Get the workbench name and add it to the Workbench dict
+                    WorkBenchName = filename.replace(".json", "")
+                    StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches",WorkBenchName], endEmpty=True)
+                    # Update the workbench dict with the contents of the file
+                    WorkbenchDict["workbenches"][WorkBenchName].update(json.load(file))
+        
+        # Go through all the installed workbenches
+        for WorkBenchName, Workbench in Gui.listWorkbenches().items():
+            for root, dirs, files in os.walk(LayoutDir):
+                # If the workbench is not in the layout directory, recreate its dict 
+                # with every first command of a toolbar to set to large
+                if WorkBenchName + ".json" not in files:  # noqa: SIM102
+                    # Activate the workbench
+                    Gui.activateWorkbench(WorkBenchName)
+                    # Get the toolbar with its command
+                    ToolBarItems: dict = Workbench.getToolbarItems()
+                    # Define a list for the toolbar order
+                    ToolBarOrder = []
+                    
+                    for toolbar, commands in ToolBarItems.items():
+                        # Skip certain toolbars
+                        if toolbar == "View" or toolbar == "Tools":
+                            continue
+                        
+                        # Create the workbench dict for the order key and set the order bast on the toolbar items
+                        StandardFunctions.add_keys_nested_dict(
+                                WorkbenchDict,
+                                ["workbenches",WorkBenchName, "toolbars", toolbar, "order"],
+                                endEmpty=True
+                            )
+                        WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["order"] = commands
+                        # Go through the commands
+                        for command in commands:
+                            # The default size is 'small', if it is the first command, set it to 'large'
+                            size = "medium"
+                            if command == commands[0] and toolbar != "Structure":
+                                size = "large"
+                            # Create the workbench dict for the command and set the order bast on the toolbar items
+                            StandardFunctions.add_keys_nested_dict(
+                                WorkbenchDict,
+                                [
+                                    "workbenches",
+                                    WorkBenchName,
+                                    "toolbars",
+                                    toolbar,
+                                    "commands",
+                                    command,
+                                    "size",
+                                ],
+                                endEmpty=True
+                            )
+                            WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["commands"][command]["size"] = size
+                        # Add the toolbar to the toolbar order list
+                        ToolBarOrder.append(toolbar)
+                    # Write the toolbar order to the workbench dict
+                    WorkbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolBarOrder
+        # Update the ribbonStructure dict with the temporary WorkbenchDict        
+        self.ribbonStructure["workbenches"] = WorkbenchDict["workbenches"]
         
         # get the path for the Json file
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON

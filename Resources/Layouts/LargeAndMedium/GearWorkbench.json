@@ -1,0 +1,127 @@
+{
+    "toolbars": {
+        "Structure": {
+            "commands": {
+                "Std_Part": {
+                    "size": "medium"
+                },
+                "Part_Datums": {
+                    "size": "medium"
+                },
+                "Std_Group": {
+                    "size": "medium"
+                },
+                "Std_LinkActions": {
+                    "size": "medium"
+                },
+                "Std_VarSet": {
+                    "size": "medium"
+                }
+            },
+            "order": [
+                "Std_Part",
+                "Part_Datums",
+                "Std_Group",
+                "Std_LinkActions",
+                "Std_VarSet"
+            ],
+            "Enabled": true
+        },
+        "Gear": {
+            "commands": {
+                "FCGear_InvoluteGear": {
+                    "size": "large"
+                },
+                "FCGear_InternalInvoluteGear": {
+                    "size": "large"
+                },
+                "FCGear_InvoluteRack": {
+                    "size": "large"
+                },
+                "FCGear_CycloidGear": {
+                    "size": "medium"
+                },
+                "FCGear_CycloidRack": {
+                    "size": "medium"
+                },
+                "FCGear_BevelGear": {
+                    "size": "large"
+                },
+                "FCGear_CrownGear": {
+                    "size": "large"
+                },
+                "FCGear_WormGear": {
+                    "size": "large"
+                },
+                "FCGear_TimingGearT": {
+                    "size": "medium"
+                },
+                "FCGear_TimingGear": {
+                    "size": "large"
+                },
+                "FCGear_LanternGear": {
+                    "size": "medium"
+                },
+                "FCGear_HypoCycloidGear": {
+                    "size": "medium"
+                },
+                "FCGear_GearConnector": {
+                    "size": "medium"
+                },
+                "FCGear_PlanetaryGear": {
+                    "size": "medium"
+                }
+            },
+            "order": [
+                "FCGear_InvoluteGear",
+                "FCGear_InternalInvoluteGear",
+                "FCGear_BevelGear",
+                "FCGear_InvoluteRack",
+                "FCGear_CrownGear",
+                "FCGear_WormGear",
+                "FCGear_TimingGear",
+                "7_separator_GearWorkbench",
+                "FCGear_TimingGearT",
+                "FCGear_LanternGear",
+                "FCGear_HypoCycloidGear",
+                "FCGear_CycloidRack",
+                "FCGear_CycloidGear",
+                "FCGear_GearConnector",
+                "FCGear_PlanetaryGear"
+            ],
+            "Enabled": true
+        },
+        "Tools_newPanel": {
+            "commands": {
+                "Std_Measure": {
+                    "size": "medium"
+                },
+                "Std_UnitsCalculator": {
+                    "size": "medium"
+                },
+                "Std_Properties": {
+                    "size": "medium"
+                },
+                "Std_BoxElementSelection": {
+                    "size": "medium"
+                },
+                "Std_BoxSelection": {
+                    "size": "medium"
+                },
+                "Std_WhatsThis": {
+                    "size": "medium"
+                }
+            },
+            "order": [
+                "Std_Measure",
+                "Std_UnitsCalculator",
+                "Std_Properties",
+                "Std_BoxElementSelection",
+                "Std_BoxSelection",
+                "Std_WhatsThis"
+            ],
+            "Enabled": true
+        }
+    },
+    "Enabled": true
+}

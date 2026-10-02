@@ -1,0 +1,546 @@
+{
+    "toolbars": {
+        "Draft Creation": {
+            "commands": {
+                "Draft_Line": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Wire": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Draft_Fillet": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_ArcTools": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Circle": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Ellipse": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Rectangle": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Polygon": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_BSpline": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_BezierTools": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Point": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Facebinder": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_ShapeString": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Hatch": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Draft_Wire",
+                "Draft_Line",
+                "Draft_ArcTools",
+                "Draft_BezierTools",
+                "Draft_Hatch",
+                "Draft_Fillet",
+                "Draft_Circle",
+                "Draft_Ellipse",
+                "Draft_Rectangle",
+                "Draft_Polygon",
+                "Draft_BSpline",
+                "Draft_Point",
+                "Draft_Facebinder",
+                "Draft_ShapeString"
+            ],
+            "Enabled": true
+        },
+        "Draft Annotation": {
+            "commands": {
+                "Draft_Text": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Draft_Dimension": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Label": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_AnnotationStyleEditor": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Draft_Text",
+                "Draft_Dimension",
+                "Draft_Label",
+                "Draft_AnnotationStyleEditor"
+            ],
+            "Enabled": true
+        },
+        "Draft Modification": {
+            "commands": {
+                "Draft_Move": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Draft_Rotate": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Scale": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Mirror": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Offset": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Trimex": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Stretch": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Clone": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_ArrayTools": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Edit": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_SubelementHighlight": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Join": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Split": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Upgrade": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Downgrade": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_WireToBSpline": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Draft2Sketch": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Slope": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_FlipDimension": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Shape2DView": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Draft_Move",
+                "Draft_Scale",
+                "Draft_Rotate",
+                "Draft_Mirror",
+                "Draft_Offset",
+                "Draft_Trimex",
+                "Draft_Stretch",
+                "7_separator_DraftWorkbench",
+                "Draft_Edit",
+                "Draft_Shape2DView",
+                "Draft_ArrayTools",
+                "Draft_Clone",
+                "Draft_SubelementHighlight",
+                "Draft_Join",
+                "Draft_Split",
+                "Draft_Slope",
+                "Draft_WireToBSpline",
+                "Draft_Upgrade",
+                "Draft_Downgrade",
+                "19_separator_DraftWorkbench",
+                "Draft_Draft2Sketch",
+                "Draft_FlipDimension"
+            ],
+            "Enabled": true
+        },
+        "Draft Utility": {
+            "commands": {
+                "Draft_LayerManager": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Draft_AddNamedGroup": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_SelectGroup": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_AddToLayer": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_AddToGroup": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_AddConstruction": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_ToggleDisplayMode": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_WorkingPlaneProxy": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Draft_LayerManager",
+                "Draft_AddNamedGroup",
+                "Draft_SelectGroup",
+                "Draft_AddToLayer",
+                "Draft_AddToGroup",
+                "Draft_AddConstruction",
+                "Draft_ToggleDisplayMode",
+                "Draft_WorkingPlaneProxy"
+            ],
+            "Enabled": true
+        },
+        "Draft Snap": {
+            "commands": {
+                "Draft_Snap_Lock": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Draft_Snap_Endpoint": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Snap_Midpoint": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Snap_Center": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Snap_Angle": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Snap_Intersection": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Snap_Perpendicular": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Snap_Extension": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Snap_Parallel": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Snap_Special": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Snap_Near": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Snap_Ortho": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Snap_Grid": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Snap_WorkingPlane": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_Snap_Dimensions": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Draft_ToggleGrid": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Draft_Snap_Lock",
+                "Draft_Snap_Endpoint",
+                "Draft_Snap_Midpoint",
+                "Draft_Snap_Center",
+                "Draft_Snap_Angle",
+                "Draft_Snap_Intersection",
+                "Draft_Snap_Perpendicular",
+                "Draft_Snap_Extension",
+                "Draft_Snap_Parallel",
+                "Draft_Snap_Special",
+                "Draft_Snap_Near",
+                "Draft_Snap_Ortho",
+                "Draft_Snap_Grid",
+                "Draft_Snap_WorkingPlane",
+                "Draft_Snap_Dimensions",
+                "Draft_ToggleGrid"
+            ],
+            "Enabled": true
+        },
+        "Structure": {
+            "commands": {
+                "Std_Part": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "Geofeaturegroup"
+                },
+                "Part_Datums": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": ""
+                },
+                "Std_Group": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "folder"
+                },
+                "Std_LinkActions": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": ""
+                },
+                "Std_VarSet": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "VarSet"
+                }
+            },
+            "order": [
+                "Part_Datums",
+                "Std_Part",
+                "Std_Group",
+                "Std_LinkActions",
+                "Std_VarSet"
+            ],
+            "Enabled": true
+        },
+        "Tools_newPanel": {
+            "commands": {
+                "Std_Measure": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "umf-measurement"
+                },
+                "Std_UnitsCalculator": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "accessories-calculator"
+                },
+                "Std_Properties": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "document-properties"
+                },
+                "Std_BoxElementSelection": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "edit-element-select-box"
+                },
+                "Std_BoxSelection": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "edit-select-box"
+                },
+                "Std_WhatsThis": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "WhatsThis"
+                }
+            },
+            "order": [
+                "Std_Measure",
+                "Std_UnitsCalculator",
+                "Std_Properties",
+                "Std_BoxElementSelection",
+                "Std_BoxSelection",
+                "Std_WhatsThis"
+            ],
+            "Enabled": true
+        },
+        "Views - Ribbon_newPanel": {
+            "order": [
+                "All",
+                "Std_ViewGroup",
+                "Std_ViewFitSelection",
+                "Std_ViewZoomOut",
+                "Std_ViewZoomIn",
+                "Std_ViewBoxZoom",
+                "Std_AlignToSelection",
+                "Part_SelectFilter"
+            ],
+            "commands": {
+                "Std_ViewGroup": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "view-isometric"
+                },
+                "Std_ViewFitSelection": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "zoom-selection"
+                },
+                "Std_ViewZoomOut": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "zoom-out"
+                },
+                "Std_ViewZoomIn": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "zoom-in"
+                },
+                "Std_ViewBoxZoom": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "zoom-border"
+                },
+                "Std_AlignToSelection": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "align-to-selection"
+                },
+                "Part_SelectFilter": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "clear-selection"
+                }
+            }
+        },
+        "Individual Views": {
+            "order": [
+                "All",
+                "Std_ViewIsometric",
+                "Std_ViewFront",
+                "Std_ViewTop",
+                "Std_ViewRight",
+                "Std_ViewRear",
+                "Std_ViewBottom",
+                "Std_ViewLeft"
+            ],
+            "commands": {
+                "Std_ViewIsometric": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "view-axonometric"
+                },
+                "Std_ViewFront": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "view-front"
+                },
+                "Std_ViewTop": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "view-top"
+                },
+                "Std_ViewRight": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "view-right"
+                },
+                "Std_ViewRear": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "view-rear"
+                },
+                "Std_ViewBottom": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "view-bottom"
+                },
+                "Std_ViewLeft": {
+                    "size": "medium",
+                    "text": "",
+                    "icon": "view-left"
+                }
+            }
+        },
+        "order": [
+            "Individual views",
+            "Structure",
+            "File",
+            "Edit",
+            "Clipboard",
+            "Workbench",
+            "Macro",
+            "View",
+            "Help",
+            "Draft Creation",
+            "Draft Annotation",
+            "Draft Modification",
+            "Draft Utility",
+            "Draft Snap"
+        ]
+    },
+    "Enabled": false
+}

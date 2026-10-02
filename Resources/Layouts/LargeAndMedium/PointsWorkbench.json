@@ -1,0 +1,134 @@
+{
+    "toolbars": {
+        "order": [
+            "Individual views",
+            "Structure",
+            "File",
+            "Edit",
+            "Clipboard",
+            "Workbench",
+            "Macro",
+            "View",
+            "Help",
+            "Points tools"
+        ],
+        "Points tools": {
+            "order": [
+                "Points_Convert",
+                "Points_Structure",
+                "Points_Merge",
+                "Points_PolyCut"
+            ],
+            "commands": {
+                "Points_Import": {
+                    "size": "large",
+                    "text": "",
+                    "icon": "Points_Import_Point_cloud"
+                }
+            }
+        },
+        "Structure": {
+            "commands": {
+                "Std_Part": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Part_Datums": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_Group": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_LinkActions": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_VarSet": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Part_Datums"
+            ],
+            "Enabled": true
+        },
+        "Points Tools": {
+            "commands": {
+                "Points_Import": {
+                    "size": "large",
+                    "text": ""
+                },
+                "Points_Export": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Points_Convert": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Points_Structure": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Points_Merge": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Points_PolyCut": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Points_Import",
+                "Points_Export",
+                "Points_Convert",
+                "Points_Structure",
+                "Points_Merge",
+                "Points_PolyCut"
+            ],
+            "Enabled": true
+        },
+        "Tools_newPanel": {
+            "commands": {
+                "Std_Measure": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_UnitsCalculator": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_Properties": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_BoxElementSelection": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_BoxSelection": {
+                    "size": "medium",
+                    "text": ""
+                },
+                "Std_WhatsThis": {
+                    "size": "medium",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Std_Measure",
+                "Std_UnitsCalculator",
+                "Std_Properties",
+                "Std_BoxElementSelection",
+                "Std_BoxSelection",
+                "Std_WhatsThis"
+            ],
+            "Enabled": true
+        }
+    },
+    "Enabled": false
+}
