@@ -1293,7 +1293,13 @@ class ModernMenu(RibbonBar):
                         if self.ribbonStructure["PanelStates"][dockWidget.objectName()][1] == "Top":
                             dockWidget.setDockLocation(Qt.DockWidgetArea.TopDockWidgetArea)
                         if self.ribbonStructure["PanelStates"][dockWidget.objectName()][1] == "Bottem":
-                            dockWidget.setDockLocation(Qt.DockWidgetArea.BottomDockWidgetArea)                        
+                            dockWidget.setDockLocation(Qt.DockWidgetArea.BottomDockWidgetArea)
+                            
+                        for tabifiedDockwidget in self.ribbonStructure["PanelStates"][dockWidget.objectName()][2]:
+                            dockWidget_2 = mw.findChild(QDockWidget, tabifiedDockwidget)
+                            if dockWidget_2 is not None:
+                                mw.tabifyDockWidget(dockWidget, dockWidget_2)
+                                             
                         dockWidget.show()     
                         dockWidget.setFloating(False)   
                         dockWidget.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
@@ -8886,18 +8892,25 @@ class EventInspector(QObject):
             for dockWidget in mw.findChildren(QDockWidget):                                    
                 dockWidget_Name = dockWidget.objectName()
                 dockWidget_Area = mw.dockWidgetArea(dockWidget)
+                tabifiedDockWidgets = []
+                tabifiedList = []
                 
                 # If not present, add a dict for the toolbar states to the ribbonstructure.json
                 Standard_Functions_Ribbon.add_keys_nested_dict(RibbonBar.ribbonStructure, ["PanelStates", dockWidget_Name], endEmpty=True)
                 
+                tabifiedDockWidgets = mw.tabifiedDockWidgets(dockWidget)
+                
+                for tabifiedDockWidget in tabifiedDockWidgets:
+                    tabifiedList.append(tabifiedDockWidget.objectName())
+                
                 if dockWidget_Area == Qt.DockWidgetArea.LeftDockWidgetArea:
-                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Left"]
+                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Left", tabifiedList]
                 if dockWidget_Area == Qt.DockWidgetArea.RightDockWidgetArea:
-                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Right"]
+                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Right", tabifiedList]
                 if dockWidget_Area == Qt.DockWidgetArea.BottomDockWidgetArea:
-                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Bottom"]
+                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Bottom", tabifiedList]
                 if dockWidget_Area == Qt.DockWidgetArea.TopDockWidgetArea:
-                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Top"]
+                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Top", tabifiedList]
                 
             # Store the state of the mainwindow
             if mw.isMaximized():
