@@ -1888,16 +1888,24 @@ class ModernMenu(RibbonBar):
             # Update the ribbonStructure dict with the temporary WorkbenchDict        
             self.ribbonStructure["workbenches"] = WorkbenchDict["workbenches"]
             
+            # Adjust the icon sizes
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 24)
+            Parameters.ICON_SIZE_SMALL = 24
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 36)
+            Parameters.ICON_SIZE_MEDIUM = 36
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 72)
+            Parameters.ICON_SIZE_LARGE = 72
+            Parameters_Ribbon.Settings.SetBoolSetting("Link_IconSizes", True)
+            Parameters.LINK_ICON_SIZES = True
             # Disable text for buttons
             Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", False)
+            Parameters.SHOW_ICON_TEXT_SMALL = False
             Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", False)
+            Parameters.SHOW_ICON_TEXT_MEDIUM = False
             Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", True)
-            Parameters_Ribbon.Settings.SetBoolSetting("Link_IconSizes", True)
-            # Adjust the icon sizes
-            Parameters_Ribbon.Settings.SetIntSetting("IconSize_small", 24)
-            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 36)
-            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 72)
-            
+            Parameters.SHOW_ICON_TEXT_LARGE = True
+            App.saveParameter()
+                                    
         if LayoutName == "LargeAndMedium":
             # Write the layout to the parameters
             Parameters_Ribbon.Settings.SetStringSetting("Layout", "LargeAndMedium")
@@ -1957,15 +1965,16 @@ class ModernMenu(RibbonBar):
             # Update the ribbonStructure dict with the temporary WorkbenchDict        
             self.ribbonStructure["workbenches"] = WorkbenchDict["workbenches"]
 
-        # Disable text for buttons
-        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", False)
-        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", False)
-        Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", False)
-        Parameters_Ribbon.Settings.SetBoolSetting("Link_IconSizes", False)
-        # Adjust the icon sizes
-        Parameters_Ribbon.Settings.SetIntSetting("IconSize_small", 24)
-        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 24)
-        Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 48)
+            # Disable text for buttons
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", False)
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", False)
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", False)
+            Parameters_Ribbon.Settings.SetBoolSetting("Link_IconSizes", False)
+            # Adjust the icon sizes
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 24)
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 24)
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 48)
+            App.saveParameter()
         
         # get the path for the Json file
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
