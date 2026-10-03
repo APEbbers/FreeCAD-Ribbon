@@ -1,0 +1,340 @@
+{
+    "toolbars": {
+        "Solids": {
+            "order": [
+                "Part_Box",
+                "Part_Cylinder",
+                "Part_Sphere",
+                "Part_Cone",
+                "Part_Torus",
+                "Part_Tube",
+                "Part_Primitives",
+                "Part_Builder"
+            ],
+            "commands": {
+                "Part_Box": {
+                    "size": "small",
+                    "text": "",
+                    "icon": "Part_Box_Parametric"
+                },
+                "Part_Cylinder": {
+                    "size": "small",
+                    "text": "",
+                    "icon": "Part_Cylinder_Parametric"
+                },
+                "Part_Sphere": {
+                    "size": "small",
+                    "text": "",
+                    "icon": "Part_Sphere_Parametric"
+                },
+                "Part_Cone": {
+                    "size": "small",
+                    "text": "",
+                    "icon": "Part_Cone_Parametric"
+                },
+                "Part_Torus": {
+                    "size": "small",
+                    "text": "",
+                    "icon": "Part_Torus_Parametric"
+                },
+                "Part_Tube": {
+                    "size": "small",
+                    "text": "",
+                    "icon": "Part_Tube_Parametric"
+                },
+                "Part_Primitives": {
+                    "size": "small",
+                    "text": "",
+                    "icon": "Part_Primitives"
+                },
+                "Part_Builder": {
+                    "size": "small",
+                    "text": "",
+                    "icon": "Part_Shapebuilder"
+                }
+            },
+            "Enabled": true
+        },
+        "Part Tools": {
+            "commands": {
+                "Sketcher_NewSketch": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Extrude": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Revolve": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Mirror": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Scale": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Fillet": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Chamfer": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_MakeFace": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_RuledSurface": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Loft": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Sweep": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Section": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_CrossSections": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_CompOffset": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Thickness": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_ProjectionOnSurface": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_ColorPerFace": {
+                    "size": "small",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Sketcher_NewSketch",
+                "Part_Extrude",
+                "Part_Revolve",
+                "Part_Sweep",
+                "Part_Loft",
+                "5_separator_PartWorkbench",
+                "Part_Chamfer",
+                "Part_Fillet",
+                "Part_Thickness",
+                "9_separator_PartWorkbench",
+                "Part_Mirror",
+                "Part_CompOffset",
+                "Part_Scale",
+                "13_separator_PartWorkbench",
+                "Part_MakeFace",
+                "Part_RuledSurface",
+                "Part_Section",
+                "Part_CrossSections",
+                "Part_ProjectionOnSurface",
+                "Part_ColorPerFace"
+            ],
+            "Enabled": true,
+            "title": "Modeling tools"
+        },
+        "Boolean Tools": {
+            "commands": {
+                "Part_CompCompoundTools": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Boolean": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Cut": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Fuse": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Common": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_CompJoinFeatures": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_CompSplitFeatures": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_CheckGeometry": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Defeaturing": {
+                    "size": "small",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Part_CompCompoundTools",
+                "Part_Boolean",
+                "Part_Cut",
+                "Part_Fuse",
+                "Part_Common",
+                "Part_CompJoinFeatures",
+                "Part_CompSplitFeatures",
+                "7_separator_PartWorkbench",
+                "Part_CheckGeometry",
+                "Part_Defeaturing"
+            ],
+            "Enabled": true
+        },
+        "Individual views": {
+            "order": [
+                "Isometric",
+                "Front",
+                "Top",
+                "Right",
+                "Rear",
+                "Bottom",
+                "Left"
+            ],
+            "commands": {
+                "Std_ViewIsometric": {
+                    "size": "small",
+                    "text": "",
+                    "icon": "view-axonometric"
+                },
+                "Std_ViewFront": {
+                    "size": "small",
+                    "text": "",
+                    "icon": "view-front"
+                },
+                "Std_ViewTop": {
+                    "size": "small",
+                    "text": "",
+                    "icon": "view-top"
+                },
+                "Std_ViewRight": {
+                    "size": "small",
+                    "text": "",
+                    "icon": "view-right"
+                },
+                "Std_ViewRear": {
+                    "size": "small",
+                    "text": "",
+                    "icon": "view-rear"
+                },
+                "Std_ViewBottom": {
+                    "size": "small",
+                    "text": "",
+                    "icon": "view-bottom"
+                },
+                "Std_ViewLeft": {
+                    "size": "small",
+                    "text": "",
+                    "icon": "view-left"
+                }
+            }
+        },
+        "Structure": {
+            "commands": {
+                "Std_Part": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Datums": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_Group": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_LinkActions": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_VarSet": {
+                    "size": "small",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Part_Datums",
+                "Std_Part",
+                "Std_Group",
+                "Std_LinkActions",
+                "Std_VarSet"
+            ],
+            "Enabled": true
+        },
+        "Tools_newPanel": {
+            "commands": {
+                "Std_Measure": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_UnitsCalculator": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_Properties": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_BoxElementSelection": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_BoxSelection": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_WhatsThis": {
+                    "size": "small",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Std_Measure",
+                "Std_UnitsCalculator",
+                "Std_Properties",
+                "Std_BoxElementSelection",
+                "Std_BoxSelection",
+                "Std_WhatsThis"
+            ],
+            "Enabled": true
+        },
+        "order": [
+            "Structure",
+            "Solids",
+            "Part Tools",
+            "Boolean Tools",
+            "Tools_newPanel"
+        ]
+    },
+    "order": [
+        "Structure",
+        "Solids",
+        "Part Tools",
+        "Boolean Tools",
+        "Tools_newPanel"
+    ],
+    "Enabled": true
+}

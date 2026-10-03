@@ -510,9 +510,7 @@
                 "FEM_ConstraintInitialTemperature",
                 "FEM_ConstraintHeatflux",
                 "FEM_ConstraintTemperature",
-                "FEM_ConstraintBodyHeatSource",
-                "19_separator_FemWorkbench",
-                "qt_toolbutton_menubutton"
+                "FEM_ConstraintBodyHeatSource"
             ],
             "commands": {
                 "FEM_CompEmConstraints": {

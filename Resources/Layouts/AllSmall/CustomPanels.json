@@ -1,0 +1,72 @@
+{
+    "customToolbars": {
+        "TechDrawWorkbench": {
+            "Dimensions_custom": {
+                "commands": {
+                    "TechDraw_CompDimensionTools": "TechDraw Dimensions",
+                    "TechDraw_Balloon": "TechDraw Dimensions",
+                    "TechDraw_AxoLengthDimension": "TechDraw Dimensions",
+                    "TechDraw_DimensionRepair": "TechDraw Dimensions",
+                    "TechDraw_ExtensionInsertPrefixGroup": "TechDraw Extend Dimensions",
+                    "TechDraw_ExtensionIncreaseDecreaseGroup": "TechDraw Extend Dimensions"
+                }
+            },
+            "Views_custom": {
+                "commands": {
+                    "TechDraw_View": "TechDraw Views",
+                    "TechDraw_BrokenView": "TechDraw Views",
+                    "TechDraw_ActiveView": "TechDraw Views",
+                    "TechDraw_SectionGroup": "TechDraw Views",
+                    "TechDraw_DetailView": "TechDraw Views",
+                    "TechDraw_DraftView": "TechDraw Views",
+                    "TechDraw_SpreadsheetView": "TechDraw Views",
+                    "TechDraw_ClipGroup": "TechDraw Views",
+                    "TechDraw_StackGroup": "TechDraw Stacking"
+                }
+            },
+            "Annotations_custom": {
+                "commands": {
+                    "TechDraw_RichTextAnnotation": "TechDraw Annotation",
+                    "TechDraw_LeaderLine": "TechDraw Annotation",
+                    "TechDraw_CosmeticVertexGroup": "TechDraw Annotation",
+                    "TechDraw_CenterLineGroup": "TechDraw Annotation",
+                    "TechDraw_2PointCosmeticLine": "TechDraw Annotation",
+                    "TechDraw_DecorateLine": "TechDraw Annotation",
+                    "TechDraw_ShowAll": "TechDraw Annotation",
+                    "TechDraw_WeldSymbol": "TechDraw Annotation",
+                    "TechDraw_SurfaceFinishSymbols": "TechDraw Annotation",
+                    "TechDraw_HoleShaftFit": "TechDraw Annotation",
+                    "TechDraw_ToggleFrame": "TechDraw Decoration",
+                    "TechDraw_Hatch": "TechDraw Decoration",
+                    "TechDraw_GeometricHatch": "TechDraw Decoration"
+                }
+            }
+        },
+        "FemWorkbench": {
+            "Loads & Constraints_custom": {
+                "commands": {
+                    "FEM_ConstraintInitialFlowVelocity": "Fluid boundary conditions",
+                    "FEM_ConstraintInitialPressure": "Fluid boundary conditions",
+                    "FEM_ConstraintFlowVelocity": "Fluid boundary conditions",
+                    "FEM_ConstraintFixed": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintRigidBody": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintDisplacement": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintContact": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintTie": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintForce": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintPressure": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintCentrif": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintSelfWeight": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintInitialTemperature": "Thermal boundary conditions and loads",
+                    "FEM_ConstraintHeatflux": "Thermal boundary conditions and loads",
+                    "FEM_ConstraintTemperature": "Thermal boundary conditions and loads",
+                    "FEM_ConstraintBodyHeatSource": "Thermal boundary conditions and loads",
+                    "FEM_CompEmConstraints": "Electromagnetic Boundary Conditions",
+                    "FEM_ConstraintPlaneRotation": "Geometrical Analysis Features",
+                    "FEM_ConstraintSectionPrint": "Geometrical Analysis Features",
+                    "FEM_ConstraintTransform": "Geometrical Analysis Features"
+                }
+            }
+        }
+    }
+}

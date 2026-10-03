@@ -1714,19 +1714,31 @@ class ModernMenu(RibbonBar):
                 and quickaccesstoolbar is None 
                 and self.tabBar().underMouse() is False
                 ):                
-                # Add a menu to select layout (themes)
-                SetLayoutsAct = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set Layouts..."))
-                Default_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "Default layout"))
+                # Add a menu to select layout (themes)                
+                SetLayoutsMenu = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set Layouts..."))
+                
+                # Add a label to indicate the standard layout section
+                label = QLabel(translate("FreeCAD Ribbon", "Standard layouts"))
+                label.setAlignment(Qt.AlignmentFlag.AlignLeading)
+                label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+                label.setStyleSheet("QLabel {font-weight: bold; padding: 4px;}")
+                widget_action = QWidgetAction(SetLayoutsMenu)
+                widget_action.setDefaultWidget(label)
+                SetLayoutsMenu.addAction(widget_action)
+                SetLayoutsMenu.addSeparator()
+
+                Default_Act = SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Default layout"))
                 Default_Act.triggered.connect(lambda: self.handleLayoutMenuAction("Default"))
                 
-                LargeAndMedium_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "Large and medium buttons"))
+                LargeAndMedium_Act = SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Large and medium buttons"))
                 LargeAndMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("LargeAndMedium"))
                 
-                AllSmall_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All small"))
+                AllSmall_Act = SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "All small"))
                 AllSmall_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllSmall"))
                 
-                AllMedium_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All medium"))
+                AllMedium_Act = SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "All medium"))
                 AllMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllMedium"))
+
                 
                 # Add a menu to select tabs to be shown
                 menu = StayOpenMenu(self.contextMenu)
@@ -1825,13 +1837,18 @@ class ModernMenu(RibbonBar):
         StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches"], endEmpty=True)
         # Define a variable for the layout directory 
         LayoutDir = ""
-        
+        DefaultSize = "small"
+        FirstCommandSize = "large"
+
         # Set the default layout
         if LayoutName == "Default":
             # Write the layout to the parameters
             Parameters_Ribbon.Settings.SetStringSetting("Layout", "Default")
             # Get the directory with the files for the default layout
-            LayoutDir = os.path.join(ConfigDirectory, "Layouts", "Default")  
+            LayoutDir = os.path.join(ConfigDirectory, "Layouts", "Default")
+            # Set the values for the icon sizes
+            DefaultSize = "small"
+            FirstCommandSize = "large"
                         
             # Adjust the icon sizes
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 24)
@@ -1848,6 +1865,9 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.Settings.SetStringSetting("Layout", "LargeAndMedium")
             # Get the directory with the files for the default layout
             LayoutDir = os.path.join(ConfigDirectory, "Layouts", "LargeAndMedium")
+            # Set the values for the icon sizes
+            DefaultSize = "medium"
+            FirstCommandSize = "large"
             
             # Disable text for buttons
             Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", False)
@@ -1858,17 +1878,39 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 24)
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 24)
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 48)
+            
+        if LayoutName == "AllSmall":
+            # Write the layout to the parameters
+            Parameters_Ribbon.Settings.SetStringSetting("Layout", "AllSmall")
+            # Get the directory with the files for the default layout
+            LayoutDir = os.path.join(ConfigDirectory, "Layouts", "AllSmall")
+            # Set the values for the icon sizes
+            DefaultSize = "small"
+            FirstCommandSize = "small"
+            
+            # Disable text for buttons
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", False)
+
+            # Adjust the icon sizes
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 24)
 
         # Go through the directory     
         for root, dirs, files in os.walk(LayoutDir):
             for filename in files:
                 # Open the file and store its contents in the workbenchdict
                 with open(os.path.join(LayoutDir, filename), "r") as file:
-                        # Get the workbench name and add it to the Workbench dict
-                    WorkBenchName = filename.replace(".json", "")
-                    StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches",WorkBenchName], endEmpty=True)
-                    # Update the workbench dict with the contents of the file
-                    WorkbenchDict["workbenches"][WorkBenchName].update(json.load(file))
+                    try:
+                        if filename != "CustomPanels.json":
+                            # Get the workbench name and add it to the Workbench dict
+                            WorkBenchName = filename.replace(".json", "")
+                            StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches",WorkBenchName], endEmpty=True)
+                            # Update the workbench dict with the contents of the file
+                            WorkbenchDict["workbenches"][WorkBenchName].update(json.load(file))
+                        if filename == "CustomPanels.json":
+                            StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["customToolbars"], endEmpty=True)
+                            WorkbenchDict["customToolbars"].update(json.load(file))
+                    except:
+                        print(f"{traceback.format_exc()}, {filename}")
         
         # Go through all the installed workbenches
         for WorkBenchName, Workbench in Gui.listWorkbenches().items():
@@ -1898,9 +1940,9 @@ class ModernMenu(RibbonBar):
                         # Go through the commands
                         for command in commands:
                             # The default size is 'small', if it is the first command, set it to 'large'
-                            size = "medium"
+                            size = DefaultSize
                             if command == commands[0] and toolbar != "Structure":
-                                size = "large"
+                                size = FirstCommandSize
                             # Create the workbench dict for the command and set the order bast on the toolbar items
                             StandardFunctions.add_keys_nested_dict(
                                 WorkbenchDict,
@@ -1920,15 +1962,19 @@ class ModernMenu(RibbonBar):
                         ToolBarOrder.append(toolbar)
                     # Write the toolbar order to the workbench dict
                     WorkbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolBarOrder
-        # Update the ribbonStructure dict with the temporary WorkbenchDict        
-        self.ribbonStructure["workbenches"] = WorkbenchDict["workbenches"]
         
-        # get the path for the Json file
-        JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-        # Writing to sample.json
-        with open(JsonFile, "w") as outfile:
-            json.dump(self.ribbonStructure, outfile, indent=4)
+            # Update the ribbonStructure dict with the temporary WorkbenchDict and custom panels
+            if "workbenches" in self.ribbonStructure and "workbenches" in WorkbenchDict:
+                self.ribbonStructure["workbenches"] = WorkbenchDict["workbenches"]
+            if "customToolbars" in self.ribbonStructure and "customToolbars" in WorkbenchDict:
+                self.ribbonStructure["customToolbars"] = WorkbenchDict["customToolbars"]
             
+            # get the path for the Json file
+            JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+            # Writing to sample.json
+            with open(JsonFile, "w") as outfile:
+                json.dump(self.ribbonStructure, outfile, indent=4)
+                    
         # Restore the cursor
         QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         
@@ -2401,9 +2447,12 @@ class ModernMenu(RibbonBar):
                     continue
                 
                 if longPanel.objectName() == objPanel.objectName() and longPanel.objectName() != "" and objPanel.objectName() != "":
-                    if longPanel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
-                        if self.workBenchDict["workbenches"][workbenchName]["toolbars"][longPanel.objectName()]["Enabled"] is False:
-                            continue                               
+                    if (
+                        longPanel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"] 
+                        and "Enabled" in self.workBenchDict["workbenches"][workbenchName]["toolbars"][longPanel.objectName()]
+                        and self.workBenchDict["workbenches"][workbenchName]["toolbars"][longPanel.objectName()]["Enabled"] is False
+                        ):
+                        continue                               
                     
                     # Create a panel and replace the long panel with this one
                     if CloseDialog is True:
