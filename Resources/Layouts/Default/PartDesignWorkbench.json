@@ -44,9 +44,6 @@
                     "size": "large",
                     "text": "",
                     "icon": ""
-                },
-                "AssemblyCut_Cut": {
-                    "size": "small"
                 }
             },
             "title": "Helpers",
@@ -141,31 +138,6 @@
                     "size": "large",
                     "text": "Boolean Operation",
                     "icon": "PartDesign_Boolean"
-                },
-                "15_separator_PartDesignWorkbench": {
-                    "size": "",
-                    "text": "Separator",
-                    "icon": ""
-                },
-                "7_separator_PartDesignWorkbench": {
-                    "size": "",
-                    "text": "Separator",
-                    "icon": ""
-                },
-                "14_separator_PartDesignWorkbench": {
-                    "size": "",
-                    "text": "Separator",
-                    "icon": ""
-                },
-                "11_separator_PartDesignWorkbench": {
-                    "size": "",
-                    "text": "Separator",
-                    "icon": ""
-                },
-                "16_separator_PartDesignWorkbench": {
-                    "size": "",
-                    "text": "Separator",
-                    "icon": ""
                 }
             },
             "title": "Modeling",

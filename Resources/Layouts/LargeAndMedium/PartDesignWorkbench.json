@@ -49,8 +49,7 @@
                     "size": "medium"
                 }
             },
-            "title": "Helpers",
-            "Enabled": true
+            "title": "Helpers"
         },
         "Part Design Modeling Features": {
             "order": [
@@ -141,35 +140,9 @@
                     "size": "large",
                     "text": "Boolean Operation",
                     "icon": "PartDesign_Boolean"
-                },
-                "15_separator_PartDesignWorkbench": {
-                    "size": "",
-                    "text": "Separator",
-                    "icon": ""
-                },
-                "7_separator_PartDesignWorkbench": {
-                    "size": "",
-                    "text": "Separator",
-                    "icon": ""
-                },
-                "14_separator_PartDesignWorkbench": {
-                    "size": "",
-                    "text": "Separator",
-                    "icon": ""
-                },
-                "11_separator_PartDesignWorkbench": {
-                    "size": "",
-                    "text": "Separator",
-                    "icon": ""
-                },
-                "16_separator_PartDesignWorkbench": {
-                    "size": "",
-                    "text": "Separator",
-                    "icon": ""
                 }
             },
-            "title": "Modeling",
-            "Enabled": true
+            "title": "Modeling"
         },
         "Individual views": {
             "order": [
@@ -217,8 +190,7 @@
                     "text": "",
                     "icon": "view-left"
                 }
-            },
-            "Enabled": true
+            }
         },
         "Structure": {
             "order": [
@@ -254,8 +226,7 @@
                     "text": "Datums...",
                     "icon": ""
                 }
-            },
-            "Enabled": true
+            }
         },
         "Part Design Dress-Up Features": {
             "order": [
@@ -290,8 +261,7 @@
                     "size": "medium"
                 }
             },
-            "title": "Dress-Up",
-            "Enabled": true
+            "title": "Dress-up"
         },
         "Part Design Transformation Features": {
             "order": [
@@ -326,8 +296,7 @@
                     "textEnabled": false
                 }
             },
-            "title": "Patterns",
-            "Enabled": true
+            "title": "Patterns"
         },
         "Tools_newPanel": {
             "commands": {
@@ -372,8 +341,7 @@
                 "Std_BoxElementSelection",
                 "Std_WhatsThis",
                 "Std_BoxSelection"
-            ],
-            "Enabled": true
+            ]
         },
         "Individual Views": {
             "order": [

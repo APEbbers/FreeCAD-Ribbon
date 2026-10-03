@@ -56,8 +56,7 @@
                     "size": "medium",
                     "text": ""
                 }
-            },
-            "Enabled": true
+            }
         },
         "Electromagnetic boundary conditions": {
             "order": [
@@ -202,8 +201,7 @@
                 "FEM_MeshGMSHRefinement": {
                     "size": "medium"
                 }
-            },
-            "Enabled": true
+            }
         },
         "Solve": {
             "order": [
@@ -260,8 +258,7 @@
                 "FEM_CompSolvers": {
                     "size": "medium"
                 }
-            },
-            "Enabled": true
+            }
         },
         "Results": {
             "order": [
@@ -367,8 +364,7 @@
                     "size": "medium",
                     "text": ""
                 }
-            },
-            "Enabled": true
+            }
         },
         "Utilities": {
             "order": [
@@ -392,8 +388,7 @@
                     "text": "",
                     "icon": "FemWorkbench"
                 }
-            },
-            "Enabled": true
+            }
         },
         "order": [
             "Structure",
@@ -404,7 +399,8 @@
             "Solve",
             "Results",
             "Utilities",
-            "Tools_newPanel"
+            "Tools_newPanel",
+            "Loads & Constraints_custom"
         ],
         "Individual views": {
             "order": [
@@ -487,31 +483,35 @@
                     "size": "medium",
                     "text": ""
                 }
-            },
-            "Enabled": true
+            }
         },
         "Loads & Constraints_custom": {
             "order": [
+                "FEM_ConstraintSectionPrint",
+                "FEM_ConstraintTransform",
+                "2_separator_FemWorkbench",
                 "FEM_ConstraintFixed",
                 "FEM_ConstraintRigidBody",
                 "FEM_ConstraintDisplacement",
                 "FEM_ConstraintContact",
+                "FEM_ConstraintSpring",
+                "FEM_ConstraintPlaneRotation",
                 "FEM_ConstraintTie",
-                "separator_FemWorkbench_6",
+                "10_separator_FemWorkbench",
                 "FEM_ConstraintForce",
                 "FEM_ConstraintPressure",
                 "FEM_ConstraintCentrif",
                 "FEM_ConstraintSelfWeight",
-                "separator_FemWorkbench_11",
+                "15_separator_FemWorkbench",
                 "FEM_ConstraintInitialFlowVelocity",
                 "FEM_ConstraintInitialPressure",
                 "FEM_ConstraintFlowVelocity",
-                "separator_FemWorkbench_16",
+                "19_separator_FemWorkbench",
                 "FEM_ConstraintInitialTemperature",
-                "FEM_ConstraintHeatflux",
                 "FEM_ConstraintTemperature",
                 "FEM_ConstraintBodyHeatSource",
-                "19_separator_FemWorkbench",
+                "FEM_ConstraintHeatflux",
+                "24_separator_FemWorkbench",
                 "qt_toolbutton_menubutton"
             ],
             "commands": {
@@ -605,17 +605,19 @@
                     "text": "",
                     "icon": "FEM_ConstraintBodyHeatSource"
                 },
-                "null": {
-                    "size": "medium",
-                    "text": ""
+                "FEM_ConstraintSectionPrint": {
+                    "size": "large"
+                },
+                "FEM_ConstraintTransform": {
+                    "size": "medium"
+                },
+                "FEM_ConstraintPlaneRotation": {
+                    "size": "medium"
                 },
                 "qt_toolbutton_menubutton": {
-                    "size": "large",
-                    "text": "Electro magnetic constraints",
-                    "textEnabled": true
+                    "size": "medium"
                 }
-            },
-            "Enabled": true
+            }
         },
         "Geometrical Analysis Features": {
             "commands": {
@@ -636,9 +638,7 @@
                 "FEM_ConstraintPlaneRotation",
                 "FEM_ConstraintSectionPrint",
                 "FEM_ConstraintTransform"
-            ],
-            "Enabled": true,
-            "title": "Geometrical Analyse"
+            ]
         },
         "Tools_newPanel": {
             "commands": {
@@ -674,8 +674,103 @@
                 "Std_BoxElementSelection",
                 "Std_BoxSelection",
                 "Std_WhatsThis"
-            ],
-            "Enabled": true
+            ]
+        },
+        "Electromagnetic Boundary Conditions": {
+            "commands": {
+                "FEM_CompEmConstraints": {
+                    "size": "medium"
+                }
+            },
+            "order": [
+                "FEM_CompEmConstraints"
+            ]
+        },
+        "Fluid Boundary Conditions": {
+            "commands": {
+                "FEM_ConstraintInitialFlowVelocity": {
+                    "size": "medium"
+                },
+                "FEM_ConstraintInitialPressure": {
+                    "size": "medium"
+                },
+                "FEM_ConstraintFlowVelocity": {
+                    "size": "medium"
+                }
+            },
+            "order": [
+                "FEM_ConstraintInitialFlowVelocity",
+                "FEM_ConstraintInitialPressure",
+                "FEM_ConstraintFlowVelocity"
+            ]
+        },
+        "Mechanical Boundary Conditions and Loads": {
+            "commands": {
+                "FEM_ConstraintFixed": {
+                    "size": "medium"
+                },
+                "FEM_ConstraintRigidBody": {
+                    "size": "medium"
+                },
+                "FEM_ConstraintDisplacement": {
+                    "size": "medium"
+                },
+                "FEM_ConstraintContact": {
+                    "size": "medium"
+                },
+                "FEM_ConstraintTie": {
+                    "size": "medium"
+                },
+                "FEM_ConstraintSpring": {
+                    "size": "medium"
+                },
+                "FEM_ConstraintForce": {
+                    "size": "medium"
+                },
+                "FEM_ConstraintPressure": {
+                    "size": "medium"
+                },
+                "FEM_ConstraintCentrif": {
+                    "size": "medium"
+                },
+                "FEM_ConstraintSelfWeight": {
+                    "size": "medium"
+                }
+            },
+            "order": [
+                "FEM_ConstraintFixed",
+                "FEM_ConstraintRigidBody",
+                "FEM_ConstraintDisplacement",
+                "FEM_ConstraintContact",
+                "FEM_ConstraintTie",
+                "FEM_ConstraintSpring",
+                "FEM_ConstraintForce",
+                "FEM_ConstraintPressure",
+                "FEM_ConstraintCentrif",
+                "FEM_ConstraintSelfWeight"
+            ]
+        },
+        "Thermal Boundary Conditions and Loads": {
+            "commands": {
+                "FEM_ConstraintInitialTemperature": {
+                    "size": "medium"
+                },
+                "FEM_ConstraintHeatflux": {
+                    "size": "medium"
+                },
+                "FEM_ConstraintTemperature": {
+                    "size": "medium"
+                },
+                "FEM_ConstraintBodyHeatSource": {
+                    "size": "medium"
+                }
+            },
+            "order": [
+                "FEM_ConstraintInitialTemperature",
+                "FEM_ConstraintHeatflux",
+                "FEM_ConstraintTemperature",
+                "FEM_ConstraintBodyHeatSource"
+            ]
         }
     },
     "Enabled": true

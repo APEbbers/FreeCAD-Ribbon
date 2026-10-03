@@ -441,7 +441,7 @@ class ModernMenu(RibbonBar):
                     action.associatedObjects()[1].setStyleSheet(styleSheet_ToolTip + action.associatedObjects()[1].styleSheet())
         
         # ------------------------------------------------------------------------------------------------------------------
-        
+
         # Read all data files and fill the lists and dicts -----------------------------------------------------------------
         # read ribbon structure from JSON file
         if os.path.exists(Parameters.RIBBON_STRUCTURE_JSON) is False:
@@ -451,7 +451,9 @@ class ModernMenu(RibbonBar):
             Parameters.RIBBON_STRUCTURE_JSON = os.path.join(ConfigDirectory, "RibbonStructure.json")        
         with open(Parameters.RIBBON_STRUCTURE_JSON, "r") as file:
             self.ribbonStructure.update(json.load(file))
-        file.close()
+        # Check the ribbon structure and correct it if needed
+        self.CheckRibbonStructure()
+        
         # Read a lighter version of the datafile used with the dialogs for icons
         DataFile2 = os.path.join(ConfigDirectory, "RibbonDataFile2.dat")
         if os.path.exists(DataFile2) is True:
@@ -8492,6 +8494,43 @@ class ModernMenu(RibbonBar):
                 )
                 StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
         return True
+    
+    def CheckRibbonStructure(self):
+        workbenchDict = {}
+        # Check if there are workbenches and toolbars in the ribbon structure
+        if "workbenches" in self.ribbonStructure:
+            for WorkBenchName in self.ribbonStructure["workbenches"]:
+                if "toolbars" in self.ribbonStructure["workbenches"][WorkBenchName]:
+                    for ToolBar in self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"]:
+                        if ToolBar == "order":
+                            orderList = []
+                            for entry in self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"]["order"]:
+                                if entry is not None and entry != "null" and entry != "":
+                                    orderList.append(entry)
+                            StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", "order"])
+                            workbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = orderList
+                        else:
+                            for item in self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][ToolBar].keys():
+                                if item == "order":
+                                    orderList = []
+                                    for entry in self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][ToolBar]["order"]:
+                                        if entry is not None and entry != "null" and entry != "" and entry != "qt_toolbutton_menubutton":
+                                            orderList.append(entry)                                            
+                                    StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "order"])
+                                    workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["order"] = orderList
+                                if item == "commands":
+                                    for command in self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"].keys():
+                                        if command is not None and command != "null" and command != "" and command != "qt_toolbutton_menubutton" and "separator" not in command:
+                                            StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "commands", command])
+                                            workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command] = self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command]
+        
+            if "workbenches" in workbenchDict:
+                self.ribbonStructure["workbenches"] = workbenchDict["workbenches"]
+                
+                JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+                with open(JsonFile, "w") as outfile:
+                    json.dump(self.ribbonStructure, outfile, indent=4)
+                                            
 
     def ConvertRibbonStructure(self, checkFCVersion = True, RestartFreeCAD = False):
         # Define a result parameter
@@ -8710,8 +8749,6 @@ class ModernMenu(RibbonBar):
         with open(JsonFile, "w") as outfile:
             json.dump(self.ribbonStructure, outfile, indent=4)
 
-        outfile.close()
-        
         if RestartFreeCAD is True:
             message = translate(
                 "FreeCAD Ribbon",

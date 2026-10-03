@@ -602,15 +602,6 @@
                     "size": "small",
                     "text": "",
                     "icon": "FEM_ConstraintBodyHeatSource"
-                },
-                "null": {
-                    "size": "small",
-                    "text": ""
-                },
-                "qt_toolbutton_menubutton": {
-                    "size": "large",
-                    "text": "Electro magnetic constraints",
-                    "textEnabled": true
                 }
             },
             "Enabled": true
