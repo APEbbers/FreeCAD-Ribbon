@@ -1,16 +1,90 @@
 {
-    "toolbars": {
-        "order": [
-            "Individual views",
-            "Structure",
-            "File",
-            "Edit",
-            "Clipboard",
-            "Workbench",
-            "Macro",
-            "View",
-            "Help"
-        ]
-    },
-    "Enabled": false
+    "workbenches": {
+        "InspectionWorkbench": {
+            "toolbars": {
+                "order": [
+                    "Individual views",
+                    "Structure",
+                    "File",
+                    "Edit",
+                    "Clipboard",
+                    "Workbench",
+                    "Macro",
+                    "View",
+                    "Help"
+                ],
+                "Structure": {
+                    "commands": {
+                        "Std_Part": {
+                            "size": "small"
+                        },
+                        "Part_Datums": {
+                            "size": "small"
+                        },
+                        "Std_Group": {
+                            "size": "small"
+                        },
+                        "Std_LinkActions": {
+                            "size": "small"
+                        },
+                        "Std_VarSet": {
+                            "size": "small"
+                        }
+                    },
+                    "order": [
+                        "Std_Part",
+                        "Part_Datums",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ]
+                },
+                "Inspection": {
+                    "commands": {
+                        "Inspection_VisualInspection": {
+                            "size": "large"
+                        },
+                        "Inspection_InspectElement": {
+                            "size": "large"
+                        }
+                    },
+                    "order": [
+                        "Inspection_VisualInspection",
+                        "Inspection_InspectElement"
+                    ]
+                },
+                "Tools_newPanel": {
+                    "commands": {
+                        "Std_Measure": {
+                            "size": "small"
+                        },
+                        "Std_UnitsCalculator": {
+                            "size": "small"
+                        },
+                        "Std_Properties": {
+                            "size": "small"
+                        },
+                        "Std_BoxElementSelection": {
+                            "size": "small"
+                        },
+                        "Std_BoxSelection": {
+                            "size": "small"
+                        },
+                        "Std_WhatsThis": {
+                            "size": "small"
+                        }
+                    },
+                    "order": [
+                        "Std_Measure",
+                        "Std_UnitsCalculator",
+                        "Std_Properties",
+                        "Std_BoxElementSelection",
+                        "Std_BoxSelection",
+                        "Std_WhatsThis"
+                    ]
+                }
+            },
+            "Enabled": true
+        }
+    }
 }

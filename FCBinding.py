@@ -1903,14 +1903,23 @@ class ModernMenu(RibbonBar):
                 with open(os.path.join(LayoutDir, filename), "r") as file:
                     try:
                         if filename != "CustomPanels.json":
+                            loadedDict = {}
+                            loadedDict.update(json.load(file))
+                           
                             # Get the workbench name and add it to the Workbench dict
-                            WorkBenchName = filename.replace(".json", "")
-                            StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches",WorkBenchName], endEmpty=True)
-                            # Update the workbench dict with the contents of the file
-                            WorkbenchDict["workbenches"][WorkBenchName].update(json.load(file))
+                            WorkBenchName = filename.replace(".json", "")                            
+                            if "workbenches" in loadedDict and WorkBenchName in loadedDict["workbenches"]:
+                                 WorkbenchDict["workbenches"][WorkBenchName] = loadedDict["workbenches"][WorkBenchName]
+                            if "toolbars" in loadedDict:
+                                StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches",WorkBenchName], endEmpty=True)
+                                # Update the workbench dict with the contents of the file
+                                WorkbenchDict["workbenches"][WorkBenchName] = loadedDict
+                            if "customToolbars" in loadedDict:
+                                StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["customToolbars", WorkBenchName], endEmpty=True)
+                                WorkbenchDict["customToolbars"][WorkBenchName].update(loadedDict["customToolbars"][WorkBenchName])
                         if filename == "CustomPanels.json":
                             StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["customToolbars"], endEmpty=True)
-                            WorkbenchDict["customToolbars"].update(json.load(file))
+                            WorkbenchDict.update(json.load(file))
                     except:
                         print(f"{traceback.format_exc()}, {filename}")
         
@@ -1939,6 +1948,7 @@ class ModernMenu(RibbonBar):
                                 endEmpty=True
                             )
                         WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["order"] = commands
+                                                
                         # Go through the commands
                         for command in commands:
                             # The default size is 'small', if it is the first command, set it to 'large'
@@ -8375,11 +8385,20 @@ class ModernMenu(RibbonBar):
                 
         if WorkbenchName != "":
             WorkbenchDict = {}
+            IsEmpty = True
             if "workbenches" in self.ribbonStructure and WorkbenchName in self.ribbonStructure["workbenches"]:
-                WorkbenchDict.update(self.ribbonStructure["workbenches"][WorkbenchName])
+                StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches", WorkbenchName])
+                WorkbenchDict["workbenches"][WorkbenchName] = self.ribbonStructure["workbenches"][WorkbenchName]
+                IsEmpty = False
                 
+            if "customToolbars" in self.ribbonStructure and WorkbenchName in self.ribbonStructure["customToolbars"]:
+                StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["customToolbars", WorkbenchName])
+                WorkbenchDict["customToolbars"][WorkbenchName] = self.ribbonStructure["customToolbars"][WorkbenchName]
+                IsEmpty = False
+                
+            if IsEmpty is False:
                 FileName = StandardFunctions.GetFileDialog(
-                    Filter=f"{WorkbenchName} (*.json)",
+                    Filter=f"{WorkbenchName}.json ({WorkbenchName}.json)",
                     parent=self,
                     DefaultPath=Parameters.EXPORT_LOCATION,
                     SaveAs=True,
@@ -8523,6 +8542,8 @@ class ModernMenu(RibbonBar):
                                         if command is not None and command != "null" and command != "" and command != "qt_toolbutton_menubutton" and "separator" not in command:
                                             StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "commands", command])
                                             workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command] = self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command]
+                                if item == "title":
+                                    workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"] = self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"]
         
             if "workbenches" in workbenchDict:
                 self.ribbonStructure["workbenches"] = workbenchDict["workbenches"]

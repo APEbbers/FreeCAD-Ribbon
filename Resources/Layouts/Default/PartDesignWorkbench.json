@@ -1,459 +1,456 @@
 {
-    "toolbars": {
-        "Part Design Helper Features": {
-            "order": [
-                "PartDesign_CompSketches",
-                "PartDesign_Body",
-                "PartDesign_SubShapeBinder",
-                "PartDesign_Clone",
-                "Sketcher_ValidateSketch",
-                "Part_CheckGeometry"
-            ],
-            "commands": {
-                "PartDesign_CompSketches": {
-                    "size": "large",
-                    "text": "",
-                    "icon": ""
+    "workbenches": {
+        "PartDesignWorkbench": {
+            "toolbars": {
+                "Part Design Helper Features": {
+                    "order": [
+                        "PartDesign_CompSketches",
+                        "PartDesign_Body",
+                        "PartDesign_SubShapeBinder",
+                        "PartDesign_Clone",
+                        "Sketcher_ValidateSketch",
+                        "Part_CheckGeometry"
+                    ],
+                    "commands": {
+                        "PartDesign_CompSketches": {
+                            "size": "large",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "PartDesign_Body": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "PartDesign_Body"
+                        },
+                        "Sketcher_ValidateSketch": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "Sketcher_ValidateSketch"
+                        },
+                        "Part_CheckGeometry": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "Part_CheckGeometry"
+                        },
+                        "PartDesign_SubShapeBinder": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "PartDesign_SubShapeBinder"
+                        },
+                        "PartDesign_Clone": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "PartDesign_Clone"
+                        },
+                        "PartDesign_CompDatums": {
+                            "size": "large",
+                            "text": "",
+                            "icon": ""
+                        }
+                    },
+                    "title": "Helpers"
                 },
-                "PartDesign_Body": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "PartDesign_Body"
+                "Part Design Modeling Features": {
+                    "order": [
+                        "PartDesign_Pad",
+                        "PartDesign_Revolution",
+                        "PartDesign_AdditiveLoft",
+                        "PartDesign_AdditivePipe",
+                        "PartDesign_AdditiveHelix",
+                        "PartDesign_CompPrimitiveAdditive",
+                        "7_separator_PartDesignWorkbench",
+                        "PartDesign_Pocket",
+                        "PartDesign_Hole",
+                        "PartDesign_Groove",
+                        "PartDesign_SubtractiveLoft",
+                        "PartDesign_SubtractivePipe",
+                        "PartDesign_SubtractiveHelix",
+                        "PartDesign_CompPrimitiveSubtractive",
+                        "15_separator_PartDesignWorkbench",
+                        "PartDesign_Boolean"
+                    ],
+                    "commands": {
+                        "PartDesign_Pad": {
+                            "size": "large",
+                            "text": "Pad",
+                            "icon": "PartDesign_Pad"
+                        },
+                        "PartDesign_Revolution": {
+                            "size": "small",
+                            "text": "Revolve",
+                            "icon": "PartDesign_Revolution"
+                        },
+                        "PartDesign_AdditiveLoft": {
+                            "size": "small",
+                            "text": "Additive Loft",
+                            "icon": "PartDesign_AdditiveLoft"
+                        },
+                        "PartDesign_AdditivePipe": {
+                            "size": "small",
+                            "text": "Additive Pipe",
+                            "icon": "PartDesign_AdditivePipe"
+                        },
+                        "PartDesign_AdditiveHelix": {
+                            "size": "small",
+                            "text": "Additive Helix",
+                            "icon": "PartDesign_AdditiveHelix"
+                        },
+                        "PartDesign_CompPrimitiveAdditive": {
+                            "size": "small",
+                            "text": "Additive Primitive...",
+                            "icon": ""
+                        },
+                        "PartDesign_Pocket": {
+                            "size": "large",
+                            "text": "Pocket",
+                            "icon": "PartDesign_Pocket"
+                        },
+                        "PartDesign_Hole": {
+                            "size": "small",
+                            "text": "Hole",
+                            "icon": "PartDesign_Hole"
+                        },
+                        "PartDesign_Groove": {
+                            "size": "small",
+                            "text": "Groove",
+                            "icon": "PartDesign_Groove"
+                        },
+                        "PartDesign_SubtractiveLoft": {
+                            "size": "small",
+                            "text": "Subtractive Loft",
+                            "icon": "PartDesign_SubtractiveLoft"
+                        },
+                        "PartDesign_SubtractivePipe": {
+                            "size": "small",
+                            "text": "Subtractive Pipe",
+                            "icon": "PartDesign_SubtractivePipe"
+                        },
+                        "PartDesign_SubtractiveHelix": {
+                            "size": "small",
+                            "text": "Subtractive Helix",
+                            "icon": "PartDesign_SubtractiveHelix"
+                        },
+                        "PartDesign_CompPrimitiveSubtractive": {
+                            "size": "small",
+                            "text": "Subtractive Primitive...",
+                            "icon": ""
+                        },
+                        "PartDesign_Boolean": {
+                            "size": "large",
+                            "text": "Boolean Operation",
+                            "icon": "PartDesign_Boolean"
+                        }
+                    },
+                    "title": "Modeling"
                 },
-                "Sketcher_ValidateSketch": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "Sketcher_ValidateSketch"
+                "Individual views": {
+                    "order": [
+                        "Isometric",
+                        "Front",
+                        "Top",
+                        "Right",
+                        "Rear",
+                        "Bottom",
+                        "Left"
+                    ],
+                    "commands": {
+                        "Std_ViewIsometric": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-axonometric"
+                        },
+                        "Std_ViewFront": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-front"
+                        },
+                        "Std_ViewTop": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-top"
+                        },
+                        "Std_ViewRight": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-right"
+                        },
+                        "Std_ViewRear": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-rear"
+                        },
+                        "Std_ViewBottom": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-bottom"
+                        },
+                        "Std_ViewLeft": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-left"
+                        }
+                    }
                 },
-                "Part_CheckGeometry": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "Part_CheckGeometry"
+                "Structure": {
+                    "order": [
+                        "Std_Part",
+                        "Part_Datums",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ],
+                    "commands": {
+                        "Std_Part": {
+                            "size": "small",
+                            "text": "New Part",
+                            "icon": "Geofeaturegroup"
+                        },
+                        "Std_Group": {
+                            "size": "small",
+                            "text": "New Group",
+                            "icon": "folder"
+                        },
+                        "Std_LinkActions": {
+                            "size": "small",
+                            "text": "Link Actions...",
+                            "icon": ""
+                        },
+                        "Std_VarSet": {
+                            "size": "small",
+                            "text": "Variable Set",
+                            "icon": "VarSet"
+                        },
+                        "Part_Datums": {
+                            "size": "small",
+                            "text": "Datums...",
+                            "icon": ""
+                        }
+                    }
                 },
-                "PartDesign_SubShapeBinder": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "PartDesign_SubShapeBinder"
+                "Part Design Dress-Up Features": {
+                    "order": [
+                        "PartDesign_Fillet",
+                        "PartDesign_Chamfer",
+                        "PartDesign_Draft",
+                        "PartDesign_Thickness",
+                        "PartDesign_Defeaturing"
+                    ],
+                    "commands": {
+                        "PartDesign_Fillet": {
+                            "size": "large",
+                            "text": "Fillet",
+                            "icon": "PartDesign_Fillet"
+                        },
+                        "PartDesign_Chamfer": {
+                            "size": "small",
+                            "text": "Chamfer",
+                            "icon": "PartDesign_Chamfer"
+                        },
+                        "PartDesign_Draft": {
+                            "size": "small",
+                            "text": "Draft",
+                            "icon": "PartDesign_Draft"
+                        },
+                        "PartDesign_Thickness": {
+                            "size": "small",
+                            "text": "Thickness",
+                            "icon": "PartDesign_Thickness"
+                        },
+                        "PartDesign_Defeaturing": {
+                            "size": "small"
+                        }
+                    },
+                    "title": "Dress-up"
                 },
-                "PartDesign_Clone": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "PartDesign_Clone"
+                "Part Design Transformation Features": {
+                    "order": [
+                        "PartDesign_LinearPattern",
+                        "PartDesign_PolarPattern",
+                        "PartDesign_Mirrored",
+                        "PartDesign_MultiTransform"
+                    ],
+                    "commands": {
+                        "PartDesign_Mirrored": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "PartDesign_Mirrored",
+                            "textEnabled": false
+                        },
+                        "PartDesign_LinearPattern": {
+                            "size": "large",
+                            "text": "",
+                            "icon": "PartDesign_LinearPattern"
+                        },
+                        "PartDesign_PolarPattern": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "PartDesign_PolarPattern",
+                            "ButtonSize_small": 24,
+                            "textEnabled": false
+                        },
+                        "PartDesign_MultiTransform": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "PartDesign_MultiTransform",
+                            "textEnabled": false
+                        }
+                    },
+                    "title": "Patterns"
                 },
-                "PartDesign_CompDatums": {
-                    "size": "large",
-                    "text": "",
-                    "icon": ""
-                }
+                "Tools_newPanel": {
+                    "commands": {
+                        "Std_Measure": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "umf-measurement"
+                        },
+                        "Std_UnitsCalculator": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "accessories-calculator"
+                        },
+                        "Std_Properties": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "document-properties"
+                        },
+                        "Std_BoxElementSelection": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "edit-element-select-box"
+                        },
+                        "Std_BoxSelection": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "edit-select-box"
+                        },
+                        "Std_WhatsThis": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "WhatsThis"
+                        },
+                        "Part_Offset2D": {
+                            "size": ""
+                        }
+                    },
+                    "order": [
+                        "Std_Measure",
+                        "Std_UnitsCalculator",
+                        "Std_Properties",
+                        "Std_BoxElementSelection",
+                        "Std_WhatsThis",
+                        "Std_BoxSelection"
+                    ]
+                },
+                "Individual Views": {
+                    "order": [
+                        "Std_ViewIsometric",
+                        "Std_ViewFront",
+                        "Std_ViewTop",
+                        "Std_ViewRight",
+                        "Std_ViewRear",
+                        "Std_ViewBottom",
+                        "Std_ViewLeft"
+                    ],
+                    "commands": {
+                        "Std_ViewIsometric": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_ViewFront": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_ViewTop": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_ViewRight": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_ViewRear": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_ViewBottom": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_ViewLeft": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Views - Ribbon_newPanel": {
+                    "order": [
+                        "Std_ViewGroup",
+                        "Std_ViewFitSelection",
+                        "Std_ViewZoomOut",
+                        "Std_ViewZoomIn",
+                        "Std_ViewBoxZoom",
+                        "Std_AlignToSelection",
+                        "Part_SelectFilter"
+                    ],
+                    "commands": {
+                        "Std_ViewGroup": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_ViewFitSelection": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_ViewZoomOut": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_ViewZoomIn": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_ViewBoxZoom": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_AlignToSelection": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Part_SelectFilter": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        }
+                    }
+                },
+                "order": [
+                    "Structure",
+                    "Part Design Helper Features",
+                    "Part Design Modeling Features",
+                    "Part Design Dress-Up Features",
+                    "Part Design Transformation Features",
+                    "FusedFilamentDesign",
+                    "Tools_newPanel",
+                    "Individual Views",
+                    "Views - Ribbon_newPanel"
+                ]
             },
-            "title": "Helpers",
             "Enabled": true
-        },
-        "Part Design Modeling Features": {
-            "order": [
-                "PartDesign_Pad",
-                "PartDesign_Revolution",
-                "PartDesign_AdditiveLoft",
-                "PartDesign_AdditivePipe",
-                "PartDesign_AdditiveHelix",
-                "PartDesign_CompPrimitiveAdditive",
-                "7_separator_PartDesignWorkbench",
-                "PartDesign_Pocket",
-                "PartDesign_Hole",
-                "PartDesign_Groove",
-                "PartDesign_SubtractiveLoft",
-                "PartDesign_SubtractivePipe",
-                "PartDesign_SubtractiveHelix",
-                "PartDesign_CompPrimitiveSubtractive",
-                "15_separator_PartDesignWorkbench",
-                "PartDesign_Boolean"
-            ],
-            "commands": {
-                "PartDesign_Pad": {
-                    "size": "large",
-                    "text": "Pad",
-                    "icon": "PartDesign_Pad"
-                },
-                "PartDesign_Revolution": {
-                    "size": "small",
-                    "text": "Revolve",
-                    "icon": "PartDesign_Revolution"
-                },
-                "PartDesign_AdditiveLoft": {
-                    "size": "small",
-                    "text": "Additive Loft",
-                    "icon": "PartDesign_AdditiveLoft"
-                },
-                "PartDesign_AdditivePipe": {
-                    "size": "small",
-                    "text": "Additive Pipe",
-                    "icon": "PartDesign_AdditivePipe"
-                },
-                "PartDesign_AdditiveHelix": {
-                    "size": "small",
-                    "text": "Additive Helix",
-                    "icon": "PartDesign_AdditiveHelix"
-                },
-                "PartDesign_CompPrimitiveAdditive": {
-                    "size": "small",
-                    "text": "Additive Primitive...",
-                    "icon": ""
-                },
-                "PartDesign_Pocket": {
-                    "size": "large",
-                    "text": "Pocket",
-                    "icon": "PartDesign_Pocket"
-                },
-                "PartDesign_Hole": {
-                    "size": "small",
-                    "text": "Hole",
-                    "icon": "PartDesign_Hole"
-                },
-                "PartDesign_Groove": {
-                    "size": "small",
-                    "text": "Groove",
-                    "icon": "PartDesign_Groove"
-                },
-                "PartDesign_SubtractiveLoft": {
-                    "size": "small",
-                    "text": "Subtractive Loft",
-                    "icon": "PartDesign_SubtractiveLoft"
-                },
-                "PartDesign_SubtractivePipe": {
-                    "size": "small",
-                    "text": "Subtractive Pipe",
-                    "icon": "PartDesign_SubtractivePipe"
-                },
-                "PartDesign_SubtractiveHelix": {
-                    "size": "small",
-                    "text": "Subtractive Helix",
-                    "icon": "PartDesign_SubtractiveHelix"
-                },
-                "PartDesign_CompPrimitiveSubtractive": {
-                    "size": "small",
-                    "text": "Subtractive Primitive...",
-                    "icon": ""
-                },
-                "PartDesign_Boolean": {
-                    "size": "large",
-                    "text": "Boolean Operation",
-                    "icon": "PartDesign_Boolean"
-                }
-            },
-            "title": "Modeling",
-            "Enabled": true
-        },
-        "Individual views": {
-            "order": [
-                "Isometric",
-                "Front",
-                "Top",
-                "Right",
-                "Rear",
-                "Bottom",
-                "Left"
-            ],
-            "commands": {
-                "Std_ViewIsometric": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "view-axonometric"
-                },
-                "Std_ViewFront": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "view-front"
-                },
-                "Std_ViewTop": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "view-top"
-                },
-                "Std_ViewRight": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "view-right"
-                },
-                "Std_ViewRear": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "view-rear"
-                },
-                "Std_ViewBottom": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "view-bottom"
-                },
-                "Std_ViewLeft": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "view-left"
-                }
-            },
-            "Enabled": true
-        },
-        "Structure": {
-            "order": [
-                "Std_Part",
-                "Part_Datums",
-                "Std_Group",
-                "Std_LinkActions",
-                "Std_VarSet"
-            ],
-            "commands": {
-                "Std_Part": {
-                    "size": "small",
-                    "text": "New Part",
-                    "icon": "Geofeaturegroup"
-                },
-                "Std_Group": {
-                    "size": "small",
-                    "text": "New Group",
-                    "icon": "folder"
-                },
-                "Std_LinkActions": {
-                    "size": "small",
-                    "text": "Link Actions...",
-                    "icon": ""
-                },
-                "Std_VarSet": {
-                    "size": "small",
-                    "text": "Variable Set",
-                    "icon": "VarSet"
-                },
-                "Part_Datums": {
-                    "size": "small",
-                    "text": "Datums...",
-                    "icon": ""
-                }
-            },
-            "Enabled": true
-        },
-        "Part Design Dress-Up Features": {
-            "order": [
-                "PartDesign_Fillet",
-                "PartDesign_Chamfer",
-                "PartDesign_Draft",
-                "PartDesign_Thickness",
-                "PartDesign_Defeaturing"
-            ],
-            "commands": {
-                "PartDesign_Fillet": {
-                    "size": "large",
-                    "text": "Fillet",
-                    "icon": "PartDesign_Fillet"
-                },
-                "PartDesign_Chamfer": {
-                    "size": "small",
-                    "text": "Chamfer",
-                    "icon": "PartDesign_Chamfer"
-                },
-                "PartDesign_Draft": {
-                    "size": "small",
-                    "text": "Draft",
-                    "icon": "PartDesign_Draft"
-                },
-                "PartDesign_Thickness": {
-                    "size": "small",
-                    "text": "Thickness",
-                    "icon": "PartDesign_Thickness"
-                },
-                "PartDesign_Defeaturing": {
-                    "size": "small"
-                }
-            },
-            "title": "Dress-Up",
-            "Enabled": true
-        },
-        "Part Design Transformation Features": {
-            "order": [
-                "PartDesign_LinearPattern",
-                "PartDesign_PolarPattern",
-                "PartDesign_Mirrored",
-                "PartDesign_MultiTransform"
-            ],
-            "commands": {
-                "PartDesign_Mirrored": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "PartDesign_Mirrored",
-                    "textEnabled": false
-                },
-                "PartDesign_LinearPattern": {
-                    "size": "large",
-                    "text": "",
-                    "icon": "PartDesign_LinearPattern"
-                },
-                "PartDesign_PolarPattern": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "PartDesign_PolarPattern",
-                    "ButtonSize_small": 24,
-                    "textEnabled": false
-                },
-                "PartDesign_MultiTransform": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "PartDesign_MultiTransform",
-                    "textEnabled": false
-                }
-            },
-            "title": "Patterns",
-            "Enabled": true
-        },
-        "Tools_newPanel": {
-            "commands": {
-                "Std_Measure": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "umf-measurement"
-                },
-                "Std_UnitsCalculator": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "accessories-calculator"
-                },
-                "Std_Properties": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "document-properties"
-                },
-                "Std_BoxElementSelection": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "edit-element-select-box"
-                },
-                "Std_BoxSelection": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "edit-select-box"
-                },
-                "Std_WhatsThis": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "WhatsThis"
-                },
-                "Part_Offset2D": {
-                    "size": ""
-                }
-            },
-            "order": [
-                "Std_Measure",
-                "Std_UnitsCalculator",
-                "Std_Properties",
-                "Std_BoxElementSelection",
-                "Std_WhatsThis",
-                "Std_BoxSelection"
-            ],
-            "Enabled": true
-        },
-        "Individual Views": {
-            "order": [
-                "Std_ViewIsometric",
-                "Std_ViewFront",
-                "Std_ViewTop",
-                "Std_ViewRight",
-                "Std_ViewRear",
-                "Std_ViewBottom",
-                "Std_ViewLeft"
-            ],
-            "commands": {
-                "Std_ViewIsometric": {
-                    "size": "small",
-                    "text": "",
-                    "icon": ""
-                },
-                "Std_ViewFront": {
-                    "size": "small",
-                    "text": "",
-                    "icon": ""
-                },
-                "Std_ViewTop": {
-                    "size": "small",
-                    "text": "",
-                    "icon": ""
-                },
-                "Std_ViewRight": {
-                    "size": "small",
-                    "text": "",
-                    "icon": ""
-                },
-                "Std_ViewRear": {
-                    "size": "small",
-                    "text": "",
-                    "icon": ""
-                },
-                "Std_ViewBottom": {
-                    "size": "small",
-                    "text": "",
-                    "icon": ""
-                },
-                "Std_ViewLeft": {
-                    "size": "small",
-                    "text": "",
-                    "icon": ""
-                }
-            }
-        },
-        "Views - Ribbon_newPanel": {
-            "order": [
-                "Std_ViewGroup",
-                "Std_ViewFitSelection",
-                "Std_ViewZoomOut",
-                "Std_ViewZoomIn",
-                "Std_ViewBoxZoom",
-                "Std_AlignToSelection",
-                "Part_SelectFilter"
-            ],
-            "commands": {
-                "Std_ViewGroup": {
-                    "size": "small",
-                    "text": "",
-                    "icon": ""
-                },
-                "Std_ViewFitSelection": {
-                    "size": "small",
-                    "text": "",
-                    "icon": ""
-                },
-                "Std_ViewZoomOut": {
-                    "size": "small",
-                    "text": "",
-                    "icon": ""
-                },
-                "Std_ViewZoomIn": {
-                    "size": "small",
-                    "text": "",
-                    "icon": ""
-                },
-                "Std_ViewBoxZoom": {
-                    "size": "small",
-                    "text": "",
-                    "icon": ""
-                },
-                "Std_AlignToSelection": {
-                    "size": "small",
-                    "text": "",
-                    "icon": ""
-                },
-                "Part_SelectFilter": {
-                    "size": "small",
-                    "text": "",
-                    "icon": ""
-                }
-            }
-        },
-        "order": [
-            "Structure",
-            "Part Design Helper Features",
-            "Part Design Modeling Features",
-            "Part Design Dress-Up Features",
-            "Part Design Transformation Features",
-            "FusedFilamentDesign",
-            "Tools_newPanel",
-            "Individual Views",
-            "Views - Ribbon_newPanel"
-        ]
-    },
-    "Enabled": true
+        }
+    }
 }
