@@ -1906,24 +1906,16 @@ class ModernMenu(RibbonBar):
                 # Open the file and store its contents in the workbenchdict
                 with open(os.path.join(LayoutDir, filename), "r") as file:
                     try:
-                        if filename != "CustomPanels.json":
-                            loadedDict = {}
-                            loadedDict.update(json.load(file))
-                           
-                            # Get the workbench name and add it to the Workbench dict
-                            WorkBenchName = filename.replace(".json", "")                            
-                            if "workbenches" in loadedDict and WorkBenchName in loadedDict["workbenches"]:
-                                 WorkbenchDict["workbenches"][WorkBenchName] = loadedDict["workbenches"][WorkBenchName]
-                            if "toolbars" in loadedDict:
-                                StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches",WorkBenchName], endEmpty=True)
-                                # Update the workbench dict with the contents of the file
-                                WorkbenchDict["workbenches"][WorkBenchName] = loadedDict
-                            if "customToolbars" in loadedDict:
-                                StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["customToolbars", WorkBenchName], endEmpty=True)
-                                WorkbenchDict["customToolbars"][WorkBenchName].update(loadedDict["customToolbars"][WorkBenchName])
-                        if filename == "CustomPanels.json":
-                            StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["customToolbars"], endEmpty=True)
-                            WorkbenchDict.update(json.load(file))
+                        loadedDict = {}
+                        loadedDict.update(json.load(file))
+                        
+                        # Get the workbench name and add it to the Workbench dict
+                        WorkBenchName = filename.replace(".json", "")                            
+                        if "workbenches" in loadedDict and WorkBenchName in loadedDict["workbenches"]:
+                                WorkbenchDict["workbenches"][WorkBenchName] = loadedDict["workbenches"][WorkBenchName]
+                        if "customToolbars" in loadedDict:
+                            StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["customToolbars", WorkBenchName], endEmpty=True)
+                            WorkbenchDict["customToolbars"][WorkBenchName].update(loadedDict["customToolbars"][WorkBenchName])
                     except:
                         print(f"{traceback.format_exc()}, {filename}")
         
@@ -1979,17 +1971,17 @@ class ModernMenu(RibbonBar):
                     # Write the toolbar order to the workbench dict
                     WorkbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolBarOrder
         
-            # Update the ribbonStructure dict with the temporary WorkbenchDict and custom panels
-            if "workbenches" in self.ribbonStructure and "workbenches" in WorkbenchDict:
-                self.ribbonStructure["workbenches"] = WorkbenchDict["workbenches"]
-            if "customToolbars" in self.ribbonStructure and "customToolbars" in WorkbenchDict:
-                self.ribbonStructure["customToolbars"] = WorkbenchDict["customToolbars"]
-            
-            # get the path for the Json file
-            JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-            # Writing to sample.json
-            with open(JsonFile, "w") as outfile:
-                json.dump(self.ribbonStructure, outfile, indent=4)
+        # Update the ribbonStructure dict with the temporary WorkbenchDict and custom panels
+        if "workbenches" in self.ribbonStructure and "workbenches" in WorkbenchDict:
+            self.ribbonStructure["workbenches"] = WorkbenchDict["workbenches"]
+        if "customToolbars" in self.ribbonStructure and "customToolbars" in WorkbenchDict:
+            self.ribbonStructure["customToolbars"] = WorkbenchDict["customToolbars"]
+        
+        # get the path for the Json file
+        JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+        # Writing to sample.json
+        with open(JsonFile, "w") as outfile:
+            json.dump(self.ribbonStructure, outfile, indent=4)
                     
         # Restore the cursor
         QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
