@@ -1899,6 +1899,21 @@ class ModernMenu(RibbonBar):
 
             # Adjust the icon sizes
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 24)
+        if LayoutName == "AllMedium":
+            # Write the layout to the parameters
+            Parameters_Ribbon.Settings.SetStringSetting("Layout", "AllMedium")
+            # Get the directory with the files for the default layout
+            LayoutDir = os.path.join(ConfigDirectory, "Layouts", "AllMedium")
+            # Set the values for the icon sizes
+            DefaultSize = "medium"
+            FirstCommandSize = "medium"
+            
+            # Disable text for buttons
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", False)
+
+            # Adjust the icon sizes
+            Parameters_Ribbon.Settings.SetBoolSetting("Link_IconSizes", False)
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 30)
 
         # Go through the directory     
         for root, dirs, files in os.walk(LayoutDir):
