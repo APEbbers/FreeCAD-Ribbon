@@ -1,0 +1,379 @@
+{
+    "workbenches": {
+        "OpenSCADWorkbench": {
+            "toolbars": {
+                "File": {
+                    "commands": {
+                        "Std_New": {
+                            "size": "medium",
+                            "text": "New Document",
+                            "icon": "document-new"
+                        },
+                        "Std_Open": {
+                            "size": "medium",
+                            "text": "Open\u2026",
+                            "icon": "document-open"
+                        },
+                        "Std_Save": {
+                            "size": "medium",
+                            "text": "Save",
+                            "icon": "document-save"
+                        }
+                    }
+                },
+                "Edit": {
+                    "commands": {
+                        "Std_Undo": {
+                            "size": "medium",
+                            "text": "Undo",
+                            "icon": "edit-undo"
+                        },
+                        "Std_Redo": {
+                            "size": "medium",
+                            "text": "Redo",
+                            "icon": "edit-redo"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_Refresh": {
+                            "size": "medium",
+                            "text": "Recompute",
+                            "icon": "view-refresh"
+                        }
+                    }
+                },
+                "Clipboard": {
+                    "commands": {
+                        "Std_Cut": {
+                            "size": "medium",
+                            "text": "Cut",
+                            "icon": "edit-cut"
+                        },
+                        "Std_Copy": {
+                            "size": "medium",
+                            "text": "Copy",
+                            "icon": "edit-copy"
+                        },
+                        "Std_Paste": {
+                            "size": "medium",
+                            "text": "Paste",
+                            "icon": "edit-paste"
+                        }
+                    }
+                },
+                "Workbench": {
+                    "commands": {
+                        "Std_Workbench": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Macro": {
+                    "commands": {
+                        "Std_DlgMacroRecord": {
+                            "size": "medium",
+                            "text": "Record Macro",
+                            "icon": "media-record"
+                        },
+                        "Std_DlgMacroExecute": {
+                            "size": "medium",
+                            "text": "Macros",
+                            "icon": "accessories-text-editor"
+                        },
+                        "Std_DlgMacroExecuteDirect": {
+                            "size": "medium",
+                            "text": "Execute Macro",
+                            "icon": "media-playback-start"
+                        }
+                    }
+                },
+                "View": {
+                    "commands": {
+                        "Std_ViewFitAll": {
+                            "size": "medium",
+                            "text": "Fit All",
+                            "icon": "zoom-all"
+                        },
+                        "Std_ViewFitSelection": {
+                            "size": "medium",
+                            "text": "Fit Selection",
+                            "icon": "zoom-selection"
+                        },
+                        "Std_ViewGroup": {
+                            "size": "medium",
+                            "text": "Standard Views...",
+                            "icon": "view-isometric"
+                        },
+                        "Std_AlignToSelection": {
+                            "size": "medium",
+                            "text": "Align to Selection",
+                            "icon": "align-to-selection"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_DrawStyle": {
+                            "size": "medium",
+                            "text": "Draw Style...",
+                            "icon": "DrawStyleAsIs"
+                        },
+                        "Part_SelectFilter": {
+                            "size": "medium",
+                            "text": "Selection Filter...",
+                            "icon": "clear-selection"
+                        },
+                        "Std_Measure": {
+                            "size": "medium",
+                            "text": "Measure",
+                            "icon": "umf-measurement"
+                        },
+                        "Std_MassProperties": {
+                            "size": "medium",
+                            "text": "Mass Properties",
+                            "icon": "MassPropertiesIcon"
+                        }
+                    }
+                },
+                "Individual Views": {
+                    "commands": {
+                        "Std_ViewIsometric": {
+                            "size": "medium",
+                            "text": "&Isometric",
+                            "icon": "view-axonometric"
+                        },
+                        "Std_ViewFront": {
+                            "size": "medium",
+                            "text": "Front",
+                            "icon": "view-front"
+                        },
+                        "Std_ViewTop": {
+                            "size": "medium",
+                            "text": "Top",
+                            "icon": "view-top"
+                        },
+                        "Std_ViewRight": {
+                            "size": "medium",
+                            "text": "Right",
+                            "icon": "view-right"
+                        },
+                        "Std_ViewRear": {
+                            "size": "medium",
+                            "text": "Rear",
+                            "icon": "view-rear"
+                        },
+                        "Std_ViewBottom": {
+                            "size": "medium",
+                            "text": "Bottom",
+                            "icon": "view-bottom"
+                        },
+                        "Std_ViewLeft": {
+                            "size": "medium",
+                            "text": "Left",
+                            "icon": "view-left"
+                        }
+                    }
+                },
+                "Structure": {
+                    "commands": {
+                        "Std_Part": {
+                            "size": "medium",
+                            "text": "New Part",
+                            "icon": "Geofeaturegroup"
+                        },
+                        "Part_Datums": {
+                            "size": "medium",
+                            "text": "Datums...",
+                            "icon": ""
+                        },
+                        "Std_Group": {
+                            "size": "medium",
+                            "text": "New Group",
+                            "icon": "folder"
+                        },
+                        "Std_LinkActions": {
+                            "size": "medium",
+                            "text": "Link Actions...",
+                            "icon": ""
+                        },
+                        "Std_VarSet": {
+                            "size": "medium",
+                            "text": "Variable Set",
+                            "icon": "VarSet"
+                        }
+                    }
+                },
+                "Help": {
+                    "commands": {
+                        "Std_WhatsThis": {
+                            "size": "medium",
+                            "text": "What's This?",
+                            "icon": "WhatsThis"
+                        }
+                    }
+                },
+                "OpenSCAD Tools": {
+                    "commands": {
+                        "OpenSCAD_ReplaceObject": {
+                            "size": "medium",
+                            "text": "Replace Object",
+                            "icon": "OpenSCAD_ReplaceObject"
+                        },
+                        "OpenSCAD_RemoveSubtree": {
+                            "size": "medium",
+                            "text": "Remove Objects and Children",
+                            "icon": "OpenSCAD_RemoveSubtree"
+                        },
+                        "OpenSCAD_ExplodeGroup": {
+                            "size": "medium",
+                            "text": "Explode Group",
+                            "icon": "OpenSCAD_Explode_Group"
+                        },
+                        "OpenSCAD_RefineShapeFeature": {
+                            "size": "medium",
+                            "text": "Refine Shape Feature",
+                            "icon": "OpenSCAD_RefineShapeFeature"
+                        },
+                        "OpenSCAD_IncreaseToleranceFeature": {
+                            "size": "medium",
+                            "text": "Increase Tolerance Feature",
+                            "icon": "OpenSCAD_IncreaseToleranceFeature"
+                        },
+                        "OpenSCAD_AddOpenSCADElement": {
+                            "size": "medium",
+                            "text": "Add OpenSCAD Element",
+                            "icon": "OpenSCAD_AddOpenSCADElement"
+                        },
+                        "OpenSCAD_MeshBoolean": {
+                            "size": "medium",
+                            "text": "Mesh Boolean",
+                            "icon": "OpenSCAD_MeshBooleans"
+                        },
+                        "OpenSCAD_Hull": {
+                            "size": "medium",
+                            "text": "Hull",
+                            "icon": "OpenSCAD_Hull"
+                        },
+                        "OpenSCAD_Minkowski": {
+                            "size": "medium",
+                            "text": "Minkowski Sum",
+                            "icon": "OpenSCAD_Minkowski"
+                        }
+                    }
+                },
+                "Frequently-used Part WB tools": {
+                    "commands": {
+                        "Part_CheckGeometry": {
+                            "size": "medium",
+                            "text": "Check Geometry",
+                            "icon": "Part_CheckGeometry"
+                        },
+                        "Part_Primitives": {
+                            "size": "medium",
+                            "text": "Primitive",
+                            "icon": "Part_Primitives"
+                        },
+                        "Part_Builder": {
+                            "size": "medium",
+                            "text": "Shape Builder",
+                            "icon": "Part_Shapebuilder"
+                        },
+                        "Part_Cut": {
+                            "size": "medium",
+                            "text": "Cut",
+                            "icon": "Part_Cut"
+                        },
+                        "Part_Fuse": {
+                            "size": "medium",
+                            "text": "Union",
+                            "icon": "Part_Fuse"
+                        },
+                        "Part_Common": {
+                            "size": "medium",
+                            "text": "Intersection",
+                            "icon": "Part_Common"
+                        },
+                        "Part_Extrude": {
+                            "size": "medium",
+                            "text": "Extrude",
+                            "icon": "Part_Extrude"
+                        },
+                        "Part_Revolve": {
+                            "size": "medium",
+                            "text": "Revolve",
+                            "icon": "Part_Revolve"
+                        }
+                    }
+                },
+                "Create BOM OpenSCADWorkbench": {
+                    "commands": {
+                        "CreateBOM_Overall": {
+                            "size": "medium",
+                            "text": "Create BOM",
+                            "icon": "BillOfMaterialsWB.svg"
+                        }
+                    }
+                },
+                "PieMenuTB": {
+                    "commands": {
+                        "PieMenu_View": {
+                            "size": "medium",
+                            "text": "View",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
+                        },
+                        "PieMenu_PartDesign": {
+                            "size": "medium",
+                            "text": "PartDesign",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
+                        },
+                        "PieMenu_Sketcher": {
+                            "size": "medium",
+                            "text": "Sketcher",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
+                        }
+                    }
+                },
+                "Tools_newPanel": {
+                    "commands": {
+                        "Std_Measure": {
+                            "size": "medium",
+                            "text": "Measure",
+                            "icon": "umf-measurement"
+                        },
+                        "Std_UnitsCalculator": {
+                            "size": "medium",
+                            "text": "Units Converter",
+                            "icon": "accessories-calculator"
+                        },
+                        "Std_Properties": {
+                            "size": "medium",
+                            "text": "Properties",
+                            "icon": "document-properties"
+                        },
+                        "Std_BoxElementSelection": {
+                            "size": "medium",
+                            "text": "Box Element Selection",
+                            "icon": "edit-element-select-box"
+                        },
+                        "Std_BoxSelection": {
+                            "size": "medium",
+                            "text": "Box Selection",
+                            "icon": "edit-select-box"
+                        },
+                        "Std_WhatsThis": {
+                            "size": "medium",
+                            "text": "What's This?",
+                            "icon": "WhatsThis"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
