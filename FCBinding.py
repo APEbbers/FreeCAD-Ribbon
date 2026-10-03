@@ -1763,6 +1763,10 @@ class ModernMenu(RibbonBar):
                     ExportLayoutsMenu = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Export..."))
                     ExportAll = ExportLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Export layout for all tabs"))
                     ExportAll.triggered.connect(lambda: self.ExportLayout())
+                    #
+                    ExportAll_SeparateFiles = ExportLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Export layout for all tabs in separate files"))
+                    ExportAll_SeparateFiles.triggered.connect(lambda: self.ExportLayout("All_SeparateFiles"))
+                    #
                     ExportSingle= ExportLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Export layout for current tab"))
                     ExportSingle.triggered.connect(lambda: self.ExportLayout(self.tabBar().tabData(self.tabBar().currentIndex())))
 
@@ -8366,11 +8370,12 @@ class ModernMenu(RibbonBar):
         button.setObjectName(commandName)
         return button
     
-    def ExportLayout(self, WorkbenchName = ""):
+    def ExportLayout(self, WorkbenchName = "All"):
         # Update the ribbon structure file before copy
-        if WorkbenchName == "":
+        if WorkbenchName == "All":
             # Writing to ribbonStructure.json
             JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+            
             with open(JsonFile, "w") as outfile:
                 json.dump(self.ribbonStructure, outfile, indent=4)
             
@@ -8382,6 +8387,28 @@ class ModernMenu(RibbonBar):
             )
             if FileName != "":
                 shutil.copy(Parameters.RIBBON_STRUCTURE_JSON, FileName)
+        
+        if WorkbenchName == "All_SeparateFiles":
+            path = StandardFunctions.GetFolder(DefaultPath=Parameters.EXPORT_LOCATION)
+            for Workbench in self.ribbonStructure["workbenches"]:
+                WorkbenchDict = {}
+                IsEmpty = True
+                if "workbenches" in self.ribbonStructure and Workbench in self.ribbonStructure["workbenches"]:
+                    StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches", Workbench])
+                    WorkbenchDict["workbenches"][Workbench] = self.ribbonStructure["workbenches"][Workbench]
+                    IsEmpty = False
+                    
+                if "customToolbars" in self.ribbonStructure and Workbench in self.ribbonStructure["customToolbars"]:
+                    StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["customToolbars", Workbench])
+                    WorkbenchDict["customToolbars"][Workbench] = self.ribbonStructure["customToolbars"][Workbench]
+                    IsEmpty = False
+                    
+                if IsEmpty is False:
+                    FileName = os.path.join(path, Workbench + ".json")
+                    if FileName != "":
+                        with open(FileName, "w") as outfile:
+                            json.dump(WorkbenchDict, outfile, indent=4)
+            
                 
         if WorkbenchName != "":
             WorkbenchDict = {}

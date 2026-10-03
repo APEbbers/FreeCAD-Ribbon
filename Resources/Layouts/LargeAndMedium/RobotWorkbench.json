@@ -1,142 +1,143 @@
 {
-    "toolbars": {
-        "order": [
-            "Structure",
-            "Edit",
-            "Robot",
-            "Workbench",
-            "View",
-            "Tools_newPanel"
-        ],
-        "Robot": {
-            "order": [
-                "Robot_Create",
-                "1_separator_RobotWorkbench",
-                "Robot_CreateTrajectory",
-                "Robot_InsertWaypoint",
-                "Robot_InsertWaypointPreselect",
-                "Robot_Edge2Trac",
-                "Robot_TrajectoryDressUp",
-                "Robot_TrajectoryCompound",
-                "5_separator_RobotWorkbench",
-                "Robot_Simulate",
-                "Robot_RestoreHomePos",
-                "Robot_SetHomePos"
-            ],
-            "commands": {
-                "Robot_Create": {
-                    "size": "large",
-                    "text": "",
-                    "icon": "Robot_CreateRobot"
+    "workbenches": {
+        "RobotWorkbench": {
+            "toolbars": {
+                "order": [
+                    "Structure",
+                    "Edit",
+                    "Robot",
+                    "Workbench",
+                    "View",
+                    "Tools_newPanel"
+                ],
+                "Robot": {
+                    "order": [
+                        "Robot_Create",
+                        "1_separator_RobotWorkbench",
+                        "Robot_CreateTrajectory",
+                        "Robot_InsertWaypoint",
+                        "Robot_InsertWaypointPreselect",
+                        "Robot_Edge2Trac",
+                        "Robot_TrajectoryDressUp",
+                        "Robot_TrajectoryCompound",
+                        "5_separator_RobotWorkbench",
+                        "Robot_Simulate",
+                        "Robot_RestoreHomePos",
+                        "Robot_SetHomePos"
+                    ],
+                    "commands": {
+                        "Robot_Create": {
+                            "size": "large",
+                            "text": "",
+                            "icon": "Robot_CreateRobot"
+                        },
+                        "Robot_InsertWaypoint": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Robot_Edge2Trac": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Robot_TrajectoryDressUp": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Robot_TrajectoryCompound": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Robot_RestoreHomePos": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Robot_CreateTrajectory": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Robot_SetHomePos": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Robot_Simulate": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Robot_InsertWaypointPreselect": {
+                            "size": "medium",
+                            "text": ""
+                        }
+                    }
                 },
-                "Robot_InsertWaypoint": {
-                    "size": "medium",
-                    "text": ""
+                "Structure": {
+                    "commands": {
+                        "Std_Part": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Part_Datums": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_Group": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_LinkActions": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_VarSet": {
+                            "size": "medium",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Part_Datums",
+                        "Std_Part",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ]
                 },
-                "Robot_Edge2Trac": {
-                    "size": "medium",
-                    "text": ""
-                },
-                "Robot_TrajectoryDressUp": {
-                    "size": "medium",
-                    "text": ""
-                },
-                "Robot_TrajectoryCompound": {
-                    "size": "medium",
-                    "text": ""
-                },
-                "Robot_RestoreHomePos": {
-                    "size": "medium",
-                    "text": ""
-                },
-                "Robot_CreateTrajectory": {
-                    "size": "large",
-                    "text": ""
-                },
-                "Robot_SetHomePos": {
-                    "size": "medium",
-                    "text": ""
-                },
-                "Robot_Simulate": {
-                    "size": "large",
-                    "text": ""
-                },
-                "Robot_InsertWaypointPreselect": {
-                    "size": "medium",
-                    "text": ""
+                "Tools_newPanel": {
+                    "commands": {
+                        "Std_Measure": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_UnitsCalculator": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_Properties": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_BoxElementSelection": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_BoxSelection": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_WhatsThis": {
+                            "size": "medium",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Std_Measure",
+                        "Std_UnitsCalculator",
+                        "Std_Properties",
+                        "Std_BoxElementSelection",
+                        "Std_BoxSelection",
+                        "Std_WhatsThis"
+                    ]
                 }
             },
-            "Enabled": true
-        },
-        "Structure": {
-            "commands": {
-                "Std_Part": {
-                    "size": "medium",
-                    "text": ""
-                },
-                "Part_Datums": {
-                    "size": "medium",
-                    "text": ""
-                },
-                "Std_Group": {
-                    "size": "medium",
-                    "text": ""
-                },
-                "Std_LinkActions": {
-                    "size": "medium",
-                    "text": ""
-                },
-                "Std_VarSet": {
-                    "size": "medium",
-                    "text": ""
-                }
-            },
-            "order": [
-                "Part_Datums",
-                "Std_Part",
-                "Std_Group",
-                "Std_LinkActions",
-                "Std_VarSet"
-            ],
-            "Enabled": true
-        },
-        "Tools_newPanel": {
-            "commands": {
-                "Std_Measure": {
-                    "size": "medium",
-                    "text": ""
-                },
-                "Std_UnitsCalculator": {
-                    "size": "medium",
-                    "text": ""
-                },
-                "Std_Properties": {
-                    "size": "medium",
-                    "text": ""
-                },
-                "Std_BoxElementSelection": {
-                    "size": "medium",
-                    "text": ""
-                },
-                "Std_BoxSelection": {
-                    "size": "medium",
-                    "text": ""
-                },
-                "Std_WhatsThis": {
-                    "size": "medium",
-                    "text": ""
-                }
-            },
-            "order": [
-                "Std_Measure",
-                "Std_UnitsCalculator",
-                "Std_Properties",
-                "Std_BoxElementSelection",
-                "Std_BoxSelection",
-                "Std_WhatsThis"
-            ],
             "Enabled": true
         }
-    },
-    "Enabled": true
+    }
 }

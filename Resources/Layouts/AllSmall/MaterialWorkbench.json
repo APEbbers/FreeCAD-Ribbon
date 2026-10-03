@@ -1,29 +1,32 @@
 {
-    "toolbars": {
-        "order": [
-            "Individual views",
-            "Structure",
-            "File",
-            "Edit",
-            "Clipboard",
-            "Workbench",
-            "Macro",
-            "View",
-            "Help",
-            "Materials"
-        ],
-        "Materials": {
-            "order": [
-                "Material_Edit"
-            ],
-            "commands": {
-                "Materials_Edit": {
-                    "size": "small",
-                    "text": "",
-                    "icon": "Materials_Edit"
+    "workbenches": {
+        "MaterialWorkbench": {
+            "toolbars": {
+                "order": [
+                    "Individual views",
+                    "Structure",
+                    "File",
+                    "Edit",
+                    "Clipboard",
+                    "Workbench",
+                    "Macro",
+                    "View",
+                    "Help",
+                    "Materials"
+                ],
+                "Materials": {
+                    "order": [
+                        "Material_Edit"
+                    ],
+                    "commands": {
+                        "Materials_Edit": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "Materials_Edit"
+                        }
+                    }
                 }
             }
         }
-    },
-    "Enabled": false
+    }
 }
