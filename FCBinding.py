@@ -1995,6 +1995,9 @@ class ModernMenu(RibbonBar):
         
         self.DefaultButtonStyle = DefaultSize
         
+        # Make sure that there that the structure is correct
+        self.CheckRibbonStructure()
+        
         # Restore the cursor
         QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         
@@ -7244,6 +7247,7 @@ class ModernMenu(RibbonBar):
         ButtonList = []
 
         # Go through the button list:
+        newOrderList = []
         for i in range(len(allButtons)):
             button = allButtons[i]
             CommandName = button.objectName()
@@ -7358,6 +7362,8 @@ class ModernMenu(RibbonBar):
                         + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";}"
                                             )
+                    if UpdateDict:
+                        newOrderList.append(button.text())
 
                     # there is a bug in pyqtribbon where the separator is placed in the wrong position
                     # despite the correct order of the button list.
@@ -7702,6 +7708,11 @@ class ModernMenu(RibbonBar):
                             + ";}"
                         )
                         btn.setStyleSheet(StyleSheet_Addition_Button)
+                        
+                        if UpdateDict:
+                            StandardFunctions.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "toolbars", panelName, "commands", CommandName, "size"], endEmpty=True)
+                            Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["size"] = buttonSize
+                            newOrderList.append(CommandName)
 
                         # add the button text to the shadowList for checking if buttons are already there.
                         shadowList.append(CommandName)
@@ -7710,6 +7721,9 @@ class ModernMenu(RibbonBar):
                         if Parameters.DEBUG_MODE:
                             print(e.with_traceback(e.__traceback__))
                         continue
+                
+                if UpdateDict:
+                    Dict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = newOrderList
         
         # Set the panel title
         panel.setTitle(self.ReturnPanelTitle(panel, Dict))
