@@ -364,7 +364,11 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
 
         :param title: The title of the panel.
         """
-        # self._panelLayout.removeWidget(self._panels[title])
+        # this makes the function case insensitive
+        for key in self._panels.keys():
+            if key.lower() == title.lower():
+                title = key
+        
         self.removeWidget(self._panels[title])
         self._panels.pop(title)
         
