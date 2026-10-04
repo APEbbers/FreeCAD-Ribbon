@@ -2328,29 +2328,6 @@
                     },
                     "Enabled": true
                 },
-                "Geometrical Analysis Features": {
-                    "commands": {
-                        "FEM_ConstraintPlaneRotation": {
-                            "size": "large",
-                            "text": ""
-                        },
-                        "FEM_ConstraintSectionPrint": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "FEM_ConstraintTransform": {
-                            "size": "small",
-                            "text": ""
-                        }
-                    },
-                    "order": [
-                        "FEM_ConstraintPlaneRotation",
-                        "FEM_ConstraintSectionPrint",
-                        "FEM_ConstraintTransform"
-                    ],
-                    "Enabled": true,
-                    "title": "Geometrical Analyse"
-                },
                 "Tools_newPanel": {
                     "commands": {
                         "Std_Measure": {
