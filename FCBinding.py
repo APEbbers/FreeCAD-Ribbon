@@ -408,7 +408,7 @@ class ModernMenu(RibbonBar):
             toolBar.setAllowedAreas(Qt.ToolBarArea.LeftToolBarArea|Qt.ToolBarArea.RightToolBarArea|Qt.ToolBarArea.BottomToolBarArea)
         
         # Set the default button style
-        if Parameters_Ribbon.Settings.GetStringSetting("Layout") == "LargeAndMedium":
+        if Parameters_Ribbon.Settings.GetStringSetting("Layout") == "LargeAndMedium" or Parameters_Ribbon.Settings.GetStringSetting("Layout") == "AllMedium":
             self.DefaultButtonStyle = "medium"
         else:
             self.DefaultButtonStyle = "small"
@@ -1932,7 +1932,8 @@ class ModernMenu(RibbonBar):
                             StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["customToolbars", WorkBenchName], endEmpty=True)
                             WorkbenchDict["customToolbars"][WorkBenchName].update(loadedDict["customToolbars"][WorkBenchName])
                     except:
-                        print(f"{traceback.format_exc()}, {filename}")
+                        if Parameters.DEBUG_MODE is True: 
+                            print(traceback.format_exc())
         
         # Go through all the installed workbenches
         for WorkBenchName, Workbench in Gui.listWorkbenches().items():
@@ -1992,15 +1993,17 @@ class ModernMenu(RibbonBar):
         if "customToolbars" in self.ribbonStructure and "customToolbars" in WorkbenchDict:
             self.ribbonStructure["customToolbars"] = WorkbenchDict["customToolbars"]
         
+        self.DefaultButtonStyle = DefaultSize
+        
+        # Restore the cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        
         # get the path for the Json file
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
         # Writing to sample.json
         with open(JsonFile, "w") as outfile:
             json.dump(self.ribbonStructure, outfile, indent=4)
-                    
-        # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
-        
+                            
         # Restart FreeCAD
         StandardFunctions.RestartDialog(includeIcons=True)
          
@@ -3909,6 +3912,8 @@ class ModernMenu(RibbonBar):
                                 
                                 self.dropPanelName = ""
                                 self.dropPanel.close()
+                                
+                                self.CheckRibbonStructure(self.workBenchDict, WriteRibbonStructure=False)
                                 return
                 except Exception as e:
                     if Parameters.DEBUG_MODE:
@@ -7743,12 +7748,17 @@ class ModernMenu(RibbonBar):
 
         if panel._actionsLayout.count() > 1:            
             return panel
-        else: 
-            Category.removePanel(panel.objectName())
-            panel.deleteLater()    
-            if Parameters.DEBUG_MODE is True:                  
-                print(f"The panel \"{panel.title()}\" did not have any buttons and is not loaded!")
-            return None
+        else:
+            try:
+                Category.removePanel(panel.objectName())
+                panel.deleteLater()    
+                if Parameters.DEBUG_MODE is True:                  
+                    print(f"The panel \"{panel.title()}\" did not have any buttons and is not loaded!")
+                return None
+            except:
+                if Parameters.DEBUG_MODE is True: 
+                    print(traceback.format_exc())
+                return None
         return None
     
     def CreateNewPanel(self, title):
@@ -8432,7 +8442,7 @@ class ModernMenu(RibbonBar):
                 
             if IsEmpty is False:
                 FileName = StandardFunctions.GetFileDialog(
-                    Filter=f"{WorkbenchName}.json ({WorkbenchName}.json)",
+                    Filter=f"{WorkbenchName}.json (*.json)",
                     parent=self,
                     DefaultPath=Parameters.EXPORT_LOCATION,
                     SaveAs=True,
@@ -8548,44 +8558,53 @@ class ModernMenu(RibbonBar):
                 StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
         return True
     
-    def CheckRibbonStructure(self):
+    def CheckRibbonStructure(self, Dict = ribbonStructure, WorkBenchName = "", WriteRibbonStructure = True):
         workbenchDict = {}
-        # Check if there are workbenches and toolbars in the ribbon structure
-        if "workbenches" in self.ribbonStructure:
-            for WorkBenchName in self.ribbonStructure["workbenches"]:
-                if "toolbars" in self.ribbonStructure["workbenches"][WorkBenchName]:
-                    for ToolBar in self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"]:
-                        if ToolBar == "order":
-                            orderList = []
-                            for entry in self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"]["order"]:
-                                if entry is not None and entry != "null" and entry != "":
-                                    orderList.append(entry)
-                            StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", "order"])
-                            workbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = orderList
-                        else:
-                            for item in self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][ToolBar].keys():
-                                if item == "order":
-                                    orderList = []
-                                    for entry in self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][ToolBar]["order"]:
-                                        if entry is not None and entry != "null" and entry != "" and entry != "qt_toolbutton_menubutton":
-                                            orderList.append(entry)                                            
-                                    StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "order"])
-                                    workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["order"] = orderList
-                                if item == "commands":
-                                    for command in self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"].keys():
-                                        if command is not None and command != "null" and command != "" and command != "qt_toolbutton_menubutton" and "separator" not in command:
-                                            StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "commands", command])
-                                            workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command] = self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command]
-                                if item == "title":
-                                    workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"] = self.ribbonStructure["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"]
         
-            if "workbenches" in workbenchDict:
-                self.ribbonStructure["workbenches"] = workbenchDict["workbenches"]
-                
-                JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-                with open(JsonFile, "w") as outfile:
-                    json.dump(self.ribbonStructure, outfile, indent=4)
-                                            
+        def UpdateDict(Dict, WorkBenchName):
+            if "toolbars" in Dict["workbenches"][WorkBenchName]:
+                for ToolBar in Dict["workbenches"][WorkBenchName]["toolbars"]:
+                    if ToolBar == "order":
+                        orderList = []
+                        for entry in Dict["workbenches"][WorkBenchName]["toolbars"]["order"]:
+                            if entry is not None and entry != "null" and entry != "":
+                                orderList.append(entry)
+                        StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", "order"])
+                        workbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = orderList
+                    else:
+                        for item in Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar].keys():
+                            if item == "order":
+                                orderList = []
+                                for entry in Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["order"]:
+                                    if entry is not None and entry != "null" and entry != "" and entry != "qt_toolbutton_menubutton":
+                                        orderList.append(entry)                                            
+                                StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "order"])
+                                workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["order"] = orderList
+                            if item == "commands":
+                                for command in Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"].keys():
+                                    if command is not None and command != "null" and command != "" and command != "qt_toolbutton_menubutton" and "separator" not in command:
+                                        StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "commands", command])
+                                        workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command]
+                            if item == "title":
+                                workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"]
+        
+        # Check if there are workbenches and toolbars in the ribbon structure
+        if "workbenches" in Dict and WorkBenchName == "":
+            for WorkBenchName in Dict["workbenches"]:
+                UpdateDict(Dict, WorkBenchName)           
+        
+        if "workbenches" in workbenchDict and WriteRibbonStructure is True:
+            Dict["workbenches"] = workbenchDict["workbenches"]
+            
+            JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+            with open(JsonFile, "w") as outfile:
+                json.dump(Dict, outfile, indent=4)
+        
+        if "workbenches" in Dict and WorkBenchName != "":
+            UpdateDict(Dict, WorkBenchName)
+
+        return Dict
+                                                    
 
     def ConvertRibbonStructure(self, checkFCVersion = True, RestartFreeCAD = False):
         # Define a result parameter

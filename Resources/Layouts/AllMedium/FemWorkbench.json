@@ -526,11 +526,16 @@
                 },
                 "Loads & Constraints_custom": {
                     "order": [
-                        "FEM_ConstraintFixed",
+                        "FEM_ConstraintPlaneRotation",
+                        "FEM_ConstraintTransform",
+                        "FEM_ConstraintSectionPrint",
+                        "3_separator_FemWorkbench",
                         "FEM_ConstraintRigidBody",
                         "FEM_ConstraintDisplacement",
+                        "FEM_ConstraintFixed",
                         "FEM_ConstraintContact",
                         "FEM_ConstraintTie",
+                        "FEM_ConstraintSpring",
                         "separator_FemWorkbench_6",
                         "FEM_ConstraintForce",
                         "FEM_ConstraintPressure",
@@ -544,7 +549,9 @@
                         "FEM_ConstraintInitialTemperature",
                         "FEM_ConstraintHeatflux",
                         "FEM_ConstraintTemperature",
-                        "FEM_ConstraintBodyHeatSource"
+                        "FEM_ConstraintBodyHeatSource",
+                        "23_separator_FemWorkbench",
+                        "qt_toolbutton_menubutton"
                     ],
                     "commands": {
                         "FEM_CompEmConstraints": {
@@ -593,7 +600,7 @@
                             "icon": "FEM_ConstraintTie"
                         },
                         "FEM_ConstraintSpring": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": "FEM_ConstraintSpring"
                         },
@@ -636,6 +643,18 @@
                             "size": "medium",
                             "text": "Body Heat Source",
                             "icon": "FEM_ConstraintBodyHeatSource"
+                        },
+                        "FEM_ConstraintPlaneRotation": {
+                            "size": "medium"
+                        },
+                        "FEM_ConstraintTransform": {
+                            "size": "medium"
+                        },
+                        "FEM_ConstraintSectionPrint": {
+                            "size": "medium"
+                        },
+                        "qt_toolbutton_menubutton": {
+                            "size": "medium"
                         }
                     }
                 },
@@ -1066,7 +1085,11 @@
                     "FEM_ConstraintHeatflux": "Thermal boundary conditions and loads",
                     "FEM_ConstraintTemperature": "Thermal boundary conditions and loads",
                     "FEM_ConstraintBodyHeatSource": "Thermal boundary conditions and loads",
-                    "FEM_CompEmConstraints": "Electromagnetic Boundary Conditions"
+                    "FEM_CompEmConstraints": "Electromagnetic Boundary Conditions",
+                    "FEM_ConstraintSpring": "Mechanical Boundary Conditions and Loads",
+                    "FEM_ConstraintPlaneRotation": "Geometrical Analysis Features",
+                    "FEM_ConstraintSectionPrint": "Geometrical Analysis Features",
+                    "FEM_ConstraintTransform": "Geometrical Analysis Features"
                 }
             }
         }

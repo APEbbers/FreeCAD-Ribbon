@@ -207,7 +207,14 @@
                             "text": "Variable Set",
                             "icon": "VarSet"
                         }
-                    }
+                    },
+                    "order": [
+                        "Std_Part",
+                        "Part_Datums",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ]
                 },
                 "Help": {
                     "commands": {
@@ -310,7 +317,31 @@
                             "text": "Make Forming in Wall",
                             "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_Forming.svg"
                         }
-                    }
+                    },
+                    "order": [
+                        "SheetMetal_NewSketch",
+                        "SheetMetal_BaseShape",
+                        "SheetMetal_AddBase",
+                        "SheetMetal_FromSolid",
+                        "4_separator_SMWorkbench",
+                        "SheetMetal_AddBend",
+                        "SheetMetal_AddWall",
+                        "SheetMetal_AddHem",
+                        "SheetMetal_Extrude",
+                        "SheetMetal_ExtendBySketch",
+                        "9_separator_SMWorkbench",
+                        "SheetMetal_AddFoldWall",
+                        "SheetMetal_Unfold",
+                        "SheetMetal_UnfoldUpdate",
+                        "SheetMetal_Forming",
+                        "13_separator_SMWorkbench",
+                        "SheetMetal_AddCornerRelief",
+                        "SheetMetal_AddRelief",
+                        "SheetMetal_AddJunction",
+                        "20_separator_SMWorkbench",
+                        "SheetMetal_AddCutout",
+                        "SheetMetal_SketchOnSheet"
+                    ]
                 },
                 "Create BOM SMWorkbench": {
                     "commands": {
@@ -372,7 +403,15 @@
                             "text": "What's This?",
                             "icon": "WhatsThis"
                         }
-                    }
+                    },
+                    "order": [
+                        "Std_Measure",
+                        "Std_UnitsCalculator",
+                        "Std_Properties",
+                        "Std_BoxElementSelection",
+                        "Std_BoxSelection",
+                        "Std_WhatsThis"
+                    ]
                 }
             },
             "Enabled": true

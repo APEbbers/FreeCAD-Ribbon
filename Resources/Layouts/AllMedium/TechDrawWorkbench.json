@@ -90,7 +90,8 @@
                             "text": "Spreadsheet View",
                             "icon": "actions/TechDraw_SpreadsheetView"
                         }
-                    }
+                    },
+                    "Enabled": false
                 },
                 "TechDraw Stacking": {
                     "order": [
@@ -102,7 +103,8 @@
                             "text": "View Stacking Order...",
                             "icon": ""
                         }
-                    }
+                    },
+                    "Enabled": false
                 },
                 "TechDraw Dimensions": {
                     "order": [
@@ -373,6 +375,7 @@
                 "order": [
                     "Structure",
                     "TechDraw Pages",
+                    "Views_custom",
                     "TechDraw Views",
                     "TechDraw Stacking",
                     "Dimensions_custom",
@@ -381,8 +384,7 @@
                     "TechDraw File Access",
                     "TechDraw Decoration",
                     "TechDraw Annotation",
-                    "Tools_newPanel",
-                    "TechDraw Extend Dimensions"
+                    "Tools_newPanel"
                 ],
                 "Individual views": {
                     "order": [
@@ -538,7 +540,7 @@
                             "icon": ""
                         },
                         "TechDraw_ExtensionRemovePrefixChar": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": "",
                             "IsExtra": true
@@ -547,15 +549,17 @@
                             "size": "medium",
                             "text": "Dimension...",
                             "icon": ""
+                        },
+                        "qt_toolbutton_menubutton": {
+                            "size": "medium"
                         }
                     },
                     "order": [
                         "TechDraw_Balloon",
                         "TechDraw_AxoLengthDimension",
                         "TechDraw_DimensionRepair",
-                        "TechDraw_ExtensionIncreaseDecreaseGroup",
-                        "TechDraw_ExtensionInsertPrefixGroup",
-                        "TechDraw_ExtensionRemovePrefixChar"
+                        "TechDraw_ExtensionRemovePrefixChar",
+                        "qt_toolbutton_menubutton"
                     ]
                 },
                 "File": {
@@ -787,6 +791,19 @@
                     "TechDraw_DimensionRepair": "TechDraw Dimensions",
                     "TechDraw_ExtensionInsertPrefixGroup": "TechDraw Extend Dimensions",
                     "TechDraw_ExtensionIncreaseDecreaseGroup": "TechDraw Extend Dimensions"
+                }
+            },
+            "Views_custom": {
+                "commands": {
+                    "TechDraw_View": "TechDraw Views",
+                    "TechDraw_BrokenView": "TechDraw Views",
+                    "TechDraw_ActiveView": "TechDraw Views",
+                    "TechDraw_SectionGroup": "TechDraw Views",
+                    "TechDraw_DetailView": "TechDraw Views",
+                    "TechDraw_DraftView": "TechDraw Views",
+                    "TechDraw_SpreadsheetView": "TechDraw Views",
+                    "TechDraw_ClipGroup": "TechDraw Views",
+                    "TechDraw_StackGroup": "TechDraw Stacking"
                 }
             }
         }
