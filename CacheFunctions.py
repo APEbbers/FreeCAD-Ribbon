@@ -227,14 +227,20 @@ def CreateCache(RestartFreeCAD=False):
                 # Check if the ribbonstructure needs updated
                 if WorkBench[0] in ribbonStructure["workbenches"]:
                     for ToolbarName, commands in ribbonStructure["workbenches"][WorkBench[0]]["toolbars"].items():
-                        if Toolbar.lower() == ToolbarName.lower() and Toolbar != ToolbarName:
+                        if Toolbar.lower() == ToolbarName.lower():
                             StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBench[0], "toolbars", Toolbar])
                             tempDict["workbenches"][WorkBench[0]]["toolbars"][Toolbar] = commands
+                        if ToolbarName == "order":
+                                tempList = []
+                                for item in tempDict["workbenches"][WorkBench[0]]["toolbars"]["order"]:
+                                    if item.lower() == Toolbar.lower():
+                                        tempList.append(Toolbar)
+                                tempDict["workbenches"][WorkBench[0]]["toolbars"]["order"] = tempList
                    
                 if WorkBench[0] in ribbonStructure["customToolbars"]:
                     for customToolBar in ribbonStructure["customToolbars"][WorkBench[0]].keys():
                         for command, parent in ribbonStructure["customToolbars"][WorkBench[0]][customToolBar]["commands"].items():
-                            if parent.lower() == Toolbar.lower() and parent != Toolbar:
+                            if parent.lower() == Toolbar.lower():
                                 StandardFunctions.add_keys_nested_dict(tempDict, ["customToolbars", WorkBench[0], customToolBar, "commands", command])
                                 tempDict["customToolbars"][WorkBench[0]][customToolBar]["commands"][command] = Toolbar
                                 
