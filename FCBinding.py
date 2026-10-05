@@ -3433,53 +3433,8 @@ class ModernMenu(RibbonBar):
         if tabName is not None and tabName != "" and tabName != "test":
             # activate selected workbench
             tabName = tabName.replace("&", "")
-            if self.wbNameMapping[tabName] is not None:   
-                WorkBenchName = self.wbNameMapping[tabName]
-                Gui.activateWorkbench(WorkBenchName)
-              
-                Dict = self.ribbonStructure
-                if self.CustomizeEnabled:
-                    Dict = self.workBenchDict
-                tempDict = {}
-                wbToolbars = Gui.getWorkbench(WorkBenchName).listToolbars()
-                # Go through the toolbars
-                for Toolbar in wbToolbars:
-                    ToolBarTtranslated = StandardFunctions.TranslationsMapping(
-                        WorkBenchName, Toolbar
-                    )
-                    
-                    # Check if the Dict needs updated
-                    if WorkBenchName in Dict["workbenches"]:
-                        for ToolbarName, commands in Dict["workbenches"][WorkBenchName]["toolbars"].items():
-                            if Toolbar.lower() == ToolbarName.lower():
-                                StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", Toolbar])
-                                tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands
-                            if ToolbarName == "order":
-                                tempList = []
-                                StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", "order"])
-                                for item in tempDict["workbenches"][WorkBenchName]["toolbars"]["order"]:
-                                    if item.lower() == Toolbar.lower():
-                                        tempList.append(Toolbar)
-                                tempDict["workbenches"][WorkBenchName]["toolbars"]["order"] = tempList
-                            
-                    
-                    if WorkBenchName in Dict["customToolbars"]:
-                        for customToolBar in Dict["customToolbars"][WorkBenchName].keys():
-                            for command, parent in Dict["customToolbars"][WorkBenchName][customToolBar]["commands"].items():
-                                if parent.lower() == Toolbar.lower():
-                                    StandardFunctions.add_keys_nested_dict(tempDict, ["customToolbars", WorkBenchName, customToolBar, "commands", command])
-                                    tempDict["customToolbars"][WorkBenchName][customToolBar]["commands"][command] = Toolbar                                
-                                    
-                if "workbenches" in tempDict and WorkBenchName in tempDict["workbenches"]:
-                    Dict["workbenches"][WorkBenchName] = tempDict["workbenches"][WorkBenchName]
-                if "customToolbars" in tempDict and WorkBenchName in tempDict["customToolbars"]:
-                    Dict["customToolbars"][WorkBenchName] = tempDict["customToolbars"][WorkBenchName]    
-                    
-                if not self.CustomizeEnabled:
-                    # Writing to ribbonStructure.json
-                    JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-                    with open(JsonFile, "w") as outfile:
-                        json.dump(Dict, outfile, indent=4)
+            if self.wbNameMapping[tabName] is not None:                
+                Gui.activateWorkbench(self.wbNameMapping[tabName])
 
             if tabActivated is True:
                 self.onWbActivated()
