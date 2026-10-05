@@ -4224,16 +4224,24 @@ class ModernMenu(RibbonBar):
                     # Check if the Dict needs updated
                     if WorkBenchName in Dict["workbenches"]:
                         for ToolbarName, commands in Dict["workbenches"][WorkBenchName]["toolbars"].items():
-                            if Toolbar.lower() == ToolbarName.lower() and Toolbar != ToolbarName:
+                            if Toolbar.lower() == ToolbarName.lower():
                                 StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", Toolbar])
                                 tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands
+                            if ToolbarName == "order":
+                                tempList = []
+                                StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", "order"])
+                                for item in tempDict["workbenches"][WorkBenchName]["toolbars"]["order"]:
+                                    if item.lower() == Toolbar.lower():
+                                        tempList.append(Toolbar)
+                                tempDict["workbenches"][WorkBenchName]["toolbars"]["order"] = tempList
+                            
                     
                     if WorkBenchName in Dict["customToolbars"]:
                         for customToolBar in Dict["customToolbars"][WorkBenchName].keys():
                             for command, parent in Dict["customToolbars"][WorkBenchName][customToolBar]["commands"].items():
-                                if parent.lower() == Toolbar.lower() and parent != Toolbar:
+                                if parent.lower() == Toolbar.lower():
                                     StandardFunctions.add_keys_nested_dict(tempDict, ["customToolbars", WorkBenchName, customToolBar, "commands", command])
-                                    tempDict["customToolbars"][WorkBenchName][customToolBar]["commands"][command] = Toolbar
+                                    tempDict["customToolbars"][WorkBenchName][customToolBar]["commands"][command] = Toolbar                                
                                     
                 if "workbenches" in tempDict and WorkBenchName in tempDict["workbenches"]:
                     Dict["workbenches"][WorkBenchName] = tempDict["workbenches"][WorkBenchName]
