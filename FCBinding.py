@@ -3456,6 +3456,7 @@ class ModernMenu(RibbonBar):
                                 tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands
                             if ToolbarName == "order":
                                 tempList = []
+                                StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", "order"])
                                 for item in tempDict["workbenches"][WorkBenchName]["toolbars"]["order"]:
                                     if item.lower() == Toolbar.lower():
                                         tempList.append(Toolbar)

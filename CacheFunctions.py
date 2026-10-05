@@ -232,6 +232,7 @@ def CreateCache(RestartFreeCAD=False):
                             tempDict["workbenches"][WorkBench[0]]["toolbars"][Toolbar] = commands
                         if ToolbarName == "order":
                                 tempList = []
+                                StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBench[0], "toolbars", "order"])
                                 for item in tempDict["workbenches"][WorkBench[0]]["toolbars"]["order"]:
                                     if item.lower() == Toolbar.lower():
                                         tempList.append(Toolbar)
