@@ -55,7 +55,6 @@ import Serialize_Ribbon
 import webbrowser
 import StyleMapping_Ribbon
 import requests
-import FCBinding
 
 # Get the resources
 ConfigDirectory = Parameters.CONFIG_DIR
@@ -83,8 +82,6 @@ IsChanged = False
 # Set the data file version. Triggeres an question if an update is needed
 DataFileVersion = "1.5"
 
-ribbonStructure = {}
-
 # Define list of the workbenches, toolbars and commands on class level
 List_Workbenches = []
 StringList_Toolbars = []
@@ -111,11 +108,6 @@ List_WorkBenchIcons = []
 newDDBList = []
 
 def CreateCache(RestartFreeCAD=False):
-    # Get the main window and the ribbon
-    mw = Gui.getMainWindow()
-    RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-    ribbonStructure = RibbonBar.ribbonStructure
-    
     # Create a progressbar
     progressBar = QProgressBar(minimum=0, value=0)
     progressBar.setWindowFlags(
@@ -199,9 +191,6 @@ def CreateCache(RestartFreeCAD=False):
     # --- Toolbars ----------------------------------------------------------------------------------------------
     #
     # Go through the list of workbenches
-    #
-    tempDict = {}
-    #
     progressBar.setFormat(translate("FreeCAD Ribbon", "Create toolbar list"))
     progressBar.setValue(progressBar.value() + 1)
     #
@@ -223,38 +212,7 @@ def CreateCache(RestartFreeCAD=False):
                 StringList_Toolbars.append(
                     [Toolbar, WorkBench[2], WorkBench[0], ToolBarTtranslated]
                 )
-                
-                # Check if the ribbonstructure needs updated
-                if WorkBench[0] in ribbonStructure["workbenches"]:
-                    for ToolbarName, commands in ribbonStructure["workbenches"][WorkBench[0]]["toolbars"].items():
-                        if Toolbar.lower() == ToolbarName.lower():
-                            StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBench[0], "toolbars", Toolbar])
-                            tempDict["workbenches"][WorkBench[0]]["toolbars"][Toolbar] = commands
-                        if ToolbarName == "order":
-                                tempList = []
-                                StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBench[0], "toolbars", "order"])
-                                for item in tempDict["workbenches"][WorkBench[0]]["toolbars"]["order"]:
-                                    if item.lower() == Toolbar.lower():
-                                        tempList.append(Toolbar)
-                                tempDict["workbenches"][WorkBench[0]]["toolbars"]["order"] = tempList
-                   
-                if WorkBench[0] in ribbonStructure["customToolbars"]:
-                    for customToolBar in ribbonStructure["customToolbars"][WorkBench[0]].keys():
-                        for command, parent in ribbonStructure["customToolbars"][WorkBench[0]][customToolBar]["commands"].items():
-                            if parent.lower() == Toolbar.lower():
-                                StandardFunctions.add_keys_nested_dict(tempDict, ["customToolbars", WorkBench[0], customToolBar, "commands", command])
-                                tempDict["customToolbars"][WorkBench[0]][customToolBar]["commands"][command] = Toolbar
-                                
-            if "workbenches" in tempDict and WorkBench[0] in tempDict["workbenches"]:
-                ribbonStructure["workbenches"][WorkBench[0]] = tempDict["workbenches"][WorkBench[0]]
-            if "customToolbars" in tempDict and WorkBench[0] in tempDict["customToolbars"]:
-                ribbonStructure["customToolbars"][WorkBench[0]] = tempDict["customToolbars"][WorkBench[0]]
-    
-    # Writing to ribbonStructure.json
-    JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-    with open(JsonFile, "w") as outfile:
-        json.dump(ribbonStructure, outfile, indent=4)
-    
+
     # Add the custom toolbars
     CustomToolbars = List_ReturnCustomToolbars()
     for Customtoolbar in CustomToolbars:
@@ -841,7 +799,7 @@ def DownLoadIcons():
     url = 'https://raw.githubusercontent.com/FreeCAD/FreeCAD/main/src/Gui/Icons/3dx_pivot.png'
     
     
-    response = requests.get(url, timeout=10)
+    response = requests.get(url)
     response.raise_for_status() # proper handle HTTP errors
 
     file_content = response.text
