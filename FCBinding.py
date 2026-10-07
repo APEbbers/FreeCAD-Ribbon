@@ -3850,16 +3850,7 @@ class ModernMenu(RibbonBar):
                             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                             
                             # Get the order list, if there isn't one, create it
-                            StandardFunctions.add_keys_nested_dict(
-                                self.workBenchDict,
-                                [
-                                    "workbenches",
-                                    workbenchName,
-                                    "toolbars",
-                                    panel.objectName(),
-                                ],
-                                endEmpty=True,
-                            )
+                            StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), ], endEmpty=True)
                             OrderList = []            
                             if panel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
                                 if "order" in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
@@ -3879,15 +3870,6 @@ class ModernMenu(RibbonBar):
                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["text"] = MenuText
                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["icon"] = ""
                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["IsExtra"] = True
-                            
-                            # # if this is a newPanel, update the newpanel dict as well
-                            # if panel.objectName().endswith("_newPanel"):
-                            #     if workbenchName not in self.workBenchDict["newPanels"]:
-                            #         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName], endEmpty=True)
-                            #     if panel.objectName() not in self.workBenchDict["newPanels"][workbenchName]:
-                            #         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName, panel.objectName()], endEmpty=True)
-                            #         self.workBenchDict["newPanels"][workbenchName][panel.objectName()] = []
-                            #     self.workBenchDict["newPanels"][workbenchName][panel.objectName()].append([ExtraCommand, ExtraCommand_WB])
                             
                             # Get the name from  current workbench
                             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
@@ -3919,6 +3901,7 @@ class ModernMenu(RibbonBar):
                                 self.dropPanelName = ""
                                 self.dropPanel.close()
                                 
+                                # If toolbars are renamed (Char cases only), update the dict
                                 self.CleanRibbonStructure(self.workBenchDict, WriteRibbonStructure=False)
                                 return
                 except Exception as e:
@@ -7072,19 +7055,6 @@ class ModernMenu(RibbonBar):
             customList = self.List_AddCustomToolBarToWorkbench(workbenchName, panelName, Dict = Dict["customToolbars"])
             allButtons.extend(customList)
 
-        # # Add newPanels
-        # if panelName.endswith("_newPanel"):
-        #     if workbenchName in Dict["workbenches"]:
-        #         if panelName in Dict["workbenches"][workbenchName]["toolbars"]:
-        #             if "commands" in Dict["workbenches"][workbenchName]["toolbars"][panelName]:
-        #                 for key in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():
-        #                     if key != "order" and key is not None and key != "":
-        #                         button = self.CreateButtonFromCommand(key, ActivateWorkBench=ActivateWorkbench, Dict=Dict)
-        #                         if button is not None:
-        #                             # button.setProperty("CommandName", key)
-        #                             button.setObjectName(key)                                    
-        #                             # button.setToolTip(key)
-        #                             allButtons.append(button)
         # Add newPanels
         if panelName.endswith("_newPanel"):
             if workbenchName in Dict["newPanels"]:
@@ -7139,9 +7109,7 @@ class ModernMenu(RibbonBar):
                                             if ExtraCommand is not None:
                                                 ExtraCommand.setObjectName(Command)
                                                 allButtons.append(ExtraCommand)
-        
-        # print(f"panel {title}: {allButtons}")
-            
+
         # add separators to the command list.
         if workbenchName in Dict["workbenches"]:
             if (
@@ -7150,38 +7118,14 @@ class ModernMenu(RibbonBar):
                 and panelName
                 in Dict["workbenches"][workbenchName]["toolbars"]
             ):
-                for orderedToolbar in Dict["workbenches"][
-                    workbenchName
-                ]["toolbars"]:
+                for orderedToolbar in Dict["workbenches"][workbenchName]["toolbars"]:
                     if orderedToolbar.lower() == panelName.lower():
-                        if (
-                            "order"
-                            in Dict["workbenches"][workbenchName][
-                                "toolbars"
-                            ][panelName]
-                        ) and type(Dict["workbenches"][
-                                        workbenchName
-                                    ]["toolbars"][panelName]["order"]) is list:
-                            for j in range(
-                                len(
-                                    Dict["workbenches"][
-                                        workbenchName
-                                    ]["toolbars"][panelName]["order"]
-                                )
-                            ):
+                        if ("order" in Dict["workbenches"][workbenchName]["toolbars"][panelName]) and type(Dict["workbenches"][workbenchName]["toolbars"][panelName]["order"]) is list:
+                            for j in range(len(Dict["workbenches"][workbenchName]["toolbars"][panelName]["order"])):
                                 try:
-                                    if (
-                                        "separator"
-                                        in Dict["workbenches"][
-                                            workbenchName
-                                        ]["toolbars"][panelName]["order"][j].lower()
-                                    ):
+                                    if ("separator" in Dict["workbenches"][workbenchName]["toolbars"][panelName]["order"][j].lower()):
                                         separator = QToolButton()
-                                        separator.setText(
-                                            Dict["workbenches"][
-                                                workbenchName
-                                            ]["toolbars"][panelName]["order"][j]
-                                        )
+                                        separator.setText(Dict["workbenches"][workbenchName]["toolbars"][panelName]["order"][j])
                                         separator.setObjectName(separator.text())
                                         allButtons.insert(j, separator)
                                 except Exception:
@@ -8567,6 +8511,7 @@ class ModernMenu(RibbonBar):
                         tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands
                         tempList.append(Toolbar)
                     if ToolbarName.endswith("_newPanel") or ToolbarName.endswith("_custom"):
+                        StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", Toolbar])
                         tempDict["workbenches"][WorkBenchName]["toolbars"][ToolbarName] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolbarName]
             
             if WorkBenchName in Dict["customToolbars"]:
