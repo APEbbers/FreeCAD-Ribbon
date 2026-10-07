@@ -2579,6 +2579,9 @@ class ModernMenu(RibbonBar):
                 else:
                     # Make sure to set the tab visible
                     self.tabBar().setTabVisible(i, True)
+                    
+                
+        self.UpdateToolBar_Keys(workbenchName, self.workBenchDict)
         
         # update the ribbonstructure before writing it to disk
         if "quickAccessCommands" in self.workBenchDict:
@@ -4398,8 +4401,10 @@ class ModernMenu(RibbonBar):
             # if self.wbNameMapping[tabName] is not None and self.SuspendBuildPanels is False:                
             if self.wbNameMapping[tabName] is not None:   
                 WorkBenchName = self.wbNameMapping[tabName]
-                self.UpdateToolBar_Keys(WorkBenchName)
-                
+                Dict = self.ribbonStructure
+                if self.CustomizeEnabled:
+                    Dict = self.workBenchDict
+                self.UpdateToolBar_Keys(WorkBenchName, Dict)               
 
             if tabActivated is True:
                 self.onWbActivated()
@@ -8127,20 +8132,20 @@ class ModernMenu(RibbonBar):
             if command != "" and command is not None and command in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
                 self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = ""              
                 
-                # if it is a button from a newPanel, remove it from the newPanel list
-                if panelName.endswith("_newPanel"):
-                    commandList = []
-                    if panelName in self.workBenchDict["newPanels"][workbenchName]:
-                        commandList = self.workBenchDict["newPanels"][workbenchName][panelName]
-                    elif panelName in self.workBenchDict["newPanels"]["Global"]:
-                        commandList = self.workBenchDict["newPanels"]["Global"][panelName]
-                    elif panelName in self.workBenchDict["newPanels"]["Standard"]:
-                        commandList = self.workBenchDict["newPanels"]["Standard"][panelName]
-                    for item in commandList:
-                        if item[0] == command:
-                            commandList.remove(item)
-                            self.workBenchDict["newPanels"][workbenchName][panelName] = commandList
-                            break     
+                # # if it is a button from a newPanel, remove it from the newPanel list
+                # if panelName.endswith("_newPanel"):
+                #     commandList = []
+                #     if panelName in self.workBenchDict["newPanels"][workbenchName]:
+                #         commandList = self.workBenchDict["newPanels"][workbenchName][panelName]
+                #     elif panelName in self.workBenchDict["newPanels"]["Global"]:
+                #         commandList = self.workBenchDict["newPanels"]["Global"][panelName]
+                #     elif panelName in self.workBenchDict["newPanels"]["Standard"]:
+                #         commandList = self.workBenchDict["newPanels"]["Standard"][panelName]
+                #     for item in commandList:
+                #         if item[0] == command:
+                #             commandList.remove(item)
+                #             self.workBenchDict["newPanels"][workbenchName][panelName] = commandList
+                #             break     
 
                 # Remove also from the ribbon structure if it is an extra (dragged) button
                 if "IsExtra" in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]:
@@ -8546,12 +8551,9 @@ class ModernMenu(RibbonBar):
                 StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
         return True
     
-    def UpdateToolBar_Keys(self, WorkBenchName):
+    def UpdateToolBar_Keys(self, WorkBenchName, Dict = ribbonStructure):
         Gui.activateWorkbench(WorkBenchName)
               
-        Dict = self.ribbonStructure
-        if self.CustomizeEnabled:
-            Dict = self.workBenchDict
         tempDict = {}
         tempList = []
         wbToolbars = Gui.getWorkbench(WorkBenchName).getToolbarItems()
@@ -8564,8 +8566,8 @@ class ModernMenu(RibbonBar):
                         StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", Toolbar])
                         tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands
                         tempList.append(Toolbar)
-                    if ToolbarName.endswith("newPanels") or ToolbarName.endswith("_custom"):
-                        tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = Dict["workbenches"][WorkBenchName]["toolbars"][Toolbar]
+                    if ToolbarName.endswith("_newPanel") or ToolbarName.endswith("_custom"):
+                        tempDict["workbenches"][WorkBenchName]["toolbars"][ToolbarName] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolbarName]
             
             if WorkBenchName in Dict["customToolbars"]:
                 for customToolBar in Dict["customToolbars"][WorkBenchName].keys():
