@@ -452,7 +452,7 @@ class ModernMenu(RibbonBar):
         with open(Parameters.RIBBON_STRUCTURE_JSON, "r") as file:
             self.ribbonStructure.update(json.load(file))
         # Check the ribbon structure and correct it if needed
-        self.CheckRibbonStructure()
+        self.CleanRibbonStructure()
         
         # Read a lighter version of the datafile used with the dialogs for icons
         DataFile2 = os.path.join(ConfigDirectory, "RibbonDataFile2.dat")
@@ -1996,7 +1996,7 @@ class ModernMenu(RibbonBar):
         self.DefaultButtonStyle = DefaultSize
         
         # Make sure that there that the structure is correct
-        self.CheckRibbonStructure()
+        self.CleanRibbonStructure()
         
         # Restore the cursor
         QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
@@ -2732,7 +2732,7 @@ class ModernMenu(RibbonBar):
                 objPanel.close()
                 continue
             # If the panel is not in the ribbon structure, remove it
-            if objPanel.objectName() not in Dict["workbenches"][workbenchName]["toolbars"] and objPanel.objectName() not in Dict["customToolbars"][workbenchName]:
+            if objPanel.objectName() not in Dict["workbenches"][workbenchName]["toolbars"]:
                 objPanel.close()
                 continue
             
@@ -3877,14 +3877,16 @@ class ModernMenu(RibbonBar):
                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["icon"] = ""
                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["IsExtra"] = True
                             
-                            # if this is a newPanel, update the newpanel dict as well
-                            if panel.objectName().endswith("_newPanel"):
-                                if workbenchName not in self.workBenchDict["newPanels"]:
-                                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName], endEmpty=True)
-                                if panel.objectName() not in self.workBenchDict["newPanels"][workbenchName]:
-                                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName, panel.objectName()], endEmpty=True)
-                                    self.workBenchDict["newPanels"][workbenchName][panel.objectName()] = []
-                                self.workBenchDict["newPanels"][workbenchName][panel.objectName()].append([ExtraCommand, ExtraCommand_WB])
+                            self.UpdateToolBar_Keys(workbenchName)
+                            
+                            # # if this is a newPanel, update the newpanel dict as well
+                            # if panel.objectName().endswith("_newPanel"):
+                            #     if workbenchName not in self.workBenchDict["newPanels"]:
+                            #         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName], endEmpty=True)
+                            #     if panel.objectName() not in self.workBenchDict["newPanels"][workbenchName]:
+                            #         Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName, panel.objectName()], endEmpty=True)
+                            #         self.workBenchDict["newPanels"][workbenchName][panel.objectName()] = []
+                            #     self.workBenchDict["newPanels"][workbenchName][panel.objectName()].append([ExtraCommand, ExtraCommand_WB])
                             
                             # Get the name from  current workbench
                             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
@@ -3916,7 +3918,7 @@ class ModernMenu(RibbonBar):
                                 self.dropPanelName = ""
                                 self.dropPanel.close()
                                 
-                                self.CheckRibbonStructure(self.workBenchDict, WriteRibbonStructure=False)
+                                self.CleanRibbonStructure(self.workBenchDict, WriteRibbonStructure=False)
                                 return
                 except Exception as e:
                     if Parameters.DEBUG_MODE:
@@ -4398,50 +4400,7 @@ class ModernMenu(RibbonBar):
             # if self.wbNameMapping[tabName] is not None and self.SuspendBuildPanels is False:                
             if self.wbNameMapping[tabName] is not None:   
                 WorkBenchName = self.wbNameMapping[tabName]
-                Gui.activateWorkbench(WorkBenchName)
-              
-                Dict = self.ribbonStructure
-                if self.CustomizeEnabled:
-                    Dict = self.workBenchDict
-                tempDict = {}
-                tempList = [] 
-                wbToolbars = Gui.getWorkbench(WorkBenchName).listToolbars()
-                # Go through the toolbars
-                for Toolbar in wbToolbars:
-                    # Check if the Dict needs updated
-                    if WorkBenchName in Dict["workbenches"]:
-                        for ToolbarName, commands in Dict["workbenches"][WorkBenchName]["toolbars"].items():
-                            if Toolbar.lower() == ToolbarName.lower() and ToolbarName != "order" and ToolbarName != "enabled":
-                                StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", Toolbar])
-                                tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands
-                            if "_custom" in ToolbarName or "_newPanel" in ToolbarName:
-                                StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", ToolbarName])
-                                tempDict["workbenches"][WorkBenchName]["toolbars"][ToolbarName] = commands
-                        if "order" in Dict["workbenches"][WorkBenchName]["toolbars"]:                          
-                            StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", "order"], default=[])
-                            for i in range(len(Dict["workbenches"][WorkBenchName]["toolbars"]["order"])):
-                                item = Dict["workbenches"][WorkBenchName]["toolbars"]["order"][i]                                    
-                                if item.lower() == Toolbar.lower():
-                                    tempList.append(Toolbar)                         
-                    
-                    if WorkBenchName in Dict["customToolbars"]:
-                        for customToolBar in Dict["customToolbars"][WorkBenchName].keys():
-                            for command, parent in Dict["customToolbars"][WorkBenchName][customToolBar]["commands"].items():
-                                if parent.lower() == Toolbar.lower():
-                                    StandardFunctions.add_keys_nested_dict(tempDict, ["customToolbars", WorkBenchName, customToolBar, "commands", command])
-                                    tempDict["customToolbars"][WorkBenchName][customToolBar]["commands"][command] = Toolbar                                
-                
-                tempDict["workbenches"][WorkBenchName]["toolbars"]["order"] = tempList                
-                if "workbenches" in tempDict and WorkBenchName in tempDict["workbenches"]:
-                    Dict["workbenches"][WorkBenchName] = tempDict["workbenches"][WorkBenchName]
-                if "customToolbars" in tempDict and WorkBenchName in tempDict["customToolbars"]:
-                    Dict["customToolbars"][WorkBenchName] = tempDict["customToolbars"][WorkBenchName]    
-                    
-                if not self.CustomizeEnabled:
-                    # Writing to ribbonStructure.json
-                    JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-                    with open(JsonFile, "w") as outfile:
-                        json.dump(Dict, outfile, indent=4)
+                self.UpdateToolBar_Keys(WorkBenchName)
                 
 
             if tabActivated is True:
@@ -7056,7 +7015,7 @@ class ModernMenu(RibbonBar):
                 pass
             
         # If it is a custom dropdown that is present on the panel, create a button for it.
-        if workbenchName in Dict["workbenches"]:
+        if workbenchName in Dict["workbenches"]:  # noqa: SIM102
             if (
                 panelName != ""
                 and "toolbars" in Dict["workbenches"][workbenchName]
@@ -7066,7 +7025,7 @@ class ModernMenu(RibbonBar):
             ):
                 # Add custom dropdown buttons to the list that are on default panels
                 button = QToolButton()
-                for command in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():
+                for command in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():  # noqa: SIM118
                     if command is not None and command !="":
                         if command.endswith("_ddb"):
                             for key, value in Dict["dropdownButtons"].items():
@@ -7507,9 +7466,7 @@ class ModernMenu(RibbonBar):
                         if Icon.isNull():
                             pixmap = ""
                             try:
-                                pixmap = Dict["workbenches"][
-                                    workbenchName
-                                ]["toolbars"][panelName]["commands"][CommandName]["icon"]
+                                pixmap = Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["icon"]
                             except Exception:
                                 pass
                             if action.data() is not None:
@@ -8605,7 +8562,49 @@ class ModernMenu(RibbonBar):
                 StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
         return True
     
-    def CheckRibbonStructure(self, Dict = ribbonStructure, WorkBenchName = "", WriteRibbonStructure = True):
+    def UpdateToolBar_Keys(self, WorkBenchName):
+        Gui.activateWorkbench(WorkBenchName)
+              
+        Dict = self.ribbonStructure
+        if self.CustomizeEnabled:
+            Dict = self.workBenchDict
+        tempDict = {}
+        tempList = []
+        wbToolbars = Gui.getWorkbench(WorkBenchName).getToolbarItems()
+        # Go through the toolbars
+        for Toolbar in wbToolbars.keys():
+            # Check if the Dict needs updated
+            if WorkBenchName in Dict["workbenches"]:
+                for ToolbarName, commands in Dict["workbenches"][WorkBenchName]["toolbars"].items():                    
+                    if Toolbar.lower() == ToolbarName.lower():
+                        StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", Toolbar])
+                        tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands
+                        tempList.append(Toolbar)               
+            
+            if WorkBenchName in Dict["customToolbars"]:
+                for customToolBar in Dict["customToolbars"][WorkBenchName].keys():
+                    for command, parent in Dict["customToolbars"][WorkBenchName][customToolBar]["commands"].items():
+                        if parent.lower() == Toolbar.lower():
+                            StandardFunctions.add_keys_nested_dict(tempDict, ["customToolbars", WorkBenchName, customToolBar, "commands", command])
+                            tempDict["customToolbars"][WorkBenchName][customToolBar]["commands"][command] = Toolbar                                
+            
+        StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", "order"])
+        tempDict["workbenches"][WorkBenchName]["toolbars"]["order"] = tempList
+                            
+        if "workbenches" in tempDict and WorkBenchName in tempDict["workbenches"]:
+            Dict["workbenches"][WorkBenchName] = tempDict["workbenches"][WorkBenchName]
+        if "customToolbars" in tempDict and WorkBenchName in tempDict["customToolbars"]:
+            Dict["customToolbars"][WorkBenchName] = tempDict["customToolbars"][WorkBenchName]    
+            
+        if not self.CustomizeEnabled:
+            # Writing to ribbonStructure.json
+            JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+            with open(JsonFile, "w") as outfile:
+                json.dump(Dict, outfile, indent=4)
+                
+        return
+    
+    def CleanRibbonStructure(self, Dict = ribbonStructure, WorkBenchName = "", WriteRibbonStructure = True):
         workbenchDict = {}
         
         def UpdateDict(Dict, WorkBenchName):
@@ -8614,7 +8613,7 @@ class ModernMenu(RibbonBar):
                     if ToolBar == "order":
                         orderList = []
                         for entry in Dict["workbenches"][WorkBenchName]["toolbars"]["order"]:
-                            if entry is not None and entry != "null" and entry != "" and entry != "qt_toolbutton_menubutton":
+                            if entry is not None and entry != "null" and entry != "":
                                 orderList.append(entry)
                         StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", "order"])
                         workbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = orderList
