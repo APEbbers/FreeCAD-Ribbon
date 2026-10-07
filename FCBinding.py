@@ -3877,8 +3877,6 @@ class ModernMenu(RibbonBar):
                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["icon"] = ""
                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["IsExtra"] = True
                             
-                            self.UpdateToolBar_Keys(workbenchName)
-                            
                             # # if this is a newPanel, update the newpanel dict as well
                             # if panel.objectName().endswith("_newPanel"):
                             #     if workbenchName not in self.workBenchDict["newPanels"]:
@@ -4492,7 +4490,7 @@ class ModernMenu(RibbonBar):
         if self.CustomizeEnabled is False: 
             self.buildPanels()
         if self.CustomizeEnabled and self.SuspendBuildPanels is False:
-            self.buildPanels(Dict=self.workBenchDict, UpdateDict=False)
+            self.buildPanels(Dict=self.workBenchDict, UpdateDict=True)
         
         # hide normal toolbars
         self.hideClassicToolbars()
@@ -5769,9 +5767,7 @@ class ModernMenu(RibbonBar):
 
         try:
             # Get the order of toolbars
-            ToolbarOrder: list = Dict["workbenches"][workbenchName][
-                "toolbars"
-            ]["order"]
+            ToolbarOrder: list = Dict["workbenches"][workbenchName]["toolbars"]["order"]
 
             # Sort the list of toolbars according the toolbar order
             def SortToolbars(toolbar):
@@ -6938,7 +6934,7 @@ class ModernMenu(RibbonBar):
             Category = self.currentCategory()
         
         if UpdateDict is True:
-            Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "toolbars"], 1, True)
+            Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "toolbars"], endEmpty=True)
                
         # Create the panel, use the toolbar name as title
         title = StandardFunctions.TranslationsMapping(workbenchName, panelName)
@@ -7191,14 +7187,9 @@ class ModernMenu(RibbonBar):
             if (
                 panelName
                 in Dict["workbenches"][workbenchName]["toolbars"]
-                and "order"
-                in Dict["workbenches"][workbenchName]["toolbars"][
-                    panelName
-                ]
+                and "order" in Dict["workbenches"][workbenchName]["toolbars"][panelName]
             ):
-                OrderList: list = Dict["workbenches"][
-                    workbenchName
-                ]["toolbars"][panelName]["order"]
+                OrderList: list = Dict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
                 
                 # XXX check that positionsList consists of strings only
                 def sortButtons(button: QToolButton):
@@ -7429,12 +7420,7 @@ class ModernMenu(RibbonBar):
                                         # There is a bug in freecad with the comp-sketch menu hase the wrong text
                                         if (
                                             CommandName == "PartDesign_CompSketches"
-                                            and Dict["workbenches"][
-                                                workbenchName
-                                            ]["toolbars"][panelName]["commands"][CommandName][
-                                                "text"
-                                            ]
-                                            == "Create datum"
+                                            and Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["text"] == "Create datum"
                                         ):
                                             textJSON = "Create sketch"
 
@@ -7488,9 +7474,7 @@ class ModernMenu(RibbonBar):
 
                         # get button size from ribbonStructure
                         try:
-                            buttonSize = Dict["workbenches"][
-                                workbenchName
-                            ]["toolbars"][panelName]["commands"][CommandName]["size"]
+                            buttonSize = Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["size"]
                             # If the size is empty. This button is removed from the panel
                             if buttonSize == "":
                                 # Remove also from the ribbon structure if it is an extra (dragged) button
@@ -8579,14 +8563,16 @@ class ModernMenu(RibbonBar):
                     if Toolbar.lower() == ToolbarName.lower():
                         StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", Toolbar])
                         tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands
-                        tempList.append(Toolbar)               
+                        tempList.append(Toolbar)
+                    if ToolbarName.endswith("newPanels") or ToolbarName.endswith("_custom"):
+                        tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = Dict["workbenches"][WorkBenchName]["toolbars"][Toolbar]
             
             if WorkBenchName in Dict["customToolbars"]:
                 for customToolBar in Dict["customToolbars"][WorkBenchName].keys():
                     for command, parent in Dict["customToolbars"][WorkBenchName][customToolBar]["commands"].items():
                         if parent.lower() == Toolbar.lower():
                             StandardFunctions.add_keys_nested_dict(tempDict, ["customToolbars", WorkBenchName, customToolBar, "commands", command])
-                            tempDict["customToolbars"][WorkBenchName][customToolBar]["commands"][command] = Toolbar                                
+                            tempDict["customToolbars"][WorkBenchName][customToolBar]["commands"][command] = Toolbar                        
             
         StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", "order"])
         tempDict["workbenches"][WorkBenchName]["toolbars"]["order"] = tempList
