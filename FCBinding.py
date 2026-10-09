@@ -203,7 +203,7 @@ class ModernMenu(RibbonBar):
     """
     Create ModernMenu QWidget.
     """
-    
+
     # region - class parameters
     # Add workbenches that need to be loaded first or early here
     WBtoLoadFirst = ["BillOfMaterialsWB"]
@@ -5756,7 +5756,7 @@ class ModernMenu(RibbonBar):
         try:
             # Get the order of toolbars
             ToolbarOrder: list = Dict["workbenches"][workbenchName]["toolbars"]["order"]
-
+            
             # Sort the list of toolbars according the toolbar order
             def SortToolbars(toolbar):
                 if toolbar == "":
@@ -5767,7 +5767,7 @@ class ModernMenu(RibbonBar):
                     position = ToolbarOrder.index(toolbar)
                 except ValueError as e:
                     position = 999999
-                    if toolbar.endswith("_custom") or toolbar.endswith("_newPanel"):
+                    if (toolbar.endswith("_custom") or toolbar.endswith("_newPanel")) and toolbar not in ToolbarOrder:
                         if Parameters.DEFAULT_PANEL_POSITION_CUSTOM == "Right":
                             position = 999999
                         else:
@@ -8501,29 +8501,39 @@ class ModernMenu(RibbonBar):
         tempDict = {}
         tempList = []
         wbToolbars = Gui.getWorkbench(WorkBenchName).getToolbarItems()
-        # Go through the toolbars
-        for Toolbar in wbToolbars.keys():
-            # Check if the Dict needs updated
-            if WorkBenchName in Dict["workbenches"]:
-                for ToolbarName, commands in Dict["workbenches"][WorkBenchName]["toolbars"].items():                    
-                    if Toolbar.lower() == ToolbarName.lower():
-                        StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", Toolbar])
-                        tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands
-                        tempList.append(Toolbar)
+        
+        # Check if the Dict needs updated
+        if WorkBenchName in Dict["workbenches"]:
+            for ToolbarName, commands in Dict["workbenches"][WorkBenchName]["toolbars"].items():
+                # Go through the toolbars
+                if ToolbarName != "order" and ToolbarName != "enabled":
+                    for Toolbar in wbToolbars.keys():
+                        if Toolbar.lower() == ToolbarName.lower():
+                            StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", Toolbar])
+                            tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands
                     if ToolbarName.endswith("_newPanel") or ToolbarName.endswith("_custom"):
-                        StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", Toolbar])
-                        tempDict["workbenches"][WorkBenchName]["toolbars"][ToolbarName] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolbarName]
+                        StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", ToolbarName])
+                        tempDict["workbenches"][WorkBenchName]["toolbars"][ToolbarName] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolbarName]                
+
+                if ToolbarName == "order":                    
+                    for item in Dict["workbenches"][WorkBenchName]["toolbars"]["order"]:
+                        for Toolbar in wbToolbars.keys():
+                            if Toolbar.lower() == item.lower():
+                                tempList.append(Toolbar)
+                        if item.endswith("_newPanel") or item.endswith("_custom"):
+                            tempList.append(item)        
             
-            if WorkBenchName in Dict["customToolbars"]:
-                for customToolBar in Dict["customToolbars"][WorkBenchName].keys():
-                    for command, parent in Dict["customToolbars"][WorkBenchName][customToolBar]["commands"].items():
+        if WorkBenchName in Dict["customToolbars"]:
+            for customToolBar in Dict["customToolbars"][WorkBenchName].keys():
+                for command, parent in Dict["customToolbars"][WorkBenchName][customToolBar]["commands"].items():
+                    for Toolbar in wbToolbars.keys():
                         if parent.lower() == Toolbar.lower():
                             StandardFunctions.add_keys_nested_dict(tempDict, ["customToolbars", WorkBenchName, customToolBar, "commands", command])
                             tempDict["customToolbars"][WorkBenchName][customToolBar]["commands"][command] = Toolbar                        
             
         StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", "order"])
         tempDict["workbenches"][WorkBenchName]["toolbars"]["order"] = tempList
-                            
+
         if "workbenches" in tempDict and WorkBenchName in tempDict["workbenches"]:
             Dict["workbenches"][WorkBenchName] = tempDict["workbenches"][WorkBenchName]
         if "customToolbars" in tempDict and WorkBenchName in tempDict["customToolbars"]:
