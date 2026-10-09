@@ -2672,14 +2672,13 @@ class ModernMenu(RibbonBar):
         QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
         return
     
-    def on_Cancel_Clicked(self, workbenchName = ""):        
+    def on_Cancel_Clicked(self):        
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
 
         # Get the name of the current workbench
-        if workbenchName == "":
-            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         
         # Set stylesheets
         self.currentCategory().setStyleSheet(self.StyleSheet)
@@ -2736,6 +2735,7 @@ class ModernMenu(RibbonBar):
                 continue
             # If the panel is not in the ribbon structure, remove it
             if objPanel.objectName() not in Dict["workbenches"][workbenchName]["toolbars"]:
+                print(title)
                 objPanel.close()
                 continue
             
@@ -2793,8 +2793,8 @@ class ModernMenu(RibbonBar):
             workbenchName = self.tabBar().tabData(i)
             
             # Make sure to set the tab visible
-            if workbenchName in self.ribbonStructure["workbenches"] and "Enabled" in self.ribbonStructure["workbenches"][workbenchName]:  # noqa: SIM102
-                if self.ribbonStructure["workbenches"][workbenchName]["Enabled"] is True:
+            if workbenchName in Dict["workbenches"] and "Enabled" in Dict["workbenches"][workbenchName]:  # noqa: SIM102
+                if Dict["workbenches"][workbenchName]["Enabled"] is True:
                     # Make sure to set the tab visible
                     self.tabBar().setTabVisible(i, True)  
                 else:
@@ -2807,7 +2807,7 @@ class ModernMenu(RibbonBar):
                 self.tabBar().setTabVisible(i, True) 
 
             self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None)
-             
+            
         self.currentCategory().panels().update(dictPanels)
                 
         # Restore closed panels
@@ -2817,6 +2817,32 @@ class ModernMenu(RibbonBar):
             except Exception:
                 pass
             
+        # Restore any custom panel
+        # Get the custom panels and add them to the list of toolbars
+        try:
+            # Get the name of the current workbench
+            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+            if workbenchName in Dict["customToolbars"]:
+                for customPanel in Dict["customToolbars"][workbenchName]:
+                    # remove the original toolbars from the list
+                    Commands = Dict["customToolbars"][workbenchName][customPanel]["commands"]
+                    for Command in Commands:
+                        try:
+                            OriginalToolbar = Dict["customToolbars"][workbenchName][customPanel]["commands"][Command]
+                            self.currentCategory().removePanel(OriginalToolbar)
+                        except Exception:
+                            continue
+                    
+                    # show the custom panel again
+                    self.currentCategory().panels()[customPanel].show()
+                    
+        except Exception as e:
+            print(traceback.format_exc())
+            if Parameters.DEBUG_MODE is True:
+                StandardFunctions.Print(f"{e}, 1", "Warning")
+            pass
+
+                 
         for panel in self.AddedPanels:
             if workbenchName in Dict["newPanels"]:
                 if panel.objectName() not in Dict["newPanels"][workbenchName]:                     
@@ -3305,6 +3331,7 @@ class ModernMenu(RibbonBar):
             # Writing to ribbonStructure.json
             JsonFile = Parameters.RIBBON_STRUCTURE_JSON
             with open(JsonFile, "w") as outfile:
+                print("addToGroup")
                 json.dump(self.ribbonStructure, outfile, indent=4)      
         
         ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
@@ -4478,7 +4505,7 @@ class ModernMenu(RibbonBar):
         if self.CustomizeEnabled is False: 
             self.buildPanels()
         if self.CustomizeEnabled and self.SuspendBuildPanels is False:
-            self.buildPanels(Dict=self.workBenchDict, UpdateDict=True)
+            self.buildPanels(Dict=self.workBenchDict, UpdateDict=False)
         
         # hide normal toolbars
         self.hideClassicToolbars()
@@ -5804,12 +5831,12 @@ class ModernMenu(RibbonBar):
                             self.HiddenPanels.append(panel)
                             panel.hide()
                                    
-            # Writing to ribbonStructure.json
-            if UpdateDict is True:
-                JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-                with open(JsonFile, "w") as outfile:
-                    json.dump(Dict, outfile, indent=4)
-                outfile.close()
+            # # Writing to ribbonStructure.json
+            # if UpdateDict is True:
+            #     JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+            #     with open(JsonFile, "w") as outfile:
+            #         json.dump(Dict, outfile, indent=4)
+            #     outfile.close()
 
         self.isWbLoaded[tabName] = True
         
