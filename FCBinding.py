@@ -8496,25 +8496,35 @@ class ModernMenu(RibbonBar):
         return True
     
     def UpdateToolBar_Keys(self, WorkBenchName, Dict = ribbonStructure):
+        """
+        Update the ribbonstructure with updated toolbar names
+        """        
+        # Activate the workbench
         Gui.activateWorkbench(WorkBenchName)
-              
+
+        # Define a temparory dict and list for workbench dict and order list
         tempDict = {}
         tempList = []
+        # Get the toolbar dict of the workbench
         wbToolbars = Gui.getWorkbench(WorkBenchName).getToolbarItems()
         
         # Check if the Dict needs updated
         if WorkBenchName in Dict["workbenches"]:
             for ToolbarName, commands in Dict["workbenches"][WorkBenchName]["toolbars"].items():
-                # Go through the toolbars
+                # Go through the toolbars if name is not 'order' or 'enabled'
                 if ToolbarName != "order" and ToolbarName != "enabled":
+                    # If the Toolbar in the toolbar dict is equal to the name in the ribbonstructure when set to lower case
+                    # update the temporary dict with the structure of the ribbonstructure, but with the name from the toolbar dict.
+                    # This updates the ribbonstructure when toolbarnames are changed with upper and/or lower cases
                     for Toolbar in wbToolbars.keys():
                         if Toolbar.lower() == ToolbarName.lower():
                             StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", Toolbar])
                             tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands
+                    # if the toolbar in the ribbonstructure is a 'newPanel' or 'custom' just add it to the temporary dict
                     if ToolbarName.endswith("_newPanel") or ToolbarName.endswith("_custom"):
                         StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", ToolbarName])
                         tempDict["workbenches"][WorkBenchName]["toolbars"][ToolbarName] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolbarName]                
-
+                # if the ToolbarName is 'order', update the orderlist with the same toolbar names
                 if ToolbarName == "order":                    
                     for item in Dict["workbenches"][WorkBenchName]["toolbars"]["order"]:
                         for Toolbar in wbToolbars.keys():
@@ -8522,7 +8532,8 @@ class ModernMenu(RibbonBar):
                                 tempList.append(Toolbar)
                         if item.endswith("_newPanel") or item.endswith("_custom"):
                             tempList.append(item)        
-            
+        
+        # Update the customToolbar dict with the latest toolbar names as well
         if WorkBenchName in Dict["customToolbars"]:
             for customToolBar in Dict["customToolbars"][WorkBenchName].keys():
                 for command, parent in Dict["customToolbars"][WorkBenchName][customToolBar]["commands"].items():
@@ -8530,15 +8541,18 @@ class ModernMenu(RibbonBar):
                         if parent.lower() == Toolbar.lower():
                             StandardFunctions.add_keys_nested_dict(tempDict, ["customToolbars", WorkBenchName, customToolBar, "commands", command])
                             tempDict["customToolbars"][WorkBenchName][customToolBar]["commands"][command] = Toolbar                        
-            
+
+        # Add the toolbar orderlist to the temporary ribbonstructure
         StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", "order"])
         tempDict["workbenches"][WorkBenchName]["toolbars"]["order"] = tempList
 
+        # Update the ribbonstrucure with temporary ribbonstructure
         if "workbenches" in tempDict and WorkBenchName in tempDict["workbenches"]:
             Dict["workbenches"][WorkBenchName] = tempDict["workbenches"][WorkBenchName]
         if "customToolbars" in tempDict and WorkBenchName in tempDict["customToolbars"]:
             Dict["customToolbars"][WorkBenchName] = tempDict["customToolbars"][WorkBenchName]    
-            
+
+        # If the customize is not enabled, update the ribbonstructure.json
         if not self.CustomizeEnabled:
             # Writing to ribbonStructure.json
             JsonFile = Parameters.RIBBON_STRUCTURE_JSON
@@ -8548,32 +8562,45 @@ class ModernMenu(RibbonBar):
         return
     
     def CleanRibbonStructure(self, Dict = ribbonStructure, WorkBenchName = "", WriteRibbonStructure = True):
+        """
+        Remove any empty or null entry or other wrong netry in the ribbonstructure.json
+        """        
+        # Define an new workbench dict
         workbenchDict = {}
         
+        # function to correct the dic
         def UpdateDict(Dict, WorkBenchName):
             if "toolbars" in Dict["workbenches"][WorkBenchName]:
                 for ToolBar in Dict["workbenches"][WorkBenchName]["toolbars"]:
                     if ToolBar == "order":
+                        # Define a new orderlist
                         orderList = []
                         for entry in Dict["workbenches"][WorkBenchName]["toolbars"]["order"]:
+                            # the entry is not None, null or empty, add it to the orderList
                             if entry is not None and entry != "null" and entry != "":
                                 orderList.append(entry)
+                        # Add the orderList to the workbench dicts
                         StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", "order"])
                         workbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = orderList
                     else:
                         for item in Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar].keys():
+                            # Filter the orderlist for commands
                             if item == "order":
+                                # Define a new orderlist
                                 orderList = []
                                 for entry in Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["order"]:
                                     if entry is not None and entry != "null" and entry != "" and entry != "qt_toolbutton_menubutton":
-                                        orderList.append(entry)                                            
+                                        orderList.append(entry)
+                                # Add the orderList to the workbench dicts
                                 StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "order"])
                                 workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["order"] = orderList
+                            # Filter the commands
                             if item == "commands":
                                 for command in Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"].keys():
                                     if command is not None and command != "null" and command != "" and command != "qt_toolbutton_menubutton" and "separator" not in command:
                                         StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "commands", command])
                                         workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command]
+                            # add the title 
                             if item == "title":
                                 workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"]
         
