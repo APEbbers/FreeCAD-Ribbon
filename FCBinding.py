@@ -173,6 +173,7 @@ pathStylSheets = Parameters.STYLESHEET_LOCATION
 pathUI = Parameters.UI_LOCATION
 pathScripts = os.path.join(ConfigDirectory, "Scripts")
 pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
+pathLayouts = os.path.join(os.path.dirname(__file__), "Resources", "Layouts")
 pathBackup = Parameters.BACKUP_LOCATION
 sys.path.append(ConfigDirectory)
 sys.path.append(pathIcons)
@@ -1851,7 +1852,8 @@ class ModernMenu(RibbonBar):
             # Write the layout to the parameters
             Parameters_Ribbon.Settings.SetStringSetting("Layout", "Default")
             # Get the directory with the files for the default layout
-            LayoutDir = os.path.join(ConfigDirectory, "Layouts", "Default")
+            # LayoutDir = os.path.join(ConfigDirectory, "Layouts", "Default")
+            LayoutDir = os.path.join(pathLayouts, "Default")
             # Set the values for the icon sizes
             DefaultSize = "small"
             FirstCommandSize = "large"
@@ -1870,7 +1872,8 @@ class ModernMenu(RibbonBar):
             # Write the layout to the parameters
             Parameters_Ribbon.Settings.SetStringSetting("Layout", "LargeAndMedium")
             # Get the directory with the files for the default layout
-            LayoutDir = os.path.join(ConfigDirectory, "Layouts", "LargeAndMedium")
+            # LayoutDir = os.path.join(ConfigDirectory, "Layouts", "LargeAndMedium")
+            LayoutDir = os.path.join(pathLayouts, "LargeAndMedium")
             # Set the values for the icon sizes
             DefaultSize = "medium"
             FirstCommandSize = "large"
@@ -1889,7 +1892,8 @@ class ModernMenu(RibbonBar):
             # Write the layout to the parameters
             Parameters_Ribbon.Settings.SetStringSetting("Layout", "AllSmall")
             # Get the directory with the files for the default layout
-            LayoutDir = os.path.join(ConfigDirectory, "Layouts", "AllSmall")
+            # LayoutDir = os.path.join(ConfigDirectory, "Layouts", "AllSmall")
+            LayoutDir = os.path.join(pathLayouts, "AllSmall")
             # Set the values for the icon sizes
             DefaultSize = "small"
             FirstCommandSize = "small"
@@ -1903,7 +1907,8 @@ class ModernMenu(RibbonBar):
             # Write the layout to the parameters
             Parameters_Ribbon.Settings.SetStringSetting("Layout", "AllMedium")
             # Get the directory with the files for the default layout
-            LayoutDir = os.path.join(ConfigDirectory, "Layouts", "AllMedium")
+            # LayoutDir = os.path.join(ConfigDirectory, "Layouts", "AllMedium")
+            LayoutDir = os.path.join(pathLayouts, "AllMedium")
             # Set the values for the icon sizes
             DefaultSize = "medium"
             FirstCommandSize = "medium"
