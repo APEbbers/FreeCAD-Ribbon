@@ -25,7 +25,7 @@ from pathlib import Path
 import subprocess
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -56,7 +56,7 @@ from PySide.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -105,7 +105,7 @@ from PySide.QtWidgets import (
     QStyleOptionComplex,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -225,6 +225,10 @@ class ModernMenu(RibbonBar):
     isWbLoaded = {}
     MainWindowLoaded = False
     LeaveEventEnabled = True
+    
+    # define a placeholder for the CommitID
+    CommitID = ""
+    branch = ""
 
     # use icon size from FreeCAD preferences
     iconSize = Parameters.ICON_SIZE_SMALL
@@ -442,6 +446,43 @@ class ModernMenu(RibbonBar):
                     action.associatedObjects()[1].setStyleSheet(styleSheet_ToolTip + action.associatedObjects()[1].styleSheet())
         
         # ------------------------------------------------------------------------------------------------------------------
+        
+        # Print the info about installed and latest version ----------------------------------------------------------------
+        # Get the address of the repository address
+        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
+        self.ReproAdress = StandardFunctions.ReturnXML_Value(
+            PackageXML, "url", "type", "repository"
+        )
+        LocalVersion = StandardFunctions.ReturnXML_Value(
+            PackageXML, "version",
+        )
+        if self.ReproAdress != "" or self.ReproAdress is not None:
+            print(translate("FreeCAD Ribbon", "Ribbon UI: ") + self.ReproAdress)
+            print(translate("FreeCAD Ribbon", "Ribbon UI: Installed version: ") + LocalVersion)
+        
+        # Get the location of the help documentation
+        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
+        self.HelpAdress = StandardFunctions.ReturnXML_Value(
+            PackageXML, "url", "type", "website"
+        )
+        # Store the commit id
+        # Try first to read from the local folder in case the repository is cloned
+        self.branch = ""
+        self.CommitID = "" 
+        # if there is no commitID, get the commitID from the shipped info
+        if self.CommitID == "":
+            with open(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "version_main"), "r") as fd:
+                line = fd.readlines()[0]
+                self.CommitID = line[:10]
+        # if there is no branch, get the branch from the version info
+        if self.branch == "":
+            self.branch = "main"
+            if LocalVersion.endswith("dev"):
+                self.branch = "Develop"
+                with open(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "version_Develop"), "r") as fd:
+                    line = fd.readlines()[0]
+                    self.CommitID = line[:10]
+        # ------------------------------------------------------------------------------------------------------------------     
 
         # Read all data files and fill the lists and dicts -----------------------------------------------------------------
         # read ribbon structure from JSON file
@@ -491,6 +532,7 @@ class ModernMenu(RibbonBar):
             )
             print(translate("FreeCAD Ribbon", "Ribbon UI: The workbench dict was empty. A new dict is created"))           
         
+        # Convert the ribbonstructure for older versions of FreeCAD
         if int(App.Version()[0]) == 0 or (int(App.Version()[0]) == 1 and int(App.Version()[1]) == 0):
             self.ConvertRibbonStructure(checkFCVersion=False, RestartFreeCAD=False)
         else:
@@ -659,26 +701,6 @@ class ModernMenu(RibbonBar):
         with open(Parameters.RIBBON_STRUCTURE_JSON, "w") as outfile:
             json.dump(self.ribbonStructure, outfile, indent=4)
         outfile.close()
-        # ------------------------------------------------------------------------------------------------------------------     
-
-        # Print the info about installed and latest version ----------------------------------------------------------------
-        # Get the address of the repository address
-        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
-        self.ReproAdress = StandardFunctions.ReturnXML_Value(
-            PackageXML, "url", "type", "repository"
-        )
-        LocalVersion = StandardFunctions.ReturnXML_Value(
-            PackageXML, "version",
-        )
-        if self.ReproAdress != "" or self.ReproAdress is not None:
-            print(translate("FreeCAD Ribbon", "Ribbon UI: ") + self.ReproAdress)
-            print(translate("FreeCAD Ribbon", "Ribbon UI: Installed version: ") + LocalVersion)
-        
-        # Get the location of the help documentation
-        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
-        self.HelpAdress = StandardFunctions.ReturnXML_Value(
-            PackageXML, "url", "type", "website"
-        )
         # ------------------------------------------------------------------------------------------------------------------     
         
         # Do some checking and take measures so that everything will be loaded ---------------------------------------------
@@ -1576,7 +1598,7 @@ class ModernMenu(RibbonBar):
                 self.contextMenu.addAction(self.RemoveFromTabGroupAct)
                 
                 # create the context menu action
-                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
+                action = self.contextMenu.exec_(event.globalPos())
 
                 # Disconnect the widgetActions
                 self.AddToTabGroupAct.currentIndexChanged.disconnect()                
@@ -1666,7 +1688,7 @@ class ModernMenu(RibbonBar):
                         AddSeparator_Right.triggered.connect(lambda: self.on_AddSeparator_Clicked(panel, widget,"right"))                        
                         
                         # create the context menu action
-                        action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
+                        action = self.contextMenu.exec_(self.mapFromGlobal(event.globalPos()))
 
                         # Disconnect the widgetActions
                         RibbonButtonAction_Style.currentTextChanged.disconnect()
@@ -1690,7 +1712,7 @@ class ModernMenu(RibbonBar):
                 self.contextMenu.addAction(ChangePanelTitle)
                 
                 # create the context menu action
-                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
+                action = self.contextMenu.exec_(event.globalPos())
                 
                 # Disconnect the widgetActions
                 ChangePanelTitle.textChanged.disconnect()
@@ -1707,7 +1729,7 @@ class ModernMenu(RibbonBar):
                     RemoveSeparator.triggered.connect(lambda: self.on_RemoveSeparator_Clicked(panel, separator))
                     
                     # create the context menu action
-                    action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
+                    action = self.contextMenu.exec_(event.globalPos())
                     return
             
             # Add the context menu for the ribbon
@@ -1786,8 +1808,8 @@ class ModernMenu(RibbonBar):
                 CustomizeCancelAct.triggered.connect(lambda: self.handleContextMenuAction("Cancel"))
                 CustomizeCancelAct.setVisible(self.CustomizeEnabled)
                                 
-                # Create the action
-                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
+                # create the context menu action
+                action = self.contextMenu.exec_(event.globalPos())
                 
                 CustomizeStartAct.triggered.disconnect()
                 if self.CustomizeEnabled is True:
@@ -1807,7 +1829,7 @@ class ModernMenu(RibbonBar):
                 clearToolBar.triggered.connect(self.on_ClearToolBar_QC_Clicked)
                 
                 # create the context menu action
-                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
+                action = self.contextMenu.exec_(event.globalPos())
                 
                 # Disconnect the widgetActions
                 AddSeparator_Left.triggered.disconnect()                                
@@ -1825,7 +1847,7 @@ class ModernMenu(RibbonBar):
                 clearToolBar.triggered.connect(self.on_ClearToolBar_QC_Clicked)
                 
                 # create the context menu action
-                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
+                action = self.contextMenu.exec_(event.globalPos())
                 
                 # Disconnect the widgetActions
                 removeSeparator.triggered.disconnect()
@@ -1987,7 +2009,7 @@ class ModernMenu(RibbonBar):
         self.DefaultButtonStyle = DefaultSize
         
         # Make sure that there that the structure is correct
-        self.CleanRibbonStructure()
+        self.CleanRibbonStructure(skipIdCheck=True)
         
         # Restore the cursor
         QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
@@ -2433,8 +2455,12 @@ class ModernMenu(RibbonBar):
             
             IsRemoved = False
             for panel in self.RemovedPanels:
-                if panel.objectName() == objPanel.objectName():
-                    IsRemoved = True
+                try:
+                    if panel.objectName() == objPanel.objectName():
+                        IsRemoved = True
+                except:
+                    if Parameters.DEBUG_MODE:
+                        traceback.print_exc()
   
             # hide the enable checkboxes and hide the panel if it is unchecked
             titleLayout: QHBoxLayout = objPanel._titleLayout
@@ -2572,7 +2598,7 @@ class ModernMenu(RibbonBar):
                     self.tabBar().setTabVisible(i, True)
                     
                 
-        self.UpdateToolBar_Keys(workbenchName, self.workBenchDict)
+        self.UpdateToolBar_Keys(WorkBenchName=workbenchName, Dict=self.workBenchDict, skipIdCheck=True)
         
         # update the ribbonstructure before writing it to disk
         if "quickAccessCommands" in self.workBenchDict:
@@ -3920,7 +3946,7 @@ class ModernMenu(RibbonBar):
                                 self.dropPanel.close()
                                 
                                 # If toolbars are renamed (Char cases only), update the dict
-                                self.CleanRibbonStructure(self.workBenchDict, WriteRibbonStructure=False)
+                                self.CleanRibbonStructure(self.workBenchDict, WriteRibbonStructure=False, skipIdCheck=True)
                                 return
                 except Exception as e:
                     if Parameters.DEBUG_MODE:
@@ -4405,7 +4431,7 @@ class ModernMenu(RibbonBar):
                 Dict = self.ribbonStructure
                 if self.CustomizeEnabled:
                     Dict = self.workBenchDict
-                self.UpdateToolBar_Keys(WorkBenchName, Dict)               
+                self.UpdateToolBar_Keys(WorkBenchName=WorkBenchName, Dict=Dict, skipIdCheck=self.CustomizeEnabled)               
 
             if tabActivated is True:
                 self.onWbActivated()
@@ -8513,12 +8539,18 @@ class ModernMenu(RibbonBar):
                 StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
         return True
     
-    def UpdateToolBar_Keys(self, WorkBenchName, Dict = ribbonStructure):
+    def UpdateToolBar_Keys(self, WorkBenchName, Dict = ribbonStructure,  skipIdCheck = False):
         """
         Update the ribbonstructure with updated toolbar names
         """        
         # Activate the workbench
         Gui.activateWorkbench(WorkBenchName)
+        
+        # Compare the current CommitID with the stored CommitID. If they are different store the ID and continue
+        if Parameters_Ribbon.Settings.GetStringSetting("CommitID") == self.CommitID and skipIdCheck is False:
+            return
+        else:
+            Parameters_Ribbon.Settings.SetStringSetting("CommitID", self.CommitID)
 
         # Define a temparory dict and list for workbench dict and order list
         tempDict = {}
@@ -8527,7 +8559,7 @@ class ModernMenu(RibbonBar):
         wbToolbars = Gui.getWorkbench(WorkBenchName).getToolbarItems()
         
         # Check if the Dict needs updated
-        if WorkBenchName in Dict["workbenches"]:
+        if "workbenches" in Dict and WorkBenchName in Dict["workbenches"]:
             for ToolbarName, commands in Dict["workbenches"][WorkBenchName]["toolbars"].items():
                 # Go through the toolbars if name is not 'order' or 'enabled'
                 if ToolbarName != "order" and ToolbarName != "enabled":
@@ -8552,7 +8584,7 @@ class ModernMenu(RibbonBar):
                             tempList.append(item)        
         
         # Update the customToolbar dict with the latest toolbar names as well
-        if WorkBenchName in Dict["customToolbars"]:
+        if "customToolbars" in Dict and WorkBenchName in Dict["customToolbars"]:
             for customToolBar in Dict["customToolbars"][WorkBenchName].keys():
                 for command, parent in Dict["customToolbars"][WorkBenchName][customToolBar]["commands"].items():
                     for Toolbar in wbToolbars.keys():
@@ -8579,12 +8611,18 @@ class ModernMenu(RibbonBar):
                 
         return
     
-    def CleanRibbonStructure(self, Dict = ribbonStructure, WorkBenchName = "", WriteRibbonStructure = True):
+    def CleanRibbonStructure(self, Dict = ribbonStructure, WorkBenchName = "", WriteRibbonStructure = True, skipIdCheck = False):
         """
         Remove any empty or null entry or other wrong netry in the ribbonstructure.json
         """        
         # Define an new workbench dict
         workbenchDict = {}
+        
+        # Compare the current CommitID with the stored CommitID. If they are different store the ID and continue
+        if Parameters_Ribbon.Settings.GetStringSetting("CommitID") == self.CommitID and skipIdCheck is False:
+            return
+        else:
+            Parameters_Ribbon.Settings.SetStringSetting("CommitID", self.CommitID)
         
         # function to correct the dic
         def UpdateDict(Dict, WorkBenchName):
