@@ -179,7 +179,8 @@ try:
         if Parameters_Ribbon.Settings.GetStringSetting("MainWindow") == "Maximized":
             mw.showMaximized()
         # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
 
     # Hide the Titlebar of FreeCAD
     if Parameters.HIDE_TITLEBAR_FC is True:
@@ -197,7 +198,8 @@ try:
         if Parameters_Ribbon.Settings.GetStringSetting("MainWindow") == "Maximized":
             mw.showMaximized()
         # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
     
                 
     Ribbon: QDockWidget = mw.findChild(QDockWidget, "Ribbon")

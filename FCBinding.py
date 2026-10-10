@@ -1992,6 +1992,7 @@ class ModernMenu(RibbonBar):
                 
          # Restore the cursor
         QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
         
         # Clear the workbench dict
         if CloseDialog is True:
@@ -2165,6 +2166,7 @@ class ModernMenu(RibbonBar):
                 DockWidget.deleteLater()
         
         # Restore the cursor
+        QApplication.restoreOverrideCursor()
         QApplication.restoreOverrideCursor()
         
         # Activate the stored category when the customise enviroment was started
@@ -4327,6 +4329,7 @@ class ModernMenu(RibbonBar):
 
             # Restore the cursor
             QApplication.restoreOverrideCursor()
+            QApplication.restoreOverrideCursor()
         return
 
     # Function for loading the settings menu
@@ -4356,6 +4359,7 @@ class ModernMenu(RibbonBar):
         self.DesignMenuLoaded = True
 
         # Restore the cursor
+        QApplication.restoreOverrideCursor()
         QApplication.restoreOverrideCursor()
         return
 
@@ -6869,6 +6873,7 @@ class ModernMenu(RibbonBar):
             panel.close()
             
             # Restore the cursor
+            QApplication.restoreOverrideCursor()
             QApplication.restoreOverrideCursor()
             return True     
         except Exception as e:
