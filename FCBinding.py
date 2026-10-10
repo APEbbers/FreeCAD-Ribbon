@@ -2058,7 +2058,8 @@ class ModernMenu(RibbonBar):
         self.CleanRibbonStructure(skipIdCheck=True)
         
         # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        # QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
         
         # get the path for the Json file
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
@@ -2178,7 +2179,8 @@ class ModernMenu(RibbonBar):
             return
         
         # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
         return
     
     def on_Customize_Clicked(self):
@@ -2459,7 +2461,8 @@ class ModernMenu(RibbonBar):
                         self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))             
                 
         # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
         return
     
     def on_ApplyClicked(self):
@@ -2769,7 +2772,8 @@ class ModernMenu(RibbonBar):
                     }""")
                                 
         # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
         return
     
     def on_Cancel_Clicked(self):        
@@ -3021,7 +3025,8 @@ class ModernMenu(RibbonBar):
         print(translate("FreeCAD Ribbon", "RibbonUI: Changes are rolled back"))
         
         # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
         return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction):     
@@ -5769,7 +5774,8 @@ class ModernMenu(RibbonBar):
                 mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
             # Restore the cursor
-            QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+            QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
         return
 
     # Function for loading the settings menu
@@ -5806,7 +5812,8 @@ class ModernMenu(RibbonBar):
         self.DesignMenuLoaded = True
 
         # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
         return
 
     # Build the panels from active workbench
@@ -8245,7 +8252,8 @@ class ModernMenu(RibbonBar):
             panel.close()
             
             # Restore the cursor
-            QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+            QApplication.restoreOverrideCursor()
+            QApplication.restoreOverrideCursor()
             return True     
         except Exception as e:
             if Parameters.DEBUG_MODE is True:
