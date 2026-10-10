@@ -1,0 +1,57 @@
+{
+    "ignoredToolbars": [
+        "Clipboard",
+        "Edit",
+        "File",
+        "Help",
+        "Macro",
+        "PieMenuTB",
+        "View",
+        "Workbench",
+        "Individual views",
+        "Dimensions_custom",
+        "Views - Ribbon"
+    ],
+    "iconOnlyToolbars": [
+        "Individual views",
+        "Structure"
+    ],
+    "quickAccessCommands": [
+        "Std_New",
+        "Std_Open",
+        "Std_Save",
+        "separator_1",
+        "Std_Undo",
+        "Std_Redo",
+        "separator_2",
+        "Std_Refresh",
+        "separator_3",
+        "Std_Cut",
+        "Std_Copy",
+        "Std_Paste",
+        "separator_4",
+        "ExampleDropDown_ddb"
+    ],
+    "tabGroups": {
+        "Mechanical": [
+            "SketcherWorkbench",
+            "PartDesignWorkbench",
+            "PartWorkbench",
+            "SMWorkbench",
+            "SurfaceWorkbench",
+            "AssemblyWorkbench",
+            "FastenersWorkbench",
+            "TechDrawWorkbench",
+            "CAMWorkbench"
+        ],
+        "Analyse": [
+            "SketcherWorkbench",
+            "PartDesignWorkbench",
+            "PartWorkbench",
+            "SMWorkbench",
+            "SurfaceWorkbench",
+            "AssemblyWorkbench",
+            "FemWorkbench"
+        ]
+    }
+}
