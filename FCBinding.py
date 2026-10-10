@@ -300,6 +300,7 @@ class ModernMenu(RibbonBar):
     RibbonMenu = QMenu()
     HelpMenu = QMenu()
     SettingsMenu = QMenu()
+    SetLayoutsMenu = QMenu()
     OverlayMenu = None
     AccessoriesMenu = None
     DesignButton = None
@@ -1566,16 +1567,18 @@ class ModernMenu(RibbonBar):
 
                 # Create an QAction for adding a tab to a new or existing group
                 self.AddToTabGroupAct = ComboBoxAction(self, f"Add {tabText} to a new or existing group", "Top", Parameters.FONTSIZE_MENUS, True, "Add")
-                self.AddToTabGroupAct.addItem("")
+                self.AddToTabGroupAct.setObjectName("AddToTabGroup")
+                self.AddToTabGroupAct.combobox.clear()
+                self.AddToTabGroupAct.combobox.addItem("")
                 self.AddToTabGroupAct.setEditable(True)
                 if "tabGroups" in self.ribbonStructure:
                     for key in self.ribbonStructure["tabGroups"]:
-                        self.AddToTabGroupAct.addItem(str(key))
+                        self.AddToTabGroupAct.combobox.addItem(str(key))
                 self.AddToTabGroupAct.setFixedWidth(180)
-                self.AddToTabGroupAct.currentIndexChanged.connect(lambda: self.on_AddToGroup_Clicked(tabIndex, self.AddToTabGroupAct.currentText()))
-                self.AddToTabGroupAct.currentIndexChanged.connect(lambda: self.CloseContextMenu(self.AddToTabGroupAct))
-                self.AddToTabGroupAct.clicked.connect(lambda: self.on_AddToGroup_Clicked(tabIndex, self.AddToTabGroupAct.currentText()))
-                self.AddToTabGroupAct.clicked.connect(lambda: self.CloseContextMenu(self.AddToTabGroupAct))
+                self.AddToTabGroupAct.combobox.currentIndexChanged.connect(lambda: self.on_AddToGroup_Clicked(tabIndex, self.AddToTabGroupAct.currentText()))
+                self.AddToTabGroupAct.combobox.currentIndexChanged.connect(lambda: self.CloseContextMenu(self.AddToTabGroupAct))
+                self.AddToTabGroupAct.combobox.activated.connect(lambda: self.on_AddToGroup_Clicked(tabIndex, self.AddToTabGroupAct.currentText()))
+                self.AddToTabGroupAct.combobox.activated.connect(lambda: self.CloseContextMenu(self.AddToTabGroupAct))
                 self.contextMenu.addAction(self.AddToTabGroupAct)
                 
                 # Add a separator
@@ -1587,6 +1590,7 @@ class ModernMenu(RibbonBar):
                     Parameters.FONTSIZE_MENUS,
                     Qt.AlignmentFlag.AlignLeft
                     )
+                self.RemoveFromTabGroupAct.setObjectName("RemoveFromGroup")
                 self.RemoveFromTabGroupAct.clicked.connect(lambda: self.on_RemoveFromExistingGroup_Clicked(tabIndex))
                 # Get the current group
                 ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
@@ -1602,7 +1606,7 @@ class ModernMenu(RibbonBar):
 
                 # Disconnect the widgetActions
                 self.AddToTabGroupAct.currentIndexChanged.disconnect()                
-                self.AddToTabGroupAct.clicked.disconnect()  
+                self.AddToTabGroupAct.combobox.activated.disconnect()  
                 self.RemoveFromTabGroupAct.clicked.disconnect()     
                 return
             
@@ -1638,6 +1642,7 @@ class ModernMenu(RibbonBar):
                             textVisible = False                                    
                         # set the checkbox for enabling text
                         RibbonButtonAction_Text = ToggleAction(self, translate("FreeCAD Ribbon", "Show button text"), "Top", Parameters.FONTSIZE_MENUS)
+                        RibbonButtonAction_Text.setObjectName("ShowButtonText")
                         RibbonButtonAction_Text.setChecked(textVisible)
                         RibbonButtonAction_Text.setText(translate("FreeCAD Ribbon", "Show button text"))
                         # Set the checkbox action checked or unchecked
@@ -1653,9 +1658,11 @@ class ModernMenu(RibbonBar):
                         
                         # Set the dropdown for the button style
                         RibbonButtonAction_Style = ComboBoxAction(self, translate("FreeCAD Ribbon", "Set button type"), "Top", Parameters.FONTSIZE_MENUS)
-                        RibbonButtonAction_Style.addItem("Small")
-                        RibbonButtonAction_Style.addItem("Medium")
-                        RibbonButtonAction_Style.addItem("Large")
+                        RibbonButtonAction_Style.combobox.clear()
+                        RibbonButtonAction_Style.combobox.addItem("Small")
+                        RibbonButtonAction_Style.combobox.addItem("Medium")
+                        RibbonButtonAction_Style.combobox.addItem("Large")
+                        RibbonButtonAction_Style.setObjectName("ButtonStyle")
 
                         if widget.parent().ButtonStyle == RibbonButtonStyle.Small:
                             RibbonButtonAction_Style.setCurrentText("Small")
@@ -1669,6 +1676,7 @@ class ModernMenu(RibbonBar):
                         
                         # Add a line edit for changing the text
                         ChangeButtonText = LineEditAction(self, translate("FreeCAD Ribbon", "Set button text"), Parameters.FONTSIZE_MENUS)
+                        ChangeButtonText.setObjectName("SetButtonText")
                         ChangeButtonText.setText("")
                         text = ""
                         label = widget.parent().findChild(QLabel)
@@ -1704,6 +1712,7 @@ class ModernMenu(RibbonBar):
             if titleWidget is not None and self.CustomizeEnabled is True and titleWidget.underMouse():
                 panel = titleWidget.parent().parent()
                 ChangePanelTitle = CustomWidgets.LineEditAction(self, translate("FreeCAD Ribbon", "Change panel title"))
+                ChangePanelTitle.setObjectName("SetPanelTitle")
                 ChangePanelTitle.setText("")
                 ChangePanelTitle.setPlaceholderText(panel.title())
                 ChangePanelTitle.setClearButtonEnabled(True)
@@ -1740,33 +1749,58 @@ class ModernMenu(RibbonBar):
                 and self.tabBar().underMouse() is False
                 ):                
                 # Add a menu to select layout (themes)                
-                SetLayoutsMenu = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set Layouts..."))
+                self.SetLayoutsMenu = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set Layouts..."))
                 
                 # Add a label to indicate the standard layout section
                 label = QLabel(translate("FreeCAD Ribbon", "Standard layouts"))
                 label.setAlignment(Qt.AlignmentFlag.AlignLeading)
                 label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
                 label.setStyleSheet("QLabel {font-weight: bold; padding: 4px;}")
-                widget_action = QWidgetAction(SetLayoutsMenu)
+                label.setObjectName("StandardLayout_Label")
+                widget_action = QWidgetAction(self.SetLayoutsMenu)
                 widget_action.setDefaultWidget(label)
-                SetLayoutsMenu.addAction(widget_action)
-                SetLayoutsMenu.addSeparator()
+                self.SetLayoutsMenu.addAction(widget_action)
+                self.SetLayoutsMenu.addSeparator()
 
-                Default_Act = SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Default layout"))
+                Default_Act = self.SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Default layout"))
                 Default_Act.triggered.connect(lambda: self.handleLayoutMenuAction("Default"))
                 
-                LargeAndMedium_Act = SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Large and medium buttons"))
+                LargeAndMedium_Act = self.SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Large and medium buttons"))
                 LargeAndMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("LargeAndMedium"))
                 
-                AllSmall_Act = SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "All small"))
+                AllSmall_Act = self.SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "All small"))
                 AllSmall_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllSmall"))
                 
-                AllMedium_Act = SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "All medium"))
+                AllMedium_Act = self.SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "All medium"))
                 AllMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllMedium"))
-
+                
+                # Add any user defined layout to the menu
+                UserLayoutDir = os.path.join(ConfigDirectory, "UserLayouts")
+                userLayouts = []
+                if os.path.exists(UserLayoutDir) is True:
+                    for root, dirs, files in os.walk(UserLayoutDir):
+                        for dir in dirs:
+                            userLayouts.append(dir)
+                if len(userLayouts) > 0:
+                    # Add a label to indicate the user layout section
+                    self.SetLayoutsMenu.addSeparator().setVisible(False)
+                    label = QLabel(translate("FreeCAD Ribbon", "Custom layouts"))
+                    label.setAlignment(Qt.AlignmentFlag.AlignLeading)
+                    label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+                    label.setStyleSheet("QLabel {font-weight: bold; padding: 4px;}")
+                    label.setObjectName("StandardLayout_Label")
+                    widget_action = QWidgetAction(self.SetLayoutsMenu)
+                    widget_action.setDefaultWidget(label)
+                    self.SetLayoutsMenu.addAction(widget_action)
+                    self.SetLayoutsMenu.addSeparator()
+                    
+                    for layout in userLayouts:
+                        act = self.SetLayoutsMenu.addAction(str(layout))
+                        act.triggered.connect(lambda: self.handleLayoutMenuAction(str(layout)))
                 
                 # Add a menu to select tabs to be shown
                 menu = StayOpenMenu(self.contextMenu)
+                menu.setObjectName("TabsMenu")
                 for i in range(self.tabBar().count()):
                     WorkbenchName = self.tabBar().tabData(i) 
                     if WorkbenchName != "NoneWorkbench":
@@ -1782,6 +1816,12 @@ class ModernMenu(RibbonBar):
                     # Set the tabs movable
                     self.tabBar().setMovable(True)
                     
+                    setUserLayout = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Save current layout"))
+                    setUserLayout.triggered.connect(self.AddUserLayout)
+                    # setUserLayout.triggered.connect
+                    
+                    # Add a separator
+                    self.contextMenu.addSeparator()
                     # Add a menu for exporting layouts
                     ExportLayoutsMenu = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Export..."))
                     ExportAll = ExportLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Export layout for all tabs"))
@@ -1890,7 +1930,7 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", False)
             Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", True)
                                     
-        if LayoutName == "LargeAndMedium":
+        elif LayoutName == "LargeAndMedium":
             # Write the layout to the parameters
             Parameters_Ribbon.Settings.SetStringSetting("Layout", "LargeAndMedium")
             # Get the directory with the files for the default layout
@@ -1910,7 +1950,7 @@ class ModernMenu(RibbonBar):
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 24)
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 48)
             
-        if LayoutName == "AllSmall":
+        elif LayoutName == "AllSmall":
             # Write the layout to the parameters
             Parameters_Ribbon.Settings.SetStringSetting("Layout", "AllSmall")
             # Get the directory with the files for the default layout
@@ -1925,7 +1965,7 @@ class ModernMenu(RibbonBar):
 
             # Adjust the icon sizes
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 24)
-        if LayoutName == "AllMedium":
+        elif LayoutName == "AllMedium":
             # Write the layout to the parameters
             Parameters_Ribbon.Settings.SetStringSetting("Layout", "AllMedium")
             # Get the directory with the files for the default layout
@@ -1941,6 +1981,12 @@ class ModernMenu(RibbonBar):
             # Adjust the icon sizes
             Parameters_Ribbon.Settings.SetBoolSetting("Link_IconSizes", False)
             Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 30)
+        else:
+            if LayoutName != "":
+                # Write the layout to the parameters
+                Parameters_Ribbon.Settings.SetStringSetting("Layout", LayoutName)
+                # Get the directory with the files for the default layout                
+                LayoutDir = os.path.join(ConfigDirectory, "UserLayouts", LayoutName)
 
         # Go through the directory     
         for root, dirs, files in os.walk(LayoutDir):
@@ -1993,7 +2039,7 @@ class ModernMenu(RibbonBar):
                             if command == commands[0] and toolbar != "Structure":
                                 size = FirstCommandSize
                             # Create the workbench dict for the command and set the order bast on the toolbar items
-                            StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches", WorkBenchName, "toolbars", toolbar, command, "size"], endEmpty=True)
+                            StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches", WorkBenchName, "toolbars", toolbar, "commands", command, "size"], endEmpty=True)
                             WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["commands"][command]["size"] = size
                         # Add the toolbar to the toolbar order list
                         ToolBarOrder.append(toolbar)
@@ -2023,6 +2069,43 @@ class ModernMenu(RibbonBar):
         # Restart FreeCAD
         StandardFunctions.RestartDialog(includeIcons=True)
          
+        return
+    
+    def AddUserLayout(self):                
+        # Check if there is a layout folder with default layouts
+        UserLayoutDir = os.path.join(ConfigDirectory, "UserLayouts")
+        if os.path.exists(UserLayoutDir) is False:
+            # Create the directory
+            os.makedirs(UserLayoutDir)
+        
+        #  Create a list of the layouts that are present. Used to fill the dropdown menu
+        userLayouts = []
+        for root, dirs, files in os.walk(UserLayoutDir):
+            for dir in dirs:
+                userLayouts.append(dir)
+        
+        # Get the dialog to enter or select a name
+        answer = StandardFunctions.Mbox(text=translate("FreeCAD Ribbon", "Enter a name..."), title="", style=21, default="User_1", stringList=userLayouts)
+        
+        # If the answer is not empty, add the layout to the directory
+        if answer is not None and answer != "":
+            os.makedirs(os.path.join(UserLayoutDir, answer))
+            for workbench in self.workBenchDict["workbenches"]:
+                # Define a file
+                workbenchFile = os.path.join(UserLayoutDir, answer, f"{workbench}.json")
+                # Fill the dict
+                workbenchDict = {}
+                Standard_Functions_Ribbon.add_keys_nested_dict(workbenchDict, ["workbenches", workbench])
+                workbenchDict["workbenches"][workbench] = self.workBenchDict["workbenches"][workbench]
+                # If the workbench has a custom toolbar, add its dict as well
+                if "customToolbars" in self.workBenchDict and workbench in self.workBenchDict["customToolbars"]:
+                    Standard_Functions_Ribbon.add_keys_nested_dict(workbenchDict, ["customToolbars", workbench])
+                    workbenchDict["customToolbars"][workbench].update(self.workBenchDict["customToolbars"][workbench])
+                
+                # Writing to file
+                with open(workbenchFile, "w") as outfile:
+                    json.dump(workbenchDict, outfile, indent=4)
+                    
         return
     
     def handleContextMenuAction(self, action):        
@@ -3351,17 +3434,16 @@ class ModernMenu(RibbonBar):
                 print("addToGroup")
                 json.dump(self.ribbonStructure, outfile, indent=4)      
         
-        ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
         IsInList = False
-        for i in range(ComboBox.count()):
-            if ComboBox.itemText(i) == GroupName:
+        for i in range(self.ComboBox.count()):
+            if self.ComboBox.itemText(i) == GroupName:
                 IsInList = True
         if IsInList is False:
-            ComboBox.addItem(GroupName)
-        ComboBox.show()
+            self.ComboBox.addItem(GroupName)
+        self.ComboBox.show()
         Button = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
         Button.show()  
-        if ComboBox.currentText() == translate("FreeCAD Ribbon", "All"):
+        if self.ComboBox.currentText() == translate("FreeCAD Ribbon", "All"):
             Button.setDisabled(True)
         
         return
