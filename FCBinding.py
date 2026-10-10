@@ -1937,6 +1937,8 @@ class ModernMenu(RibbonBar):
         
         # Go through all the installed workbenches
         for WorkBenchName, Workbench in Gui.listWorkbenches().items():
+            if WorkBenchName == "NoneWorkbench":
+                continue
             for root, dirs, files in os.walk(LayoutDir):
                 # If the workbench is not in the layout directory, recreate its dict 
                 # with every first command of a toolbar to set to large
@@ -1954,11 +1956,7 @@ class ModernMenu(RibbonBar):
                             continue
                         
                         # Create the workbench dict for the order key and set the order bast on the toolbar items
-                        StandardFunctions.add_keys_nested_dict(
-                                WorkbenchDict,
-                                ["workbenches",WorkBenchName, "toolbars", toolbar, "order"],
-                                endEmpty=True
-                            )
+                        StandardFunctions.add_keys_nested_dict(WorkbenchDict,["workbenches",WorkBenchName, "toolbars", toolbar, "order"], endEmpty=True)
                         WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["order"] = commands
                                                 
                         # Go through the commands
@@ -1968,19 +1966,7 @@ class ModernMenu(RibbonBar):
                             if command == commands[0] and toolbar != "Structure":
                                 size = FirstCommandSize
                             # Create the workbench dict for the command and set the order bast on the toolbar items
-                            StandardFunctions.add_keys_nested_dict(
-                                WorkbenchDict,
-                                [
-                                    "workbenches",
-                                    WorkBenchName,
-                                    "toolbars",
-                                    toolbar,
-                                    "commands",
-                                    command,
-                                    "size",
-                                ],
-                                endEmpty=True
-                            )
+                            StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches", WorkBenchName, "toolbars", toolbar, command, "size"], endEmpty=True)
                             WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["commands"][command]["size"] = size
                         # Add the toolbar to the toolbar order list
                         ToolBarOrder.append(toolbar)
