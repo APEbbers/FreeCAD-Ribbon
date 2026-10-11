@@ -2090,7 +2090,7 @@ class ModernMenu(RibbonBar):
         self.CleanRibbonStructure(skipIdCheck=True)
         
         # Restore the cursor
-        # QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
         QApplication.restoreOverrideCursor()
         
         # get the path for the Json file
@@ -5847,7 +5847,7 @@ class ModernMenu(RibbonBar):
 
             # Restore the cursor
             QApplication.restoreOverrideCursor()
-        QApplication.restoreOverrideCursor()
+            QApplication.restoreOverrideCursor()
         return
 
     # Function for loading the settings menu
