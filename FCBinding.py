@@ -695,6 +695,8 @@ class ModernMenu(RibbonBar):
         # write the change to the json file
         # Writing to sample.json
         with open(Parameters.RIBBON_STRUCTURE_JSON, "w") as outfile:
+            if Parameters.DEBUG_MODE:
+                print("RibbonStructure is updated with prefered panels")
             json.dump(self.ribbonStructure, outfile, indent=4)
         outfile.close()
         # ------------------------------------------------------------------------------------------------------------------     
@@ -2095,6 +2097,8 @@ class ModernMenu(RibbonBar):
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
         # Writing to sample.json
         with open(JsonFile, "w") as outfile:
+            if Parameters.DEBUG_MODE:
+                print(f"Layout {LayoutName} is applied")
             json.dump(self.ribbonStructure, outfile, indent=4)
                             
         # Restart FreeCAD
@@ -2136,6 +2140,8 @@ class ModernMenu(RibbonBar):
                     workbenchDict["customToolbars"][workbench].update(self.workBenchDict["customToolbars"][workbench])
                 # Writing to file
                 with open(workbenchFile, "w") as outfile:
+                    if Parameters.DEBUG_MODE:
+                        print(f"Layout {answer} is added to user layouts")
                     json.dump(workbenchDict, outfile, indent=4)
             
             # Write the general file
@@ -2517,8 +2523,7 @@ class ModernMenu(RibbonBar):
     
     def on_ApplyClicked(self):
         self.on_Ok_Clicked(CloseDialog=False)
-        # Print a message
-        print(translate("FreeCAD Ribbon", f"RibbonUI: Changes are saved."))
+        return
     
     def on_Ok_Clicked(self, workbenchName = "", CloseDialog = True):
         # Set the wait cursor
@@ -2774,6 +2779,8 @@ class ModernMenu(RibbonBar):
         # Writing to ribbonStructure.json
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
         with open(JsonFile, "w") as outfile:
+            # Print a message
+            print(translate("FreeCAD Ribbon", f"RibbonUI: Changes are saved."))
             json.dump(self.ribbonStructure, outfile, indent=4)
                 
         # Close the temporary document
@@ -3486,7 +3493,8 @@ class ModernMenu(RibbonBar):
             # Writing to ribbonStructure.json
             JsonFile = Parameters.RIBBON_STRUCTURE_JSON
             with open(JsonFile, "w") as outfile:
-                print("addToGroup")
+                if Parameters.DEBUG_MODE:
+                    print(f"{workbenchName} added to group {GroupName}")
                 json.dump(self.ribbonStructure, outfile, indent=4)      
         
         IsInList = False
@@ -3520,6 +3528,8 @@ class ModernMenu(RibbonBar):
                 # Writing to ribbonStructure.json
                 JsonFile = Parameters.RIBBON_STRUCTURE_JSON
                 with open(JsonFile, "w") as outfile:
+                    if Parameters.DEBUG_MODE:
+                        print(f"{workbenchName} removed from group {GroupName}")
                     json.dump(self.ribbonStructure, outfile, indent=4)
                 
                 # Hide the tab
@@ -3613,6 +3623,8 @@ class ModernMenu(RibbonBar):
             # Writing to ribbonStructure.json
             JsonFile = Parameters.RIBBON_STRUCTURE_JSON
             with open(JsonFile, "w") as outfile:
+                if Parameters.DEBUG_MODE:
+                    print(f"{GroupName} deleted from groups")
                 json.dump(self.ribbonStructure, outfile, indent=4)
             
             # Remove the group from the combobox as welll
@@ -4051,7 +4063,7 @@ class ModernMenu(RibbonBar):
                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["text"] = MenuText
                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["icon"] = ""
                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["IsExtra"] = True
-                            
+
                             # Get the name from  current workbench
                             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                             # Create a new panel with the extra command
@@ -4082,8 +4094,8 @@ class ModernMenu(RibbonBar):
                                 self.dropPanelName = ""
                                 self.dropPanel.close()
                                 
-                                # If toolbars are renamed (Char cases only), update the dict
-                                self.CleanRibbonStructure(self.workBenchDict, WriteRibbonStructure=False, skipIdCheck=True)
+                                # # If toolbars are renamed (Char cases only), update the dict
+                                # self.CleanRibbonStructure(self.workBenchDict, WriteRibbonStructure=False, skipIdCheck=True)
                                 return
                 except Exception as e:
                     if Parameters.DEBUG_MODE:
@@ -5678,10 +5690,12 @@ class ModernMenu(RibbonBar):
                     self.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Top"]
                 break
         
-        # Writing to ribbonStructure.json
-        JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-        with open(JsonFile, "w") as outfile:
-            json.dump(self.ribbonStructure, outfile, indent=4)
+        # # Writing to ribbonStructure.json
+        # JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+        # with open(JsonFile, "w") as outfile:
+        #     if Parameters.DEBUG_MODE:
+        #        print(f"position for { dockWidget_Name} stored.")
+        #     json.dump(self.ribbonStructure, outfile, indent=4)
                     
         return
     
@@ -5765,10 +5779,12 @@ class ModernMenu(RibbonBar):
                     self.ribbonStructure["ToolBarStates"][toolbarName] = [False, Location]                    
                     toolbar.close()
                     
-                # Writing to ribbonStructure.json
-                JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-                with open(JsonFile, "w") as outfile:
-                    json.dump(self.ribbonStructure, outfile, indent=4)
+                # # Writing to ribbonStructure.json
+                # JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+                # with open(JsonFile, "w") as outfile:
+                #     if Parameters.DEBUG_MODE:
+                #       print(f"{toolbarName} set at {Location}")
+                #     json.dump(self.ribbonStructure, outfile, indent=4)
                     
         return
     
@@ -5867,7 +5883,7 @@ class ModernMenu(RibbonBar):
         return
 
     # Build the panels from active workbench
-    def buildPanels(self, Dict=ribbonStructure, UpdateDict=True):
+    def buildPanels(self, Dict=ribbonStructure, UpdateDict=False):
         # Get the active workbench and get its name
         #
         workbenchTitle = self.tabBar().tabText(self.tabBar().currentIndex())
@@ -5987,12 +6003,12 @@ class ModernMenu(RibbonBar):
                             self.HiddenPanels.append(panel)
                             panel.hide()
                                    
-            # # Writing to ribbonStructure.json
-            # if UpdateDict is True:
-            #     JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-            #     with open(JsonFile, "w") as outfile:
-            #         json.dump(Dict, outfile, indent=4)
-            #     outfile.close()
+            # Writing to ribbonStructure.json
+            if UpdateDict is True:
+                JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+                with open(JsonFile, "w") as outfile:
+                    json.dump(Dict, outfile, indent=4)
+                outfile.close()
 
         self.isWbLoaded[tabName] = True
         
@@ -8515,6 +8531,8 @@ class ModernMenu(RibbonBar):
             JsonFile = Parameters.RIBBON_STRUCTURE_JSON
             
             with open(JsonFile, "w") as outfile:
+                if Parameters.DEBUG_MODE:
+                    print("The complete layout exported as one file.")
                 json.dump(self.ribbonStructure, outfile, indent=4)
             
             FileName = StandardFunctions.GetFileDialog(
@@ -8545,6 +8563,8 @@ class ModernMenu(RibbonBar):
                     FileName = os.path.join(path, Workbench + ".json")
                     if FileName != "":
                         with open(FileName, "w") as outfile:
+                            if Parameters.DEBUG_MODE:
+                                print(f"{WorkbenchName} layout exported")
                             json.dump(WorkbenchDict, outfile, indent=4)
             
                 
@@ -8570,6 +8590,8 @@ class ModernMenu(RibbonBar):
                 )
                 if FileName != "":
                     with open(FileName, "w") as outfile:
+                        if Parameters.DEBUG_MODE:
+                            print(f"{WorkbenchName} layout exported")
                         json.dump(WorkbenchDict, outfile, indent=4)
         return
     # endregion
@@ -8735,6 +8757,8 @@ class ModernMenu(RibbonBar):
             # Writing to ribbonStructure.json
             JsonFile = Parameters.RIBBON_STRUCTURE_JSON
             with open(JsonFile, "w") as outfile:
+                if Parameters.DEBUG_MODE:
+                    print("Toolbar names updated")
                 json.dump(Dict, outfile, indent=4)
                 
         return
@@ -8742,7 +8766,7 @@ class ModernMenu(RibbonBar):
     def CleanRibbonStructure(self, Dict = ribbonStructure, WorkBenchName = "", WriteRibbonStructure = True, skipIdCheck = False):
         """
         Remove any empty or null entry or other wrong netry in the ribbonstructure.json
-        """        
+        """       
         # Define an new workbench dict
         workbenchDict = {}
         
@@ -8796,9 +8820,13 @@ class ModernMenu(RibbonBar):
         if "workbenches" in workbenchDict and WriteRibbonStructure is True:
             Dict["workbenches"] = workbenchDict["workbenches"]
             
-            JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-            with open(JsonFile, "w") as outfile:
-                json.dump(Dict, outfile, indent=4)
+            # If the customize is not enabled, update the ribbonstructure.json
+            if not self.CustomizeEnabled:
+                JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+                with open(JsonFile, "w") as outfile:
+                    if Parameters.DEBUG_MODE:
+                        print("RibbonStructure.json cleaned")
+                    json.dump(Dict, outfile, indent=4)
         
         if "workbenches" in Dict and WorkBenchName != "":
             UpdateDict(Dict, WorkBenchName)
@@ -9016,6 +9044,8 @@ class ModernMenu(RibbonBar):
 
         # Writing to sample.json
         with open(JsonFile, "w") as outfile:
+            if Parameters.DEBUG_MODE:
+                print("the ribbonStructure is updated to the latest version")
             json.dump(self.ribbonStructure, outfile, indent=4)
 
         if RestartFreeCAD is True:
@@ -9041,8 +9071,11 @@ class EventInspector(QObject):
     def eventFilter(self, obj, event: QEvent):
         # This is an alternative drop function which works only with QT6.
         # It is needed to avoid problems with older Nvidia Cards (Pascal and older) and Wayland        
-        try:       
-            if self.PatchApplicable is True and platform.system() == "Linux":
+        try:
+            # Get the main window and the ribbon
+            mw = Gui.getMainWindow()
+            RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")  
+            if RibbonBar.CustomizeEnabled and self.PatchApplicable is True and platform.system() == "Linux":
                 session_id = subprocess.getoutput("env | grep -E -i 'x11|xorg|wayland'").split()[1].split("=")[1]
                 if session_id == "wayland":                                 
                     if self.dragEntered is True and QApplication.mouseButtons().value == 0:
@@ -9050,9 +9083,7 @@ class EventInspector(QObject):
                         if Parameters.DEBUG_MODE:
                             print("Wayland patch: Alternative drop event")
                         
-                        # Get the main window and the ribbon
-                        mw = Gui.getMainWindow()
-                        RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+                        
                         if RibbonBar.dropPanelName != "":
                             RibbonBar.dropEvent(widget=self.widget)
                             self.widget = None
@@ -9071,7 +9102,7 @@ class EventInspector(QObject):
                                 event.accept()                        
                         return QObject.eventFilter(self, obj, event)
         except Exception:
-            self.PatchApplicable = False
+            # self.PatchApplicable = False
             pass
                  
         if event.type() == QEvent.Type.KeyRelease:
@@ -9148,6 +9179,7 @@ class EventInspector(QObject):
                         pass       
 
         if event.type() == QEvent.Type.Close:
+            print("close event")
             OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
             String = OverlayParam_Top.GetString("Widgets")
             Parameters_Ribbon.Settings.SetStringSetting("StoredOverlayState", String)
