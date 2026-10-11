@@ -579,6 +579,7 @@ def GetCommand(CommandName):
         message = f"The command {CommandName} resulted in an error"
         if Parameters.DEBUG_MODE:
             message = message + ".\ntraceback:\n" + traceback.format_exc()
+        print(message)
         return ""
     return CommandName
 
