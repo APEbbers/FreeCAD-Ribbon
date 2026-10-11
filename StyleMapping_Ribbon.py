@@ -110,9 +110,9 @@ def DarkMode():
     if "opendark.qss" in currentStyleSheet.lower():
         return True
     if "opentheme.qss" in currentStyleSheet.lower():
-        if "OpenDark" in currentTheme:
+        if "opendark" in currentTheme.lower():
             return True
-        if "OpenLight" in currentTheme:
+        if "openlight" in currentTheme.lower():
             return False
 
     path = os.path.dirname(__file__)
