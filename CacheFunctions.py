@@ -285,47 +285,49 @@ def CreateCache(RestartFreeCAD=False):
             for j in range(len(value)):
                 if value[j] != "Std_Workbench":
                     CommandName = GetCommand(value[j])
-                    if CommandName.startswith("Std_"):
-                        Item = [CommandName, "Standard"]
-                    else:
-                        Item = [CommandName, WorkBenchName]
-                    IsInList = False
-                    for CommandNamesItem in CommandNames:
-                        if CommandNamesItem == Item:
-                            IsInList = True
-                            break
-                    if IsInList is False:
-                        CommandNames.append(Item)
+                    if CommandName != "":
+                        if CommandName.startswith("Std_"):
+                            Item = [CommandName, "Standard"]
+                        else:
+                            Item = [CommandName, WorkBenchName]
+                        IsInList = False
+                        for CommandNamesItem in CommandNames:
+                            if CommandNamesItem == Item:
+                                IsInList = True
+                                break
+                        if IsInList is False:
+                            CommandNames.append(Item)
         # Add commands that are not in any toolbars
         for commandNamesItem in Gui.listCommands():
-            CommandName_2 = GetCommand(commandNamesItem)          
-            if CommandName_2.lower().startswith("std_"):
-                inList = False
-                for CommandName in CommandNames:
-                    if CommandName[0] == CommandName_2:
-                        inList = True
-                
-                # Skip "Std_Workbench".
-                if commandNamesItem == "Std_Workbench":
-                    continue
-                
-                if inList is False:                    
-                    CommandNames.append([CommandName_2, "Standard"])
-            else:
-                inList = False
-                for CommandName in CommandNames:
-                    if CommandName[0] == commandNamesItem:
-                        inList = True
-                
-                if inList is False:
-                    WorkBench = ""
-                    for WorkBenchName in List_Workbenches:
-                        if CommandName_2.startswith(WorkBenchName[0]) or WorkBenchName[0].startswith(CommandName_2.split("_")[0]):
-                            WorkBench = WorkBenchName[0]
-                            break
-                    Icon = StandardFunctions.returnQiCons_Commands(CommandName_2)
-                    if Icon is not None or Icon.isNull() is False:
-                        CommandNames.append([CommandName_2, WorkBench])
+            CommandName_2 = GetCommand(commandNamesItem)
+            if CommandName_2 != "":
+                if CommandName_2.lower().startswith("std_"):
+                    inList = False
+                    for CommandName in CommandNames:
+                        if CommandName[0] == CommandName_2:
+                            inList = True
+                    
+                    # Skip "Std_Workbench".
+                    if commandNamesItem == "Std_Workbench":
+                        continue
+                    
+                    if inList is False:                    
+                        CommandNames.append([CommandName_2, "Standard"])
+                else:
+                    inList = False
+                    for CommandName in CommandNames:
+                        if CommandName[0] == commandNamesItem:
+                            inList = True
+                    
+                    if inList is False:
+                        WorkBench = ""
+                        for WorkBenchName in List_Workbenches:
+                            if CommandName_2.startswith(WorkBenchName[0]) or WorkBenchName[0].startswith(CommandName_2.split("_")[0]):
+                                WorkBench = WorkBenchName[0]
+                                break
+                        Icon = StandardFunctions.returnQiCons_Commands(CommandName_2)
+                        if Icon is not None or Icon.isNull() is False:
+                            CommandNames.append([CommandName_2, WorkBench])
 
     # Go through the list
     shadowList = []
@@ -556,21 +558,24 @@ def CreateCache(RestartFreeCAD=False):
 
 # region - helper functions
 def GetCommand(CommandName):
-    if len(CommandName.split(", ")) > 1:
-        # Split the commandname
-        CommandName_1 = CommandName.split(", ")[0]
-        ActionNumber = int(CommandName.split(", ")[1])
-        # Get the parent command
-        ParentCommand = Gui.Command.get(CommandName_1)
-        # If parent is not none, get the action based on the number
-        if ParentCommand is not None:
-            action = ParentCommand.getAction()[ActionNumber]
-            if action.objectName() != "":
-                CommandName = action.objectName()
-                return CommandName
-            else:
-                return CommandName
-        return CommandName
+    try:
+        if len(CommandName.split(", ")) > 1:
+            # Split the commandname
+            CommandName_1 = CommandName.split(", ")[0]
+            ActionNumber = int(CommandName.split(", ")[1])
+            # Get the parent command
+            ParentCommand = Gui.Command.get(CommandName_1)
+            # If parent is not none, get the action based on the number
+            if ParentCommand is not None:
+                action = ParentCommand.getAction()[ActionNumber]
+                if action.objectName() != "":
+                    CommandName = action.objectName()
+                    return CommandName
+                else:
+                    return CommandName
+            return CommandName
+    except Exception:
+        return ""
     return CommandName
 
 
