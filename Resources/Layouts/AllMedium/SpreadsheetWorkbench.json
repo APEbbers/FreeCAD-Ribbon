@@ -1,0 +1,460 @@
+{
+    "workbenches": {
+        "SpreadsheetWorkbench": {
+            "toolbars": {
+                "Spreadsheet": {
+                    "order": [
+                        "Spreadsheet_CreateSheet",
+                        "Spreadsheet_Import",
+                        "Spreadsheet_Export",
+                        "4_separator_SpreadsheetWorkbench",
+                        "Spreadsheet_MergeCells",
+                        "Spreadsheet_SplitCell",
+                        "7_separator_SpreadsheetWorkbench",
+                        "Spreadsheet_AlignLeft",
+                        "Spreadsheet_AlignCenter",
+                        "Spreadsheet_AlignRight",
+                        "Spreadsheet_AlignTop",
+                        "Spreadsheet_AlignVCenter",
+                        "Spreadsheet_AlignBottom",
+                        "13_separator_SpreadsheetWorkbench",
+                        "Spreadsheet_StyleBold",
+                        "Spreadsheet_StyleUnderline",
+                        "Spreadsheet_StyleItalic",
+                        "17_separator_SpreadsheetWorkbench",
+                        "Spreadsheet_SetAlias"
+                    ],
+                    "commands": {
+                        "Spreadsheet_CreateSheet": {
+                            "size": "medium",
+                            "text": "New Spreadsheet",
+                            "icon": "Spreadsheet"
+                        },
+                        "Spreadsheet_Import": {
+                            "size": "medium",
+                            "text": "Import Spreadsheet",
+                            "icon": "SpreadsheetImport"
+                        },
+                        "Spreadsheet_Export": {
+                            "size": "medium",
+                            "text": "Export Spreadsheet",
+                            "icon": "SpreadsheetExport"
+                        },
+                        "Spreadsheet_MergeCells": {
+                            "size": "medium",
+                            "text": "Merge Cells",
+                            "icon": "SpreadsheetMergeCells"
+                        },
+                        "Spreadsheet_SplitCell": {
+                            "size": "medium",
+                            "text": "Split Cell",
+                            "icon": "SpreadsheetSplitCell"
+                        },
+                        "Spreadsheet_AlignLeft": {
+                            "size": "medium",
+                            "text": "Align Left",
+                            "icon": "SpreadsheetAlignLeft"
+                        },
+                        "Spreadsheet_AlignCenter": {
+                            "size": "medium",
+                            "text": "Align Horizontal Center",
+                            "icon": "SpreadsheetAlignCenter"
+                        },
+                        "Spreadsheet_AlignRight": {
+                            "size": "medium",
+                            "text": "Align Right",
+                            "icon": "SpreadsheetAlignRight"
+                        },
+                        "Spreadsheet_AlignTop": {
+                            "size": "medium",
+                            "text": "Align Top",
+                            "icon": "SpreadsheetAlignTop"
+                        },
+                        "Spreadsheet_AlignVCenter": {
+                            "size": "medium",
+                            "text": "Align Vertical Center",
+                            "icon": "SpreadsheetAlignVCenter"
+                        },
+                        "Spreadsheet_AlignBottom": {
+                            "size": "medium",
+                            "text": "Align Bottom",
+                            "icon": "SpreadsheetAlignBottom"
+                        },
+                        "Spreadsheet_StyleBold": {
+                            "size": "medium",
+                            "text": "Bold Text",
+                            "icon": "SpreadsheetStyleBold"
+                        },
+                        "Spreadsheet_StyleItalic": {
+                            "size": "medium",
+                            "text": "Italic Text",
+                            "icon": "SpreadsheetStyleItalic"
+                        },
+                        "Spreadsheet_StyleUnderline": {
+                            "size": "medium",
+                            "text": "Underline Text",
+                            "icon": "SpreadsheetStyleUnderline"
+                        },
+                        "Spreadsheet_SetAlias": {
+                            "size": "medium",
+                            "text": "Set Alias",
+                            "icon": "SpreadsheetAlias"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        }
+                    }
+                },
+                "order": [
+                    "Individual views",
+                    "Structure",
+                    "Spreadsheet"
+                ],
+                "Individual views": {
+                    "order": [
+                        "Isometric",
+                        "Front",
+                        "Top",
+                        "Right",
+                        "Rear",
+                        "Bottom",
+                        "Left"
+                    ],
+                    "commands": {
+                        "Std_ViewIsometric": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-axonometric"
+                        },
+                        "Std_ViewFront": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-front"
+                        },
+                        "Std_ViewTop": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-top"
+                        },
+                        "Std_ViewRight": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-right"
+                        },
+                        "Std_ViewRear": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-rear"
+                        },
+                        "Std_ViewBottom": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-bottom"
+                        },
+                        "Std_ViewLeft": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-left"
+                        }
+                    }
+                },
+                "Structure": {
+                    "order": [
+                        "Part_Datums",
+                        "Std_Part",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ],
+                    "commands": {
+                        "Std_Part": {
+                            "size": "medium",
+                            "text": "New Part",
+                            "icon": "Geofeaturegroup"
+                        },
+                        "Std_Group": {
+                            "size": "medium",
+                            "text": "New Group",
+                            "icon": "folder"
+                        },
+                        "Std_LinkActions": {
+                            "size": "medium",
+                            "text": "Link Actions...",
+                            "icon": ""
+                        },
+                        "Std_VarSet": {
+                            "size": "medium",
+                            "text": "Variable Set",
+                            "icon": "VarSet"
+                        },
+                        "Part_Datums": {
+                            "size": "medium",
+                            "text": "Datums...",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Tools_newPanel": {
+                    "commands": {
+                        "Std_Measure": {
+                            "size": "medium",
+                            "text": "Measure",
+                            "icon": "umf-measurement"
+                        },
+                        "Std_UnitsCalculator": {
+                            "size": "medium",
+                            "text": "Units Converter",
+                            "icon": "accessories-calculator"
+                        },
+                        "Std_Properties": {
+                            "size": "medium",
+                            "text": "Properties",
+                            "icon": "document-properties"
+                        },
+                        "Std_BoxElementSelection": {
+                            "size": "medium",
+                            "text": "Box Element Selection",
+                            "icon": "edit-element-select-box"
+                        },
+                        "Std_BoxSelection": {
+                            "size": "medium",
+                            "text": "Box Selection",
+                            "icon": "edit-select-box"
+                        },
+                        "Std_WhatsThis": {
+                            "size": "medium",
+                            "text": "What's This?",
+                            "icon": "WhatsThis"
+                        }
+                    },
+                    "order": [
+                        "Std_Measure",
+                        "Std_UnitsCalculator",
+                        "Std_Properties",
+                        "Std_BoxElementSelection",
+                        "Std_BoxSelection",
+                        "Std_WhatsThis"
+                    ]
+                },
+                "File": {
+                    "commands": {
+                        "Std_New": {
+                            "size": "medium",
+                            "text": "New Document",
+                            "icon": "document-new"
+                        },
+                        "Std_Open": {
+                            "size": "medium",
+                            "text": "Open\u2026",
+                            "icon": "document-open"
+                        },
+                        "Std_Save": {
+                            "size": "medium",
+                            "text": "Save",
+                            "icon": "document-save"
+                        }
+                    }
+                },
+                "Edit": {
+                    "commands": {
+                        "Std_Undo": {
+                            "size": "medium",
+                            "text": "Undo",
+                            "icon": "edit-undo"
+                        },
+                        "Std_Redo": {
+                            "size": "medium",
+                            "text": "Redo",
+                            "icon": "edit-redo"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_Refresh": {
+                            "size": "medium",
+                            "text": "Recompute",
+                            "icon": "view-refresh"
+                        }
+                    }
+                },
+                "Clipboard": {
+                    "commands": {
+                        "Std_Cut": {
+                            "size": "medium",
+                            "text": "Cut",
+                            "icon": "edit-cut"
+                        },
+                        "Std_Copy": {
+                            "size": "medium",
+                            "text": "Copy",
+                            "icon": "edit-copy"
+                        },
+                        "Std_Paste": {
+                            "size": "medium",
+                            "text": "Paste",
+                            "icon": "edit-paste"
+                        }
+                    }
+                },
+                "Workbench": {
+                    "commands": {
+                        "Std_Workbench": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Macro": {
+                    "commands": {
+                        "Std_DlgMacroRecord": {
+                            "size": "medium",
+                            "text": "Record Macro",
+                            "icon": "media-record"
+                        },
+                        "Std_DlgMacroExecute": {
+                            "size": "medium",
+                            "text": "Macros",
+                            "icon": "accessories-text-editor"
+                        },
+                        "Std_DlgMacroExecuteDirect": {
+                            "size": "medium",
+                            "text": "Execute Macro",
+                            "icon": "media-playback-start"
+                        }
+                    }
+                },
+                "View": {
+                    "commands": {
+                        "Std_ViewFitAll": {
+                            "size": "medium",
+                            "text": "Fit All",
+                            "icon": "zoom-all"
+                        },
+                        "Std_ViewFitSelection": {
+                            "size": "medium",
+                            "text": "Fit Selection",
+                            "icon": "zoom-selection"
+                        },
+                        "Std_ViewGroup": {
+                            "size": "medium",
+                            "text": "Standard Views...",
+                            "icon": "view-isometric"
+                        },
+                        "Std_AlignToSelection": {
+                            "size": "medium",
+                            "text": "Align to Selection",
+                            "icon": "align-to-selection"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_DrawStyle": {
+                            "size": "medium",
+                            "text": "Draw Style...",
+                            "icon": "DrawStyleAsIs"
+                        },
+                        "Part_SelectFilter": {
+                            "size": "medium",
+                            "text": "Selection Filter...",
+                            "icon": "clear-selection"
+                        },
+                        "Std_Measure": {
+                            "size": "medium",
+                            "text": "Measure",
+                            "icon": "umf-measurement"
+                        },
+                        "Std_MassProperties": {
+                            "size": "medium",
+                            "text": "Mass Properties",
+                            "icon": "MassPropertiesIcon"
+                        }
+                    }
+                },
+                "Individual Views": {
+                    "commands": {
+                        "Std_ViewIsometric": {
+                            "size": "medium",
+                            "text": "&Isometric",
+                            "icon": "view-axonometric"
+                        },
+                        "Std_ViewFront": {
+                            "size": "medium",
+                            "text": "Front",
+                            "icon": "view-front"
+                        },
+                        "Std_ViewTop": {
+                            "size": "medium",
+                            "text": "Top",
+                            "icon": "view-top"
+                        },
+                        "Std_ViewRight": {
+                            "size": "medium",
+                            "text": "Right",
+                            "icon": "view-right"
+                        },
+                        "Std_ViewRear": {
+                            "size": "medium",
+                            "text": "Rear",
+                            "icon": "view-rear"
+                        },
+                        "Std_ViewBottom": {
+                            "size": "medium",
+                            "text": "Bottom",
+                            "icon": "view-bottom"
+                        },
+                        "Std_ViewLeft": {
+                            "size": "medium",
+                            "text": "Left",
+                            "icon": "view-left"
+                        }
+                    }
+                },
+                "Help": {
+                    "commands": {
+                        "Std_WhatsThis": {
+                            "size": "medium",
+                            "text": "What's This?",
+                            "icon": "WhatsThis"
+                        }
+                    }
+                },
+                "Create BOM SpreadsheetWorkbench": {
+                    "commands": {
+                        "CreateBOM_Overall": {
+                            "size": "medium",
+                            "text": "Create BOM",
+                            "icon": "BillOfMaterialsWB.svg"
+                        }
+                    }
+                },
+                "PieMenuTB": {
+                    "commands": {
+                        "PieMenu_View": {
+                            "size": "medium",
+                            "text": "View",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
+                        },
+                        "PieMenu_PartDesign": {
+                            "size": "medium",
+                            "text": "PartDesign",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
+                        },
+                        "PieMenu_Sketcher": {
+                            "size": "medium",
+                            "text": "Sketcher",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
+                        }
+                    }
+                }
+            },
+            "Enabled": true
+        }
+    }
+}

@@ -159,6 +159,7 @@ def DarkMode():
                     else: 
                         if mw.palette().windowText().color().lightness() > mw.palette().window().color().lightness():
                             IsDarkTheme = True
+                    
 
     return IsDarkTheme
 

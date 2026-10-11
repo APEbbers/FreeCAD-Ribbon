@@ -203,26 +203,6 @@ try:
 except Exception:
     pass
 
-# Check if there is a layout folder with default layouts
-LayoutDir = os.path.join(ConfigDirectory, "Layouts", "Default")
-if os.path.exists(LayoutDir) is False:
-    # Create the directories
-    os.makedirs(LayoutDir)
-    # open "CreateStructure.txt" and create files for each workbench
-    ribbonStructure = os.path.join(os.path.dirname(FCBinding.__file__), "CreateStructure.txt")
-    structure = {}
-    with open(ribbonStructure, "r") as file:
-        structure.update(json.load(file))
-    
-    for workbench in structure["workbenches"]:
-        # Define a file
-        workbenchFile = os.path.join(LayoutDir, f"{workbench}.json")
-        # Fill the dict
-        workbenchDict = structure["workbenches"][workbench]        
-        # Writing to file
-        with open(workbenchFile, "w") as outfile:
-            json.dump(workbenchDict, outfile, indent=4)
-
 try:   
     print(translate("FreeCAD Ribbon", "Activating Ribbon UI..."))
     # # Set the wait cursor

@@ -689,20 +689,24 @@ def TranslationsMapping(WorkBenchName: str, string: str):
     return result
 
 
-# # Add or update the dict for the Ribbon command panel
-#         self.add_keys_nested_dict(
-#             self.Dict_RibbonCommandPanel,
-#             ["workbenches", WorkBenchName, "toolbars", Toolbar, "order"],
-#         )
+def lowercase_keys(obj):
+  if isinstance(obj, dict):
+    obj = {key.lower(): value for key, value in obj.items()}
+    for key, value in obj.items():         
+      if isinstance(value, list):
+        for idx, item in enumerate(value):
+          value[idx] = lowercase_keys(item)
+      obj[key] = lowercase_keys(value)
+  return obj 
+
+
+# https://stackoverflow.com/questions/764235/dictionary-to-lowercase-in-python
 def add_keys_nested_dict(dict, keys, default=1, endEmpty = False):
-    """_summary_
-
-    Args:
-        dict (_type_): Enter dict to create or modify
-        keys (_type_): Enter key or list of keys
-
-    Returns:
-        bool: True if a new dict is created or modified. Otherwise False
+    """Add or update the dict for the Ribbon command panel
+        self.add_keys_nested_dict(
+            self.Dict_RibbonCommandPanel,
+            ["workbenches", WorkBenchName, "toolbars", Toolbar, "order"],
+        )
     """
     for key in keys:
         result = False

@@ -1,0 +1,1104 @@
+{
+    "workbenches": {
+        "BIMWorkbench": {
+            "toolbars": {
+                "Drafting Tools": {
+                    "commands": {
+                        "BIM_Sketch": {
+                            "size": "medium",
+                            "text": "New Sketch",
+                            "icon": "Sketch"
+                        },
+                        "Draft_Line": {
+                            "size": "medium",
+                            "text": "Line",
+                            "icon": "Draft_Line"
+                        },
+                        "Draft_Wire": {
+                            "size": "medium",
+                            "text": "Polyline",
+                            "icon": "Draft_Wire"
+                        },
+                        "Draft_Circle": {
+                            "size": "medium",
+                            "text": "Circle",
+                            "icon": "Draft_Circle"
+                        },
+                        "Draft_Arc": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Draft_Arc_3Points": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Draft_Fillet": {
+                            "size": "medium",
+                            "text": "Fillet",
+                            "icon": "Draft_Fillet"
+                        },
+                        "Draft_Ellipse": {
+                            "size": "medium",
+                            "text": "Ellipse",
+                            "icon": "Draft_Ellipse"
+                        },
+                        "Draft_Polygon": {
+                            "size": "medium",
+                            "text": "Polygon",
+                            "icon": "Draft_Polygon"
+                        },
+                        "Draft_Rectangle": {
+                            "size": "medium",
+                            "text": "Rectangle",
+                            "icon": "Draft_Rectangle"
+                        },
+                        "Draft_BSpline": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Draft_BezCurve": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Draft_CubicBezCurve": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Draft_Point": {
+                            "size": "medium",
+                            "text": "Point",
+                            "icon": "Draft_Point"
+                        },
+                        "BIM_ArcTools": {
+                            "size": "medium",
+                            "text": "Arc Tools...",
+                            "icon": ""
+                        },
+                        "BIM_SplineTools": {
+                            "size": "medium",
+                            "text": "Spline Tools...",
+                            "icon": ""
+                        }
+                    },
+                    "order": [
+                        "BIM_Sketch",
+                        "BIM_ArcTools",
+                        "BIM_SplineTools",
+                        "Draft_Line",
+                        "Draft_Wire",
+                        "Draft_Rectangle",
+                        "Draft_Circle",
+                        "Draft_Ellipse",
+                        "Draft_Polygon",
+                        "Draft_Point",
+                        "Draft_Fillet"
+                    ]
+                },
+                "Draft Snap": {
+                    "commands": {
+                        "Draft_Snap_Lock": {
+                            "size": "medium",
+                            "text": "Snap Lock",
+                            "icon": "Draft_Snap_Lock"
+                        },
+                        "Draft_Snap_Endpoint": {
+                            "size": "medium",
+                            "text": "Snap Endpoint",
+                            "icon": "Draft_Snap_Endpoint"
+                        },
+                        "Draft_Snap_Midpoint": {
+                            "size": "medium",
+                            "text": "Snap Midpoint",
+                            "icon": "Draft_Snap_Midpoint"
+                        },
+                        "Draft_Snap_Center": {
+                            "size": "medium",
+                            "text": "Snap Center",
+                            "icon": "Draft_Snap_Center"
+                        },
+                        "Draft_Snap_Angle": {
+                            "size": "medium",
+                            "text": "Snap Angle",
+                            "icon": "Draft_Snap_Angle"
+                        },
+                        "Draft_Snap_Intersection": {
+                            "size": "medium",
+                            "text": "Snap Intersection",
+                            "icon": "Draft_Snap_Intersection"
+                        },
+                        "Draft_Snap_Perpendicular": {
+                            "size": "medium",
+                            "text": "Snap Perpendicular",
+                            "icon": "Draft_Snap_Perpendicular"
+                        },
+                        "Draft_Snap_Extension": {
+                            "size": "medium",
+                            "text": "Snap Extension",
+                            "icon": "Draft_Snap_Extension"
+                        },
+                        "Draft_Snap_Parallel": {
+                            "size": "medium",
+                            "text": "Snap Parallel",
+                            "icon": "Draft_Snap_Parallel"
+                        },
+                        "Draft_Snap_Special": {
+                            "size": "medium",
+                            "text": "Snap Special",
+                            "icon": "Draft_Snap_Special"
+                        },
+                        "Draft_Snap_Near": {
+                            "size": "medium",
+                            "text": "Snap Near",
+                            "icon": "Draft_Snap_Near"
+                        },
+                        "Draft_Snap_Ortho": {
+                            "size": "medium",
+                            "text": "Snap Ortho",
+                            "icon": "Draft_Snap_Ortho"
+                        },
+                        "Draft_Snap_Grid": {
+                            "size": "medium",
+                            "text": "Snap Grid",
+                            "icon": "Draft_Snap_Grid"
+                        },
+                        "Draft_Snap_WorkingPlane": {
+                            "size": "medium",
+                            "text": "Snap Working Plane",
+                            "icon": "Draft_Snap_WorkingPlane"
+                        },
+                        "Draft_Snap_Dimensions": {
+                            "size": "medium",
+                            "text": "Snap Dimensions",
+                            "icon": "Draft_Snap_Dimensions"
+                        },
+                        "Draft_ToggleGrid": {
+                            "size": "medium",
+                            "text": "Toggle Grid",
+                            "icon": "Draft_Grid"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        }
+                    },
+                    "order": [
+                        "Draft_Snap_Lock",
+                        "Draft_Snap_Endpoint",
+                        "Draft_Snap_Midpoint",
+                        "Draft_Snap_Center",
+                        "Draft_Snap_Angle",
+                        "Draft_Snap_Intersection",
+                        "Draft_Snap_Perpendicular",
+                        "Draft_Snap_Extension",
+                        "Draft_Snap_Parallel",
+                        "Draft_Snap_Special",
+                        "Draft_Snap_Near",
+                        "Draft_Snap_Ortho",
+                        "Draft_Snap_Grid",
+                        "Draft_Snap_WorkingPlane",
+                        "Draft_Snap_Dimensions",
+                        "Draft_ToggleGrid"
+                    ]
+                },
+                "3D/BIM Tools": {
+                    "commands": {
+                        "Arch_Site": {
+                            "size": "medium",
+                            "text": "Site",
+                            "icon": "Arch_Site"
+                        },
+                        "Arch_Building": {
+                            "size": "medium",
+                            "text": "Building",
+                            "icon": "Arch_Building"
+                        },
+                        "Arch_Level": {
+                            "size": "medium",
+                            "text": "Level",
+                            "icon": "Arch_Floor"
+                        },
+                        "Arch_Space": {
+                            "size": "medium",
+                            "text": "Space",
+                            "icon": "Arch_Space"
+                        },
+                        "Arch_Wall": {
+                            "size": "medium",
+                            "text": "Wall",
+                            "icon": "Arch_Wall"
+                        },
+                        "Arch_CurtainWall": {
+                            "size": "medium",
+                            "text": "Curtain Wall",
+                            "icon": "Arch_CurtainWall"
+                        },
+                        "BIM_Column": {
+                            "size": "medium",
+                            "text": "Column",
+                            "icon": "BIM_Column"
+                        },
+                        "BIM_Beam": {
+                            "size": "medium",
+                            "text": "Beam",
+                            "icon": "BIM_Beam"
+                        },
+                        "BIM_Slab": {
+                            "size": "medium",
+                            "text": "Slab",
+                            "icon": "BIM_Slab"
+                        },
+                        "BIM_Door": {
+                            "size": "medium",
+                            "text": "Door",
+                            "icon": "BIM_Door"
+                        },
+                        "Arch_Window": {
+                            "size": "medium",
+                            "text": "Window",
+                            "icon": "Arch_Window"
+                        },
+                        "Arch_Pipe": {
+                            "size": "medium",
+                            "text": "Pipe",
+                            "icon": "Arch_Pipe"
+                        },
+                        "Arch_PipeConnector": {
+                            "size": "medium",
+                            "text": "Connector",
+                            "icon": "Arch_PipeConnector"
+                        },
+                        "Arch_Stairs": {
+                            "size": "medium",
+                            "text": "Stairs",
+                            "icon": "Arch_Stairs"
+                        },
+                        "Arch_Roof": {
+                            "size": "medium",
+                            "text": "Roof",
+                            "icon": "Arch_Roof"
+                        },
+                        "Arch_Panel": {
+                            "size": "medium",
+                            "text": "Panel",
+                            "icon": "Arch_Panel"
+                        },
+                        "Arch_Frame": {
+                            "size": "medium",
+                            "text": "Frame",
+                            "icon": "Arch_Frame"
+                        },
+                        "Arch_Fence": {
+                            "size": "medium",
+                            "text": "Fence",
+                            "icon": "Arch_Fence"
+                        },
+                        "Arch_Truss": {
+                            "size": "medium",
+                            "text": "Truss",
+                            "icon": "Arch_Truss"
+                        },
+                        "Arch_Equipment": {
+                            "size": "medium",
+                            "text": "Equipment",
+                            "icon": "Arch_Equipment"
+                        },
+                        "Arch_Rebar": {
+                            "size": "medium",
+                            "text": "Custom Rebar",
+                            "icon": "Arch_Rebar"
+                        },
+                        "BIM_GenericTools": {
+                            "size": "medium",
+                            "text": "Generic 3D Tools...",
+                            "icon": ""
+                        },
+                        "BIM_Covering": {
+                            "size": "medium",
+                            "text": "Covering",
+                            "icon": "BIM_Covering"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        }
+                    },
+                    "order": [
+                        "Arch_Building",
+                        "Arch_Site",
+                        "Arch_Level",
+                        "Arch_Space",
+                        "Arch_Wall",
+                        "Arch_CurtainWall",
+                        "BIM_Column",
+                        "BIM_Beam",
+                        "BIM_Slab",
+                        "BIM_Door",
+                        "Arch_Window",
+                        "Arch_Pipe",
+                        "Arch_PipeConnector",
+                        "Arch_Stairs",
+                        "Arch_Roof",
+                        "Arch_Panel",
+                        "Arch_Frame",
+                        "Arch_Fence",
+                        "Arch_Truss",
+                        "Arch_Equipment",
+                        "Arch_Rebar",
+                        "BIM_GenericTools",
+                        "BIM_Covering"
+                    ]
+                },
+                "Annotation Tools": {
+                    "commands": {
+                        "BIM_Text": {
+                            "size": "medium",
+                            "text": "Text",
+                            "icon": "Draft_Text"
+                        },
+                        "Draft_ShapeString": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "BIM_DimensionAligned": {
+                            "size": "medium",
+                            "text": "Aligned Dimension",
+                            "icon": "BIM_DimensionAligned"
+                        },
+                        "BIM_DimensionHorizontal": {
+                            "size": "medium",
+                            "text": "Horizontal Dimension",
+                            "icon": "BIM_DimensionHorizontal.svg"
+                        },
+                        "BIM_DimensionVertical": {
+                            "size": "medium",
+                            "text": "Vertical Dimension",
+                            "icon": "BIM_DimensionVertical"
+                        },
+                        "BIM_Leader": {
+                            "size": "medium",
+                            "text": "Leader",
+                            "icon": "BIM_Leader"
+                        },
+                        "Draft_Label": {
+                            "size": "medium",
+                            "text": "Label",
+                            "icon": "Draft_Label"
+                        },
+                        "Draft_Hatch": {
+                            "size": "medium",
+                            "text": "Hatch",
+                            "icon": "Draft_Hatch"
+                        },
+                        "Arch_Axis": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Arch_AxisSystem": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Arch_Grid": {
+                            "size": "medium",
+                            "text": "Grid",
+                            "icon": "Arch_Grid"
+                        },
+                        "Arch_SectionPlane": {
+                            "size": "medium",
+                            "text": "Section Plane",
+                            "icon": "Arch_SectionPlane"
+                        },
+                        "BIM_Create2DViews": {
+                            "size": "medium",
+                            "text": "Create 2D Views...",
+                            "icon": ""
+                        },
+                        "BIM_TDPage": {
+                            "size": "medium",
+                            "text": "New Page",
+                            "icon": "BIM_PageDefault"
+                        },
+                        "BIM_TDView": {
+                            "size": "medium",
+                            "text": "New View",
+                            "icon": "BIM_InsertView"
+                        },
+                        "BIM_AxisTools": {
+                            "size": "medium",
+                            "text": "Axis Tools...",
+                            "icon": ""
+                        }
+                    },
+                    "order": [
+                        "BIM_Text",
+                        "BIM_DimensionAligned",
+                        "BIM_DimensionHorizontal",
+                        "BIM_DimensionVertical",
+                        "BIM_Leader",
+                        "Arch_Grid",
+                        "Arch_SectionPlane",
+                        "BIM_Create2DViews",
+                        "BIM_TDPage",
+                        "BIM_TDView",
+                        "BIM_AxisTools",
+                        "Draft_Label",
+                        "Draft_Hatch"
+                    ],
+                    "title": "Annotation Tools"
+                },
+                "General Tools": {
+                    "commands": {
+                        "Draft_Move": {
+                            "size": "medium",
+                            "text": "Move",
+                            "icon": "Draft_Move"
+                        },
+                        "BIM_Copy": {
+                            "size": "medium",
+                            "text": "Copy",
+                            "icon": "BIM_Copy"
+                        },
+                        "Draft_Rotate": {
+                            "size": "medium",
+                            "text": "Rotate",
+                            "icon": "Draft_Rotate"
+                        },
+                        "BIM_Clone": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "BIM_SimpleCopy": {
+                            "size": "medium",
+                            "text": "Simple Copy",
+                            "icon": "Tree_Part"
+                        },
+                        "BIM_Compound": {
+                            "size": "medium",
+                            "text": "Compound",
+                            "icon": "Part_Compound"
+                        },
+                        "Draft_Scale": {
+                            "size": "medium",
+                            "text": "Scale",
+                            "icon": "Draft_Scale"
+                        },
+                        "Draft_Mirror": {
+                            "size": "medium",
+                            "text": "Mirror",
+                            "icon": "Draft_Mirror"
+                        },
+                        "BIM_CloneTools": {
+                            "size": "medium",
+                            "text": "Cloning Tools...",
+                            "icon": ""
+                        }
+                    },
+                    "order": [
+                        "BIM_Copy",
+                        "BIM_SimpleCopy",
+                        "BIM_Compound",
+                        "BIM_CloneTools",
+                        "4_separator_BIMWorkbench",
+                        "Draft_Move",
+                        "Draft_Rotate",
+                        "Draft_Scale",
+                        "Draft_Mirror"
+                    ],
+                    "title": "General Tools"
+                },
+                "2D Tools": {
+                    "commands": {
+                        "Draft_Offset": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "BIM_Offset2D": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Draft_Trimex": {
+                            "size": "medium",
+                            "text": "Trimex",
+                            "icon": "Draft_Trimex"
+                        },
+                        "Draft_Join": {
+                            "size": "medium",
+                            "text": "Join",
+                            "icon": "Draft_Join"
+                        },
+                        "Draft_Split": {
+                            "size": "medium",
+                            "text": "Split",
+                            "icon": "Draft_Split"
+                        },
+                        "Draft_Scale": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Draft_Stretch": {
+                            "size": "medium",
+                            "text": "Stretch",
+                            "icon": "Draft_Stretch"
+                        },
+                        "Draft_Draft2Sketch": {
+                            "size": "medium",
+                            "text": "Draft to Sketch",
+                            "icon": "Draft_Draft2Sketch"
+                        },
+                        "BIM_OffsetTools": {
+                            "size": "medium",
+                            "text": "Offset Tools...",
+                            "icon": ""
+                        },
+                        "Draft_Edit": {
+                            "size": "medium",
+                            "text": "Edit",
+                            "icon": "Draft_Edit"
+                        }
+                    },
+                    "order": [
+                        "BIM_OffsetTools",
+                        "Draft_Trimex",
+                        "Draft_Join",
+                        "Draft_Split",
+                        "Draft_Stretch",
+                        "Draft_Draft2Sketch",
+                        "Draft_Edit"
+                    ]
+                },
+                "Object Tools": {
+                    "commands": {
+                        "Draft_Upgrade": {
+                            "size": "medium",
+                            "text": "Upgrade",
+                            "icon": "Draft_Upgrade"
+                        },
+                        "Draft_Downgrade": {
+                            "size": "medium",
+                            "text": "Downgrade",
+                            "icon": "Draft_Downgrade"
+                        },
+                        "Arch_Add": {
+                            "size": "medium",
+                            "text": "Add Component",
+                            "icon": "Arch_Add"
+                        },
+                        "Arch_Remove": {
+                            "size": "medium",
+                            "text": "Remove Component",
+                            "icon": "Arch_Remove"
+                        }
+                    },
+                    "order": [
+                        "Arch_Add",
+                        "Arch_Remove",
+                        "Draft_Upgrade",
+                        "Draft_Downgrade"
+                    ]
+                },
+                "3D Tools": {
+                    "commands": {
+                        "Draft_OrthoArray": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Draft_PathArray": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Draft_PolarArray": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Draft_PointArray": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Arch_CutPlane": {
+                            "size": "medium",
+                            "text": "Cut With Plane",
+                            "icon": "Arch_CutPlane"
+                        },
+                        "Draft_Mirror": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "BIM_Extrude": {
+                            "size": "medium",
+                            "text": "Extrude",
+                            "icon": "Part_Extrude"
+                        },
+                        "BIM_Cut": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "BIM_Fuse": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "BIM_Common": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "BIM_ArrayTools": {
+                            "size": "medium",
+                            "text": "Array Tools...",
+                            "icon": ""
+                        },
+                        "BIM_BooleanTools": {
+                            "size": "medium",
+                            "text": "Boolean Tools...",
+                            "icon": ""
+                        }
+                    },
+                    "order": [
+                        "BIM_BooleanTools",
+                        "Arch_CutPlane",
+                        "BIM_Extrude",
+                        "BIM_ArrayTools"
+                    ]
+                },
+                "Manage Tools": {
+                    "commands": {
+                        "BIM_Setup": {
+                            "size": "medium",
+                            "text": "BIM Setup",
+                            "icon": ":icons/preferences-system.svg"
+                        },
+                        "BIM_Views": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "BIM_ProjectManager": {
+                            "size": "medium",
+                            "text": "Setup Project",
+                            "icon": "BIM_ProjectManager"
+                        },
+                        "BIM_Windows": {
+                            "size": "medium",
+                            "text": "Manage Doors and Windows",
+                            "icon": "BIM_Windows"
+                        },
+                        "BIM_IfcElements": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "BIM_IfcQuantities": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "BIM_IfcProperties": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "BIM_Classification": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "BIM_Layers": {
+                            "size": "medium",
+                            "text": "Manage Layers",
+                            "icon": "BIM_Layers"
+                        },
+                        "BIM_Material": {
+                            "size": "medium",
+                            "text": "Material",
+                            "icon": "BIM_Material"
+                        },
+                        "Arch_Schedule": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "BIM_Preflight": {
+                            "size": "medium",
+                            "text": "Preflight Checks",
+                            "icon": "BIM_Preflight"
+                        },
+                        "Draft_AnnotationStyleEditor": {
+                            "size": "medium",
+                            "text": "Annotation Styles",
+                            "icon": ":icons/Draft_Annotation_Style.svg"
+                        },
+                        "BIM_IfcManageTools": {
+                            "size": "medium",
+                            "text": "IFC Management...",
+                            "icon": ""
+                        },
+                        "BIM_ReportTools": {
+                            "size": "medium",
+                            "text": "Report Tools...",
+                            "icon": ""
+                        }
+                    },
+                    "order": [
+                        "BIM_Setup",
+                        "BIM_ProjectManager",
+                        "BIM_Windows",
+                        "BIM_Layers",
+                        "BIM_Material",
+                        "BIM_Preflight",
+                        "BIM_IfcManageTools",
+                        "BIM_ReportTools",
+                        "Draft_AnnotationStyleEditor"
+                    ]
+                },
+                "Individual views": {
+                    "order": [
+                        "Isometric",
+                        "Front",
+                        "Top",
+                        "Right",
+                        "Rear",
+                        "Bottom",
+                        "Left"
+                    ],
+                    "commands": {
+                        "Std_ViewIsometric": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-axonometric"
+                        },
+                        "Std_ViewFront": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-front"
+                        },
+                        "Std_ViewTop": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-top"
+                        },
+                        "Std_ViewRight": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-right"
+                        },
+                        "Std_ViewRear": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-rear"
+                        },
+                        "Std_ViewBottom": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-bottom"
+                        },
+                        "Std_ViewLeft": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-left"
+                        }
+                    }
+                },
+                "Structure": {
+                    "order": [
+                        "Part_Datums",
+                        "Std_Part",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ],
+                    "commands": {
+                        "Std_Part": {
+                            "size": "medium",
+                            "text": "New Part",
+                            "icon": "Geofeaturegroup"
+                        },
+                        "Std_Group": {
+                            "size": "medium",
+                            "text": "New Group",
+                            "icon": "folder"
+                        },
+                        "Std_LinkActions": {
+                            "size": "medium",
+                            "text": "Link Actions...",
+                            "icon": ""
+                        },
+                        "Std_VarSet": {
+                            "size": "medium",
+                            "text": "Variable Set",
+                            "icon": "VarSet"
+                        },
+                        "Part_Datums": {
+                            "size": "medium",
+                            "text": "Datums...",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Tools_newPanel": {
+                    "commands": {
+                        "Std_Measure": {
+                            "size": "medium",
+                            "text": "Measure",
+                            "icon": "umf-measurement"
+                        },
+                        "Std_UnitsCalculator": {
+                            "size": "medium",
+                            "text": "Units Converter",
+                            "icon": "accessories-calculator"
+                        },
+                        "Std_Properties": {
+                            "size": "medium",
+                            "text": "Properties",
+                            "icon": "document-properties"
+                        },
+                        "Std_BoxElementSelection": {
+                            "size": "medium",
+                            "text": "Box Element Selection",
+                            "icon": "edit-element-select-box"
+                        },
+                        "Std_BoxSelection": {
+                            "size": "medium",
+                            "text": "Box Selection",
+                            "icon": "edit-select-box"
+                        },
+                        "Std_WhatsThis": {
+                            "size": "medium",
+                            "text": "What's This?",
+                            "icon": "WhatsThis"
+                        }
+                    },
+                    "order": [
+                        "Std_Measure",
+                        "Std_UnitsCalculator",
+                        "Std_Properties",
+                        "Std_BoxElementSelection",
+                        "Std_BoxSelection",
+                        "Std_WhatsThis"
+                    ]
+                },
+                "order": [
+                    "Structure",
+                    "Drafting Tools",
+                    "Draft Snap",
+                    "3D/BIM Tools",
+                    "Annotation Tools",
+                    "General Tools",
+                    "2D Tools",
+                    "3D Tools",
+                    "Object Tools",
+                    "Manage Tools",
+                    "Tools_newPanel"
+                ],
+                "File": {
+                    "commands": {
+                        "Std_New": {
+                            "size": "medium",
+                            "text": "New Document",
+                            "icon": "document-new"
+                        },
+                        "Std_Open": {
+                            "size": "medium",
+                            "text": "Open\u2026",
+                            "icon": "document-open"
+                        },
+                        "Std_Save": {
+                            "size": "medium",
+                            "text": "Save",
+                            "icon": "document-save"
+                        }
+                    }
+                },
+                "Edit": {
+                    "commands": {
+                        "Std_Undo": {
+                            "size": "medium",
+                            "text": "Undo",
+                            "icon": "edit-undo"
+                        },
+                        "Std_Redo": {
+                            "size": "medium",
+                            "text": "Redo",
+                            "icon": "edit-redo"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_Refresh": {
+                            "size": "medium",
+                            "text": "Recompute",
+                            "icon": "view-refresh"
+                        }
+                    }
+                },
+                "Clipboard": {
+                    "commands": {
+                        "Std_Cut": {
+                            "size": "medium",
+                            "text": "Cut",
+                            "icon": "edit-cut"
+                        },
+                        "Std_Copy": {
+                            "size": "medium",
+                            "text": "Copy",
+                            "icon": "edit-copy"
+                        },
+                        "Std_Paste": {
+                            "size": "medium",
+                            "text": "Paste",
+                            "icon": "edit-paste"
+                        }
+                    }
+                },
+                "Workbench": {
+                    "commands": {
+                        "Std_Workbench": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Macro": {
+                    "commands": {
+                        "Std_DlgMacroRecord": {
+                            "size": "medium",
+                            "text": "Record Macro",
+                            "icon": "media-record"
+                        },
+                        "Std_DlgMacroExecute": {
+                            "size": "medium",
+                            "text": "Macros",
+                            "icon": "accessories-text-editor"
+                        },
+                        "Std_DlgMacroExecuteDirect": {
+                            "size": "medium",
+                            "text": "Execute Macro",
+                            "icon": "media-playback-start"
+                        }
+                    }
+                },
+                "View": {
+                    "commands": {
+                        "Std_ViewFitAll": {
+                            "size": "medium",
+                            "text": "Fit All",
+                            "icon": "zoom-all"
+                        },
+                        "Std_ViewFitSelection": {
+                            "size": "medium",
+                            "text": "Fit Selection",
+                            "icon": "zoom-selection"
+                        },
+                        "Std_ViewGroup": {
+                            "size": "medium",
+                            "text": "Standard Views...",
+                            "icon": "view-isometric"
+                        },
+                        "Std_AlignToSelection": {
+                            "size": "medium",
+                            "text": "Align to Selection",
+                            "icon": "align-to-selection"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_DrawStyle": {
+                            "size": "medium",
+                            "text": "Draw Style...",
+                            "icon": "DrawStyleAsIs"
+                        },
+                        "Part_SelectFilter": {
+                            "size": "medium",
+                            "text": "Selection Filter...",
+                            "icon": "clear-selection"
+                        },
+                        "Std_Measure": {
+                            "size": "medium",
+                            "text": "Measure",
+                            "icon": "umf-measurement"
+                        },
+                        "Std_MassProperties": {
+                            "size": "medium",
+                            "text": "Mass Properties",
+                            "icon": "MassPropertiesIcon"
+                        }
+                    }
+                },
+                "Individual Views": {
+                    "commands": {
+                        "Std_ViewIsometric": {
+                            "size": "medium",
+                            "text": "&Isometric",
+                            "icon": "view-axonometric"
+                        },
+                        "Std_ViewFront": {
+                            "size": "medium",
+                            "text": "Front",
+                            "icon": "view-front"
+                        },
+                        "Std_ViewTop": {
+                            "size": "medium",
+                            "text": "Top",
+                            "icon": "view-top"
+                        },
+                        "Std_ViewRight": {
+                            "size": "medium",
+                            "text": "Right",
+                            "icon": "view-right"
+                        },
+                        "Std_ViewRear": {
+                            "size": "medium",
+                            "text": "Rear",
+                            "icon": "view-rear"
+                        },
+                        "Std_ViewBottom": {
+                            "size": "medium",
+                            "text": "Bottom",
+                            "icon": "view-bottom"
+                        },
+                        "Std_ViewLeft": {
+                            "size": "medium",
+                            "text": "Left",
+                            "icon": "view-left"
+                        }
+                    }
+                },
+                "Help": {
+                    "commands": {
+                        "Std_WhatsThis": {
+                            "size": "medium",
+                            "text": "What's This?",
+                            "icon": "WhatsThis"
+                        }
+                    }
+                },
+                "Create BOM BIMWorkbench": {
+                    "commands": {
+                        "CreateBOM_Overall": {
+                            "size": "medium",
+                            "text": "Create BOM",
+                            "icon": "BillOfMaterialsWB.svg"
+                        }
+                    }
+                },
+                "PieMenuTB": {
+                    "commands": {
+                        "PieMenu_View": {
+                            "size": "medium",
+                            "text": "View",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
+                        },
+                        "PieMenu_PartDesign": {
+                            "size": "medium",
+                            "text": "PartDesign",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
+                        },
+                        "PieMenu_Sketcher": {
+                            "size": "medium",
+                            "text": "Sketcher",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
+                        }
+                    }
+                }
+            },
+            "Enabled": true
+        }
+    }
+}

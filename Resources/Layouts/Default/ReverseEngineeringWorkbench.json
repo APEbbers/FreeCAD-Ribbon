@@ -1,0 +1,100 @@
+{
+    "workbenches": {
+        "ReverseEngineeringWorkbench": {
+            "toolbars": {
+                "order": [
+                    "Individual views",
+                    "Structure",
+                    "File",
+                    "Edit",
+                    "Clipboard",
+                    "Workbench",
+                    "Macro",
+                    "View",
+                    "Help",
+                    "Reverse Engineering"
+                ],
+                "Reverse Engineering": {
+                    "order": [
+                        "Reen_ApproxSurface"
+                    ],
+                    "commands": {
+                        "Reen_ApproxSurface": {
+                            "size": "large",
+                            "text": "",
+                            "icon": "actions/FitSurface"
+                        }
+                    }
+                },
+                "Structure": {
+                    "commands": {
+                        "Std_Part": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Part_Datums": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_Group": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_LinkActions": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_VarSet": {
+                            "size": "small",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Part_Datums",
+                        "Std_Part",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ]
+                },
+                "Tools_newPanel": {
+                    "commands": {
+                        "Std_Measure": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_UnitsCalculator": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_Properties": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_BoxElementSelection": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_BoxSelection": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_WhatsThis": {
+                            "size": "small",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Std_Measure",
+                        "Std_UnitsCalculator",
+                        "Std_Properties",
+                        "Std_BoxElementSelection",
+                        "Std_BoxSelection",
+                        "Std_WhatsThis"
+                    ]
+                }
+            },
+            "Enabled": true
+        }
+    }
+}

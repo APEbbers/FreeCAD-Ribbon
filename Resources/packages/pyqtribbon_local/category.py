@@ -364,7 +364,11 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
 
         :param title: The title of the panel.
         """
-        # self._panelLayout.removeWidget(self._panels[title])
+        # this makes the function case insensitive
+        for key in self._panels.keys():
+            if key.lower() == title.lower():
+                title = key
+                
         self.removeWidget(self._panels[title])
         self._panels.pop(title)
         
@@ -375,9 +379,15 @@ class RibbonCategory(RibbonCategoryLayoutWidget):
         :param toPanel: The panel to replace with.
         :return: The new panel.
         """
+                
         self.replaceWidget(fromPanel, toPanel)
         if toPanel.title() != fromPanel.title():
-            self._panels.pop(fromPanel.title())
+            # this makes the function case insensitive
+            for key in self._panels.keys():
+                if key.lower() == fromPanel.title().lower():
+                    fromPanel_title = key
+            
+            self._panels.pop(fromPanel_title)
             self._panels[toPanel.title()] = toPanel
         return toPanel
 

@@ -1,0 +1,175 @@
+{
+    "toolbars": {
+        "Structure": {
+            "commands": {
+                "Std_Part": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Part_Datums": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_Group": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_LinkActions": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_VarSet": {
+                    "size": "small",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Std_Part",
+                "Part_Datums",
+                "Std_Group",
+                "Std_LinkActions",
+                "Std_VarSet"
+            ],
+            "Enabled": true
+        },
+        "Sheet Metal": {
+            "commands": {
+                "SheetMetal_BaseShape": {
+                    "size": "large",
+                    "text": ""
+                },
+                "SheetMetal_NewSketch": {
+                    "size": "small",
+                    "text": ""
+                },
+                "SheetMetal_AddBase": {
+                    "size": "small",
+                    "text": ""
+                },
+                "SheetMetal_FromSolid": {
+                    "size": "large",
+                    "text": ""
+                },
+                "SheetMetal_AddWall": {
+                    "size": "large",
+                    "text": ""
+                },
+                "SheetMetal_AddHem": {
+                    "size": "small",
+                    "text": ""
+                },
+                "SheetMetal_Extrude": {
+                    "size": "small",
+                    "text": ""
+                },
+                "SheetMetal_ExtendBySketch": {
+                    "size": "small",
+                    "text": ""
+                },
+                "SheetMetal_AddFoldWall": {
+                    "size": "small",
+                    "text": ""
+                },
+                "SheetMetal_Unfold": {
+                    "size": "large",
+                    "text": ""
+                },
+                "SheetMetal_UnfoldUpdate": {
+                    "size": "small",
+                    "text": ""
+                },
+                "SheetMetal_AddCornerRelief": {
+                    "size": "small",
+                    "text": ""
+                },
+                "SheetMetal_AddRelief": {
+                    "size": "small",
+                    "text": ""
+                },
+                "SheetMetal_AddJunction": {
+                    "size": "small",
+                    "text": ""
+                },
+                "SheetMetal_AddBend": {
+                    "size": "small",
+                    "text": ""
+                },
+                "SheetMetal_SketchOnSheet": {
+                    "size": "small",
+                    "text": ""
+                },
+                "SheetMetal_AddCutout": {
+                    "size": "small",
+                    "text": ""
+                },
+                "SheetMetal_Forming": {
+                    "size": "small",
+                    "text": ""
+                }
+            },
+            "order": [
+                "SheetMetal_BaseShape",
+                "SheetMetal_FromSolid",
+                "SheetMetal_NewSketch",
+                "2_separator_SMWorkbench",
+                "SheetMetal_AddWall",
+                "SheetMetal_AddBase",
+                "SheetMetal_AddHem",
+                "SheetMetal_Extrude",
+                "SheetMetal_ExtendBySketch",
+                "SheetMetal_AddBend",
+                "8_separator_SMWorkbench",
+                "SheetMetal_Unfold",
+                "SheetMetal_AddFoldWall",
+                "SheetMetal_UnfoldUpdate",
+                "12_separator_SMWorkbench",
+                "SheetMetal_AddCornerRelief",
+                "SheetMetal_AddRelief",
+                "SheetMetal_AddJunction",
+                "18_separator_SMWorkbench",
+                "SheetMetal_AddCutout",
+                "SheetMetal_Forming",
+                "SheetMetal_SketchOnSheet"
+            ],
+            "Enabled": true
+        },
+        "Tools_newPanel": {
+            "commands": {
+                "Std_Measure": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_UnitsCalculator": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_Properties": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_BoxElementSelection": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_BoxSelection": {
+                    "size": "small",
+                    "text": ""
+                },
+                "Std_WhatsThis": {
+                    "size": "small",
+                    "text": ""
+                }
+            },
+            "order": [
+                "Std_Measure",
+                "Std_UnitsCalculator",
+                "Std_Properties",
+                "Std_BoxElementSelection",
+                "Std_BoxSelection",
+                "Std_WhatsThis"
+            ],
+            "Enabled": true
+        }
+    },
+    "Enabled": true
+}

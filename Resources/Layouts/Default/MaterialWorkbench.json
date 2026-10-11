@@ -1,0 +1,29 @@
+{
+    "toolbars": {
+        "order": [
+            "Individual views",
+            "Structure",
+            "File",
+            "Edit",
+            "Clipboard",
+            "Workbench",
+            "Macro",
+            "View",
+            "Help",
+            "Materials"
+        ],
+        "Materials": {
+            "order": [
+                "Material_Edit"
+            ],
+            "commands": {
+                "Materials_Edit": {
+                    "size": "large",
+                    "text": "",
+                    "icon": "Materials_Edit"
+                }
+            }
+        }
+    },
+    "Enabled": false
+}

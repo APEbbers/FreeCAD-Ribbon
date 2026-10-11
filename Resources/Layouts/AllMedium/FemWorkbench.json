@@ -1,0 +1,1097 @@
+{
+    "workbenches": {
+        "FemWorkbench": {
+            "toolbars": {
+                "Model": {
+                    "order": [
+                        "FEM_Analysis",
+                        "FEM_MaterialReinforced",
+                        "FEM_MaterialEditor",
+                        "FEM_MaterialSolid",
+                        "FEM_MaterialMechanicalNonlinear",
+                        "FEM_MaterialFluid",
+                        "5_separator_FemWorkbench",
+                        "FEM_ElementGeometry1D",
+                        "FEM_ElementRotation1D",
+                        "FEM_ElementGeometry2D",
+                        "FEM_ElementFluid1D"
+                    ],
+                    "commands": {
+                        "FEM_Analysis": {
+                            "size": "medium",
+                            "text": "New Analysis",
+                            "icon": "FEM_Analysis"
+                        },
+                        "FEM_MaterialReinforced": {
+                            "size": "medium",
+                            "text": "Reinforced Material (Concrete)",
+                            "icon": "FEM_MaterialReinforced"
+                        },
+                        "FEM_MaterialEditor": {
+                            "size": "medium",
+                            "text": "Material Editor",
+                            "icon": "Arch_Material_Group"
+                        },
+                        "FEM_ElementGeometry1D": {
+                            "size": "medium",
+                            "text": "Beam Cross Section",
+                            "icon": "FEM_ElementGeometry1D"
+                        },
+                        "FEM_ElementRotation1D": {
+                            "size": "medium",
+                            "text": "Beam Rotation",
+                            "icon": "FEM_ElementRotation1D"
+                        },
+                        "FEM_ElementGeometry2D": {
+                            "size": "medium",
+                            "text": "Shell Plate Thickness",
+                            "icon": "FEM_ElementGeometry2D"
+                        },
+                        "FEM_ElementFluid1D": {
+                            "size": "medium",
+                            "text": "Fluid Section for 1D Flow",
+                            "icon": "FEM_ElementFluid1D"
+                        },
+                        "FEM_MaterialSolid": {
+                            "size": "medium",
+                            "text": "Solid Material",
+                            "icon": "FEM_MaterialSolid"
+                        },
+                        "FEM_MaterialFluid": {
+                            "size": "medium",
+                            "text": "Fluid Material",
+                            "icon": "FEM_MaterialFluid"
+                        },
+                        "FEM_MaterialMechanicalNonlinear": {
+                            "size": "medium",
+                            "text": "Non-Linear Mechanical Material",
+                            "icon": "FEM_MaterialMechanicalNonlinear"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Electromagnetic boundary conditions": {
+                    "order": [
+                        "Electromagnetic boundary conditions"
+                    ],
+                    "commands": {
+                        "FEM_CompEmConstraints": {
+                            "size": "large",
+                            "text": "",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Fluid boundary conditions": {
+                    "order": [
+                        "FEM_ConstraintInitialFlowVelocity",
+                        "FEM_ConstraintInitialPressure",
+                        "FEM_ConstraintFlowVelocity"
+                    ],
+                    "commands": {
+                        "FEM_ConstraintInitialFlowVelocity": {
+                            "size": "large",
+                            "text": "",
+                            "icon": "FEM_ConstraintInitialFlowVelocity"
+                        }
+                    }
+                },
+                "Geometrical analysis features": {
+                    "order": [
+                        "FEM_ConstraintPlaneRotation",
+                        "FEM_ConstraintSectionPrint",
+                        "FEM_ConstraintTransform"
+                    ],
+                    "commands": {
+                        "FEM_ConstraintPlaneRotation": {
+                            "size": "large",
+                            "text": "",
+                            "icon": "FEM_ConstraintPlaneRotation"
+                        },
+                        "FEM_ConstraintSectionPrint": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "FEM_ConstraintSectionPrint"
+                        },
+                        "FEM_ConstraintTransform": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "FEM_ConstraintTransform"
+                        }
+                    }
+                },
+                "Mechanical boundary conditions and loads": {
+                    "order": [
+                        "FEM_ConstraintFixed",
+                        "FEM_ConstraintRigidBody",
+                        "FEM_ConstraintDisplacement",
+                        "FEM_ConstraintContact",
+                        "FEM_ConstraintTie",
+                        "FEM_ConstraintForce",
+                        "FEM_ConstraintPressure",
+                        "FEM_ConstraintCentrif",
+                        "FEM_ConstraintSelfWeight"
+                    ],
+                    "commands": {
+                        "FEM_ConstraintFixed": {
+                            "size": "large",
+                            "text": "",
+                            "icon": "FEM_ConstraintFixed"
+                        }
+                    }
+                },
+                "Thermal boundary conditions and loads": {
+                    "order": [
+                        "FEM_ConstraintInitialTemperature",
+                        "FEM_ConstraintHeatflux",
+                        "FEM_ConstraintTemperature",
+                        "FEM_ConstraintBodyHeatSource"
+                    ],
+                    "commands": {
+                        "FEM_ConstraintInitialTemperature": {
+                            "size": "large",
+                            "text": "",
+                            "icon": "FEM_ConstraintInitialTemperature"
+                        },
+                        "FEM_ConstraintHeatflux": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "FEM_ConstraintHeatflux"
+                        },
+                        "FEM_ConstraintTemperature": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "FEM_ConstraintTemperature"
+                        },
+                        "FEM_ConstraintBodyHeatSource": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "FEM_ConstraintBodyHeatSource"
+                        }
+                    }
+                },
+                "Mesh": {
+                    "order": [
+                        "FEM_MeshNetgenFromShape",
+                        "FEM_FEMMesh2Mesh",
+                        "FEM_MeshGmshFromShape",
+                        "FEM_MeshRegion",
+                        "FEM_MeshGroup",
+                        "FEM_MeshGMSHRefinement"
+                    ],
+                    "commands": {
+                        "FEM_MeshNetgenFromShape": {
+                            "size": "medium",
+                            "text": "Mesh From Shape by Netgen",
+                            "icon": "FEM_MeshNetgenFromShape"
+                        },
+                        "FEM_MeshGmshFromShape": {
+                            "size": "medium",
+                            "text": "Mesh From Shape by Gmsh",
+                            "icon": "FEM_MeshGmshFromShape"
+                        },
+                        "FEM_MeshBoundaryLayer": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "FEM_MeshBoundaryLayer"
+                        },
+                        "FEM_MeshRegion": {
+                            "size": "medium",
+                            "text": "Mesh Refinement",
+                            "icon": "FEM_MeshRegion"
+                        },
+                        "FEM_MeshGroup": {
+                            "size": "medium",
+                            "text": "Mesh Group",
+                            "icon": "FEM_MeshGroup"
+                        },
+                        "FEM_FEMMesh2Mesh": {
+                            "size": "medium",
+                            "text": "FEM Mesh to Mesh",
+                            "icon": "FEM_FEMMesh2Mesh"
+                        },
+                        "FEM_MeshGMSHRefinement": {
+                            "size": "medium",
+                            "text": "GMSH Refinements...",
+                            "icon": ""
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Solve": {
+                    "order": [
+                        "FEM_SolverRun",
+                        "FEM_EquationFlow",
+                        "FEM_EquationFlux",
+                        "FEM_EquationHeat",
+                        "FEM_SolverControl",
+                        "FEM_CompMechEquations",
+                        "FEM_CompEmEquations",
+                        "FEM_CompSolvers"
+                    ],
+                    "commands": {
+                        "FEM_SolverCalculiXCcxTools": {
+                            "size": "large",
+                            "text": "",
+                            "icon": "FEM_SolverStandard"
+                        },
+                        "FEM_CompMechEquations": {
+                            "size": "medium",
+                            "text": "Mechanical Equations...",
+                            "icon": ""
+                        },
+                        "FEM_CompEmEquations": {
+                            "size": "medium",
+                            "text": "Electromagnetic Equations...",
+                            "icon": ""
+                        },
+                        "FEM_EquationFlow": {
+                            "size": "medium",
+                            "text": "Flow Equation",
+                            "icon": "FEM_EquationFlow"
+                        },
+                        "FEM_EquationFlux": {
+                            "size": "medium",
+                            "text": "Flux Equation",
+                            "icon": "FEM_EquationFlux"
+                        },
+                        "FEM_EquationHeat": {
+                            "size": "medium",
+                            "text": "Heat Equation",
+                            "icon": "FEM_EquationHeat"
+                        },
+                        "FEM_SolverControl": {
+                            "size": "medium",
+                            "text": "Solver Job Control",
+                            "icon": "FEM_SolverControl"
+                        },
+                        "FEM_SolverRun": {
+                            "size": "medium",
+                            "text": "Run Solver",
+                            "icon": "FEM_SolverRun"
+                        },
+                        "FEM_CompSolvers": {
+                            "size": "medium",
+                            "text": "Solvers...",
+                            "icon": ""
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Results": {
+                    "order": [
+                        "FEM_ResultShow",
+                        "FEM_PostPipelineFromResult",
+                        "FEM_PostFilterWarp",
+                        "FEM_PostFilterClipScalar",
+                        "FEM_PostFilterCutFunction",
+                        "FEM_PostFilterClipRegion",
+                        "FEM_PostFilterDataAtPoint",
+                        "FEM_PostFilterContours",
+                        "FEM_PostFilterGlyph",
+                        "FEM_PostFilterDataAlongLine",
+                        "FEM_PostFilterCalculator",
+                        "9_separator_FemWorkbench",
+                        "FEM_PostFilterLinearizedStresses",
+                        "FEM_PostVisualization",
+                        "FEM_PostBranchFilter",
+                        "15_separator_FemWorkbench",
+                        "FEM_PostCreateFunctions",
+                        "FEM_PostApplyChanges",
+                        "FEM_ResultsPurge"
+                    ],
+                    "commands": {
+                        "FEM_ResultsPurge": {
+                            "size": "medium",
+                            "text": "Purge Results",
+                            "icon": "FEM_ResultsPurge"
+                        },
+                        "FEM_ResultShow": {
+                            "size": "medium",
+                            "text": "Show Result",
+                            "icon": "FEM_ResultShow"
+                        },
+                        "FEM_PostApplyChanges": {
+                            "size": "medium",
+                            "text": "Apply Changes to Pipeline",
+                            "icon": "view-refresh"
+                        },
+                        "FEM_PostPipelineFromResult": {
+                            "size": "medium",
+                            "text": "Post Pipeline From Result",
+                            "icon": "FEM_PostPipelineFromResult"
+                        },
+                        "FEM_PostFilterWarp": {
+                            "size": "medium",
+                            "text": "Warp Filter",
+                            "icon": "FEM_PostFilterWarp"
+                        },
+                        "FEM_PostFilterClipScalar": {
+                            "size": "medium",
+                            "text": "Scalar Clip Filter",
+                            "icon": "FEM_PostFilterClipScalar"
+                        },
+                        "FEM_PostFilterCutFunction": {
+                            "size": "medium",
+                            "text": "Function Cut Filter",
+                            "icon": "FEM_PostFilterCutFunction"
+                        },
+                        "FEM_PostFilterClipRegion": {
+                            "size": "medium",
+                            "text": "Region Clip Filter",
+                            "icon": "FEM_PostFilterClipRegion"
+                        },
+                        "FEM_PostFilterContours": {
+                            "size": "medium",
+                            "text": "Contours Filter",
+                            "icon": "FEM_PostFilterContours"
+                        },
+                        "FEM_PostFilterDataAlongLine": {
+                            "size": "medium",
+                            "text": "Line Clip Filter",
+                            "icon": "FEM_PostFilterDataAlongLine"
+                        },
+                        "FEM_PostFilterLinearizedStresses": {
+                            "size": "medium",
+                            "text": "Stress Linearization Plot",
+                            "icon": "FEM_PostFilterLinearizedStresses"
+                        },
+                        "FEM_PostFilterDataAtPoint": {
+                            "size": "medium",
+                            "text": "Data at Point Clip Filter",
+                            "icon": "FEM_PostFilterDataAtPoint"
+                        },
+                        "FEM_PostCreateFunctions": {
+                            "size": "medium",
+                            "text": "Filter Functions...",
+                            "icon": ""
+                        },
+                        "FEM_PostBranchFilter": {
+                            "size": "medium",
+                            "text": "Pipeline Branch",
+                            "icon": "FEM_PostBranchFilter"
+                        },
+                        "FEM_PostFilterGlyph": {
+                            "size": "medium",
+                            "text": "Glyph Filter",
+                            "icon": "FEM_PostFilterGlyph"
+                        },
+                        "FEM_PostFilterCalculator": {
+                            "size": "medium",
+                            "text": "Calculator Filter",
+                            "icon": "FEM_PostFilterCalculator"
+                        },
+                        "FEM_PostVisualization": {
+                            "size": "medium",
+                            "text": "Data Visualizations...",
+                            "icon": ""
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Utilities": {
+                    "order": [
+                        "FEM_ClippingPlaneAdd",
+                        "FEM_ClippingPlaneRemoveAll",
+                        "FEM_Examples"
+                    ],
+                    "commands": {
+                        "FEM_ClippingPlaneAdd": {
+                            "size": "medium",
+                            "text": "Clipping Plane on Face",
+                            "icon": "FEM_ClippingPlaneAdd"
+                        },
+                        "FEM_ClippingPlaneRemoveAll": {
+                            "size": "medium",
+                            "text": "Remove All Clipping Planes",
+                            "icon": "FEM_ClippingPlaneRemoveAll"
+                        },
+                        "FEM_Examples": {
+                            "size": "medium",
+                            "text": "FEM Examples",
+                            "icon": "FemWorkbench"
+                        }
+                    }
+                },
+                "order": [
+                    "Structure",
+                    "Model",
+                    "Geometrical Analysis Features",
+                    "Loads & Constraints_custom",
+                    "Mesh",
+                    "Solve",
+                    "Results",
+                    "Utilities",
+                    "Tools_newPanel"
+                ],
+                "Individual views": {
+                    "order": [
+                        "Isometric",
+                        "Front",
+                        "Top",
+                        "Right",
+                        "Rear",
+                        "Bottom",
+                        "Left"
+                    ],
+                    "commands": {
+                        "Std_ViewIsometric": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-axonometric"
+                        },
+                        "Std_ViewFront": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-front"
+                        },
+                        "Std_ViewTop": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-top"
+                        },
+                        "Std_ViewRight": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-right"
+                        },
+                        "Std_ViewRear": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-rear"
+                        },
+                        "Std_ViewBottom": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-bottom"
+                        },
+                        "Std_ViewLeft": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-left"
+                        }
+                    }
+                },
+                "Structure": {
+                    "order": [
+                        "Part_Datums",
+                        "Std_Part",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ],
+                    "commands": {
+                        "Std_Part": {
+                            "size": "medium",
+                            "text": "New Part",
+                            "icon": "Geofeaturegroup"
+                        },
+                        "Std_Group": {
+                            "size": "medium",
+                            "text": "New Group",
+                            "icon": "folder"
+                        },
+                        "Std_LinkActions": {
+                            "size": "medium",
+                            "text": "Link Actions...",
+                            "icon": ""
+                        },
+                        "Std_VarSet": {
+                            "size": "medium",
+                            "text": "Variable Set",
+                            "icon": "VarSet"
+                        },
+                        "Part_Datums": {
+                            "size": "medium",
+                            "text": "Datums...",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Loads & Constraints_custom": {
+                    "order": [
+                        "FEM_ConstraintPlaneRotation",
+                        "FEM_ConstraintTransform",
+                        "FEM_ConstraintSectionPrint",
+                        "3_separator_FemWorkbench",
+                        "FEM_ConstraintRigidBody",
+                        "FEM_ConstraintDisplacement",
+                        "FEM_ConstraintFixed",
+                        "FEM_ConstraintContact",
+                        "FEM_ConstraintTie",
+                        "FEM_ConstraintSpring",
+                        "separator_FemWorkbench_6",
+                        "FEM_ConstraintForce",
+                        "FEM_ConstraintPressure",
+                        "FEM_ConstraintCentrif",
+                        "FEM_ConstraintSelfWeight",
+                        "separator_FemWorkbench_11",
+                        "FEM_ConstraintInitialFlowVelocity",
+                        "FEM_ConstraintInitialPressure",
+                        "FEM_ConstraintFlowVelocity",
+                        "separator_FemWorkbench_16",
+                        "FEM_ConstraintInitialTemperature",
+                        "FEM_ConstraintHeatflux",
+                        "FEM_ConstraintTemperature",
+                        "FEM_ConstraintBodyHeatSource",
+                        "23_separator_FemWorkbench",
+                        "qt_toolbutton_menubutton"
+                    ],
+                    "commands": {
+                        "FEM_CompEmConstraints": {
+                            "size": "medium",
+                            "text": "Electromagnetic Boundary Conditions...",
+                            "icon": ""
+                        },
+                        "FEM_ConstraintInitialFlowVelocity": {
+                            "size": "medium",
+                            "text": "Initial Flow Velocity Condition",
+                            "icon": "FEM_ConstraintInitialFlowVelocity"
+                        },
+                        "FEM_ConstraintInitialPressure": {
+                            "size": "medium",
+                            "text": "Initial Pressure Condition",
+                            "icon": "FEM_ConstraintInitialPressure"
+                        },
+                        "FEM_ConstraintFlowVelocity": {
+                            "size": "medium",
+                            "text": "Flow Velocity Boundary Condition",
+                            "icon": "FEM_ConstraintFlowVelocity"
+                        },
+                        "FEM_ConstraintFixed": {
+                            "size": "medium",
+                            "text": "Fixed Boundary Condition",
+                            "icon": "FEM_ConstraintFixed"
+                        },
+                        "FEM_ConstraintRigidBody": {
+                            "size": "medium",
+                            "text": "Rigid Body Constraint",
+                            "icon": "FEM_ConstraintRigidBody"
+                        },
+                        "FEM_ConstraintDisplacement": {
+                            "size": "medium",
+                            "text": "Displacement Boundary Condition",
+                            "icon": "FEM_ConstraintDisplacement"
+                        },
+                        "FEM_ConstraintContact": {
+                            "size": "medium",
+                            "text": "Contact Constraint",
+                            "icon": "FEM_ConstraintContact"
+                        },
+                        "FEM_ConstraintTie": {
+                            "size": "medium",
+                            "text": "Tie Constraint",
+                            "icon": "FEM_ConstraintTie"
+                        },
+                        "FEM_ConstraintSpring": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "FEM_ConstraintSpring"
+                        },
+                        "FEM_ConstraintForce": {
+                            "size": "medium",
+                            "text": "Force Load",
+                            "icon": "FEM_ConstraintForce"
+                        },
+                        "FEM_ConstraintPressure": {
+                            "size": "medium",
+                            "text": "Pressure Load",
+                            "icon": "FEM_ConstraintPressure"
+                        },
+                        "FEM_ConstraintCentrif": {
+                            "size": "medium",
+                            "text": "Centrifugal Load",
+                            "icon": "FEM_ConstraintCentrif"
+                        },
+                        "FEM_ConstraintSelfWeight": {
+                            "size": "medium",
+                            "text": "Gravity Load",
+                            "icon": "FEM_ConstraintSelfWeight"
+                        },
+                        "FEM_ConstraintInitialTemperature": {
+                            "size": "medium",
+                            "text": "Initial Temperature",
+                            "icon": "FEM_ConstraintInitialTemperature"
+                        },
+                        "FEM_ConstraintHeatflux": {
+                            "size": "medium",
+                            "text": "Heat Flux Load",
+                            "icon": "FEM_ConstraintHeatflux"
+                        },
+                        "FEM_ConstraintTemperature": {
+                            "size": "medium",
+                            "text": "Temperature Boundary Condition",
+                            "icon": "FEM_ConstraintTemperature"
+                        },
+                        "FEM_ConstraintBodyHeatSource": {
+                            "size": "medium",
+                            "text": "Body Heat Source",
+                            "icon": "FEM_ConstraintBodyHeatSource"
+                        },
+                        "FEM_ConstraintPlaneRotation": {
+                            "size": "medium"
+                        },
+                        "FEM_ConstraintTransform": {
+                            "size": "medium"
+                        },
+                        "FEM_ConstraintSectionPrint": {
+                            "size": "medium"
+                        },
+                        "qt_toolbutton_menubutton": {
+                            "size": "medium"
+                        }
+                    }
+                },
+                "Geometrical Analysis Features": {
+                    "commands": {
+                        "FEM_ConstraintPlaneRotation": {
+                            "size": "medium",
+                            "text": "Plane Multi-Point Constraint",
+                            "icon": "FEM_ConstraintPlaneRotation"
+                        },
+                        "FEM_ConstraintSectionPrint": {
+                            "size": "medium",
+                            "text": "Section Print Feature",
+                            "icon": "FEM_ConstraintSectionPrint"
+                        },
+                        "FEM_ConstraintTransform": {
+                            "size": "medium",
+                            "text": "Local Coordinate System",
+                            "icon": "FEM_ConstraintTransform"
+                        }
+                    },
+                    "order": [
+                        "FEM_ConstraintPlaneRotation",
+                        "FEM_ConstraintSectionPrint",
+                        "FEM_ConstraintTransform"
+                    ],
+                    "title": "Geometrical Analyse"
+                },
+                "Tools_newPanel": {
+                    "commands": {
+                        "Std_Measure": {
+                            "size": "medium",
+                            "text": "Measure",
+                            "icon": "umf-measurement"
+                        },
+                        "Std_UnitsCalculator": {
+                            "size": "medium",
+                            "text": "Units Converter",
+                            "icon": "accessories-calculator"
+                        },
+                        "Std_Properties": {
+                            "size": "medium",
+                            "text": "Properties",
+                            "icon": "document-properties"
+                        },
+                        "Std_BoxElementSelection": {
+                            "size": "medium",
+                            "text": "Box Element Selection",
+                            "icon": "edit-element-select-box"
+                        },
+                        "Std_BoxSelection": {
+                            "size": "medium",
+                            "text": "Box Selection",
+                            "icon": "edit-select-box"
+                        },
+                        "Std_WhatsThis": {
+                            "size": "medium",
+                            "text": "What's This?",
+                            "icon": "WhatsThis"
+                        }
+                    },
+                    "order": [
+                        "Std_Measure",
+                        "Std_UnitsCalculator",
+                        "Std_Properties",
+                        "Std_BoxElementSelection",
+                        "Std_BoxSelection",
+                        "Std_WhatsThis"
+                    ]
+                },
+                "File": {
+                    "commands": {
+                        "Std_New": {
+                            "size": "medium",
+                            "text": "New Document",
+                            "icon": "document-new"
+                        },
+                        "Std_Open": {
+                            "size": "medium",
+                            "text": "Open\u2026",
+                            "icon": "document-open"
+                        },
+                        "Std_Save": {
+                            "size": "medium",
+                            "text": "Save",
+                            "icon": "document-save"
+                        }
+                    }
+                },
+                "Edit": {
+                    "commands": {
+                        "Std_Undo": {
+                            "size": "medium",
+                            "text": "Undo",
+                            "icon": "edit-undo"
+                        },
+                        "Std_Redo": {
+                            "size": "medium",
+                            "text": "Redo",
+                            "icon": "edit-redo"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_Refresh": {
+                            "size": "medium",
+                            "text": "Recompute",
+                            "icon": "view-refresh"
+                        }
+                    }
+                },
+                "Clipboard": {
+                    "commands": {
+                        "Std_Cut": {
+                            "size": "medium",
+                            "text": "Cut",
+                            "icon": "edit-cut"
+                        },
+                        "Std_Copy": {
+                            "size": "medium",
+                            "text": "Copy",
+                            "icon": "edit-copy"
+                        },
+                        "Std_Paste": {
+                            "size": "medium",
+                            "text": "Paste",
+                            "icon": "edit-paste"
+                        }
+                    }
+                },
+                "Workbench": {
+                    "commands": {
+                        "Std_Workbench": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Macro": {
+                    "commands": {
+                        "Std_DlgMacroRecord": {
+                            "size": "medium",
+                            "text": "Record Macro",
+                            "icon": "media-record"
+                        },
+                        "Std_DlgMacroExecute": {
+                            "size": "medium",
+                            "text": "Macros",
+                            "icon": "accessories-text-editor"
+                        },
+                        "Std_DlgMacroExecuteDirect": {
+                            "size": "medium",
+                            "text": "Execute Macro",
+                            "icon": "media-playback-start"
+                        }
+                    }
+                },
+                "View": {
+                    "commands": {
+                        "Std_ViewFitAll": {
+                            "size": "medium",
+                            "text": "Fit All",
+                            "icon": "zoom-all"
+                        },
+                        "Std_ViewFitSelection": {
+                            "size": "medium",
+                            "text": "Fit Selection",
+                            "icon": "zoom-selection"
+                        },
+                        "Std_ViewGroup": {
+                            "size": "medium",
+                            "text": "Standard Views...",
+                            "icon": "view-isometric"
+                        },
+                        "Std_AlignToSelection": {
+                            "size": "medium",
+                            "text": "Align to Selection",
+                            "icon": "align-to-selection"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_DrawStyle": {
+                            "size": "medium",
+                            "text": "Draw Style...",
+                            "icon": "DrawStyleAsIs"
+                        },
+                        "Part_SelectFilter": {
+                            "size": "medium",
+                            "text": "Selection Filter...",
+                            "icon": "clear-selection"
+                        },
+                        "Std_Measure": {
+                            "size": "medium",
+                            "text": "Measure",
+                            "icon": "umf-measurement"
+                        },
+                        "Std_MassProperties": {
+                            "size": "medium",
+                            "text": "Mass Properties",
+                            "icon": "MassPropertiesIcon"
+                        }
+                    }
+                },
+                "Individual Views": {
+                    "commands": {
+                        "Std_ViewIsometric": {
+                            "size": "medium",
+                            "text": "&Isometric",
+                            "icon": "view-axonometric"
+                        },
+                        "Std_ViewFront": {
+                            "size": "medium",
+                            "text": "Front",
+                            "icon": "view-front"
+                        },
+                        "Std_ViewTop": {
+                            "size": "medium",
+                            "text": "Top",
+                            "icon": "view-top"
+                        },
+                        "Std_ViewRight": {
+                            "size": "medium",
+                            "text": "Right",
+                            "icon": "view-right"
+                        },
+                        "Std_ViewRear": {
+                            "size": "medium",
+                            "text": "Rear",
+                            "icon": "view-rear"
+                        },
+                        "Std_ViewBottom": {
+                            "size": "medium",
+                            "text": "Bottom",
+                            "icon": "view-bottom"
+                        },
+                        "Std_ViewLeft": {
+                            "size": "medium",
+                            "text": "Left",
+                            "icon": "view-left"
+                        }
+                    }
+                },
+                "Help": {
+                    "commands": {
+                        "Std_WhatsThis": {
+                            "size": "medium",
+                            "text": "What's This?",
+                            "icon": "WhatsThis"
+                        }
+                    }
+                },
+                "Electromagnetic Boundary Conditions": {
+                    "commands": {
+                        "FEM_CompEmConstraints": {
+                            "size": "medium",
+                            "text": "Electromagnetic Boundary Conditions...",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Fluid Boundary Conditions": {
+                    "commands": {
+                        "FEM_ConstraintInitialFlowVelocity": {
+                            "size": "medium",
+                            "text": "Initial Flow Velocity Condition",
+                            "icon": "FEM_ConstraintInitialFlowVelocity"
+                        },
+                        "FEM_ConstraintInitialPressure": {
+                            "size": "medium",
+                            "text": "Initial Pressure Condition",
+                            "icon": "FEM_ConstraintInitialPressure"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "FEM_ConstraintFlowVelocity": {
+                            "size": "medium",
+                            "text": "Flow Velocity Boundary Condition",
+                            "icon": "FEM_ConstraintFlowVelocity"
+                        }
+                    }
+                },
+                "Mechanical Boundary Conditions and Loads": {
+                    "commands": {
+                        "FEM_ConstraintFixed": {
+                            "size": "medium",
+                            "text": "Fixed Boundary Condition",
+                            "icon": "FEM_ConstraintFixed"
+                        },
+                        "FEM_ConstraintRigidBody": {
+                            "size": "medium",
+                            "text": "Rigid Body Constraint",
+                            "icon": "FEM_ConstraintRigidBody"
+                        },
+                        "FEM_ConstraintDisplacement": {
+                            "size": "medium",
+                            "text": "Displacement Boundary Condition",
+                            "icon": "FEM_ConstraintDisplacement"
+                        },
+                        "FEM_ConstraintContact": {
+                            "size": "medium",
+                            "text": "Contact Constraint",
+                            "icon": "FEM_ConstraintContact"
+                        },
+                        "FEM_ConstraintTie": {
+                            "size": "medium",
+                            "text": "Tie Constraint",
+                            "icon": "FEM_ConstraintTie"
+                        },
+                        "FEM_ConstraintSpring": {
+                            "size": "medium",
+                            "text": "Spring Boundary Condition",
+                            "icon": "FEM_ConstraintSpring"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "FEM_ConstraintForce": {
+                            "size": "medium",
+                            "text": "Force Load",
+                            "icon": "FEM_ConstraintForce"
+                        },
+                        "FEM_ConstraintPressure": {
+                            "size": "medium",
+                            "text": "Pressure Load",
+                            "icon": "FEM_ConstraintPressure"
+                        },
+                        "FEM_ConstraintCentrif": {
+                            "size": "medium",
+                            "text": "Centrifugal Load",
+                            "icon": "FEM_ConstraintCentrif"
+                        },
+                        "FEM_ConstraintSelfWeight": {
+                            "size": "medium",
+                            "text": "Gravity Load",
+                            "icon": "FEM_ConstraintSelfWeight"
+                        }
+                    }
+                },
+                "Thermal Boundary Conditions and Loads": {
+                    "commands": {
+                        "FEM_ConstraintInitialTemperature": {
+                            "size": "medium",
+                            "text": "Initial Temperature",
+                            "icon": "FEM_ConstraintInitialTemperature"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "FEM_ConstraintHeatflux": {
+                            "size": "medium",
+                            "text": "Heat Flux Load",
+                            "icon": "FEM_ConstraintHeatflux"
+                        },
+                        "FEM_ConstraintTemperature": {
+                            "size": "medium",
+                            "text": "Temperature Boundary Condition",
+                            "icon": "FEM_ConstraintTemperature"
+                        },
+                        "FEM_ConstraintBodyHeatSource": {
+                            "size": "medium",
+                            "text": "Body Heat Source",
+                            "icon": "FEM_ConstraintBodyHeatSource"
+                        }
+                    }
+                },
+                "Create BOM FemWorkbench": {
+                    "commands": {
+                        "CreateBOM_Overall": {
+                            "size": "medium",
+                            "text": "Create BOM",
+                            "icon": "BillOfMaterialsWB.svg"
+                        }
+                    }
+                },
+                "PieMenuTB": {
+                    "commands": {
+                        "PieMenu_View": {
+                            "size": "medium",
+                            "text": "View",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
+                        },
+                        "PieMenu_PartDesign": {
+                            "size": "medium",
+                            "text": "PartDesign",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
+                        },
+                        "PieMenu_Sketcher": {
+                            "size": "medium",
+                            "text": "Sketcher",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
+                        }
+                    }
+                }
+            },
+            "Enabled": true
+        }
+    },
+    "customToolbars": {
+        "FemWorkbench": {
+            "Loads & Constraints_custom": {
+                "commands": {
+                    "FEM_ConstraintInitialFlowVelocity": "Fluid boundary conditions",
+                    "FEM_ConstraintInitialPressure": "Fluid boundary conditions",
+                    "FEM_ConstraintFlowVelocity": "Fluid boundary conditions",
+                    "FEM_ConstraintFixed": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintRigidBody": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintDisplacement": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintContact": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintTie": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintForce": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintPressure": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintCentrif": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintSelfWeight": "Mechanical boundary conditions and loads",
+                    "FEM_ConstraintInitialTemperature": "Thermal boundary conditions and loads",
+                    "FEM_ConstraintHeatflux": "Thermal boundary conditions and loads",
+                    "FEM_ConstraintTemperature": "Thermal boundary conditions and loads",
+                    "FEM_ConstraintBodyHeatSource": "Thermal boundary conditions and loads",
+                    "FEM_CompEmConstraints": "Electromagnetic Boundary Conditions",
+                    "FEM_ConstraintSpring": "Mechanical Boundary Conditions and Loads",
+                    "FEM_ConstraintPlaneRotation": "Geometrical Analysis Features",
+                    "FEM_ConstraintSectionPrint": "Geometrical Analysis Features",
+                    "FEM_ConstraintTransform": "Geometrical Analysis Features"
+                }
+            }
+        }
+    }
+}

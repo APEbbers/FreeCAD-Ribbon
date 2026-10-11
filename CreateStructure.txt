@@ -6,7 +6,6 @@
         "File",
         "Help",
         "Macro",
-        "PieMenuTB",
         "View",
         "Workbench",
         "Individual views",
@@ -33,17 +32,9 @@
         "ExampleDropDown_ddb"
     ],
     "ignoredWorkbenches": [
-        "Inspection",
         "Material",
-        "Points",
-        "Reverse Engineering",
         "OpenSCAD",
-        "Fasteners",
-        "TestWorkbench",
-        "Assembly4p1Workbench",
-        "addFC",
-        "Assembly3Workbench",
-        "A2plusWorkbench"
+        "TestWorkbench"
     ],
     "customToolbars": {
         "TechDrawWorkbench": {
@@ -80,32 +71,25 @@
                     "FEM_CompEmConstraints": "Electromagnetic Boundary Conditions"
                 }
             }
-        },
-        "PartDesignWorkbench": {}
+        }
     },
     "dropdownButtons": {
         "ExampleDropDown_ddb": [
             [
                 "Std_UnitsCalculator",
-                "Standard"
+                "Global"
             ],
             [
                 "Std_Measure",
-                "Standard"
+                "General"
+            ],
+            [
+                "Sketcher_NewSketch",
+                "PartWorkbench"
             ],
             [
                 "Std_DlgMacroExecute",
-                "Standard"
-            ]
-        ],
-        "test11_ddb": [
-            [
-                "Draft_AddToGroup",
-                "DraftWorkbench"
-            ],
-            [
-                "PartDesign_AdditiveHelix",
-                "PartDesignWorkbench"
+                "AssemblyWorkbench"
             ]
         ]
     },
@@ -138,13 +122,6 @@
                 ]
             ]
         },
-        "PartDesignWorkbench": {
-            "Tools_newPanel": []
-        },
-        "SurfaceWorkbench": {},
-        "SketcherWorkbench": {
-            "Tools_newPanel": []
-        },
         "AssemblyWorkbench": {
             "Patterns_newPanel": [
                 [
@@ -164,9 +141,6 @@
                     "DraftWorkbench"
                 ]
             ]
-        },
-        "PartWorkbench": {
-            "Tools_newPanel": []
         }
     },
     "workbenches": {
@@ -216,6 +190,9 @@
                             "size": "large",
                             "text": "",
                             "icon": ""
+                        },
+                        "AssemblyCut_Cut": {
+                            "size": "small"
                         }
                     },
                     "title": "Helpers",
@@ -543,43 +520,6 @@
                         "Std_WhatsThis",
                         "Std_BoxSelection"
                     ],
-                    "Enabled": true
-                },
-                "FusedFilamentDesign": {
-                    "commands": {
-                        "ffDesign_About": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "ffDesign_HoleWizard": {
-                            "size": "large",
-                            "text": ""
-                        },
-                        "ffDesign_ZipTieChannels": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "ffDesign_AutoFillet": {
-                            "size": "small",
-                            "text": ""
-                        }
-                    },
-                    "order": [
-                        "ffDesign_HoleWizard",
-                        "ffDesign_AutoFillet",
-                        "ffDesign_ZipTieChannels",
-                        "ffDesign_About"
-                    ],
-                    "title": "3D Print",
-                    "Enabled": true
-                },
-                "Example_newPanel": {
-                    "Enabled": true
-                },
-                "Example_custom": {
-                    "Enabled": true
-                },
-                "test_newPanel": {
                     "Enabled": true
                 },
                 "Individual Views": {
@@ -2387,29 +2327,6 @@
                         }
                     },
                     "Enabled": true
-                },
-                "Geometrical Analysis Features": {
-                    "commands": {
-                        "FEM_ConstraintPlaneRotation": {
-                            "size": "large",
-                            "text": ""
-                        },
-                        "FEM_ConstraintSectionPrint": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "FEM_ConstraintTransform": {
-                            "size": "small",
-                            "text": ""
-                        }
-                    },
-                    "order": [
-                        "FEM_ConstraintPlaneRotation",
-                        "FEM_ConstraintSectionPrint",
-                        "FEM_ConstraintTransform"
-                    ],
-                    "Enabled": true,
-                    "title": "Geometrical Analyse"
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -4964,7 +4881,8 @@
                     "View",
                     "Help"
                 ]
-            }
+            },
+			"Enabled": false
         },
         "MaterialWorkbench": {
             "toolbars": {
@@ -4992,7 +4910,8 @@
                         }
                     }
                 }
-            }
+            },
+			"Enabled": false
         },
         "MeshWorkbench": {
             "toolbars": {
@@ -5419,7 +5338,8 @@
                         }
                     }
                 }
-            }
+            },
+            "Enabled": false
         },
         "PointsWorkbench": {
             "toolbars": {
@@ -5552,7 +5472,8 @@
                     ],
                     "Enabled": true
                 }
-            }
+            },
+			"Enabled": false
         },
         "ReverseEngineeringWorkbench": {
             "toolbars": {
@@ -5646,7 +5567,8 @@
                     ],
                     "Enabled": true
                 }
-            }
+            },
+			"Enabled": false
         },
         "RobotWorkbench": {
             "toolbars": {
@@ -5914,237 +5836,37 @@
             },
             "Enabled": true
         },
-        "FastenersWorkbench": {
+        "TestWorkbench": {
             "toolbars": {
-                "Structure": {
-                    "commands": {
-                        "Std_Part": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Part_Datums": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Std_Group": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Std_LinkActions": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Std_VarSet": {
-                            "size": "small",
-                            "text": ""
-                        }
-                    },
+                "order": [
+                    "Individual views",
+                    "Structure",
+                    "File",
+                    "Edit",
+                    "Clipboard",
+                    "Workbench",
+                    "Macro",
+                    "View",
+                    "Help",
+                    "TestTools"
+                ],
+                "TestTools": {
                     "order": [
-                        "Part_Datums",
-                        "Std_Part",
-                        "Std_Group",
-                        "Std_LinkActions",
-                        "Std_VarSet"
+                        "Self-test",
+                        "Test all",
+                        "Test Document",
+                        "Test base"
                     ],
-                    "Enabled": true
-                },
-                "FS Commands": {
                     "commands": {
-                        "Fasteners_Flip": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Fasteners_Move": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Fasteners_Simplify": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Fasteners_MatchTypeInner": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Fasteners_MatchTypeOuter": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Fasteners_BOM": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Fasteners_ScrewCalculator": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Fasteners_3dPrintSettings": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Fasteners_ChangeParameters": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Fasteners_Search": {
-                            "size": "small"
-                        }
-                    },
-                    "order": [
-                        "Fasteners_Flip",
-                        "Fasteners_Move",
-                        "Fasteners_Simplify",
-                        "Fasteners_MatchTypeInner",
-                        "Fasteners_MatchTypeOuter",
-                        "Fasteners_BOM",
-                        "Fasteners_ScrewCalculator",
-                        "Fasteners_3dPrintSettings",
-                        "Fasteners_ChangeParameters",
-                        "Fasteners_Search"
-                    ],
-                    "Enabled": true
-                },
-                "FS Screws": {
-                    "commands": {
-                        "Hex head": {
+                        "Test_Test": {
                             "size": "large",
-                            "text": ""
-                        },
-                        "Hexagon socket": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Hexalobular socket": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Slotted": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "H cross": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Misc head": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Set screws": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Thumb screws": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Ground screws": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Nut": {
-                            "size": "large",
-                            "text": ""
-                        },
-                        "T-Slot Fasteners": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Washer": {
-                            "size": "large",
-                            "text": ""
-                        },
-                        "ThreadedRod": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Inserts": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Retaining Rings": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Nails": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Pins": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Grub/Set screws": {
-                            "size": "small"
-                        },
-                        "EJOT PT WN14xx Screws for plastic": {
-                            "size": "small"
+                            "text": "",
+                            "icon": ""
                         }
-                    },
-                    "order": [
-                        "Hex head",
-                        "Hexagon socket",
-                        "Hexalobular socket",
-                        "Slotted",
-                        "H cross",
-                        "5_separator_FastenersWorkbench",
-                        "Misc head",
-                        "Grub/Set screws",
-                        "Thumb screws",
-                        "Ground screws",
-                        "ThreadedRod",
-                        "10_separator_FastenersWorkbench",
-                        "Nut",
-                        "Inserts",
-                        "T-Slot Fasteners",
-                        "13_separator_FastenersWorkbench",
-                        "Washer",
-                        "17_separator_FastenersWorkbench",
-                        "Retaining Rings",
-                        "Nails",
-                        "Pins",
-                        "EJOT PT WN14xx Screws for plastic"
-                    ],
-                    "Enabled": true
-                },
-                "Tools_newPanel": {
-                    "commands": {
-                        "Std_Measure": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Std_UnitsCalculator": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Std_Properties": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Std_BoxElementSelection": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Std_BoxSelection": {
-                            "size": "small",
-                            "text": ""
-                        },
-                        "Std_WhatsThis": {
-                            "size": "small",
-                            "text": ""
-                        }
-                    },
-                    "order": [
-                        "Std_Measure",
-                        "Std_UnitsCalculator",
-                        "Std_Properties",
-                        "Std_BoxElementSelection",
-                        "Std_BoxSelection",
-                        "Std_WhatsThis"
-                    ],
-                    "Enabled": true
+                    }
                 }
-            }
+            },
+			"Enabled": false
         },
         "SMWorkbench": {
             "toolbars": {
@@ -6317,18 +6039,6 @@
                         "Std_WhatsThis"
                     ],
                     "Enabled": true
-                },
-                "Create BOM SMWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "small",
-                            "text": ""
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": false
                 }
             },
             "Enabled": true
@@ -6425,17 +6135,6 @@
                         "FCGear_PlanetaryGear"
                     ],
                     "Enabled": true
-                },
-                "Create BOM GearWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "small"
-                        }
-                    },
-                    "order": [
-                        "CreateBOM_Overall"
-                    ],
-                    "Enabled": false
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -6539,19 +6238,11 @@
             false,
             "Bottom"
         ],
-        "Create BOM DraftWorkbench": [
-            false,
-            "Bottom"
-        ],
         "Assembly": [
             false,
             "Bottom"
         ],
         "Assembly Joints": [
-            false,
-            "Bottom"
-        ],
-        "Create BOM AssemblyWorkbench": [
             false,
             "Bottom"
         ],
@@ -6572,18 +6263,6 @@
             "Bottom"
         ],
         "FusedFilamentDesign": [
-            false,
-            "Bottom"
-        ],
-        "Create BOM PartDesignWorkbench": [
-            false,
-            "Bottom"
-        ],
-        "BOM Commands": [
-            false,
-            "Bottom"
-        ],
-        "Create BOM BillOfMaterialsWB": [
             false,
             "Bottom"
         ],
@@ -6611,15 +6290,7 @@
             false,
             "Bottom"
         ],
-        "Create BOM SketcherWorkbench": [
-            false,
-            "Bottom"
-        ],
         "SearchBar": [
-            false,
-            "Bottom"
-        ],
-        "Create BOM NoneWorkbench": [
             false,
             "Bottom"
         ],
@@ -6639,10 +6310,6 @@
             false,
             "Bottom"
         ],
-        "Create BOM PartWorkbench": [
-            false,
-            "Bottom"
-        ],
         "rightToolBar": [
             true,
             "Bottom"
@@ -6659,15 +6326,7 @@
             false,
             "Bottom"
         ],
-        "Create BOM SurfaceWorkbench": [
-            false,
-            "Bottom"
-        ],
         "Sheet Metal": [
-            false,
-            "Bottom"
-        ],
-        "Create BOM SMWorkbench": [
             false,
             "Bottom"
         ],
@@ -6711,23 +6370,11 @@
             false,
             "Bottom"
         ],
-        "Create BOM TechDrawWorkbench": [
-            false,
-            "Bottom"
-        ],
         "Spreadsheet": [
             false,
             "Bottom"
         ],
-        "Create BOM SpreadsheetWorkbench": [
-            false,
-            "Bottom"
-        ],
         "Gear": [
-            false,
-            "Bottom"
-        ],
-        "Create BOM GearWorkbench": [
             false,
             "Bottom"
         ],
@@ -6760,10 +6407,6 @@
             "Bottom"
         ],
         "Manage Tools": [
-            false,
-            "Bottom"
-        ],
-        "Create BOM BIMWorkbench": [
             false,
             "Bottom"
         ],
@@ -6807,15 +6450,7 @@
             false,
             "Bottom"
         ],
-        "Create BOM FemWorkbench": [
-            false,
-            "Bottom"
-        ],
         "CfdOF": [
-            false,
-            "Bottom"
-        ],
-        "Create BOM CfdOFWorkbench": [
             false,
             "Bottom"
         ],
@@ -6835,15 +6470,7 @@
             false,
             "Bottom"
         ],
-        "Create BOM CAMWorkbench": [
-            false,
-            "Bottom"
-        ],
         "Robot": [
-            false,
-            "Bottom"
-        ],
-        "Create BOM RobotWorkbench": [
             false,
             "Bottom"
         ],
@@ -6860,18 +6487,6 @@
             "Bottom"
         ],
         "Part Primitives": [
-            false,
-            "Bottom"
-        ],
-        "Frameforge output": [
-            false,
-            "Bottom"
-        ],
-        "Frameforge utilities": [
-            false,
-            "Bottom"
-        ],
-        "Create BOM FrameForge": [
             false,
             "Bottom"
         ],
@@ -6899,48 +6514,8 @@
             false,
             "Bottom"
         ],
-        "Create BOM MeshWorkbench": [
-            false,
-            "Bottom"
-        ],
-        "ksu Tools": [
-            false,
-            "Bottom"
-        ],
-        "ksu Sketching": [
-            false,
-            "Bottom"
-        ],
-        "ksu PushPull": [
-            false,
-            "Bottom"
-        ],
-        "ksu Design Tools": [
-            false,
-            "Bottom"
-        ],
-        "ksu Show": [
-            false,
-            "Bottom"
-        ],
-        "ksu Helpers": [
-            false,
-            "Bottom"
-        ],
-        "Create BOM KiCadStepUpWB": [
-            false,
-            "Bottom"
-        ],
-        "Render": [
-            false,
-            "Bottom"
-        ],
-        "Create BOM RenderWorkbench": [
-            false,
-            "Bottom"
-        ],
         "BIMStatusWidget": [
-            true,
+            false,
             "Bottom"
         ],
         "Tabs": [
@@ -6955,95 +6530,7 @@
             false,
             "Bottom"
         ],
-        "Create BOM OpenSCADWorkbench": [
-            false,
-            "Bottom"
-        ],
-        "FS Commands": [
-            false,
-            "Bottom"
-        ],
-        "Misc head": [
-            false,
-            "Bottom"
-        ],
-        "Hex head": [
-            false,
-            "Bottom"
-        ],
-        "Hexagon socket": [
-            false,
-            "Bottom"
-        ],
-        "Hexalobular socket": [
-            false,
-            "Bottom"
-        ],
-        "Slotted": [
-            false,
-            "Bottom"
-        ],
-        "H cross": [
-            false,
-            "Bottom"
-        ],
-        "Grub/Set screws": [
-            false,
-            "Bottom"
-        ],
-        "Thumb screws": [
-            false,
-            "Bottom"
-        ],
-        "Ground screws": [
-            false,
-            "Bottom"
-        ],
-        "Nut": [
-            false,
-            "Bottom"
-        ],
-        "T-Slot Fasteners": [
-            false,
-            "Bottom"
-        ],
-        "Washer": [
-            false,
-            "Bottom"
-        ],
-        "ThreadedRod": [
-            false,
-            "Bottom"
-        ],
-        "Inserts": [
-            false,
-            "Bottom"
-        ],
-        "Retaining Rings": [
-            false,
-            "Bottom"
-        ],
-        "Nails": [
-            false,
-            "Bottom"
-        ],
-        "Pins": [
-            false,
-            "Bottom"
-        ],
-        "EJOT PT WN14xx Screws for plastic": [
-            false,
-            "Bottom"
-        ],
-        "Create BOM FastenersWorkbench": [
-            false,
-            "Bottom"
-        ],
         "Inspection": [
-            false,
-            "Bottom"
-        ],
-        "Create BOM InspectionWorkbench": [
             false,
             "Bottom"
         ],
@@ -7051,15 +6538,7 @@
             false,
             "Bottom"
         ],
-        "Create BOM MaterialWorkbench": [
-            false,
-            "Bottom"
-        ],
         "Points Tools": [
-            false,
-            "Bottom"
-        ],
-        "Create BOM PointsWorkbench": [
             false,
             "Bottom"
         ],
@@ -7067,15 +6546,7 @@
             false,
             "Bottom"
         ],
-        "Create BOM ReverseEngineeringWorkbench": [
-            false,
-            "Bottom"
-        ],
         "SearchBarAtMouse": [
-            false,
-            "Bottom"
-        ],
-        "PieMenuTB": [
             false,
             "Bottom"
         ]
@@ -7124,10 +6595,6 @@
         "DockWidget": [
             false,
             "Right"
-        ],
-        "kicadStepUp": [
-            false,
-            "Left"
         ]
     },
     "tabGroups": {
@@ -7147,8 +6614,7 @@
             "SketcherWorkbench",
             "CfdOFWorkbench",
             "PartDesignWorkbench",
-            "MeshWorkbench",
-            "BillOfMaterialsWB"
+            "MeshWorkbench"
         ]
     }
 }

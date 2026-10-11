@@ -1,0 +1,500 @@
+{
+    "workbenches": {
+        "SketcherWorkbench": {
+            "toolbars": {
+                "Sketcher": {
+                    "order": [
+                        "Sketcher_NewSketch",
+                        "Sketcher_MirrorSketch",
+                        "Sketcher_MergeSketches",
+                        "Sketcher_ReorientSketch",
+                        "Sketcher_ValidateSketch",
+                        "Sketcher_EditSketch",
+                        "Sketcher_MapSketch"
+                    ],
+                    "commands": {
+                        "Sketcher_NewSketch": {
+                            "size": "large",
+                            "text": "",
+                            "icon": "Sketcher_NewSketch"
+                        },
+                        "Sketcher_EditSketch": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "Sketcher_EditSketch"
+                        },
+                        "Sketcher_MapSketch": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "Sketcher_MapSketch"
+                        },
+                        "Sketcher_ReorientSketch": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "Sketcher_ReorientSketch"
+                        },
+                        "Sketcher_ValidateSketch": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "Sketcher_ValidateSketch"
+                        },
+                        "Sketcher_MergeSketches": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "Sketcher_MergeSketch"
+                        },
+                        "Sketcher_MirrorSketch": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "Sketcher_MirrorSketch"
+                        }
+                    }
+                },
+                "Edit Mode": {
+                    "commands": {
+                        "Sketcher_LeaveSketch": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Sketcher_ViewSketch": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_ViewSection": {
+                            "size": "medium",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Sketcher_LeaveSketch",
+                        "Sketcher_ViewSketch",
+                        "Sketcher_ViewSection"
+                    ]
+                },
+                "Geometries": {
+                    "commands": {
+                        "Sketcher_CreatePoint": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_CreatePolyline": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Sketcher_CreateLine": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_CompCreateArc": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_CompCreateConic": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_CompCreateRectangles": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_CompCreateRegularPolygon": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_CompSlot": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_CompCreateBSpline": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_ToggleConstruction": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_CreateText": {
+                            "size": "medium",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Sketcher_CreatePolyline",
+                        "Sketcher_CreatePoint",
+                        "Sketcher_CreateLine",
+                        "Sketcher_CompCreateArc",
+                        "Sketcher_CompCreateConic",
+                        "Sketcher_CompCreateRectangles",
+                        "Sketcher_CompCreateRegularPolygon",
+                        "Sketcher_CompSlot",
+                        "Sketcher_CompCreateBSpline",
+                        "Sketcher_ToggleConstruction",
+                        "Sketcher_CreateText"
+                    ]
+                },
+                "Constraints": {
+                    "commands": {
+                        "Sketcher_CompDimensionTools": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Sketcher_ConstrainCoincidentUnified": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_CompHorVer": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_ConstrainParallel": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_ConstrainPerpendicular": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_ConstrainTangent": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_ConstrainEqual": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_ConstrainSymmetric": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_ConstrainBlock": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_CompToggleConstraints": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_ConstrainGroup": {
+                            "size": "medium",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Sketcher_CompDimensionTools",
+                        "Sketcher_CompHorVer",
+                        "Sketcher_ConstrainCoincidentUnified",
+                        "Sketcher_ConstrainParallel",
+                        "Sketcher_ConstrainPerpendicular",
+                        "Sketcher_ConstrainTangent",
+                        "Sketcher_ConstrainEqual",
+                        "Sketcher_ConstrainSymmetric",
+                        "Sketcher_ConstrainBlock",
+                        "Sketcher_CompToggleConstraints",
+                        "Sketcher_ConstrainGroup"
+                    ]
+                },
+                "Sketcher Tools": {
+                    "commands": {
+                        "Sketcher_CompCreateFillets": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Sketcher_CompCurveEdition": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_CompExternal": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_CarbonCopy": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_Translate": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_Rotate": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_Scale": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_Offset": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_Symmetry": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_RemoveAxesAlignment": {
+                            "size": "medium",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Sketcher_CompCreateFillets",
+                        "Sketcher_CompCurveEdition",
+                        "Sketcher_Translate",
+                        "Sketcher_Rotate",
+                        "Sketcher_Symmetry",
+                        "Sketcher_Offset",
+                        "Sketcher_Scale",
+                        "Sketcher_RemoveAxesAlignment",
+                        "Sketcher_CarbonCopy",
+                        "Sketcher_CompExternal"
+                    ]
+                },
+                "B-Spline Tools": {
+                    "commands": {
+                        "Sketcher_BSplineConvertToNURBS": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Sketcher_BSplineIncreaseDegree": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_BSplineDecreaseDegree": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_CompModifyKnotMultiplicity": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_BSplineInsertKnot": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_JoinCurves": {
+                            "size": "medium",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Sketcher_BSplineConvertToNURBS",
+                        "Sketcher_BSplineIncreaseDegree",
+                        "Sketcher_BSplineDecreaseDegree",
+                        "Sketcher_CompModifyKnotMultiplicity",
+                        "Sketcher_BSplineInsertKnot",
+                        "Sketcher_JoinCurves"
+                    ]
+                },
+                "Visual Helpers": {
+                    "commands": {
+                        "Sketcher_SelectConstraints": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_SelectElementsAssociatedWithConstraints": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_ArcOverlay": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_CompBSplineShowHideGeometryInformation": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Sketcher_RestoreInternalAlignmentGeometry": {
+                            "size": "large",
+                            "text": "",
+                            "textEnabled": false
+                        },
+                        "Sketcher_SwitchVirtualSpace": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "ksuTools2DtoFace": {
+                            "size": "medium",
+                            "text": "2D to Face",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "BIM_Offset2D": {
+                            "size": "medium",
+                            "text": "2D Offset",
+                            "icon": "",
+                            "IsExtra": true
+                        }
+                    },
+                    "order": [
+                        "Sketcher_SelectConstraints",
+                        "Sketcher_SelectElementsAssociatedWithConstraints",
+                        "Sketcher_ArcOverlay",
+                        "Sketcher_CompBSplineShowHideGeometryInformation",
+                        "Sketcher_RestoreInternalAlignmentGeometry",
+                        "Sketcher_SwitchVirtualSpace",
+                        "ksuTools2DtoFace",
+                        "BIM_Offset2D"
+                    ]
+                },
+                "Sketcher edit tools": {
+                    "order": [
+                        "Sketcher_Grid",
+                        "Sketcher_Snap"
+                    ],
+                    "commands": {
+                        "Sketcher_Grid": {
+                            "size": "large",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Sketcher_Snap": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Sketcher_RenderingOrder": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Individual views": {
+                    "order": [
+                        "Isometric",
+                        "Front",
+                        "Top",
+                        "Right",
+                        "Rear",
+                        "Bottom",
+                        "Left"
+                    ],
+                    "commands": {
+                        "Std_ViewIsometric": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "view-axonometric"
+                        },
+                        "Std_ViewFront": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "view-front"
+                        },
+                        "Std_ViewTop": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "view-top"
+                        },
+                        "Std_ViewRight": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "view-right"
+                        },
+                        "Std_ViewRear": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "view-rear"
+                        },
+                        "Std_ViewBottom": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "view-bottom"
+                        },
+                        "Std_ViewLeft": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "view-left"
+                        }
+                    }
+                },
+                "Structure": {
+                    "commands": {
+                        "Std_Part": {
+                            "size": "medium",
+                            "text": "New Part",
+                            "icon": "Geofeaturegroup"
+                        },
+                        "Part_Datums": {
+                            "size": "medium",
+                            "text": "Datums...",
+                            "icon": ""
+                        },
+                        "Std_Group": {
+                            "size": "medium",
+                            "text": "New Group",
+                            "icon": "folder"
+                        },
+                        "Std_LinkActions": {
+                            "size": "medium",
+                            "text": "Link Actions...",
+                            "icon": ""
+                        },
+                        "Std_VarSet": {
+                            "size": "medium",
+                            "text": "Variable Set",
+                            "icon": "VarSet"
+                        }
+                    },
+                    "order": [
+                        "All",
+                        "Part_Datums",
+                        "Std_Part",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ]
+                },
+                "Tools_newPanel": {
+                    "commands": {
+                        "Std_Measure": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_UnitsCalculator": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_Properties": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_BoxElementSelection": {
+                            "size": "medium",
+                            "text": "",
+                            "textEnabled": false
+                        },
+                        "Std_BoxSelection": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_WhatsThis": {
+                            "size": "medium",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Std_Measure",
+                        "Std_UnitsCalculator",
+                        "Std_Properties",
+                        "Std_BoxElementSelection",
+                        "Std_BoxSelection",
+                        "Std_WhatsThis"
+                    ]
+                },
+                "order": [
+                    "Individual views",
+                    "Structure",
+                    "Sketcher",
+                    "Edit Mode",
+                    "Geometries",
+                    "Constraints",
+                    "Sketcher Tools",
+                    "B-Spline Tools",
+                    "Visual Helpers",
+                    "Sketcher edit tools"
+                ]
+            },
+            "Enabled": true
+        }
+    }
+}

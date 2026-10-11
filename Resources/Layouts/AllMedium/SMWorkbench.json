@@ -1,0 +1,420 @@
+{
+    "workbenches": {
+        "SMWorkbench": {
+            "toolbars": {
+                "File": {
+                    "commands": {
+                        "Std_New": {
+                            "size": "medium",
+                            "text": "New Document",
+                            "icon": "document-new"
+                        },
+                        "Std_Open": {
+                            "size": "medium",
+                            "text": "Open\u2026",
+                            "icon": "document-open"
+                        },
+                        "Std_Save": {
+                            "size": "medium",
+                            "text": "Save",
+                            "icon": "document-save"
+                        }
+                    }
+                },
+                "Edit": {
+                    "commands": {
+                        "Std_Undo": {
+                            "size": "medium",
+                            "text": "Undo",
+                            "icon": "edit-undo"
+                        },
+                        "Std_Redo": {
+                            "size": "medium",
+                            "text": "Redo",
+                            "icon": "edit-redo"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_Refresh": {
+                            "size": "medium",
+                            "text": "Recompute",
+                            "icon": "view-refresh"
+                        }
+                    }
+                },
+                "Clipboard": {
+                    "commands": {
+                        "Std_Cut": {
+                            "size": "medium",
+                            "text": "Cut",
+                            "icon": "edit-cut"
+                        },
+                        "Std_Copy": {
+                            "size": "medium",
+                            "text": "Copy",
+                            "icon": "edit-copy"
+                        },
+                        "Std_Paste": {
+                            "size": "medium",
+                            "text": "Paste",
+                            "icon": "edit-paste"
+                        }
+                    }
+                },
+                "Workbench": {
+                    "commands": {
+                        "Std_Workbench": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        }
+                    }
+                },
+                "Macro": {
+                    "commands": {
+                        "Std_DlgMacroRecord": {
+                            "size": "medium",
+                            "text": "Record Macro",
+                            "icon": "media-record"
+                        },
+                        "Std_DlgMacroExecute": {
+                            "size": "medium",
+                            "text": "Macros",
+                            "icon": "accessories-text-editor"
+                        },
+                        "Std_DlgMacroExecuteDirect": {
+                            "size": "medium",
+                            "text": "Execute Macro",
+                            "icon": "media-playback-start"
+                        }
+                    }
+                },
+                "View": {
+                    "commands": {
+                        "Std_ViewFitAll": {
+                            "size": "medium",
+                            "text": "Fit All",
+                            "icon": "zoom-all"
+                        },
+                        "Std_ViewFitSelection": {
+                            "size": "medium",
+                            "text": "Fit Selection",
+                            "icon": "zoom-selection"
+                        },
+                        "Std_ViewGroup": {
+                            "size": "medium",
+                            "text": "Standard Views...",
+                            "icon": "view-isometric"
+                        },
+                        "Std_AlignToSelection": {
+                            "size": "medium",
+                            "text": "Align to Selection",
+                            "icon": "align-to-selection"
+                        },
+                        "Separator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Std_DrawStyle": {
+                            "size": "medium",
+                            "text": "Draw Style...",
+                            "icon": "DrawStyleAsIs"
+                        },
+                        "Part_SelectFilter": {
+                            "size": "medium",
+                            "text": "Selection Filter...",
+                            "icon": "clear-selection"
+                        },
+                        "Std_Measure": {
+                            "size": "medium",
+                            "text": "Measure",
+                            "icon": "umf-measurement"
+                        },
+                        "Std_MassProperties": {
+                            "size": "medium",
+                            "text": "Mass Properties",
+                            "icon": "MassPropertiesIcon"
+                        }
+                    }
+                },
+                "Individual Views": {
+                    "commands": {
+                        "Std_ViewIsometric": {
+                            "size": "medium",
+                            "text": "&Isometric",
+                            "icon": "view-axonometric"
+                        },
+                        "Std_ViewFront": {
+                            "size": "medium",
+                            "text": "Front",
+                            "icon": "view-front"
+                        },
+                        "Std_ViewTop": {
+                            "size": "medium",
+                            "text": "Top",
+                            "icon": "view-top"
+                        },
+                        "Std_ViewRight": {
+                            "size": "medium",
+                            "text": "Right",
+                            "icon": "view-right"
+                        },
+                        "Std_ViewRear": {
+                            "size": "medium",
+                            "text": "Rear",
+                            "icon": "view-rear"
+                        },
+                        "Std_ViewBottom": {
+                            "size": "medium",
+                            "text": "Bottom",
+                            "icon": "view-bottom"
+                        },
+                        "Std_ViewLeft": {
+                            "size": "medium",
+                            "text": "Left",
+                            "icon": "view-left"
+                        }
+                    }
+                },
+                "Structure": {
+                    "commands": {
+                        "Std_Part": {
+                            "size": "medium",
+                            "text": "New Part",
+                            "icon": "Geofeaturegroup"
+                        },
+                        "Part_Datums": {
+                            "size": "medium",
+                            "text": "Datums...",
+                            "icon": ""
+                        },
+                        "Std_Group": {
+                            "size": "medium",
+                            "text": "New Group",
+                            "icon": "folder"
+                        },
+                        "Std_LinkActions": {
+                            "size": "medium",
+                            "text": "Link Actions...",
+                            "icon": ""
+                        },
+                        "Std_VarSet": {
+                            "size": "medium",
+                            "text": "Variable Set",
+                            "icon": "VarSet"
+                        }
+                    },
+                    "order": [
+                        "Std_Part",
+                        "Part_Datums",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ]
+                },
+                "Help": {
+                    "commands": {
+                        "Std_WhatsThis": {
+                            "size": "medium",
+                            "text": "What's This?",
+                            "icon": "WhatsThis"
+                        }
+                    }
+                },
+                "Sheet Metal": {
+                    "commands": {
+                        "SheetMetal_BaseShape": {
+                            "size": "medium",
+                            "text": "Add base shape",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_AddBaseShape.svg"
+                        },
+                        "SheetMetal_NewSketch": {
+                            "size": "medium",
+                            "text": "New Sketch",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/Sketcher_NewSketch.svg"
+                        },
+                        "SheetMetal_AddBase": {
+                            "size": "medium",
+                            "text": "Make Base Wall",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_AddBase.svg"
+                        },
+                        "SheetMetal_FromSolid": {
+                            "size": "medium",
+                            "text": "Convert to Sheet Metal",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_FromSolid.svg"
+                        },
+                        "SheetMetal_AddWall": {
+                            "size": "medium",
+                            "text": "Make Wall",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_AddWall.svg"
+                        },
+                        "SheetMetal_AddHem": {
+                            "size": "medium",
+                            "text": "Make Hem",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_AddHem.svg"
+                        },
+                        "SheetMetal_Extrude": {
+                            "size": "medium",
+                            "text": "Extend Face",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_Extrude.svg"
+                        },
+                        "SheetMetal_ExtendBySketch": {
+                            "size": "medium",
+                            "text": "Extend by Sketch",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_ExtendBySketch.svg"
+                        },
+                        "SheetMetal_AddFoldWall": {
+                            "size": "medium",
+                            "text": "Fold a Wall",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_AddFoldWall.svg"
+                        },
+                        "SheetMetal_Unfold": {
+                            "size": "medium",
+                            "text": "Unfold",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_Unfold.svg"
+                        },
+                        "SheetMetal_UnfoldUpdate": {
+                            "size": "medium",
+                            "text": "Unfold Update",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_UnfoldUpdate.svg"
+                        },
+                        "SheetMetal_AddCornerRelief": {
+                            "size": "medium",
+                            "text": "Add Corner Relief",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_AddCornerRelief.svg"
+                        },
+                        "SheetMetal_AddRelief": {
+                            "size": "medium",
+                            "text": "Make Relief",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_AddRelief.svg"
+                        },
+                        "SheetMetal_AddJunction": {
+                            "size": "medium",
+                            "text": "Make Junction",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_AddJunction.svg"
+                        },
+                        "SheetMetal_AddBend": {
+                            "size": "medium",
+                            "text": "Make Bend",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_AddBend.svg"
+                        },
+                        "SheetMetal_SketchOnSheet": {
+                            "size": "medium",
+                            "text": "Wrap Cutout",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_SketchOnSheet.svg"
+                        },
+                        "SheetMetal_AddCutout": {
+                            "size": "medium",
+                            "text": "Extruded Cutout",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_AddCutout.svg"
+                        },
+                        "SheetMetal_Forming": {
+                            "size": "medium",
+                            "text": "Make Forming in Wall",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/sheetmetal/Resources/icons/SheetMetal_Forming.svg"
+                        }
+                    },
+                    "order": [
+                        "SheetMetal_NewSketch",
+                        "SheetMetal_BaseShape",
+                        "SheetMetal_AddBase",
+                        "SheetMetal_FromSolid",
+                        "4_separator_SMWorkbench",
+                        "SheetMetal_AddBend",
+                        "SheetMetal_AddWall",
+                        "SheetMetal_AddHem",
+                        "SheetMetal_Extrude",
+                        "SheetMetal_ExtendBySketch",
+                        "9_separator_SMWorkbench",
+                        "SheetMetal_AddFoldWall",
+                        "SheetMetal_Unfold",
+                        "SheetMetal_UnfoldUpdate",
+                        "SheetMetal_Forming",
+                        "13_separator_SMWorkbench",
+                        "SheetMetal_AddCornerRelief",
+                        "SheetMetal_AddRelief",
+                        "SheetMetal_AddJunction",
+                        "20_separator_SMWorkbench",
+                        "SheetMetal_AddCutout",
+                        "SheetMetal_SketchOnSheet"
+                    ]
+                },
+                "Create BOM SMWorkbench": {
+                    "commands": {
+                        "CreateBOM_Overall": {
+                            "size": "medium",
+                            "text": "Create BOM",
+                            "icon": "BillOfMaterialsWB.svg"
+                        }
+                    }
+                },
+                "PieMenuTB": {
+                    "commands": {
+                        "PieMenu_View": {
+                            "size": "medium",
+                            "text": "View",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
+                        },
+                        "PieMenu_PartDesign": {
+                            "size": "medium",
+                            "text": "PartDesign",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
+                        },
+                        "PieMenu_Sketcher": {
+                            "size": "medium",
+                            "text": "Sketcher",
+                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
+                        }
+                    }
+                },
+                "Tools_newPanel": {
+                    "commands": {
+                        "Std_Measure": {
+                            "size": "medium",
+                            "text": "Measure",
+                            "icon": "umf-measurement"
+                        },
+                        "Std_UnitsCalculator": {
+                            "size": "medium",
+                            "text": "Units Converter",
+                            "icon": "accessories-calculator"
+                        },
+                        "Std_Properties": {
+                            "size": "medium",
+                            "text": "Properties",
+                            "icon": "document-properties"
+                        },
+                        "Std_BoxElementSelection": {
+                            "size": "medium",
+                            "text": "Box Element Selection",
+                            "icon": "edit-element-select-box"
+                        },
+                        "Std_BoxSelection": {
+                            "size": "medium",
+                            "text": "Box Selection",
+                            "icon": "edit-select-box"
+                        },
+                        "Std_WhatsThis": {
+                            "size": "medium",
+                            "text": "What's This?",
+                            "icon": "WhatsThis"
+                        }
+                    },
+                    "order": [
+                        "Std_Measure",
+                        "Std_UnitsCalculator",
+                        "Std_Properties",
+                        "Std_BoxElementSelection",
+                        "Std_BoxSelection",
+                        "Std_WhatsThis"
+                    ]
+                }
+            },
+            "Enabled": true
+        }
+    }
+}

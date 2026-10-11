@@ -1,0 +1,128 @@
+{
+    "workbenches": {
+        "GearWorkbench": {
+            "toolbars": {
+                "Structure": {
+                    "commands": {
+                        "Std_Part": {
+                            "size": "small"
+                        },
+                        "Part_Datums": {
+                            "size": "small"
+                        },
+                        "Std_Group": {
+                            "size": "small"
+                        },
+                        "Std_LinkActions": {
+                            "size": "small"
+                        },
+                        "Std_VarSet": {
+                            "size": "small"
+                        }
+                    },
+                    "order": [
+                        "Std_Part",
+                        "Part_Datums",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ]
+                },
+                "Gear": {
+                    "commands": {
+                        "FCGear_InvoluteGear": {
+                            "size": "large"
+                        },
+                        "FCGear_InternalInvoluteGear": {
+                            "size": "large"
+                        },
+                        "FCGear_InvoluteRack": {
+                            "size": "large"
+                        },
+                        "FCGear_CycloidGear": {
+                            "size": "small"
+                        },
+                        "FCGear_CycloidRack": {
+                            "size": "small"
+                        },
+                        "FCGear_BevelGear": {
+                            "size": "large"
+                        },
+                        "FCGear_CrownGear": {
+                            "size": "large"
+                        },
+                        "FCGear_WormGear": {
+                            "size": "large"
+                        },
+                        "FCGear_TimingGearT": {
+                            "size": "small"
+                        },
+                        "FCGear_TimingGear": {
+                            "size": "large"
+                        },
+                        "FCGear_LanternGear": {
+                            "size": "small"
+                        },
+                        "FCGear_HypoCycloidGear": {
+                            "size": "small"
+                        },
+                        "FCGear_GearConnector": {
+                            "size": "small"
+                        },
+                        "FCGear_PlanetaryGear": {
+                            "size": "small"
+                        }
+                    },
+                    "order": [
+                        "FCGear_InvoluteGear",
+                        "FCGear_InternalInvoluteGear",
+                        "FCGear_BevelGear",
+                        "FCGear_InvoluteRack",
+                        "FCGear_CrownGear",
+                        "FCGear_WormGear",
+                        "FCGear_TimingGear",
+                        "7_separator_GearWorkbench",
+                        "FCGear_TimingGearT",
+                        "FCGear_LanternGear",
+                        "FCGear_HypoCycloidGear",
+                        "FCGear_CycloidRack",
+                        "FCGear_CycloidGear",
+                        "FCGear_GearConnector",
+                        "FCGear_PlanetaryGear"
+                    ]
+                },
+                "Tools_newPanel": {
+                    "commands": {
+                        "Std_Measure": {
+                            "size": "small"
+                        },
+                        "Std_UnitsCalculator": {
+                            "size": "small"
+                        },
+                        "Std_Properties": {
+                            "size": "small"
+                        },
+                        "Std_BoxElementSelection": {
+                            "size": "small"
+                        },
+                        "Std_BoxSelection": {
+                            "size": "small"
+                        },
+                        "Std_WhatsThis": {
+                            "size": "small"
+                        }
+                    },
+                    "order": [
+                        "Std_Measure",
+                        "Std_UnitsCalculator",
+                        "Std_Properties",
+                        "Std_BoxElementSelection",
+                        "Std_BoxSelection",
+                        "Std_WhatsThis"
+                    ]
+                }
+            },
+            "Enabled": true
+        }
+    }
+}

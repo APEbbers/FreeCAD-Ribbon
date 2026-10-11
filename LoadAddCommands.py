@@ -1121,6 +1121,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
         # Update the workBenchDict in the Ribbon
         RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"].update(RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"])
+        # Make sure the dict is correct
+        RibbonBar.workBenchDict = RibbonBar.CheckRibbonStructure(RibbonBar.workBenchDict, WorkBenchName, False)
         # Create the new panel in the ribbon
         newPanel = RibbonBar.CreatePanel(
             workbenchName=WorkBenchName,
@@ -1286,20 +1288,21 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 if TB is not None:
                                     # Create the panel based on the toolbars
                                     newPanel = RibbonBar.CreatePanel(workbenchName=WorkBenchName, panelName=toolbar, addPanel=False, Dict=RibbonBar.workBenchDict, showEnableControl=True, ActivateButtons=True)                                                                        
+                                    if newPanel is not None:
                                     # show the enable checkboxes  
-                                    titleLayout: QHBoxLayout = newPanel._titleLayout
-                                    EnableControl = titleLayout.itemAt(0).widget()
-                                    if EnableControl is not None:
-                                        EnableControl.setVisible(True)
-                                        EnableControl.setChecked(True)
-                                    # Add the original panel to the orderList
-                                    if toolbar not in orderList:
-                                        orderList.append(toolbar)
-                                    # Add the panel
-                                    index = orderList.index(toolbar)
-                                    RibbonBar.currentCategory().insertWidget(newPanel, index)
-                                    # Update the dict of the currentCategory with the new panel
-                                    RibbonBar.currentCategory()._panels[newPanel.objectName()] = newPanel                                  
+                                        titleLayout: QHBoxLayout = newPanel._titleLayout
+                                        EnableControl = titleLayout.itemAt(0).widget()
+                                        if EnableControl is not None:
+                                            EnableControl.setVisible(True)
+                                            EnableControl.setChecked(True)
+                                        # Add the original panel to the orderList
+                                        if toolbar not in orderList:
+                                            orderList.append(toolbar)
+                                        # Add the panel
+                                        index = orderList.index(toolbar)
+                                        RibbonBar.currentCategory().insertWidget(newPanel, index)
+                                        # Update the dict of the currentCategory with the new panel
+                                        RibbonBar.currentCategory()._panels[newPanel.objectName()] = newPanel                                  
                             
                             # Remove the custom panel
                             #
@@ -2655,7 +2658,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
         JsonFile.close()
         return    
-    
+        
     # endregion
     
 def main():

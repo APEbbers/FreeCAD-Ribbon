@@ -1,0 +1,50 @@
+{
+    "toolbars": {
+        "order": [
+            "Individual views",
+            "Structure",
+            "File",
+            "Edit",
+            "Clipboard",
+            "Workbench",
+            "Macro",
+            "View",
+            "Help",
+            "OpenSCAD Tools",
+            "Frequently-used Part WB tools"
+        ],
+        "OpenSCAD Tools": {
+            "order": [
+                "OpenSCAD_ReplaceObject",
+                "OpenSCAD_ExplodeGroup",
+                "OpenSCAD_RefineShapeFeature",
+                "OpenSCAD_IncreaseToleranceFeature"
+            ],
+            "commands": {
+                "OpenSCAD_ReplaceObject": {
+                    "size": "large",
+                    "text": "",
+                    "icon": "OpenSCAD_ReplaceObject"
+                }
+            }
+        },
+        "Frequently-used Part WB tools": {
+            "order": [
+                "Part_CheckGeometry",
+                "Part_Cut",
+                "Part_Fuse",
+                "Part_Common",
+                "Part_Extrude",
+                "Part_Revolve"
+            ],
+            "commands": {
+                "Part_CheckGeometry": {
+                    "size": "large",
+                    "text": "",
+                    "icon": "Part_CheckGeometry"
+                }
+            }
+        }
+    },
+    "Enabled": false
+}

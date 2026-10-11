@@ -173,6 +173,7 @@ pathStylSheets = Parameters.STYLESHEET_LOCATION
 pathUI = Parameters.UI_LOCATION
 pathScripts = os.path.join(ConfigDirectory, "Scripts")
 pathPackages = os.path.join(os.path.dirname(__file__), "Resources", "packages")
+pathLayouts = os.path.join(os.path.dirname(__file__), "Resources", "Layouts")
 pathBackup = Parameters.BACKUP_LOCATION
 sys.path.append(ConfigDirectory)
 sys.path.append(pathIcons)
@@ -203,14 +204,17 @@ class ModernMenu(RibbonBar):
     """
     Create ModernMenu QWidget.
     """
-    
+
     # region - class parameters
     # Add workbenches that need to be loaded first or early here
     WBtoLoadFirst = ["BillOfMaterialsWB"]
 
     # The datafile version is set in LoadDesign.py
     DataFileVersion = CacheFunctions.DataFileVersion
-
+    
+    # Set the default button style
+    DefaultButtonStyle = "small"
+        
     # Define a placeholder for the repro adress
     ReproAdress: str = ""
     HelpAdress: str = ""
@@ -221,6 +225,10 @@ class ModernMenu(RibbonBar):
     isWbLoaded = {}
     MainWindowLoaded = False
     LeaveEventEnabled = True
+    
+    # define a placeholder for the CommitID
+    CommitID = ""
+    branch = ""
 
     # use icon size from FreeCAD preferences
     iconSize = Parameters.ICON_SIZE_SMALL
@@ -292,6 +300,7 @@ class ModernMenu(RibbonBar):
     RibbonMenu = QMenu()
     HelpMenu = QMenu()
     SettingsMenu = QMenu()
+    SetLayoutsMenu = QMenu()
     OverlayMenu = None
     AccessoriesMenu = None
     DesignButton = None
@@ -335,6 +344,9 @@ class ModernMenu(RibbonBar):
     
     # Create a list for panels that have a option button which have to be restored when exitiing the customisation enviroment
     longPanels = []
+    
+    # Create a dict to store the buttonstates in
+    ButtonState = {}
     
     # Define a placeholder for the AddButton Dialog
     AddCommandsDialog = None
@@ -403,6 +415,12 @@ class ModernMenu(RibbonBar):
         toolBars = mw.findChildren(QToolBar)
         for toolBar in toolBars:
             toolBar.setAllowedAreas(Qt.ToolBarArea.LeftToolBarArea|Qt.ToolBarArea.RightToolBarArea|Qt.ToolBarArea.BottomToolBarArea)
+        
+        # Set the default button style
+        if Parameters_Ribbon.Settings.GetStringSetting("Layout") == "LargeAndMedium" or Parameters_Ribbon.Settings.GetStringSetting("Layout") == "AllMedium":
+            self.DefaultButtonStyle = "medium"
+        else:
+            self.DefaultButtonStyle = "small"
         # ------------------------------------------------------------------------------------------------------------------
 
         # Correct the tooltips for the panels ------------------------------------------------------------------------------
@@ -433,6 +451,43 @@ class ModernMenu(RibbonBar):
         
         # ------------------------------------------------------------------------------------------------------------------
         
+        # Print the info about installed and latest version ----------------------------------------------------------------
+        # Get the address of the repository address
+        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
+        self.ReproAdress = StandardFunctions.ReturnXML_Value(
+            PackageXML, "url", "type", "repository"
+        )
+        LocalVersion = StandardFunctions.ReturnXML_Value(
+            PackageXML, "version",
+        )
+        if self.ReproAdress != "" or self.ReproAdress is not None:
+            print(translate("FreeCAD Ribbon", "Ribbon UI: ") + self.ReproAdress)
+            print(translate("FreeCAD Ribbon", "Ribbon UI: Installed version: ") + LocalVersion)
+        
+        # Get the location of the help documentation
+        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
+        self.HelpAdress = StandardFunctions.ReturnXML_Value(
+            PackageXML, "url", "type", "website"
+        )
+        # Store the commit id
+        # Try first to read from the local folder in case the repository is cloned
+        self.branch = ""
+        self.CommitID = "" 
+        # if there is no commitID, get the commitID from the shipped info
+        if self.CommitID == "":
+            with open(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "version_main"), "r") as fd:
+                line = fd.readlines()[0]
+                self.CommitID = line[:10]
+        # if there is no branch, get the branch from the version info
+        if self.branch == "":
+            self.branch = "main"
+            if LocalVersion.endswith("dev"):
+                self.branch = "Develop"
+                with open(os.path.join(os.path.dirname(__file__), "Resources", "GitInfo", "version_Develop"), "r") as fd:
+                    line = fd.readlines()[0]
+                    self.CommitID = line[:10]
+        # ------------------------------------------------------------------------------------------------------------------     
+
         # Read all data files and fill the lists and dicts -----------------------------------------------------------------
         # read ribbon structure from JSON file
         if os.path.exists(Parameters.RIBBON_STRUCTURE_JSON) is False:
@@ -442,7 +497,9 @@ class ModernMenu(RibbonBar):
             Parameters.RIBBON_STRUCTURE_JSON = os.path.join(ConfigDirectory, "RibbonStructure.json")        
         with open(Parameters.RIBBON_STRUCTURE_JSON, "r") as file:
             self.ribbonStructure.update(json.load(file))
-        file.close()
+        # Check the ribbon structure and correct it if needed
+        self.CleanRibbonStructure()
+        
         # Read a lighter version of the datafile used with the dialogs for icons
         DataFile2 = os.path.join(ConfigDirectory, "RibbonDataFile2.dat")
         if os.path.exists(DataFile2) is True:
@@ -474,11 +531,10 @@ class ModernMenu(RibbonBar):
         if not "workbenches" in self.ribbonStructure:            
             for InstalledWB in Gui.listWorkbenches().keys():
                 if "ignoredWorkbenches" in self.ribbonStructure and InstalledWB not in self.ribbonStructure["ignoredWorkbenches"]:
-                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure,
-                "workbenches", InstalledWB, True
-            )
+                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure,["workbenches", InstalledWB], True)
             print(translate("FreeCAD Ribbon", "Ribbon UI: The workbench dict was empty. A new dict is created"))           
         
+        # Convert the ribbonstructure for older versions of FreeCAD
         if int(App.Version()[0]) == 0 or (int(App.Version()[0]) == 1 and int(App.Version()[1]) == 0):
             self.ConvertRibbonStructure(checkFCVersion=False, RestartFreeCAD=False)
         else:
@@ -540,10 +596,7 @@ class ModernMenu(RibbonBar):
         PreferredToolbar = Parameters_Ribbon.Settings.GetIntSetting("Preferred_view")
         # Create a key if not present
         if PreferredToolbar == 2:
-            StandardFunctions.add_keys_nested_dict(
-                self.ribbonStructure,
-                ["newPanels", "Global", "Views - Ribbon_newPanel"],
-            )
+            StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["newPanels", "Global", "Views - Ribbon_newPanel"],default=[] )
             self.ribbonStructure["newPanels"]["Global"]["Views - Ribbon_newPanel"] = [
                 ["Std_ViewGroup", "Standard"],
                 ["Std_ViewFitAll", "Standard"],
@@ -582,10 +635,7 @@ class ModernMenu(RibbonBar):
                 "Tools_newPanel" not in self.ribbonStructure["newPanels"]["Global"]
                 and UseToolsPanel is True
             ) or NeedsUpdating is True:
-                StandardFunctions.add_keys_nested_dict(
-                    self.ribbonStructure,
-                    ["newPanels", "Global", "Tools_newPanel"],
-                )
+                StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["newPanels", "Global", "Tools_newPanel"], default=[])
                 self.ribbonStructure["newPanels"]["Global"]["Tools_newPanel"] = [
                     ["Std_Measure", "Standard"],
                     ["Std_UnitsCalculator", "Standard"],
@@ -645,28 +695,10 @@ class ModernMenu(RibbonBar):
         # write the change to the json file
         # Writing to sample.json
         with open(Parameters.RIBBON_STRUCTURE_JSON, "w") as outfile:
+            if Parameters.DEBUG_MODE:
+                print("RibbonStructure is updated with prefered panels")
             json.dump(self.ribbonStructure, outfile, indent=4)
         outfile.close()
-        # ------------------------------------------------------------------------------------------------------------------     
-
-        # Print the info about installed and latest version ----------------------------------------------------------------
-        # Get the address of the repository address
-        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
-        self.ReproAdress = StandardFunctions.ReturnXML_Value(
-            PackageXML, "url", "type", "repository"
-        )
-        LocalVersion = StandardFunctions.ReturnXML_Value(
-            PackageXML, "version",
-        )
-        if self.ReproAdress != "" or self.ReproAdress is not None:
-            print(translate("FreeCAD Ribbon", "Ribbon UI: ") + self.ReproAdress)
-            print(translate("FreeCAD Ribbon", "Ribbon UI: Installed version: ") + LocalVersion)
-        
-        # Get the location of the help documentation
-        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
-        self.HelpAdress = StandardFunctions.ReturnXML_Value(
-            PackageXML, "url", "type", "website"
-        )
         # ------------------------------------------------------------------------------------------------------------------     
         
         # Do some checking and take measures so that everything will be loaded ---------------------------------------------
@@ -1284,7 +1316,13 @@ class ModernMenu(RibbonBar):
                         if self.ribbonStructure["PanelStates"][dockWidget.objectName()][1] == "Top":
                             dockWidget.setDockLocation(Qt.DockWidgetArea.TopDockWidgetArea)
                         if self.ribbonStructure["PanelStates"][dockWidget.objectName()][1] == "Bottem":
-                            dockWidget.setDockLocation(Qt.DockWidgetArea.BottomDockWidgetArea)                        
+                            dockWidget.setDockLocation(Qt.DockWidgetArea.BottomDockWidgetArea)
+                            
+                        for tabifiedDockwidget in self.ribbonStructure["PanelStates"][dockWidget.objectName()][2]:
+                            dockWidget_2 = mw.findChild(QDockWidget, tabifiedDockwidget)
+                            if dockWidget_2 is not None:
+                                mw.tabifyDockWidget(dockWidget, dockWidget_2)
+                                             
                         dockWidget.show()     
                         dockWidget.setFloating(False)   
                         dockWidget.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
@@ -1526,16 +1564,18 @@ class ModernMenu(RibbonBar):
 
                 # Create an QAction for adding a tab to a new or existing group
                 self.AddToTabGroupAct = ComboBoxAction(self, f"Add {tabText} to a new or existing group", "Top", Parameters.FONTSIZE_MENUS, True, "Add")
-                self.AddToTabGroupAct.addItem("")
+                self.AddToTabGroupAct.setObjectName("AddToTabGroup")
+                self.AddToTabGroupAct.combobox.clear()
+                self.AddToTabGroupAct.combobox.addItem("")
                 self.AddToTabGroupAct.setEditable(True)
                 if "tabGroups" in self.ribbonStructure:
                     for key in self.ribbonStructure["tabGroups"]:
-                        self.AddToTabGroupAct.addItem(str(key))
+                        self.AddToTabGroupAct.combobox.addItem(str(key))
                 self.AddToTabGroupAct.setFixedWidth(180)
-                self.AddToTabGroupAct.currentIndexChanged.connect(lambda: self.on_AddToGroup_Clicked(tabIndex, self.AddToTabGroupAct.currentText()))
-                self.AddToTabGroupAct.currentIndexChanged.connect(lambda: self.CloseContextMenu(self.AddToTabGroupAct))
-                self.AddToTabGroupAct.clicked.connect(lambda: self.on_AddToGroup_Clicked(tabIndex, self.AddToTabGroupAct.currentText()))
-                self.AddToTabGroupAct.clicked.connect(lambda: self.CloseContextMenu(self.AddToTabGroupAct))
+                self.AddToTabGroupAct.combobox.currentIndexChanged.connect(lambda: self.on_AddToGroup_Clicked(tabIndex, self.AddToTabGroupAct.currentText()))
+                self.AddToTabGroupAct.combobox.currentIndexChanged.connect(lambda: self.CloseContextMenu(self.AddToTabGroupAct))
+                self.AddToTabGroupAct.combobox.activated.connect(lambda: self.on_AddToGroup_Clicked(tabIndex, self.AddToTabGroupAct.currentText()))
+                self.AddToTabGroupAct.combobox.activated.connect(lambda: self.CloseContextMenu(self.AddToTabGroupAct))
                 self.contextMenu.addAction(self.AddToTabGroupAct)
                 
                 # Add a separator
@@ -1547,6 +1587,7 @@ class ModernMenu(RibbonBar):
                     Parameters.FONTSIZE_MENUS,
                     Qt.AlignmentFlag.AlignLeft
                     )
+                self.RemoveFromTabGroupAct.setObjectName("RemoveFromGroup")
                 self.RemoveFromTabGroupAct.clicked.connect(lambda: self.on_RemoveFromExistingGroup_Clicked(tabIndex))
                 # Get the current group
                 ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
@@ -1558,11 +1599,11 @@ class ModernMenu(RibbonBar):
                 self.contextMenu.addAction(self.RemoveFromTabGroupAct)
                 
                 # create the context menu action
-                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
+                action = self.contextMenu.exec_(event.globalPos())
 
                 # Disconnect the widgetActions
                 self.AddToTabGroupAct.currentIndexChanged.disconnect()                
-                self.AddToTabGroupAct.clicked.disconnect()  
+                self.AddToTabGroupAct.combobox.activated.disconnect()  
                 self.RemoveFromTabGroupAct.clicked.disconnect()     
                 return
             
@@ -1598,6 +1639,7 @@ class ModernMenu(RibbonBar):
                             textVisible = False                                    
                         # set the checkbox for enabling text
                         RibbonButtonAction_Text = ToggleAction(self, translate("FreeCAD Ribbon", "Show button text"), "Top", Parameters.FONTSIZE_MENUS)
+                        RibbonButtonAction_Text.setObjectName("ShowButtonText")
                         RibbonButtonAction_Text.setChecked(textVisible)
                         RibbonButtonAction_Text.setText(translate("FreeCAD Ribbon", "Show button text"))
                         # Set the checkbox action checked or unchecked
@@ -1613,9 +1655,11 @@ class ModernMenu(RibbonBar):
                         
                         # Set the dropdown for the button style
                         RibbonButtonAction_Style = ComboBoxAction(self, translate("FreeCAD Ribbon", "Set button type"), "Top", Parameters.FONTSIZE_MENUS)
-                        RibbonButtonAction_Style.addItem("Small")
-                        RibbonButtonAction_Style.addItem("Medium")
-                        RibbonButtonAction_Style.addItem("Large")
+                        RibbonButtonAction_Style.combobox.clear()
+                        RibbonButtonAction_Style.combobox.addItem("Small")
+                        RibbonButtonAction_Style.combobox.addItem("Medium")
+                        RibbonButtonAction_Style.combobox.addItem("Large")
+                        RibbonButtonAction_Style.setObjectName("ButtonStyle")
 
                         if widget.parent().ButtonStyle == RibbonButtonStyle.Small:
                             RibbonButtonAction_Style.setCurrentText("Small")
@@ -1629,6 +1673,7 @@ class ModernMenu(RibbonBar):
                         
                         # Add a line edit for changing the text
                         ChangeButtonText = LineEditAction(self, translate("FreeCAD Ribbon", "Set button text"), Parameters.FONTSIZE_MENUS)
+                        ChangeButtonText.setObjectName("SetButtonText")
                         ChangeButtonText.setText("")
                         text = ""
                         label = widget.parent().findChild(QLabel)
@@ -1648,7 +1693,7 @@ class ModernMenu(RibbonBar):
                         AddSeparator_Right.triggered.connect(lambda: self.on_AddSeparator_Clicked(panel, widget,"right"))                        
                         
                         # create the context menu action
-                        action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
+                        action = self.contextMenu.exec_(self.mapFromGlobal(event.globalPos()))
 
                         # Disconnect the widgetActions
                         RibbonButtonAction_Style.currentTextChanged.disconnect()
@@ -1664,6 +1709,7 @@ class ModernMenu(RibbonBar):
             if titleWidget is not None and self.CustomizeEnabled is True and titleWidget.underMouse():
                 panel = titleWidget.parent().parent()
                 ChangePanelTitle = CustomWidgets.LineEditAction(self, translate("FreeCAD Ribbon", "Change panel title"))
+                ChangePanelTitle.setObjectName("SetPanelTitle")
                 ChangePanelTitle.setText("")
                 ChangePanelTitle.setPlaceholderText(panel.title())
                 ChangePanelTitle.setClearButtonEnabled(True)
@@ -1672,7 +1718,7 @@ class ModernMenu(RibbonBar):
                 self.contextMenu.addAction(ChangePanelTitle)
                 
                 # create the context menu action
-                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
+                action = self.contextMenu.exec_(event.globalPos())
                 
                 # Disconnect the widgetActions
                 ChangePanelTitle.textChanged.disconnect()
@@ -1689,7 +1735,7 @@ class ModernMenu(RibbonBar):
                     RemoveSeparator.triggered.connect(lambda: self.on_RemoveSeparator_Clicked(panel, separator))
                     
                     # create the context menu action
-                    action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
+                    action = self.contextMenu.exec_(event.globalPos())
                     return
             
             # Add the context menu for the ribbon
@@ -1698,41 +1744,96 @@ class ModernMenu(RibbonBar):
                 and quickaccessbutton is None 
                 and quickaccesstoolbar is None 
                 and self.tabBar().underMouse() is False
-                ):
+                ):                
+                # Add a menu to select layout (themes)                
+                self.SetLayoutsMenu = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set Layouts..."))
+                
+                # Add a label to indicate the standard layout section
+                label = QLabel(translate("FreeCAD Ribbon", "Standard layouts"))
+                label.setAlignment(Qt.AlignmentFlag.AlignLeading)
+                label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+                label.setStyleSheet("QLabel {font-weight: bold; padding: 4px;}")
+                label.setObjectName("StandardLayout_Label")
+                widget_action = QWidgetAction(self.SetLayoutsMenu)
+                widget_action.setDefaultWidget(label)
+                self.SetLayoutsMenu.addAction(widget_action)
+                self.SetLayoutsMenu.addSeparator()
+
+                Default_Act = self.SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Default layout"))
+                Default_Act.triggered.connect(lambda: self.handleLayoutMenuAction("Default"))
+                
+                LargeAndMedium_Act = self.SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Large and medium buttons"))
+                LargeAndMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("LargeAndMedium"))
+                
+                AllSmall_Act = self.SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "All small"))
+                AllSmall_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllSmall"))
+                
+                AllMedium_Act = self.SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "All medium"))
+                AllMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllMedium"))
+                
+                # Add any user defined layout to the menu
+                UserLayoutDir = os.path.join(ConfigDirectory, "UserLayouts")
+                userLayouts = []
+                if os.path.exists(UserLayoutDir) is True:
+                    for root, dirs, files in os.walk(UserLayoutDir):
+                        for dir in dirs:
+                            userLayouts.append(dir)
+                if len(userLayouts) > 0:
+                    # Add a label to indicate the user layout section
+                    self.SetLayoutsMenu.addSeparator().setVisible(False)
+                    label = QLabel(translate("FreeCAD Ribbon", "Custom layouts"))
+                    label.setAlignment(Qt.AlignmentFlag.AlignLeading)
+                    label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+                    label.setStyleSheet("QLabel {font-weight: bold; padding: 4px;}")
+                    label.setObjectName("StandardLayout_Label")
+                    widget_action = QWidgetAction(self.SetLayoutsMenu)
+                    widget_action.setDefaultWidget(label)
+                    self.SetLayoutsMenu.addAction(widget_action)
+                    self.SetLayoutsMenu.addSeparator()
+                    
+                    for layout in userLayouts:
+                        act = self.SetLayoutsMenu.addAction(str(layout))
+                        act.triggered.connect(lambda: self.handleLayoutMenuAction(str(layout)))
+                
+                # Add a menu to select tabs to be shown
+                menu = StayOpenMenu(self.contextMenu)
+                menu.setObjectName("TabsMenu")
+                for i in range(self.tabBar().count()):
+                    WorkbenchName = self.tabBar().tabData(i) 
+                    if WorkbenchName != "NoneWorkbench":
+                        menu.addAction(self.createAction_Tabs(WorkbenchName, menu))
+                SetTabAct = self.contextMenu.addMenu(menu)
+                SetTabAct.setText(translate("FreeCAD Ribbon", "Show/Hide tabs..."))
+                
                 # Add Customize buttons for entering and exiting customize enviroment
                 self.contextMenu.addSeparator()
                 title = translate("FreeCAD Ribbon", "Customize...")
+                    
                 if self.CustomizeEnabled is True:
                     # Set the tabs movable
                     self.tabBar().setMovable(True)
-                    # Add a menu to select layout (themes)
-                    SetLayoutsAct = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set Layouts..."))
-                    Default_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "Default layout"))
-                    Default_Act.triggered.connect(lambda: self.handleLayoutMenuAction("Default"))
                     
-                    LargeAndMedium_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "Large and medium buttons"))
-                    LargeAndMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("LargeAndMedium"))
+                    setUserLayout = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Save current layout"))
+                    setUserLayout.triggered.connect(self.AddUserLayout)
+                    # setUserLayout.triggered.connect
                     
-                    AllSmall_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All small"))
-                    AllSmall_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllSmall"))
-                    
-                    AllMedium_Act = SetLayoutsAct.addAction(translate("FreeCAD Ribbon", "All medium"))
-                    AllMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllMedium"))
-                    
+                    # Add a separator
+                    self.contextMenu.addSeparator()
+                    # Add a menu for exporting layouts
+                    ExportLayoutsMenu = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Export..."))
+                    ExportAll = ExportLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Export layout for all tabs"))
+                    ExportAll.triggered.connect(lambda: self.ExportLayout())
+                    #
+                    ExportAll_SeparateFiles = ExportLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Export layout for all tabs in separate files"))
+                    ExportAll_SeparateFiles.triggered.connect(lambda: self.ExportLayout("All_SeparateFiles"))
+                    #
+                    ExportSingle= ExportLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Export layout for current tab"))
+                    ExportSingle.triggered.connect(lambda: self.ExportLayout(self.tabBar().tabData(self.tabBar().currentIndex())))
+
                     # Add a button to restore a layout
                     RestoreLayoutAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Restore a Ribbon layout"))
                     RestoreLayoutAct.triggered.connect(self.RestoreJson)
-                    # Add a separator
-                    self.contextMenu.addSeparator()
-                    # Add a menu to select tabs to be shown
-                    menu = StayOpenMenu(self.contextMenu)
-                    for i in range(self.tabBar().count()):
-                        WorkbenchName = self.tabBar().tabData(i) 
-                        if WorkbenchName != "NoneWorkbench":
-                            menu.addAction(self.createAction_Tabs(WorkbenchName, menu))
-                    SetTabAct = self.contextMenu.addMenu(menu)
-                    SetTabAct.setText(translate("FreeCAD Ribbon", "Show/Hide tabs..."))
-                                        
+                    
                     # Add a separator
                     self.contextMenu.addSeparator()
                     title = translate("FreeCAD Ribbon", "Save and exit customize...")
@@ -1744,8 +1845,8 @@ class ModernMenu(RibbonBar):
                 CustomizeCancelAct.triggered.connect(lambda: self.handleContextMenuAction("Cancel"))
                 CustomizeCancelAct.setVisible(self.CustomizeEnabled)
                                 
-                # Create the action
-                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
+                # create the context menu action
+                action = self.contextMenu.exec_(event.globalPos())
                 
                 CustomizeStartAct.triggered.disconnect()
                 if self.CustomizeEnabled is True:
@@ -1765,7 +1866,7 @@ class ModernMenu(RibbonBar):
                 clearToolBar.triggered.connect(self.on_ClearToolBar_QC_Clicked)
                 
                 # create the context menu action
-                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
+                action = self.contextMenu.exec_(event.globalPos())
                 
                 # Disconnect the widgetActions
                 AddSeparator_Left.triggered.disconnect()                                
@@ -1783,7 +1884,7 @@ class ModernMenu(RibbonBar):
                 clearToolBar.triggered.connect(self.on_ClearToolBar_QC_Clicked)
                 
                 # create the context menu action
-                action = self.contextMenu.exec_(self.mapFromGlobal(event.pos()))
+                action = self.contextMenu.exec_(event.globalPos())
                 
                 # Disconnect the widgetActions
                 removeSeparator.triggered.disconnect()
@@ -1794,50 +1895,274 @@ class ModernMenu(RibbonBar):
         return
     
     def handleLayoutMenuAction(self, LayoutName = "Default"):
-        # if LayoutName == "Default":
-        #     LayoutDir = os.path.join(ConfigDirectory, "Layouts", "Default")       
-        #     for root, dirs, files in os.walk(LayoutDir):
-        #         for filename in files:
-        #             with open(os.path.join(LayoutDir, filename), "r") as file:
-        #                 LayoutDict = {}
-        #                 WorkBenchName = filename.replace(".json", "")
-        #                 LayoutDict.update(json.load(file))
-        #                 self.workBenchDict["workbenches"][WorkBenchName] = LayoutDict
-                                                                     
-        #                 try:
-        #                     workbench = Gui.getWorkbench(WorkBenchName)
-        #                     for CategoryName, Category in self.categories().items():
-        #                         if WorkBenchName in self.isWbLoaded and CategoryName == workbench.MenuText:  
-        #                             self.setCurrentCategory(Category)
-        #                             # self.on_Ok_Clicked(CloseDialog=False)
-        #                             print(CategoryName)     
+        # Set the wait cursor
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        # Define a dict to temporaly store the new layout
+        WorkbenchDict = {}
+        GeneralDict = {}
+        # Add the "workbenches key" to the Workbench Dict
+        StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches"], endEmpty=True)
+        # Define a variable for the layout directory 
+        LayoutDir = ""
+        DefaultSize = "small"
+        FirstCommandSize = "large"
 
-        #                             for panelName, panel in Category.panels().items():                                   
-        #                                 # Create a new panel with the extra command
-        #                                 newPanel = self.CreatePanel(WorkBenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict, UpdateDict=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ActivateButtons=True, Category=Category)
-        #                                 print(newPanel)              
-        #                                 # Add the panel to the list with long panels
-        #                                 if newPanel is not None:
-        #                                     if newPanel.panelOptionButton().isVisible():
-        #                                         self.longPanels.append(newPanel)
-                                                                    
-        #                                     # Replace the panel with the new panel
-        #                                     self.currentCategory().replacePanel(panel, newPanel)
-        #                                     # For some reason, the font of the panel title will be reset after replacing a panel, set its properties again.
-        #                                     self.setPanelProperties(newPanel)
-                                            
-        #                                     # # Close the old panel and the dragindicator
-        #                                     panel.close()
-                                            
-        #                                     # Enable all buttons, so you can access them with a right click
-        #                                     self.activateButtons()
-                                                            
-        #                 except Exception:
-        #                     print(traceback.print_exc())
-        #                     pass
-                                
-                            
+        # Set the default layout
+        if LayoutName == "Default":
+            # Write the layout to the parameters
+            Parameters_Ribbon.Settings.SetStringSetting("Layout", "Default")
+            # Get the directory with the files for the default layout
+            # LayoutDir = os.path.join(ConfigDirectory, "Layouts", "Default")
+            LayoutDir = os.path.join(pathLayouts, "Default")
+            # Set the values for the icon sizes
+            DefaultSize = "small"
+            FirstCommandSize = "large"
                         
+            # Adjust the icon sizes
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 24)
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 36)
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 72)
+            Parameters_Ribbon.Settings.SetBoolSetting("Link_IconSizes", True)
+            # Disable text for buttons
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", False)
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", False)
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", True)
+                                    
+        elif LayoutName == "LargeAndMedium":
+            # Write the layout to the parameters
+            Parameters_Ribbon.Settings.SetStringSetting("Layout", "LargeAndMedium")
+            # Get the directory with the files for the default layout
+            # LayoutDir = os.path.join(ConfigDirectory, "Layouts", "LargeAndMedium")
+            LayoutDir = os.path.join(pathLayouts, "LargeAndMedium")
+            # Set the values for the icon sizes
+            DefaultSize = "medium"
+            FirstCommandSize = "large"
+            
+            # Disable text for buttons
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", False)
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", False)
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", False)
+            Parameters_Ribbon.Settings.SetBoolSetting("Link_IconSizes", False)
+            # Adjust the icon sizes
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 24)
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 24)
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 48)
+            
+        elif LayoutName == "AllSmall":
+            # Write the layout to the parameters
+            Parameters_Ribbon.Settings.SetStringSetting("Layout", "AllSmall")
+            # Get the directory with the files for the default layout
+            # LayoutDir = os.path.join(ConfigDirectory, "Layouts", "AllSmall")
+            LayoutDir = os.path.join(pathLayouts, "AllSmall")
+            # Set the values for the icon sizes
+            DefaultSize = "small"
+            FirstCommandSize = "small"
+            
+            # Disable text for buttons
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", False)
+
+            # Adjust the icon sizes
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 24)
+        elif LayoutName == "AllMedium":
+            # Write the layout to the parameters
+            Parameters_Ribbon.Settings.SetStringSetting("Layout", "AllMedium")
+            # Get the directory with the files for the default layout
+            # LayoutDir = os.path.join(ConfigDirectory, "Layouts", "AllMedium")
+            LayoutDir = os.path.join(pathLayouts, "AllMedium")
+            # Set the values for the icon sizes
+            DefaultSize = "medium"
+            FirstCommandSize = "medium"
+            
+            # Disable text for buttons
+            Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", False)
+
+            # Adjust the icon sizes
+            Parameters_Ribbon.Settings.SetBoolSetting("Link_IconSizes", False)
+            Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 30)
+        else:
+            if LayoutName != "":
+                # Write the layout to the parameters
+                Parameters_Ribbon.Settings.SetStringSetting("Layout", LayoutName)
+                # Get the directory with the files for the default layout                
+                LayoutDir = os.path.join(ConfigDirectory, "UserLayouts", LayoutName)
+
+        # Go through the directory     
+        for root, dirs, files in os.walk(LayoutDir):
+            for filename in files:
+                # Open the file and store its contents in the workbenchdict
+                with open(os.path.join(LayoutDir, filename), "r") as file:
+                    try:
+                        loadedDict = {}
+                        loadedDict.update(json.load(file))
+                        
+                        if "general" not in filename.lower():
+                            # Get the workbench name and add it to the Workbench dict
+                            WorkBenchName = filename.replace(".json", "")                            
+                            if "workbenches" in loadedDict and WorkBenchName in loadedDict["workbenches"]:
+                                    WorkbenchDict["workbenches"][WorkBenchName] = loadedDict["workbenches"][WorkBenchName]
+                            if "customToolbars" in loadedDict:
+                                StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["customToolbars", WorkBenchName], endEmpty=True)
+                                WorkbenchDict["customToolbars"][WorkBenchName].update(loadedDict["customToolbars"][WorkBenchName])
+                            if "newPanels" in loadedDict:
+                                StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["newPanels", WorkBenchName], endEmpty=True)
+                                WorkbenchDict["newPanels"][WorkBenchName].update(loadedDict["newPanels"][WorkBenchName])
+                        if "general" in filename.lower():      
+                            # Add the list with ignored toolbars
+                            if "ignoredToolbars" in loadedDict:
+                                Standard_Functions_Ribbon.add_keys_nested_dict(GeneralDict, ["ignoredToolbars"], default=[])
+                                GeneralDict["ignoredToolbars"] = loadedDict["ignoredToolbars"]
+                            # Add the list with icon only toolbars
+                            if "iconOnlyToolbars" in loadedDict:
+                                Standard_Functions_Ribbon.add_keys_nested_dict(GeneralDict, ["iconOnlyToolbars"], default=[])
+                                GeneralDict["iconOnlyToolbars"] = loadedDict["iconOnlyToolbars"]
+                            # Add the list with the quickaccess commands
+                            if "quickAccessCommands" in loadedDict:
+                                Standard_Functions_Ribbon.add_keys_nested_dict(GeneralDict, ["quickAccessCommands"], default=[])
+                                GeneralDict["quickAccessCommands"] = loadedDict["quickAccessCommands"]
+                            if "tabGroups" in loadedDict:
+                                # Add the dict with the tabgroups
+                                Standard_Functions_Ribbon.add_keys_nested_dict(GeneralDict, ["tabGroups"], endEmpty=True)
+                                GeneralDict["tabGroups"] = loadedDict["tabGroups"]
+                    except:
+                        if Parameters.DEBUG_MODE is True: 
+                            print(traceback.format_exc())
+        
+        # Go through all the installed workbenches
+        for WorkBenchName, Workbench in Gui.listWorkbenches().items():
+            if WorkBenchName == "NoneWorkbench":
+                continue
+            for root, dirs, files in os.walk(LayoutDir):
+                # If the workbench is not in the layout directory, recreate its dict 
+                # with every first command of a toolbar to set to large
+                if WorkBenchName + ".json" not in files:  # noqa: SIM102
+                    # Activate the workbench
+                    Gui.activateWorkbench(WorkBenchName)
+                    # Get the toolbar with its command
+                    ToolBarItems: dict = Workbench.getToolbarItems()
+                    # Define a list for the toolbar order
+                    ToolBarOrder = []
+                    
+                    for toolbar, commands in ToolBarItems.items():
+                        # Skip certain toolbars
+                        if toolbar == "View" or toolbar == "Tools":
+                            continue
+                        
+                        # Create the workbench dict for the order key and set the order bast on the toolbar items
+                        StandardFunctions.add_keys_nested_dict(WorkbenchDict,["workbenches",WorkBenchName, "toolbars", toolbar, "order"], endEmpty=True)
+                        WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["order"] = commands
+                                                
+                        # Go through the commands
+                        for command in commands:
+                            # The default size is 'small', if it is the first command, set it to 'large'
+                            size = DefaultSize
+                            if command == commands[0] and toolbar != "Structure":
+                                size = FirstCommandSize
+                            # Create the workbench dict for the command and set the order bast on the toolbar items
+                            StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches", WorkBenchName, "toolbars", toolbar, "commands", command, "size"], endEmpty=True)
+                            WorkbenchDict["workbenches"][WorkBenchName]["toolbars"][toolbar]["commands"][command]["size"] = size
+                        # Add the toolbar to the toolbar order list
+                        ToolBarOrder.append(toolbar)
+                    # Write the toolbar order to the workbench dict
+                    WorkbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolBarOrder
+        
+        # Update the ribbonStructure dict with the temporary WorkbenchDict
+        if "workbenches" in self.ribbonStructure and "workbenches" in WorkbenchDict:
+            self.ribbonStructure["workbenches"] = WorkbenchDict["workbenches"]
+        if "customToolbars" in self.ribbonStructure and "customToolbars" in WorkbenchDict:
+            self.ribbonStructure["customToolbars"] = WorkbenchDict["customToolbars"]
+        if "newPanels" in self.ribbonStructure and "newPanels" in WorkbenchDict:
+            self.ribbonStructure["newPanels"].update(WorkbenchDict["newPanels"])
+        
+        # Update the ribbonStructure dict with the temporary GeneralDict
+        if "ignoredToolbars" in self.ribbonStructure and "ignoredToolbars" in GeneralDict:
+            self.ribbonStructure["ignoredToolbars"] = GeneralDict["ignoredToolbars"]
+        if "iconOnlyToolbars" in self.ribbonStructure and "iconOnlyToolbars" in GeneralDict:
+            self.ribbonStructure["iconOnlyToolbars"] = GeneralDict["iconOnlyToolbars"]
+        if "quickAccessCommands" in self.ribbonStructure and "quickAccessCommands" in GeneralDict:
+            print(GeneralDict["quickAccessCommands"])
+            self.ribbonStructure["quickAccessCommands"] = GeneralDict["quickAccessCommands"]
+        if "tabGroups" in self.ribbonStructure and "tabGroups" in GeneralDict:
+            self.ribbonStructure["tabGroups"] = GeneralDict["tabGroups"]
+        
+        self.DefaultButtonStyle = DefaultSize
+        
+        # Make sure that there that the structure is correct
+        self.CleanRibbonStructure(skipIdCheck=True)
+        
+        # Restore the cursor
+        QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
+        
+        # get the path for the Json file
+        JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+        # Writing to sample.json
+        with open(JsonFile, "w") as outfile:
+            if Parameters.DEBUG_MODE:
+                print(f"Layout {LayoutName} is applied")
+            json.dump(self.ribbonStructure, outfile, indent=4)
+                            
+        # Restart FreeCAD
+        StandardFunctions.RestartDialog(includeIcons=True)
+         
+        return
+    
+    def AddUserLayout(self):                
+        # Check if there is a layout folder with default layouts
+        UserLayoutDir = os.path.join(ConfigDirectory, "UserLayouts")
+        if os.path.exists(UserLayoutDir) is False:
+            # Create the directory
+            os.makedirs(UserLayoutDir)
+        
+        #  Create a list of the layouts that are present. Used to fill the dropdown menu
+        userLayouts = []
+        for root, dirs, files in os.walk(UserLayoutDir):
+            for dir in dirs:
+                userLayouts.append(dir)
+        
+        # Get the dialog to enter or select a name
+        answer = StandardFunctions.Mbox(text=translate("FreeCAD Ribbon", "Enter a name..."), title="", style=21, default="User_1", stringList=userLayouts)
+        
+        # If the answer is not empty, add the layout to the directory
+        if answer is not None and answer != "":
+            # Create a folder for the new layout
+            os.makedirs(os.path.join(UserLayoutDir, answer))
+            # Create the separate files for each workbench
+            for workbench in self.workBenchDict["workbenches"]:
+                # Define a file
+                workbenchFile = os.path.join(UserLayoutDir, answer, f"{workbench}.json")
+                # Fill the dict
+                workbenchDict = {}
+                Standard_Functions_Ribbon.add_keys_nested_dict(workbenchDict, ["workbenches", workbench])
+                workbenchDict["workbenches"][workbench] = self.workBenchDict["workbenches"][workbench]
+                # If the workbench has a custom toolbar, add its dict as well
+                if "customToolbars" in self.workBenchDict and workbench in self.workBenchDict["customToolbars"]:
+                    Standard_Functions_Ribbon.add_keys_nested_dict(workbenchDict, ["customToolbars", workbench])
+                    workbenchDict["customToolbars"][workbench].update(self.workBenchDict["customToolbars"][workbench])
+                # Writing to file
+                with open(workbenchFile, "w") as outfile:
+                    if Parameters.DEBUG_MODE:
+                        print(f"Layout {answer} is added to user layouts")
+                    json.dump(workbenchDict, outfile, indent=4)
+            
+            # Write the general file
+            generalDict = {}
+            # Add the list with ignored toolbars
+            if "ignoredToolbars" in self.workBenchDict:
+                Standard_Functions_Ribbon.add_keys_nested_dict(generalDict, ["ignoredToolbars"], default=[])
+                generalDict["ignoredToolbars"] = self.workBenchDict["ignoredToolbars"]
+            # Add the list with icon only toolbars
+            if "iconOnlyToolbars" in self.workBenchDict:
+                Standard_Functions_Ribbon.add_keys_nested_dict(generalDict, ["iconOnlyToolbars"], default=[])
+                generalDict["iconOnlyToolbars"] = self.workBenchDict["iconOnlyToolbars"]
+            # Add the list with the quickaccess commands
+            if "quickAccessCommands" in self.workBenchDict:
+                Standard_Functions_Ribbon.add_keys_nested_dict(generalDict, ["quickAccessCommands"], default=[])
+                generalDict["quickAccessCommands"] = self.workBenchDict["quickAccessCommands"]
+            if "tabGroups" in self.workBenchDict:
+                # Add the dict with the tabgroups
+                Standard_Functions_Ribbon.add_keys_nested_dict(generalDict, ["tabGroups"], endEmpty=True)
+                generalDict["tabGroups"] = self.workBenchDict["tabGroups"]
+                    
         return
     
     def handleContextMenuAction(self, action):        
@@ -1910,7 +2235,8 @@ class ModernMenu(RibbonBar):
             return
         
         # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
         return
     
     def on_Customize_Clicked(self):
@@ -2191,13 +2517,13 @@ class ModernMenu(RibbonBar):
                         self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))             
                 
         # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
         return
     
     def on_ApplyClicked(self):
         self.on_Ok_Clicked(CloseDialog=False)
-        # Print a message
-        print(translate("FreeCAD Ribbon", f"RibbonUI: Changes are saved."))
+        return
     
     def on_Ok_Clicked(self, workbenchName = "", CloseDialog = True):
         # Set the wait cursor
@@ -2270,8 +2596,12 @@ class ModernMenu(RibbonBar):
             
             IsRemoved = False
             for panel in self.RemovedPanels:
-                if panel.objectName() == objPanel.objectName():
-                    IsRemoved = True
+                try:
+                    if panel.objectName() == objPanel.objectName():
+                        IsRemoved = True
+                except:
+                    if Parameters.DEBUG_MODE:
+                        traceback.print_exc()
   
             # hide the enable checkboxes and hide the panel if it is unchecked
             titleLayout: QHBoxLayout = objPanel._titleLayout
@@ -2304,9 +2634,12 @@ class ModernMenu(RibbonBar):
                     continue
                 
                 if longPanel.objectName() == objPanel.objectName() and longPanel.objectName() != "" and objPanel.objectName() != "":
-                    if longPanel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
-                        if self.workBenchDict["workbenches"][workbenchName]["toolbars"][longPanel.objectName()]["Enabled"] is False:
-                            continue                               
+                    if (
+                        longPanel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"] 
+                        and "Enabled" in self.workBenchDict["workbenches"][workbenchName]["toolbars"][longPanel.objectName()]
+                        and self.workBenchDict["workbenches"][workbenchName]["toolbars"][longPanel.objectName()]["Enabled"] is False
+                        ):
+                        continue                               
                     
                     # Create a panel and replace the long panel with this one
                     if CloseDialog is True:
@@ -2404,6 +2737,9 @@ class ModernMenu(RibbonBar):
                 else:
                     # Make sure to set the tab visible
                     self.tabBar().setTabVisible(i, True)
+                    
+                
+        self.UpdateToolBar_Keys(WorkBenchName=workbenchName, Dict=self.workBenchDict, skipIdCheck=True)
         
         # update the ribbonstructure before writing it to disk
         if "quickAccessCommands" in self.workBenchDict:
@@ -2443,6 +2779,8 @@ class ModernMenu(RibbonBar):
         # Writing to ribbonStructure.json
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
         with open(JsonFile, "w") as outfile:
+            # Print a message
+            print(translate("FreeCAD Ribbon", f"RibbonUI: Changes are saved."))
             json.dump(self.ribbonStructure, outfile, indent=4)
                 
         # Close the temporary document
@@ -2491,17 +2829,17 @@ class ModernMenu(RibbonBar):
                     }""")
                                 
         # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
         return
     
-    def on_Cancel_Clicked(self, workbenchName = ""):        
+    def on_Cancel_Clicked(self):        
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
 
         # Get the name of the current workbench
-        if workbenchName == "":
-            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
         
         # Set stylesheets
         self.currentCategory().setStyleSheet(self.StyleSheet)
@@ -2558,6 +2896,7 @@ class ModernMenu(RibbonBar):
                 continue
             # If the panel is not in the ribbon structure, remove it
             if objPanel.objectName() not in Dict["workbenches"][workbenchName]["toolbars"]:
+                print(title)
                 objPanel.close()
                 continue
             
@@ -2615,8 +2954,8 @@ class ModernMenu(RibbonBar):
             workbenchName = self.tabBar().tabData(i)
             
             # Make sure to set the tab visible
-            if workbenchName in self.ribbonStructure["workbenches"] and "Enabled" in self.ribbonStructure["workbenches"][workbenchName]:  # noqa: SIM102
-                if self.ribbonStructure["workbenches"][workbenchName]["Enabled"] is True:
+            if workbenchName in Dict["workbenches"] and "Enabled" in Dict["workbenches"][workbenchName]:  # noqa: SIM102
+                if Dict["workbenches"][workbenchName]["Enabled"] is True:
                     # Make sure to set the tab visible
                     self.tabBar().setTabVisible(i, True)  
                 else:
@@ -2629,7 +2968,7 @@ class ModernMenu(RibbonBar):
                 self.tabBar().setTabVisible(i, True) 
 
             self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None)
-             
+            
         self.currentCategory().panels().update(dictPanels)
                 
         # Restore closed panels
@@ -2639,6 +2978,32 @@ class ModernMenu(RibbonBar):
             except Exception:
                 pass
             
+        # Restore any custom panel
+        # Get the custom panels and add them to the list of toolbars
+        try:
+            # Get the name of the current workbench
+            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+            if workbenchName in Dict["customToolbars"]:
+                for customPanel in Dict["customToolbars"][workbenchName]:
+                    # remove the original toolbars from the list
+                    Commands = Dict["customToolbars"][workbenchName][customPanel]["commands"]
+                    for Command in Commands:
+                        try:
+                            OriginalToolbar = Dict["customToolbars"][workbenchName][customPanel]["commands"][Command]
+                            self.currentCategory().removePanel(OriginalToolbar)
+                        except Exception:
+                            continue
+                    
+                    # show the custom panel again
+                    self.currentCategory().panels()[customPanel].show()
+                    
+        except Exception as e:
+            print(traceback.format_exc())
+            if Parameters.DEBUG_MODE is True:
+                StandardFunctions.Print(f"{e}, 1", "Warning")
+            pass
+
+                 
         for panel in self.AddedPanels:
             if workbenchName in Dict["newPanels"]:
                 if panel.objectName() not in Dict["newPanels"][workbenchName]:                     
@@ -2717,7 +3082,8 @@ class ModernMenu(RibbonBar):
         print(translate("FreeCAD Ribbon", "RibbonUI: Changes are rolled back"))
         
         # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
         return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction):     
@@ -3127,19 +3493,20 @@ class ModernMenu(RibbonBar):
             # Writing to ribbonStructure.json
             JsonFile = Parameters.RIBBON_STRUCTURE_JSON
             with open(JsonFile, "w") as outfile:
+                if Parameters.DEBUG_MODE:
+                    print(f"{workbenchName} added to group {GroupName}")
                 json.dump(self.ribbonStructure, outfile, indent=4)      
         
-        ComboBox: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox")
         IsInList = False
-        for i in range(ComboBox.count()):
-            if ComboBox.itemText(i) == GroupName:
+        for i in range(self.ComboBox.count()):
+            if self.ComboBox.itemText(i) == GroupName:
                 IsInList = True
         if IsInList is False:
-            ComboBox.addItem(GroupName)
-        ComboBox.show()
+            self.ComboBox.addItem(GroupName)
+        self.ComboBox.show()
         Button = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
         Button.show()  
-        if ComboBox.currentText() == translate("FreeCAD Ribbon", "All"):
+        if self.ComboBox.currentText() == translate("FreeCAD Ribbon", "All"):
             Button.setDisabled(True)
         
         return
@@ -3161,6 +3528,8 @@ class ModernMenu(RibbonBar):
                 # Writing to ribbonStructure.json
                 JsonFile = Parameters.RIBBON_STRUCTURE_JSON
                 with open(JsonFile, "w") as outfile:
+                    if Parameters.DEBUG_MODE:
+                        print(f"{workbenchName} removed from group {GroupName}")
                     json.dump(self.ribbonStructure, outfile, indent=4)
                 
                 # Hide the tab
@@ -3254,6 +3623,8 @@ class ModernMenu(RibbonBar):
             # Writing to ribbonStructure.json
             JsonFile = Parameters.RIBBON_STRUCTURE_JSON
             with open(JsonFile, "w") as outfile:
+                if Parameters.DEBUG_MODE:
+                    print(f"{GroupName} deleted from groups")
                 json.dump(self.ribbonStructure, outfile, indent=4)
             
             # Remove the group from the combobox as welll
@@ -3293,7 +3664,7 @@ class ModernMenu(RibbonBar):
         return result
     
     # Function to create an action for the panel menu
-    def createAction_Tabs(self, WorkbenchName, parent):
+    def createAction_Tabs(self, WorkbenchName, parent, Dict = ribbonStructure):
         Workbench = Gui.getWorkbench(WorkbenchName)
         workbenchText = Workbench.MenuText
 
@@ -3307,31 +3678,33 @@ class ModernMenu(RibbonBar):
         for i in range(self.tabBar().count()):
             tabData = self.tabBar().tabData(i)   
             # Set the checkbox enabled
-            if "workbenches" in self.workBenchDict and tabData in self.workBenchDict["workbenches"] and tabData == WorkbenchName:  # noqa: SIM102
+            if "workbenches" in Dict and tabData in Dict["workbenches"] and tabData == WorkbenchName:  # noqa: SIM102
                 # If enabled is present, set the checkbox accordingly
-                if "Enabled" in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
-                    Action.setChecked(self.workBenchDict["workbenches"][tabData]["Enabled"])
+                if "Enabled" in Dict["workbenches"][tabData]:  # noqa: SIM102
+                    Action.setChecked(Dict["workbenches"][tabData]["Enabled"])
                 # If enabled is not present, set the checkbox checked by default
-                if "Enabled" not in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
+                if "Enabled" not in Dict["workbenches"][tabData]:  # noqa: SIM102
                     # Add the command if they don't exist
-                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", WorkbenchName, "Enabled"], True)
+                    Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", WorkbenchName, "Enabled"], True)
                     # Write the state to the dict
-                    self.workBenchDict["workbenches"][tabData]["Enabled"] = True
+                    Dict["workbenches"][tabData]["Enabled"] = True
                     Action.setChecked(True)
                      
         # # Connect the action
         Action.toggled.connect(lambda e: self.HandleTab(WorkbenchName, e))   
         return Action
     
-    def HandleTab(self, workbenchName, Checked = False):        
+    def HandleTab(self, workbenchName, Checked = False, Dict = ribbonStructure):   
+        if self.CustomizeEnabled: 
+            Dict = self.workBenchDict    
         for i in range(self.tabBar().count()):
             tabData = self.tabBar().tabData(i)
             if tabData == workbenchName:
-                if "workbenches" in self.workBenchDict and tabData in self.workBenchDict["workbenches"]:
+                if "workbenches" in Dict and tabData in Dict["workbenches"]:
                     # Add the command if they don't exist
-                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "Enabled"], True)
+                    Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "Enabled"], True)
                     # Write the state to the dict
-                    self.workBenchDict["workbenches"][tabData]["Enabled"] = Checked
+                    Dict["workbenches"][tabData]["Enabled"] = Checked
                     # Enable or disable the tab
                     self.tabBar().setTabEnabled(i, Checked)
                     if not self.tabBar().isTabEnabled(i):
@@ -3341,9 +3714,15 @@ class ModernMenu(RibbonBar):
                             + mw.palette().color(mw.palette().ColorGroup.Disabled, mw.palette().ColorRole.Text).name()
                             + """;}"""
                         )
+                        if not self.CustomizeEnabled:
+                            # Make sure to set the tab hidden
+                            self.tabBar().setTabVisible(i, False)
                         self.tabBar().update()
                     else:
                         self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))
+                        if not self.CustomizeEnabled:
+                            # Make sure to set the tab visible
+                            self.tabBar().setTabVisible(i, True)
                 break                    
         return
     
@@ -3426,6 +3805,7 @@ class ModernMenu(RibbonBar):
             self.target = None
             self.targetPanel = None
             # self.dropPanelName = None
+            self.SuspendBuildPanels = False
             
             # Enable all buttons, so you can access them with a right click
             self.actionList = []
@@ -3460,7 +3840,6 @@ class ModernMenu(RibbonBar):
                         self.tabBar().moveTab(self._currentTabIndex, index)
                         break
 
-            self.SuspendBuildPanels = False
              # If you drag and drop a new command, you actually dragging the complete QListWidget
             if type(widget) is QListWidget:
                 position = event.pos()
@@ -3610,6 +3989,16 @@ class ModernMenu(RibbonBar):
                 print("drop exited")
             return
         
+        # Reset the suspendBuildPanels parameter
+        if type(widget) is RibbonNormalCategory:
+            self.SuspendBuildPanels = False
+            self.buildPanels(self.workBenchDict)
+             
+            # Restore the cursor
+            QApplication.restoreOverrideCursor()
+            QApplication.restoreOverrideCursor()
+            return
+        
         # Define a parent
         parent = widget.parent()
 
@@ -3635,7 +4024,7 @@ class ModernMenu(RibbonBar):
                         Size = "large"
 
                     for panelName, panel in currentCategory.panels().items():
-                        # If the panelName is equal to the panel name on which the command is dropped, continue.                        
+                        # If the panelName is equal to the panel name on which the command is dropped, continue.                    
                         if panelName == self.dropPanelName and panel not in self.RemovedPanels:
                             # Get the command to be added
                             ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
@@ -3664,16 +4053,7 @@ class ModernMenu(RibbonBar):
                             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                             
                             # Get the order list, if there isn't one, create it
-                            StandardFunctions.add_keys_nested_dict(
-                                self.workBenchDict,
-                                [
-                                    "workbenches",
-                                    workbenchName,
-                                    "toolbars",
-                                    panel.objectName(),
-                                ],
-                                endEmpty=True,
-                            )
+                            StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), ], endEmpty=True)
                             OrderList = []            
                             if panel.objectName() in self.workBenchDict["workbenches"][workbenchName]["toolbars"]:
                                 if "order" in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
@@ -3693,21 +4073,12 @@ class ModernMenu(RibbonBar):
                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["text"] = MenuText
                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["icon"] = ""
                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["IsExtra"] = True
-                            
-                            # if this is a newPanel, update the newpanel dict as well
-                            if panel.objectName().endswith("_newPanel"):
-                                if workbenchName not in self.workBenchDict["newPanels"]:
-                                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName], endEmpty=True)
-                                if panel.objectName() not in self.workBenchDict["newPanels"][workbenchName]:
-                                    Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName, panel.objectName()], endEmpty=True)
-                                    self.workBenchDict["newPanels"][workbenchName][panel.objectName()] = []
-                                self.workBenchDict["newPanels"][workbenchName][panel.objectName()].append([ExtraCommand, ExtraCommand_WB])
-                            
+
                             # Get the name from  current workbench
                             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                             # Create a new panel with the extra command
                             newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict, UpdateDict=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand, ActivateButtons=True)
-                                                 
+                                                                             
                             # Add the panel to the list with long panels
                             if newPanel is not None:
                                 if newPanel.panelOptionButton().isVisible():
@@ -3732,6 +4103,9 @@ class ModernMenu(RibbonBar):
                                 
                                 self.dropPanelName = ""
                                 self.dropPanel.close()
+                                
+                                # # If toolbars are renamed (Char cases only), update the dict
+                                # self.CleanRibbonStructure(self.workBenchDict, WriteRibbonStructure=False, skipIdCheck=True)
                                 return
                 except Exception as e:
                     if Parameters.DEBUG_MODE:
@@ -4205,55 +4579,19 @@ class ModernMenu(RibbonBar):
 
         index = self.tabBar().currentIndex()
         tabName = self.tabBar().tabText(index)
+        WorkBenchName = ""
 
         if tabName is not None and tabName != "" and tabName != "test":
             # activate selected workbench
             tabName = tabName.replace("&", "")
             # if self.wbNameMapping[tabName] is not None and self.SuspendBuildPanels is False:                
-            if self.wbNameMapping[tabName] is not None:                
+            if self.wbNameMapping[tabName] is not None:   
                 WorkBenchName = self.wbNameMapping[tabName]
-                Gui.activateWorkbench(WorkBenchName)
-
                 Dict = self.ribbonStructure
                 if self.CustomizeEnabled:
                     Dict = self.workBenchDict
-                tempDict = {}
-                wbToolbars = Gui.getWorkbench(WorkBenchName).listToolbars()
-                # Go through the toolbars
-                for Toolbar in wbToolbars:
-                    # Check if the Dict needs updated
-                    if WorkBenchName in Dict["workbenches"]:
-                        for ToolbarName, commands in Dict["workbenches"][WorkBenchName]["toolbars"].items():
-                            if Toolbar.lower() == ToolbarName.lower():
-                                StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", Toolbar])
-                                tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands
-                            if ToolbarName == "order":
-                                tempList = []
-                                StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", "order"])
-                                for item in tempDict["workbenches"][WorkBenchName]["toolbars"]["order"]:
-                                    if item.lower() == Toolbar.lower():
-                                        tempList.append(Toolbar)
-                                tempDict["workbenches"][WorkBenchName]["toolbars"]["order"] = tempList
-                            
-                    
-                    if WorkBenchName in Dict["customToolbars"]:
-                        for customToolBar in Dict["customToolbars"][WorkBenchName].keys():
-                            for command, parent in Dict["customToolbars"][WorkBenchName][customToolBar]["commands"].items():
-                                if parent.lower() == Toolbar.lower():
-                                    StandardFunctions.add_keys_nested_dict(tempDict, ["customToolbars", WorkBenchName, customToolBar, "commands", command])
-                                    tempDict["customToolbars"][WorkBenchName][customToolBar]["commands"][command] = Toolbar                                
-                                    
-                if "workbenches" in tempDict and WorkBenchName in tempDict["workbenches"]:
-                    Dict["workbenches"][WorkBenchName] = tempDict["workbenches"][WorkBenchName]
-                if "customToolbars" in tempDict and WorkBenchName in tempDict["customToolbars"]:
-                    Dict["customToolbars"][WorkBenchName] = tempDict["customToolbars"][WorkBenchName]    
-                    
-                if not self.CustomizeEnabled:
-                    # Writing to ribbonStructure.json
-                    JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-                    with open(JsonFile, "w") as outfile:
-                        json.dump(Dict, outfile, indent=4)
-                
+                self.UpdateToolBar_Keys(WorkBenchName=WorkBenchName, Dict=Dict, skipIdCheck=self.CustomizeEnabled)               
+
             if tabActivated is True:
                 self.onWbActivated()
                 self.ApplicationMenus()           
@@ -4343,7 +4681,7 @@ class ModernMenu(RibbonBar):
         if self.CustomizeEnabled is False: 
             self.buildPanels()
         if self.CustomizeEnabled and self.SuspendBuildPanels is False:
-            self.buildPanels(Dict=self.workBenchDict, UpdateDict=False)
+            self.buildPanels(Dict=self.workBenchDict)
         
         # hide normal toolbars
         self.hideClassicToolbars()
@@ -4352,13 +4690,6 @@ class ModernMenu(RibbonBar):
             self.on_Customize_Clicked()
             # If not activated, activate all buttons    
             self.activateButtons() 
-
-        # if self.DesignMenuLoaded is True:
-        #     # Disable the quick toolbar, righttoolbar and application menu
-        #     self.rightToolBar().setDisabled(True)
-        #     self.quickAccessToolBar().setDisabled(True)
-        #     self.applicationOptionButton().setDisabled(True)
-        #     Gui.updateGui()
         
         return
 
@@ -4389,12 +4720,6 @@ class ModernMenu(RibbonBar):
             # If not activated, activate all buttons    
             self.activateButtons() 
 
-        # if self.DesignMenuLoaded is True:
-        #     # Disable the quick toolbar, righttoolbar and application menu
-        #     self.rightToolBar().setDisabled(True)
-        #     self.quickAccessToolBar().setDisabled(True)
-        #     self.applicationOptionButton().setDisabled(True)
-        #     Gui.updateGui()
         return
 
     # endregion
@@ -4885,11 +5210,9 @@ class ModernMenu(RibbonBar):
         if TB is not None:
             try:
                 import SearchBoxLight
-                import StyleMapping_SearchBar
 
                 width = 10 * self.RightToolBarButtonSize
-
-                sea = SearchBoxLight.SearchBoxLight(
+                sea: QLineEdit = SearchBoxLight.SearchBoxLight(
                     getItemGroups=lambda: __import__("GetItemGroups").getItemGroups(),
                     getToolTip=lambda groupId, setParent: __import__(
                         "GetItemGroups"
@@ -4903,20 +5226,40 @@ class ModernMenu(RibbonBar):
                         index, groupId
                     )
                 )
+                
+                # Set the stylesheet specific for use in the RibbonUI
                 StyleSheet = (
                         """background: """
                         + "white;"
                         + "color: black"
-                        # + StyleMapping_SearchBar.ReturnStyleItem("Background_Color")
                         + """;"""
                     )
                 sea.setStyleSheet(StyleSheet)
+                # Set the focus policy to clickFocus. This way it cannot take focus unless clicked
+                # This prevents focus during other processes
+                sea.setFocusPolicy(Qt.FocusPolicy.ClickFocus)
+                
+                # Add leave and enter events, 
+                # so the input is only possible when the cursor is above the widget
+                def SearchBar_LeaveEvent(e):
+                    sea.setReadOnly(True)
+
+                sea.leaveEvent = lambda e: SearchBar_LeaveEvent(e)
+                
+                def SearchBar_EnterEvent(e):
+                    sea.setReadOnly(False)
+                    
+                sea.enterEvent = lambda e: SearchBar_EnterEvent(e)
+                
+                # Set the size
                 sea.setFixedSize(width, self.RightToolBarButtonSize)
+                
+                # Add it to the right toolbar
                 BeforeAction = self.rightToolBar().actions()[1]
                 self.rightToolBar().insertWidget(BeforeAction, sea)
-                # width = sea.width()
             except Exception:
                 pass
+        # return the widht, so that the correct width can be set for the right toolbar
         return width
         
     # Function to create the application menu
@@ -5357,10 +5700,12 @@ class ModernMenu(RibbonBar):
                     self.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Top"]
                 break
         
-        # Writing to ribbonStructure.json
-        JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-        with open(JsonFile, "w") as outfile:
-            json.dump(self.ribbonStructure, outfile, indent=4)
+        # # Writing to ribbonStructure.json
+        # JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+        # with open(JsonFile, "w") as outfile:
+        #     if Parameters.DEBUG_MODE:
+        #        print(f"position for { dockWidget_Name} stored.")
+        #     json.dump(self.ribbonStructure, outfile, indent=4)
                     
         return
     
@@ -5444,10 +5789,12 @@ class ModernMenu(RibbonBar):
                     self.ribbonStructure["ToolBarStates"][toolbarName] = [False, Location]                    
                     toolbar.close()
                     
-                # Writing to ribbonStructure.json
-                JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-                with open(JsonFile, "w") as outfile:
-                    json.dump(self.ribbonStructure, outfile, indent=4)
+                # # Writing to ribbonStructure.json
+                # JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+                # with open(JsonFile, "w") as outfile:
+                #     if Parameters.DEBUG_MODE:
+                #       print(f"{toolbarName} set at {Location}")
+                #     json.dump(self.ribbonStructure, outfile, indent=4)
                     
         return
     
@@ -5503,7 +5850,8 @@ class ModernMenu(RibbonBar):
                 mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
             # Restore the cursor
-            QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+            QApplication.restoreOverrideCursor()
+            QApplication.restoreOverrideCursor()
         return
 
     # Function for loading the settings menu
@@ -5540,22 +5888,24 @@ class ModernMenu(RibbonBar):
         self.DesignMenuLoaded = True
 
         # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
         return
 
     # Build the panels from active workbench
-    def buildPanels(self, Dict=ribbonStructure, UpdateDict=True):
+    def buildPanels(self, Dict=ribbonStructure):
         # Get the active workbench and get its name
         #
         workbenchTitle = self.tabBar().tabText(self.tabBar().currentIndex())
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        tabName = workbenchTitle
         if workbenchName is None:
             return
 
-        # check if the panel is already loaded. If so exit this function
-        tabName = workbenchTitle
-        if tabName in self.isWbLoaded and (self.isWbLoaded[tabName] or tabName == ""):
-            return
+        # # check if the panel is already loaded. If so exit this function        
+        # if tabName in self.isWbLoaded and (self.isWbLoaded[tabName] or tabName == ""):
+        #     print(tabName)
+        #     return
 
         workbench = Gui.getWorkbench(workbenchName)
         # Get the list of toolbars from the active workbench
@@ -5583,9 +5933,7 @@ class ModernMenu(RibbonBar):
                     ListToolbars.append(customPanel)
 
                     # remove the original toolbars from the list
-                    Commands = Dict["customToolbars"][workbenchName][
-                        customPanel
-                    ]["commands"]
+                    Commands = Dict["customToolbars"][workbenchName][customPanel]["commands"]
                     for Command in Commands:
                         try:
                             OriginalToolbar = Dict["customToolbars"][workbenchName][customPanel]["commands"][Command]
@@ -5614,10 +5962,8 @@ class ModernMenu(RibbonBar):
 
         try:
             # Get the order of toolbars
-            ToolbarOrder: list = Dict["workbenches"][workbenchName][
-                "toolbars"
-            ]["order"]
-
+            ToolbarOrder: list = Dict["workbenches"][workbenchName]["toolbars"]["order"]
+            
             # Sort the list of toolbars according the toolbar order
             def SortToolbars(toolbar):
                 if toolbar == "":
@@ -5628,7 +5974,7 @@ class ModernMenu(RibbonBar):
                     position = ToolbarOrder.index(toolbar)
                 except ValueError as e:
                     position = 999999
-                    if toolbar.endswith("_custom") or toolbar.endswith("_newPanel"):
+                    if (toolbar.endswith("_custom") or toolbar.endswith("_newPanel")) and toolbar not in ToolbarOrder:
                         if Parameters.DEFAULT_PANEL_POSITION_CUSTOM == "Right":
                             position = 999999
                         else:
@@ -5638,20 +5984,21 @@ class ModernMenu(RibbonBar):
             ListToolbars.sort(key=SortToolbars)
         except Exception:
             pass
-      
-        # If the toolbar must be ignored, skip it        
+                   
         for toolbar in ListToolbars:
+            # If the panel must be ignored, skip it   
             Skip = False
             for ToolbarToIgnore in Dict["ignoredToolbars"]:
                 if toolbar.lower() == ToolbarToIgnore.lower():
                     Skip = True
             if toolbar == "" or Skip is True:
                 continue
+            # If the panel already exists, skip it
             if toolbar in self.currentCategory().panels().keys():
                 continue
             
             # Create the panel based on the toolbars
-            panel = self.CreatePanel(workbenchName=workbenchName, panelName=toolbar, addPanel=True, Dict=Dict, UpdateDict=UpdateDict)
+            panel = self.CreatePanel(workbenchName=workbenchName, panelName=toolbar, addPanel=True, Dict=Dict, UpdateDict=False)
             if panel is None:
                 self.ignoredToolbars.append(toolbar)
                 Dict["ignoredToolbars"].append(toolbar)
@@ -5664,13 +6011,6 @@ class ModernMenu(RibbonBar):
                         if Enabled is False:
                             self.HiddenPanels.append(panel)
                             panel.hide()
-                                   
-            # Writing to ribbonStructure.json
-            if UpdateDict is True:
-                JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-                with open(JsonFile, "w") as outfile:
-                    json.dump(Dict, outfile, indent=4)
-                outfile.close()
 
         self.isWbLoaded[tabName] = True
         
@@ -6461,14 +6801,14 @@ class ModernMenu(RibbonBar):
             ):
                 ribbonHeight = LargeButtonHeight
         
-        # If there only medium or large buttons
+        # If there only medium or small buttons
         if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  == 2 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 0 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
             if Parameters.ICON_SIZE_SMALL * 2 < Parameters.ICON_SIZE_MEDIUM or self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 2:
                 ribbonHeight = Parameters.ICON_SIZE_MEDIUM * 2 + self.ButtonSpacing
             if Parameters.ICON_SIZE_SMALL * 2 > Parameters.ICON_SIZE_MEDIUM and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] == 2:
                 ribbonHeight = Parameters.ICON_SIZE_SMALL * 2 + self.ButtonSpacing
         
-        # If there are only large buttons
+        # If there only medium or large buttons
         if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  <= 2 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 1 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
             if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"] < 2:
                 ribbonHeight = LargeButtonHeight
@@ -6783,7 +7123,7 @@ class ModernMenu(RibbonBar):
             Category = self.currentCategory()
         
         if UpdateDict is True:
-            Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "toolbars"], 1, True)
+            Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "toolbars"], endEmpty=True)
                
         # Create the panel, use the toolbar name as title
         title = StandardFunctions.TranslationsMapping(workbenchName, panelName)
@@ -6860,7 +7200,7 @@ class ModernMenu(RibbonBar):
                 pass
             
         # If it is a custom dropdown that is present on the panel, create a button for it.
-        if workbenchName in Dict["workbenches"]:
+        if workbenchName in Dict["workbenches"]:  # noqa: SIM102
             if (
                 panelName != ""
                 and "toolbars" in Dict["workbenches"][workbenchName]
@@ -6870,7 +7210,7 @@ class ModernMenu(RibbonBar):
             ):
                 # Add custom dropdown buttons to the list that are on default panels
                 button = QToolButton()
-                for command in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():
+                for command in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():  # noqa: SIM118
                     if command is not None and command !="":
                         if command.endswith("_ddb"):
                             for key, value in Dict["dropdownButtons"].items():
@@ -6916,20 +7256,7 @@ class ModernMenu(RibbonBar):
             customList = self.List_AddCustomToolBarToWorkbench(workbenchName, panelName, Dict = Dict["customToolbars"])
             allButtons.extend(customList)
 
-        # # Add newPanels
-        # if panelName.endswith("_newPanel"):
-        #     if workbenchName in Dict["workbenches"]:
-        #         if panelName in Dict["workbenches"][workbenchName]["toolbars"]:
-        #             if "commands" in Dict["workbenches"][workbenchName]["toolbars"][panelName]:
-        #                 for key in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"].keys():
-        #                     if key != "order" and key is not None and key != "":
-        #                         button = self.CreateButtonFromCommand(key, ActivateWorkBench=ActivateWorkbench, Dict=Dict)
-        #                         if button is not None:
-        #                             # button.setProperty("CommandName", key)
-        #                             button.setObjectName(key)                                    
-        #                             # button.setToolTip(key)
-        #                             allButtons.append(button)
-        # Add global newPanels
+        # Add newPanels
         if panelName.endswith("_newPanel"):
             if workbenchName in Dict["newPanels"]:
                 if panelName in Dict["newPanels"][workbenchName]:
@@ -6983,9 +7310,7 @@ class ModernMenu(RibbonBar):
                                             if ExtraCommand is not None:
                                                 ExtraCommand.setObjectName(Command)
                                                 allButtons.append(ExtraCommand)
-        
-        # print(f"panel {title}: {allButtons}")
-            
+
         # add separators to the command list.
         if workbenchName in Dict["workbenches"]:
             if (
@@ -6994,38 +7319,14 @@ class ModernMenu(RibbonBar):
                 and panelName
                 in Dict["workbenches"][workbenchName]["toolbars"]
             ):
-                for orderedToolbar in Dict["workbenches"][
-                    workbenchName
-                ]["toolbars"]:
+                for orderedToolbar in Dict["workbenches"][workbenchName]["toolbars"]:
                     if orderedToolbar.lower() == panelName.lower():
-                        if (
-                            "order"
-                            in Dict["workbenches"][workbenchName][
-                                "toolbars"
-                            ][panelName]
-                        ) and type(Dict["workbenches"][
-                                        workbenchName
-                                    ]["toolbars"][panelName]["order"]) is list:
-                            for j in range(
-                                len(
-                                    Dict["workbenches"][
-                                        workbenchName
-                                    ]["toolbars"][panelName]["order"]
-                                )
-                            ):
+                        if ("order" in Dict["workbenches"][workbenchName]["toolbars"][panelName]) and type(Dict["workbenches"][workbenchName]["toolbars"][panelName]["order"]) is list:
+                            for j in range(len(Dict["workbenches"][workbenchName]["toolbars"][panelName]["order"])):
                                 try:
-                                    if (
-                                        "separator"
-                                        in Dict["workbenches"][
-                                            workbenchName
-                                        ]["toolbars"][panelName]["order"][j].lower()
-                                    ):
+                                    if ("separator" in Dict["workbenches"][workbenchName]["toolbars"][panelName]["order"][j].lower()):
                                         separator = QToolButton()
-                                        separator.setText(
-                                            Dict["workbenches"][
-                                                workbenchName
-                                            ]["toolbars"][panelName]["order"][j]
-                                        )
+                                        separator.setText(Dict["workbenches"][workbenchName]["toolbars"][panelName]["order"][j])
                                         separator.setObjectName(separator.text())
                                         allButtons.insert(j, separator)
                                 except Exception:
@@ -7036,14 +7337,9 @@ class ModernMenu(RibbonBar):
             if (
                 panelName
                 in Dict["workbenches"][workbenchName]["toolbars"]
-                and "order"
-                in Dict["workbenches"][workbenchName]["toolbars"][
-                    panelName
-                ]
+                and "order" in Dict["workbenches"][workbenchName]["toolbars"][panelName]
             ):
-                OrderList: list = Dict["workbenches"][
-                    workbenchName
-                ]["toolbars"][panelName]["order"]
+                OrderList: list = Dict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
                 
                 # XXX check that positionsList consists of strings only
                 def sortButtons(button: QToolButton):
@@ -7084,14 +7380,21 @@ class ModernMenu(RibbonBar):
         ButtonList = []
 
         # Go through the button list:
+        newOrderList = []
         for i in range(len(allButtons)):
             button = allButtons[i]
             CommandName = button.objectName()
             
             # count the number of buttons per type. Needed for proper sorting the buttons later.
-            buttonSize = "small"
+            buttonSize = self.DefaultButtonStyle
             try:
                 buttonSize = Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][self.ReturnCommand_string(Dict=Dict, panel=panel, widget=button)]["size"]
+                # If a layout is set with a different default size, adjust the button size
+                if buttonSize == "small" and buttonSize != self.DefaultButtonStyle:
+                    buttonSize = self.DefaultButtonStyle
+                if buttonSize == "":
+                    buttonSize = self.DefaultButtonStyle
+                
                 if buttonSize == "small":
                     NoSmallButtons_spacer += 1
                 if buttonSize == "medium":
@@ -7192,6 +7495,8 @@ class ModernMenu(RibbonBar):
                         + StyleMapping_Ribbon.ReturnStyleItem("Background_Color_Hover")
                         + ";}"
                                             )
+                    if UpdateDict:
+                        newOrderList.append(button.text())
 
                     # there is a bug in pyqtribbon where the separator is placed in the wrong position
                     # despite the correct order of the button list.
@@ -7265,12 +7570,7 @@ class ModernMenu(RibbonBar):
                                         # There is a bug in freecad with the comp-sketch menu hase the wrong text
                                         if (
                                             CommandName == "PartDesign_CompSketches"
-                                            and Dict["workbenches"][
-                                                workbenchName
-                                            ]["toolbars"][panelName]["commands"][CommandName][
-                                                "text"
-                                            ]
-                                            == "Create datum"
+                                            and Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["text"] == "Create datum"
                                         ):
                                             textJSON = "Create sketch"
 
@@ -7302,9 +7602,7 @@ class ModernMenu(RibbonBar):
                         if Icon.isNull():
                             pixmap = ""
                             try:
-                                pixmap = Dict["workbenches"][
-                                    workbenchName
-                                ]["toolbars"][panelName]["commands"][CommandName]["icon"]
+                                pixmap = Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["icon"]
                             except Exception:
                                 pass
                             if action.data() is not None:
@@ -7326,9 +7624,7 @@ class ModernMenu(RibbonBar):
 
                         # get button size from ribbonStructure
                         try:
-                            buttonSize = Dict["workbenches"][
-                                workbenchName
-                            ]["toolbars"][panelName]["commands"][CommandName]["size"]
+                            buttonSize = Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["size"]
                             # If the size is empty. This button is removed from the panel
                             if buttonSize == "":
                                 # Remove also from the ribbon structure if it is an extra (dragged) button
@@ -7341,6 +7637,12 @@ class ModernMenu(RibbonBar):
                                 continue
                         except KeyError:
                             pass
+                        
+                        # If a layout is set with a different default size, adjust the button size
+                        if buttonSize == "small" and buttonSize != self.DefaultButtonStyle:
+                            buttonSize = self.DefaultButtonStyle
+                        if buttonSize == "":
+                            buttonSize = self.DefaultButtonStyle
 
                         # Check if this is an icon only toolbar
                         IconOnly = False
@@ -7530,6 +7832,11 @@ class ModernMenu(RibbonBar):
                             + ";}"
                         )
                         btn.setStyleSheet(StyleSheet_Addition_Button)
+                        
+                        if UpdateDict:
+                            StandardFunctions.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "toolbars", panelName, "commands", CommandName, "size"], endEmpty=True)
+                            Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["size"] = buttonSize
+                            newOrderList.append(CommandName)
 
                         # add the button text to the shadowList for checking if buttons are already there.
                         shadowList.append(CommandName)
@@ -7538,6 +7845,9 @@ class ModernMenu(RibbonBar):
                         if Parameters.DEBUG_MODE:
                             print(e.with_traceback(e.__traceback__))
                         continue
+                
+                if UpdateDict:
+                    Dict["workbenches"][workbenchName]["toolbars"][panelName]["order"] = newOrderList
         
         # Set the panel title
         panel.setTitle(self.ReturnPanelTitle(panel, Dict))
@@ -7576,12 +7886,17 @@ class ModernMenu(RibbonBar):
 
         if panel._actionsLayout.count() > 1:            
             return panel
-        else: 
-            Category.removePanel(panel.objectName())
-            panel.deleteLater()    
-            if Parameters.DEBUG_MODE is True:                  
-                print(f"The panel \"{panel.title()}\" did not have any buttons and is not loaded!")
-            return None
+        else:
+            try:
+                Category.removePanel(panel.objectName())
+                panel.deleteLater()    
+                if Parameters.DEBUG_MODE is True:                  
+                    print(f"The panel \"{panel.title()}\" did not have any buttons and is not loaded!")
+                return None
+            except:
+                if Parameters.DEBUG_MODE is True: 
+                    print(traceback.format_exc())
+                return None
         return None
     
     def CreateNewPanel(self, title):
@@ -7609,7 +7924,7 @@ class ModernMenu(RibbonBar):
             
             # Add the new panel to the dict
             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName, panel.objectName()])
+            StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName, panel.objectName()], endEmpty=True)
             self.workBenchDict["newPanels"][workbenchName][panel.objectName()] = []
             
             self.AddedPanels.append(panel)
@@ -7798,6 +8113,8 @@ class ModernMenu(RibbonBar):
         OptionButton.setFixedSize(Parameters.ICON_SIZE_SMALL, self.RibbonOffset+QFontMetrics(Font).tightBoundingRect(panel.title()).height())
         # # Set the size policy to fixed. Otherwise resizing is not working properly
         panel.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        
+        
         return
     
     def PopulateOverflowMenu(self, panel: RibbonPanel, ButtonList: list):
@@ -7910,7 +8227,7 @@ class ModernMenu(RibbonBar):
                 "FreeCAD Ribbon",
                 "Settings reset to {}!\nYou must restart FreeCAD for changes to take effect.",
             ).format(SelectedFile)
-            StandardFunctions.RestartDialog(message=message)
+            StandardFunctions.RestartDialog(message=message, includeIcons=True)
         return
     
     def ReturnCommand_string(self, Dict: dict, panel: RibbonPanel, widget) -> str:
@@ -7960,20 +8277,20 @@ class ModernMenu(RibbonBar):
             if command != "" and command is not None and command in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
                 self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = ""              
                 
-                # if it is a button from a newPanel, remove it from the newPanel list
-                if panelName.endswith("_newPanel"):
-                    commandList = []
-                    if panelName in self.workBenchDict["newPanels"][workbenchName]:
-                        commandList = self.workBenchDict["newPanels"][workbenchName][panelName]
-                    elif panelName in self.workBenchDict["newPanels"]["Global"]:
-                        commandList = self.workBenchDict["newPanels"]["Global"][panelName]
-                    elif panelName in self.workBenchDict["newPanels"]["Standard"]:
-                        commandList = self.workBenchDict["newPanels"]["Standard"][panelName]
-                    for item in commandList:
-                        if item[0] == command:
-                            commandList.remove(item)
-                            self.workBenchDict["newPanels"][workbenchName][panelName] = commandList
-                            break     
+                # # if it is a button from a newPanel, remove it from the newPanel list
+                # if panelName.endswith("_newPanel"):
+                #     commandList = []
+                #     if panelName in self.workBenchDict["newPanels"][workbenchName]:
+                #         commandList = self.workBenchDict["newPanels"][workbenchName][panelName]
+                #     elif panelName in self.workBenchDict["newPanels"]["Global"]:
+                #         commandList = self.workBenchDict["newPanels"]["Global"][panelName]
+                #     elif panelName in self.workBenchDict["newPanels"]["Standard"]:
+                #         commandList = self.workBenchDict["newPanels"]["Standard"][panelName]
+                #     for item in commandList:
+                #         if item[0] == command:
+                #             commandList.remove(item)
+                #             self.workBenchDict["newPanels"][workbenchName][panelName] = commandList
+                #             break     
 
                 # Remove also from the ribbon structure if it is an extra (dragged) button
                 if "IsExtra" in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]:
@@ -8003,7 +8320,8 @@ class ModernMenu(RibbonBar):
             panel.close()
             
             # Restore the cursor
-            QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+            QApplication.restoreOverrideCursor()
+            QApplication.restoreOverrideCursor()
             return True     
         except Exception as e:
             if Parameters.DEBUG_MODE is True:
@@ -8207,6 +8525,77 @@ class ModernMenu(RibbonBar):
         # Set the command as objectName for future reference
         button.setObjectName(commandName)
         return button
+    
+    def ExportLayout(self, WorkbenchName = "All"):
+        # Update the ribbon structure file before copy
+        if WorkbenchName == "All":
+            # Writing to ribbonStructure.json
+            JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+            
+            with open(JsonFile, "w") as outfile:
+                if Parameters.DEBUG_MODE:
+                    print("The complete layout exported as one file.")
+                json.dump(self.ribbonStructure, outfile, indent=4)
+            
+            FileName = StandardFunctions.GetFileDialog(
+                Filter="RibbonStructure (*.json)",
+                parent=self,
+                DefaultPath=Parameters.EXPORT_LOCATION,
+                SaveAs=True,
+            )
+            if FileName != "":
+                shutil.copy(Parameters.RIBBON_STRUCTURE_JSON, FileName)
+        
+        if WorkbenchName == "All_SeparateFiles":
+            path = StandardFunctions.GetFolder(DefaultPath=Parameters.EXPORT_LOCATION)
+            for Workbench in self.ribbonStructure["workbenches"]:
+                WorkbenchDict = {}
+                IsEmpty = True
+                if "workbenches" in self.ribbonStructure and Workbench in self.ribbonStructure["workbenches"]:
+                    StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches", Workbench], endEmpty=True)
+                    WorkbenchDict["workbenches"][Workbench] = self.ribbonStructure["workbenches"][Workbench]
+                    IsEmpty = False
+                    
+                if "customToolbars" in self.ribbonStructure and Workbench in self.ribbonStructure["customToolbars"]:
+                    StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["customToolbars", Workbench], endEmpty=True)
+                    WorkbenchDict["customToolbars"][Workbench] = self.ribbonStructure["customToolbars"][Workbench]
+                    IsEmpty = False
+                    
+                if IsEmpty is False:
+                    FileName = os.path.join(path, Workbench + ".json")
+                    if FileName != "":
+                        with open(FileName, "w") as outfile:
+                            if Parameters.DEBUG_MODE:
+                                print(f"{WorkbenchName} layout exported")
+                            json.dump(WorkbenchDict, outfile, indent=4)
+            
+                
+        if WorkbenchName != "":
+            WorkbenchDict = {}
+            IsEmpty = True
+            if "workbenches" in self.ribbonStructure and WorkbenchName in self.ribbonStructure["workbenches"]:
+                StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["workbenches", WorkbenchName], endEmpty=True)
+                WorkbenchDict["workbenches"][WorkbenchName] = self.ribbonStructure["workbenches"][WorkbenchName]
+                IsEmpty = False
+                
+            if "customToolbars" in self.ribbonStructure and WorkbenchName in self.ribbonStructure["customToolbars"]:
+                StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["customToolbars", WorkbenchName], endEmpty=True)
+                WorkbenchDict["customToolbars"][WorkbenchName] = self.ribbonStructure["customToolbars"][WorkbenchName]
+                IsEmpty = False
+                
+            if IsEmpty is False:
+                FileName = StandardFunctions.GetFileDialog(
+                    Filter=f"{WorkbenchName}.json (*.json)",
+                    parent=self,
+                    DefaultPath=Parameters.EXPORT_LOCATION,
+                    SaveAs=True,
+                )
+                if FileName != "":
+                    with open(FileName, "w") as outfile:
+                        if Parameters.DEBUG_MODE:
+                            print(f"{WorkbenchName} layout exported")
+                        json.dump(WorkbenchDict, outfile, indent=4)
+        return
     # endregion
 
     # region - Titlebar functions
@@ -8313,6 +8702,139 @@ class ModernMenu(RibbonBar):
                 )
                 StandardFunctions.Mbox(text=Question, title="FreeCAD Ribbon", style=30)
         return True
+    
+    def UpdateToolBar_Keys(self, WorkBenchName, Dict = ribbonStructure,  skipIdCheck = False):
+        """
+        Update the ribbonstructure with updated toolbar names
+        """        
+        # Activate the workbench
+        Gui.activateWorkbench(WorkBenchName)
+        
+        # Compare the current CommitID with the stored CommitID. If they are different store the ID and continue
+        if Parameters_Ribbon.Settings.GetStringSetting("CommitID") == self.CommitID and skipIdCheck is False:
+            return
+        else:
+            Parameters_Ribbon.Settings.SetStringSetting("CommitID", self.CommitID)
+
+        # Define a temparory dict and list for workbench dict and order list
+        tempDict = {}
+        tempList = []
+        # Get the toolbar dict of the workbench
+        wbToolbars = Gui.getWorkbench(WorkBenchName).getToolbarItems()
+        
+        # Check if the Dict needs updated
+        if "workbenches" in Dict and WorkBenchName in Dict["workbenches"]:
+            for ToolbarName, commands in Dict["workbenches"][WorkBenchName]["toolbars"].items():
+                # Go through the toolbars if name is not 'order' or 'enabled'
+                if ToolbarName != "order" and ToolbarName != "enabled":
+                    # If the Toolbar in the toolbar dict is equal to the name in the ribbonstructure when set to lower case
+                    # update the temporary dict with the structure of the ribbonstructure, but with the name from the toolbar dict.
+                    # This updates the ribbonstructure when toolbarnames are changed with upper and/or lower cases
+                    for Toolbar in wbToolbars.keys():
+                        if Toolbar.lower() == ToolbarName.lower():
+                            StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", Toolbar])
+                            tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands                          
+                       
+        # Update the customToolbar dict with the latest toolbar names as well
+        if "customToolbars" in Dict and WorkBenchName in Dict["customToolbars"]:
+            for customToolBar in Dict["customToolbars"][WorkBenchName].keys():
+                for command, parent in Dict["customToolbars"][WorkBenchName][customToolBar]["commands"].items():
+                    for Toolbar in wbToolbars.keys():
+                        if parent.lower() == Toolbar.lower():
+                            StandardFunctions.add_keys_nested_dict(tempDict, ["customToolbars", WorkBenchName, customToolBar, "commands", command], endEmpty=True)
+                            tempDict["customToolbars"][WorkBenchName][customToolBar]["commands"][command] = Toolbar                        
+
+        # Add the toolbar orderlist to the temporary ribbonstructure
+        StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", "order"], default=[])
+        tempDict["workbenches"][WorkBenchName]["toolbars"]["order"] = tempList
+
+        # Update the ribbonstrucure with temporary ribbonstructure
+        if "workbenches" in tempDict and WorkBenchName in tempDict["workbenches"]:
+            Dict["workbenches"][WorkBenchName] = tempDict["workbenches"][WorkBenchName]
+        if "customToolbars" in tempDict and WorkBenchName in tempDict["customToolbars"]:
+            Dict["customToolbars"][WorkBenchName] = tempDict["customToolbars"][WorkBenchName]    
+
+        # If the customize is not enabled, update the ribbonstructure.json
+        if not self.CustomizeEnabled:
+            # Writing to ribbonStructure.json
+            JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+            with open(JsonFile, "w") as outfile:
+                if Parameters.DEBUG_MODE:
+                    print("Toolbar names updated")
+                json.dump(Dict, outfile, indent=4)
+                
+        return
+    
+    def CleanRibbonStructure(self, Dict = ribbonStructure, WorkBenchName = "", WriteRibbonStructure = True, skipIdCheck = False):
+        """
+        Remove any empty or null entry or other wrong netry in the ribbonstructure.json
+        """       
+        # Define an new workbench dict
+        workbenchDict = {}
+        
+        # Compare the current CommitID with the stored CommitID. If they are different store the ID and continue
+        if Parameters_Ribbon.Settings.GetStringSetting("CommitID") == self.CommitID and skipIdCheck is False:
+            return
+        else:
+            Parameters_Ribbon.Settings.SetStringSetting("CommitID", self.CommitID)
+        
+        # function to correct the dic
+        def UpdateDict(Dict, WorkBenchName):
+            if "toolbars" in Dict["workbenches"][WorkBenchName]:
+                for ToolBar in Dict["workbenches"][WorkBenchName]["toolbars"]:
+                    if ToolBar == "order":
+                        # Define a new orderlist
+                        orderList = []
+                        for entry in Dict["workbenches"][WorkBenchName]["toolbars"]["order"]:
+                            # the entry is not None, null or empty, add it to the orderList
+                            if entry is not None and entry != "null" and entry != "":
+                                orderList.append(entry)
+                        # Add the orderList to the workbench dicts
+                        StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", "order"], default=[])
+                        workbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = orderList
+                    else:
+                        for item in Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar].keys():
+                            # Filter the orderlist for commands
+                            if item == "order":
+                                # Define a new orderlist
+                                orderList = []
+                                for entry in Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["order"]:
+                                    if entry is not None and entry != "null" and entry != "" and entry != "qt_toolbutton_menubutton":
+                                        orderList.append(entry)
+                                # Add the orderList to the workbench dicts
+                                StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "order"], default=[])
+                                workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["order"] = orderList
+                            # Filter the commands
+                            if item == "commands":
+                                for command in Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"].keys():
+                                    if command is not None and command != "null" and command != "" and command != "qt_toolbutton_menubutton" and "separator" not in command:
+                                        StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "commands", command], endEmpty=True)
+                                        workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command]
+                            # add the title 
+                            if item == "title":
+                                workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"]
+        
+        # Check if there are workbenches and toolbars in the ribbon structure
+        if "workbenches" in Dict and WorkBenchName == "":
+            for WorkBenchName in Dict["workbenches"]:
+                UpdateDict(Dict, WorkBenchName)           
+        
+        if "workbenches" in workbenchDict and WriteRibbonStructure is True:
+            Dict["workbenches"] = workbenchDict["workbenches"]
+            
+            # If the customize is not enabled, update the ribbonstructure.json
+            if not self.CustomizeEnabled:
+                JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+                with open(JsonFile, "w") as outfile:
+                    if Parameters.DEBUG_MODE:
+                        print("RibbonStructure.json cleaned")
+                    json.dump(Dict, outfile, indent=4)
+        
+        if "workbenches" in Dict and WorkBenchName != "":
+            UpdateDict(Dict, WorkBenchName)
+
+        return Dict
+                                                    
 
     def ConvertRibbonStructure(self, checkFCVersion = True, RestartFreeCAD = False):
         # Define a result parameter
@@ -8501,12 +9023,7 @@ class ModernMenu(RibbonBar):
 
         # Add the version of FreeCAD on which this conversion is done, to the ribbonstructure
         # Create a key if not present
-        StandardFunctions.add_keys_nested_dict(
-            self.ribbonStructure,
-            [
-                "convertedWithVersion",
-            ],
-        )
+        StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["convertedWithVersion"], endEmpty=True)
         self.ribbonStructure["convertedWithVersion"] = [
             int(version[0]),
             int(version[1]),
@@ -8529,18 +9046,16 @@ class ModernMenu(RibbonBar):
 
         # Writing to sample.json
         with open(JsonFile, "w") as outfile:
+            if Parameters.DEBUG_MODE:
+                print("the ribbonStructure is updated to the latest version")
             json.dump(self.ribbonStructure, outfile, indent=4)
 
-        outfile.close()
-        
         if RestartFreeCAD is True:
             message = translate(
                 "FreeCAD Ribbon",
                 "The file containing the Ribbon layout is updated.\nYou must restart FreeCAD for changes to take effect.",
             )
-            answer = StandardFunctions.RestartDialog(message=message)
-            if answer == "yes":
-                StandardFunctions.restart_freecad()
+            StandardFunctions.RestartDialog(message=message, includeIcons=True)
 
         return isConverted
 
@@ -8558,8 +9073,11 @@ class EventInspector(QObject):
     def eventFilter(self, obj, event: QEvent):
         # This is an alternative drop function which works only with QT6.
         # It is needed to avoid problems with older Nvidia Cards (Pascal and older) and Wayland        
-        try:       
-            if self.PatchApplicable is True and platform.system() == "Linux":
+        try:
+            # Get the main window and the ribbon
+            mw = Gui.getMainWindow()
+            RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")  
+            if RibbonBar.CustomizeEnabled and self.PatchApplicable is True and platform.system() == "Linux":
                 session_id = subprocess.getoutput("env | grep -E -i 'x11|xorg|wayland'").split()[1].split("=")[1]
                 if session_id == "wayland":                                 
                     if self.dragEntered is True and QApplication.mouseButtons().value == 0:
@@ -8567,9 +9085,7 @@ class EventInspector(QObject):
                         if Parameters.DEBUG_MODE:
                             print("Wayland patch: Alternative drop event")
                         
-                        # Get the main window and the ribbon
-                        mw = Gui.getMainWindow()
-                        RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+                        
                         if RibbonBar.dropPanelName != "":
                             RibbonBar.dropEvent(widget=self.widget)
                             self.widget = None
@@ -8588,7 +9104,7 @@ class EventInspector(QObject):
                                 event.accept()                        
                         return QObject.eventFilter(self, obj, event)
         except Exception:
-            self.PatchApplicable = False
+            # self.PatchApplicable = False
             pass
                  
         if event.type() == QEvent.Type.KeyRelease:
@@ -8665,6 +9181,7 @@ class EventInspector(QObject):
                         pass       
 
         if event.type() == QEvent.Type.Close:
+            print("close event")
             OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
             String = OverlayParam_Top.GetString("Widgets")
             Parameters_Ribbon.Settings.SetStringSetting("StoredOverlayState", String)
@@ -8705,18 +9222,25 @@ class EventInspector(QObject):
             for dockWidget in mw.findChildren(QDockWidget):                                    
                 dockWidget_Name = dockWidget.objectName()
                 dockWidget_Area = mw.dockWidgetArea(dockWidget)
+                tabifiedDockWidgets = []
+                tabifiedList = []
                 
                 # If not present, add a dict for the toolbar states to the ribbonstructure.json
                 Standard_Functions_Ribbon.add_keys_nested_dict(RibbonBar.ribbonStructure, ["PanelStates", dockWidget_Name], endEmpty=True)
                 
+                tabifiedDockWidgets = mw.tabifiedDockWidgets(dockWidget)
+                
+                for tabifiedDockWidget in tabifiedDockWidgets:
+                    tabifiedList.append(tabifiedDockWidget.objectName())
+                
                 if dockWidget_Area == Qt.DockWidgetArea.LeftDockWidgetArea:
-                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Left"]
+                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Left", tabifiedList]
                 if dockWidget_Area == Qt.DockWidgetArea.RightDockWidgetArea:
-                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Right"]
+                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Right", tabifiedList]
                 if dockWidget_Area == Qt.DockWidgetArea.BottomDockWidgetArea:
-                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Bottom"]
+                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Bottom", tabifiedList]
                 if dockWidget_Area == Qt.DockWidgetArea.TopDockWidgetArea:
-                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Top"]
+                    RibbonBar.ribbonStructure["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Top", tabifiedList]
                 
             # Store the state of the mainwindow
             if mw.isMaximized():

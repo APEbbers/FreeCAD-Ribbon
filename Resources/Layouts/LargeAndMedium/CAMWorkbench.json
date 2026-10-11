@@ -1,0 +1,292 @@
+{
+    "workbenches": {
+        "CAMWorkbench": {
+            "toolbars": {
+                "Project Setup": {
+                    "order": [
+                        "CAM_Job",
+                        "CAM_Sanity",
+                        "CAM_PostTools"
+                    ],
+                    "commands": {
+                        "CAM_Job": {
+                            "size": "large",
+                            "text": "",
+                            "icon": "CAM_Job"
+                        },
+                        "CAM_Post": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "CAM_Sanity": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "CAM_PostTools": {
+                            "size": "medium",
+                            "text": ""
+                        }
+                    }
+                },
+                "Tool Commands": {
+                    "order": [
+                        "CAM_Inspect",
+                        "CAM_SelectLoop",
+                        "CAM_OpActiveToggle",
+                        "CAM_ToolBitDock",
+                        "CAM_SimTools"
+                    ],
+                    "commands": {
+                        "CAM_Inspect": {
+                            "size": "large",
+                            "text": "",
+                            "icon": "CAM_Inspect"
+                        },
+                        "CAM_Simulator": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "CAM_Simulator"
+                        },
+                        "CAM_SimulatorGL": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "CAM_SimulatorGL"
+                        },
+                        "CAM_SelectLoop": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "CAM_SelectLoop"
+                        },
+                        "CAM_OpActiveToggle": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "CAM_OpActive"
+                        },
+                        "CAM_ToolBitDock": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "CAM_ToolTable"
+                        },
+                        "CAM_SimTools": {
+                            "size": "medium",
+                            "text": ""
+                        }
+                    }
+                },
+                "New Operations": {
+                    "order": [
+                        "CAM_Profile",
+                        "CAM_Pocket_Shape",
+                        "CAM_Helix",
+                        "CAM_Adaptive",
+                        "CAM_Pocket3D",
+                        "CAM_Slot",
+                        "CAM_EngraveTools",
+                        "CAM_MillFacing",
+                        "CAM_DrillingTools"
+                    ],
+                    "commands": {
+                        "CAM_Profile": {
+                            "size": "large",
+                            "text": "",
+                            "icon": "CAM_Profile"
+                        },
+                        "CAM_Pocket_Shape": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "CAM_Drilling": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "CAM_MillFace": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "CAM_Helix": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "CAM_Adaptive": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "CAM_Pocket3D": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "CAM_Slot": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "CAM_EngraveTools": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "CAM_MillFacing": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "CAM_DrillingTools": {
+                            "size": "medium",
+                            "text": ""
+                        }
+                    }
+                },
+                "Path Modification": {
+                    "order": [
+                        "CAM_OperationCopy",
+                        "CAM_Array",
+                        "CAM_SimpleCopy",
+                        "CAM_DressupTools"
+                    ],
+                    "commands": {
+                        "CAM_OperationCopy": {
+                            "size": "large",
+                            "text": "",
+                            "icon": "CAM_OpCopy"
+                        },
+                        "CAM_Array": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "CAM_Array"
+                        },
+                        "CAM_SimpleCopy": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "CAM_SimpleCopy"
+                        },
+                        "CAM_DressupTools": {
+                            "size": "medium",
+                            "text": ""
+                        }
+                    }
+                },
+                "order": [
+                    "Structure",
+                    "Project Setup",
+                    "New Operations",
+                    "Path Modification",
+                    "Tool Commands",
+                    "Tools_newPanel"
+                ],
+                "Individual views": {
+                    "order": [
+                        "Isometric",
+                        "Front",
+                        "Top",
+                        "Right",
+                        "Rear",
+                        "Bottom",
+                        "Left"
+                    ],
+                    "commands": {
+                        "Std_ViewIsometric": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "view-axonometric"
+                        },
+                        "Std_ViewFront": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "view-front"
+                        },
+                        "Std_ViewTop": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "view-top"
+                        },
+                        "Std_ViewRight": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "view-right"
+                        },
+                        "Std_ViewRear": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "view-rear"
+                        },
+                        "Std_ViewBottom": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "view-bottom"
+                        },
+                        "Std_ViewLeft": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": "view-left"
+                        }
+                    }
+                },
+                "Structure": {
+                    "commands": {
+                        "Std_Part": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Part_Datums": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_Group": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_LinkActions": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_VarSet": {
+                            "size": "medium",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Part_Datums",
+                        "Std_Part",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ]
+                },
+                "Tools_newPanel": {
+                    "commands": {
+                        "Std_Measure": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_UnitsCalculator": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_Properties": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_BoxElementSelection": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_BoxSelection": {
+                            "size": "medium",
+                            "text": ""
+                        },
+                        "Std_WhatsThis": {
+                            "size": "medium",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Std_Measure",
+                        "Std_UnitsCalculator",
+                        "Std_Properties",
+                        "Std_BoxElementSelection",
+                        "Std_BoxSelection",
+                        "Std_WhatsThis"
+                    ]
+                }
+            },
+            "Enabled": true
+        }
+    }
+}

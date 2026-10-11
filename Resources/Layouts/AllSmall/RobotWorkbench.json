@@ -1,0 +1,142 @@
+{
+    "workbenches": {
+        "RobotWorkbench": {
+            "toolbars": {
+                "order": [
+                    "Structure",
+                    "Edit",
+                    "Robot",
+                    "Workbench",
+                    "View",
+                    "Tools_newPanel"
+                ],
+                "Robot": {
+                    "order": [
+                        "Robot_Create",
+                        "Robot_CreateTrajectory",
+                        "Robot_InsertWaypoint",
+                        "Robot_InsertWaypointPreselect",
+                        "Robot_Edge2Trac",
+                        "Robot_TrajectoryDressUp",
+                        "Robot_TrajectoryCompound",
+                        "5_separator_RobotWorkbench",
+                        "Robot_Simulate",
+                        "Robot_RestoreHomePos",
+                        "Robot_SetHomePos"
+                    ],
+                    "commands": {
+                        "Robot_Create": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "Robot_CreateRobot"
+                        },
+                        "Robot_InsertWaypoint": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Robot_Edge2Trac": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Robot_TrajectoryDressUp": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Robot_TrajectoryCompound": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Robot_RestoreHomePos": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Robot_CreateTrajectory": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Robot_SetHomePos": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Robot_Simulate": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Robot_InsertWaypointPreselect": {
+                            "size": "small",
+                            "text": ""
+                        }
+                    }
+                },
+                "Structure": {
+                    "commands": {
+                        "Std_Part": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Part_Datums": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_Group": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_LinkActions": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_VarSet": {
+                            "size": "small",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Part_Datums",
+                        "Std_Part",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ]
+                },
+                "Tools_newPanel": {
+                    "commands": {
+                        "Std_Measure": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_UnitsCalculator": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_Properties": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_BoxElementSelection": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_BoxSelection": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_WhatsThis": {
+                            "size": "small",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Std_Measure",
+                        "Std_UnitsCalculator",
+                        "Std_Properties",
+                        "Std_BoxElementSelection",
+                        "Std_BoxSelection",
+                        "Std_WhatsThis"
+                    ]
+                }
+            },
+            "Enabled": true
+        }
+    }
+}

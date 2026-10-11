@@ -1,0 +1,20 @@
+{
+    "workbenches": {
+        "InspectionWorkbench": {
+            "toolbars": {
+                "order": [
+                    "Individual views",
+                    "Structure",
+                    "File",
+                    "Edit",
+                    "Clipboard",
+                    "Workbench",
+                    "Macro",
+                    "View",
+                    "Help"
+                ]
+            },
+            "Enabled": true
+        }
+    }
+}

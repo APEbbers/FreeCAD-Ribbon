@@ -2245,7 +2245,7 @@ class SpinBoxAction(QWidgetAction):
 class ComboBoxAction(QWidgetAction):
     combobox = QComboBox()
     combobox.setStyleSheet("""QComboBox {padding-left: 6px;}""")
-    
+        
     confirmButton = QPushButton()
     confirmButton.setShortcut(Qt.Key.Key_Enter)
 

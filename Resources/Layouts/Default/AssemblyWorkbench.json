@@ -1,0 +1,333 @@
+{
+    "workbenches": {
+        "AssemblyWorkbench": {
+            "toolbars": {
+                "order": [
+                    "Structure",
+                    "Assembly",
+                    "Assembly Joints",
+                    "Patterns_newPanel",
+                    "Tools_newPanel"
+                ],
+                "Assembly": {
+                    "order": [
+                        "Assembly_CreateAssembly",
+                        "Assembly_Insert",
+                        "2_separator_AssemblyWorkbench",
+                        "Assembly_SolveAssembly",
+                        "Assembly_CreateView",
+                        "Assembly_CreateSimulation",
+                        "Assembly_CreateBom",
+                        "Assembly_CreateSnapshot"
+                    ],
+                    "commands": {
+                        "Assembly_CreateAssembly": {
+                            "size": "large",
+                            "text": "",
+                            "icon": "Geoassembly"
+                        },
+                        "Assembly_SolveAssembly": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Assembly_Insert": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Assembly_CreateView": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Assembly_CreateSimulation": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Assembly_CreateBom": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Assembly_CreateSnapshot": {
+                            "size": "small"
+                        }
+                    }
+                },
+                "Assembly Joints": {
+                    "order": [
+                        "Assembly_CreateJointFixed",
+                        "Assembly_CreateJointPerpendicular",
+                        "Assembly_CreateJointRevolute",
+                        "Assembly_CreateJointCylindrical",
+                        "Assembly_CreateJointAngle",
+                        "Assembly_CreateJointParallel",
+                        "Assembly_CreateJointDistance",
+                        "Assembly_ToggleGrounded",
+                        "5_separator_AssemblyWorkbench",
+                        "Assembly_CreateJointSlider",
+                        "Assembly_CreateJointBall",
+                        "Assembly_CreateJointRackPinion",
+                        "Assembly_CreateJointScrew",
+                        "Assembly_CreateJointGearBelt",
+                        "Assembly_CreateJointRigidGroup"
+                    ],
+                    "commands": {
+                        "Assembly_ToggleGrounded": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "Assembly_ToggleGrounded"
+                        },
+                        "Assembly_CreateJointFixed": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Assembly_CreateJointRevolute": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Assembly_CreateJointCylindrical": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Assembly_CreateJointSlider": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Assembly_CreateJointBall": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Assembly_CreateJointDistance": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Assembly_CreateJointParallel": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Assembly_CreateJointPerpendicular": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Assembly_CreateJointAngle": {
+                            "size": "large",
+                            "text": ""
+                        },
+                        "Assembly_CreateJointRackPinion": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Assembly_CreateJointScrew": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Assembly_CreateJointGearBelt": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Assembly_CreateJointRigidGroup": {
+                            "size": "small"
+                        }
+                    }
+                },
+                "Individual views": {
+                    "order": [
+                        "Isometric",
+                        "Front",
+                        "Top",
+                        "Right",
+                        "Rear",
+                        "Bottom",
+                        "Left"
+                    ],
+                    "commands": {
+                        "Std_ViewIsometric": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-axonometric"
+                        },
+                        "Std_ViewFront": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-front"
+                        },
+                        "Std_ViewTop": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-top"
+                        },
+                        "Std_ViewRight": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-right"
+                        },
+                        "Std_ViewRear": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-rear"
+                        },
+                        "Std_ViewBottom": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-bottom"
+                        },
+                        "Std_ViewLeft": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-left"
+                        }
+                    }
+                },
+                "Structure": {
+                    "commands": {
+                        "Std_Part": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Part_Datums": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_Group": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_LinkActions": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_VarSet": {
+                            "size": "small",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Part_Datums",
+                        "Std_Part",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ]
+                },
+                "Tools_newPanel": {
+                    "commands": {
+                        "Std_Measure": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_UnitsCalculator": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_Properties": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_BoxElementSelection": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_BoxSelection": {
+                            "size": "small",
+                            "text": ""
+                        },
+                        "Std_WhatsThis": {
+                            "size": "small",
+                            "text": ""
+                        }
+                    },
+                    "order": [
+                        "Std_Measure",
+                        "Std_UnitsCalculator",
+                        "Std_Properties",
+                        "Std_BoxElementSelection",
+                        "Std_BoxSelection",
+                        "Std_WhatsThis"
+                    ]
+                },
+                "Individual Views": {
+                    "order": [
+                        "All",
+                        "Std_ViewIsometric",
+                        "Std_ViewFront",
+                        "Std_ViewTop",
+                        "Std_ViewRight",
+                        "Std_ViewRear",
+                        "Std_ViewBottom",
+                        "Std_ViewLeft"
+                    ],
+                    "commands": {
+                        "Std_ViewIsometric": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-axonometric"
+                        },
+                        "Std_ViewFront": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-front"
+                        },
+                        "Std_ViewTop": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-top"
+                        },
+                        "Std_ViewRight": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-right"
+                        },
+                        "Std_ViewRear": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-rear"
+                        },
+                        "Std_ViewBottom": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-bottom"
+                        },
+                        "Std_ViewLeft": {
+                            "size": "small",
+                            "text": "",
+                            "icon": "view-left"
+                        }
+                    }
+                },
+                "Patterns_newPanel": {
+                    "order": [
+                        "Draft_OrthoArray",
+                        "Draft_CircularArray",
+                        "Draft_Mirror",
+                        "Draft_ArrayTools"
+                    ],
+                    "commands": {
+                        "Draft_ArrayTools": {
+                            "size": "small",
+                            "text": "Array...",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "Draft_OrthoArray": {
+                            "size": "large",
+                            "text": "Array",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "Draft_CircularArray": {
+                            "size": "large",
+                            "text": "Circular Array",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "Draft_Mirror": {
+                            "size": "large",
+                            "text": "Mirror",
+                            "icon": "",
+                            "IsExtra": true
+                        }
+                    }
+                }
+            },
+            "Enabled": true
+        }
+    }
+}

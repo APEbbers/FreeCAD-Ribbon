@@ -34,5 +34,12 @@
         ["Draft modification tools", "Draft Modification"],
         ["Draft utility tools", "Draft Utility"],
         ["Draft snap", "Draft Snap"]
+    ],
+    "FemWorkbench": [
+        ["Electromagnetic boundary conditions", "Electromagnetic Boundary Conditions"],
+        ["Geometrical analysis features", "Geometrical Analysis Features"],
+        ["Fluid boundary conditions", "Fluid Boundary Conditions"],
+        ["Mechanical boundary conditions and loads", "Mechanical Boundary Conditions and Loads"],
+        ["Thermal boundary conditions and loads", "Thermal Boundary Conditions and Loads"]
     ]
 }
