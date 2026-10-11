@@ -156,6 +156,10 @@ def DarkMode():
                 if not os.path.isfile(packageXML):
                     if "dark" in currentStyleSheet.lower():
                         IsDarkTheme = True
+                    else: 
+                        if mw.palette().windowText().color().lightness() > mw.palette().window().color().lightness():
+                            IsDarkTheme = True
+                    
 
     return IsDarkTheme
 
