@@ -8709,20 +8709,8 @@ class ModernMenu(RibbonBar):
                     for Toolbar in wbToolbars.keys():
                         if Toolbar.lower() == ToolbarName.lower():
                             StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", Toolbar])
-                            tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands
-                    # if the toolbar in the ribbonstructure is a 'newPanel' or 'custom' just add it to the temporary dict
-                    if ToolbarName.endswith("_newPanel") or ToolbarName.endswith("_custom"):
-                        StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", ToolbarName], endEmpty=True)
-                        tempDict["workbenches"][WorkBenchName]["toolbars"][ToolbarName] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolbarName]                
-                # if the ToolbarName is 'order', update the orderlist with the same toolbar names
-                if ToolbarName == "order":                    
-                    for item in Dict["workbenches"][WorkBenchName]["toolbars"]["order"]:
-                        for Toolbar in wbToolbars.keys():
-                            if Toolbar.lower() == item.lower():
-                                tempList.append(Toolbar)
-                        if item.endswith("_newPanel") or item.endswith("_custom"):
-                            tempList.append(item)        
-        
+                            tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands                          
+                       
         # Update the customToolbar dict with the latest toolbar names as well
         if "customToolbars" in Dict and WorkBenchName in Dict["customToolbars"]:
             for customToolBar in Dict["customToolbars"][WorkBenchName].keys():
