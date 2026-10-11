@@ -3557,6 +3557,9 @@ class ModernMenu(RibbonBar):
                 else:
                     # Make sure to set the tab visible
                     self.tabBar().setTabVisible(i, True) 
+                    # Update the dict
+                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName, "Enabled"], default=True)
+                    self.ribbonStructure["workbenches"][workbenchName]["Enabled"] = True
                 self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None) 
             
             # Disable the delete button and set the icon
@@ -9181,7 +9184,6 @@ class EventInspector(QObject):
                         pass       
 
         if event.type() == QEvent.Type.Close:
-            print("close event")
             OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
             String = OverlayParam_Top.GetString("Widgets")
             Parameters_Ribbon.Settings.SetStringSetting("StoredOverlayState", String)
