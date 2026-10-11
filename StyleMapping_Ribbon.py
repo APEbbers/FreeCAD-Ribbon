@@ -78,11 +78,13 @@ def GetColorSetting(settingName: str) -> object:
         return result
 
 def DarkMode():
-    import defusedxml.ElementTree as ET
+    import xml.etree.ElementTree as ET
     import os
 
     # Define the standard result
     IsDarkTheme = False
+    if mw.palette().windowText().color().lightness() > mw.palette().window().color().lightness():
+        IsDarkTheme = True
 
     # Get the current stylesheet for FreeCAD
     FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/MainWindow")
@@ -103,10 +105,15 @@ def DarkMode():
         return True
 
     # OpenLight and OpenDark are from one addon. Set the currentStyleSheet value to the addon folder
-    if "OpenLight.qss" in currentStyleSheet:
+    if "openlight.qss" in currentStyleSheet.lower():
         return False
-    if "OpenDark.qss" in currentStyleSheet:
+    if "opendark.qss" in currentStyleSheet.lower():
         return True
+    if "opentheme.qss" in currentStyleSheet.lower():
+        if "opendark" in currentTheme.lower():
+            return True
+        if "openlight" in currentTheme.lower():
+            return False
 
     path = os.path.dirname(__file__)
     # Get the folder with add-ons
