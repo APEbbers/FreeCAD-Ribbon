@@ -78,7 +78,7 @@ def GetColorSetting(settingName: str) -> object:
         return result
 
 def DarkMode():
-    import xml.etree.ElementTree as ET
+    import defusedxml.ElementTree as ET
     import os
 
     # Define the standard result
