@@ -3991,9 +3991,13 @@ class ModernMenu(RibbonBar):
         
         # Reset the suspendBuildPanels parameter
         if type(widget) is RibbonNormalCategory:
-             self.SuspendBuildPanels = False
-             self.buildPanels(self.workBenchDict)
-             return
+            self.SuspendBuildPanels = False
+            self.buildPanels(self.workBenchDict)
+             
+            # Restore the cursor
+            QApplication.restoreOverrideCursor()
+            QApplication.restoreOverrideCursor()
+            return
         
         # Define a parent
         parent = widget.parent()
