@@ -157,8 +157,10 @@ def DarkMode():
                     if "dark" in currentStyleSheet.lower():
                         IsDarkTheme = True
                     else: 
-                        mw.palette().windowText().color().lightness() > mw.palette().window().color().lightness():
-                        IsDarkTheme = True
+                        if mw.palette().windowText().color().lightness() > mw.palette().window().color().lightness():
+                            IsDarkTheme = True
+                        else:
+                            IsDarkTheme = False
 
     return IsDarkTheme
 
