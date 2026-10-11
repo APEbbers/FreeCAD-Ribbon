@@ -3805,6 +3805,7 @@ class ModernMenu(RibbonBar):
             self.target = None
             self.targetPanel = None
             # self.dropPanelName = None
+            self.SuspendBuildPanels = False
             
             # Enable all buttons, so you can access them with a right click
             self.actionList = []
@@ -3839,7 +3840,6 @@ class ModernMenu(RibbonBar):
                         self.tabBar().moveTab(self._currentTabIndex, index)
                         break
 
-            self.SuspendBuildPanels = False
              # If you drag and drop a new command, you actually dragging the complete QListWidget
             if type(widget) is QListWidget:
                 position = event.pos()
@@ -3988,6 +3988,11 @@ class ModernMenu(RibbonBar):
             if Parameters.DEBUG_MODE:
                 print("drop exited")
             return
+        
+        # Reset the suspendBuildPanels parameter
+        if type(event.source()) is RibbonNormalCategory:
+             self.SuspendBuildPanels = False
+             self.buildPanels(self.workBenchDict)
         
         # Define a parent
         parent = widget.parent()
@@ -4671,7 +4676,7 @@ class ModernMenu(RibbonBar):
         if self.CustomizeEnabled is False: 
             self.buildPanels()
         if self.CustomizeEnabled and self.SuspendBuildPanels is False:
-            self.buildPanels(Dict=self.workBenchDict, UpdateDict=False)
+            self.buildPanels(Dict=self.workBenchDict)
         
         # hide normal toolbars
         self.hideClassicToolbars()
@@ -5883,7 +5888,7 @@ class ModernMenu(RibbonBar):
         return
 
     # Build the panels from active workbench
-    def buildPanels(self, Dict=ribbonStructure, UpdateDict=False):
+    def buildPanels(self, Dict=ribbonStructure):
         # Get the active workbench and get its name
         #
         workbenchTitle = self.tabBar().tabText(self.tabBar().currentIndex())
@@ -5923,9 +5928,7 @@ class ModernMenu(RibbonBar):
                     ListToolbars.append(customPanel)
 
                     # remove the original toolbars from the list
-                    Commands = Dict["customToolbars"][workbenchName][
-                        customPanel
-                    ]["commands"]
+                    Commands = Dict["customToolbars"][workbenchName][customPanel]["commands"]
                     for Command in Commands:
                         try:
                             OriginalToolbar = Dict["customToolbars"][workbenchName][customPanel]["commands"][Command]
@@ -5976,20 +5979,21 @@ class ModernMenu(RibbonBar):
             ListToolbars.sort(key=SortToolbars)
         except Exception:
             pass
-      
-        # If the toolbar must be ignored, skip it        
+                   
         for toolbar in ListToolbars:
+            # If the panel must be ignored, skip it   
             Skip = False
             for ToolbarToIgnore in Dict["ignoredToolbars"]:
                 if toolbar.lower() == ToolbarToIgnore.lower():
                     Skip = True
             if toolbar == "" or Skip is True:
                 continue
+            # If the panel already exists, skip it
             if toolbar in self.currentCategory().panels().keys():
                 continue
             
             # Create the panel based on the toolbars
-            panel = self.CreatePanel(workbenchName=workbenchName, panelName=toolbar, addPanel=True, Dict=Dict, UpdateDict=UpdateDict)
+            panel = self.CreatePanel(workbenchName=workbenchName, panelName=toolbar, addPanel=True, Dict=Dict, UpdateDict=False)
             if panel is None:
                 self.ignoredToolbars.append(toolbar)
                 Dict["ignoredToolbars"].append(toolbar)
@@ -6002,13 +6006,6 @@ class ModernMenu(RibbonBar):
                         if Enabled is False:
                             self.HiddenPanels.append(panel)
                             panel.hide()
-                                   
-            # Writing to ribbonStructure.json
-            if UpdateDict is True:
-                JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-                with open(JsonFile, "w") as outfile:
-                    json.dump(Dict, outfile, indent=4)
-                outfile.close()
 
         self.isWbLoaded[tabName] = True
         
