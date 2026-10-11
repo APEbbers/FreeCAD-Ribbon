@@ -142,11 +142,11 @@ def DarkMode():
                         for child in element.iter():
                             if child.text.lower() == currentStyleSheet.lower():
                                 for child2 in element.iter():
-                                    if child2.text.lower() == "dark":
+                                    if child2.text is not None and child2.text.lower() == "dark":
                                         if Parameters.DEBUG_MODE:
                                             print(f"{child2.text} theme detected for: {child.text}")
                                         return True
-                                    if child2.text.lower() == "light":
+                                    if child2.text is not None and child2.text.lower() == "light":
                                         if Parameters.DEBUG_MODE:
                                             print(f"{child2.text} theme detected for: {child.text}")
                                         return False
@@ -155,6 +155,9 @@ def DarkMode():
             except Exception as e:
                 if not os.path.isfile(packageXML):
                     if "dark" in currentStyleSheet.lower():
+                        IsDarkTheme = True
+                    else: 
+                        mw.palette().windowText().color().lightness() > mw.palette().window().color().lightness():
                         IsDarkTheme = True
 
     return IsDarkTheme
