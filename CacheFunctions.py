@@ -56,6 +56,7 @@ import webbrowser
 import StyleMapping_Ribbon
 import requests
 import FCBinding
+import traceback
 
 # Get the resources
 ConfigDirectory = Parameters.CONFIG_DIR
@@ -575,6 +576,10 @@ def GetCommand(CommandName):
                     return CommandName
             return CommandName
     except Exception:
+        message = f"The command {CommandName} resulted in an error"
+        if Parameters.DEBUG_MODE:
+            message = message + ".\ntraceback:\n" + traceback.format_exc()
+        print(message)
         return ""
     return CommandName
 
