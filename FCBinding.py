@@ -25,7 +25,7 @@ from pathlib import Path
 import subprocess
 import traceback
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -56,7 +56,7 @@ from PySide6.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -105,7 +105,7 @@ from PySide6.QtWidgets import (
     QStyleOptionComplex,
     
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -3990,9 +3990,10 @@ class ModernMenu(RibbonBar):
             return
         
         # Reset the suspendBuildPanels parameter
-        if type(event.source()) is RibbonNormalCategory:
+        if type(widget) is RibbonNormalCategory:
              self.SuspendBuildPanels = False
              self.buildPanels(self.workBenchDict)
+             return
         
         # Define a parent
         parent = widget.parent()
@@ -4019,7 +4020,7 @@ class ModernMenu(RibbonBar):
                         Size = "large"
 
                     for panelName, panel in currentCategory.panels().items():
-                        # If the panelName is equal to the panel name on which the command is dropped, continue.                        
+                        # If the panelName is equal to the panel name on which the command is dropped, continue.                    
                         if panelName == self.dropPanelName and panel not in self.RemovedPanels:
                             # Get the command to be added
                             ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
@@ -4073,7 +4074,7 @@ class ModernMenu(RibbonBar):
                             workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
                             # Create a new panel with the extra command
                             newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict, UpdateDict=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand, ActivateButtons=True)
-                                                 
+                                                                             
                             # Add the panel to the list with long panels
                             if newPanel is not None:
                                 if newPanel.panelOptionButton().isVisible():
