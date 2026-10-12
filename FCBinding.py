@@ -8710,11 +8710,11 @@ class ModernMenu(RibbonBar):
         # Activate the workbench
         Gui.activateWorkbench(WorkBenchName)
         
-        # Compare the current CommitID with the stored CommitID. If they are different store the ID and continue
-        if Parameters_Ribbon.Settings.GetStringSetting("CommitID") == self.CommitID and skipIdCheck is False:
-            return
-        else:
-            Parameters_Ribbon.Settings.SetStringSetting("CommitID", self.CommitID)
+        # # Compare the current CommitID with the stored CommitID. If they are different store the ID and continue
+        # if Parameters_Ribbon.Settings.GetStringSetting("CommitID") == self.CommitID and skipIdCheck is False:
+        #     return
+        # else:
+        #     Parameters_Ribbon.Settings.SetStringSetting("CommitID", self.CommitID)
 
         # Define a temparory dict and list for workbench dict and order list
         tempDict = {}
@@ -8772,11 +8772,11 @@ class ModernMenu(RibbonBar):
         # Define an new workbench dict
         workbenchDict = {}
         
-        # Compare the current CommitID with the stored CommitID. If they are different store the ID and continue
-        if Parameters_Ribbon.Settings.GetStringSetting("CommitID") == self.CommitID and skipIdCheck is False:
-            return
-        else:
-            Parameters_Ribbon.Settings.SetStringSetting("CommitID", self.CommitID)
+        # # Compare the current CommitID with the stored CommitID. If they are different store the ID and continue
+        # if Parameters_Ribbon.Settings.GetStringSetting("CommitID") == self.CommitID and skipIdCheck is False:
+        #     return
+        # else:
+        #     Parameters_Ribbon.Settings.SetStringSetting("CommitID", self.CommitID)
         
         # function to correct the dic
         def UpdateDict(Dict, WorkBenchName):
