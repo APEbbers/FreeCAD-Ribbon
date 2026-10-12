@@ -8783,7 +8783,7 @@ class ModernMenu(RibbonBar):
         
         # function to correct the dic
         def UpdateDict(Dict, WorkBenchName):
-            if "toolbars" in Dict["workbenches"][WorkBenchName]:
+            if "workbenches" in Dict and WorkBenchName in Dict["workbenches"] and "toolbars" in Dict["workbenches"][WorkBenchName]:
                 for ToolBar in Dict["workbenches"][WorkBenchName]["toolbars"]:
                     if ToolBar == "order":
                         # Define a new orderlist
