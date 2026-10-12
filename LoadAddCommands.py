@@ -60,6 +60,7 @@ import FCBinding
 from CustomWidgets import QuickAccessToolButton, CustomControls
 import StyleMapping_Ribbon
 import webbrowser
+import traceback
 
 import pyqtribbon_local as pyqtribbon
 from pyqtribbon_local.ribbonbar import RibbonMenu, RibbonTitleWidget, RibbonApplicationButton
@@ -808,7 +809,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             if WorkBenchName == "":
                 return
 
-            # Get the toolbars of the workbench
+             # Get the toolbars of the workbench
             wbToolbars = self.returnWorkBenchToolbars(WorkBenchName)
             # Get all the custom toolbars from the toolbar layout
             CustomToolbars = self.List_ReturnCustomToolbars()
@@ -822,7 +823,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             # Get the custom panels
             if "customToolbars" in RibbonBar.workBenchDict:
                 CustomPanel = self.List_ReturnCustomPanel(
-                    RibbonBar.workBenchDict["customToolbars"], WorkBenchName=WorkBenchName
+                    RibbonBar.workBenchDict, WorkBenchName=WorkBenchName
                 )
                 for CustomToolbar in CustomPanel:
                     if CustomToolbar[1] == WorkBenchTitle or CustomToolbar[1] == "Global":
@@ -830,18 +831,18 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             # Get the new panels per workbench
             if "newPanels" in RibbonBar.workBenchDict:
                 NewPanels = self.List_ReturnNewPanel(
-                    RibbonBar.workBenchDict["newPanels"], WorkBenchName=WorkBenchName, PanelDict="newPanels"
+                    RibbonBar.workBenchDict, WorkBenchName=WorkBenchName, PanelDict="newPanels"
                 )
                 for Newpanel in NewPanels:
                     if Newpanel[1] == WorkBenchTitle:
                         wbToolbars.append(Newpanel[0])
                 # Get the new panels globally
                 NewPanels = self.List_ReturnNewPanel(
-                    RibbonBar.workBenchDict["newPanels"], WorkBenchName="Global", PanelDict="newPanels"
+                    RibbonBar.workBenchDict, WorkBenchName="Global", PanelDict="newPanels"
                 )
                 for Newpanel in NewPanels:
                     if Newpanel[1] == "Global":
-                        wbToolbars.append(Newpanel[0])                       
+                        wbToolbars.append(Newpanel[0])                          
 
             # Clear the listwidget before filling it
             self.form.PanelAvailable_CP.clear()
@@ -1122,7 +1123,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Update the workBenchDict in the Ribbon
         RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"].update(RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"])
         # Make sure the dict is correct
-        RibbonBar.workBenchDict = RibbonBar.CheckRibbonStructure(RibbonBar.workBenchDict, WorkBenchName, False)
+        RibbonBar.workBenchDict = RibbonBar.CleanRibbonStructure(RibbonBar.workBenchDict, WorkBenchName, False)
         # Create the new panel in the ribbon
         newPanel = RibbonBar.CreatePanel(
             workbenchName=WorkBenchName,
@@ -1309,8 +1310,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             # Close the panel first before removing
                             panelToRemove = RibbonBar.currentCategory().panels()[panel]                            
                             panelToRemove.close()
-                            # Remove it
-                            RibbonBar.currentCategory().removePanel(panel)
+                            # # Remove it
+                            # RibbonBar.currentCategory().removePanel(panel)
                                                                           
                             # remove the custom toolbar from the combobox
                             for i in range(self.form.CustomToolbarSelector_CP.count()):
@@ -2399,50 +2400,31 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     def List_ReturnCustomPanel(self, DictPanels: dict, WorkBenchName="Global", PanelDict="customToolbars"):
         Toolbars = []
 
-        if str(WorkBenchName) != "" or WorkBenchName is not None:
-            if str(WorkBenchName) != "NoneWorkbench":
-                try:
+        if str(WorkBenchName) != "" and WorkBenchName is not None and str(WorkBenchName) != "NoneWorkbench":
+            try:
+                if PanelDict in DictPanels and WorkBenchName in DictPanels[PanelDict]:
                     for CustomToolbar in DictPanels[PanelDict][WorkBenchName]:
                         if len(DictPanels[PanelDict][WorkBenchName]) > 0:
                             ListCommands = []
-                            Commands = DictPanels[PanelDict][WorkBenchName][
-                                CustomToolbar
-                            ]["commands"]
-
+                            Commands = DictPanels[PanelDict][WorkBenchName][CustomToolbar]["commands"]
                             WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
                             if WorkBenchName == "Global":
                                 WorkbenchTitle = "Global"
 
                             for key, value in list(Commands.items()):
                                 for i in range(len(self.List_Commands)):
-                                    if (
-                                        self.List_Commands[i][0] == key
-                                        and self.List_Commands[i][3] == WorkBenchName
-                                    ):
+                                    if (self.List_Commands[i][0] == key and self.List_Commands[i][3] == WorkBenchName):
                                         Command = self.List_Commands[i][0]
                                         ListCommands.append(Command)
-                                    if (
-                                        self.List_Commands[i][0] == key
-                                        and self.List_Commands[i][3] == "Global"
-                                    ):
+                                    if (self.List_Commands[i][0] == key and self.List_Commands[i][3] == "Global"):
                                         Command = self.List_Commands[i][0]
                                         ListCommands.append(Command)
+                            Toolbars.append([CustomToolbar, WorkbenchTitle, ListCommands, CustomToolbar])
 
-                                if value not in self.List_IgnoredToolbars_internal:
-                                    self.List_IgnoredToolbars_internal.append(
-                                        f"{value}"
-                                    )
-
-                            Toolbars.append(
-                                [
-                                    CustomToolbar,
-                                    WorkbenchTitle,
-                                    ListCommands,
-                                    CustomToolbar,
-                                ]
-                            )
-                except Exception:
-                    pass
+            except Exception:
+                if Parameters.DEBUG_MODE:
+                    print(f"When loading custom toolbars for {WorkBenchName}, the following error occured:\n{traceback.format_exc()}")
+                pass
 
         return Toolbars
 
