@@ -211,6 +211,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Check if there is a datafile. if not, ask the user to create one.
         DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
         if os.path.exists(DataFile) is False:
+            # Restore the cursor
+            QApplication.restoreOverrideCursor()
+            
             Question = translate(
                 "FreeCAD Ribbon",
                 "The first time, a data file must be generated!\n"
@@ -219,6 +222,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
             if Answer == "yes":
                 self.on_ReloadWB_clicked()
+            # Set the wait cursor
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
 
         # region - Load data------------------------------------------------------------------
         #
@@ -303,6 +309,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 if j == len(self.List_Workbenches) - 1:
                     missingWB.append(WorkBenchName)
         if len(missingWB) > 0:
+            # Restore the cursor
+            QApplication.restoreOverrideCursor()
+            
             ListWB = "  "
             for WB in missingWB:
                 ListWB = ListWB + WB + "\n" + "  "
@@ -316,6 +325,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
             if Answer == "yes":
                 self.on_ReloadWB_clicked()
+            # Set the wait cursor
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
 
         # Add dropdownbuttons to the list of commands
         try:

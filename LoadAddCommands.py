@@ -214,6 +214,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         except Exception:
             DataUpdateNeeded = True
         if DataUpdateNeeded is True:
+            # Restore the cursor
+            QApplication.restoreOverrideCursor()
+        
             Question = translate(
                 "FreeCAD Ribbon",
                 "The current data file is based on an older format!\n"
@@ -225,10 +228,15 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
             if Answer == "yes":
                 CacheFunctions.CreateCache()
+            # Set the wait cursor
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
 
         # get the system language
         FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
         try:
+            # Restore the cursor
+            QApplication.restoreOverrideCursor()
             FCLanguage = FreeCAD_preferences.GetString("Language")
             # Check if the language in the data file machtes the system language
             IsSystemLanguage = True
@@ -248,8 +256,14 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 )
                 if Answer == "yes":
                     CacheFunctions.CreateCache(resetTexts=True)
+                # Set the wait cursor
+                QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+                QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
         except Exception:
             pass
+            # Set the wait cursor
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
 
         # Load the standard lists for Workbenches, toolbars and commands
         self.List_Workbenches = Data["List_Workbenches"]
@@ -264,6 +278,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     i = len(item)
                     break
         if i < 5:
+            # Restore the cursor
+            QApplication.restoreOverrideCursor()
+            
             Question = translate(
                 "FreeCAD Ribbon",
                 "It seems that the data file is not up-to-date.\n"
@@ -273,6 +290,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
             if Answer == "yes":
                 CacheFunctions.CreateCache()
+            # Set the wait cursor
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
 
         # Load icons for all workbenches
         try:
@@ -344,6 +364,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 if j == len(self.List_Workbenches) - 1:
                     missingWB.append(WorkBenchName)
         if len(missingWB) > 0:
+            # Restore the cursor
+            QApplication.restoreOverrideCursor()
+            
             ListWB = "  "
             for WB in missingWB:
                 ListWB = ListWB + WB + "\n" + "  "
@@ -357,6 +380,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
             if Answer == "yes":
                 CacheFunctions.CreateCache()
+            # Set the wait cursor
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
 
         # Add dropdownbuttons to the list of commands
         try:
