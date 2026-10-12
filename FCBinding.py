@@ -2737,8 +2737,7 @@ class ModernMenu(RibbonBar):
                 else:
                     # Make sure to set the tab visible
                     self.tabBar().setTabVisible(i, True)
-                    
-                
+                  
         self.UpdateToolBar_Keys(WorkBenchName=workbenchName, Dict=self.workBenchDict, skipIdCheck=True)
         
         # update the ribbonstructure before writing it to disk
@@ -3079,7 +3078,7 @@ class ModernMenu(RibbonBar):
         
         
         # Print a message
-        print(translate("FreeCAD Ribbon", "RibbonUI: Changes are rolled back"))
+        print(translate("FreeCAD Ribbon", f"RibbonUI: Changes are rolled back for {workbenchName}"))
         
         # Restore the cursor
         QApplication.restoreOverrideCursor()
@@ -8713,11 +8712,11 @@ class ModernMenu(RibbonBar):
         # Activate the workbench
         Gui.activateWorkbench(WorkBenchName)
         
-        # Compare the current CommitID with the stored CommitID. If they are different store the ID and continue
-        if Parameters_Ribbon.Settings.GetStringSetting("CommitID") == self.CommitID and skipIdCheck is False:
-            return
-        else:
-            Parameters_Ribbon.Settings.SetStringSetting("CommitID", self.CommitID)
+        # # Compare the current CommitID with the stored CommitID. If they are different store the ID and continue
+        # if Parameters_Ribbon.Settings.GetStringSetting("CommitID") == self.CommitID and skipIdCheck is False:
+        #     return
+        # else:
+        #     Parameters_Ribbon.Settings.SetStringSetting("CommitID", self.CommitID)
 
         # Define a temparory dict and list for workbench dict and order list
         tempDict = {}
@@ -8736,19 +8735,31 @@ class ModernMenu(RibbonBar):
                     for Toolbar in wbToolbars.keys():
                         if Toolbar.lower() == ToolbarName.lower():
                             StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", Toolbar])
-                            tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands                          
-                       
+                            tempDict["workbenches"][WorkBenchName]["toolbars"][Toolbar] = commands
+                    # if the toolbar in the ribbonstructure is a 'newPanel' or 'custom' just add it to the temporary dict
+                    if ToolbarName.endswith("_newPanel") or ToolbarName.endswith("_custom"):
+                        StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", ToolbarName])
+                        tempDict["workbenches"][WorkBenchName]["toolbars"][ToolbarName] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolbarName]                
+                # if the ToolbarName is 'order', update the orderlist with the same toolbar names
+                if ToolbarName == "order":                    
+                    for item in Dict["workbenches"][WorkBenchName]["toolbars"]["order"]:
+                        for Toolbar in wbToolbars.keys():
+                            if Toolbar.lower() == item.lower():
+                                tempList.append(Toolbar)
+                        if item.endswith("_newPanel") or item.endswith("_custom"):
+                            tempList.append(item)        
+        
         # Update the customToolbar dict with the latest toolbar names as well
         if "customToolbars" in Dict and WorkBenchName in Dict["customToolbars"]:
             for customToolBar in Dict["customToolbars"][WorkBenchName].keys():
                 for command, parent in Dict["customToolbars"][WorkBenchName][customToolBar]["commands"].items():
                     for Toolbar in wbToolbars.keys():
                         if parent.lower() == Toolbar.lower():
-                            StandardFunctions.add_keys_nested_dict(tempDict, ["customToolbars", WorkBenchName, customToolBar, "commands", command], endEmpty=True)
+                            StandardFunctions.add_keys_nested_dict(tempDict, ["customToolbars", WorkBenchName, customToolBar, "commands", command])
                             tempDict["customToolbars"][WorkBenchName][customToolBar]["commands"][command] = Toolbar                        
 
         # Add the toolbar orderlist to the temporary ribbonstructure
-        StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", "order"], default=[])
+        StandardFunctions.add_keys_nested_dict(tempDict, ["workbenches", WorkBenchName, "toolbars", "order"])
         tempDict["workbenches"][WorkBenchName]["toolbars"]["order"] = tempList
 
         # Update the ribbonstrucure with temporary ribbonstructure
@@ -8762,8 +8773,6 @@ class ModernMenu(RibbonBar):
             # Writing to ribbonStructure.json
             JsonFile = Parameters.RIBBON_STRUCTURE_JSON
             with open(JsonFile, "w") as outfile:
-                if Parameters.DEBUG_MODE:
-                    print("Toolbar names updated")
                 json.dump(Dict, outfile, indent=4)
                 
         return
@@ -8771,15 +8780,16 @@ class ModernMenu(RibbonBar):
     def CleanRibbonStructure(self, Dict = ribbonStructure, WorkBenchName = "", WriteRibbonStructure = True, skipIdCheck = False):
         """
         Remove any empty or null entry or other wrong netry in the ribbonstructure.json
-        """       
+        """        
         # Define an new workbench dict
         workbenchDict = {}
+        BackUpDict = Dict.copy()
         
-        # Compare the current CommitID with the stored CommitID. If they are different store the ID and continue
-        if Parameters_Ribbon.Settings.GetStringSetting("CommitID") == self.CommitID and skipIdCheck is False:
-            return
-        else:
-            Parameters_Ribbon.Settings.SetStringSetting("CommitID", self.CommitID)
+        # # Compare the current CommitID with the stored CommitID. If they are different store the ID and continue
+        # if Parameters_Ribbon.Settings.GetStringSetting("CommitID") == self.CommitID and skipIdCheck is False:
+        #     return
+        # else:
+        #     Parameters_Ribbon.Settings.SetStringSetting("CommitID", self.CommitID)
         
         # function to correct the dic
         def UpdateDict(Dict, WorkBenchName):
@@ -8793,7 +8803,7 @@ class ModernMenu(RibbonBar):
                             if entry is not None and entry != "null" and entry != "":
                                 orderList.append(entry)
                         # Add the orderList to the workbench dicts
-                        StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", "order"], default=[])
+                        StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", "order"])
                         workbenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = orderList
                     else:
                         for item in Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar].keys():
@@ -8805,13 +8815,13 @@ class ModernMenu(RibbonBar):
                                     if entry is not None and entry != "null" and entry != "" and entry != "qt_toolbutton_menubutton":
                                         orderList.append(entry)
                                 # Add the orderList to the workbench dicts
-                                StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "order"], default=[])
+                                StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "order"])
                                 workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["order"] = orderList
                             # Filter the commands
                             if item == "commands":
                                 for command in Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"].keys():
                                     if command is not None and command != "null" and command != "" and command != "qt_toolbutton_menubutton" and "separator" not in command:
-                                        StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "commands", command], endEmpty=True)
+                                        StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "commands", command])
                                         workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command]
                             # add the title 
                             if item == "title":
@@ -8825,17 +8835,15 @@ class ModernMenu(RibbonBar):
         if "workbenches" in workbenchDict and WriteRibbonStructure is True:
             Dict["workbenches"] = workbenchDict["workbenches"]
             
-            # If the customize is not enabled, update the ribbonstructure.json
-            if not self.CustomizeEnabled:
-                JsonFile = Parameters.RIBBON_STRUCTURE_JSON
-                with open(JsonFile, "w") as outfile:
-                    if Parameters.DEBUG_MODE:
-                        print("RibbonStructure.json cleaned")
-                    json.dump(Dict, outfile, indent=4)
+            JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+            with open(JsonFile, "w") as outfile:
+                json.dump(Dict, outfile, indent=4)
         
         if "workbenches" in Dict and WorkBenchName != "":
             UpdateDict(Dict, WorkBenchName)
 
+        if Dict is None:
+            return BackUpDict
         return Dict
                                                     
 
