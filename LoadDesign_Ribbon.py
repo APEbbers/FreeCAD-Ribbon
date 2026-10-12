@@ -886,6 +886,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 self.closeSignal.emit()
         # show the dialog
         self.form.show()
+        
+        # Restore the cursor
+        QApplication.restoreOverrideCursor()
         return
     
     # region - Control functions----------------------------------------------------------------------
