@@ -9081,17 +9081,18 @@ class EventInspector(QObject):
 
     def eventFilter(self, obj, event: QEvent):
         # Check the datafile version after the ribbonbar is loaded in memory
-        try:
-            mw = Gui.getMainWindow()
-            RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
-            
-            if RibbonBar is not None and RibbonBar.isLoaded and self.DataChecked is False:
+        if self.DataChecked is False:
+            try:
+                mw = Gui.getMainWindow()
+                RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+                
+                if RibbonBar is not None and RibbonBar.isLoaded:
+                    self.DataChecked = True
+                    CacheFunctions.CheckDataFileVersion()               
+            except Exception:
+                if Parameters.DEBUG_MODE:
+                    print(traceback.format_exc())
                 self.DataChecked = True
-                CacheFunctions.CheckDataFileVersion()                
-        except Exception:
-            if Parameters.DEBUG_MODE:
-                print(traceback.format_exc())
-            self.DataChecked = True
             
         # This is an alternative drop function which works only with QT6.
         # It is needed to avoid problems with older Nvidia Cards (Pascal and older) and Wayland        
