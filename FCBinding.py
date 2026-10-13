@@ -1145,9 +1145,6 @@ class ModernMenu(RibbonBar):
         self._titleWidget.mousePressEvent = lambda e: self.mousePress_Titlebar(e)
         mw.moveEvent = lambda e: self.mouseMove_Titlebar(e)
         
-        # Check if an reload of the datafile is needed an show an message
-        CacheFunctions.CheckDataFileVersion()
-        
         if Parameters.BETA_FUNCTIONS_ENABLED is True:
                 self.BetaFunctionsEnabled = True   
         else:
@@ -7415,10 +7412,26 @@ class ModernMenu(RibbonBar):
     # endregion
 
 class EventInspector(QObject):
+    DataChecked = False
+    
     def __init__(self, parent):
         super(EventInspector, self).__init__(parent)
 
     def eventFilter(self, obj, event: QEvent):
+        # Check the datafile version after the ribbonbar is loaded in memory
+        if self.DataChecked is False:
+            try:
+                mw = Gui.getMainWindow()
+                RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+                
+                if RibbonBar is not None and RibbonBar.isLoaded:
+                    self.DataChecked = True
+                    CacheFunctions.CheckDataFileVersion()               
+            except Exception:
+                if Parameters.DEBUG_MODE:
+                    print(traceback.format_exc())
+                self.DataChecked = True
+            
         if event.type() == QEvent.Type.KeyRelease:
             try:
                 # Get the main window and the ribbon
