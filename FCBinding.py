@@ -1287,9 +1287,6 @@ class ModernMenu(RibbonBar):
         self._titleWidget.mousePressEvent = lambda e: self.mousePress_Titlebar(e)
         mw.moveEvent = lambda e: self.mouseMove_Titlebar(e)
         
-        # Check if an reload of the datafile is needed an show an message
-        CacheFunctions.CheckDataFileVersion()
-        
         if Parameters.BETA_FUNCTIONS_ENABLED is True:
                 self.BetaFunctionsEnabled = True   
         else:
@@ -9077,11 +9074,25 @@ class EventInspector(QObject):
     widget = None
     pos = None
     PatchApplicable = True
+    DataChecked = False
     
     def __init__(self, parent):
         super(EventInspector, self).__init__(parent)
 
     def eventFilter(self, obj, event: QEvent):
+        # Check the datafile version after the ribbonbar is loaded in memory
+        try:
+            mw = Gui.getMainWindow()
+            RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+            
+            if RibbonBar is not None and RibbonBar.isLoaded and self.DataChecked is False:
+                self.DataChecked = True
+                CacheFunctions.CheckDataFileVersion()                
+        except Exception:
+            if Parameters.DEBUG_MODE:
+                print(traceback.format_exc())
+            self.DataChecked = True
+            
         # This is an alternative drop function which works only with QT6.
         # It is needed to avoid problems with older Nvidia Cards (Pascal and older) and Wayland        
         try:
@@ -9314,27 +9325,28 @@ class EventInspector(QObject):
             # Get the mainwindow, the ribbon and the title
             mw = Gui.getMainWindow()
             RibbonBar = mw.findChild(ModernMenu, "Ribbon")
-            title = RibbonBar.title()
-            # If there is an active document, continue here
-            if App.ActiveDocument is not None:
-                # Define the standard title as a prefix
-                Prefix = (
-                    f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
-                )
-                # if the title is not equal to the prefix with the active document label,
-                # Get the text from the active tab from the viewport and combine it with the prefix
-                # Set it as the new title
-                if title != Prefix + " - " + App.ActiveDocument.Label:
-                    CentralWidget = mw.centralWidget()
-                    TabBar: QTabBar = CentralWidget.findChild(QTabBar, "mdiAreaTabBar")
-                    CurrentText = TabBar.tabText(TabBar.currentIndex())
-                    RibbonBar.setTitle(Prefix + " - " + CurrentText)
-            # If there is no active document, set just the standard title
-            if App.ActiveDocument is None:
-                RibbonBar.setTitle(
-                    f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
-                )
-            return QObject.eventFilter(self, obj, event)
+            if RibbonBar is not None:
+                title = RibbonBar.title()
+                # If there is an active document, continue here
+                if App.ActiveDocument is not None:
+                    # Define the standard title as a prefix
+                    Prefix = (
+                        f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
+                    )
+                    # if the title is not equal to the prefix with the active document label,
+                    # Get the text from the active tab from the viewport and combine it with the prefix
+                    # Set it as the new title
+                    if title != Prefix + " - " + App.ActiveDocument.Label:
+                        CentralWidget = mw.centralWidget()
+                        TabBar: QTabBar = CentralWidget.findChild(QTabBar, "mdiAreaTabBar")
+                        CurrentText = TabBar.tabText(TabBar.currentIndex())
+                        RibbonBar.setTitle(Prefix + " - " + CurrentText)
+                # If there is no active document, set just the standard title
+                if App.ActiveDocument is None:
+                    RibbonBar.setTitle(
+                        f"FreeCAD {App.Version()[0]}.{App.Version()[1]}.{App.Version()[2]}"
+                    )
+                return QObject.eventFilter(self, obj, event)
         
         if event.type() == QEvent.Type.MouseMove:
             # Get the mainwindow, the ribbon and the title
