@@ -6771,20 +6771,17 @@ class ModernMenu(RibbonBar):
                 and Parameters.ICON_SIZE_SMALL * 3 >= LargeButtonHeight
             ):
                 ribbonHeight = Parameters.ICON_SIZE_SMALL * 3 + self.ButtonSpacing*2
-                print(f"{Parameters.ICON_SIZE_SMALL}x3 + {self.ButtonSpacing}x2+{offset}={ribbonHeight+offset}")
             if (
                 Parameters.ICON_SIZE_MEDIUM * 2
                 > Parameters.ICON_SIZE_SMALL * 3
                 and Parameters.ICON_SIZE_MEDIUM * 2 > LargeButtonHeight
             ):
                 ribbonHeight = Parameters.ICON_SIZE_MEDIUM * 2 + self.ButtonSpacing
-                print(f"{Parameters.ICON_SIZE_MEDIUM}x + {self.ButtonSpacing}+{offset}={ribbonHeight+offset}")
             if (
                 Parameters.ICON_SIZE_LARGE > Parameters.ICON_SIZE_SMALL * 3
                 and Parameters.ICON_SIZE_LARGE > Parameters.ICON_SIZE_MEDIUM * 2
             ):
                 ribbonHeight = LargeButtonHeight
-                print(f"{LargeButtonHeight}+{offset}={ribbonHeight+offset}")
         
         # If there only medium or small buttons
         if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  == 2 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 0 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
@@ -9064,7 +9061,7 @@ class EventInspector(QObject):
         try:
             # Get the main window and the ribbon
             session_id = subprocess.getoutput("env | grep -E -i 'x11|xorg|wayland'").split()[1].split("=")[1]
-            if session_id == "wayland":           
+            if session_id == "wayland":         
                 mw = Gui.getMainWindow()
                 RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")  
                 if RibbonBar.CustomizeEnabled and self.PatchApplicable is True and platform.system() == "Linux":                                      
@@ -9072,7 +9069,6 @@ class EventInspector(QObject):
                         self.dragEntered = False
                         if Parameters.DEBUG_MODE:
                             StandardFunctions.Print("RibbonUI: Wayland patch applied for an alternative drop event", "Log")
-                        
                         
                         if RibbonBar.dropPanelName != "":
                             RibbonBar.dropEvent(widget=self.widget)
@@ -9092,7 +9088,8 @@ class EventInspector(QObject):
                                 event.accept()                        
                         return QObject.eventFilter(self, obj, event)
         except Exception:  # noqa: BLE001
-            self.PatchApplicable = False
+            if Parameters.DEBUG_MODE:
+                StandardFunctions.Print(f"RibbonUI: {traceback.format_exc()}", "Warning")
                  
         if event.type() == QEvent.Type.KeyRelease:
             try:
