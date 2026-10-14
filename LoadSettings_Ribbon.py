@@ -282,7 +282,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         )
      
         # Set the limits for the spinboxes
-        self.form.IconSize_Small.setRange(8, 36)
+        self.form.IconSize_Small.setRange(16, 36)
         self.form.IconSize_Medium.setRange(12, 48)
         if (Parameters.ICON_SIZE_SMALL * 3 >= Parameters.ICON_SIZE_MEDIUM * 2):
             max = Parameters.ICON_SIZE_SMALL * 3 + Parameters.BUTTON_SPACING*2

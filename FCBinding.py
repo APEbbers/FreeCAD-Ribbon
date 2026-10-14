@@ -4997,6 +4997,7 @@ class ModernMenu(RibbonBar):
         self.ComboBox = QComboBox(self.rightToolBar())
         self.ComboBox.setObjectName("GroupBox")
         self.ComboBox.setFixedWidth(100)
+        self.ComboBox.setFixedHeight(self.RightToolBarButtonSize)
         self.ComboBox.addItem("All")        
         self.ComboBox.setToolTip(translate("FreeCAD Ribbon", "Select a tab group"))
         self.ComboBox.setStyleSheet("""QToolTip {
@@ -5005,7 +5006,11 @@ class ModernMenu(RibbonBar):
                     border: black solid 1px;
                     border-radius: 2px;
                     }"""
-                )        
+                )   
+        # Adjust the font size to the toolbar height    
+        Font = QFont()
+        Font.setPixelSize(self.RightToolBarButtonSize *0.5)
+        self.ComboBox.setFont(Font)
         self.ComboBox.currentTextChanged.connect(lambda: self.on_Group_Changed(self.ComboBox.currentText( )))
         if "tabGroups" in self.ribbonStructure:
             for group in self.ribbonStructure["tabGroups"].keys():
@@ -5049,7 +5054,7 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().addWidget(self.DeleteButton)
                 
         # if the FreeCAD titlebar is hidden,add close, minimize and maximize buttons
-        padding = "5px"
+        padding = "2px"
         if Parameters.HIDE_TITLEBAR_FC is True:
             spacer = QWidget()
             spacer.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
@@ -5077,6 +5082,7 @@ class ModernMenu(RibbonBar):
             MinimzeButton.setFixedSize(
                 self.RightToolBarButtonSize, self.RightToolBarButtonSize
             )
+            MinimzeButton.adjustSize()
             self.rightToolBar().addWidget(MinimzeButton)
             # Restore button
             RestoreButton = QToolButton()
@@ -5098,6 +5104,7 @@ class ModernMenu(RibbonBar):
             RestoreButton.setFixedSize(
                 self.RightToolBarButtonSize, self.RightToolBarButtonSize
             )
+            RestoreButton.adjustSize()
             self.rightToolBar().addWidget(RestoreButton)
             # Close button
             CloseButton = QToolButton()
@@ -5119,6 +5126,7 @@ class ModernMenu(RibbonBar):
             CloseButton.setFixedSize(
                 self.RightToolBarButtonSize, self.RightToolBarButtonSize
             )
+            CloseButton.adjustSize()
             self.rightToolBar().addWidget(CloseButton)
         else:
             self.setTitle("")
@@ -5198,12 +5206,12 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setSizeIncrement(1, 1)
         # Set the objectName for the right toolbar. needed for excluding from hiding.
         self.rightToolBar().setObjectName("rightToolBar")
-        
+        self.rightToolBar().setFixedHeight(self.RightToolBarButtonSize)
         return
 
     # Add the searchBar if it is present
     def AddSearchBar(self):        
-        TB: QToolBar = mw.findChildren(QToolBar, "SearchBar")
+        TB = mw.findChildren(QToolBar, "SearchBar")
         width = 10
         if TB is not None:
             try:
@@ -5224,6 +5232,11 @@ class ModernMenu(RibbonBar):
                         index, groupId
                     )
                 )
+                
+                # Adjust the font size to the toolbar height
+                Font = QFont()
+                Font.setPixelSize(self.RightToolBarButtonSize *0.5)
+                sea.setFont(Font)
                 
                 # Set the stylesheet specific for use in the RibbonUI
                 StyleSheet = (
@@ -6050,13 +6063,8 @@ class ModernMenu(RibbonBar):
         )
 
         # Set the maximum height to a high value to prevent from the ribbon to be clipped off
-        category.setMinimumHeight(
-            self.RibbonHeight - self.RibbonMinimalHeight - 3
-        )
-        category.setMaximumHeight(
-            self.RibbonHeight - self.RibbonMinimalHeight - 3
-        )
-        # self.setRibbonHeight(self.RibbonHeight)
+        category.setMinimumHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
+        category.setMaximumHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
 
         if self.DesignMenuLoaded is True:
             # Disable the quick toolbar, righttoolbar and application menu
@@ -6763,17 +6771,20 @@ class ModernMenu(RibbonBar):
                 and Parameters.ICON_SIZE_SMALL * 3 >= LargeButtonHeight
             ):
                 ribbonHeight = Parameters.ICON_SIZE_SMALL * 3 + self.ButtonSpacing*2
+                print(f"{Parameters.ICON_SIZE_SMALL}x3 + {self.ButtonSpacing}x2+{offset}={ribbonHeight+offset}")
             if (
-                (Parameters.ICON_SIZE_MEDIUM * 2
+                Parameters.ICON_SIZE_MEDIUM * 2
                 > Parameters.ICON_SIZE_SMALL * 3
-                and Parameters.ICON_SIZE_MEDIUM * 2 > LargeButtonHeight)
+                and Parameters.ICON_SIZE_MEDIUM * 2 > LargeButtonHeight
             ):
                 ribbonHeight = Parameters.ICON_SIZE_MEDIUM * 2 + self.ButtonSpacing
+                print(f"{Parameters.ICON_SIZE_MEDIUM}x + {self.ButtonSpacing}+{offset}={ribbonHeight+offset}")
             if (
                 Parameters.ICON_SIZE_LARGE > Parameters.ICON_SIZE_SMALL * 3
                 and Parameters.ICON_SIZE_LARGE > Parameters.ICON_SIZE_MEDIUM * 2
             ):
                 ribbonHeight = LargeButtonHeight
+                print(f"{LargeButtonHeight}+{offset}={ribbonHeight+offset}")
         
         # If there only medium or small buttons
         if self.MaxRowsPerWB[workbenchName]["MediumButtons"]["Rows"]  == 2 and self.MaxRowsPerWB[workbenchName]["LargeButtons"]["Rows"] == 0 and self.MaxRowsPerWB[workbenchName]["SmallButtons"]["Rows"] < 3:
@@ -7619,8 +7630,11 @@ class ModernMenu(RibbonBar):
                             try:
                                 if Parameters.BETA_FUNCTIONS_ENABLED is True:
                                     showText = Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["textEnabled"]
-                            except Exception:
+                            except Exception:  # noqa: BLE001, S110
                                 pass
+                            
+                            # Make sure that the icon size is not too small
+                            if Parameters.ICON_SIZE_SMALL < 16: Parameters.ICON_SIZE_SMALL = 16  # noqa: PLR1730
 
                             # Create a custom toolbutton
                             ButtonSize = QSize(
@@ -7836,6 +7850,7 @@ class ModernMenu(RibbonBar):
         spacer.setObjectName("ExtraSpacer")
         spacer.setMinimumSize(0, panel.height() - panel._titleWidget.height())
         panel.addWidget(spacer, rowSpan=6)
+        print(panel.height())
 
         # Enable all buttons, so you can access them with a right click
         self.activateButtons()
