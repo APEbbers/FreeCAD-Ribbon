@@ -23,6 +23,7 @@ import CustomWidgets
 import FreeCAD as App
 import FreeCADGui as Gui
 from pathlib import Path
+import subprocess
 import traceback
 
 from PySide.QtGui import (
@@ -3852,7 +3853,7 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().addAction(WidgetAction)
                 
         # if the FreeCAD titlebar is hidden,add close, minimize and maximize buttons
-        padding = "5px"
+        padding = "2px"
         if Parameters.HIDE_TITLEBAR_FC is True:
             spacer = QWidget()
             spacer.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Expanding)
@@ -3880,6 +3881,7 @@ class ModernMenu(RibbonBar):
             MinimzeButton.setFixedSize(
                 self.RightToolBarButtonSize, self.RightToolBarButtonSize
             )
+            MinimzeButton.adjustSize()
             self.rightToolBar().addWidget(MinimzeButton)
             # Restore button
             RestoreButton = QToolButton()
@@ -3901,6 +3903,7 @@ class ModernMenu(RibbonBar):
             RestoreButton.setFixedSize(
                 self.RightToolBarButtonSize, self.RightToolBarButtonSize
             )
+            RestoreButton.adjustSize()
             self.rightToolBar().addWidget(RestoreButton)
             # Close button
             CloseButton = QToolButton()
@@ -3922,6 +3925,7 @@ class ModernMenu(RibbonBar):
             CloseButton.setFixedSize(
                 self.RightToolBarButtonSize, self.RightToolBarButtonSize
             )
+            CloseButton.adjustSize()
             self.rightToolBar().addWidget(CloseButton)
 
         # Add a beta button when showing the settings menu. 
@@ -3996,6 +4000,7 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setSizeIncrement(1, 1)
         # Set the objectName for the right toolbar. needed for excluding from hiding.
         self.rightToolBar().setObjectName("rightToolBar")
+        self.rightToolBar().setFixedHeight(self.RightToolBarButtonSize)
         return
 
     # Add the searchBar if it is present
@@ -4023,6 +4028,12 @@ class ModernMenu(RibbonBar):
                         index, groupId
                     )
                 )
+                
+                # Adjust the font size to the toolbar height
+                Font = QFont()
+                Font.setPixelSize(self.RightToolBarButtonSize *0.5)
+                sea.setFont(Font)
+                
                 StyleSheet = (
                         """background: """
                         + "white;"
@@ -4543,13 +4554,8 @@ class ModernMenu(RibbonBar):
         )
 
         # Set the maximum height to a high value to prevent from the ribbon to be clipped off
-        category.setMinimumHeight(
-            self.RibbonHeight - self.RibbonMinimalHeight - 3
-        )
-        category.setMaximumHeight(
-            self.RibbonHeight - self.RibbonMinimalHeight - 3
-        )
-        # self.setRibbonHeight(self.RibbonHeight)
+        category.setMinimumHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
+        category.setMaximumHeight(self.ReturnRibbonHeight(self.PanelHeightOffset))
 
         if self.DesignMenuLoaded is True:
             # Disable the quick toolbar, righttoolbar and application menu
@@ -6217,6 +6223,9 @@ class ModernMenu(RibbonBar):
                                     showText = Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["textEnabled"]
                             except Exception:
                                 pass
+                            
+                            # Make sure that the icon size is not too small
+                            if Parameters.ICON_SIZE_SMALL < 16: Parameters.ICON_SIZE_SMALL = 16  # noqa: PLR1730
 
                             # Create a custom toolbutton
                             ButtonSize = QSize(
@@ -7431,7 +7440,7 @@ class EventInspector(QObject):
                 if Parameters.DEBUG_MODE:
                     print(traceback.format_exc())
                 self.DataChecked = True
-            
+                
         if event.type() == QEvent.Type.KeyRelease:
             try:
                 # Get the main window and the ribbon
