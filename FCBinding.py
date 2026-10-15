@@ -2230,6 +2230,7 @@ class ModernMenu(RibbonBar):
             for category in self.CustomizedCategories:
                 self.setCurrentCategory(category)
                 self.on_Cancel_Clicked()
+                print("got here")
             # self.on_Cancel_Clicked()
             self.CustomizedCategories.clear()
             return
@@ -4153,11 +4154,11 @@ class ModernMenu(RibbonBar):
                     if button is not None:
                         self.addQuickAccessButton(button)
                         self.quickAccessToolBar().setMinimumWidth(self.quickAccessToolBar().width() + button.width() + 1)
-                    
-                    # Add the command to the quickaccess command list
-                    self.workBenchDict["quickAccessCommands"].append(commandName)
-                    if Parameters.DEBUG_MODE:
-                        StandardFunctions.Print(f"RibbonUI: Mew order for the quickaccess toolbar is: \n{self.workBenchDict['quickAccessCommands']}")
+
+                        # Add the command to the quickaccess command list
+                        self.workBenchDict["quickAccessCommands"].append(commandName)
+                        if Parameters.DEBUG_MODE:
+                            StandardFunctions.Print(f"RibbonUI: Mew order for the quickaccess toolbar is: \n{self.workBenchDict['quickAccessCommands']}")
                     
                     # Enable all buttons, so you can access them with a right click
                     self.activateButtons()
@@ -7847,7 +7848,6 @@ class ModernMenu(RibbonBar):
         spacer.setObjectName("ExtraSpacer")
         spacer.setMinimumSize(0, panel.height() - panel._titleWidget.height())
         panel.addWidget(spacer, rowSpan=6)
-        print(panel.height())
 
         # Enable all buttons, so you can access them with a right click
         self.activateButtons()
@@ -8422,15 +8422,15 @@ class ModernMenu(RibbonBar):
             try:
                 # Check if the workbench is loaded. If not, actions will be an empty list
                 # Find the command its workbench and activate it
-                QuickAction = Gui.Command.get(commandName).getAction()
-                if len(QuickAction) == 0:
-                    for CommandItem in self.List_Commands:
-                        if CommandItem[0] == commandName and CommandItem[3] not in self.isWbLoaded:
-                            Gui.activateWorkbench(CommandItem[3])
-                            self.isWbLoaded[CommandItem[3]] = True
-                            break
-            except Exception:
-                pass
+                for CommandItem in self.List_Commands:
+                    if CommandItem[0] == commandName:
+                        Gui.activateWorkbench(CommandItem[3])
+                        self.isWbLoaded[CommandItem[3]] = True
+                        break
+            except:  # noqa: E722
+                e = traceback.format_exc()
+                if Parameters.DEBUG_MODE is True:
+                    StandardFunctions.Print(f"RibbonUI:\n{e}", "Warning")
             QuickAction = Gui.Command.get(commandName).getAction()
 
             if len(QuickAction) == 1:
