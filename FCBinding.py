@@ -7015,15 +7015,15 @@ class ModernMenu(RibbonBar):
             try:
                 # Check if the workbench is loaded. If not, actions will be an empty list
                 # Find the command its workbench and activate it
-                QuickAction = Gui.Command.get(commandName).getAction()
-                if len(QuickAction) == 0:
-                    for CommandItem in self.List_Commands:
-                        if CommandItem[0] == commandName and CommandItem[3] not in self.isWbLoaded:
-                            Gui.activateWorkbench(CommandItem[3])
-                            self.isWbLoaded[CommandItem[3]] = True
-                            break
-            except Exception:
-                pass
+                for CommandItem in self.List_Commands:
+                    if CommandItem[0] == commandName:
+                        Gui.activateWorkbench(CommandItem[3])
+                        self.isWbLoaded[CommandItem[3]] = True
+                        break
+            except:  # noqa: E722
+                e = traceback.format_exc()
+                if Parameters.DEBUG_MODE is True:
+                    StandardFunctions.Print(f"RibbonUI:\n{e}", "Warning")
             QuickAction = Gui.Command.get(commandName).getAction()
 
             if len(QuickAction) == 1:
