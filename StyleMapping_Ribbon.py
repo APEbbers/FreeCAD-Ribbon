@@ -580,9 +580,9 @@ def ReturnIcons_ThemeEditor():
 StyleMapping = {
     "Stylesheets": {
         "Background_Color": "",
-        "Background_Color_Hover": StandardFunctions.ColorConvertor(mw.palette().highlight().color().toTuple(), 1, True, False),
+        "Background_Color_Hover": Parameters.COLOR_BACKGROUND_HOVER,
         "Border_Color": "",
-        "ApplicationButton_Background": StandardFunctions.ColorConvertor(mw.palette().highlight().color().toTuple(), 1, True, False),
+        "ApplicationButton_Background": Parameters.COLOR_APPLICATION_BUTTON_BACKGROUND,
         "FontColor": ReturnFontColor(),  
         "UpdateColor": ReturnUpdateColor(),
         "DevelopColor": ReturnDevelopColor(),
