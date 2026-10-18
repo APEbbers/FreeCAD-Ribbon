@@ -40,6 +40,7 @@ from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread
 import sys
 import Standard_Functions_Ribbon as StandardFunctions
 from Parameters_Ribbon import Parameters
+import traceback
 
 # Get the resources
 ConfigDirectory = Parameters.CONFIG_DIR
@@ -278,15 +279,13 @@ def ReturnStyleItem(ControlName, ShowCustomIcon=False, IgnoreOverlay=False, Igno
                 result = Parameters.COLOR_APPLICATION_BUTTON_BACKGROUND
             
             if result == "" or result is None:
-                result = StyleMapping_default["Stylesheets"][currentStyleSheet][
-                    ControlName
-                ]
+                result = StyleMapping_default["Stylesheets"][currentStyleSheet][ControlName]
                 if result == "" or result is None:
                     result = StyleMapping_default["Stylesheets"][""][ControlName]
             return result
-    except Exception as e:
-        print(e)
-        return None
+    except:  # noqa: E722
+        print(traceback.format_exc())
+        return ""
 
 
 def ReturnStyleSheet(
@@ -580,9 +579,9 @@ def ReturnIcons_ThemeEditor():
 StyleMapping = {
     "Stylesheets": {
         "Background_Color": "",
-        "Background_Color_Hover": Parameters.COLOR_BACKGROUND_HOVER,
+        "Background_Color_Hover": "",
         "Border_Color": "",
-        "ApplicationButton_Background": Parameters.COLOR_APPLICATION_BUTTON_BACKGROUND,
+        "ApplicationButton_Background": "",
         "FontColor": ReturnFontColor(),  
         "UpdateColor": ReturnUpdateColor(),
         "DevelopColor": ReturnDevelopColor(),
