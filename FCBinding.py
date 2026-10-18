@@ -3543,16 +3543,16 @@ class ModernMenu(RibbonBar):
                 workbenchName = self.tabBar().tabData(i)
                 
                 # Make sure to set the tab visible
-                if "workbenches" in self.ribbonStructure and workbenchName in self.ribbonStructure["workbenches"]:
-                    if "Enabled" in self.ribbonStructure["workbenches"][workbenchName]:  # noqa: SIM102
-                        if self.ribbonStructure["workbenches"][workbenchName]["Enabled"] is True:
-                            # Make sure to set the tab visible
-                            self.tabBar().setTabEnabled(i, True)
-                            self.tabBar().setTabVisible(i, True)  
-                        else:
-                            # Make sure to set the tab hidden
-                            self.tabBar().setTabEnabled(i, False)
-                            self.tabBar().setTabVisible(i, False)
+                if ("workbenches" in self.ribbonStructure and workbenchName in self.ribbonStructure["workbenches"]
+                    and "Enabled" in self.ribbonStructure["workbenches"][workbenchName]):
+                    if self.ribbonStructure["workbenches"][workbenchName]["Enabled"] is True:
+                        # Make sure to set the tab visible
+                        self.tabBar().setTabEnabled(i, True)
+                        self.tabBar().setTabVisible(i, True)  
+                    else:
+                        # Make sure to set the tab hidden
+                        self.tabBar().setTabEnabled(i, False)
+                        self.tabBar().setTabVisible(i, False)
                 # If enabled is not present, set the tab always visible
                 else:
                     # Make sure to set the tab visible
