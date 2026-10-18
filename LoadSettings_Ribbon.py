@@ -858,8 +858,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
                                               border-bottom-right-radius: 5px;""")
         
         # Restore the cursor
-        QApplication.restoreOverrideCursor()
-        
+        QApplication.restoreOverrideCursor()        
         return
 
     # region - Control functions----------------------------------------------------------------------

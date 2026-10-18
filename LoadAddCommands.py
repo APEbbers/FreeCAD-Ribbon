@@ -1054,6 +1054,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         WorkBenchTitle = self.CurrentWorkBenchTitle
         # Create item that defines the custom toolbar
         MenuName = ""
+        Commands = []
         for i in range(self.form.PanelSelected_CP.count()):
             ListWidgetItem = self.form.PanelSelected_CP.item(i)
             # if the translated menuname from the ListWidgetItem is equel to the MenuName from the command
@@ -1069,24 +1070,15 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             Parameters.FreeCAD_Version["gitVersion"],
                         ) is True:
                         MenuName = CommandItem[0]
+                        Commands.append(MenuName)
 
                     # Get the original toolbar
                     OriginalToolbar = ListWidgetItem.data(Qt.ItemDataRole.UserRole)[0]
 
                     # Create or modify the dict that will be entered
-                    StandardFunctions.add_keys_nested_dict(
-                        RibbonBar.workBenchDict,
-                        [
-                            "customToolbars",
-                            WorkBenchName,
-                            CustomPanelTitle + Suffix,
-                            "commands",
-                            MenuName,
-                        ],
-                    )
-
-                    # Update the dict
-                    RibbonBar.workBenchDict["customToolbars"][WorkBenchName][CustomPanelTitle + Suffix]["commands"][MenuName] = OriginalToolbar
+                    StandardFunctions.add_keys_nested_dict(RibbonBar.workBenchDict, ["customToolbars", WorkBenchName, CustomPanelTitle + Suffix, "commands", MenuName])
+                    # Update the custom toolbar dict
+                    RibbonBar.workBenchDict["customToolbars"][WorkBenchName][CustomPanelTitle + Suffix]["commands"][MenuName] = OriginalToolbar                    
 
         # Check if the custom panel is selected in the Json file
         IsInList = False
@@ -1097,36 +1089,45 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
         # If the custom panel is not in the json file, add it to the QComboBox
         if IsInList is False:
-            self.form.CustomToolbarSelector_CP.addItem(
-                f"{CustomPanelTitle}, {WorkBenchTitle}"
-            )
+            self.form.CustomToolbarSelector_CP.addItem(f"{CustomPanelTitle}, {WorkBenchTitle}")
 
             # Set the Custom panel as current text for the QComboBox
-            self.form.CustomToolbarSelector_CP.setCurrentText(
-                f"{CustomPanelTitle}, {WorkBenchTitle}"
-            )
+            self.form.CustomToolbarSelector_CP.setCurrentText(f"{CustomPanelTitle}, {WorkBenchTitle}")
 
-            # Add the order of panels to the Json file
-            StandardFunctions.add_keys_nested_dict(
-                RibbonBar.workBenchDict,
-                ["workbenches", WorkBenchName, "toolbars", "order"],
-            )
-            ToolbarOrder = RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"]["order"]
+        # Add the order of panels to the Json file
+        StandardFunctions.add_keys_nested_dict(RibbonBar.workBenchDict, ["workbenches", WorkBenchName, "toolbars", "order"])
+        ToolbarOrder: list = RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"]["order"]
+        if (CustomPanelTitle + Suffix) not in ToolbarOrder:
             ToolbarOrder.append(CustomPanelTitle + Suffix)
-            RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolbarOrder.append(CustomPanelTitle + Suffix)
+        RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolbarOrder
+        
+        for Command in Commands:
+            StandardFunctions.add_keys_nested_dict(RibbonBar.workBenchDict, ["workbenches", WorkBenchName, "toolbars", CustomPanelTitle + Suffix, "commands", Command, "size"], default="small")
+            StandardFunctions.add_keys_nested_dict(RibbonBar.workBenchDict, ["workbenches", WorkBenchName, "toolbars", CustomPanelTitle + Suffix, "commands", Command, "text"], endEmpty=True)
+            StandardFunctions.add_keys_nested_dict(RibbonBar.workBenchDict, ["workbenches", WorkBenchName, "toolbars", CustomPanelTitle + Suffix, "commands", Command, "icon"], endEmpty=True)
 
+
+        AddPanel = True
+        if (CustomPanelTitle + Suffix) in ToolbarOrder:
+            AddPanel = False
+        
         # Get the ribbon
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
         # Create the new panel in the ribbon
         newPanel = RibbonBar.CreatePanel(
             workbenchName=WorkBenchName,
             panelName=CustomPanelTitle + Suffix,
-            addPanel=True,
+            addPanel=AddPanel,
             Dict=RibbonBar.workBenchDict,
+            UpdateDict=True,
             ignoreColumnLimit=True,
             showEnableControl=True,
             ActivateButtons=True
             )
+        if AddPanel is False:
+            oldPanel = RibbonBar.currentCategory().panel(CustomPanelTitle + Suffix)
+            RibbonBar.currentCategory().replacePanel(oldPanel, newPanel)
+        
         # Add the newPanel to the list of CombinePanels
         RibbonBar.longPanels.append(newPanel)
         
@@ -1159,10 +1160,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.PanelSelected_CP.clear()
 
         # If the selected item is "new", clear the list widgets and exit
-        if (
-            self.form.CustomToolbarSelector_CP.currentData(Qt.ItemDataRole.UserRole)
-            == "new"
-        ):
+        if self.form.CustomToolbarSelector_CP.currentData(Qt.ItemDataRole.UserRole) == "new":
             self.form.PanelAvailable_CP.clear()
             self.form.PanelName_CP.clear()
             self.on_WorkbenchList_CP__activated()
@@ -1188,48 +1186,31 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             )  # Create a shadow list. To check if items are already existing.
             WorkBenchName = ""
             for WorkBench in self.Dict_CustomToolbars["customToolbars"]:
-                for CustomToolbar in self.Dict_CustomToolbars["customToolbars"][
-                    WorkBench
-                ]:
+                for CustomToolbar in self.Dict_CustomToolbars["customToolbars"][WorkBench]:
                     if CustomToolbar == CustomPanelTitle:
                         WorkBenchName = WorkBench
 
                         # Get the commands and their original toolbar
-                        for key, value in list(
-                            self.Dict_CustomToolbars["customToolbars"][WorkBenchName][
-                                CustomPanelTitle
-                            ]["commands"].items()
-                        ):
+                        for key, value in list(self.Dict_CustomToolbars["customToolbars"][WorkBenchName][CustomPanelTitle]["commands"].items()):
                             for CommandItem in self.List_Commands:
                                 # Check if the items is already there
                                 # if not, continue
                                 if not CommandItem[0] in ShadowList:
-                                    MenuName_Command = CommandItem[0]
-                                    if (
-                                        MenuName_Command == key
-                                        and CommandItem[3] == WorkBenchName
-                                    ):
-                                        MenuName = (
-                                            CommandItem[4]
-                                            .replace("&", "")
-                                            .replace("_custom", "")
-                                        )
+                                    CommandName = CommandItem[0]
+                                    if CommandName == key and CommandItem[3] == WorkBenchName:
+                                        MenuName = CommandItem[4].replace("&", "").replace("_custom", "")
 
                                         # Define a new ListWidgetItem.
                                         ListWidgetItem = QListWidgetItem()
                                         ListWidgetItem.setText(MenuName)
-                                        ListWidgetItem.setData(
-                                            Qt.ItemDataRole.UserRole, [value,CommandItem[0]]
-                                        )
+                                        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, [value, CommandName])
                                         Icon = QIcon()
-                                        Icon = self.ReturnCommandIcon(CommandName=CommandItem[0])
+                                        Icon = self.ReturnCommandIcon(CommandName=CommandName)
                                         if Icon is not None:
                                             ListWidgetItem.setIcon(Icon)
 
                                         if ListWidgetItem.text() != "":
-                                            self.form.PanelSelected_CP.addItem(
-                                                ListWidgetItem
-                                            )
+                                            self.form.PanelSelected_CP.addItem(ListWidgetItem)
 
                                         # Add the command to the shadow list
                                         ShadowList.append(CommandItem[0])
@@ -2688,24 +2669,14 @@ class EventInspector(QObject):
             RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
             if type(self.widget) is not QuickAccessToolButton and type(self.widget) is not RibbonPanel:
                 if panel is not None:
-                    # Set the wait cursor
-                    QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-                    QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
                     # Remove the button from the panel
                     RibbonBar.RemoveButtonFromPanel(panel, self.widget)
                     self.dragEntered = False
-                    # Restore the cursor
-                    QApplication.restoreOverrideCursor()
                     event.accept()
                     return True              
             if type(self.widget) is QuickAccessToolButton:
-                # Set the wait cursor
-                QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-                QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
                 # Remove the button from the panel
                 RibbonBar.RemoveButtonFromQuickAccess(self.widget, self.pos)
-                # Restore the cursor
-                QApplication.restoreOverrideCursor()
                 self.dragEntered = False
                 event.accept()
                 return True
