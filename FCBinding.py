@@ -4618,12 +4618,12 @@ class ModernMenu(RibbonBar):
             #     self.FoldRibbon(True)
 
         # Set the text color depending in tabstyle
-        # if Parameters.TABBAR_STYLE != 1:
-        #     self.tabBar().setStyleSheet(
-        #         "QTabBar::tab {color: "
-        #         + StyleMapping_Ribbon.ReturnStyleItem("FontColor")
-        #         + ";}"
-        #     )
+        if Parameters.TABBAR_STYLE != 1:
+            self.tabBar().setStyleSheet(
+                "QTabBar::tab {color: "
+                + StyleMapping_Ribbon.ReturnStyleItem("FontColor")
+                + ";}"
+            )
         if Parameters.TABBAR_STYLE == 1:
             self.tabBar().setStyleSheet(
                 "QTabBar::tab {background: "
@@ -6466,6 +6466,7 @@ class ModernMenu(RibbonBar):
 
     def List_AddCustomToolBarToWorkbench(self, workbenchName, CustomToolbar, Dict = None):
         ButtonList = []
+        Commands = {}
         
         if Dict is None:
             Dict = self.ribbonStructure["customToolbars"]
@@ -6476,76 +6477,66 @@ class ModernMenu(RibbonBar):
                 if CustomToolbar.lower() == toolbar.lower():
                     Commands = Dict[workbenchName][toolbar]["commands"]
 
-                    # Create a QToolButton from the key and add it to the button list
-                    allButtons: list = []
-                    for key, value in list(Commands.items()):
-                        # Get the buttons with two ways, to be sure that all buttons are present
-                        #
-                        # 1. Get the buttons from the mainWindow. This way you will get dropdown like "electro magnetic boundarys from the FEM wob"
-                        # Get the toolbar from the mainwindow
-                        try:
-                            TB = mw.findChildren(QToolBar, value)
-                            allButtons = TB[0].findChildren(QToolButton)
-                            # remove empty buttons
-                            for i in range(len(allButtons)):
-                                button: QToolButton = allButtons[i]
-                                if allButtons[i].text() == "":
-                                    allButtons.pop(i)
-                        except Exception:
-                            pass
-                        # Find the matching button and add it the the button list
-                        for i in range(len(allButtons)):
-                            button: QToolButton = allButtons[i]
-                            if button.defaultAction().data() == key:
-                                ButtonList.append(button)
+        # Create a QToolButton from the key and add it to the button list
+        allButtons: list = []
+        for key, value in list(Commands.items()):
+            # Get the buttons with two ways, to be sure that all buttons are present
+            #
+            # 1. Get the buttons from the mainWindow. This way you will get dropdown like "electro magnetic boundarys from the FEM wob"
+            # Get the toolbar from the mainwindow
+            try:
+                TB = mw.findChildren(QToolBar, value)
+                allButtons = TB[0].findChildren(QToolButton)
+                # remove empty buttons
+                for i in range(len(allButtons)):
+                    if allButtons[i].text() == "":
+                        allButtons.pop(i)
+            except Exception:
+                pass
+            # Find the matching button and add it the the button list
+            for i in range(len(allButtons)):
+                button: QToolButton = allButtons[i]
+                if button.defaultAction().data() == key:
+                    ButtonList.append(button)
 
-                        # 2. Get the command and create a button from it
-                        try:
-                            # Get the command
-                            Command = Gui.Command.get(key)
-                            CommandName = key
-                            if Command == None:
-                                for CommandItem in self.List_Commands:
-                                    if CommandItem[2] == CommandName:
-                                        Command = Gui.Command.get(CommandItem[0])
-                                        CommandName = (CommandItem[0])
-                                    if CommandItem[4] == CommandName:
-                                        Command = Gui.Command.get(CommandItem[0])
-                                        CommandName = (CommandItem[0])
-                            
-                            if Command is not None:
-                                Icon = Gui.getIcon(
-                                    CommandInfoCorrections(CommandName)[
-                                        "pixmap"
-                                    ]
-                                )
-                                action = Command.getAction()
-                                Button = QToolButton()                                
-                                Button.addActions(action)
-                                Button.setDefaultAction(action[0])
-                                Button.setIcon(Icon)
-                                Button.setText(CommandInfoCorrections(CommandName)[
-                                        "menuText"
-                                    ])
-                                # Store the commmandName as a property
-                                Button.setProperty("CommandName", CommandName)
-                                # Set the commandName as objectName as backup
-                                Button.setObjectName(CommandName)
-                                try:
-                                    if len(action) > 1:
-                                        Icon = action[0].icon()
-                                        menu = QMenu(self)
-                                        menu.addActions(action)
-                                        Button.setMenu(menu)
-                                except Exception:
-                                    pass
-                                # Add the button to the button list
-                                ButtonList.append(Button)
-                        except:  # noqa: E722
-                            e = traceback.format_exc()
-                            if Parameters.DEBUG_MODE is True:
-                                StandardFunctions.Print(f"RibbonUI:\n{e}", "Warning")
-                            continue
+            # 2. Get the command and create a button from it
+            try:
+                # Get the command
+                Command = Gui.Command.get(key)
+                CommandName = key
+                if Command is None:
+                    for CommandItem in self.List_Commands:
+                        if CommandItem[2] == CommandName:
+                            Command = Gui.Command.get(CommandItem[0])
+                            # CommandName = (CommandItem[0])
+                        if CommandItem[4] == CommandName:
+                            Command = Gui.Command.get(CommandItem[0])
+                            # CommandName = (CommandItem[0])
+                else:
+                    Icon = Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"])
+                    action = Command.getAction()
+                    Button = QToolButton()                                
+                    Button.addActions(action)
+                    Button.setDefaultAction(action[0])
+                    Button.setIcon(Icon)
+                    Button.setText(CommandInfoCorrections(CommandName)["menuText"])
+                    # Set the commandName as objectName as backup
+                    Button.setObjectName(CommandName)
+                    try:
+                        if len(action) > 1:
+                            Icon = action[0].icon()
+                            menu = QMenu(self)
+                            menu.addActions(action)
+                            Button.setMenu(menu)
+                    except Exception:
+                        pass
+                    # Add the button to the button list
+                    ButtonList.append(Button)
+            except:  # noqa: E722
+                e = traceback.format_exc()
+                if Parameters.DEBUG_MODE is True:
+                    StandardFunctions.Print(f"RibbonUI:\n{e}", "Warning")
+                continue
         return ButtonList
 
     def CreateButtonFromCommand(self, CommandName: str, ActivateWorkBench = True, Dict=ribbonStructure):
@@ -7804,7 +7795,7 @@ class ModernMenu(RibbonBar):
                             StandardFunctions.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "toolbars", panelName, "commands", CommandName, "size"], endEmpty=True)
                             Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["size"] = buttonSize
                             newOrderList.append(CommandName)
-
+  
                         # add the button text to the shadowList for checking if buttons are already there.
                         shadowList.append(CommandName)
 

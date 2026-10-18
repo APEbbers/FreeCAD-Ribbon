@@ -1086,9 +1086,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     )
 
                     # Update the dict
-                    RibbonBar.workBenchDict["customToolbars"][WorkBenchName][
-                        CustomPanelTitle + Suffix
-                    ]["commands"][MenuName] = OriginalToolbar
+                    RibbonBar.workBenchDict["customToolbars"][WorkBenchName][CustomPanelTitle + Suffix]["commands"][MenuName] = OriginalToolbar
 
         # Check if the custom panel is selected in the Json file
         IsInList = False
@@ -1113,17 +1111,12 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 RibbonBar.workBenchDict,
                 ["workbenches", WorkBenchName, "toolbars", "order"],
             )
-            ToolbarOrder = RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"][
-                "order"
-            ]
+            ToolbarOrder = RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"]["order"]
             ToolbarOrder.append(CustomPanelTitle + Suffix)
+            RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolbarOrder.append(CustomPanelTitle + Suffix)
 
         # Get the ribbon
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-        # Update the workBenchDict in the Ribbon
-        RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"].update(RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"])
-        # Make sure the dict is correct
-        RibbonBar.workBenchDict = RibbonBar.CleanRibbonStructure(RibbonBar.workBenchDict, WorkBenchName, False)
         # Create the new panel in the ribbon
         newPanel = RibbonBar.CreatePanel(
             workbenchName=WorkBenchName,
@@ -1153,9 +1146,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         # Write the state to the structure
                         StandardFunctions.add_keys_nested_dict(RibbonBar.workBenchDict, ["workbenches", WorkBenchName, "toolbars", objPanel.objectName(), "Enabled"])
                         RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"][objPanel.objectName()]["Enabled"] = False
-                        # Update the workBenchDict in the Ribbon
-                        RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"].update(RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"])
-        
+                                
         # Remove the panels also from the current category. Othewise the will showup on clicking Ok
         for panel in panelsToRemove:
             # RibbonBar.currentCategory().removeWidget(panel)
@@ -1231,7 +1222,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                             Qt.ItemDataRole.UserRole, [value,CommandItem[0]]
                                         )
                                         Icon = QIcon()
-                                        Icon = self.ReturnCommandIcon(CommandName=CommandItem[1])
+                                        Icon = self.ReturnCommandIcon(CommandName=CommandItem[0])
                                         if Icon is not None:
                                             ListWidgetItem.setIcon(Icon)
 
