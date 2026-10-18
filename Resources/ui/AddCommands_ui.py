@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsBMtxVc.ui'
+## Form generated from reading UI file 'AddCommandsgUjPjI.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.12.0
 ##
@@ -25,7 +25,7 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(847, 576)
+        Form.resize(847, 540)
         Form.setAcceptDrops(True)
         self.gridLayout_4 = QGridLayout(Form)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
@@ -476,13 +476,15 @@ class Ui_Form(object):
         self.gridLayout_17.addLayout(self.horizontalLayout, 1, 2, 1, 1)
 
         self.gridLayout_7 = QGridLayout()
-        self.gridLayout_7.setSpacing(0)
         self.gridLayout_7.setObjectName(u"gridLayout_7")
+        self.gridLayout_7.setHorizontalSpacing(0)
+        self.gridLayout_7.setVerticalSpacing(10)
         self.SetShortcut = QLineEdit(self.CreateMacroButtons)
         self.SetShortcut.setObjectName(u"SetShortcut")
         sizePolicy3.setHeightForWidth(self.SetShortcut.sizePolicy().hasHeightForWidth())
         self.SetShortcut.setSizePolicy(sizePolicy3)
-        self.SetShortcut.setMinimumSize(QSize(200, 0))
+        self.SetShortcut.setMinimumSize(QSize(200, 20))
+        self.SetShortcut.setMaximumSize(QSize(16777215, 30))
 
         self.gridLayout_7.addWidget(self.SetShortcut, 5, 1, 1, 1)
 
@@ -490,7 +492,8 @@ class Ui_Form(object):
         self.SetStatusText.setObjectName(u"SetStatusText")
         sizePolicy3.setHeightForWidth(self.SetStatusText.sizePolicy().hasHeightForWidth())
         self.SetStatusText.setSizePolicy(sizePolicy3)
-        self.SetStatusText.setMinimumSize(QSize(200, 0))
+        self.SetStatusText.setMinimumSize(QSize(200, 20))
+        self.SetStatusText.setMaximumSize(QSize(16777215, 30))
 
         self.gridLayout_7.addWidget(self.SetStatusText, 3, 1, 1, 1)
 
@@ -498,7 +501,8 @@ class Ui_Form(object):
         self.SetMenuText.setObjectName(u"SetMenuText")
         sizePolicy3.setHeightForWidth(self.SetMenuText.sizePolicy().hasHeightForWidth())
         self.SetMenuText.setSizePolicy(sizePolicy3)
-        self.SetMenuText.setMinimumSize(QSize(200, 0))
+        self.SetMenuText.setMinimumSize(QSize(200, 20))
+        self.SetMenuText.setMaximumSize(QSize(16777215, 30))
 
         self.gridLayout_7.addWidget(self.SetMenuText, 1, 1, 1, 1)
 
@@ -552,6 +556,8 @@ class Ui_Form(object):
         sizePolicy3.setHeightForWidth(self.SelectMacro.sizePolicy().hasHeightForWidth())
         self.SelectMacro.setSizePolicy(sizePolicy3)
         self.SelectMacro.setMinimumSize(QSize(200, 0))
+        self.SelectMacro.setMaximumSize(QSize(16777215, 30))
+        self.SelectMacro.setBaseSize(QSize(0, 0))
 
         self.gridLayout_7.addWidget(self.SelectMacro, 0, 1, 1, 1)
 
@@ -559,7 +565,8 @@ class Ui_Form(object):
         self.SetToolTip.setObjectName(u"SetToolTip")
         sizePolicy3.setHeightForWidth(self.SetToolTip.sizePolicy().hasHeightForWidth())
         self.SetToolTip.setSizePolicy(sizePolicy3)
-        self.SetToolTip.setMinimumSize(QSize(200, 0))
+        self.SetToolTip.setMinimumSize(QSize(200, 20))
+        self.SetToolTip.setMaximumSize(QSize(16777215, 30))
 
         self.gridLayout_7.addWidget(self.SetToolTip, 2, 1, 1, 1)
 
@@ -576,12 +583,14 @@ class Ui_Form(object):
         self.SetWhatIsThis.setObjectName(u"SetWhatIsThis")
         sizePolicy3.setHeightForWidth(self.SetWhatIsThis.sizePolicy().hasHeightForWidth())
         self.SetWhatIsThis.setSizePolicy(sizePolicy3)
-        self.SetWhatIsThis.setMinimumSize(QSize(200, 0))
+        self.SetWhatIsThis.setMinimumSize(QSize(200, 20))
+        self.SetWhatIsThis.setMaximumSize(QSize(16777215, 30))
 
         self.gridLayout_7.addWidget(self.SetWhatIsThis, 4, 1, 1, 1)
 
         self.SelectIcon = QToolButton(self.CreateMacroButtons)
         self.SelectIcon.setObjectName(u"SelectIcon")
+        self.SelectIcon.setMaximumSize(QSize(16777215, 30))
 
         self.gridLayout_7.addWidget(self.SelectIcon, 6, 1, 1, 1)
 
@@ -597,16 +606,20 @@ class Ui_Form(object):
 
         self.gridLayout_17.addLayout(self.gridLayout_7, 0, 2, 1, 1)
 
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_17.addItem(self.verticalSpacer_2, 0, 3, 1, 1)
+
+        self.verticalSpacer_3 = QSpacerItem(0, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_17.addItem(self.verticalSpacer_3, 2, 2, 1, 1)
+
         self.ListMacroButtons = QListView(self.CreateMacroButtons)
         self.ListMacroButtons.setObjectName(u"ListMacroButtons")
         sizePolicy5.setHeightForWidth(self.ListMacroButtons.sizePolicy().hasHeightForWidth())
         self.ListMacroButtons.setSizePolicy(sizePolicy5)
 
-        self.gridLayout_17.addWidget(self.ListMacroButtons, 0, 0, 2, 1)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_17.addItem(self.verticalSpacer_2, 0, 3, 1, 1)
+        self.gridLayout_17.addWidget(self.ListMacroButtons, 0, 0, 3, 1)
 
         self.tabWidget.addTab(self.CreateMacroButtons, "")
 
