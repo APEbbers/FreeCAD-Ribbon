@@ -1213,7 +1213,7 @@
         </spacer>
        </item>
        <item row="0" column="0" rowspan="3">
-        <widget class="QListView" name="ListMacroButtons">
+        <widget class="QListWidget" name="ListMacroButtons">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
