@@ -752,15 +752,12 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         self.form.EnableToolsPanel.clicked.connect(self.on_EnableToolsPanel_clicked)
         # Connect the overlay setting:
         self.form.OverlayState.currentIndexChanged.connect(self.on_OverlayState_currentIndexChanged)
-        self.form.EnableBackGroundColor.clicked.connect(
-            self.on_EnableBackGroundColor_clicked
-        )
 
         # endregion
 
         # region - Connect the controls for custom icons and colors
         self.form.HideMenuIcon.clicked.connect(self.on_HideMenuIcon_clicked)
-        
+        self.form.EnableBackGroundColor.clicked.connect(self.on_EnableBackGroundColor_clicked)
         self.form.Enable_Tab_Scroll_Icon.clicked.connect(self.on_Enable_Tab_Scroll_Icon_clicked)
         self.form.Enable_Ribbon_Scroll_Icon.clicked.connect(self.on_Enable_Ribbon_Scroll_Icon_clicked)
         self.form.Enable_MoreCommands_Icon.clicked.connect(self.on_Enable_MoreCommands_Icon_clicked)
@@ -1427,58 +1424,37 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         return
 
     def on_EnableBorderColor_clicked(self):
-        if self.form.EnableBorderColor.isChecked() is True:
-            self.ValuesToUpdate["EnableBorderColor"] = True
-        if self.form.EnableBorderColor.isChecked() is False:
-            self.ValuesToUpdate["EnableBorderColor"] = False
+        self.ValuesToUpdate["EnableBorderColor"] = self.form.EnableBorderColor.isChecked()
         self.settingChanged = True
         return
     
     def on_EnableBackGroundColor_clicked(self):
-        if self.form.EnableBackGroundColor.isChecked() is True:
-            self.ValuesToUpdate["EnableBackGroundColor"] = True
-        if self.form.EnableBackGroundColor.isChecked() is False:
-            self.ValuesToUpdate["EnableBackGroundColor"] = False
+        self.ValuesToUpdate["EnableBackGroundColor"] = self.form.EnableBackGroundColor.isChecked()
         self.settingChanged = True
         return
     
     def on_EnableBackGroundColor_Hover_clicked(self):
-        if self.form.EnableBackGroundColor.isChecked() is True:
-            self.ValuesToUpdate["EnableBackGroundColor_Hover"] = True
-        if self.form.EnableBackGroundColor.isChecked() is False:
-            self.ValuesToUpdate["EnableBackGroundColor_Hover"] = False
+        self.ValuesToUpdate["EnableBackGroundColor_Hover"] = self.form.EnableBackGroundColor_Hover.isChecked()
         self.settingChanged = True
         return
     
     def on_EnableBackGroundColor_App_clicked(self):
-        if self.form.EnableBackGroundColor_App.isChecked() is True:
-            self.ValuesToUpdate["EnableBackGroundColor_App"] = True
-        if self.form.EnableBackGroundColor_App.isChecked() is False:
-            self.ValuesToUpdate["EnableBackGroundColor_App"] = False
+        self.ValuesToUpdate["EnableBackGroundColor_App"] = self.form.EnableBackGroundColor_App.isChecked()
         self.settingChanged = True
         return
     
     def on_EnableBackGroundColor_Tab_clicked(self):
-        if self.form.EnableBackGroundColor_Tab.isChecked() is True:
-            self.ValuesToUpdate["EnableBackGroundColor_Tab"] = True
-        if self.form.EnableBackGroundColor_Tab.isChecked() is False:
-            self.ValuesToUpdate["EnableBackGroundColor_Tab"] = False
+        self.ValuesToUpdate["EnableBackGroundColor_Tab"] = self.form.EnableBackGroundColor_Tab.isChecked()
         self.settingChanged = True
         return
     
     def on_EnableBackGroundColor_TitleBar_clicked(self):
-        if self.form.EnableBackGroundColor_TitleBar.isChecked() is True:
-            self.ValuesToUpdate["EnableBackGroundColor_TitleBar"] = True
-        if self.form.EnableBackGroundColor_TitleBar.isChecked() is False:
-            self.ValuesToUpdate["EnableBackGroundColor_TitleBar"] = False
+        self.ValuesToUpdate["EnableBackGroundColor_TitleBar"] = self.form.EnableBackGroundColor_TitleBar.isChecked()
         self.settingChanged = True
         return
     
     def on_EnableTextColor_clicked(self):
-        if self.form.EnableTextColor.isChecked() is True:
-            self.ValuesToUpdate["EnableTextColor"] = True
-        if self.form.EnableTextColor.isChecked() is False:
-            self.ValuesToUpdate["EnableTextColor"] = False
+        self.ValuesToUpdate["EnableTextColor"] = self.form.EnableTextColor.isChecked()
         self.settingChanged = True
         return
 
@@ -1715,9 +1691,6 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # Parameters_Ribbon.Settings.SetBoolSetting(
         #     "UseFCOverlay", self.OriginalValues["UseFCOverlay"]
         # )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableBackGroundColor", self.OriginalValues["EnableBackGroundColor"]
-        )
         # Set the use of custom icons
         Parameters_Ribbon.Settings.SetBoolSetting(
             "HideMenuIcon", self.OriginalValues["HideMenuIcon"]
@@ -1930,9 +1903,6 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         # Parameters_Ribbon.Settings.SetBoolSetting(
         #     "UseFCOverlay", self.ValuesToUpdate["UseFCOverlay"]
         # )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableBackGroundColor", self.ValuesToUpdate["EnableBackGroundColor"]
-        )
         # Set the use of custom icons
         Parameters_Ribbon.Settings.SetBoolSetting(
             "HideMenuIcon", self.ValuesToUpdate["HideMenuIcon"]

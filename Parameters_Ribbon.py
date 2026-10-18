@@ -566,10 +566,6 @@ class Parameters:
         Settings.SetIntSetting("OverlayState", OVERLAYSTATE)
     OVERLAYSTATE = Settings.GetIntSetting("OverlayState")
 
-    # if Settings.GetBoolSetting("EnableBackGroundColor") is None:
-    #     BUTTON_BACKGROUND_ENABLED = bool(DefaultSettings["EnableBackGroundColor"])
-    #     Settings.SetBoolSetting("EnableBackGroundColor", BUTTON_BACKGROUND_ENABLED)
-    # BUTTON_BACKGROUND_ENABLED = Settings.GetBoolSetting("EnableBackGroundColor")
     # endregion ------------------------------------------------------------------------------------------------------------
 
     # region - Icon settings -------------------------------------------------------------------------------------
