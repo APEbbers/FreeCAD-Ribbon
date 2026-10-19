@@ -2230,7 +2230,6 @@ class ModernMenu(RibbonBar):
             for category in self.CustomizedCategories:
                 self.setCurrentCategory(category)
                 self.on_Cancel_Clicked()
-                print("got here")
             # self.on_Cancel_Clicked()
             self.CustomizedCategories.clear()
             return
@@ -6694,7 +6693,6 @@ class ModernMenu(RibbonBar):
                 menu = QMenu()
                 for action in QuickAction:
                     if len(action) > 0:
-                        print(f"{len(action)}, {CommandName}")
                         menu.addAction(action[0])
                 Button.setMenu(menu)
                 # # Set the default action
@@ -7630,7 +7628,6 @@ class ModernMenu(RibbonBar):
                         # Make sure that no strange "&" symbols are remainging
                         action.setText(action.text().replace("&", ""))
                         if buttonSize == "small":
-                            # print(f"{button.objectName()}, {button.menu()}")
                             showText = Parameters.SHOW_ICON_TEXT_SMALL
                             if (
                                 IconOnly is True
