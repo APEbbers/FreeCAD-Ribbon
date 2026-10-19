@@ -1498,7 +1498,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.CommandsAvailable_DDB,
             self.form.ListCategory_DDB,
             self.form.SearchBar_DDB,
-            True,
+            # True,
         )
         return
 
@@ -1507,7 +1507,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.CommandsAvailable_DDB,
             self.form.SearchBar_DDB,
             self.form.ListCategory_DDB,
-            True,
+            # True,
         )
         return
 
