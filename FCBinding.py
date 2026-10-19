@@ -4721,6 +4721,9 @@ class ModernMenu(RibbonBar):
         if self.CustomizeEnabled and self.SuspendBuildPanels is False:
             # If not activated, activate all buttons    
             self.activateButtons() 
+            
+        # hide normal toolbars
+        self.hideClassicToolbars()
 
         return
 
@@ -7169,45 +7172,60 @@ class ModernMenu(RibbonBar):
                 for command in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
                     if command is not None and command !="":
                         if command.endswith("_ddb"):
-                            for key, value in Dict["dropdownButtons"].items():
-                                if key == command:
-                                    currentCategory = Category
-                                    for CommandItem in self.List_Commands:
-                                        if CommandItem[0] == value[0] and ActivateWorkbench is True:
-                                            if (value[1] != "General" and value[1] != "Global" and value[1] != "Standard"):                                
-                                                # Activate the workbench if not loaded
-                                                if CommandItem[3] in self.isWbLoaded and self.isWbLoaded[CommandItem[3]] is False:    
-                                                    Gui.activateWorkbench(value[1])
-                                                    self.isWbLoaded[value[1]] = True
-                                                    break
-                                                if CommandItem[3] not in self.isWbLoaded:
-                                                    Gui.activateWorkbench(value[1])
-                                                    self.isWbLoaded[value[1]] = True
-                                                    break
-                                                
-                                    # Set the current  category after activating the workbench
-                                    self.setCurrentCategory(currentCategory)
-                                    if ActivateWorkbench is True:
-                                        Gui.activateWorkbench(currentCategory.objectName())
-
-                                    # Get the actions and add them one by one
-                                    QuickAction = self.returnCustomDropDown(key, dict=Dict)
+                            for DropdownCommand, Commands in Dict["dropdownButtons"].items():
+                                if DropdownCommand == command:
                                     button = QToolButton()
                                     menu = QMenu()
-                                    for action in QuickAction:                                        
-                                        if len(action) > 0:                                            
-                                            menu.addAction(action[0])
+                                    
+                                    currentCategory = Category
+                                    for CommandItem in self.List_Commands:
+                                        if CommandItem[0] == Commands[1][0] and ActivateWorkbench is True:
+                                            if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard"):                                
+                                                # Activate the workbench if not loaded
+                                                if CommandItem[3] in self.isWbLoaded and self.isWbLoaded[CommandItem[3]] is False:    
+                                                    Gui.activateWorkbench(CommandItem[3])
+                                                    self.isWbLoaded[Commands[1]] = True
+                                                if CommandItem[3] not in self.isWbLoaded:
+                                                    Gui.activateWorkbench(CommandItem[3])
+                                                    self.isWbLoaded[Commands[1]] = True
+                                                                                                    
+                                                # Set the current  category after activating the workbench
+                                                self.setCurrentCategory(currentCategory)
+                                                if ActivateWorkbench is True:
+                                                    Gui.activateWorkbench(currentCategory.objectName())
+
+                                            # Get the actions and add them one by one
+                                            for CommandItem in Commands:                                                
+                                                Command = Gui.Command.get(CommandItem[0])
+                                                # Get the command. If success, get the actions
+                                                if Command is not None:
+                                                    action = Command.getAction()  
+                                                    # if it just one command, just add it to the menu                                                                         
+                                                    if len(action) == 1:
+                                                        menu.addAction(action[0])     
+                                                    # If there are more commands, create a submenu 
+                                                    # ToDo: (make a seperate function for nested menus)                                   
+                                                    if len(action) > 1:  
+                                                        subMenu = QMenu()
+                                                        subMenu.addActions(action)                                           
+                                                        subMenu.setTitle(StandardFunctions.CommandInfoCorrections(CommandItem[0])["menuText"])
+                                                        subMenu.setIcon(self.ReturnCommandIcon(CommandItem[0]))
+                                                        menu.addMenu(subMenu)
+                                    # If the menu is not empty, add it to the button, set the button properties 
+                                    # and add the button to the button list
                                     if len(menu.actions()) > 0:                                            
                                         button.setMenu(menu)
                                         # # Set the default action
-                                        button.setDefaultAction(QuickAction[0][0])                                
+                                        button.setDefaultAction(menu.actions()[0])                                
                                         # # Store the commmandName as a property
                                         # button.setProperty("CommandName", command)
                                         # Set the commandName as objectName as backup
-                                        button.setObjectName(key)
-                                        button.setToolTip(key)
+                                        button.setObjectName(DropdownCommand)
+                                        button.setToolTip(DropdownCommand)
                                         # Add the button
                                         allButtons.append(button)
+                                        # For some reasen this is needed, otherwise the wrong button is shown
+                                        f"{button.objectName()}, {button.menu()}"
                        
         # Add custom panels
         if panelName.endswith("_custom"):
