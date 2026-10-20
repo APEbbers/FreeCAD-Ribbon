@@ -2406,7 +2406,7 @@ class ModernMenu(RibbonBar):
                 orderList = []
                 for n in range(gridLayout.count()):
                     control = gridLayout.itemAt(n).widget().findChild(CustomControls)
-                    if control is not None:                                    
+                    if control is not None and control.objectName() != "qt_toolbutton_menubutton" and control.objectName() != "qt_toolbar_ext_button":
                         # Update the orderlist
                         command = self.ReturnCommand_string(self.workBenchDict, objPanel, control)
                         if command != "" and command is not None:
@@ -2519,11 +2519,13 @@ class ModernMenu(RibbonBar):
         QApplication.restoreOverrideCursor()
         return
     
+    OkClicked = False
     def on_ApplyClicked(self):
         self.on_Ok_Clicked(CloseDialog=False)
         return
     
     def on_Ok_Clicked(self, workbenchName = "", CloseDialog = True):
+        self.OkClicked = True
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
@@ -2836,7 +2838,9 @@ class ModernMenu(RibbonBar):
         QApplication.restoreOverrideCursor()
         return
     
-    def on_Cancel_Clicked(self):        
+    def on_Cancel_Clicked(self):    
+        if self.OkClicked:
+            return 
         # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
@@ -7514,11 +7518,17 @@ class ModernMenu(RibbonBar):
                     continue
                 else:
                     try:
-                        CommandName = button.objectName()                    
-                        # CommandName = self.ReturnCommand_string(dict, panel, button)
-                        # CommandName = button.toolTip()
                         action = button.defaultAction()
+                        CommandName = button.objectName()     
+                        # Make sure that the CommandName is correct                   
+                        if CommandName == "qt_toolbutton_menubutton" or CommandName == "qt_toolbar_ext_button":
+                            try:
+                                CommandName = action.data()                                
+                            except:  # noqa: E722
+                                # if Parameters.DEBUG_MODE:
+                                StandardFunctions.Print(f"RibbonUI: {traceback.format_exc()}")
                         Icon = QIcon()
+                        
 
                         if CommandName == "":
                             continue
@@ -7808,6 +7818,7 @@ class ModernMenu(RibbonBar):
                             + ";}"
                         )
                         btn.setStyleSheet(StyleSheet_Addition_Button)
+                        btn.setObjectName(CommandName)
                         
                         if UpdateDict:
                             StandardFunctions.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "toolbars", panelName, "commands", CommandName, "size"], endEmpty=True)
@@ -8210,11 +8221,7 @@ class ModernMenu(RibbonBar):
             if command is not None and command != "":
                 return command
 
-        # if command is None or command == "":
         # Try to get the command button. This means that the widget is a custom toolbutton
-        # button = widget.findChild(QToolButton, "CommandButton")
-        # if the button is None and the widget is a QToolButton, us it instead
-        # if button is None and type(widget) is QToolButton:
         button = widget
         if button is not None and command != "":
             command = button.defaultAction().data()
