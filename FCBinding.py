@@ -25,7 +25,7 @@ from pathlib import Path
 import subprocess
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -56,7 +56,7 @@ from PySide.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -105,7 +105,7 @@ from PySide.QtWidgets import (
     QStyleOptionComplex,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1673,7 +1673,7 @@ class ModernMenu(RibbonBar):
                         ChangeButtonText.setClearButtonEnabled(False)
                         if widget.parent().ButtonStyle == RibbonButtonStyle.Large:
                             ChangeButtonText = PlainTextEditAction(self, translate("FreeCAD Ribbon", "Set button text"), Parameters.FONTSIZE_MENUS)
-                            ChangeButtonText.setFixedSize(200,42)
+                            ChangeButtonText.setFixedSize(Parameters.ICON_SIZE_LARGE,42)
                             ChangeButtonText.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
                         StyleSheet = (
                             """background: """
@@ -3469,6 +3469,9 @@ class ModernMenu(RibbonBar):
         
         # Set the text also in the label widget
         LabelWidget: QLabel = ButtonWidget.findChild(QLabel)
+        # Make sure that the label does not resizes during typing
+        LabelWidget.setFixedSize(LabelWidget.size())
+        # Set the text
         LabelWidget.setText(Text)        
         return
 
