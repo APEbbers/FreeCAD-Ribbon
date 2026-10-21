@@ -333,6 +333,8 @@ class CustomControls(RibbonToolButton):
 
             # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
             if setWordWrap is False:
+                if "\n" in Text:
+                    Text = Text.replace("\n", " ")
                 # Determine the maximum length per line
                 FontMetrics = QFontMetrics(Text)
                 maxWidth = 0
@@ -355,6 +357,13 @@ class CustomControls(RibbonToolButton):
 
             # If wordwrap is enabled, set the text and height accordingly
             if setWordWrap is True:
+                line1 = ""
+                line2 = ""
+                
+                AllreadyWrapped = False
+                if "\n" in Text:
+                    AllreadyWrapped = True
+                    
                 # Set the wrap mode
                 Label_Text.setWordWrap(True)
                 # Determine the maximum length per line
@@ -370,10 +379,13 @@ class CustomControls(RibbonToolButton):
                 # maxLength = maxLength + 3 
                 maxLength = maxLength
 
-                # Get the first text line
-                line1 = StandardFunctions.ReturnWrappedText(
-                    Text, maxLength, MaxNumberOfLines, True
-                )[0]
+                if AllreadyWrapped is False:
+                    # Get the first text line
+                    line1 = StandardFunctions.ReturnWrappedText(
+                        Text, maxLength, MaxNumberOfLines, True
+                    )[0]
+                else:
+                    line1 = Text.split("\n")[0]
                 # Set the alignment
                 Label_Text.setAlignment(TextAlignment)
                 # Add the line
@@ -382,9 +394,11 @@ class CustomControls(RibbonToolButton):
                 TextWidth = FontMetrics.tightBoundingRect(line1).width()
                 # Try to get the second line if there is one
                 try:
-                    line2 = StandardFunctions.ReturnWrappedText(
-                        Text, maxLength, MaxNumberOfLines, True
-                    )[1]
+                    if AllreadyWrapped is False:
+                        line2 = StandardFunctions.ReturnWrappedText(Text, maxLength, MaxNumberOfLines, True)[1]
+                    else:
+                        line2 = Text.split("\n", 1)[1]
+                        line2 = line2.replace("\n", " ")
                     # Set the alignment
                     Label_Text.setAlignment(TextAlignment)
                     # Add the line
@@ -2428,7 +2442,8 @@ class PlainTextEditAction(QWidgetAction):
         
     PlainTextEdit = QPlainTextEdit()
     PlainTextEdit.setFixedSize(300, 21)
-  
+    PlainTextEdit.setMaximumBlockCount(2)
+      
     textChanged =  PlainTextEdit.textChanged
     
     def __init__(self, parent, text, FontSize = 12):
