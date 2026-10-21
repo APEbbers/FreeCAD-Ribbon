@@ -1668,16 +1668,27 @@ class ModernMenu(RibbonBar):
                         self.contextMenu.addAction(RibbonButtonAction_Style)
                         
                         # Add a line edit for changing the text
-                        ChangeButtonText = PlainTextEditAction(self, translate("FreeCAD Ribbon", "Set button text"), Parameters.FONTSIZE_MENUS)
-                        ChangeButtonText.setObjectName("SetButtonText")
-                        ChangeButtonText.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+                        ChangeButtonText = LineEditAction(self, translate("FreeCAD Ribbon", "Set button text"), Parameters.FONTSIZE_MENUS)
+                        ChangeButtonText.setFixedSize(200,21)
+                        ChangeButtonText.setClearButtonEnabled(False)
+                        if widget.parent().ButtonStyle == RibbonButtonStyle.Large:
+                            ChangeButtonText = PlainTextEditAction(self, translate("FreeCAD Ribbon", "Set button text"), Parameters.FONTSIZE_MENUS)
+                            ChangeButtonText.setFixedSize(200,42)
+                            ChangeButtonText.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+                        StyleSheet = (
+                            """background: """
+                            + "white;"
+                            + "color: black"
+                            + """;"""
+                        )
+                        ChangeButtonText.setStyleSheet(StyleSheet)
+                        ChangeButtonText.setObjectName("SetButtonText")                        
                         ChangeButtonText.setText("")
                         text = ""
                         label = widget.parent().findChild(QLabel)
                         if label is not None:
                             text = label.text().replace("\n", " ")
-                        ChangeButtonText.setPlaceholderText(text)
-                        ChangeButtonText.setFixedSize(200,42)
+                        ChangeButtonText.setPlaceholderText(text)                        
                         ChangeButtonText.textChanged.connect(lambda: self.on_ButtonLabel_Changing(panel=panel, ButtonWidget=widget, widgetAction=ChangeButtonText))
                         self.contextMenu.addAction(ChangeButtonText)
                         
@@ -1705,6 +1716,13 @@ class ModernMenu(RibbonBar):
                 panel = titleWidget.parent().parent()
                 ChangePanelTitle = CustomWidgets.LineEditAction(self, translate("FreeCAD Ribbon", "Change panel title"))
                 ChangePanelTitle.setObjectName("SetPanelTitle")
+                StyleSheet = (
+                    """background: """
+                    + "white;"
+                    + "color: black"
+                    + """;"""
+                )
+                ChangePanelTitle.setStyleSheet(StyleSheet)
                 ChangePanelTitle.setText("")
                 ChangePanelTitle.setPlaceholderText(panel.title())
                 ChangePanelTitle.setClearButtonEnabled(True)
@@ -3427,7 +3445,7 @@ class ModernMenu(RibbonBar):
             # Close the context menu
             self.contextMenu.close()
 
-    def on_ButtonLabel_Changing(self, panel: RibbonPanel, ButtonWidget: CustomControls, widgetAction: CustomWidgets.PlainTextEditAction):
+    def on_ButtonLabel_Changing(self, panel: RibbonPanel, ButtonWidget: QToolButton, widgetAction):
         # widgetAction.setClearButtonEnabled(True)
         Text = widgetAction.text()
         # If the text is empty, restore the original name

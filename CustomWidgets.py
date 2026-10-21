@@ -25,7 +25,7 @@ import typing
 from typing import Optional, cast
 import sys
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
@@ -41,8 +41,9 @@ from PySide6.QtGui import (
     QEnterEvent,   
     QKeyEvent,
     QTextOption,
+    QPalette,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QComboBox,
     QMainWindow,
     QSizePolicy,
@@ -66,7 +67,7 @@ from PySide6.QtWidgets import (
     QPlainTextEdit,
     QAbstractScrollArea,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QSize,
     QMimeData,
@@ -2437,13 +2438,20 @@ class LineEditAction(QWidgetAction):
     
     def setObjectName(self, objectName = ""):
         self.lineEdit.setObjectName(objectName)
+        
+    def styleSheet(self):
+        return self.lineEdit.styleSheet()
+    
+    def setStyleSheet(self, styleSheet):
+        self.lineEdit.setStyleSheet(styleSheet)
+        return
 
 class PlainTextEditAction(QWidgetAction):
         
     PlainTextEdit = QPlainTextEdit()
     PlainTextEdit.setFixedSize(300, 21)
     PlainTextEdit.setMaximumBlockCount(2)
-      
+          
     textChanged =  PlainTextEdit.textChanged
     
     def __init__(self, parent, text, FontSize = 12):
@@ -2505,6 +2513,14 @@ class PlainTextEditAction(QWidgetAction):
     
     def setObjectName(self, objectName = ""):
         self.PlainTextEdit.setObjectName(objectName)   
+        return
+    
+    def styleSheet(self):
+        return self.PlainTextEdit.styleSheet()
+    
+    def setStyleSheet(self, styleSheet):
+        self.PlainTextEdit.setStyleSheet(styleSheet)
+        return
         
 class ButtonAction(QWidgetAction):
         
