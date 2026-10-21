@@ -2848,7 +2848,6 @@ class ModernMenu(RibbonBar):
                                 
         # Restore the cursor
         QApplication.restoreOverrideCursor()
-        QApplication.restoreOverrideCursor()
         return
     
     def on_Cancel_Clicked(self):    
@@ -2858,7 +2857,7 @@ class ModernMenu(RibbonBar):
             return 
         self.CancelClicked = True
         # # Set the wait cursor
-        # QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
 
         # Get the name of the current workbench
@@ -3101,7 +3100,7 @@ class ModernMenu(RibbonBar):
         StandardFunctions.Print(translate("FreeCAD Ribbon", f"RibbonUI: Changes are rolled back for {workbenchName}"))
         
         # # Restore the cursor
-        # QApplication.restoreOverrideCursor()
+        QApplication.restoreOverrideCursor()
         # QApplication.restoreOverrideCursor()
         return
         
@@ -3448,6 +3447,10 @@ class ModernMenu(RibbonBar):
     def on_ButtonLabel_Changing(self, panel: RibbonPanel, ButtonWidget: QToolButton, widgetAction):
         # widgetAction.setClearButtonEnabled(True)
         Text = widgetAction.text()
+        if len(Text.split("\n")) > 2:
+            Text_1 = Text.split(("\n"), 1)[0]
+            Text_2 = Text.split(("\n"), 1)[1].replace("\n", " ")
+            Text = Text_1 + "\n" + Text_2
         # If the text is empty, restore the original name
         if Text == "":
             CommandName = ""
@@ -3466,7 +3469,7 @@ class ModernMenu(RibbonBar):
         
         # Set the text also in the label widget
         LabelWidget: QLabel = ButtonWidget.findChild(QLabel)
-        LabelWidget.setText(Text)
+        LabelWidget.setText(Text)        
         return
 
     def on_PanelTitle_Changing(self, event, panel: RibbonPanel, widgetAction: CustomWidgets.LineEditAction):
