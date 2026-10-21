@@ -25,7 +25,7 @@ import typing
 from typing import Optional, cast
 import sys
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
@@ -40,8 +40,9 @@ from PySide.QtGui import (
     QPainter,
     QEnterEvent,   
     QKeyEvent,
+    QTextOption,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QComboBox,
     QMainWindow,
     QSizePolicy,
@@ -62,8 +63,10 @@ from PySide.QtWidgets import (
     QGraphicsEffect,
     QStyle,
     QApplication,
+    QPlainTextEdit,
+    QAbstractScrollArea,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QSize,
     QMimeData,
@@ -2042,7 +2045,7 @@ class ToggleAction(QWidgetAction):
     focusPolicy = Toggle.focusPolicy()
     
     def __init__(self, parent, text, TextPostion = "Right", FontSize = 12):
-        super(ToggleAction, self).__init__(parent)
+        super().__init__(parent)
         layout_H = QHBoxLayout()
         layout_V = QVBoxLayout()
         self.widget = QWidget()
@@ -2122,7 +2125,7 @@ class CheckBoxAction(QWidgetAction):
     checkStateChanged = checkbox.stateChanged
 
     def __init__(self, parent, text, TextPostion = "Right", FontSize = 12):
-        super(CheckBoxAction, self).__init__(parent)
+        super().__init__(parent)
         layout_H = QHBoxLayout()
         layout_V = QVBoxLayout()
         self.widget = QWidget()
@@ -2187,7 +2190,7 @@ class SpinBoxAction(QWidgetAction):
     valueChanged =  spinbox.valueChanged
     
     def __init__(self, parent, text, TextPostion = "Right", FontSize = 12):
-        super(SpinBoxAction, self).__init__(parent)
+        super().__init__(parent)
         layout_H = QHBoxLayout()
         layout_V = QVBoxLayout()
         self.widget = QWidget()
@@ -2257,7 +2260,7 @@ class ComboBoxAction(QWidgetAction):
     clicked = confirmButton.clicked
     
     def __init__(self, parent, text, TextPostion = "Right", FontSize = 12, EnableConfirmButton = False, ButtonText = "Add"):
-        super(ComboBoxAction, self).__init__(parent)
+        super().__init__(parent)
         
         self.combobox.setFixedHeight(20)
         
@@ -2374,7 +2377,7 @@ class LineEditAction(QWidgetAction):
     returnPressed = lineEdit.returnPressed
     
     def __init__(self, parent, text, FontSize = 12):
-        super(LineEditAction, self).__init__(parent)
+        super().__init__(parent)
         layout = QVBoxLayout()
         self.widget = QWidget()
         self.label = QLabel(text)
@@ -2420,6 +2423,73 @@ class LineEditAction(QWidgetAction):
     
     def setObjectName(self, objectName = ""):
         self.lineEdit.setObjectName(objectName)
+
+class PlainTextEditAction(QWidgetAction):
+        
+    PlainTextEdit = QPlainTextEdit()
+    PlainTextEdit.setFixedSize(300, 21)
+  
+    textChanged =  PlainTextEdit.textChanged
+    
+    def __init__(self, parent, text, FontSize = 12):
+        super().__init__(parent)
+        layout = QVBoxLayout()
+        self.widget = QWidget()
+        self.label = QLabel(text)
+        self.label.setWordWrap(True)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        Font = QFont()
+        Font.setPixelSize(FontSize)
+        self.label.setFont(Font)
+        
+        layout.addWidget(self.label)        
+        layout.addWidget(self.PlainTextEdit)
+        self.widget.setLayout(layout)
+
+        self.setDefaultWidget(self.widget)
+        return
+    
+    def setLineWrapMode(self, mode: QPlainTextEdit.LineWrapMode):
+        self.PlainTextEdit.setWordWrapMode(mode)
+        return
+    
+    def setWordWrapMode(self, policy: QTextOption.WrapMode):
+        self.PlainTextEdit.setWordWrapMode(policy)
+        return
+    
+    def setVerticalScrollBarPolicy(self, arg_1: Qt.ScrollBarPolicy):
+        self.PlainTextEdit.setVerticalScrollBarPolicy(arg_1)
+        return
+    
+    def setHorizontalScrollBarPolicy(self, arg_1: Qt.ScrollBarPolicy):
+        self.PlainTextEdit.setHorizontalScrollBarPolicy(arg_1)
+        return
+    
+    def text(self):
+        return self.PlainTextEdit.toPlainText()
+
+    def setText(self, val):
+        self.PlainTextEdit.setPlainText(val)
+        return
+    
+    def setPlaceholderText(self, val):
+        self.PlainTextEdit.setPlaceholderText(val)
+        return
+    
+    def setFixedWidth(self, w):
+        self.PlainTextEdit.setFixedWidth(w)
+        self.label.setFixedWidth(w)
+        return
+    
+    def setFixedHeight(self, h):
+        self.PlainTextEdit.setFixedHeight(h)
+        return
+    
+    def setFixedSize(self, w, h):
+        self.PlainTextEdit.setFixedSize(w,h)
+    
+    def setObjectName(self, objectName = ""):
+        self.PlainTextEdit.setObjectName(objectName)   
         
 class ButtonAction(QWidgetAction):
         
@@ -2429,7 +2499,7 @@ class ButtonAction(QWidgetAction):
     triggerd = ToolButton.triggered   
     
     def __init__(self, parent, text, FontSize = 12, TextAlignment = Qt.AlignmentFlag.AlignLeft):
-        super(ButtonAction, self).__init__(parent)
+        super().__init__(parent)
         layout = QHBoxLayout()
         self.label = QLabel()
         # Determine the number of lines in the text and set the text accordingly        
