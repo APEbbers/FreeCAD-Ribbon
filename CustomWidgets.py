@@ -40,6 +40,8 @@ from PySide.QtGui import (
     QPainter,
     QEnterEvent,   
     QKeyEvent,
+    QTextOption,
+    QPalette,
 )
 from PySide.QtWidgets import (
     QComboBox,
@@ -62,6 +64,8 @@ from PySide.QtWidgets import (
     QGraphicsEffect,
     QStyle,
     QApplication,
+    QPlainTextEdit,
+    QAbstractScrollArea,
 )
 from PySide.QtCore import (
     Qt,
@@ -330,6 +334,8 @@ class CustomControls(RibbonToolButton):
 
             # If there is no WordWrap, set the ElideMode and the max number of lines to 1.
             if setWordWrap is False:
+                if "\n" in Text:
+                    Text = Text.replace("\n", " ")
                 # Determine the maximum length per line
                 FontMetrics = QFontMetrics(Text)
                 maxWidth = 0
@@ -352,6 +358,13 @@ class CustomControls(RibbonToolButton):
 
             # If wordwrap is enabled, set the text and height accordingly
             if setWordWrap is True:
+                line1 = ""
+                line2 = ""
+                
+                AllreadyWrapped = False
+                if "\n" in Text:
+                    AllreadyWrapped = True
+                    
                 # Set the wrap mode
                 Label_Text.setWordWrap(True)
                 # Determine the maximum length per line
@@ -367,10 +380,13 @@ class CustomControls(RibbonToolButton):
                 # maxLength = maxLength + 3 
                 maxLength = maxLength
 
-                # Get the first text line
-                line1 = StandardFunctions.ReturnWrappedText(
-                    Text, maxLength, MaxNumberOfLines, True
-                )[0]
+                if AllreadyWrapped is False:
+                    # Get the first text line
+                    line1 = StandardFunctions.ReturnWrappedText(
+                        Text, maxLength, MaxNumberOfLines, True
+                    )[0]
+                else:
+                    line1 = Text.split("\n")[0]
                 # Set the alignment
                 Label_Text.setAlignment(TextAlignment)
                 # Add the line
@@ -379,9 +395,11 @@ class CustomControls(RibbonToolButton):
                 TextWidth = FontMetrics.tightBoundingRect(line1).width()
                 # Try to get the second line if there is one
                 try:
-                    line2 = StandardFunctions.ReturnWrappedText(
-                        Text, maxLength, MaxNumberOfLines, True
-                    )[1]
+                    if AllreadyWrapped is False:
+                        line2 = StandardFunctions.ReturnWrappedText(Text, maxLength, MaxNumberOfLines, True)[1]
+                    else:
+                        line2 = Text.split("\n", 1)[1]
+                        line2 = line2.replace("\n", " ")
                     # Set the alignment
                     Label_Text.setAlignment(TextAlignment)
                     # Add the line
@@ -2042,7 +2060,7 @@ class ToggleAction(QWidgetAction):
     focusPolicy = Toggle.focusPolicy()
     
     def __init__(self, parent, text, TextPostion = "Right", FontSize = 12):
-        super(ToggleAction, self).__init__(parent)
+        super().__init__(parent)
         layout_H = QHBoxLayout()
         layout_V = QVBoxLayout()
         self.widget = QWidget()
@@ -2122,7 +2140,7 @@ class CheckBoxAction(QWidgetAction):
     checkStateChanged = checkbox.stateChanged
 
     def __init__(self, parent, text, TextPostion = "Right", FontSize = 12):
-        super(CheckBoxAction, self).__init__(parent)
+        super().__init__(parent)
         layout_H = QHBoxLayout()
         layout_V = QVBoxLayout()
         self.widget = QWidget()
@@ -2187,7 +2205,7 @@ class SpinBoxAction(QWidgetAction):
     valueChanged =  spinbox.valueChanged
     
     def __init__(self, parent, text, TextPostion = "Right", FontSize = 12):
-        super(SpinBoxAction, self).__init__(parent)
+        super().__init__(parent)
         layout_H = QHBoxLayout()
         layout_V = QVBoxLayout()
         self.widget = QWidget()
@@ -2257,7 +2275,7 @@ class ComboBoxAction(QWidgetAction):
     clicked = confirmButton.clicked
     
     def __init__(self, parent, text, TextPostion = "Right", FontSize = 12, EnableConfirmButton = False, ButtonText = "Add"):
-        super(ComboBoxAction, self).__init__(parent)
+        super().__init__(parent)
         
         self.combobox.setFixedHeight(20)
         
@@ -2374,7 +2392,7 @@ class LineEditAction(QWidgetAction):
     returnPressed = lineEdit.returnPressed
     
     def __init__(self, parent, text, FontSize = 12):
-        super(LineEditAction, self).__init__(parent)
+        super().__init__(parent)
         layout = QVBoxLayout()
         self.widget = QWidget()
         self.label = QLabel(text)
@@ -2421,6 +2439,89 @@ class LineEditAction(QWidgetAction):
     def setObjectName(self, objectName = ""):
         self.lineEdit.setObjectName(objectName)
         
+    def styleSheet(self):
+        return self.lineEdit.styleSheet()
+    
+    def setStyleSheet(self, styleSheet):
+        self.lineEdit.setStyleSheet(styleSheet)
+        return
+
+class PlainTextEditAction(QWidgetAction):
+        
+    PlainTextEdit = QPlainTextEdit()
+    PlainTextEdit.setFixedSize(300, 21)
+    PlainTextEdit.setMaximumBlockCount(2)
+          
+    textChanged =  PlainTextEdit.textChanged
+    
+    def __init__(self, parent, text, FontSize = 12):
+        super().__init__(parent)
+        layout = QVBoxLayout()
+        self.widget = QWidget()
+        self.label = QLabel(text)
+        self.label.setWordWrap(True)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        Font = QFont()
+        Font.setPixelSize(FontSize)
+        self.label.setFont(Font)
+        
+        layout.addWidget(self.label)        
+        layout.addWidget(self.PlainTextEdit)
+        self.widget.setLayout(layout)
+
+        self.setDefaultWidget(self.widget)
+        return
+    
+    def setLineWrapMode(self, mode: QPlainTextEdit.LineWrapMode):
+        self.PlainTextEdit.setWordWrapMode(mode)
+        return
+    
+    def setWordWrapMode(self, policy: QTextOption.WrapMode):
+        self.PlainTextEdit.setWordWrapMode(policy)
+        return
+    
+    def setVerticalScrollBarPolicy(self, arg_1: Qt.ScrollBarPolicy):
+        self.PlainTextEdit.setVerticalScrollBarPolicy(arg_1)
+        return
+    
+    def setHorizontalScrollBarPolicy(self, arg_1: Qt.ScrollBarPolicy):
+        self.PlainTextEdit.setHorizontalScrollBarPolicy(arg_1)
+        return
+    
+    def text(self):
+        return self.PlainTextEdit.toPlainText()
+
+    def setText(self, val):
+        self.PlainTextEdit.setPlainText(val)
+        return
+    
+    def setPlaceholderText(self, val):
+        self.PlainTextEdit.setPlaceholderText(val)
+        return
+    
+    def setFixedWidth(self, w):
+        self.PlainTextEdit.setFixedWidth(w)
+        self.label.setFixedWidth(w)
+        return
+    
+    def setFixedHeight(self, h):
+        self.PlainTextEdit.setFixedHeight(h)
+        return
+    
+    def setFixedSize(self, w, h):
+        self.PlainTextEdit.setFixedSize(w,h)
+    
+    def setObjectName(self, objectName = ""):
+        self.PlainTextEdit.setObjectName(objectName)   
+        return
+    
+    def styleSheet(self):
+        return self.PlainTextEdit.styleSheet()
+    
+    def setStyleSheet(self, styleSheet):
+        self.PlainTextEdit.setStyleSheet(styleSheet)
+        return
+        
 class ButtonAction(QWidgetAction):
         
     ToolButton = QToolButton()
@@ -2429,7 +2530,7 @@ class ButtonAction(QWidgetAction):
     triggerd = ToolButton.triggered   
     
     def __init__(self, parent, text, FontSize = 12, TextAlignment = Qt.AlignmentFlag.AlignLeft):
-        super(ButtonAction, self).__init__(parent)
+        super().__init__(parent)
         layout = QHBoxLayout()
         self.label = QLabel()
         # Determine the number of lines in the text and set the text accordingly        

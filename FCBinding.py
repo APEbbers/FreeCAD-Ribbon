@@ -141,6 +141,7 @@ from CustomWidgets import (
     LineEditAction,
     ButtonAction,
     StayOpenMenu,
+    PlainTextEditAction,
 )
 import json
 import os
@@ -1608,11 +1609,8 @@ class ModernMenu(RibbonBar):
                 return
             
             # Check if the panel is not none and of type RibbonPanel. If so, continue
-            if panel is not None and type(panel) is RibbonPanel:
-                if (
-                    (type(widget) is QToolButton or type(widget) is RibbonPanelItemWidget)
-                    and self.CustomizeEnabled is True and titleWidget is None
-                ):
+            if panel is not None and type(panel) is RibbonPanel:  # noqa: SIM102
+                if ((type(widget) is QToolButton or type(widget) is RibbonPanelItemWidget) and self.CustomizeEnabled is True and titleWidget is None):  # noqa: SIM102
                     if separator is None:
                         # Define the context menu for buttons
                         self.contextMenu.setContentsMargins(0,0,0,0)
@@ -1623,10 +1621,7 @@ class ModernMenu(RibbonBar):
                         try:
                             CommandName = ""
                             for child in widget.children():
-                                if (
-                                    type(child) is QToolButton
-                                    and child.objectName() == "CommandButton"
-                                ):
+                                if (type(child) is QToolButton and child.objectName() == "CommandButton"):
                                     CommandName = child.objectName()
                             textVisible = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][CommandName]["textEnabled"]
                         except:  # noqa: E722
@@ -1674,17 +1669,27 @@ class ModernMenu(RibbonBar):
                         
                         # Add a line edit for changing the text
                         ChangeButtonText = LineEditAction(self, translate("FreeCAD Ribbon", "Set button text"), Parameters.FONTSIZE_MENUS)
-                        ChangeButtonText.setObjectName("SetButtonText")
+                        ChangeButtonText.setFixedSize(200,21)
+                        ChangeButtonText.setClearButtonEnabled(False)
+                        if widget.parent().ButtonStyle == RibbonButtonStyle.Large:
+                            ChangeButtonText = PlainTextEditAction(self, translate("FreeCAD Ribbon", "Set button text"), Parameters.FONTSIZE_MENUS)
+                            ChangeButtonText.setFixedSize(200,42)
+                            ChangeButtonText.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+                        StyleSheet = (
+                            """background: """
+                            + "white;"
+                            + "color: black"
+                            + """;"""
+                        )
+                        ChangeButtonText.setStyleSheet(StyleSheet)
+                        ChangeButtonText.setObjectName("SetButtonText")                        
                         ChangeButtonText.setText("")
                         text = ""
                         label = widget.parent().findChild(QLabel)
                         if label is not None:
                             text = label.text().replace("\n", " ")
-                        ChangeButtonText.setPlaceholderText(text)
-                        ChangeButtonText.setFixedSize(200,21)
-                        ChangeButtonText.setClearButtonEnabled(True)
-                        ChangeButtonText.textChanged.connect(lambda e: self.on_ButtonLabel_Changing(e, panel, widget, ChangeButtonText))
-                        ChangeButtonText.editingFinished.connect(lambda: self.contextMenu.close())
+                        ChangeButtonText.setPlaceholderText(text)                        
+                        ChangeButtonText.textChanged.connect(lambda: self.on_ButtonLabel_Changing(panel=panel, ButtonWidget=widget, widgetAction=ChangeButtonText))
                         self.contextMenu.addAction(ChangeButtonText)
                         
                         # Create the buttons for adding a separator
@@ -1702,7 +1707,7 @@ class ModernMenu(RibbonBar):
                         AddSeparator_Left.triggered.disconnect()                                
                         AddSeparator_Right.triggered.disconnect()
                         ChangeButtonText.textChanged.disconnect()                            
-                        ChangeButtonText.editingFinished.disconnect()
+                        # ChangeButtonText.editingFinished.disconnect()
                        
                         return
 
@@ -1711,6 +1716,13 @@ class ModernMenu(RibbonBar):
                 panel = titleWidget.parent().parent()
                 ChangePanelTitle = CustomWidgets.LineEditAction(self, translate("FreeCAD Ribbon", "Change panel title"))
                 ChangePanelTitle.setObjectName("SetPanelTitle")
+                StyleSheet = (
+                    """background: """
+                    + "white;"
+                    + "color: black"
+                    + """;"""
+                )
+                ChangePanelTitle.setStyleSheet(StyleSheet)
                 ChangePanelTitle.setText("")
                 ChangePanelTitle.setPlaceholderText(panel.title())
                 ChangePanelTitle.setClearButtonEnabled(True)
@@ -1896,8 +1908,8 @@ class ModernMenu(RibbonBar):
         return
     
     def handleLayoutMenuAction(self, LayoutName = "Default"):
-        # Set the wait cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        # # Set the wait cursor
+        # QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         # Define a dict to temporaly store the new layout
         WorkbenchDict = {}
         GeneralDict = {}
@@ -2089,9 +2101,9 @@ class ModernMenu(RibbonBar):
         # Make sure that there that the structure is correct
         self.CleanRibbonStructure(skipIdCheck=True)
         
-        # Restore the cursor
-        QApplication.restoreOverrideCursor()
-        QApplication.restoreOverrideCursor()
+        # # Restore the cursor
+        # QApplication.restoreOverrideCursor()
+        # QApplication.restoreOverrideCursor()
         
         # get the path for the Json file
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
@@ -2166,8 +2178,8 @@ class ModernMenu(RibbonBar):
         return
     
     def handleContextMenuAction(self, action):        
-        # Set the wait cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        # # Set the wait cursor
+        # QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         
         # Perfom the action depending on which button is clicked
         if action == "Start":
@@ -2234,14 +2246,14 @@ class ModernMenu(RibbonBar):
             self.CustomizedCategories.clear()
             return
         
-        # Restore the cursor
-        QApplication.restoreOverrideCursor()
-        QApplication.restoreOverrideCursor()
+        # # Restore the cursor
+        # QApplication.restoreOverrideCursor()
+        # QApplication.restoreOverrideCursor()
         return
     
     def on_Customize_Clicked(self):
-        # Set the wait cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        # # Set the wait cursor
+        # QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         
         # Get the name of the current workbench
         workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
@@ -2514,12 +2526,13 @@ class ModernMenu(RibbonBar):
                         self.tabBar().setTabEnabled(i, True)     
                         self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))             
                 
-        # Restore the cursor
-        QApplication.restoreOverrideCursor()
-        QApplication.restoreOverrideCursor()
+        # # Restore the cursor
+        # QApplication.restoreOverrideCursor()
+        # QApplication.restoreOverrideCursor()
         return
     
     OkClicked = False
+    CancelClicked = False
     def on_ApplyClicked(self):
         self.on_Ok_Clicked(CloseDialog=False)
         return
@@ -2835,13 +2848,15 @@ class ModernMenu(RibbonBar):
                                 
         # Restore the cursor
         QApplication.restoreOverrideCursor()
-        QApplication.restoreOverrideCursor()
         return
     
     def on_Cancel_Clicked(self):    
         if self.OkClicked:
             return 
-        # Set the wait cursor
+        if self.CancelClicked:
+            return 
+        self.CancelClicked = True
+        # # Set the wait cursor
         QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
 
@@ -3084,9 +3099,9 @@ class ModernMenu(RibbonBar):
         # Print a message
         StandardFunctions.Print(translate("FreeCAD Ribbon", f"RibbonUI: Changes are rolled back for {workbenchName}"))
         
-        # Restore the cursor
+        # # Restore the cursor
         QApplication.restoreOverrideCursor()
-        QApplication.restoreOverrideCursor()
+        # QApplication.restoreOverrideCursor()
         return
         
     def on_ButtonStyle_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, ButtonStyleWidget: ComboBoxAction):     
@@ -3429,9 +3444,13 @@ class ModernMenu(RibbonBar):
             # Close the context menu
             self.contextMenu.close()
 
-    def on_ButtonLabel_Changing(self, event, panel: RibbonPanel, ButtonWidget: CustomControls, widgetAction: CustomWidgets.LineEditAction):
-        widgetAction.setClearButtonEnabled(True)
-        Text = event
+    def on_ButtonLabel_Changing(self, panel: RibbonPanel, ButtonWidget: QToolButton, widgetAction):
+        # widgetAction.setClearButtonEnabled(True)
+        Text = widgetAction.text()
+        if len(Text.split("\n")) > 2:
+            Text_1 = Text.split(("\n"), 1)[0]
+            Text_2 = Text.split(("\n"), 1)[1].replace("\n", " ")
+            Text = Text_1 + "\n" + Text_2
         # If the text is empty, restore the original name
         if Text == "":
             CommandName = ""
@@ -3450,7 +3469,7 @@ class ModernMenu(RibbonBar):
         
         # Set the text also in the label widget
         LabelWidget: QLabel = ButtonWidget.findChild(QLabel)
-        LabelWidget.setText(Text)
+        LabelWidget.setText(Text)        
         return
 
     def on_PanelTitle_Changing(self, event, panel: RibbonPanel, widgetAction: CustomWidgets.LineEditAction):
@@ -5018,6 +5037,7 @@ class ModernMenu(RibbonBar):
         Font = QFont()
         Font.setPixelSize(self.RightToolBarButtonSize *0.5)
         self.ComboBox.setFont(Font)
+        self.ComboBox.setFixedHeight(self.RightToolBarButtonSize-6)
         self.ComboBox.currentTextChanged.connect(lambda: self.on_Group_Changed(self.ComboBox.currentText( )))
         if "tabGroups" in self.ribbonStructure:
             for group in self.ribbonStructure["tabGroups"].keys():
@@ -5270,7 +5290,7 @@ class ModernMenu(RibbonBar):
                 sea.enterEvent = lambda e: SearchBar_EnterEvent(e)
                 
                 # Set the size
-                sea.setFixedSize(width, self.RightToolBarButtonSize)
+                sea.setFixedSize(width, self.RightToolBarButtonSize-6)
                 
                 # Add it to the right toolbar
                 BeforeAction = self.rightToolBar().actions()[1]
@@ -7763,7 +7783,7 @@ class ModernMenu(RibbonBar):
 
                             # Create a custom toolbutton
                             ButtonSize = QSize(
-                                Parameters.ICON_SIZE_LARGE,
+                                Parameters.ICON_SIZE_LARGE - 3,
                                 Parameters.ICON_SIZE_LARGE,
                             )
                             IconSize = QSize(
