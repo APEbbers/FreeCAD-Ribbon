@@ -25,7 +25,7 @@ import typing
 from typing import Optional, cast
 import sys
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
@@ -43,7 +43,7 @@ from PySide6.QtGui import (
     QTextOption,
     QPalette,
 )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QComboBox,
     QMainWindow,
     QSizePolicy,
@@ -67,7 +67,7 @@ from PySide6.QtWidgets import (
     QPlainTextEdit,
     QAbstractScrollArea,
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QSize,
     QMimeData,
