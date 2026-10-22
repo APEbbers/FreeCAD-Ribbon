@@ -1671,14 +1671,17 @@ class ModernMenu(RibbonBar):
                         ChangeButtonText = LineEditAction(self, translate("FreeCAD Ribbon", "Set button text"), Parameters.FONTSIZE_MENUS)
                         ChangeButtonText.setFixedSize(200,21)
                         ChangeButtonText.setClearButtonEnabled(False)
+                        
                         if widget.parent().ButtonStyle != RibbonButtonStyle.Small:
                             ChangeButtonText = PlainTextEditAction(self, translate("FreeCAD Ribbon", "Set button text"), Parameters.FONTSIZE_MENUS)
-                            ChangeButtonText.setFixedSize(Parameters.ICON_SIZE_LARGE,42)
+                            width = (Parameters.FONTSIZE_BUTTONS/widget.font().pointSize())*widget.width() + 10
+                            ChangeButtonText.setFixedSize(width,42)
                             ChangeButtonText.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
                         StyleSheet = (
                             """background: """
                             + "white;"
-                            + "color: black"
+                            + "color: black;"
+                            # + f"font-size: {Parameters.FONTSIZE_BUTTONS}px"
                             + """;"""
                         )
                         ChangeButtonText.setStyleSheet(StyleSheet)
