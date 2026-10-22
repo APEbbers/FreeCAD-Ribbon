@@ -967,8 +967,11 @@ def ReturnWrappedText(text: str, max_length: int = 50, max_Lines=0, returnList=F
                     wrapped_text.pop(i)
                 except Exception:
                     continue
-                wrapped_text[1]= wrapped_text[1][:3] + "..."
-
+                if len(wrapped_text[1]) >= max_length:
+                    wrapped_text[1]= wrapped_text[1][:-3] + "..."
+                else:
+                    wrapped_text[1]= wrapped_text[1] + "..."
+                
     # return the desired result
     if returnList is False:
         result = "\n".join(wrapped_text)

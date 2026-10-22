@@ -25,7 +25,7 @@ from pathlib import Path
 import subprocess
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -56,7 +56,7 @@ from PySide.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -105,7 +105,7 @@ from PySide.QtWidgets import (
     QStyleOptionComplex,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1671,7 +1671,7 @@ class ModernMenu(RibbonBar):
                         ChangeButtonText = LineEditAction(self, translate("FreeCAD Ribbon", "Set button text"), Parameters.FONTSIZE_MENUS)
                         ChangeButtonText.setFixedSize(200,21)
                         ChangeButtonText.setClearButtonEnabled(False)
-                        if widget.parent().ButtonStyle == RibbonButtonStyle.Large:
+                        if widget.parent().ButtonStyle != RibbonButtonStyle.Small:
                             ChangeButtonText = PlainTextEditAction(self, translate("FreeCAD Ribbon", "Set button text"), Parameters.FONTSIZE_MENUS)
                             ChangeButtonText.setFixedSize(Parameters.ICON_SIZE_LARGE,42)
                             ChangeButtonText.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
@@ -7752,6 +7752,7 @@ class ModernMenu(RibbonBar):
                                 ButtonSize=ButtonSize,
                                 FontSize=Parameters.FONTSIZE_BUTTONS,
                                 showText=showText,
+                                TextPositionAlignment=Qt.AlignmentFlag.AlignVCenter | Qt.AlignmentFlag.AlignLeft,
                                 setWordWrap=Parameters.WRAPTEXT_MEDIUM,
                                 MaxNumberOfLines=2,
                                 Menu=Menu,

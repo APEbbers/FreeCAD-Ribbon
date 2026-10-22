@@ -25,7 +25,7 @@ import typing
 from typing import Optional, cast
 import sys
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QIcon,
     QAction,
     QFontMetrics,
@@ -43,7 +43,7 @@ from PySide.QtGui import (
     QTextOption,
     QPalette,
 )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QComboBox,
     QMainWindow,
     QSizePolicy,
@@ -67,7 +67,7 @@ from PySide.QtWidgets import (
     QPlainTextEdit,
     QAbstractScrollArea,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QSize,
     QMimeData,
@@ -387,6 +387,7 @@ class CustomControls(RibbonToolButton):
                     )[0]
                 else:
                     line1 = Text.split("\n")[0]
+                    
                 # Set the alignment
                 Label_Text.setAlignment(TextAlignment)
                 # Add the line
@@ -886,7 +887,14 @@ class CustomControls(RibbonToolButton):
             Label_Text.setFont(Font)
             FontMetrics = QFontMetrics(Font)
             if setWordWrap is True:
+                line1 = ""
+                line2 = ""
+                
+                AllreadyWrapped = False
+                if "\n" in Text:
+                    AllreadyWrapped = True                
                 Label_Text.setWordWrap(True)
+                
                 # Determine the maximum length per line
                 FontMetrics = QFontMetrics(Font)
                 maxWidth = 0
@@ -897,58 +905,58 @@ class CustomControls(RibbonToolButton):
                         maxLength = maxLength + 1
                     if maxWidth >= ButtonSize.width() * 2:
                         break
-                # Get the first text line
-                line1 = StandardFunctions.ReturnWrappedText(
-                    Text, maxLength, MaxNumberOfLines, True
-                )[0]
+                    
+                if AllreadyWrapped is False:
+                    # Get the first text line
+                    line1 = StandardFunctions.ReturnWrappedText(Text, maxLength, MaxNumberOfLines, True)[0]
+                else:
+                    line1 = Text.split("\n")[0]
+                    
                 # Add the line with a space to avoid te need to set spacing. (Spacing breaks the hover background)
                 Label_Text.setText(" " + line1)
                 # Try to get the second line if there is one
                 try:
-                    line2 = StandardFunctions.ReturnWrappedText(
-                        Text, maxLength, MaxNumberOfLines, True
-                    )[1]
+                    if AllreadyWrapped is False:
+                        line2 = StandardFunctions.ReturnWrappedText(Text, maxLength, MaxNumberOfLines, True)[1]
+                    else:
+                        line2 = Text.split("\n", 1)[1]
+                        line2 = line2.replace("\n", " ")
+                    
                     # Add the line with a space to avoid te need to set spacing. (Spacing breaks the hover background)
                     Label_Text.setText(Label_Text.text() + "\n" +" " + line2)
-                    if (
-                        FontMetrics.tightBoundingRect(line1).width()
-                        > FontMetrics.tightBoundingRect(line2).width()
-                    ):
+                    if FontMetrics.tightBoundingRect(line1).width() > FontMetrics.tightBoundingRect(line2).width():
                         # Update a parameter for the width
                         TextWidth = FontMetrics.tightBoundingRect(line1).width()
                     else:
                         # Update a parameter for the width
                         TextWidth = FontMetrics.tightBoundingRect(line2).width()
                 except Exception:
-                    # Correct the margin to set the arrow vertical center (bug in Qt)
-                    marginCorrection = (
-                        CommandButton.height() - FontMetrics.boundingRect(Text).height()
-                    ) / 2
                     # Update a parameter for the width
                     TextWidth = FontMetrics.tightBoundingRect(line1).width()
 
                 # Adjust the size
-                Label_Text.setMaximumWidth(TextWidth + space)
+                Label_Text.setFixedWidth(TextWidth + space)
                 # Update a parameter for the width
                 TextWidth = TextWidth + space
 
-                # If the text is higher than the commandbutton, switch to no wrap
-                if (
-                    FontMetrics.boundingRect(line1).height() * MaxNumberOfLines
-                ) > ButtonSize.height():
-                    setWordWrap = False
-                    # reset the values
-                    TextWidth = 0
-                    Label_Text.setMaximumWidth(
-                        FontMetrics.tightBoundingRect(line1).width()
-                    )  # set to a extra large value to avoid clipping
-                    if Parameters.DEBUG_MODE is True:
-                        StandardFunctions.Print(
-                            "Medium button is too small for text wrap!\n wrap setting is ignored",
-                            "Warning",
-                        )
+                # # If the text is higher than the commandbutton, switch to no wrap
+                # if (
+                #     FontMetrics.boundingRect(line1).height() * MaxNumberOfLines
+                # ) > ButtonSize.height():
+                #     setWordWrap = False
+                #     # reset the values
+                #     TextWidth = FontMetrics.tightBoundingRect(line1).width()
+                #     TextWidth = max(TextWidth, FontMetrics.tightBoundingRect(line2).width())
+                #     Label_Text.setMaximumWidth(TextWidth)  # set to a extra large value to avoid clipping
+                #     if Parameters.DEBUG_MODE is True:
+                #         StandardFunctions.Print(
+                #             "Medium button is too small for text wrap!\n wrap setting is ignored",
+                #             "Warning",
+                #         )
 
             if setWordWrap is False:
+                if "\n" in Text:
+                    Text = Text.replace("\n", " ")
                 # if the text must be elided, return a updated text
                 if ElideMode is True:
                     # Determine the maximum length per line
