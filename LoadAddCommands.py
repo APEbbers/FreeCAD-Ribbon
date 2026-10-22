@@ -23,8 +23,8 @@ import FreeCAD as App  # pyright: ignore[reportMissingModuleSource]
 import FreeCADGui as Gui  # pyright: ignore[reportMissingModuleSource]
 import os
 
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
-from PySide.QtWidgets import (
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
+from PySide6.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -44,8 +44,9 @@ from PySide.QtWidgets import (
     QSizePolicy,
     QGridLayout,
     QHBoxLayout,
+    QTableWidget,
 )
-from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent
+from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent
 import sys
 import json
 from datetime import datetime, timedelta
@@ -399,6 +400,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
         # Add all toolbar to the listboxes for the panels
         self.LoadPanels()
+        
+        self.LoadICons()
         
         # Connect the filter for the quick commands on the quickcommands tab
         def FilterWorkbench_NP():
@@ -1558,6 +1561,24 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
     # endregion---------------------------------------------------------------------------------------
     
+    # Macro commands ---------------------------------------------------------------------------------
+    
+    def LoadICons(self):
+        TableWidget: QTableWidget = self.form.ListMacroButtons
+        
+        counter = 0        
+        for i1 in range(TableWidget.rowCount()):
+            for i2 in range(TableWidget.columnCount()):
+                button = QPushButton()
+                icon = self.List_CommandIcons[counter][1]
+                button.setIcon(icon)
+                TableWidget.setCellWidget(button)
+                
+                counter = counter + 1
+        return
+    
+    # endregion---------------------------------------------------------------------------------------
+        
     # region - Form controls
     def on_Cancel_Clicked(self):
         if self.DialogClosed is False:
