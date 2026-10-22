@@ -2459,6 +2459,7 @@ class PlainTextEditAction(QWidgetAction):
     PlainTextEdit = QPlainTextEdit()
     PlainTextEdit.setFixedSize(300, 21)
     PlainTextEdit.setMaximumBlockCount(2)
+    margins = PlainTextEdit.contentsMargins()
           
     textChanged =  PlainTextEdit.textChanged
     
