@@ -1573,6 +1573,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         for root, dirs, files in os.walk(MacroDir):
             for file in files:
                 self.form.SelectMacro.addItem(file, os.path.join(MacroDir, file))
+                
+                print(file)
+                MacroCommandName = Gui.Command.findCustomCommand(file)
+                print(MacroCommandName)
+                if MacroCommandName is not None:
+                    MacroCommand = Gui.Command.get(MacroCommandName)
+                    print(MacroCommand)
     
     def LoadIcons(self):
         # Get the tableWidget
