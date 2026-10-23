@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsphdDKU.ui'
+## Form generated from reading UI file 'AddCommandsupewmp.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.12.0
 ##
@@ -26,10 +26,10 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(847, 540)
+        Form.resize(674, 540)
         Form.setAcceptDrops(True)
-        self.gridLayout_4 = QGridLayout(Form)
-        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.gridLayout_10 = QGridLayout(Form)
+        self.gridLayout_10.setObjectName(u"gridLayout_10")
         self.DockedButtonFrame = QFrame(Form)
         self.DockedButtonFrame.setObjectName(u"DockedButtonFrame")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
@@ -67,7 +67,7 @@ class Ui_Form(object):
         self.gridLayout_Docked.addWidget(self.applyButton_2, 0, 2, 1, 1)
 
 
-        self.gridLayout_4.addWidget(self.DockedButtonFrame, 0, 0, 1, 1)
+        self.gridLayout_10.addWidget(self.DockedButtonFrame, 0, 0, 1, 1)
 
         self.tabWidget = QTabWidget(Form)
         self.tabWidget.setObjectName(u"tabWidget")
@@ -487,6 +487,7 @@ class Ui_Form(object):
         self.ListMacroButtons.setObjectName(u"ListMacroButtons")
         sizePolicy5.setHeightForWidth(self.ListMacroButtons.sizePolicy().hasHeightForWidth())
         self.ListMacroButtons.setSizePolicy(sizePolicy5)
+        self.ListMacroButtons.setFrameShape(QFrame.Shape.Box)
         self.ListMacroButtons.setEditTriggers(QAbstractItemView.EditTrigger.SelectedClicked)
         self.ListMacroButtons.setTabKeyNavigation(False)
         self.ListMacroButtons.setProperty(u"showDropIndicator", False)
@@ -496,37 +497,12 @@ class Ui_Form(object):
         self.ListMacroButtons.horizontalHeader().setVisible(False)
         self.ListMacroButtons.verticalHeader().setVisible(False)
 
-        self.gridLayout_17.addWidget(self.ListMacroButtons, 1, 0, 3, 1)
+        self.gridLayout_17.addWidget(self.ListMacroButtons, 3, 0, 3, 1)
 
-        self.verticalSpacer_3 = QSpacerItem(0, 0, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.label_15 = QLabel(self.CreateMacroButtons)
+        self.label_15.setObjectName(u"label_15")
 
-        self.gridLayout_17.addItem(self.verticalSpacer_3, 3, 2, 1, 1)
-
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setSpacing(6)
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.horizontalLayout.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
-        self.AddButton = QPushButton(self.CreateMacroButtons)
-        self.AddButton.setObjectName(u"AddButton")
-
-        self.horizontalLayout.addWidget(self.AddButton)
-
-        self.RemoveButton = QPushButton(self.CreateMacroButtons)
-        self.RemoveButton.setObjectName(u"RemoveButton")
-
-        self.horizontalLayout.addWidget(self.RemoveButton)
-
-        self.ReplaceButton = QPushButton(self.CreateMacroButtons)
-        self.ReplaceButton.setObjectName(u"ReplaceButton")
-
-        self.horizontalLayout.addWidget(self.ReplaceButton)
-
-
-        self.gridLayout_17.addLayout(self.horizontalLayout, 2, 2, 1, 1)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_17.addItem(self.verticalSpacer_2, 1, 3, 1, 1)
+        self.gridLayout_17.addWidget(self.label_15, 2, 0, 1, 1)
 
         self.MacroList = QListWidget(self.CreateMacroButtons)
         self.MacroList.setObjectName(u"MacroList")
@@ -536,15 +512,30 @@ class Ui_Form(object):
         sizePolicy6.setHeightForWidth(self.MacroList.sizePolicy().hasHeightForWidth())
         self.MacroList.setSizePolicy(sizePolicy6)
         self.MacroList.setMaximumSize(QSize(16777215, 300))
+        self.MacroList.setFrameShape(QFrame.Shape.Box)
         self.MacroList.setSupportedDragActions(Qt.DropAction.IgnoreAction)
 
-        self.gridLayout_17.addWidget(self.MacroList, 0, 0, 1, 1)
+        self.gridLayout_17.addWidget(self.MacroList, 1, 0, 1, 1)
 
+        self.label_14 = QLabel(self.CreateMacroButtons)
+        self.label_14.setObjectName(u"label_14")
+
+        self.gridLayout_17.addWidget(self.label_14, 0, 0, 1, 1)
+
+        self.toolButton = QToolButton(self.CreateMacroButtons)
+        self.toolButton.setObjectName(u"toolButton")
+
+        self.gridLayout_17.addWidget(self.toolButton, 6, 0, 1, 1)
+
+        self.groupBox_2 = QGroupBox(self.CreateMacroButtons)
+        self.groupBox_2.setObjectName(u"groupBox_2")
+        self.gridLayout_4 = QGridLayout(self.groupBox_2)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.gridLayout_7 = QGridLayout()
         self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.gridLayout_7.setHorizontalSpacing(0)
         self.gridLayout_7.setVerticalSpacing(10)
-        self.SetShortcut = QLineEdit(self.CreateMacroButtons)
+        self.SetShortcut = QLineEdit(self.groupBox_2)
         self.SetShortcut.setObjectName(u"SetShortcut")
         sizePolicy3.setHeightForWidth(self.SetShortcut.sizePolicy().hasHeightForWidth())
         self.SetShortcut.setSizePolicy(sizePolicy3)
@@ -553,7 +544,7 @@ class Ui_Form(object):
 
         self.gridLayout_7.addWidget(self.SetShortcut, 5, 1, 1, 1)
 
-        self.SetStatusText = QLineEdit(self.CreateMacroButtons)
+        self.SetStatusText = QLineEdit(self.groupBox_2)
         self.SetStatusText.setObjectName(u"SetStatusText")
         sizePolicy3.setHeightForWidth(self.SetStatusText.sizePolicy().hasHeightForWidth())
         self.SetStatusText.setSizePolicy(sizePolicy3)
@@ -562,7 +553,7 @@ class Ui_Form(object):
 
         self.gridLayout_7.addWidget(self.SetStatusText, 3, 1, 1, 1)
 
-        self.SetMenuText = QLineEdit(self.CreateMacroButtons)
+        self.SetMenuText = QLineEdit(self.groupBox_2)
         self.SetMenuText.setObjectName(u"SetMenuText")
         sizePolicy3.setHeightForWidth(self.SetMenuText.sizePolicy().hasHeightForWidth())
         self.SetMenuText.setSizePolicy(sizePolicy3)
@@ -571,7 +562,7 @@ class Ui_Form(object):
 
         self.gridLayout_7.addWidget(self.SetMenuText, 1, 1, 1, 1)
 
-        self.label_5 = QLabel(self.CreateMacroButtons)
+        self.label_5 = QLabel(self.groupBox_2)
         self.label_5.setObjectName(u"label_5")
         sizePolicy1.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
         self.label_5.setSizePolicy(sizePolicy1)
@@ -580,7 +571,7 @@ class Ui_Form(object):
 
         self.gridLayout_7.addWidget(self.label_5, 2, 0, 1, 1)
 
-        self.label_3 = QLabel(self.CreateMacroButtons)
+        self.label_3 = QLabel(self.groupBox_2)
         self.label_3.setObjectName(u"label_3")
         sizePolicy1.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
         self.label_3.setSizePolicy(sizePolicy1)
@@ -589,7 +580,7 @@ class Ui_Form(object):
 
         self.gridLayout_7.addWidget(self.label_3, 0, 0, 1, 1)
 
-        self.label_6 = QLabel(self.CreateMacroButtons)
+        self.label_6 = QLabel(self.groupBox_2)
         self.label_6.setObjectName(u"label_6")
         sizePolicy1.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
         self.label_6.setSizePolicy(sizePolicy1)
@@ -598,7 +589,7 @@ class Ui_Form(object):
 
         self.gridLayout_7.addWidget(self.label_6, 3, 0, 1, 1)
 
-        self.label_12 = QLabel(self.CreateMacroButtons)
+        self.label_12 = QLabel(self.groupBox_2)
         self.label_12.setObjectName(u"label_12")
         sizePolicy1.setHeightForWidth(self.label_12.sizePolicy().hasHeightForWidth())
         self.label_12.setSizePolicy(sizePolicy1)
@@ -607,7 +598,7 @@ class Ui_Form(object):
 
         self.gridLayout_7.addWidget(self.label_12, 5, 0, 1, 1)
 
-        self.label_8 = QLabel(self.CreateMacroButtons)
+        self.label_8 = QLabel(self.groupBox_2)
         self.label_8.setObjectName(u"label_8")
         sizePolicy1.setHeightForWidth(self.label_8.sizePolicy().hasHeightForWidth())
         self.label_8.setSizePolicy(sizePolicy1)
@@ -616,7 +607,7 @@ class Ui_Form(object):
 
         self.gridLayout_7.addWidget(self.label_8, 4, 0, 1, 1)
 
-        self.SelectMacro = QComboBox(self.CreateMacroButtons)
+        self.SelectMacro = QComboBox(self.groupBox_2)
         self.SelectMacro.setObjectName(u"SelectMacro")
         sizePolicy3.setHeightForWidth(self.SelectMacro.sizePolicy().hasHeightForWidth())
         self.SelectMacro.setSizePolicy(sizePolicy3)
@@ -626,7 +617,7 @@ class Ui_Form(object):
 
         self.gridLayout_7.addWidget(self.SelectMacro, 0, 1, 1, 1)
 
-        self.SetToolTip = QLineEdit(self.CreateMacroButtons)
+        self.SetToolTip = QLineEdit(self.groupBox_2)
         self.SetToolTip.setObjectName(u"SetToolTip")
         sizePolicy3.setHeightForWidth(self.SetToolTip.sizePolicy().hasHeightForWidth())
         self.SetToolTip.setSizePolicy(sizePolicy3)
@@ -635,7 +626,7 @@ class Ui_Form(object):
 
         self.gridLayout_7.addWidget(self.SetToolTip, 2, 1, 1, 1)
 
-        self.label_4 = QLabel(self.CreateMacroButtons)
+        self.label_4 = QLabel(self.groupBox_2)
         self.label_4.setObjectName(u"label_4")
         sizePolicy1.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
         self.label_4.setSizePolicy(sizePolicy1)
@@ -644,7 +635,7 @@ class Ui_Form(object):
 
         self.gridLayout_7.addWidget(self.label_4, 1, 0, 1, 1)
 
-        self.SetWhatIsThis = QLineEdit(self.CreateMacroButtons)
+        self.SetWhatIsThis = QLineEdit(self.groupBox_2)
         self.SetWhatIsThis.setObjectName(u"SetWhatIsThis")
         sizePolicy3.setHeightForWidth(self.SetWhatIsThis.sizePolicy().hasHeightForWidth())
         self.SetWhatIsThis.setSizePolicy(sizePolicy3)
@@ -653,13 +644,13 @@ class Ui_Form(object):
 
         self.gridLayout_7.addWidget(self.SetWhatIsThis, 4, 1, 1, 1)
 
-        self.SelectIcon = QToolButton(self.CreateMacroButtons)
+        self.SelectIcon = QToolButton(self.groupBox_2)
         self.SelectIcon.setObjectName(u"SelectIcon")
         self.SelectIcon.setMaximumSize(QSize(16777215, 30))
 
         self.gridLayout_7.addWidget(self.SelectIcon, 6, 1, 1, 1)
 
-        self.label_13 = QLabel(self.CreateMacroButtons)
+        self.label_13 = QLabel(self.groupBox_2)
         self.label_13.setObjectName(u"label_13")
         sizePolicy1.setHeightForWidth(self.label_13.sizePolicy().hasHeightForWidth())
         self.label_13.setSizePolicy(sizePolicy1)
@@ -669,11 +660,48 @@ class Ui_Form(object):
         self.gridLayout_7.addWidget(self.label_13, 6, 0, 1, 1)
 
 
-        self.gridLayout_17.addLayout(self.gridLayout_7, 0, 2, 2, 1)
+        self.gridLayout_4.addLayout(self.gridLayout_7, 0, 0, 1, 1)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_4.addItem(self.verticalSpacer_3, 0, 1, 1, 1)
+
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setSpacing(6)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
+        self.AddButton = QPushButton(self.groupBox_2)
+        self.AddButton.setObjectName(u"AddButton")
+
+        self.horizontalLayout.addWidget(self.AddButton)
+
+        self.RemoveButton = QPushButton(self.groupBox_2)
+        self.RemoveButton.setObjectName(u"RemoveButton")
+
+        self.horizontalLayout.addWidget(self.RemoveButton)
+
+        self.ReplaceButton = QPushButton(self.groupBox_2)
+        self.ReplaceButton.setObjectName(u"ReplaceButton")
+
+        self.horizontalLayout.addWidget(self.ReplaceButton)
+
+
+        self.gridLayout_4.addLayout(self.horizontalLayout, 2, 0, 1, 1)
+
+
+        self.gridLayout_17.addWidget(self.groupBox_2, 1, 1, 7, 1)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_17.addItem(self.verticalSpacer_4, 8, 1, 1, 1)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_17.addItem(self.verticalSpacer_2, 8, 0, 1, 1)
 
         self.tabWidget.addTab(self.CreateMacroButtons, "")
 
-        self.gridLayout_4.addWidget(self.tabWidget, 1, 0, 1, 1)
+        self.gridLayout_10.addWidget(self.tabWidget, 1, 0, 1, 1)
 
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
@@ -733,7 +761,7 @@ class Ui_Form(object):
         self.gridLayout.addWidget(self.okButton, 0, 3, 2, 1)
 
 
-        self.gridLayout_4.addLayout(self.gridLayout, 2, 0, 1, 1)
+        self.gridLayout_10.addLayout(self.gridLayout, 2, 0, 1, 1)
 
         QWidget.setTabOrder(self.okButton_2, self.applyButton_2)
         QWidget.setTabOrder(self.applyButton_2, self.cancelButton_2)
@@ -902,9 +930,10 @@ class Ui_Form(object):
         self.ListMacroButtons.setSortingEnabled(False)
         self.ListMacroButtons.setSortingEnabled(__sortingEnabled5)
 
-        self.AddButton.setText(QCoreApplication.translate("Form", u"Add", None))
-        self.RemoveButton.setText(QCoreApplication.translate("Form", u"Remove", None))
-        self.ReplaceButton.setText(QCoreApplication.translate("Form", u"Replace", None))
+        self.label_15.setText(QCoreApplication.translate("Form", u"Available icons", None))
+        self.label_14.setText(QCoreApplication.translate("Form", u"Macro buttons:", None))
+        self.toolButton.setText(QCoreApplication.translate("Form", u"Browse for icons...", None))
+        self.groupBox_2.setTitle(QCoreApplication.translate("Form", u"GroupBox", None))
         self.label_5.setText(QCoreApplication.translate("Form", u"Tooltip", None))
         self.label_3.setText(QCoreApplication.translate("Form", u"Macro", None))
         self.label_6.setText(QCoreApplication.translate("Form", u"Status text", None))
@@ -913,6 +942,9 @@ class Ui_Form(object):
         self.label_4.setText(QCoreApplication.translate("Form", u"Menu text", None))
         self.SelectIcon.setText(QCoreApplication.translate("Form", u"...", None))
         self.label_13.setText(QCoreApplication.translate("Form", u"Icon", None))
+        self.AddButton.setText(QCoreApplication.translate("Form", u"Add", None))
+        self.RemoveButton.setText(QCoreApplication.translate("Form", u"Remove", None))
+        self.ReplaceButton.setText(QCoreApplication.translate("Form", u"Replace", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.CreateMacroButtons), QCoreApplication.translate("Form", u"Create macro buttons", None))
         self.label.setText(QCoreApplication.translate("Form", u"Refresh workbench data", None))
         self.cancelButton.setText(QCoreApplication.translate("Form", u"Cancel", None))
