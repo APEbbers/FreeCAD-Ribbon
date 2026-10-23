@@ -516,16 +516,16 @@ class ModernMenu(RibbonBar):
                 if Parameters.DEBUG_MODE:
                     StandardFunctions.Print(f"RibbonUI:\n{traceback.format_exc()}", "Warning")
                 
-        # Check if there are disabled workbenches. If so add them to the ignored workbenches
-        if "workbenches" in self.ribbonStructure:
-            for WorkBenchName in self.ribbonStructure["workbenches"]:
-                IsInstalled = False
-                for InstalledWB in Gui.listWorkbenches():
-                    if InstalledWB == WorkBenchName:
-                        IsInstalled = True
+        # # Check if there are disabled workbenches. If so add them to the ignored workbenches
+        # if "workbenches" in self.ribbonStructure:
+        #     for WorkBenchName in self.ribbonStructure["workbenches"]:
+        #         IsInstalled = False
+        #         for InstalledWB in Gui.listWorkbenches():
+        #             if InstalledWB == WorkBenchName:
+        #                 IsInstalled = True
                 
-                if IsInstalled is False and "ignoredWorkbenches" in self.ribbonStructure and WorkBenchName not in self.ribbonStructure["ignoredWorkbenches"]:
-                        self.ribbonStructure["ignoredWorkbenches"].append(WorkBenchName)
+        #         if IsInstalled is False and "ignoredWorkbenches" in self.ribbonStructure and WorkBenchName not in self.ribbonStructure["ignoredWorkbenches"]:
+        #                 self.ribbonStructure["ignoredWorkbenches"].append(WorkBenchName)
                         
         # If workbenches are not present in the ribbon structure, something went wrong.
         # Re-create the workbech structure
