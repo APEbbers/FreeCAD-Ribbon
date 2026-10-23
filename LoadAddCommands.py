@@ -403,7 +403,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Add all toolbar to the listboxes for the panels
         self.LoadPanels()
         
-        self.LoadICons()
+        # Load all the macro lists
+        self.LoadMacroLists()
+        self.LoadIcons()
         
         # Connect the filter for the quick commands on the quickcommands tab
         def FilterWorkbench_NP():
@@ -518,9 +520,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.SearchBar_DDB.textChanged.connect(
             self.on_SearchBar_DDB_TextChanged
         )
-
-        # # QTableWidget.cellDoubleClicked
-        # self.form.ListMacroButtons.cellDoubleClicked.connect(lambda e: self.TableCell_Clicked(e))
         
         # --- Form controls ------------------
         #
@@ -596,7 +595,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.ListCategory_NP.setAcceptDrops(True)
             self.form.ListCategory_NP.setDragEnabled(True)
         except Exception:
-            pass
+            pass             
                 
         # Restore the cursor
         QApplication.restoreOverrideCursor()
@@ -1568,7 +1567,14 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     
     # Macro commands ---------------------------------------------------------------------------------
     
-    def LoadICons(self):
+    def LoadMacroLists(self):
+        MacroDir = App.getUserMacroDir()
+        
+        for root, dirs, files in os.walk(MacroDir):
+            for file in files:
+                self.form.SelectMacro.addItem(file, os.path.join(MacroDir, file))
+    
+    def LoadIcons(self):
         # Get the tableWidget
         TableWidget: QTableWidget = self.form.ListMacroButtons
         # Set the number of rows
@@ -1585,6 +1591,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     }""")
         TableWidget.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
         TableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        
         
         # Create a shadowlist to store processed items
         shadowList = []        
@@ -1628,11 +1635,15 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     emptyRow = False
             if emptyRow is True:
                 TableWidget.hideRow(i1)
+        
+        # Adjust the height of the table  
+        TableWidget.setFixedHeight(TableWidget.rowHeight(1)*(TableWidget.rowCount()) + TableWidget.autoScrollMargin())
 
         return
     
     def TableCellButton_Clicked(self, icon):
         self.form.SelectIcon.setIcon(icon)
+        self.form.SelectIcon.setIconSize(self.form.SelectIcon.size())
         return
     
     # endregion---------------------------------------------------------------------------------------
