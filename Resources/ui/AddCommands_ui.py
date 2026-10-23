@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsECacQY.ui'
+## Form generated from reading UI file 'AddCommandsXULmqa.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.12.0
 ##
@@ -26,10 +26,10 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(674, 843)
+        Form.resize(749, 709)
         Form.setAcceptDrops(True)
-        self.gridLayout_10 = QGridLayout(Form)
-        self.gridLayout_10.setObjectName(u"gridLayout_10")
+        self.gridLayout_13 = QGridLayout(Form)
+        self.gridLayout_13.setObjectName(u"gridLayout_13")
         self.DockedButtonFrame = QFrame(Form)
         self.DockedButtonFrame.setObjectName(u"DockedButtonFrame")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
@@ -67,7 +67,7 @@ class Ui_Form(object):
         self.gridLayout_Docked.addWidget(self.applyButton_2, 0, 2, 1, 1)
 
 
-        self.gridLayout_10.addWidget(self.DockedButtonFrame, 0, 0, 1, 1)
+        self.gridLayout_13.addWidget(self.DockedButtonFrame, 0, 0, 1, 1)
 
         self.tabWidget = QTabWidget(Form)
         self.tabWidget.setObjectName(u"tabWidget")
@@ -455,59 +455,12 @@ class Ui_Form(object):
         self.gridLayout_17 = QGridLayout(self.CreateMacroButtons)
         self.gridLayout_17.setObjectName(u"gridLayout_17")
         self.gridLayout_17.setContentsMargins(6, 6, 6, 6)
-        self.ListMacroButtons = QTableWidget(self.CreateMacroButtons)
-        if (self.ListMacroButtons.columnCount() < 6):
-            self.ListMacroButtons.setColumnCount(6)
-        __qtablewidgetitem = QTableWidgetItem()
-        self.ListMacroButtons.setHorizontalHeaderItem(0, __qtablewidgetitem)
-        __qtablewidgetitem1 = QTableWidgetItem()
-        self.ListMacroButtons.setHorizontalHeaderItem(1, __qtablewidgetitem1)
-        __qtablewidgetitem2 = QTableWidgetItem()
-        self.ListMacroButtons.setHorizontalHeaderItem(2, __qtablewidgetitem2)
-        __qtablewidgetitem3 = QTableWidgetItem()
-        self.ListMacroButtons.setHorizontalHeaderItem(3, __qtablewidgetitem3)
-        __qtablewidgetitem4 = QTableWidgetItem()
-        self.ListMacroButtons.setHorizontalHeaderItem(4, __qtablewidgetitem4)
-        if (self.ListMacroButtons.rowCount() < 6):
-            self.ListMacroButtons.setRowCount(6)
-        __qtablewidgetitem5 = QTableWidgetItem()
-        self.ListMacroButtons.setVerticalHeaderItem(0, __qtablewidgetitem5)
-        __qtablewidgetitem6 = QTableWidgetItem()
-        self.ListMacroButtons.setVerticalHeaderItem(1, __qtablewidgetitem6)
-        __qtablewidgetitem7 = QTableWidgetItem()
-        self.ListMacroButtons.setVerticalHeaderItem(2, __qtablewidgetitem7)
-        __qtablewidgetitem8 = QTableWidgetItem()
-        self.ListMacroButtons.setVerticalHeaderItem(3, __qtablewidgetitem8)
-        __qtablewidgetitem9 = QTableWidgetItem()
-        self.ListMacroButtons.setVerticalHeaderItem(4, __qtablewidgetitem9)
-        __qtablewidgetitem10 = QTableWidgetItem()
-        self.ListMacroButtons.setVerticalHeaderItem(5, __qtablewidgetitem10)
-        __qtablewidgetitem11 = QTableWidgetItem()
-        __qtablewidgetitem11.setFlags(Qt.ItemIsSelectable|Qt.ItemIsEnabled)
-        self.ListMacroButtons.setItem(0, 0, __qtablewidgetitem11)
-        self.ListMacroButtons.setObjectName(u"ListMacroButtons")
-        sizePolicy5.setHeightForWidth(self.ListMacroButtons.sizePolicy().hasHeightForWidth())
-        self.ListMacroButtons.setSizePolicy(sizePolicy5)
-        self.ListMacroButtons.setFrameShape(QFrame.Shape.Box)
-        self.ListMacroButtons.setEditTriggers(QAbstractItemView.EditTrigger.SelectedClicked)
-        self.ListMacroButtons.setTabKeyNavigation(False)
-        self.ListMacroButtons.setProperty(u"showDropIndicator", False)
-        self.ListMacroButtons.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
-        self.ListMacroButtons.setShowGrid(False)
-        self.ListMacroButtons.setSupportedDragActions(Qt.DropAction.IgnoreAction)
-        self.ListMacroButtons.horizontalHeader().setVisible(False)
-        self.ListMacroButtons.verticalHeader().setVisible(False)
-
-        self.gridLayout_17.addWidget(self.ListMacroButtons, 3, 1, 3, 1)
-
-        self.label_15 = QLabel(self.CreateMacroButtons)
-        self.label_15.setObjectName(u"label_15")
-        sizePolicy2.setHeightForWidth(self.label_15.sizePolicy().hasHeightForWidth())
-        self.label_15.setSizePolicy(sizePolicy2)
-
-        self.gridLayout_17.addWidget(self.label_15, 2, 1, 1, 1)
-
-        self.MacroList = QListWidget(self.CreateMacroButtons)
+        self.groupBox_4 = QGroupBox(self.CreateMacroButtons)
+        self.groupBox_4.setObjectName(u"groupBox_4")
+        self.gridLayout_10 = QGridLayout(self.groupBox_4)
+        self.gridLayout_10.setObjectName(u"gridLayout_10")
+        self.gridLayout_10.setContentsMargins(6, 6, 6, 6)
+        self.MacroList = QListWidget(self.groupBox_4)
         self.MacroList.setObjectName(u"MacroList")
         sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Maximum)
         sizePolicy6.setHorizontalStretch(0)
@@ -518,12 +471,10 @@ class Ui_Form(object):
         self.MacroList.setFrameShape(QFrame.Shape.Box)
         self.MacroList.setSupportedDragActions(Qt.DropAction.IgnoreAction)
 
-        self.gridLayout_17.addWidget(self.MacroList, 1, 1, 1, 1)
+        self.gridLayout_10.addWidget(self.MacroList, 0, 0, 1, 1)
 
-        self.pushButton = QPushButton(self.CreateMacroButtons)
-        self.pushButton.setObjectName(u"pushButton")
 
-        self.gridLayout_17.addWidget(self.pushButton, 6, 1, 1, 1)
+        self.gridLayout_17.addWidget(self.groupBox_4, 0, 0, 2, 1)
 
         self.groupBox_2 = QGroupBox(self.CreateMacroButtons)
         self.groupBox_2.setObjectName(u"groupBox_2")
@@ -538,7 +489,7 @@ class Ui_Form(object):
         self.SetShortcut.setObjectName(u"SetShortcut")
         sizePolicy3.setHeightForWidth(self.SetShortcut.sizePolicy().hasHeightForWidth())
         self.SetShortcut.setSizePolicy(sizePolicy3)
-        self.SetShortcut.setMinimumSize(QSize(200, 20))
+        self.SetShortcut.setMinimumSize(QSize(200, 30))
         self.SetShortcut.setMaximumSize(QSize(16777215, 30))
 
         self.gridLayout_7.addWidget(self.SetShortcut, 5, 1, 1, 1)
@@ -547,7 +498,7 @@ class Ui_Form(object):
         self.SetStatusText.setObjectName(u"SetStatusText")
         sizePolicy3.setHeightForWidth(self.SetStatusText.sizePolicy().hasHeightForWidth())
         self.SetStatusText.setSizePolicy(sizePolicy3)
-        self.SetStatusText.setMinimumSize(QSize(200, 20))
+        self.SetStatusText.setMinimumSize(QSize(200, 30))
         self.SetStatusText.setMaximumSize(QSize(16777215, 30))
 
         self.gridLayout_7.addWidget(self.SetStatusText, 3, 1, 1, 1)
@@ -556,7 +507,7 @@ class Ui_Form(object):
         self.SetMenuText.setObjectName(u"SetMenuText")
         sizePolicy3.setHeightForWidth(self.SetMenuText.sizePolicy().hasHeightForWidth())
         self.SetMenuText.setSizePolicy(sizePolicy3)
-        self.SetMenuText.setMinimumSize(QSize(200, 20))
+        self.SetMenuText.setMinimumSize(QSize(200, 30))
         self.SetMenuText.setMaximumSize(QSize(16777215, 30))
 
         self.gridLayout_7.addWidget(self.SetMenuText, 1, 1, 1, 1)
@@ -610,7 +561,7 @@ class Ui_Form(object):
         self.SelectMacro.setObjectName(u"SelectMacro")
         sizePolicy3.setHeightForWidth(self.SelectMacro.sizePolicy().hasHeightForWidth())
         self.SelectMacro.setSizePolicy(sizePolicy3)
-        self.SelectMacro.setMinimumSize(QSize(200, 0))
+        self.SelectMacro.setMinimumSize(QSize(200, 30))
         self.SelectMacro.setMaximumSize(QSize(16777215, 30))
         self.SelectMacro.setBaseSize(QSize(0, 0))
 
@@ -620,7 +571,7 @@ class Ui_Form(object):
         self.SetToolTip.setObjectName(u"SetToolTip")
         sizePolicy3.setHeightForWidth(self.SetToolTip.sizePolicy().hasHeightForWidth())
         self.SetToolTip.setSizePolicy(sizePolicy3)
-        self.SetToolTip.setMinimumSize(QSize(200, 20))
+        self.SetToolTip.setMinimumSize(QSize(200, 30))
         self.SetToolTip.setMaximumSize(QSize(16777215, 30))
 
         self.gridLayout_7.addWidget(self.SetToolTip, 2, 1, 1, 1)
@@ -638,14 +589,14 @@ class Ui_Form(object):
         self.SetWhatIsThis.setObjectName(u"SetWhatIsThis")
         sizePolicy3.setHeightForWidth(self.SetWhatIsThis.sizePolicy().hasHeightForWidth())
         self.SetWhatIsThis.setSizePolicy(sizePolicy3)
-        self.SetWhatIsThis.setMinimumSize(QSize(200, 20))
+        self.SetWhatIsThis.setMinimumSize(QSize(200, 30))
         self.SetWhatIsThis.setMaximumSize(QSize(16777215, 30))
 
         self.gridLayout_7.addWidget(self.SetWhatIsThis, 4, 1, 1, 1)
 
         self.SelectIcon = QToolButton(self.groupBox_2)
         self.SelectIcon.setObjectName(u"SelectIcon")
-        self.SelectIcon.setMaximumSize(QSize(16777215, 30))
+        self.SelectIcon.setMaximumSize(QSize(32, 32))
 
         self.gridLayout_7.addWidget(self.SelectIcon, 6, 1, 1, 1)
 
@@ -687,27 +638,79 @@ class Ui_Form(object):
 
         self.gridLayout_4.addLayout(self.horizontalLayout, 2, 0, 1, 1)
 
-        self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.gridLayout_4.addItem(self.verticalSpacer_5, 3, 0, 1, 1)
+        self.gridLayout_17.addWidget(self.groupBox_2, 0, 1, 2, 1)
+
+        self.groupBox_6 = QGroupBox(self.CreateMacroButtons)
+        self.groupBox_6.setObjectName(u"groupBox_6")
+        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+        sizePolicy7.setHorizontalStretch(0)
+        sizePolicy7.setVerticalStretch(0)
+        sizePolicy7.setHeightForWidth(self.groupBox_6.sizePolicy().hasHeightForWidth())
+        self.groupBox_6.setSizePolicy(sizePolicy7)
+        self.gridLayout_11 = QGridLayout(self.groupBox_6)
+        self.gridLayout_11.setObjectName(u"gridLayout_11")
+        self.gridLayout_11.setContentsMargins(6, 6, 6, 6)
+        self.pushButton = QPushButton(self.groupBox_6)
+        self.pushButton.setObjectName(u"pushButton")
+
+        self.gridLayout_11.addWidget(self.pushButton, 1, 1, 1, 1)
+
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_11.addItem(self.horizontalSpacer_4, 1, 2, 1, 1)
+
+        self.ListMacroButtons = QTableWidget(self.groupBox_6)
+        if (self.ListMacroButtons.columnCount() < 6):
+            self.ListMacroButtons.setColumnCount(6)
+        __qtablewidgetitem = QTableWidgetItem()
+        self.ListMacroButtons.setHorizontalHeaderItem(0, __qtablewidgetitem)
+        __qtablewidgetitem1 = QTableWidgetItem()
+        self.ListMacroButtons.setHorizontalHeaderItem(1, __qtablewidgetitem1)
+        __qtablewidgetitem2 = QTableWidgetItem()
+        self.ListMacroButtons.setHorizontalHeaderItem(2, __qtablewidgetitem2)
+        __qtablewidgetitem3 = QTableWidgetItem()
+        self.ListMacroButtons.setHorizontalHeaderItem(3, __qtablewidgetitem3)
+        __qtablewidgetitem4 = QTableWidgetItem()
+        self.ListMacroButtons.setHorizontalHeaderItem(4, __qtablewidgetitem4)
+        if (self.ListMacroButtons.rowCount() < 6):
+            self.ListMacroButtons.setRowCount(6)
+        __qtablewidgetitem5 = QTableWidgetItem()
+        self.ListMacroButtons.setVerticalHeaderItem(0, __qtablewidgetitem5)
+        __qtablewidgetitem6 = QTableWidgetItem()
+        self.ListMacroButtons.setVerticalHeaderItem(1, __qtablewidgetitem6)
+        __qtablewidgetitem7 = QTableWidgetItem()
+        self.ListMacroButtons.setVerticalHeaderItem(2, __qtablewidgetitem7)
+        __qtablewidgetitem8 = QTableWidgetItem()
+        self.ListMacroButtons.setVerticalHeaderItem(3, __qtablewidgetitem8)
+        __qtablewidgetitem9 = QTableWidgetItem()
+        self.ListMacroButtons.setVerticalHeaderItem(4, __qtablewidgetitem9)
+        __qtablewidgetitem10 = QTableWidgetItem()
+        self.ListMacroButtons.setVerticalHeaderItem(5, __qtablewidgetitem10)
+        __qtablewidgetitem11 = QTableWidgetItem()
+        __qtablewidgetitem11.setFlags(Qt.ItemIsSelectable|Qt.ItemIsEnabled)
+        self.ListMacroButtons.setItem(0, 0, __qtablewidgetitem11)
+        self.ListMacroButtons.setObjectName(u"ListMacroButtons")
+        sizePolicy5.setHeightForWidth(self.ListMacroButtons.sizePolicy().hasHeightForWidth())
+        self.ListMacroButtons.setSizePolicy(sizePolicy5)
+        self.ListMacroButtons.setFrameShape(QFrame.Shape.Box)
+        self.ListMacroButtons.setEditTriggers(QAbstractItemView.EditTrigger.SelectedClicked)
+        self.ListMacroButtons.setTabKeyNavigation(False)
+        self.ListMacroButtons.setProperty(u"showDropIndicator", False)
+        self.ListMacroButtons.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.ListMacroButtons.setShowGrid(False)
+        self.ListMacroButtons.setSupportedDragActions(Qt.DropAction.IgnoreAction)
+        self.ListMacroButtons.horizontalHeader().setVisible(False)
+        self.ListMacroButtons.verticalHeader().setVisible(False)
+
+        self.gridLayout_11.addWidget(self.ListMacroButtons, 0, 1, 1, 2)
 
 
-        self.gridLayout_17.addWidget(self.groupBox_2, 1, 2, 7, 1)
-
-        self.label_14 = QLabel(self.CreateMacroButtons)
-        self.label_14.setObjectName(u"label_14")
-        sizePolicy2.setHeightForWidth(self.label_14.sizePolicy().hasHeightForWidth())
-        self.label_14.setSizePolicy(sizePolicy2)
-
-        self.gridLayout_17.addWidget(self.label_14, 0, 1, 1, 1)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_17.addItem(self.verticalSpacer_2, 3, 0, 1, 1)
+        self.gridLayout_17.addWidget(self.groupBox_6, 2, 0, 1, 2)
 
         self.tabWidget.addTab(self.CreateMacroButtons, "")
 
-        self.gridLayout_10.addWidget(self.tabWidget, 1, 0, 1, 1)
+        self.gridLayout_13.addWidget(self.tabWidget, 1, 0, 1, 1)
 
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
@@ -767,7 +770,7 @@ class Ui_Form(object):
         self.gridLayout.addWidget(self.okButton, 0, 3, 2, 1)
 
 
-        self.gridLayout_10.addLayout(self.gridLayout, 2, 0, 1, 1)
+        self.gridLayout_13.addLayout(self.gridLayout, 2, 0, 1, 1)
 
         QWidget.setTabOrder(self.okButton_2, self.applyButton_2)
         QWidget.setTabOrder(self.applyButton_2, self.cancelButton_2)
@@ -909,6 +912,21 @@ class Ui_Form(object):
         self.ControlName_DDB.setPlaceholderText(QCoreApplication.translate("Form", u"Enter command name...", None))
         self.CreateControl_DDB.setText(QCoreApplication.translate("Form", u"Create/update dropdown button", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.widget), QCoreApplication.translate("Form", u"Create dropdown buttons", None))
+        self.groupBox_4.setTitle(QCoreApplication.translate("Form", u"Macro buttons:", None))
+        self.groupBox_2.setTitle(QCoreApplication.translate("Form", u"Create macro button", None))
+        self.label_5.setText(QCoreApplication.translate("Form", u"Tooltip", None))
+        self.label_3.setText(QCoreApplication.translate("Form", u"Macro", None))
+        self.label_6.setText(QCoreApplication.translate("Form", u"Status text", None))
+        self.label_12.setText(QCoreApplication.translate("Form", u"Accelerator", None))
+        self.label_8.setText(QCoreApplication.translate("Form", u"What's this", None))
+        self.label_4.setText(QCoreApplication.translate("Form", u"Menu text", None))
+        self.SelectIcon.setText(QCoreApplication.translate("Form", u"...", None))
+        self.label_13.setText(QCoreApplication.translate("Form", u"Icon", None))
+        self.AddButton.setText(QCoreApplication.translate("Form", u"Add", None))
+        self.RemoveButton.setText(QCoreApplication.translate("Form", u"Remove", None))
+        self.ReplaceButton.setText(QCoreApplication.translate("Form", u"Replace", None))
+        self.groupBox_6.setTitle(QCoreApplication.translate("Form", u"Available icons", None))
+        self.pushButton.setText(QCoreApplication.translate("Form", u"Browse for icons...", None))
         ___qtablewidgetitem = self.ListMacroButtons.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("Form", u"New Column", None))
         ___qtablewidgetitem1 = self.ListMacroButtons.horizontalHeaderItem(1)
@@ -936,21 +954,6 @@ class Ui_Form(object):
         self.ListMacroButtons.setSortingEnabled(False)
         self.ListMacroButtons.setSortingEnabled(__sortingEnabled5)
 
-        self.label_15.setText(QCoreApplication.translate("Form", u"Available icons", None))
-        self.pushButton.setText(QCoreApplication.translate("Form", u"Browse for icons...", None))
-        self.groupBox_2.setTitle(QCoreApplication.translate("Form", u"GroupBox", None))
-        self.label_5.setText(QCoreApplication.translate("Form", u"Tooltip", None))
-        self.label_3.setText(QCoreApplication.translate("Form", u"Macro", None))
-        self.label_6.setText(QCoreApplication.translate("Form", u"Status text", None))
-        self.label_12.setText(QCoreApplication.translate("Form", u"Accelerator", None))
-        self.label_8.setText(QCoreApplication.translate("Form", u"What's this", None))
-        self.label_4.setText(QCoreApplication.translate("Form", u"Menu text", None))
-        self.SelectIcon.setText(QCoreApplication.translate("Form", u"...", None))
-        self.label_13.setText(QCoreApplication.translate("Form", u"Icon", None))
-        self.AddButton.setText(QCoreApplication.translate("Form", u"Add", None))
-        self.RemoveButton.setText(QCoreApplication.translate("Form", u"Remove", None))
-        self.ReplaceButton.setText(QCoreApplication.translate("Form", u"Replace", None))
-        self.label_14.setText(QCoreApplication.translate("Form", u"Macro buttons:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.CreateMacroButtons), QCoreApplication.translate("Form", u"Create macro buttons", None))
         self.label.setText(QCoreApplication.translate("Form", u"Refresh workbench data", None))
         self.cancelButton.setText(QCoreApplication.translate("Form", u"Cancel", None))
