@@ -393,24 +393,13 @@ class ModernMenu(RibbonBar):
             except Exception:
                 pass
         
-        # Check if there are disabled workbenches. If so add them to the ignored workbenches
-        if "workbenches" in self.ribbonStructure:
-            for WorkBenchName in self.ribbonStructure["workbenches"].keys():
-                IsInstalled = False
-                for InstalledWB in Gui.listWorkbenches():
-                    if InstalledWB == WorkBenchName:
-                        IsInstalled = True
-                
-                if IsInstalled is False and "ignoredWorkbenches" in self.ribbonStructure:  # noqa: SIM102
-                    if WorkBenchName not in self.ribbonStructure["ignoredWorkbenches"]:
-                        self.ribbonStructure["ignoredWorkbenches"].append(WorkBenchName)
+        # If workbenches are not present in the ribbon structure, something went wrong.
+        # Re-create the workbech structure
         if not "workbenches" in self.ribbonStructure:            
             for InstalledWB in Gui.listWorkbenches():
                 if "ignoredWorkbenches" in self.ribbonStructure and InstalledWB not in self.ribbonStructure["ignoredWorkbenches"]:
-                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, "workbenches", InstalledWB, True)
-                else:
-                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, "workbenches", InstalledWB, True)
-        
+                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure,["workbenches", InstalledWB], True)
+            StandardFunctions.Print(translate("FreeCAD Ribbon", "Ribbon UI: The workbench dict was empty. A new dict is created"), "Warning")
         
         if int(App.Version()[0]) == 0 or (int(App.Version()[0]) == 1 and int(App.Version()[1]) == 0):
             self.ConvertRibbonStructure(checkFCVersion=False, RestartFreeCAD=False)
