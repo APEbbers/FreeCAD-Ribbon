@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsXULmqa.ui'
+## Form generated from reading UI file 'AddCommandsVVWXut.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.12.0
 ##
@@ -26,7 +26,7 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(749, 709)
+        Form.resize(749, 739)
         Form.setAcceptDrops(True)
         self.gridLayout_13 = QGridLayout(Form)
         self.gridLayout_13.setObjectName(u"gridLayout_13")
@@ -651,15 +651,6 @@ class Ui_Form(object):
         self.gridLayout_11 = QGridLayout(self.groupBox_6)
         self.gridLayout_11.setObjectName(u"gridLayout_11")
         self.gridLayout_11.setContentsMargins(6, 6, 6, 6)
-        self.pushButton = QPushButton(self.groupBox_6)
-        self.pushButton.setObjectName(u"pushButton")
-
-        self.gridLayout_11.addWidget(self.pushButton, 1, 1, 1, 1)
-
-        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_11.addItem(self.horizontalSpacer_4, 1, 2, 1, 1)
-
         self.ListMacroButtons = QTableWidget(self.groupBox_6)
         if (self.ListMacroButtons.columnCount() < 6):
             self.ListMacroButtons.setColumnCount(6)
@@ -694,16 +685,33 @@ class Ui_Form(object):
         sizePolicy5.setHeightForWidth(self.ListMacroButtons.sizePolicy().hasHeightForWidth())
         self.ListMacroButtons.setSizePolicy(sizePolicy5)
         self.ListMacroButtons.setFrameShape(QFrame.Shape.Box)
-        self.ListMacroButtons.setEditTriggers(QAbstractItemView.EditTrigger.SelectedClicked)
+        self.ListMacroButtons.setEditTriggers(QAbstractItemView.EditTrigger.AllEditTriggers)
         self.ListMacroButtons.setTabKeyNavigation(False)
         self.ListMacroButtons.setProperty(u"showDropIndicator", False)
-        self.ListMacroButtons.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        self.ListMacroButtons.setDragDropOverwriteMode(False)
+        self.ListMacroButtons.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+        self.ListMacroButtons.setTextElideMode(Qt.TextElideMode.ElideRight)
         self.ListMacroButtons.setShowGrid(False)
         self.ListMacroButtons.setSupportedDragActions(Qt.DropAction.IgnoreAction)
         self.ListMacroButtons.horizontalHeader().setVisible(False)
+        self.ListMacroButtons.horizontalHeader().setHighlightSections(False)
         self.ListMacroButtons.verticalHeader().setVisible(False)
+        self.ListMacroButtons.verticalHeader().setHighlightSections(False)
 
         self.gridLayout_11.addWidget(self.ListMacroButtons, 0, 1, 1, 2)
+
+        self.pushButton = QPushButton(self.groupBox_6)
+        self.pushButton.setObjectName(u"pushButton")
+
+        self.gridLayout_11.addWidget(self.pushButton, 1, 1, 1, 1)
+
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_11.addItem(self.horizontalSpacer_4, 1, 2, 1, 1)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_11.addItem(self.verticalSpacer_2, 2, 2, 1, 1)
 
 
         self.gridLayout_17.addWidget(self.groupBox_6, 2, 0, 1, 2)
@@ -926,7 +934,6 @@ class Ui_Form(object):
         self.RemoveButton.setText(QCoreApplication.translate("Form", u"Remove", None))
         self.ReplaceButton.setText(QCoreApplication.translate("Form", u"Replace", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("Form", u"Available icons", None))
-        self.pushButton.setText(QCoreApplication.translate("Form", u"Browse for icons...", None))
         ___qtablewidgetitem = self.ListMacroButtons.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("Form", u"New Column", None))
         ___qtablewidgetitem1 = self.ListMacroButtons.horizontalHeaderItem(1)
@@ -954,6 +961,7 @@ class Ui_Form(object):
         self.ListMacroButtons.setSortingEnabled(False)
         self.ListMacroButtons.setSortingEnabled(__sortingEnabled5)
 
+        self.pushButton.setText(QCoreApplication.translate("Form", u"Browse for icons...", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.CreateMacroButtons), QCoreApplication.translate("Form", u"Create macro buttons", None))
         self.label.setText(QCoreApplication.translate("Form", u"Refresh workbench data", None))
         self.cancelButton.setText(QCoreApplication.translate("Form", u"Cancel", None))

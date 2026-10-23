@@ -45,12 +45,14 @@ from PySide6.QtWidgets import (
     QGridLayout,
     QHBoxLayout,
     QTableWidget,
+    QAbstractScrollArea,
+    QAbstractItemView,    
 )
 from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent
 import sys
 import json
 from datetime import datetime, timedelta
-
+from functools import partial
 import Standard_Functions_Ribbon as StandardFunctions
 from Standard_Functions_Ribbon import CommandInfoCorrections
 import Parameters_Ribbon
@@ -516,6 +518,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.SearchBar_DDB.textChanged.connect(
             self.on_SearchBar_DDB_TextChanged
         )
+
+        # # QTableWidget.cellDoubleClicked
+        # self.form.ListMacroButtons.cellDoubleClicked.connect(lambda e: self.TableCell_Clicked(e))
         
         # --- Form controls ------------------
         #
@@ -1566,12 +1571,20 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     def LoadICons(self):
         # Get the tableWidget
         TableWidget: QTableWidget = self.form.ListMacroButtons
-        # Set the amount of columns       
-        NoColumns = 6
-        TableWidget.setColumnCount(NoColumns)
-        # Set the initial number of rows
-        NoRows = round(len(self.List_CommandIcons) / NoColumns)
+        # Set the number of rows
+        NoRows = 6
         TableWidget.setRowCount(NoRows)
+        # Set the amount of columns       
+        NoColumns = round(len(self.List_CommandIcons) / NoRows)
+        TableWidget.setColumnCount(NoColumns)
+        TableWidget.setStyleSheet("""QToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }""")
+        TableWidget.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+        TableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
         
         # Create a shadowlist to store processed items
         shadowList = []        
@@ -1579,7 +1592,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             # Set the row height
             TableWidget.setRowHeight(i1, 32)
             for i2 in range(TableWidget.columnCount()):
-                # Set the column width
+                # # Set the column width
                 TableWidget.setColumnWidth(i2, 32)
                 
                 # Get the icon based on the icon list
@@ -1597,6 +1610,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             button.setToolTip(item[0])
                             button.setIconSize(QSize(TableWidget.columnWidth(i2), TableWidget.columnWidth(i2)))
                             button.setFixedSize(TableWidget.columnWidth(i2),TableWidget.rowHeight(i1))
+                            button.clicked.connect(lambda e, x=icon: self.TableCellButton_Clicked(x))
                             TableWidget.setCellWidget(i1, i2, button)                            
                             break
         
@@ -1615,6 +1629,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             if emptyRow is True:
                 TableWidget.hideRow(i1)
 
+        return
+    
+    def TableCellButton_Clicked(self, icon):
+        self.form.SelectIcon.setIcon(icon)
         return
     
     # endregion---------------------------------------------------------------------------------------
