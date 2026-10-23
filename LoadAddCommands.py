@@ -1564,35 +1564,56 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     # Macro commands ---------------------------------------------------------------------------------
     
     def LoadICons(self):
-        TableWidget: QTableWidget = self.form.ListMacroButtons       
+        # Get the tableWidget
+        TableWidget: QTableWidget = self.form.ListMacroButtons
+        # Set the amount of columns       
         NoColumns = 6
         TableWidget.setColumnCount(NoColumns)
+        # Set the initial number of rows
         NoRows = round(len(self.List_CommandIcons) / NoColumns)
         TableWidget.setRowCount(NoRows)
         
-        counter = -1        
+        # Create a shadowlist to store processed items
+        shadowList = []        
         for i1 in range(TableWidget.rowCount()):
-            TableWidget.setRowHeight(i1, 32*2)
+            # Set the row height
+            TableWidget.setRowHeight(i1, 32)
             for i2 in range(TableWidget.columnCount()):
-                counter = counter + 1
-                if counter < len(self.List_CommandIcons):                    
-                    icon: QIcon = self.List_CommandIcons[counter][1]
-                    TableWidget.setColumnWidth(i2, 32)
-                    if icon.isNull() or icon is None or self.List_CommandIcons[counter][0] == "" or icon.pixmap(64,64).toImage().bytesPerLine() < 512:
-                        counter = counter + 1
-                    button = QToolButton()
-                    button.setIcon(icon)
-                    button.setText(self.List_CommandIcons[counter][0])   
-                    button.setToolTip(self.List_CommandIcons[counter][0])
-                    button.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextUnderIcon)   
-                    button.setIconSize(QSize(TableWidget.columnWidth(i2), TableWidget.columnWidth(i2)))
-                    button.setFixedSize(TableWidget.columnWidth(i2),TableWidget.rowHeight(i1))
-                    TableWidget.setCellWidget(i1, i2, button)
-                if counter == len(self.List_CommandIcons) and i2 == 5:
-                    TableWidget.removeRow(i1)
-            if counter > len(self.List_CommandIcons): 
-                TableWidget.removeRow(i1)
-
+                # Set the column width
+                TableWidget.setColumnWidth(i2, 32)
+                
+                # Get the icon based on the icon list
+                icon = QIcon()
+                for item in self.List_CommandIcons:
+                    # If not already in the shadow list, continue
+                    if item[0] not in shadowList:
+                        # Add the commandname to the shadow list, so that it will be skipped next time
+                        shadowList.append(item[0])
+                        # Get the icon. If the icon is not empty, add it to a button and at that butten to the QTableWidget
+                        icon = self.ReturnCommandIcon(item[0])                    
+                        if not icon.isNull() and icon is not None and icon.pixmap(64,64).toImage().bytesPerLine() >= 256:
+                            button = QToolButton()
+                            button.setIcon(icon)
+                            button.setToolTip(item[0])
+                            button.setIconSize(QSize(TableWidget.columnWidth(i2), TableWidget.columnWidth(i2)))
+                            button.setFixedSize(TableWidget.columnWidth(i2),TableWidget.rowHeight(i1))
+                            TableWidget.setCellWidget(i1, i2, button)                            
+                            break
+        
+        # Hide empty rows
+        for i1 in range(TableWidget.rowCount()):
+            # Asume that the row is empty
+            emptyRow = True
+            # Go through the cells in the row.
+            for i2 in range(TableWidget.columnCount()):
+                # Get the cell widget. When the cell widget is not none,
+                # the row is not emppty and remains visible. 
+                # This way, only complete empty rows will be hidden 
+                widget = TableWidget.cellWidget(i1, i2)
+                if widget is not None:
+                    emptyRow = False
+            if emptyRow is True:
+                TableWidget.hideRow(i1)
 
         return
     
