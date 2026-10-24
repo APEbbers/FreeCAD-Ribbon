@@ -48,13 +48,13 @@ from PySide6.QtWidgets import (
     QAbstractScrollArea,
     QAbstractItemView,    
 )
-from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent
+from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent, QCursor
 import sys
 import json
 from datetime import datetime, timedelta
 from functools import partial
 import Standard_Functions_Ribbon as StandardFunctions
-from Standard_Functions_Ribbon import CommandInfoCorrections
+from Standard_Functions_Ribbon import CommandInfoCorrections, QScopedCursorOverride
 import Parameters_Ribbon
 from Parameters_Ribbon import Parameters
 import Serialize_Ribbon
@@ -142,257 +142,252 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.List_CommandIcons = RibbonBar.List_CommandIcons
         self.List_IgnoredWorkbenches = RibbonBar.ribbonStructure["ignoredWorkbenches"]
 
-        # Set the wait cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
-
-        # # this will create a Qt widget from our ui file
-        self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "AddCommands.ui"))
-        # Set its title
-        self.form.setWindowTitle(translate("FreeCAD Ribbon", "Add or remove buttons"))
-        self.form.setAcceptDrops(True)
-        
-        # Install an event filter to catch events from the main window and act on it.
-        self.form.installEventFilter(EventInspector(self.form))
-        
-        # set all widgets on the form to not accepting drops
-        self.form.CommandsAvailable_NP.setAcceptDrops(False)
-        self.form.SearchBar_NP.setAcceptDrops(False)
-        
-        # Get the address of the repository address
-        PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
-        self.ReproAdress = StandardFunctions.ReturnXML_Value(
-            PackageXML, "url", "type", "repository"
-        )
-        
-        # load the RibbonStructure.json
-        self.ReadJson()
-
-        # Make sure that the dialog stays on top
-        self.form.raise_()
-        self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
-        self.form.setFocus(Qt.FocusReason.PopupFocusReason)
-        
-        # Get the style from the main window and use it for this form
-        palette = mw.palette()
-        self.form.setPalette(palette)
-        Style = mw.style()
-        self.form.setStyle(Style)
-
-        # Position the dialog in front of FreeCAD
-        centerPoint = mw.geometry().center()
-        Rectangle = self.form.frameGeometry()
-        Rectangle.moveCenter(centerPoint)
-        self.form.move(Rectangle.topLeft())
-        
-        # Check if there is a datafile. if not, ask the user to create one.
-        DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
-        if os.path.exists(DataFile) is False:
-            Question = translate(
-                "FreeCAD Ribbon",
-                "The first time, a data file must be generated!\n"
-                "This can take a while! Do you want to proceed?",
+        with QScopedCursorOverride():                    
+            # # this will create a Qt widget from our ui file
+            self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "AddCommands.ui"))
+            # Set its title
+            self.form.setWindowTitle(translate("FreeCAD Ribbon", "Add or remove buttons"))
+            self.form.setAcceptDrops(True)
+            
+            # Install an event filter to catch events from the main window and act on it.
+            self.form.installEventFilter(EventInspector(self.form))
+            
+            # set all widgets on the form to not accepting drops
+            self.form.CommandsAvailable_NP.setAcceptDrops(False)
+            self.form.SearchBar_NP.setAcceptDrops(False)
+            
+            # Get the address of the repository address
+            PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
+            self.ReproAdress = StandardFunctions.ReturnXML_Value(
+                PackageXML, "url", "type", "repository"
             )
-            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
-            if Answer == "yes":
-                CacheFunctions.CreateCache()
-            else:
-                # Restore the cursor
-                QApplication.restoreOverrideCursor()
-                return
-        
-        # region - Load data------------------------------------------------------------------
-        #
-        Data = {}
-        # read ribbon structure from JSON file
-        with open(DataFile, "r") as file:
-            Data.update(json.load(file))
-        file.close()
+            
+            # load the RibbonStructure.json
+            self.ReadJson()
 
-        DataUpdateNeeded = False
-        try:
-            FileVersion = Data["dataVersion"]
-            if FileVersion != CacheFunctions.DataFileVersion:
-                DataUpdateNeeded = True
-        except Exception:
-            DataUpdateNeeded = True
-        if DataUpdateNeeded is True:        
-            Question = translate(
-                "FreeCAD Ribbon",
-                "The current data file is based on an older format!\n"
-                "It is important to update the data!\n"
-                "Do you want to proceed?\n"
-                "This can take a while!",
-            )
+            # Make sure that the dialog stays on top
+            self.form.raise_()
+            self.form.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint)
+            self.form.setFocus(Qt.FocusReason.PopupFocusReason)
+            
+            # Get the style from the main window and use it for this form
+            palette = mw.palette()
+            self.form.setPalette(palette)
+            Style = mw.style()
+            self.form.setStyle(Style)
 
-            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
-            if Answer == "yes":
-                CacheFunctions.CreateCache()
-
-        # get the system language
-        FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
-        try:
-            FCLanguage = FreeCAD_preferences.GetString("Language")
-            # Check if the language in the data file machtes the system language
-            IsSystemLanguage = True
-            if FCLanguage != Data["Language"]:
-                IsSystemLanguage = False
-            # If the languguage doesn't match, ask the user to update the data
-            if IsSystemLanguage is False:
+            # Position the dialog in front of FreeCAD
+            centerPoint = mw.geometry().center()
+            Rectangle = self.form.frameGeometry()
+            Rectangle.moveCenter(centerPoint)
+            self.form.move(Rectangle.topLeft())
+            
+            # Check if there is a datafile. if not, ask the user to create one.
+            DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
+            if os.path.exists(DataFile) is False:
                 Question = translate(
                     "FreeCAD Ribbon",
-                    "The data was generated for a differernt language!\n"
-                    "Do you want to update the data?\n"
+                    "The first time, a data file must be generated!\n"
+                    "This can take a while! Do you want to proceed?",
+                )
+                Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+                if Answer == "yes":
+                    CacheFunctions.CreateCache()
+                else:
+                    return
+            
+            # region - Load data------------------------------------------------------------------
+            #
+            Data = {}
+            # read ribbon structure from JSON file
+            with open(DataFile, "r") as file:
+                Data.update(json.load(file))
+            file.close()
+
+            DataUpdateNeeded = False
+            try:
+                FileVersion = Data["dataVersion"]
+                if FileVersion != CacheFunctions.DataFileVersion:
+                    DataUpdateNeeded = True
+            except Exception:
+                DataUpdateNeeded = True
+            if DataUpdateNeeded is True:        
+                Question = translate(
+                    "FreeCAD Ribbon",
+                    "The current data file is based on an older format!\n"
+                    "It is important to update the data!\n"
+                    "Do you want to proceed?\n"
                     "This can take a while!",
                 )
 
-                Answer = StandardFunctions.Mbox(
-                    Question, "FreeCAD Ribbon", 1, "Question"
-                )
+                Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
                 if Answer == "yes":
-                    CacheFunctions.CreateCache(resetTexts=True)
-        except Exception:
-            pass
+                    CacheFunctions.CreateCache()
 
-        # Load the standard lists for Workbenches, toolbars and commands
-        self.List_Workbenches = Data["List_Workbenches"]
-        self.StringList_Toolbars = Data["StringList_Toolbars"]
-        self.List_Commands = Data["List_Commands"]
+            # get the system language
+            FreeCAD_preferences = App.ParamGet("User parameter:BaseApp/Preferences/General")
+            try:
+                FCLanguage = FreeCAD_preferences.GetString("Language")
+                # Check if the language in the data file machtes the system language
+                IsSystemLanguage = True
+                if FCLanguage != Data["Language"]:
+                    IsSystemLanguage = False
+                # If the languguage doesn't match, ask the user to update the data
+                if IsSystemLanguage is False:
+                    Question = translate(
+                        "FreeCAD Ribbon",
+                        "The data was generated for a differernt language!\n"
+                        "Do you want to update the data?\n"
+                        "This can take a while!",
+                    )
 
-        # test if List_Commands is correct
-        i = 5
-        if len(self.List_Commands) > 0:
-            for item in self.List_Commands:
-                if len(item) < 5:
-                    i = len(item)
-                    break
-        if i < 5:
-            Question = translate(
-                "FreeCAD Ribbon",
-                "It seems that the data file is not up-to-date.\n"
-                "Do you want to update the data?\n"
-                "This can take a while!",
-            )
-            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
-            if Answer == "yes":
-                CacheFunctions.CreateCache()
+                    Answer = StandardFunctions.Mbox(
+                        Question, "FreeCAD Ribbon", 1, "Question"
+                    )
+                    if Answer == "yes":
+                        CacheFunctions.CreateCache(resetTexts=True)
+            except Exception:
+                pass
 
-        # Load icons for all workbenches
-        try:
-            for IconItem in Data["WorkBench_Icons"]:
-                Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
-                item = [IconItem[0], Icon]
-                if item not in self.List_CommandIcons:
-                    self.List_WorkBenchIcons.append(item)
-        except Exception as e:
-            StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
-            pass
-        
-        # Load icons for all commands
-        try:
-            for CommandItem in self.List_Commands:
-                isInList = False
-                for IconItem in self.List_CommandIcons:
-                    if CommandItem[0] == IconItem[0]:
-                        isInList = True
-                        if Parameters.DEBUG_MODE:
-                            print(f"{CommandItem[0]} already present in the list")
+            # Load the standard lists for Workbenches, toolbars and commands
+            self.List_Workbenches = Data["List_Workbenches"]
+            self.StringList_Toolbars = Data["StringList_Toolbars"]
+            self.List_Commands = Data["List_Commands"]
+
+            # test if List_Commands is correct
+            i = 5
+            if len(self.List_Commands) > 0:
+                for item in self.List_Commands:
+                    if len(item) < 5:
+                        i = len(item)
                         break
-                    
-                if isInList is False:
-                    # Check first if the icon can be loaded quickly
-                    Icon = QIcon()                                  
-                    FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
-                    for root, dirs, files in os.walk(FreeCAD_Icons):
-                        for fileName in files:
-                            if CommandItem[0] == fileName.split(".")[0]:
-                                Icon = QIcon()
-                                Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
-                                # Print a message when debug mode is enabled
-                                if Parameters.DEBUG_MODE:
-                                    print(f"{fileName} created from resources")
-                    
-                    if Icon is None or (Icon is not None and Icon.isNull()):
-                        IconName = StandardFunctions.CommandInfoCorrections(CommandItem[0])["pixmap"]      
-                        Icon = StandardFunctions.returnQiCons_Commands(CommandItem[0], IconName)
-                        # Print a message when debug mode is enabled
-                        if Parameters.DEBUG_MODE:
-                            print(f"Icon for {CommandItem[0]} retrieved from FreeCAD")
-                                    
-                    # If the Icon is still none or empty, get it from the datafile
-                    if Icon is None or (Icon is not None and Icon.isNull()):
-                        for IconItem in Data["Command_Icons"]:
-                            if IconItem[0] == CommandItem[0] and IconItem[0] != "" and CommandItem[0] != "":
-                                Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
-                                # Print a message when debug mode is enabled
-                                if Parameters.DEBUG_MODE:
-                                    print(f"Icon for {CommandItem[0]} retrieved from data file")
-                    
-                    # Add the icon to the icon list
-                    item = [CommandItem[0], Icon]
-                    self.List_CommandIcons.append(item)
-        except Exception as e:
-            StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
-            pass
-
-        # check if the list with workbenches is up-to-date
-        missingWB = []
-        for WorkBenchName in Gui.listWorkbenches():
-            for j in range(len(self.List_Workbenches)):
-                if (
-                    WorkBenchName == self.List_Workbenches[j][0]
-                    or WorkBenchName == "NoneWorkbench"
-                ):
-                    break
-                if j == len(self.List_Workbenches) - 1:
-                    missingWB.append(WorkBenchName)
-        if len(missingWB) > 0:
-            ListWB = "  "
-            for WB in missingWB:
-                ListWB = ListWB + WB + "\n" + "  "
-            Question = translate(
-                "FreeCAD Ribbon",
-                "The following workbenches were installed after the last data update: \n"
-                "{}\n\n"
-                "Do you want to update the data?\n"
-                "This can take a while!",
-            ).format(ListWB)
-            Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
-            if Answer == "yes":
-                CacheFunctions.CreateCache()
-
-        # Add dropdownbuttons to the list of commands
-        try:
-            for DropDownCommand, Commands in RibbonBar.workBenchDict["dropdownButtons"].items():
-                if isinstance(Commands, list):
-                    CommandName = Commands[0][0]
-                    IconName = ""
-                    for CommandItem in self.List_Commands:
-                        if CommandItem[0] == CommandName:
-                            IconName = StandardFunctions.CommandInfoCorrections(CommandItem[1])["pixmap"]
-                    self.List_Commands.append(
-                        [
-                            DropDownCommand,
-                            IconName,
-                            DropDownCommand.split("_")[0],
-                            "General",
-                            DropDownCommand.split("_")[0],
-                        ]
-                    )
-                else:
-                    del RibbonBar.workBenchDict["dropdownButtons"]
-                    StandardFunctions.Print(
-                        "dropdownbuttons have wrong format. Please create them again!",
-                        "Warning",
-                    )
-        except Exception as e:
-            if Parameters.DEBUG_MODE is True:
-                StandardFunctions.Print(
-                    f"{e.with_traceback(e.__traceback__)}", "Warning"
+            if i < 5:
+                Question = translate(
+                    "FreeCAD Ribbon",
+                    "It seems that the data file is not up-to-date.\n"
+                    "Do you want to update the data?\n"
+                    "This can take a while!",
                 )
-            pass
+                Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+                if Answer == "yes":
+                    CacheFunctions.CreateCache()
 
-        # endregion
+            # Load icons for all workbenches
+            try:
+                for IconItem in Data["WorkBench_Icons"]:
+                    Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
+                    item = [IconItem[0], Icon]
+                    if item not in self.List_CommandIcons:
+                        self.List_WorkBenchIcons.append(item)
+            except Exception as e:
+                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
+                pass
+            
+            # Load icons for all commands
+            try:
+                for CommandItem in self.List_Commands:
+                    isInList = False
+                    for IconItem in self.List_CommandIcons:
+                        if CommandItem[0] == IconItem[0]:
+                            isInList = True
+                            if Parameters.DEBUG_MODE:
+                                print(f"{CommandItem[0]} already present in the list")
+                            break
+                        
+                    if isInList is False:
+                        # Check first if the icon can be loaded quickly
+                        Icon = QIcon()                                  
+                        FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
+                        for root, dirs, files in os.walk(FreeCAD_Icons):
+                            for fileName in files:
+                                if CommandItem[0] == fileName.split(".")[0]:
+                                    Icon = QIcon()
+                                    Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
+                                    # Print a message when debug mode is enabled
+                                    if Parameters.DEBUG_MODE:
+                                        print(f"{fileName} created from resources")
+                        
+                        if Icon is None or (Icon is not None and Icon.isNull()):
+                            IconName = StandardFunctions.CommandInfoCorrections(CommandItem[0])["pixmap"]      
+                            Icon = StandardFunctions.returnQiCons_Commands(CommandItem[0], IconName)
+                            # Print a message when debug mode is enabled
+                            if Parameters.DEBUG_MODE:
+                                print(f"Icon for {CommandItem[0]} retrieved from FreeCAD")
+                                        
+                        # If the Icon is still none or empty, get it from the datafile
+                        if Icon is None or (Icon is not None and Icon.isNull()):
+                            for IconItem in Data["Command_Icons"]:
+                                if IconItem[0] == CommandItem[0] and IconItem[0] != "" and CommandItem[0] != "":
+                                    Icon: QIcon = Serialize_Ribbon.deserializeIcon(IconItem[1])
+                                    # Print a message when debug mode is enabled
+                                    if Parameters.DEBUG_MODE:
+                                        print(f"Icon for {CommandItem[0]} retrieved from data file")
+                        
+                        # Add the icon to the icon list
+                        item = [CommandItem[0], Icon]
+                        self.List_CommandIcons.append(item)
+            except Exception as e:
+                StandardFunctions.Print(f"{e.with_traceback(e.__traceback__)}", "Warning")
+                pass
+
+            # check if the list with workbenches is up-to-date
+            missingWB = []
+            for WorkBenchName in Gui.listWorkbenches():
+                for j in range(len(self.List_Workbenches)):
+                    if (
+                        WorkBenchName == self.List_Workbenches[j][0]
+                        or WorkBenchName == "NoneWorkbench"
+                    ):
+                        break
+                    if j == len(self.List_Workbenches) - 1:
+                        missingWB.append(WorkBenchName)
+            if len(missingWB) > 0:
+                ListWB = "  "
+                for WB in missingWB:
+                    ListWB = ListWB + WB + "\n" + "  "
+                Question = translate(
+                    "FreeCAD Ribbon",
+                    "The following workbenches were installed after the last data update: \n"
+                    "{}\n\n"
+                    "Do you want to update the data?\n"
+                    "This can take a while!",
+                ).format(ListWB)
+                Answer = StandardFunctions.Mbox(Question, "FreeCAD Ribbon", 1, "Question")
+                if Answer == "yes":
+                    CacheFunctions.CreateCache()
+
+            # Add dropdownbuttons to the list of commands
+            try:
+                for DropDownCommand, Commands in RibbonBar.workBenchDict["dropdownButtons"].items():
+                    if isinstance(Commands, list):
+                        CommandName = Commands[0][0]
+                        IconName = ""
+                        for CommandItem in self.List_Commands:
+                            if CommandItem[0] == CommandName:
+                                IconName = StandardFunctions.CommandInfoCorrections(CommandItem[1])["pixmap"]
+                        self.List_Commands.append(
+                            [
+                                DropDownCommand,
+                                IconName,
+                                DropDownCommand.split("_")[0],
+                                "General",
+                                DropDownCommand.split("_")[0],
+                            ]
+                        )
+                    else:
+                        del RibbonBar.workBenchDict["dropdownButtons"]
+                        StandardFunctions.Print(
+                            "dropdownbuttons have wrong format. Please create them again!",
+                            "Warning",
+                        )
+            except Exception as e:
+                if Parameters.DEBUG_MODE is True:
+                    StandardFunctions.Print(
+                        f"{e.with_traceback(e.__traceback__)}", "Warning"
+                    )
+                pass
+
+            # endregion
 
         # Add the workbenches
         self.addWorkbenches()
@@ -411,108 +406,108 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         def FilterWorkbench_NP():
             self.on_ListCategory_NP_TextChanged()
 
-        #
-        # --- AddCOmmandsTab ------------------
-        #
-        # Connect the filter for the quick commands on the quickcommands tab
-        self.form.ListCategory_NP.currentTextChanged.connect(FilterWorkbench_NP)
-        # Connect the searchbar for the quick commands on the quick commands tab
-        self.form.SearchBar_NP.textChanged.connect(
-            self.on_SearchBar_NP_TextChanged
-        )
-        
-        # Connect the "CreateNewPanel" button
-        self.form.CreateNewPanel.clicked.connect(self.on_CreateNewPanel_clicked)        
-        
-        #
-        # --- CombinePanelsTab ------------------
-        #
-        # Connect move and events to the buttons on the Custom Panels Tab
-        self.form.MoveUpPanelCommand_CP.connect(
-            self.form.MoveUpPanelCommand_CP,
-            SIGNAL("clicked()"),
-            self.on_MoveUpPanelCommand_CP_clicked,
-        )
-        self.form.MoveDownPanelCommand_CP.connect(
-            self.form.MoveDownPanelCommand_CP,
-            SIGNAL("clicked()"),
-            self.on_MoveDownPanelCommand_CP_clicked,
-        )
+            #
+            # --- AddCOmmandsTab ------------------
+            #
+            # Connect the filter for the quick commands on the quickcommands tab
+            self.form.ListCategory_NP.currentTextChanged.connect(FilterWorkbench_NP)
+            # Connect the searchbar for the quick commands on the quick commands tab
+            self.form.SearchBar_NP.textChanged.connect(
+                self.on_SearchBar_NP_TextChanged
+            )
+            
+            # Connect the "CreateNewPanel" button
+            self.form.CreateNewPanel.clicked.connect(self.on_CreateNewPanel_clicked)        
+            
+            #
+            # --- CombinePanelsTab ------------------
+            #
+            # Connect move and events to the buttons on the Custom Panels Tab
+            self.form.MoveUpPanelCommand_CP.connect(
+                self.form.MoveUpPanelCommand_CP,
+                SIGNAL("clicked()"),
+                self.on_MoveUpPanelCommand_CP_clicked,
+            )
+            self.form.MoveDownPanelCommand_CP.connect(
+                self.form.MoveDownPanelCommand_CP,
+                SIGNAL("clicked()"),
+                self.on_MoveDownPanelCommand_CP_clicked,
+            )
 
-        # Connect Add events to the buttons on the Custom Panels Tab for adding commands to the panel
-        self.form.AddPanel_CP.connect(
-            self.form.AddPanel_CP, SIGNAL("clicked()"), self.on_AddPanel_CP_clicked
-        )
+            # Connect Add events to the buttons on the Custom Panels Tab for adding commands to the panel
+            self.form.AddPanel_CP.connect(
+                self.form.AddPanel_CP, SIGNAL("clicked()"), self.on_AddPanel_CP_clicked
+            )
 
-        self.form.AddCustomPanel_CP.connect(
-            self.form.AddCustomPanel_CP,
-            SIGNAL("clicked()"),
-            self.on_AddCustomPanel_CP_clicked,
-        )
+            self.form.AddCustomPanel_CP.connect(
+                self.form.AddCustomPanel_CP,
+                SIGNAL("clicked()"),
+                self.on_AddCustomPanel_CP_clicked,
+            )
 
-        # Connect custom toolbar selector on the Custom Panels Tab
-        def CommandList_CP():
-            self.on_CustomToolbarSelector_CP_activated()
+            # Connect custom toolbar selector on the Custom Panels Tab
+            def CommandList_CP():
+                self.on_CustomToolbarSelector_CP_activated()
 
-        self.form.CustomToolbarSelector_CP.activated.connect(CommandList_CP)
+            self.form.CustomToolbarSelector_CP.activated.connect(CommandList_CP)
 
-        self.form.RemovePanel_CP.connect(
-            self.form.RemovePanel_CP,
-            SIGNAL("clicked()"),
-            self.on_RemovePanel_CP_clicked,
-        )
-        
-        self.form.WorkbenchList_CP.setHidden(True)
-        self.form.label_7.setHidden(True)
-        
-        #
-        # --- CreateDropDownButtonTab ----------------
-        #
-        # Connect the Create dropdown button
-        self.form.CreateControl_DDB.connect(
-            self.form.CreateControl_DDB,
-            SIGNAL("clicked()"),
-            self.on_CreateControl_DDB_clicked,
-        )
+            self.form.RemovePanel_CP.connect(
+                self.form.RemovePanel_CP,
+                SIGNAL("clicked()"),
+                self.on_RemovePanel_CP_clicked,
+            )
+            
+            self.form.WorkbenchList_CP.setHidden(True)
+            self.form.label_7.setHidden(True)
+            
+            #
+            # --- CreateDropDownButtonTab ----------------
+            #
+            # Connect the Create dropdown button
+            self.form.CreateControl_DDB.connect(
+                self.form.CreateControl_DDB,
+                SIGNAL("clicked()"),
+                self.on_CreateControl_DDB_clicked,
+            )
 
-        # Connect  dropdownselector on the create dropdown button Tab
-        def CommandList_DDB():
-            self.on_CommandList_DDB_activated()
+            # Connect  dropdownselector on the create dropdown button Tab
+            def CommandList_DDB():
+                self.on_CommandList_DDB_activated()
 
-        self.form.CommandList_DDB.activated.connect(CommandList_DDB)
+            self.form.CommandList_DDB.activated.connect(CommandList_DDB)
 
-        # Connect the remove dropdown button
-        self.form.RemoveControl_DDB.connect(
-            self.form.RemoveControl_DDB,
-            SIGNAL("clicked()"),
-            self.on_RemoveControl_DDB_clicked,
-        )
+            # Connect the remove dropdown button
+            self.form.RemoveControl_DDB.connect(
+                self.form.RemoveControl_DDB,
+                SIGNAL("clicked()"),
+                self.on_RemoveControl_DDB_clicked,
+            )
 
-        # Connect Add/Remove and move events to the buttons on the QuickAccess Tab
-        self.form.AddCommand_DDB.connect(
-            self.form.AddCommand_DDB,
-            SIGNAL("clicked()"),
-            self.on_AddCommand_DDB_clicked,
-        )
-        self.form.RemoveCommand_DDB.connect(
-            self.form.RemoveCommand_DDB,
-            SIGNAL("clicked()"),
-            self.on_RemoveCommand_DDB_clicked,
-        )
-        self.form.MoveUpCommand_DDB.connect(
-            self.form.MoveUpCommand_DDB,
-            SIGNAL("clicked()"),
-            self.on_MoveUpCommand_DDB_clicked,
-        )
-        self.form.MoveDownCommand_DDB.connect(
-            self.form.MoveDownCommand_DDB,
-            SIGNAL("clicked()"),
-            self.on_MoveDownCommand_DDB_clicked,
-        )
+            # Connect Add/Remove and move events to the buttons on the QuickAccess Tab
+            self.form.AddCommand_DDB.connect(
+                self.form.AddCommand_DDB,
+                SIGNAL("clicked()"),
+                self.on_AddCommand_DDB_clicked,
+            )
+            self.form.RemoveCommand_DDB.connect(
+                self.form.RemoveCommand_DDB,
+                SIGNAL("clicked()"),
+                self.on_RemoveCommand_DDB_clicked,
+            )
+            self.form.MoveUpCommand_DDB.connect(
+                self.form.MoveUpCommand_DDB,
+                SIGNAL("clicked()"),
+                self.on_MoveUpCommand_DDB_clicked,
+            )
+            self.form.MoveDownCommand_DDB.connect(
+                self.form.MoveDownCommand_DDB,
+                SIGNAL("clicked()"),
+                self.on_MoveDownCommand_DDB_clicked,
+            )
 
-        # Connect the filter for the quick commands on the quickcommands tab
-        def FilterWorkbench_DDB():
-            self.on_ListCategory_DDB_TextChanged()
+            # Connect the filter for the quick commands on the quickcommands tab
+            def FilterWorkbench_DDB():
+                self.on_ListCategory_DDB_TextChanged()
 
         # Connect the filter for the quick commands on the quickcommands tab
         self.form.ListCategory_DDB.currentTextChanged.connect(FilterWorkbench_DDB)
@@ -1657,23 +1652,25 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
     # region - Form controls
     def on_Cancel_Clicked(self):
-        if self.DialogClosed is False:
-            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")        
-            for category in RibbonBar.CustomizedCategories:
-                RibbonBar.setCurrentCategory(category)
-                RibbonBar.on_Cancel_Clicked()
-            RibbonBar.CustomizedCategories.clear()
+        with QScopedCursorOverride():
+            if self.DialogClosed is False:
+                RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")        
+                for category in RibbonBar.CustomizedCategories:
+                    RibbonBar.setCurrentCategory(category)
+                    RibbonBar.on_Cancel_Clicked()
+                RibbonBar.CustomizedCategories.clear()
         return
         
     def on_Ok_Clicked(self):
-        self.DialogClosed = True
-        if self.DialogClosed is True:
-            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-            for category in RibbonBar.CustomizedCategories:
-                RibbonBar.setCurrentCategory(category) 
-                RibbonBar.on_Ok_Clicked()
-            RibbonBar.CustomizedCategories.clear()
-            # self.DialogClosed = False
+        with QScopedCursorOverride():
+            self.DialogClosed = True
+            if self.DialogClosed is True:
+                RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+                for category in RibbonBar.CustomizedCategories:
+                    RibbonBar.setCurrentCategory(category) 
+                    RibbonBar.on_Ok_Clicked()
+                RibbonBar.CustomizedCategories.clear()
+                # self.DialogClosed = False
         return
 
     def on_Apply_Clicked(self):
@@ -2810,4 +2807,4 @@ class EventInspector(QObject):
             # mw.centralWidget().setFixedWidth(RibbonBar.CentralWidgetWidth)
             # mw.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         return False
-  
+

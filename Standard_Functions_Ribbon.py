@@ -21,7 +21,8 @@
 # *************************************************************************
 
 from PySide.QtGui import QIcon
-from PySide.QtCore import QSize
+from PySide.QtCore import QSize, QEventLoop, Qt
+from PySide.QtWidgets import QApplication
 
 import FreeCAD as App
 import FreeCADGui as Gui
@@ -33,6 +34,17 @@ translate = App.Qt.translate
 
 mw = Gui.getMainWindow()
 
+
+class QScopedCursorOverride:
+    def __enter__(self):
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+        return
+        
+    def __exit__(self, exception_type, exception_value, traceback):
+        while QApplication.overrideCursor() is not None:
+            QApplication.restoreOverrideCursor()
+        return
 
 def Mbox(
     text,
@@ -1049,3 +1061,4 @@ def isWorkbenchActive(WorkBenchName = ""):
             pass
     
     return result
+
