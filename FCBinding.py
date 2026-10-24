@@ -5766,21 +5766,22 @@ class ModernMenu(RibbonBar):
                     height = App.ParamGet("User parameter:BaseApp/Preferences/General/").GetInt("ToolbarIconSize")                    
                     for item in self.ToolBarsToHide:
                         if item[0] == toolbar.objectName():
-                            width = max(item[1], 0)
-                            height = max(item[2], 0)
-                            size = QSize(width, height)       
+                            width = max(item[1],0)
+                            height = max(item[2],0)
+                            size = QSize(width, height)
+                            # print(size)             
                             toolbar.setMinimumSize(size)
                             toolbar.setMaximumSize(16777215, height*3.7795275591) # convert height from mm to pixel
-                    # make sure the toolbar is visible
-                    toolbar.show()
-                    
-                    # Write the location and state to the ribbon structure
-                    if mw.toolBarArea(toolbar) == Qt.ToolBarArea.LeftToolBarArea:
-                        Location = "Left"
-                    if mw.toolBarArea(toolbar) == Qt.ToolBarArea.RightToolBarArea:
-                        Location = "Right"
-                    self.ribbonStructure["ToolBarStates"][toolbarName] = [True, Location]
-                    
+                            # make sure the toolbar is visible
+                            toolbar.show()
+                            
+                            # Write the location and state to the ribbon structure
+                            if mw.toolBarArea(toolbar) == Qt.ToolBarArea.LeftToolBarArea:
+                                Location = "Left"
+                            if mw.toolBarArea(toolbar) == Qt.ToolBarArea.RightToolBarArea:
+                                Location = "Right"
+                            self.ribbonStructure["ToolBarStates"][toolbarName] = [True, Location]
+                            break
                 else:                    
                     self.ribbonStructure["ToolBarStates"][toolbarName] = [False, Location]                    
                     toolbar.close()
