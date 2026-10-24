@@ -389,6 +389,9 @@ class ModernMenu(RibbonBar):
     RemoveFromTabGroupAct = None
     ComboBox = None
     DeleteButton = None
+    
+    # Create a list to hide toolbars that appear on top and needs to be hidden
+    ToolBarsToHide = []
     # endregion
 
     def __init__(self):
@@ -515,6 +518,17 @@ class ModernMenu(RibbonBar):
             except:  # noqa: E722
                 if Parameters.DEBUG_MODE:
                     StandardFunctions.Print(f"RibbonUI:\n{traceback.format_exc()}", "Warning")
+                
+        # # Check if there are disabled workbenches. If so add them to the ignored workbenches
+        # if "workbenches" in self.ribbonStructure:
+        #     for WorkBenchName in self.ribbonStructure["workbenches"]:
+        #         IsInstalled = False
+        #         for InstalledWB in Gui.listWorkbenches():
+        #             if InstalledWB == WorkBenchName:
+        #                 IsInstalled = True
+                
+        #         if IsInstalled is False and "ignoredWorkbenches" in self.ribbonStructure and WorkBenchName not in self.ribbonStructure["ignoredWorkbenches"]:
+        #                 self.ribbonStructure["ignoredWorkbenches"].append(WorkBenchName)
                         
         # If workbenches are not present in the ribbon structure, something went wrong.
         # Re-create the workbech structure
@@ -1343,6 +1357,7 @@ class ModernMenu(RibbonBar):
                     border-radius: 2px;
                     }""")
         # ------------------------------------------------------------------------------------------------------------------       
+        
         return
 
     # region - Custom functions for FreeCAD
@@ -1435,7 +1450,7 @@ class ModernMenu(RibbonBar):
         return False
 
     def enterEvent_Custom(self, QEvent):
-        # # Hide any possible toolbar
+        # Hide any possible toolbar
         self.hideClassicToolbars()
         TB: QDockWidget = mw.findChildren(QDockWidget, "Ribbon")[0]
         TB.show()
@@ -2532,7 +2547,7 @@ class ModernMenu(RibbonBar):
     def on_Ok_Clicked(self, workbenchName = "", CloseDialog = True):
         self.OkClicked = True
         # Set the wait cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        # QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
         
         # Get the name of the current workbench
@@ -2839,7 +2854,8 @@ class ModernMenu(RibbonBar):
                     }""")
                                 
         # Restore the cursor
-        QApplication.restoreOverrideCursor()
+        # QApplication.restoreOverrideCursor()
+        # QApplication.restoreOverrideCursor()
         return
     
     def on_Cancel_Clicked(self):    
@@ -2849,7 +2865,7 @@ class ModernMenu(RibbonBar):
             return 
         self.CancelClicked = True
         # # Set the wait cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        # QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
         # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
 
         # Get the name of the current workbench
@@ -3092,7 +3108,7 @@ class ModernMenu(RibbonBar):
         StandardFunctions.Print(translate("FreeCAD Ribbon", f"RibbonUI: Changes are rolled back for {workbenchName}"))
         
         # # Restore the cursor
-        QApplication.restoreOverrideCursor()
+        # QApplication.restoreOverrideCursor()
         # QApplication.restoreOverrideCursor()
         return
         
@@ -4015,8 +4031,8 @@ class ModernMenu(RibbonBar):
             self.buildPanels(self.workBenchDict)
              
             # Restore the cursor
-            QApplication.restoreOverrideCursor()
-            QApplication.restoreOverrideCursor()
+            # QApplication.restoreOverrideCursor()
+            # QApplication.restoreOverrideCursor()
             return
         
         # Define a parent
@@ -4687,9 +4703,6 @@ class ModernMenu(RibbonBar):
         
         workbenchName = workbench.name()
         self.isWbLoaded[workbenchName] = True
-
-        # hide normal toolbars
-        self.hideClassicToolbars()
 
         # switch tab if necessary
         if self.CustomizeEnabled is False: 
@@ -5388,8 +5401,7 @@ class ModernMenu(RibbonBar):
             Panel_Menu.setMenu(menu)
         
         # Fill the toolbar menu with actions
-        if ToolBar_Menu is not None:      
-                    
+        if ToolBar_Menu is not None:                          
             menu = StayOpenMenu(mw)
             for Toolbar_Name in Toolbar_Names:
                 Action = self.createAction_ToolBar(Toolbar_Name, menu)
@@ -5799,9 +5811,19 @@ class ModernMenu(RibbonBar):
 
                     # Remove the toolbar first.
                     mw.removeToolBar(toolbar)
-                    # Add the toolbar again. But now only in one of the allowed areas
-                    
+                    # Add the toolbar again. But now only in one of the allowed areas                    
                     mw.addToolBar(ToolBarArea ,toolbar)
+                    # set the size
+                    size = QSize()
+                    height = App.ParamGet("User parameter:BaseApp/Preferences/General/").GetInt("ToolbarIconSize")                    
+                    for item in self.ToolBarsToHide:
+                        if item[0] == toolbar.objectName():
+                            width = max(item[1], 0)
+                            height = max(item[2], 0)
+                            size = QSize(width, height)       
+                            toolbar.setMinimumSize(size)
+                            toolbar.setMaximumSize(16777215, height*3.7795275591) # convert height from mm to pixel
+                    # make sure the toolbar is visible
                     toolbar.show()
                     
                     # Write the location and state to the ribbon structure
@@ -5845,8 +5867,8 @@ class ModernMenu(RibbonBar):
         
         if os.path.exists(DataFile) is True:            
             # Set the wait cursor
-            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+            # QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
             
             # Get the form
             Dialog = LoadDesign_Ribbon.LoadDialog(self.List_CommandIcons, self.ribbonStructure)
@@ -5869,8 +5891,8 @@ class ModernMenu(RibbonBar):
                 mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
 
             # Restore the cursor
-            QApplication.restoreOverrideCursor()
-            QApplication.restoreOverrideCursor()
+            # QApplication.restoreOverrideCursor()
+            # QApplication.restoreOverrideCursor()
         return
 
     # Function for loading the settings menu
@@ -5880,8 +5902,8 @@ class ModernMenu(RibbonBar):
             return
         
         # Set the wait cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+        # QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
                 
         # Get the form
         Dialog = LoadSettings_Ribbon.LoadDialog()
@@ -5907,8 +5929,8 @@ class ModernMenu(RibbonBar):
         self.DesignMenuLoaded = True
 
         # Restore the cursor
-        QApplication.restoreOverrideCursor()
-        QApplication.restoreOverrideCursor()
+        # QApplication.restoreOverrideCursor()
+        # QApplication.restoreOverrideCursor()
         return
 
     # Build the panels from active workbench
@@ -6386,10 +6408,20 @@ class ModernMenu(RibbonBar):
 
     # region - helper functions
     def hideClassicToolbars(self):
-        for toolbar in mw.findChildren(QToolBar):
+        for toolbar in mw.findChildren(QToolBar):            
             parentWidget = toolbar.parentWidget()
-            if mw.toolBarArea(toolbar) == Qt.ToolBarArea.TopToolBarArea:
+            # Find the location stored in the ribbonStructure
+            storedLocation = None
+            if "ToolBarStates" in self.ribbonStructure and toolbar.objectName() in self.ribbonStructure["ToolBarStates"]:
+                storedLocation = self.ribbonStructure["ToolBarStates"][toolbar.objectName()]
+            
+            if mw.toolBarArea(toolbar) == Qt.ToolBarArea.TopToolBarArea and storedLocation is not None and storedLocation[1] != "top":
                 toolbar.setHidden(True)
+                # Store the original size
+                self.ToolBarsToHide.append([toolbar.objectName(), toolbar.width(), toolbar.height()])                
+                # Set the size to zero
+                toolbar.setMinimumSize(0,0)
+                toolbar.setMaximumSize(0,0)
             # hide toolbars that are not in the statusBar and show toolbars that are in the statusbar.
             if (
                 parentWidget.objectName() == "statusBar"
@@ -6397,15 +6429,6 @@ class ModernMenu(RibbonBar):
             ):
                 toolbar.setEnabled(True)
                 toolbar.setVisible(True)
-            #
-            # if (
-            #     mw.toolBarArea(toolbar) == Qt.ToolBarArea.LeftToolBarArea
-            #     or mw.toolBarArea(toolbar) == Qt.ToolBarArea.RightToolBarArea
-            #     or mw.toolBarArea(toolbar) == Qt.ToolBarArea.BottomToolBarArea
-            # ):
-            #     toolbar.setEnabled(True)
-            #     toolbar.setVisible(True)
-            #
             # Show specific toolbars and go to the next
             if toolbar.objectName() != "" and toolbar.objectName() in [
                 self.quickAccessToolBar().objectName(),
@@ -8312,8 +8335,8 @@ class ModernMenu(RibbonBar):
             panel.close()
             
             # Restore the cursor
-            QApplication.restoreOverrideCursor()
-            QApplication.restoreOverrideCursor()
+            # QApplication.restoreOverrideCursor()
+            # QApplication.restoreOverrideCursor()
             return True     
         except:  # noqa: E722
             e = traceback.format_exc()
@@ -9087,6 +9110,13 @@ class EventInspector(QObject):
                 if Parameters.DEBUG_MODE is True:
                     StandardFunctions.Print(f"RibbonUI:\n{e}", "Warning")
                 self.DataChecked = True
+        
+        # try:      
+        #     mw = Gui.getMainWindow()
+        #     RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+        #     RibbonBar.hideClassicToolbars()
+        # except:  # noqa: E722
+        #     pass
             
         # This is an alternative drop function which works only with QT6.
         # It is needed to avoid problems with older Nvidia Cards (Pascal and older) and Wayland        
