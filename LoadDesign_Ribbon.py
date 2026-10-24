@@ -50,7 +50,7 @@ import json
 from datetime import datetime, date, timedelta, time
 import shutil
 import Standard_Functions_Ribbon as StandardFunctions
-from Standard_Functions_Ribbon import CommandInfoCorrections
+from Standard_Functions_Ribbon import CommandInfoCorrections, QScopedCursorOverride
 import Parameters_Ribbon
 from Parameters_Ribbon import Parameters
 import Serialize_Ribbon
@@ -3421,84 +3421,86 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
     # region - Form buttons tab
     def on_RestoreJson_clicked(self):
-        self.form.setWindowFlags(Qt.WindowType.WindowStaysOnBottomHint)
-        # get the path for the Json file
-        JsonPath = ConfigDirectory
-        JsonFile = os.path.join(JsonPath, "RibbonStructure.json")
+        with QScopedCursorOverride():
+            self.form.setWindowFlags(Qt.WindowType.WindowStaysOnBottomHint)
+            # get the path for the Json file
+            JsonPath = ConfigDirectory
+            JsonFile = os.path.join(JsonPath, "RibbonStructure.json")
 
-        BackupFiles: list = []
-        # returns a list of names (with extension, without full path) of all files
-        # in backup path
-        for name in os.listdir(pathBackup):
-            if os.path.isfile(os.path.join(pathBackup, name)):
-                if name.lower().endswith("json"):
-                    BackupFiles.append(name)
-        # Sort the backup files in reversed order
-        BackupFiles.sort(reverse=True)
+            BackupFiles: list = []
+            # returns a list of names (with extension, without full path) of all files
+            # in backup path
+            for name in os.listdir(pathBackup):
+                if os.path.isfile(os.path.join(pathBackup, name)):
+                    if name.lower().endswith("json"):
+                        BackupFiles.append(name)
+            # Sort the backup files in reversed order
+            BackupFiles.sort(reverse=True)
 
-        if len(BackupFiles) > 0:
-            SelectedFile = StandardFunctions.Mbox(
-                translate("FreeCAD Ribbon", "Select a backup file"),
-                "",
-                21,
-                "NoIcon",
-                BackupFiles[0],
-                BackupFiles,
-            )
-            BackupFile = os.path.join(pathBackup, SelectedFile)
-            result = shutil.copy(BackupFile, JsonFile)
-            StandardFunctions.Print(
-                translate(
-                    "FreeCAD Ribbon", "Ribbon bar set back to settings from: {}"
-                ).format(result),
-                "Warning",
-            )
+            if len(BackupFiles) > 0:
+                SelectedFile = StandardFunctions.Mbox(
+                    translate("FreeCAD Ribbon", "Select a backup file"),
+                    "",
+                    21,
+                    "NoIcon",
+                    BackupFiles[0],
+                    BackupFiles,
+                )
+                BackupFile = os.path.join(pathBackup, SelectedFile)
+                result = shutil.copy(BackupFile, JsonFile)
+                StandardFunctions.Print(
+                    translate(
+                        "FreeCAD Ribbon", "Ribbon bar set back to settings from: {}"
+                    ).format(result),
+                    "Warning",
+                )
 
-            message = translate(
-                "FreeCAD Ribbon",
-                "Settings reset to {}!\nYou must restart FreeCAD for changes to take effect.",
-            ).format(SelectedFile)
-            answer = StandardFunctions.RestartDialog(message=message)
-            if answer == "yes":
-                StandardFunctions.restart_freecad()
+                message = translate(
+                    "FreeCAD Ribbon",
+                    "Settings reset to {}!\nYou must restart FreeCAD for changes to take effect.",
+                ).format(SelectedFile)
+                answer = StandardFunctions.RestartDialog(message=message)
+                if answer == "yes":
+                    StandardFunctions.restart_freecad()
 
-        self.form.close()
+            self.form.close()
         return
 
     def on_ResetJson_clicked(self):
-        self.form.setWindowFlags(Qt.WindowType.WindowStaysOnBottomHint)
-        # get the path for the Json file
-        JsonPath = ConfigDirectory
-        JsonFile = os.path.join(JsonPath, "RibbonStructure.json")
+        with QScopedCursorOverride():
+            self.form.setWindowFlags(Qt.WindowType.WindowStaysOnBottomHint)
+            # get the path for the Json file
+            JsonPath = ConfigDirectory
+            JsonFile = os.path.join(JsonPath, "RibbonStructure.json")
 
-        BackupFile = os.path.join(JsonPath, "RibbonStructure_default.json")
+            BackupFile = os.path.join(JsonPath, "RibbonStructure_default.json")
 
-        # Add a warning message with an option to back out
-        message = translate(
-            "FreeCAD Ribbon",
-            "Do you really want to reset the ribbon? All customizations will be gone!",
-        )
-        answer = StandardFunctions.Mbox(message, "FreeCAD Ribbon", 1, "Warning")
-        if answer == "yes":
+            # Add a warning message with an option to back out
             message = translate(
                 "FreeCAD Ribbon",
-                "Settings reset to default!\nYou must restart FreeCAD for changes to take effect.",
+                "Do you really want to reset the ribbon? All customizations will be gone!",
             )
-
-            result = shutil.copy(BackupFile, JsonFile)
-            StandardFunctions.Print(
-                translate("FreeCAD Ribbon", "Ribbon bar reset from {}!").format(result),
-                "Warning",
-            )
-            answer = StandardFunctions.RestartDialog(message=message)
+            answer = StandardFunctions.Mbox(message, "FreeCAD Ribbon", 1, "Warning")
             if answer == "yes":
-                StandardFunctions.restart_freecad()
+                message = translate(
+                    "FreeCAD Ribbon",
+                    "Settings reset to default!\nYou must restart FreeCAD for changes to take effect.",
+                )
 
-            DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
-            if DockWidget is not None:
-                DockWidget.deleteLater()
-            
-            self.form.close()
+                result = shutil.copy(BackupFile, JsonFile)
+                StandardFunctions.Print(
+                    translate("FreeCAD Ribbon", "Ribbon bar reset from {}!").format(result),
+                    "Warning",
+                )
+                answer = StandardFunctions.RestartDialog(message=message)
+                if answer == "yes":
+                    StandardFunctions.restart_freecad()
+
+                DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
+                if DockWidget is not None:
+                    DockWidget.deleteLater()
+                
+                self.form.close()
         return
 
     @staticmethod
@@ -3510,27 +3512,28 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
     # @staticmethod
     def on_Close_clicked(self):
-        self.WriteJson()
+        with QScopedCursorOverride():
+            self.WriteJson()
 
-        # Set the size of the window to the previous state
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "LayoutDialog_Height", self.form.height()
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "LayoutDialog_Width", self.form.width()
-        )
-        
-        DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
-        if DockWidget is not None:
-            DockWidget.deleteLater()
-        # Emit a close signal
-        # self.closeSignal.emit()
-        # Close the form
-        self.form.close()
+            # Set the size of the window to the previous state
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "LayoutDialog_Height", self.form.height()
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "LayoutDialog_Width", self.form.width()
+            )
+            
+            DockWidget = mw.findChild(QDockWidget, "RibbonLayout")
+            if DockWidget is not None:
+                DockWidget.deleteLater()
+            # Emit a close signal
+            # self.closeSignal.emit()
+            # Close the form
+            self.form.close()
 
-        # show the restart dialog
-        if self.IsChanged is True:
-            result = StandardFunctions.RestartDialog(includeIcons=True)
+            # show the restart dialog
+            if self.IsChanged is True:
+                result = StandardFunctions.RestartDialog(includeIcons=True)
         return
 
     @staticmethod
