@@ -151,7 +151,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.form = Gui.PySideUic.loadUi(os.path.join(pathUI, "Design.ui"))
 
         # Install an event filter to catch events from the main window and act on it.
-        self.form.installEventFilter(EventInspector(self.form))
+        self.form.installEventFilter(EventInspector_Ribbon_4(self.form))
 
         # Get the address of the repository address
         PackageXML = os.path.join(os.path.dirname(__file__), "package.xml")
@@ -5533,12 +5533,12 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
     # endregion---------------------------------------------------------------------------------------
 
 
-class EventInspector(QObject):
+class EventInspector_Ribbon_4(QObject):
     form = None
 
     def __init__(self, parent):
         self.form = parent
-        super(EventInspector, self).__init__(parent)
+        super(EventInspector_Ribbon_4, self).__init__(parent)
 
     def eventFilter(self, obj, event):
         import FCBinding

@@ -147,7 +147,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.setAcceptDrops(True)
             
             # Install an event filter to catch events from the main window and act on it.
-            self.form.installEventFilter(EventInspector(self.form))
+            self.form.installEventFilter(EventInspector_Ribbon_2(self.form))
             
             # set all widgets on the form to not accepting drops
             self.form.CommandsAvailable_NP.setAcceptDrops(False)
@@ -2616,7 +2616,7 @@ def main():
     # Show the form
     Dialog.show()
 
-class EventInspector(QObject):
+class EventInspector_Ribbon_2(QObject):
     dragEntered = False
     widget = None
     pos = None
@@ -2624,7 +2624,7 @@ class EventInspector(QObject):
     ButtonReleased = True
     
     def __init__(self, parent):
-        super(EventInspector, self).__init__(parent)
+        super(EventInspector_Ribbon_2, self).__init__(parent)
 
     def eventFilter(self, obj, event: QEvent):
         # Detect mousebutton press. --------------------------------------------

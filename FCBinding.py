@@ -1256,7 +1256,7 @@ class ModernMenu(RibbonBar):
         # Install eventfilters and connect custom events -------------------------------------------------------------------
         #
         # Install an event filter to catch events from the main window and act on it.
-        mw.installEventFilter(EventInspector(mw))
+        mw.installEventFilter(EventInspector_RibbonUI_1(mw))
         
         # Set isLoaded to True, to show that the loading is finished
         self.isLoaded = True
@@ -9020,7 +9020,7 @@ class ModernMenu(RibbonBar):
 
     # endregion
 
-class EventInspector(QObject):
+class EventInspector_RibbonUI_1(QObject):
     dragEntered = False
     widget = None
     pos = None
@@ -9028,7 +9028,7 @@ class EventInspector(QObject):
     DataChecked = False
     
     def __init__(self, parent):
-        super(EventInspector, self).__init__(parent)
+        super(EventInspector_RibbonUI_1, self).__init__(parent)
 
     def eventFilter(self, obj, event: QEvent):
         # Check the datafile version after the ribbonbar is loaded in memory
