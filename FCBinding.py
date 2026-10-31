@@ -25,7 +25,7 @@ from pathlib import Path
 import subprocess
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -56,7 +56,7 @@ from PySide.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -105,7 +105,7 @@ from PySide.QtWidgets import (
     QStyleOptionComplex,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -380,6 +380,8 @@ class ModernMenu(RibbonBar):
     HiddenPanels = []
     RemovedPanels = []
     AddedPanels = []
+    CustomPanelsToRestore = []
+    OriginalPanelsToRemove = []
     
     # Define a variable for storing the current category when the customise enviroment is activated
     CurrentCategoryToRestore = None
@@ -1266,8 +1268,9 @@ class ModernMenu(RibbonBar):
         # Activate some WB's first to ensure proper loading of the panels
         for Wb in self.WBtoLoadFirst:
             try:
-                Gui.activateWorkbench(Wb)
-                self.isWbLoaded[Wb] = True
+                if Wb in Gui.listWorkbenches():
+                    Gui.activateWorkbench(Wb)
+                    self.isWbLoaded[Wb] = True
             except:  # noqa: E722
                 if Parameters.DEBUG_MODE:
                     StandardFunctions.Print(f"RibbonUI:\n{traceback.format_exc()}", "Warning")
@@ -1523,7 +1526,7 @@ class ModernMenu(RibbonBar):
     # region - Context event functions
     #            
     def contextMenuEvent(self, event: QContextMenuEvent):
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        workbenchName = self.currentCategory().objectName()
 
         # Create the menu
         self.contextMenu = QMenu(self)
@@ -1848,7 +1851,7 @@ class ModernMenu(RibbonBar):
                     ExportAll_SeparateFiles.triggered.connect(lambda: self.ExportLayout("All_SeparateFiles"))
                     #
                     ExportSingle= ExportLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Export layout for current tab"))
-                    ExportSingle.triggered.connect(lambda: self.ExportLayout(self.tabBar().tabData(self.tabBar().currentIndex())))
+                    ExportSingle.triggered.connect(lambda: self.ExportLayout(self.currentCategory().objectName()))
 
                     # Add a button to restore a layout
                     RestoreLayoutAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Restore a Ribbon layout"))
@@ -2181,6 +2184,7 @@ class ModernMenu(RibbonBar):
     def handleContextMenuAction(self, action):        
         # Perfom the action depending on which button is clicked
         if action == "Start":
+            print("start")
             if self.CustomizeEnabled is False:
                 # Enter the customise enviroment
                 self.on_Customize_Clicked()
@@ -2237,17 +2241,27 @@ class ModernMenu(RibbonBar):
                 return
 
         if action == "Cancel":
+            print("Cancel")
+            print(self.CustomizedCategories)
             for category in self.CustomizedCategories:
                 self.setCurrentCategory(category)
                 self.on_Cancel_Clicked()
+                
             # self.on_Cancel_Clicked()
-            self.CustomizedCategories.clear()
-            return
+            self.OriginalPanelsToRemove.clear()
+            self.CustomPanelsToRestore.clear()
+            
+            # Restore the ribbonstructure
+            self.ribbonStructure = self.workBenchDict
+        
+            # Clear the workbench dict
+            self.workBenchDict.clear()
+
         return
     
     def on_Customize_Clicked(self):
         # Get the name of the current workbench
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        workbenchName = self.currentCategory().objectName()
         if self.currentCategory() not in self.CustomizedCategories:
             self.CustomizedCategories.append(self.currentCategory())
         self.CurrentCategoryToRestore = self.currentCategory()
@@ -2519,7 +2533,7 @@ class ModernMenu(RibbonBar):
         return
     
     OkClicked = False
-    CancelClicked = False
+    CancelClicked = []
     def on_ApplyClicked(self):
         self.on_Ok_Clicked(CloseDialog=False)
         return
@@ -2529,7 +2543,7 @@ class ModernMenu(RibbonBar):
         
         # Get the name of the current workbench
         if workbenchName == "":
-            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+            workbenchName = self.currentCategory().objectName()
 
         # Set stylesheets
         if CloseDialog is True:
@@ -2812,15 +2826,20 @@ class ModernMenu(RibbonBar):
                     }""")
         return
     
-    def on_Cancel_Clicked(self):    
+    def on_Cancel_Clicked(self): 
+        # If apply (or OK is clicked, but doesn do anything) and afterwards cancel, just return
         if self.OkClicked:
             return 
-        if self.CancelClicked:
-            return 
-        self.CancelClicked = True
-
+        
         # Get the name of the current workbench
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        workbenchName = self.currentCategory().objectName()
+        
+        # Check if the cancel action is already done for this workbench
+        if workbenchName in self.CancelClicked:
+            return
+        # If the workbench is not yet in the cancel list, add it
+        if not workbenchName in self.CancelClicked:
+            self.CancelClicked.append(workbenchName)
         
         # Set stylesheets
         self.currentCategory().setStyleSheet(self.StyleSheet)
@@ -2863,7 +2882,7 @@ class ModernMenu(RibbonBar):
             Dict.update(json.load(file))
         
         # Restore the original panels used with combine panels
-        dictPanels = self.currentCategory().panels().copy()
+        dictPanels = self.currentCategory().panels()
         for title, objPanel in dictPanels.items():
             # Test if the panel is not already deleted.
             # This is needed, if a combined panel was added and then removed by clicking cancel
@@ -2929,26 +2948,23 @@ class ModernMenu(RibbonBar):
         
         # Hide tabs if they are set to hidden         
         for i in range(self.tabBar().count()):
-            workbenchName = self.tabBar().tabData(i)
-            
-            # Make sure to set the tab visible
-            if workbenchName in Dict["workbenches"] and "Enabled" in Dict["workbenches"][workbenchName]:  # noqa: SIM102
-                if Dict["workbenches"][workbenchName]["Enabled"] is True:
-                    # Make sure to set the tab visible
-                    self.tabBar().setTabVisible(i, True)  
-                else:
-                    # Make sure to set the tab hidden
-                    self.tabBar().setTabEnabled(i, True)
-                    self.tabBar().setTabVisible(i, False)
-            # If enabled is not present, set the tab always visible
-            else:
+            if workbenchName == self.tabBar().tabData(i):
                 # Make sure to set the tab visible
-                self.tabBar().setTabVisible(i, True) 
+                if workbenchName in Dict["workbenches"] and "Enabled" in Dict["workbenches"][workbenchName]:  # noqa: SIM102
+                    if Dict["workbenches"][workbenchName]["Enabled"] is True:
+                        # Make sure to set the tab visible
+                        self.tabBar().setTabVisible(i, True)  
+                    else:
+                        # Make sure to set the tab hidden
+                        self.tabBar().setTabEnabled(i, True)
+                        self.tabBar().setTabVisible(i, False)
+                # If enabled is not present, set the tab always visible
+                else:
+                    # Make sure to set the tab visible
+                    self.tabBar().setTabVisible(i, True) 
 
-            self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None)
-            
-        self.currentCategory().panels().update(dictPanels)
-                
+                self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None)
+
         # Restore closed panels
         for panel in self.RemovedPanels:
             try:
@@ -2959,50 +2975,64 @@ class ModernMenu(RibbonBar):
         # Restore any custom panel
         # Get the custom panels and add them to the list of toolbars
         try:
-            # Get the name of the current workbench
-            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-            if workbenchName in Dict["customToolbars"]:
-                for customPanel in Dict["customToolbars"][workbenchName]:
-                    # remove the original toolbars from the list
-                    Commands = Dict["customToolbars"][workbenchName][customPanel]["commands"]
-                    for Command in Commands:
-                        try:
-                            OriginalToolbar = Dict["customToolbars"][workbenchName][customPanel]["commands"][Command]
-                            self.currentCategory().removePanel(OriginalToolbar)
-                        except Exception:
-                            continue
-                    
-                    # show the custom panel again
-                    self.currentCategory().panels()[customPanel].show()
+            for panel in self.CustomPanelsToRestore:
+                panel.show()
+             
+            for panel in self.OriginalPanelsToRemove:                
+                if panel.objectName() in self.currentCategory().panels():
+                    panel.deleteLater()                    
+                    try:
+                        self.currentCategory().removePanel(panel.objectName())
+                    except Exception:
+                        pass
+                elif panel.title() in self.currentCategory().panels():
+                    panel.deleteLater() 
+                    try:
+                        self.currentCategory().removePanel(panel.title())
+                    except Exception:
+                        pass  
+                else:
+                    print(panel.objectName())
+            print(self.currentCategory().panels())
                     
         except:  # noqa: E722
-            e = traceback.format_exc()
             if Parameters.DEBUG_MODE is True:
                 StandardFunctions.Print(f"RibbonUI:\n{traceback.format_exc()}", "Warning")
             pass
-                 
-        for panel in self.AddedPanels:
-            if workbenchName in Dict["newPanels"]:
-                if panel.objectName() not in Dict["newPanels"][workbenchName]:                     
-                    panel.deleteLater()
-            try:
-                self.currentCategory().removePanel(panel.title())
-            except Exception:
-                pass  
-            try:
-                self.currentCategory().removePanel(panel.objectName())
-            except Exception:
-                pass   
-
-        # Restore the ribbonstructure
-        self.ribbonStructure = Dict
+        
+        try:    
+            for panel in self.AddedPanels:
+                try:
+                    if workbenchName in Dict["newPanels"]:
+                        if panel.objectName() not in Dict["newPanels"][workbenchName]:                     
+                            panel.deleteLater()
+                except Exception:
+                    pass          
+                try:
+                    self.currentCategory().removePanel(panel.title())
+                except Exception:
+                    pass  
+                try:
+                    self.currentCategory().removePanel(panel.objectName())
+                except Exception:
+                    pass   
+                else:
+                    print(panel.objectName())
+                    
+        except:  # noqa: E722
+            if Parameters.DEBUG_MODE is True:
+                StandardFunctions.Print(f"RibbonUI:\n{traceback.format_exc()}", "Warning")
+            pass
         
         # Restore the quickaccess toolbar
         #
         # Remove the current buttons
         for child in self.quickAccessToolBar().findChildren(QToolButton):
-            if type(child) is QuickAccessSeparator or type(child) is QuickAccessToolButton or type(child) is DragTargetIndicator:
-                child.deleteLater()
+            try:
+                if type(child) is QuickAccessSeparator or type(child) is QuickAccessToolButton or type(child) is DragTargetIndicator:
+                    child.deleteLater()
+            except Exception:
+                pass  
         # Create new buttons and add them to the quickacces toolbar based on the original order
         for commandName in self.ribbonStructure["quickAccessCommands"]:
             button = self.CreateToolBarButtonFromCommand(commandName=commandName)
@@ -3024,10 +3054,6 @@ class ModernMenu(RibbonBar):
                 self.tabBar().moveTab(i, originalIndex)
                 if Parameters.DEBUG_MODE:
                     StandardFunctions.Print(f"RibbonUI: original index of {tabName} is {originalIndex} instead of {i}")
-                
-                                           
-        # Clear the workbench dict
-        self.workBenchDict.clear()
                    
         # Close the AddCommands dialog
         if self.AddCommandsDialog is not None:       
@@ -3040,10 +3066,6 @@ class ModernMenu(RibbonBar):
             except Exception:
                 pass
         
-        # Activate the stored category when the customise enviroment was started
-        self.setCurrentCategory(self.CurrentCategoryToRestore)
-        self.hideClassicToolbars()
-        
         # Gui.updateGui()
         # Make sure that the tooltip has the correct color settings
         styleSheet = self.tabBar().styleSheet()
@@ -3054,9 +3076,12 @@ class ModernMenu(RibbonBar):
                     border-radius: 2px;
                     }""")
         
-        
         # Print a message
         StandardFunctions.Print(translate("FreeCAD Ribbon", f"RibbonUI: Changes are rolled back for {workbenchName}"))
+                
+        # Activate the stored category when the customise enviroment was started
+        # self.setCurrentCategory(self.CurrentCategoryToRestore)
+        self.hideClassicToolbars()
 
         return
         
@@ -3084,7 +3109,7 @@ class ModernMenu(RibbonBar):
         self.WriteButtonSettings(ButtonWidget, panel, property)
         
         # Create a new panel
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        workbenchName = self.currentCategory().objectName()
         newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
         # Add the panel to the list with long panels
         if newPanel.panelOptionButton().isVisible():
@@ -3158,7 +3183,7 @@ class ModernMenu(RibbonBar):
             self.WriteButtonSettings(ButtonWidget, panel, {"textEnabled": TextEnabled})
         
          # Create a new panel
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())        
+        workbenchName = self.currentCategory().objectName()        
         newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
         # Add the panel to the list with long panels
         if newPanel.panelOptionButton().isVisible():
@@ -3281,7 +3306,7 @@ class ModernMenu(RibbonBar):
     
     def on_AddSeparator_Clicked(self, panel: RibbonPanel, ButtonWidget: CustomControls, Side = "left"):
         # Get the workbench name and the panel name
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        workbenchName = self.currentCategory().objectName()
         panelName = panel.objectName()
         # Declare an order list
         OrderList = []
@@ -3330,7 +3355,7 @@ class ModernMenu(RibbonBar):
             self.workBenchDict.update(Dict)
        
             # Create a new panel
-            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+            workbenchName = self.currentCategory().objectName()
             newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
             # Add the panel to the list with long panels
             if newPanel.panelOptionButton().isVisible():
@@ -3356,7 +3381,7 @@ class ModernMenu(RibbonBar):
             
     def on_RemoveSeparator_Clicked(self, panel: RibbonPanel, separator: CustomSeparator):
         # Get the workbench hame and the panel name
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        workbenchName = self.currentCategory().objectName()
         panelName = panel.objectName()
         # Declare an order list
         OrderList = []
@@ -3380,7 +3405,7 @@ class ModernMenu(RibbonBar):
             self.workBenchDict.update(Dict)
             
             # Create a new panel
-            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+            workbenchName = self.currentCategory().objectName()
             newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
             # Add the panel to the list with long panels
             if newPanel.panelOptionButton().isVisible():
@@ -3433,7 +3458,7 @@ class ModernMenu(RibbonBar):
 
     def on_PanelTitle_Changing(self, event, panel: RibbonPanel, widgetAction: CustomWidgets.LineEditAction):
         # Get the workbench name and the panel name
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        workbenchName = self.currentCategory().objectName()
         panelName = panel.objectName()
         widgetAction.setClearButtonEnabled(True)
         
@@ -3988,7 +4013,7 @@ class ModernMenu(RibbonBar):
 
         # Get the current category
         currentCategory = self.currentCategory()
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        workbenchName = self.currentCategory().objectName()
 
         # Add a new button by drag & drop
         #
@@ -4033,7 +4058,7 @@ class ModernMenu(RibbonBar):
                                                 
                             # Get the workbench name and the panel name                  
                             title = panel.objectName()
-                            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                            workbenchName = self.currentCategory().objectName()
                             
                             # Get the order list, if there isn't one, create it
                             StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), ], endEmpty=True)
@@ -4058,7 +4083,7 @@ class ModernMenu(RibbonBar):
                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["commands"][ExtraCommand]["IsExtra"] = True
 
                             # Get the name from  current workbench
-                            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                            workbenchName = self.currentCategory().objectName()
                             # Create a new panel with the extra command
                             newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict, UpdateDict=False, ignoreColumnLimit=True,showEnableControl=True, enableSeparator=True, ExtraCommand=ExtraCommand, ActivateButtons=True)
                                                                              
@@ -4182,7 +4207,7 @@ class ModernMenu(RibbonBar):
                     if not widget.geometry().contains(event.pos()):   
                         # Get the workbench name and the panel name                  
                         title = panel.objectName()
-                        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                        workbenchName = self.currentCategory().objectName()
                             
                         # Get the coordinates of the drag location
                         xPos_drag = self.target[0]
@@ -4305,7 +4330,7 @@ class ModernMenu(RibbonBar):
                         self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList     
                                                             
                         # Create a new panel
-                        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                        workbenchName = self.currentCategory().objectName()
                         newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
                                                 
                         # Add the panel to the list with long panels
@@ -4382,7 +4407,7 @@ class ModernMenu(RibbonBar):
                 position = self.find_drop_location(event)
 
                 # Create a new panel
-                workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+                workbenchName = self.currentCategory().objectName()
                 newPanel = self.CreatePanel(workbenchName, widget.objectName(), False, self.workBenchDict,  ignoreColumnLimit=True, showEnableControl=True, ActivateButtons=True)
 
                 # Add the new panel
@@ -4606,7 +4631,7 @@ class ModernMenu(RibbonBar):
                 + ";}"
             )
         if Parameters.TABBAR_STYLE == 1:
-            self.tabBar().setStyleSheet(
+            self.tabBar().setStyleSheet( 
                 "QTabBar::tab {background: "
                 + StyleMapping_Ribbon.ReturnStyleItem("Background_Color", True, True)
                 + ";color: "
@@ -4641,7 +4666,7 @@ class ModernMenu(RibbonBar):
         if not hasattr(workbench, "__Workbench__"):
             # XXX for debugging purposes
             if Parameters.DEBUG_MODE is True:
-                StandardFunctions.Print(f"RibbonUI: Workbench {workbench.MenuText} not loaded", "Warning")
+                StandardFunctions.Print(f"RibbonUI: Workbench {workbench.MenuText} not loaded when trying to activate the workbench.\nTried again after 1000ms.", "Warning")
 
             # wait for 0.1s hoping that after that time the workbench is loaded
             Timer.timeout.connect(self.onWbActivated)
@@ -5873,9 +5898,13 @@ class ModernMenu(RibbonBar):
         # Get the active workbench and get its name
         #
         workbenchTitle = self.tabBar().tabText(self.tabBar().currentIndex())
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
-        tabName = workbenchTitle
-        if workbenchName is None:
+        workbenchName = ""
+        try:
+            workbenchName = self.currentCategory().objectName()
+            tabName = workbenchTitle
+        except:
+            pass
+        if workbenchName is None or workbenchName == "":
             return
 
         # # check if the panel is already loaded. If so exit this function        
@@ -5917,9 +5946,11 @@ class ModernMenu(RibbonBar):
                             for item in ListToolbars:
                                 if OriginalToolbar.lower() == item.lower():
                                     OriginalToolbar = item
-
-                            ListToolbars.remove(OriginalToolbar)
-                        except Exception:
+                            if OriginalToolbar in ListToolbars:
+                                ListToolbars.remove(OriginalToolbar)
+                        except:
+                            if Parameters.DEBUG_MODE:
+                                StandardFunctions.Print(f"RibbonUI:\n{traceback.format_exc()}", "Warning")
                             continue
         except:
             if Parameters.DEBUG_MODE is True:
@@ -6493,24 +6524,26 @@ class ModernMenu(RibbonBar):
                             # CommandName = (CommandItem[0])
                 else:
                     Icon = Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"])
-                    action = Command.getAction()
-                    Button = QToolButton()                                
-                    Button.addActions(action)
-                    Button.setDefaultAction(action[0])
-                    Button.setIcon(Icon)
-                    Button.setText(CommandInfoCorrections(CommandName)["menuText"])
-                    # Set the commandName as objectName as backup
-                    Button.setObjectName(CommandName)
-                    try:
-                        if len(action) > 1:
-                            Icon = action[0].icon()
-                            menu = QMenu(self)
-                            menu.addActions(action)
-                            Button.setMenu(menu)
-                    except Exception:
-                        pass
-                    # Add the button to the button list
-                    ButtonList.append(Button)
+                    if Icon is not None and not Icon.isNull():                                                
+                        Button = QToolButton()    
+                        Button.setIcon(Icon)    
+                        action = Command.getAction()                        
+                        Button.addActions(action)
+                        Button.setDefaultAction(action[0])
+                    
+                        Button.setText(CommandInfoCorrections(CommandName)["menuText"])
+                        # Set the commandName as objectName as backup
+                        Button.setObjectName(CommandName)
+                        try:
+                            if len(action) > 1:
+                                Icon = action[0].icon()
+                                menu = QMenu(self)
+                                menu.addActions(action)
+                                Button.setMenu(menu)
+                        except Exception:
+                            pass
+                        # Add the button to the button list
+                        ButtonList.append(Button)
             except:  # noqa: E722
                 e = traceback.format_exc()
                 if Parameters.DEBUG_MODE is True:
@@ -6724,7 +6757,7 @@ class ModernMenu(RibbonBar):
 
     def ReturnRibbonHeight(self, offset=0):
         # Get the name of the current workbench
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        workbenchName = self.currentCategory().objectName()
         
         # Set the ribbon height.
         ribbonHeight = 0
@@ -6977,7 +7010,7 @@ class ModernMenu(RibbonBar):
         return
                       
     def ReturnPanelTitle(self, panel: RibbonPanel, dict = ribbonStructure, filterOnly = False):
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        workbenchName = self.currentCategory().objectName()
         panelName = panel.objectName()
         # Get the workbenchTitle
         index = None
@@ -7050,11 +7083,19 @@ class ModernMenu(RibbonBar):
                     ExtraCommand = "",
                     ActivateButtons = False,
                     ActivateWorkbench = True,
-                    Category = None
+                    Category = None,
+                    CheckCustomPanels = True
                     ):
 
         if Category is None:
             Category = self.currentCategory()
+        
+        # If the panel is replaced by a custom panel, just return
+        if CheckCustomPanels is True and "customToolbars" in Dict and workbenchName in Dict["customToolbars"]:
+            for CustomPanel in Dict["customToolbars"][workbenchName]:
+                for command in Dict["customToolbars"][workbenchName][CustomPanel]["commands"]:
+                    if Dict["customToolbars"][workbenchName][CustomPanel]["commands"][command] == panelName:
+                        return
         
         if UpdateDict is True:
             Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "toolbars"], endEmpty=True)
@@ -7850,8 +7891,12 @@ class ModernMenu(RibbonBar):
             return panel
         else:
             try:
-                Category.removePanel(panel.objectName())
-                panel.deleteLater()    
+                if panel.objectName() in Category.panels():
+                    Category.removePanel(panel.objectName())
+                    panel.deleteLater()    
+                if panel.title() in Category.panels():
+                    Category.removePanel(panel.title())
+                    panel.deleteLater()
                 if Parameters.DEBUG_MODE is True:                  
                     StandardFunctions.Print(f"RibbonUI: The panel \"{panel.title()}\" did not have any buttons and is not loaded!", "Warning")
                 return None
@@ -7885,7 +7930,7 @@ class ModernMenu(RibbonBar):
             titleLayout.insertWidget(0, EnableControl)
             
             # Add the new panel to the dict
-            workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+            workbenchName = self.currentCategory().objectName()
             StandardFunctions.add_keys_nested_dict(self.workBenchDict, ["newPanels", workbenchName, panel.objectName()], endEmpty=True)
             self.workBenchDict["newPanels"][workbenchName][panel.objectName()] = []
             
@@ -7899,7 +7944,7 @@ class ModernMenu(RibbonBar):
         return
     
     def RemovePanelFromDict(self, panel: RibbonPanel):
-        WorkBenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        WorkBenchName = self.currentCategory().objectName()
         WorkBenchTitle = self.currentCategory().title()
         
         # _newPanel
@@ -8215,7 +8260,7 @@ class ModernMenu(RibbonBar):
         return command
     
     def RemoveButtonFromPanel(self, panel: RibbonPanel = None, widget = None):
-        workbenchName = self.tabBar().tabData(self.tabBar().currentIndex())
+        workbenchName = self.currentCategory().objectName()
         panelName = panel.objectName()
         
         # Get the command
@@ -8414,7 +8459,8 @@ class ModernMenu(RibbonBar):
                 # Find the command its workbench and activate it
                 for CommandItem in self.List_Commands:
                     if CommandItem[0] == commandName:
-                        Gui.activateWorkbench(CommandItem[3])
+                        if 'Standard' != CommandItem[3] and "Global" != CommandItem[3]:
+                            Gui.activateWorkbench(CommandItem[3])
                         self.isWbLoaded[CommandItem[3]] = True
                         break
             except:  # noqa: E722
@@ -8713,9 +8759,9 @@ class ModernMenu(RibbonBar):
         tempDict["workbenches"][WorkBenchName]["toolbars"]["order"] = tempList
 
         # Update the ribbonstrucure with temporary ribbonstructure
-        if "workbenches" in tempDict and WorkBenchName in tempDict["workbenches"]:
+        if "workbenches" in tempDict and WorkBenchName in tempDict["workbenches"] and "workbenches" in Dict and WorkBenchName in Dict["workbenches"]:
             Dict["workbenches"][WorkBenchName] = tempDict["workbenches"][WorkBenchName]
-        if "customToolbars" in tempDict and WorkBenchName in tempDict["customToolbars"]:
+        if "customToolbars" in tempDict and WorkBenchName in tempDict["customToolbars"] and "customToolbars" in Dict and WorkBenchName in Dict["customToolbars"]:
             Dict["customToolbars"][WorkBenchName] = tempDict["customToolbars"][WorkBenchName]    
 
         # If the customize is not enabled, update the ribbonstructure.json
@@ -9019,7 +9065,7 @@ class ModernMenu(RibbonBar):
         return isConverted
 
     # endregion
-
+session_id = subprocess.getoutput("env | grep -E -i 'x11|xorg|wayland'").split()[1].split("=")[1]
 class EventInspector_RibbonUI_1(QObject):
     dragEntered = False
     widget = None
@@ -9027,8 +9073,8 @@ class EventInspector_RibbonUI_1(QObject):
     PatchApplicable = True
     DataChecked = False
     
-    def __init__(self, parent):
-        super(EventInspector_RibbonUI_1, self).__init__(parent)
+    # def __init__(self, parent):
+    #     super(EventInspector_RibbonUI_1, self).__init__(parent)
 
     def eventFilter(self, obj, event: QEvent):
         # Check the datafile version after the ribbonbar is loaded in memory
@@ -9039,7 +9085,8 @@ class EventInspector_RibbonUI_1(QObject):
                 
                 if RibbonBar is not None and RibbonBar.isLoaded:
                     self.DataChecked = True
-                    CacheFunctions.CheckDataFileVersion()               
+                    CacheFunctions.CheckDataFileVersion()
+                    print("DataChecked")           
             except:  # noqa: E722
                 e = traceback.format_exc()
                 if Parameters.DEBUG_MODE is True:
@@ -9057,11 +9104,10 @@ class EventInspector_RibbonUI_1(QObject):
         # It is needed to avoid problems with older Nvidia Cards (Pascal and older) and Wayland        
         try:
             # Get the main window and the ribbon
-            session_id = subprocess.getoutput("env | grep -E -i 'x11|xorg|wayland'").split()[1].split("=")[1]
             if session_id == "wayland":         
                 mw = Gui.getMainWindow()
                 RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")  
-                if RibbonBar.CustomizeEnabled and self.PatchApplicable is True and platform.system() == "Linux":                                      
+                if RibbonBar is not None and RibbonBar.CustomizeEnabled and self.PatchApplicable is True and platform.system() == "Linux":                                      
                     if self.dragEntered is True and QApplication.mouseButtons().value == 0:
                         self.dragEntered = False
                         if Parameters.DEBUG_MODE:
