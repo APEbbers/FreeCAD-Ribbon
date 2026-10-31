@@ -237,7 +237,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         mw = Gui.getMainWindow()
 
         # Install an event filter to catch events from the main window and act on it.
-        self.form.installEventFilter(EventInspector(self.form))
+        self.form.installEventFilter(EventInspector_Ribbon_3(self.form))
 
         # Make sure that the dialog stays on top
         self.form.raise_()
@@ -2217,12 +2217,12 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
     # endregion---------------------------------------------------------------------------------------
 
 
-class EventInspector(QObject):
+class EventInspector_Ribbon_3(QObject):
     form = None
 
     def __init__(self, parent):
         self.form = parent
-        super(EventInspector, self).__init__(parent)
+        super(EventInspector_Ribbon_3, self).__init__(parent)
 
     def eventFilter(self, obj, event):
         import FCBinding
