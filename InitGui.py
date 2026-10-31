@@ -31,6 +31,7 @@ import shutil
 import sys
 from datetime import datetime
 import json
+import traceback
 
 from PySide.QtCore import Qt, QTimer, QSize, QSettings
 from PySide.QtGui import QGuiApplication
@@ -72,9 +73,6 @@ sys.path.append(pathBackup)
 translate = App.Qt.translate
 mw: QMainWindow = Gui.getMainWindow()
 
-# Set the wait cursor
-QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-
 # Move the data files to the new location for fixing issue with the new addon manager
 # Function to move the data files out the addon folder to fix issue with the new addon manager
 #
@@ -94,8 +92,9 @@ if Settings.GetStringSetting("RibbonStructure") == os.path.join(os.path.dirname(
             shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile.dat"), os.path.join(ConfigDirectory, "RibbonDataFile.dat"))
         if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile2.dat")):
             shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile2.dat"), os.path.join(ConfigDirectory, "RibbonDataFile2.dat"))
-    except Exception as e:
-        print(e)
+    except:
+        if Parameters.DEBUG_MODE:
+            StandardFunctions.Print(f"Ribbon UI: something went wrong copying the datafiles to the new location. Error:\n{traceback.format_exc(), "Error"}")
         pass
 
 if Settings.GetStringSetting("BackupFolder") == os.path.join(os.path.dirname(FCBinding.__file__), "BackupFolder"):
@@ -104,6 +103,8 @@ if Settings.GetStringSetting("BackupFolder") == os.path.join(os.path.dirname(FCB
         if os.path.exists(os.path.join(os.path.dirname(FCBinding.__file__), "Backups")):
             shutil.copytree(os.path.join(os.path.dirname(FCBinding.__file__), "Backups"), os.path.join(ConfigDirectory, "Backups"))
     except Exception:
+        if Parameters.DEBUG_MODE:
+            StandardFunctions.Print(f"Ribbon UI: something went wrong copying the backups to the new location. Error:\n{traceback.format_exc(), "Error"}")
         pass
 
 # check if there is a "RibbonStructure.json". if not create one
@@ -154,7 +155,7 @@ if fileExists is True:
         
         # Print a message that the ribbon structure has ben reverted to default
         StandardFunctions.Print(translate("FreeCAD Ribbon", 
-            f"""RibbonUI: RibbonStructure.json got corrupted. A new file is created\nYou can find the corruped file in {Path}"""), "Error")
+            f"""Ribbon UI: RibbonStructure.json got corrupted. A new file is created\nYou can find the corruped file in {Path}"""), "Error")
         # Print the error message, so that it is on the log
         StandardFunctions.Print(translate("FreeCAD Ribbon", "Traceback: \n") + str(e.with_traceback(e.__traceback__)) + "\n in " + os.path.join(ConfigDirectory, "RibbonStructure.json"), "Error")
 
@@ -205,8 +206,6 @@ except Exception:
 
 try:   
     print(translate("FreeCAD Ribbon", "Activating Ribbon UI..."))
-    # # Set the wait cursor
-    # QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
 
     if Parameters.HIDE_TITLEBAR_FC is False:
         mw.setWindowFlags(Qt.WindowType.WindowFullscreenButtonHint)
@@ -214,8 +213,6 @@ try:
         # Set the mainwindow to the last state
         if Parameters_Ribbon.Settings.GetStringSetting("MainWindow") == "Maximized":
             mw.showMaximized()
-        # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
 
     # Hide the Titlebar of FreeCAD
     if Parameters.HIDE_TITLEBAR_FC is True:
@@ -231,17 +228,14 @@ try:
             mw.showMaximized()
         # Normally after setting the window frameless you show the window with mw.show()
         # This is now done in FCBinding with an eventfilter class
-        print(translate("FreeCAD Ribbon", "Ribbon UI: FreeCAD loaded without titlebar"))
-        # Restore the cursor
-        QApplication.setOverrideCursor(Qt.CursorShape.ArrowCursor)
+        StandardFunctions.Print(translate("FreeCAD Ribbon", "Ribbon UI: FreeCAD loaded without titlebar"))
        
     Ribbon = mw.findChild(QDockWidget, "Ribbon")
     Ribbon.show()
             
-except Exception as e:
-    # raise e
+except:
     if Parameters.DEBUG_MODE is True:
-        print(f"{e.with_traceback(e.__traceback__)}, 0")
+        StandardFunctions.Print(f"Ribbon UI: something went loading the RibbonUI. Error:\n{traceback.format_exc(), "Error"}")
 
 Gui.addLanguagePath(os.path.join(os.path.dirname(FCBinding.__file__), "translations"))
 Gui.updateLocale()

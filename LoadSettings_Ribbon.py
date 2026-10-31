@@ -48,6 +48,7 @@ from PySide.QtGui import QIcon, QPixmap, QColor, QBrush, QPaintEvent, QPen, QPai
 import sys
 import StyleMapping_Ribbon
 import Standard_Functions_Ribbon as StandardFunctions
+from Standard_Functions_Ribbon import QScopedCursorOverride
 import Parameters_Ribbon
 from Parameters_Ribbon import DefaultSettings
 from Parameters_Ribbon import Parameters
@@ -236,7 +237,7 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
         mw = Gui.getMainWindow()
 
         # Install an event filter to catch events from the main window and act on it.
-        self.form.installEventFilter(EventInspector(self.form))
+        self.form.installEventFilter(EventInspector_Ribbon_3(self.form))
 
         # Make sure that the dialog stays on top
         self.form.raise_()
@@ -1569,433 +1570,435 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
 
     @staticmethod
     def on_Cancel_clicked(self):
-        # Save docked dialogs
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "Docked_Dialogs", self.OriginalValues["Docked_Dialogs"]
-        )
-        # Save backup settings
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "BackupEnabled", self.OriginalValues["BackupEnabled"]
-        )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "BackupFolder", self.OriginalValues["BackupFolder"]
-        )
-        # Save tabBar style
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "TabBar_Style", self.OriginalValues["TabBar_Style"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "Toolbar_Position", self.OriginalValues["Toolbar_Position"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "Hide_Titlebar_FC", self.OriginalValues["Hide_Titlebar_FC"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "HidePanelTitles", self.OriginalValues["HidePanelTitles"]
-        )
-        # Save icon sizes
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "Link_IconSizes", self.OriginalValues["Link_IconSizes"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "IconSize_Small", int(self.OriginalValues["IconSize_Small"])
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "IconSize_Medium", int(self.OriginalValues["IconSize_Medium"])
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "IconSize_Large", int(self.OriginalValues["IconSize_Large"])
-        )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "Stylesheet", self.OriginalValues["Stylesheet"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "ApplicationButtonSize", int(self.OriginalValues["ApplicationButtonSize"])
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "QuickAccessButtonSize", int(self.OriginalValues["QuickAccessButtonSize"])
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "TabBarSize", int(self.OriginalValues["TabBarSize"])
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "RightToolbarButtonSize", int(self.OriginalValues["RightToolbarButtonSize"])
-        )
-        # Save text settings
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "ShowIconText_Small", self.OriginalValues["ShowIconText_Small"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "ShowIconText_Medium", self.OriginalValues["ShowIconText_Medium"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "ShowIconText_Large", self.OriginalValues["ShowIconText_Large"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "WrapText_Medium", self.OriginalValues["WrapText_Medium"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "WrapText_Large", self.OriginalValues["WrapText_Large"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "FontSize_Menus", self.OriginalValues["FontSize_Menus"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "FontSize_Buttons", self.OriginalValues["FontSize_Buttons"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "FontSize_Tabs", self.OriginalValues["FontSize_Tabs"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "FontSize_Panels", self.OriginalValues["FontSize_Panels"]
-        )
-        # Save No of columns
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "MaxColumnsPerPanel", int(self.OriginalValues["MaxColumnsPerPanel"])
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "DebugMode", self.OriginalValues["DebugMode"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "ShowOnHover", self.OriginalValues["ShowOnHover"]
-        )
-        # Save behavior settings
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "TabBar_Scroll", self.OriginalValues["TabBar_Scroll"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "Ribbon_Scroll", self.OriginalValues["Ribbon_Scroll"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "TabBar_Click", self.OriginalValues["TabBar_Click"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "Ribbon_Click", self.OriginalValues["Ribbon_Click"]
-        )
-        # Save the preferred toolbars
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "Preferred_view", self.OriginalValues["Preferred_view"]
-        )
-        # Set the use of the tools panel
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "UseToolsPanel", self.OriginalValues["UseToolsPanel"]
-        )
-        # Set the use of FreeCAD's overlay function
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "OverlayState", self.OriginalValues["OverlayState"]
-        )
-        # Parameters_Ribbon.Settings.SetBoolSetting(
-        #     "UseOverlay", self.OriginalValues["UseOverlay"]
-        # )
-        # Parameters_Ribbon.Settings.SetBoolSetting(
-        #     "UseFCOverlay", self.OriginalValues["UseFCOverlay"]
-        # )
-        # Set the use of custom icons
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "HideMenuIcon", self.OriginalValues["HideMenuIcon"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "Enable_Tab_Scroll_Icon", self.OriginalValues["Enable_Tab_Scroll_Icon"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "Enable_Ribbon_Scroll_Icon", self.OriginalValues["Enable_Ribbon_Scroll_Icon"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "Enable_MoreCommands_Icon", self.OriginalValues["Enable_MoreCommands_Icon"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "Enable_pinButton_Icon", self.OriginalValues["Enable_pinButton_Icon"]
-        )        
-        # Set the use of custom colors
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableBorderColor", self.OriginalValues["EnableBorderColor"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableBackGroundColor", self.OriginalValues["EnableBackGroundColor"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableBackGroundColor_Hover", self.OriginalValues["EnableBackGroundColor_Hover"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableBackGroundColor_App", self.OriginalValues["EnableBackGroundColor_App"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableBackGroundColor_Tab", self.OriginalValues["EnableBackGroundColor_Tab"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableBackGroundColor_TitleBar", self.OriginalValues["EnableBackGroundColor_TitleBar"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableTextColor", self.OriginalValues["EnableTextColor"]
-        )
-        # Parameters_Ribbon.Settings.SetBoolSetting(
-        #     "BorderTransparant", self.OriginalValues["BorderTransparant"]
-        # )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "Color_Borders", self.OriginalValues["Color_Borders"]
-        )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "Color_Background_Hover", self.OriginalValues["Color_Background_Hover"]
-        )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "Color_Background_App", self.OriginalValues["Color_Background_App"]
-        )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "Color_Background_Tabs", self.OriginalValues["Color_Background_Tabs"]
-        )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "Color_Background_TitleBar", self.OriginalValues["Color_Background_TitleBar"]
-        )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "Color_Font", self.OriginalValues["Color_Font"]
-        )
+        with QScopedCursorOverride():
+            # Save docked dialogs
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "Docked_Dialogs", self.OriginalValues["Docked_Dialogs"]
+            )
+            # Save backup settings
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "BackupEnabled", self.OriginalValues["BackupEnabled"]
+            )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "BackupFolder", self.OriginalValues["BackupFolder"]
+            )
+            # Save tabBar style
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "TabBar_Style", self.OriginalValues["TabBar_Style"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "Toolbar_Position", self.OriginalValues["Toolbar_Position"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "Hide_Titlebar_FC", self.OriginalValues["Hide_Titlebar_FC"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "HidePanelTitles", self.OriginalValues["HidePanelTitles"]
+            )
+            # Save icon sizes
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "Link_IconSizes", self.OriginalValues["Link_IconSizes"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "IconSize_Small", int(self.OriginalValues["IconSize_Small"])
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "IconSize_Medium", int(self.OriginalValues["IconSize_Medium"])
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "IconSize_Large", int(self.OriginalValues["IconSize_Large"])
+            )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "Stylesheet", self.OriginalValues["Stylesheet"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "ApplicationButtonSize", int(self.OriginalValues["ApplicationButtonSize"])
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "QuickAccessButtonSize", int(self.OriginalValues["QuickAccessButtonSize"])
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "TabBarSize", int(self.OriginalValues["TabBarSize"])
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "RightToolbarButtonSize", int(self.OriginalValues["RightToolbarButtonSize"])
+            )
+            # Save text settings
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "ShowIconText_Small", self.OriginalValues["ShowIconText_Small"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "ShowIconText_Medium", self.OriginalValues["ShowIconText_Medium"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "ShowIconText_Large", self.OriginalValues["ShowIconText_Large"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "WrapText_Medium", self.OriginalValues["WrapText_Medium"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "WrapText_Large", self.OriginalValues["WrapText_Large"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "FontSize_Menus", self.OriginalValues["FontSize_Menus"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "FontSize_Buttons", self.OriginalValues["FontSize_Buttons"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "FontSize_Tabs", self.OriginalValues["FontSize_Tabs"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "FontSize_Panels", self.OriginalValues["FontSize_Panels"]
+            )
+            # Save No of columns
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "MaxColumnsPerPanel", int(self.OriginalValues["MaxColumnsPerPanel"])
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "DebugMode", self.OriginalValues["DebugMode"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "ShowOnHover", self.OriginalValues["ShowOnHover"]
+            )
+            # Save behavior settings
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "TabBar_Scroll", self.OriginalValues["TabBar_Scroll"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "Ribbon_Scroll", self.OriginalValues["Ribbon_Scroll"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "TabBar_Click", self.OriginalValues["TabBar_Click"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "Ribbon_Click", self.OriginalValues["Ribbon_Click"]
+            )
+            # Save the preferred toolbars
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "Preferred_view", self.OriginalValues["Preferred_view"]
+            )
+            # Set the use of the tools panel
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "UseToolsPanel", self.OriginalValues["UseToolsPanel"]
+            )
+            # Set the use of FreeCAD's overlay function
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "OverlayState", self.OriginalValues["OverlayState"]
+            )
+            # Parameters_Ribbon.Settings.SetBoolSetting(
+            #     "UseOverlay", self.OriginalValues["UseOverlay"]
+            # )
+            # Parameters_Ribbon.Settings.SetBoolSetting(
+            #     "UseFCOverlay", self.OriginalValues["UseFCOverlay"]
+            # )
+            # Set the use of custom icons
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "HideMenuIcon", self.OriginalValues["HideMenuIcon"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "Enable_Tab_Scroll_Icon", self.OriginalValues["Enable_Tab_Scroll_Icon"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "Enable_Ribbon_Scroll_Icon", self.OriginalValues["Enable_Ribbon_Scroll_Icon"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "Enable_MoreCommands_Icon", self.OriginalValues["Enable_MoreCommands_Icon"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "Enable_pinButton_Icon", self.OriginalValues["Enable_pinButton_Icon"]
+            )        
+            # Set the use of custom colors
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "EnableBorderColor", self.OriginalValues["EnableBorderColor"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "EnableBackGroundColor", self.OriginalValues["EnableBackGroundColor"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "EnableBackGroundColor_Hover", self.OriginalValues["EnableBackGroundColor_Hover"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "EnableBackGroundColor_App", self.OriginalValues["EnableBackGroundColor_App"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "EnableBackGroundColor_Tab", self.OriginalValues["EnableBackGroundColor_Tab"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "EnableBackGroundColor_TitleBar", self.OriginalValues["EnableBackGroundColor_TitleBar"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "EnableTextColor", self.OriginalValues["EnableTextColor"]
+            )
+            # Parameters_Ribbon.Settings.SetBoolSetting(
+            #     "BorderTransparant", self.OriginalValues["BorderTransparant"]
+            # )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "Color_Borders", self.OriginalValues["Color_Borders"]
+            )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "Color_Background_Hover", self.OriginalValues["Color_Background_Hover"]
+            )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "Color_Background_App", self.OriginalValues["Color_Background_App"]
+            )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "Color_Background_Tabs", self.OriginalValues["Color_Background_Tabs"]
+            )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "Color_Background_TitleBar", self.OriginalValues["Color_Background_TitleBar"]
+            )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "Color_Font", self.OriginalValues["Color_Font"]
+            )
 
-        # Set the size of the window to the previous state
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "SettingsDialog_Height", self.form.height()
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "SettingsDialog_Width", self.form.width()
-        )
-        
-        # Set the advanced size settings to the previous state
-        Parameters_Ribbon.Settings.SetFloatSetting("SizeFactor", self.OriginalValues["SizeFactor"])
-        Parameters_Ribbon.Settings.SetIntSetting("PanelHeightOffset", self.OriginalValues["PanelHeightOffset"])
-        Parameters_Ribbon.Settings.SetIntSetting("RibbonHeightOffset", self.OriginalValues["RibbonHeightOffset"])
-        Parameters_Ribbon.Settings.SetIntSetting("RibbonMinimumHeight", self.OriginalValues["RibbonMinimumHeight"])
-        Parameters_Ribbon.Settings.SetIntSetting("ButtonSpacing", self.OriginalValues["ButtonSpacing"])
+            # Set the size of the window to the previous state
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "SettingsDialog_Height", self.form.height()
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "SettingsDialog_Width", self.form.width()
+            )
+            
+            # Set the advanced size settings to the previous state
+            Parameters_Ribbon.Settings.SetFloatSetting("SizeFactor", self.OriginalValues["SizeFactor"])
+            Parameters_Ribbon.Settings.SetIntSetting("PanelHeightOffset", self.OriginalValues["PanelHeightOffset"])
+            Parameters_Ribbon.Settings.SetIntSetting("RibbonHeightOffset", self.OriginalValues["RibbonHeightOffset"])
+            Parameters_Ribbon.Settings.SetIntSetting("RibbonMinimumHeight", self.OriginalValues["RibbonMinimumHeight"])
+            Parameters_Ribbon.Settings.SetIntSetting("ButtonSpacing", self.OriginalValues["ButtonSpacing"])
 
-        # Close the dockwidget as well, if there is one
-        DockWidget = mw.findChild(QDockWidget, "RibbonSettings")
-        if DockWidget is not None:
-            DockWidget.deleteLater()
-        
-        # Emit a close signal
-        self.closeSignal.emit()
-        # Close the form
-        self.form.close()
+            # Close the dockwidget as well, if there is one
+            DockWidget = mw.findChild(QDockWidget, "RibbonSettings")
+            if DockWidget is not None:
+                DockWidget.deleteLater()
+            
+            # Emit a close signal
+            self.closeSignal.emit()
+            # Close the form
+            self.form.close()
         return
 
     @staticmethod
     def on_Close_clicked(self):
-        # Save docked dialogs
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "Docked_Dialogs", self.ValuesToUpdate["Docked_Dialogs"]
-        )
-        # Save backup settings
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "BackupEnabled", self.ValuesToUpdate["BackupEnabled"]
-        )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "BackupFolder", self.ValuesToUpdate["BackupFolder"]
-        )
-        # Save tabBar style
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "TabBar_Style", self.ValuesToUpdate["TabBar_Style"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "Toolbar_Position", self.ValuesToUpdate["Toolbar_Position"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "Hide_Titlebar_FC", self.ValuesToUpdate["Hide_Titlebar_FC"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "HidePanelTitles", self.ValuesToUpdate["HidePanelTitles"]
-        )
-        # Save icon sizes
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "Link_IconSizes", self.ValuesToUpdate["Link_IconSizes"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "IconSize_Small", int(self.ValuesToUpdate["IconSize_Small"])
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "IconSize_Medium", int(self.ValuesToUpdate["IconSize_Medium"])
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "IconSize_Large", int(self.ValuesToUpdate["IconSize_Large"])
-        )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "Stylesheet", self.ValuesToUpdate["Stylesheet"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "ApplicationButtonSize", int(self.ValuesToUpdate["ApplicationButtonSize"])
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "QuickAccessButtonSize", int(self.ValuesToUpdate["QuickAccessButtonSize"])
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "TabBarSize", int(self.ValuesToUpdate["TabBarSize"])
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "RightToolbarButtonSize", int(self.ValuesToUpdate["RightToolbarButtonSize"])
-        )
-        # Save text settings
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "ShowIconText_Small", self.ValuesToUpdate["ShowIconText_Small"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "ShowIconText_Medium", self.ValuesToUpdate["ShowIconText_Medium"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "ShowIconText_Large", self.ValuesToUpdate["ShowIconText_Large"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "WrapText_Medium", self.ValuesToUpdate["WrapText_Medium"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "WrapText_Large", self.ValuesToUpdate["WrapText_Large"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "FontSize_Menus", self.ValuesToUpdate["FontSize_Menus"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "FontSize_Buttons", self.ValuesToUpdate["FontSize_Buttons"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "FontSize_Tabs", self.ValuesToUpdate["FontSize_Tabs"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "FontSize_Panels", self.ValuesToUpdate["FontSize_Panels"]
-        )
-        # Save No of columns
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "MaxColumnsPerPanel", int(self.ValuesToUpdate["MaxColumnsPerPanel"])
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "DebugMode", self.ValuesToUpdate["DebugMode"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "ShowOnHover", self.ValuesToUpdate["ShowOnHover"]
-        )
-        # Save behavior settings
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "TabBar_Scroll", self.ValuesToUpdate["TabBar_Scroll"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "Ribbon_Scroll", self.ValuesToUpdate["Ribbon_Scroll"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "TabBar_Click", self.ValuesToUpdate["TabBar_Click"]
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "Ribbon_Click", self.ValuesToUpdate["Ribbon_Click"]
-        )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "Shortcut_Application", self.ValuesToUpdate["Shortcut_Application"]
-        )
-        # Save the preferred toolbars
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "Preferred_view", self.ValuesToUpdate["Preferred_view"]
-        )
-        # Set the use of the tools panel
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "UseToolsPanel", self.ValuesToUpdate["UseToolsPanel"]
-        )
-        # Set the use of FreeCAD's overlay function
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "OverlayState", self.ValuesToUpdate["OverlayState"]
-        )
-        # Parameters_Ribbon.Settings.SetBoolSetting(
-        #     "UseOverlay", self.ValuesToUpdate["UseOverlay"]
-        # )
-        # Parameters_Ribbon.Settings.SetBoolSetting(
-        #     "UseFCOverlay", self.ValuesToUpdate["UseFCOverlay"]
-        # )
-        # Set the use of custom icons
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "HideMenuIcon", self.ValuesToUpdate["HideMenuIcon"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "Enable_Tab_Scroll_Icon", self.ValuesToUpdate["Enable_Tab_Scroll_Icon"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "Enable_Ribbon_Scroll_Icon", self.ValuesToUpdate["Enable_Ribbon_Scroll_Icon"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "Enable_MoreCommands_Icon", self.ValuesToUpdate["Enable_MoreCommands_Icon"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "Enable_pinButton_Icon", self.ValuesToUpdate["Enable_pinButton_Icon"]
-        )   
-        # Set the use of custom colors
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableBorderColor", self.ValuesToUpdate["EnableBorderColor"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableBackGroundColor", self.ValuesToUpdate["EnableBackGroundColor"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableBackGroundColor_Hover", self.ValuesToUpdate["EnableBackGroundColor_Hover"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableBackGroundColor_App", self.ValuesToUpdate["EnableBackGroundColor_App"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableBackGroundColor_Tab", self.ValuesToUpdate["EnableBackGroundColor_Tab"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableBackGroundColor_TitleBar", self.ValuesToUpdate["EnableBackGroundColor_TitleBar"]
-        )
-        Parameters_Ribbon.Settings.SetBoolSetting(
-            "EnableTextColor", self.ValuesToUpdate["EnableTextColor"]
-        )
-        # Parameters_Ribbon.Settings.SetBoolSetting(
-        #     "BorderTransparant", self.ValuesToUpdate["BorderTransparant"]
-        # )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "Color_Borders", self.ValuesToUpdate["Color_Borders"]
-        )
-        Parameters_Ribbon.Settings.SetStringSetting("Color_Background", self.ValuesToUpdate["Color_Background"])
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "Color_Background_Hover", self.ValuesToUpdate["Color_Background_Hover"]
-        )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "Color_Background_App", self.ValuesToUpdate["Color_Background_App"]
-        )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "Color_Background_Tabs", self.ValuesToUpdate["Color_Background_Tabs"]
-        )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "Color_Background_TitleBar", self.ValuesToUpdate["Color_Background_TitleBar"]
-        )
-        Parameters_Ribbon.Settings.SetStringSetting(
-            "Color_Font", self.ValuesToUpdate["Color_Font"]
-        )
+        with QScopedCursorOverride():
+            # Save docked dialogs
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "Docked_Dialogs", self.ValuesToUpdate["Docked_Dialogs"]
+            )
+            # Save backup settings
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "BackupEnabled", self.ValuesToUpdate["BackupEnabled"]
+            )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "BackupFolder", self.ValuesToUpdate["BackupFolder"]
+            )
+            # Save tabBar style
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "TabBar_Style", self.ValuesToUpdate["TabBar_Style"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "Toolbar_Position", self.ValuesToUpdate["Toolbar_Position"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "Hide_Titlebar_FC", self.ValuesToUpdate["Hide_Titlebar_FC"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "HidePanelTitles", self.ValuesToUpdate["HidePanelTitles"]
+            )
+            # Save icon sizes
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "Link_IconSizes", self.ValuesToUpdate["Link_IconSizes"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "IconSize_Small", int(self.ValuesToUpdate["IconSize_Small"])
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "IconSize_Medium", int(self.ValuesToUpdate["IconSize_Medium"])
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "IconSize_Large", int(self.ValuesToUpdate["IconSize_Large"])
+            )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "Stylesheet", self.ValuesToUpdate["Stylesheet"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "ApplicationButtonSize", int(self.ValuesToUpdate["ApplicationButtonSize"])
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "QuickAccessButtonSize", int(self.ValuesToUpdate["QuickAccessButtonSize"])
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "TabBarSize", int(self.ValuesToUpdate["TabBarSize"])
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "RightToolbarButtonSize", int(self.ValuesToUpdate["RightToolbarButtonSize"])
+            )
+            # Save text settings
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "ShowIconText_Small", self.ValuesToUpdate["ShowIconText_Small"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "ShowIconText_Medium", self.ValuesToUpdate["ShowIconText_Medium"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "ShowIconText_Large", self.ValuesToUpdate["ShowIconText_Large"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "WrapText_Medium", self.ValuesToUpdate["WrapText_Medium"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "WrapText_Large", self.ValuesToUpdate["WrapText_Large"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "FontSize_Menus", self.ValuesToUpdate["FontSize_Menus"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "FontSize_Buttons", self.ValuesToUpdate["FontSize_Buttons"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "FontSize_Tabs", self.ValuesToUpdate["FontSize_Tabs"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "FontSize_Panels", self.ValuesToUpdate["FontSize_Panels"]
+            )
+            # Save No of columns
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "MaxColumnsPerPanel", int(self.ValuesToUpdate["MaxColumnsPerPanel"])
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "DebugMode", self.ValuesToUpdate["DebugMode"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "ShowOnHover", self.ValuesToUpdate["ShowOnHover"]
+            )
+            # Save behavior settings
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "TabBar_Scroll", self.ValuesToUpdate["TabBar_Scroll"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "Ribbon_Scroll", self.ValuesToUpdate["Ribbon_Scroll"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "TabBar_Click", self.ValuesToUpdate["TabBar_Click"]
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "Ribbon_Click", self.ValuesToUpdate["Ribbon_Click"]
+            )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "Shortcut_Application", self.ValuesToUpdate["Shortcut_Application"]
+            )
+            # Save the preferred toolbars
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "Preferred_view", self.ValuesToUpdate["Preferred_view"]
+            )
+            # Set the use of the tools panel
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "UseToolsPanel", self.ValuesToUpdate["UseToolsPanel"]
+            )
+            # Set the use of FreeCAD's overlay function
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "OverlayState", self.ValuesToUpdate["OverlayState"]
+            )
+            # Parameters_Ribbon.Settings.SetBoolSetting(
+            #     "UseOverlay", self.ValuesToUpdate["UseOverlay"]
+            # )
+            # Parameters_Ribbon.Settings.SetBoolSetting(
+            #     "UseFCOverlay", self.ValuesToUpdate["UseFCOverlay"]
+            # )
+            # Set the use of custom icons
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "HideMenuIcon", self.ValuesToUpdate["HideMenuIcon"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "Enable_Tab_Scroll_Icon", self.ValuesToUpdate["Enable_Tab_Scroll_Icon"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "Enable_Ribbon_Scroll_Icon", self.ValuesToUpdate["Enable_Ribbon_Scroll_Icon"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "Enable_MoreCommands_Icon", self.ValuesToUpdate["Enable_MoreCommands_Icon"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "Enable_pinButton_Icon", self.ValuesToUpdate["Enable_pinButton_Icon"]
+            )   
+            # Set the use of custom colors
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "EnableBorderColor", self.ValuesToUpdate["EnableBorderColor"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "EnableBackGroundColor", self.ValuesToUpdate["EnableBackGroundColor"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "EnableBackGroundColor_Hover", self.ValuesToUpdate["EnableBackGroundColor_Hover"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "EnableBackGroundColor_App", self.ValuesToUpdate["EnableBackGroundColor_App"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "EnableBackGroundColor_Tab", self.ValuesToUpdate["EnableBackGroundColor_Tab"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "EnableBackGroundColor_TitleBar", self.ValuesToUpdate["EnableBackGroundColor_TitleBar"]
+            )
+            Parameters_Ribbon.Settings.SetBoolSetting(
+                "EnableTextColor", self.ValuesToUpdate["EnableTextColor"]
+            )
+            # Parameters_Ribbon.Settings.SetBoolSetting(
+            #     "BorderTransparant", self.ValuesToUpdate["BorderTransparant"]
+            # )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "Color_Borders", self.ValuesToUpdate["Color_Borders"]
+            )
+            Parameters_Ribbon.Settings.SetStringSetting("Color_Background", self.ValuesToUpdate["Color_Background"])
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "Color_Background_Hover", self.ValuesToUpdate["Color_Background_Hover"]
+            )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "Color_Background_App", self.ValuesToUpdate["Color_Background_App"]
+            )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "Color_Background_Tabs", self.ValuesToUpdate["Color_Background_Tabs"]
+            )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "Color_Background_TitleBar", self.ValuesToUpdate["Color_Background_TitleBar"]
+            )
+            Parameters_Ribbon.Settings.SetStringSetting(
+                "Color_Font", self.ValuesToUpdate["Color_Font"]
+            )
 
-        # Set the size of the window to the previous state
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "SettingsDialog_Height", self.form.height()
-        )
-        Parameters_Ribbon.Settings.SetIntSetting(
-            "SettingsDialog_Width", self.form.width()
-        )
-        
-        # Set the advanced size settings to the previous state
-        Parameters_Ribbon.Settings.SetFloatSetting("SizeFactor", self.ValuesToUpdate["SizeFactor"])
-        Parameters_Ribbon.Settings.SetIntSetting("PanelHeightOffset", self.ValuesToUpdate["PanelHeightOffset"])
-        Parameters_Ribbon.Settings.SetIntSetting("RibbonHeightOffset", self.ValuesToUpdate["RibbonHeightOffset"])
-        Parameters_Ribbon.Settings.SetIntSetting("RibbonMinimumHeight", self.ValuesToUpdate["RibbonMinimumHeight"])
-        Parameters_Ribbon.Settings.SetIntSetting("ButtonSpacing", self.ValuesToUpdate["ButtonSpacing"])
-
-        # Close the dockwidget as well, if there is one
-        DockWidget = mw.findChild(QDockWidget, "RibbonSettings")
-        if DockWidget is not None:
-            DockWidget.deleteLater()
+            # Set the size of the window to the previous state
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "SettingsDialog_Height", self.form.height()
+            )
+            Parameters_Ribbon.Settings.SetIntSetting(
+                "SettingsDialog_Width", self.form.width()
+            )
             
-            # RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-            # mw.centralWidget().setFixedWidth(RibbonBar.CentralWidgetWidth[0])
-            
+            # Set the advanced size settings to the previous state
+            Parameters_Ribbon.Settings.SetFloatSetting("SizeFactor", self.ValuesToUpdate["SizeFactor"])
+            Parameters_Ribbon.Settings.SetIntSetting("PanelHeightOffset", self.ValuesToUpdate["PanelHeightOffset"])
+            Parameters_Ribbon.Settings.SetIntSetting("RibbonHeightOffset", self.ValuesToUpdate["RibbonHeightOffset"])
+            Parameters_Ribbon.Settings.SetIntSetting("RibbonMinimumHeight", self.ValuesToUpdate["RibbonMinimumHeight"])
+            Parameters_Ribbon.Settings.SetIntSetting("ButtonSpacing", self.ValuesToUpdate["ButtonSpacing"])
 
-        # Emit a close signal
-        self.closeSignal.emit()
-        # Close the form
-        self.form.close()
-        # show the restart dialog
-        if self.settingChanged is True:
-            result = StandardFunctions.RestartDialog(includeIcons=True)
-            if result == "no":
-                App.saveParameter()
+            # Close the dockwidget as well, if there is one
+            DockWidget = mw.findChild(QDockWidget, "RibbonSettings")
+            if DockWidget is not None:
+                DockWidget.deleteLater()
+                
+                # RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+                # mw.centralWidget().setFixedWidth(RibbonBar.CentralWidgetWidth[0])
+                
+
+            # Emit a close signal
+            self.closeSignal.emit()
+            # Close the form
+            self.form.close()
+            # show the restart dialog
+            if self.settingChanged is True:
+                result = StandardFunctions.RestartDialog(includeIcons=True)
+                if result == "no":
+                    App.saveParameter()
         return
 
     @staticmethod
@@ -2214,12 +2217,12 @@ class LoadDialog(Settings_ui.Ui_Settings, QObject):
     # endregion---------------------------------------------------------------------------------------
 
 
-class EventInspector(QObject):
+class EventInspector_Ribbon_3(QObject):
     form = None
 
     def __init__(self, parent):
         self.form = parent
-        super(EventInspector, self).__init__(parent)
+        super(EventInspector_Ribbon_3, self).__init__(parent)
 
     def eventFilter(self, obj, event):
         import FCBinding
