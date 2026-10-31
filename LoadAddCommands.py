@@ -923,7 +923,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 self.form.PanelSelected_CP.clear()       
         except Exception as e:
             if Parameters.DEBUG_MODE:
-                print("RibbonUI: \n" + str(e))
+                StandardFunctions.Print(f"Ribbon UI:\n{e}", "Warning")
             pass
         return
 

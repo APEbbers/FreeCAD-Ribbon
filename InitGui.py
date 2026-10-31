@@ -94,7 +94,7 @@ if Settings.GetStringSetting("RibbonStructure") == os.path.join(os.path.dirname(
             shutil.copyfile(os.path.join(os.path.dirname(FCBinding.__file__), "RibbonDataFile2.dat"), os.path.join(ConfigDirectory, "RibbonDataFile2.dat"))
     except:
         if Parameters.DEBUG_MODE:
-            StandardFunctions.Print(f"RibbonUI: something went wrong copying the datafiles to the new location. Error:\n{traceback.format_exc(), "Error"}")
+            StandardFunctions.Print(f"Ribbon UI: something went wrong copying the datafiles to the new location. Error:\n{traceback.format_exc(), "Error"}")
         pass
 
 if Settings.GetStringSetting("BackupFolder") == os.path.join(os.path.dirname(FCBinding.__file__), "BackupFolder"):
@@ -104,7 +104,7 @@ if Settings.GetStringSetting("BackupFolder") == os.path.join(os.path.dirname(FCB
             shutil.copytree(os.path.join(os.path.dirname(FCBinding.__file__), "Backups"), os.path.join(ConfigDirectory, "Backups"))
     except Exception:
         if Parameters.DEBUG_MODE:
-            StandardFunctions.Print(f"RibbonUI: something went wrong copying the backups to the new location. Error:\n{traceback.format_exc(), "Error"}")
+            StandardFunctions.Print(f"Ribbon UI: something went wrong copying the backups to the new location. Error:\n{traceback.format_exc(), "Error"}")
         pass
 
 # check if there is a "RibbonStructure.json". if not create one
@@ -155,7 +155,7 @@ if fileExists is True:
         
         # Print a message that the ribbon structure has ben reverted to default
         StandardFunctions.Print(translate("FreeCAD Ribbon", 
-            f"""RibbonUI: RibbonStructure.json got corrupted. A new file is created\nYou can find the corruped file in {Path}"""), "Error")
+            f"""Ribbon UI: RibbonStructure.json got corrupted. A new file is created\nYou can find the corruped file in {Path}"""), "Error")
         # Print the error message, so that it is on the log
         StandardFunctions.Print(translate("FreeCAD Ribbon", "Traceback: \n") + str(e.with_traceback(e.__traceback__)) + "\n in " + os.path.join(ConfigDirectory, "RibbonStructure.json"), "Error")
 
@@ -235,7 +235,7 @@ try:
             
 except:
     if Parameters.DEBUG_MODE is True:
-        StandardFunctions.Print(f"RibbonUI: something went loading the RibbonUI. Error:\n{traceback.format_exc(), "Error"}")
+        StandardFunctions.Print(f"Ribbon UI: something went loading the RibbonUI. Error:\n{traceback.format_exc(), "Error"}")
 
 Gui.addLanguagePath(os.path.join(os.path.dirname(FCBinding.__file__), "translations"))
 Gui.updateLocale()
