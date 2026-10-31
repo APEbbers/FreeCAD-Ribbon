@@ -505,9 +505,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 self.on_MoveDownCommand_DDB_clicked,
             )
 
-            # Connect the filter for the quick commands on the quickcommands tab
-            def FilterWorkbench_DDB():
-                self.on_ListCategory_DDB_TextChanged()
+        # Connect the filter for the quick commands on the quickcommands tab
+        def FilterWorkbench_DDB():
+            self.on_ListCategory_DDB_TextChanged()
 
         # Connect the filter for the quick commands on the quickcommands tab
         self.form.ListCategory_DDB.currentTextChanged.connect(FilterWorkbench_DDB)
