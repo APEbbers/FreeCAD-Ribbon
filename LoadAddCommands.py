@@ -1653,24 +1653,33 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     # region - Form controls
     def on_Cancel_Clicked(self):
         with QScopedCursorOverride():
-            if self.DialogClosed is False:
-                RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")        
-                for category in RibbonBar.CustomizedCategories:
-                    RibbonBar.setCurrentCategory(category)
-                    RibbonBar.on_Cancel_Clicked()
-                RibbonBar.CustomizedCategories.clear()
+            # Get the ribbon
+            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")    
+            # Go throug the customized categories and rollback any changes  
+            for category in RibbonBar.CustomizedCategories:
+                RibbonBar.setCurrentCategory(category)
+                RibbonBar.on_Cancel_Clicked()
+            # If there is no changes, just go through the protocol to properly close the customize enviroment
+            if len(RibbonBar.CustomizedCategories) == 0:
+                RibbonBar.on_Cancel_Clicked()
+            # Clear the lists
+            RibbonBar.CustomizedCategories.clear()
+            RibbonBar.CancelClicked.clear()
         return
         
     def on_Ok_Clicked(self):
         with QScopedCursorOverride():
-            self.DialogClosed = True
-            if self.DialogClosed is True:
-                RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-                for category in RibbonBar.CustomizedCategories:
-                    RibbonBar.setCurrentCategory(category) 
-                    RibbonBar.on_Ok_Clicked()
-                RibbonBar.CustomizedCategories.clear()
-                # self.DialogClosed = False
+            # Get the ribbon
+            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+            # Go throug the customized categories and rollback any changes 
+            for category in RibbonBar.CustomizedCategories:
+                RibbonBar.setCurrentCategory(category) 
+                RibbonBar.on_Ok_Clicked()
+            # If there is no changes, just go through the protocol to properly close the customize enviroment
+            if len(RibbonBar.CustomizedCategories) == 0:
+                RibbonBar.on_Ok_Clicked()
+            # Clear the lists
+            RibbonBar.CustomizedCategories.clear()
         return
 
     def on_Apply_Clicked(self):
