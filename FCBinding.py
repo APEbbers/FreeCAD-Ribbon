@@ -2183,18 +2183,26 @@ class ModernMenu(RibbonBar):
                     
         return
     
-    def handleContextMenuAction(self, action):        
+    OkClicked = False
+    CancelClicked = []
+    def handleContextMenuAction(self, action):  
         # Perfom the action depending on which button is clicked
-        if action == "Start":
+        if action == "Start":                        
             if self.CustomizeEnabled is False:
+                # Install the patch for dragdrop under wayland
+                if len(self.findChildren(EventInspector_Patch_1)) == 0:
+                    self.installEventFilter(EventInspector_Patch_1(mw))
+                    
                 # Enter the customise enviroment
                 self.on_Customize_Clicked()
+                
                 # Set the tabGroup to "All"
                 for toolBarAction in QToolBar.actions(self.rightToolBar()):    
                     if toolBarAction is not None and type(toolBarAction) == QWidgetAction and toolBarAction.defaultWidget() is not None:  # noqa: SIM102
                         if toolBarAction.defaultWidget().objectName() == "GroupBox":
                             toolBarAction.defaultWidget().setCurrentIndex(0) 
-
+                
+                # Get the data from the data file if the data exists, load the form
                 DataFile = os.path.join(ConfigDirectory, "RibbonDataFile.dat")
                 if os.path.exists(DataFile) is False:
                     Question = translate(
@@ -2235,24 +2243,33 @@ class ModernMenu(RibbonBar):
                 for category in self.CustomizedCategories:
                     self.setCurrentCategory(category)
                     self.on_Ok_Clicked()
+                if len(self.CustomizedCategories) == 0:
+                    self.on_Ok_Clicked()
                 self.CustomizedCategories.clear()
+                
+                self.removeEventFilter(self.findChild(EventInspector_Patch_1))
                 return
 
         if action == "Cancel":
             for category in self.CustomizedCategories:
                 self.setCurrentCategory(category)
                 self.on_Cancel_Clicked()
-                
-            # self.on_Cancel_Clicked()
+            if len(self.CustomizedCategories) == 0:
+                self.on_Cancel_Clicked()
+            self.CustomizedCategories.clear()
+
             self.OriginalPanelsToRemove.clear()
             self.CustomPanelsToRestore.clear()
             
-            # Restore the ribbonstructure
-            self.ribbonStructure = self.workBenchDict
+            # # Restore the ribbonstructure
+            # self.ribbonStructure = self.workBenchDict
+            
+            self.CancelClicked.clear()
         
             # Clear the workbench dict
             self.workBenchDict.clear()
-
+            
+            self.removeEventFilter(self.findChild(EventInspector_Patch_1))
         return
     
     def on_Customize_Clicked(self):
@@ -2528,8 +2545,6 @@ class ModernMenu(RibbonBar):
                         self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))             
         return
     
-    OkClicked = False
-    CancelClicked = []
     def on_ApplyClicked(self):
         self.on_Ok_Clicked(CloseDialog=False)
         return
@@ -9062,30 +9077,14 @@ class ModernMenu(RibbonBar):
     # endregion
     
 session_id = subprocess.getoutput("env | grep -E -i 'x11|xorg|wayland'").split()[1].split("=")[1]
-class EventInspector_RibbonUI_1(QObject):
+class EventInspector_Patch_1(QObject):
+    PatchApplicable = True
     dragEntered = False
     widget = None
     pos = None
-    PatchApplicable = True
-    DataChecked = False
-
+    
     @override
     def eventFilter(self, obj, event: QEvent):
-        # Check the datafile version after the ribbonbar is loaded in memory
-        if self.DataChecked is False:
-            try:
-                mw = Gui.getMainWindow()
-                RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
-                
-                if RibbonBar is not None and RibbonBar.isLoaded:
-                    self.DataChecked = True
-                    CacheFunctions.CheckDataFileVersion()        
-            except:  # noqa: E722
-                e = traceback.format_exc()
-                if Parameters.DEBUG_MODE is True:
-                    StandardFunctions.Print(f"Ribbon UI:\n{e}", "Warning")
-                self.DataChecked = True
-        
         # This is an alternative drop function which works only with QT6.
         # It is needed to avoid problems with older Nvidia Cards (Pascal and older) and Wayland        
         try:
@@ -9119,6 +9118,62 @@ class EventInspector_RibbonUI_1(QObject):
         except Exception:  # noqa: BLE001
             if Parameters.DEBUG_MODE:
                 StandardFunctions.Print(f"Ribbon UI: {traceback.format_exc()}", "Warning")
+        
+        return QObject.eventFilter(self, obj, event)
+
+class EventInspector_RibbonUI_1(QObject):   
+    DataChecked = False
+
+    @override
+    def eventFilter(self, obj, event: QEvent):
+        # Check the datafile version after the ribbonbar is loaded in memory
+        if self.DataChecked is False:
+            try:
+                mw = Gui.getMainWindow()
+                RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")
+                
+                if RibbonBar is not None and RibbonBar.isLoaded:
+                    self.DataChecked = True
+                    CacheFunctions.CheckDataFileVersion()        
+            except:  # noqa: E722
+                e = traceback.format_exc()
+                if Parameters.DEBUG_MODE is True:
+                    StandardFunctions.Print(f"Ribbon UI:\n{e}", "Warning")
+                self.DataChecked = True
+        
+        # # This is an alternative drop function which works only with QT6.
+        # # It is needed to avoid problems with older Nvidia Cards (Pascal and older) and Wayland        
+        # try:
+        #     # Get the main window and the ribbon
+        #     if session_id == "wayland" and QApplication.mouseButtons().value == 0:         
+        #         mw = Gui.getMainWindow()
+        #         RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")  
+        #         if RibbonBar is not None and RibbonBar.CustomizeEnabled and self.PatchApplicable is True and platform.system() == "Linux":                                      
+        #             if self.dragEntered is True and QApplication.mouseButtons().value == 0:
+        #                 self.dragEntered = False
+        #                 if Parameters.DEBUG_MODE:
+        #                     StandardFunctions.Print("Ribbon UI: Wayland patch applied for an alternative drop event", "Log")
+                        
+        #                 if RibbonBar.dropPanelName != "":
+        #                     RibbonBar.dropEvent(widget=self.widget)
+        #                     self.widget = None
+        #                     self.pos = None
+        #                 return QObject.eventFilter(self, obj, event)
+                
+        #             # Store the dragged widget
+        #             if event.type() == QEvent.Type.DragEnter:
+        #                 if self.dragEntered is False and self.widget is None:
+        #                         if Parameters.DEBUG_MODE:
+        #                             StandardFunctions.Print("Wayland patch: drag entered", "Log")
+        #                         self.dragEntered = True
+        #                         self.widget = event.source()
+        #                         # self.widget = self.widget.parent()
+        #                         self.pos= event.source().pos()
+        #                         event.accept()                        
+        #                 return QObject.eventFilter(self, obj, event)
+        # except Exception:  # noqa: BLE001
+        #     if Parameters.DEBUG_MODE:
+        #         StandardFunctions.Print(f"Ribbon UI: {traceback.format_exc()}", "Warning")
                  
         if event.type() == QEvent.Type.KeyRelease:
             try:
