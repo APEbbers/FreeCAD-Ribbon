@@ -27,7 +27,7 @@ from pathlib import Path
 import subprocess
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -58,7 +58,7 @@ from PySide.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -107,7 +107,7 @@ from PySide.QtWidgets import (
     QStyleOptionComplex,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -2251,19 +2251,22 @@ class ModernMenu(RibbonBar):
                 return
 
         if action == "Cancel":
+            # Restore the ribbonstructure
+            # read ribbon structure from JSON file
+            Dict = {}
+            with open(Parameters.RIBBON_STRUCTURE_JSON, "r") as file:
+                Dict.update(json.load(file))
+            self.ribbonStructure = Dict
+            
             for category in self.CustomizedCategories:
                 self.setCurrentCategory(category)
                 self.on_Cancel_Clicked()
             if len(self.CustomizedCategories) == 0:
                 self.on_Cancel_Clicked()
+                
             self.CustomizedCategories.clear()
-
             self.OriginalPanelsToRemove.clear()
-            self.CustomPanelsToRestore.clear()
-            
-            # # Restore the ribbonstructure
-            # self.ribbonStructure = self.workBenchDict
-            
+            self.CustomPanelsToRestore.clear()                        
             self.CancelClicked.clear()
         
             # Clear the workbench dict
@@ -2942,8 +2945,8 @@ class ModernMenu(RibbonBar):
             self.setPanelProperties(newPanel)
             # Update the panel dict            
             dictPanels[title] = newPanel
-            # Delete the old panel
-            objPanel.deleteLater()
+            # Close the old panel
+            objPanel.close()
             
             # Set the buttonstate back as it was
             panelName = newPanel.objectName()
@@ -2998,37 +3001,35 @@ class ModernMenu(RibbonBar):
         for panel in self.RemovedPanels:
             try:
                 panel.show()
-            except Exception:
+            except:  # noqa: E722
+                if Parameters.DEBUG_MODE is True:
+                    StandardFunctions.Print(f"Ribbon UI:\n{traceback.format_exc()}", "Warning")
                 pass
             
         # Restore any custom panel
         # Get the custom panels and add them to the list of toolbars
         try:
             for panel in self.CustomPanelsToRestore:
-                panel.show()
-             
-            for panel in self.OriginalPanelsToRemove:                
-                if panel.objectName() in self.currentCategory().panels():
-                    panel.deleteLater()                    
-                    try:
-                        self.currentCategory().removePanel(panel.objectName())
-                    except Exception:  # noqa: BLE001, S110
-                        pass
-                elif panel.title() in self.currentCategory().panels():
-                    panel.deleteLater() 
-                    try:
-                        self.currentCategory().removePanel(panel.title())
-                    except Exception: # noqa: BLE001, S110
-                        pass  
-                else:
-                    if Parameters.DEBUG_MODE:
-                        StandardFunctions.Print(f"Ribbon UI: an panel({panel.objectName()}) which was replaced by a custom panel, was not removed during rollback")
-                    
+                # Show the panel again
+                try:
+                    panel.show()
+                except Exception: # noqa: BLE001, S110
+                    pass
+                # Check the customtoolbar dict for panels that were replaced by this panel and should be closed
+                for command, toolbar in Dict["customToolbars"][workbenchName][panel.objectName()]["commands"].items():
+                    for panelName, panelObject in  self.currentCategory().panels().items():
+                        if panelObject.title() == toolbar or panelObject.objectName() == toolbar:
+                            panelObject.close()
+                    for longPanel in self.longPanels:
+                        if longPanel.title() == toolbar or longPanel.objectName() == toolbar:
+                            longPanel.close()
+          
         except:  # noqa: E722
             if Parameters.DEBUG_MODE is True:
                 StandardFunctions.Print(f"Ribbon UI:\n{traceback.format_exc()}", "Warning")
             pass
         
+        # Remove any newly added panels
         try:    
             for panel in self.AddedPanels:
                 try:
