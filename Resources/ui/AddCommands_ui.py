@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsVVWXut.ui'
+## Form generated from reading UI file 'AddCommandsQvbRfK.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.12.0
 ##
@@ -26,7 +26,7 @@ class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(749, 739)
+        Form.resize(660, 685)
         Form.setAcceptDrops(True)
         self.gridLayout_13 = QGridLayout(Form)
         self.gridLayout_13.setObjectName(u"gridLayout_13")
@@ -453,6 +453,7 @@ class Ui_Form(object):
         self.CreateMacroButtons = QWidget()
         self.CreateMacroButtons.setObjectName(u"CreateMacroButtons")
         self.gridLayout_17 = QGridLayout(self.CreateMacroButtons)
+        self.gridLayout_17.setSpacing(3)
         self.gridLayout_17.setObjectName(u"gridLayout_17")
         self.gridLayout_17.setContentsMargins(6, 6, 6, 6)
         self.groupBox_4 = QGroupBox(self.CreateMacroButtons)
@@ -484,7 +485,7 @@ class Ui_Form(object):
         self.gridLayout_7 = QGridLayout()
         self.gridLayout_7.setObjectName(u"gridLayout_7")
         self.gridLayout_7.setHorizontalSpacing(0)
-        self.gridLayout_7.setVerticalSpacing(10)
+        self.gridLayout_7.setVerticalSpacing(3)
         self.SetShortcut = QLineEdit(self.groupBox_2)
         self.SetShortcut.setObjectName(u"SetShortcut")
         sizePolicy3.setHeightForWidth(self.SetShortcut.sizePolicy().hasHeightForWidth())
@@ -682,8 +683,8 @@ class Ui_Form(object):
         __qtablewidgetitem11.setFlags(Qt.ItemIsSelectable|Qt.ItemIsEnabled)
         self.ListMacroButtons.setItem(0, 0, __qtablewidgetitem11)
         self.ListMacroButtons.setObjectName(u"ListMacroButtons")
-        sizePolicy5.setHeightForWidth(self.ListMacroButtons.sizePolicy().hasHeightForWidth())
-        self.ListMacroButtons.setSizePolicy(sizePolicy5)
+        sizePolicy.setHeightForWidth(self.ListMacroButtons.sizePolicy().hasHeightForWidth())
+        self.ListMacroButtons.setSizePolicy(sizePolicy)
         self.ListMacroButtons.setFrameShape(QFrame.Shape.Box)
         self.ListMacroButtons.setEditTriggers(QAbstractItemView.EditTrigger.AllEditTriggers)
         self.ListMacroButtons.setTabKeyNavigation(False)

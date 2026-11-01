@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>749</width>
-    <height>739</height>
+    <width>660</width>
+    <height>685</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -831,6 +831,9 @@
        <property name="bottomMargin">
         <number>6</number>
        </property>
+       <property name="spacing">
+        <number>3</number>
+       </property>
        <item row="0" column="0" rowspan="2">
         <widget class="QGroupBox" name="groupBox_4">
          <property name="title">
@@ -898,7 +901,7 @@
              <number>0</number>
             </property>
             <property name="verticalSpacing">
-             <number>10</number>
+             <number>3</number>
             </property>
             <item row="5" column="1">
              <widget class="QLineEdit" name="SetShortcut">
@@ -1302,7 +1305,7 @@
           <item row="0" column="1" colspan="2">
            <widget class="QTableWidget" name="ListMacroButtons">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
