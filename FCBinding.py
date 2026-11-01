@@ -2926,8 +2926,8 @@ class ModernMenu(RibbonBar):
             self.setPanelProperties(newPanel)
             # Update the panel dict            
             dictPanels[title] = newPanel
-            # Delete the old panel
-            objPanel.deleteLater()
+            # Close the old panel
+            objPanel.close()
             
             # Set the buttonstate back as it was
             panelName = newPanel.objectName()
