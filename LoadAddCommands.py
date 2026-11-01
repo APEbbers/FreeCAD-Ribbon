@@ -1253,7 +1253,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 TB = mw.findChildren(QToolBar, toolbar)
                                 if TB is not None:
                                     # Create the panel based on the toolbars
-                                    newPanel = RibbonBar.CreatePanel(workbenchName=WorkBenchName, panelName=toolbar, addPanel=False, Dict=RibbonBar.workBenchDict, showEnableControl=True, ActivateButtons=True)                                                                        
+                                    newPanel = RibbonBar.CreatePanel(workbenchName=WorkBenchName, panelName=toolbar, addPanel=False, Dict=RibbonBar.workBenchDict, showEnableControl=True, ActivateButtons=True, CheckCustomPanels=False)                                                                        
                                     if newPanel is not None:
                                     # show the enable checkboxes  
                                         titleLayout: QHBoxLayout = newPanel._titleLayout
@@ -1268,15 +1268,17 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                         index = orderList.index(toolbar)
                                         RibbonBar.currentCategory().insertWidget(newPanel, index)
                                         # Update the dict of the currentCategory with the new panel
-                                        RibbonBar.currentCategory()._panels[newPanel.objectName()] = newPanel                                  
+                                        RibbonBar.currentCategory()._panels[newPanel.objectName()] = newPanel   
+                                        RibbonBar.OriginalPanelsToRemove.append
+                                    else:
+                                        StandardFunctions.Print(f"Ribbon UI: Creating a panel from toolbar {toolbar} resulted in an 'None' result")
                             
                             # Remove the custom panel
                             #
                             # Close the panel first before removing
-                            panelToRemove = RibbonBar.currentCategory().panels()[panel]                            
+                            panelToRemove = RibbonBar.currentCategory().panels()[panel]
+                            RibbonBar.CustomPanelsToRestore.append(panelToRemove)                       
                             panelToRemove.close()
-                            # # Remove it
-                            # RibbonBar.currentCategory().removePanel(panel)
                                                                           
                             # remove the custom toolbar from the combobox
                             for i in range(self.form.CustomToolbarSelector_CP.count()):
@@ -1284,24 +1286,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     if (self.form.CustomToolbarSelector_CP.itemText(i).split(", ")[1] == WorkBenchTitle and self.form.CustomToolbarSelector_CP.itemText(i).split(", ")[1] != ""):
                                         self.form.CustomToolbarSelector_CP.removeItem(i)
                                         self.form.CustomToolbarSelector_CP.setCurrentText(self.form.CustomToolbarSelector_CP.itemText(i - 1))
-
-                            # Remove the custom panel from the order list
-                            if panel in orderList:
-                                orderList.remove(panel)
-
-                            # remove the custom toolbar also from the workbenches dict
-                            del RibbonBar.workBenchDict["customToolbars"][WorkBenchName][panel]
-                            if (panel in RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"]):
-                                del RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"][panel]
-
-                            # update the order list
-                            if panel in RibbonBar.workBenchDict["workbenches"][WorkBenchName]:
-                                RibbonBar.workBenchDict["workbenches"][WorkBenchName][panel]["order"] = orderList
-
-                            # # Get the ribbon
-                            # RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-                            # # Update the workBenchDict in the Ribbon
-                            # RibbonBar.workBenchDict["workbenches"][WorkBenchName].update(RibbonBar.workBenchDict["workbenches"][WorkBenchName])
 
                             # Set the current text to new
                             self.form.CustomToolbarSelector_CP.setCurrentText("New")
