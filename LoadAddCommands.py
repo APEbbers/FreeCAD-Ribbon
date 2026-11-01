@@ -48,7 +48,7 @@ from PySide6.QtWidgets import (
     QAbstractScrollArea,
     QAbstractItemView,    
 )
-from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent, QCursor
+from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent, QCursor
 import sys
 import json
 from datetime import datetime, timedelta
@@ -515,6 +515,11 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.SearchBar_DDB.textChanged.connect(
             self.on_SearchBar_DDB_TextChanged
         )
+        
+        #
+        # --- CreateDropDownButtonTab ----------------
+        #
+        self.form.AddButton.clicked.connect(self.addMacroButton)
         
         # --- Form controls ------------------
         #
@@ -1547,18 +1552,27 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     # Macro commands ---------------------------------------------------------------------------------
     
     def LoadMacroLists(self):
-        MacroDir = App.getUserMacroDir()
-        
-        for root, dirs, files in os.walk(MacroDir):
+        MacroList = []
+        MacroDirSystem = App.getUserMacroDir()        
+        for root, dirs, files in os.walk(MacroDirSystem):
             for file in files:
-                self.form.SelectMacro.addItem(file, os.path.join(MacroDir, file))
-                
-                print(file)
-                MacroCommandName = Gui.Command.findCustomCommand(file)
-                print(MacroCommandName)
-                if MacroCommandName is not None:
-                    MacroCommand = Gui.Command.get(MacroCommandName)
-                    print(MacroCommand)
+                MacroList.append(os.path.join(MacroDirSystem, file))
+
+        preferences = App.ParamGet("User parameter:BaseApp/Preferences/Macro/")
+        MacroDirUser = preferences.GetString("MacroPath")
+        if os.path.exists(MacroDirUser):
+            for root, dirs, files in os.walk(MacroDirUser):
+                for file in files:
+                    MacroList.append(os.path.join(MacroDirUser, file))
+                    
+        for file in MacroList:
+            fileName = os.path.basename(file)
+            self.form.SelectMacro.addItem(fileName, file)
+
+            MacroCommandName = Gui.Command.findCustomCommand(fileName)
+            if MacroCommandName is not None:
+                MacroCommand = Gui.Command.get(MacroCommandName)
+                print(MacroCommand)
     
     def LoadIcons(self):
         # Get the tableWidget
@@ -1596,14 +1610,14 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         # Add the commandname to the shadow list, so that it will be skipped next time
                         shadowList.append(item[0])
                         # Get the icon. If the icon is not empty, add it to a button and at that butten to the QTableWidget
-                        icon = self.ReturnCommandIcon(item[0])                    
+                        icon = self.ReturnCommandIcon(item[0])     
                         if not icon.isNull() and icon is not None and icon.pixmap(64,64).toImage().bytesPerLine() >= 256:
                             button = QToolButton()
                             button.setIcon(icon)
                             button.setToolTip(item[0])
                             button.setIconSize(QSize(TableWidget.columnWidth(i2), TableWidget.columnWidth(i2)))
                             button.setFixedSize(TableWidget.columnWidth(i2),TableWidget.rowHeight(i1))
-                            button.clicked.connect(lambda e, x=icon: self.TableCellButton_Clicked(x))
+                            button.clicked.connect(lambda e, x=icon, y=item[0]: self.TableCellButton_Clicked(x, y))
                             TableWidget.setCellWidget(i1, i2, button)                            
                             break
         
@@ -1627,10 +1641,44 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
         return
     
-    def TableCellButton_Clicked(self, icon):
+    def TableCellButton_Clicked(self, icon, commandName):
         self.form.SelectIcon.setIcon(icon)
         self.form.SelectIcon.setIconSize(self.form.SelectIcon.size())
+        self.form.SelectIcon.setObjectName(commandName)
         return
+    
+    def addMacroButton(self):
+        # Get the filled in data
+        MacroFile = self.form.SelectMacro.currentText()
+        MenuText = self.form.SetMenuText.text()
+        ToolTip = self.form.SetToolTip.text()
+        StatusText = self.form.SetStatusText.text()
+        WhatIsThis = self.form.SetWhatIsThis.text()
+        ShortCut = self.form.SetShortcut.text()
+        Pixmap = self.form.SelectIcon.objectName()
+        
+        # Create a custom command with FreeCAD
+        macroButton = Gui.Command.createCustomCommand(
+            macroFile=MacroFile,
+            menuText=MenuText,
+            toolTip=ToolTip,
+            statusTip=StatusText,
+            whatsThis=WhatIsThis,
+            shortcut=ShortCut,
+            pixmap=Pixmap
+        )
+        # Store the custom command so that the command is usable and present in FreeCAD's customize menu
+        preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{macroButton}")
+        preferences.SetString("Menu", MenuText)
+        preferences.SetString("Tooltip", ToolTip)
+        preferences.SetString("Statustip", StatusText)
+        preferences.SetString("WhatsThis", WhatIsThis)
+        preferences.SetString("Accel", ShortCut)
+        preferences.SetString("Pixmap", Pixmap)
+        preferences.SetBool("System", False)
+        
+        # Add the command to the listWidgets so that they can be added to the ribbon right away
+        # TODO
     
     # endregion---------------------------------------------------------------------------------------
         
