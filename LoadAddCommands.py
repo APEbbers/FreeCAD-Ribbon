@@ -406,104 +406,104 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         def FilterWorkbench_NP():
             self.on_ListCategory_NP_TextChanged()
 
-            #
-            # --- AddCOmmandsTab ------------------
-            #
-            # Connect the filter for the quick commands on the quickcommands tab
-            self.form.ListCategory_NP.currentTextChanged.connect(FilterWorkbench_NP)
-            # Connect the searchbar for the quick commands on the quick commands tab
-            self.form.SearchBar_NP.textChanged.connect(
-                self.on_SearchBar_NP_TextChanged
-            )
-            
-            # Connect the "CreateNewPanel" button
-            self.form.CreateNewPanel.clicked.connect(self.on_CreateNewPanel_clicked)        
-            
-            #
-            # --- CombinePanelsTab ------------------
-            #
-            # Connect move and events to the buttons on the Custom Panels Tab
-            self.form.MoveUpPanelCommand_CP.connect(
-                self.form.MoveUpPanelCommand_CP,
-                SIGNAL("clicked()"),
-                self.on_MoveUpPanelCommand_CP_clicked,
-            )
-            self.form.MoveDownPanelCommand_CP.connect(
-                self.form.MoveDownPanelCommand_CP,
-                SIGNAL("clicked()"),
-                self.on_MoveDownPanelCommand_CP_clicked,
-            )
+        #
+        # --- AddCOmmandsTab ------------------
+        #
+        # Connect the filter for the quick commands on the quickcommands tab
+        self.form.ListCategory_NP.currentTextChanged.connect(FilterWorkbench_NP)
+        # Connect the searchbar for the quick commands on the quick commands tab
+        self.form.SearchBar_NP.textChanged.connect(
+            self.on_SearchBar_NP_TextChanged
+        )
+        
+        # Connect the "CreateNewPanel" button
+        self.form.CreateNewPanel.clicked.connect(self.on_CreateNewPanel_clicked)        
+        
+        #
+        # --- CombinePanelsTab ------------------
+        #
+        # Connect move and events to the buttons on the Custom Panels Tab
+        self.form.MoveUpPanelCommand_CP.connect(
+            self.form.MoveUpPanelCommand_CP,
+            SIGNAL("clicked()"),
+            self.on_MoveUpPanelCommand_CP_clicked,
+        )
+        self.form.MoveDownPanelCommand_CP.connect(
+            self.form.MoveDownPanelCommand_CP,
+            SIGNAL("clicked()"),
+            self.on_MoveDownPanelCommand_CP_clicked,
+        )
 
-            # Connect Add events to the buttons on the Custom Panels Tab for adding commands to the panel
-            self.form.AddPanel_CP.connect(
-                self.form.AddPanel_CP, SIGNAL("clicked()"), self.on_AddPanel_CP_clicked
-            )
+        # Connect Add events to the buttons on the Custom Panels Tab for adding commands to the panel
+        self.form.AddPanel_CP.connect(
+            self.form.AddPanel_CP, SIGNAL("clicked()"), self.on_AddPanel_CP_clicked
+        )
 
-            self.form.AddCustomPanel_CP.connect(
-                self.form.AddCustomPanel_CP,
-                SIGNAL("clicked()"),
-                self.on_AddCustomPanel_CP_clicked,
-            )
+        self.form.AddCustomPanel_CP.connect(
+            self.form.AddCustomPanel_CP,
+            SIGNAL("clicked()"),
+            self.on_AddCustomPanel_CP_clicked,
+        )
 
-            # Connect custom toolbar selector on the Custom Panels Tab
-            def CommandList_CP():
-                self.on_CustomToolbarSelector_CP_activated()
+        # Connect custom toolbar selector on the Custom Panels Tab
+        def CommandList_CP():
+            self.on_CustomToolbarSelector_CP_activated()
 
-            self.form.CustomToolbarSelector_CP.activated.connect(CommandList_CP)
+        self.form.CustomToolbarSelector_CP.activated.connect(CommandList_CP)
 
-            self.form.RemovePanel_CP.connect(
-                self.form.RemovePanel_CP,
-                SIGNAL("clicked()"),
-                self.on_RemovePanel_CP_clicked,
-            )
-            
-            self.form.WorkbenchList_CP.setHidden(True)
-            self.form.label_7.setHidden(True)
-            
-            #
-            # --- CreateDropDownButtonTab ----------------
-            #
-            # Connect the Create dropdown button
-            self.form.CreateControl_DDB.connect(
-                self.form.CreateControl_DDB,
-                SIGNAL("clicked()"),
-                self.on_CreateControl_DDB_clicked,
-            )
+        self.form.RemovePanel_CP.connect(
+            self.form.RemovePanel_CP,
+            SIGNAL("clicked()"),
+            self.on_RemovePanel_CP_clicked,
+        )
+        
+        self.form.WorkbenchList_CP.setHidden(True)
+        self.form.label_7.setHidden(True)
+        
+        #
+        # --- CreateDropDownButtonTab ----------------
+        #
+        # Connect the Create dropdown button
+        self.form.CreateControl_DDB.connect(
+            self.form.CreateControl_DDB,
+            SIGNAL("clicked()"),
+            self.on_CreateControl_DDB_clicked,
+        )
 
-            # Connect  dropdownselector on the create dropdown button Tab
-            def CommandList_DDB():
-                self.on_CommandList_DDB_activated()
+        # Connect  dropdownselector on the create dropdown button Tab
+        def CommandList_DDB():
+            self.on_CommandList_DDB_activated()
 
-            self.form.CommandList_DDB.activated.connect(CommandList_DDB)
+        self.form.CommandList_DDB.activated.connect(CommandList_DDB)
 
-            # Connect the remove dropdown button
-            self.form.RemoveControl_DDB.connect(
-                self.form.RemoveControl_DDB,
-                SIGNAL("clicked()"),
-                self.on_RemoveControl_DDB_clicked,
-            )
+        # Connect the remove dropdown button
+        self.form.RemoveControl_DDB.connect(
+            self.form.RemoveControl_DDB,
+            SIGNAL("clicked()"),
+            self.on_RemoveControl_DDB_clicked,
+        )
 
-            # Connect Add/Remove and move events to the buttons on the QuickAccess Tab
-            self.form.AddCommand_DDB.connect(
-                self.form.AddCommand_DDB,
-                SIGNAL("clicked()"),
-                self.on_AddCommand_DDB_clicked,
-            )
-            self.form.RemoveCommand_DDB.connect(
-                self.form.RemoveCommand_DDB,
-                SIGNAL("clicked()"),
-                self.on_RemoveCommand_DDB_clicked,
-            )
-            self.form.MoveUpCommand_DDB.connect(
-                self.form.MoveUpCommand_DDB,
-                SIGNAL("clicked()"),
-                self.on_MoveUpCommand_DDB_clicked,
-            )
-            self.form.MoveDownCommand_DDB.connect(
-                self.form.MoveDownCommand_DDB,
-                SIGNAL("clicked()"),
-                self.on_MoveDownCommand_DDB_clicked,
-            )
+        # Connect Add/Remove and move events to the buttons on the QuickAccess Tab
+        self.form.AddCommand_DDB.connect(
+            self.form.AddCommand_DDB,
+            SIGNAL("clicked()"),
+            self.on_AddCommand_DDB_clicked,
+        )
+        self.form.RemoveCommand_DDB.connect(
+            self.form.RemoveCommand_DDB,
+            SIGNAL("clicked()"),
+            self.on_RemoveCommand_DDB_clicked,
+        )
+        self.form.MoveUpCommand_DDB.connect(
+            self.form.MoveUpCommand_DDB,
+            SIGNAL("clicked()"),
+            self.on_MoveUpCommand_DDB_clicked,
+        )
+        self.form.MoveDownCommand_DDB.connect(
+            self.form.MoveDownCommand_DDB,
+            SIGNAL("clicked()"),
+            self.on_MoveDownCommand_DDB_clicked,
+        )
 
         # Connect the filter for the quick commands on the quickcommands tab
         def FilterWorkbench_DDB():
