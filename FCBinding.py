@@ -2997,14 +2997,13 @@ class ModernMenu(RibbonBar):
                 except Exception: # noqa: BLE001, S110
                     pass
                 # Check the customtoolbar dict for panels that were replaced by this panel and should be closed
-                if workbenchName in Dict["customToolbars"] and [panel.objectName()] in Dict["customToolbars"][workbenchName]:
-                    for command, toolbar in Dict["customToolbars"][workbenchName][panel.objectName()]["commands"].items():
-                        for panelName, panelObject in  self.currentCategory().panels().items():
-                            if panelObject.title() == toolbar or panelObject.objectName() == toolbar:
-                                panelObject.close()
-                        for longPanel in self.longPanels:
-                            if longPanel.title() == toolbar or longPanel.objectName() == toolbar:
-                                longPanel.close()
+                for command, toolbar in Dict["customToolbars"][workbenchName][panel.objectName()]["commands"].items():
+                    for panelName, panelObject in  self.currentCategory().panels().items():
+                        if panelObject.title() == toolbar or panelObject.objectName() == toolbar:
+                            panelObject.close()
+                    for longPanel in self.longPanels:
+                        if longPanel.title() == toolbar or longPanel.objectName() == toolbar:
+                            longPanel.close()
           
         except:  # noqa: E722
             if Parameters.DEBUG_MODE is True:
