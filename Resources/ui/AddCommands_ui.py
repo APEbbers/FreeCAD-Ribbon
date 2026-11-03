@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsQvbRfK.ui'
+## Form generated from reading UI file 'AddCommandsvJqIOy.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.12.0
 ##
@@ -701,10 +701,10 @@ class Ui_Form(object):
 
         self.gridLayout_11.addWidget(self.ListMacroButtons, 0, 1, 1, 2)
 
-        self.pushButton = QPushButton(self.groupBox_6)
-        self.pushButton.setObjectName(u"pushButton")
+        self.BrowseIcons = QPushButton(self.groupBox_6)
+        self.BrowseIcons.setObjectName(u"BrowseIcons")
 
-        self.gridLayout_11.addWidget(self.pushButton, 1, 1, 1, 1)
+        self.gridLayout_11.addWidget(self.BrowseIcons, 1, 1, 1, 1)
 
         self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -962,7 +962,7 @@ class Ui_Form(object):
         self.ListMacroButtons.setSortingEnabled(False)
         self.ListMacroButtons.setSortingEnabled(__sortingEnabled5)
 
-        self.pushButton.setText(QCoreApplication.translate("Form", u"Browse for icons...", None))
+        self.BrowseIcons.setText(QCoreApplication.translate("Form", u"Browse for icons...", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.CreateMacroButtons), QCoreApplication.translate("Form", u"Create macro buttons", None))
         self.label.setText(QCoreApplication.translate("Form", u"Refresh workbench data", None))
         self.cancelButton.setText(QCoreApplication.translate("Form", u"Cancel", None))

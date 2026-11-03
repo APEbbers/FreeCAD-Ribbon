@@ -519,16 +519,13 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.SearchBar_DDB.textChanged.connect(
             self.on_SearchBar_DDB_TextChanged
         )
-        
+                
         #
-        # --- CreateDropDownButtonTab ----------------
-        #
-        self.form.AddButton.clicked.connect(self.addMacroButton)
-        
-         #
         # --- MacroButtons ----------------
         #
+        self.form.AddButton.clicked.connect(self.addMacroButton)
         self.form.MacroList.itemClicked.connect(self.MacroListItem_clicked)
+        self.form.BrowseIcons.clicked.connect(self.BrowseMacroIcon)
         
         # --- Form controls ------------------
         #
@@ -1664,7 +1661,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     
     def TableCellButton_Clicked(self, icon, commandName):
         self.form.SelectIcon.setIcon(icon)
-        self.form.SelectIcon.setIconSize(self.form.SelectIcon.size())
+        TableWidget: QTableWidget = self.form.ListMacroButtons
+        self.form.SelectIcon.setIconSize(QSize(TableWidget.columnWidth(0), TableWidget.columnWidth(0)))
         self.form.SelectIcon.setObjectName(commandName)
         return
     
@@ -1771,6 +1769,25 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             # Get the tableWidget
             TableWidget: QTableWidget = self.form.ListMacroButtons
             self.form.SelectIcon.setIconSize(QSize(TableWidget.columnWidth(0), TableWidget.columnWidth(0)))
+        return
+    
+    def BrowseMacroIcon(self):
+        # Get the file with a dialog
+        File = StandardFunctions.GetFileDialog(
+            Filter="Pictures (*.png *.svg)",
+            parent=self.form,
+            DefaultPath="",
+            SaveAs=False,
+        )
+        if File is not None and File != "" and os.path.isfile(File):
+            icon = QIcon()
+            pixMap = QPixmap(File)
+            icon.addPixmap(pixMap)
+            self.form.SelectIcon.setIcon(icon)
+            TableWidget: QTableWidget = self.form.ListMacroButtons
+            self.form.SelectIcon.setIconSize(QSize(TableWidget.columnWidth(0), TableWidget.columnWidth(0)))
+            self.form.SelectIcon.setObjectName(File)
+        
         return
     
     # endregion---------------------------------------------------------------------------------------
