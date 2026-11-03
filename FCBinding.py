@@ -8628,6 +8628,11 @@ class ModernMenu(RibbonBar):
 
     # region - Titlebar functions
     def CloseFreeCAD(self):
+        App.saveParameter("System parameter")
+        App.saveParameter("User parameter")
+        Timer.setSingleShot(True)
+        Timer.start(1000)
+        
         mw.close()
         return
 
@@ -9161,40 +9166,6 @@ class EventInspector_RibbonUI_1(QObject):
                     StandardFunctions.Print(f"Ribbon UI:\n{e}", "Warning")
                 self.DataChecked = True
         
-        # # This is an alternative drop function which works only with QT6.
-        # # It is needed to avoid problems with older Nvidia Cards (Pascal and older) and Wayland        
-        # try:
-        #     # Get the main window and the ribbon
-        #     if session_id == "wayland" and QApplication.mouseButtons().value == 0:         
-        #         mw = Gui.getMainWindow()
-        #         RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")  
-        #         if RibbonBar is not None and RibbonBar.CustomizeEnabled and self.PatchApplicable is True and platform.system() == "Linux":                                      
-        #             if self.dragEntered is True and QApplication.mouseButtons().value == 0:
-        #                 self.dragEntered = False
-        #                 if Parameters.DEBUG_MODE:
-        #                     StandardFunctions.Print("Ribbon UI: Wayland patch applied for an alternative drop event", "Log")
-                        
-        #                 if RibbonBar.dropPanelName != "":
-        #                     RibbonBar.dropEvent(widget=self.widget)
-        #                     self.widget = None
-        #                     self.pos = None
-        #                 return QObject.eventFilter(self, obj, event)
-                
-        #             # Store the dragged widget
-        #             if event.type() == QEvent.Type.DragEnter:
-        #                 if self.dragEntered is False and self.widget is None:
-        #                         if Parameters.DEBUG_MODE:
-        #                             StandardFunctions.Print("Wayland patch: drag entered", "Log")
-        #                         self.dragEntered = True
-        #                         self.widget = event.source()
-        #                         # self.widget = self.widget.parent()
-        #                         self.pos= event.source().pos()
-        #                         event.accept()                        
-        #                 return QObject.eventFilter(self, obj, event)
-        # except Exception:  # noqa: BLE001
-        #     if Parameters.DEBUG_MODE:
-        #         StandardFunctions.Print(f"Ribbon UI: {traceback.format_exc()}", "Warning")
-                 
         if event.type() == QEvent.Type.KeyRelease:
             try:
                 # Get the main window and the ribbon
@@ -9272,7 +9243,11 @@ class EventInspector_RibbonUI_1(QObject):
             OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
             String = OverlayParam_Top.GetString("Widgets")
             Parameters_Ribbon.Settings.SetStringSetting("StoredOverlayState", String)
-            App.saveParameter()   
+            App.saveParameter()  
+            App.saveParameter("System parameter")  
+            
+            Timer.setSingleShot(True)
+            Timer.start(1000)
 
             # Store the states of the toolbars and panels
             #
@@ -9442,13 +9417,10 @@ class run:
         """
         Constructor
         """
-        disable = 0
         if name != "NoneWorkbench":
             mw: QMainWindow = Gui.getMainWindow()
             # Disable connection after activation
             mw.workbenchActivated.disconnect(run)
-            if disable:
-                return
 
             ribbon = ModernMenu()
             ribbon.setContentsMargins(0, 0, 0, 0)
