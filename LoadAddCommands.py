@@ -49,6 +49,7 @@ from PySide6.QtWidgets import (
     QAbstractItemView,    
 )
 from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent, QCursor
+
 import sys
 import json
 from datetime import datetime, timedelta
@@ -399,6 +400,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.LoadPanels()
         
         # Load all the macro lists
+        self.LoadMacroButtons()
         self.LoadMacroLists()
         self.LoadIcons()
         
@@ -521,6 +523,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         #
         self.form.AddButton.clicked.connect(self.addMacroButton)
         
+         #
+        # --- MacroButtons ----------------
+        #
+        self.form.MacroList.itemClicked.connect(self.MacroListIten_clicked)
         # --- Form controls ------------------
         #
         # Connect the reload button
@@ -1550,6 +1556,16 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     # endregion---------------------------------------------------------------------------------------
     
     # Macro commands ---------------------------------------------------------------------------------
+    def LoadMacroButtons(self):
+        preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+        ListMacroButtons = preferences.GetGroups()
+        for MacroButton in ListMacroButtons:
+            cmd = Gui.Command.get(MacroButton)
+            name = cmd.getInfo()['name']
+            menuText = cmd.getInfo()['menuText']
+            pixMap = cmd.getInfo()['pixmap']
+            self.AddMacroButtonToTable(menuText, pixMap, name)
+        return
     
     def LoadMacroLists(self):
         MacroList = []
@@ -1678,7 +1694,48 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         preferences.SetBool("System", False)
         
         # Add the command to the listWidgets so that they can be added to the ribbon right away
-        # TODO
+        self.AddMacroButtonToTable(MenuText, Pixmap, macroButton)
+        
+        return
+        
+    def AddMacroButtonToTable(self, Text, Pixmap, ToolTip):
+        ListWidget: QListWidget = self.form.MacroList
+        ListWidgetItem = QListWidgetItem()
+        ListWidgetItem.setText(Text)
+        ListWidgetItem.setIcon(self.ReturnCommandIcon(Pixmap))
+        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Pixmap)
+        ListWidgetItem.setToolTip(ToolTip)
+        ListWidget.addItem(ListWidgetItem)
+        
+        return
+    
+    def MacroListIten_clicked(self, e):
+        if type(e) == QListWidgetItem:    
+            # Get the command with its properties                    
+            cmd = Gui.Command.get(e.toolTip())
+            name = cmd.getInfo()['name']
+            menuText = cmd.getInfo()['menuText']
+            toolTip = cmd.getInfo()['toolTip']
+            whatsThis = cmd.getInfo()['whatsThis']
+            statusTip = cmd.getInfo()['statusTip']            
+            pixMap = cmd.getInfo()['pixmap']
+            shortCut = cmd.getInfo()['shortcut']
+            # Get the macro
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{e.toolTip()}")
+            macro = preferences.GetString("Script")
+            
+            # Fill in the fields
+            self.form.SelectMacro.setCurrentText(macro)
+            self.form.SetMenuText.setText(menuText)
+            self.form.SetToolTip.setText(toolTip)
+            self.form.SetStatusText.setText(statusTip)
+            self.form.SetWhatIsThis.setText(whatsThis)
+            self.form.SetShortcut.setText(shortCut)
+            self.form.SelectIcon.setIcon(self.ReturnCommandIcon(e.data(Qt.ItemDataRole.UserRole)))
+            # Get the tableWidget
+            TableWidget: QTableWidget = self.form.ListMacroButtons
+            self.form.SelectIcon.setIconSize(QSize(TableWidget.columnWidth(0), TableWidget.columnWidth(0)))
+        return
     
     # endregion---------------------------------------------------------------------------------------
         
