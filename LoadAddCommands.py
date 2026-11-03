@@ -134,6 +134,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     # Create a list for all listwidget items. Used to switch filters to "All"
     listWidgetItems_NP = []
     listWidgetItems_DDB = []
+    
+    isLoaded = False
             
     def __init__(self, parent):
         super(LoadDialog, self).__init__()
@@ -526,7 +528,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
          #
         # --- MacroButtons ----------------
         #
-        self.form.MacroList.itemClicked.connect(self.MacroListIten_clicked)
+        self.form.MacroList.itemClicked.connect(self.MacroListItem_clicked)
+        
         # --- Form controls ------------------
         #
         # Connect the reload button
@@ -605,6 +608,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 
         # Restore the cursor
         QApplication.restoreOverrideCursor()
+        
+        self.isLoaded = True
         return        
         
     def addWorkbenches(self):
@@ -1588,8 +1593,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             MacroCommandName = Gui.Command.findCustomCommand(fileName)
             if MacroCommandName is not None:
                 MacroCommand = Gui.Command.get(MacroCommandName)
-                print(MacroCommand)
-    
+        return
+
     def LoadIcons(self):
         # Get the tableWidget
         TableWidget: QTableWidget = self.form.ListMacroButtons
@@ -1664,53 +1669,80 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         return
     
     def addMacroButton(self):
-        # Get the filled in data
-        MacroFile = self.form.SelectMacro.currentText()
-        MenuText = self.form.SetMenuText.text()
-        ToolTip = self.form.SetToolTip.text()
-        StatusText = self.form.SetStatusText.text()
-        WhatIsThis = self.form.SetWhatIsThis.text()
-        ShortCut = self.form.SetShortcut.text()
-        Pixmap = self.form.SelectIcon.objectName()
-        
-        # Create a custom command with FreeCAD
-        macroButton = Gui.Command.createCustomCommand(
-            macroFile=MacroFile,
-            menuText=MenuText,
-            toolTip=ToolTip,
-            statusTip=StatusText,
-            whatsThis=WhatIsThis,
-            shortcut=ShortCut,
-            pixmap=Pixmap
-        )
-        # Store the custom command so that the command is usable and present in FreeCAD's customize menu
-        preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{macroButton}")
-        preferences.SetString("Menu", MenuText)
-        preferences.SetString("Tooltip", ToolTip)
-        preferences.SetString("Statustip", StatusText)
-        preferences.SetString("WhatsThis", WhatIsThis)
-        preferences.SetString("Accel", ShortCut)
-        preferences.SetString("Pixmap", Pixmap)
-        preferences.SetBool("System", False)
-        
-        # Add the command to the listWidgets so that they can be added to the ribbon right away
-        self.AddMacroButtonToTable(MenuText, Pixmap, macroButton)
+        if self.isLoaded:
+            # Get the filled in data
+            MacroFile = self.form.SelectMacro.currentText()
+            MenuText = self.form.SetMenuText.text()
+            ToolTip = self.form.SetToolTip.text()
+            StatusText = self.form.SetStatusText.text()
+            WhatIsThis = self.form.SetWhatIsThis.text()
+            ShortCut = self.form.SetShortcut.text()
+            Pixmap = self.form.SelectIcon.objectName()
+            
+            if MenuText == "":
+                return
+            
+            # Create a custom command with FreeCAD
+            macroButton = Gui.Command.createCustomCommand(
+                macroFile=MacroFile,
+                menuText=MenuText,
+                toolTip=ToolTip,
+                statusTip=StatusText,
+                whatsThis=WhatIsThis,
+                shortcut=ShortCut,
+                pixmap=Pixmap
+            )
+            # Store the custom command so that the command is usable and present in FreeCAD's customize menu
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{macroButton}")
+            preferences.SetString("Menu", MenuText)
+            preferences.SetString("Tooltip", ToolTip)
+            preferences.SetString("Statustip", StatusText)
+            preferences.SetString("WhatsThis", WhatIsThis)
+            preferences.SetString("Accel", ShortCut)
+            preferences.SetString("Pixmap", Pixmap)
+            preferences.SetBool("System", False)
+            
+            # Add the command to the listWidgets so that they can be added to the ribbon right away
+            self.AddMacroButtonToTable(MenuText, Pixmap, macroButton)
         
         return
         
     def AddMacroButtonToTable(self, Text, Pixmap, ToolTip):
+        # Get the data from the parameters   
+        preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+        if ToolTip in preferences.GetGroups():
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{ToolTip}")
+        else:
+            return
+        
         ListWidget: QListWidget = self.form.MacroList
         ListWidgetItem = QListWidgetItem()
         ListWidgetItem.setText(Text)
-        ListWidgetItem.setIcon(self.ReturnCommandIcon(Pixmap))
+        
+        # Set the icon
+        icon = self.ReturnCommandIcon(Pixmap)
+        if icon is None or (icon is not None and icon.isNull()):
+            icon = QIcon()
+            icon.addPixmap(QPixmap(preferences.GetString("Pixmap")))
+        if icon is not None and icon.isNull() is False:
+            ListWidgetItem.setIcon(icon)
         ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Pixmap)
         ListWidgetItem.setToolTip(ToolTip)
         ListWidget.addItem(ListWidgetItem)
         
         return
     
-    def MacroListIten_clicked(self, e):
-        if type(e) == QListWidgetItem:    
+    def MacroListItem_clicked(self, e):
+        if type(e) == QListWidgetItem and self.isLoaded:         
+            # Get the data from the parameters   
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+            if e.toolTip() in preferences.GetGroups():
+                preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{e.toolTip()}")
+            else:
+                return
+            # Get the macro
+            macro = preferences.GetString("Script")
+                
             # Get the command with its properties                    
             cmd = Gui.Command.get(e.toolTip())
             name = cmd.getInfo()['name']
@@ -1719,11 +1751,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             whatsThis = cmd.getInfo()['whatsThis']
             statusTip = cmd.getInfo()['statusTip']            
             pixMap = cmd.getInfo()['pixmap']
-            shortCut = cmd.getInfo()['shortcut']
-            # Get the macro
-            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{e.toolTip()}")
-            macro = preferences.GetString("Script")
-            
+            shortCut = cmd.getInfo()['shortcut']          
+                        
             # Fill in the fields
             self.form.SelectMacro.setCurrentText(macro)
             self.form.SetMenuText.setText(menuText)
@@ -1731,7 +1760,14 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.SetStatusText.setText(statusTip)
             self.form.SetWhatIsThis.setText(whatsThis)
             self.form.SetShortcut.setText(shortCut)
-            self.form.SelectIcon.setIcon(self.ReturnCommandIcon(e.data(Qt.ItemDataRole.UserRole)))
+            # Set the icon
+            icon = self.ReturnCommandIcon(e.data(Qt.ItemDataRole.UserRole))
+            if icon is None or (icon is not None and icon.isNull()):
+                icon = QIcon()
+                pixMap = QPixmap(preferences.GetString("Pixmap"))
+                icon.addPixmap(pixMap)
+            if icon is not None and icon.isNull() is False:
+                self.form.SelectIcon.setIcon(icon)
             # Get the tableWidget
             TableWidget: QTableWidget = self.form.ListMacroButtons
             self.form.SelectIcon.setIconSize(QSize(TableWidget.columnWidth(0), TableWidget.columnWidth(0)))
@@ -2182,107 +2218,110 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
         # Define an empty icon
         Icon = QIcon()
-        # Try to get the icon from the icon list first. This list is created on load and is the fasted to read
-        for item in self.List_CommandIcons:
-            if CommandName in item[0]:
-                Icon = item[1]
-                return Icon
-            if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
-                for (DropDownCommand, Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
-                    if DropDownCommand == CommandName and Commands[0][0] == item[0]:
-                        Icon = item[1]
-
-        # If the icon is still empty, try to get the icon from file
-        if Icon is None or (Icon is not None and Icon.isNull()):            
-            FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
-            for root, dirs, files in os.walk(FreeCAD_Icons):
-                for fileName in files:
-                    if CommandName in fileName:
-                        Icon = QIcon()
-                        Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
-                        # Add the icons to open the dialog faster a second time
-                        item = [CommandName, Icon]
-                        self.List_CommandIcons.append(item)
-                        
-                        # Print a message when debug mode is enabled
-                        if Parameters.DEBUG_MODE:
-                            print(f"{fileName} created from resources")
-                        return Icon
-                    
-                    if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
-                        for (DropDownCommand,Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
-                            if DropDownCommand == CommandName and Commands[0][0] in fileName:
-                                Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
-                                # Add the icons to open the dialog faster a second time
-                                item = [CommandName, Icon]
-                                self.List_CommandIcons.append(item)
-                                
-                                # Print a message when debug mode is enabled
-                                if Parameters.DEBUG_MODE:
-                                    print(f"{fileName} created from resources")
-                                return Icon
-                                   
-            # If the icon is still empty, try to get it from FreeCAD. This will only work with loaded workbenches.
-            # Therefore this is the last resort
-            if Icon is None or (Icon is not None and Icon.isNull()):
-                # Get the standard pixmap, if a pixmap is not provided
-                if pixmap == "":
-                    pixmap = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
-                Icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap)
+        if os.path.exists(CommandName):
+            Icon.addPixmap(QPixmap(CommandName))
+        if Icon is None or (Icon is not None and Icon.isNull()): 
+            # Try to get the icon from the icon list first. This list is created on load and is the fasted to read
+            for item in self.List_CommandIcons:
+                if CommandName in item[0]:
+                    Icon = item[1]
+                    return Icon
                 if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
-                        for (DropDownCommand,Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
-                            if DropDownCommand == CommandName:
-                                pixmap = StandardFunctions.CommandInfoCorrections(Commands[0][0])["pixmap"]
-                                Icon = StandardFunctions.returnQiCons_Commands(Commands[0][0], pixmap)
-                                # Add the icons to open the dialog faster a second time
-                                item = [Commands[0][0], Icon]
-                                self.List_CommandIcons.append(item)
-                                
-                                if Parameters.DEBUG_MODE:
-                                    print(f"Icon for {Commands[0][0]} retrieved from FreeCAD")
-                                return Icon
+                    for (DropDownCommand, Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
+                        if DropDownCommand == CommandName and Commands[0][0] == item[0]:
+                            Icon = item[1]
 
-                if Icon is None or (Icon is not None and Icon.isNull()):
-                    if Parameters.DEBUG_MODE is True:
-                        StandardFunctions.Print(
-                            f"An icon retrieved from data file for '{CommandName}'"
-                        )
-                    DataFile = os.path.join(
-                        ConfigDirectory, "RibbonDataFile.dat"
-                    )
-
-                    if os.path.exists(DataFile) is True:
-                        Data = {}
-                        # read ribbon structure from JSON file
-                        with open(DataFile, "r") as file:
-                            Data.update(json.load(file))
-                        file.close()
-                        try:
-                            # Load the lists for the deserialized icons
-                            for IconItem in Data["Command_Icons"]:
-                                # This works only for FreeCAD Commands
-                                if CommandName == IconItem[0]:
-                                    Icon: QIcon = (
-                                        Serialize_Ribbon.deserializeIcon(
-                                            IconItem[1]
-                                        )
-                                    )
-                                    # Print a message when debug mode is enabled
-                                    if Parameters.DEBUG_MODE:
-                                        print(f"Icon for {CommandName} retrieved from data file")
-                                    
+            # If the icon is still empty, try to get the icon from file
+            if Icon is None or (Icon is not None and Icon.isNull()):            
+                FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
+                for root, dirs, files in os.walk(FreeCAD_Icons):
+                    for fileName in files:
+                        if CommandName in fileName:
+                            Icon = QIcon()
+                            Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
+                            # Add the icons to open the dialog faster a second time
+                            item = [CommandName, Icon]
+                            self.List_CommandIcons.append(item)
+                            
+                            # Print a message when debug mode is enabled
+                            if Parameters.DEBUG_MODE:
+                                print(f"{fileName} created from resources")
+                            return Icon
+                        
+                        if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
+                            for (DropDownCommand,Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
+                                if DropDownCommand == CommandName and Commands[0][0] in fileName:
+                                    Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                                     # Add the icons to open the dialog faster a second time
-                                    item = [IconItem[0], Icon]
+                                    item = [CommandName, Icon]
                                     self.List_CommandIcons.append(item)
                                     
+                                    # Print a message when debug mode is enabled
+                                    if Parameters.DEBUG_MODE:
+                                        print(f"{fileName} created from resources")
                                     return Icon
-                        except Exception as e:
-                            if Parameters.DEBUG_MODE is True:
-                                StandardFunctions.Print(
-                                    f"Trying the get an icon for {CommandName}\n{e}",
-                                    "Warning",
-                                )
-                            pass
+                                    
+                # If the icon is still empty, try to get it from FreeCAD. This will only work with loaded workbenches.
+                # Therefore this is the last resort
+                if Icon is None or (Icon is not None and Icon.isNull()):
+                    # Get the standard pixmap, if a pixmap is not provided
+                    if pixmap == "":
+                        pixmap = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
+                    Icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap)
+                    if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
+                            for (DropDownCommand,Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
+                                if DropDownCommand == CommandName:
+                                    pixmap = StandardFunctions.CommandInfoCorrections(Commands[0][0])["pixmap"]
+                                    Icon = StandardFunctions.returnQiCons_Commands(Commands[0][0], pixmap)
+                                    # Add the icons to open the dialog faster a second time
+                                    item = [Commands[0][0], Icon]
+                                    self.List_CommandIcons.append(item)
+                                    
+                                    if Parameters.DEBUG_MODE:
+                                        print(f"Icon for {Commands[0][0]} retrieved from FreeCAD")
+                                    return Icon
+
+                    if Icon is None or (Icon is not None and Icon.isNull()):
+                        if Parameters.DEBUG_MODE is True:
+                            StandardFunctions.Print(
+                                f"An icon retrieved from data file for '{CommandName}'"
+                            )
+                        DataFile = os.path.join(
+                            ConfigDirectory, "RibbonDataFile.dat"
+                        )
+
+                        if os.path.exists(DataFile) is True:
+                            Data = {}
+                            # read ribbon structure from JSON file
+                            with open(DataFile, "r") as file:
+                                Data.update(json.load(file))
+                            file.close()
+                            try:
+                                # Load the lists for the deserialized icons
+                                for IconItem in Data["Command_Icons"]:
+                                    # This works only for FreeCAD Commands
+                                    if CommandName == IconItem[0]:
+                                        Icon: QIcon = (
+                                            Serialize_Ribbon.deserializeIcon(
+                                                IconItem[1]
+                                            )
+                                        )
+                                        # Print a message when debug mode is enabled
+                                        if Parameters.DEBUG_MODE:
+                                            print(f"Icon for {CommandName} retrieved from data file")
+                                        
+                                        # Add the icons to open the dialog faster a second time
+                                        item = [IconItem[0], Icon]
+                                        self.List_CommandIcons.append(item)
+                                        
+                                        return Icon
+                            except Exception as e:
+                                if Parameters.DEBUG_MODE is True:
+                                    StandardFunctions.Print(
+                                        f"Trying the get an icon for {CommandName}\n{e}",
+                                        "Warning",
+                                    )
+                                pass
         if Icon is None or (Icon is not None and Icon.isNull()):
             Icon = None
         return Icon
