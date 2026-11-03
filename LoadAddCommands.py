@@ -626,10 +626,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.ListCategory_NP.addItem(Gui.getIcon("freecad"), Standard_KeyWord, [Standard_KeyWord, "Standard", "Standard"])
         self.form.ListCategory_DDB.addItem(Gui.getIcon("freecad"), Standard_KeyWord, [Standard_KeyWord, "Standard", "Standard"])
         
-        # # Add "Global" to the list for the panels
-        # Standard_KeyWord = translate("FreeCAD Ribbon", "Global")
-        # self.form.ListCategory_NP.addItem(Gui.getIcon("freecad"), Standard_KeyWord, [Standard_KeyWord, "Global", "Global"])
-        # self.form.ListCategory_DDB.addItem(Gui.getIcon("freecad"), Standard_KeyWord, [Standard_KeyWord, "Global", "Global"])
+        # Add "Macro" to the list for the panels
+        Standard_KeyWord = translate("FreeCAD Ribbon", "Macro buttons")
+        self.form.ListCategory_NP.addItem(Gui.getIcon("media-record"), Standard_KeyWord, [Standard_KeyWord, "Macro", "Macro"])
+        self.form.ListCategory_DDB.addItem(Gui.getIcon("media-record"), Standard_KeyWord, [Standard_KeyWord, "Macro", "Macro"])
 
         # Sort the workbenches according the order of tabs
         def sortWorkbenches(item):
@@ -1567,6 +1567,16 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             menuText = cmd.getInfo()['menuText']
             pixMap = cmd.getInfo()['pixmap']
             self.AddMacroButtonToTable(menuText, pixMap, name)
+            
+            self.List_Commands.append(
+                [
+                    name,
+                    pixMap,
+                    menuText,
+                    "Macro",
+                    menuText,
+                ]
+            )
         return
     
     def LoadMacroLists(self):
@@ -1705,18 +1715,17 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
         return
         
-    def AddMacroButtonToTable(self, Text, Pixmap, ToolTip):
+    def AddMacroButtonToTable(self, Text, Pixmap, CommandName):
         # Get the data from the parameters   
         preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
-        if ToolTip in preferences.GetGroups():
-            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{ToolTip}")
+        if CommandName in preferences.GetGroups():
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{CommandName}")
         else:
             return
         
-        ListWidget: QListWidget = self.form.MacroList
+        # Create a listwidget item
         ListWidgetItem = QListWidgetItem()
         ListWidgetItem.setText(Text)
-        
         # Set the icon
         icon = self.ReturnCommandIcon(Pixmap)
         if icon is None or (icon is not None and icon.isNull()):
@@ -1724,10 +1733,21 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             icon.addPixmap(QPixmap(preferences.GetString("Pixmap")))
         if icon is not None and icon.isNull() is False:
             ListWidgetItem.setIcon(icon)
-        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, Pixmap)
-        ListWidgetItem.setToolTip(ToolTip)
-        ListWidget.addItem(ListWidgetItem)
+        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+        ListWidgetItem.setToolTip(CommandName)
         
+        # Add the listwidget item to the listwidgets
+        self.form.CommandsAvailable_NP.addItem(ListWidgetItem)
+        self.form.MacroList.addItem(ListWidgetItem.clone())
+        # Append a clone of the item to the listwidget item list
+        self.listWidgetItems_NP.append(ListWidgetItem.clone())        
+        command = Gui.Command.get(CommandName)
+        if command is not None and len(command.getAction()) == 1:
+            # Add clones of the listWidgetItem to the other listwidgets
+            self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
+            # Append a clone of the item to the listwidget item list
+            self.listWidgetItems_DDB.append(ListWidgetItem.clone())        
+                
         return
     
     def MacroListItem_clicked(self, e):
@@ -1787,7 +1807,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             TableWidget: QTableWidget = self.form.ListMacroButtons
             self.form.SelectIcon.setIconSize(QSize(TableWidget.columnWidth(0), TableWidget.columnWidth(0)))
             self.form.SelectIcon.setObjectName(File)
-        
         return
     
     # endregion---------------------------------------------------------------------------------------
@@ -1912,11 +1931,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     and WorkBenchName != "General"
                                     and WorkBenchName != "Standard"
                                     and WorkBenchName != "All"
+                                    and WorkBenchName != "Macro"
                                     and WorkBenchName != ""
                                 ):
-                                    WorkbenchTitle = Gui.getWorkbench(
-                                        WorkBenchName
-                                    ).MenuText
+                                    WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
                                 else:
                                     WorkbenchTitle = WorkBenchName
                             except Exception as e:
@@ -1931,12 +1949,29 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                         Qt.ItemDataRole.UserRole
                                     )[2]
                                     or ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "All")
+                                    or ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "Macro")
                                 ):
                                     # Get the icon
                                     Icon = QIcon()
                                     IconName = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
                                     Icon = self.ReturnCommandIcon(CommandName=CommandName, pixmap=IconName)
-  
+                                    
+                                    # Get the data from the parameters if it is a macro button 
+                                    if CommandName.startswith("Std_Macro"):
+                                        preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+                                        if CommandName in preferences.GetGroups():
+                                            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{CommandName}")
+                                            
+                                            # Get the command info
+                                            cmd = Gui.Command.get(CommandName)
+                                            MenuNameTranslated = cmd.getInfo()['menuText']
+                                            pixMap = cmd.getInfo()['pixmap']
+                                            
+                                            # Set the icon
+                                            Icon = self.ReturnCommandIcon(pixMap)
+                                            if Icon is None or (Icon is not None and Icon.isNull()):                                                
+                                                Icon.addPixmap(QPixmap(preferences.GetString("Pixmap")))
+
                                     # Define a new ListWidgetItem.
                                     ListWidgetItem = QListWidgetItem()
                                     ListWidgetItem.setText(MenuNameTranslated)
@@ -1977,12 +2012,12 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             # Go through the stored listwidget items and add them to the listwidget
             for item in self.listWidgetItems_NP:
                 Allow = False
-                if SingleCommandsOnly is True:
-                    CommandName = item.data(Qt.ItemDataRole.UserRole)
+                CommandName = item.data(Qt.ItemDataRole.UserRole)
+                if SingleCommandsOnly is True:                    
                     command = Gui.Command.get(CommandName)
                     if command is not None and len(command.getAction()) == 1:
                         Allow = True
-                if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):   
+                if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True) or CommandName.startswith("Std_Macro"):   
                     try:   
                         ListWidget_Commands.addItem(item.clone()) 
                     except Exception:
@@ -1996,7 +2031,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     listWidgetItems_NP.append(item.clone())
                     CommandName = item.data(Qt.ItemDataRole.UserRole)
                     command = Gui.Command.get(CommandName)
-                    if command is not None and len(command.getAction()) == 1:
+                    if (command is not None and len(command.getAction()) == 1) or CommandName.startswith("Std_Macro"):
                         listWidgetItems_DDB.append(item.clone())
                 except Exception:
                     pass
@@ -2065,6 +2100,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 and WorkBenchName != "Global"
                                 and WorkBenchName != "General"
                                 and WorkBenchName != "Standard"
+                                and WorkBenchName != "Macro"
                                 and WorkBenchName != ""
                             ):
                                 try:
@@ -2153,10 +2189,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     ListWidget_Commands.addItem(ListWidgetItem.clone())
                                     ShadowList.append(CommandName)
                                 
-                        if (
-                            WorkBenchName == "Global" and
-                            ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "Global")
-                        ):                                          
+                        if WorkBenchName == "Global" and ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "Global"):                                          
                             # Define a commandname for the icon
                             Icon = QIcon()
                             Icon = self.ReturnCommandIcon(CommandName=CommandName)
@@ -2187,17 +2220,59 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 
                                     ListWidget_Commands.addItem(ListWidgetItem.clone())
                                     ShadowList.append(CommandName)
+                        
+                        if WorkBenchName == "Macro" and ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "Macro buttons"):
+                            # Get the data from the parameters   
+                            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+                            if CommandName in preferences.GetGroups():
+                                preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{CommandName}")                            
+                                # Get the command info
+                                cmd = Gui.Command.get(CommandName)
+                                menuText = cmd.getInfo()['menuText']
+                                pixMap = cmd.getInfo()['pixmap']
+
+                                # Create a listwidget item
+                                ListWidgetItem = QListWidgetItem()
+                                ListWidgetItem.setText(menuText)
+                                ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+                                # Set the icon
+                                Icon = self.ReturnCommandIcon(pixMap)
+                                if Icon is None or (Icon is not None and Icon.isNull()):
+                                    Icon = QIcon()
+                                    Icon.addPixmap(QPixmap(preferences.GetString("Pixmap")))
+                                if Icon is not None and Icon.isNull() is False:
+                                    ListWidgetItem.setIcon(Icon)
+                                ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+                                ListWidgetItem.setToolTip(CommandName)
+
+                                # Add the listwidget item has an icon, add it
+                                if Icon is not None and Icon.isNull() is False:
+                                    Allow = False
+                                    if SingleCommandsOnly is True:
+                                        command = Gui.Command.get(CommandName)
+                                        if command is not None and len(command.getAction()) == 1:
+                                            Allow = True
+                                        
+                                    if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):
+                                        # Check if there is an Icon. if not add a replacement
+                                        if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
+                                            # Icon = Gui.getIcon("preferences-workbenches")
+                                            # ListWidgetItem.setIcon(Icon)
+                                            continue
+                                    
+                                        ListWidget_Commands.addItem(ListWidgetItem.clone())
+                                        ShadowList.append(CommandName)
 
         if (ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole) == "All"):
             # Go through the stored listwidget items and add them to the listwidget
             for item in self.listWidgetItems_NP:
                 Allow = False
-                if SingleCommandsOnly is True:
-                    CommandName = item.data(Qt.ItemDataRole.UserRole)
+                CommandName = item.data(Qt.ItemDataRole.UserRole)
+                if SingleCommandsOnly is True:                    
                     command = Gui.Command.get(CommandName)
                     if command is not None and len(command.getAction()) == 1:
                         Allow = True
-                if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):      
+                if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True) or CommandName.startswith("Std_Macro"):
                     try:   
                         ListWidget_Commands.addItem(item.clone()) 
                     except Exception:
@@ -2211,7 +2286,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     listWidgetItems_NP.append(item.clone())
                     CommandName = item.data(Qt.ItemDataRole.UserRole)
                     command = Gui.Command.get(CommandName)
-                    if command is not None and len(command.getAction()) == 1:
+                    if (command is not None and len(command.getAction()) == 1) or CommandName.startswith("Std_Macro"):
                         listWidgetItems_DDB.append(item.clone())
                 except Exception:
                     pass
