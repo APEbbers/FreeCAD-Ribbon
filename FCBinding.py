@@ -6592,18 +6592,29 @@ class ModernMenu(RibbonBar):
                 cmd = Gui.Command.get(CommandName)
                 menuText = cmd.getInfo()['menuText']
                 pixMap = cmd.getInfo()['pixmap']
-
+                macro = preferences.GetString("Script")
+                shortcut = preferences.GetString("Accel")
+                tooltipUser = preferences.GetString("Tooltip")
+                tooltip = ""
+                if tooltipUser != "":
+                    tooltip = f"<b>{menuText}</b> (<i>{shortcut}</i>)<br></br>{tooltipUser}<br></br>(<i>{macro}</i>)"
+                    if shortcut != "":
+                        tooltip = f"<b>{menuText}</b><br></br>{tooltipUser}<br></br>(<i>{macro}</i>)"
+                if tooltipUser == "": 
+                    tooltip = CommandName
+                    if shortcut != "": tooltip = tooltip + f"({shortcut})"
                 
                 action = QAction()
                 action.setData(CommandName)
                 action.setText(menuText)
                 action.setObjectName(CommandName)
+                action.setToolTip(tooltip)
                 action.triggered.connect(lambda: self.RunCommand(action.objectName()))
                 
                 # Create a button
                 Button = QToolButton()
                 Button.setText(menuText)  
-                Button.setToolTip(CommandName)
+                Button.setToolTip(tooltip)
                 # Set the commandName as objectName as backup
                 Button.setObjectName(CommandName)
                 # Add the action to the button
