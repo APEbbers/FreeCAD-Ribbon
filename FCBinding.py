@@ -34,6 +34,7 @@ from PySide6.QtGui import (
     QDropEvent,
     QContextMenuEvent,
     QMouseEvent,
+    QCloseEvent,
     QIcon,
     QAction,
     QPixmap,
@@ -6582,7 +6583,44 @@ class ModernMenu(RibbonBar):
         return ButtonList
 
     def CreateButtonFromCommand(self, CommandName: str, ActivateWorkBench = True, Dict=ribbonStructure):
-        if CommandName.endswith("_ddb") is False:
+        if CommandName.endswith("_ddb") is False and "Std_Macro" in CommandName:
+            # Get the data from the parameters   
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+            if CommandName in preferences.GetGroups():
+                preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{CommandName}")                            
+                # Get the command info
+                cmd = Gui.Command.get(CommandName)
+                menuText = cmd.getInfo()['menuText']
+                pixMap = cmd.getInfo()['pixmap']
+
+                
+                action = QAction()
+                action.setData(CommandName)
+                action.setText(menuText)
+                action.setObjectName(CommandName)
+                action.triggered.connect(lambda: self.RunCommand(action.objectName()))
+                
+                # Create a button
+                Button = QToolButton()
+                Button.setText(menuText)  
+                Button.setToolTip(CommandName)
+                # Set the commandName as objectName as backup
+                Button.setObjectName(CommandName)
+                # Add the action to the button
+                Button.addAction(action)
+                Button.setDefaultAction(action)
+
+                # Set the icon
+                Icon = self.ReturnCommandIcon(pixMap)
+                if Icon is None or (Icon is not None and Icon.isNull()):
+                    Icon = QIcon()
+                    Icon.addPixmap(QPixmap(preferences.GetString("Pixmap")))
+                if Icon is not None and Icon.isNull() is False:
+                    action.setIcon(Icon)
+                    Button.setIcon(Icon)
+                return Button
+                
+        if CommandName.endswith("_ddb") is False and "Std_Macro" not in CommandName:
             try:            
                 # Activate the workbench, the command belongs to. Otherwise, the command wont be created later
                 # Get the current category
@@ -6590,7 +6628,7 @@ class ModernMenu(RibbonBar):
                 if ActivateWorkBench is True:
                     for CommandItem in self.List_Commands:
                         if CommandItem[0] == CommandName:
-                            if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard" and CommandItem[3] != ""):                                
+                            if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard" and CommandItem[3] != "" and CommandItem[3 != "Macro"]):                                
                                 if CommandItem[3] not in self.isWbLoaded:
                                     # Activate the workbench if not loaded
                                     Gui.activateWorkbench(CommandItem[3])
@@ -6613,7 +6651,7 @@ class ModernMenu(RibbonBar):
                 Command = Gui.Command.get(CommandName)
                 action = None            
                 Icon = QIcon()
-                if Command is not None:
+                if Command is not None:                    
                     FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                     for root, dirs, files in os.walk(FreeCAD_Icons):
                         for fileName in files:
@@ -7318,7 +7356,7 @@ class ModernMenu(RibbonBar):
         if workbenchName in Dict["workbenches"]:
             if (
                 panelName != ""
-                and not panelName.endswith("_newPanel")
+                # and not panelName.endswith("_newPanel")
                 and "toolbars" in Dict["workbenches"][workbenchName]
                 and panelName
                 in Dict["workbenches"][workbenchName]["toolbars"]
@@ -7329,7 +7367,7 @@ class ModernMenu(RibbonBar):
                             for Command in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
                                 if Command != "order":
                                     if "IsExtra" in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]:
-                                        if Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]["IsExtra"]:
+                                        if Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]["IsExtra"]:                                            
                                             ExtraCommand = self.CreateButtonFromCommand(Command, ActivateWorkBench=ActivateWorkbench, Dict=Dict)
                                             if ExtraCommand is not None:
                                                 ExtraCommand.setObjectName(Command)
@@ -7621,13 +7659,13 @@ class ModernMenu(RibbonBar):
                         FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                         for root, dirs, files in os.walk(FreeCAD_Icons):
                             for fileName in files:
-                                if CommandName in fileName:
+                                if CommandName in fileName and "Std_Macro" not in CommandName:
                                     Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                                     action.setIcon(Icon)
                                     break
                         
                         # If not get the Icon from FreeCAD or the data file
-                        if Icon.isNull():
+                        if Icon.isNull() and "Std_Macro" not in CommandName:
                             pixmap = ""
                             try:
                                 pixmap = Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["icon"]
@@ -7641,7 +7679,7 @@ class ModernMenu(RibbonBar):
                                 action.setIcon(Icon)
                                 
                         # Check if there is an Icon. if not add a replacement
-                        if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
+                        if Icon.pixmap(64,64).toImage().bytesPerLine() < 256  and "Std_Macro" not in CommandName:
                             Icon = Gui.getIcon("preferences-workbenches")
                             action.setIcon(Icon)
                         
@@ -8633,7 +8671,8 @@ class ModernMenu(RibbonBar):
         Timer.setSingleShot(True)
         Timer.start(1000)
         
-        mw.close()
+        e = QCloseEvent()
+        mw.closeEvent(e)
         return
 
     def MinimizeFreeCAD(self):
@@ -9239,7 +9278,7 @@ class EventInspector_RibbonUI_1(QObject):
                         if Parameters.DEBUG_MODE:
                             StandardFunctions.Print(f"Ribbon UI:\n{traceback.format_exc()}", "Warning")
 
-        if event.type() == QEvent.Type.Close:
+        if event.type() == QEvent.Type.Close:            
             OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
             String = OverlayParam_Top.GetString("Widgets")
             Parameters_Ribbon.Settings.SetStringSetting("StoredOverlayState", String)
