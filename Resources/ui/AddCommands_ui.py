@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsBWDLOG.ui'
+## Form generated from reading UI file 'AddCommandsAAWlMq.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.12.0
 ##
@@ -488,8 +488,8 @@ class Ui_Form(object):
         self.gridLayout_7.setVerticalSpacing(3)
         self.SetShortcut = QLineEdit(self.groupBox_2)
         self.SetShortcut.setObjectName(u"SetShortcut")
-        sizePolicy3.setHeightForWidth(self.SetShortcut.sizePolicy().hasHeightForWidth())
-        self.SetShortcut.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.SetShortcut.sizePolicy().hasHeightForWidth())
+        self.SetShortcut.setSizePolicy(sizePolicy4)
         self.SetShortcut.setMinimumSize(QSize(200, 30))
         self.SetShortcut.setMaximumSize(QSize(16777215, 30))
         self.SetShortcut.setInputMethodHints(Qt.InputMethodHint.ImhNone)
@@ -500,8 +500,8 @@ class Ui_Form(object):
 
         self.SetStatusText = QLineEdit(self.groupBox_2)
         self.SetStatusText.setObjectName(u"SetStatusText")
-        sizePolicy3.setHeightForWidth(self.SetStatusText.sizePolicy().hasHeightForWidth())
-        self.SetStatusText.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.SetStatusText.sizePolicy().hasHeightForWidth())
+        self.SetStatusText.setSizePolicy(sizePolicy4)
         self.SetStatusText.setMinimumSize(QSize(200, 30))
         self.SetStatusText.setMaximumSize(QSize(16777215, 30))
 
@@ -509,8 +509,8 @@ class Ui_Form(object):
 
         self.SetMenuText = QLineEdit(self.groupBox_2)
         self.SetMenuText.setObjectName(u"SetMenuText")
-        sizePolicy3.setHeightForWidth(self.SetMenuText.sizePolicy().hasHeightForWidth())
-        self.SetMenuText.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.SetMenuText.sizePolicy().hasHeightForWidth())
+        self.SetMenuText.setSizePolicy(sizePolicy4)
         self.SetMenuText.setMinimumSize(QSize(200, 30))
         self.SetMenuText.setMaximumSize(QSize(16777215, 30))
 
@@ -563,8 +563,8 @@ class Ui_Form(object):
 
         self.SelectMacro = QComboBox(self.groupBox_2)
         self.SelectMacro.setObjectName(u"SelectMacro")
-        sizePolicy3.setHeightForWidth(self.SelectMacro.sizePolicy().hasHeightForWidth())
-        self.SelectMacro.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.SelectMacro.sizePolicy().hasHeightForWidth())
+        self.SelectMacro.setSizePolicy(sizePolicy4)
         self.SelectMacro.setMinimumSize(QSize(200, 30))
         self.SelectMacro.setMaximumSize(QSize(16777215, 30))
         self.SelectMacro.setBaseSize(QSize(0, 0))
@@ -573,8 +573,8 @@ class Ui_Form(object):
 
         self.SetToolTip = QLineEdit(self.groupBox_2)
         self.SetToolTip.setObjectName(u"SetToolTip")
-        sizePolicy3.setHeightForWidth(self.SetToolTip.sizePolicy().hasHeightForWidth())
-        self.SetToolTip.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.SetToolTip.sizePolicy().hasHeightForWidth())
+        self.SetToolTip.setSizePolicy(sizePolicy4)
         self.SetToolTip.setMinimumSize(QSize(200, 30))
         self.SetToolTip.setMaximumSize(QSize(16777215, 30))
 
@@ -591,8 +591,8 @@ class Ui_Form(object):
 
         self.SetWhatIsThis = QLineEdit(self.groupBox_2)
         self.SetWhatIsThis.setObjectName(u"SetWhatIsThis")
-        sizePolicy3.setHeightForWidth(self.SetWhatIsThis.sizePolicy().hasHeightForWidth())
-        self.SetWhatIsThis.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHeightForWidth(self.SetWhatIsThis.sizePolicy().hasHeightForWidth())
+        self.SetWhatIsThis.setSizePolicy(sizePolicy4)
         self.SetWhatIsThis.setMinimumSize(QSize(200, 30))
         self.SetWhatIsThis.setMaximumSize(QSize(16777215, 30))
 

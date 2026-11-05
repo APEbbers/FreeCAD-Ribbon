@@ -1706,18 +1706,28 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 StandardFunctions.Mbox(text=translate("FreeCAD Ribbon", "Select a macro first"), style=0, IconType="Warning")
                 return
             
-            # Create a custom command with FreeCAD
-            macroButton = Gui.Command.createCustomCommand(
-                macroFile=MacroFile,
-                menuText=MenuText,
-                toolTip=ToolTip,
-                statusTip=StatusText,
-                whatsThis=WhatIsThis,
-                shortcut=ShortCut,
-                pixmap=Pixmap
-            )
-            # Store the custom command so that the command is usable and present in FreeCAD's customize menu
+            # if present get the command
+            currentRow = self.form.MacroList.currentRow()
+            macroButton = f"Std_Macro_{currentRow}"
             preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{macroButton}")
+            if MenuText != preferences.GetString("Menu"):
+                # Create a custom command with FreeCAD
+                macroButton = Gui.Command.createCustomCommand(
+                    macroFile=MacroFile,
+                    menuText=MenuText,
+                    toolTip=ToolTip,
+                    statusTip=StatusText,
+                    whatsThis=WhatIsThis,
+                    shortcut=ShortCut,
+                    pixmap=Pixmap
+                )
+                preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{macroButton}")
+                # Add the command to the listWidgets so that they can be added to the ribbon right away
+                self.AddMacroButtonToTable(MenuText, Pixmap, macroButton)
+            else:
+                self.UpdateMacroButtonTable(currentRow, MenuText, Pixmap, macroButton)
+                
+            # Store the custom command so that the command is usable and present in FreeCAD's customize menu            
             preferences.SetString("Menu", MenuText)
             preferences.SetString("Tooltip", ToolTip)
             preferences.SetString("Statustip", StatusText)
@@ -1725,11 +1735,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             preferences.SetString("Accel", ShortCut)
             preferences.SetString("Pixmap", Pixmap)
             preferences.SetBool("System", False)
-            preferences.SetBool("Script", MacroFile)
-            
-            # Add the command to the listWidgets so that they can be added to the ribbon right away
-            self.AddMacroButtonToTable(MenuText, Pixmap, macroButton)
-        
+            preferences.SetString("Script", MacroFile)
+
         return
         
     def AddMacroButtonToTable(self, Text, Pixmap, CommandName):
@@ -1765,6 +1772,52 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             # Append a clone of the item to the listwidget item list
             self.listWidgetItems_DDB.append(ListWidgetItem.clone())        
                 
+        return
+    
+    def UpdateMacroButtonTable(self, row, Text, Pixmap, CommandName):
+        # Get the data from the parameters   
+        preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+        if CommandName in preferences.GetGroups():
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{CommandName}")
+        else:
+            return
+        
+        # Get the listwidget item
+        ListWidgetItem: QListWidgetItem = self.form.MacroList.item(row)
+        ListWidgetItem.setText(Text)
+        # Set the icon
+        icon = self.ReturnCommandIcon(Pixmap)
+        if icon is None or (icon is not None and icon.isNull()):
+            icon = QIcon()
+            icon.addPixmap(QPixmap(preferences.GetString("Pixmap")))
+        if icon is not None and icon.isNull() is False:
+            ListWidgetItem.setIcon(icon)
+        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+        ListWidgetItem.setToolTip(CommandName)
+        
+        # Update the other listwidgets and their filter lists
+        for i in range(self.form.CommandsAvailable_NP.count()):
+            ListWidgetItem_NP: QListWidgetItem = self.form.CommandsAvailable_NP.item(i)
+            if ListWidgetItem_NP.data(Qt.ItemDataRole.UserRole) == CommandName:
+                ListWidgetItem_NP.setText(ListWidgetItem.text())
+                ListWidgetItem_NP.setIcon(ListWidgetItem.icon())
+                break
+        for j in range(len(self.listWidgetItems_NP)):
+            if self.listWidgetItems_NP[j].data(Qt.ItemDataRole.UserRole) == CommandName:
+                self.listWidgetItems_NP[j].setText(ListWidgetItem.text())
+                self.listWidgetItems_NP[j].setIcon(ListWidgetItem.icon())
+                break
+        for i in range(self.form.CommandsAvailable_DDB.count()):
+            ListWidgetItem_DDB: QListWidgetItem = self.form.CommandsAvailable_DDB.item(i)
+            if ListWidgetItem_DDB.data(Qt.ItemDataRole.UserRole) == CommandName:
+                self.form.CommandsAvailable_DDB.removeItemWidget(ListWidgetItem_DDB)
+                self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
+                break
+        for j in range(len(self.listWidgetItems_DDB)):
+            if self.listWidgetItems_DDB[j].data(Qt.ItemDataRole.UserRole) == CommandName:
+                self.listWidgetItems_DDB[j].setText(ListWidgetItem.text())
+                self.listWidgetItems_DDB[j].setIcon(ListWidgetItem.icon())
+                break
         return
     
     def MacroListItem_clicked(self, e):
@@ -1977,9 +2030,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                             preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{CommandName}")
                                             
                                             # Get the command info
-                                            cmd = Gui.Command.get(CommandName)
-                                            MenuNameTranslated = cmd.getInfo()['menuText']
-                                            pixMap = cmd.getInfo()['pixmap']
+                                            MenuNameTranslated = preferences.GetString("Menu")
+                                            pixMap = preferences.GetString("Pixmap")
                                             
                                             # Set the icon
                                             Icon = self.ReturnCommandIcon(pixMap)
@@ -2241,9 +2293,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                             if CommandName in preferences.GetGroups():
                                 preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{CommandName}")                            
                                 # Get the command info
-                                cmd = Gui.Command.get(CommandName)
-                                menuText = cmd.getInfo()['menuText']
-                                pixMap = cmd.getInfo()['pixmap']
+                                menuText = preferences.GetString("Menu")
+                                pixMap = preferences.GetString("Pixmap")
 
                                 # Create a listwidget item
                                 ListWidgetItem = QListWidgetItem()
