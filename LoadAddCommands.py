@@ -63,7 +63,7 @@ from Parameters_Ribbon import Parameters
 import Serialize_Ribbon
 import CacheFunctions
 import FCBinding
-from CustomWidgets import QuickAccessToolButton, CustomControls, CustomLineEdit
+from CustomWidgets import QuickAccessToolButton, CustomControls
 import StyleMapping_Ribbon
 import webbrowser
 import traceback
@@ -2985,49 +2985,49 @@ class EventInspector_Ribbon_2(QObject):
                 self.ButtonPressed = False
         # -----------------------------------------------------------------------
         
-        if event.type() == QEvent.Type.KeyPress:
-            try:
-                self.MacroShortCutKey = ""
-                self.MacroShortCutKeyModifier = ""
-                form = obj 
-                if form.SetShortcut.hasFocus():                    
-                    # if modifiers are set, store its name
-                    if event.modifiers():                
-                        # Get the name of modifier key
-                        for keyModifierName, keyModifierItem in Qt.KeyboardModifier._member_map_.items():
-                            if event.modifiers() == keyModifierItem:
-                                self.MacroShortCutKeyModifier = keyModifierName.removesuffix("Modifier")
-                    else:
-                        self.MacroShortCutKeyModifier = ""
-                    # Get the key name
-                    for keyName, keyItem in Qt.Key._member_map_.items():
-                        if event.key() == keyItem and keyName.split("_")[1].lower() != self.MacroShortCutKeyModifier.lower():
-                            self.MacroShortCutKey = keyName.split("_")[1]                 
-                            return QObject.eventFilter(self, obj, event)                  
-            except:  # noqa: E722
-                if Parameters.DEBUG_MODE:
-                    StandardFunctions.Print(f"Ribbon UI:\n{traceback.format_exc()}", "Warning")
-                return QObject.eventFilter(self, obj, event)
+        # if event.type() == QEvent.Type.KeyPress:
+        #     try:
+        #         self.MacroShortCutKey = ""
+        #         self.MacroShortCutKeyModifier = ""
+        #         form = obj 
+        #         if form.SetShortcut.hasFocus():                    
+        #             # if modifiers are set, store its name
+        #             if event.modifiers():                
+        #                 # Get the name of modifier key
+        #                 for keyModifierName, keyModifierItem in Qt.KeyboardModifier._member_map_.items():
+        #                     if event.modifiers() == keyModifierItem:
+        #                         self.MacroShortCutKeyModifier = keyModifierName.removesuffix("Modifier")
+        #             else:
+        #                 self.MacroShortCutKeyModifier = ""
+        #             # Get the key name
+        #             for keyName, keyItem in Qt.Key._member_map_.items():
+        #                 if event.key() == keyItem and keyName.split("_")[1].lower() != self.MacroShortCutKeyModifier.lower():
+        #                     self.MacroShortCutKey = keyName.split("_")[1]                 
+        #                     return QObject.eventFilter(self, obj, event)                  
+        #     except:  # noqa: E722
+        #         if Parameters.DEBUG_MODE:
+        #             StandardFunctions.Print(f"Ribbon UI:\n{traceback.format_exc()}", "Warning")
+        #         return QObject.eventFilter(self, obj, event)
         
-        if event.type() == QEvent.Type.KeyRelease:
-            try:
-                form = obj                
-                if form.SetShortcut.hasFocus() and self.MacroShortCutKey != "":
-                    if event.key() == Qt.Key.Key_Backspace or event.key == Qt.Key.Key_Delete:
-                        form.SetShortcut.clear()
-                        self.MacroShortCutKey = ""
-                        self.MacroShortCutKeyModifier = ""
-                        return QObject.eventFilter(self, obj, event)
+        # if event.type() == QEvent.Type.KeyRelease:
+        #     try:
+        #         form = obj                
+        #         if form.SetShortcut.hasFocus() and self.MacroShortCutKey != "":
+        #             if event.key() == Qt.Key.Key_Backspace or event.key == Qt.Key.Key_Delete:
+        #                 form.SetShortcut.clear()
+        #                 self.MacroShortCutKey = ""
+        #                 self.MacroShortCutKeyModifier = ""
+        #                 return QObject.eventFilter(self, obj, event)
                     
-                    text = self.MacroShortCutKey.upper()
-                    if self.MacroShortCutKeyModifier != "":
-                        text = f"{self.MacroShortCutKeyModifier}+{self.MacroShortCutKey.upper()}"
-                    form.SetShortcut.setText(text)
-                    return QObject.eventFilter(self, obj, event)
-            except:  # noqa: E722
-                if Parameters.DEBUG_MODE:
-                    StandardFunctions.Print(f"Ribbon UI:\n{traceback.format_exc()}", "Warning")
-                return False
+        #             text = self.MacroShortCutKey.upper()
+        #             if self.MacroShortCutKeyModifier != "":
+        #                 text = f"{self.MacroShortCutKeyModifier}+{self.MacroShortCutKey.upper()}"
+        #             form.SetShortcut.setText(text)
+        #             return QObject.eventFilter(self, obj, event)
+        #     except:  # noqa: E722
+        #         if Parameters.DEBUG_MODE:
+        #             StandardFunctions.Print(f"Ribbon UI:\n{traceback.format_exc()}", "Warning")
+        #         return False
         
         if event.type() == QEvent.Type.Drop and self.dragEntered is True:
             count = 0
@@ -3105,6 +3105,38 @@ class EventFilter_Macro(QObject):
         if event.type() == QEvent.Type.KeyPress:
             if event.matches(QKeySequence.StandardKey.Paste):
                 return True
+            if event.matches(QKeySequence.StandardKey.Backspace) or event.matches(QKeySequence.StandardKey.Delete):
+                obj.clear()
+                return True
+                
+            # if modifiers are set, store its name
+            MacroShortCutKeyModifier = ""
+            if event.modifiers():                
+                # Get the name of modifier key
+                for keyModifierName, keyModifierItem in Qt.KeyboardModifier._member_map_.items():
+                    if event.modifiers() == keyModifierItem:
+                        MacroShortCutKeyModifier = keyModifierName.removesuffix("Modifier")
+            
+            # Get the key name
+            for keyName, keyItem in Qt.Key._member_map_.items():
+                if event.key() == keyItem and keyName.split("_")[1].lower() != MacroShortCutKeyModifier.lower():
+                    MacroShortCutKey = keyName.split("_")[1]                 
+                    text = MacroShortCutKey.upper()
+                    if len(text) > 1:
+                        return True
+                                        
+                    if MacroShortCutKeyModifier != "":                                    
+                        if "control" in MacroShortCutKeyModifier.lower():
+                            MacroShortCutKeyModifier = "CTRL"
+                        if "shift" in MacroShortCutKeyModifier.lower():
+                            MacroShortCutKeyModifier = "SHFT"
+                        if "alt" in MacroShortCutKeyModifier.lower():
+                            MacroShortCutKeyModifier = "ALT"
+                        
+                        text = f"{MacroShortCutKeyModifier}+{MacroShortCutKey.upper()}"
+                    obj.setText(text)
+            return QObject.eventFilter(self, obj, event) 
+
         
         if event.type() == QEvent.Type.KeyRelease:
             if event.matches(QKeySequence.StandardKey.Copy):
@@ -3113,5 +3145,4 @@ class EventFilter_Macro(QObject):
                 obj.setText("CTRL+V")
             if event.matches(QKeySequence.StandardKey.Cut):
                 obj.setText("CTRL+X")
-
         return QObject.eventFilter(self, obj, event)

@@ -98,7 +98,7 @@
    <item row="1" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>3</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -922,6 +922,15 @@
                 <width>16777215</width>
                 <height>30</height>
                </size>
+              </property>
+              <property name="inputMethodHints">
+               <set>Qt::InputMethodHint::ImhNone</set>
+              </property>
+              <property name="echoMode">
+               <enum>QLineEdit::EchoMode::Normal</enum>
+              </property>
+              <property name="clearButtonEnabled">
+               <bool>true</bool>
               </property>
              </widget>
             </item>

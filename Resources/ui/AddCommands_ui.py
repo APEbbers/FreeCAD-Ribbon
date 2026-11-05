@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsvJqIOy.ui'
+## Form generated from reading UI file 'AddCommandsrxsiWj.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.12.0
 ##
@@ -492,6 +492,9 @@ class Ui_Form(object):
         self.SetShortcut.setSizePolicy(sizePolicy3)
         self.SetShortcut.setMinimumSize(QSize(200, 30))
         self.SetShortcut.setMaximumSize(QSize(16777215, 30))
+        self.SetShortcut.setInputMethodHints(Qt.InputMethodHint.ImhNone)
+        self.SetShortcut.setEchoMode(QLineEdit.EchoMode.Normal)
+        self.SetShortcut.setClearButtonEnabled(True)
 
         self.gridLayout_7.addWidget(self.SetShortcut, 5, 1, 1, 1)
 
