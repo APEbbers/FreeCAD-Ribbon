@@ -1264,21 +1264,14 @@
             <item>
              <widget class="QPushButton" name="AddButton">
               <property name="text">
-               <string>Add</string>
+               <string>Create/update macro button</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="RemoveButton">
               <property name="text">
-               <string>Remove</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="ReplaceButton">
-              <property name="text">
-               <string>Replace</string>
+               <string>Remove macro button</string>
               </property>
              </widget>
             </item>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsrxsiWj.ui'
+## Form generated from reading UI file 'AddCommandsBWDLOG.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.12.0
 ##
@@ -634,11 +634,6 @@ class Ui_Form(object):
 
         self.horizontalLayout.addWidget(self.RemoveButton)
 
-        self.ReplaceButton = QPushButton(self.groupBox_2)
-        self.ReplaceButton.setObjectName(u"ReplaceButton")
-
-        self.horizontalLayout.addWidget(self.ReplaceButton)
-
 
         self.gridLayout_4.addLayout(self.horizontalLayout, 2, 0, 1, 1)
 
@@ -934,9 +929,8 @@ class Ui_Form(object):
         self.label_4.setText(QCoreApplication.translate("Form", u"Menu text", None))
         self.SelectIcon.setText(QCoreApplication.translate("Form", u"...", None))
         self.label_13.setText(QCoreApplication.translate("Form", u"Icon", None))
-        self.AddButton.setText(QCoreApplication.translate("Form", u"Add", None))
-        self.RemoveButton.setText(QCoreApplication.translate("Form", u"Remove", None))
-        self.ReplaceButton.setText(QCoreApplication.translate("Form", u"Replace", None))
+        self.AddButton.setText(QCoreApplication.translate("Form", u"Create/update macro button", None))
+        self.RemoveButton.setText(QCoreApplication.translate("Form", u"Remove macro button", None))
         self.groupBox_6.setTitle(QCoreApplication.translate("Form", u"Available icons", None))
         ___qtablewidgetitem = self.ListMacroButtons.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("Form", u"New Column", None))
