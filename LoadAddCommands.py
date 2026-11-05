@@ -3134,7 +3134,10 @@ class EventFilter_Macro(QObject):
                             MacroShortCutKeyModifier = "ALT"
                         
                         text = f"{MacroShortCutKeyModifier}+{MacroShortCutKey.upper()}"
+                    else:
+                        text = text[0]
                     obj.setText(text)
+                    return True
             return QObject.eventFilter(self, obj, event) 
 
         
