@@ -19,6 +19,8 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+from typing import override
+
 import FreeCAD as App  # pyright: ignore[reportMissingModuleSource]
 import FreeCADGui as Gui  # pyright: ignore[reportMissingModuleSource]
 import os
@@ -48,7 +50,7 @@ from PySide6.QtWidgets import (
     QAbstractScrollArea,
     QAbstractItemView,    
 )
-from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent, QCursor
+from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent, QCursor, QKeyEvent, QKeySequence
 
 import sys
 import json
@@ -61,7 +63,7 @@ from Parameters_Ribbon import Parameters
 import Serialize_Ribbon
 import CacheFunctions
 import FCBinding
-from CustomWidgets import QuickAccessToolButton, CustomControls
+from CustomWidgets import QuickAccessToolButton, CustomControls, CustomLineEdit
 import StyleMapping_Ribbon
 import webbrowser
 import traceback
@@ -526,7 +528,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.AddButton.clicked.connect(self.addMacroButton)
         self.form.MacroList.itemClicked.connect(self.MacroListItem_clicked)
         self.form.BrowseIcons.clicked.connect(self.BrowseMacroIcon)
-        
+                
         # --- Form controls ------------------
         #
         # Connect the reload button
@@ -583,7 +585,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.applyButton.setHidden(True)
         else:
             self.form.DockedButtonFrame.setHidden(True)
-        
+
         # Set the first tab active
         self.form.tabWidget.setCurrentIndex(0)
         
@@ -602,12 +604,22 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.ListCategory_NP.setDragEnabled(True)
         except Exception:
             pass             
-                
+        
+        # self.form.SetShortcut.keyPressEvent = lambda event: self.KeyPressEvent_Macro(event)
+        self.form.SetShortcut.installEventFilter(EventFilter_Macro(self.form))
+
         # Restore the cursor
         QApplication.restoreOverrideCursor()
         
         self.isLoaded = True
         return        
+    
+    def KeyPressEvent_Macro(event: QKeyEvent):
+        print(event)
+        if event.matches(QKeySequence.StandardKey.Copy) or event.matches(QKeySequence.StandardKey.Paste) or event.matches(QKeySequence.StandardKey.Cut):
+            event.ignore()
+        else:
+            return event
         
     def addWorkbenches(self):
         ShadowList = []  # List to add the commands and prevent duplicates
@@ -1688,6 +1700,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             Pixmap = self.form.SelectIcon.objectName()
             
             if MenuText == "":
+                StandardFunctions.Mbox(text=translate("FreeCAD Ribbon", "Specify the menu text first"), style=0, IconType="Warning")
+                return
+            if MacroFile == "":
+                StandardFunctions.Mbox(text=translate("FreeCAD Ribbon", "Select a macro first"), style=0, IconType="Warning")
                 return
             
             # Create a custom command with FreeCAD
@@ -1709,6 +1725,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             preferences.SetString("Accel", ShortCut)
             preferences.SetString("Pixmap", Pixmap)
             preferences.SetBool("System", False)
+            preferences.SetBool("Script", MacroFile)
             
             # Add the command to the listWidgets so that they can be added to the ribbon right away
             self.AddMacroButtonToTable(MenuText, Pixmap, macroButton)
@@ -1758,18 +1775,15 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{e.toolTip()}")
             else:
                 return
+            
             # Get the macro
             macro = preferences.GetString("Script")
-                
-            # Get the command with its properties                    
-            cmd = Gui.Command.get(e.toolTip())
-            name = cmd.getInfo()['name']
-            menuText = cmd.getInfo()['menuText']
-            toolTip = cmd.getInfo()['toolTip']
-            whatsThis = cmd.getInfo()['whatsThis']
-            statusTip = cmd.getInfo()['statusTip']            
-            pixMap = cmd.getInfo()['pixmap']
-            shortCut = cmd.getInfo()['shortcut']          
+            shortcut = preferences.GetString("Accel")
+            toolTip = preferences.GetString("Tooltip")
+            menuText = preferences.GetString("Menu")
+            pixMap = preferences.GetString("Pixmap")
+            statusTip = preferences.GetString("Statustip")
+            whatsThis = preferences.GetString("WhatsThis")              
                         
             # Fill in the fields
             self.form.SelectMacro.setCurrentText(macro)
@@ -1777,7 +1791,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             self.form.SetToolTip.setText(toolTip)
             self.form.SetStatusText.setText(statusTip)
             self.form.SetWhatIsThis.setText(whatsThis)
-            self.form.SetShortcut.setText(shortCut)
+            self.form.SetShortcut.setText(shortcut)
             # Set the icon
             icon = self.ReturnCommandIcon(e.data(Qt.ItemDataRole.UserRole))
             if icon is None or (icon is not None and icon.isNull()):
@@ -2950,6 +2964,8 @@ class EventInspector_Ribbon_2(QObject):
     pos = None
     ButtonPressed = False
     ButtonReleased = True
+    MacroShortCutKey = ""
+    MacroShortCutKeyModifier = ""
     
     def __init__(self, parent):
         super(EventInspector_Ribbon_2, self).__init__(parent)
@@ -2968,6 +2984,50 @@ class EventInspector_Ribbon_2(QObject):
             if event.button() == Qt.MouseButton.LeftButton:
                 self.ButtonPressed = False
         # -----------------------------------------------------------------------
+        
+        if event.type() == QEvent.Type.KeyPress:
+            try:
+                self.MacroShortCutKey = ""
+                self.MacroShortCutKeyModifier = ""
+                form = obj 
+                if form.SetShortcut.hasFocus():                    
+                    # if modifiers are set, store its name
+                    if event.modifiers():                
+                        # Get the name of modifier key
+                        for keyModifierName, keyModifierItem in Qt.KeyboardModifier._member_map_.items():
+                            if event.modifiers() == keyModifierItem:
+                                self.MacroShortCutKeyModifier = keyModifierName.removesuffix("Modifier")
+                    else:
+                        self.MacroShortCutKeyModifier = ""
+                    # Get the key name
+                    for keyName, keyItem in Qt.Key._member_map_.items():
+                        if event.key() == keyItem and keyName.split("_")[1].lower() != self.MacroShortCutKeyModifier.lower():
+                            self.MacroShortCutKey = keyName.split("_")[1]                 
+                            return QObject.eventFilter(self, obj, event)                  
+            except:  # noqa: E722
+                if Parameters.DEBUG_MODE:
+                    StandardFunctions.Print(f"Ribbon UI:\n{traceback.format_exc()}", "Warning")
+                return QObject.eventFilter(self, obj, event)
+        
+        if event.type() == QEvent.Type.KeyRelease:
+            try:
+                form = obj                
+                if form.SetShortcut.hasFocus() and self.MacroShortCutKey != "":
+                    if event.key() == Qt.Key.Key_Backspace or event.key == Qt.Key.Key_Delete:
+                        form.SetShortcut.clear()
+                        self.MacroShortCutKey = ""
+                        self.MacroShortCutKeyModifier = ""
+                        return QObject.eventFilter(self, obj, event)
+                    
+                    text = self.MacroShortCutKey.upper()
+                    if self.MacroShortCutKeyModifier != "":
+                        text = f"{self.MacroShortCutKeyModifier}+{self.MacroShortCutKey.upper()}"
+                    form.SetShortcut.setText(text)
+                    return QObject.eventFilter(self, obj, event)
+            except:  # noqa: E722
+                if Parameters.DEBUG_MODE:
+                    StandardFunctions.Print(f"Ribbon UI:\n{traceback.format_exc()}", "Warning")
+                return False
         
         if event.type() == QEvent.Type.Drop and self.dragEntered is True:
             count = 0
@@ -3037,3 +3097,21 @@ class EventInspector_Ribbon_2(QObject):
             # mw.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         return False
 
+class EventFilter_Macro(QObject):
+    def __init__(self, parent):
+        super(EventFilter_Macro, self).__init__(parent)
+
+    def eventFilter(self, obj, event: QEvent):
+        if event.type() == QEvent.Type.KeyPress:
+            if event.matches(QKeySequence.StandardKey.Paste):
+                return True
+        
+        if event.type() == QEvent.Type.KeyRelease:
+            if event.matches(QKeySequence.StandardKey.Copy):
+                obj.setText("CTRL+C")
+            if event.matches(QKeySequence.StandardKey.Paste):
+                obj.setText("CTRL+V")
+            if event.matches(QKeySequence.StandardKey.Cut):
+                obj.setText("CTRL+X")
+
+        return QObject.eventFilter(self, obj, event)
