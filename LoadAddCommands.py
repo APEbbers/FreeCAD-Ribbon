@@ -1706,6 +1706,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             if MacroFile == "":
                 StandardFunctions.Mbox(text=translate("FreeCAD Ribbon", "Select a macro first"), style=0, IconType="Warning")
                 return
+            if Pixmap == "":
+                StandardFunctions.Mbox(text=translate("FreeCAD Ribbon", "Select an icon first"), style=0, IconType="Warning")
+                return
             
             # if present get the command
             currentRow = self.form.MacroList.currentRow()
