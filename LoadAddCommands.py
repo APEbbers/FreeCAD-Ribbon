@@ -1709,10 +1709,12 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             
             # if present get the command
             currentRow = self.form.MacroList.currentRow()
-            macroButton = self.form.MacroList.currentItem().data(Qt.ItemDataRole.UserRole)
+            macroButton = ""
+            if self.form.MacroList.currentItem() != None:
+                macroButton = self.form.MacroList.currentItem().data(Qt.ItemDataRole.UserRole)
             preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{macroButton}")
             # if MenuText != preferences.GetString("Menu"):
-            if MacroFile != preferences.GetString("Script"):
+            if MacroFile != preferences.GetString("Script") or macroButton == "":
                 # Create a custom command with FreeCAD
                 macroButton = Gui.Command.createCustomCommand(
                     macroFile=MacroFile,

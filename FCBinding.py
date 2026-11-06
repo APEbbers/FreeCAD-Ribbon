@@ -6589,9 +6589,8 @@ class ModernMenu(RibbonBar):
             if CommandName in preferences.GetGroups():
                 preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{CommandName}")                            
                 # Get the command info
-                cmd = Gui.Command.get(CommandName)
-                menuText = cmd.getInfo()['menuText']
-                pixMap = cmd.getInfo()['pixmap']
+                menuText = preferences.GetString("Menu")
+                pixMap = preferences.GetString("Pixmap")
                 macro = preferences.GetString("Script")
                 shortcut = preferences.GetString("Accel")
                 tooltipUser = preferences.GetString("Tooltip")
@@ -6601,8 +6600,9 @@ class ModernMenu(RibbonBar):
                     if shortcut != "":
                         tooltip = f"<b>{menuText}</b><br></br>{tooltipUser}<br></br>(<i>{macro}</i>)"
                 if tooltipUser == "": 
-                    tooltip = CommandName
-                    if shortcut != "": tooltip = tooltip + f"({shortcut})"
+                    tooltip = f"<b>{menuText}</b><br></br>(<i>{macro}</i>)"
+                    if shortcut != "":
+                        tooltip = f"<b>{menuText}</b> (<i>{shortcut}</i>)<br></br>(<i>{macro}</i>)"
                 
                 action = QAction()
                 action.setData(CommandName)
@@ -7383,7 +7383,15 @@ class ModernMenu(RibbonBar):
                                             if ExtraCommand is not None:
                                                 ExtraCommand.setObjectName(Command)
                                                 allButtons.append(ExtraCommand)
-
+                                                
+                                                if Command.startswith("Std_Macro"):
+                                                    preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{Command}")                            
+                                                    # Get the command info
+                                                    menuText = preferences.GetString("Menu")
+                                                    pixMap = preferences.GetString("Pixmap")
+                                                    Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]["text"] = menuText
+                                                    Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]["icon"] = pixMap
+                                                    
         # add separators to the command list.
         if workbenchName in Dict["workbenches"]:
             if (
