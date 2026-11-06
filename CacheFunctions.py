@@ -761,36 +761,53 @@ def returnDropDownCommands(commandName):
                         )
     return Commands
 
-def loadAllWorkbenches(AutoHide=True, HideOnly=False, FinishMessage="", progressBar: QProgressBar = None, maximum = 0):        
-    if HideOnly is False:
-        activeWorkbench = Gui.activeWorkbench().name()
-        progressBar.show()
-        lst = Gui.listWorkbenches()
-        progressBar.setMaximum(len(lst) - 1 + maximum)
-        for i, wb in enumerate(lst):
-            try:
-                msg = (
-                    translate("FreeCAD Ribbon", "Loading workbench ")
-                    + wb
-                    + " ("
-                    + str(i + 1)
-                    + "/"
-                    + str(len(lst))
-                    + ")"
-                )
-                print(msg)
-                progressBar.setFormat(msg)
-                progressBar.setValue(i)
-                Gui.updateGui()  # Probably slower with this, because it redraws the entire GUI with all tool buttons changed etc. but allows the label to actually be updated, and it looks nice and gives a quick overview of all the workbenches…
-                Gui.activateWorkbench(wb)
-                List_Workbenches.append(wb)
-            except Exception:
-                pass
-        if FinishMessage != "":
-            print(FinishMessage)
-        Gui.activateWorkbench(activeWorkbench)
-  
-        return
+def loadAllWorkbenches(FinishMessage="", progressBar: QProgressBar = None, maximum = 0):        
+    # Temporarily disable popups for the some workbenches like the BIM workbench. They need to have a parameter to disable certain popups
+    ListPreferences = [
+        ["User parameter:BaseApp/Preferences/Mod/BIM", "FirstTime"],
+        ["User parameter:BaseApp/Preferences/Mod/SearchBar", "ShowChangeDialog"]
+    ]
+    ListPreferencesToReset = []
+    for item in ListPreferences:
+        preferences = App.ParamGet(item[0])
+        Value = preferences.GetBool(item[1])
+        if Value is True:
+            preferences.SetBool(item[1], False)
+            ListPreferencesToReset.append(item)
+    
+    activeWorkbench = Gui.activeWorkbench().name()
+    progressBar.show()
+    lst = Gui.listWorkbenches()
+    progressBar.setMaximum(len(lst) - 1 + maximum)
+    for i, wb in enumerate(lst):
+        try:
+            msg = (
+                translate("FreeCAD Ribbon", "Loading workbench ")
+                + wb
+                + " ("
+                + str(i + 1)
+                + "/"
+                + str(len(lst))
+                + ")"
+            )
+            print(msg)
+            progressBar.setFormat(msg)
+            progressBar.setValue(i)
+            Gui.updateGui()  # Probably slower with this, because it redraws the entire GUI with all tool buttons changed etc. but allows the label to actually be updated, and it looks nice and gives a quick overview of all the workbenches…
+            Gui.activateWorkbench(wb)
+            List_Workbenches.append(wb)
+        except Exception:
+            pass
+    if FinishMessage != "":
+        print(FinishMessage)
+    Gui.activateWorkbench(activeWorkbench)
+    
+    # Reset preferences if needed
+    for item in ListPreferencesToReset:
+        preferences = App.ParamGet(item[0])
+        preferences.SetBool(item[1], True)
+            
+    return
 # endregion---------------------------------------------------------------------------------------
 
 def DownLoadIcons():
