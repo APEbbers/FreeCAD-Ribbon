@@ -528,6 +528,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.AddButton.clicked.connect(self.addMacroButton)
         self.form.MacroList.itemClicked.connect(self.MacroListItem_clicked)
         self.form.BrowseIcons.clicked.connect(self.BrowseMacroIcon)
+        self.form.RemoveButton.clicked.connect(self.removeMacroButton)
                 
         # --- Form controls ------------------
         #
@@ -1708,9 +1709,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             
             # if present get the command
             currentRow = self.form.MacroList.currentRow()
-            macroButton = f"Std_Macro_{currentRow}"
+            macroButton = self.form.MacroList.currentItem().data(Qt.ItemDataRole.UserRole)
             preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{macroButton}")
-            if MenuText != preferences.GetString("Menu"):
+            # if MenuText != preferences.GetString("Menu"):
+            if MacroFile != preferences.GetString("Script"):
                 # Create a custom command with FreeCAD
                 macroButton = Gui.Command.createCustomCommand(
                     macroFile=MacroFile,
@@ -1818,6 +1820,52 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 self.listWidgetItems_DDB[j].setText(ListWidgetItem.text())
                 self.listWidgetItems_DDB[j].setIcon(ListWidgetItem.icon())
                 break
+            
+        # Update any button in the ribbon
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
+        for category in RibbonBar.findChildren(RibbonCategory):
+            for panel in category.findChildren(RibbonPanel):
+                for button in panel.findChildren(CustomControls):
+                    if button.objectName() == CommandName:
+                        commandButton = button.findChild(QToolButton, "CommandButton")                        
+                        commandButton.setIcon(icon)
+                        label = button.findChild(QLabel)  
+                        label.setText(Text)
+        return
+    
+    def removeMacroButton(self):
+        if self.isLoaded:
+            currentRow = self.form.MacroList.currentRow()
+            macroButton = self.form.MacroList.currentItem().data(Qt.ItemDataRole.UserRole)
+            
+            # Get the data from the parameters   
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+            if macroButton in preferences.GetGroups():
+                preferences.RemGroup(macroButton)
+                App.saveParameter()
+            
+            # Update any button in the ribbon
+            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
+            for category in RibbonBar.findChildren(RibbonCategory):
+                for panel in category.findChildren(RibbonPanel):
+                    for button in panel.findChildren(CustomControls):
+                        if button.objectName() == macroButton:
+                            button.close()
+            
+            # Update the workbenchDict    
+            if "workbenches" in RibbonBar.workBenchDict:
+                for workbenchName in RibbonBar.workBenchDict["workbenches"]:
+                    if "toolbars" in RibbonBar.workBenchDict["workbenches"][workbenchName]:
+                        for toolbar in RibbonBar.workBenchDict["workbenches"][workbenchName]["toolbars"]:
+                            if "commands" in RibbonBar.workBenchDict["workbenches"][workbenchName]["toolbars"][toolbar]:
+                                for command in RibbonBar.workBenchDict["workbenches"][workbenchName]["toolbars"][toolbar]["commands"]:
+                                    if command == macroButton:
+                                        StandardFunctions.remove_keys_with_values(RibbonBar.workBenchDict["workbenches"][workbenchName]["toolbars"][toolbar]["commands"], macroButton)
+                                    if command == "order":
+                                        RibbonBar.workBenchDict["workbenches"][workbenchName]["toolbars"][toolbar][command].remove(macroButton)
+            
+            # Remove the row frm the table
+            self.form.MacroList.setRowHidden(currentRow, True)
         return
     
     def MacroListItem_clicked(self, e):
