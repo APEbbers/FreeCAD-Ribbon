@@ -1857,18 +1857,6 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         if button.objectName() == macroButton:
                             button.close()
             
-            # Update the workbenchDict    
-            if "workbenches" in RibbonBar.workBenchDict:
-                for workbenchName in RibbonBar.workBenchDict["workbenches"]:
-                    if "toolbars" in RibbonBar.workBenchDict["workbenches"][workbenchName]:
-                        for toolbar in RibbonBar.workBenchDict["workbenches"][workbenchName]["toolbars"]:
-                            if "commands" in RibbonBar.workBenchDict["workbenches"][workbenchName]["toolbars"][toolbar]:
-                                for command in RibbonBar.workBenchDict["workbenches"][workbenchName]["toolbars"][toolbar]["commands"]:
-                                    if command == macroButton:
-                                        StandardFunctions.remove_keys_with_values(RibbonBar.workBenchDict["workbenches"][workbenchName]["toolbars"][toolbar]["commands"], macroButton)
-                                    if command == "order":
-                                        RibbonBar.workBenchDict["workbenches"][workbenchName]["toolbars"][toolbar][command].remove(macroButton)
-            
             # Remove the row frm the table
             self.form.MacroList.setRowHidden(currentRow, True)
         return

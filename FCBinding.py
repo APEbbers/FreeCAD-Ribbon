@@ -385,6 +385,7 @@ class ModernMenu(RibbonBar):
     AddedPanels = []
     CustomPanelsToRestore = []
     OriginalPanelsToRemove = []
+    CurrentMacroButtons = {}
     
     # Define a variable for storing the current category when the customise enviroment is activated
     CurrentCategoryToRestore = None
@@ -2295,6 +2296,24 @@ class ModernMenu(RibbonBar):
         self.workBenchDict["ignoredWorkbenches"] = self.ribbonStructure["ignoredWorkbenches"]
         self.workBenchDict["iconOnlyToolbars"] = self.ribbonStructure["iconOnlyToolbars"]
         self.workBenchDict["customToolbars"] = self.ribbonStructure["customToolbars"]
+        # Store all current macrobuttons
+        # Get the data from the parameters   
+        MacroGroup = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+        macroButtons = MacroGroup.GetGroups()
+        for macrobutton in macroButtons:
+            # Make sure the dict has a key for this macrobutton
+            Standard_Functions_Ribbon.add_keys_nested_dict(self.CurrentMacroButtons, [macrobutton], endEmpty=True)
+                        
+            # Store the macro button
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{macrobutton}")
+            self.CurrentMacroButtons[macrobutton]["Script"] = preferences.GetString("Script")
+            self.CurrentMacroButtons[macrobutton]["Accel"] = preferences.GetString("Accel")
+            self.CurrentMacroButtons[macrobutton]["Tooltip"] = preferences.GetString("Tooltip")
+            self.CurrentMacroButtons[macrobutton]["Menu"] = preferences.GetString("Menu")
+            self.CurrentMacroButtons[macrobutton]["Pixmap"] = preferences.GetString("Pixmap")
+            self.CurrentMacroButtons[macrobutton]["WhatsThis"] = preferences.GetString("WhatsThis")
+            self.CurrentMacroButtons[macrobutton]["System"] = preferences.GetBool("System")
+        
         # Show the comboBox and delete button for the tabgroups
         DeleteButtonOff = False
         for action in QToolBar.actions(self.rightToolBar()):    
@@ -2874,6 +2893,17 @@ class ModernMenu(RibbonBar):
         # If the workbench is not yet in the cancel list, add it
         if not workbenchName in self.CancelClicked:
             self.CancelClicked.append(workbenchName)
+            
+        # Update or create the macrobuttons
+        for macroButton in self.CurrentMacroButtons:
+            MacroButtonGroup = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{str(macroButton)}")
+            MacroButtonGroup.SetString("Menu", self.CurrentMacroButtons[macroButton]["Menu"])
+            MacroButtonGroup.SetString("Script", self.CurrentMacroButtons[macroButton]["Script"])
+            MacroButtonGroup.SetString("Accel", self.CurrentMacroButtons[macroButton]["Accel"])
+            MacroButtonGroup.SetString("Tooltip", self.CurrentMacroButtons[macroButton]["Tooltip"])
+            MacroButtonGroup.SetString("Pixmap", self.CurrentMacroButtons[macroButton]["Pixmap"])
+            MacroButtonGroup.SetString("WhatsThis", self.CurrentMacroButtons[macroButton]["WhatsThis"])
+            MacroButtonGroup.SetBool("System", self.CurrentMacroButtons[macroButton]["System"])
         
         # Set stylesheets
         self.currentCategory().setStyleSheet(self.StyleSheet)
@@ -8836,7 +8866,7 @@ class ModernMenu(RibbonBar):
                             if Toolbar.lower() == item.lower():
                                 tempList.append(Toolbar)
                         if item.endswith("_newPanel") or item.endswith("_custom"):
-                            tempList.append(item)        
+                            tempList.append(item)     
         
         # Update the customToolbar dict with the latest toolbar names as well
         if "customToolbars" in Dict and WorkBenchName in Dict["customToolbars"]:
@@ -8909,9 +8939,16 @@ class ModernMenu(RibbonBar):
                             # Filter the commands
                             if item == "commands":
                                 for command in Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"].keys():
-                                    if command is not None and command != "null" and command != "" and command != "qt_toolbutton_menubutton" and "separator" not in command:
+                                    if command.startswith("Std_Macro"):
+                                        # Get the data from the parameters   
+                                        preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")                                        
+                                        if command not in preferences.GetGroups():
+                                            # Update the workbenchDict    
+                                            workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"] = StandardFunctions.remove_keys_with_values(workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"], command)
+                                    if command is not None and command != "null" and command != "" and command != "qt_toolbutton_menubutton" and "separator" not in command and not command.startswith("Std_Macro"):
                                         StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "commands", command])
                                         workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command]
+                                    
                             # add the title 
                             if item == "title":
                                 workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"]
