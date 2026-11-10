@@ -5739,6 +5739,14 @@ class ModernMenu(RibbonBar):
             if dockWidget.objectName() == DockWidgetName:
                 try:
                         Action.setChecked(dockWidget.isVisible())
+                except Exception:
+                    pass
+
+        # Connect the action
+        Action.toggled.connect(lambda e: self.HandleDockWidget(DockWidgetName, e))
+        # Set the current state      
+        # self.HandleDockWidget(DockWidgetName, Action.isChecked())        
+        return Action
     
     def HandleDockWidget(self, dockWidget_Name, Checked = False, skipChecked=False):
         if self.ribbonStructure is None:
