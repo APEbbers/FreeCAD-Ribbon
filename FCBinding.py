@@ -5726,33 +5726,19 @@ class ModernMenu(RibbonBar):
         
         return
             
-    # Functions to create an action for the toolbar menu
-    def createAction_ToolBar(self, toolbarName, parent):
-        # Define a QAction
-        Action = QAction(toolbarName, parent=parent)
+    # Functions to create an action for the panel menu
+    def createAction_DockWidget(self, DockWidgetName, parent):
+        # Defin a checkbox
+        Action = QAction(DockWidgetName, parent)
         Action.setCheckable(True)
-        Action.setObjectName(toolbarName)
-        # Connect the action
-        Action.toggled.connect(lambda e: self.HandleToolbar(toolbarName, e))
+        Action.setObjectName(DockWidgetName)
+        
         # Set the checkstate
-        listToolBars = mw.findChildren(QToolBar)
-        for toolbar in listToolBars:
-            if toolbar.objectName() == toolbarName:
+        listDockWidgets = mw.findChildren(QDockWidget)
+        for dockWidget in listDockWidgets:
+            if dockWidget.objectName() == DockWidgetName:
                 try:
-                    if "ToolBarStates" in self.ribbonStructure:
-                        if toolbarName in self.ribbonStructure["ToolBarStates"]:
-                            Checked = bool(self.ribbonStructure["ToolBarStates"][toolbarName][0])
-                            Action.setChecked(Checked)  
-                            toolbar.setVisible(Checked)                   
-                    else:
-                        if toolbar.isVisible():
-                            Action.setChecked(True)
-                        else:
-                            Action.setChecked(False)
-                except Exception:
-                    pass
-
-        return Action 
+                        Action.setChecked(dockWidget.isVisible())
     
     def HandleDockWidget(self, dockWidget_Name, Checked = False, skipChecked=False):
         if self.ribbonStructure is None:
@@ -5795,6 +5781,8 @@ class ModernMenu(RibbonBar):
         Action = QAction(toolbarName, parent=parent)
         Action.setCheckable(True)
         Action.setObjectName(toolbarName)
+        # Connect the action
+        Action.toggled.connect(lambda e: self.HandleToolbar(toolbarName, e))
         # Set the checkstate
         listToolBars = mw.findChildren(QToolBar)
         for toolbar in listToolBars:
@@ -5803,7 +5791,8 @@ class ModernMenu(RibbonBar):
                     if "ToolBarStates" in self.ribbonStructure:
                         if toolbarName in self.ribbonStructure["ToolBarStates"]:
                             Checked = bool(self.ribbonStructure["ToolBarStates"][toolbarName][0])
-                            Action.setChecked(Checked)                     
+                            Action.setChecked(Checked)  
+                            toolbar.setVisible(Checked)                   
                     else:
                         if toolbar.isVisible():
                             Action.setChecked(True)
@@ -5811,12 +5800,8 @@ class ModernMenu(RibbonBar):
                             Action.setChecked(False)
                 except Exception:
                     pass
-        
-        # Connect the action
-        Action.toggled.connect(lambda e: self.HandleToolbar(toolbarName, e))
-        # Set the current state
-        self.HandleToolbar(toolbarName, Action.isChecked())
-        return Action   
+
+        return Action 
 
     def HandleToolbar(self, toolbarName, Checked = False):
         if self.ribbonStructure is None:
