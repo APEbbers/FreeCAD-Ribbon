@@ -5825,7 +5825,7 @@ class ModernMenu(RibbonBar):
                 Location = "Bottom"
                 try:
                     if "ToolBarStates" in self.ribbonStructure and toolbarName in self.ribbonStructure["ToolBarStates"]:
-                            Location = self.ribbonStructure["ToolBarStates"][toolbarName][1]
+                        Location = self.ribbonStructure["ToolBarStates"][toolbarName][1]
                 except Exception:
                     pass
                 ToolBarArea = mw.toolBarArea(toolbar)
@@ -6461,6 +6461,9 @@ class ModernMenu(RibbonBar):
                 self.quickAccessToolBar().objectName(),
                 self.rightToolBar().objectName(),
             ]:
+                toolbar.setEnabled(True)
+                toolbar.setVisible(True)
+            if mw.toolBarArea(toolbar) != Qt.ToolBarArea.TopToolBarArea and storedLocation is not None and storedLocation[1] != "top" and storedLocation[0] is True:
                 toolbar.setEnabled(True)
                 toolbar.setVisible(True)
         StatusArea = mw.findChildren(QWidget, "StatusBarArea")
