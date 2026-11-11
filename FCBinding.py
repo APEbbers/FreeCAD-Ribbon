@@ -1773,7 +1773,7 @@ class ModernMenu(RibbonBar):
                 and self.tabBar().underMouse() is False
                 ):                
                 # Add a menu to select layout (themes)                
-                self.SetLayoutsMenu = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set Layouts..."))
+                self.SetLayoutsMenu = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set layouts..."))
                 
                 # Add a label to indicate the standard layout section
                 label = QLabel(translate("FreeCAD Ribbon", "Standard layouts"))
@@ -1822,6 +1822,9 @@ class ModernMenu(RibbonBar):
                         act = self.SetLayoutsMenu.addAction(str(layout))
                         act.triggered.connect(lambda: self.handleLayoutMenuAction(str(layout)))
                 
+                # Add a separator
+                self.contextMenu.addSeparator()
+                
                 # Add a menu to select tabs to be shown
                 menu = StayOpenMenu(self.contextMenu)
                 menu.setObjectName("TabsMenu")
@@ -1830,7 +1833,35 @@ class ModernMenu(RibbonBar):
                     if WorkbenchName != "NoneWorkbench":
                         menu.addAction(self.createAction_Tabs(WorkbenchName, menu))
                 SetTabAct = self.contextMenu.addMenu(menu)
-                SetTabAct.setText(translate("FreeCAD Ribbon", "Show/Hide tabs..."))
+                SetTabAct.setText(translate("FreeCAD Ribbon", "Show/hide tabs..."))
+                
+                # Add a menu to select toolbars to be shown
+                #
+                # Store the toolbar names
+                workBench = Gui.activeWorkbench()
+                Toolbar_Names = workBench.listToolbars()
+                # Fill the toolbar menu with actions                     
+                menu = StayOpenMenu(mw)
+                for Toolbar_Name in Toolbar_Names:
+                    Action = self.createAction_ToolBar(Toolbar_Name, menu)
+                    menu.addAction(Action)
+                SetToolbarAct = self.contextMenu.addMenu(menu)
+                SetToolbarAct.setText(translate("FreeCAD Ribbon", "Show/hide toolbars..."))
+                
+                # Add a menu to select panels to be shown
+                #
+                # Get the active workbench
+                workBench = Gui.activeWorkbench()
+                # Store the panel names
+                panel_Names = []
+                for dockWidget in  mw.findChildren(QDockWidget):
+                    panel_Names.append(dockWidget.objectName())
+                menu = StayOpenMenu(mw)
+                for Panel_Name in panel_Names:
+                    Action = self.createAction_DockWidget(Panel_Name, menu)
+                    menu.addAction(Action)
+                SetPanelAct = self.contextMenu.addMenu(menu)
+                SetPanelAct.setText(translate("FreeCAD Ribbon", "Show/hide panels..."))
                 
                 # Add Customize buttons for entering and exiting customize enviroment
                 self.contextMenu.addSeparator()
@@ -6463,8 +6494,26 @@ class ModernMenu(RibbonBar):
                 toolbar.setEnabled(True)
                 toolbar.setVisible(True)
             if mw.toolBarArea(toolbar) != Qt.ToolBarArea.TopToolBarArea and storedLocation is not None and storedLocation[1] != "top" and storedLocation[0] is True:
-                toolbar.setEnabled(True)
-                toolbar.setVisible(True)
+                for item in self.ToolBarsToHide:
+                    if item[0] == toolbar.objectName():
+                        width = max(item[1],0)
+                        height = max(item[2],0)
+                        size = QSize(width, height)
+                        # print(size)             
+                        toolbar.setMinimumSize(size)
+                        toolbar.setMaximumSize(16777215, height*3.7795275591) # convert height from mm to pixel
+                        # make sure the toolbar is visible
+                        toolbar.setEnabled(True)
+                        toolbar.setVisible(True)
+                        
+                        # Write the location and state to the ribbon structure
+                        Location = "Bottom"
+                        if mw.toolBarArea(toolbar) == Qt.ToolBarArea.LeftToolBarArea:
+                            Location = "Left"
+                        if mw.toolBarArea(toolbar) == Qt.ToolBarArea.RightToolBarArea:
+                            Location = "Right"
+                        self.ribbonStructure["ToolBarStates"][toolbar.objectName()] = [True, Location]
+                        break
         StatusArea = mw.findChildren(QWidget, "StatusBarArea")
         for Widget in StatusArea:
             Widget.show()
