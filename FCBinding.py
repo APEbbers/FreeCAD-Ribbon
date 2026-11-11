@@ -6412,6 +6412,27 @@ class ModernMenu(RibbonBar):
             ]:
                 toolbar.setEnabled(True)
                 toolbar.setVisible(True)
+            if mw.toolBarArea(toolbar) != Qt.ToolBarArea.TopToolBarArea and storedLocation is not None and storedLocation[1] != "top" and storedLocation[0] is True:
+                for item in self.ToolBarsToHide:
+                    if item[0] == toolbar.objectName():
+                        width = max(item[1],0)
+                        height = max(item[2],0)
+                        size = QSize(width, height)
+                        # print(size)             
+                        toolbar.setMinimumSize(size)
+                        toolbar.setMaximumSize(16777215, height*3.7795275591) # convert height from mm to pixel
+                        # make sure the toolbar is visible
+                        toolbar.setEnabled(True)
+                        toolbar.setVisible(True)
+                        
+                        # Write the location and state to the ribbon structure
+                        Location = "Bottom"
+                        if mw.toolBarArea(toolbar) == Qt.ToolBarArea.LeftToolBarArea:
+                            Location = "Left"
+                        if mw.toolBarArea(toolbar) == Qt.ToolBarArea.RightToolBarArea:
+                            Location = "Right"
+                        self.ribbonStructure["ToolBarStates"][toolbar.objectName()] = [True, Location]
+                        break
         StatusArea = mw.findChildren(QWidget, "StatusBarArea")
         for Widget in StatusArea:
             Widget.show()
