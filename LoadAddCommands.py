@@ -1605,14 +1605,15 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             for root, dirs, files in os.walk(MacroDirUser):
                 for file in files:
                     MacroList.append(os.path.join(MacroDirUser, file))
-                    
+        
+        # Add an empty item
+        self.form.SelectMacro.addItem("")
+        # Add all macros to the dropdown
         for file in MacroList:
             fileName = os.path.basename(file)
             self.form.SelectMacro.addItem(fileName, file)
-
-            MacroCommandName = Gui.Command.findCustomCommand(fileName)
-            if MacroCommandName is not None:
-                MacroCommand = Gui.Command.get(MacroCommandName)
+        # Set the empty item current
+        self.form.SelectMacro.setCurrentText("")
         return
 
     def LoadIcons(self):
@@ -1859,6 +1860,14 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             
             # Remove the row frm the table
             self.form.MacroList.setRowHidden(currentRow, True)
+            # Clear all fields
+            self.form.SelectMacro.setCurrentText("")
+            self.form.SetMenuText.clear()
+            self.form.SetToolTip.clear()
+            self.form.SetStatusText.clear()
+            self.form.SetWhatIsThis.clear()
+            self.form.SetShortcut.clear()
+            self.form.SelectIcon.setIcon(QIcon())
         return
     
     def MacroListItem_clicked(self, e):
