@@ -34,6 +34,7 @@ from PySide.QtGui import (
     QDropEvent,
     QContextMenuEvent,
     QMouseEvent,
+    QCloseEvent,
     QIcon,
     QAction,
     QPixmap,
@@ -384,6 +385,7 @@ class ModernMenu(RibbonBar):
     AddedPanels = []
     CustomPanelsToRestore = []
     OriginalPanelsToRemove = []
+    CurrentMacroButtons = {}
     
     # Define a variable for storing the current category when the customise enviroment is activated
     CurrentCategoryToRestore = None
@@ -1771,7 +1773,7 @@ class ModernMenu(RibbonBar):
                 and self.tabBar().underMouse() is False
                 ):                
                 # Add a menu to select layout (themes)                
-                self.SetLayoutsMenu = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set Layouts..."))
+                self.SetLayoutsMenu = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set layouts..."))
                 
                 # Add a label to indicate the standard layout section
                 label = QLabel(translate("FreeCAD Ribbon", "Standard layouts"))
@@ -1823,6 +1825,9 @@ class ModernMenu(RibbonBar):
                 # Add a separator
                 self.contextMenu.addSeparator()
                 
+                # Add a separator
+                self.contextMenu.addSeparator()
+                
                 # Add a menu to select tabs to be shown
                 menu = StayOpenMenu(self.contextMenu)
                 menu.setObjectName("TabsMenu")
@@ -1831,7 +1836,35 @@ class ModernMenu(RibbonBar):
                     if WorkbenchName != "NoneWorkbench":
                         menu.addAction(self.createAction_Tabs(WorkbenchName, menu))
                 SetTabAct = self.contextMenu.addMenu(menu)
-                SetTabAct.setText(translate("FreeCAD Ribbon", "Show/Hide tabs..."))
+                SetTabAct.setText(translate("FreeCAD Ribbon", "Show/hide tabs..."))
+                
+                # Add a menu to select toolbars to be shown
+                #
+                # Store the toolbar names
+                workBench = Gui.activeWorkbench()
+                Toolbar_Names = workBench.listToolbars()
+                # Fill the toolbar menu with actions                     
+                menu = StayOpenMenu(mw)
+                for Toolbar_Name in Toolbar_Names:
+                    Action = self.createAction_ToolBar(Toolbar_Name, menu)
+                    menu.addAction(Action)
+                SetToolbarAct = self.contextMenu.addMenu(menu)
+                SetToolbarAct.setText(translate("FreeCAD Ribbon", "Show/hide toolbars..."))
+                
+                # Add a menu to select panels to be shown
+                #
+                # Get the active workbench
+                workBench = Gui.activeWorkbench()
+                # Store the panel names
+                panel_Names = []
+                for dockWidget in  mw.findChildren(QDockWidget):
+                    panel_Names.append(dockWidget.objectName())
+                menu = StayOpenMenu(mw)
+                for Panel_Name in panel_Names:
+                    Action = self.createAction_DockWidget(Panel_Name, menu)
+                    menu.addAction(Action)
+                SetPanelAct = self.contextMenu.addMenu(menu)
+                SetPanelAct.setText(translate("FreeCAD Ribbon", "Show/hide panels..."))
                 
                  # Add a menu to select toolbars to be shown
                 #
@@ -2325,6 +2358,24 @@ class ModernMenu(RibbonBar):
         self.workBenchDict["ignoredWorkbenches"] = self.ribbonStructure["ignoredWorkbenches"]
         self.workBenchDict["iconOnlyToolbars"] = self.ribbonStructure["iconOnlyToolbars"]
         self.workBenchDict["customToolbars"] = self.ribbonStructure["customToolbars"]
+        # Store all current macrobuttons
+        # Get the data from the parameters   
+        MacroGroup = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+        macroButtons = MacroGroup.GetGroups()
+        for macrobutton in macroButtons:
+            # Make sure the dict has a key for this macrobutton
+            Standard_Functions_Ribbon.add_keys_nested_dict(self.CurrentMacroButtons, [macrobutton], endEmpty=True)
+                        
+            # Store the macro button
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{macrobutton}")
+            self.CurrentMacroButtons[macrobutton]["Script"] = preferences.GetString("Script")
+            self.CurrentMacroButtons[macrobutton]["Accel"] = preferences.GetString("Accel")
+            self.CurrentMacroButtons[macrobutton]["Tooltip"] = preferences.GetString("Tooltip")
+            self.CurrentMacroButtons[macrobutton]["Menu"] = preferences.GetString("Menu")
+            self.CurrentMacroButtons[macrobutton]["Pixmap"] = preferences.GetString("Pixmap")
+            self.CurrentMacroButtons[macrobutton]["WhatsThis"] = preferences.GetString("WhatsThis")
+            self.CurrentMacroButtons[macrobutton]["System"] = preferences.GetBool("System")
+        
         # Show the comboBox and delete button for the tabgroups
         DeleteButtonOff = False
         for action in QToolBar.actions(self.rightToolBar()):    
@@ -2799,9 +2850,28 @@ class ModernMenu(RibbonBar):
                 else:
                     # Make sure to set the tab visible
                     self.tabBar().setTabVisible(i, True)        
-        # # Restore the cursor
-        # QApplication.restoreOverrideCursor()
-        # QApplication.restoreOverrideCursor()
+        
+        self.UpdateToolBar_Keys(WorkBenchName=workbenchName, Dict=self.workBenchDict, skipIdCheck=True)
+        
+        # update the ribbonstructure before writing it to disk
+        if "quickAccessCommands" in self.workBenchDict:
+            self.ribbonStructure["quickAccessCommands"] = self.workBenchDict["quickAccessCommands"]
+        if "newPanels" in self.workBenchDict:
+            self.ribbonStructure["newPanels"] = self.workBenchDict["newPanels"]
+        if "dropdownButtons" in self.workBenchDict: 
+            self.ribbonStructure["dropdownButtons"] = self.workBenchDict["dropdownButtons"]
+        if "ignoredToolbars" in self.workBenchDict:
+            self.ribbonStructure["ignoredToolbars"] = self.workBenchDict["ignoredToolbars"]
+        if "ignoredWorkbenches" in self.workBenchDict:
+            self.ribbonStructure["ignoredWorkbenches"] = self.workBenchDict["ignoredWorkbenches"]
+        if "iconOnlyToolbars" in self.workBenchDict:
+            self.ribbonStructure["iconOnlyToolbars"] = self.workBenchDict["iconOnlyToolbars"]
+        if "customToolbars" in self.workBenchDict:
+            self.ribbonStructure["customToolbars"] = self.workBenchDict["customToolbars"]
+        
+        for WorkBench in self.workBenchDict["workbenches"].keys():
+            self.ribbonStructure["workbenches"][WorkBench] = self.workBenchDict["workbenches"][WorkBench]
+            
         # Store the tab order to FreeCAD
         OrderString = ""
         for i in range(self.tabBar().count()):
@@ -2885,6 +2955,17 @@ class ModernMenu(RibbonBar):
         # If the workbench is not yet in the cancel list, add it
         if not workbenchName in self.CancelClicked:
             self.CancelClicked.append(workbenchName)
+            
+        # Update or create the macrobuttons
+        for macroButton in self.CurrentMacroButtons:
+            MacroButtonGroup = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{str(macroButton)}")
+            MacroButtonGroup.SetString("Menu", self.CurrentMacroButtons[macroButton]["Menu"])
+            MacroButtonGroup.SetString("Script", self.CurrentMacroButtons[macroButton]["Script"])
+            MacroButtonGroup.SetString("Accel", self.CurrentMacroButtons[macroButton]["Accel"])
+            MacroButtonGroup.SetString("Tooltip", self.CurrentMacroButtons[macroButton]["Tooltip"])
+            MacroButtonGroup.SetString("Pixmap", self.CurrentMacroButtons[macroButton]["Pixmap"])
+            MacroButtonGroup.SetString("WhatsThis", self.CurrentMacroButtons[macroButton]["WhatsThis"])
+            MacroButtonGroup.SetBool("System", self.CurrentMacroButtons[macroButton]["System"])
         
         # Set stylesheets
         self.currentCategory().setStyleSheet(self.StyleSheet)
@@ -5805,7 +5886,7 @@ class ModernMenu(RibbonBar):
                 Location = "Bottom"
                 try:
                     if "ToolBarStates" in self.ribbonStructure and toolbarName in self.ribbonStructure["ToolBarStates"]:
-                            Location = self.ribbonStructure["ToolBarStates"][toolbarName][1]
+                        Location = self.ribbonStructure["ToolBarStates"][toolbarName][1]
                 except Exception:
                     pass
                 ToolBarArea = mw.toolBarArea(toolbar)
@@ -6614,7 +6695,55 @@ class ModernMenu(RibbonBar):
         return ButtonList
 
     def CreateButtonFromCommand(self, CommandName: str, ActivateWorkBench = True, Dict=ribbonStructure):
-        if CommandName.endswith("_ddb") is False:
+        if CommandName.endswith("_ddb") is False and "Std_Macro" in CommandName:
+            # Get the data from the parameters   
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+            if CommandName in preferences.GetGroups():
+                preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{CommandName}")                            
+                # Get the command info
+                menuText = preferences.GetString("Menu")
+                pixMap = preferences.GetString("Pixmap")
+                macro = preferences.GetString("Script")
+                shortcut = preferences.GetString("Accel")
+                tooltipUser = preferences.GetString("Tooltip")
+                tooltip = ""
+                if tooltipUser != "":
+                    tooltip = f"<b>{menuText}</b> (<i>{shortcut}</i>)<br></br>{tooltipUser}<br></br>(<i>{macro}</i>)"
+                    if shortcut != "":
+                        tooltip = f"<b>{menuText}</b><br></br>{tooltipUser}<br></br>(<i>{macro}</i>)"
+                if tooltipUser == "": 
+                    tooltip = f"<b>{menuText}</b><br></br>(<i>{macro}</i>)"
+                    if shortcut != "":
+                        tooltip = f"<b>{menuText}</b> (<i>{shortcut}</i>)<br></br>(<i>{macro}</i>)"
+                
+                action = QAction()
+                action.setData(CommandName)
+                action.setText(menuText)
+                action.setObjectName(CommandName)
+                action.setToolTip(tooltip)
+                action.triggered.connect(lambda: self.RunCommand(action.objectName()))
+                
+                # Create a button
+                Button = QToolButton()
+                Button.setText(menuText)  
+                Button.setToolTip(tooltip)
+                # Set the commandName as objectName as backup
+                Button.setObjectName(CommandName)
+                # Add the action to the button
+                Button.addAction(action)
+                Button.setDefaultAction(action)
+
+                # Set the icon
+                Icon = self.ReturnCommandIcon(pixMap)
+                if Icon is None or (Icon is not None and Icon.isNull()):
+                    Icon = QIcon()
+                    Icon.addPixmap(QPixmap(preferences.GetString("Pixmap")))
+                if Icon is not None and Icon.isNull() is False:
+                    action.setIcon(Icon)
+                    Button.setIcon(Icon)
+                return Button
+                
+        if CommandName.endswith("_ddb") is False and "Std_Macro" not in CommandName:
             try:            
                 # Activate the workbench, the command belongs to. Otherwise, the command wont be created later
                 # Get the current category
@@ -6622,7 +6751,7 @@ class ModernMenu(RibbonBar):
                 if ActivateWorkBench is True:
                     for CommandItem in self.List_Commands:
                         if CommandItem[0] == CommandName:
-                            if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard" and CommandItem[3] != ""):                                
+                            if (CommandItem[3] != "General" and CommandItem[3] != "Global" and CommandItem[3] != "Standard" and CommandItem[3] != "" and CommandItem[3 != "Macro"]):                                
                                 if CommandItem[3] not in self.isWbLoaded:
                                     # Activate the workbench if not loaded
                                     Gui.activateWorkbench(CommandItem[3])
@@ -6645,7 +6774,7 @@ class ModernMenu(RibbonBar):
                 Command = Gui.Command.get(CommandName)
                 action = None            
                 Icon = QIcon()
-                if Command is not None:
+                if Command is not None:                    
                     FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                     for root, dirs, files in os.walk(FreeCAD_Icons):
                         for fileName in files:
@@ -7350,7 +7479,7 @@ class ModernMenu(RibbonBar):
         if workbenchName in Dict["workbenches"]:
             if (
                 panelName != ""
-                and not panelName.endswith("_newPanel")
+                # and not panelName.endswith("_newPanel")
                 and "toolbars" in Dict["workbenches"][workbenchName]
                 and panelName
                 in Dict["workbenches"][workbenchName]["toolbars"]
@@ -7361,12 +7490,20 @@ class ModernMenu(RibbonBar):
                             for Command in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
                                 if Command != "order":
                                     if "IsExtra" in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]:
-                                        if Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]["IsExtra"]:
+                                        if Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]["IsExtra"]:                                            
                                             ExtraCommand = self.CreateButtonFromCommand(Command, ActivateWorkBench=ActivateWorkbench, Dict=Dict)
                                             if ExtraCommand is not None:
                                                 ExtraCommand.setObjectName(Command)
                                                 allButtons.append(ExtraCommand)
-
+                                                
+                                                if Command.startswith("Std_Macro"):
+                                                    preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{Command}")                            
+                                                    # Get the command info
+                                                    menuText = preferences.GetString("Menu")
+                                                    pixMap = preferences.GetString("Pixmap")
+                                                    Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]["text"] = menuText
+                                                    Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]["icon"] = pixMap
+                                                    
         # add separators to the command list.
         if workbenchName in Dict["workbenches"]:
             if (
@@ -7653,13 +7790,13 @@ class ModernMenu(RibbonBar):
                         FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
                         for root, dirs, files in os.walk(FreeCAD_Icons):
                             for fileName in files:
-                                if CommandName in fileName:
+                                if CommandName in fileName and "Std_Macro" not in CommandName:
                                     Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                                     action.setIcon(Icon)
                                     break
                         
                         # If not get the Icon from FreeCAD or the data file
-                        if Icon.isNull():
+                        if Icon.isNull() and "Std_Macro" not in CommandName:
                             pixmap = ""
                             try:
                                 pixmap = Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][CommandName]["icon"]
@@ -7673,7 +7810,7 @@ class ModernMenu(RibbonBar):
                                 action.setIcon(Icon)
                                 
                         # Check if there is an Icon. if not add a replacement
-                        if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
+                        if Icon.pixmap(64,64).toImage().bytesPerLine() < 256  and "Std_Macro" not in CommandName:
                             Icon = Gui.getIcon("preferences-workbenches")
                             action.setIcon(Icon)
                         
@@ -8660,7 +8797,13 @@ class ModernMenu(RibbonBar):
 
     # region - Titlebar functions
     def CloseFreeCAD(self):
-        mw.close()
+        App.saveParameter("System parameter")
+        App.saveParameter("User parameter")
+        Timer.setSingleShot(True)
+        Timer.start(1000)
+        
+        e = QCloseEvent()
+        mw.closeEvent(e)
         return
 
     def MinimizeFreeCAD(self):
@@ -8805,7 +8948,7 @@ class ModernMenu(RibbonBar):
                             if Toolbar.lower() == item.lower():
                                 tempList.append(Toolbar)
                         if item.endswith("_newPanel") or item.endswith("_custom"):
-                            tempList.append(item)        
+                            tempList.append(item)     
         
         # Update the customToolbar dict with the latest toolbar names as well
         if "customToolbars" in Dict and WorkBenchName in Dict["customToolbars"]:
@@ -8878,9 +9021,16 @@ class ModernMenu(RibbonBar):
                             # Filter the commands
                             if item == "commands":
                                 for command in Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"].keys():
-                                    if command is not None and command != "null" and command != "" and command != "qt_toolbutton_menubutton" and "separator" not in command:
+                                    if command.startswith("Std_Macro"):
+                                        # Get the data from the parameters   
+                                        preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")                                        
+                                        if command not in preferences.GetGroups():
+                                            # Update the workbenchDict    
+                                            workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"] = StandardFunctions.remove_keys_with_values(workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"], command)
+                                    if command is not None and command != "null" and command != "" and command != "qt_toolbutton_menubutton" and "separator" not in command and not command.startswith("Std_Macro"):
                                         StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "commands", command])
                                         workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["commands"][command]
+                                    
                             # add the title 
                             if item == "title":
                                 workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"]
@@ -9193,40 +9343,6 @@ class EventInspector_RibbonUI_1(QObject):
                     StandardFunctions.Print(f"Ribbon UI:\n{e}", "Warning")
                 self.DataChecked = True
         
-        # # This is an alternative drop function which works only with QT6.
-        # # It is needed to avoid problems with older Nvidia Cards (Pascal and older) and Wayland        
-        # try:
-        #     # Get the main window and the ribbon
-        #     if session_id == "wayland" and QApplication.mouseButtons().value == 0:         
-        #         mw = Gui.getMainWindow()
-        #         RibbonBar: ModernMenu = mw.findChild(ModernMenu, "Ribbon")  
-        #         if RibbonBar is not None and RibbonBar.CustomizeEnabled and self.PatchApplicable is True and platform.system() == "Linux":                                      
-        #             if self.dragEntered is True and QApplication.mouseButtons().value == 0:
-        #                 self.dragEntered = False
-        #                 if Parameters.DEBUG_MODE:
-        #                     StandardFunctions.Print("Ribbon UI: Wayland patch applied for an alternative drop event", "Log")
-                        
-        #                 if RibbonBar.dropPanelName != "":
-        #                     RibbonBar.dropEvent(widget=self.widget)
-        #                     self.widget = None
-        #                     self.pos = None
-        #                 return QObject.eventFilter(self, obj, event)
-                
-        #             # Store the dragged widget
-        #             if event.type() == QEvent.Type.DragEnter:
-        #                 if self.dragEntered is False and self.widget is None:
-        #                         if Parameters.DEBUG_MODE:
-        #                             StandardFunctions.Print("Wayland patch: drag entered", "Log")
-        #                         self.dragEntered = True
-        #                         self.widget = event.source()
-        #                         # self.widget = self.widget.parent()
-        #                         self.pos= event.source().pos()
-        #                         event.accept()                        
-        #                 return QObject.eventFilter(self, obj, event)
-        # except Exception:  # noqa: BLE001
-        #     if Parameters.DEBUG_MODE:
-        #         StandardFunctions.Print(f"Ribbon UI: {traceback.format_exc()}", "Warning")
-                 
         if event.type() == QEvent.Type.KeyRelease:
             try:
                 # Get the main window and the ribbon
@@ -9300,11 +9416,15 @@ class EventInspector_RibbonUI_1(QObject):
                         if Parameters.DEBUG_MODE:
                             StandardFunctions.Print(f"Ribbon UI:\n{traceback.format_exc()}", "Warning")
 
-        if event.type() == QEvent.Type.Close:
+        if event.type() == QEvent.Type.Close:            
             OverlayParam_Top = App.ParamGet("User parameter:BaseApp/MainWindow/DockWindows/OverlayTop")
             String = OverlayParam_Top.GetString("Widgets")
             Parameters_Ribbon.Settings.SetStringSetting("StoredOverlayState", String)
-            App.saveParameter()   
+            App.saveParameter()  
+            App.saveParameter("System parameter")  
+            
+            Timer.setSingleShot(True)
+            Timer.start(1000)
 
             # Store the states of the toolbars and panels
             #
@@ -9474,13 +9594,10 @@ class run:
         """
         Constructor
         """
-        disable = 0
         if name != "NoneWorkbench":
             mw: QMainWindow = Gui.getMainWindow()
             # Disable connection after activation
             mw.workbenchActivated.disconnect(run)
-            if disable:
-                return
 
             ribbon = ModernMenu()
             ribbon.setContentsMargins(0, 0, 0, 0)

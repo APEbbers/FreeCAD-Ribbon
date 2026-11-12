@@ -19,6 +19,8 @@
 # * USA                                                                   *
 # *                                                                       *
 # *************************************************************************
+from typing import override
+
 import FreeCAD as App  # pyright: ignore[reportMissingModuleSource]
 import FreeCADGui as Gui  # pyright: ignore[reportMissingModuleSource]
 import os
@@ -43,13 +45,17 @@ from PySide.QtWidgets import (
     QDockWidget,
     QSizePolicy,
     QGridLayout,
-    QHBoxLayout    
+    QHBoxLayout,
+    QTableWidget,
+    QAbstractScrollArea,
+    QAbstractItemView,    
 )
-from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent, QCursor
+from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent, QCursor, QKeyEvent, QKeySequence
+
 import sys
 import json
 from datetime import datetime, timedelta
-
+from functools import partial
 import Standard_Functions_Ribbon as StandardFunctions
 from Standard_Functions_Ribbon import CommandInfoCorrections, QScopedCursorOverride
 import Parameters_Ribbon
@@ -130,6 +136,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
     # Create a list for all listwidget items. Used to switch filters to "All"
     listWidgetItems_NP = []
     listWidgetItems_DDB = []
+    
+    isLoaded = False
             
     def __init__(self, parent):
         super(LoadDialog, self).__init__()
@@ -386,206 +394,238 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
             # endregion
 
-            # Add the workbenches
-            self.addWorkbenches()
-            
-            # Load the commands
-            self.LoadCommands()
-            
-            # Add all toolbar to the listboxes for the panels
-            self.LoadPanels()
-            
-            # Connect the filter for the quick commands on the quickcommands tab
-            def FilterWorkbench_NP():
-                self.on_ListCategory_NP_TextChanged()
+        # Add the workbenches
+        self.addWorkbenches()
+        
+        # Load the commands
+        self.LoadCommands()
+        
+        # Add all toolbar to the listboxes for the panels
+        self.LoadPanels()
+        
+        # Load all the macro lists
+        self.LoadMacroButtons()
+        self.LoadMacroLists()
+        self.LoadIcons()
+        
+        # Connect the filter for the quick commands on the quickcommands tab
+        def FilterWorkbench_NP():
+            self.on_ListCategory_NP_TextChanged()
 
-            #
-            # --- AddCOmmandsTab ------------------
-            #
-            # Connect the filter for the quick commands on the quickcommands tab
-            self.form.ListCategory_NP.currentTextChanged.connect(FilterWorkbench_NP)
-            # Connect the searchbar for the quick commands on the quick commands tab
-            self.form.SearchBar_NP.textChanged.connect(
-                self.on_SearchBar_NP_TextChanged
-            )
-            
-            # Connect the "CreateNewPanel" button
-            self.form.CreateNewPanel.clicked.connect(self.on_CreateNewPanel_clicked)        
-            
-            #
-            # --- CombinePanelsTab ------------------
-            #
-            # Connect move and events to the buttons on the Custom Panels Tab
-            self.form.MoveUpPanelCommand_CP.connect(
-                self.form.MoveUpPanelCommand_CP,
-                SIGNAL("clicked()"),
-                self.on_MoveUpPanelCommand_CP_clicked,
-            )
-            self.form.MoveDownPanelCommand_CP.connect(
-                self.form.MoveDownPanelCommand_CP,
-                SIGNAL("clicked()"),
-                self.on_MoveDownPanelCommand_CP_clicked,
-            )
+        #
+        # --- AddCOmmandsTab ------------------
+        #
+        # Connect the filter for the quick commands on the quickcommands tab
+        self.form.ListCategory_NP.currentTextChanged.connect(FilterWorkbench_NP)
+        # Connect the searchbar for the quick commands on the quick commands tab
+        self.form.SearchBar_NP.textChanged.connect(
+            self.on_SearchBar_NP_TextChanged
+        )
+        
+        # Connect the "CreateNewPanel" button
+        self.form.CreateNewPanel.clicked.connect(self.on_CreateNewPanel_clicked)        
+        
+        #
+        # --- CombinePanelsTab ------------------
+        #
+        # Connect move and events to the buttons on the Custom Panels Tab
+        self.form.MoveUpPanelCommand_CP.connect(
+            self.form.MoveUpPanelCommand_CP,
+            SIGNAL("clicked()"),
+            self.on_MoveUpPanelCommand_CP_clicked,
+        )
+        self.form.MoveDownPanelCommand_CP.connect(
+            self.form.MoveDownPanelCommand_CP,
+            SIGNAL("clicked()"),
+            self.on_MoveDownPanelCommand_CP_clicked,
+        )
 
-            # Connect Add events to the buttons on the Custom Panels Tab for adding commands to the panel
-            self.form.AddPanel_CP.connect(
-                self.form.AddPanel_CP, SIGNAL("clicked()"), self.on_AddPanel_CP_clicked
-            )
+        # Connect Add events to the buttons on the Custom Panels Tab for adding commands to the panel
+        self.form.AddPanel_CP.connect(
+            self.form.AddPanel_CP, SIGNAL("clicked()"), self.on_AddPanel_CP_clicked
+        )
 
-            self.form.AddCustomPanel_CP.connect(
-                self.form.AddCustomPanel_CP,
-                SIGNAL("clicked()"),
-                self.on_AddCustomPanel_CP_clicked,
-            )
+        self.form.AddCustomPanel_CP.connect(
+            self.form.AddCustomPanel_CP,
+            SIGNAL("clicked()"),
+            self.on_AddCustomPanel_CP_clicked,
+        )
 
-            # Connect custom toolbar selector on the Custom Panels Tab
-            def CommandList_CP():
-                self.on_CustomToolbarSelector_CP_activated()
+        # Connect custom toolbar selector on the Custom Panels Tab
+        def CommandList_CP():
+            self.on_CustomToolbarSelector_CP_activated()
 
-            self.form.CustomToolbarSelector_CP.activated.connect(CommandList_CP)
+        self.form.CustomToolbarSelector_CP.activated.connect(CommandList_CP)
 
-            self.form.RemovePanel_CP.connect(
-                self.form.RemovePanel_CP,
-                SIGNAL("clicked()"),
-                self.on_RemovePanel_CP_clicked,
-            )
-            
-            self.form.WorkbenchList_CP.setHidden(True)
-            self.form.label_7.setHidden(True)
-            
-            #
-            # --- CreateDropDownButtonTab ----------------
-            #
-            # Connect the Create dropdown button
-            self.form.CreateControl_DDB.connect(
-                self.form.CreateControl_DDB,
-                SIGNAL("clicked()"),
-                self.on_CreateControl_DDB_clicked,
-            )
+        self.form.RemovePanel_CP.connect(
+            self.form.RemovePanel_CP,
+            SIGNAL("clicked()"),
+            self.on_RemovePanel_CP_clicked,
+        )
+        
+        self.form.WorkbenchList_CP.setHidden(True)
+        self.form.label_7.setHidden(True)
+        
+        #
+        # --- CreateDropDownButtonTab ----------------
+        #
+        # Connect the Create dropdown button
+        self.form.CreateControl_DDB.connect(
+            self.form.CreateControl_DDB,
+            SIGNAL("clicked()"),
+            self.on_CreateControl_DDB_clicked,
+        )
 
-            # Connect  dropdownselector on the create dropdown button Tab
-            def CommandList_DDB():
-                self.on_CommandList_DDB_activated()
+        # Connect  dropdownselector on the create dropdown button Tab
+        def CommandList_DDB():
+            self.on_CommandList_DDB_activated()
 
-            self.form.CommandList_DDB.activated.connect(CommandList_DDB)
+        self.form.CommandList_DDB.activated.connect(CommandList_DDB)
 
-            # Connect the remove dropdown button
-            self.form.RemoveControl_DDB.connect(
-                self.form.RemoveControl_DDB,
-                SIGNAL("clicked()"),
-                self.on_RemoveControl_DDB_clicked,
-            )
+        # Connect the remove dropdown button
+        self.form.RemoveControl_DDB.connect(
+            self.form.RemoveControl_DDB,
+            SIGNAL("clicked()"),
+            self.on_RemoveControl_DDB_clicked,
+        )
 
-            # Connect Add/Remove and move events to the buttons on the QuickAccess Tab
-            self.form.AddCommand_DDB.connect(
-                self.form.AddCommand_DDB,
-                SIGNAL("clicked()"),
-                self.on_AddCommand_DDB_clicked,
-            )
-            self.form.RemoveCommand_DDB.connect(
-                self.form.RemoveCommand_DDB,
-                SIGNAL("clicked()"),
-                self.on_RemoveCommand_DDB_clicked,
-            )
-            self.form.MoveUpCommand_DDB.connect(
-                self.form.MoveUpCommand_DDB,
-                SIGNAL("clicked()"),
-                self.on_MoveUpCommand_DDB_clicked,
-            )
-            self.form.MoveDownCommand_DDB.connect(
-                self.form.MoveDownCommand_DDB,
-                SIGNAL("clicked()"),
-                self.on_MoveDownCommand_DDB_clicked,
-            )
+        # Connect Add/Remove and move events to the buttons on the QuickAccess Tab
+        self.form.AddCommand_DDB.connect(
+            self.form.AddCommand_DDB,
+            SIGNAL("clicked()"),
+            self.on_AddCommand_DDB_clicked,
+        )
+        self.form.RemoveCommand_DDB.connect(
+            self.form.RemoveCommand_DDB,
+            SIGNAL("clicked()"),
+            self.on_RemoveCommand_DDB_clicked,
+        )
+        self.form.MoveUpCommand_DDB.connect(
+            self.form.MoveUpCommand_DDB,
+            SIGNAL("clicked()"),
+            self.on_MoveUpCommand_DDB_clicked,
+        )
+        self.form.MoveDownCommand_DDB.connect(
+            self.form.MoveDownCommand_DDB,
+            SIGNAL("clicked()"),
+            self.on_MoveDownCommand_DDB_clicked,
+        )
 
-            # Connect the filter for the quick commands on the quickcommands tab
-            def FilterWorkbench_DDB():
-                self.on_ListCategory_DDB_TextChanged()
+        # Connect the filter for the quick commands on the quickcommands tab
+        def FilterWorkbench_DDB():
+            self.on_ListCategory_DDB_TextChanged()
 
-            # Connect the filter for the quick commands on the quickcommands tab
-            self.form.ListCategory_DDB.currentTextChanged.connect(FilterWorkbench_DDB)
-            # Connect the searchbar for the quick commands on the quick commands tab
-            self.form.SearchBar_DDB.textChanged.connect(
-                self.on_SearchBar_DDB_TextChanged
-            )
-            
-            # --- Form controls ------------------
-            #
-            # Connect the reload button
-            self.form.LoadWB.connect(
-                self.form.LoadWB, SIGNAL("clicked()"), self.on_ReloadWB_clicked
-            )
-            # Set the icon and size for the refresh button
-            self.form.LoadWB.heightForWidth(1)
-            self.form.LoadWB.setIcon(Gui.getIcon("view-refresh"))
-            self.form.LoadWB.setIconSize(QSize(20, 20))
-            
-            # Create the a message to indicate when the last time the data was (re)created.
-            TimeStamp = Parameters_Ribbon.Settings.GetStringSetting("ReloadTimeStamp")
-            if TimeStamp != "":
-                try:
-                    date_format = "%m-%d-%Y, %H:%M:%S"
-                    lastDate = datetime.strptime(TimeStamp, date_format)
-                    deltaDate: timedelta = datetime.now()-lastDate
-                    deltaDict = StandardFunctions.TimeDeltaToDict(deltaDate)
-                    # Get the separate values
-                    delta_days = deltaDict['days']
-                    delta_hours = deltaDict['hours']
-                    delta_minutes= deltaDict['minutes']
-                    # Set the message    
-                    TimeStamp = datetime.strftime(lastDate, "%B %d, %Y, %H:%M:%S")
-                    self.form.TimeStamp_Reloaded.setText(translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}. This is {delta_days} days, {delta_hours} hour(s) and {delta_minutes} minutes ago."))
-                except Exception:
-                    pass
-            else:
-                TimeStamp = "-"
-                self.form.TimeStamp_Reloaded.setText(translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}."))
-            
-            # Connect the OK and Cancel buttons
-            self.form.cancelButton.clicked.connect(self.on_Cancel_Clicked)
-            self.form.okButton.clicked.connect(self.on_Ok_Clicked)
-            self.form.applyButton.clicked.connect(self.on_Apply_Clicked)
-            self.form.cancelButton_2.clicked.connect(self.on_Cancel_Clicked)
-            self.form.okButton_2.clicked.connect(self.on_Ok_Clicked)
-            self.form.applyButton_2.clicked.connect(self.on_Apply_Clicked)
-            
-            # Connect the helpbutton
-            self.form.HelpButton.setIcon(Gui.getIcon("help-browser"))
-            self.form.HelpButton.clicked.connect(self.on_Helpbutton_clicked)
-            
-            # Set the correct workbench active and connect it with the tab change
-            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
-            RibbonBar.TabChanged.connect(self.setWB)
-            self.setWB()
-            
-            # Hide the correct ok and cancel button when the form is docked or not
-            if Parameters.DOCKED_DIALOGS is True:
-                self.form.okButton.setHidden(True)
-                self.form.cancelButton.setHidden(True)
-                self.form.applyButton.setHidden(True)
-            else:
-                self.form.DockedButtonFrame.setHidden(True)
-            
-            # Set the first tab active
-            self.form.tabWidget.setCurrentIndex(0)
-            
-            # Enable drag for the listWidget.
-            #
-            # Qt6
+        # Connect the filter for the quick commands on the quickcommands tab
+        self.form.ListCategory_DDB.currentTextChanged.connect(FilterWorkbench_DDB)
+        # Connect the searchbar for the quick commands on the quick commands tab
+        self.form.SearchBar_DDB.textChanged.connect(
+            self.on_SearchBar_DDB_TextChanged
+        )
+                
+        #
+        # --- MacroButtons ----------------
+        #
+        self.form.AddButton.clicked.connect(self.addMacroButton)
+        self.form.MacroList.itemClicked.connect(self.MacroListItem_clicked)
+        self.form.BrowseIcons.clicked.connect(self.BrowseMacroIcon)
+        self.form.RemoveButton.clicked.connect(self.removeMacroButton)
+                
+        # --- Form controls ------------------
+        #
+        # Connect the reload button
+        self.form.LoadWB.connect(
+            self.form.LoadWB, SIGNAL("clicked()"), self.on_ReloadWB_clicked
+        )
+        # Set the icon and size for the refresh button
+        self.form.LoadWB.heightForWidth(1)
+        self.form.LoadWB.setIcon(Gui.getIcon("view-refresh"))
+        self.form.LoadWB.setIconSize(QSize(20, 20))
+        
+        # Create the a message to indicate when the last time the data was (re)created.
+        TimeStamp = Parameters_Ribbon.Settings.GetStringSetting("ReloadTimeStamp")
+        if TimeStamp != "":
             try:
-                self.form.ListCategory_NP.setSupportedDragActions(Qt.DropAction.CopyAction|Qt.DropAction.MoveAction)
+                date_format = "%m-%d-%Y, %H:%M:%S"
+                lastDate = datetime.strptime(TimeStamp, date_format)
+                deltaDate: timedelta = datetime.now()-lastDate
+                deltaDict = StandardFunctions.TimeDeltaToDict(deltaDate)
+                # Get the separate values
+                delta_days = deltaDict['days']
+                delta_hours = deltaDict['hours']
+                delta_minutes= deltaDict['minutes']
+                # Set the message    
+                TimeStamp = datetime.strftime(lastDate, "%B %d, %Y, %H:%M:%S")
+                self.form.TimeStamp_Reloaded.setText(translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}. This is {delta_days} days, {delta_hours} hour(s) and {delta_minutes} minutes ago."))
             except Exception:
                 pass
-            # Qt5
-            try:
-                from PySide2 import QtWidgets
-                self.form.ListCategory_NP.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
-                self.form.ListCategory_NP.setAcceptDrops(True)
-                self.form.ListCategory_NP.setDragEnabled(True)
-            except Exception:
-                pass
+        else:
+            TimeStamp = "-"
+            self.form.TimeStamp_Reloaded.setText(translate("FreeCAD Ribbon", f"Last reloaded on: {TimeStamp}."))
+        
+       # Connect the OK and Cancel buttons
+        self.form.cancelButton.clicked.connect(self.on_Cancel_Clicked)
+        self.form.okButton.clicked.connect(self.on_Ok_Clicked)
+        self.form.applyButton.clicked.connect(self.on_Apply_Clicked)
+        self.form.cancelButton_2.clicked.connect(self.on_Cancel_Clicked)
+        self.form.okButton_2.clicked.connect(self.on_Ok_Clicked)
+        self.form.applyButton_2.clicked.connect(self.on_Apply_Clicked)
+        
+        # Connect the helpbutton
+        self.form.HelpButton.setIcon(Gui.getIcon("help-browser"))
+        self.form.HelpButton.clicked.connect(self.on_Helpbutton_clicked)
+        
+        # Set the correct workbench active and connect it with the tab change
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
+        RibbonBar.TabChanged.connect(self.setWB)
+        self.setWB()
+        
+        # Hide the correct ok and cancel button when the form is docked or not
+        if Parameters.DOCKED_DIALOGS is True:
+            self.form.okButton.setHidden(True)
+            self.form.cancelButton.setHidden(True)
+            self.form.applyButton.setHidden(True)
+        else:
+            self.form.DockedButtonFrame.setHidden(True)
 
-            return        
+        # Set the first tab active
+        self.form.tabWidget.setCurrentIndex(0)
+        
+        # Enable drag for the listWidget.
+        #
+        # Qt6
+        try:
+            self.form.ListCategory_NP.setSupportedDragActions(Qt.DropAction.CopyAction|Qt.DropAction.MoveAction)
+            self.form.MacroList.setSupportedDragActions(Qt.DropAction.CopyAction|Qt.DropAction.MoveAction)
+        except Exception:
+            pass
+        # Qt5
+        try:
+            from PySide2 import QtWidgets
+            self.form.ListCategory_NP.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
+            self.form.ListCategory_NP.setAcceptDrops(True)            
+            self.form.ListCategory_NP.setDragEnabled(True)
+            
+            self.form.MacroList.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
+            self.form.MacroList.setAcceptDrops(True)
+            self.form.MacroList.setDragEnabled(True)
+        except Exception:
+            pass             
+        
+        # self.form.SetShortcut.keyPressEvent = lambda event: self.KeyPressEvent_Macro(event)
+        self.form.SetShortcut.installEventFilter(EventFilter_Macro(self.form))
+
+        # Restore the cursor
+        QApplication.restoreOverrideCursor()
+        
+        self.isLoaded = True
+        return        
+    
+    def KeyPressEvent_Macro(event: QKeyEvent):
+        print(event)
+        if event.matches(QKeySequence.StandardKey.Copy) or event.matches(QKeySequence.StandardKey.Paste) or event.matches(QKeySequence.StandardKey.Cut):
+            event.ignore()
+        else:
+            return event
         
     def addWorkbenches(self):
         ShadowList = []  # List to add the commands and prevent duplicates
@@ -604,10 +644,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         self.form.ListCategory_NP.addItem(Gui.getIcon("freecad"), Standard_KeyWord, [Standard_KeyWord, "Standard", "Standard"])
         self.form.ListCategory_DDB.addItem(Gui.getIcon("freecad"), Standard_KeyWord, [Standard_KeyWord, "Standard", "Standard"])
         
-        # # Add "Global" to the list for the panels
-        # Standard_KeyWord = translate("FreeCAD Ribbon", "Global")
-        # self.form.ListCategory_NP.addItem(Gui.getIcon("freecad"), Standard_KeyWord, [Standard_KeyWord, "Global", "Global"])
-        # self.form.ListCategory_DDB.addItem(Gui.getIcon("freecad"), Standard_KeyWord, [Standard_KeyWord, "Global", "Global"])
+        # Add "Macro" to the list for the panels
+        Standard_KeyWord = translate("FreeCAD Ribbon", "Macro buttons")
+        self.form.ListCategory_NP.addItem(Gui.getIcon("media-record"), Standard_KeyWord, [Standard_KeyWord, "Macro", "Macro"])
+        self.form.ListCategory_DDB.addItem(Gui.getIcon("media-record"), Standard_KeyWord, [Standard_KeyWord, "Macro", "Macro"])
 
         # Sort the workbenches according the order of tabs
         def sortWorkbenches(item):
@@ -1535,6 +1575,364 @@ class LoadDialog(AddCommands_ui.Ui_Form):
 
     # endregion---------------------------------------------------------------------------------------
     
+    # Macro commands ---------------------------------------------------------------------------------
+    def LoadMacroButtons(self):
+        preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+        ListMacroButtons = preferences.GetGroups()
+        for MacroButton in ListMacroButtons:
+            cmd = Gui.Command.get(MacroButton)
+            name = cmd.getInfo()['name']
+            menuText = cmd.getInfo()['menuText']
+            pixMap = cmd.getInfo()['pixmap']
+            self.AddMacroButtonToTable(menuText, pixMap, name)
+            
+            self.List_Commands.append(
+                [
+                    name,
+                    pixMap,
+                    menuText,
+                    "Macro",
+                    menuText,
+                ]
+            )
+        return
+    
+    def LoadMacroLists(self):
+        MacroList = []
+        MacroDirSystem = App.getUserMacroDir()        
+        for root, dirs, files in os.walk(MacroDirSystem):
+            for file in files:
+                MacroList.append(os.path.join(MacroDirSystem, file))
+
+        preferences = App.ParamGet("User parameter:BaseApp/Preferences/Macro/")
+        MacroDirUser = preferences.GetString("MacroPath")
+        if os.path.exists(MacroDirUser):
+            for root, dirs, files in os.walk(MacroDirUser):
+                for file in files:
+                    MacroList.append(os.path.join(MacroDirUser, file))
+        
+        # Add an empty item
+        self.form.SelectMacro.addItem("")
+        # Add all macros to the dropdown
+        for file in MacroList:
+            fileName = os.path.basename(file)
+            self.form.SelectMacro.addItem(fileName, file)
+        # Set the empty item current
+        self.form.SelectMacro.setCurrentText("")
+        return
+
+    def LoadIcons(self):
+        # Get the tableWidget
+        TableWidget: QTableWidget = self.form.ListMacroButtons
+        # Set the number of rows
+        NoRows = 6
+        TableWidget.setRowCount(NoRows)
+        # Set the amount of columns       
+        NoColumns = round(len(self.List_CommandIcons) / NoRows)
+        TableWidget.setColumnCount(NoColumns)
+        TableWidget.setStyleSheet("""QToolTip {
+                    background-color: #FFFFE1;
+                    color: black;
+                    border: black solid 1px;
+                    border-radius: 2px;
+                    }""")
+        TableWidget.setSelectionMode(QAbstractItemView.SelectionMode.NoSelection)
+        TableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
+        
+        
+        # Create a shadowlist to store processed items
+        shadowList = []        
+        for i1 in range(TableWidget.rowCount()):
+            # Set the row height
+            TableWidget.setRowHeight(i1, 32)
+            for i2 in range(TableWidget.columnCount()):
+                # # Set the column width
+                TableWidget.setColumnWidth(i2, 32)
+                
+                # Get the icon based on the icon list
+                icon = QIcon()
+                for item in self.List_CommandIcons:
+                    # If not already in the shadow list, continue
+                    if item[0] not in shadowList:
+                        # Add the commandname to the shadow list, so that it will be skipped next time
+                        shadowList.append(item[0])
+                        # Get the icon. If the icon is not empty, add it to a button and at that butten to the QTableWidget
+                        icon = self.ReturnCommandIcon(item[0])     
+                        if not icon.isNull() and icon is not None and icon.pixmap(64,64).toImage().bytesPerLine() >= 256:
+                            button = QToolButton()
+                            button.setIcon(icon)
+                            button.setToolTip(item[0])
+                            button.setIconSize(QSize(TableWidget.columnWidth(i2), TableWidget.columnWidth(i2)))
+                            button.setFixedSize(TableWidget.columnWidth(i2),TableWidget.rowHeight(i1))
+                            button.clicked.connect(lambda e, x=icon, y=item[0]: self.TableCellButton_Clicked(x, y))
+                            TableWidget.setCellWidget(i1, i2, button)                            
+                            break
+        
+        # Hide empty rows
+        for i1 in range(TableWidget.rowCount()):
+            # Asume that the row is empty
+            emptyRow = True
+            # Go through the cells in the row.
+            for i2 in range(TableWidget.columnCount()):
+                # Get the cell widget. When the cell widget is not none,
+                # the row is not emppty and remains visible. 
+                # This way, only complete empty rows will be hidden 
+                widget = TableWidget.cellWidget(i1, i2)
+                if widget is not None:
+                    emptyRow = False
+            if emptyRow is True:
+                TableWidget.hideRow(i1)
+        
+        # Adjust the height of the table  
+        TableWidget.setFixedHeight(TableWidget.rowHeight(1)*(TableWidget.rowCount()) + TableWidget.autoScrollMargin())
+
+        return
+    
+    def TableCellButton_Clicked(self, icon, commandName):
+        self.form.SelectIcon.setIcon(icon)
+        TableWidget: QTableWidget = self.form.ListMacroButtons
+        self.form.SelectIcon.setIconSize(QSize(TableWidget.columnWidth(0), TableWidget.columnWidth(0)))
+        self.form.SelectIcon.setObjectName(commandName)
+        return
+    
+    def addMacroButton(self):
+        if self.isLoaded:
+            # Get the filled in data
+            MacroFile = self.form.SelectMacro.currentText()
+            MenuText = self.form.SetMenuText.text()
+            ToolTip = self.form.SetToolTip.text()
+            StatusText = self.form.SetStatusText.text()
+            WhatIsThis = self.form.SetWhatIsThis.text()
+            ShortCut = self.form.SetShortcut.text()
+            Pixmap = self.form.SelectIcon.objectName()
+            
+            if MenuText == "":
+                StandardFunctions.Mbox(text=translate("FreeCAD Ribbon", "Specify the menu text first"), style=0, IconType="Warning")
+                return
+            if MacroFile == "":
+                StandardFunctions.Mbox(text=translate("FreeCAD Ribbon", "Select a macro first"), style=0, IconType="Warning")
+                return
+            if Pixmap == "":
+                StandardFunctions.Mbox(text=translate("FreeCAD Ribbon", "Select an icon first"), style=0, IconType="Warning")
+                return
+            
+            # if present get the command
+            currentRow = self.form.MacroList.currentRow()
+            macroButton = ""
+            if self.form.MacroList.currentItem() != None:
+                macroButton = self.form.MacroList.currentItem().data(Qt.ItemDataRole.UserRole)
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{macroButton}")
+            # if MenuText != preferences.GetString("Menu"):
+            if MacroFile != preferences.GetString("Script") or macroButton == "":
+                # Create a custom command with FreeCAD
+                macroButton = Gui.Command.createCustomCommand(
+                    macroFile=MacroFile,
+                    menuText=MenuText,
+                    toolTip=ToolTip,
+                    statusTip=StatusText,
+                    whatsThis=WhatIsThis,
+                    shortcut=ShortCut,
+                    pixmap=Pixmap
+                )
+                preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{macroButton}")
+                # Add the command to the listWidgets so that they can be added to the ribbon right away
+                self.AddMacroButtonToTable(MenuText, Pixmap, macroButton)
+            else:
+                self.UpdateMacroButtonTable(currentRow, MenuText, Pixmap, macroButton)
+                
+            # Store the custom command so that the command is usable and present in FreeCAD's customize menu            
+            preferences.SetString("Menu", MenuText)
+            preferences.SetString("Tooltip", ToolTip)
+            preferences.SetString("Statustip", StatusText)
+            preferences.SetString("WhatsThis", WhatIsThis)
+            preferences.SetString("Accel", ShortCut)
+            preferences.SetString("Pixmap", Pixmap)
+            preferences.SetBool("System", False)
+            preferences.SetString("Script", MacroFile)
+
+        return
+        
+    def AddMacroButtonToTable(self, Text, Pixmap, CommandName):
+        # Get the data from the parameters   
+        preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+        if CommandName in preferences.GetGroups():
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{CommandName}")
+        else:
+            return
+        
+        # Create a listwidget item
+        ListWidgetItem = QListWidgetItem()
+        ListWidgetItem.setText(Text)
+        # Set the icon
+        icon = self.ReturnCommandIcon(Pixmap)
+        if icon is None or (icon is not None and icon.isNull()):
+            icon = QIcon()
+            icon.addPixmap(QPixmap(preferences.GetString("Pixmap")))
+        if icon is not None and icon.isNull() is False:
+            ListWidgetItem.setIcon(icon)
+        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+        ListWidgetItem.setToolTip(CommandName)
+        
+        # Add the listwidget item to the listwidgets
+        self.form.CommandsAvailable_NP.addItem(ListWidgetItem)
+        self.form.MacroList.addItem(ListWidgetItem.clone())
+        # Append a clone of the item to the listwidget item list
+        self.listWidgetItems_NP.append(ListWidgetItem.clone())        
+        command = Gui.Command.get(CommandName)
+        if command is not None and len(command.getAction()) == 1:
+            # Add clones of the listWidgetItem to the other listwidgets
+            self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
+            # Append a clone of the item to the listwidget item list
+            self.listWidgetItems_DDB.append(ListWidgetItem.clone())        
+                
+        return
+    
+    def UpdateMacroButtonTable(self, row, Text, Pixmap, CommandName):
+        # Get the data from the parameters   
+        preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+        if CommandName in preferences.GetGroups():
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{CommandName}")
+        else:
+            return
+        
+        # Get the listwidget item
+        ListWidgetItem: QListWidgetItem = self.form.MacroList.item(row)
+        ListWidgetItem.setText(Text)
+        # Set the icon
+        icon = self.ReturnCommandIcon(Pixmap)
+        if icon is None or (icon is not None and icon.isNull()):
+            icon = QIcon()
+            icon.addPixmap(QPixmap(preferences.GetString("Pixmap")))
+        if icon is not None and icon.isNull() is False:
+            ListWidgetItem.setIcon(icon)
+        ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+        ListWidgetItem.setToolTip(CommandName)
+        
+        # Update the other listwidgets and their filter lists
+        for i in range(self.form.CommandsAvailable_NP.count()):
+            ListWidgetItem_NP: QListWidgetItem = self.form.CommandsAvailable_NP.item(i)
+            if ListWidgetItem_NP.data(Qt.ItemDataRole.UserRole) == CommandName:
+                ListWidgetItem_NP.setText(ListWidgetItem.text())
+                ListWidgetItem_NP.setIcon(ListWidgetItem.icon())
+                break
+        for j in range(len(self.listWidgetItems_NP)):
+            if self.listWidgetItems_NP[j].data(Qt.ItemDataRole.UserRole) == CommandName:
+                self.listWidgetItems_NP[j].setText(ListWidgetItem.text())
+                self.listWidgetItems_NP[j].setIcon(ListWidgetItem.icon())
+                break
+        for i in range(self.form.CommandsAvailable_DDB.count()):
+            ListWidgetItem_DDB: QListWidgetItem = self.form.CommandsAvailable_DDB.item(i)
+            if ListWidgetItem_DDB.data(Qt.ItemDataRole.UserRole) == CommandName:
+                self.form.CommandsAvailable_DDB.removeItemWidget(ListWidgetItem_DDB)
+                self.form.CommandsAvailable_DDB.addItem(ListWidgetItem.clone())
+                break
+        for j in range(len(self.listWidgetItems_DDB)):
+            if self.listWidgetItems_DDB[j].data(Qt.ItemDataRole.UserRole) == CommandName:
+                self.listWidgetItems_DDB[j].setText(ListWidgetItem.text())
+                self.listWidgetItems_DDB[j].setIcon(ListWidgetItem.icon())
+                break
+            
+        # Update any button in the ribbon
+        RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
+        for category in RibbonBar.findChildren(RibbonCategory):
+            for panel in category.findChildren(RibbonPanel):
+                for button in panel.findChildren(CustomControls):
+                    if button.objectName() == CommandName:
+                        commandButton = button.findChild(QToolButton, "CommandButton")                        
+                        commandButton.setIcon(icon)
+                        label = button.findChild(QLabel)  
+                        label.setText(Text)
+        return
+    
+    def removeMacroButton(self):
+        if self.isLoaded:
+            currentRow = self.form.MacroList.currentRow()
+            macroButton = self.form.MacroList.currentItem().data(Qt.ItemDataRole.UserRole)
+            
+            # Remove the macrobutton from the parameters   
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+            if macroButton in preferences.GetGroups():
+                preferences.RemGroup(macroButton)
+                App.saveParameter()
+            
+            # Update any button in the ribbon
+            RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
+            for category in RibbonBar.findChildren(RibbonCategory):
+                for panel in category.findChildren(RibbonPanel):
+                    for button in panel.findChildren(CustomControls):
+                        if button.objectName() == macroButton:
+                            button.close()
+            
+            # Remove the row frm the table
+            self.form.MacroList.setRowHidden(currentRow, True)
+            # Clear all fields
+            self.form.SelectMacro.setCurrentText("")
+            self.form.SetMenuText.clear()
+            self.form.SetToolTip.clear()
+            self.form.SetStatusText.clear()
+            self.form.SetWhatIsThis.clear()
+            self.form.SetShortcut.clear()
+            self.form.SelectIcon.setIcon(QIcon())
+        return
+    
+    def MacroListItem_clicked(self, e):
+        if type(e) == QListWidgetItem and self.isLoaded:         
+            # Get the data from the parameters   
+            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+            if e.toolTip() in preferences.GetGroups():
+                preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{e.toolTip()}")
+            else:
+                return
+            
+            # Get the macro
+            macro = preferences.GetString("Script")
+            shortcut = preferences.GetString("Accel")
+            toolTip = preferences.GetString("Tooltip")
+            menuText = preferences.GetString("Menu")
+            pixMap = preferences.GetString("Pixmap")
+            statusTip = preferences.GetString("Statustip")
+            whatsThis = preferences.GetString("WhatsThis")              
+                        
+            # Fill in the fields
+            self.form.SelectMacro.setCurrentText(macro)
+            self.form.SetMenuText.setText(menuText)
+            self.form.SetToolTip.setText(toolTip)
+            self.form.SetStatusText.setText(statusTip)
+            self.form.SetWhatIsThis.setText(whatsThis)
+            self.form.SetShortcut.setText(shortcut)
+            # Set the icon
+            icon = self.ReturnCommandIcon(e.data(Qt.ItemDataRole.UserRole))
+            if icon is None or (icon is not None and icon.isNull()):
+                icon = QIcon()
+                pixMap = QPixmap(preferences.GetString("Pixmap"))
+                icon.addPixmap(pixMap)
+            if icon is not None and icon.isNull() is False:
+                self.form.SelectIcon.setIcon(icon)
+            # Get the tableWidget
+            TableWidget: QTableWidget = self.form.ListMacroButtons
+            self.form.SelectIcon.setIconSize(QSize(TableWidget.columnWidth(0), TableWidget.columnWidth(0)))
+        return
+    
+    def BrowseMacroIcon(self):
+        # Get the file with a dialog
+        File = StandardFunctions.GetFileDialog(
+            Filter="Pictures (*.png *.svg)",
+            parent=self.form,
+            DefaultPath="",
+            SaveAs=False,
+        )
+        if File is not None and File != "" and os.path.isfile(File):
+            icon = QIcon()
+            pixMap = QPixmap(File)
+            icon.addPixmap(pixMap)
+            self.form.SelectIcon.setIcon(icon)
+            TableWidget: QTableWidget = self.form.ListMacroButtons
+            self.form.SelectIcon.setIconSize(QSize(TableWidget.columnWidth(0), TableWidget.columnWidth(0)))
+            self.form.SelectIcon.setObjectName(File)
+        return
+    
+    # endregion---------------------------------------------------------------------------------------
+        
     # region - Form controls
     def on_Cancel_Clicked(self):
         with QScopedCursorOverride():
@@ -1655,11 +2053,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     and WorkBenchName != "General"
                                     and WorkBenchName != "Standard"
                                     and WorkBenchName != "All"
+                                    and WorkBenchName != "Macro"
                                     and WorkBenchName != ""
                                 ):
-                                    WorkbenchTitle = Gui.getWorkbench(
-                                        WorkBenchName
-                                    ).MenuText
+                                    WorkbenchTitle = Gui.getWorkbench(WorkBenchName).MenuText
                                 else:
                                     WorkbenchTitle = WorkBenchName
                             except Exception as e:
@@ -1674,12 +2071,28 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                         Qt.ItemDataRole.UserRole
                                     )[2]
                                     or ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "All")
+                                    or ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "Macro")
                                 ):
                                     # Get the icon
                                     Icon = QIcon()
                                     IconName = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
                                     Icon = self.ReturnCommandIcon(CommandName=CommandName, pixmap=IconName)
-  
+                                    
+                                    # Get the data from the parameters if it is a macro button 
+                                    if CommandName.startswith("Std_Macro"):
+                                        preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+                                        if CommandName in preferences.GetGroups():
+                                            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{CommandName}")
+                                            
+                                            # Get the command info
+                                            MenuNameTranslated = preferences.GetString("Menu")
+                                            pixMap = preferences.GetString("Pixmap")
+                                            
+                                            # Set the icon
+                                            Icon = self.ReturnCommandIcon(pixMap)
+                                            if Icon is None or (Icon is not None and Icon.isNull()):                                                
+                                                Icon.addPixmap(QPixmap(preferences.GetString("Pixmap")))
+
                                     # Define a new ListWidgetItem.
                                     ListWidgetItem = QListWidgetItem()
                                     ListWidgetItem.setText(MenuNameTranslated)
@@ -1720,12 +2133,12 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             # Go through the stored listwidget items and add them to the listwidget
             for item in self.listWidgetItems_NP:
                 Allow = False
-                if SingleCommandsOnly is True:
-                    CommandName = item.data(Qt.ItemDataRole.UserRole)
+                CommandName = item.data(Qt.ItemDataRole.UserRole)
+                if SingleCommandsOnly is True:                    
                     command = Gui.Command.get(CommandName)
                     if command is not None and len(command.getAction()) == 1:
                         Allow = True
-                if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):   
+                if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True) or CommandName.startswith("Std_Macro"):   
                     try:   
                         ListWidget_Commands.addItem(item.clone()) 
                     except Exception:
@@ -1739,7 +2152,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     listWidgetItems_NP.append(item.clone())
                     CommandName = item.data(Qt.ItemDataRole.UserRole)
                     command = Gui.Command.get(CommandName)
-                    if command is not None and len(command.getAction()) == 1:
+                    if (command is not None and len(command.getAction()) == 1) or CommandName.startswith("Std_Macro"):
                         listWidgetItems_DDB.append(item.clone())
                 except Exception:
                     pass
@@ -1808,6 +2221,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 and WorkBenchName != "Global"
                                 and WorkBenchName != "General"
                                 and WorkBenchName != "Standard"
+                                and WorkBenchName != "Macro"
                                 and WorkBenchName != ""
                             ):
                                 try:
@@ -1896,10 +2310,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                     ListWidget_Commands.addItem(ListWidgetItem.clone())
                                     ShadowList.append(CommandName)
                                 
-                        if (
-                            WorkBenchName == "Global" and
-                            ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "Global")
-                        ):                                          
+                        if WorkBenchName == "Global" and ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "Global"):                                          
                             # Define a commandname for the icon
                             Icon = QIcon()
                             Icon = self.ReturnCommandIcon(CommandName=CommandName)
@@ -1930,17 +2341,58 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                                 
                                     ListWidget_Commands.addItem(ListWidgetItem.clone())
                                     ShadowList.append(CommandName)
+                        
+                        if WorkBenchName == "Macro" and ListWidget_WorkBenches.currentText() == translate("FreeCAD Ribbon", "Macro buttons"):
+                            # Get the data from the parameters   
+                            preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
+                            if CommandName in preferences.GetGroups():
+                                preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/{CommandName}")                            
+                                # Get the command info
+                                menuText = preferences.GetString("Menu")
+                                pixMap = preferences.GetString("Pixmap")
+
+                                # Create a listwidget item
+                                ListWidgetItem = QListWidgetItem()
+                                ListWidgetItem.setText(menuText)
+                                ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+                                # Set the icon
+                                Icon = self.ReturnCommandIcon(pixMap)
+                                if Icon is None or (Icon is not None and Icon.isNull()):
+                                    Icon = QIcon()
+                                    Icon.addPixmap(QPixmap(preferences.GetString("Pixmap")))
+                                if Icon is not None and Icon.isNull() is False:
+                                    ListWidgetItem.setIcon(Icon)
+                                ListWidgetItem.setData(Qt.ItemDataRole.UserRole, CommandName)
+                                ListWidgetItem.setToolTip(CommandName)
+
+                                # Add the listwidget item has an icon, add it
+                                if Icon is not None and Icon.isNull() is False:
+                                    Allow = False
+                                    if SingleCommandsOnly is True:
+                                        command = Gui.Command.get(CommandName)
+                                        if command is not None and len(command.getAction()) == 1:
+                                            Allow = True
+                                        
+                                    if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):
+                                        # Check if there is an Icon. if not add a replacement
+                                        if Icon.pixmap(64,64).toImage().bytesPerLine() < 256:
+                                            # Icon = Gui.getIcon("preferences-workbenches")
+                                            # ListWidgetItem.setIcon(Icon)
+                                            continue
+                                    
+                                        ListWidget_Commands.addItem(ListWidgetItem.clone())
+                                        ShadowList.append(CommandName)
 
         if (ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole) == "All"):
             # Go through the stored listwidget items and add them to the listwidget
             for item in self.listWidgetItems_NP:
                 Allow = False
-                if SingleCommandsOnly is True:
-                    CommandName = item.data(Qt.ItemDataRole.UserRole)
+                CommandName = item.data(Qt.ItemDataRole.UserRole)
+                if SingleCommandsOnly is True:                    
                     command = Gui.Command.get(CommandName)
                     if command is not None and len(command.getAction()) == 1:
                         Allow = True
-                if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True):      
+                if SingleCommandsOnly is False or (SingleCommandsOnly is True and Allow is True) or CommandName.startswith("Std_Macro"):
                     try:   
                         ListWidget_Commands.addItem(item.clone()) 
                     except Exception:
@@ -1954,7 +2406,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                     listWidgetItems_NP.append(item.clone())
                     CommandName = item.data(Qt.ItemDataRole.UserRole)
                     command = Gui.Command.get(CommandName)
-                    if command is not None and len(command.getAction()) == 1:
+                    if (command is not None and len(command.getAction()) == 1) or CommandName.startswith("Std_Macro"):
                         listWidgetItems_DDB.append(item.clone())
                 except Exception:
                     pass
@@ -1978,107 +2430,110 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         
         # Define an empty icon
         Icon = QIcon()
-        # Try to get the icon from the icon list first. This list is created on load and is the fasted to read
-        for item in self.List_CommandIcons:
-            if CommandName in item[0]:
-                Icon = item[1]
-                return Icon
-            if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
-                for (DropDownCommand, Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
-                    if DropDownCommand == CommandName and Commands[0][0] == item[0]:
-                        Icon = item[1]
-
-        # If the icon is still empty, try to get the icon from file
-        if Icon is None or (Icon is not None and Icon.isNull()):            
-            FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
-            for root, dirs, files in os.walk(FreeCAD_Icons):
-                for fileName in files:
-                    if CommandName in fileName:
-                        Icon = QIcon()
-                        Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
-                        # Add the icons to open the dialog faster a second time
-                        item = [CommandName, Icon]
-                        self.List_CommandIcons.append(item)
-                        
-                        # Print a message when debug mode is enabled
-                        if Parameters.DEBUG_MODE:
-                            print(f"{fileName} created from resources")
-                        return Icon
-                    
-                    if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
-                        for (DropDownCommand,Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
-                            if DropDownCommand == CommandName and Commands[0][0] in fileName:
-                                Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
-                                # Add the icons to open the dialog faster a second time
-                                item = [CommandName, Icon]
-                                self.List_CommandIcons.append(item)
-                                
-                                # Print a message when debug mode is enabled
-                                if Parameters.DEBUG_MODE:
-                                    print(f"{fileName} created from resources")
-                                return Icon
-                                   
-            # If the icon is still empty, try to get it from FreeCAD. This will only work with loaded workbenches.
-            # Therefore this is the last resort
-            if Icon is None or (Icon is not None and Icon.isNull()):
-                # Get the standard pixmap, if a pixmap is not provided
-                if pixmap == "":
-                    pixmap = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
-                Icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap)
+        if os.path.exists(CommandName):
+            Icon.addPixmap(QPixmap(CommandName))
+        if Icon is None or (Icon is not None and Icon.isNull()): 
+            # Try to get the icon from the icon list first. This list is created on load and is the fasted to read
+            for item in self.List_CommandIcons:
+                if CommandName in item[0]:
+                    Icon = item[1]
+                    return Icon
                 if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
-                        for (DropDownCommand,Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
-                            if DropDownCommand == CommandName:
-                                pixmap = StandardFunctions.CommandInfoCorrections(Commands[0][0])["pixmap"]
-                                Icon = StandardFunctions.returnQiCons_Commands(Commands[0][0], pixmap)
-                                # Add the icons to open the dialog faster a second time
-                                item = [Commands[0][0], Icon]
-                                self.List_CommandIcons.append(item)
-                                
-                                if Parameters.DEBUG_MODE:
-                                    print(f"Icon for {Commands[0][0]} retrieved from FreeCAD")
-                                return Icon
+                    for (DropDownCommand, Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
+                        if DropDownCommand == CommandName and Commands[0][0] == item[0]:
+                            Icon = item[1]
 
-                if Icon is None or (Icon is not None and Icon.isNull()):
-                    if Parameters.DEBUG_MODE is True:
-                        StandardFunctions.Print(
-                            f"An icon retrieved from data file for '{CommandName}'"
-                        )
-                    DataFile = os.path.join(
-                        ConfigDirectory, "RibbonDataFile.dat"
-                    )
-
-                    if os.path.exists(DataFile) is True:
-                        Data = {}
-                        # read ribbon structure from JSON file
-                        with open(DataFile, "r") as file:
-                            Data.update(json.load(file))
-                        file.close()
-                        try:
-                            # Load the lists for the deserialized icons
-                            for IconItem in Data["Command_Icons"]:
-                                # This works only for FreeCAD Commands
-                                if CommandName == IconItem[0]:
-                                    Icon: QIcon = (
-                                        Serialize_Ribbon.deserializeIcon(
-                                            IconItem[1]
-                                        )
-                                    )
-                                    # Print a message when debug mode is enabled
-                                    if Parameters.DEBUG_MODE:
-                                        print(f"Icon for {CommandName} retrieved from data file")
-                                    
+            # If the icon is still empty, try to get the icon from file
+            if Icon is None or (Icon is not None and Icon.isNull()):            
+                FreeCAD_Icons = os.path.abspath(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons"))
+                for root, dirs, files in os.walk(FreeCAD_Icons):
+                    for fileName in files:
+                        if CommandName in fileName:
+                            Icon = QIcon()
+                            Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
+                            # Add the icons to open the dialog faster a second time
+                            item = [CommandName, Icon]
+                            self.List_CommandIcons.append(item)
+                            
+                            # Print a message when debug mode is enabled
+                            if Parameters.DEBUG_MODE:
+                                print(f"{fileName} created from resources")
+                            return Icon
+                        
+                        if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
+                            for (DropDownCommand,Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
+                                if DropDownCommand == CommandName and Commands[0][0] in fileName:
+                                    Icon.addPixmap(QPixmap(os.path.join(root, fileName)))
                                     # Add the icons to open the dialog faster a second time
-                                    item = [IconItem[0], Icon]
+                                    item = [CommandName, Icon]
                                     self.List_CommandIcons.append(item)
                                     
+                                    # Print a message when debug mode is enabled
+                                    if Parameters.DEBUG_MODE:
+                                        print(f"{fileName} created from resources")
                                     return Icon
-                        except Exception as e:
-                            if Parameters.DEBUG_MODE is True:
-                                StandardFunctions.Print(
-                                    f"Trying the get an icon for {CommandName}\n{e}",
-                                    "Warning",
-                                )
-                            pass
+                                    
+                # If the icon is still empty, try to get it from FreeCAD. This will only work with loaded workbenches.
+                # Therefore this is the last resort
+                if Icon is None or (Icon is not None and Icon.isNull()):
+                    # Get the standard pixmap, if a pixmap is not provided
+                    if pixmap == "":
+                        pixmap = StandardFunctions.CommandInfoCorrections(CommandName)["pixmap"]
+                    Icon = StandardFunctions.returnQiCons_Commands(CommandName, pixmap)
+                    if (str(CommandName).endswith("_ddb") and "dropdownButtons" in RibbonBar.workBenchDict):
+                            for (DropDownCommand,Commands) in RibbonBar.workBenchDict["dropdownButtons"].items():
+                                if DropDownCommand == CommandName:
+                                    pixmap = StandardFunctions.CommandInfoCorrections(Commands[0][0])["pixmap"]
+                                    Icon = StandardFunctions.returnQiCons_Commands(Commands[0][0], pixmap)
+                                    # Add the icons to open the dialog faster a second time
+                                    item = [Commands[0][0], Icon]
+                                    self.List_CommandIcons.append(item)
+                                    
+                                    if Parameters.DEBUG_MODE:
+                                        print(f"Icon for {Commands[0][0]} retrieved from FreeCAD")
+                                    return Icon
+
+                    if Icon is None or (Icon is not None and Icon.isNull()):
+                        if Parameters.DEBUG_MODE is True:
+                            StandardFunctions.Print(
+                                f"An icon retrieved from data file for '{CommandName}'"
+                            )
+                        DataFile = os.path.join(
+                            ConfigDirectory, "RibbonDataFile.dat"
+                        )
+
+                        if os.path.exists(DataFile) is True:
+                            Data = {}
+                            # read ribbon structure from JSON file
+                            with open(DataFile, "r") as file:
+                                Data.update(json.load(file))
+                            file.close()
+                            try:
+                                # Load the lists for the deserialized icons
+                                for IconItem in Data["Command_Icons"]:
+                                    # This works only for FreeCAD Commands
+                                    if CommandName == IconItem[0]:
+                                        Icon: QIcon = (
+                                            Serialize_Ribbon.deserializeIcon(
+                                                IconItem[1]
+                                            )
+                                        )
+                                        # Print a message when debug mode is enabled
+                                        if Parameters.DEBUG_MODE:
+                                            print(f"Icon for {CommandName} retrieved from data file")
+                                        
+                                        # Add the icons to open the dialog faster a second time
+                                        item = [IconItem[0], Icon]
+                                        self.List_CommandIcons.append(item)
+                                        
+                                        return Icon
+                            except Exception as e:
+                                if Parameters.DEBUG_MODE is True:
+                                    StandardFunctions.Print(
+                                        f"Trying the get an icon for {CommandName}\n{e}",
+                                        "Warning",
+                                    )
+                                pass
         if Icon is None or (Icon is not None and Icon.isNull()):
             Icon = None
         return Icon
@@ -2615,6 +3070,8 @@ class EventInspector_Ribbon_2(QObject):
     pos = None
     ButtonPressed = False
     ButtonReleased = True
+    MacroShortCutKey = ""
+    MacroShortCutKeyModifier = ""
     
     def __init__(self, parent):
         super(EventInspector_Ribbon_2, self).__init__(parent)
@@ -2633,6 +3090,50 @@ class EventInspector_Ribbon_2(QObject):
             if event.button() == Qt.MouseButton.LeftButton:
                 self.ButtonPressed = False
         # -----------------------------------------------------------------------
+        
+        # if event.type() == QEvent.Type.KeyPress:
+        #     try:
+        #         self.MacroShortCutKey = ""
+        #         self.MacroShortCutKeyModifier = ""
+        #         form = obj 
+        #         if form.SetShortcut.hasFocus():                    
+        #             # if modifiers are set, store its name
+        #             if event.modifiers():                
+        #                 # Get the name of modifier key
+        #                 for keyModifierName, keyModifierItem in Qt.KeyboardModifier._member_map_.items():
+        #                     if event.modifiers() == keyModifierItem:
+        #                         self.MacroShortCutKeyModifier = keyModifierName.removesuffix("Modifier")
+        #             else:
+        #                 self.MacroShortCutKeyModifier = ""
+        #             # Get the key name
+        #             for keyName, keyItem in Qt.Key._member_map_.items():
+        #                 if event.key() == keyItem and keyName.split("_")[1].lower() != self.MacroShortCutKeyModifier.lower():
+        #                     self.MacroShortCutKey = keyName.split("_")[1]                 
+        #                     return QObject.eventFilter(self, obj, event)                  
+        #     except:  # noqa: E722
+        #         if Parameters.DEBUG_MODE:
+        #             StandardFunctions.Print(f"Ribbon UI:\n{traceback.format_exc()}", "Warning")
+        #         return QObject.eventFilter(self, obj, event)
+        
+        # if event.type() == QEvent.Type.KeyRelease:
+        #     try:
+        #         form = obj                
+        #         if form.SetShortcut.hasFocus() and self.MacroShortCutKey != "":
+        #             if event.key() == Qt.Key.Key_Backspace or event.key == Qt.Key.Key_Delete:
+        #                 form.SetShortcut.clear()
+        #                 self.MacroShortCutKey = ""
+        #                 self.MacroShortCutKeyModifier = ""
+        #                 return QObject.eventFilter(self, obj, event)
+                    
+        #             text = self.MacroShortCutKey.upper()
+        #             if self.MacroShortCutKeyModifier != "":
+        #                 text = f"{self.MacroShortCutKeyModifier}+{self.MacroShortCutKey.upper()}"
+        #             form.SetShortcut.setText(text)
+        #             return QObject.eventFilter(self, obj, event)
+        #     except:  # noqa: E722
+        #         if Parameters.DEBUG_MODE:
+        #             StandardFunctions.Print(f"Ribbon UI:\n{traceback.format_exc()}", "Warning")
+        #         return False
         
         if event.type() == QEvent.Type.Drop and self.dragEntered is True:
             count = 0
@@ -2702,3 +3203,55 @@ class EventInspector_Ribbon_2(QObject):
             # mw.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         return False
 
+class EventFilter_Macro(QObject):
+    def __init__(self, parent):
+        super(EventFilter_Macro, self).__init__(parent)
+
+    def eventFilter(self, obj, event: QEvent):
+        if event.type() == QEvent.Type.KeyPress:
+            if event.matches(QKeySequence.StandardKey.Paste):
+                return True
+            if event.matches(QKeySequence.StandardKey.Backspace) or event.matches(QKeySequence.StandardKey.Delete):
+                obj.clear()
+                return True
+                
+            # if modifiers are set, store its name
+            MacroShortCutKeyModifier = ""
+            if event.modifiers():                
+                # Get the name of modifier key
+                for keyModifierName, keyModifierItem in Qt.KeyboardModifier._member_map_.items():
+                    if event.modifiers() == keyModifierItem:
+                        MacroShortCutKeyModifier = keyModifierName.removesuffix("Modifier")
+            
+            # Get the key name
+            for keyName, keyItem in Qt.Key._member_map_.items():
+                if event.key() == keyItem and keyName.split("_")[1].lower() != MacroShortCutKeyModifier.lower():
+                    MacroShortCutKey = keyName.split("_")[1]                 
+                    text = MacroShortCutKey.upper()
+                    if len(text) > 1:
+                        return True
+                                        
+                    if MacroShortCutKeyModifier != "":                                    
+                        if "control" in MacroShortCutKeyModifier.lower():
+                            MacroShortCutKeyModifier = "CTRL"
+                        if "shift" in MacroShortCutKeyModifier.lower():
+                            MacroShortCutKeyModifier = "SHFT"
+                        if "alt" in MacroShortCutKeyModifier.lower():
+                            MacroShortCutKeyModifier = "ALT"
+                        
+                        text = f"{MacroShortCutKeyModifier}+{MacroShortCutKey.upper()}"
+                    else:
+                        text = text[0]
+                    obj.setText(text)
+                    return True
+            return QObject.eventFilter(self, obj, event) 
+
+        
+        if event.type() == QEvent.Type.KeyRelease:
+            if event.matches(QKeySequence.StandardKey.Copy):
+                obj.setText("CTRL+C")
+            if event.matches(QKeySequence.StandardKey.Paste):
+                obj.setText("CTRL+V")
+            if event.matches(QKeySequence.StandardKey.Cut):
+                obj.setText("CTRL+X")
+        return QObject.eventFilter(self, obj, event)
