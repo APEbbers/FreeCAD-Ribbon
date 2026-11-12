@@ -595,14 +595,19 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         # Qt6
         try:
             self.form.ListCategory_NP.setSupportedDragActions(Qt.DropAction.CopyAction|Qt.DropAction.MoveAction)
+            self.form.MacroList.setSupportedDragActions(Qt.DropAction.CopyAction|Qt.DropAction.MoveAction)
         except Exception:
             pass
         # Qt5
         try:
             from PySide2 import QtWidgets
             self.form.ListCategory_NP.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
-            self.form.ListCategory_NP.setAcceptDrops(True)
+            self.form.ListCategory_NP.setAcceptDrops(True)            
             self.form.ListCategory_NP.setDragEnabled(True)
+            
+            self.form.MacroList.setDragDropMode(QtWidgets.QAbstractItemView.DragDrop)
+            self.form.MacroList.setAcceptDrops(True)
+            self.form.MacroList.setDragEnabled(True)
         except Exception:
             pass             
         

@@ -869,6 +869,12 @@
             <property name="frameShape">
              <enum>QFrame::Shape::Box</enum>
             </property>
+            <property name="dragEnabled">
+             <bool>true</bool>
+            </property>
+            <property name="dragDropMode">
+             <enum>QAbstractItemView::DragDropMode::DragDrop</enum>
+            </property>
             <property name="supportedDragActions">
              <set>Qt::DropAction::IgnoreAction</set>
             </property>

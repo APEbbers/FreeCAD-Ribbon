@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'AddCommandsAAWlMq.ui'
+## Form generated from reading UI file 'AddCommandsFTmTbM.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.12.0
 ##
@@ -470,6 +470,8 @@ class Ui_Form(object):
         self.MacroList.setSizePolicy(sizePolicy6)
         self.MacroList.setMaximumSize(QSize(16777215, 300))
         self.MacroList.setFrameShape(QFrame.Shape.Box)
+        self.MacroList.setDragEnabled(True)
+        self.MacroList.setDragDropMode(QAbstractItemView.DragDropMode.DragDrop)
         self.MacroList.setSupportedDragActions(Qt.DropAction.IgnoreAction)
 
         self.gridLayout_10.addWidget(self.MacroList, 0, 0, 1, 1)
