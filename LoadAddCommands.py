@@ -25,8 +25,8 @@ import FreeCAD as App  # pyright: ignore[reportMissingModuleSource]
 import FreeCADGui as Gui  # pyright: ignore[reportMissingModuleSource]
 import os
 
-from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
-from PySide6.QtWidgets import (
+from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
+from PySide.QtWidgets import (
     QTabWidget,
     QSlider,
     QSpinBox,
@@ -50,7 +50,7 @@ from PySide6.QtWidgets import (
     QAbstractScrollArea,
     QAbstractItemView,    
 )
-from PySide6.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent, QCursor, QKeyEvent, QKeySequence
+from PySide.QtGui import QIcon, QPixmap, QDragEnterEvent, QDragLeaveEvent, QDropEvent, QCursor, QKeyEvent, QKeySequence
 
 import sys
 import json
@@ -1849,7 +1849,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             currentRow = self.form.MacroList.currentRow()
             macroButton = self.form.MacroList.currentItem().data(Qt.ItemDataRole.UserRole)
             
-            # Get the data from the parameters   
+            # Remove the macrobutton from the parameters   
             preferences = App.ParamGet(f"User parameter:BaseApp/Macro/Macros/")
             if macroButton in preferences.GetGroups():
                 preferences.RemGroup(macroButton)
