@@ -1824,10 +1824,7 @@ class ModernMenu(RibbonBar):
                         
                 # Add a separator
                 self.contextMenu.addSeparator()
-                
-                # Add a separator
-                self.contextMenu.addSeparator()
-                
+
                 # Add a menu to select tabs to be shown
                 menu = StayOpenMenu(self.contextMenu)
                 menu.setObjectName("TabsMenu")
@@ -1839,34 +1836,6 @@ class ModernMenu(RibbonBar):
                 SetTabAct.setText(translate("FreeCAD Ribbon", "Show/hide tabs..."))
                 
                 # Add a menu to select toolbars to be shown
-                #
-                # Store the toolbar names
-                workBench = Gui.activeWorkbench()
-                Toolbar_Names = workBench.listToolbars()
-                # Fill the toolbar menu with actions                     
-                menu = StayOpenMenu(mw)
-                for Toolbar_Name in Toolbar_Names:
-                    Action = self.createAction_ToolBar(Toolbar_Name, menu)
-                    menu.addAction(Action)
-                SetToolbarAct = self.contextMenu.addMenu(menu)
-                SetToolbarAct.setText(translate("FreeCAD Ribbon", "Show/hide toolbars..."))
-                
-                # Add a menu to select panels to be shown
-                #
-                # Get the active workbench
-                workBench = Gui.activeWorkbench()
-                # Store the panel names
-                panel_Names = []
-                for dockWidget in  mw.findChildren(QDockWidget):
-                    panel_Names.append(dockWidget.objectName())
-                menu = StayOpenMenu(mw)
-                for Panel_Name in panel_Names:
-                    Action = self.createAction_DockWidget(Panel_Name, menu)
-                    menu.addAction(Action)
-                SetPanelAct = self.contextMenu.addMenu(menu)
-                SetPanelAct.setText(translate("FreeCAD Ribbon", "Show/hide panels..."))
-                
-                 # Add a menu to select toolbars to be shown
                 #
                 # Store the toolbar names
                 workBench = Gui.activeWorkbench()
