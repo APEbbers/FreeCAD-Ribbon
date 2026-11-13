@@ -54,7 +54,8 @@
                             "text": "",
                             "icon": "Part_Shapebuilder"
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "Part Tools": {
                     "commands": {
@@ -79,11 +80,11 @@
                             "text": ""
                         },
                         "Part_Fillet": {
-                            "size": "small",
+                            "size": "large",
                             "text": ""
                         },
                         "Part_Chamfer": {
-                            "size": "small",
+                            "size": "large",
                             "text": ""
                         },
                         "Part_MakeFace": {
@@ -148,7 +149,8 @@
                         "Part_CrossSections",
                         "Part_ProjectionOnSurface",
                         "Part_ColorPerFace"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Boolean Tools": {
                     "commands": {
@@ -187,6 +189,9 @@
                         "Part_Defeaturing": {
                             "size": "small",
                             "text": ""
+                        },
+                        "Part_LinkArrays": {
+                            "size": ""
                         }
                     },
                     "order": [
@@ -199,10 +204,12 @@
                         "Part_CompSplitFeatures",
                         "7_separator_PartWorkbench",
                         "Part_CheckGeometry",
-                        "Part_Defeaturing"
-                    ]
+                        "Part_Defeaturing",
+                        "Part_LinkArrays"
+                    ],
+                    "Enabled": true
                 },
-                "Individual views": {
+                "Individual Views": {
                     "order": [
                         "Isometric",
                         "Front",
@@ -279,7 +286,8 @@
                         "Std_Group",
                         "Std_LinkActions",
                         "Std_VarSet"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -315,17 +323,60 @@
                         "Std_BoxElementSelection",
                         "Std_BoxSelection",
                         "Std_WhatsThis"
-                    ]
+                    ],
+                    "Enabled": true
+                },
+                "Arrays_newPanel": {
+                    "order": [
+                        "Part_LinkArrayLinear",
+                        "Part_LinkArrayCircular",
+                        "Part_LinkArrayPolar",
+                        "Part_LinkArrayPoint",
+                        "Part_LinkArrayPath"
+                    ],
+                    "commands": {
+                        "Part_LinkArrayCircular": {
+                            "size": "large",
+                            "text": "Circular Link Array",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "Part_LinkArrayLinear": {
+                            "size": "large",
+                            "text": "Linear Link Array",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "Part_LinkArrayPath": {
+                            "size": "small",
+                            "text": "Path Link Array",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "Part_LinkArrayPoint": {
+                            "size": "small",
+                            "text": "Point Link Array",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "Part_LinkArrayPolar": {
+                            "size": "small",
+                            "text": "Polar Link Array",
+                            "icon": "",
+                            "IsExtra": true
+                        }
+                    },
+                    "Enabled": true
                 },
                 "order": [
                     "Structure",
                     "Solids",
                     "Part Tools",
+                    "Arrays_newPanel",
                     "Boolean Tools",
                     "Tools_newPanel"
                 ]
-            },
-            "Enabled": true
+            }
         }
     }
 }

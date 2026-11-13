@@ -243,41 +243,7 @@
                     ],
                     "Enabled": true
                 },
-                "Patterns_newPanel": {
-                    "order": [
-                        "Draft_OrthoArray",
-                        "Draft_CircularArray",
-                        "Draft_Mirror",
-                        "Draft_ArrayTools"
-                    ],
-                    "commands": {
-                        "Draft_ArrayTools": {
-                            "size": "small",
-                            "text": "Array...",
-                            "icon": "",
-                            "IsExtra": true
-                        },
-                        "Draft_OrthoArray": {
-                            "size": "large",
-                            "text": "Array",
-                            "icon": "",
-                            "IsExtra": true
-                        },
-                        "Draft_CircularArray": {
-                            "size": "large",
-                            "text": "Circular Array",
-                            "icon": "",
-                            "IsExtra": true
-                        },
-                        "Draft_Mirror": {
-                            "size": "large",
-                            "text": "Mirror",
-                            "icon": "",
-                            "IsExtra": true
-                        }
-                    }
-                },
-                "Array_newPanel": {
+                "Arrays_newPanel": {
                     "order": [
                         "Part_LinkArrayLinear",
                         "Part_LinkArrayCircular",
