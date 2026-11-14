@@ -48,7 +48,8 @@
                             "text": "",
                             "icon": "Sketcher_MirrorSketch"
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "Edit Mode": {
                     "commands": {
@@ -69,7 +70,8 @@
                         "Sketcher_LeaveSketch",
                         "Sketcher_ViewSketch",
                         "Sketcher_ViewSection"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Geometries": {
                     "commands": {
@@ -130,7 +132,8 @@
                         "Sketcher_CompCreateBSpline",
                         "Sketcher_ToggleConstruction",
                         "Sketcher_CreateText"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Constraints": {
                     "commands": {
@@ -189,9 +192,9 @@
                         "Sketcher_ConstrainEqual",
                         "Sketcher_ConstrainSymmetric",
                         "Sketcher_ConstrainBlock",
-                        "Sketcher_CompToggleConstraints",
-                        "Sketcher_ConstrainGroup"
-                    ]
+                        "Sketcher_CompToggleConstraints"
+                    ],
+                    "Enabled": true
                 },
                 "Sketcher Tools": {
                     "commands": {
@@ -247,7 +250,8 @@
                         "Sketcher_RemoveAxesAlignment",
                         "Sketcher_CarbonCopy",
                         "Sketcher_CompExternal"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "B-Spline Tools": {
                     "commands": {
@@ -283,7 +287,8 @@
                         "Sketcher_CompModifyKnotMultiplicity",
                         "Sketcher_BSplineInsertKnot",
                         "Sketcher_JoinCurves"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Visual Helpers": {
                     "commands": {
@@ -326,82 +331,61 @@
                         }
                     },
                     "order": [
+                        "Sketcher_RestoreInternalAlignmentGeometry",
                         "Sketcher_SelectConstraints",
                         "Sketcher_SelectElementsAssociatedWithConstraints",
                         "Sketcher_ArcOverlay",
                         "Sketcher_CompBSplineShowHideGeometryInformation",
-                        "Sketcher_RestoreInternalAlignmentGeometry",
                         "Sketcher_SwitchVirtualSpace",
                         "BIM_Offset2D"
-                    ]
-                },
-                "Sketcher edit tools": {
-                    "order": [
-                        "Sketcher_Grid",
-                        "Sketcher_Snap"
                     ],
-                    "commands": {
-                        "Sketcher_Grid": {
-                            "size": "large",
-                            "text": "",
-                            "icon": ""
-                        },
-                        "Sketcher_Snap": {
-                            "size": "small",
-                            "text": "",
-                            "icon": ""
-                        },
-                        "Sketcher_RenderingOrder": {
-                            "size": "small",
-                            "text": "",
-                            "icon": ""
-                        }
-                    }
+                    "Enabled": true
                 },
-                "Individual views": {
+                "Individual Views": {
                     "order": [
-                        "Isometric",
-                        "Front",
-                        "Top",
-                        "Right",
-                        "Rear",
-                        "Bottom",
-                        "Left"
+                        "All",
+                        "Std_ViewIsometric",
+                        "Std_ViewFront",
+                        "Std_ViewTop",
+                        "Std_ViewRight",
+                        "Std_ViewRear",
+                        "Std_ViewBottom",
+                        "Std_ViewLeft"
                     ],
                     "commands": {
                         "Std_ViewIsometric": {
                             "size": "small",
-                            "text": "",
+                            "text": "&Isometric",
                             "icon": "view-axonometric"
                         },
                         "Std_ViewFront": {
                             "size": "small",
-                            "text": "",
+                            "text": "Front",
                             "icon": "view-front"
                         },
                         "Std_ViewTop": {
                             "size": "small",
-                            "text": "",
+                            "text": "Top",
                             "icon": "view-top"
                         },
                         "Std_ViewRight": {
                             "size": "small",
-                            "text": "",
+                            "text": "Right",
                             "icon": "view-right"
                         },
                         "Std_ViewRear": {
                             "size": "small",
-                            "text": "",
+                            "text": "Rear",
                             "icon": "view-rear"
                         },
                         "Std_ViewBottom": {
                             "size": "small",
-                            "text": "",
+                            "text": "Bottom",
                             "icon": "view-bottom"
                         },
                         "Std_ViewLeft": {
                             "size": "small",
-                            "text": "",
+                            "text": "Left",
                             "icon": "view-left"
                         }
                     }
@@ -440,7 +424,8 @@
                         "Std_Group",
                         "Std_LinkActions",
                         "Std_VarSet"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -477,10 +462,11 @@
                         "Std_BoxElementSelection",
                         "Std_BoxSelection",
                         "Std_WhatsThis"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "order": [
-                    "Individual views",
+                    "Individual Views",
                     "Structure",
                     "Sketcher",
                     "Edit Mode",
@@ -488,11 +474,9 @@
                     "Constraints",
                     "Sketcher Tools",
                     "B-Spline Tools",
-                    "Visual Helpers",
-                    "Sketcher edit tools"
+                    "Visual Helpers"
                 ]
-            },
-            "Enabled": true
-        }
+            }
+        },
     }
 }
