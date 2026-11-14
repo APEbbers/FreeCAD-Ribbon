@@ -9005,7 +9005,12 @@ class ModernMenu(RibbonBar):
                                     
                             # add the title 
                             if item == "title":
+                                StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "title"], default="")
                                 workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"]
+                            # add the title 
+                            if item == "Enabled":
+                                StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "Enabled"], default=True)
+                                workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["Enabled"] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["Enabled"]
         
         # Check if there are workbenches and toolbars in the ribbon structure
         if "workbenches" in Dict and WorkBenchName == "":
