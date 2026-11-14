@@ -22,8 +22,8 @@
 import FreeCAD as App
 import FreeCADGui as Gui
 import os
-from PySide.QtGui import QIcon, QPixmap, QAction, QGuiApplication
-from PySide.QtWidgets import (
+from PySide6.QtGui import QIcon, QPixmap, QAction, QGuiApplication
+from PySide6.QtWidgets import (
     QListWidgetItem,
     QTableWidgetItem,
     QListWidget,
@@ -43,7 +43,7 @@ from PySide.QtWidgets import (
     QDockWidget,
     QMainWindow,
 )
-from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
+from PySide6.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent, QEventLoop
 
 import sys
 import json
@@ -3081,17 +3081,8 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                         # Define the order based on the order in this table widget
                         Order = []
                         for j in range(self.form.CommandTable_RD.rowCount()):
-                            if (
-                                QTableWidgetItem(
-                                    self.form.CommandTable_RD.item(j, 0)
-                                ).data(Qt.ItemDataRole.UserRole)
-                                != ""
-                            ):
-                                Order.append(
-                                    QTableWidgetItem(
-                                        self.form.CommandTable_RD.item(j, 0)
-                                    ).data(Qt.ItemDataRole.UserRole)
-                                )
+                            if self.form.CommandTable_RD.item(j, 0).data(Qt.ItemDataRole.UserRole) != "":
+                                Order.append(self.form.CommandTable_RD.item(j, 0).data(Qt.ItemDataRole.UserRole))
 
                         # Add or update the dict for the Ribbon command panel
                         StandardFunctions.add_keys_nested_dict(

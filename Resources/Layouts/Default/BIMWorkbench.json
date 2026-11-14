@@ -1,6 +1,5 @@
 {
-    "workbenches": {
-        "BIMWorkbench": {
+    "BIMWorkbench": {
             "toolbars": {
                 "Drafting Tools": {
                     "commands": {
@@ -67,9 +66,24 @@
                         "BIM_SplineTools": {
                             "size": "small",
                             "text": ""
+                        },
+                        "Draft Snap_ddb": {
+                            "size": "large",
+                            "text": "Draft Snap",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "Draft_ToggleGrid": {
+                            "size": "small",
+                            "text": "Toggle Grid",
+                            "icon": "",
+                            "IsExtra": true
                         }
                     },
                     "order": [
+                        "Draft Snap_ddb",
+                        "Draft_ToggleGrid",
+                        "1_separator_BIMWorkbench",
                         "BIM_Sketch",
                         "BIM_ArcTools",
                         "BIM_SplineTools",
@@ -81,7 +95,8 @@
                         "Draft_Polygon",
                         "Draft_Point",
                         "Draft_Fillet"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Draft Snap": {
                     "commands": {
@@ -167,7 +182,8 @@
                         "Draft_Snap_WorkingPlane",
                         "Draft_Snap_Dimensions",
                         "Draft_ToggleGrid"
-                    ]
+                    ],
+                    "Enabled": false
                 },
                 "3D/BIM Tools": {
                     "commands": {
@@ -288,7 +304,8 @@
                         "Arch_Rebar",
                         "BIM_GenericTools",
                         "BIM_Covering"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Annotation Tools": {
                     "commands": {
@@ -372,7 +389,8 @@
                         "Draft_Label",
                         "Draft_Hatch"
                     ],
-                    "title": "Annotation Tools"
+                    "title": "Annotation Tools",
+                    "Enabled": true
                 },
                 "General Tools": {
                     "commands": {
@@ -424,7 +442,8 @@
                         "Draft_Scale",
                         "Draft_Mirror"
                     ],
-                    "title": "General Tools"
+                    "title": "General Tools",
+                    "Enabled": true
                 },
                 "2D Tools": {
                     "commands": {
@@ -466,17 +485,21 @@
                         },
                         "Draft_Edit": {
                             "size": "small"
+                        },
+                        "BIM_Trimex": {
+                            "size": "small"
                         }
                     },
                     "order": [
                         "BIM_OffsetTools",
-                        "Draft_Trimex",
                         "Draft_Join",
                         "Draft_Split",
                         "Draft_Stretch",
                         "Draft_Draft2Sketch",
-                        "Draft_Edit"
-                    ]
+                        "Draft_Edit",
+                        "BIM_Trimex"
+                    ],
+                    "Enabled": true
                 },
                 "Object Tools": {
                     "commands": {
@@ -502,7 +525,8 @@
                         "Arch_Remove",
                         "Draft_Upgrade",
                         "Draft_Downgrade"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "3D Tools": {
                     "commands": {
@@ -553,14 +577,18 @@
                         "BIM_BooleanTools": {
                             "size": "large",
                             "text": ""
+                        },
+                        "BIM_ExtrudeTools": {
+                            "size": "small"
                         }
                     },
                     "order": [
                         "BIM_BooleanTools",
                         "Arch_CutPlane",
-                        "BIM_Extrude",
-                        "BIM_ArrayTools"
-                    ]
+                        "BIM_ArrayTools",
+                        "BIM_ExtrudeTools"
+                    ],
+                    "Enabled": true
                 },
                 "Manage Tools": {
                     "commands": {
@@ -635,9 +663,10 @@
                         "BIM_IfcManageTools",
                         "BIM_ReportTools",
                         "Draft_AnnotationStyleEditor"
-                    ]
+                    ],
+                    "Enabled": true
                 },
-                "Individual views": {
+                "Individual Views": {
                     "order": [
                         "Isometric",
                         "Front",
@@ -718,7 +747,8 @@
                             "size": "small",
                             "text": ""
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -754,7 +784,8 @@
                         "Std_BoxElementSelection",
                         "Std_BoxSelection",
                         "Std_WhatsThis"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "order": [
                     "Structure",
@@ -769,8 +800,70 @@
                     "Manage Tools",
                     "Tools_newPanel"
                 ]
-            },
-            "Enabled": true
-        }
+            }
+        },
+    "dropdownButtons": {
+        "Draft Snap_ddb": [
+            [
+                "Draft_Snap_Angle",
+                "DraftWorkbench"
+            ],
+            [
+                "Draft_Snap_Center",
+                "DraftWorkbench"
+            ],
+            [
+                "Draft_Snap_Dimensions",
+                "DraftWorkbench"
+            ],
+            [
+                "Draft_Snap_Endpoint",
+                "DraftWorkbench"
+            ],
+            [
+                "Draft_Snap_Extension",
+                "DraftWorkbench"
+            ],
+            [
+                "Draft_Snap_Grid",
+                "DraftWorkbench"
+            ],
+            [
+                "Draft_Snap_Intersection",
+                "DraftWorkbench"
+            ],
+            [
+                "Draft_Snap_Lock",
+                "DraftWorkbench"
+            ],
+            [
+                "Draft_Snap_Midpoint",
+                "DraftWorkbench"
+            ],
+            [
+                "Draft_Snap_Near",
+                "DraftWorkbench"
+            ],
+            [
+                "Draft_Snap_Ortho",
+                "DraftWorkbench"
+            ],
+            [
+                "Draft_Snap_Parallel",
+                "DraftWorkbench"
+            ],
+            [
+                "Draft_Snap_Perpendicular",
+                "DraftWorkbench"
+            ],
+            [
+                "Draft_Snap_Special",
+                "DraftWorkbench"
+            ],
+            [
+                "Draft_Snap_WorkingPlane",
+                "DraftWorkbench"
+            ]
+        ]
     }
 }
