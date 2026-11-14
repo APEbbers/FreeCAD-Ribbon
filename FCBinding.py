@@ -8917,7 +8917,10 @@ class ModernMenu(RibbonBar):
                             if Toolbar.lower() == item.lower():
                                 tempList.append(Toolbar)
                         if item.endswith("_newPanel") or item.endswith("_custom"):
-                            tempList.append(item)     
+                            tempList.append(item)
+                if ToolbarName == "enabled":
+                     tempDict["workbenches"][WorkBenchName]["toolbars"][ToolbarName] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolbarName]
+        
         
         # Update the customToolbar dict with the latest toolbar names as well
         if "customToolbars" in Dict and WorkBenchName in Dict["customToolbars"]:

@@ -1,5 +1,6 @@
 {
-    "BIMWorkbench": {
+    "workbenches": {
+        "BIMWorkbench": {
             "toolbars": {
                 "Drafting Tools": {
                     "commands": {
@@ -801,7 +802,8 @@
                     "Tools_newPanel"
                 ]
             }
-        },
+        }
+    },
     "dropdownButtons": {
         "Draft Snap_ddb": [
             [
