@@ -4261,7 +4261,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Go through the items
         for Value in Values:
             # Get the item text
-            DestinationItem = QListWidgetItem(Value)
+            DestinationItem = Value
 
             IsInList = False
             if CheckIfInList is True:
@@ -4279,7 +4279,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
 
             # Add the item to the list with current items
             if IsInList is False and IsExcluded is False:
-                DestinationWidget.addItem(DestinationItem)
+                DestinationWidget.addItem(DestinationItem.clone())
 
                 # Go through the items on the list with items to add.
                 for i in range(SourceWidget.count()):
