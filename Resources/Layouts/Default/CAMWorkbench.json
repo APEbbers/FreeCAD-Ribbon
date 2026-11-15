@@ -6,7 +6,8 @@
                     "order": [
                         "CAM_Job",
                         "CAM_Sanity",
-                        "CAM_PostTools"
+                        "CAM_PostTools",
+                        "CAM_Workplane"
                     ],
                     "commands": {
                         "CAM_Job": {
@@ -25,8 +26,12 @@
                         "CAM_PostTools": {
                             "size": "small",
                             "text": ""
+                        },
+                        "CAM_Workplane": {
+                            "size": "small"
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "Tool Commands": {
                     "order": [
@@ -71,19 +76,21 @@
                             "size": "small",
                             "text": ""
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "New Operations": {
                     "order": [
                         "CAM_Profile",
                         "CAM_Pocket_Shape",
                         "CAM_Helix",
-                        "CAM_Adaptive",
-                        "CAM_Pocket3D",
                         "CAM_Slot",
-                        "CAM_EngraveTools",
                         "CAM_MillFacing",
-                        "CAM_DrillingTools"
+                        "5_separator_CAMWorkbench",
+                        "CAM_Pocket3D",
+                        "CAM_EngraveTools",
+                        "CAM_DrillingTools",
+                        "CAM_Adaptive"
                     ],
                     "commands": {
                         "CAM_Profile": {
@@ -92,7 +99,7 @@
                             "icon": "CAM_Profile"
                         },
                         "CAM_Pocket_Shape": {
-                            "size": "small",
+                            "size": "large",
                             "text": ""
                         },
                         "CAM_Drilling": {
@@ -104,7 +111,7 @@
                             "text": ""
                         },
                         "CAM_Helix": {
-                            "size": "small",
+                            "size": "large",
                             "text": ""
                         },
                         "CAM_Adaptive": {
@@ -116,7 +123,7 @@
                             "text": ""
                         },
                         "CAM_Slot": {
-                            "size": "small",
+                            "size": "large",
                             "text": ""
                         },
                         "CAM_EngraveTools": {
@@ -124,20 +131,21 @@
                             "text": ""
                         },
                         "CAM_MillFacing": {
-                            "size": "small",
+                            "size": "large",
                             "text": ""
                         },
                         "CAM_DrillingTools": {
                             "size": "small",
                             "text": ""
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "Path Modification": {
                     "order": [
+                        "CAM_SimpleCopy",
                         "CAM_OperationCopy",
                         "CAM_Array",
-                        "CAM_SimpleCopy",
                         "CAM_DressupTools"
                     ],
                     "commands": {
@@ -147,12 +155,12 @@
                             "icon": "CAM_OpCopy"
                         },
                         "CAM_Array": {
-                            "size": "small",
+                            "size": "large",
                             "text": "",
                             "icon": "CAM_Array"
                         },
                         "CAM_SimpleCopy": {
-                            "size": "small",
+                            "size": "large",
                             "text": "",
                             "icon": "CAM_SimpleCopy"
                         },
@@ -160,17 +168,10 @@
                             "size": "small",
                             "text": ""
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
-                "order": [
-                    "Structure",
-                    "Project Setup",
-                    "New Operations",
-                    "Path Modification",
-                    "Tool Commands",
-                    "Tools_newPanel"
-                ],
-                "Individual views": {
+                "Individual Views": {
                     "order": [
                         "Isometric",
                         "Front",
@@ -247,7 +248,8 @@
                         "Std_Group",
                         "Std_LinkActions",
                         "Std_VarSet"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -283,10 +285,19 @@
                         "Std_BoxElementSelection",
                         "Std_BoxSelection",
                         "Std_WhatsThis"
-                    ]
-                }
+                    ],
+                    "Enabled": true
+                },
+                "order": [
+                    "Structure",
+                    "Project Setup",
+                    "New Operations",
+                    "Path Modification",
+                    "Tool Commands",
+                    "Tools_newPanel"
+                ]
             },
             "Enabled": true
-        }
+        },
     }
 }
