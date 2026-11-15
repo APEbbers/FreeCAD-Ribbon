@@ -1950,6 +1950,9 @@ class ModernMenu(RibbonBar):
                   
         widget = None
         panel = None
+        self.CancelClicked.clear()
+        self.OkClicked = False
+        self.contextMenu = None
         return
     
     def handleLayoutMenuAction(self, LayoutName = "Default"):
@@ -4359,7 +4362,7 @@ class ModernMenu(RibbonBar):
                                 # Get the indexes of the widgets
                                 index_originalWidget = OrderList.index(self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=OriginalWidget)) # This is the location were will be dropped
                                 if DraggedWidget is not None:
-                                    index_newWidget = OrderList.index(self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=DraggedWidget)) # This is the original location of the dragged widget                                                        
+                                    index_newWidget = OrderList.index(self.ReturnCommand_string(Dict=self.workBenchDict, panel=panel, widget=DraggedWidget)) # This is the original location of the dragged widget                                                    
                                     if replace is True:                                
                                         # Remove the command name of the original widget from the order list and
                                         # Add the command of the dragged widget in its place
@@ -4424,7 +4427,7 @@ class ModernMenu(RibbonBar):
                         # Create a new panel
                         workbenchName = self.currentCategory().objectName()
                         newPanel = self.CreatePanel(workbenchName, panel.objectName(), addPanel=False, Dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True)
-                                                
+                                                                        
                         # Add the panel to the list with long panels
                         if newPanel.panelOptionButton().isVisible():
                             self.longPanels.append(newPanel)
@@ -6596,6 +6599,7 @@ class ModernMenu(RibbonBar):
     def List_AddCustomToolBarToWorkbench(self, workbenchName, CustomToolbar, Dict = None):
         ButtonList = []
         Commands = {}
+        ShadowList = []
         
         if Dict is None:
             Dict = self.ribbonStructure["customToolbars"]
@@ -6609,65 +6613,68 @@ class ModernMenu(RibbonBar):
         # Create a QToolButton from the key and add it to the button list
         allButtons: list = []
         for key, value in list(Commands.items()):
-            # Get the buttons with two ways, to be sure that all buttons are present
-            #
-            # 1. Get the buttons from the mainWindow. This way you will get dropdown like "electro magnetic boundarys from the FEM wob"
-            # Get the toolbar from the mainwindow
-            try:
-                TB = mw.findChildren(QToolBar, value)
-                allButtons = TB[0].findChildren(QToolButton)
-                # remove empty buttons
+            if key not in ShadowList:
+                # Get the buttons with two ways, to be sure that all buttons are present
+                #
+                # 1. Get the buttons from the mainWindow. This way you will get dropdown like "electro magnetic boundarys from the FEM wob"
+                # Get the toolbar from the mainwindow
+                try:
+                    TB = mw.findChildren(QToolBar, value)
+                    allButtons = TB[0].findChildren(QToolButton)
+                    # remove empty buttons
+                    for i in range(len(allButtons)):
+                        if allButtons[i].text() == "":
+                            allButtons.pop(i)
+                except Exception:
+                    pass
+                # Find the matching button and add it the the button list
                 for i in range(len(allButtons)):
-                    if allButtons[i].text() == "":
-                        allButtons.pop(i)
-            except Exception:
-                pass
-            # Find the matching button and add it the the button list
-            for i in range(len(allButtons)):
-                button: QToolButton = allButtons[i]
-                if button.defaultAction().data() == key:
-                    ButtonList.append(button)
+                    button: QToolButton = allButtons[i]
+                    if button.defaultAction().data() == key:
+                        button.setObjectName(key)
+                        ButtonList.append(button)
+                        ShadowList.append(key)
 
-            # 2. Get the command and create a button from it
-            try:
-                # Get the command
-                Command = Gui.Command.get(key)
-                CommandName = key
-                if Command is None:
-                    for CommandItem in self.List_Commands:
-                        if CommandItem[2] == CommandName:
-                            Command = Gui.Command.get(CommandItem[0])
-                            # CommandName = (CommandItem[0])
-                        if CommandItem[4] == CommandName:
-                            Command = Gui.Command.get(CommandItem[0])
-                            # CommandName = (CommandItem[0])
-                else:
-                    Icon = Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"])
-                    if Icon is not None and not Icon.isNull():                                                
-                        Button = QToolButton()    
-                        Button.setIcon(Icon)    
-                        action = Command.getAction()                        
-                        Button.addActions(action)
-                        Button.setDefaultAction(action[0])
-                    
-                        Button.setText(CommandInfoCorrections(CommandName)["menuText"])
-                        # Set the commandName as objectName as backup
-                        Button.setObjectName(CommandName)
-                        try:
-                            if len(action) > 1:
-                                Icon = action[0].icon()
-                                menu = QMenu(self)
-                                menu.addActions(action)
-                                Button.setMenu(menu)
-                        except Exception:
-                            pass
-                        # Add the button to the button list
-                        ButtonList.append(Button)
-            except:  # noqa: E722
-                e = traceback.format_exc()
-                if Parameters.DEBUG_MODE is True:
-                    StandardFunctions.Print(f"Ribbon UI:\n{e}", "Warning")
-                continue
+                # 2. Get the command and create a button from it
+                try:
+                    # Get the command
+                    Command = Gui.Command.get(key)
+                    CommandName = key
+                    if Command is None:
+                        for CommandItem in self.List_Commands:
+                            if CommandItem[2] == CommandName:
+                                Command = Gui.Command.get(CommandItem[0])
+                                # CommandName = (CommandItem[0])
+                            if CommandItem[4] == CommandName:
+                                Command = Gui.Command.get(CommandItem[0])
+                                # CommandName = (CommandItem[0])
+                    else:
+                        Icon = Gui.getIcon(CommandInfoCorrections(CommandName)["pixmap"])
+                        if Icon is not None and not Icon.isNull():                                                
+                            Button = QToolButton()    
+                            Button.setIcon(Icon)    
+                            action = Command.getAction()                        
+                            Button.addActions(action)
+                            Button.setDefaultAction(action[0])
+                        
+                            Button.setText(CommandInfoCorrections(CommandName)["menuText"])
+                            # Set the commandName as objectName as backup
+                            Button.setObjectName(CommandName)
+                            try:
+                                if len(action) > 1:
+                                    Icon = action[0].icon()
+                                    menu = QMenu(self)
+                                    menu.addActions(action)
+                                    Button.setMenu(menu)
+                            except Exception:
+                                pass
+                            # Add the button to the button list
+                            ButtonList.append(Button)
+                except:  # noqa: E722
+                    e = traceback.format_exc()
+                    if Parameters.DEBUG_MODE is True:
+                        StandardFunctions.Print(f"Ribbon UI:\n{e}", "Warning")
+                    continue
         return ButtonList
 
     def CreateButtonFromCommand(self, CommandName: str, ActivateWorkBench = True, Dict=ribbonStructure):
@@ -7322,12 +7329,12 @@ class ModernMenu(RibbonBar):
         panel.mouseMoveEvent = lambda e: mouseMoveEvent(panel, e, self.CustomizeEnabled)
         
         # get list of all buttons in toolbar
-        allButtons: list = []
+        allButtons = []
+
         if panelName.endswith("_newPanel") is False and panelName.endswith("_custom") is False:
             try:
                 TB = mw.findChildren(QToolBar, panelName)
                 allButtons = TB[0].findChildren(QToolButton)
-                # remove empty buttons
                 for i in range(len(allButtons)):
                     button: QToolButton = allButtons[i]
                     try:
@@ -7335,7 +7342,7 @@ class ModernMenu(RibbonBar):
                             if isinstance(button.actions(), list):
                                 button.setDefaultAction(button.actions()[0])
                             if isinstance(button.actions(), QAction):
-                                button.setDefaultAction(button.actions())
+                                button.setDefaultAction(button.actions())                        
                         button.setObjectName(button.defaultAction().data())
                     except Exception:
                         pass
@@ -7428,8 +7435,9 @@ class ModernMenu(RibbonBar):
                         # Create a button
                         button = self.CreateButtonFromCommand(CommandName, ActivateWorkBench=ActivateWorkbench, Dict=Dict)
                         if button is not None:
-                            button.setObjectName(CommandName)                                    
-                            allButtons.append(button)
+                            button.setObjectName(CommandName)
+                            if button not in allButtons:
+                                allButtons.append(button)
         
         # Add global newPanels
         if panelName.endswith("_newPanel"):
@@ -7441,8 +7449,9 @@ class ModernMenu(RibbonBar):
                         # Create a button
                         button = self.CreateButtonFromCommand(CommandName, ActivateWorkBench=ActivateWorkbench, Dict=Dict)
                         if button is not None:
-                            button.setObjectName(CommandName)                                    
-                            allButtons.append(button)
+                            button.setObjectName(CommandName)  
+                            if button not in allButtons:                                  
+                                allButtons.append(button)
                         
                     
         # If a new command needs to be added, create a button and add it to allButtons
@@ -7469,9 +7478,16 @@ class ModernMenu(RibbonBar):
                             for Command in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
                                 if Command != "order":
                                     if "IsExtra" in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]:
-                                        if Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]["IsExtra"]:                                            
+                                        # Check if it is not part of a custom panel
+                                        IsExtra = True
+                                        if panelName in Dict["customToolbars"][workbenchName]:
+                                            Commands = Dict["customToolbars"][workbenchName][panelName]["commands"]
+                                            for customCommand in Commands:
+                                                if customCommand == Command:
+                                                    IsExtra = False 
+                                        if IsExtra is True:                                                                           
                                             ExtraCommand = self.CreateButtonFromCommand(Command, ActivateWorkBench=ActivateWorkbench, Dict=Dict)
-                                            if ExtraCommand is not None:
+                                            if ExtraCommand is not None:                                                
                                                 ExtraCommand.setObjectName(Command)
                                                 allButtons.append(ExtraCommand)
                                                 
@@ -7528,7 +7544,7 @@ class ModernMenu(RibbonBar):
                     return position
 
                 allButtons.sort(key=sortButtons)
-        
+
         # add buttons to panel
         shadowList = [] # if buttons are used in multiple workbenches, they can show up double. (Sketcher_NewSketch)
         # for button in allButtons:
@@ -7625,7 +7641,7 @@ class ModernMenu(RibbonBar):
             if button.text() == "":                  
                 continue
             # If the command is already there, remove it, skip it and increase the counter.
-            elif shadowList.__contains__(CommandName) is True:                             
+            elif CommandName in shadowList:                             
                 continue
             else:
                 # If the number of columns is more than allowed,

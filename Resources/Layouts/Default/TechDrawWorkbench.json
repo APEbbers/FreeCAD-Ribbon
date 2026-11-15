@@ -36,7 +36,8 @@
                             "text": "",
                             "icon": "actions/TechDraw_PrintAll"
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "TechDraw Views": {
                     "order": [
@@ -88,7 +89,8 @@
                         "TechDraw_SpreadsheetView": {
                             "size": "small"
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "TechDraw Stacking": {
                     "order": [
@@ -100,7 +102,8 @@
                             "text": "",
                             "icon": ""
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "TechDraw Dimensions": {
                     "order": [
@@ -155,7 +158,8 @@
                             "text": "",
                             "icon": "TechDraw_ExtensionCustomizeFormat"
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "TechDraw Centerlines": {
                     "order": [
@@ -196,7 +200,8 @@
                             "text": "",
                             "icon": ""
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "TechDraw Extend Dimensions": {
                     "order": [
@@ -228,7 +233,8 @@
                             "icon": "actions/TechDraw_ExportPageDXF"
                         }
                     },
-                    "title": "Export"
+                    "title": "Export",
+                    "Enabled": true
                 },
                 "TechDraw Decoration": {
                     "order": [
@@ -252,7 +258,8 @@
                             "text": "",
                             "icon": "actions/TechDraw_ToggleFrame"
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "TechDraw Annotation": {
                     "order": [
@@ -313,47 +320,10 @@
                             "size": "small",
                             "text": ""
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
-                "TitleBlock Toolbar": {
-                    "order": [
-                        "Populate titleblock",
-                        "Import data from the FreeCAD source file",
-                        "Import data from titleblock"
-                    ],
-                    "commands": {
-                        "FillTitleBlock": {
-                            "size": "large",
-                            "text": "",
-                            "icon": "FillTitleBlock.svg"
-                        },
-                        "ImportFreeCAD": {
-                            "size": "small",
-                            "text": "",
-                            "icon": "ImportFreeCAD.svg"
-                        },
-                        "FillSpreadsheet": {
-                            "size": "small",
-                            "text": "",
-                            "icon": "FillSpreadsheet.svg"
-                        }
-                    }
-                },
-                "order": [
-                    "Structure",
-                    "TechDraw Pages",
-                    "TechDraw Views",
-                    "TechDraw Stacking",
-                    "Dimensions_custom",
-                    "TechDraw Attributes",
-                    "TechDraw Centerlines",
-                    "TechDraw File Access",
-                    "TechDraw Decoration",
-                    "TechDraw Annotation",
-                    "Tools_newPanel",
-                    "TechDraw Extend Dimensions"
-                ],
-                "Individual views": {
+                "Individual Views": {
                     "order": [
                         "Isometric",
                         "Front",
@@ -430,7 +400,8 @@
                         "Std_Group",
                         "Std_LinkActions",
                         "Std_VarSet"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -466,56 +437,72 @@
                         "Std_BoxElementSelection",
                         "Std_BoxSelection",
                         "Std_WhatsThis"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Dimensions_custom": {
                     "commands": {
                         "TechDraw_Balloon": {
                             "size": "small",
-                            "text": ""
+                            "text": "",
+                            "icon": ""
                         },
                         "TechDraw_AxoLengthDimension": {
                             "size": "small",
-                            "text": ""
+                            "text": "",
+                            "icon": ""
                         },
                         "TechDraw_DimensionRepair": {
                             "size": "small",
-                            "text": ""
+                            "text": "",
+                            "icon": ""
                         },
                         "TechDraw_ExtensionIncreaseDecreaseGroup": {
                             "size": "small",
                             "text": "",
-                            "icon": "",
-                            "IsExtra": true
+                            "icon": ""
                         },
                         "TechDraw_ExtensionInsertPrefixGroup": {
                             "size": "small",
                             "text": "",
-                            "icon": "",
-                            "IsExtra": true
+                            "icon": ""
                         },
                         "TechDraw_ExtensionRemovePrefixChar": {
                             "size": "small",
                             "text": "",
-                            "icon": "",
-                            "IsExtra": true
+                            "icon": ""
                         },
-                        "qt_toolbutton_menubutton": {
-                            "size": "small"
+                        "TechDraw_CompDimensionTools": {
+                            "size": "large",
+                            "text": "",
+                            "icon": ""
                         }
                     },
                     "order": [
-                        "TechDraw_Balloon",
-                        "TechDraw_AxoLengthDimension",
+                        "TechDraw_CompDimensionTools",
                         "TechDraw_DimensionRepair",
-                        "TechDraw_ExtensionIncreaseDecreaseGroup",
+                        "TechDraw_Balloon",
                         "TechDraw_ExtensionInsertPrefixGroup",
-                        "TechDraw_ExtensionRemovePrefixChar",
-                        "qt_toolbutton_menubutton"
-                    ]
-                }
-            },
-            "Enabled": true
+                        "TechDraw_AxoLengthDimension",
+                        "TechDraw_ExtensionIncreaseDecreaseGroup"
+                    ],
+                    "Enabled": true
+                },
+                "order": [
+                    "Structure",
+                    "TechDraw Pages",
+                    "TechDraw Views",
+                    "TechDraw Stacking",
+                    "Dimensions_custom",
+                    "TechDraw Attributes",
+                    "TechDraw Centerlines",
+                    "TechDraw File Access",
+                    "TechDraw Decoration",
+                    "TechDraw Annotation",
+                    "Tools_newPanel",
+                    "TechDraw Extend Dimensions"
+                ]
+            }
         }
     },
     "customToolbars": {
