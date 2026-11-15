@@ -7327,14 +7327,14 @@ class ModernMenu(RibbonBar):
                         StandardFunctions.Print(f"Ribbon UI:\n{e}", "Warning")
         
         panel.mouseMoveEvent = lambda e: mouseMoveEvent(panel, e, self.CustomizeEnabled)
-        
-        # get list of all buttons in toolbar
-        allButtons = []
 
+        # get list of all buttons in toolbar
+        allButtons: list = []
         if panelName.endswith("_newPanel") is False and panelName.endswith("_custom") is False:
             try:
                 TB = mw.findChildren(QToolBar, panelName)
                 allButtons = TB[0].findChildren(QToolButton)
+                # remove empty buttons
                 for i in range(len(allButtons)):
                     button: QToolButton = allButtons[i]
                     try:
@@ -7342,7 +7342,7 @@ class ModernMenu(RibbonBar):
                             if isinstance(button.actions(), list):
                                 button.setDefaultAction(button.actions()[0])
                             if isinstance(button.actions(), QAction):
-                                button.setDefaultAction(button.actions())                        
+                                button.setDefaultAction(button.actions())
                         button.setObjectName(button.defaultAction().data())
                     except Exception:
                         pass
