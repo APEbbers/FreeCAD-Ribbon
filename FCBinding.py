@@ -6051,9 +6051,16 @@ class ModernMenu(RibbonBar):
         # Add the new panels to the toolbar list
         try:
             for WorkBenchItem in Dict["newPanels"]:
-                if WorkBenchItem == workbenchName or WorkBenchItem == "Global":
+                if WorkBenchItem == "Global":
                     for Panel in Dict["newPanels"][WorkBenchItem]:
                         ListToolbars.append(Panel)
+        except Exception:
+            pass
+        try:
+            if workbenchName in Dict["workbenches"] and "toolbars" in Dict["workbenches"][workbenchName]:
+                for panelName in Dict["workbenches"][workbenchName]["toolbars"]:
+                    if panelName.endswith("_newPanel"):
+                        ListToolbars.append(panelName)
         except Exception:
             pass
 
@@ -7408,18 +7415,21 @@ class ModernMenu(RibbonBar):
             customList = self.List_AddCustomToolBarToWorkbench(workbenchName, panelName, Dict = Dict["customToolbars"])
             allButtons.extend(customList)
         
-        # # Add newPanels
-        # if panelName.endswith("_newPanel"):
-        #     if workbenchName in Dict["newPanels"]:
-        #         if panelName in Dict["newPanels"][workbenchName]:
-        #             Commands = Dict["newPanels"][workbenchName][panelName]
-        #             for CommandItem in Commands:
-        #                 CommandName = CommandItem[0]
-        #                 # Create a button
-        #                 button = self.CreateButtonFromCommand(CommandName, ActivateWorkBench=ActivateWorkbench, Dict=Dict)
-        #                 if button is not None:
-        #                     button.setObjectName(CommandName)                                    
-        #                     allButtons.append(button)
+        # Add newPanels
+        if panelName.endswith("_newPanel"):
+            if (
+                workbenchName in Dict 
+                and "toolbars" in Dict["workbenches"][workbenchName]
+                and panelName in Dict["workbenches"][workbenchName]["toolbars"]
+                and "commands" in Dict["workbenches"][workbenchName]["toolbars"][panelName]
+                ):
+                    Commands = Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]
+                    for CommandName in Commands:
+                        # Create a button
+                        button = self.CreateButtonFromCommand(CommandName, ActivateWorkBench=ActivateWorkbench, Dict=Dict)
+                        if button is not None:
+                            button.setObjectName(CommandName)                                    
+                            allButtons.append(button)
         
         # Add global newPanels
         if panelName.endswith("_newPanel"):
@@ -7444,7 +7454,7 @@ class ModernMenu(RibbonBar):
                 allButtons.append(ExtraButton)
                 
         # add the extra commands to the command list that are present in the dict and not part of a newPanel.
-        # (For a newPanel, all commands are extra and are already added)
+        # (For a global newPanel, all commands are extra and are already added)
         if workbenchName in Dict["workbenches"]:
             if (
                 panelName != ""
@@ -7494,7 +7504,6 @@ class ModernMenu(RibbonBar):
                                 except Exception:
                                     pass
         
-
         if workbenchName in Dict["workbenches"]:
             # order buttons like defined in ribbonStructure
             if (
@@ -9560,7 +9569,7 @@ class EventInspector_RibbonUI_1(QObject):
         #     if Parameters.AUTOHIDE_RIBBON is False and Counter == 0:
         #         RibbonBar.UnfoldRibbon()
         #         Counter = 1
-        # return False  
+        return False  
 
 class run:
     """
