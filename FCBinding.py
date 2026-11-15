@@ -7480,7 +7480,7 @@ class ModernMenu(RibbonBar):
                                     if "IsExtra" in Dict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][Command]:
                                         # Check if it is not part of a custom panel
                                         IsExtra = True
-                                        if panelName in Dict["customToolbars"][workbenchName]:
+                                        if "customToolbars" in Dict and workbenchName in Dict["customToolbars"] and panelName in Dict["customToolbars"][workbenchName]:
                                             Commands = Dict["customToolbars"][workbenchName][panelName]["commands"]
                                             for customCommand in Commands:
                                                 if customCommand == Command:
