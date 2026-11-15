@@ -45,7 +45,7 @@
                             "text": ""
                         },
                         "SheetMetal_AddBase": {
-                            "size": "small",
+                            "size": "large",
                             "text": ""
                         },
                         "SheetMetal_FromSolid": {
@@ -81,7 +81,7 @@
                             "text": ""
                         },
                         "SheetMetal_AddCornerRelief": {
-                            "size": "small",
+                            "size": "large",
                             "text": ""
                         },
                         "SheetMetal_AddRelief": {
@@ -93,7 +93,7 @@
                             "text": ""
                         },
                         "SheetMetal_AddBend": {
-                            "size": "small",
+                            "size": "large",
                             "text": ""
                         },
                         "SheetMetal_SketchOnSheet": {
@@ -101,7 +101,7 @@
                             "text": ""
                         },
                         "SheetMetal_AddCutout": {
-                            "size": "small",
+                            "size": "large",
                             "text": ""
                         },
                         "SheetMetal_Forming": {
@@ -116,10 +116,10 @@
                         "2_separator_SMWorkbench",
                         "SheetMetal_AddWall",
                         "SheetMetal_AddBase",
+                        "SheetMetal_AddBend",
                         "SheetMetal_AddHem",
                         "SheetMetal_Extrude",
                         "SheetMetal_ExtendBySketch",
-                        "SheetMetal_AddBend",
                         "8_separator_SMWorkbench",
                         "SheetMetal_Unfold",
                         "SheetMetal_AddFoldWall",
@@ -171,9 +171,9 @@
                         "Std_WhatsThis"
                     ],
                     "Enabled": true
-                }
-            },
-            "Enabled": true
+                },
+                "order": []
+            }
         }
     }
 }
