@@ -9549,18 +9549,18 @@ class EventInspector_RibbonUI_1(QObject):
                     )
                 return QObject.eventFilter(self, obj, event)
         
-        if event.type() == QEvent.Type.MouseMove:
-            # Get the mainwindow, the ribbon and the title
-            mw = Gui.getMainWindow()
-            RibbonBar = mw.findChild(ModernMenu, "Ribbon")
-            if RibbonBar.AccessoriesMenu is None:
-                RibbonBar.ApplicationMenus()
+        # if event.type() == QEvent.Type.MouseMove:
+        #     # Get the mainwindow, the ribbon and the title
+        #     mw = Gui.getMainWindow()
+        #     RibbonBar = mw.findChild(ModernMenu, "Ribbon")
+        #     if RibbonBar.AccessoriesMenu is None:
+        #         RibbonBar.ApplicationMenus()
                 
-            Counter = 0
-            if Parameters.AUTOHIDE_RIBBON is False and Counter == 0:
-                RibbonBar.UnfoldRibbon()
-                Counter = 1
-        return False  
+        #     Counter = 0
+        #     if Parameters.AUTOHIDE_RIBBON is False and Counter == 0:
+        #         RibbonBar.UnfoldRibbon()
+        #         Counter = 1
+        # return False  
 
 class run:
     """
