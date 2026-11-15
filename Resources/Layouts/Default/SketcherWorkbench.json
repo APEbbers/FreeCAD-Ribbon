@@ -311,7 +311,7 @@
                         "Sketcher_RestoreInternalAlignmentGeometry": {
                             "size": "large",
                             "text": "",
-                            "textEnabled": false
+                            "textEnabled": true
                         },
                         "Sketcher_SwitchVirtualSpace": {
                             "size": "small",
@@ -476,7 +476,8 @@
                     "B-Spline Tools",
                     "Visual Helpers"
                 ]
-            }
+            },
+            "Enabled": true
         }
     }
 }
