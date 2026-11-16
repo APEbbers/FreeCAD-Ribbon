@@ -367,7 +367,7 @@
                             "text": ""
                         },
                         "BIM_Create2DViews": {
-                            "size": "small",
+                            "size": "large",
                             "text": ""
                         },
                         "BIM_TDPage": {
@@ -379,24 +379,26 @@
                             "text": ""
                         },
                         "BIM_AxisTools": {
-                            "size": "small",
+                            "size": "large",
                             "text": ""
                         }
                     },
                     "order": [
                         "BIM_Text",
+                        "BIM_Create2DViews",
+                        "BIM_AxisTools",
+                        "3_separator_BIMWorkbench",
                         "BIM_DimensionAligned",
                         "BIM_DimensionHorizontal",
                         "BIM_DimensionVertical",
+                        "Draft_Label",
                         "BIM_Leader",
+                        "Draft_Hatch",
+                        "9_separator_BIMWorkbench",
                         "Arch_Grid",
                         "Arch_SectionPlane",
-                        "BIM_Create2DViews",
-                        "BIM_TDPage",
                         "BIM_TDView",
-                        "BIM_AxisTools",
-                        "Draft_Label",
-                        "Draft_Hatch"
+                        "BIM_TDPage"
                     ],
                     "title": "Annotation Tools",
                     "Enabled": true
@@ -442,14 +444,13 @@
                     },
                     "order": [
                         "BIM_Copy",
-                        "BIM_SimpleCopy",
-                        "BIM_Compound",
-                        "BIM_CloneTools",
-                        "4_separator_BIMWorkbench",
                         "Draft_Move",
                         "Draft_Rotate",
                         "Draft_Scale",
-                        "Draft_Mirror"
+                        "Draft_Mirror",
+                        "BIM_SimpleCopy",
+                        "BIM_Compound",
+                        "BIM_CloneTools"
                     ],
                     "title": "General Tools",
                     "Enabled": true
@@ -809,8 +810,7 @@
                     "Manage Tools",
                     "Tools_newPanel"
                 ]
-            },
-            "Enabled": true
+            }
         }
     },
     "dropdownButtons": {
