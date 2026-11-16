@@ -82,9 +82,6 @@
                         }
                     },
                     "order": [
-                        "Draft Snap_ddb",
-                        "Draft_ToggleGrid",
-                        "1_separator_BIMWorkbench",
                         "BIM_Sketch",
                         "BIM_ArcTools",
                         "BIM_SplineTools",
@@ -95,7 +92,10 @@
                         "Draft_Ellipse",
                         "Draft_Polygon",
                         "Draft_Point",
-                        "Draft_Fillet"
+                        "Draft_Fillet",
+                        "12_separator_BIMWorkbench",
+                        "Draft Snap_ddb",
+                        "Draft_ToggleGrid"
                     ],
                     "Enabled": true
                 },
@@ -809,7 +809,8 @@
                     "Manage Tools",
                     "Tools_newPanel"
                 ]
-            }
+            },
+            "Enabled": true
         }
     },
     "dropdownButtons": {
