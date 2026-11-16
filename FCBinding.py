@@ -27,7 +27,7 @@ from pathlib import Path
 import subprocess
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -59,7 +59,7 @@ from PySide.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -108,7 +108,7 @@ from PySide.QtWidgets import (
     QStyleOptionComplex,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -4165,7 +4165,8 @@ class ModernMenu(RibbonBar):
                                     self.workBenchDict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["order"] = OrderList
 
                             # Add the extra command to the order list
-                            OrderList.append(ExtraCommand)
+                            if not ExtraCommand in OrderList:
+                                OrderList.append(ExtraCommand)
                             self.workBenchDict["workbenches"][workbenchName]["toolbars"][title]["order"] = OrderList
                             # Add the command to the panel in the dict
                             Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "toolbars", panel.objectName(), "commands", ExtraCommand, "size"], endEmpty=True)
@@ -5888,7 +5889,6 @@ class ModernMenu(RibbonBar):
                             width = max(item[1],0)
                             height = max(item[2],0)
                             size = QSize(width, height)
-                            # print(size)             
                             toolbar.setMinimumSize(size)
                             toolbar.setMaximumSize(16777215, height*3.7795275591) # convert height from mm to pixel
                             # make sure the toolbar is visible
@@ -6508,8 +6508,7 @@ class ModernMenu(RibbonBar):
                     if item[0] == toolbar.objectName():
                         width = max(item[1],0)
                         height = max(item[2],0)
-                        size = QSize(width, height)
-                        # print(size)             
+                        size = QSize(width, height)         
                         toolbar.setMinimumSize(size)
                         toolbar.setMaximumSize(16777215, height*3.7795275591) # convert height from mm to pixel
                         # make sure the toolbar is visible
@@ -6869,6 +6868,7 @@ class ModernMenu(RibbonBar):
                 if Parameters.DEBUG_MODE is True:
                     StandardFunctions.Print(f"Ribbon UI:\n{e}", "Warning")
                 return None
+        
         if CommandName.endswith("_ddb"):
             try:
                 # Get the actions and add them one by one
@@ -7384,26 +7384,26 @@ class ModernMenu(RibbonBar):
                                                 if ActivateWorkbench is True:
                                                     Gui.activateWorkbench(currentCategory.objectName())
 
-                                            # Get the actions and add them one by one
-                                            for CommandItem in Commands:                                                
-                                                Command = Gui.Command.get(CommandItem[0])
-                                                # Get the command. If success, get the actions
-                                                if Command is not None:
-                                                    action = Command.getAction()  
-                                                    # if it just one command, just add it to the menu                                                                         
-                                                    if len(action) == 1:
-                                                        menu.addAction(action[0])     
-                                                    # If there are more commands, create a submenu 
-                                                    # ToDo: (make a seperate function for nested menus)                                   
-                                                    if len(action) > 1:  
-                                                        subMenu = QMenu()
-                                                        subMenu.addActions(action)                                           
-                                                        subMenu.setTitle(StandardFunctions.CommandInfoCorrections(CommandItem[0])["menuText"])
-                                                        subMenu.setIcon(self.ReturnCommandIcon(CommandItem[0]))
-                                                        menu.addMenu(subMenu)
+                                        # Get the actions and add them one by one
+                                        for CommandItem in Commands:                                                
+                                            Command = Gui.Command.get(CommandItem[0])
+                                            # Get the command. If success, get the actions
+                                            if Command is not None:
+                                                action = Command.getAction()  
+                                                # if it just one command, just add it to the menu                                                                         
+                                                if len(action) == 1:
+                                                    menu.addAction(action[0])     
+                                                # If there are more commands, create a submenu 
+                                                # ToDo: (make a seperate function for nested menus)                                   
+                                                if len(action) > 1:  
+                                                    subMenu = QMenu()
+                                                    subMenu.addActions(action)                                           
+                                                    subMenu.setTitle(StandardFunctions.CommandInfoCorrections(CommandItem[0])["menuText"])
+                                                    subMenu.setIcon(self.ReturnCommandIcon(CommandItem[0]))
+                                                    menu.addMenu(subMenu)
                                     # If the menu is not empty, add it to the button, set the button properties 
                                     # and add the button to the button list
-                                    if len(menu.actions()) > 0:                                            
+                                    if len(menu.actions()) > 0:                                          
                                         button.setMenu(menu)
                                         # # Set the default action
                                         button.setDefaultAction(menu.actions()[0])                                
@@ -7485,7 +7485,7 @@ class ModernMenu(RibbonBar):
                                             for customCommand in Commands:
                                                 if customCommand == Command:
                                                     IsExtra = False 
-                                        if IsExtra is True:                                                                           
+                                        if IsExtra is True:
                                             ExtraCommand = self.CreateButtonFromCommand(Command, ActivateWorkBench=ActivateWorkbench, Dict=Dict)
                                             if ExtraCommand is not None:                                                
                                                 ExtraCommand.setObjectName(Command)
@@ -7728,14 +7728,13 @@ class ModernMenu(RibbonBar):
                         action = button.defaultAction()
                         CommandName = button.objectName()     
                         # Make sure that the CommandName is correct                   
-                        if CommandName == "qt_toolbutton_menubutton" or CommandName == "qt_toolbar_ext_button":
+                        if CommandName == "qt_toolbutton_menubutton" or CommandName == "qt_toolbar_ext_button":                            
                             try:
                                 CommandName = action.data()                                
                             except:  # noqa: E722
                                 # if Parameters.DEBUG_MODE:
                                 StandardFunctions.Print(f"Ribbon UI: {traceback.format_exc()}")
                         Icon = QIcon()
-                        
 
                         if CommandName == "":
                             continue
@@ -8463,22 +8462,7 @@ class ModernMenu(RibbonBar):
         try:
             orderList: list = self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
             if command != "" and command is not None and command in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"]:
-                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = ""              
-                
-                # # if it is a button from a newPanel, remove it from the newPanel list
-                # if panelName.endswith("_newPanel"):
-                #     commandList = []
-                #     if panelName in self.workBenchDict["newPanels"][workbenchName]:
-                #         commandList = self.workBenchDict["newPanels"][workbenchName][panelName]
-                #     elif panelName in self.workBenchDict["newPanels"]["Global"]:
-                #         commandList = self.workBenchDict["newPanels"]["Global"][panelName]
-                #     elif panelName in self.workBenchDict["newPanels"]["Standard"]:
-                #         commandList = self.workBenchDict["newPanels"]["Standard"][panelName]
-                #     for item in commandList:
-                #         if item[0] == command:
-                #             commandList.remove(item)
-                #             self.workBenchDict["newPanels"][workbenchName][panelName] = commandList
-                #             break     
+                self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]["size"] = ""
 
                 # Remove also from the ribbon structure if it is an extra (dragged) button
                 if "IsExtra" in self.workBenchDict["workbenches"][workbenchName]["toolbars"][panelName]["commands"][command]:
@@ -8493,8 +8477,7 @@ class ModernMenu(RibbonBar):
 
                     except Exception:
                         pass
-     
-            
+
             # Close the widget
             # widget.close()
             newPanel = self.CreatePanel(workbenchName, panelName, addPanel=False, Dict=self.workBenchDict, ignoreColumnLimit=True, showEnableControl=True, enableSeparator=True, ActivateButtons=True, ActivateWorkbench=False)

@@ -189,39 +189,39 @@
                 "3D/BIM Tools": {
                     "commands": {
                         "Arch_Site": {
-                            "size": "small",
+                            "size": "",
                             "text": ""
                         },
                         "Arch_Building": {
-                            "size": "large",
+                            "size": "",
                             "text": ""
                         },
                         "Arch_Level": {
-                            "size": "small",
+                            "size": "",
                             "text": ""
                         },
                         "Arch_Space": {
-                            "size": "small",
+                            "size": "",
                             "text": ""
                         },
                         "Arch_Wall": {
-                            "size": "small",
+                            "size": "",
                             "text": ""
                         },
                         "Arch_CurtainWall": {
-                            "size": "small",
+                            "size": "",
                             "text": ""
                         },
                         "BIM_Column": {
-                            "size": "small",
+                            "size": "",
                             "text": ""
                         },
                         "BIM_Beam": {
-                            "size": "small",
+                            "size": "",
                             "text": ""
                         },
                         "BIM_Slab": {
-                            "size": "small",
+                            "size": "",
                             "text": ""
                         },
                         "BIM_Door": {
@@ -233,11 +233,11 @@
                             "text": ""
                         },
                         "Arch_Pipe": {
-                            "size": "small",
+                            "size": "",
                             "text": ""
                         },
                         "Arch_PipeConnector": {
-                            "size": "small",
+                            "size": "",
                             "text": ""
                         },
                         "Arch_Stairs": {
@@ -245,7 +245,7 @@
                             "text": ""
                         },
                         "Arch_Roof": {
-                            "size": "small",
+                            "size": "",
                             "text": ""
                         },
                         "Arch_Panel": {
@@ -253,7 +253,7 @@
                             "text": ""
                         },
                         "Arch_Frame": {
-                            "size": "small",
+                            "size": "",
                             "text": ""
                         },
                         "Arch_Fence": {
@@ -269,42 +269,50 @@
                             "text": ""
                         },
                         "Arch_Rebar": {
-                            "size": "small",
+                            "size": "",
                             "text": ""
                         },
                         "BIM_GenericTools": {
-                            "size": "small",
+                            "size": "large",
                             "text": ""
                         },
                         "BIM_Covering": {
                             "size": "small",
                             "text": ""
+                        },
+                        "BIM Container_ddb": {
+                            "size": "large",
+                            "text": "BIM Container",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "BIM Wall_ddb": {
+                            "size": "large",
+                            "text": "BIM Wall",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "BIM Pipe_ddb": {
+                            "size": "large",
+                            "text": "BIM Pipe",
+                            "icon": "",
+                            "IsExtra": true
                         }
                     },
                     "order": [
-                        "Arch_Building",
-                        "Arch_Site",
-                        "Arch_Level",
-                        "Arch_Space",
-                        "Arch_Wall",
-                        "Arch_CurtainWall",
-                        "BIM_Column",
-                        "BIM_Beam",
-                        "BIM_Slab",
+                        "BIM Container_ddb",
+                        "BIM Wall_ddb",
+                        "BIM_GenericTools",
+                        "BIM Pipe_ddb",
+                        "6_separator_BIMWorkbench",
+                        "Arch_Panel",
+                        "Arch_Truss",
                         "BIM_Door",
                         "Arch_Window",
-                        "Arch_Pipe",
-                        "Arch_PipeConnector",
                         "Arch_Stairs",
-                        "Arch_Roof",
-                        "Arch_Panel",
-                        "Arch_Frame",
                         "Arch_Fence",
-                        "Arch_Truss",
-                        "Arch_Equipment",
-                        "Arch_Rebar",
-                        "BIM_GenericTools",
-                        "BIM_Covering"
+                        "BIM_Covering",
+                        "Arch_Equipment"
                     ],
                     "Enabled": true
                 },
@@ -522,10 +530,10 @@
                         }
                     },
                     "order": [
-                        "Arch_Add",
-                        "Arch_Remove",
                         "Draft_Upgrade",
-                        "Draft_Downgrade"
+                        "Draft_Downgrade",
+                        "Arch_Add",
+                        "Arch_Remove"
                     ],
                     "Enabled": true
                 },
@@ -865,6 +873,68 @@
             [
                 "Draft_Snap_WorkingPlane",
                 "DraftWorkbench"
+            ]
+        ],
+        "BIM Container_ddb": [
+            [
+                "Arch_Building",
+                "BIMWorkbench"
+            ],
+            [
+                "Arch_Level",
+                "BIMWorkbench"
+            ],
+            [
+                "Arch_Site",
+                "BIMWorkbench"
+            ],
+            [
+                "BIM_Slab",
+                "BIMWorkbench"
+            ],
+            [
+                "Arch_Space",
+                "BIMWorkbench"
+            ]
+        ],
+        "BIM Wall_ddb": [
+            [
+                "Arch_Wall",
+                "BIMWorkbench"
+            ],
+            [
+                "Arch_CurtainWall",
+                "BIMWorkbench"
+            ],
+            [
+                "BIM_Beam",
+                "BIMWorkbench"
+            ],
+            [
+                "BIM_Column",
+                "BIMWorkbench"
+            ],
+            [
+                "Arch_Frame",
+                "BIMWorkbench"
+            ],
+            [
+                "Arch_Roof",
+                "BIMWorkbench"
+            ],
+            [
+                "Arch_Rebar",
+                "BIMWorkbench"
+            ]
+        ],
+        "BIM Pipe_ddb": [
+            [
+                "Arch_Pipe",
+                "BIMWorkbench"
+            ],
+            [
+                "Arch_PipeConnector",
+                "BIMWorkbench"
             ]
         ]
     }
