@@ -1135,14 +1135,17 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"]["order"] = ToolbarOrder
         
         for Command in Commands:
-            StandardFunctions.add_keys_nested_dict(RibbonBar.workBenchDict, ["workbenches", WorkBenchName, "toolbars", CustomPanelTitle + Suffix, "commands", Command, "size"], default="small")
+            StandardFunctions.add_keys_nested_dict(RibbonBar.workBenchDict, ["workbenches", WorkBenchName, "toolbars", CustomPanelTitle + Suffix, "commands", Command, "size"], endEmpty=True)            
             StandardFunctions.add_keys_nested_dict(RibbonBar.workBenchDict, ["workbenches", WorkBenchName, "toolbars", CustomPanelTitle + Suffix, "commands", Command, "text"], endEmpty=True)
             StandardFunctions.add_keys_nested_dict(RibbonBar.workBenchDict, ["workbenches", WorkBenchName, "toolbars", CustomPanelTitle + Suffix, "commands", Command, "icon"], endEmpty=True)
-
+            RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"][CustomPanelTitle + Suffix]["commands"][Command]["size"] = "small"
+            RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"][CustomPanelTitle + Suffix]["commands"][Command]["text"] = ""
+            RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"][CustomPanelTitle + Suffix]["commands"][Command]["icon"] = ""
+        RibbonBar.workBenchDict["workbenches"][WorkBenchName]["toolbars"][CustomPanelTitle + Suffix]["order"] = Commands
 
         AddPanel = True
-        if (CustomPanelTitle + Suffix) in ToolbarOrder:
-            AddPanel = False
+        # if (CustomPanelTitle + Suffix) in ToolbarOrder:
+        #     AddPanel = False
         
         # Get the ribbon
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon")
@@ -1157,9 +1160,10 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             showEnableControl=True,
             ActivateButtons=True
             )
-        if AddPanel is False and CustomPanelTitle + Suffix in RibbonBar.currentCategory().panels():
-            oldPanel = RibbonBar.currentCategory().panel(CustomPanelTitle + Suffix)
-            RibbonBar.currentCategory().replacePanel(oldPanel, newPanel)
+        
+        # if AddPanel is False and CustomPanelTitle + Suffix in RibbonBar.currentCategory().panels():
+        #     oldPanel = RibbonBar.currentCategory().panel(CustomPanelTitle + Suffix)
+        #     RibbonBar.currentCategory().replacePanel(oldPanel, newPanel)
         
         # Add the newPanel to the list of CombinePanels
         RibbonBar.longPanels.append(newPanel)
