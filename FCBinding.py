@@ -6107,8 +6107,8 @@ class ModernMenu(RibbonBar):
             # Create the panel based on the toolbars
             panel = self.CreatePanel(workbenchName=workbenchName, panelName=toolbar, addPanel=True, Dict=Dict, UpdateDict=False)
             if panel is None:
-                self.ignoredToolbars.append(toolbar)
-                Dict["ignoredToolbars"].append(toolbar)
+                if Parameters.DEBUG_MODE:
+                    StandardFunctions.Print(f"Ribbon UI:\n{toolbar} resulted in an empty panel", "Warning")
                 continue
             # Hide the panel if stated in the ribbon structure
             if workbenchName in Dict["workbenches"]:
@@ -7263,12 +7263,12 @@ class ModernMenu(RibbonBar):
 
         if Category is None:
             Category = self.currentCategory()
-        
+
         # If the panel is replaced by a custom panel, just return
         if CheckCustomPanels is True and "customToolbars" in Dict and workbenchName in Dict["customToolbars"]:
             for CustomPanel in Dict["customToolbars"][workbenchName]:
                 for command in Dict["customToolbars"][workbenchName][CustomPanel]["commands"]:
-                    if Dict["customToolbars"][workbenchName][CustomPanel]["commands"][command] == panelName:
+                    if Dict["customToolbars"][workbenchName][CustomPanel]["commands"][command] == panelName:                        
                         return
         
         if UpdateDict is True:
@@ -7354,8 +7354,7 @@ class ModernMenu(RibbonBar):
             if (
                 panelName != ""
                 and "toolbars" in Dict["workbenches"][workbenchName]
-                and panelName
-                in Dict["workbenches"][workbenchName]["toolbars"]
+                and panelName in Dict["workbenches"][workbenchName]["toolbars"]
                 and "commands" in Dict["workbenches"][workbenchName]["toolbars"][panelName]
             ):
                 # Add custom dropdown buttons to the list that are on default panels
@@ -7469,8 +7468,7 @@ class ModernMenu(RibbonBar):
                 panelName != ""
                 # and not panelName.endswith("_newPanel")
                 and "toolbars" in Dict["workbenches"][workbenchName]
-                and panelName
-                in Dict["workbenches"][workbenchName]["toolbars"]
+                and panelName in Dict["workbenches"][workbenchName]["toolbars"]
             ):
                 for orderedToolbar in Dict["workbenches"][workbenchName]["toolbars"]:
                     if orderedToolbar.lower() == panelName.lower():
@@ -7504,8 +7502,7 @@ class ModernMenu(RibbonBar):
             if (
                 panelName != ""
                 and "toolbars" in Dict["workbenches"][workbenchName]
-                and panelName
-                in Dict["workbenches"][workbenchName]["toolbars"]
+                and panelName in Dict["workbenches"][workbenchName]["toolbars"]
             ):
                 for orderedToolbar in Dict["workbenches"][workbenchName]["toolbars"]:
                     if orderedToolbar.lower() == panelName.lower():
@@ -7523,8 +7520,7 @@ class ModernMenu(RibbonBar):
         if workbenchName in Dict["workbenches"]:
             # order buttons like defined in ribbonStructure
             if (
-                panelName
-                in Dict["workbenches"][workbenchName]["toolbars"]
+                panelName in Dict["workbenches"][workbenchName]["toolbars"]
                 and "order" in Dict["workbenches"][workbenchName]["toolbars"][panelName]
             ):
                 OrderList: list = Dict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
@@ -7732,8 +7728,8 @@ class ModernMenu(RibbonBar):
                             try:
                                 CommandName = action.data()                                
                             except:  # noqa: E722
-                                # if Parameters.DEBUG_MODE:
-                                StandardFunctions.Print(f"Ribbon UI: {traceback.format_exc()}")
+                                if Parameters.DEBUG_MODE:
+                                    StandardFunctions.Print(f"Ribbon UI: {traceback.format_exc()}")
                         Icon = QIcon()
 
                         if CommandName == "":
@@ -8089,7 +8085,7 @@ class ModernMenu(RibbonBar):
                 if panel.title() in Category.panels():
                     Category.removePanel(panel.title())
                     panel.deleteLater()
-                if Parameters.DEBUG_MODE is True:                  
+                if Parameters.DEBUG_MODE is True:
                     StandardFunctions.Print(f"Ribbon UI: The panel \"{panel.title()}\" did not have any buttons and is not loaded!", "Warning")
                 return None
             except:
