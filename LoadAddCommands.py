@@ -1157,7 +1157,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             showEnableControl=True,
             ActivateButtons=True
             )
-        if AddPanel is False:
+        if AddPanel is False and CustomPanelTitle + Suffix in RibbonBar.currentCategory().panels():
             oldPanel = RibbonBar.currentCategory().panel(CustomPanelTitle + Suffix)
             RibbonBar.currentCategory().replacePanel(oldPanel, newPanel)
         

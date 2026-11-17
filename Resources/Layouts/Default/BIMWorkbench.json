@@ -314,7 +314,8 @@
                         "BIM_Covering",
                         "Arch_Equipment"
                     ],
-                    "Enabled": true
+                    "Enabled": true,
+                    "title": "Building members"
                 },
                 "Annotation Tools": {
                     "commands": {
@@ -367,7 +368,7 @@
                             "text": ""
                         },
                         "BIM_Create2DViews": {
-                            "size": "large",
+                            "size": "small",
                             "text": ""
                         },
                         "BIM_TDPage": {
@@ -385,7 +386,6 @@
                     },
                     "order": [
                         "BIM_Text",
-                        "BIM_Create2DViews",
                         "BIM_AxisTools",
                         "3_separator_BIMWorkbench",
                         "BIM_DimensionAligned",
@@ -398,7 +398,8 @@
                         "Arch_Grid",
                         "Arch_SectionPlane",
                         "BIM_TDView",
-                        "BIM_TDPage"
+                        "BIM_TDPage",
+                        "BIM_Create2DViews"
                     ],
                     "title": "Annotation Tools",
                     "Enabled": true
@@ -598,7 +599,8 @@
                         "BIM_ArrayTools",
                         "BIM_ExtrudeTools"
                     ],
-                    "Enabled": true
+                    "Enabled": true,
+                    "title": "3D Tools"
                 },
                 "Manage Tools": {
                     "commands": {
@@ -674,7 +676,8 @@
                         "BIM_ReportTools",
                         "Draft_AnnotationStyleEditor"
                     ],
-                    "Enabled": true
+                    "Enabled": true,
+                    "title": "Managing Tools"
                 },
                 "Individual Views": {
                     "order": [
