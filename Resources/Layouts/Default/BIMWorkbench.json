@@ -314,8 +314,7 @@
                         "BIM_Covering",
                         "Arch_Equipment"
                     ],
-                    "Enabled": true,
-                    "title": "Building members"
+                    "Enabled": true
                 },
                 "Annotation Tools": {
                     "commands": {
@@ -368,7 +367,7 @@
                             "text": ""
                         },
                         "BIM_Create2DViews": {
-                            "size": "small",
+                            "size": "large",
                             "text": ""
                         },
                         "BIM_TDPage": {
@@ -386,6 +385,7 @@
                     },
                     "order": [
                         "BIM_Text",
+                        "BIM_Create2DViews",
                         "BIM_AxisTools",
                         "3_separator_BIMWorkbench",
                         "BIM_DimensionAligned",
@@ -398,8 +398,7 @@
                         "Arch_Grid",
                         "Arch_SectionPlane",
                         "BIM_TDView",
-                        "BIM_TDPage",
-                        "BIM_Create2DViews"
+                        "BIM_TDPage"
                     ],
                     "title": "Annotation Tools",
                     "Enabled": true
@@ -454,7 +453,7 @@
                         "BIM_CloneTools"
                     ],
                     "title": "General Tools",
-                    "Enabled": true
+                    "Enabled": false
                 },
                 "2D Tools": {
                     "commands": {
@@ -537,7 +536,7 @@
                         "Arch_Add",
                         "Arch_Remove"
                     ],
-                    "Enabled": true
+                    "Enabled": false
                 },
                 "3D Tools": {
                     "commands": {
@@ -599,8 +598,7 @@
                         "BIM_ArrayTools",
                         "BIM_ExtrudeTools"
                     ],
-                    "Enabled": true,
-                    "title": "3D Tools"
+                    "Enabled": true
                 },
                 "Manage Tools": {
                     "commands": {
@@ -676,8 +674,7 @@
                         "BIM_ReportTools",
                         "Draft_AnnotationStyleEditor"
                     ],
-                    "Enabled": true,
-                    "title": "Managing Tools"
+                    "Enabled": true
                 },
                 "Individual Views": {
                     "order": [
@@ -800,16 +797,96 @@
                     ],
                     "Enabled": true
                 },
+                "Object Tools_custom": {
+                    "commands": {
+                        "Draft_Move": {
+                            "size": "large",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Draft_Rotate": {
+                            "size": "large",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Draft_Scale": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Draft_Mirror": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "BIM_CloneTools": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "BIM_Copy": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "BIM_SimpleCopy": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "BIM_Compound": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Draft_Upgrade": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Draft_Downgrade": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Arch_Add": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "Arch_Remove": {
+                            "size": "small",
+                            "text": "",
+                            "icon": ""
+                        }
+                    },
+                    "order": [
+                        "Draft_Move",
+                        "Draft_Rotate",
+                        "Draft_Scale",
+                        "Draft_Mirror",
+                        "BIM_Copy",
+                        "5_separator_BIMWorkbench",
+                        "BIM_Compound",
+                        "BIM_CloneTools",
+                        "BIM_SimpleCopy",
+                        "Arch_Add",
+                        "Arch_Remove",
+                        "11_separator_BIMWorkbench",
+                        "Draft_Upgrade",
+                        "Draft_Downgrade"
+                    ],
+                    "Enabled": true
+                },
                 "order": [
                     "Structure",
                     "Drafting Tools",
                     "Draft Snap",
                     "3D/BIM Tools",
                     "Annotation Tools",
-                    "General Tools",
+                    "Object Tools_custom",
                     "2D Tools",
                     "3D Tools",
-                    "Object Tools",
                     "Manage Tools",
                     "Tools_newPanel"
                 ]
