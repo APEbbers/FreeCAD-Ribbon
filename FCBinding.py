@@ -4688,8 +4688,8 @@ class ModernMenu(RibbonBar):
         if tabName is not None and tabName != "" and tabName != "test":
             # activate selected workbench
             tabName = tabName.replace("&", "")
-            # if self.wbNameMapping[tabName] is not None and self.SuspendBuildPanels is False:                
-            if self.wbNameMapping[tabName] is not None:   
+            if self.wbNameMapping[tabName] is not None and self.SuspendBuildPanels is False:                
+            # if self.wbNameMapping[tabName] is not None:   
                 WorkBenchName = self.wbNameMapping[tabName]
                 Dict = self.ribbonStructure
                 if self.CustomizeEnabled:
