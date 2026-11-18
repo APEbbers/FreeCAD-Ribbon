@@ -204,6 +204,15 @@ try:
 except Exception:
     pass
 
+# If the NXT addon is installed, make sure that nxt toolbars are disabled
+# They don't work with the RibbonUI anyway
+try:
+    preferences = App.ParamGet("User parameter:BaseApp/Preferences/Mod/Nxt")
+    preferences.SetBool("MenuButton", True)
+    App.saveParameter()
+except Exception:
+    pass
+
 try:   
     print(translate("FreeCAD Ribbon", "Activating Ribbon UI..."))
 
