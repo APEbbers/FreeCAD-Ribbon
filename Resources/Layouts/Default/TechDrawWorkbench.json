@@ -259,7 +259,8 @@
                             "icon": "actions/TechDraw_ToggleFrame"
                         }
                     },
-                    "Enabled": true
+                    "Enabled": true,
+                    "title": "Hatch"
                 },
                 "TechDraw Annotation": {
                     "order": [
@@ -552,18 +553,18 @@
                 "order": [
                     "Structure",
                     "TechDraw Pages",
-                    "TechDraw Views",
                     "TechDraw Stacking",
                     "Views_custom",
                     "Dimensions_custom",
                     "TechDraw Attributes",
                     "TechDraw Centerlines",
-                    "TechDraw File Access",
                     "TechDraw Decoration",
                     "TechDraw Annotation",
+                    "TechDraw File Access",
                     "Tools_newPanel"
                 ]
-            }
+            },
+            "Enabled": true
         }
     },
     "customToolbars": {
