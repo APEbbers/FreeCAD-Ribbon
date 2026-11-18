@@ -425,6 +425,8 @@ class ModernMenu(RibbonBar):
         toolBars = mw.findChildren(QToolBar)
         for toolBar in toolBars:
             toolBar.setAllowedAreas(Qt.ToolBarArea.LeftToolBarArea|Qt.ToolBarArea.RightToolBarArea|Qt.ToolBarArea.BottomToolBarArea)
+        # Hide the toolbars at the top of the window
+        self.hideClassicToolbars()
         
         # Set the default button style
         if Parameters_Ribbon.Settings.GetStringSetting("Layout") == "LargeAndMedium" or Parameters_Ribbon.Settings.GetStringSetting("Layout") == "AllMedium":
@@ -1363,8 +1365,7 @@ class ModernMenu(RibbonBar):
                     border: black solid 1px;
                     border-radius: 2px;
                     }""")
-        # ------------------------------------------------------------------------------------------------------------------       
-
+        # ------------------------------------------------------------------------------------------------------------------               
         return
 
     # region - Custom functions for FreeCAD
