@@ -36,6 +36,487 @@
         "separator_4",
         "ExampleDropDown_ddb"
     ],
+    "ToolBarStates": {
+        "Sketcher": [
+            false,
+            "Bottom"
+        ],
+        "File": [
+            false,
+            "Bottom"
+        ],
+        "Edit": [
+            false,
+            "Bottom"
+        ],
+        "Clipboard": [
+            false,
+            "Bottom"
+        ],
+        "Workbench": [
+            false,
+            "Bottom"
+        ],
+        "Macro": [
+            false,
+            "Bottom"
+        ],
+        "View": [
+            false,
+            "Bottom"
+        ],
+        "Individual Views": [
+            false,
+            "Bottom"
+        ],
+        "Structure": [
+            false,
+            "Bottom"
+        ],
+        "Help": [
+            false,
+            "Bottom"
+        ],
+        "Draft Creation": [
+            false,
+            "Bottom"
+        ],
+        "Draft Annotation": [
+            false,
+            "Bottom"
+        ],
+        "Draft Modification": [
+            false,
+            "Bottom"
+        ],
+        "Draft Utility": [
+            false,
+            "Bottom"
+        ],
+        "Draft Snap": [
+            false,
+            "Bottom"
+        ],
+        "Assembly": [
+            false,
+            "Bottom"
+        ],
+        "Assembly Joints": [
+            false,
+            "Bottom"
+        ],
+        "Part Design Helper Features": [
+            false,
+            "Bottom"
+        ],
+        "Part Design Modeling Features": [
+            false,
+            "Bottom"
+        ],
+        "Part Design Dress-Up Features": [
+            false,
+            "Bottom"
+        ],
+        "Part Design Transformation Features": [
+            false,
+            "Bottom"
+        ],
+        "FusedFilamentDesign": [
+            false,
+            "Bottom"
+        ],
+        "Edit Mode": [
+            false,
+            "Bottom"
+        ],
+        "Geometries": [
+            false,
+            "Bottom"
+        ],
+        "Constraints": [
+            false,
+            "Bottom"
+        ],
+        "Sketcher Tools": [
+            false,
+            "Bottom"
+        ],
+        "B-Spline Tools": [
+            false,
+            "Bottom"
+        ],
+        "Visual Helpers": [
+            false,
+            "Bottom"
+        ],
+        "SearchBar": [
+            false,
+            "Bottom"
+        ],
+        "Draft tray": [
+            false,
+            "Bottom"
+        ],
+        "Solids": [
+            false,
+            "Bottom"
+        ],
+        "Part Tools": [
+            false,
+            "Bottom"
+        ],
+        "Boolean Tools": [
+            false,
+            "Bottom"
+        ],
+        "rightToolBar": [
+            true,
+            "Bottom"
+        ],
+        "quickAccessToolBar": [
+            true,
+            "Bottom"
+        ],
+        "statusBar": [
+            true,
+            "-"
+        ],
+        "Surface": [
+            false,
+            "Bottom"
+        ],
+        "Sheet Metal": [
+            false,
+            "Bottom"
+        ],
+        "TechDraw Pages": [
+            false,
+            "Bottom"
+        ],
+        "TechDraw Views": [
+            false,
+            "Bottom"
+        ],
+        "TechDraw Stacking": [
+            false,
+            "Bottom"
+        ],
+        "TechDraw Dimensions": [
+            false,
+            "Bottom"
+        ],
+        "TechDraw Attributes": [
+            false,
+            "Bottom"
+        ],
+        "TechDraw Centerlines": [
+            false,
+            "Bottom"
+        ],
+        "TechDraw Extend Dimensions": [
+            false,
+            "Bottom"
+        ],
+        "TechDraw File Access": [
+            false,
+            "Bottom"
+        ],
+        "TechDraw Decoration": [
+            false,
+            "Bottom"
+        ],
+        "TechDraw Annotation": [
+            false,
+            "Bottom"
+        ],
+        "Spreadsheet": [
+            false,
+            "Bottom"
+        ],
+        "Gear": [
+            false,
+            "Bottom"
+        ],
+        "Drafting Tools": [
+            false,
+            "Bottom"
+        ],
+        "3D/BIM Tools": [
+            false,
+            "Bottom"
+        ],
+        "Annotation Tools": [
+            false,
+            "Bottom"
+        ],
+        "General Tools": [
+            false,
+            "Bottom"
+        ],
+        "2D Tools": [
+            false,
+            "Bottom"
+        ],
+        "Object Tools": [
+            false,
+            "Bottom"
+        ],
+        "3D Tools": [
+            false,
+            "Bottom"
+        ],
+        "Manage Tools": [
+            false,
+            "Bottom"
+        ],
+        "Model": [
+            false,
+            "Bottom"
+        ],
+        "Electromagnetic Boundary Conditions": [
+            false,
+            "Bottom"
+        ],
+        "Fluid Boundary Conditions": [
+            false,
+            "Bottom"
+        ],
+        "Geometrical Analysis Features": [
+            false,
+            "Bottom"
+        ],
+        "Mechanical Boundary Conditions and Loads": [
+            false,
+            "Bottom"
+        ],
+        "Thermal Boundary Conditions and Loads": [
+            false,
+            "Bottom"
+        ],
+        "Mesh": [
+            false,
+            "Bottom"
+        ],
+        "Solve": [
+            false,
+            "Bottom"
+        ],
+        "Results": [
+            false,
+            "Bottom"
+        ],
+        "Utilities": [
+            false,
+            "Bottom"
+        ],
+        "CfdOF": [
+            false,
+            "Bottom"
+        ],
+        "Project Setup": [
+            false,
+            "Bottom"
+        ],
+        "Tool Commands": [
+            false,
+            "Bottom"
+        ],
+        "New Operations": [
+            false,
+            "Bottom"
+        ],
+        "Path Modification": [
+            false,
+            "Bottom"
+        ],
+        "Robot": [
+            false,
+            "Bottom"
+        ],
+        "Drawing Primitives": [
+            false,
+            "Bottom"
+        ],
+        "Frameforge": [
+            false,
+            "Bottom"
+        ],
+        "Profiles Group": [
+            false,
+            "Bottom"
+        ],
+        "Part Primitives": [
+            false,
+            "Bottom"
+        ],
+        "Mesh Tools": [
+            false,
+            "Bottom"
+        ],
+        "Mesh Modify": [
+            false,
+            "Bottom"
+        ],
+        "Mesh Boolean": [
+            false,
+            "Bottom"
+        ],
+        "Mesh Cutting": [
+            false,
+            "Bottom"
+        ],
+        "Mesh Segmentation": [
+            false,
+            "Bottom"
+        ],
+        "Mesh Analyze": [
+            false,
+            "Bottom"
+        ],
+        "BIMStatusWidget": [
+            true,
+            "Bottom"
+        ],
+        "Tabs": [
+            false,
+            "Bottom"
+        ],
+        "OpenSCAD Tools": [
+            false,
+            "Bottom"
+        ],
+        "Frequently-used Part WB tools": [
+            false,
+            "Bottom"
+        ],
+        "Inspection": [
+            false,
+            "Bottom"
+        ],
+        "Material": [
+            false,
+            "Bottom"
+        ],
+        "Points Tools": [
+            false,
+            "Bottom"
+        ],
+        "Reverse Engineering": [
+            false,
+            "Bottom"
+        ],
+        "SearchBarAtMouse": [
+            false,
+            "Bottom"
+        ],
+        "PieMenuTB": [
+            false,
+            "Bottom"
+        ],
+        "FS Commands": [
+            false,
+            "Bottom"
+        ],
+        "FS Screws": [
+            false,
+            "Bottom"
+        ],
+        "Create BOM SketcherWorkbench": [
+            false,
+            "Bottom"
+        ],
+        "NxtTesting": [
+            false,
+            "Bottom"
+        ],
+        "Create BOM SMWorkbench": [
+            false,
+            "Bottom"
+        ],
+        "NxtMenuToolbar": [
+            true,
+            "Bottom"
+        ],
+        "Create BOM FemWorkbench": [
+            false,
+            "Bottom"
+        ]
+    },
+    "PanelStates": {
+        "Tree view": [
+            false,
+            "Left",
+            []
+        ],
+        "Property view": [
+            true,
+            "Right",
+            [
+                "Tasks"
+            ]
+        ],
+        "Selection view": [
+            false,
+            "Left",
+            []
+        ],
+        "Python console": [
+            true,
+            "Bottom",
+            [
+                "Report view"
+            ]
+        ],
+        "Report view": [
+            true,
+            "Bottom",
+            [
+                "Python console"
+            ]
+        ],
+        "Tasks": [
+            true,
+            "Right",
+            [
+                "Property view"
+            ]
+        ],
+        "Ribbon": [
+            true,
+            "Top",
+            []
+        ],
+        "RibbonLayout": [
+            true,
+            "Right",
+            []
+        ],
+        "RibbonSettings": [
+            true,
+            "Right",
+            []
+        ],
+        "AddCommands": [
+            true,
+            "Right",
+            []
+        ],
+        "DockWidget": [
+            false,
+            "Right",
+            []
+        ],
+        "NxtModelPanel": [
+            false,
+            "Left",
+            []
+        ],
+        "NxtToolbarDropStrip": [
+            false,
+            "Top",
+            []
+        ]
+    },
     "tabGroups": {
         "Mechanical": [
             "SketcherWorkbench",
