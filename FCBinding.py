@@ -509,8 +509,25 @@ class ModernMenu(RibbonBar):
             Parameters.RIBBON_STRUCTURE_JSON = os.path.join(ConfigDirectory, "RibbonStructure.json")        
         with open(Parameters.RIBBON_STRUCTURE_JSON, "r") as file:
             self.ribbonStructure.update(json.load(file))
+        
         # Check the ribbon structure and correct it if needed
         self.CleanRibbonStructure()
+        
+        # Add disabled workbenches to the ignoredWorkbenches list
+        StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["ignoredWorkbenches"], default=[])
+        # Reset the list
+        self.ribbonStructure["ignoredWorkbenches"].clear()
+        # Read the preferences
+        preferences = App.ParamGet("User parameter:BaseApp/Preferences/Workbenches/")
+        disabledWB_String = preferences.GetString("Disabled")
+        disabledWB_List = disabledWB_String.split(",")
+        # if there are disabled workbenches add them to the ignored workbench list
+        if len(disabledWB_List) > 0:
+            for workbenchName in disabledWB_List:
+                if workbenchName != "":
+                    workbench = Gui.getWorkbench(workbenchName)
+                    if workbench.MenuText.replace("&", "") not in self.ribbonStructure["ignoredWorkbenches"]:
+                        self.ribbonStructure["ignoredWorkbenches"].append(workbench.MenuText.replace("&", ""))
         
         # Read a lighter version of the datafile used with the dialogs for icons
         DataFile2 = os.path.join(ConfigDirectory, "RibbonDataFile2.dat")

@@ -4216,6 +4216,15 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         self.Dict_RibbonCommandPanel.update(self.Dict_CustomToolbars)
         self.Dict_RibbonCommandPanel.update(self.Dict_RibbonCommandPanel)
         self.Dict_RibbonCommandPanel.update(self.Dict_NewPanels)
+        
+        # Write the ignored workbenches to the paramter from FC
+        IgnoredWorkbenches_String = ""
+        for workbenchName, workbench in Gui.listWorkbenches().items():
+            if workbench.MenuText.replace("&", "") in List_IgnoredWorkbenches:
+                IgnoredWorkbenches_String = IgnoredWorkbenches_String + "," + workbenchName
+        if IgnoredWorkbenches_String.startswith(","): IgnoredWorkbenches_String = IgnoredWorkbenches_String[1:]
+        preferences = App.ParamGet("User parameter:BaseApp/Preferences/Workbenches/")
+        preferences.SetString("Disabled", IgnoredWorkbenches_String)
 
         # get the path for the Json file
         JsonFile = Parameters.RIBBON_STRUCTURE_JSON
