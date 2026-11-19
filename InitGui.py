@@ -204,11 +204,19 @@ try:
 except Exception:
     pass
 
-# If the NXT addon is installed, make sure that nxt toolbars are disabled
-# They don't work with the RibbonUI anyway
+# If the NXT addon is installed, make sure that some settings are disabled
+#
+# Menubar off = MenuButton on
 try:
     preferences = App.ParamGet("User parameter:BaseApp/Preferences/Mod/Nxt")
     preferences.SetBool("MenuButton", True)
+    App.saveParameter()
+except Exception:
+    pass
+# Nxt toolbar off
+try:
+    preferences = App.ParamGet("User parameter:BaseApp/Preferences/Mod/Nxt")
+    preferences.SetBool("ToolStrip", False)
     App.saveParameter()
 except Exception:
     pass
