@@ -316,18 +316,6 @@
                         "Sketcher_SwitchVirtualSpace": {
                             "size": "small",
                             "text": ""
-                        },
-                        "ksuTools2DtoFace": {
-                            "size": "small",
-                            "text": "2D to Face",
-                            "icon": "",
-                            "IsExtra": true
-                        },
-                        "BIM_Offset2D": {
-                            "size": "small",
-                            "text": "2D Offset",
-                            "icon": "",
-                            "IsExtra": true
                         }
                     },
                     "order": [
