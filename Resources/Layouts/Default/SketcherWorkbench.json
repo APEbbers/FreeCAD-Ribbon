@@ -324,8 +324,7 @@
                         "Sketcher_SelectElementsAssociatedWithConstraints",
                         "Sketcher_ArcOverlay",
                         "Sketcher_CompBSplineShowHideGeometryInformation",
-                        "Sketcher_SwitchVirtualSpace",
-                        "BIM_Offset2D"
+                        "Sketcher_SwitchVirtualSpace"
                     ],
                     "Enabled": true
                 },
