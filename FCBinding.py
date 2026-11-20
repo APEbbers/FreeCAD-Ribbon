@@ -2327,6 +2327,7 @@ class ModernMenu(RibbonBar):
             self.workBenchDict.clear()
             
             self.removeEventFilter(self.findChild(EventInspector_Patch_1))
+            
         return
     
     def on_Customize_Clicked(self):
@@ -2592,7 +2593,7 @@ class ModernMenu(RibbonBar):
             # Enable all buttons, so you can access them with a right click
             self.activateButtons() 
             
-            # Add show hidden tabs
+            # Show hidden tabs
             for i in range(self.tabBar().count()):
                 tabData = self.tabBar().tabData(i)  
                 # For some reason, you need to set a tabButton. Otherwise the tab won appear
@@ -2600,10 +2601,10 @@ class ModernMenu(RibbonBar):
                 # Set the tab visible
                 self.tabBar().setTabVisible(i, True)         
                 # Set the checkbox enabled
-                if tabData in self.workBenchDict["workbenches"]:  # noqa: SIM102
+                if tabData in self.ribbonStructure["workbenches"]:  # noqa: SIM102
                     # If enabled is present, set the checkbox accordingly
-                    if "Enabled" in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
-                        self.tabBar().setTabEnabled(i, self.workBenchDict["workbenches"][tabData]["Enabled"])
+                    if "Enabled" in self.ribbonStructure["workbenches"][tabData]:  # noqa: SIM102
+                        self.tabBar().setTabEnabled(i, self.ribbonStructure["workbenches"][tabData]["Enabled"])
                         if not self.tabBar().isTabEnabled(i):
                             # Change the text color
                             self.tabBar().setStyleSheet(
@@ -2615,7 +2616,7 @@ class ModernMenu(RibbonBar):
                         else:
                             self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))
                     # If enabled is not present, set the checkbox checked by default
-                    if "Enabled" not in self.workBenchDict["workbenches"][tabData]:  # noqa: SIM102
+                    if "Enabled" not in self.ribbonStructure["workbenches"][tabData]:  # noqa: SIM102
                         self.tabBar().setTabEnabled(i, True)     
                         self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))             
         return
@@ -3011,7 +3012,7 @@ class ModernMenu(RibbonBar):
                 objPanel.close()
                 continue
             # If the panel is not in the ribbon structure, remove it
-            if objPanel.objectName() not in Dict["workbenches"][workbenchName]["toolbars"]:                
+            if "toolbars" in Dict["workbenches"][workbenchName] and objPanel.objectName() not in Dict["workbenches"][workbenchName]["toolbars"]:                
                 objPanel.close()
                 continue
             
@@ -3178,6 +3179,30 @@ class ModernMenu(RibbonBar):
                     DockWidget.deleteLater()
             except Exception:
                 pass
+            
+        # Set the tab visible or invisible based on checkstate        
+        for i in range(self.tabBar().count()):
+            workbenchName = self.tabBar().tabData(i)
+            
+            if workbenchName in self.workBenchDict["workbenches"]:  # noqa: SIM102
+                # Add the command if they don't exist
+                Standard_Functions_Ribbon.add_keys_nested_dict(self.workBenchDict, ["workbenches", workbenchName, "Enabled"], True)
+                
+                if "Enabled" in self.workBenchDict["workbenches"][workbenchName]:  # noqa: SIM102
+                    if self.tabBar().isTabEnabled(i):                        
+                        # Set the state
+                        self.workBenchDict["workbenches"][workbenchName]["Enabled"] = True
+                        # Make sure to set the tab visible
+                        self.tabBar().setTabVisible(i, True)  
+                    else:
+                        self.workBenchDict["workbenches"][workbenchName]["Enabled"] = False
+                        # Make sure to set the tab hidden
+                        self.tabBar().setTabEnabled(i, True)
+                        self.tabBar().setTabVisible(i, False)
+                # If enabled is not present, set the tab always visible
+                else:
+                    # Make sure to set the tab visible
+                    self.tabBar().setTabVisible(i, True)        
         
         # Gui.updateGui()
         # Make sure that the tooltip has the correct color settings
@@ -3833,6 +3858,9 @@ class ModernMenu(RibbonBar):
                     self.tabBar().setStyleSheet(
                         """QTabBar::tab:disabled {color: """
                         + mw.palette().color(mw.palette().ColorGroup.Disabled, mw.palette().ColorRole.Text).name()
+                        + """;}"""
+                        """QTabBar::tab:enabled {color: """
+                        + StyleMapping_Ribbon.ReturnStyleItem("FontColor")
                         + """;}"""
                     )
                     if not self.CustomizeEnabled:
@@ -6125,7 +6153,7 @@ class ModernMenu(RibbonBar):
                     StandardFunctions.Print(f"Ribbon UI:\n{toolbar} resulted in an empty panel", "Warning")
                 continue
             # Hide the panel if stated in the ribbon structure
-            if workbenchName in Dict["workbenches"]:
+            if workbenchName in Dict["workbenches"] and "toolbars" in Dict["workbenches"][workbenchName]:
                 if panel.objectName() in Dict["workbenches"][workbenchName]["toolbars"]:
                     if "Enabled" in Dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
                         Enabled = Dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"]
@@ -7534,7 +7562,8 @@ class ModernMenu(RibbonBar):
         if workbenchName in Dict["workbenches"]:
             # order buttons like defined in ribbonStructure
             if (
-                panelName in Dict["workbenches"][workbenchName]["toolbars"]
+                "toolbars" in Dict["workbenches"][workbenchName]
+                and panelName in Dict["workbenches"][workbenchName]["toolbars"]
                 and "order" in Dict["workbenches"][workbenchName]["toolbars"][panelName]
             ):
                 OrderList: list = Dict["workbenches"][workbenchName]["toolbars"][panelName]["order"]
@@ -8065,7 +8094,7 @@ class ModernMenu(RibbonBar):
         # EnableControl = QCheckBox()
         EnableControl = Toggle()
         EnableControl.setChecked(True)
-        if workbenchName in Dict["workbenches"]:
+        if workbenchName in Dict["workbenches"] and "toolbars" in Dict["workbenches"][workbenchName]:
             if panel.objectName() in Dict["workbenches"][workbenchName]["toolbars"]:
                 if "Enabled" in Dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]:
                     Enabled = Dict["workbenches"][workbenchName]["toolbars"][panel.objectName()]["Enabled"]
@@ -8913,7 +8942,7 @@ class ModernMenu(RibbonBar):
         wbToolbars = Gui.getWorkbench(WorkBenchName).getToolbarItems()
         
         # Check if the Dict needs updated
-        if "workbenches" in Dict and WorkBenchName in Dict["workbenches"]:
+        if "workbenches" in Dict and WorkBenchName in Dict["workbenches"] and "toolbars" in Dict["workbenches"][WorkBenchName]:
             for ToolbarName, commands in Dict["workbenches"][WorkBenchName]["toolbars"].items():
                 # Go through the toolbars if name is not 'order' or 'enabled'
                 if ToolbarName != "order" and ToolbarName != "enabled":
@@ -9589,17 +9618,6 @@ class EventInspector_RibbonUI_1(QObject):
                     )
                 return QObject.eventFilter(self, obj, event)
         
-        # if event.type() == QEvent.Type.MouseMove:
-        #     # Get the mainwindow, the ribbon and the title
-        #     mw = Gui.getMainWindow()
-        #     RibbonBar = mw.findChild(ModernMenu, "Ribbon")
-        #     if RibbonBar.AccessoriesMenu is None:
-        #         RibbonBar.ApplicationMenus()
-                
-        #     Counter = 0
-        #     if Parameters.AUTOHIDE_RIBBON is False and Counter == 0:
-        #         RibbonBar.UnfoldRibbon()
-        #         Counter = 1
         return False  
 
 class run:
