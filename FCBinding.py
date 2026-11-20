@@ -3822,30 +3822,35 @@ class ModernMenu(RibbonBar):
         for i in range(self.tabBar().count()):
             tabData = self.tabBar().tabData(i)
             if tabData == workbenchName:
-                if "workbenches" in Dict and tabData in Dict["workbenches"]:
-                    # Add the command if they don't exist
-                    Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "Enabled"], True)
-                    # Write the state to the dict
-                    Dict["workbenches"][tabData]["Enabled"] = Checked
-                    # Enable or disable the tab
-                    self.tabBar().setTabEnabled(i, Checked)
-                    if not self.tabBar().isTabEnabled(i):
-                        # Change the text color
-                        self.tabBar().setStyleSheet(
-                            """QTabBar::tab:disabled {color: """
-                            + mw.palette().color(mw.palette().ColorGroup.Disabled, mw.palette().ColorRole.Text).name()
-                            + """;}"""
-                        )
-                        if not self.CustomizeEnabled:
-                            # Make sure to set the tab hidden
-                            self.tabBar().setTabVisible(i, False)
-                        self.tabBar().update()
-                    else:
-                        self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))
-                        if not self.CustomizeEnabled:
-                            # Make sure to set the tab visible
-                            self.tabBar().setTabVisible(i, True)
-                break                    
+                # Add the command if they don't exist
+                Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "Enabled"], True)
+                # Write the state to the dict
+                Dict["workbenches"][tabData]["Enabled"] = Checked
+                # Enable or disable the tab
+                self.tabBar().setTabEnabled(i, Checked)
+                if not self.tabBar().isTabEnabled(i):
+                    # Change the text color
+                    self.tabBar().setStyleSheet(
+                        """QTabBar::tab:disabled {color: """
+                        + mw.palette().color(mw.palette().ColorGroup.Disabled, mw.palette().ColorRole.Text).name()
+                        + """;}"""
+                    )
+                    if not self.CustomizeEnabled:
+                        # Make sure to set the tab hidden
+                        self.tabBar().setTabVisible(i, False)
+                    self.tabBar().update()
+                else:
+                    self.tabBar().setTabTextColor(i, StyleMapping_Ribbon.ReturnStyleItem("FontColor"))
+                    if not self.CustomizeEnabled:
+                        # Make sure to set the tab visible
+                        self.tabBar().setTabVisible(i, True)
+                
+                if not self.CustomizeEnabled:        
+                    # Writing to ribbonStructure.json
+                    JsonFile = Parameters.RIBBON_STRUCTURE_JSON
+                    with open(JsonFile, "w") as outfile:
+                        json.dump(Dict, outfile, indent=4)
+                break                 
         return
     
     # endregion
@@ -9024,7 +9029,14 @@ class ModernMenu(RibbonBar):
                             if item == "Enabled":
                                 StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "Enabled"], default=True)
                                 workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["Enabled"] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["Enabled"]
-        
+                
+            if "workbenches" in Dict and WorkBenchName in Dict["workbenches"]:
+                StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "Enabled"])
+                if "Enabled" in Dict["workbenches"][WorkBenchName]:
+                    workbenchDict["workbenches"][WorkBenchName]["Enabled"] = Dict["workbenches"][WorkBenchName]["Enabled"]
+                else:                    
+                    workbenchDict["workbenches"][WorkBenchName]["Enabled"] = True
+                
         # Check if there are workbenches and toolbars in the ribbon structure
         if "workbenches" in Dict and WorkBenchName == "":
             for WorkBenchName in Dict["workbenches"]:
@@ -9478,6 +9490,16 @@ class EventInspector_RibbonUI_1(QObject):
                     Dict["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Bottom", tabifiedList]
                 if dockWidget_Area == Qt.DockWidgetArea.TopDockWidgetArea:
                     Dict["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Top", tabifiedList]
+                    
+            # Store the state of the tabs
+            for i in range(RibbonBar.tabBar().count()):
+                workbenchName = RibbonBar.tabBar().tabData(i)
+                if "Enabled" in Dict["workbenches"][workbenchName]:
+                    Dict["workbenches"][workbenchName]["Enabled"] = RibbonBar.tabBar().isTabEnabled(i)
+                else:
+                    # Add the command if they don't exist
+                    Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "Enabled"], True)
+                    Dict["workbenches"][workbenchName]["Enabled"] = RibbonBar.tabBar().isTabEnabled(i)
                 
             # Store the state of the mainwindow
             if mw.isMaximized():
