@@ -9267,8 +9267,13 @@ class ModernMenu(RibbonBar):
         return isConverted
 
     # endregion
-    
-session_id = subprocess.getoutput("env | grep -E -i 'x11|xorg|wayland'").split()[1].split("=")[1]
+
+session_id = ""
+try:
+    session_id = subprocess.getoutput("env | grep -E -i 'x11|xorg|wayland'").split()[1].split("=")[1]
+except Exception:
+    pass
+
 class EventInspector_Patch_1(QObject):
     PatchApplicable = True
     dragEntered = False
