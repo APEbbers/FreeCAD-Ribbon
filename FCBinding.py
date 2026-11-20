@@ -9063,8 +9063,6 @@ class ModernMenu(RibbonBar):
                 StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "Enabled"])
                 if "Enabled" in Dict["workbenches"][WorkBenchName]:
                     workbenchDict["workbenches"][WorkBenchName]["Enabled"] = Dict["workbenches"][WorkBenchName]["Enabled"]
-                else:                    
-                    workbenchDict["workbenches"][WorkBenchName]["Enabled"] = True
                 
         # Check if there are workbenches and toolbars in the ribbon structure
         if "workbenches" in Dict and WorkBenchName == "":
