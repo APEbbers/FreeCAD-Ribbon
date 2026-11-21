@@ -314,7 +314,8 @@
                         "BIM_Covering",
                         "Arch_Equipment"
                     ],
-                    "Enabled": true
+                    "Enabled": true,
+                    "title": "Building Tools"
                 },
                 "Annotation Tools": {
                     "commands": {
@@ -866,10 +867,10 @@
                         "Draft_Scale",
                         "Draft_Mirror",
                         "BIM_Copy",
-                        "5_separator_BIMWorkbench",
-                        "BIM_Compound",
+                        "4_separator_BIMWorkbench",
                         "BIM_CloneTools",
                         "BIM_SimpleCopy",
+                        "BIM_Compound",
                         "Arch_Add",
                         "Arch_Remove",
                         "11_separator_BIMWorkbench",
@@ -888,7 +889,9 @@
                     "2D Tools",
                     "3D Tools",
                     "Manage Tools",
-                    "Tools_newPanel"
+                    "Tools_newPanel",
+                    "General Tools",
+                    "Object Tools"
                 ]
             }
         }
@@ -1018,5 +1021,25 @@
                 "BIMWorkbench"
             ]
         ]
+    },
+    "customToolbars": {
+        "BIMWorkbench": {
+            "Object Tools_custom": {
+                "commands": {
+                    "Draft_Move": "General Tools",
+                    "Draft_Rotate": "General Tools",
+                    "Draft_Scale": "General Tools",
+                    "Draft_Mirror": "General Tools",
+                    "BIM_CloneTools": "General Tools",
+                    "BIM_Copy": "General Tools",
+                    "BIM_SimpleCopy": "General Tools",
+                    "BIM_Compound": "General Tools",
+                    "Draft_Upgrade": "Object Tools",
+                    "Draft_Downgrade": "Object Tools",
+                    "Arch_Add": "Object Tools",
+                    "Arch_Remove": "Object Tools"
+                }
+            }
+        }
     }
 }
